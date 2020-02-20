@@ -1,0 +1,9 @@
+Django==3.0.3
+gunicorn==20.0.4
+psycopg2-binary==2.8.4
+Pillow==7.0.0
+django_cron
+python-dateutil
+django-stdimage
+PyPDF2
+requests

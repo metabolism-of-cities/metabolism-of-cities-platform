@@ -1,0 +1,21 @@
+version: '3'  
+
+services:  
+  db:
+    image: postgres:latest
+    container_name: moc_db
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
+    container_name: moc_adminer
+  web:
+    build: .
+    command: python3 manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./src:/src
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    container_name: moc_web
