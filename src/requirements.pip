@@ -7,3 +7,6 @@ python-dateutil
 django-stdimage
 PyPDF2
 requests
+libsass 
+django-compressor 
+django-sass-processor
