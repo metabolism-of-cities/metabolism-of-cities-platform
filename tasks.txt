@@ -1,0 +1,103 @@
+Familiarise yourself with Sass
+==============================
+
+Sass is a rather simple but also very useful CSS extension. It makes writing CSS easier.
+
+https://sass-lang.com/guide
+- A basic overview. The most important features to understand for MoC are variables and nesting. Because we use the Sass version of Bootstrap, you will also encounter many partials.
+
+Current .scss file used for new design: /static/css/main.scss
+- Notice the nesting of styles.
+
+Please also take a look at the scss files for bootstrap: /static/css/bootstrap/
+- You can see examples of variables in _variables.scss and how they're used in most other files, for examples _buttons.scss.
+
+One of Sass' features I haven't used yet is extend/inheritance as I didn't know it existed! It would have been very useful for a number of projects and I think we can use it for MoC as well. I need to learn this too, so we can figure out how it works together.
+
+As a last note: MoC will use the SCSS style (.scss as opposed to .sass). Not super important to know the differences, the main thing to know is that we're using the SCSS style. See this link for more info: https://stackoverflow.com/questions/5654447/whats-the-difference-between-scss-and-sass
+
+
+Software suggestion: Zeal
+=========================
+
+A programme I use a lot is Zeal: https://zealdocs.org/
+
+It's offline documentation for a large number of languages / libraries, including most (all?) of the ones used for MoC.
+
+
+Page elements
+=============
+
+Virtually every page will have a few common elements.
+- Navbar
+- Hero
+- Main content section
+- Footer(s)
+
+Other common elements include:
+- Tables
+- Buttons
+- Cards (https://getbootstrap.com/docs/4.4/components/card/)
+- Images
+- Contribute box (see bottom of https://metabolismofcities.org/community/research/projects)
+- Vertical navigation (https://getbootstrap.com/docs/4.4/components/navs/#vertical)
+- Navbar for single city
+
+
+Page types
+==========
+
+Though a few pages are unique, many others are of a recurring type.
+- City overview page (https://metabolismofcities.org/cities/cape-town/)
+- City > single sector page (https://metabolismofcities.org/cities/cape-town/sectors/agriculture/)
+- Single dataset page (https://metabolismofcities.org/cities/cape-town/datasets/58/)
+- Single journal article page (https://metabolismofcities.org/resources/publications/1100)
+- Single news article page (https://metabolismofcities.org/community/news/226)
+- Single person (https://metabolismofcities.org/community/people/593)
+- Single thesis (https://metabolismofcities.org/community/research/theses/67)
+- Single event (https://metabolismofcities.org/community/events/196)
+
+
+Unique pages
+============
+
+- Homepage
+
+- About > Our story
+- About > Mission and values
+- About > Team
+- About > Task forces
+- About > Services
+- About > Join us
+- About > Subscribe to newsletter
+- About > Contact us
+
+- Community > Projects overview page
+- Community > Theses overview page
+- Community > People overview page
+	(these three are basically the same except for the text)
+- Community > Events
+- Community > News
+	(these two are basically the same except for the text)
+- Community > Add research
+
+- Resources > About Urban Metabolism
+- Resources > Started kit
+- Resources > Photos
+- Resources > Videos
+- Resources > Library
+- Resources > Journals
+- Resources > Add publication
+- Resources > Datasets
+- Resources > Data visualisations
+- Resources > OMAT
+- Resources > MOOC
+
+- Cities > Introduction
+- Cities > Prototype
+- Cities > Video
+- Cities > Add data
+- Cities > Data collection events
+- Cities > Development roadmap
+- Cities > Datasets
+- Cities > Cities overview page
