@@ -17,6 +17,28 @@ One of Sass' features I haven't used yet is extend/inheritance as I didn't know 
 As a last note: MoC will use the SCSS style (.scss as opposed to .sass). Not super important to know the differences, the main thing to know is that we're using the SCSS style. See this link for more info: https://stackoverflow.com/questions/5654447/whats-the-difference-between-scss-and-sass
 
 
+Initial tasks
+=============
+
+# Footer(s)
+There are two footers. It would be useful for one to have basically a list of all the pages; the navbar but everything visible automatically. The second footer should have the logo, contact information, and a link to MoI.
+
+# Buttons with images
+For a city's resources / sectors (see https://metabolismofcities.org/cities/cape-town) we'll need nice looking buttons with an image as background, like the ones on the Resource Watch homepage under "Featured dashboards".
+
+# Tables
+MoC has many tables and uses something called Data Tables (https://datatables.net/). It would be great if these better fit in with the style of the new design. I know from experience this is a bit of a pain. See: https://datatables.net/manual/styling/
+
+# Contribute message
+Many pages (such as https://metabolismofcities.org/community/research/projects) have an orange "Contribute" box. These would ideally be in a seperate file so it can be used as a template and fit in with the new design.
+
+# Cards
+The Bootstrap cards are fine (https://getbootstrap.com/docs/4.4/components/card/), but it would be great if the default card would be styled closer to Resource Watch's cards, like here: https://resourcewatch.org/data/explore
+
+# Images on city profile pages
+On a city's page on MoC, there are a number of thumbnails for photos (see bottom of https://metabolismofcities.org/cities/cape-town/). I'd like to create squared
+
+
 Software suggestion: Zeal
 =========================
 
@@ -25,21 +47,21 @@ A programme I use a lot is Zeal: https://zealdocs.org/
 It's offline documentation for a large number of languages / libraries, including most (all?) of the ones used for MoC.
 
 
+
+-------------------------------------------------------------------------------------
+
+
 Page elements
 =============
 
 Virtually every page will have a few common elements.
-- Navbar
-- Hero
-- Main content section
-- Footer(s)
+
+
 
 Other common elements include:
 - Tables
 - Buttons
-- Cards (https://getbootstrap.com/docs/4.4/components/card/)
-- Images
-- Contribute box (see bottom of https://metabolismofcities.org/community/research/projects)
+
 - Vertical navigation (https://getbootstrap.com/docs/4.4/components/navs/#vertical)
 - Navbar for single city
 
