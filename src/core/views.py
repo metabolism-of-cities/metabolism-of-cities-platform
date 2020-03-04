@@ -25,4 +25,8 @@ from collections import defaultdict
 
 def about(request):
     return render(request, "about.html")
+def datatables(request):
+    return render(request, "datatables.html")
+def map(request):
+    return render(request, "map.html")
 

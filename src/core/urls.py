@@ -8,4 +8,6 @@ from . import views
 
 urlpatterns = [
     path('about/', views.about),
+    path('datatables/', views.datatables),
+    path('map/', views.map),
 ]

@@ -1,0 +1,104 @@
+{% extends '_base.html' %}
+{% load static %}
+{% block page_name %}about{% endblock %}
+{% block title %}About{% endblock %}
+{% block subtitle %}Everything you need to know about Metabolism of Cities
+{% endblock %}
+
+{% block content %}
+<table id="table_id" class="display">
+  <thead>
+    <tr>
+      <th>Column 1</th>
+      <th>Column 2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>kopano</td>
+      <td>yamkela</td>
+    </tr>
+    <tr>
+      <td>sizwe</td>
+      <td>vusi</td>
+    </tr>
+    <tr>
+      <td>ntandazo</td>
+      <td>khangelani</td>
+    </tr>
+    <tr>
+      <td>thuliswa</td>
+      <td>amkele</td>
+    </tr>
+    <tr>
+      <td>ntando</td>
+      <td>phumezo</td>
+    </tr>
+    <tr>
+      <td>khuselo</td>
+      <td>mpemey</td>
+    </tr>
+    <tr>
+      <td>zobuyo</td>
+      <td>thembela</td>
+    </tr>
+    <tr>
+      <td>siphamandla</td>
+      <td>akhanyile</td>
+    </tr>
+    <tr>
+      <td>phumlani</td>
+      <td>khuselo</td>
+    </tr>
+    <tr>
+      <td>thembela</td>
+      <td>ntandazo</td>
+    </tr>
+    <tr>
+      <td>likhona</td>
+      <td>yamkela</td>
+    </tr>
+    <tr>
+      <td>phumlani</td>
+      <td>khuselo</td>
+    </tr>
+    <tr>
+      <td>vusi</td>
+      <td>kopano</td>
+    </tr>
+    <tr>
+      <td>thuliswa</td>
+      <td>amkele</td>
+    </tr>
+    <tr>
+      <td>siphamandla</td>
+      <td>akhanyile</td>
+    </tr>
+    <tr>
+      <td>phumezo</td>
+      <td>ntandazo</td>
+    </tr>
+    <tr>
+      <td>thembela</td>
+      <td>ntandazo</td>
+    </tr>
+    <tr>
+      <td>ntando</td>
+      <td>phumezo</td>
+    </tr>
+    <tr>
+      <td>siphamandla</td>
+      <td>akhanyile</td>
+    </tr>
+  </tbody>
+</table>
+{% endblock %}
+
+{% block footer %}
+<script src="{% static 'js/datatables.min.js' %}"></script>
+<script>
+  $(document).ready( function () {
+    $('#table_id').DataTable();
+  });
+</script>
+{% endblock %}
