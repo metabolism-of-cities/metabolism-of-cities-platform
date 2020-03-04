@@ -26,3 +26,10 @@ from collections import defaultdict
 def about(request):
     return render(request, "about.html")
 
+def load_baseline(request):
+    list = ['Event','Page','News'] 
+    # for details in list:
+    #   info = Type.objects.create(name = details)
+    #   info.save()
+    return render(request, "load.baseline.html")
+

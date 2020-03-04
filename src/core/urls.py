@@ -8,4 +8,5 @@ from . import views
 
 urlpatterns = [
     path('about/', views.about),
+    path('baseline/', views.load_baseline),
 ]
