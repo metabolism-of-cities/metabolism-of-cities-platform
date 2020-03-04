@@ -1,0 +1,2 @@
+sudo docker exec -it moc_web python manage.py makemigrations
+sudo docker exec -it moc_web python manage.py migrate

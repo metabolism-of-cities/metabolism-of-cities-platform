@@ -1,17 +1,36 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin);
-
 body {
-  background-color: #fcfcfc;
-  font-family: Lato, 'Helvetica Neue' , Arial , Helvetica ,sans-serif;
+background-color: #fcfcfc;
+font-family: Lato, 'Helvetica Neue' , Arial , Helvetica ,sans-serif;
 }
-
 // YOU CAN START THE SCSS HERE, DON'T WORRY ABOUT THE GENERAL LAYOUT, PLEASE JUST FOCUS ON THE INDIVIDUAL ELEMENTS
-
-
-
-
 // OLD CSS, WE CAN DO WITHOUT THIS FOR NOW, AND SOME NEEDS TO BE TRANSLATED INTO SCSS
-
+$primary-color: #808080;
+$logo: 250px;
+$address: #FFF;
+footer#actions {
+border-top: 1px solid $primary-color;
+.title {
+color: #CB270D;
+font-size: 25px;
+}
+a {
+color: $primary-color;
+}
+}
+footer#info {
+background-color: #333;
+padding-top: 30px;
+img {
+width: $logo;
+}
+p {
+color: $address;
+}
+h3 {
+color: $address;
+}
+}
 // a {
 //   color: #77216F;
 //   &:hover {
@@ -113,11 +132,9 @@ body {
 //     }
 //   }
 // }
-
 // .btn {
 //   border-radius: 0;
 // }
-
 // .btn-primary {
 //   background-color: #e95420;
 //   border: none;
@@ -125,7 +142,6 @@ body {
 //     background-color: #EB6536;
 //   }
 // }
-
 // .jumbotron {
 //   padding: 3rem 0;
 //   background: unset;
@@ -136,12 +152,10 @@ body {
 //     font-weight: normal;
 //   }
 // }
-
 // .main-content {
 //   padding-top: 2rem;
 //   padding-bottom: 2rem;
 // }
-
 // .card-columns {
 //   column-count: 2;
 //   .card {
@@ -151,7 +165,6 @@ body {
 //     column-count: 1;
 //   }
 // }
-
 // .content-container {
 //   background-color: #fff;
 //   border: 1px solid #dee2e6;
@@ -161,7 +174,6 @@ body {
 //     padding: 1rem;
 //   }
 // }
-
 // .card {
 //   border-radius: 0;
 //   hr {
@@ -206,7 +218,6 @@ body {
 //     padding: .75rem 1.25rem;
 //   }
 // }
-
 // .content-container hr {
 //   border-top: 1px solid #dee2e6;
 //   margin: 0;
@@ -238,12 +249,10 @@ body {
 //   margin-top: 16px;
 //   font-size: 24px;
 // }
-
 // .timeline {
 //   position: relative;
 //   padding-left: 30px;
 // }
-
 // .timeline:before {
 //   content: ' ';
 //   background: #5E2750;
@@ -254,14 +263,12 @@ body {
 //   height: 100%;
 //   z-index: 400;
 // }
-
 // .timeline > .single-entry {
 //   padding: 15px;
 //   background-color: #fff;
 //   border: 1px solid #dee2e6;
 //   max-width: 800px;
 // }
-
 // .timeline > .single-entry:before {
 //   content: ' ';
 //   background: #fff;
@@ -274,16 +281,13 @@ body {
 //   height: 20px;
 //   z-index: 400;
 // }
-
 // .timeline .single-entry {
 //   margin-bottom: 2rem;
 // }
-
 // .timeline .title {
 //   font-size: 18px;
 //   font-weight: bold;
 // }
-
 // body.city-page .jumbotron {
 //   margin-bottom: 0;
 // }
@@ -315,12 +319,10 @@ body {
 //   border-color: #5E2750;
 //   box-shadow: 0 2px 2px 2px rgba(0,0,0,0.1);
 // }
-
 // body.city-page .content-bar .resources .single-resource .title {
 //   font-size: 24px;
 //   margin-bottom: 8px;
 // }
-
 // body.city-page .content-bar .sectors .single-sector {
 //   display: block;
 //   margin-bottom: 16px;
@@ -332,17 +334,13 @@ body {
 //   transition: all .2s;
 //   text-align: center !important;
 // }
-
 // body.city-page .content-bar .sectors .single-sector i {
 //   font-size: 24px
 // }
-
-
 // body.city-page .content-bar .sectors .single-sector:hover {
 //   border-color: #5E2750;
 //   box-shadow: 0 2px 2px 2px rgba(0,0,0,0.1);
 // }
-
 // body.city-page .content-bar img {
 //   max-width: 100%;
 //   box-shadow: 0 2px 2px 2px rgba(0,0,0,0.1);
@@ -356,7 +354,6 @@ body {
 //   border-radius: 0;
 //   box-shadow: 0 2px 2px 2px rgba(0,0,0,0.1);
 // }
-
 // body.city-page .sidebar {
 //   max-width: 250px;
 //   background-color: #f0e8ee;
