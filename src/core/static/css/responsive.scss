@@ -1,15 +1,10 @@
-  @media screen and (max-width: 500px) {
+@media screen and (max-width: 767px) {
 footer#info {
-p {
-text-align: left;
-}
-h3 {
-text-align: left;
-margin-top: 15px;
-font-size: 25px;
-}
 img {
-  width: 200px;
+width: 200px;
+}
+.row {
+  text-align: center
 }
 }
 }
