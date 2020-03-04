@@ -31,6 +31,76 @@ h3 {
 color: $address;
 }
 }
+.anchor {
+.card {
+  width: 250px;
+  height: 250px;
+}
+a {
+  width: 250px;
+  height: 250px;
+}
+.agriculture {
+background-image: url("/static/img/agriculture.jpg");
+background-repeat:no-repeat;
+background-size:100%;
+}
+.construction {
+background-image: url("/static/img/construction.jpg");
+background-repeat:no-repeat;
+background-size:100%
+}
+.energy {
+background-image: url("/static/img/energy.jpg");
+background-repeat:no-repeat;
+background-size:100%
+}
+.fishing {
+background-image: url("/static/img/fishing.jpg");
+background-repeat:no-repeat;
+background-size:100%
+}
+.forestry {
+background-image: url("/static/img/forestry.jpg");
+background-repeat:no-repeat;
+background-size:100%
+}
+.manufacturing {
+background-image: url("/static/img/agriculture.jpg");
+background-repeat:no-repeat;
+background-size:100%
+}
+.mining {
+background-image: url("/static/img/mining.jpg");
+background-repeat:no-repeat;
+background-size:100%
+}
+.retail {
+background-image: url("/static/img/retail.jpg");
+background-repeat:no-repeat;
+background-size:100%
+}
+.transport {
+background-image: url("/static/img/transport.jpg");
+background-repeat:no-repeat;
+background-size:100%
+}
+.waste {
+background-image: url("/static/img/waste.jpg");
+background-repeat:no-repeat;
+background-size:100%
+}
+.water {
+background-image: url("/static/img/water.jpg");
+background-repeat:no-repeat;
+background-size:100%
+}
+a {
+  color: $address;
+  font-weight: 1000;
+  font-size: 20px;
+}
+}
 // a {
 //   color: #77216F;
 //   &:hover {

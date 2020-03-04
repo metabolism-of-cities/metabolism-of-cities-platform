@@ -1,10 +1,19 @@
 @media screen and (max-width: 767px) {
-footer#info {
-img {
-width: 200px;
-}
-.row {
-  text-align: center
-}
-}
-}
+  footer#info {
+    img {
+    width: 200px;
+  }
+    .row {
+      text-align: center
+    }
+  }
+  .anchor {
+   .card{
+    width: 100%;
+    padding-bottom: 15px;
+   }
+   a {
+    width: 100%;
+   }
+  }
+  }
