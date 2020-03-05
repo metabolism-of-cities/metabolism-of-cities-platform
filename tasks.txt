@@ -36,7 +36,10 @@ Many pages (such as https://metabolismofcities.org/community/research/projects) 
 The Bootstrap cards are fine (https://getbootstrap.com/docs/4.4/components/card/), but it would be great if the default card would be styled closer to Resource Watch's cards, like here: https://resourcewatch.org/data/explore
 
 # Images on city profile pages
-On a city's page on MoC, there are a number of thumbnails for photos (see bottom of https://metabolismofcities.org/cities/cape-town/). I'd like to create squared
+On a city's page on MoC, there are a number of thumbnails for photos (see bottom of https://metabolismofcities.org/cities/cape-town/). I'd like to create squared thumbnails that will look good with every image.
+
+# Team member cards
+On the team page (https://metabolismofcities.org/about/team) every member of the team has his/her own card. These are of different sizes and don't look so good.
 
 
 Software suggestion: Zeal
