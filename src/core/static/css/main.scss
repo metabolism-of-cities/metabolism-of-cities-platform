@@ -1,14 +1,27 @@
-@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin);
-body {
-background-color: #fcfcfc;
-font-family: Lato, 'Helvetica Neue' , Arial , Helvetica ,sans-serif;
-}
-// YOU CAN START THE SCSS HERE, DON'T WORRY ABOUT THE GENERAL LAYOUT, PLEASE JUST FOCUS ON THE INDIVIDUAL ELEMENTS
-// OLD CSS, WE CAN DO WITHOUT THIS FOR NOW, AND SOME NEEDS TO BE TRANSLATED INTO SCSS
+// Variables
 $primary-color: #808080;
 $logo: 250px;
 $address: #fff;
 $brown: #cb270d;
+
+// Fonts
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin);
+
+// Styles
+body {
+  background-color: #fcfcfc;
+  font-family: Lato, 'Helvetica Neue' , Arial , Helvetica ,sans-serif;
+}
+
+.top-layer {
+  background-color: $primary-color;
+  background-image: url(https://resourcewatch.org/static/images/components/layout/header-bg-texture.png);
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: cover;
+  z-index: 10000;
+}
+
 footer#actions {
 border-top: 1px solid $primary-color;
 .title {
@@ -113,100 +126,100 @@ font-size: 20px;
 //     text-decoration: none;
 //   }
 // }
-// nav {
-//   &.navbar {
-//     padding-top: 1rem;
-//     padding-bottom: 0;
-//   }
-//   .navbar-brand {
-//     margin-right: 30px;
-//     width: 120px;
-//     padding: 0 0 4px 0;
-//     img {
-//       height: 52px;
-//     }
-//   }
-//   li.dropdown {
-//     position: unset;
-//   }
-//   .container {
-//     position: relative;
-//   }
-//   .dropdown-menu {
-//     width: calc(100% - 29px);
-//     top: 56px;
-//     left: unset;
-//     right: 14px;
-//     border-radius: 0;
-//     margin: 0;
-//     padding: 0;
-//     box-shadow: 0 4px 2px -2px rgba(0,0,0,0.3);
-//     border: 1px solid #5e2750;
-//     display: block;
-//     opacity: 0;
-//     transition: margin-top .2s linear;
-//     margin-top: -6px;
-//     pointer-events: none;
-//     &.show {
-//       opacity: 1;
-//       margin-top: 0;
-//       pointer-events: unset;
-//     }
-//     .col {
-//       padding: 15px;
-//       &.key {
-//         background-color: #f6f6f6;
-//       }
-//       &:first-of-type {
-//         border-right: 1px solid #dee2e6;
-//       }
-//       &:last-of-type {
-//         border-left: 1px solid #dee2e6;
-//       }
-//     }
-//     a {
-//       text-decoration: none;
-//       color: #666;
-//       display: block;
-//       padding: 4px 0 4px 8px;
-//       &:hover {
-//         color: #000;
-//       }
-//       &.disabled {
-//         color: #bbb;
-//         cursor: default;
-//         &:hover {
-//           color: #bbb;
-//         }
-//       }
-//     }
-//   }
-//   .dropdown-submenu .submenu-title {
-//     text-transform: uppercase;
-//     font-weight: bold;
-//     font-size: 14px;
-//     margin-bottom: 0;
-//     padding: 4px 0 4px 8px;
-//   }
-//   a.nav-link {
-//     color: #ffffffc4 !important;
-//     &:hover {
-//       color: #ffffff !important;
-//     }
-//     &.dropdown-toggle {
-//       border-bottom: 2px solid transparent;
-//       padding: 8px 1.25rem 16px !important;
-//       &::after {
-//         display: none;
-//       }
-//       &[aria-expanded="true"] {
-//         border-bottom-color: #fff;
-//         z-index: 1001;
-//         color: #ffffff !important;
-//       }
-//     }
-//   }
-// }
+nav {
+  &.navbar {
+    padding-top: 1rem;
+    padding-bottom: 0;
+  }
+  .navbar-brand {
+    margin-right: 30px;
+    width: 120px;
+    padding: 0 0 4px 0;
+    img {
+      height: 52px;
+    }
+  }
+  li.dropdown {
+    position: unset;
+  }
+  .container {
+    position: relative;
+  }
+  .dropdown-menu {
+    width: calc(100% - 29px);
+    top: 56px;
+    left: unset;
+    right: 14px;
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+    box-shadow: 0 4px 2px -2px rgba(0,0,0,0.3);
+    border: 1px solid #5e2750;
+    display: block;
+    opacity: 0;
+    transition: margin-top .2s linear;
+    margin-top: -6px;
+    pointer-events: none;
+    &.show {
+      opacity: 1;
+      margin-top: 0;
+      pointer-events: unset;
+    }
+    .col {
+      padding: 15px;
+      &.key {
+        background-color: #f6f6f6;
+      }
+      &:first-of-type {
+        border-right: 1px solid #dee2e6;
+      }
+      &:last-of-type {
+        border-left: 1px solid #dee2e6;
+      }
+    }
+    a {
+      text-decoration: none;
+      color: #666;
+      display: block;
+      padding: 4px 0 4px 8px;
+      &:hover {
+        color: #000;
+      }
+      &.disabled {
+        color: #bbb;
+        cursor: default;
+        &:hover {
+          color: #bbb;
+        }
+      }
+    }
+  }
+  .dropdown-submenu .submenu-title {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 0;
+    padding: 4px 0 4px 8px;
+  }
+  a.nav-link {
+    color: #ffffffc4 !important;
+    &:hover {
+      color: #ffffff !important;
+    }
+    &.dropdown-toggle {
+      border-bottom: 2px solid transparent;
+      padding: 8px 1.25rem 16px !important;
+      &::after {
+        display: none;
+      }
+      &[aria-expanded="true"] {
+        border-bottom-color: #fff;
+        z-index: 1001;
+        color: #ffffff !important;
+      }
+    }
+  }
+}
 // .btn {
 //   border-radius: 0;
 // }
@@ -217,16 +230,16 @@ font-size: 20px;
 //     background-color: #eb6536;
 //   }
 // }
-// .jumbotron {
-//   padding: 3rem 0;
-//   background: unset;
-//   h1 {
-//     font-weight: bold;
-//   }
-//   .lead {
-//     font-weight: normal;
-//   }
-// }
+.jumbotron {
+  padding: 3rem 0;
+  background: unset;
+  h1 {
+    font-weight: bold;
+  }
+  .lead {
+    font-weight: normal;
+  }
+}
 // .main-content {
 //   padding-top: 2rem;
 //   padding-bottom: 2rem;
