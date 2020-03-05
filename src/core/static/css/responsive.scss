@@ -1,3 +1,10 @@
+@media screen and (max-width: 991px) {
+  .anchor {
+    .card {
+      width: 100%;
+    }
+  }
+  }
 @media screen and (max-width: 767px) {
   footer#info {
     img {
@@ -7,13 +14,5 @@
       text-align: center
     }
   }
-  .anchor {
-   .card{
-    width: 100%;
-    padding-bottom: 15px;
-   }
-   a {
-    width: 100%;
-   }
-  }
+  
   }
