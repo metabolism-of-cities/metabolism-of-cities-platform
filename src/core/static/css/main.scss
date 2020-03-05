@@ -7,8 +7,8 @@ font-family: Lato, 'Helvetica Neue' , Arial , Helvetica ,sans-serif;
 // OLD CSS, WE CAN DO WITHOUT THIS FOR NOW, AND SOME NEEDS TO BE TRANSLATED INTO SCSS
 $primary-color: #808080;
 $logo: 250px;
-$address: #FFF;
-$brown: #CB270D;
+$address: #fff;
+$brown: #cb270d;
 footer#actions {
 border-top: 1px solid $primary-color;
 .title {
@@ -107,9 +107,9 @@ font-size: 20px;
 }
 }
 // a {
-//   color: #77216F;
+//   color: #77216f;
 //   &:hover {
-//     color: #2C001E;
+//     color: #2C001e;
 //     text-decoration: none;
 //   }
 // }
@@ -141,7 +141,7 @@ font-size: 20px;
 //     margin: 0;
 //     padding: 0;
 //     box-shadow: 0 4px 2px -2px rgba(0,0,0,0.3);
-//     border: 1px solid #5E2750;
+//     border: 1px solid #5e2750;
 //     display: block;
 //     opacity: 0;
 //     transition: margin-top .2s linear;
@@ -214,7 +214,7 @@ font-size: 20px;
 //   background-color: #e95420;
 //   border: none;
 //   &:hover {
-//     background-color: #EB6536;
+//     background-color: #eb6536;
 //   }
 // }
 // .jumbotron {
@@ -304,7 +304,7 @@ font-size: 20px;
 // }
 // footer#info {
 //   padding: 3rem 0;
-//   background-color: #5E2750;
+//   background-color: #5e2750;
 //   color: #ffffff91;
 // }
 // footer#info img {
@@ -330,7 +330,7 @@ font-size: 20px;
 // }
 // .timeline:before {
 //   content: ' ';
-//   background: #5E2750;
+//   background: #5e2750;
 //   display: inline-block;
 //   position: absolute;
 //   left: 9px;
@@ -350,7 +350,7 @@ font-size: 20px;
 //   display: inline-block;
 //   position: absolute;
 //   border-radius: 50%;
-//   border: 6px solid #5E2750;
+//   border: 6px solid #5e2750;
 //   left: 0;
 //   width: 20px;
 //   height: 20px;
@@ -391,7 +391,7 @@ font-size: 20px;
 //   transition: all .2s;
 // }
 // body.city-page .content-bar .resources .single-resource:hover {
-//   border-color: #5E2750;
+//   border-color: #5e2750;
 //   box-shadow: 0 2px 2px 2px rgba(0,0,0,0.1);
 // }
 // body.city-page .content-bar .resources .single-resource .title {
