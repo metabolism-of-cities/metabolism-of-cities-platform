@@ -7,13 +7,13 @@
 
 {% block css %}
   <style>
-    #mapid {
-     height: 180px;
-     margin-bottom: 30px;
+    #mappin {
+      height: 180px;
+      margin-bottom: 30px;
    }
-   #map {
-     height: 180px;
-     margin-bottom: 30px;
+   #mappolygon {
+      height: 180px;
+      margin-bottom: 30px;
    }
   </style>
 {% endblock %}
@@ -28,8 +28,8 @@
 
 {% block content %}
 
-<div id="mapid"></div>
-<div id="map"></div>
+<div id="mappin"></div>
+<div id="mappolygon"></div>
 {% endblock %}
 
 {% block footer %}
@@ -38,7 +38,7 @@
    crossorigin=""></script>
    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
 <script>
-  var mymapp = L.map('mapid').setView([51.505, -0.09], 13);
+  var map_pin = L.map('mappin').setView([51.505, -0.09], 13);
   L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
@@ -46,10 +46,10 @@
     tileSize: 512,
     zoomOffset: -1,
     accessToken: 'your.mapbox.access.token'
-  }).addTo(mymapp);
-  var marker = L.marker([51.5, -0.09]).addTo(mymapp);
+  }).addTo(map_pin);
+  var marker = L.marker([51.5, -0.09]).addTo(map_pin);
 
-  var mymap = L.map('map').setView([51.505, -0.09], 13);
+  var map_polygon = L.map('mappolygon').setView([51.505, -0.09], 13);
   L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
@@ -57,11 +57,11 @@
     tileSize: 512,
     zoomOffset: -1,
     accessToken: 'your.mapbox.access.token'
-  }).addTo(mymap);
+  }).addTo(map_polygon);
   var polygon = L.polygon([
     [51.509, -0.08],
     [51.503, -0.06],
     [51.51, -0.047]
-  ]).addTo(mymap);
+  ]).addTo(map_polygon);
 </script>
 {% endblock %}
