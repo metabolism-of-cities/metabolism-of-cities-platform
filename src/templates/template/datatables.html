@@ -1,15 +1,22 @@
 {% extends '_base.html' %}
+
 {% load static %}
+
 {% load sass_tags %}
+
 {% block page_name %}about{% endblock %}
+
 {% block title %}About{% endblock %}
+
 {% block subtitle %}Everything you need to know about Metabolism of Cities
 {% endblock %}
+
 {% block css %}
-<link href="{% sass_src 'css/datatables.min.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% sass_src 'css/datatables.min.css' %}" rel="stylesheet" />
 {% endblock %}
+
 {% block content %}
-<table id="table_id" class="display">
+<table class="display">
   <thead>
     <tr>
       <th>Column 1</th>
@@ -101,7 +108,7 @@
 <script src="{% static 'js/datatables.min.js' %}"></script>
 <script>
   $(document).ready( function () {
-    $('#table_id').DataTable();
+    $("table").DataTable();
   });
 </script>
 {% endblock %}
