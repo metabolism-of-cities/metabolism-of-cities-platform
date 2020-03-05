@@ -8,10 +8,11 @@ font-family: Lato, 'Helvetica Neue' , Arial , Helvetica ,sans-serif;
 $primary-color: #808080;
 $logo: 250px;
 $address: #FFF;
+$brown: #CB270D;
 footer#actions {
 border-top: 1px solid $primary-color;
 .title {
-color: #CB270D;
+color: $brown;
 font-size: 25px;
 }
 a {
@@ -32,9 +33,17 @@ color: $address;
 }
 }
 .anchor {
-.card {
-  width: 250px;
-  height: 250px;
+a {
+display: inline-block;
+width: 250px;
+height: 250px;
+margin: 15px;
+border-radius: 10px;
+text-align: center;
+}
+a:hover {
+color: $brown;
+text-decoration: none;
 }
 .agriculture {
 background-image: url("/static/img/agriculture.jpg");
@@ -92,9 +101,9 @@ background-repeat:no-repeat;
 background-size:100%
 }
 a {
-  color: $address;
-  font-weight: 1000;
-  font-size: 20px;
+color: $address;
+font-weight: 1000;
+font-size: 20px;
 }
 }
 // a {
