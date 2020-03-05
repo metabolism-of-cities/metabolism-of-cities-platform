@@ -14,7 +14,7 @@ body {
 }
 
 .top-layer {
-  background-color: $primary-color;
+  background-color: darkred;
   background-image: url(https://resourcewatch.org/static/images/components/layout/header-bg-texture.png);
   background-repeat: no-repeat;
   background-position: 50%;
@@ -119,13 +119,8 @@ font-weight: 1000;
 font-size: 20px;
 }
 }
-// a {
-//   color: #77216f;
-//   &:hover {
-//     color: #2C001e;
-//     text-decoration: none;
-//   }
-// }
+
+
 nav {
   &.navbar {
     padding-top: 1rem;
@@ -202,9 +197,9 @@ nav {
     padding: 4px 0 4px 8px;
   }
   a.nav-link {
-    color: #ffffffc4 !important;
+    color: #ffffffc4;
     &:hover {
-      color: #ffffff !important;
+      color: #ffffff;
     }
     &.dropdown-toggle {
       border-bottom: 2px solid transparent;
@@ -220,16 +215,7 @@ nav {
     }
   }
 }
-// .btn {
-//   border-radius: 0;
-// }
-// .btn-primary {
-//   background-color: #e95420;
-//   border: none;
-//   &:hover {
-//     background-color: #eb6536;
-//   }
-// }
+
 .jumbotron {
   padding: 3rem 0;
   background: unset;
@@ -240,6 +226,57 @@ nav {
     font-weight: normal;
   }
 }
+
+body.single-project {
+  .return-bar {
+    background-color: darkred;
+    background-image: url(https://resourcewatch.org/static/images/components/layout/header-bg-texture.png);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: cover;
+    z-index: 10000;
+    a {
+      color: #fff;
+      &:hover {
+        color: #ccc;
+        text-decoration: none;
+      }
+    }
+  }
+  nav {
+    background-color: #f6f6f6;
+    padding-bottom: 1rem;
+    box-shadow: 0 1px 1px 1px rgba(0,0,0,0.1);
+    a.nav-link {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+      color: #666 !important;
+      &:hover {
+        color: #000 !important;
+      }
+    }
+  }
+}
+
+// a {
+//   color: #77216f;
+//   &:hover {
+//     color: #2C001e;
+//     text-decoration: none;
+//   }
+// }
+
+// .btn {
+//   border-radius: 0;
+// }
+// .btn-primary {
+//   background-color: #e95420;
+//   border: none;
+//   &:hover {
+//     background-color: #eb6536;
+//   }
+// }
+
 // .main-content {
 //   padding-top: 2rem;
 //   padding-bottom: 2rem;

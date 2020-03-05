@@ -10,5 +10,4 @@ urlpatterns = [
 
     path("templates/", views.templates, name="templates"),
     path("templates/<slug:slug>/", views.template, name="template"),
-
 ]
