@@ -12,6 +12,7 @@ class Record(models.Model):
     slug = models.SlugField(null=True, blank=True)
     content = models.TextField(null=True, blank=True)
     type = models.ForeignKey(RecordType, on_delete=models.CASCADE)
+    active = models.BooleanField(default=True)
     def __str__(self):
         return self.title
 
