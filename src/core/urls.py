@@ -10,4 +10,5 @@ urlpatterns = [
     path('about/', views.about),
     path('datatables/', views.datatables),
     path('map/', views.map),
+    path('baseline/', views.load_baseline),
 ]
