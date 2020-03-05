@@ -25,10 +25,19 @@ from collections import defaultdict
 
 def about(request):
     return render(request, "about.html")
+
 def datatables(request):
     return render(request, "datatables.html")
+
 def map(request):
     return render(request, "map.html")
+
+def templates(request):
+    return render(request, "template/index.html")
+
+def template(request, slug):
+    page = "template/" + slug + ".html"
+    return render (request, page)
 
 def load_baseline(request):
     list = ['Event','Page','News'] 

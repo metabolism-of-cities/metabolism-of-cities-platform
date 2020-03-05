@@ -1,0 +1,24 @@
+{% extends '_base.html' %}
+
+{% block page_name %}{% endblock %}
+
+{% block title %}Template index{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block subtitle %}{% endblock %}
+
+{% block content %}
+  <p>Please find ready-to-use templates in the "template" folder. You can find the following items there:</p>
+  <ul>
+    <li><a href="{% url "template" "blank" %}">blank.html: Blank page with all possible (empty) blocks</a></li>
+    <li><a href="{% url "template" "map" %}">map.html: Leaflet map</a></li>
+    <li><a href="{% url "template" "grid" %}">grid.html: Image grid</a></li>
+    <li><a href="{% url "template" "datatables" %}">datatables.html: Data tables</a></li>
+  </ul>
+{% endblock %}
+
+
+{% block footer %}
+{% endblock %}

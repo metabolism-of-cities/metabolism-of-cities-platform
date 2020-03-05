@@ -8,9 +8,7 @@ from . import views
 
 urlpatterns = [
 
-    path('about/', views.about),
-    path('datatables/', views.datatables),
-    path('map/', views.map),
-    path('baseline/', views.load_baseline),
+    path("templates/", views.templates, name="templates"),
+    path("templates/<slug:slug>/", views.template, name="template"),
 
 ]
