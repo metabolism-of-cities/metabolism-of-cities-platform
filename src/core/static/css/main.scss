@@ -8,10 +8,11 @@ font-family: Lato, 'Helvetica Neue' , Arial , Helvetica ,sans-serif;
 $primary-color: #808080;
 $logo: 250px;
 $address: #FFF;
+$brown: #CB270D;
 footer#actions {
 border-top: 1px solid $primary-color;
 .title {
-color: #CB270D;
+color: $brown;
 font-size: 25px;
 }
 a {
@@ -32,69 +33,77 @@ color: $address;
 }
 }
 .anchor {
-.card {
-  width: 250px;
-  height: 250px;
+a {
+display: inline-block;
+width: 250px;
+height: 250px;
+margin: 15px;
+border-radius: 10px;
+text-align: center;
+text-shadow: 10px 10px 10px #000000;
+}
+a:hover {
+color: $brown;
 }
 .agriculture {
 background-image: url("/static/img/agriculture.jpg");
 background-repeat:no-repeat;
-background-size:100%;
+background-size:cover;
 }
 .construction {
 background-image: url("/static/img/construction.jpg");
 background-repeat:no-repeat;
-background-size:100%
+background-size:cover;
 }
 .energy {
 background-image: url("/static/img/energy.jpg");
 background-repeat:no-repeat;
-background-size:100%
+background-size:cover;
 }
 .fishing {
 background-image: url("/static/img/fishing.jpg");
 background-repeat:no-repeat;
-background-size:100%
+background-size:cover;
 }
 .forestry {
 background-image: url("/static/img/forestry.jpg");
 background-repeat:no-repeat;
-background-size:100%
+background-size:cover;
 }
 .manufacturing {
 background-image: url("/static/img/agriculture.jpg");
 background-repeat:no-repeat;
-background-size:100%
+background-size:cover;
 }
 .mining {
 background-image: url("/static/img/mining.jpg");
 background-repeat:no-repeat;
-background-size:100%
+background-size:cover;
 }
 .retail {
 background-image: url("/static/img/retail.jpg");
 background-repeat:no-repeat;
-background-size:100%
+background-size:cover;
 }
 .transport {
 background-image: url("/static/img/transport.jpg");
 background-repeat:no-repeat;
-background-size:100%
+background-size:cover;
 }
 .waste {
 background-image: url("/static/img/waste.jpg");
 background-repeat:no-repeat;
-background-size:100%
+background-size:cover;
 }
 .water {
 background-image: url("/static/img/water.jpg");
 background-repeat:no-repeat;
-background-size:100%
+background-size:cover;
 }
 a {
-  color: $address;
-  font-weight: 1000;
-  font-size: 20px;
+color: $address;
+font-weight: 1000;
+font-size: 20px;
 }
 }
 // a {
