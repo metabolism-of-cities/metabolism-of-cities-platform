@@ -4,6 +4,8 @@ services:
   db:
     image: postgres:latest
     container_name: moc_db
+    environment:
+       POSTGRES_HOST_AUTH_METHOD: trust
   adminer:
     image: adminer
     ports:
