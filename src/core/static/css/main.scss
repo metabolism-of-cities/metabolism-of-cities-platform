@@ -40,10 +40,10 @@ height: 250px;
 margin: 15px;
 border-radius: 10px;
 text-align: center;
+text-shadow: 10px 10px 10px #000000;
 }
 a:hover {
 color: $brown;
-text-decoration: none;
 }
 .agriculture {
 background-image: url("/static/img/agriculture.jpg");
