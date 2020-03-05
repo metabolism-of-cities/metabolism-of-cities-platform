@@ -31,16 +31,16 @@ class News(models.Model):
         return self.record.title
 
 class Event(models.Model):
-    EVENT_TYPE = (
-    ('conference', 'Conference'),
-    ('hackathon', 'Hackathon'),
-    ('workshop', 'Workshop'),
-    ('seminar', 'Seminar'),
-    ('other', 'Other'),
-    ) 
+    EVENT_TYPE = [
+        ('conference', 'Conference'),
+        ('hackathon', 'Hackathon'),
+        ('workshop', 'Workshop'),
+        ('seminar', 'Seminar'),
+        ('other', 'Other'),
+    ] 
+    type = models.CharField(max_length=20, blank=True, null=True, choices=EVENT_TYPE)
     record = models.OneToOneField(Record,on_delete=models.CASCADE)
     url = models.URLField(max_length=255, null=True, blank=True)
-    type = models.CharField(max_length=20, blank=True, null=True, choices=EVENT_TYPE)
     def __str__(self):
         return self.record.title
 
