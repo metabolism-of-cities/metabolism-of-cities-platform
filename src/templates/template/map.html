@@ -2,20 +2,18 @@
 
 {% load static %}
 
-{% block page_name %}about{% endblock %}
-
-{% block title %}About{% endblock %}
+{% block title %}Map{% endblock %}
 
 {% block subtitle %}Everything you need to know about Metabolism of Cities
 {% endblock %}
 
 {% block css %}
   <style>
-    #mappin {
+    #map_pin {
       height: 180px;
       margin-bottom: 30px;
    }
-   #mappolygon {
+   #map_polygon {
       height: 180px;
       margin-bottom: 30px;
    }
@@ -32,8 +30,8 @@
 
 {% block content %}
 
-<div id="mappin"></div>
-<div id="mappolygon"></div>
+<div id="map_pin"></div>
+<div id="map_polygon"></div>
 {% endblock %}
 
 {% block footer %}
@@ -42,7 +40,7 @@
    crossorigin=""></script>
    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
 <script>
-  var map_pin = L.map("mappin").setView([51.505, -0.09], 13);
+  var map_pin = L.map("map_pin").setView([51.505, -0.09], 13);
   L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
@@ -53,7 +51,7 @@
   }).addTo(map_pin);
   var marker = L.marker([51.5, -0.09]).addTo(map_pin);
 
-  var map_polygon = L.map("mappolygon").setView([51.505, -0.09], 13);
+  var map_polygon = L.map("map_polygon").setView([51.505, -0.09], 13);
   L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
