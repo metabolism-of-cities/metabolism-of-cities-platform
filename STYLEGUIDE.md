@@ -12,14 +12,9 @@ There may be reasons to define expections to these rules that apply to our proje
 
 There are currently no exceptions to the aforementioned style guides.
 
-## External Libraries
+## Libraries
 
-We may use a variety of external libraries or other files, for example javascript libraries, web fonts, or external CSS stylesheets. Please take into account the following considerations when loading external libraries:
-
-- Every different external domain adds a new dependency and thus risk factor to the site (i.e. if this external website is down, we may lose key functionality of our own website). We should therefore try to limit the number of different, remote sites that we use.
-- Open source libraries and files that are part of the XXX CND (let's define a big one here) can be included from this CDN. 
-- Other files should be downloaded to our own project and included locally instead.
-- It is very easy to lose track of which libraries we use, and what we use them for. We therefore keep track of all our libraries in a central location (see LIBRARIES.md). When considering using a new library, please check if nothing similar has not already been used and where possible re-use this instead.
+We may use a variety of external libraries or other files, for example javascript libraries, web fonts, or external CSS stylesheets. Please see LIBRARIES.md for more information.
 
 ## Coding templates
 
@@ -34,3 +29,32 @@ Let's define how files should be named and where they should be saved.
 We should define a workflow.
 https://nvie.com/posts/a-successful-git-branching-model/ ?
 Maybe a slightly simplified version of that.
+
+## Front-end guidelines
+
+This is a list of front-end specific guidelines. Please keep in mind that as the project progresses, some guidelines will be added to the list, some will change, and perhaps a few will be removed.
+
+However, a few general rules will always apply:
+
+- Be consistent. Use the defined variables and helper classes whenever they're applicable. Don't add arbitrary padding or margins, don't give objects colours that aren't defined already, etc. 
+- Ensure responsiveness. Whatever you make, make sure it works well on phones, tablets, laptop screens, and external monitors.
+
+### Colours
+
+The colours are not defined yet. These will have to be decided upon along with the client.
+
+### Fonts
+
+The global typeface at the moment is Lato. This will probably stay this way unless there are objections from the client. This typeface is used throught the website. At the moment there are no exceptions.
+
+### Margin and padding
+
+Bootstrap has built-in helpers to make adding margins and padding easier (https://getbootstrap.com/docs/4.4/utilities/spacing/). This early into the project it's difficult to know what will work best, but please use these helper classes rather than adding your own padding and margins in the CSS file.
+
+### Shadows
+
+It doesn't exist yet, but it would be useful to have a shadow class / extend that can be used on all elements that need a shadow.
+
+### HTML elements
+
+Whenever applicable, please make use of relevant HTML elements such as `article`, `aside`, and `section`. See https://developer.mozilla.org/en-US/docs/Web/HTML for a full list. Using these consistently and appropriately saves time and effort while at the same time make things easier for search engines and screen readers.
