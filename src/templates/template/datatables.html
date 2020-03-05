@@ -1,10 +1,12 @@
 {% extends '_base.html' %}
 {% load static %}
+{% load sass_tags %}
 {% block page_name %}about{% endblock %}
 {% block title %}About{% endblock %}
 {% block subtitle %}Everything you need to know about Metabolism of Cities
 {% endblock %}
-{% block head %}
+{% block css %}
+<link href="{% sass_src 'css/datatables.min.css' %}" rel="stylesheet" type="text/css" />
 {% endblock %}
 {% block content %}
 <table id="table_id" class="display">
