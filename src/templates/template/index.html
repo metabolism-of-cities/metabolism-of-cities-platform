@@ -12,11 +12,12 @@
 {% block content %}
   <p>Please find ready-to-use templates in the "template" folder. You can find the following items there:</p>
   <ul>
-    <li><a href="{% url "template" "blank" %}">blank.html: Blank page with all possible (empty) blocks</a></li>
-    <li><a href="{% url "template" "map" %}">map.html: Leaflet map</a></li>
-    <li><a href="{% url "template" "grid" %}">grid.html: Image grid</a></li>
-    <li><a href="{% url "template" "datatables" %}">datatables.html: Data tables</a></li>
-    <li><a href="{% url "template" "project" %}">project.html: Single project page</a></li>
+    <li><a href="{% url 'template' 'blank' %}">blank.html: Blank page with all possible (empty) blocks</a></li>
+    <li><a href="{% url 'template' 'map' %}">map.html: Leaflet map</a></li>
+    <li><a href="{% url 'template' 'grid' %}">grid.html: Image grid</a></li>
+    <li><a href="{% url 'template' 'datatables' %}">datatables.html: Data tables</a></li>
+    <li><a href="{% url 'template' 'project' %}">project.html: Single project page</a></li>
+    <li><a href="{% url 'template' 'contribute' %}">contribute.html: contribute box</a></li>
   </ul>
 {% endblock %}
 

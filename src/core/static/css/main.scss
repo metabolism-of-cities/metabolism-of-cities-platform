@@ -1,11 +1,12 @@
 // VARIABLES
 $primary: #e95420;
-$secondary: #e95420;
+$secondary: #5e2750;
 $black: #000;
 $white: #fff;
 $dark: #333;
 $gray: #808080;
 $light: #efefef;
+$very-light: #fbfbfb;
 
 // EXTENSIONS
 %raised-hover {
@@ -37,10 +38,82 @@ body {
 a:hover {
   text-decoration: none;
 }
+.btn-primary {
+  background-color: $primary;
+  border-color: $primary;
+  color: $white;
+  &:hover {
+    border-color: darken($primary, 5%);
+    background-color: darken($primary, 5%);
+  }
+  &:active,
+  &:focus {
+    border-color: darken($primary, 5%) !important;
+    background-color: darken($primary, 5%) !important;
+  }
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(218, 72, 22, 0.4) !important;
+  }
+}
+.btn-primary-outline {
+  background-color: transparent;
+  border-color: $primary;
+  color: $primary;
+  &:hover {
+    border-color: $primary;
+    background-color: $primary;
+    color: $white;
+  }
+  &:active,
+  &:focus {
+    border-color: $primary !important;
+    background-color: $primary !important;
+    color: $white;
+  }
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(218, 72, 22, 0.4) !important;
+  }
+}
+.btn-secondary {
+  background-color: $secondary;
+  border-color: $secondary;
+  &:hover {
+    border-color: darken($secondary, 5%);
+    background-color: darken($secondary, 5%);
+  }
+  &:active,
+  &:focus {
+    border-color: darken($secondary, 5%) !important;
+    background-color: darken($secondary, 5%) !important;
+  }
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(76, 32, 65, 0.4) !important;
+  }
+}
+.btn-secondary-outline {
+  background-color: transparent;
+  border-color: $secondary;
+  color: $secondary;
+  &:hover {
+    border-color: $secondary;
+    background-color: $secondary;
+    color: $white;
+  }
+  &:active,
+  &:focus {
+    border-color: $secondary !important;
+    background-color: $secondary !important;
+    color: $white;
+  }
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(76, 32, 65, 0.4) !important;
+  }
+}
 
 // NAVBAR AND HERO
 .top-layer {
-  background-color: darkred;
+  box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.1);
+  background-color: $secondary;
   background-image: url(https://resourcewatch.org/static/images/components/layout/header-bg-texture.png);
   background-repeat: no-repeat;
   background-position: 50%;
@@ -67,65 +140,66 @@ nav {
     position: relative;
   }
   .dropdown-menu {
-    width: calc(100% - 29px);
-    top: 56px;
-    left: unset;
-    right: 14px;
+    border: 1px solid $secondary;
     border-radius: 0;
-    margin: 0;
-    padding: 0;
     box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.3);
-    border: 1px solid #5e2750;
     display: block;
+    left: unset;
+    margin: 0;
     opacity: 0;
-    transition: margin-top .2s linear;
-    margin-top: -6px;
+    padding: 0;
     pointer-events: none;
+    right: 15px;
+    top: 56px;
+    transform: translateY(-6px);
+    transition: transform .2s;
+    width: calc(100% - 30px);
     &.show {
       opacity: 1;
-      margin-top: 0;
       pointer-events: unset;
+      transform: translateY(0);
     }
     .col {
       padding: 15px;
       &.key {
-        background-color: #f6f6f6;
+        background-color: $very-light;
       }
       &:first-of-type {
-        border-right: 1px solid #dee2e6;
+        border-right: 1px solid $light;
       }
       &:last-of-type {
-        border-left: 1px solid #dee2e6;
+        border-left: 1px solid $gray;
       }
     }
     a {
-      text-decoration: none;
-      color: #666;
+      color: $dark;
       display: block;
       padding: 4px 0 4px 8px;
+      text-decoration: none;
       &:hover {
         color: #000;
       }
       &.disabled {
-        color: #bbb;
+        color: $gray;
         cursor: default;
         &:hover {
-          color: #bbb;
+          color: $gray;
         }
       }
     }
   }
   .dropdown-submenu .submenu-title {
-    text-transform: uppercase;
-    font-weight: bold;
     font-size: 14px;
+    font-weight: bold;
     margin-bottom: 0;
     padding: 4px 0 4px 8px;
+    text-transform: uppercase;
   }
   a.nav-link {
-    color: #ffffffc4;
+    color: $white !important;
+    opacity: .7 !important;
     &:hover {
-      color: #ffffff;
+      opacity: 1 !important;
     }
     &.dropdown-toggle {
       border-bottom: 2px solid transparent;
@@ -134,9 +208,9 @@ nav {
         display: none;
       }
       &[aria-expanded="true"] {
-        border-bottom-color: #fff;
+        border-bottom-color: $white;
+        opacity: 1 !important;
         z-index: 1001;
-        color: #ffffff !important;
       }
     }
   }
@@ -222,7 +296,8 @@ footer {
 }
 // CONTRIBUTE BOX
 .contribute {
-  background: #cf4803;
+  color: $dark;
+  background: $light;
 }
 
 // SINGLE PROJECT PAGE
