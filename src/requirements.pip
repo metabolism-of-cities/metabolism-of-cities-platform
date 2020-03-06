@@ -10,3 +10,5 @@ requests
 libsass 
 django-compressor 
 django-sass-processor
+django-bootstrap4
+django-tinymce4-lite
