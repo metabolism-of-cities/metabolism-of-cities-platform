@@ -1,23 +1,34 @@
-// Variables
+// VARIABLES
 $primary-color: #808080;
 $logo: 250px;
 $address: #fff;
 $brown: #cb270d;
-// Fonts
+
+// EXTENSIONS
+%raised-hover {
+  transition: all .3s;
+  &:hover {
+    transform: translateY(-3px);
+  }
+}
+%box-shadow {
+  box-shadow: 1px 1px 2px 0px rgba(0,0,0,0.2);
+  transition: all .3s;
+  &:hover {
+    box-shadow: 0px 10px 20px 0px rgba(0,0,0,0.2);
+  }
+}
+
+// FONTS
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin);
-// Styles
+
+// STYLES
 body {
   background-color: #fcfcfc;
   font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
-.top-layer {
-  background-color: darkred;
-  background-image: url(https://resourcewatch.org/static/images/components/layout/header-bg-texture.png);
-  background-repeat: no-repeat;
-  background-position: 50%;
-  background-size: cover;
-  z-index: 10000;
-}
+
+// FOOTERS
 #actions {
   border-top: 1px solid $primary-color;
   .title {
@@ -41,78 +52,36 @@ body {
     color: $address;
   }
 }
-.anchor {
-  a {
-    display: inline-block;
-    width: 250px;
-    height: 250px;
-    margin: 15px;
-    border-radius: 10px;
-    text-align: center;
-    text-shadow: 10px 10px 10px #000000;
+
+// COMMON ELEMENTS
+.top-layer {
+  background-color: darkred;
+  background-image: url(https://resourcewatch.org/static/images/components/layout/header-bg-texture.png);
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: cover;
+  z-index: 10000;
+}
+.btn-thumbnail {
+  @extend %raised-hover;
+  @extend %box-shadow;
+  border-radius: 4px;
+  color: white;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  font-size: 1.2rem;
+  height: 200px;
+  width: 100%;
+  &:hover {
+    color: white;
+    text-decoration: none;
   }
-  a:hover {
-    color: $brown;
-  }
-  .agriculture {
-    background-image: url("/static/img/agriculture.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  .construction {
-    background-image: url("/static/img/construction.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  .energy {
-    background-image: url("/static/img/energy.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  .fishing {
-    background-image: url("/static/img/fishing.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  .forestry {
-    background-image: url("/static/img/forestry.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  .manufacturing {
-    background-image: url("/static/img/agriculture.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  .mining {
-    background-image: url("/static/img/mining.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  .retail {
-    background-image: url("/static/img/retail.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  .transport {
-    background-image: url("/static/img/transport.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  .waste {
-    background-image: url("/static/img/waste.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  .water {
-    background-image: url("/static/img/water.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  a {
-    color: $address;
-    font-weight: 1000;
-    font-size: 20px;
+  .title {
+    margin: 0 0 4px 10px;
+    align-self: flex-end;
+    text-shadow: 0px 0px 2px rgba(0, 0, 0, 1);
+    font-weight: bold;
   }
 }
 nav {
@@ -219,6 +188,11 @@ nav {
     font-weight: normal;
   }
 }
+.contribute {
+  background: #cf4803;
+}
+
+// SINGLE PROJECT PAGE
 body.single-project {
   .return-bar {
     background-color: darkred;
@@ -248,7 +222,4 @@ body.single-project {
       }
     }
   }
-}
-.contribute {
-  background: #cf4803;
 }

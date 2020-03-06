@@ -1,49 +1,63 @@
   {% extends '_base.html' %}
   {% load static %}
   {% load sass_tags %}
-  {% block page_name %}about{% endblock %}
-  {% block title %}About{% endblock %}
-  {% block css %}
-  <link href="{% sass_src 'css/responsive.scss' %}" rel="stylesheet" type="text/css" />
-  {% endblock %}
-  {% block subtitle %}Everything you need to know about Metabolism of Cities
-  {% endblock %}
+  {% block title %}Image grid{% endblock %}
   {% block content %}
-  <div class="container mb-5">
-    <div class="row anchor">
-      <div class="col-lg-3 col-md-6 col-sm-12">
-        <a href="#" class="btn-light agriculture">Agriculture</a>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-12">
-        <a href="#" class="btn-light construction">Construction</a>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-12">
-        <a href="#" class="btn-light energy">Energy</a>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-12">
-        <a href="#" class="btn-light fishing">Fishing</a>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-12">
-        <a href="#" class="btn-light forestry">Forestry</a>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-12">
-        <a href="#" class="btn-light manufacturing">Manufacturing</a>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-12">
-        <a href="#" class="btn-light mining">Mining</a>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-12">
-        <a href="#" class="btn-light retail">Retail & Wholesale</a>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-12">
-        <a href="#" class="btn-light transport">Transport</a>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-12">
-        <a href="#" class="btn-light waste">Waste</a>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-12">
-        <a href="#" class="btn-light water">Water</a>
-      </div>
+  <div class="row anchor">
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/agriculture.jpg');">
+        <span class="title">Agriculture</span>
+      </a>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/construction.jpg');">
+        <span class="title">Construction</span>
+      </a>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/energy.jpg');">
+        <span class="title">Energy</span>
+      </a>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/fishing.jpg');">
+        <span class="title">Fishing</span>
+      </a>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/forestry.jpg');">
+        <span class="title">Forestry</span>
+      </a>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/manufacturing.jpg');">
+        <span class="title">Manufacturing</span>
+      </a>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/mining.jpg');">
+        <span class="title">Mining</span>
+      </a>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/retail.jpg');">
+        <span class="title">Retail and wholesale</span>
+      </a>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/transport.jpg');">
+        <span class="title">Transport</span>
+      </a>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/waste.jpg');">
+        <span class="title">Waste</span>
+      </a>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/water.jpg');">
+        <span class="title">Water</span>
+      </a>
     </div>
   </div>
   {% endblock %}
