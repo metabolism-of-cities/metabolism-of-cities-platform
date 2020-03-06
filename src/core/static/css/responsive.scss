@@ -1,14 +1,14 @@
-@media screen and (max-width: 1199px) {
-.anchor {
-a {
-width: 100%;
+@media screen and (max-width:1199px) {
+  .anchor {
+    a {
+      width: 100%;
+    }
+  }
 }
-}
-}
-@media screen and (max-width: 767px) {
-footer#info {
-img {
-width: 200px;
-}
-}
+@media screen and (max-width:767px) {
+  #info {
+    img {
+      width: 200px;
+    }
+  }
 }
