@@ -18,7 +18,7 @@ We may use a variety of external libraries or other files, for example javascrip
 
 ## Coding templates
 
-We provide a set of templates for any developer to use when adding or editing pages within Metabolism of Cities. These templates make it easy to re-use existing code, and to kickstart work. We recommend new contributors to check out our templates at: XXXXXXX
+We provide a set of templates for any developer to use when adding or editing pages within Metabolism of Cities. These templates make it easy to re-use existing code, and to kickstart work. We recommend new contributors to check out our templates at: http://localhost:8000/templates/
 
 ## File naming conventions and locations
 
