@@ -42,3 +42,10 @@ def projects(request):
 
 def project(request, id):
     return render(request, "project.html")
+
+def pdf(request):
+    name = request.GET["name"]
+    score = request.GET["score"]
+    print(name)
+    print(score)
+    return render(request, "template/blank.html")
