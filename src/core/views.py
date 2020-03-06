@@ -37,3 +37,8 @@ def load_baseline(request):
     #   info.save()
     return render(request, "load.baseline.html")
 
+def projects(request):
+    return render(request, "projects.html")
+
+def project(request, id):
+    return render(request, "project.html")
