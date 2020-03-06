@@ -1,8 +1,11 @@
 // VARIABLES
-$primary-color: #808080;
-$logo: 250px;
-$address: #fff;
-$brown: #cb270d;
+$primary: #e95420;
+$secondary: #e95420;
+$black: #000;
+$white: #fff;
+$dark: #333;
+$gray: #808080;
+$light: #efefef;
 
 // EXTENSIONS
 %raised-hover {
@@ -22,38 +25,20 @@ $brown: #cb270d;
 // FONTS
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin);
 
-// STYLES
+// GLOBALS
 body {
   background-color: #fcfcfc;
   font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
-
-// FOOTERS
-#actions {
-  border-top: 1px solid $primary-color;
-  .title {
-    color: $brown;
-    font-size: 25px;
-  }
-  a {
-    color: $primary-color;
-  }
+.main-content.container {
+  padding-top: 36px;
+  padding-bottom: 36px;
 }
-#info {
-  background-color: #333;
-  padding-top: 30px;
-  img {
-    width: $logo;
-  }
-  p {
-    color: $address;
-  }
-  h3 {
-    color: $address;
-  }
+a:hover {
+  text-decoration: none;
 }
 
-// COMMON ELEMENTS
+// NAVBAR AND HERO
 .top-layer {
   background-color: darkred;
   background-image: url(https://resourcewatch.org/static/images/components/layout/header-bg-texture.png);
@@ -61,28 +46,6 @@ body {
   background-position: 50%;
   background-size: cover;
   z-index: 10000;
-}
-.btn-thumbnail {
-  @extend %raised-hover;
-  @extend %box-shadow;
-  border-radius: 4px;
-  color: white;
-  background-repeat: no-repeat;
-  background-size: cover;
-  display: flex;
-  font-size: 1.2rem;
-  height: 200px;
-  width: 100%;
-  &:hover {
-    color: white;
-    text-decoration: none;
-  }
-  .title {
-    margin: 0 0 4px 10px;
-    align-self: flex-end;
-    text-shadow: 0px 0px 2px rgba(0, 0, 0, 1);
-    font-weight: bold;
-  }
 }
 nav {
   &.navbar {
@@ -179,8 +142,9 @@ nav {
   }
 }
 .jumbotron {
-  padding: 3rem 0;
   background: unset;
+  margin-bottom: 0;
+  padding: 3rem 0;
   h1 {
     font-weight: bold;
   }
@@ -188,6 +152,75 @@ nav {
     font-weight: normal;
   }
 }
+
+// FOOTERS
+footer {
+  padding: 36px 0;
+}
+#actions {
+  background-color: $light;
+  .header {
+    color: $primary;
+  }
+  a {
+    color: $dark;
+    &:hover {
+      color: $black;
+      text-decoration: none;
+    }
+  }
+}
+#info {
+  background-color: $dark;
+  padding-top: 30px;
+  color: $light;
+  img {
+    max-width: 300px;
+    width: 100%;
+  }
+  a {
+    color: $light;
+    &:hover {
+      color: $white;
+      text-decoration: none;
+    }
+  }
+  i {
+    margin-right: 6px;
+  }
+  .links a {
+    display: block;
+  }
+  .social i {
+    font-size: 1.5rem;
+    margin-right: 12px;
+  }
+}
+
+// COMMON ELEMENTS
+.btn-thumbnail {
+  @extend %raised-hover;
+  @extend %box-shadow;
+  border-radius: 4px;
+  color: white;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  font-size: 1.2rem;
+  height: 200px;
+  width: 100%;
+  &:hover {
+    color: white;
+    text-decoration: none;
+  }
+  .title {
+    margin: 0 0 4px 10px;
+    align-self: flex-end;
+    text-shadow: 0px 0px 2px rgba(0, 0, 0, 1);
+    font-weight: bold;
+  }
+}
+// CONTRIBUTE BOX
 .contribute {
   background: #cf4803;
 }

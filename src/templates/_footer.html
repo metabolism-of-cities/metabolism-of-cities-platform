@@ -1,11 +1,9 @@
 {% load static %}
 <footer id="actions">
-  <div class="container text-center text-md-left">
+  <div class="container">
     <div class="row">
-      <div class="col-md-3">
-        <h3>
-          <a class="title font-weight-bold mt-3 mb-4" href="#">About</a>
-        </h3>
+      <div class="col-md-3 col-sm-6">
+        <h4 class="header">About</h4>
         <ul class="list-unstyled">
           <li>
             <a href="#">Our Story</a>
@@ -33,12 +31,8 @@
           </li>
         </ul>
       </div>
-      <hr class="clearfix w-100 d-md-none">
-      <div class="col-md-3 mx-auto">
-        <!-- Links -->
-        <h3>
-          <a class="title font-weight-bold mt-3 mb-4" href="#">Community</a>
-        </h3>
+      <div class="col-md-3 col-sm-6">
+        <h4 class="header">Community</h4>
         <ul class="list-unstyled">
           <li>
             <a href="#">Projects</a>
@@ -60,11 +54,8 @@
           </li>
         </ul>
       </div>
-      <hr class="clearfix w-100 d-md-none">
-      <div class="col-md-3">
-        <h3>
-          <a class="title font-weight-bold mt-3 mb-4" href="#">Resources</a>
-        </h3>
+      <div class="col-md-3 col-sm-6">
+        <h4 class="header">Resources</h4>
         <ul class="list-unstyled">
           <li>
             <a href="#">About Urban Metabolism</a>
@@ -100,11 +91,8 @@
           </li>
         </ul>
       </div>
-      <hr class="clearfix w-100 d-md-none">
-      <div class="col-md-3">
-        <h3>
-          <a class="title font-weight-bold mt-3 mb-4" href="#">Cities</a>
-        </h3>
+      <div class="col-md-3 col-sm-6">
+        <h4 class="header">Cities</h4>
         <ul class="list-unstyled">
           <li>
             <a href="#!">Introduction</a>
@@ -144,18 +132,26 @@
 <footer id="info">
   <div class="container">
     <div class="row">
-      <div class="col-md-9">
-       <a href="#">
-        <img alt="Metabolism of Cities" src="{% static 'img/logo.svg' %}">
-      </a>
-    </div>
-    <hr class="clearfix w-100 d-md-none">
-    <div class="col-md-3">
-     <h3>Contact Us</h3>
-     <p>Address</p>
-     <p>Contact Details</p>
-     <p>Email Address</p>
+      <div class="col-md-6 mb-4">
+        <div class="links">
+          <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="mb-2">
+            <i class="fab fa-creative-commons"></i> Creative Commons Attribution 4.0 International license
+          </a>
+          <a href="https://gitlab.com/metabolism-of-cities/metabolism-of-cities-platform">
+            <i class="fab fa-gitlab"></i> Our source code is available on Gitlab
+          </a>
+        </div>
+        <div class="social mt-4 mb-2">
+          <a href="https://twitter.com/CityMetabolism"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.youtube.com/metabolismofcities"><i class="fab fa-youtube"></i></a>
+          <a href="https://www.instagram.com/MetabolismOfCities/"><i class="fab fa-instagram"></i></a>
+          <a href="https://linkedin.com/company/metabolism-of-cities"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+      <div class="col-md-6 logos text-md-right">
+        <a href="#"><img alt="Metabolism of Cities" class="mb-4" src="{% static 'img/logo.svg' %}"></a>
+        <a href="#"><img alt="Metabolism of Cities" src="{% static 'img/islands-logo.svg' %}"></a>
+      </div>
    </div>
- </div>
-</div>
+  </div>
 </footer>
