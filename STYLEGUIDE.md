@@ -41,7 +41,7 @@ However, a few general rules will always apply:
 
 ### Colours
 
-The colours are not defined yet. These will have to be decided upon along with the client.
+The primary and secondary colours are set, but are subject to change. A few useful shades of black are defined and those should be used using their variable names rather than creating new shades. It's possible more are needed in the future.
 
 ### Fonts
 
@@ -49,11 +49,11 @@ The global typeface at the moment is Lato. This will probably stay this way unle
 
 ### Margin and padding
 
-Bootstrap has built-in helpers to make adding margins and padding easier (https://getbootstrap.com/docs/4.4/utilities/spacing/). This early into the project it's difficult to know what will work best, but please use these helper classes rather than adding your own padding and margins in the CSS file.
+Bootstrap has built-in helpers to make adding margins and padding easier (https://getbootstrap.com/docs/4.4/utilities/spacing/). This early into the project it's difficult to know what will work best. Sometimes it's useful to use these, other times it makes more sense to add a custom amount of margin and padding.
 
 ### Shadows
 
-It doesn't exist yet, but it would be useful to have a shadow class / extend that can be used on all elements that need a shadow.
+A shadow extend exists for when hovering over an item. So far these are only used for thumbnail buttons but might be useful in the future. 
 
 ### HTML elements
 
