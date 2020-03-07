@@ -58,3 +58,72 @@ A shadow extend exists for when hovering over an item. So far these are only use
 ### HTML elements
 
 Whenever applicable, please make use of relevant HTML elements such as `article`, `aside`, and `section`. See https://developer.mozilla.org/en-US/docs/Web/HTML for a full list. Using these consistently and appropriately saves time and effort while at the same time make things easier for search engines and screen readers.
+
+## Back-end guidelines
+
+This project contains lots of moving pieces and it is daunting to grasp for new contributors. We therefore value *simplicity* and *consistency*. Use the following conventions to make things easier.
+
+### Database queries and looping
+
+When querying the database, use the following naming conventions for the variables:
+
+*list* = when you except various records
+You use this name when there is one "main" model that you interact with. 
+
+Example: you are viewing the page with all the projects.
+
+list = Project.objects.all()
+
+--------------
+
+*name of model in plural* = when you expect various records, but this is NOT the only model you interact with
+
+Example: you are viewing an article, and on the side you want to show relevant news and events
+
+events = Event.objects.all()[:10]
+news = News.objects.all()[:10]
+
+--------------
+
+*info* = when querying a single principal record
+
+Example: you want to retrieve the current video the user is viewing
+
+info = Video.objects.get(pk=id)
+
+--------------
+
+*context* = used to pass variables from your views to your templates. This is a dictionary. You have two ways of constructing this: you can either define the variables earlier on and then reference them (if you do, use the same names in the dictionary), or you can define each item in the actual dictionary. As a general guideline, if a query if very simple and there is no additional code required (no conditions, etc), then do it straight in the dictionary. If not, define first.
+
+Define it first:
+
+if id:
+  info = Video.objects.get(pk=id)
+  events = None
+  news = None
+else:
+  info = Video.objects.filter(active=True)[0]
+  events = Event.objects.all()
+  news = News.objects.all()
+
+context = { 
+  "info": info,
+  "events": events,
+  "news": news,
+}
+
+Define it straight in the context:
+
+context = {
+  "info": Photo.objects.get(pk=id),
+  "list": Photo.objects.all(),
+}
+
+-------------
+
+When looping through a list, please use these keywords:
+
+Use *each* when looping through a queryset:
+
+for each in list:
+  print(each.id)
