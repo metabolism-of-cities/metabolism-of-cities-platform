@@ -30,7 +30,7 @@ from .models import *
 
 from django.contrib.sites.shortcuts import get_current_site
 
-def register(request):
+def user_register(request):
     context = {}
     if request.method == 'POST':
         User.objects.create_user(request.POST.get('email'), request.POST.get('email'), request.POST.get('password'))
@@ -39,7 +39,7 @@ def register(request):
 
     return render(request, "auth/register.html", context)
 
-def login(request):
+def user_login(request):
     context = {}
     if request.method == 'POST':
         email = request.POST.get('email')
