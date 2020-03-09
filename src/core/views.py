@@ -22,7 +22,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
 
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 
 from collections import defaultdict
@@ -54,6 +54,11 @@ def user_login(request):
             messages.error(request, "Your info is not correct!")
 
     return render(request, "auth/login.html", context)
+
+def user_logout(request):
+    logout(request)
+    messages.error(request, "Your are logout now!")
+    return redirect('login')
 
 def index(request):
     return render(request, "index.html")
