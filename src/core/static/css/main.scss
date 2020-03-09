@@ -368,15 +368,16 @@ footer {
 .btn-icon {
   @extend %raised-hover;
   @extend %box-shadow;
-  display: block;
-  margin-bottom: 1rem;
   background-color: #fff;
-  padding: 1rem;
+  border-radius: .25rem;
   color: $black;
-  border: 1px solid #dee2e6;
+  display: block;
+  border: none;
   height: calc(100% - 1rem);
+  margin-bottom: 1rem;
+  padding: 1rem;
   &:hover {
-    color: $secondary;
+    color: $black;
   }
   .title {
     font-size: 1.5rem;
