@@ -212,7 +212,13 @@ footer {
 
 // COMMON ELEMENTS
 
-// NORMAL BUTTON
+// BUTTONS
+.btn:not(.btn-icon) i {
+  margin-right: .35rem;
+}
+.btn:focus {
+  box-shadow: none !important;
+}
 .btn-primary {
   background-color: $primary;
   border-color: $primary;
@@ -226,9 +232,6 @@ footer {
     border-color: darken($primary, 5%) !important;
     background-color: darken($primary, 5%) !important;
   }
-  &:focus {
-    box-shadow: 0 0 0 0.2rem rgba(218, 72, 22, 0.4) !important;
-  }
 }
 .btn-primary-outline {
   background-color: transparent;
@@ -236,26 +239,24 @@ footer {
   color: $primary;
   &:hover {
     border-color: $primary;
-    background-color: $primary;
-    color: $white;
+    background-color: transparentize($primary, 0.9);;
+    color: $primary;
   }
   &:active,
   &:focus {
     border-color: $primary !important;
-    background-color: $primary !important;
-    color: $white;
-  }
-  &:focus {
-    box-shadow: 0 0 0 0.2rem rgba(218, 72, 22, 0.4) !important;
+    background-color: transparentize($primary, 0.9) !important;
+    color: $primary;
   }
 }
 .btn-primary-basic {
   background-color: transparent;
-  border: none;
+  border-color: transparent;
   color: $primary;
   &:hover {
-    color: $primary;
     background-color: transparentize($primary, 0.9);
+    border-color: transparent;
+    color: $primary;
   }
 }
 .btn-secondary {
@@ -270,9 +271,6 @@ footer {
     border-color: darken($secondary, 5%) !important;
     background-color: darken($secondary, 5%) !important;
   }
-  &:focus {
-    box-shadow: 0 0 0 0.2rem rgba(76, 32, 65, 0.4) !important;
-  }
 }
 .btn-secondary-outline {
   background-color: transparent;
@@ -280,26 +278,65 @@ footer {
   color: $secondary;
   &:hover {
     border-color: $secondary;
-    background-color: $secondary;
-    color: $white;
+    background-color: transparentize($secondary, 0.9);
+    color: $secondary;
   }
   &:active,
   &:focus {
     border-color: $secondary !important;
-    background-color: $secondary !important;
-    color: $white;
-  }
-  &:focus {
-    box-shadow: 0 0 0 0.2rem rgba(76, 32, 65, 0.4) !important;
+    background-color: transparentize($secondary, 0.9) !important;
+    color: $secondary;
   }
 }
 .btn-secondary-basic {
   background-color: transparent;
-  border: none;
+  border-color: transparent;
   color: $secondary;
   &:hover {
-    color: $secondary;
     background-color: transparentize($secondary, 0.9);
+    border-color: transparent;
+    color: $secondary;
+  }
+}
+.btn-default {
+  background-color: $dark;
+  border-color: $dark;
+  color: $very-light;
+  &:hover {
+    border-color: darken($dark, 5%);
+    background-color: darken($dark, 5%);
+    color: $very-light;
+  }
+  &:active,
+  &:focus {
+    border-color: darken($dark, 5%) !important;
+    background-color: darken($dark, 5%) !important;
+  }
+}
+.btn-default-outline {
+  background-color: transparent;
+  border-color: $dark;
+  color: $dark;
+  &:hover {
+    border-color: $dark;
+    background-color: transparentize($dark, 0.9);
+    color: $dark;
+  }
+  &:active,
+  &:focus {
+    border-color: $dark !important;
+    background-color: transparentize($dark, 0.9) !important;
+    color: $dark;
+  }
+}
+.btn-default-basic {
+  background-color: transparent;
+  border-color: transparent;
+  color: $dark;
+  &:hover {
+    background-color: transparentize($dark, 0.9);
+    border-color: transparent;
+    color: $dark;
   }
 }
 // THUMBNAIL BUTTON
@@ -358,8 +395,9 @@ footer {
 .leaflet-map {
   box-shadow: $basic-shadow;
   border-radius: .25rem;
-  width: 100%;
   height: 100%;
+  min-height: 300px;
+  width: 100%;
 }
 
 // SINGLE PROJECT PAGE
