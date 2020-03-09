@@ -41,6 +41,10 @@ def user_register(request):
 
 def user_login(request):
     context = {}
+
+    if request.user.is_authenticated:
+        return redirect('index')
+    
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
