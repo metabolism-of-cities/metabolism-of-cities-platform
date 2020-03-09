@@ -30,39 +30,51 @@ from .models import *
 
 from django.contrib.sites.shortcuts import get_current_site
 
-def user_register(request):
-    context = {}
-    if request.method == 'POST':
-        User.objects.create_user(request.POST.get('email'), request.POST.get('email'), request.POST.get('password'))
-        messages.success(request, "User was create")
-        return redirect('login')
+# Authentication of users
 
-    return render(request, "auth/register.html", context)
+def user_register(request):
+    if request.method == "POST":
+        password = request.POST.get("password")
+        email = request.POST.get("email")
+        if not password:
+            messages.error(request, "You did not enter a password.")
+        else:
+            check = User.objects.filter(email=email)
+            if check:
+                messages.error(request, "A user already exists with this e-mail address. Please log in or reset your password instead.")
+            else:
+                user = User.objects.create_user(email, email, password)
+                messages.success(request, "User was created.")
+                login(request, user)
+                return redirect("index")
+
+    return render(request, "auth/register.html")
 
 def user_login(request):
-    context = {}
 
     if request.user.is_authenticated:
-        return redirect('index')
+        return redirect("index")
     
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("password")
         user = authenticate(request, username=email, password=password)
 
         if user is not None:
             login(request, user)
-            messages.success(request, "You are login!")
-            return redirect('index')
+            messages.success(request, "You are logged in.")
+            return redirect("index")
         else:
-            messages.error(request, "Your info is not correct!")
+            messages.error(request, "We could not authenticate you, please try again.")
 
-    return render(request, "auth/login.html", context)
+    return render(request, "auth/login.html")
 
 def user_logout(request):
     logout(request)
-    messages.error(request, "Your are logout now!")
-    return redirect('login')
+    messages.warning(request, "You are now logged out")
+    return redirect("login")
+
+# Homepage
 
 def index(request):
     return render(request, "index.html")
