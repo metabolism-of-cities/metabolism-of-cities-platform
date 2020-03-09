@@ -339,6 +339,7 @@ footer {
     color: $dark;
   }
 }
+
 // THUMBNAIL BUTTON
 .btn-thumbnail {
   @extend %raised-hover;
@@ -362,6 +363,7 @@ footer {
     font-weight: bold;
   }
 }
+
 // ICON BUTTON
 .btn-icon {
   @extend %raised-hover;
@@ -381,16 +383,19 @@ footer {
     margin-bottom: .5rem;
   }
 }
+
 // CARD
 .card {
   border: none;
   box-shadow: $basic-shadow;
 }
+
 // CONTRIBUTE BOX
 .contribute {
   color: $dark;
   background: $light;
 }
+
 // LEAFLET MAP
 .leaflet-map {
   box-shadow: $basic-shadow;
@@ -398,6 +403,36 @@ footer {
   height: 100%;
   min-height: 300px;
   width: 100%;
+}
+
+// DATATABLE | the DataTables CSS file is loaded after this file, so this section requires some !important tags
+.dataTables_wrapper thead tr th {
+  border-top: none;
+}
+.dataTables_wrapper input.form-control:focus,
+.dataTables_wrapper select.custom-select:focus {
+  border-color: $secondary;
+  box-shadow: 0 0 0 .2rem rgba(94, 39, 80, 0.16);
+}
+.dataTables_wrapper .paginate_button.page-item .page-link:focus {
+  box-shadow: none !important;
+}
+.dataTables_wrapper .paginate_button.page-item:not(.disabled) .page-link {
+  color: $dark;
+}
+.dataTables_wrapper .paginate_button.page-item.active .page-link {
+  background-color: $secondary;
+  border-color: $secondary;
+  color: $white;
+  &:hover {
+    border-color: darken($secondary, 5%);
+    background-color: darken($secondary, 5%);
+  }
+  &:active,
+  &:focus {
+    border-color: darken($secondary, 5%) !important;
+    background-color: darken($secondary, 5%) !important;
+  }
 }
 
 // SINGLE PROJECT PAGE

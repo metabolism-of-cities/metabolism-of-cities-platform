@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content %}
-<table class="display">
+<table id="example" class="table table-striped">
   <thead>
     <tr>
       <th>Column 1</th>
@@ -102,8 +102,6 @@
 {% block footer %}
 <script src="{% static 'js/datatables.min.js' %}"></script>
 <script>
-  $(document).ready( function () {
-    $("table").DataTable();
-  });
+  $("table").DataTable();
 </script>
 {% endblock %}
