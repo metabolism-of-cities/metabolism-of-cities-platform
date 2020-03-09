@@ -7,6 +7,7 @@ $dark: #333;
 $gray: #808080;
 $light: #efefef;
 $very-light: #fbfbfb;
+$basic-shadow: 1px 1px 2px 0px rgba(0,0,0,0.2);;
 
 // EXTENSIONS
 %raised-hover {
@@ -16,7 +17,7 @@ $very-light: #fbfbfb;
   }
 }
 %box-shadow {
-  box-shadow: 1px 1px 2px 0px rgba(0,0,0,0.2);
+  box-shadow: $basic-shadow;
   transition: all .3s;
   &:hover {
     box-shadow: 0px 10px 20px 0px rgba(0,0,0,0.2);
@@ -31,83 +32,21 @@ body {
   background-color: #fcfcfc;
   font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
+section {
+  padding: 2rem 0;
+  &:first-of-type {
+    padding-top: 0;
+  }
+  &:last-of-type {
+    padding-bottom: 0;
+  }
+}
 .main-content.container {
   padding-top: 36px;
   padding-bottom: 36px;
 }
 a:hover {
   text-decoration: none;
-}
-.btn-primary {
-  background-color: $primary;
-  border-color: $primary;
-  color: $white;
-  &:hover {
-    border-color: darken($primary, 5%);
-    background-color: darken($primary, 5%);
-  }
-  &:active,
-  &:focus {
-    border-color: darken($primary, 5%) !important;
-    background-color: darken($primary, 5%) !important;
-  }
-  &:focus {
-    box-shadow: 0 0 0 0.2rem rgba(218, 72, 22, 0.4) !important;
-  }
-}
-.btn-primary-outline {
-  background-color: transparent;
-  border-color: $primary;
-  color: $primary;
-  &:hover {
-    border-color: $primary;
-    background-color: $primary;
-    color: $white;
-  }
-  &:active,
-  &:focus {
-    border-color: $primary !important;
-    background-color: $primary !important;
-    color: $white;
-  }
-  &:focus {
-    box-shadow: 0 0 0 0.2rem rgba(218, 72, 22, 0.4) !important;
-  }
-}
-.btn-secondary {
-  background-color: $secondary;
-  border-color: $secondary;
-  &:hover {
-    border-color: darken($secondary, 5%);
-    background-color: darken($secondary, 5%);
-  }
-  &:active,
-  &:focus {
-    border-color: darken($secondary, 5%) !important;
-    background-color: darken($secondary, 5%) !important;
-  }
-  &:focus {
-    box-shadow: 0 0 0 0.2rem rgba(76, 32, 65, 0.4) !important;
-  }
-}
-.btn-secondary-outline {
-  background-color: transparent;
-  border-color: $secondary;
-  color: $secondary;
-  &:hover {
-    border-color: $secondary;
-    background-color: $secondary;
-    color: $white;
-  }
-  &:active,
-  &:focus {
-    border-color: $secondary !important;
-    background-color: $secondary !important;
-    color: $white;
-  }
-  &:focus {
-    box-shadow: 0 0 0 0.2rem rgba(76, 32, 65, 0.4) !important;
-  }
 }
 
 // NAVBAR AND HERO
@@ -272,6 +211,98 @@ footer {
 }
 
 // COMMON ELEMENTS
+
+// NORMAL BUTTON
+.btn-primary {
+  background-color: $primary;
+  border-color: $primary;
+  color: $white;
+  &:hover {
+    border-color: darken($primary, 5%);
+    background-color: darken($primary, 5%);
+  }
+  &:active,
+  &:focus {
+    border-color: darken($primary, 5%) !important;
+    background-color: darken($primary, 5%) !important;
+  }
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(218, 72, 22, 0.4) !important;
+  }
+}
+.btn-primary-outline {
+  background-color: transparent;
+  border-color: $primary;
+  color: $primary;
+  &:hover {
+    border-color: $primary;
+    background-color: $primary;
+    color: $white;
+  }
+  &:active,
+  &:focus {
+    border-color: $primary !important;
+    background-color: $primary !important;
+    color: $white;
+  }
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(218, 72, 22, 0.4) !important;
+  }
+}
+.btn-primary-basic {
+  background-color: transparent;
+  border: none;
+  color: $primary;
+  &:hover {
+    color: $primary;
+    background-color: transparentize($primary, 0.9);
+  }
+}
+.btn-secondary {
+  background-color: $secondary;
+  border-color: $secondary;
+  &:hover {
+    border-color: darken($secondary, 5%);
+    background-color: darken($secondary, 5%);
+  }
+  &:active,
+  &:focus {
+    border-color: darken($secondary, 5%) !important;
+    background-color: darken($secondary, 5%) !important;
+  }
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(76, 32, 65, 0.4) !important;
+  }
+}
+.btn-secondary-outline {
+  background-color: transparent;
+  border-color: $secondary;
+  color: $secondary;
+  &:hover {
+    border-color: $secondary;
+    background-color: $secondary;
+    color: $white;
+  }
+  &:active,
+  &:focus {
+    border-color: $secondary !important;
+    background-color: $secondary !important;
+    color: $white;
+  }
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(76, 32, 65, 0.4) !important;
+  }
+}
+.btn-secondary-basic {
+  background-color: transparent;
+  border: none;
+  color: $secondary;
+  &:hover {
+    color: $secondary;
+    background-color: transparentize($secondary, 0.9);
+  }
+}
+// THUMBNAIL BUTTON
 .btn-thumbnail {
   @extend %raised-hover;
   @extend %box-shadow;
@@ -294,10 +325,41 @@ footer {
     font-weight: bold;
   }
 }
+// ICON BUTTON
+.btn-icon {
+  @extend %raised-hover;
+  @extend %box-shadow;
+  display: block;
+  margin-bottom: 1rem;
+  background-color: #fff;
+  padding: 1rem;
+  color: $black;
+  border: 1px solid #dee2e6;
+  height: calc(100% - 1rem);
+  &:hover {
+    color: $secondary;
+  }
+  .title {
+    font-size: 1.5rem;
+    margin-bottom: .5rem;
+  }
+}
+// CARD
+.card {
+  border: none;
+  box-shadow: $basic-shadow;
+}
 // CONTRIBUTE BOX
 .contribute {
   color: $dark;
   background: $light;
+}
+// LEAFLET MAP
+.leaflet-map {
+  box-shadow: $basic-shadow;
+  border-radius: .25rem;
+  width: 100%;
+  height: 100%;
 }
 
 // SINGLE PROJECT PAGE
