@@ -21,15 +21,43 @@ from django.conf import settings
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
 
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+
+
 from collections import defaultdict
 from .models import *
 
 from django.contrib.sites.shortcuts import get_current_site
 
+def register(request):
+    context = {}
+    if request.method == 'POST':
+        User.objects.create_user(request.POST.get('email'), request.POST.get('email'), request.POST.get('password'))
+        messages.success(request, "User was create")
+        return redirect('login')
+
+    return render(request, "auth/register.html", context)
+
+def login(request):
+    context = {}
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, username=email, password=password)
+
+        if user is not None:
+            messages.success(request, "You are login!")
+            return redirect('index')
+        else:
+            messages.error(request, "Your info is not correct!")
+
+    return render(request, "auth/login.html", context)
+
 def index(request):
     return render(request, "index.html")
 
-# The template section allows contributors to see how some 
+# The template section allows contributors to see how some
 # commonly used elements are coded, and allows them to copy/paste 
 
 def templates(request):
@@ -47,7 +75,7 @@ def projects(request):
 def project(request, id):
     return render(request, "project.html")
 
-# Article is used for general web pages, and they can be opened in 
+# Article is used for general web pages, and they can be opened in
 # various ways (using ID, using slug). They can have different presentational formats
 
 def article(request, id=None, prefix=None, slug=None):

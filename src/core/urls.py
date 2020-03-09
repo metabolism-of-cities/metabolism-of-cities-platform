@@ -7,6 +7,8 @@ from django.views.generic.base import RedirectView
 from . import views
 
 urlpatterns = [
+    path("register", views.register, name="register"),
+    path("login", views.login, name="login"),
 
     path("", views.index, name="index"),
     path("templates/", views.templates, name="templates"),
