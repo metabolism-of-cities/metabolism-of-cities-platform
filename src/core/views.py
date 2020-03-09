@@ -22,7 +22,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
 
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 
 
 from collections import defaultdict
@@ -47,6 +47,7 @@ def login(request):
         user = authenticate(request, username=email, password=password)
 
         if user is not None:
+            login(request, user)
             messages.success(request, "You are login!")
             return redirect('index')
         else:
