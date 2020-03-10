@@ -3,15 +3,22 @@
     a {
       width: 100%;
     }
+
   }
+
   .decor {
     width: 100%;
+    margin: 5px;
   }
+
 }
+
 @media screen and (max-width:767px) {
   #info {
     img {
       width: 200px;
     }
+
   }
+
 }

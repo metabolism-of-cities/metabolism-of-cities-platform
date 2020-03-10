@@ -3,7 +3,6 @@ $primary-color: #808080;
 $logo: 250px;
 $address: #fff;
 $brown: #cb270d;
-
 // EXTENSIONS
 %raised-hover {
   transition: all .3s;
@@ -18,16 +17,13 @@ $brown: #cb270d;
     box-shadow: 0px 10px 20px 0px rgba(0,0,0,0.2);
   }
 }
-
 // FONTS
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin);
-
 // STYLES
 body {
   background-color: #fcfcfc;
   font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
-
 // FOOTERS
 #actions {
   border-top: 1px solid $primary-color;
@@ -52,7 +48,6 @@ body {
     color: $address;
   }
 }
-
 // COMMON ELEMENTS
 .top-layer {
   background-color: darkred;
@@ -191,7 +186,6 @@ nav {
 .contribute {
   background: #cf4803;
 }
-
 // SINGLE PROJECT PAGE
 body.single-project {
   .return-bar {
@@ -223,7 +217,6 @@ body.single-project {
     }
   }
 }
-<<<<<<< HEAD
 .contribute {
   background: #cf4803;
 }
@@ -234,5 +227,3 @@ body.single-project {
     width: 100%;
   }
 }
-=======
->>>>>>> 49dfadbe71b38a3e843fac11acb0734abedce396
