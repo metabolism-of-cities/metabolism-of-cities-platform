@@ -139,6 +139,7 @@ def article_list(request, id):
 
 def pdf(request):
     import pdfkit
+    import wkhtmltopdf
 
     name = request.GET["name"]
     score = request.GET["score"]
@@ -151,13 +152,18 @@ def pdf(request):
 
     html = template.render(context.flatten())
 
-    pdfkit.from_string(html, 'out.pdf')
-    pdf = open("out.pdf")
+    import os
+    path = settings.MEDIA_ROOT + "/out.pdf"
+    print(path)
+    pdfkit.from_string('hello', path)
+    print("HERE")
+    pdf = open(path)
+    print("OR HERE")
     response = HttpResponse(pdf.read(), content_type='application/pdf')
 
     response['Content-Disposition'] = 'attachment; filename=output.pdf'
     pdf.close()
-    os.remove("out.pdf")
+    os.remove(path)
 
     return response
 
