@@ -12,7 +12,6 @@ $gray: #808080;
 $light: #efefef;
 $very-light: #fbfbfb;
 $basic-shadow: 1px 1px 2px 0px rgba(0,0,0,0.2);;
-
 // EXTENSIONS
 %raised-hover {
   transition: all .3s;
@@ -30,8 +29,6 @@ $basic-shadow: 1px 1px 2px 0px rgba(0,0,0,0.2);;
 // FONTS
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin);
 // STYLES
-=======
-
 // GLOBALS
 body {
   background-color: #fcfcfc;
@@ -59,9 +56,7 @@ section {
 a:hover {
   text-decoration: none;
 }
-<<<<<<< HEAD
 // COMMON ELEMENTS
-
 // NAVBAR AND HERO
 .top-layer {
   box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.1);
@@ -178,7 +173,6 @@ nav {
     font-weight: normal;
   }
 }
-
 // FOOTERS
 footer {
   padding: 36px 0;
@@ -222,9 +216,7 @@ footer {
     margin-right: 12px;
   }
 }
-
 // COMMON ELEMENTS
-
 // BUTTONS
 .btn:not(.btn-icon) i {
   margin-right: .35rem;
@@ -352,7 +344,6 @@ footer {
     color: $dark;
   }
 }
-
 // THUMBNAIL BUTTON
 .btn-thumbnail {
   @extend %raised-hover;
@@ -376,7 +367,6 @@ footer {
     font-weight: bold;
   }
 }
-
 // ICON BUTTON
 .btn-icon {
   @extend %raised-hover;
@@ -397,19 +387,16 @@ footer {
     margin-bottom: .5rem;
   }
 }
-
 // CARD
 .card {
   border: none;
   box-shadow: $basic-shadow;
 }
-
 // CONTRIBUTE BOX
 .contribute {
   color: $dark;
   background: $light;
 }
-
 // LEAFLET MAP
 .leaflet-map {
   box-shadow: $basic-shadow;
@@ -418,7 +405,6 @@ footer {
   min-height: 300px;
   width: 100%;
 }
-
 // DATATABLE | the DataTables CSS file is loaded after this file, so this section requires some !important tags
 .dataTables_wrapper thead tr th {
   border-top: none;
