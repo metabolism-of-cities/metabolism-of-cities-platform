@@ -1,3 +1,5 @@
+import os
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
@@ -14,7 +16,7 @@ from django.http import Http404, HttpResponseRedirect
 
 # These are used so that we can send mail
 from django.core.mail import send_mail
-from django.template.loader import render_to_string
+from django.template.loader import render_to_string, get_template
 
 from django.conf import settings
 
@@ -29,6 +31,8 @@ from collections import defaultdict
 from .models import *
 
 from django.contrib.sites.shortcuts import get_current_site
+
+from django.template import Context
 
 # Authentication of users
 
@@ -134,11 +138,28 @@ def article_list(request, id):
 # TEMPORARY PAGES DURING DEVELOPMENT
 
 def pdf(request):
+    import pdfkit
+
     name = request.GET["name"]
     score = request.GET["score"]
+
     print(name)
     print(score)
-    return render(request, "template/blank.html")
+
+    context = Context({"name": name, "score": score})
+    template = get_template("pdf_template.html")
+
+    html = template.render(context.flatten())
+
+    pdfkit.from_string(html, 'out.pdf')
+    pdf = open("out.pdf")
+    response = HttpResponse(pdf.read(), content_type='application/pdf')
+
+    response['Content-Disposition'] = 'attachment; filename=output.pdf'
+    pdf.close()
+    os.remove("out.pdf")
+
+    return response
 
 def load_baseline(request):
     moc = Site.objects.get(pk=1)
