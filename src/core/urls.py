@@ -17,7 +17,7 @@ urlpatterns = [
     path("projects/<int:id>/", views.project, name="project"),
     path("projects/", views.projects, name="projects"),
     path("pdf/", views.pdf),
-
+    path("projects/create", views.project_form, name="project_form"),
     # Urban metabolism
 
     path("urbanmetabolism/", views.article_list, { "id": 1 }, name="um"),

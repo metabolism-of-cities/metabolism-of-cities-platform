@@ -217,3 +217,5 @@ def load_baseline(request):
 
     return render(request, "template/blank.html")
 
+def project_form(request):
+    return render(request, "project.form.html")
