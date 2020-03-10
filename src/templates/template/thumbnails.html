@@ -1,0 +1,31 @@
+{% extends "_base.html" %}
+{% load static %}
+{% block title %}Thumbnails{% endblock %}
+{% block content %}
+<div class="card thumbnails">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-lg-2 mb-4">
+        <img alt="Image name" class="mb-4" src="{% static 'img/water.jpg' %}">
+      </div>
+      <div class="col-lg-2 mb-4">
+        <img alt="Image name" class="mb-4" src="{% static 'img/water.jpg' %}">
+      </div>
+      <div class="col-lg-2 mb-4">
+        <img alt="Image name" class="mb-4" src="{% static 'img/water.jpg' %}">
+      </div>
+      <div class="col-lg-2 mb-4">
+        <img alt="Image name" class="mb-4" src="{% static 'img/water.jpg' %}">
+      </div>
+      <div class="col-lg-2 mb-4">
+        <img alt="Image name" class="mb-4" src="{% static 'img/water.jpg' %}">
+      </div>
+      <div class="col-lg-2 mb-4">
+        <img alt="Image name" class="mb-4" src="{% static 'img/water.jpg' %}">
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block footer %}
+{% endblock %}
