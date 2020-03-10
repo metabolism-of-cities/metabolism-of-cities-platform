@@ -1,0 +1,25 @@
+  {% extends '_base.html' %}
+  {% load static %}
+  {% load sass_tags %}
+  {% block title %}Icon buttons{% endblock %}
+  {% block content %}
+
+  <a class="btn btn-primary" href="">btn btn-primary</a>
+  <a class="btn btn-primary-outline" href="">btn btn-primary-outline</a>
+  <a class="btn btn-primary-basic" href="">btn btn-primary-basic</a>
+
+  <br><br>
+
+  <a class="btn btn-secondary" href="">btn btn-secondary</a>
+  <a class="btn btn-secondary-outline" href="">btn btn-secondary-outline</a>
+  <a class="btn btn-secondary-basic" href="">btn btn-secondary-basic</a>
+
+  <br><br>
+
+  <a class="btn btn-success" href=""><i class="fas fa-save"></i> Save</a>
+  <a class="btn btn-danger" href=""><i class="fas fa-times"></i> Cancel</a>
+  <a class="btn btn-default-basic" href=""><i class="fas fa-plus"></i> Add</a>
+  <a class="btn btn-default-basic" href=""><i class="fas fa-edit"></i> Edit</a>
+  <a class="btn btn-default-basic" href=""><i class="fas fa-folder-open"></i> Open</a>
+
+  {% endblock %}

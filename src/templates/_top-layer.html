@@ -13,30 +13,17 @@
         <ul class="navbar-nav ml-auto">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="about-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              About
+              Urban metabolism
             </a>
             <div class="dropdown-menu" aria-labelledby="about-dropdown">
               <div class="dropdown-submenu">
                 <div class="row no-gutters">
-                  <div class="col col-md-4">
-                    <div class="submenu-title">About us</div>
-                    <a href="/about/our-story">Our story</a>
-                    <a href="/about/mission">Mission and values</a>
-                    <a href="/about/team">Team</a>
-                    <a href="/about/task-forces">Task forces</a>
-                    <a href="/about/services">Services</a>
-                  </div>
-                  <div class="col col-md-4">
-                    <div class="submenu-title">Contact</div>
-                    <a href="/about/join">Join us</a>
-                    <a href="/about/subscribe">Subscribe</a>
-                    <a href="/contact">Contact us</a>
-                  </div>
-                  <div class="key col col-md-4">
-                    <div class="submenu-title"><i class="fa fa-star"></i> Frequently used items</div>
-                    <a href="/about/services">Services</a>
-                    <a href="/about/join">Join us</a>
-                    <a href="/contact">Contact us</a>
+                  <div class="col col-md-12">
+
+                    {% for each in UM %}
+                        <a href="{{ each.get_absolute_url }}">{{ each }}</a>
+                    {% endfor %}
+
                   </div>
                 </div>
               </div>
@@ -49,23 +36,12 @@
             <div class="dropdown-menu" aria-labelledby="community-dropdown">
               <div class="dropdown-submenu">
                 <div class="row no-gutters">
-                  <div class="col col-md-4">
-                    <div class="submenu-title">Research</div>
-                    <a href="/about/our-story">Projects</a>
-                    <a href="/about/mission">Theses</a>
-                    <a href="/about/team">Add research</a>
-                    <a href="/about/task-forces">People</a>
-                  </div>
-                  <div class="col col-md-4">
-                    <div class="submenu-title">Updates</div>
-                    <a href="/about/join">Events</a>
-                    <a href="/about/subscribe">News</a>
-                  </div>
-                  <div class="key col col-md-4">
-                    <div class="submenu-title"><i class="fa fa-star"></i> Frequently used items</div>
-                    <a href="/about/services">Research</a>
-                    <a href="/contact">Projects</a>
-                    <a href="/about/join">Events</a>
+                  <div class="col col-md-12">
+
+                    {% for each in COMMUNITY %}
+                        <a href="{{ each.get_absolute_url }}">{{ each }}</a>
+                    {% endfor %}
+
                   </div>
                 </div>
               </div>

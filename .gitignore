@@ -11,3 +11,4 @@ src/logs/*
 src/multiplicity/static/moc/css-preprocessors/*
 src/moc/settings.py
 config/*production*
+.idea/*

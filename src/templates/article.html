@@ -1,0 +1,40 @@
+{% extends "_base.html" %}
+
+{% block title %}{{ info.title }}{% endblock %}
+
+{% block content %}
+
+  <h1>{{ info }}</h1>
+
+  <ol class="breadcrumbs">
+    <li><a href="/">{{ SITE_NAME }}</a></li>
+    {% if info.parent.parent.parent %}
+      <li><a href="{{ info.parent.parent.parent.get_absolute_url }}">{{ info.parent.parent.parent }}</a></li>
+    {% endif %}
+    {% if info.parent.parent %}
+      <li><a href="{{ info.parent.parent.get_absolute_url }}">{{ info.parent.parent }}</a></li>
+    {% endif %}
+    {% if info.parent %}
+      <li><a href="{{ info.parent.get_absolute_url }}">{{ info.parent }}</a></li>
+    {% endif %}
+    <li>{{ info }}</li>
+  </ol>
+
+  <div style="margin:20px 0;background:#f4f4f4;padding:10px">
+    {% if info.description %}
+      {{ info.description }}
+    {% else %}
+      {% lorem 7 p %} 
+    {% endif %}
+  </div>
+
+  {% if menu %}
+    <h3><a href="{{ info.parent.get_absolute_url }}">{{ info.parent }}</a></h3>
+    <ul>
+    {% for each in menu %}
+      <li><a{% if each == info %} style="font-weight:bold;color:green;"{% endif %} href="{{ each.get_absolute_url }}">{{ each }}</a></li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+
+{% endblock %}

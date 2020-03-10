@@ -1,23 +1,13 @@
 {% extends '_base.html' %}
 {% load static %}
-{% block page_name %}Contribute Message{% endblock %}
 {% block title %}Contribute Message{% endblock %}
-{% block subtitle %}Do you see any errors or do you know of any missing information?{% endblock %}
 {% block content %}
-<div class="container">
-  <div class="card mb-5">
-    <div class="card-body text-light contribute">
-      <h2 class="font-weight-bold">Contribute Message</h2>
-      <p>Do you see any errors or do you know of any missing information?</p>
-      <form method="post">
-        <div class="form-group">
-          <input type="text" name="contact" placeholder="Contact us" class="form-control" required>
-        </div>
-        <div class="form-group">
-          <input type="text" name="project" placeholder="Add your own project" class="form-control" required>
-        </div>
-      </form>
-    </div>
+<div class="card contribute">
+  <div class="card-body">
+    <h4 class="card-title font-weight-bold">Contribute</h4>
+    <p class="card-text">Do you see any errors or do you know of any missing information?</p>
+    <a class="btn btn-secondary" href="">Contact us</a>
+    <a class="btn btn-secondary-outline" href="">Add your own project</a>
   </div>
 </div>
 {% endblock %}

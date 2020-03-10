@@ -3,6 +3,16 @@ $primary-color: #808080;
 $logo: 250px;
 $address: #fff;
 $brown: #cb270d;
+$primary: #e95420;
+$secondary: #5e2750;
+$black: #000;
+$white: #fff;
+$dark: #333;
+$gray: #808080;
+$light: #efefef;
+$very-light: #fbfbfb;
+$basic-shadow: 1px 1px 2px 0px rgba(0,0,0,0.2);;
+
 // EXTENSIONS
 %raised-hover {
   transition: all .3s;
@@ -11,7 +21,7 @@ $brown: #cb270d;
   }
 }
 %box-shadow {
-  box-shadow: 1px 1px 2px 0px rgba(0,0,0,0.2);
+  box-shadow: $basic-shadow;
   transition: all .3s;
   &:hover {
     box-shadow: 0px 10px 20px 0px rgba(0,0,0,0.2);
@@ -20,6 +30,9 @@ $brown: #cb270d;
 // FONTS
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin);
 // STYLES
+=======
+
+// GLOBALS
 body {
   background-color: #fcfcfc;
   font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
@@ -30,33 +43,317 @@ body {
   .title {
     color: $brown;
     font-size: 25px;
+section {
+  padding: 2rem 0;
+  &:first-of-type {
+    padding-top: 0;
   }
-  a {
-    color: $primary-color;
-  }
-}
-#info {
-  background-color: #333;
-  padding-top: 30px;
-  img {
-    width: $logo;
-  }
-  p {
-    color: $address;
-  }
-  h3 {
-    color: $address;
+  &:last-of-type {
+    padding-bottom: 0;
   }
 }
+.main-content.container {
+  padding-top: 36px;
+  padding-bottom: 36px;
+}
+a:hover {
+  text-decoration: none;
+}
+<<<<<<< HEAD
 // COMMON ELEMENTS
+
+// NAVBAR AND HERO
 .top-layer {
-  background-color: darkred;
+  box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.1);
+  background-color: $secondary;
   background-image: url(https://resourcewatch.org/static/images/components/layout/header-bg-texture.png);
   background-repeat: no-repeat;
   background-position: 50%;
   background-size: cover;
   z-index: 10000;
 }
+nav {
+  &.navbar {
+    padding-top: 1rem;
+    padding-bottom: 0;
+  }
+  .navbar-brand {
+    margin-right: 30px;
+    width: 120px;
+    padding: 0 0 4px 0;
+    img {
+      height: 52px;
+    }
+  }
+  li.dropdown {
+    position: unset;
+  }
+  .container {
+    position: relative;
+  }
+  .dropdown-menu {
+    border: 1px solid $secondary;
+    border-radius: 0;
+    box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.3);
+    display: block;
+    left: unset;
+    margin: 0;
+    opacity: 0;
+    padding: 0;
+    pointer-events: none;
+    right: 15px;
+    top: 56px;
+    transform: translateY(-6px);
+    transition: transform .2s;
+    width: calc(100% - 30px);
+    &.show {
+      opacity: 1;
+      pointer-events: unset;
+      transform: translateY(0);
+    }
+    .col {
+      padding: 15px;
+      &.key {
+        background-color: $very-light;
+      }
+      &:first-of-type {
+        border-right: 1px solid $light;
+      }
+      &:last-of-type {
+        border-left: 1px solid $gray;
+      }
+    }
+    a {
+      color: $dark;
+      display: block;
+      padding: 4px 0 4px 8px;
+      text-decoration: none;
+      &:hover {
+        color: #000;
+      }
+      &.disabled {
+        color: $gray;
+        cursor: default;
+        &:hover {
+          color: $gray;
+        }
+      }
+    }
+  }
+  .dropdown-submenu .submenu-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 0;
+    padding: 4px 0 4px 8px;
+    text-transform: uppercase;
+  }
+  a.nav-link {
+    color: $white !important;
+    opacity: .7 !important;
+    &:hover {
+      opacity: 1 !important;
+    }
+    &.dropdown-toggle {
+      border-bottom: 2px solid transparent;
+      padding: 8px 1.25rem 16px !important;
+      &::after {
+        display: none;
+      }
+      &[aria-expanded="true"] {
+        border-bottom-color: $white;
+        opacity: 1 !important;
+        z-index: 1001;
+      }
+    }
+  }
+}
+.jumbotron {
+  background: unset;
+  margin-bottom: 0;
+  padding: 3rem 0;
+  h1 {
+    font-weight: bold;
+  }
+  .lead {
+    font-weight: normal;
+  }
+}
+
+// FOOTERS
+footer {
+  padding: 36px 0;
+}
+#actions {
+  background-color: $light;
+  .header {
+    color: $primary;
+  }
+  a {
+    color: $dark;
+    &:hover {
+      color: $black;
+      text-decoration: none;
+    }
+  }
+}
+#info {
+  background-color: $dark;
+  padding-top: 30px;
+  color: $light;
+  img {
+    max-width: 300px;
+    width: 100%;
+  }
+  a {
+    color: $light;
+    &:hover {
+      color: $white;
+      text-decoration: none;
+    }
+  }
+  i {
+    margin-right: 6px;
+  }
+  .links a {
+    display: block;
+  }
+  .social i {
+    font-size: 1.5rem;
+    margin-right: 12px;
+  }
+}
+
+// COMMON ELEMENTS
+
+// BUTTONS
+.btn:not(.btn-icon) i {
+  margin-right: .35rem;
+}
+.btn:focus {
+  box-shadow: none !important;
+}
+.btn-primary {
+  background-color: $primary;
+  border-color: $primary;
+  color: $white;
+  &:hover {
+    border-color: darken($primary, 5%);
+    background-color: darken($primary, 5%);
+  }
+  &:active,
+  &:focus {
+    border-color: darken($primary, 5%) !important;
+    background-color: darken($primary, 5%) !important;
+  }
+}
+.btn-primary-outline {
+  background-color: transparent;
+  border-color: $primary;
+  color: $primary;
+  &:hover {
+    border-color: $primary;
+    background-color: transparentize($primary, 0.9);;
+    color: $primary;
+  }
+  &:active,
+  &:focus {
+    border-color: $primary !important;
+    background-color: transparentize($primary, 0.9) !important;
+    color: $primary;
+  }
+}
+.btn-primary-basic {
+  background-color: transparent;
+  border-color: transparent;
+  color: $primary;
+  &:hover {
+    background-color: transparentize($primary, 0.9);
+    border-color: transparent;
+    color: $primary;
+  }
+}
+.btn-secondary {
+  background-color: $secondary;
+  border-color: $secondary;
+  &:hover {
+    border-color: darken($secondary, 5%);
+    background-color: darken($secondary, 5%);
+  }
+  &:active,
+  &:focus {
+    border-color: darken($secondary, 5%) !important;
+    background-color: darken($secondary, 5%) !important;
+  }
+}
+.btn-secondary-outline {
+  background-color: transparent;
+  border-color: $secondary;
+  color: $secondary;
+  &:hover {
+    border-color: $secondary;
+    background-color: transparentize($secondary, 0.9);
+    color: $secondary;
+  }
+  &:active,
+  &:focus {
+    border-color: $secondary !important;
+    background-color: transparentize($secondary, 0.9) !important;
+    color: $secondary;
+  }
+}
+.btn-secondary-basic {
+  background-color: transparent;
+  border-color: transparent;
+  color: $secondary;
+  &:hover {
+    background-color: transparentize($secondary, 0.9);
+    border-color: transparent;
+    color: $secondary;
+  }
+}
+.btn-default {
+  background-color: $dark;
+  border-color: $dark;
+  color: $very-light;
+  &:hover {
+    border-color: darken($dark, 5%);
+    background-color: darken($dark, 5%);
+    color: $very-light;
+  }
+  &:active,
+  &:focus {
+    border-color: darken($dark, 5%) !important;
+    background-color: darken($dark, 5%) !important;
+  }
+}
+.btn-default-outline {
+  background-color: transparent;
+  border-color: $dark;
+  color: $dark;
+  &:hover {
+    border-color: $dark;
+    background-color: transparentize($dark, 0.9);
+    color: $dark;
+  }
+  &:active,
+  &:focus {
+    border-color: $dark !important;
+    background-color: transparentize($dark, 0.9) !important;
+    color: $dark;
+  }
+}
+.btn-default-basic {
+  background-color: transparent;
+  border-color: transparent;
+  color: $dark;
+  &:hover {
+    background-color: transparentize($dark, 0.9);
+    border-color: transparent;
+    color: $dark;
+  }
+}
+
+// THUMBNAIL BUTTON
 .btn-thumbnail {
   @extend %raised-hover;
   @extend %box-shadow;
@@ -79,112 +376,77 @@ body {
     font-weight: bold;
   }
 }
-nav {
-  &.navbar {
-    padding-top: 1rem;
-    padding-bottom: 0;
+
+// ICON BUTTON
+.btn-icon {
+  @extend %raised-hover;
+  @extend %box-shadow;
+  background-color: #fff;
+  border-radius: .25rem;
+  color: $black;
+  display: block;
+  border: none;
+  height: calc(100% - 1rem);
+  margin-bottom: 1rem;
+  padding: 1rem;
+  &:hover {
+    color: $black;
   }
-  .navbar-brand {
-    margin-right: 30px;
-    width: 120px;
-    padding: 0 0 4px 0;
-    img {
-      height: 52px;
-    }
-  }
-  li.dropdown {
-    position: unset;
-  }
-  .container {
-    position: relative;
-  }
-  .dropdown-menu {
-    width: calc(100% - 29px);
-    top: 56px;
-    left: unset;
-    right: 14px;
-    border-radius: 0;
-    margin: 0;
-    padding: 0;
-    box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.3);
-    border: 1px solid #5e2750;
-    display: block;
-    opacity: 0;
-    transition: margin-top .2s linear;
-    margin-top: -6px;
-    pointer-events: none;
-    &.show {
-      opacity: 1;
-      margin-top: 0;
-      pointer-events: unset;
-    }
-    .col {
-      padding: 15px;
-      &.key {
-        background-color: #f6f6f6;
-      }
-      &:first-of-type {
-        border-right: 1px solid #dee2e6;
-      }
-      &:last-of-type {
-        border-left: 1px solid #dee2e6;
-      }
-    }
-    a {
-      text-decoration: none;
-      color: #666;
-      display: block;
-      padding: 4px 0 4px 8px;
-      &:hover {
-        color: #000;
-      }
-      &.disabled {
-        color: #bbb;
-        cursor: default;
-        &:hover {
-          color: #bbb;
-        }
-      }
-    }
-  }
-  .dropdown-submenu .submenu-title {
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 14px;
-    margin-bottom: 0;
-    padding: 4px 0 4px 8px;
-  }
-  a.nav-link {
-    color: #ffffffc4;
-    &:hover {
-      color: #ffffff;
-    }
-    &.dropdown-toggle {
-      border-bottom: 2px solid transparent;
-      padding: 8px 1.25rem 16px !important;
-      &::after {
-        display: none;
-      }
-      &[aria-expanded="true"] {
-        border-bottom-color: #fff;
-        z-index: 1001;
-        color: #ffffff !important;
-      }
-    }
+  .title {
+    font-size: 1.5rem;
+    margin-bottom: .5rem;
   }
 }
-.jumbotron {
-  padding: 3rem 0;
-  background: unset;
-  h1 {
-    font-weight: bold;
-  }
-  .lead {
-    font-weight: normal;
-  }
+
+// CARD
+.card {
+  border: none;
+  box-shadow: $basic-shadow;
 }
+
+// CONTRIBUTE BOX
 .contribute {
-  background: #cf4803;
+  color: $dark;
+  background: $light;
+}
+
+// LEAFLET MAP
+.leaflet-map {
+  box-shadow: $basic-shadow;
+  border-radius: .25rem;
+  height: 100%;
+  min-height: 300px;
+  width: 100%;
+}
+
+// DATATABLE | the DataTables CSS file is loaded after this file, so this section requires some !important tags
+.dataTables_wrapper thead tr th {
+  border-top: none;
+}
+.dataTables_wrapper input.form-control:focus,
+.dataTables_wrapper select.custom-select:focus {
+  border-color: $secondary;
+  box-shadow: 0 0 0 .2rem rgba(94, 39, 80, 0.16);
+}
+.dataTables_wrapper .paginate_button.page-item .page-link:focus {
+  box-shadow: none !important;
+}
+.dataTables_wrapper .paginate_button.page-item:not(.disabled) .page-link {
+  color: $dark;
+}
+.dataTables_wrapper .paginate_button.page-item.active .page-link {
+  background-color: $secondary;
+  border-color: $secondary;
+  color: $white;
+  &:hover {
+    border-color: darken($secondary, 5%);
+    background-color: darken($secondary, 5%);
+  }
+  &:active,
+  &:focus {
+    border-color: darken($secondary, 5%) !important;
+    background-color: darken($secondary, 5%) !important;
+  }
 }
 // SINGLE PROJECT PAGE
 body.single-project {
@@ -219,11 +481,4 @@ body.single-project {
 }
 .contribute {
   background: #cf4803;
-}
-.decor {
-  width: 250px;
-  margin: 5px;
-  img {
-    width: 100%;
-  }
 }
