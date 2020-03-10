@@ -11,51 +11,71 @@ $dark: #333;
 $gray: #808080;
 $light: #efefef;
 $very-light: #fbfbfb;
-$basic-shadow: 1px 1px 2px 0px rgba(0,0,0,0.2);;
+$basic-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
+
 // EXTENSIONS
 %raised-hover {
   transition: all .3s;
+
   &:hover {
     transform: translateY(-3px);
   }
+
 }
+
 %box-shadow {
   box-shadow: $basic-shadow;
   transition: all .3s;
+
   &:hover {
-    box-shadow: 0px 10px 20px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.2);
   }
+
 }
+
 // FONTS
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin);
+
 // STYLES
 // GLOBALS
 body {
   background-color: #fcfcfc;
   font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
+
 // FOOTERS
 #actions {
   border-top: 1px solid $primary-color;
+
   .title {
     color: $brown;
     font-size: 25px;
+  }
+
+}
+
 section {
   padding: 2rem 0;
+
   &:first-of-type {
     padding-top: 0;
   }
+
   &:last-of-type {
     padding-bottom: 0;
   }
+
 }
+
 .main-content.container {
   padding-top: 36px;
   padding-bottom: 36px;
 }
+
 a:hover {
   text-decoration: none;
 }
+
 // COMMON ELEMENTS
 // NAVBAR AND HERO
 .top-layer {
@@ -67,25 +87,32 @@ a:hover {
   background-size: cover;
   z-index: 10000;
 }
+
 nav {
   &.navbar {
     padding-top: 1rem;
     padding-bottom: 0;
   }
+
   .navbar-brand {
     margin-right: 30px;
     width: 120px;
     padding: 0 0 4px 0;
+
     img {
       height: 52px;
     }
+
   }
+
   li.dropdown {
     position: unset;
   }
+
   .container {
     position: relative;
   }
+
   .dropdown-menu {
     border: 1px solid $secondary;
     border-radius: 0;
@@ -101,40 +128,54 @@ nav {
     transform: translateY(-6px);
     transition: transform .2s;
     width: calc(100% - 30px);
+
     &.show {
       opacity: 1;
       pointer-events: unset;
       transform: translateY(0);
     }
+
     .col {
       padding: 15px;
+
       &.key {
         background-color: $very-light;
       }
+
       &:first-of-type {
         border-right: 1px solid $light;
       }
+
       &:last-of-type {
         border-left: 1px solid $gray;
       }
+
     }
+
     a {
       color: $dark;
       display: block;
       padding: 4px 0 4px 8px;
       text-decoration: none;
+
       &:hover {
         color: #000;
       }
+
       &.disabled {
         color: $gray;
         cursor: default;
+
         &:hover {
           color: $gray;
         }
+
       }
+
     }
+
   }
+
   .dropdown-submenu .submenu-title {
     font-size: 14px;
     font-weight: bold;
@@ -142,208 +183,266 @@ nav {
     padding: 4px 0 4px 8px;
     text-transform: uppercase;
   }
+
   a.nav-link {
     color: $white !important;
     opacity: .7 !important;
+
     &:hover {
       opacity: 1 !important;
     }
+
     &.dropdown-toggle {
       border-bottom: 2px solid transparent;
       padding: 8px 1.25rem 16px !important;
+
       &::after {
         display: none;
       }
+
       &[aria-expanded="true"] {
         border-bottom-color: $white;
         opacity: 1 !important;
         z-index: 1001;
       }
+
     }
+
   }
+
 }
+
 .jumbotron {
   background: unset;
   margin-bottom: 0;
   padding: 3rem 0;
+
   h1 {
     font-weight: bold;
   }
+
   .lead {
     font-weight: normal;
   }
+
 }
+
 // FOOTERS
 footer {
   padding: 36px 0;
 }
+
 #actions {
   background-color: $light;
+
   .header {
     color: $primary;
   }
+
   a {
     color: $dark;
+
     &:hover {
       color: $black;
       text-decoration: none;
     }
+
   }
+
 }
+
 #info {
   background-color: $dark;
   padding-top: 30px;
   color: $light;
+
   img {
     max-width: 300px;
     width: 100%;
   }
+
   a {
     color: $light;
+
     &:hover {
       color: $white;
       text-decoration: none;
     }
+
   }
+
   i {
     margin-right: 6px;
   }
+
   .links a {
     display: block;
   }
+
   .social i {
     font-size: 1.5rem;
     margin-right: 12px;
   }
+
 }
+
 // COMMON ELEMENTS
 // BUTTONS
 .btn:not(.btn-icon) i {
   margin-right: .35rem;
 }
+
 .btn:focus {
   box-shadow: none !important;
 }
+
 .btn-primary {
   background-color: $primary;
   border-color: $primary;
   color: $white;
+
   &:hover {
     border-color: darken($primary, 5%);
     background-color: darken($primary, 5%);
   }
-  &:active,
-  &:focus {
+
+  &:active, &:focus {
     border-color: darken($primary, 5%) !important;
     background-color: darken($primary, 5%) !important;
   }
+
 }
+
 .btn-primary-outline {
   background-color: transparent;
   border-color: $primary;
   color: $primary;
+
   &:hover {
     border-color: $primary;
-    background-color: transparentize($primary, 0.9);;
+    background-color: transparentize($primary, 0.9);
     color: $primary;
   }
-  &:active,
-  &:focus {
+
+  &:active, &:focus {
     border-color: $primary !important;
     background-color: transparentize($primary, 0.9) !important;
     color: $primary;
   }
+
 }
+
 .btn-primary-basic {
   background-color: transparent;
   border-color: transparent;
   color: $primary;
+
   &:hover {
     background-color: transparentize($primary, 0.9);
     border-color: transparent;
     color: $primary;
   }
+
 }
+
 .btn-secondary {
   background-color: $secondary;
   border-color: $secondary;
+
   &:hover {
     border-color: darken($secondary, 5%);
     background-color: darken($secondary, 5%);
   }
-  &:active,
-  &:focus {
+
+  &:active, &:focus {
     border-color: darken($secondary, 5%) !important;
     background-color: darken($secondary, 5%) !important;
   }
+
 }
+
 .btn-secondary-outline {
   background-color: transparent;
   border-color: $secondary;
   color: $secondary;
+
   &:hover {
     border-color: $secondary;
     background-color: transparentize($secondary, 0.9);
     color: $secondary;
   }
-  &:active,
-  &:focus {
+
+  &:active, &:focus {
     border-color: $secondary !important;
     background-color: transparentize($secondary, 0.9) !important;
     color: $secondary;
   }
+
 }
+
 .btn-secondary-basic {
   background-color: transparent;
   border-color: transparent;
   color: $secondary;
+
   &:hover {
     background-color: transparentize($secondary, 0.9);
     border-color: transparent;
     color: $secondary;
   }
+
 }
+
 .btn-default {
   background-color: $dark;
   border-color: $dark;
   color: $very-light;
+
   &:hover {
     border-color: darken($dark, 5%);
     background-color: darken($dark, 5%);
     color: $very-light;
   }
-  &:active,
-  &:focus {
+
+  &:active, &:focus {
     border-color: darken($dark, 5%) !important;
     background-color: darken($dark, 5%) !important;
   }
+
 }
+
 .btn-default-outline {
   background-color: transparent;
   border-color: $dark;
   color: $dark;
+
   &:hover {
     border-color: $dark;
     background-color: transparentize($dark, 0.9);
     color: $dark;
   }
-  &:active,
-  &:focus {
+
+  &:active, &:focus {
     border-color: $dark !important;
     background-color: transparentize($dark, 0.9) !important;
     color: $dark;
   }
+
 }
+
 .btn-default-basic {
   background-color: transparent;
   border-color: transparent;
   color: $dark;
+
   &:hover {
     background-color: transparentize($dark, 0.9);
     border-color: transparent;
     color: $dark;
   }
+
 }
+
 // THUMBNAIL BUTTON
 .btn-thumbnail {
   @extend %raised-hover;
@@ -356,17 +455,21 @@ footer {
   font-size: 1.2rem;
   height: 200px;
   width: 100%;
+
   &:hover {
     color: white;
     text-decoration: none;
   }
+
   .title {
     margin: 0 0 4px 10px;
     align-self: flex-end;
     text-shadow: 0px 0px 2px rgba(0, 0, 0, 1);
     font-weight: bold;
   }
+
 }
+
 // ICON BUTTON
 .btn-icon {
   @extend %raised-hover;
@@ -379,24 +482,30 @@ footer {
   height: calc(100% - 1rem);
   margin-bottom: 1rem;
   padding: 1rem;
+
   &:hover {
     color: $black;
   }
+
   .title {
     font-size: 1.5rem;
     margin-bottom: .5rem;
   }
+
 }
+
 // CARD
 .card {
   border: none;
   box-shadow: $basic-shadow;
 }
+
 // CONTRIBUTE BOX
 .contribute {
   color: $dark;
   background: $light;
 }
+
 // LEAFLET MAP
 .leaflet-map {
   box-shadow: $basic-shadow;
@@ -405,35 +514,42 @@ footer {
   min-height: 300px;
   width: 100%;
 }
+
 // DATATABLE | the DataTables CSS file is loaded after this file, so this section requires some !important tags
 .dataTables_wrapper thead tr th {
   border-top: none;
 }
-.dataTables_wrapper input.form-control:focus,
-.dataTables_wrapper select.custom-select:focus {
+
+.dataTables_wrapper input.form-control:focus, .dataTables_wrapper select.custom-select:focus {
   border-color: $secondary;
   box-shadow: 0 0 0 .2rem rgba(94, 39, 80, 0.16);
 }
+
 .dataTables_wrapper .paginate_button.page-item .page-link:focus {
   box-shadow: none !important;
 }
+
 .dataTables_wrapper .paginate_button.page-item:not(.disabled) .page-link {
   color: $dark;
 }
+
 .dataTables_wrapper .paginate_button.page-item.active .page-link {
   background-color: $secondary;
   border-color: $secondary;
   color: $white;
+
   &:hover {
     border-color: darken($secondary, 5%);
     background-color: darken($secondary, 5%);
   }
-  &:active,
-  &:focus {
+
+  &:active, &:focus {
     border-color: darken($secondary, 5%) !important;
     background-color: darken($secondary, 5%) !important;
   }
+
 }
+
 // SINGLE PROJECT PAGE
 body.single-project {
   .return-bar {
@@ -443,28 +559,48 @@ body.single-project {
     background-position: 50%;
     background-size: cover;
     z-index: 10000;
+
     a {
       color: #fff;
+
       &:hover {
         color: #ccc;
         text-decoration: none;
       }
+
     }
+
   }
+
   nav {
     background-color: #f6f6f6;
     padding-bottom: 1rem;
     box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
+
     a.nav-link {
       padding-left: 1rem !important;
       padding-right: 1rem !important;
       color: #666 !important;
+
       &:hover {
         color: #000 !important;
       }
+
     }
+
   }
+
 }
+
 .contribute {
   background: #cf4803;
+}
+
+.thumbnails {
+  img {
+    display: flex;
+    height: 150px;
+    width: 100%;
+  }
+
 }
