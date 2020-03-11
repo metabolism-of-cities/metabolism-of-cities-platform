@@ -219,9 +219,15 @@ def load_baseline(request):
     return render(request, "template/blank.html")
 
 def project_form(request):
-    form = modelform_factory(Project, fields=('title','content','email','url'))
+    ModelForm = modelform_factory(Project, fields=('title','content','email','url'))
+    form = ModelForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Information was saved.')
+        else:
+            messages.error(request, 'We could not save your form, please fill out all fields')
     context = {
     'form':form
     }
-    print(form)
     return render(request, "project.form.html",context)
