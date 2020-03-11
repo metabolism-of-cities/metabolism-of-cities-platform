@@ -12,9 +12,11 @@
 {% block subtitle %}{% endblock %}
 
 {% block content %}
-  Content goes here
+  <form method="post" class="form form-horizontal" enctype="multipart/form-data">
+    {{ form }}
+    <button type="submit">Save</button>
+  </form>
 {% endblock %}
-
 
 {% block footer %}
 {% endblock %}

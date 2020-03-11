@@ -6,6 +6,7 @@ from stdimage.models import StdImageField
 # To indicate which site a record belongs to
 from django.contrib.sites.models import Site
 from django.contrib.sites.managers import CurrentSiteManager
+from django.forms import ModelForm
 
 class Record(models.Model):
     title = models.CharField(max_length=255)
@@ -61,3 +62,4 @@ class Article(Record):
             models.UniqueConstraint(fields=["site", "slug"], name="site_slug")
         ]
         ordering = ["position", "title"]
+        

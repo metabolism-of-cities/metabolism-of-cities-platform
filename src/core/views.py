@@ -33,6 +33,7 @@ from .models import *
 from django.contrib.sites.shortcuts import get_current_site
 
 from django.template import Context
+from django.forms import modelform_factory
 
 # Authentication of users
 
@@ -218,4 +219,9 @@ def load_baseline(request):
     return render(request, "template/blank.html")
 
 def project_form(request):
-    return render(request, "project.form.html")
+    form = modelform_factory(Project, fields=('title','content','email','url'))
+    context = {
+    'form':form
+    }
+    print(form)
+    return render(request, "project.form.html",context)
