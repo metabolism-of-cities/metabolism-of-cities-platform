@@ -7,7 +7,7 @@ $primary: #e95420;
 $secondary: #5e2750;
 $black: #000;
 $white: #fff;
-$dark: #333;
+$dark: #212529;
 $gray: #808080;
 $light: #efefef;
 $very-light: #fbfbfb;
@@ -40,7 +40,7 @@ $basic-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
 // GLOBALS
 body {
   background-color: #fcfcfc;
-  font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
 
 // FOOTERS
@@ -246,9 +246,7 @@ footer {
       color: $black;
       text-decoration: none;
     }
-
   }
-
 }
 
 #info {
@@ -268,7 +266,6 @@ footer {
       color: $white;
       text-decoration: none;
     }
-
   }
 
   i {
@@ -283,7 +280,6 @@ footer {
     font-size: 1.5rem;
     margin-right: 12px;
   }
-
 }
 
 // COMMON ELEMENTS
@@ -310,7 +306,6 @@ footer {
     border-color: darken($primary, 5%) !important;
     background-color: darken($primary, 5%) !important;
   }
-
 }
 
 .btn-primary-outline {
@@ -329,7 +324,6 @@ footer {
     background-color: transparentize($primary, 0.9) !important;
     color: $primary;
   }
-
 }
 
 .btn-primary-basic {
@@ -342,7 +336,6 @@ footer {
     border-color: transparent;
     color: $primary;
   }
-
 }
 
 .btn-secondary {
@@ -358,7 +351,6 @@ footer {
     border-color: darken($secondary, 5%) !important;
     background-color: darken($secondary, 5%) !important;
   }
-
 }
 
 .btn-secondary-outline {
@@ -377,7 +369,6 @@ footer {
     background-color: transparentize($secondary, 0.9) !important;
     color: $secondary;
   }
-
 }
 
 .btn-secondary-basic {
@@ -390,7 +381,6 @@ footer {
     border-color: transparent;
     color: $secondary;
   }
-
 }
 
 .btn-default {
@@ -408,7 +398,6 @@ footer {
     border-color: darken($dark, 5%) !important;
     background-color: darken($dark, 5%) !important;
   }
-
 }
 
 .btn-default-outline {
@@ -427,7 +416,6 @@ footer {
     background-color: transparentize($dark, 0.9) !important;
     color: $dark;
   }
-
 }
 
 .btn-default-basic {
@@ -440,7 +428,17 @@ footer {
     border-color: transparent;
     color: $dark;
   }
+}
 
+.btn-card {
+  @extend %raised-hover;
+  @extend %box-shadow;
+  color: $dark;
+  height: 100%;
+
+  &:hover {
+    color: $dark;
+  }
 }
 
 // THUMBNAIL BUTTON
