@@ -10,7 +10,13 @@ There may be reasons to define expections to these rules that apply to our proje
 
 ## Exceptions
 
-There are currently no exceptions to the aforementioned style guides.
+### HTML
+
+- Please keep using the optional tags as described in 3.1.7 (https://google.github.io/styleguide/htmlcssguide.html#Optional_Tags). Technically it's not necessary to, for example, close `<p>` tags. However, as already mentioned in the styleguide documents, this is "significantly different from what web developers are typically taught". The stated benefits are "file size optimization and scannability", but I don't think these really apply for this project.
+
+### CSS
+
+- Please use double quotation marks ("") instead of single ('') as suggested in section 4.2.8 (https://google.github.io/styleguide/htmlcssguide.html#CSS_Quotation_Marks). I think it makes sense being consistent throughout all of our code.
 
 ## Libraries
 
