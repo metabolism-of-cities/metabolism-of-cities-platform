@@ -1,8 +1,4 @@
 // VARIABLES
-$primary-color: #808080;
-$logo: 250px;
-$address: #fff;
-$brown: #cb270d;
 $primary: #e95420;
 $secondary: #5e2750;
 $black: #000;
@@ -43,17 +39,6 @@ body {
   font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
 
-// FOOTERS
-#actions {
-  border-top: 1px solid $primary-color;
-
-  .title {
-    color: $brown;
-    font-size: 25px;
-  }
-
-}
-
 section {
   padding: 2rem 0;
 
@@ -64,7 +49,6 @@ section {
   &:last-of-type {
     padding-bottom: 0;
   }
-
 }
 
 .main-content.container {
@@ -95,8 +79,6 @@ nav {
   }
 
   .navbar-brand {
-    margin-right: 30px;
-    width: 120px;
     padding: 0 0 4px 0;
 
     img {
@@ -232,7 +214,12 @@ footer {
   padding: 36px 0;
 }
 
-#actions {
+#involved {
+  background-color: $secondary;
+  color: $light;
+}
+
+#sitemap {
   background-color: $light;
 
   .header {
@@ -427,6 +414,53 @@ footer {
     background-color: transparentize($dark, 0.9);
     border-color: transparent;
     color: $dark;
+  }
+}
+
+.btn-inverse {
+  background-color: $light;
+  border-color: $light;
+  color: $dark;
+
+  &:hover {
+    border-color: darken($light, 5%);
+    background-color: darken($light, 5%);
+    color: $dark;
+  }
+
+  &:active, &:focus {
+    border-color: darken($light, 5%) !important;
+    background-color: darken($light, 5%) !important;
+  }
+}
+
+.btn-inverse-outline {
+  background-color: transparent;
+  border-color: $light;
+  color: $light;
+
+  &:hover {
+    border-color: $light;
+    background-color: transparentize($light, 0.9);
+    color: $light;
+  }
+
+  &:active, &:focus {
+    border-color: $light !important;
+    background-color: transparentize($light, 0.9) !important;
+    color: $light;
+  }
+}
+
+.btn-inverse-basic {
+  background-color: transparent;
+  border-color: transparent;
+  color: $light;
+
+  &:hover {
+    background-color: transparentize($light, 0.9);
+    border-color: transparent;
+    color: $light;
   }
 }
 
