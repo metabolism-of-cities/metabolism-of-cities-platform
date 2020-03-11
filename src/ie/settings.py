@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'stdimage',
     'sass_processor',
     'django.contrib.sites',
-    'wkhtmltopdf',
 ]
 
 MIDDLEWARE = [

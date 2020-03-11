@@ -1,4 +1,4 @@
-import os
+from io import BytesIO
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -33,6 +33,8 @@ from .models import *
 from django.contrib.sites.shortcuts import get_current_site
 
 from django.template import Context
+
+from xhtml2pdf import pisa
 
 # Authentication of users
 
@@ -138,34 +140,26 @@ def article_list(request, id):
 # TEMPORARY PAGES DURING DEVELOPMENT
 
 def pdf(request):
-    import pdfkit
-    import wkhtmltopdf
-
     name = request.GET["name"]
     score = request.GET["score"]
 
     print(name)
     print(score)
 
-    context = Context({"name": name, "score": score})
+    #path = settings.BASE_DIR + "/img/water.jpg"
+    path = "https://www.google.com.ni/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
+    context = Context({"name": name, "score": score, "path": path})
     template = get_template("pdf_template.html")
 
     html = template.render(context.flatten())
+    print(html)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
 
-    import os
-    path = settings.MEDIA_ROOT + "/out.pdf"
-    print(path)
-    pdfkit.from_string('hello', path)
-    print("HERE")
-    pdf = open(path)
-    print("OR HERE")
-    response = HttpResponse(pdf.read(), content_type='application/pdf')
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
 
-    response['Content-Disposition'] = 'attachment; filename=output.pdf'
-    pdf.close()
-    os.remove(path)
-
-    return response
+    return None
 
 def load_baseline(request):
     moc = Site.objects.get(pk=1)

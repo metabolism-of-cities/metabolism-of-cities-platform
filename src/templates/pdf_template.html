@@ -1,3 +1,5 @@
+{% load static %}
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,10 +12,10 @@
 </head>
 <body>
 <div class="container">
-  <table class="table table-borderless">
+  <table class="table table-bordered">
     <tr>
       <td>
-        <table>
+        <table class="table table-bordered">
           <tr>
             <th colspan="2">
               <h1>Metabolism of Cities</h1>
@@ -41,7 +43,7 @@
         </table>
       </td>
       <td style="vertical-align: middle;">
-        <img alt="Metabolism of Cities" src="/static/img/logo.svg">
+        <img alt="Metabolism of Cities" src="{{ path }}">
       </td>
     </tr>
   </table>
