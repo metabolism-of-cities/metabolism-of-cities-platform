@@ -1,6 +1,7 @@
 {% extends "_base.html" %}
 {% load static %}
 {% load sass_tags %}
+{% load bootstrap4 %}
 
 {% block page_name %}{% endblock %}
 
@@ -13,8 +14,11 @@
 
 {% block content %}
   <form method="post" class="form form-horizontal" enctype="multipart/form-data">
-    {{ form }}
-    <button type="submit">Save</button>
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    {% endbuttons %}
   </form>
 {% endblock %}
 
