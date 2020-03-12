@@ -28,7 +28,7 @@
   }
 
   .content {
-    background-image: url("http://0.0.0.0:8000/static/img/bg.png");
+    background-image: url("{{ site }}{% static "img/bg.png" %}");
     background-repeat: no-repeat;
     background-size: cover;
     height: 640px;

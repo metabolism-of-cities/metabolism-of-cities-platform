@@ -148,8 +148,9 @@ def pdf(request):
     score = request.GET["score"]
     date = datetime.now()
     date = date.strftime("%d %B %Y")
+    site = Site.objects.get_current()
 
-    context = Context({"name": name, "score": score, "date": date})
+    context = Context({"name": name, "score": score, "date": date, "site": site.domain})
 
     response = HttpResponse(content_type="application/pdf")
     response['Content-Disposition'] = "inline; filename=test.pdf"
