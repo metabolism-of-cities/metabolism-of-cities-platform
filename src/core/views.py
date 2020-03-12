@@ -39,32 +39,37 @@ from django.template import Context
 
 PAGE_ID = {
     "people": 12,
+    "projects": 19,
 }
 
 # We use getHeader to obtain the header settings (type of header, title, subtitle, image)
 # This dictionary has to be created for many different pages so by simply calling this 
 # function instead we don't repeat ourselves too often.
 def getHeader(info):
-    header_image = info.image.huge.url if info.image else None
+    if hasattr(info, "design"):
+        design = info.design
+    else:
+        design = ArticleDesign()
 
+    header_image = design.header_image.huge.url if design.header_image else None
     breadcrumbs = '<a href="/"><i aria-hidden="true" class="fa fa-home fa-fw"></i></a>'
     if info.parent:
         breadcrumbs += ' &raquo; '
         breadcrumbs += '<a href="' + info.parent.get_absolute_url() + '">' + info.parent.title + '</a>'
-    if info.header != "full":
+    if design.header != "full":
         breadcrumbs += ' &raquo; '
         breadcrumbs += '<span class="active">' + info.title + '</span>'
 
-    if info.header_subtitle:
-        subtitle = info.header_subtitle
+    if design.header_subtitle:
+        subtitle = design.header_subtitle
     elif info.parent:
         subtitle = breadcrumbs
     else:
         subtitle = ""
 
     return {
-        "type": info.header,
-        "title": info.header_title if info.header_title else info.title,
+        "type": design.header,
+        "title": design.header_title if design.header_title else info.title,
         "subtitle": subtitle,
         "breadcrumbs": breadcrumbs,
         "image": header_image,
@@ -135,10 +140,29 @@ def template(request, slug):
 # The internal projects section
 
 def projects(request):
-    return render(request, "projects.html")
+    article = get_object_or_404(Article, pk=PAGE_ID["projects"])
+    context = {
+        "header": getHeader(article),
+        "edit_link": "/admin/core/project/" + str(article.id) + "/change/",
+        "list": Project.on_site.all(),
+        "article": article,
+    }
+    return render(request, "projects.html", context)
 
 def project(request, id):
-    return render(request, "project.html")
+    article = get_object_or_404(Article, pk=PAGE_ID["projects"])
+    info = get_object_or_404(Project, pk=id)
+    header = getHeader(article)
+    context = {
+        "header": {
+            "type": article.design.header if hasattr(article, "design") else "full",
+            "title": info.title,
+            "subtitle": header["breadcrumbs"] + ' &raquo; <a href="/projects">Projects</a>',
+        },
+        "edit_link": "/admin/core/project/" + str(info.id) + "/change/",
+        "info": info,
+    }
+    return render(request, "project.html", context)
 
 # Article is used for general web pages, and they can be opened in
 # various ways (using ID, using slug). They can have different presentational formats
@@ -158,13 +182,18 @@ def article(request, id=None, prefix=None, slug=None):
 
     if info.parent:
         menu = Article.objects.filter(parent=info.parent)
+    if hasattr(info, "design"):
+        design_link = "/admin/core/articledesign/" + str(info.id) + "/change/"
+    else:
+        design_link = "/admin/core/articledesign/add/?article=" + str(info.id)
     context = {
         "info": info,
         "menu": menu,
         "edit_link": "/admin/core/article/" + str(info.id) + "/change/",
         "add_link": "/admin/core/article/add/",
+        "design_link": design_link,
         "header": getHeader(info),
-        }
+    }
     return render(request, "article.html", context)
 
 def article_list(request, id):
@@ -275,6 +304,8 @@ def load_baseline(request):
         { "id": 34, "title": "Our Members", "parent": 31, "slug": "/about/members/", "position": 3 },
         { "id": 35, "title": "Our Partners", "parent": 31, "slug": "/about/partners/", "position": 4 },
         { "id": 36, "title": "Contact Us", "parent": 31, "slug": "/about/contact/", "position": 5 },
+
+        { "id": 38, "title": "Urban Metabolism Library", "parent": 19, "slug": "/library/", "position": None },
 
     ]
     projects = [

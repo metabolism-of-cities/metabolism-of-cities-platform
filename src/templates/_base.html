@@ -18,6 +18,12 @@
   <!-- top layer with navbar and hero -->
   {% include "_top-layer.html" %}
 
+  {% if design_link and request.user.is_authenticated and request.user.is_staff %}
+    <a href="{{ design_link }}" style="position:fixed;right:0;top:400px;background:green;padding:5px;color:#fff">
+      DESIGN
+    </a>
+  {% endif %}
+
   {% if edit_link and request.user.is_authenticated and request.user.is_staff %}
     <a href="{{ edit_link }}" style="position:fixed;right:0;top:300px;background:yellow;padding:5px;">
       EDIT
