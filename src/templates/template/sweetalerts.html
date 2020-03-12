@@ -1,0 +1,143 @@
+{% extends "_base.html" %}
+
+{% block title %}Sweertalerts{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+  <button id="basic">Show basic Sweetalert</button>
+  <button id="title_and_content">Title & content</button>
+  <button id="success">succes tik 1</button>
+  <button id="successobject">succes tik 2</button>
+  <button id="success_button">Show custom button</button>
+  <button id="dangermode">Show danger mode</button>
+  <button id="switchcondition">Show basic Sweetalert</button>
+  <button id="seach_movie">show to search</button>
+  <button id="inputvalue">show write</button>
+{% endblock %}
+
+{% block footer %}
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	<script>
+		$("#basic").click(function(){
+		  swal("Hello world!");
+		});
+		$("#title_and_content").click(function(){
+		  swal("Here's the title!", "...and here's the text!");
+		});
+		$("#success").click(function(){
+		  swal("Good job!", "You clicked the button!", "success");
+		});
+		$("#successobject").click(function(){
+		  swal({
+		    title: "Good job!",
+		    text: "You clicked the button!",
+		    icon: "success",
+		  });
+		});
+		$("#success_button").click(function(){
+		  swal({
+  		  title: "Good job!",
+  		  text: "You clicked the button!",
+  		  icon: "success",
+  		  button: "Aww yiss!",
+  		});
+		});
+		$("#dangermode").click(function(){
+		  swal({
+		    title: "Are you sure?",
+		    text: "Once deleted, you will not be able to recover this imaginary file!",
+		    icon: "warning",
+		    buttons: true,
+		    dangerMode: true,
+		  })
+		  .then((willDelete) => {
+		    if (willDelete) {
+		      swal("Poof! Your imaginary file has been deleted!", {
+		        icon: "success",
+		      });
+		    } else {
+		      swal("Your imaginary file is safe!");
+		    }
+		  });
+		});
+		$("#switchcondition").click(function(){
+		  swal("A wild Pikachu appeared! What do you want to do?", {
+		    buttons: {
+		      cancel: "Run away!",
+		      catch: {
+		        text: "Throw Pokéball!",
+		        value: "catch",
+		      },
+		      defeat: true,
+		    },
+		  })
+		  .then((value) => {
+		    switch (value) {
+		   
+		      case "defeat":
+		        swal("Pikachu fainted! You gained 500 XP!");
+		        break;
+		   
+		      case "catch":
+		        swal("Gotcha!", "Pikachu was caught!", "success");
+		        break;
+		   
+		      default:
+		        swal("Got away safely!");
+		    }
+		  });
+		});
+		$("#seach_movie").click(function(){
+		  swal({
+		    text: 'Search for a movie. e.g. "La La Land".',
+		    content: "input",
+		    button: {
+		      text: "Search!",
+		      closeModal: false,
+		    },
+		  })
+		  .then(name => {
+		    if (!name) throw null;
+		   
+		    return fetch(`https://itunes.apple.com/search?term=${name}&entity=movie`);
+		  })
+		  .then(results => {
+		    return results.json();
+		  })
+		  .then(json => {
+		    const movie = json.results[0];
+		   
+		    if (!movie) {
+		      return swal("No movie was found!");
+		    }
+		   
+		    const name = movie.trackName;
+		    const imageURL = movie.artworkUrl100;
+		   
+		    swal({
+		      title: "Top result:",
+		      text: name,
+		      icon: imageURL,
+		    });
+		  })
+		  .catch(err => {
+		    if (err) {
+		      swal("Oh noes!", "The AJAX request failed!", "error");
+		    } else {
+		      swal.stopLoading();
+		      swal.close();
+		    }
+		  });
+		});
+		$("#inputvalue").click(function(){
+		  swal("Write something here:", {
+		    content: "input",
+		  })
+		  .then((value) => {
+		    swal(`You typed: ${value}`);
+		  });
+		});
+	</script>
+{% endblock %}
