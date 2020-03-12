@@ -36,8 +36,9 @@ from django.template import Context
 
 from xhtml2pdf import pisa
 
-from weasyprint import HTML
+from weasyprint import HTML, CSS
 from weasyprint.fonts import FontConfiguration
+from datetime import datetime
 
 # Authentication of users
 
@@ -145,11 +146,10 @@ def article_list(request, id):
 def pdf(request):
     name = request.GET["name"]
     score = request.GET["score"]
+    date = datetime.now()
+    date = date.strftime("%d %B %Y")
 
-    path = "https://www.google.com.ni/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
-
-    context = Context({"name": name, "score": score, "path": path})
-    template = get_template("pdf_template.html")
+    context = Context({"name": name, "score": score, "date": date})
 
     response = HttpResponse(content_type="application/pdf")
     response['Content-Disposition'] = "inline; filename=test.pdf"
