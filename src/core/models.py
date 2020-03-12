@@ -6,6 +6,7 @@ from stdimage.models import StdImageField
 # To indicate which site a record belongs to
 from django.contrib.sites.models import Site
 from django.contrib.sites.managers import CurrentSiteManager
+from django.urls import reverse
 
 class Record(models.Model):
     title = models.CharField(max_length=255)
@@ -42,8 +43,13 @@ class Video(Record):
 
 class People(Record):
     affiliation = models.CharField(max_length=255,null=True, blank=True)
+    site = models.ManyToManyField(Site)
+    def get_absolute_url(self):
+        return reverse("person", args=[self.id])
     class Meta:
         verbose_name_plural = "people"
+    objects = models.Manager()
+    on_site = CurrentSiteManager()
 
 class Article(Record):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)

@@ -1,0 +1,17 @@
+{% extends "_base.html" %}
+
+{% block title %}{{ info }}{% endblock %}
+
+{% block content %}
+
+  <h1>{{ info }}</h1>
+  {% if info.image %}
+  <img src="{{ info.image.large.url }}" alt="" />
+  {% endif %}
+  <p><strong>Description</strong>: {{ info.content|safe }}</p>
+  <p><strong>Affiliation</strong>: {{ info.affiliation }}</p>
+  <p><strong>Location</strong>: Cape Town, South Africa</p>
+
+  <p><a href="{% url "people_list" %}">Back to list</a></p>
+
+{% endblock %}

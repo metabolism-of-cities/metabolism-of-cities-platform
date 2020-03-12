@@ -23,6 +23,13 @@ urlpatterns = [
     path("urbanmetabolism/", views.article_list, { "id": 1 }, name="um"),
     path("urbanmetabolism/<slug:slug>/", views.article, { "prefix": "/urbanmetabolism/" }, name="um"),
 
+    # Community
+
+    path("community/people/", views.people_list, name="people_list"),
+    path("community/people/<int:id>/", views.person, name="person"),
+    path("community/", views.article_list, { "id": 1 }, name="community"),
+    path("community/<slug:slug>/", views.article, { "prefix": "/community/" }, name="community"),
+
     # Temporary
     path("baseline/", views.load_baseline),
 

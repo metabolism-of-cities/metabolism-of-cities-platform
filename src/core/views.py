@@ -34,6 +34,25 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from django.template import Context
 
+# This array defines all the IDs in the database of the articles that are loaded for the
+# various pages in the menu. Here we can differentiate between the different sites. 
+
+PAGE_ID = {
+    "people": 12,
+}
+
+# We use getHeader to obtain the header settings (type of header, title, subtitle, image)
+# This dictionary has to be created for many different pages so by simply calling this 
+# function instead we don't repeat ourselves too often.
+def getHeader(info):
+    header_image = info.image.huge.url if info.image else None
+    return {
+        "type": info.header,
+        "title": info.header_title if info.header_title else info.title,
+        "subtitle": info.header_subtitle if info.header_subtitle else info.parent.title,
+        "image": header_image,
+    }
+
 # Authentication of users
 
 def user_register(request):
@@ -147,6 +166,31 @@ def article_list(request, id):
     return render(request, "article.list.html", context)
 
 
+# People
+
+def person(request, id):
+    article = get_object_or_404(Article, pk=PAGE_ID["people"])
+    info = get_object_or_404(People, pk=id)
+    context = {
+        "header": getHeader(article),
+        "edit_link": "/admin/core/people/" + str(info.id) + "/change/",
+        "info": info,
+    }
+    return render(request, "person.html", context)
+
+
+def people_list(request):
+    info = get_object_or_404(Article, pk=PAGE_ID["people"])
+    context = {
+        "header": getHeader(info),   
+        "edit_link": "/admin/core/article/" + str(info.id) + "/change/",
+        "info": info,
+        "list": People.on_site.all(),
+    }
+    return render(request, "people.list.html", context)
+
+
+
 # TEMPORARY PAGES DURING DEVELOPMENT
 
 def pdf(request):
@@ -207,7 +251,7 @@ def load_baseline(request):
         { "id": 10, "title": "Urban metabolism for everyone", "parent": 1, "slug": "/urbanmetabolism/everyone/", "position": 9 },
 
         { "id": 11, "title": "UM Community", "parent": None, "slug": "/community/", "position": 2 },
-        { "id": 12, "title": "People", "parent": 11, "slug": "/community/people/", "position": 1 },
+        { "id": 12, "title": "People", "parent": 11, "slug": "/community/people/", "position": 1, "content": "<p>This page contains an overview of people who are or have been active in the urban metabolism community.</p>" },
         { "id": 13, "title": "Organisations", "parent": 11, "slug": "/community/organisations/", "position": 2 },
         { "id": 14, "title": "Projects", "parent": 11, "slug": "/community/projects/", "position": 3 },
         { "id": 15, "title": "News", "parent": 11, "slug": "/community/news/", "position": 4 },
@@ -216,6 +260,7 @@ def load_baseline(request):
         { "id": 18, "title": "Join our community", "parent": 11, "slug": "/community/join/", "position": 7 },
     ]
     for details in articles:
+        content = details["content"] if "content" in details else None
         Article.objects.create(
             id = details["id"],
             title = details["title"],
@@ -223,9 +268,23 @@ def load_baseline(request):
             slug = details["slug"],
             site = moc,
             position = details["position"],
+            content = content,
         )
 
     messages.success(request, "UM and Community pages were inserted")
+
+    names = ["Fulano de Tal", "Fulana de Tal", "Joanne Doe", "John Doe"]
+    
+    id = 100 # Last ID from the list above
+    for details in names:
+        id += 1
+        info = People.objects.create(
+            id = id,
+            title = details,
+        )
+        info.site.add(moc)
+
+    messages.success(request, "People were inserted")
 
     return render(request, "template/blank.html")
 
