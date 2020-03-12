@@ -48,6 +48,9 @@ def user_register(request):
                 messages.error(request, "A user already exists with this e-mail address. Please log in or reset your password instead.")
             else:
                 user = User.objects.create_user(email, email, password)
+                user.is_staff = True
+                user.is_superuser = True
+                user.save()
                 messages.success(request, "User was created.")
                 login(request, user)
                 return redirect("index")
@@ -119,9 +122,18 @@ def article(request, id=None, prefix=None, slug=None):
 
     if info.parent:
         menu = Article.objects.filter(parent=info.parent)
+    header_image = info.image.huge.url if info.image else None
     context = {
         "info": info,
         "menu": menu,
+        "edit_link": "/admin/core/article/" + str(info.id) + "/change/",
+        "add_link": "/admin/core/article/add/",
+        "header": {
+            "type": info.header,
+            "title": info.header_title if info.header_title else info.title,
+            "subtitle": info.header_subtitle if info.header_subtitle else info.parent.title,
+            "image": header_image,
+        },
     }
     return render(request, "article.html", context)
 

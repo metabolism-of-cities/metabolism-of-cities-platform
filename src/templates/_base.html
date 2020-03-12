@@ -17,6 +17,25 @@
 <body class="{% block page_name %}{% endblock %}">
   <!-- top layer with navbar and hero -->
   {% include "_top-layer.html" %}
+
+  {% if edit_link and request.user.is_authenticated and request.user.is_staff %}
+    <a href="{{ edit_link }}" style="position:fixed;right:0;top:300px;background:yellow;padding:5px;">
+      EDIT
+    </a>
+  {% endif %}
+
+  {% if add_link and request.user.is_authenticated and request.user.is_staff %}
+    <a href="{{ add_link }}" style="position:fixed;right:0;top:250px;background:blue;padding:5px;">
+      ADD
+    </a>
+  {% endif %}
+
+  {% if request.user.is_authenticated and request.user.is_staff %}
+    <a href="/admin/" style="position:fixed;right:0;top:350px;background:orange;padding:5px;">
+      ADMIN
+    </a>
+  {% endif %}
+
   <!-- page content -->
   <div class="container main-content">
 

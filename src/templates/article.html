@@ -4,7 +4,9 @@
 
 {% block content %}
 
-  <h1>{{ info }}</h1>
+  {% if not header.type == "full" %}
+    <h1>{{ info }}</h1>
+  {% endif %}
 
   <ol class="breadcrumbs">
     <li><a href="/">{{ SITE_NAME }}</a></li>

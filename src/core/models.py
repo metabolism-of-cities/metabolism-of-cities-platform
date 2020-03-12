@@ -11,7 +11,7 @@ class Record(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField(null=True, blank=True)
     active = models.BooleanField(default=True)
-    image = StdImageField(upload_to="records", variations={"thumbnail": (480, 480), "large": (1280, 1024)}, blank=True, null=True)
+    image = StdImageField(upload_to="records", variations={"thumbnail": (480, 480), "large": (1280, 1024), "huge": (2560, 1440)}, blank=True, null=True)
     def __str__(self):
         return self.title
 
@@ -50,6 +50,14 @@ class Article(Record):
     slug = models.CharField(db_index=True, max_length=100)
     position = models.PositiveSmallIntegerField(db_index=True, null=True, blank=True)
     parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
+    HEADER = [
+        ("full", "Full header with title and subtitle"),
+        ("small", "Small header; menu only"),
+        ("image", "Image underneath menu"),
+    ]
+    header = models.CharField(max_length=6, choices=HEADER, default="full")
+    header_title = models.CharField(max_length=100, null=True, blank=True)
+    header_subtitle = models.CharField(max_length=255, null=True, blank=True)
 
     objects = models.Manager()
     on_site = CurrentSiteManager()

@@ -2,7 +2,7 @@
 <div class="top-layer">
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="/">
         <img alt="Metabolism of Cities" src="{% static 'img/logo.svg' %}">
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -139,10 +139,20 @@
       </div>
     </div>
   </nav>
-  <div class="jumbotron jumbotron-fluid text-light">
-    <div class="container">
-      <h1 class="display-4">{% block title %}{% endblock %}</h1>
-      <p class="lead">{% block subtitle %}{% endblock %}</p>
+
+  {% if header.type == "full" %}
+    <div class="jumbotron jumbotron-fluid text-light">
+      <div class="container">
+        {% if header.title %}
+          <h1 class="display-4">{{ header.title }}</h1>
+        {% endif %}
+        {% if header.subtitle %}
+          <p class="lead">{{ header.subtitle }}</p>
+        {% endif %}
+      </div>
     </div>
-  </div>
+  {% elif header.type == "image" %}
+    <img src="{{ header.image }}" alt="" style="width:100%" />
+  {% endif %}
+
 </div>
