@@ -46,10 +46,27 @@ PAGE_ID = {
 # function instead we don't repeat ourselves too often.
 def getHeader(info):
     header_image = info.image.huge.url if info.image else None
+
+    breadcrumbs = '<a href="/"><i aria-hidden="true" class="fa fa-home fa-fw"></i></a>'
+    if info.parent:
+        breadcrumbs += ' &raquo; '
+        breadcrumbs += '<a href="' + info.parent.get_absolute_url() + '">' + info.parent.title + '</a>'
+    if info.header != "full":
+        breadcrumbs += ' &raquo; '
+        breadcrumbs += '<span class="active">' + info.title + '</span>'
+
+    if info.header_subtitle:
+        subtitle = info.header_subtitle
+    elif info.parent:
+        subtitle = breadcrumbs
+    else:
+        subtitle = ""
+
     return {
         "type": info.header,
         "title": info.header_title if info.header_title else info.title,
-        "subtitle": info.header_subtitle if info.header_subtitle else info.parent.title,
+        "subtitle": subtitle,
+        "breadcrumbs": breadcrumbs,
         "image": header_image,
     }
 
@@ -147,13 +164,8 @@ def article(request, id=None, prefix=None, slug=None):
         "menu": menu,
         "edit_link": "/admin/core/article/" + str(info.id) + "/change/",
         "add_link": "/admin/core/article/add/",
-        "header": {
-            "type": info.header,
-            "title": info.header_title if info.header_title else info.title,
-            "subtitle": info.header_subtitle if info.header_subtitle else info.parent.title,
-            "image": header_image,
-        },
-    }
+        "header": getHeader(info),
+        }
     return render(request, "article.html", context)
 
 def article_list(request, id):
@@ -162,6 +174,7 @@ def article_list(request, id):
     context = {
         "info": info,
         "list": list,
+        "header": getHeader(info),
     }
     return render(request, "article.list.html", context)
 

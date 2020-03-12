@@ -147,7 +147,7 @@
           <h1 class="display-4">{{ header.title }}</h1>
         {% endif %}
         {% if header.subtitle %}
-          <p class="lead">{{ header.subtitle }}</p>
+          <p class="lead">{{ header.subtitle|safe }}</p>
         {% endif %}
       </div>
     </div>
