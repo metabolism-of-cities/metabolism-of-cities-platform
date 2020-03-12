@@ -165,7 +165,6 @@ def article_list(request, id):
     }
     return render(request, "article.list.html", context)
 
-
 # People
 
 def person(request, id):
@@ -178,7 +177,6 @@ def person(request, id):
     }
     return render(request, "person.html", context)
 
-
 def people_list(request):
     info = get_object_or_404(Article, pk=PAGE_ID["people"])
     context = {
@@ -188,8 +186,6 @@ def people_list(request):
         "list": People.on_site.all(),
     }
     return render(request, "people.list.html", context)
-
-
 
 # TEMPORARY PAGES DURING DEVELOPMENT
 
