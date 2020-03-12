@@ -47,94 +47,45 @@
               </div>
             </div>
           </li>
+
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="resources-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Resources
+            <a class="nav-link dropdown-toggle" href="#" id="projects-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Projects
             </a>
-            <div class="dropdown-menu" aria-labelledby="resources-dropdown">
+            <div class="dropdown-menu" aria-labelledby="projects-dropdown">
               <div class="dropdown-submenu">
                 <div class="row no-gutters">
-                  <div class="col col-md-4">
-                    <div class="submenu-title">Getting started</div>
-                    <a href="/about/our-story">About urban metabolism</a>
-                    <a href="/about/mission">Starter kit</a>
+                  <div class="col col-md-12">
 
-                    <div class="submenu-title mt-4">Publications</div>
-                    <a href="/about/join">Library</a>
-                    <a href="/about/subscribe">Journals</a>
-                    <a href="/contact">Add publication</a>
-                  </div>
-                  <div class="col col-md-4">
-                    <div class="submenu-title">Data</div>
-                    <a href="/contact">Datasets</a>
-                    <a href="/contact">Data visualisations</a>
+                    {% for each in PROJECTS %}
+                        <a href="{{ each.get_absolute_url }}">{{ each }}</a>
+                    {% endfor %}
 
-                    <div class="submenu-title mt-4">Tools</div>
-                    <a href="/contact">Online Material Flow Analysis Tool (OMAT)</a>
-                    <a href="/contact">MOOC</a>
-
-                    <div class="submenu-title mt-4">Multimedia</div>
-                    <a href="/about/team">Photos</a>
-                    <a href="/about/task-forces">Videos</a>
-                  </div>
-                  <div class="key col col-md-4">
-                    <div class="submenu-title"><i class="fa fa-star"></i> Frequently used items</div>
-                    <a href="/contact">Starter kit</a>
-                    <a href="/about/services">Publication library</a>
-                    <a href="/about/join">Datasets</a>
-                    <a href="/contact">Online Material Flow Analysis Tool (OMAT)</a>
-                    <a href="/contact">MOOC</a>
                   </div>
                 </div>
               </div>
             </div>
           </li>
+
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="cities-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Cities
+            <a class="nav-link dropdown-toggle" href="#" id="about-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              About
             </a>
-            <div class="dropdown-menu" aria-labelledby="cities-dropdown">
+            <div class="dropdown-menu" aria-labelledby="about-dropdown">
               <div class="dropdown-submenu">
                 <div class="row no-gutters">
-                  <div class="col col-md-4">
-                    <div class="submenu-title">MultipliCity - Data Portals</div>
-                    <a href="/cities/page/multiplicity">Introduction</a>
-                    <a href="/cities/page/video">Video</a>
-                    <a href="/cities/page/contribute">Add Data</a>
-                    <a href="/cities/page/data-collection-events">Data Collection Events</a>
-                    <a href="/cities/page/development-roadmap">Development Roadmap</a>
-                    <a href="/cities/datasets/">Datasets</a>
-                  </div>
-                  <div class="col col-md-4">
-                    <div class="submenu-title">Data Portals</div>
-                    <a href="/cities/overview/">Overview page</a>
-                    <a href="/cities/beijing/">Prototype: Beijing, China</a>
-                    <a href="/cities/cape-town/">Prototype: Cape Town, South Africa</a>
-                    <a href="/cities/the-hague/">Prototype: The Hague, Netherlands</a>
-                    <a class="disabled">Apeldoorn, Netherlands <span class="badge badge-light">Coming soon</span></a>
-                    <a class="disabled">Bødo, Norway <span class="badge badge-light">Coming soon</span></a>
-                    <a class="disabled">Brussels, Belgium <span class="badge badge-light">Coming soon</span></a>
-                    <a class="disabled">Høje Taastrup, Denmark <span class="badge badge-light">Coming soon</span></a>
-                    <a class="disabled">Mikkeli, Finland <span class="badge badge-light">Coming soon</span></a>
-                    <a class="disabled">Porto, Portugal <span class="badge badge-light">Coming soon</span></a>
-                    <a class="disabled">Sevilla, Spain <span class="badge badge-light">Coming soon</span></a>
-                    <a class="disabled">Toronto, Canada <span class="badge badge-light">Coming soon</span></a>
-                    <a class="showpointer" href="/cities/page/data-collection-events">Add your city</a>
-                  </div>
-                  <div class="col key col-md-4">
-                    <div class="submenu-title"><i class="fa fa-star"></i> Frequently used items</div>
-                    <a href="/cities/page/multiplicity">Introduction to MultipliCity</a>
-                    <a href="/cities/overview/">Overview page</a>
-                    <a href="/cities/beijing/">Beijing, China</a>
-                    <a href="/cities/cape-town/">Cape Town, South Africa</a>
-                    <a href="/cities/the-hague/">The Hague, Netherlands</a>
-                    <a href="/cities/page/multiplicity">Add data</a>
-                    <a href="/cities/page/multiplicity">Add your city</a>
+                  <div class="col col-md-12">
+
+                    {% for each in ABOUT %}
+                        <a href="{{ each.get_absolute_url }}">{{ each }}</a>
+                    {% endfor %}
+
                   </div>
                 </div>
               </div>
             </div>
           </li>
+
         </ul>
       </div>
     </div>

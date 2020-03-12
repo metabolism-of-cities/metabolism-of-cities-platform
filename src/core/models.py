@@ -19,6 +19,11 @@ class Record(models.Model):
 class Project(Record):
     email = models.EmailField(null=True, blank=True)
     url = models.URLField(max_length=255, null=True, blank=True)
+    site = models.ForeignKey(Site, on_delete=models.CASCADE)
+    objects = models.Manager()
+    on_site = CurrentSiteManager()
+    def get_absolute_url(self):
+        return reverse("project", args=[self.id])
 
 class News(Record):
     date = models.DateField()

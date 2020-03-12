@@ -1,5 +1,6 @@
 from django.contrib.sites.models import Site
-from core.models import Article
+
+from core.models import Article, Project
 #from datetime import datetime, timedelta, time
 from django.conf import settings
 
@@ -17,6 +18,8 @@ def site(request):
         # Temporary list while we stabilize the nav 
 
         "UM": Article.objects.filter(parent__id=1),
+        "ABOUT": Article.objects.filter(parent__id=31),
         "COMMUNITY": Article.objects.filter(parent__id=11),
+        "PROJECTS": Project.on_site.all(),
 
     }
