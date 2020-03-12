@@ -1,13 +1,9 @@
 // VARIABLES
-$primary-color: #808080;
-$logo: 250px;
-$address: #fff;
-$brown: #cb270d;
 $primary: #e95420;
 $secondary: #5e2750;
 $black: #000;
 $white: #fff;
-$dark: #333;
+$dark: #212529;
 $gray: #808080;
 $light: #efefef;
 $very-light: #fbfbfb;
@@ -40,18 +36,7 @@ $basic-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
 // GLOBALS
 body {
   background-color: #fcfcfc;
-  font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
-}
-
-// FOOTERS
-#actions {
-  border-top: 1px solid $primary-color;
-
-  .title {
-    color: $brown;
-    font-size: 25px;
-  }
-
+  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
 
 section {
@@ -64,7 +49,6 @@ section {
   &:last-of-type {
     padding-bottom: 0;
   }
-
 }
 
 .main-content.container {
@@ -95,8 +79,6 @@ nav {
   }
 
   .navbar-brand {
-    margin-right: 30px;
-    width: 120px;
     padding: 0 0 4px 0;
 
     img {
@@ -232,7 +214,12 @@ footer {
   padding: 36px 0;
 }
 
-#actions {
+#involved {
+  background-color: $secondary;
+  color: $light;
+}
+
+#sitemap {
   background-color: $light;
 
   .header {
@@ -246,9 +233,7 @@ footer {
       color: $black;
       text-decoration: none;
     }
-
   }
-
 }
 
 #info {
@@ -268,7 +253,6 @@ footer {
       color: $white;
       text-decoration: none;
     }
-
   }
 
   i {
@@ -283,7 +267,6 @@ footer {
     font-size: 1.5rem;
     margin-right: 12px;
   }
-
 }
 
 // COMMON ELEMENTS
@@ -310,7 +293,6 @@ footer {
     border-color: darken($primary, 5%) !important;
     background-color: darken($primary, 5%) !important;
   }
-
 }
 
 .btn-primary-outline {
@@ -329,7 +311,6 @@ footer {
     background-color: transparentize($primary, 0.9) !important;
     color: $primary;
   }
-
 }
 
 .btn-primary-basic {
@@ -342,7 +323,6 @@ footer {
     border-color: transparent;
     color: $primary;
   }
-
 }
 
 .btn-secondary {
@@ -358,7 +338,6 @@ footer {
     border-color: darken($secondary, 5%) !important;
     background-color: darken($secondary, 5%) !important;
   }
-
 }
 
 .btn-secondary-outline {
@@ -377,7 +356,6 @@ footer {
     background-color: transparentize($secondary, 0.9) !important;
     color: $secondary;
   }
-
 }
 
 .btn-secondary-basic {
@@ -390,7 +368,6 @@ footer {
     border-color: transparent;
     color: $secondary;
   }
-
 }
 
 .btn-default {
@@ -408,7 +385,6 @@ footer {
     border-color: darken($dark, 5%) !important;
     background-color: darken($dark, 5%) !important;
   }
-
 }
 
 .btn-default-outline {
@@ -427,7 +403,6 @@ footer {
     background-color: transparentize($dark, 0.9) !important;
     color: $dark;
   }
-
 }
 
 .btn-default-basic {
@@ -440,7 +415,64 @@ footer {
     border-color: transparent;
     color: $dark;
   }
+}
 
+.btn-inverse {
+  background-color: $light;
+  border-color: $light;
+  color: $dark;
+
+  &:hover {
+    border-color: darken($light, 5%);
+    background-color: darken($light, 5%);
+    color: $dark;
+  }
+
+  &:active, &:focus {
+    border-color: darken($light, 5%) !important;
+    background-color: darken($light, 5%) !important;
+  }
+}
+
+.btn-inverse-outline {
+  background-color: transparent;
+  border-color: $light;
+  color: $light;
+
+  &:hover {
+    border-color: $light;
+    background-color: transparentize($light, 0.9);
+    color: $light;
+  }
+
+  &:active, &:focus {
+    border-color: $light !important;
+    background-color: transparentize($light, 0.9) !important;
+    color: $light;
+  }
+}
+
+.btn-inverse-basic {
+  background-color: transparent;
+  border-color: transparent;
+  color: $light;
+
+  &:hover {
+    background-color: transparentize($light, 0.9);
+    border-color: transparent;
+    color: $light;
+  }
+}
+
+.btn-card {
+  @extend %raised-hover;
+  @extend %box-shadow;
+  color: $dark;
+  height: 100%;
+
+  &:hover {
+    color: $dark;
+  }
 }
 
 // THUMBNAIL BUTTON
