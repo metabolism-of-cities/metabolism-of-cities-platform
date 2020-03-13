@@ -200,7 +200,7 @@ def article(request, id=None, prefix=None, slug=None, project=None):
         design_link = "/admin/core/articledesign/" + str(info.id) + "/change/"
     else:
         design_link = "/admin/core/articledesign/add/?article=" + str(info.id)
-    project_header = None
+    subsite = None
     if project:
         project = get_object_or_404(Article, pk=project, site=site)
         subsite = getHeader(project)
