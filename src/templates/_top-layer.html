@@ -28,80 +28,90 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="about-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Urban metabolism
-            </a>
-            <div class="dropdown-menu" aria-labelledby="about-dropdown">
-              <div class="dropdown-submenu">
-                <div class="row no-gutters">
-                  <div class="col col-md-12">
+          
+          {% if subsite and menu %}
+            {% for each in menu %}
+              <li class="nav-item"><a class="nav-link" href="{{ each.get_absolute_url }}">{{ each }}</a></li>
+            {% endfor %}
 
-                    {% for each in UM %}
-                        <a href="{{ each.get_absolute_url }}">{{ each }}</a>
-                    {% endfor %}
+          {% else %}
 
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="about-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Urban metabolism
+              </a>
+              <div class="dropdown-menu" aria-labelledby="about-dropdown">
+                <div class="dropdown-submenu">
+                  <div class="row no-gutters">
+                    <div class="col col-md-12">
+
+                      {% for each in UM %}
+                          <a href="{{ each.get_absolute_url }}">{{ each }}</a>
+                      {% endfor %}
+
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="community-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Community
-            </a>
-            <div class="dropdown-menu" aria-labelledby="community-dropdown">
-              <div class="dropdown-submenu">
-                <div class="row no-gutters">
-                  <div class="col col-md-12">
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="community-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Community
+              </a>
+              <div class="dropdown-menu" aria-labelledby="community-dropdown">
+                <div class="dropdown-submenu">
+                  <div class="row no-gutters">
+                    <div class="col col-md-12">
 
-                    {% for each in COMMUNITY %}
-                        <a href="{{ each.get_absolute_url }}">{{ each }}</a>
-                    {% endfor %}
+                      {% for each in COMMUNITY %}
+                          <a href="{{ each.get_absolute_url }}">{{ each }}</a>
+                      {% endfor %}
 
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </li>
+            </li>
 
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="projects-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Projects
-            </a>
-            <div class="dropdown-menu" aria-labelledby="projects-dropdown">
-              <div class="dropdown-submenu">
-                <div class="row no-gutters">
-                  <div class="col col-md-12">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="projects-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Projects
+              </a>
+              <div class="dropdown-menu" aria-labelledby="projects-dropdown">
+                <div class="dropdown-submenu">
+                  <div class="row no-gutters">
+                    <div class="col col-md-12">
 
-                    {% for each in PROJECTS %}
-                        <a href="{{ each.get_absolute_url }}">{{ each }}</a>
-                    {% endfor %}
+                      {% for each in PROJECTS %}
+                          <a href="{{ each.get_absolute_url }}">{{ each }}</a>
+                      {% endfor %}
 
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </li>
+            </li>
 
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="about-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              About
-            </a>
-            <div class="dropdown-menu" aria-labelledby="about-dropdown">
-              <div class="dropdown-submenu">
-                <div class="row no-gutters">
-                  <div class="col col-md-12">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="about-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                About
+              </a>
+              <div class="dropdown-menu" aria-labelledby="about-dropdown">
+                <div class="dropdown-submenu">
+                  <div class="row no-gutters">
+                    <div class="col col-md-12">
 
-                    {% for each in ABOUT %}
-                        <a href="{{ each.get_absolute_url }}">{{ each }}</a>
-                    {% endfor %}
+                      {% for each in ABOUT %}
+                          <a href="{{ each.get_absolute_url }}">{{ each }}</a>
+                      {% endfor %}
 
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </li>
+            </li>
+
+          {% endif %}
 
         </ul>
       </div>

@@ -83,8 +83,8 @@ class ArticleDesign(models.Model):
     header = models.CharField(max_length=6, choices=HEADER, default="full")
     header_title = models.CharField(max_length=100, null=True, blank=True)
     header_subtitle = models.CharField(max_length=255, null=True, blank=True)
-    header_image = StdImageField(upload_to="records", variations={"thumbnail": (480, 480), "large": (1280, 1024), "huge": (2560, 1440)}, blank=True, null=True)
-    header_background = StdImageField(upload_to="records", variations={"large": (1280, 1024), "huge": (2560, 1440)}, blank=True, null=True)
+    header_image = StdImageField(upload_to="header_image", variations={"thumbnail": (480, 480), "large": (1280, 1024), "huge": (2560, 1440)}, blank=True, null=True)
+    header_texture = StdImageField(upload_to="header_texture", variations={"large": (1280, 1024), "huge": (2560, 1440)}, blank=True, null=True)
     logo = StdImageField(upload_to="logos", variations={"thumbnail": (480, 260), "large": (800, 600)}, blank=True, null=True)
     color = models.CharField(max_length=14, null=True, blank=True)
     def __str__(self):

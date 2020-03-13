@@ -75,7 +75,7 @@ def getHeader(info, meta_info=False):
         "type": design.header,
         "color": design.color,
         "logo": design.logo.url if design.logo else None,
-        "background": design.header_background.url if design.header_background else None,
+        "background": design.header_texture.url if design.header_texture else None,
         "title": design.header_title if design.header_title else info.title,
         "subtitle": subtitle,
         "breadcrumbs": breadcrumbs,
@@ -204,6 +204,7 @@ def article(request, id=None, prefix=None, slug=None, project=None):
     if project:
         project = get_object_or_404(Article, pk=project, site=site)
         subsite = getHeader(project)
+        menu = Article.objects.filter(parent=info)
     context = {
         "info": info,
         "menu": menu,
@@ -271,6 +272,7 @@ def load_baseline(request):
     moc = Site.objects.get(pk=1)
     moc.name = "Metabolism of Cities"
     moc.domain = "https://metabolismofcities.org"
+    moc.domain = "http://0.0.0.0:8000"
     moc.save()
 
     moi = Site.objects.filter(pk=2)
@@ -313,7 +315,20 @@ def load_baseline(request):
         { "id": 36, "title": "Contact Us", "parent": 31, "slug": "/about/contact/", "position": 5 },
 
         { "id": 38, "title": "Urban Metabolism Library", "parent": 19, "slug": "/library/", "position": None },
+        { "id": 39, "title": "Library", "parent": 38, "slug": "/library/overview/", "position": 1 },
+        { "id": 40, "title": "Case Studies", "parent": 38, "slug": "/library/casestudies/overview/", "position": 2 },
+        { "id": 41, "title": "Journals", "parent": 38, "slug": "/library/journals/", "position": 3 },
+        { "id": 42, "title": "Authors", "parent": 38, "slug": "/library/authors/", "position": 4 },
+        { "id": 43, "title": "Contribute", "parent": 38, "slug": "/library/contribute/", "position": 5 },
 
+        { "id": 44, "title": "View library", "parent": 39, "slug": "/library/view/", "position": 1 },
+        { "id": 45, "title": "Search", "parent": 39, "slug": "/library/search/", "position": 2 },
+        { "id": 46, "title": "Download", "parent": 39, "slug": "/library/download/", "position": 3 },
+
+        { "id": 47, "title": "View all", "parent": 40, "slug": "/library/casestudies/", "position": 1 },
+        { "id": 48, "title": "By method", "parent": 39, "slug": "/library/casestudies/methods/", "position": 2 },
+        { "id": 49, "title": "By year", "parent": 39, "slug": "/library/casestudies/calendar/", "position": 3 },
+        { "id": 50, "title": "View map", "parent": 39, "slug": "/library/casestudies/map/", "position": 4 },
     ]
     projects = [
         { "id": 20, "title": "Library", "parent": 19, "url": "/library/", "position": 1 },
