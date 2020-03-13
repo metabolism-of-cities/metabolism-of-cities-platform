@@ -5,7 +5,6 @@ Pillow==7.0.0
 django_cron
 python-dateutil
 django-stdimage
-PyPDF2
 requests
 libsass 
 django-compressor 

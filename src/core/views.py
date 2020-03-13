@@ -34,8 +34,6 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from django.template import Context
 
-from xhtml2pdf import pisa
-
 from weasyprint import HTML, CSS
 from weasyprint.fonts import FontConfiguration
 from datetime import datetime
@@ -160,28 +158,6 @@ def pdf(request):
     HTML(string=html).write_pdf(response, font_config=font_config)
 
     return response
-
-def pdf2(request):
-    name = request.GET["name"]
-    score = request.GET["score"]
-
-    print(name)
-    print(score)
-
-    #path = settings.BASE_DIR + "/img/water.jpg"
-    path = "https://www.google.com.ni/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
-    context = Context({"name": name, "score": score, "path": path})
-    template = get_template("pdf_template.html")
-
-    html = template.render(context.flatten())
-    print(html)
-    result = BytesIO()
-    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
-
-    if not pdf.err:
-        return HttpResponse(result.getvalue(), content_type='application/pdf')
-
-    return None
 
 def load_baseline(request):
     moc = Site.objects.get(pk=1)
