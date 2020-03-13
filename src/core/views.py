@@ -87,6 +87,17 @@ def getHeader(info):
 
     return details
 
+# We use this to modify the context variables so that they hold
+# the subsite and header variables that are based on the subsite
+# that we are opening
+def load_specific_design(context, design):
+    info = get_object_or_404(Article, pk=design)
+    header = getHeader(info)
+    context["subsite"] = header
+    context["header"] = header
+    return context
+
+
 # Authentication of users
 
 def user_register(request):
@@ -227,16 +238,6 @@ def article_list(request, id):
 
 # Cities
 
-# We use this to modify the context variables so that they hold
-# the subsite and header variables that are based on the subsite
-# that we are opening
-def load_specific_design(context, design):
-    info = get_object_or_404(Article, pk=design)
-    header = getHeader(info)
-    context["subsite"] = header
-    context["header"] = header
-    return context
-
 def cities(request):
     context = {
     }
@@ -247,17 +248,17 @@ def cities_overview(request):
     }
     return render(request, "cities/overview.html", load_specific_design(context, PAGE_ID["multiplicity"]))
 
-def city(request, slug):
+def city(request, city):
     subsite = get_object_or_404(Article, pk=PAGE_ID["multiplicity"])
     header = getHeader(subsite)
     header["type"] = "image"
-    if slug == "cape-town":
+    if city == "cape-town":
         header["image"] = "/media/header_image/media-capetown.huge.jpg"
-    elif slug == "newyork":
+    elif city == "newyork":
         header["image"] = "/media/header_image/media-newyork.huge.jpg"
-    elif slug == "sydney":
+    elif city == "sydney":
         header["image"] = "/media/header_image/media-sydney.huge.jpg"
-    elif slug == "toronto":
+    elif city == "toronto":
         header["image"] = "/media/header_image/media-toronto.huge.jpg"
     context = {
         "subsite": header,
@@ -266,6 +267,12 @@ def city(request, slug):
         "country": "South Africa",
     }
     return render(request, "cities/dashboard.html", context)
+
+def sector(request, city, sector):
+    context = {
+    }
+    return render(request, "cities/sector.html", load_specific_design(context, PAGE_ID["multiplicity"]))
+    
 
 # People
 
@@ -386,6 +393,7 @@ def load_baseline(request):
         { "id": 28, "title": "GUMDB", "parent": 19, "url": "/gumdb/", "position": 10 },
         { "id": 29, "title": "STAFDB", "parent": 19, "url": "/stafdb/", "position": 11 },
         { "id": 26, "title": "OMAT", "parent": 19, "url": "/omat/", "position": 12 },
+        { "id": 52, "title": "PlatformU", "parent": 19, "url": "/platformu/", "position": 13 },
     ]
     for each in articles:
         content = each["content"] if "content" in each else None

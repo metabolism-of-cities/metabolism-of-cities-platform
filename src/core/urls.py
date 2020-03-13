@@ -39,7 +39,8 @@ urlpatterns = [
     # MultipliCity
     path("cities/", views.cities, name="cities"),
     path("cities/overview/", views.cities_overview, name="cities"),
-    path("cities/<slug:slug>/", views.city, name="city"),
+    path("cities/<slug:city>/sectors/<slug:sector>/", views.sector, name="sector"),
+    path("cities/<slug:city>/", views.city, name="city"),
 
     # Authentication
     path("register/", views.user_register, name="register"),
