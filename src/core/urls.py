@@ -37,7 +37,7 @@ urlpatterns = [
     path("library/", views.article, { "id": 38, "project": 38 }, name="library"),
 
     # MultipliCity
-    path("cities/", views.article, { "id": 51, "project": 51 }, name="cities"),
+    path("cities/", views.cities, name="cities"),
     path("cities/overview/", views.cities_overview, name="cities"),
     path("cities/<slug:slug>/", views.city, name="city"),
 

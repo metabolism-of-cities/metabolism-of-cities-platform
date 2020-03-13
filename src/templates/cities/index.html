@@ -1,0 +1,109 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-9">
+      <h2>What is this?</h2>
+      {% lorem 1 p %} 
+      <p><a href="http://">Read more &raquo;</a></p>
+    </div>
+    <div class="col">
+      <h2>Cities</h2>
+      <ul>
+        <li><a href="/cities/cape-town/">Cape Town</a></li>
+        <li><a href="/cities/newyork/">New York</a></li>
+        <li><a href="/cities/toronto/">Toronto</a></li>
+        <li><a href="/cities/sydney/">Sydney</a></li>
+        <li><a href="/cities/overview/">View all</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col" style="height:250px;background:#333;color:#fff">
+      World map showing pins for each of the city. When the pin is clicked,
+      then the relevant dashboard opens (same as clicking the link in the menu)
+    </div>
+  </div>
+
+  <h2 style="text-align:center;margin-top:55px">Latest updates</h2>
+
+  <div class="row">
+    <div class="col">
+      <h3>New datasets</h3>
+      <ul>
+        <li><a href="http://">Water consumption</a> Cape Town</li>
+        <li><a href="http://">Electricity consumption</a> Cape Town</li>
+        <li><a href="http://">CO2 emissions</a> New York</li>
+        <li><a href="http://">Metal stock in buildings older than 20 years</a> Sydney</li>
+        <li><a href="http://">Crop yields by type of crop</a> Waterloo</li>
+        <li><a href="http://">View all datasets</a></li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>New maps</h3>
+      <ul>
+        <li><a href="http://">Wastewater treatment plants</a> Cape Town</li>
+        <li><a href="http://">Water treatment plants</a> Cape Town</li>
+        <li><a href="http://">Landfill sites</a> Cape Town</li>
+        <li><a href="http://">Metro stations</a> New York</li>
+        <li><a href="http://">Bus stops</a> The Hague</li>
+        <li><a href="http://">View all maps</a></li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>News</h3>
+      <ul>
+        <li><a href="http://">New research on groundwater in Cape Town</a> Jan 1, 2020</li>
+        <li><a href="http://">New research on groundwater in Cape Town</a> Jan 1, 2020</li>
+        <li><a href="http://">New research on groundwater in Cape Town</a> Jan 1, 2020</li>
+        <li><a href="http://">New research on groundwater in Cape Town</a> Jan 1, 2020</li>
+        <li><a href="http://">New research on groundwater in Cape Town</a> Jan 1, 2020</li>
+        <li><a href="http://">View all news</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card contribute"> 
+    <div class="card-body">
+      <h4 class="card-title font-weight-bold">Contribute</h4>
+      <p class="card-text">
+        This data hub is built, maintained, and expanded by people like <strong>you</strong>. 
+        Join our project now.
+      </p>
+      <a class="btn btn-light" href="#">Contribute data</a>
+      <a class="btn btn-light" href="#">Collect photos</a>
+      <a class="btn btn-light" href="#">Academic programmes</a>
+      <a class="btn btn-light" href="#">Add your city</a>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <h2 style="text-align:center;margin-top:55px">Statistics</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <h3>Active cities</h3>
+      <p>8</p>
+    </div>
+    <div class="col">
+      <h3>Datasets</h3>
+      <p>93</p>
+    </div>
+    <div class="col">
+      <h3>Data points</h3>
+      <p>5,394</p>
+    </div>
+    <div class="col">
+      <h3>Contributors</h3>
+      <p>54</p>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

@@ -50,7 +50,7 @@ PAGE_ID = {
 # We use getHeader to obtain the header settings (type of header, title, subtitle, image)
 # This dictionary has to be created for many different pages so by simply calling this
 # function instead we don't repeat ourselves too often.
-def getHeader(info, meta_info=False):
+def getHeader(info):
     if hasattr(info, "design"):
         design = info.design
     else:
@@ -82,13 +82,9 @@ def getHeader(info, meta_info=False):
         "image": header_image,
         "id": info.id,
         "slug": info.slug,
+        "title": info.title,
     }
 
-    if meta_info:
-        # Sometimes we also want the title and some other general information
-        details += {
-            "title": info.title,
-        }
     return details
 
 # Authentication of users
@@ -231,14 +227,25 @@ def article_list(request, id):
 
 # Cities
 
-def cities_overview(request):
-    subsite = get_object_or_404(Article, pk=PAGE_ID["multiplicity"])
-    header = getHeader(subsite)
+# We use this to modify the context variables so that they hold
+# the subsite and header variables that are based on the subsite
+# that we are opening
+def load_specific_design(context, design):
+    info = get_object_or_404(Article, pk=design)
+    header = getHeader(info)
+    context["subsite"] = header
+    context["header"] = header
+    return context
+
+def cities(request):
     context = {
-        "subsite": header,
-        "header": header,
     }
-    return render(request, "cities/overview.html", context)
+    return render(request, "cities/index.html", load_specific_design(context, PAGE_ID["multiplicity"]))
+
+def cities_overview(request):
+    context = {
+    }
+    return render(request, "cities/overview.html", load_specific_design(context, PAGE_ID["multiplicity"]))
 
 def city(request, slug):
     subsite = get_object_or_404(Article, pk=PAGE_ID["multiplicity"])
@@ -368,7 +375,7 @@ def load_baseline(request):
     ]
     projects = [
         { "id": 20, "title": "Library", "parent": 19, "url": "/library/", "position": 1 },
-        { "id": 21, "title": "MultipliCity", "parent": 19, "url": "/cities/", "position": 2 },
+        { "id": 21, "title": "MultipliCity Data Hub", "parent": 19, "url": "/cities/", "position": 2 },
         { "id": 22, "title": "Stakeholders Initiative", "parent": 19, "url": "/stakeholders-initiative/", "position": 3 },
         { "id": 23, "title": "Cityloops", "parent": 19, "url": "/cityloops/", "position": 4 },
         { "id": 24, "title": "Seminar Series", "parent": 19, "url": "/seminarseries/", "position": 5 },
