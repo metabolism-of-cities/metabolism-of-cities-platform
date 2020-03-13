@@ -65,6 +65,17 @@ a {
   }
 }
 
+#admin-controls {
+  position: fixed;
+  right: 0;
+  top: 75px;
+  a {
+    text-align: left;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
 // COMMON ELEMENTS
 // NAVBAR AND HERO
 .top-layer {
