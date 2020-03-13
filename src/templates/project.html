@@ -1,20 +1,20 @@
 {% extends "_base.html" %}
-{% load static %}
-{% load sass_tags %}
 
-{% block page_name %}{% endblock %}
-
-{% block title %}Blank page{% endblock %}
-
-{% block css %}
-{% endblock %}
-
-{% block subtitle %}{% endblock %}
+{% block title %}{{ info }}{% endblock %}
 
 {% block content %}
-Content goes here
-{% endblock %}
 
+  {% if info.image %}
+    <img src="{{ info.image.large.url }}" alt="" />
+  {% endif %}
+  <p><strong>Project title</strong>: {{ info.title }}</p>
+  <p><strong>Description</strong>: {{ info.content|safe }}</p>
+  {% if info.url %}
+    <p>Website: <a href="{{ info.url }}">{{ info.url }}</a></p>
+  {% endif %}
 
-{% block footer %}
+  {% if info.url %}
+    <p><a class="btn btn-primary" href="{{ info.url }}">Visit website</a></p>
+  {% endif %}
+
 {% endblock %}

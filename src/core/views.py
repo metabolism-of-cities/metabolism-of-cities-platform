@@ -1,4 +1,4 @@
-import os
+from io import BytesIO
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -34,41 +34,60 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from django.template import Context
 
+from weasyprint import HTML, CSS
+from weasyprint.fonts import FontConfiguration
+from datetime import datetime
+
 # This array defines all the IDs in the database of the articles that are loaded for the
-# various pages in the menu. Here we can differentiate between the different sites. 
+# various pages in the menu. Here we can differentiate between the different sites.
 
 PAGE_ID = {
     "people": 12,
+    "projects": 19,
 }
 
 # We use getHeader to obtain the header settings (type of header, title, subtitle, image)
-# This dictionary has to be created for many different pages so by simply calling this 
+# This dictionary has to be created for many different pages so by simply calling this
 # function instead we don't repeat ourselves too often.
-def getHeader(info):
-    header_image = info.image.huge.url if info.image else None
+def getHeader(info, meta_info=False):
+    if hasattr(info, "design"):
+        design = info.design
+    else:
+        design = ArticleDesign()
 
+    header_image = design.header_image.huge.url if design.header_image else None
     breadcrumbs = '<a href="/"><i aria-hidden="true" class="fa fa-home fa-fw"></i></a>'
     if info.parent:
         breadcrumbs += ' &raquo; '
         breadcrumbs += '<a href="' + info.parent.get_absolute_url() + '">' + info.parent.title + '</a>'
-    if info.header != "full":
+    if design.header != "full":
         breadcrumbs += ' &raquo; '
         breadcrumbs += '<span class="active">' + info.title + '</span>'
 
-    if info.header_subtitle:
-        subtitle = info.header_subtitle
+    if design.header_subtitle:
+        subtitle = design.header_subtitle
     elif info.parent:
         subtitle = breadcrumbs
     else:
         subtitle = ""
 
-    return {
-        "type": info.header,
-        "title": info.header_title if info.header_title else info.title,
+    details = {
+        "type": design.header,
+        "color": design.color,
+        "logo": design.logo.url if design.logo else None,
+        "background": design.header_texture.url if design.header_texture else None,
+        "title": design.header_title if design.header_title else info.title,
         "subtitle": subtitle,
         "breadcrumbs": breadcrumbs,
         "image": header_image,
     }
+
+    if meta_info:
+        # Sometimes we also want the title and some other general information
+        details += {
+            "title": info.title,
+        }
+    return details
 
 # Authentication of users
 
@@ -135,15 +154,34 @@ def template(request, slug):
 # The internal projects section
 
 def projects(request):
-    return render(request, "projects.html")
+    article = get_object_or_404(Article, pk=PAGE_ID["projects"])
+    context = {
+        "header": getHeader(article),
+        "edit_link": "/admin/core/project/" + str(article.id) + "/change/",
+        "list": Project.on_site.all(),
+        "article": article,
+    }
+    return render(request, "projects.html", context)
 
 def project(request, id):
-    return render(request, "project.html")
+    article = get_object_or_404(Article, pk=PAGE_ID["projects"])
+    info = get_object_or_404(Project, pk=id)
+    header = getHeader(article)
+    context = {
+        "header": {
+            "type": article.design.header if hasattr(article, "design") else "full",
+            "title": info.title,
+            "subtitle": header["breadcrumbs"] + ' &raquo; <a href="/projects">Projects</a>',
+        },
+        "edit_link": "/admin/core/project/" + str(info.id) + "/change/",
+        "info": info,
+    }
+    return render(request, "project.html", context)
 
 # Article is used for general web pages, and they can be opened in
 # various ways (using ID, using slug). They can have different presentational formats
 
-def article(request, id=None, prefix=None, slug=None):
+def article(request, id=None, prefix=None, slug=None, project=None):
     site = get_current_site(request)
     menu = None
     if id:
@@ -158,14 +196,24 @@ def article(request, id=None, prefix=None, slug=None):
 
     if info.parent:
         menu = Article.objects.filter(parent=info.parent)
-    header_image = info.image.huge.url if info.image else None
+    if hasattr(info, "design"):
+        design_link = "/admin/core/articledesign/" + str(info.id) + "/change/"
+    else:
+        design_link = "/admin/core/articledesign/add/?article=" + str(info.id)
+    subsite = None
+    if project:
+        project = get_object_or_404(Article, pk=project, site=site)
+        subsite = getHeader(project)
+        menu = Article.objects.filter(parent=info)
     context = {
         "info": info,
         "menu": menu,
         "edit_link": "/admin/core/article/" + str(info.id) + "/change/",
         "add_link": "/admin/core/article/add/",
+        "design_link": design_link,
         "header": getHeader(info),
-        }
+        "subsite": subsite,
+    }
     return render(request, "article.html", context)
 
 def article_list(request, id):
@@ -193,7 +241,7 @@ def person(request, id):
 def people_list(request):
     info = get_object_or_404(Article, pk=PAGE_ID["people"])
     context = {
-        "header": getHeader(info),   
+        "header": getHeader(info),
         "edit_link": "/admin/core/article/" + str(info.id) + "/change/",
         "info": info,
         "list": People.on_site.all(),
@@ -203,32 +251,20 @@ def people_list(request):
 # TEMPORARY PAGES DURING DEVELOPMENT
 
 def pdf(request):
-    import pdfkit
-    import wkhtmltopdf
-
     name = request.GET["name"]
     score = request.GET["score"]
+    date = datetime.now()
+    date = date.strftime("%d %B %Y")
+    site = Site.objects.get_current()
 
-    print(name)
-    print(score)
+    context = Context({"name": name, "score": score, "date": date, "site": site.domain})
 
-    context = Context({"name": name, "score": score})
-    template = get_template("pdf_template.html")
+    response = HttpResponse(content_type="application/pdf")
+    response['Content-Disposition'] = "inline; filename=test.pdf"
+    html = render_to_string("pdf_template.html", context.flatten())
 
-    html = template.render(context.flatten())
-
-    import os
-    path = settings.MEDIA_ROOT + "/out.pdf"
-    print(path)
-    pdfkit.from_string('hello', path)
-    print("HERE")
-    pdf = open(path)
-    print("OR HERE")
-    response = HttpResponse(pdf.read(), content_type='application/pdf')
-
-    response['Content-Disposition'] = 'attachment; filename=output.pdf'
-    pdf.close()
-    os.remove(path)
+    font_config = FontConfiguration()
+    HTML(string=html).write_pdf(response, font_config=font_config)
 
     return response
 
@@ -236,6 +272,7 @@ def load_baseline(request):
     moc = Site.objects.get(pk=1)
     moc.name = "Metabolism of Cities"
     moc.domain = "https://metabolismofcities.org"
+    moc.domain = "http://0.0.0.0:8000"
     moc.save()
 
     moi = Site.objects.filter(pk=2)
@@ -267,6 +304,45 @@ def load_baseline(request):
         { "id": 16, "title": "Events", "parent": 11, "slug": "/community/events/", "position": 5 },
         { "id": 17, "title": "Forum", "parent": 11, "slug": "/community/forum/", "position": 6 },
         { "id": 18, "title": "Join our community", "parent": 11, "slug": "/community/join/", "position": 7 },
+
+        { "id": 19, "title": "Projects", "parent": None, "slug": "/projects/", "position": 3 },
+
+        { "id": 31, "title": "About", "parent": None, "slug": "/about/", "position": 4 },
+        { "id": 32, "title": "Our Story", "parent": 31, "slug": "/about/our-story/", "position": 1 },
+        { "id": 33, "title": "Mission & values", "parent": 31, "slug": "/about/mission/", "position": 2 },
+        { "id": 34, "title": "Our Members", "parent": 31, "slug": "/about/members/", "position": 3 },
+        { "id": 35, "title": "Our Partners", "parent": 31, "slug": "/about/partners/", "position": 4 },
+        { "id": 36, "title": "Contact Us", "parent": 31, "slug": "/about/contact/", "position": 5 },
+
+        { "id": 38, "title": "Urban Metabolism Library", "parent": 19, "slug": "/library/", "position": None },
+        { "id": 39, "title": "Library", "parent": 38, "slug": "/library/overview/", "position": 1 },
+        { "id": 40, "title": "Case Studies", "parent": 38, "slug": "/library/casestudies/overview/", "position": 2 },
+        { "id": 41, "title": "Journals", "parent": 38, "slug": "/library/journals/", "position": 3 },
+        { "id": 42, "title": "Authors", "parent": 38, "slug": "/library/authors/", "position": 4 },
+        { "id": 43, "title": "Contribute", "parent": 38, "slug": "/library/contribute/", "position": 5 },
+
+        { "id": 44, "title": "View library", "parent": 39, "slug": "/library/view/", "position": 1 },
+        { "id": 45, "title": "Search", "parent": 39, "slug": "/library/search/", "position": 2 },
+        { "id": 46, "title": "Download", "parent": 39, "slug": "/library/download/", "position": 3 },
+
+        { "id": 47, "title": "View all", "parent": 40, "slug": "/library/casestudies/", "position": 1 },
+        { "id": 48, "title": "By method", "parent": 39, "slug": "/library/casestudies/methods/", "position": 2 },
+        { "id": 49, "title": "By year", "parent": 39, "slug": "/library/casestudies/calendar/", "position": 3 },
+        { "id": 50, "title": "View map", "parent": 39, "slug": "/library/casestudies/map/", "position": 4 },
+    ]
+    projects = [
+        { "id": 20, "title": "Library", "parent": 19, "url": "/library/", "position": 1 },
+        { "id": 21, "title": "MultipliCity", "parent": 19, "url": "/multiplicity/", "position": 2 },
+        { "id": 22, "title": "Stakeholders Initiative", "parent": 19, "url": "/stakeholders-initiative/", "position": 3 },
+        { "id": 23, "title": "Cityloops", "parent": 19, "url": "/cityloops/", "position": 4 },
+        { "id": 24, "title": "Seminar Series", "parent": 19, "url": "/seminarseries/", "position": 5 },
+        { "id": 25, "title": "ASCuS Conference", "parent": 19, "url": "/ascus/", "position": 6 },
+        { "id": 37, "title": "Urban Metabolism & Minorities", "parent": 19, "url": "/minorities/", "position": 7 },
+        { "id": 30, "title": "Urban Metabolism Lab", "parent": 19, "url": "/um-lab/", "position": 8 },
+        { "id": 27, "title": "MOOC", "parent": 19, "url": "/mooc/", "position": 9 },
+        { "id": 28, "title": "GUMDB", "parent": 19, "url": "/gumdb/", "position": 10 },
+        { "id": 29, "title": "STAFDB", "parent": 19, "url": "/stafdb/", "position": 11 },
+        { "id": 26, "title": "OMAT", "parent": 19, "url": "/omat/", "position": 12 },
     ]
     for details in articles:
         content = details["content"] if "content" in details else None
@@ -279,11 +355,20 @@ def load_baseline(request):
             position = details["position"],
             content = content,
         )
+    for details in projects:
+        content = details["content"] if "content" in details else None
+        Project.objects.create(
+            id = details["id"],
+            url = details["url"],
+            title = details["title"],
+            site = moc,
+            content = content,
+        )
 
-    messages.success(request, "UM and Community pages were inserted")
+    messages.success(request, "UM, Community, Project, About pages were inserted/reset")
 
     names = ["Fulano de Tal", "Fulana de Tal", "Joanne Doe", "John Doe"]
-    
+
     id = 100 # Last ID from the list above
     for details in names:
         id += 1

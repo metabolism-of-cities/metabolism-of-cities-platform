@@ -14,21 +14,28 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("templates/", views.templates, name="templates"),
     path("templates/<slug:slug>/", views.template, name="template"),
-    path("projects/<int:id>/", views.project, name="project"),
-    path("projects/", views.projects, name="projects"),
     path("pdf/", views.pdf),
 
-    # Urban metabolism
+    # Projects
+    path("projects/<int:id>/", views.project, name="project"),
+    path("projects/", views.projects, name="projects"),
 
+    # Urban metabolism
     path("urbanmetabolism/", views.article_list, { "id": 1 }, name="um"),
     path("urbanmetabolism/<slug:slug>/", views.article, { "prefix": "/urbanmetabolism/" }, name="um"),
 
-    # Community
+    # About pages
+    path("about/", views.article_list, { "id": 31 }, name="about"),
+    path("about/<slug:slug>/", views.article, { "prefix": "/about/" }, name="about"),
 
+    # Community
     path("community/people/", views.people_list, name="people_list"),
     path("community/people/<int:id>/", views.person, name="person"),
     path("community/", views.article_list, { "id": 1 }, name="community"),
     path("community/<slug:slug>/", views.article, { "prefix": "/community/" }, name="community"),
+
+    # Library
+    path("library/", views.article, { "id": 38, "project": 38 }, name="library"),
 
     # Temporary
     path("baseline/", views.load_baseline),

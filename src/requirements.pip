@@ -5,12 +5,11 @@ Pillow==7.0.0
 django_cron
 python-dateutil
 django-stdimage
-PyPDF2
-pdfkit
 requests
 libsass 
 django-compressor 
 django-sass-processor
 django-bootstrap4
 django-tinymce4-lite
-django-wkhtmltopdf
+xhtml2pdf
+weasyprint

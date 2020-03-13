@@ -1,3 +1,5 @@
+{% load static %}
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,42 +8,100 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  <title>PDF Generator</title>
+  <title>CERTIFICATE</title>
+
+<style>
+  .border-sign {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #000;
+    width: 100%;
+  }
+
+  table.sign {
+    margin-top: 100px;
+  }
+
+  table.sign tr td {
+    padding: 15px;
+    width: 30%;
+    font-size: 12px;
+  }
+
+  .content {
+    background-image: url("{{ site }}{% static "img/bg.png" %}");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 640px;
+  }
+
+  .name {
+    position: relative;
+    top: 140px;
+    font-weight: normal;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .date {
+    position: relative;
+    top: 290px;
+    font-size: 30px;
+  }
+
+  .hide {
+    display: none;
+  }
+
+  @page {
+    size: landscape;
+    margin: 0;
+    height: 640px;
+  }
+</style>
 </head>
 <body>
-<div class="container">
-  <table class="table table-borderless">
+<div class="content text-center pt-4">
+
+  <h2 class="hide">CERTIFICATE OF COMPLETION</h2>
+
+  <p class="hide">Is hereby granted to:</p>
+
+  <h1 class="name">{{ name }}</h1>
+
+  <p class="hide">for succcesfully completing the Online Course</p>
+
+  <h3 class="hide"><i>Urban Metabolism for Policy Makers</i></h3>
+
+  <h4 class="date">{{ date }}</h4>
+
+  <table class="sign hide">
     <tr>
       <td>
-        <table>
-          <tr>
-            <th colspan="2">
-              <h1>Metabolism of Cities</h1>
-            </th>
-          </tr>
-          <tr>
-            <td>
-              Certifcate of completion
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">&nbsp;</td>
-          </tr>
-          <tr>
-            <td colspan="2">&nbsp;</td>
-          </tr>
-          <tr>
-            <th>Name</th>
-            <td>{{ name }}</td>
-          </tr>
-          <tr>
-            <th>Score</th>
-            <td>{{ score }}</td>
-          </tr>
-        </table>
+        <div class="border-sign"></div>
+        <div class="text-center">
+          Sharon GIL Coordinator, <br>
+          Global Initiative for <br>
+          Resource Efficient Cities
+          and  Programme Officer
+          UN Environment
+        </div>
       </td>
-      <td style="vertical-align: middle;">
-        <img alt="Metabolism of Cities" src="/static/img/logo.svg">
+      <td>
+        <div class="border-sign"></div>
+        <div class="text-center">
+          Veronica HITOSIS <br>
+          Deputy Executive Director for <br>
+          Policy, Programs, and Projects <br>
+          League of Cities of the Philippines
+        </div>
+      </td>
+      <td>
+        <div class="border-sign"></div>
+        <div class="text-center">
+          Aristide Athanassiadis, <br>
+          PhD MOOC Coordinator and <br>
+          Co-Founder of <br>
+          Metabolism of Cities
+        </div>
       </td>
     </tr>
   </table>
