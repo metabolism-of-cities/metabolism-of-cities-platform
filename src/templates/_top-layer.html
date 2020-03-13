@@ -19,7 +19,7 @@
         </a>
       {% else %}
         <a class="navbar-brand" href="/">
-          <img alt="Metabolism of Cities" src="{% static "img/logo.svg" %}">
+          <img alt="Metabolism of Cities" src="{% static 'img/logo.svg' %}">
         </a>
       {% endif %}
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,17 +43,9 @@
                 Urban metabolism
               </a>
               <div class="dropdown-menu" aria-labelledby="about-dropdown">
-                <div class="dropdown-submenu">
-                  <div class="row no-gutters">
-                    <div class="col col-md-12">
-
-                      {% for each in UM %}
-                          <a href="{{ each.get_absolute_url }}">{{ each }}</a>
-                      {% endfor %}
-
-                    </div>
-                  </div>
-                </div>
+                {% for each in UM %}
+                  <a class="dropdown-item" href="{{ each.get_absolute_url }}">{{ each }}</a>
+                {% endfor %}
               </div>
             </li>
             <li class="nav-item dropdown">
@@ -61,17 +53,9 @@
                 Community
               </a>
               <div class="dropdown-menu" aria-labelledby="community-dropdown">
-                <div class="dropdown-submenu">
-                  <div class="row no-gutters">
-                    <div class="col col-md-12">
-
-                      {% for each in COMMUNITY %}
-                          <a href="{{ each.get_absolute_url }}">{{ each }}</a>
-                      {% endfor %}
-
-                    </div>
-                  </div>
-                </div>
+                {% for each in COMMUNITY %}
+                  <a class="dropdown-item" href="{{ each.get_absolute_url }}">{{ each }}</a>
+                {% endfor %}
               </div>
             </li>
 
@@ -80,17 +64,9 @@
                 Projects
               </a>
               <div class="dropdown-menu" aria-labelledby="projects-dropdown">
-                <div class="dropdown-submenu">
-                  <div class="row no-gutters">
-                    <div class="col col-md-12">
-
-                      {% for each in PROJECTS %}
-                          <a href="{{ each.get_absolute_url }}">{{ each }}</a>
-                      {% endfor %}
-
-                    </div>
-                  </div>
-                </div>
+                {% for each in PROJECTS %}
+                  <a class="dropdown-item" href="{{ each.get_absolute_url }}">{{ each }}</a>
+                {% endfor %}
               </div>
             </li>
 
@@ -99,17 +75,9 @@
                 About
               </a>
               <div class="dropdown-menu" aria-labelledby="about-dropdown">
-                <div class="dropdown-submenu">
-                  <div class="row no-gutters">
-                    <div class="col col-md-12">
-
-                      {% for each in ABOUT %}
-                          <a href="{{ each.get_absolute_url }}">{{ each }}</a>
-                      {% endfor %}
-
-                    </div>
-                  </div>
-                </div>
+                {% for each in ABOUT %}
+                  <a class="dropdown-item" href="{{ each.get_absolute_url }}">{{ each }}</a>
+                {% endfor %}
               </div>
             </li>
 
