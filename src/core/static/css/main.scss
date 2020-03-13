@@ -1,6 +1,6 @@
 // VARIABLES
 $primary: #1f7a8c;
-$secondary: #b13335;
+$secondary: #e75870;
 $black: #000;
 $white: #fff;
 $dark: #212529;
@@ -197,9 +197,18 @@ footer {
   color: $light;
 
   img {
-    max-width: 300px;
-    width: 100%;
+    &.main-logo {
+      max-width: 300px;
+      width: 100%;
+    }
+    &.second-logo {
+      max-width: 200px;
+      width: 80%;
+    }
   }
+
+
+
 
   a {
     color: $light;
