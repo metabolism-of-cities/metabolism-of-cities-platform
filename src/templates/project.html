@@ -4,17 +4,170 @@
 
 {% block content %}
 
-  {% if info.image %}
-    <img src="{{ info.image.large.url }}" alt="" />
-  {% endif %}
-  <p><strong>Project title</strong>: {{ info.title }}</p>
-  <p><strong>Description</strong>: {{ info.content|safe }}</p>
-  {% if info.url %}
-    <p>Website: <a href="{{ info.url }}">{{ info.url }}</a></p>
-  {% endif %}
+<div class="row">
+  <div class="col-lg-4">
+    <div class="card sticky-top">
+      {% if info.image %}
+        <img class="card-img-top" src="{{ info.image.large.url }}" alt="" />
+      {% endif %}
+      <div class="card-body">
+        <h5 class="card-title">{{ info.title }}</h5>
+        <p class="card-text">{{ info.content|safe }}</p>
+        {% if info.url %}
+          <a class="btn btn-primary" href="{{ info.url }}">Visit website</a>
+        {% endif %}
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><a href=""></a></li>
+        <li class="list-group-item"><i class="fas fa-play"></i> 13 March 2020</li>
+        <li class="list-group-item"><i class="fas fa-calendar-check"></i> 13 March 2022</li>
+      </ul>
+    </div>
+    
+  </div>
+  <div class="col-lg-8">
+    <section>
+      <h3>Related materials</h3>
+      <div class="row">
+        <div class="col-lg-4 col-sm-6 mb-4">
+          <a href="#" class="btn-thumbnail" style="background-image: url('https://i.imgur.com/sxTQ6np.jpg');">
+            <span class="title">Iron</span>
+          </a>
+        </div>
+        <div class="col-lg-4 col-sm-6 mb-4">
+          <a href="#" class="btn-thumbnail" style="background-image: url('https://i.imgur.com/xxmCZDC.jpg');">
+            <span class="title">Plastics</span>
+          </a>
+        </div>
+        <div class="col-lg-4 col-sm-6 mb-4">
+          <a href="#" class="btn-thumbnail" style="background-image: url('https://i.imgur.com/MppBEcG.jpg');">
+            <span class="title">Construction and demolition waste</span>
+          </a>
+        </div>
+      </div>
+    </section>
 
-  {% if info.url %}
-    <p><a class="btn btn-primary" href="{{ info.url }}">Visit website</a></p>
-  {% endif %}
+    <section>
+      <h3>Related sectors</h3>
+      <div class="row">
+        <div class="col-lg-4 col-sm-6 mb-4">
+          <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/construction.jpg');">
+            <span class="title">Construction</span>
+          </a>
+        </div>
+        <div class="col-lg-4 col-sm-6 mb-4">
+          <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/waste.jpg');">
+            <span class="title">Waste</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h3>Related locations</h3>
+      <div class="row">
+        <div class="col-lg-4 col-sm-6 mb-4">
+          <a href="#" class="btn-thumbnail" style="background-image: url('https://metabolismofcities.org/media/photos/Beijing.large.jpeg');">
+            <span class="title">Beijing</span>
+          </a>
+        </div>
+        <div class="col-lg-4 col-sm-6 mb-4">
+          <a href="#" class="btn-thumbnail" style="background-image: url('https://metabolismofcities.org/media/photos/Brussels.large.jpg');">
+            <span class="title">Brussels<br></span>
+          </a>
+        </div>
+        <div class="col-lg-4 col-sm-6 mb-4">
+          <a href="#" class="btn-thumbnail" style="background-image: url('https://metabolismofcities.org/media/photos/32500830212_69e4954085_k.large.jpg');">
+            <span class="title">Cape Town</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h3>Tags</h3>
+      <a class="btn btn-primary-outline mb-4" href="">Material Flow Analysis</a>
+      <a class="btn btn-primary-outline mb-4" href="">Data Quality</a>
+      <a class="btn btn-primary-outline mb-4" href="">Pyrolisis</a>
+    </section>
+
+    <section>
+      <h3>Team</h3>
+      <div class="row">
+        <div class="col-6 col-sm-3 col-lg-2 mb-4">
+          <a href="#" class="btn-thumbnail small" style="background-image: url('https://backoffice.metabolismofcities.org/media/contacts/photo_cv.thumbnail.jpg');">
+            <span class="title">Aris</span>
+          </a>
+        </div>
+        <div class="col-6 col-sm-3 col-lg-2 mb-4">
+          <a href="#" class="btn-thumbnail small" style="background-image: url('https://backoffice.metabolismofcities.org/media/contacts/Carlos_Bio.thumbnail.jpg');">
+            <span class="title">Carlos</span>
+          </a>
+        </div>
+        <div class="col-6 col-sm-3 col-lg-2 mb-4">
+          <a href="#" class="btn-thumbnail small" style="background-image: url('https://backoffice.metabolismofcities.org/media/contacts/Carolin_South_Africa_2019_cropped.thumbnail.jpeg');">
+            <span class="title">Carolin</span>
+          </a>
+        </div>
+        <div class="col-6 col-sm-3 col-lg-2 mb-4">
+          <a href="#" class="btn-thumbnail small" style="background-image: url('https://backoffice.metabolismofcities.org/media/contacts/gabriela_fernandez_pic.thumbnail.png');">
+            <span class="title">Gabriela</span>
+          </a>
+        </div>
+        <div class="col-6 col-sm-3 col-lg-2 mb-4">
+          <a href="#" class="btn-thumbnail small" style="background-image: url('https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg');">
+            <span class="title">Paul</span>
+          </a>
+        </div>
+        <div class="col-6 col-sm-3 col-lg-2 mb-4">
+          <a href="#" class="btn-thumbnail small" style="background-image: url('https://backoffice.metabolismofcities.org/media/contacts/team.ramiro_K5tF7DB.thumbnail.jpg');">
+            <span class="title">Ramiro</span>
+          </a>
+        </div>
+        <div class="col-6 col-sm-3 col-lg-2 mb-4">
+          <a href="#" class="btn-thumbnail small" style="background-image: url('https://backoffice.metabolismofcities.org/media/contacts/team.rupert.thumbnail.jpg');">
+            <span class="title">Rupert</span>
+          </a>
+        </div>
+        <div class="col-6 col-sm-3 col-lg-2 mb-4">
+          <a href="#" class="btn-thumbnail small" style="background-image: url('https://backoffice.metabolismofcities.org/media/contacts/team.yves_QWpISsP.thumbnail.jpg');">
+            <span class="title">Yves</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h3>Publications</h3>
+      <a href="" class="card btn-card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Evaluating urban water management using a water metabolism framework: A comparative analysis of three regions in Korea</h5>
+          <h6 class="card-subtitle text-muted">Jeong, Seongpil; Park, Jooyoung | 2020 | Resources, Conservation and Recycling</h6>
+        </div>
+      </a>
+      <a href="" class="card btn-card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Methodological framework for the implementation of circular economy in urban systems</h5>
+          <h6 class="card-subtitle text-muted">Ana Sánchez Levoso, Carles M. Gasol, Julia Martínez-Blanco, Xavier Gabarell Durany, Martin Lehmann, Ramon Farreny Gaya | 2020 | Journal of Cleaner Production</h6>
+        </div>
+      </a>
+      <a href="" class="card btn-card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Effects of changing population or density on urban carbon dioxide emissions</h5>
+          <h6 class="card-subtitle mb-2 text-muted">Haroldo V. Ribeiro, Diego Rybski & Jürgen P. Kropp | 2019 | Nature Communications</h6>
+        </div>
+      </a>
+    </section>
+
+    <section>
+      <h3>Photos</h3>
+    </section>
+
+    <section>
+      <h3>Videos</h3>
+    </section>
+  </div>
+</div>
+
 
 {% endblock %}

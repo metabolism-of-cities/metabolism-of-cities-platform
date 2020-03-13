@@ -76,6 +76,10 @@ a {
   }
 }
 
+.sticky-top {
+  top: 1rem;
+}
+
 // COMMON ELEMENTS
 // NAVBAR AND HERO
 .top-layer {
@@ -458,6 +462,7 @@ footer {
   color: white;
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
   display: flex;
   font-size: 1.2rem;
   height: 200px;
@@ -466,6 +471,10 @@ footer {
   &:hover {
     color: white;
     text-decoration: none;
+  }
+
+  &.small {
+    height: 100px;
   }
 
   .title {
