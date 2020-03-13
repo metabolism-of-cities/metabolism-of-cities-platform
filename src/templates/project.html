@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% load static %}
 
 {% block title %}{{ info }}{% endblock %}
 
@@ -161,10 +162,32 @@
 
     <section>
       <h3>Photos</h3>
+      {% spaceless %}
+        <div class="gallery">
+          <a href="" style="background-image: url('{% static 'img/construction.jpg' %}');"></a>
+          <a href="" style="background-image: url('{% static 'img/energy.jpg' %}');"></a>
+          <a href="" style="background-image: url('{% static 'img/fishing.jpg' %}');"></a>
+          <a href="" style="background-image: url('{% static 'img/forestry.jpg' %}');"></a>
+          <a href="" style="background-image: url('https://metabolismofcities.org/media/photos/Brussels.large.jpg');"></a>
+          <a href="" style="background-image: url('https://metabolismofcities.org/media/photos/Beijing.large.jpeg');"></a>
+        </div>
+      {% endspaceless %}
     </section>
 
     <section>
       <h3>Videos</h3>
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <a class="card btn-card video" href="#">
+            <img src="https://metabolismofcities.org/media/photos/the-hague-1491554_1920.large.jpg" class="card-img-top" alt="...">
+            <i class="fad fa-play-circle"></i>
+            <div class="card-body">
+              <h5 class="card-title">What is Multiplicty?</h5>
+              <h6 class="card-subtitle mb-2 text-muted">YouTube</h6>
+            </div>
+          </a>
+        </div>
+      </div>
     </section>
   </div>
 </div>

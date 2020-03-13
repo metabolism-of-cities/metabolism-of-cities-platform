@@ -452,6 +452,14 @@ footer {
   &:hover {
     color: $dark;
   }
+
+  &.video i.fa-play-circle {
+    color: $white;
+    font-size: 6rem;
+    left: calc(50% - 3rem);
+    position: absolute;
+    top: 40px;
+  }
 }
 
 // THUMBNAIL BUTTON
@@ -608,6 +616,23 @@ body.single-project {
 
 }
 
+// CONTRIBUTE BOX
 .contribute {
-  background: #cf4803;
+  background: $light;
+}
+
+// PHOTO GALLERY
+.gallery a {
+  @extend %raised-hover;
+  @extend %box-shadow;
+  background-position: center;
+  border-radius: .25rem;
+  display: inline-block;
+  padding-bottom: calc(25% - 1rem);
+  width: calc(25% - 1rem);
+  margin: 0 1rem 1rem 0;
+  @media (max-width: 768px) {
+    padding-bottom: calc(50% - 1rem);
+    width: calc(50% - 1rem);
+  }
 }
