@@ -37,10 +37,10 @@ urlpatterns = [
     path("library/", views.article, { "id": 38, "project": 38 }, name="library"),
 
     # MultipliCity
-    path("cities/", views.cities, name="cities"),
-    path("cities/overview/", views.cities_overview, name="cities"),
-    path("cities/<slug:city>/sectors/<slug:sector>/", views.sector, name="sector"),
-    path("cities/<slug:city>/", views.city, name="city"),
+    path("data/", views.data, name="data"),
+    path("data/overview/", views.data_overview, name="data_overview"),
+    path("data/<slug:place>/sectors/<slug:sector>/", views.sector, name="sector"),
+    path("data/<slug:place>/", views.dashboard, name="dashboard"),
 
     # Authentication
     path("register/", views.user_register, name="register"),

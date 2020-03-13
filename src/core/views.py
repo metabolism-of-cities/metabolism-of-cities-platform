@@ -238,27 +238,27 @@ def article_list(request, id):
 
 # Cities
 
-def cities(request):
+def data(request):
     context = {
     }
-    return render(request, "cities/index.html", load_specific_design(context, PAGE_ID["multiplicity"]))
+    return render(request, "data/index.html", load_specific_design(context, PAGE_ID["multiplicity"]))
 
-def cities_overview(request):
+def data_overview(request):
     context = {
     }
-    return render(request, "cities/overview.html", load_specific_design(context, PAGE_ID["multiplicity"]))
+    return render(request, "data/overview.html", load_specific_design(context, PAGE_ID["multiplicity"]))
 
-def city(request, city):
+def dashboard(request, place):
     subsite = get_object_or_404(Article, pk=PAGE_ID["multiplicity"])
     header = getHeader(subsite)
     header["type"] = "image"
-    if city == "cape-town":
+    if place == "cape-town":
         header["image"] = "/media/header_image/media-capetown.huge.jpg"
-    elif city == "newyork":
+    elif place == "newyork":
         header["image"] = "/media/header_image/media-newyork.huge.jpg"
-    elif city == "sydney":
+    elif place == "sydney":
         header["image"] = "/media/header_image/media-sydney.huge.jpg"
-    elif city == "toronto":
+    elif place == "toronto":
         header["image"] = "/media/header_image/media-toronto.huge.jpg"
     context = {
         "subsite": header,
@@ -266,12 +266,12 @@ def city(request, city):
         "city": "Cape Town",
         "country": "South Africa",
     }
-    return render(request, "cities/dashboard.html", context)
+    return render(request, "data/dashboard.html", context)
 
-def sector(request, city, sector):
+def sector(request, place, sector):
     context = {
     }
-    return render(request, "cities/sector.html", load_specific_design(context, PAGE_ID["multiplicity"]))
+    return render(request, "data/sector.html", load_specific_design(context, PAGE_ID["multiplicity"]))
     
 
 # People
@@ -378,11 +378,11 @@ def load_baseline(request):
         { "id": 49, "title": "By year", "parent": 39, "slug": "/library/casestudies/calendar/", "position": 3 },
         { "id": 50, "title": "View map", "parent": 39, "slug": "/library/casestudies/map/", "position": 4 },
 
-        { "id": 51, "title": "Cities", "parent": 19, "slug": "/cities/", "position": None },
+        { "id": 51, "title": "Cities", "parent": 19, "slug": "/data/", "position": None },
     ]
     projects = [
         { "id": 20, "title": "Library", "parent": 19, "url": "/library/", "position": 1 },
-        { "id": 21, "title": "MultipliCity Data Hub", "parent": 19, "url": "/cities/", "position": 2 },
+        { "id": 21, "title": "MultipliCity Data Hub", "parent": 19, "url": "/data/", "position": 2 },
         { "id": 22, "title": "Stakeholders Initiative", "parent": 19, "url": "/stakeholders-initiative/", "position": 3 },
         { "id": 23, "title": "Cityloops", "parent": 19, "url": "/cityloops/", "position": 4 },
         { "id": 24, "title": "Seminar Series", "parent": 19, "url": "/seminarseries/", "position": 5 },
