@@ -14,7 +14,7 @@
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
       {% if subsite %}
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand" href="{{ subsite.slug }}">
           <img alt="{{ subsite.title }}" src="{% if subsite.logo %}{{ subsite.logo }}{% else %}{% static "img/logo.svg" %}{% endif %}">
         </a>
       {% else %}
@@ -29,7 +29,9 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
           
-          {% if subsite and menu %}
+          {% if subsite.id == 51 %}
+            {% include "_menu-multiplicity.html" %}
+          {% elif subsite and menu %}
             {% for each in menu %}
               <li class="nav-item"><a class="nav-link" href="{{ each.get_absolute_url }}">{{ each }}</a></li>
             {% endfor %}
@@ -133,4 +135,48 @@
     <img src="{{ header.image }}" alt="" style="width:100%" />
   {% endif %}
 
+  {% if subsite.id == 51 and city %}
+    <h2 style="position:absolute;top:200px;left:70px;color:#fff;font-size:33px">
+    {{ city }}<br>{{ country }}
+    </h2>
+  {% endif %}
+
 </div>
+
+{% if subsite.id == 51 and city %}
+  <style type="text/css">
+  .applyhere li {padding-right:20px}
+  .applyhere li a{color:#fff}
+  </style>
+  <ul class="nav nav-list applyhere" style="background:#E95420;padding:4px;padding-left:100px">
+    <li><a href="http://">Overview</a></li>
+    <li>
+      <a href="" style="color:#fff">Sectors</a>
+      <ul style="display:none">
+        <li><a href="http://">Agriculture</a></li>
+        <li><a href="http://">Water</a></li>
+        <li><a href="http://">Waste</a></li>
+        <li><a href="http://">Energy</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="" style="color:#fff">City Profile</a>
+      <ul style="display:none">
+        <li><a href="http://">Agriculture</a></li>
+        <li><a href="http://">Water</a></li>
+        <li><a href="http://">Waste</a></li>
+        <li><a href="http://">Energy</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="" style="color:#fff">Resources</a>
+      <ul style="display:none">
+        <li><a href="http://">Agriculture</a></li>
+        <li><a href="http://">Water</a></li>
+        <li><a href="http://">Waste</a></li>
+        <li><a href="http://">Energy</a></li>
+      </ul>
+    </li>
+    <li><a href="http://">Upload</a></li>
+  </ul>
+{% endif%}

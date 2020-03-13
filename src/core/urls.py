@@ -7,14 +7,13 @@ from django.views.generic.base import RedirectView
 from . import views
 
 urlpatterns = [
-    path("register/", views.user_register, name="register"),
-    path("login/", views.user_login, name="login"),
-    path("logout/", views.user_logout, name="logout"),
 
+    # Homepage
     path("", views.index, name="index"),
+
+    # Templates
     path("templates/", views.templates, name="templates"),
     path("templates/<slug:slug>/", views.template, name="template"),
-    path("pdf/", views.pdf),
 
     # Projects
     path("projects/<int:id>/", views.project, name="project"),
@@ -37,11 +36,18 @@ urlpatterns = [
     # Library
     path("library/", views.article, { "id": 38, "project": 38 }, name="library"),
 
+    # MultipliCity
+    path("cities/", views.article, { "id": 51, "project": 51 }, name="cities"),
+    path("cities/overview/", views.cities_overview, name="cities"),
+    path("cities/<slug:slug>/", views.city, name="city"),
+
+    # Authentication
+    path("register/", views.user_register, name="register"),
+    path("login/", views.user_login, name="login"),
+    path("logout/", views.user_logout, name="logout"),
+
     # Temporary
     path("baseline/", views.load_baseline),
+    path("pdf/", views.pdf),
 
-    # Design options:
-    # - Show left-hand children menu
-    # - Right sidebar with relevant A | B | C
-    # - Grid-style children view
 ]
