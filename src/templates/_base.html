@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>{% if header.title %}{{ header.title }}{% else %}{% block title %}{% endblock %}{% endif %} - Metabolism of Cities</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  <link href="{% sass_src "css/main.scss" %}" rel="stylesheet" type="text/css" />
+  <link href="{% sass_src 'css/main.scss' %}" rel="stylesheet" type="text/css" />
 
   <!-- custom CSS and head, if necessary -->
   {% block css %}{% endblock %}
@@ -27,29 +27,23 @@
   <!-- top layer with navbar and hero -->
   {% include "_top-layer.html" %}
 
-  {% if design_link and request.user.is_authenticated and request.user.is_staff %}
-    <a href="{{ design_link }}" style="position:fixed;right:0;top:400px;background:green;padding:5px;color:#fff">
-      DESIGN
-    </a>
-  {% endif %}
+  <div id="admin-controls" class="btn-group-vertical">
+    {% if design_link and request.user.is_authenticated and request.user.is_staff %}
+      <a class="btn btn-secondary" href="{{ design_link }}"><i class="fas fa-pencil fa-fw"></i> Design</a>
+    {% endif %}
 
-  {% if edit_link and request.user.is_authenticated and request.user.is_staff %}
-    <a href="{{ edit_link }}" style="position:fixed;right:0;top:300px;background:yellow;padding:5px;">
-      EDIT
-    </a>
-  {% endif %}
+    {% if edit_link and request.user.is_authenticated and request.user.is_staff %}
+      <a class="btn btn-secondary" href="{{ edit_link }}"><i class="fas fa-edit fa-fw"></i> Edit</a>
+    {% endif %}
 
-  {% if add_link and request.user.is_authenticated and request.user.is_staff %}
-    <a href="{{ add_link }}" style="position:fixed;right:0;top:250px;background:blue;padding:5px;">
-      ADD
-    </a>
-  {% endif %}
+    {% if add_link and request.user.is_authenticated and request.user.is_staff %}
+      <a class="btn btn-secondary" href="{{ add_link }}"><i class="fas fa-plus fa-fw"></i> Add</a>
+    {% endif %}
 
-  {% if request.user.is_authenticated and request.user.is_staff %}
-    <a href="/admin/" style="position:fixed;right:0;top:350px;background:orange;padding:5px;">
-      ADMIN
-    </a>
-  {% endif %}
+    {% if request.user.is_authenticated and request.user.is_staff %}
+      <a class="btn btn-secondary" href="/admin/"><i class="fas fa-user-lock fa-fw"></i> Admin</a>
+    {% endif %}
+  </div>
 
   <!-- page content -->
   <div class="container main-content">
