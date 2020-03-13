@@ -1,6 +1,6 @@
 // VARIABLES
-$primary: #e95420;
-$secondary: #5e2750;
+$primary: #1f7a8c;
+$secondary: #b13335;
 $black: #000;
 $white: #fff;
 $dark: #212529;
@@ -56,15 +56,20 @@ section {
   padding-bottom: 36px;
 }
 
-a:hover {
-  text-decoration: none;
+a {
+  color: $primary;
+
+  &:hover {
+    color: darken($primary, 20%);
+    text-decoration: none;
+  }
 }
 
 // COMMON ELEMENTS
 // NAVBAR AND HERO
 .top-layer {
   box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.1);
-  background-color: $secondary;
+  background-color: $primary;
   background-image: url(https://resourcewatch.org/static/images/components/layout/header-bg-texture.png);
   background-repeat: no-repeat;
   background-position: 50%;
@@ -75,7 +80,7 @@ a:hover {
 nav {
   &.navbar {
     padding-top: 1rem;
-    padding-bottom: 0;
+    padding-bottom: 1rem;
   }
 
   .navbar-brand {
@@ -96,7 +101,7 @@ nav {
   }
 
   .dropdown-menu {
-    border: 1px solid $secondary;
+    border: 1px solid $primary;
     border-radius: 0;
     box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.3);
     display: block;
@@ -215,15 +220,37 @@ footer {
 }
 
 #involved {
-  background-color: $secondary;
+  background-image: url("/static/img/footer.jpg");
+  background-color: $black;
   color: $light;
+
+  form {
+    max-width: 600px;
+
+
+    input {
+      &:focus {
+        box-shadow: 0 0 0 .2rem rgba(255,255,255,.25);
+        color: $light;
+      }
+
+      &::placeholder {
+        color: transparentize($light, .5);
+      }
+
+      background-color: transparent;
+      border-color: $light;
+      color: $light;
+      width: unset;
+    }
+  }
 }
 
 #sitemap {
   background-color: $light;
 
   .header {
-    color: $primary;
+    color: $secondary;
   }
 
   a {
