@@ -38,6 +38,47 @@ from weasyprint import HTML, CSS
 from weasyprint.fonts import FontConfiguration
 from datetime import datetime
 
+# This array defines all the IDs in the database of the articles that are loaded for the
+# various pages in the menu. Here we can differentiate between the different sites.
+
+PAGE_ID = {
+    "people": 12,
+    "projects": 19,
+}
+
+# We use getHeader to obtain the header settings (type of header, title, subtitle, image)
+# This dictionary has to be created for many different pages so by simply calling this
+# function instead we don't repeat ourselves too often.
+def getHeader(info):
+    if hasattr(info, "design"):
+        design = info.design
+    else:
+        design = ArticleDesign()
+
+    header_image = design.header_image.huge.url if design.header_image else None
+    breadcrumbs = '<a href="/"><i aria-hidden="true" class="fa fa-home fa-fw"></i></a>'
+    if info.parent:
+        breadcrumbs += ' &raquo; '
+        breadcrumbs += '<a href="' + info.parent.get_absolute_url() + '">' + info.parent.title + '</a>'
+    if design.header != "full":
+        breadcrumbs += ' &raquo; '
+        breadcrumbs += '<span class="active">' + info.title + '</span>'
+
+    if design.header_subtitle:
+        subtitle = design.header_subtitle
+    elif info.parent:
+        subtitle = breadcrumbs
+    else:
+        subtitle = ""
+
+    return {
+        "type": design.header,
+        "title": design.header_title if design.header_title else info.title,
+        "subtitle": subtitle,
+        "breadcrumbs": breadcrumbs,
+        "image": header_image,
+    }
+
 # Authentication of users
 
 def user_register(request):
@@ -52,6 +93,9 @@ def user_register(request):
                 messages.error(request, "A user already exists with this e-mail address. Please log in or reset your password instead.")
             else:
                 user = User.objects.create_user(email, email, password)
+                user.is_staff = True
+                user.is_superuser = True
+                user.save()
                 messages.success(request, "User was created.")
                 login(request, user)
                 return redirect("index")
@@ -100,10 +144,29 @@ def template(request, slug):
 # The internal projects section
 
 def projects(request):
-    return render(request, "projects.html")
+    article = get_object_or_404(Article, pk=PAGE_ID["projects"])
+    context = {
+        "header": getHeader(article),
+        "edit_link": "/admin/core/project/" + str(article.id) + "/change/",
+        "list": Project.on_site.all(),
+        "article": article,
+    }
+    return render(request, "projects.html", context)
 
 def project(request, id):
-    return render(request, "project.html")
+    article = get_object_or_404(Article, pk=PAGE_ID["projects"])
+    info = get_object_or_404(Project, pk=id)
+    header = getHeader(article)
+    context = {
+        "header": {
+            "type": article.design.header if hasattr(article, "design") else "full",
+            "title": info.title,
+            "subtitle": header["breadcrumbs"] + ' &raquo; <a href="/projects">Projects</a>',
+        },
+        "edit_link": "/admin/core/project/" + str(info.id) + "/change/",
+        "info": info,
+    }
+    return render(request, "project.html", context)
 
 # Article is used for general web pages, and they can be opened in
 # various ways (using ID, using slug). They can have different presentational formats
@@ -123,9 +186,17 @@ def article(request, id=None, prefix=None, slug=None):
 
     if info.parent:
         menu = Article.objects.filter(parent=info.parent)
+    if hasattr(info, "design"):
+        design_link = "/admin/core/articledesign/" + str(info.id) + "/change/"
+    else:
+        design_link = "/admin/core/articledesign/add/?article=" + str(info.id)
     context = {
         "info": info,
         "menu": menu,
+        "edit_link": "/admin/core/article/" + str(info.id) + "/change/",
+        "add_link": "/admin/core/article/add/",
+        "design_link": design_link,
+        "header": getHeader(info),
     }
     return render(request, "article.html", context)
 
@@ -135,9 +206,31 @@ def article_list(request, id):
     context = {
         "info": info,
         "list": list,
+        "header": getHeader(info),
     }
     return render(request, "article.list.html", context)
 
+# People
+
+def person(request, id):
+    article = get_object_or_404(Article, pk=PAGE_ID["people"])
+    info = get_object_or_404(People, pk=id)
+    context = {
+        "header": getHeader(article),
+        "edit_link": "/admin/core/people/" + str(info.id) + "/change/",
+        "info": info,
+    }
+    return render(request, "person.html", context)
+
+def people_list(request):
+    info = get_object_or_404(Article, pk=PAGE_ID["people"])
+    context = {
+        "header": getHeader(info),
+        "edit_link": "/admin/core/article/" + str(info.id) + "/change/",
+        "info": info,
+        "list": People.on_site.all(),
+    }
+    return render(request, "people.list.html", context)
 
 # TEMPORARY PAGES DURING DEVELOPMENT
 
@@ -187,15 +280,42 @@ def load_baseline(request):
         { "id": 10, "title": "Urban metabolism for everyone", "parent": 1, "slug": "/urbanmetabolism/everyone/", "position": 9 },
 
         { "id": 11, "title": "UM Community", "parent": None, "slug": "/community/", "position": 2 },
-        { "id": 12, "title": "People", "parent": 11, "slug": "/community/people/", "position": 1 },
+        { "id": 12, "title": "People", "parent": 11, "slug": "/community/people/", "position": 1, "content": "<p>This page contains an overview of people who are or have been active in the urban metabolism community.</p>" },
         { "id": 13, "title": "Organisations", "parent": 11, "slug": "/community/organisations/", "position": 2 },
         { "id": 14, "title": "Projects", "parent": 11, "slug": "/community/projects/", "position": 3 },
         { "id": 15, "title": "News", "parent": 11, "slug": "/community/news/", "position": 4 },
         { "id": 16, "title": "Events", "parent": 11, "slug": "/community/events/", "position": 5 },
         { "id": 17, "title": "Forum", "parent": 11, "slug": "/community/forum/", "position": 6 },
         { "id": 18, "title": "Join our community", "parent": 11, "slug": "/community/join/", "position": 7 },
+
+        { "id": 19, "title": "Projects", "parent": None, "slug": "/projects/", "position": 3 },
+
+        { "id": 31, "title": "About", "parent": None, "slug": "/about/", "position": 4 },
+        { "id": 32, "title": "Our Story", "parent": 31, "slug": "/about/our-story/", "position": 1 },
+        { "id": 33, "title": "Mission & values", "parent": 31, "slug": "/about/mission/", "position": 2 },
+        { "id": 34, "title": "Our Members", "parent": 31, "slug": "/about/members/", "position": 3 },
+        { "id": 35, "title": "Our Partners", "parent": 31, "slug": "/about/partners/", "position": 4 },
+        { "id": 36, "title": "Contact Us", "parent": 31, "slug": "/about/contact/", "position": 5 },
+
+        { "id": 38, "title": "Urban Metabolism Library", "parent": 19, "slug": "/library/", "position": None },
+
+    ]
+    projects = [
+        { "id": 20, "title": "Library", "parent": 19, "url": "/library/", "position": 1 },
+        { "id": 21, "title": "MultipliCity", "parent": 19, "url": "/multiplicity/", "position": 2 },
+        { "id": 22, "title": "Stakeholders Initiative", "parent": 19, "url": "/stakeholders-initiative/", "position": 3 },
+        { "id": 23, "title": "Cityloops", "parent": 19, "url": "/cityloops/", "position": 4 },
+        { "id": 24, "title": "Seminar Series", "parent": 19, "url": "/seminarseries/", "position": 5 },
+        { "id": 25, "title": "ASCuS Conference", "parent": 19, "url": "/ascus/", "position": 6 },
+        { "id": 37, "title": "Urban Metabolism & Minorities", "parent": 19, "url": "/minorities/", "position": 7 },
+        { "id": 30, "title": "Urban Metabolism Lab", "parent": 19, "url": "/um-lab/", "position": 8 },
+        { "id": 27, "title": "MOOC", "parent": 19, "url": "/mooc/", "position": 9 },
+        { "id": 28, "title": "GUMDB", "parent": 19, "url": "/gumdb/", "position": 10 },
+        { "id": 29, "title": "STAFDB", "parent": 19, "url": "/stafdb/", "position": 11 },
+        { "id": 26, "title": "OMAT", "parent": 19, "url": "/omat/", "position": 12 },
     ]
     for details in articles:
+        content = details["content"] if "content" in details else None
         Article.objects.create(
             id = details["id"],
             title = details["title"],
@@ -203,9 +323,32 @@ def load_baseline(request):
             slug = details["slug"],
             site = moc,
             position = details["position"],
+            content = content,
+        )
+    for details in projects:
+        content = details["content"] if "content" in details else None
+        Project.objects.create(
+            id = details["id"],
+            url = details["url"],
+            title = details["title"],
+            site = moc,
+            content = content,
         )
 
-    messages.success(request, "UM and Community pages were inserted")
+    messages.success(request, "UM, Community, Project, About pages were inserted/reset")
+
+    names = ["Fulano de Tal", "Fulana de Tal", "Joanne Doe", "John Doe"]
+
+    id = 100 # Last ID from the list above
+    for details in names:
+        id += 1
+        info = People.objects.create(
+            id = id,
+            title = details,
+        )
+        info.site.add(moc)
+
+    messages.success(request, "People were inserted")
 
     return render(request, "template/blank.html")
 
