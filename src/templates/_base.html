@@ -17,7 +17,12 @@
   {% if header.color or header.logo or header.background %}
     <style type="text/css">
       .top-layer {
-        background-color: {{ header.color }};
+        {% if header.color %}
+          background-color: {{ header.color }};
+        {% endif %}
+        {% if header.background %}
+          background-image: url({{ header.background }});
+        {% endif %}
       }
     </style>
   {% endif %}
