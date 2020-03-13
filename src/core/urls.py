@@ -35,7 +35,7 @@ urlpatterns = [
     path("community/<slug:slug>/", views.article, { "prefix": "/community/" }, name="community"),
 
     # Library
-    path("library/", views.article, { "id": 38 }, name="library"),
+    path("library/", views.article, { "id": 38, "project": 38 }, name="library"),
 
     # Temporary
     path("baseline/", views.load_baseline),

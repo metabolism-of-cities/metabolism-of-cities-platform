@@ -49,7 +49,7 @@ PAGE_ID = {
 # We use getHeader to obtain the header settings (type of header, title, subtitle, image)
 # This dictionary has to be created for many different pages so by simply calling this
 # function instead we don't repeat ourselves too often.
-def getHeader(info):
+def getHeader(info, meta_info=False):
     if hasattr(info, "design"):
         design = info.design
     else:
@@ -71,13 +71,23 @@ def getHeader(info):
     else:
         subtitle = ""
 
-    return {
+    details = {
         "type": design.header,
+        "color": design.color,
+        "logo": design.logo.url if design.logo else None,
+        "background": design.header_background.url if design.header_background else None,
         "title": design.header_title if design.header_title else info.title,
         "subtitle": subtitle,
         "breadcrumbs": breadcrumbs,
         "image": header_image,
     }
+
+    if meta_info:
+        # Sometimes we also want the title and some other general information
+        details += {
+            "title": info.title,
+        }
+    return details
 
 # Authentication of users
 
@@ -171,7 +181,7 @@ def project(request, id):
 # Article is used for general web pages, and they can be opened in
 # various ways (using ID, using slug). They can have different presentational formats
 
-def article(request, id=None, prefix=None, slug=None):
+def article(request, id=None, prefix=None, slug=None, project=None):
     site = get_current_site(request)
     menu = None
     if id:
@@ -190,6 +200,10 @@ def article(request, id=None, prefix=None, slug=None):
         design_link = "/admin/core/articledesign/" + str(info.id) + "/change/"
     else:
         design_link = "/admin/core/articledesign/add/?article=" + str(info.id)
+    project_header = None
+    if project:
+        project = get_object_or_404(Article, pk=project, site=site)
+        subsite = getHeader(project)
     context = {
         "info": info,
         "menu": menu,
@@ -197,6 +211,7 @@ def article(request, id=None, prefix=None, slug=None):
         "add_link": "/admin/core/article/add/",
         "design_link": design_link,
         "header": getHeader(info),
+        "subsite": subsite,
     }
     return render(request, "article.html", context)
 

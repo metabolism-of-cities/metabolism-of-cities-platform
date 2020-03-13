@@ -1,10 +1,27 @@
 {% load static %}
 <div class="top-layer">
+
+  {% if subsite %}
+    <div class="return-bar pt-2 pb-2" style="background:#f4f4f4;border-bottom:2px solid #333">
+      <div class="container">
+        <a href="{{ SITE_URL }}">
+          <i class="fad fa-arrow-circle-left"></i> Return to {{ SITE_NAME }}
+        </a>
+      </div>
+    </div>
+  {% endif %}
+
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-      <a class="navbar-brand" href="/">
-        <img alt="Metabolism of Cities" src="{% static 'img/logo.svg' %}">
-      </a>
+      {% if subsite %}
+        <a class="navbar-brand" href="/">
+          <img alt="{{ subsite.title }}" src="{% if subsite.logo %}{{ subsite.logo }}{% else %}{% static "img/logo.svg" %}{% endif %}">
+        </a>
+      {% else %}
+        <a class="navbar-brand" href="/">
+          <img alt="Metabolism of Cities" src="{% static "img/logo.svg" %}">
+        </a>
+      {% endif %}
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
