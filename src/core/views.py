@@ -353,7 +353,7 @@ def load_baseline(request):
         { "id": 17, "title": "Forum", "parent": 11, "slug": "/community/forum/", "position": 6 },
         { "id": 18, "title": "Join our community", "parent": 11, "slug": "/community/join/", "position": 7 },
 
-        { "id": 19, "title": "Projects", "parent": None, "slug": "/projects/", "position": 3 },
+        { "id": 19, "title": "Our Projects", "parent": None, "slug": "/projects/", "position": 3 },
 
         { "id": 31, "title": "About", "parent": None, "slug": "/about/", "position": 4 },
         { "id": 32, "title": "Our Story", "parent": 31, "slug": "/about/our-story/", "position": 1 },
