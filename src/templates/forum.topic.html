@@ -1,0 +1,23 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load sass_tags %}
+
+{% block page_name %}{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+  <h1>Test topic</h1>
+  <p><strong>Fulano wrote:</strong></p>
+  {% lorem 1 p %} 
+  <p><strong>Another one wrote:</strong></p>
+  {% lorem 2 p %} 
+
+  <h2>Reply</h2>
+  <textarea></textarea>
+  <button>Submit</button>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

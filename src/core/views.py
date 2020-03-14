@@ -299,20 +299,56 @@ def people_list(request):
 # NEWS AND EVENTS
 
 def news_list(request):
-    context = {}
+    article = get_object_or_404(Article, pk=15)
+    context = {
+        "header": getHeader(article),
+    }
     return render(request, "news.list.html", context)
 
 def news(request, id):
-    context = {}
+    article = get_object_or_404(Article, pk=15)
+    context = {
+        "header": getHeader(article),
+    }
     return render(request, "news.html", context)
 
 def event_list(request):
-    context = {}
+    article = get_object_or_404(Article, pk=16)
+    context = {
+        "header": getHeader(article),
+    }
     return render(request, "event.list.html", context)
 
 def event(request, id):
-    context = {}
+    article = get_object_or_404(Article, pk=16)
+    context = {
+        "header": getHeader(article),
+    }
     return render(request, "event.html", context)
+
+# FORUM
+
+def forum_list(request):
+    article = get_object_or_404(Article, pk=17)
+    context = {
+        "header": getHeader(article),
+    }
+    return render(request, "forum.list.html", context)
+
+def forum_topic(request, id):
+    article = get_object_or_404(Article, pk=17)
+    context = {
+        "header": getHeader(article),
+    }
+    return render(request, "forum.topic.html", context)
+
+def forum_form(request, id=False):
+    article = get_object_or_404(Article, pk=17)
+    context = {
+        "header": getHeader(article),
+    }
+    return render(request, "forum.form.html", context)
+
 
 # TEMPORARY PAGES DURING DEVELOPMENT
 

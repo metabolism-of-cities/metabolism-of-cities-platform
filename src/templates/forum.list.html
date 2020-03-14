@@ -1,0 +1,38 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load sass_tags %}
+
+{% block page_name %}{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+  {% lorem 1 p %} 
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Topic</th>
+        <th>Replies</th>
+        <th>Last post</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="/community/forum/1">Test topic</a></td>
+        <td>100</td>
+        <td>Jan 3, 2020</td>
+      </tr>
+      <tr>
+        <td><a href="/community/forum/1">Another Test topic</a></td>
+        <td>2</td>
+        <td>Feb 3, 2020</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><a href="/community/forum/create/">Post new topic</a></p>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
