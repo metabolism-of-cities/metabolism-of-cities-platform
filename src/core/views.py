@@ -296,6 +296,24 @@ def people_list(request):
     }
     return render(request, "people.list.html", context)
 
+# NEWS AND EVENTS
+
+def news_list(request):
+    context = {}
+    return render(request, "news.list.html", context)
+
+def news(request, id):
+    context = {}
+    return render(request, "news.html", context)
+
+def event_list(request):
+    context = {}
+    return render(request, "event.list.html", context)
+
+def event(request, id):
+    context = {}
+    return render(request, "event.html", context)
+
 # TEMPORARY PAGES DURING DEVELOPMENT
 
 def pdf(request):
@@ -347,7 +365,7 @@ def load_baseline(request):
         { "id": 11, "title": "UM Community", "parent": None, "slug": "/community/", "position": 2 },
         { "id": 12, "title": "People", "parent": 11, "slug": "/community/people/", "position": 1, "content": "<p>This page contains an overview of people who are or have been active in the urban metabolism community.</p>" },
         { "id": 13, "title": "Organisations", "parent": 11, "slug": "/community/organisations/", "position": 2 },
-        { "id": 14, "title": "Projects", "parent": 11, "slug": "/community/projects/", "position": 3 },
+        { "id": 14, "title": "Our Projects", "parent": 11, "slug": "/community/projects/", "position": 3 },
         { "id": 15, "title": "News", "parent": 11, "slug": "/community/news/", "position": 4 },
         { "id": 16, "title": "Events", "parent": 11, "slug": "/community/events/", "position": 5 },
         { "id": 17, "title": "Forum", "parent": 11, "slug": "/community/forum/", "position": 6 },

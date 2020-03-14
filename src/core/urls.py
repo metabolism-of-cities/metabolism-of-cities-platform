@@ -31,6 +31,10 @@ urlpatterns = [
     path("community/people/", views.people_list, name="people_list"),
     path("community/people/<int:id>/", views.person, name="person"),
     path("community/", views.article_list, { "id": 1 }, name="community"),
+    path("community/news/", views.news_list, name="news"),
+    path("community/news/<int:id>/", views.news, name="news"),
+    path("community/events/", views.event_list, name="events"),
+    path("community/events/<int:id>/", views.event, name="event"),
     path("community/<slug:slug>/", views.article, { "prefix": "/community/" }, name="community"),
 
     # Library
