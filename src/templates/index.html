@@ -21,6 +21,17 @@
     <li><a href="/admin">Admin</a></li>
     <li><a href="/templates">Templates</a></li>
   </ul>
+
+  <div class="alert alert-warning">
+    <strong>Note!</strong>
+    If you want to record new entries in the database, then you may need to run this command:
+    <pre>
+    SELECT setval('core_record_id_seq', (SELECT MAX(id) FROM core_record)+1);
+    </pre>
+    Please run this from <a href="http://localhost:8080/?pgsql=db&username=postgres&db=postgres&ns=public&sql=SELECT%20setval(%27core_record_id_seq%27%2C%20(SELECT%20MAX(id)%20FROM%20core_record)%2B1)%3B%0A">here</a>
+    (pwd = postgres)
+  </div>
+
 {% endblock %}
 
 

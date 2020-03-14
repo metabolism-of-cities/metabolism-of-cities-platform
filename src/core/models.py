@@ -36,6 +36,7 @@ class Event(Record):
         ("hackathon", "Hackathon"),
         ("workshop", "Workshop"),
         ("seminar", "Seminar"),
+        ("summerschool", "Summer School"),
         ("other", "Other"),
     ]
     type = models.CharField(max_length=20, blank=True, null=True, choices=EVENT_TYPE)
@@ -44,7 +45,16 @@ class Event(Record):
     end_date = models.DateField(null=True, blank=True)
 
 class Video(Record):
-    url = models.URLField(max_length=255, null=True, blank=True)
+    url = models.URLField(max_length=255)
+    embed_code = models.CharField(max_length=20, null=True, blank=True)
+    VIDEO_SITES = [
+        ("youtube", "Youtube"),
+        ("vimeo", "Vimeo"),
+        ("other", "Other"),
+    ]
+    video_site = models.CharField(max_length=14, choices=VIDEO_SITES)
+    def embed(self):
+        return "<iframe src=blabla></iframe>"
 
 class People(Record):
     affiliation = models.CharField(max_length=255,null=True, blank=True)

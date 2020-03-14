@@ -82,7 +82,6 @@ def getHeader(info):
         "image": header_image,
         "id": info.id,
         "slug": info.slug,
-        "title": info.title,
     }
 
     return details
@@ -348,6 +347,19 @@ def forum_form(request, id=False):
         "header": getHeader(article),
     }
     return render(request, "forum.form.html", context)
+
+# VIDEOS
+
+def video_list(request):
+    context = {
+    }
+    return render(request, "video.list.html", context)
+
+def video(request, id):
+    context = {
+        "info": get_object_or_404(Video, pk=id),
+    }
+    return render(request, "video.html", context)
 
 
 # TEMPORARY PAGES DURING DEVELOPMENT

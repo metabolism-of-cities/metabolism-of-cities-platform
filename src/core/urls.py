@@ -43,6 +43,10 @@ urlpatterns = [
 
     path("community/<slug:slug>/", views.article, { "prefix": "/community/" }, name="community"),
 
+    # Videos
+    path("videos/", views.video_list, name="video_list"),
+    path("videos/<int:id>/", views.video, name="video"),
+
     # Library
     path("library/", views.article, { "id": 38, "project": 38 }, name="library"),
 
