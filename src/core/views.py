@@ -57,13 +57,11 @@ def getHeader(info):
         design = ArticleDesign()
 
     header_image = design.header_image.huge.url if design.header_image else None
-    breadcrumbs = '<a href="/"><i aria-hidden="true" class="fa fa-home fa-fw"></i></a>'
+    breadcrumbs = '<li class="breadcrumb-item"><a href="/">Home</a></li>'
     if info.parent:
-        breadcrumbs += ' &raquo; '
-        breadcrumbs += '<a href="' + info.parent.get_absolute_url() + '">' + info.parent.title + '</a>'
+        breadcrumbs += '<li class="breadcrumb-item"><a href="' + info.parent.get_absolute_url() + '">' + info.parent.title + '</a></li>'
     if design.header != "full":
-        breadcrumbs += ' &raquo; '
-        breadcrumbs += '<span class="active">' + info.title + '</span>'
+        breadcrumbs += '<li class="breadcrumb-item active" aria-current="page">' + info.title + '</li>'
 
     if design.header_subtitle:
         subtitle = design.header_subtitle
@@ -179,7 +177,7 @@ def project(request, id):
         "header": {
             "type": article.design.header if hasattr(article, "design") else "full",
             "title": info.title,
-            "subtitle": header["breadcrumbs"] + ' &raquo; <a href="/projects">Projects</a>',
+            "subtitle": header["breadcrumbs"] + '<li class="breadcrumb-item"><a href="/projects">Projects</a></li>' + '<li class="breadcrumb-item active" aria-current="page">' + info.title + '</li>',
         },
         "edit_link": "/admin/core/project/" + str(info.id) + "/change/",
         "info": info,

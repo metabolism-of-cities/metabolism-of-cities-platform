@@ -95,7 +95,11 @@
           <h1 class="display-4">{{ header.title }}</h1>
         {% endif %}
         {% if header.subtitle %}
-          <p class="lead">{{ header.subtitle|safe }}</p>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              {{ header.subtitle|safe }}
+            </ol>
+          </nav>
         {% endif %}
       </div>
     </div>
