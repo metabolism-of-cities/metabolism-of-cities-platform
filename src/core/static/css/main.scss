@@ -80,6 +80,12 @@ a {
   top: 1rem;
 }
 
+input.form-control:focus,
+select.custom-select:focus {
+  border-color: $primary;
+  box-shadow: 0 0 0 .2rem rgba($primary,.25);
+}
+
 // COMMON ELEMENTS
 // NAVBAR AND HERO
 .top-layer {
