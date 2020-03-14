@@ -1,32 +1,64 @@
 {% extends "_base.html" %}
 {% load static %}
 
+{% block page_name %}single-project{% endblock %}
 {% block title %}{{ info }}{% endblock %}
 
 {% block content %}
 
 <div class="row">
-  <div class="col-lg-4">
-    <div class="card sticky-top">
+  <div class="col-lg-5">
+    <div class="card sticky-top mb-4">
+      <img src="https://metabolismofcities.org/media/projects/AgroCycle_8czbkcb.png" class="card-img-top" alt="...">
       {% if info.image %}
         <img class="card-img-top" src="{{ info.image.large.url }}" alt="" />
       {% endif %}
       <div class="card-body">
         <h5 class="card-title">{{ info.title }}</h5>
-        <p class="card-text">{{ info.content|safe }}</p>
+        <p>Et doloremque dolorum doloremque aut deserunt debitis animi. Vel iste expedita repellendus veritatis. Et esse explicabo harum rem dolores architecto. Eos et expedita est. Laudantium sed qui sit.</p>
+        <!-- <p class="card-text">{{ info.content|safe }}</p> -->
         {% if info.url %}
           <a class="btn btn-primary" href="{{ info.url }}">Visit website</a>
         {% endif %}
       </div>
       <ul class="list-group list-group-flush">
-        <li class="list-group-item"><a href=""></a></li>
-        <li class="list-group-item"><i class="fas fa-play"></i> 13 March 2020</li>
-        <li class="list-group-item"><i class="fas fa-calendar-check"></i> 13 March 2022</li>
+        <li class="list-group-item">
+          <i class="far fa-fw fa-map-marker-alt"></i> Cape Town, South Africa
+        </li>
+        <li class="list-group-item">
+          <i class="far fa-fw fa-calendar"></i> 12 March 2019 - 18 October 2022
+        </li>
+        <li class="list-group-item">
+          <i class="far fa-fw fa-play"></i> Ongoing
+        </li>
+        <li class="list-group-item">
+          <i class="far fa-fw fa-cabinet-filing"></i> <a href="">Conferences and seminars</a>
+        </li>
+        <li class="list-group-item">
+          <i class="far fa-fw fa-flask mb-1"></i> Materials
+          <br>
+          <a class="btn btn-sm btn-primary-outline mt-1" href="">Iron</a>
+          <a class="btn btn-sm btn-primary-outline mt-1" href="">Plastics</a>
+          <a class="btn btn-sm btn-primary-outline mt-1" href="">Construction and demolition waste</a>
+        </li>
+        <li class="list-group-item">
+          <i class="far fa-fw fa-briefcase mb-1"></i> Sectors
+          <br>
+          <a class="btn btn-sm btn-primary-outline mt-1" href="">Construction</a>
+          <a class="btn btn-sm btn-primary-outline mt-1" href="">Waste</a>
+        </li>
+        <li class="list-group-item">
+          <i class="far fa-fw fa-tags mb-1"></i> Tags
+          <br>
+          <a class="btn btn-sm btn-primary-outline mt-1" href="">Material Flow Analysis</a>
+          <a class="btn btn-sm btn-primary-outline mt-1" href="">Data Quality</a>
+          <a class="btn btn-sm btn-primary-outline mt-1" href="">Pyrolisis</a>
+        </li>
       </ul>
     </div>
     
   </div>
-  <div class="col-lg-8">
+  <div class="col-lg-7">
     <section>
       <h3>Related materials</h3>
       <div class="row">
@@ -179,8 +211,10 @@
       <div class="row">
         <div class="col-md-6 mb-4">
           <a class="card btn-card video" href="#">
-            <img src="https://metabolismofcities.org/media/photos/the-hague-1491554_1920.large.jpg" class="card-img-top" alt="...">
-            <i class="fad fa-play-circle"></i>
+            <div class="card-img-wrapper">
+              <img src="https://metabolismofcities.org/media/photos/the-hague-1491554_1920.large.jpg" class="card-img-top" alt="...">
+              <i class="fad fa-play-circle"></i>
+            </div>
             <div class="card-body">
               <h5 class="card-title">What is Multiplicty?</h5>
               <h6 class="card-subtitle mb-2 text-muted">YouTube</h6>

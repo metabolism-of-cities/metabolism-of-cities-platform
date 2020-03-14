@@ -154,7 +154,6 @@ nav {
   .lead {
     font-weight: normal;
   }
-
 }
 
 // FOOTERS
@@ -458,7 +457,7 @@ footer {
     font-size: 6rem;
     left: calc(50% - 3rem);
     position: absolute;
-    top: 40px;
+    top: calc(50% - 3rem);
   }
 }
 
@@ -574,48 +573,6 @@ footer {
 
 }
 
-// SINGLE PROJECT PAGE
-body.single-project {
-  .return-bar {
-    background-color: darkred;
-    background-image: url(https://resourcewatch.org/static/images/components/layout/header-bg-texture.png);
-    background-repeat: no-repeat;
-    background-position: 50%;
-    background-size: cover;
-    z-index: 10000;
-
-    a {
-      color: #fff;
-
-      &:hover {
-        color: #ccc;
-        text-decoration: none;
-      }
-
-    }
-
-  }
-
-  nav {
-    background-color: #f6f6f6;
-    padding-bottom: 1rem;
-    box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
-
-    a.nav-link {
-      padding-left: 1rem !important;
-      padding-right: 1rem !important;
-      color: #666 !important;
-
-      &:hover {
-        color: #000 !important;
-      }
-
-    }
-
-  }
-
-}
-
 // CONTRIBUTE BOX
 .contribute {
   background: $light;
@@ -631,8 +588,27 @@ body.single-project {
   padding-bottom: calc(25% - 1rem);
   width: calc(25% - 1rem);
   margin: 0 1rem 1rem 0;
+
   @media (max-width: 768px) {
     padding-bottom: calc(50% - 1rem);
     width: calc(50% - 1rem);
+  }
+}
+
+// PAGES
+body.projects,
+body.single-project {
+  .card .card-img-top {
+    padding: 1.25rem;
+  }
+
+  .card i {
+    margin-right: .25rem;
+  }
+}
+
+body.single-project {
+  .card-img-wrapper {
+    position: relative;
   }
 }
