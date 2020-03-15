@@ -623,6 +623,7 @@ footer {
 }
 
 // PAGES
+// PROJECT PAGES
 body.projects,
 body.single-project {
   .card .card-img-top {
@@ -637,5 +638,78 @@ body.single-project {
 body.single-project {
   .card-img-wrapper {
     position: relative;
+  }
+}
+
+// CITY SUBSITE
+body.city-subsite {
+  .return-bar {
+    background-color: $light;
+    padding: 4px 0;
+  }
+
+  #img-city {
+    background-position: center;
+    width: 100%;
+    height: 60vh;
+    position: sticky;
+    top: 0;
+
+    .black-cover {
+      background-color: $black;
+      opacity: .3;
+      width: 100%;
+      height: 100%;
+    }
+
+    .city-name {
+      font-weight: bold;
+      font-size: 2.5rem;
+      position: absolute;
+      text-shadow: 0px 0px 2px rgba(0, 0, 0, 1);
+      color: $light;
+      bottom: 1rem;
+    }
+
+  }
+  .down-city-name {
+    font-weight: bold;
+    text-align: center;
+    background-color: $light;
+    position: fixed;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    font-size: 1rem;
+    top: 0;
+    opacity: 0;
+    transition: .3s;
+    z-index: 500000;
+    pointer-events: none;
+    box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.1);
+
+    a {
+      float: left;
+    }
+  }
+
+  &.scrolled-down .down-city-name {
+    pointer-events: unset;
+    opacity: 1;
+  }
+
+  .navbar-city {
+    background-color: $light;
+    padding-bottom: .2rem;
+    padding-top: .2rem;
+    
+    a.nav-link {
+      color: $primary !important;
+
+      &:hover {
+        color: darken($primary, 20%) !important;
+        text-decoration: none !important;
+      }
+    }
   }
 }

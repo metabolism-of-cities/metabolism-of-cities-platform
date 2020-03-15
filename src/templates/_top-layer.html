@@ -1,21 +1,16 @@
 {% load static %}
 <div class="top-layer">
-
-  {% if subsite %}
-    <div class="return-bar pt-2 pb-2" style="background:#f4f4f4;border-bottom:2px solid #333">
-      <div class="container">
-        <a href="{{ SITE_URL }}">
-          <i class="fad fa-arrow-circle-left"></i> Return to {{ SITE_NAME }}
-        </a>
-      </div>
+  <div class="return-bar">
+    <div class="container">
+      <a href="{{ SITE_URL }}"><i class="fad fa-arrow-circle-left"></i> Return to {{ SITE_NAME }}</a>
     </div>
-  {% endif %}
+  </div>
 
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
       {% if subsite %}
         <a class="navbar-brand" href="{{ subsite.slug }}">
-          <img alt="{{ subsite.title }}" src="{% if subsite.logo %}{{ subsite.logo }}{% else %}{% static "img/logo.svg" %}{% endif %}">
+          <img alt="{{ subsite.title }}" src="{% if subsite.logo %}{{ subsite.logo }}{% else %}{% static 'img/logo.svg' %}{% endif %}">
         </a>
       {% else %}
         <a class="navbar-brand" href="/">
@@ -104,51 +99,86 @@
       </div>
     </div>
   {% elif header.type == "image" %}
-    <img src="{{ header.image }}" alt="" style="width:100%" />
   {% endif %}
 
   {% if subsite.id == 51 and city %}
-    <h2 style="position:absolute;top:200px;left:70px;color:#fff;font-size:33px">
-    {{ city }}<br>{{ country }}
-    </h2>
+    <div id="img-city" style="background-image: url('{{ header.image }}');">
+      <div class="black-cover"></div>
+
+      <div class="container">
+        <div class="city-name">{{ city }}, {{ country }}</div>
+      </div>
+    </div>
+
+    <div class="down-city-name">
+      <div class="container">
+        <a href="{{ SITE_URL }}"><i class="fad fa-arrow-circle-left"></i></a>
+        <span>{{ city }}, {{ country }}</span>
+      </div>
+    </div>
   {% endif %}
 
 </div>
 
 {% if subsite.id == 51 and city %}
-  <style type="text/css">
-  .applyhere li {padding-right:20px}
-  .applyhere li a{color:#fff}
-  </style>
-  <ul class="nav nav-list applyhere" style="background:#E95420;padding:4px;padding-left:100px">
-    <li><a href="http://">Overview</a></li>
-    <li>
-      <a href="" style="color:#fff">Sectors</a>
-      <ul style="display:none">
-        <li><a href="http://">Agriculture</a></li>
-        <li><a href="http://">Water</a></li>
-        <li><a href="http://">Waste</a></li>
-        <li><a href="http://">Energy</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="" style="color:#fff">City Profile</a>
-      <ul style="display:none">
-        <li><a href="http://">Agriculture</a></li>
-        <li><a href="http://">Water</a></li>
-        <li><a href="http://">Waste</a></li>
-        <li><a href="http://">Energy</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="" style="color:#fff">Resources</a>
-      <ul style="display:none">
-        <li><a href="http://">Agriculture</a></li>
-        <li><a href="http://">Water</a></li>
-        <li><a href="http://">Waste</a></li>
-        <li><a href="http://">Energy</a></li>
-      </ul>
-    </li>
-    <li><a href="http://">Upload</a></li>
-  </ul>
+  <nav class="navbar navbar-expand-lg navbar-city">
+    <div class="container">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Overview</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">City Profile</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Resources
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">Agriculture</a>
+              <a class="dropdown-item" href="#">Water</a>
+              <a class="dropdown-item" href="#">Waste</a>
+              <a class="dropdown-item" href="#">Energy</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Sectors
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">Agriculture</a>
+              <a class="dropdown-item" href="#">Water</a>
+              <a class="dropdown-item" href="#">Waste</a>
+              <a class="dropdown-item" href="#">Energy</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Upload</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 {% endif%}
+
+{% if subsite.id == 51 and city %}
+  {% block javascript %}
+  <script>
+     // When the user scrolls down 50px from the top of the document, resize the header's font size
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+      if ($(window).scrollTop() > $(".navbar-city").position().top) {
+        $("body").addClass("scrolled-down");
+      } else {
+        $("body").removeClass("scrolled-down");
+      }
+    } 
+  </script>
+  {% endblock %}
+{% endif %}
