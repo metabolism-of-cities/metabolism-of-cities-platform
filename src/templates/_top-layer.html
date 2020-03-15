@@ -1,21 +1,11 @@
 {% load static %}
 <div class="top-layer">
 
-  {% if subsite %}
-    <div class="return-bar pt-2 pb-2" style="background:#f4f4f4;border-bottom:2px solid #333">
-      <div class="container">
-        <a href="{{ SITE_URL }}">
-          <i class="fad fa-arrow-circle-left"></i> Return to {{ SITE_NAME }}
-        </a>
-      </div>
-    </div>
-  {% endif %}
-
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
       {% if subsite %}
         <a class="navbar-brand" href="{{ subsite.slug }}">
-          <img alt="{{ subsite.title }}" src="{% if subsite.logo %}{{ subsite.logo }}{% else %}{% static "img/logo.svg" %}{% endif %}">
+          <img alt="{{ subsite.title }}" src="{% if subsite.logo %}{{ subsite.logo }}{% else %}{% static 'img/logo.svg' %}{% endif %}">
         </a>
       {% else %}
         <a class="navbar-brand" href="/">
@@ -104,13 +94,20 @@
       </div>
     </div>
   {% elif header.type == "image" %}
-    <img src="{{ header.image }}" alt="" style="width:100%" />
   {% endif %}
 
   {% if subsite.id == 51 and city %}
-    <h2 style="position:absolute;top:200px;left:70px;color:#fff;font-size:33px">
-    {{ city }}<br>{{ country }}
-    </h2>
+    <div id="img-city" style="background-image: url('{{ header.image }}');">
+      <div class="black-cover"></div>
+      <div class="container">
+        <div class="city-name">{{ city }}, {{ country }}</div>
+        <!--
+        <a class="btn btn-primary" href="{{ SITE_URL }}">
+          <i class="fad fa-arrow-circle-left"></i> Return to {{ SITE_NAME }}
+        </a>
+        -->
+      </div>
+    </div>
   {% endif %}
 
 </div>
@@ -152,3 +149,20 @@
     <li><a href="http://">Upload</a></li>
   </ul>
 {% endif%}
+
+{% if subsite.id == 51 and city %}
+  {% block javascript %}
+  <script>
+     // When the user scrolls down 50px from the top of the document, resize the header's font size
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+      if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+        $("body").addClass("scrolled-down");
+      } else {
+        $("body").removeClass("scrolled-down");
+      }
+    } 
+  </script>
+  {% endblock %}
+{% endif %}
