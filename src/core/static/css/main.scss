@@ -96,6 +96,27 @@ select.custom-select:focus {
   background-position: 50%;
   background-size: cover;
   z-index: 10000;
+
+  .breadcrumb {
+    padding: 0;
+    background-color: transparent;
+
+    a {
+      color: $secondary;
+
+      &:hover {
+        color: darken($secondary, 10%);
+      }
+    }
+
+    .breadcrumb-item:before {
+      color: $secondary;
+    }
+
+    .breadcrumb-item.active {
+      color: $white;
+    }
+  }
 }
 
 nav {
