@@ -556,6 +556,20 @@ footer {
   background: $light;
 }
 
+// INFOBOX WITH ICON
+.infobox-icon {
+  box-shadow: $basic-shadow;
+  background-color: #fff;
+  border-radius: .25rem;
+  color: $black;
+  display: block;
+  border: none;
+  height: calc(100% - 1rem);
+  margin-bottom: 1rem;
+  padding: 1rem;
+  font-size: 1.25rem;
+}
+
 // LEAFLET MAP
 .leaflet-map {
   box-shadow: $basic-shadow;
@@ -632,6 +646,7 @@ footer {
 // PROJECT PAGES
 body.projects,
 body.single-project {
+
   .card .card-img-top {
     padding: 1.25rem;
   }
@@ -672,8 +687,8 @@ body.city-subsite {
       color: $light;
       bottom: 1rem;
     }
-
   }
+
   .down-city-name {
     font-weight: bold;
     text-align: center;
@@ -713,5 +728,22 @@ body.city-subsite {
         text-decoration: none !important;
       }
     }
+  }
+}
+
+// EVENTS PAGE
+body.event {
+
+  article p {
+    margin-bottom: 2rem;
+  }
+
+  .btn-group.share a i {
+    margin-right: 0;
+    color: $primary;
+  }
+
+  .basic-info.card {
+    margin-bottom: 4rem;
   }
 }
