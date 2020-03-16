@@ -622,6 +622,12 @@ footer {
   }
 }
 
+// RETURN BAR WHEN IN A SUBSITE
+.return-bar {
+  background-color: $light;
+  padding: 4px 0;
+}
+
 // PAGES
 // PROJECT PAGES
 body.projects,
@@ -643,10 +649,6 @@ body.single-project {
 
 // CITY SUBSITE
 body.city-subsite {
-  .return-bar {
-    background-color: $light;
-    padding: 4px 0;
-  }
 
   #img-city {
     background-position: center;
