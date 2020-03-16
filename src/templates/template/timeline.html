@@ -3,22 +3,23 @@
 {% block title %}Timeline{% endblock %}
 
 {% block css %}
-<link title="timeline-styles" rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
+<link rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
 {% endblock %}
 
 {% block content %}
 <div id='timeline' style="width: 100%; height: 600px"></div>
 {% endblock %}
+
 {% block footer %}
 <script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
 <script type="text/javascript">
-	var additionalOptions = {
-		start_at_end: true,
-		default_bg_color: {r:0, g:0, b:0},
-		timenav_height: 250
-	}
+  var additionalOptions = {
+    start_at_end: true,
+    default_bg_color: {r:0, g:0, b:0},
+    timenav_height: 250
+  }
 
-	timeline = new TL.Timeline('timeline',
-		'https://docs.google.com/spreadsheets/d/1cWqQBZCkX9GpzFtxCWHoqFXCHg-ylTVUWlnrdYMzKUI/pubhtml');
-	</script>
+  timeline = new TL.Timeline("timeline",
+  "https://docs.google.com/spreadsheets/d/1cWqQBZCkX9GpzFtxCWHoqFXCHg-ylTVUWlnrdYMzKUI/pubhtml");
+  </script>
 {% endblock %}
