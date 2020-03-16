@@ -4,11 +4,7 @@
 
 {% block css %}
   <style>
-    #map_pin {
-      height: 180px;
-      margin-bottom: 30px;
-    }
-    #map_polygon {
+    .maps {
       height: 180px;
       margin-bottom: 30px;
     }
@@ -23,8 +19,8 @@
 {% endblock %}
 
 {% block content %}
-  <div id="map_pin"></div>
-  <div id="map_polygon"></div>
+  <div class="maps" id="map_pin"></div>
+  <div class="maps" id="map_polygon"></div>
 {% endblock %}
 
 {% block footer %}
@@ -54,6 +50,6 @@
       [51.509, -0.08],
       [51.503, -0.06],
       [51.51, -0.047]
-    ]).addTo(map_polygon);
-  </script>
-{% endblock %}
+      ]).addTo(map_polygon);
+    </script>
+  {% endblock %}
