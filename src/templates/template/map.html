@@ -4,8 +4,12 @@
 
 {% block css %}
   <style>
-    .maps {
-      height: 180px;
+    #map_pin {
+      height: 400px;
+      margin-bottom: 30px;
+    }
+    #map_polygon {
+      height: 400px;
       margin-bottom: 30px;
     }
   </style>
@@ -19,8 +23,8 @@
 {% endblock %}
 
 {% block content %}
-  <div class="maps" id="map_pin"></div>
-  <div class="maps" id="map_polygon"></div>
+  <div id="map_pin"></div>
+  <div id="map_polygon"></div>
 {% endblock %}
 
 {% block footer %}
