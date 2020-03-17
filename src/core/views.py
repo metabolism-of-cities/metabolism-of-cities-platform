@@ -34,6 +34,7 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from django.template import Context
 from django.forms import modelform_factory
+from django.core import mail
 
 # Authentication of users
 
@@ -219,12 +220,31 @@ def load_baseline(request):
     return render(request, "template/blank.html")
 
 def project_form(request):
-    ModelForm = modelform_factory(Project, fields=('title','content','email','url'))
-    form = ModelForm(request.POST or None)
+    ModelForm = modelform_factory(Project, fields=('title','content','email','url','image'))
+    form = ModelForm(request.POST or None, request.FILES or None)
     if request.method == 'POST':
         if form.is_valid():
-            form.save()
+            info = form.save(commit=False)
+            info.active = False
+            info.save()
             messages.success(request, 'Information was saved.')
+            title = request.POST['title']
+            user_email = request.POST['user_email']
+            posted_by = request.POST['name']
+            connection = mail.get_connection()
+            connection.open()
+            email = mail.EmailMessage(
+                'New project created',
+"""A new project was created, please review:
+Project name: {} 
+Submitted by: {}
+Email: {}""".format(title,posted_by,user_email),
+                'from@example.com',
+                ['to@example.com'],
+                connection=connection,
+            )
+            email.send()
+
         else:
             messages.error(request, 'We could not save your form, please fill out all fields')
     context = {
