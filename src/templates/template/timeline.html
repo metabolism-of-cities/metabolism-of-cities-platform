@@ -7,26 +7,22 @@
 {% endblock %}
 
 {% block content %}
-<div id="timeline" style="width: 100%; height: 600px"></div>
 <div id="timeline-embed" style="width: 100%; height: 600px"></div>
 {% endblock %}
 
 {% block footer %}
-<script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
-<script type="text/javascript">
-  var additionalOptions = {
-    start_at_end: true,
-    default_bg_color: {r:0, g:0, b:0},
-    timenav_height: 250
-  }
+  <script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
+  <script type="text/javascript">
+    var additionalOptions = {
+      start_at_end: true,
+      default_bg_color: {r:0, g:0, b:0},
+      timenav_height: 250
+    }
 
-  timeline = new TL.Timeline("timeline",
-    "https://docs.google.com/spreadsheets/d/1cWqQBZCkX9GpzFtxCWHoqFXCHg-ylTVUWlnrdYMzKUI/pubhtml");
-
-  var timeline_config = {
-    width:        '100%',
-    height:       '600',
-    source:       'path_to_json/or_link_to_googlespreadsheet',
+    var timeline_config = {
+      width:        '100%',
+      height:       '600',
+      source:       'path_to_json/or_link_to_googlespreadsheet',
       embed_id:     'timeline-embed',       //OPTIONAL USE A DIFFERENT DIV ID FOR EMBED
       start_at_end:     false,              //OPTIONAL START AT LATEST DATE
       start_at_slide:   '4',              //OPTIONAL START AT SPECIFIC SLIDE
@@ -310,8 +306,7 @@
         }
       }
       ]
-    }
-    ;
-    window.timeline = new TL.Timeline('timeline-embed', timeline_json);
+    };
+    window.timeline = new TL.Timeline('timeline-embed', timeline_json, additionalOptions);
   </script>
   {% endblock %}
