@@ -1,5 +1,6 @@
 {% extends "_base.html" %}
 
+{% block page_name %}article{% endblock %}
 {% block title %}{{ info.title }}{% endblock %}
 
 {% block content %}
@@ -11,21 +12,32 @@
     </div>
   {% endif %}
 
-  <div style="margin:20px 0;background:#f4f4f4;padding:10px">
-    {% if info.description %}
-      {{ info.description }}
-    {% else %}
-      {% lorem 7 p %}
+  <div class="content-wrap">
+    {% if menu %}
+      <aside class="order-1">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ info.parent }}</h5>
+          </div>
+          <div class="list-group list-group-flush">
+            {% for each in menu %}
+              <a href="{{ each.get_absolute_url }}" class="list-group-item{% if each == info %} active{% endif %}">
+                <div>{{ each }}</div>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      </aside>
     {% endif %}
+
+    <article class="order-0">
+      {% if info.description %}
+        {{ info.description }}
+      {% else %}
+        {% lorem 7 p %}
+      {% endif %}
+    </article>
   </div>
 
-  {% if menu %}
-    <h3><a href="{{ info.parent.get_absolute_url }}">{{ info.parent }}</a></h3>
-    <ul>
-    {% for each in menu %}
-      <li><a{% if each == info %} style="font-weight:bold;color:green;"{% endif %} href="{{ each.get_absolute_url }}">{{ each }}</a></li>
-    {% endfor %}
-    </ul>
-  {% endif %}
 
 {% endblock %}

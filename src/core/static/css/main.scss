@@ -548,6 +548,11 @@ footer {
 .card {
   border: none;
   box-shadow: $basic-shadow;
+
+  .list-group-item.active {
+    background-color: $primary;
+    border-color: $primary;
+  }
 }
 
 // CONTRIBUTE BOX
@@ -747,4 +752,35 @@ body.news {
   .basic-info.card {
     margin-bottom: 4rem;
   }
+}
+
+// GENERIC ARTICLE PAGE
+body.article {
+
+  .card .card-body {
+    padding-bottom: 0;
+  }
+
+  @media (max-width: 991px) {
+    .content-wrap {
+      display: flex;
+      flex-direction: column;
+
+      article {
+        order: 0;
+      }
+
+      aside {
+        order: 1;
+      }
+    }
+  }
+
+  @media (min-width: 992px) {
+    aside {
+      margin: 0 0 1rem 1rem;
+      float: right;
+    }
+  }
+
 }
