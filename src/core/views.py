@@ -244,6 +244,7 @@ Email: {}""".format(title,posted_by,user_email),
                 connection=connection,
             )
             email.send()
+            connection.close()
 
         else:
             messages.error(request, 'We could not save your form, please fill out all fields')
