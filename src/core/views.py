@@ -239,8 +239,8 @@ def project_form(request):
 Project name: {} 
 Submitted by: {}
 Email: {}""".format(title,posted_by,user_email),
-                'from@example.com',
-                ['to@example.com'],
+                user_email,
+                ['info@metabolismofcities.org'],
                 connection=connection,
             )
             email.send()
