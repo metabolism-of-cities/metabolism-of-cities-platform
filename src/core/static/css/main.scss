@@ -80,6 +80,7 @@ a {
   top: 1rem;
 }
 
+textarea.form-control:focus,
 input.form-control:focus,
 select.custom-select:focus {
   border-color: $primary;
@@ -186,95 +187,91 @@ nav {
 // FOOTERS
 footer {
   padding: 36px 0;
-}
 
-#involved {
-  background-image: url("/static/img/footer.jpg");
-  background-color: $black;
-  color: $light;
-
-  form {
-    max-width: 600px;
-
-
-    input {
-      &:focus {
-        box-shadow: 0 0 0 .2rem rgba(255,255,255,.25);
-        color: $light;
-      }
-
-      &::placeholder {
-        color: transparentize($light, .5);
-      }
-
-      background-color: transparent;
-      border-color: $light;
-      color: $light;
-      width: unset;
-    }
-  }
-}
-
-#sitemap {
-  background-color: $light;
-
-  .header {
-    color: $secondary;
-  }
-
-  a {
-    color: $dark;
-
-    &:hover {
-      color: $black;
-      text-decoration: none;
-    }
-  }
-}
-
-#info {
-  background-color: $dark;
-  padding-top: 30px;
-  color: $light;
-
-  img {
-    &.main-logo {
-      max-width: 300px;
-      width: 100%;
-    }
-    &.second-logo {
-      max-width: 200px;
-      width: 80%;
-    }
-  }
-
-
-
-
-  a {
+  &#involved {
+    background-image: url("/static/img/footer.jpg");
+    background-color: $black;
     color: $light;
 
-    &:hover {
-      color: $white;
-      text-decoration: none;
+    form {
+      max-width: 600px;
+
+
+      input {
+        &:focus {
+          box-shadow: 0 0 0 .2rem rgba(255,255,255,.25);
+          color: $light;
+        }
+
+        &::placeholder {
+          color: transparentize($light, .5);
+        }
+
+        background-color: transparent;
+        border-color: $light;
+        color: $light;
+        width: unset;
+      }
     }
   }
 
-  i {
-    margin-right: 6px;
+  &#sitemap {
+    background-color: $light;
+
+    .header {
+      color: $secondary;
+    }
+
+    a {
+      color: $dark;
+
+      &:hover {
+        color: $black;
+        text-decoration: none;
+      }
+    }
   }
 
-  .links a {
-    display: block;
-  }
+  &#info {
+    background-color: $dark;
+    padding-top: 30px;
+    color: $light;
 
-  .social i {
-    font-size: 1.5rem;
-    margin-right: 12px;
+    img {
+      &.main-logo {
+        max-width: 300px;
+        width: 100%;
+      }
+      &.second-logo {
+        max-width: 200px;
+        width: 80%;
+      }
+    }
+
+    a {
+      color: $light;
+
+      &:hover {
+        color: $white;
+        text-decoration: none;
+      }
+    }
+
+    i {
+      margin-right: 6px;
+    }
+
+    .links a {
+      display: block;
+    }
+
+    .social i {
+      font-size: 1.5rem;
+      margin-right: 12px;
+    }
   }
 }
 
-// COMMON ELEMENTS
 // BUTTONS
 .btn:not(.btn-icon) i {
   margin-right: .35rem;
@@ -517,7 +514,6 @@ footer {
     text-shadow: 0px 0px 2px rgba(0, 0, 0, 1);
     font-weight: bold;
   }
-
 }
 
 // ICON BUTTON
@@ -541,7 +537,6 @@ footer {
     font-size: 1.5rem;
     margin-bottom: .5rem;
   }
-
 }
 
 // CARD
@@ -573,6 +568,33 @@ footer {
   margin-bottom: 1rem;
   padding: 1rem;
   font-size: 1.25rem;
+}
+
+// BADGES
+.badge-primary {
+  background-color: $primary;
+}
+
+a.badge-primary:hover,
+a.badge-primary:focus {
+  background-color: darken($primary, 20%);
+}
+
+a.badge-primary:focus {
+  box-shadow: 0 0 0 .2rem rgba($primary,.25);
+}
+
+.badge-secondary {
+  background-color: $secondary;
+}
+
+a.badge-secondary:hover,
+a.badge-secondary:focus {
+  background-color: darken($secondary, 20%);
+}
+
+a.badge-secondary:focus {
+  box-shadow: 0 0 0 .2rem rgba($secondary, 0.16);
 }
 
 // LEAFLET MAP
@@ -787,4 +809,68 @@ body.article {
     }
   }
 
+}
+
+// FORUM
+
+body.forum {
+
+  thead th {
+    border-top: none;
+  }
+
+  th.topic {
+    min-width: 50%;
+  }
+
+  .avatar {
+    border-radius: 500px;
+    height: 30px;
+    line-height: 30px;
+    width: 30px;
+    margin-right: .1rem;
+
+    &.plus {
+      background-color: $gray;
+      font-weight: bold;
+      text-align: center;
+      color: $light;
+      display: inline-block;
+    }
+  }
+
+
+  .narrow-cell {
+    width: 100px;
+  }
+
+  &.topic {
+
+    .single-message,
+    form {
+      background-color: $white;
+      box-shadow: $basic-shadow;
+      border-radius: .25rem;
+      margin-bottom: 1rem;
+      width: 100%;
+      padding: 1rem;
+    }
+
+    .single-message {
+
+      .text img {
+        width: 100%;
+        border-radius: .25rem;
+        margin-bottom: 1rem;
+      }
+
+      .text blockquote {
+        font-size: 1rem;
+        background-color: $very-light;
+        padding: .25rem;
+        padding-left: .5rem;
+        border-left: .25rem solid $gray;
+      }
+    }
+  }
 }
