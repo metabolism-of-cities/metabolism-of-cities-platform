@@ -2,7 +2,7 @@
   {% load static %}
   {% block title %}Icon buttons{% endblock %}
   {% block content %}
-  <div class="row">
+  <div class="row mb-4">
     <div class="col-lg-4 col-md-6 col-sm-8">
       <h3>Standard card</h3>
       <div class="card">
@@ -15,6 +15,38 @@
         </div>
       </div>
     </div>
+
+    <div class="col-lg-4 col-md-6 col-sm-8">
+      <h3>Card with list</h3>
+      <div class="card basic-info">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> New York, USA
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 16 March 2020 - 22 March 2020
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-link mr-1" aria-hidden="true"></i> <a href="#">Official website</a>
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Type of event
+            <br>
+            <a class="btn btn-sm btn-primary-outline mt-1" href="">Other</a>
+          </li>
+          <a href="#" class="list-group-item">
+            <div href="#">Hacking for Human Rights in Cape Town</div>
+            <div class="text-muted mb-0">2 March 2020</div>
+          </a>
+          <a href="#" class="list-group-item">
+            <div href="#">Reflections on Urban Metabolism In Policy And Practice: Cape Town</div>
+            <div class="text-muted mb-0">1 March 2020</div>
+          </a>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-4">
     <div class="col-lg-4 col-md-6 col-sm-8">
       <h3>Card button</h3>
       <a class="card btn-card" href="#">

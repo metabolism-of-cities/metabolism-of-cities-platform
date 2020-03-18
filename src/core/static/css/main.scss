@@ -740,6 +740,10 @@ body.city-subsite {
 body.event,
 body.news {
 
+  article img {
+    border-radius: .25rem;
+  }
+
   article p {
     margin-bottom: 2rem;
   }
