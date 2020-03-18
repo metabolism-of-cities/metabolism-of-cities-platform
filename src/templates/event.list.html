@@ -11,12 +11,28 @@
 
 {% block content %}
 
-  <h2>Events</h2>
-  <ul>
-    <li><a href="/community/events/1">Event 1</a></li>
-    <li><a href="/community/events/1">Event 2</a></li>
-    <li><a href="/community/events/1">Event 3</a></li>
-  </ul>
+  <h2>Upcoming events</h2>
+  <div class="row">
+    <div class="col-4">
+      <a class="card btn-card" href="/community/events/1">
+        <img src="https://i.imgur.com/KcSDpdD.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Circular City Week</h5>
+          <p class="card-text">The first and biggest circular economy festival in the US</p>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> New York, USA
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 16 March 2020 - 22 March 2020
+          </li>
+        </ul>      
+      </a>
+    </div>
+  </div>
+
+  <h2>Past events</h2>
 
 {% endblock %}
 
