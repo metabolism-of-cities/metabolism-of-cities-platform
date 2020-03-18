@@ -221,22 +221,22 @@ def load_baseline(request):
     return render(request, "template/blank.html")
 
 def project_form(request):
-    ModelForm = modelform_factory(Project, fields=('title','content','email','url','image'))
+    ModelForm = modelform_factory(Project, fields=("title", "content", "email", "url", "image"))
     form = ModelForm(request.POST or None, request.FILES or None)
-    if request.method == 'POST':
+    if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)
             info.active = False
             info.save()
             info_id = info.id
-            messages.success(request, 'Information was saved.')
-            title = request.POST['title']
-            user_email = request.POST['user_email']
-            posted_by = request.POST['name']
+            messages.success(request, "Information was saved.")
+            title = request.POST["title"]
+            user_email = request.POST["user_email"]
+            posted_by = request.POST["name"]
             host_name = request.get_host()
-            review_link = f'{host_name}/admin/core/project/{info_id}/change/'
+            review_link = f"{host_name}/admin/core/project/{info_id}/change/"
             send_mail(
-                'New project created',
+                "New project created",
 f'''A new project was created, please review:
 
 Project name: {title} 
@@ -245,7 +245,7 @@ Email: {user_email}
 
 Link to review: {review_link}''',
                 user_email,
-                ['info@metabolismofcities.org'],
+                ["info@metabolismofcities.org"],
                 fail_silently=False,
             )
         else:
@@ -253,4 +253,4 @@ Link to review: {review_link}''',
     context = {
     'form':form
     }
-    return render(request, "project.form.html",context)
+    return render(request, "project.form.html", context)
