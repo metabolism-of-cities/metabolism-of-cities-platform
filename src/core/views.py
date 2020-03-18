@@ -318,8 +318,10 @@ def event_list(request):
 
 def event(request, id):
     article = get_object_or_404(Article, pk=16)
+    header = getHeader(article)
+    header["title"] = "The first and biggest circular economy festival in the US"
     context = {
-        "header": getHeader(article),
+        "header": header,
     }
     return render(request, "event.html", context)
 
