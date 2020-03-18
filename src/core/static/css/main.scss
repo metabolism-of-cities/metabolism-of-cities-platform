@@ -864,6 +864,10 @@ body.forum {
         margin-bottom: 1rem;
       }
 
+      .text p:last-of-type {
+        margin-bottom: 0;
+      }
+
       .text blockquote {
         font-size: 1rem;
         background-color: $very-light;
