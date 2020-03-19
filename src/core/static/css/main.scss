@@ -638,8 +638,28 @@ a.badge-secondary:focus {
     border-color: darken($secondary, 5%) !important;
     background-color: darken($secondary, 5%) !important;
   }
-
 }
+
+// TIMELINE
+#timeline {
+  box-shadow: $basic-shadow;
+  width: 100%;
+  border-radius: .25rem;
+
+  .tl-slide,
+  .tl-timeaxis-background {
+    background-color: $very-light;
+  }
+
+  .tl-attribution {
+    display: none;
+  }
+
+  .tl-timenav {
+    background-color: $light;
+  }
+}
+
 
 // CONTRIBUTE BOX
 .contribute {
