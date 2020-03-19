@@ -2,36 +2,90 @@
 {% load static %}
 {% load sass_tags %}
 
-{% block page_name %}{% endblock %}
+{% block page_name %}forum{% endblock %}
 
 {% block css %}
 {% endblock %}
 
 {% block content %}
-  {% lorem 1 p %} 
-  <table class="table table-striped">
+
+  <div class="row mb-4">
+    <div class="col-md-4 mb-2">
+      <input type="text" class="form-control" placeholder="Search by topic title...">
+    </div>
+    <div class="col-md-4 mb-2">
+      <select class="custom-select">
+        <option selected>Filter by tag</option>
+        <option value="1">Seminars</option>
+        <option value="2">Conferences</option>
+        <option value="3">Something else</option>
+      </select>
+    </div>
+    <div class="col-md-4 mb-2">
+      <a class="btn btn-primary" href="/community/forum/create/">Post new topic</a>
+    </div>
+  </div>
+  
+  <table class="table">
     <thead>
-      <tr>
-        <th>Topic</th>
-        <th>Replies</th>
-        <th>Last post</th>
+      <tr class="d-none d-sm-table-row">
+        <th class="topic">Topic</th>
+        <th class="d-none d-lg-table-cell"></th>
+        <th class="d-none d-sm-table-cell narrow-cell text-center">Replies</th>
+        <th class="d-none d-md-table-cell narrow-cell text-center">Activity</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><a href="/community/forum/1">Test topic</a></td>
-        <td>100</td>
-        <td>Jan 3, 2020</td>
+        <td>
+          <a href="/community/forum/1">Officiis consequatur expedita commodi</a>
+          <br>
+          <a href="#" class="badge badge-primary">Cape Town</a>
+          <a href="#" class="badge badge-primary">Water</a>
+        </td>
+        <td class="d-none d-lg-table-cell">
+          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg"></a>
+          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/photo_cv.thumbnail.jpg"></a>
+          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/guus.thumbnail.jpg"></a>
+          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/team.rupert.thumbnail.jpg"></a>
+          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/gabriela_fernandez_pic.thumbnail.png"></a>
+          <span class="avatar plus">+5</span>
+        </td>
+        <td class="d-none d-sm-table-cell narrow-cell text-center">100</td>
+        <td class="d-none d-md-table-cell narrow-cell text-center">26m</td>
       </tr>
       <tr>
-        <td><a href="/community/forum/1">Another Test topic</a></td>
-        <td>2</td>
-        <td>Feb 3, 2020</td>
+        <td>
+          <a href="/community/forum/1">Voluptatem vero animi voluptatibus</a>
+          <br>
+          <a href="#" class="badge badge-primary">Vero animi</a>
+        </td>
+        <td class="d-none d-lg-table-cell">
+          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/team.rupert.thumbnail.jpg"></a>
+          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/photo_cv.thumbnail.jpg"></a>
+        </td>
+        <td class="d-none d-sm-table-cell narrow-cell text-center">2</td>
+        <td class="d-none d-md-table-cell narrow-cell text-center">2h</td>
+      </tr>
+      <tr>
+        <td>
+          <a href="/community/forum/1">Voluptas molestias et autem</a>
+          <br>
+          <a href="#" class="badge badge-primary">Eum velit ipsa</a>
+          <a href="#" class="badge badge-primary">Officiis dolorum</a>
+          <a href="#" class="badge badge-primary">Nesciunt</a>
+          <a href="#" class="badge badge-primary">Tenetur</a>
+        </td>
+        <td class="d-none d-lg-table-cell">
+          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/photo_cv.thumbnail.jpg"></a>
+          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/gabriela_fernandez_pic.thumbnail.png"></a>
+          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg"></a>
+        </td>
+        <td class="d-none d-sm-table-cell narrow-cell text-center">2</td>
+        <td class="d-none d-md-table-cell narrow-cell text-center">4d</td>
       </tr>
     </tbody>
   </table>
-
-  <p><a href="/community/forum/create/">Post new topic</a></p>
 {% endblock %}
 
 {% block footer %}
