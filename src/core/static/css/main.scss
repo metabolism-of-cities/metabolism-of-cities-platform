@@ -707,6 +707,24 @@ body.single-project {
   .card-img-wrapper {
     position: relative;
   }
+
+  #partners .btn-thumbnail {
+    background-color: $white;
+    height: 100%;
+    min-height: 136px;
+    padding: 1rem;
+
+    img {
+      height: 100%;
+      max-height: 136px;
+      width: 100%;
+      object-fit: contain;
+    }
+  }
+
+  #news img {
+    width: 6rem;
+  }
 }
 
 // CITY SUBSITE
@@ -832,7 +850,6 @@ body.article {
 }
 
 // FORUM
-
 body.forum {
 
   thead th {
@@ -858,7 +875,6 @@ body.forum {
       display: inline-block;
     }
   }
-
 
   .narrow-cell {
     width: 100px;
