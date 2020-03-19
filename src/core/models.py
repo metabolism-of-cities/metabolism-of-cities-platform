@@ -99,3 +99,58 @@ class ArticleDesign(models.Model):
     def __str__(self):
         return self.article.title
 
+class MOOC(models.Model):
+    STATUS = [
+        ("pending", "Pending"),
+        ("finished", "finished"),
+    ]
+
+    name = models.CharField(max_length=255)
+    desciption = models.TextField(null=True, blank=True)
+    status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+class MOOCModule(models.Model):
+    STATUS = [
+        ("pending", "Pending"),
+        ("finished", "finished"),
+    ]
+
+    mooc = models.ForeignKey(MOOC, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    desciption = models.TextField(null=True, blank=True)
+    status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+class MOOCVideo(models.Model):
+    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+class MOOCQuestion(models.Model):
+    name = models.CharField(max_length=255)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+class MOOCModuleQuestion(models.Model):
+    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE)
+    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE)
+
+class MOOCAnswer(models.Model):
+    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
