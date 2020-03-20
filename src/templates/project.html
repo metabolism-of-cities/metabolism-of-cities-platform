@@ -4,36 +4,44 @@
 {% block page_name %}single-project{% endblock %}
 {% block title %}{{ info }}{% endblock %}
 
+{% block css %}
+  {% if info.id == 20 or info.id == 21 %}
+    <style type="text/css">
+      section{display:none}
+      section#team{display:block}
+    </style>
+  {% endif %}
+{% endblock %}
+
 {% block content %}
 
 <div class="row">
   <div class="col-lg-5">
     <div class="card sticky-top mb-3">
-      <img src="https://metabolismofcities.org/media/projects/AgroCycle_8czbkcb.png" class="card-img-top" alt="...">
       {% if info.image %}
-      <img class="card-img-top" src="{{ info.image.large.url }}" alt="" />
+        <img class="card-img-top" src="{{ info.image.url }}" alt="" />
       {% endif %}
       <div class="card-body">
-        <h5 class="card-title">{{ info.title }}</h5>
-        <p>Et doloremque dolorum doloremque aut deserunt debitis animi. Vel iste expedita repellendus veritatis. Et esse explicabo harum rem dolores architecto. Eos et expedita est. Laudantium sed qui sit.</p>
-        <!-- <p class="card-text">{{ info.content|safe }}</p> -->
         {% if info.url %}
-        <a class="btn btn-primary" href="{{ info.url }}">Visit website</a>
+          <a class="btn btn-primary" href="{{ info.url }}">Visit website</a>
         {% endif %}
       </div>
       <ul class="list-group list-group-flush">
+        {% if info.location %}
         <li class="list-group-item">
           <i class="far fa-fw fa-map-marker-alt"></i> Cape Town, South Africa
         </li>
+        {% endif %}
         <li class="list-group-item">
-          <i class="far fa-fw fa-calendar"></i> 12 March 2019 - 18 October 2022
+          <i class="far fa-fw fa-calendar"></i> Start: 2014
         </li>
         <li class="list-group-item">
-          <i class="far fa-fw fa-play"></i> Ongoing
+          <i class="far fa-fw fa-play"></i> Status: Ongoing
         </li>
         <li class="list-group-item">
-          <i class="far fa-fw fa-cabinet-filing"></i> <a href="">Conferences and seminars</a>
+          <i class="far fa-fw fa-cabinet-filing"></i> Type: <a href="">Online tools and platforms</a>
         </li>
+        {% if info.id != 20 and info.id != 21 %}
         <li class="list-group-item">
           <i class="far fa-fw fa-flask mb-1"></i> Materials
           <br>
@@ -54,12 +62,23 @@
           <a class="btn btn-sm btn-primary-outline mt-1" href="">Data Quality</a>
           <a class="btn btn-sm btn-primary-outline mt-1" href="">Pyrolisis</a>
         </li>
+        {% endif %}
       </ul>
     </div>
   </div>
   <div class="col-lg-7">
     <div class="description mb-4">
-      {% lorem 2 p %}
+      <h3>Description</h3>
+      {% if info.content %}
+        {{ info.content|safe }}
+      {% else %}
+        {% lorem 2 p %}
+      {% endif %}
+
+      {% if info.url %}
+        <p>Website: <a href="{{ info.url }}">{{ info.url }}</a></p>
+      {% endif %}
+
     </div>
 
     <section>
@@ -127,17 +146,12 @@
       <a class="btn btn-primary-outline mb-4" href="">Pyrolisis</a>
     </section>
 
-    <section>
+    <section id="team">
       <h3>Team</h3>
       <div class="row">
         <div class="col-6 col-sm-3 col-lg-2 mb-4">
           <a href="#" class="btn-thumbnail small" style="background-image: url('https://backoffice.metabolismofcities.org/media/contacts/photo_cv.thumbnail.jpg');">
             <span class="title">Aris</span>
-          </a>
-        </div>
-        <div class="col-6 col-sm-3 col-lg-2 mb-4">
-          <a href="#" class="btn-thumbnail small" style="background-image: url('https://backoffice.metabolismofcities.org/media/contacts/Carlos_Bio.thumbnail.jpg');">
-            <span class="title">Carlos</span>
           </a>
         </div>
         <div class="col-6 col-sm-3 col-lg-2 mb-4">
@@ -158,11 +172,6 @@
         <div class="col-6 col-sm-3 col-lg-2 mb-4">
           <a href="#" class="btn-thumbnail small" style="background-image: url('https://backoffice.metabolismofcities.org/media/contacts/team.ramiro_K5tF7DB.thumbnail.jpg');">
             <span class="title">Ramiro</span>
-          </a>
-        </div>
-        <div class="col-6 col-sm-3 col-lg-2 mb-4">
-          <a href="#" class="btn-thumbnail small" style="background-image: url('https://backoffice.metabolismofcities.org/media/contacts/team.rupert.thumbnail.jpg');">
-            <span class="title">Rupert</span>
           </a>
         </div>
         <div class="col-6 col-sm-3 col-lg-2 mb-4">
