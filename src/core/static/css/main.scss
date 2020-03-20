@@ -49,6 +49,7 @@ section {
   &:last-of-type {
     padding-bottom: 0;
   }
+
 }
 
 .main-content.container {
@@ -63,28 +64,29 @@ a {
     color: darken($primary, 20%);
     text-decoration: none;
   }
+
 }
 
 #admin-controls {
   position: fixed;
   right: 0;
   top: 75px;
+
   a {
     text-align: left;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
+
 }
 
 .sticky-top {
   top: 1rem;
 }
 
-textarea.form-control:focus,
-input.form-control:focus,
-select.custom-select:focus {
+textarea.form-control:focus, input.form-control:focus, select.custom-select:focus {
   border-color: $primary;
-  box-shadow: 0 0 0 .2rem rgba($primary,.25);
+  box-shadow: 0 0 0 .2rem rgba($primary, .25);
 }
 
 // COMMON ELEMENTS
@@ -108,6 +110,7 @@ select.custom-select:focus {
       &:hover {
         color: darken($secondary, 10%);
       }
+
     }
 
     .breadcrumb-item:before {
@@ -117,7 +120,9 @@ select.custom-select:focus {
     .breadcrumb-item.active {
       color: $white;
     }
+
   }
+
 }
 
 nav {
@@ -141,6 +146,7 @@ nav {
     a {
       color: $dark;
     }
+
   }
 
   li.nav-item:not(:last-of-type) {
@@ -182,6 +188,7 @@ nav {
   .lead {
     font-weight: normal;
   }
+
 }
 
 // FOOTERS
@@ -196,10 +203,9 @@ footer {
     form {
       max-width: 600px;
 
-
       input {
         &:focus {
-          box-shadow: 0 0 0 .2rem rgba(255,255,255,.25);
+          box-shadow: 0 0 0 .2rem rgba(255, 255, 255, .25);
           color: $light;
         }
 
@@ -212,7 +218,9 @@ footer {
         color: $light;
         width: unset;
       }
+
     }
+
   }
 
   &#sitemap {
@@ -229,7 +237,9 @@ footer {
         color: $black;
         text-decoration: none;
       }
+
     }
+
   }
 
   &#info {
@@ -242,10 +252,12 @@ footer {
         max-width: 300px;
         width: 100%;
       }
+
       &.second-logo {
         max-width: 200px;
         width: 80%;
       }
+
     }
 
     a {
@@ -255,6 +267,7 @@ footer {
         color: $white;
         text-decoration: none;
       }
+
     }
 
     i {
@@ -269,7 +282,9 @@ footer {
       font-size: 1.5rem;
       margin-right: 12px;
     }
+
   }
+
 }
 
 // BUTTONS
@@ -295,6 +310,7 @@ footer {
     border-color: darken($primary, 5%) !important;
     background-color: darken($primary, 5%) !important;
   }
+
 }
 
 .btn-primary-outline {
@@ -313,6 +329,7 @@ footer {
     background-color: transparentize($primary, 0.9) !important;
     color: $primary;
   }
+
 }
 
 .btn-primary-basic {
@@ -325,6 +342,7 @@ footer {
     border-color: transparent;
     color: $primary;
   }
+
 }
 
 .btn-secondary {
@@ -340,6 +358,7 @@ footer {
     border-color: darken($secondary, 5%) !important;
     background-color: darken($secondary, 5%) !important;
   }
+
 }
 
 .btn-secondary-outline {
@@ -358,6 +377,7 @@ footer {
     background-color: transparentize($secondary, 0.9) !important;
     color: $secondary;
   }
+
 }
 
 .btn-secondary-basic {
@@ -370,6 +390,7 @@ footer {
     border-color: transparent;
     color: $secondary;
   }
+
 }
 
 .btn-default {
@@ -387,6 +408,7 @@ footer {
     border-color: darken($dark, 5%) !important;
     background-color: darken($dark, 5%) !important;
   }
+
 }
 
 .btn-default-outline {
@@ -405,6 +427,7 @@ footer {
     background-color: transparentize($dark, 0.9) !important;
     color: $dark;
   }
+
 }
 
 .btn-default-basic {
@@ -417,6 +440,7 @@ footer {
     border-color: transparent;
     color: $dark;
   }
+
 }
 
 .btn-inverse {
@@ -434,6 +458,7 @@ footer {
     border-color: darken($light, 5%) !important;
     background-color: darken($light, 5%) !important;
   }
+
 }
 
 .btn-inverse-outline {
@@ -452,6 +477,7 @@ footer {
     background-color: transparentize($light, 0.9) !important;
     color: $light;
   }
+
 }
 
 .btn-inverse-basic {
@@ -464,6 +490,7 @@ footer {
     border-color: transparent;
     color: $light;
   }
+
 }
 
 .btn-card {
@@ -483,6 +510,7 @@ footer {
     position: absolute;
     top: calc(50% - 3rem);
   }
+
 }
 
 // THUMBNAIL BUTTON
@@ -514,6 +542,7 @@ footer {
     text-shadow: 0px 0px 2px rgba(0, 0, 0, 1);
     font-weight: bold;
   }
+
 }
 
 // ICON BUTTON
@@ -537,6 +566,7 @@ footer {
     font-size: 1.5rem;
     margin-bottom: .5rem;
   }
+
 }
 
 // CARD
@@ -548,6 +578,7 @@ footer {
     background-color: $primary;
     border-color: $primary;
   }
+
 }
 
 // CONTRIBUTE BOX
@@ -568,6 +599,7 @@ footer {
   margin-bottom: 1rem;
   padding: 1rem;
   font-size: 1.25rem;
+  margin: 1rem;
 }
 
 // BADGES
@@ -575,21 +607,19 @@ footer {
   background-color: $primary;
 }
 
-a.badge-primary:hover,
-a.badge-primary:focus {
+a.badge-primary:hover, a.badge-primary:focus {
   background-color: darken($primary, 20%);
 }
 
 a.badge-primary:focus {
-  box-shadow: 0 0 0 .2rem rgba($primary,.25);
+  box-shadow: 0 0 0 .2rem rgba($primary, .25);
 }
 
 .badge-secondary {
   background-color: $secondary;
 }
 
-a.badge-secondary:hover,
-a.badge-secondary:focus {
+a.badge-secondary:hover, a.badge-secondary:focus {
   background-color: darken($secondary, 20%);
 }
 
@@ -638,6 +668,7 @@ a.badge-secondary:focus {
     border-color: darken($secondary, 5%) !important;
     background-color: darken($secondary, 5%) !important;
   }
+
 }
 
 // TIMELINE
@@ -646,8 +677,7 @@ a.badge-secondary:focus {
   width: 100%;
   border-radius: .25rem;
 
-  .tl-slide,
-  .tl-timeaxis-background {
+  .tl-slide, .tl-timeaxis-background {
     background-color: $very-light;
   }
 
@@ -658,8 +688,8 @@ a.badge-secondary:focus {
   .tl-timenav {
     background-color: $light;
   }
-}
 
+}
 
 // CONTRIBUTE BOX
 .contribute {
@@ -677,10 +707,11 @@ a.badge-secondary:focus {
   width: calc(25% - 1rem);
   margin: 0 1rem 1rem 0;
 
-  @media (max-width: 768px) {
+  @media (max-width:768px) {
     padding-bottom: calc(50% - 1rem);
     width: calc(50% - 1rem);
   }
+
 }
 
 // RETURN BAR WHEN IN A SUBSITE
@@ -691,9 +722,7 @@ a.badge-secondary:focus {
 
 // PAGES
 // PROJECT PAGES
-body.projects,
-body.single-project {
-
+body.projects, body.single-project {
   .card .card-img-top {
     padding: 1.25rem;
   }
@@ -701,6 +730,7 @@ body.single-project {
   .card i {
     margin-right: .25rem;
   }
+
 }
 
 body.single-project {
@@ -720,16 +750,17 @@ body.single-project {
       width: 100%;
       object-fit: contain;
     }
+
   }
 
   #news img {
     width: 6rem;
   }
+
 }
 
 // CITY SUBSITE
 body.city-subsite {
-
   #img-city {
     background-position: center;
     width: 100%;
@@ -752,6 +783,7 @@ body.city-subsite {
       color: $light;
       bottom: 1rem;
     }
+
   }
 
   .down-city-name {
@@ -773,6 +805,7 @@ body.city-subsite {
     a {
       float: left;
     }
+
   }
 
   &.scrolled-down .down-city-name {
@@ -792,8 +825,11 @@ body.city-subsite {
         color: darken($primary, 20%) !important;
         text-decoration: none !important;
       }
+
     }
+
   }
+
 }
 
 // EVENT AND NEWS LIST PAGES
@@ -802,12 +838,11 @@ body.event.list {
     height: 180px;
     object-fit: cover;
   }
+
 }
 
 // SINGLE EVENT AND NEWS PAGE
-body.event,
-body.news {
-
+body.event, body.news {
   article img {
     border-radius: .25rem;
   }
@@ -824,16 +859,16 @@ body.news {
   .basic-info.card {
     margin-bottom: 4rem;
   }
+
 }
 
 // GENERIC ARTICLE PAGE
 body.article {
-
   .card .card-body {
     padding-bottom: 0;
   }
 
-  @media (max-width: 991px) {
+  @media (max-width:991px) {
     .content-wrap {
       display: flex;
       flex-direction: column;
@@ -845,21 +880,23 @@ body.article {
       aside {
         order: 1;
       }
+
     }
+
   }
 
-  @media (min-width: 992px) {
+  @media (min-width:992px) {
     aside {
       margin: 0 0 1rem 1rem;
       float: right;
     }
+
   }
 
 }
 
 // FORUM
 body.forum {
-
   thead th {
     border-top: none;
   }
@@ -882,6 +919,7 @@ body.forum {
       color: $light;
       display: inline-block;
     }
+
   }
 
   .narrow-cell {
@@ -889,9 +927,7 @@ body.forum {
   }
 
   &.topic {
-
-    .single-message,
-    form {
+    .single-message, form {
       background-color: $white;
       box-shadow: $basic-shadow;
       border-radius: .25rem;
@@ -901,7 +937,6 @@ body.forum {
     }
 
     .single-message {
-
       .text img {
         width: 100%;
         border-radius: .25rem;
@@ -919,6 +954,9 @@ body.forum {
         padding-left: .5rem;
         border-left: .25rem solid $gray;
       }
+
     }
+
   }
+
 }
