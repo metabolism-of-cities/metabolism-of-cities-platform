@@ -20,17 +20,17 @@
 </div>
 <div class="row">
   <div class="col-lg-5">
-    <div class="card sticky-top mb-4">
+    <div class="card sticky-top mb-3">
       <img src="https://metabolismofcities.org/media/projects/AgroCycle_8czbkcb.png" class="card-img-top" alt="...">
       {% if info.image %}
-        <img class="card-img-top" src="{{ info.image.large.url }}" alt="" />
+      <img class="card-img-top" src="{{ info.image.large.url }}" alt="" />
       {% endif %}
       <div class="card-body">
         <h5 class="card-title">{{ info.title }}</h5>
         <p>Et doloremque dolorum doloremque aut deserunt debitis animi. Vel iste expedita repellendus veritatis. Et esse explicabo harum rem dolores architecto. Eos et expedita est. Laudantium sed qui sit.</p>
         <!-- <p class="card-text">{{ info.content|safe }}</p> -->
         {% if info.url %}
-          <a class="btn btn-primary" href="{{ info.url }}">Visit website</a>
+        <a class="btn btn-primary" href="{{ info.url }}">Visit website</a>
         {% endif %}
       </div>
       <ul class="list-group list-group-flush">
@@ -68,11 +68,10 @@
         </li>
       </ul>
     </div>
-    
   </div>
   <div class="col-lg-7">
     <div class="description mb-4">
-      {% lorem 2 p %} 
+      {% lorem 2 p %}
     </div>
 
     <section>
@@ -211,14 +210,14 @@
     <section>
       <h3>Photos</h3>
       {% spaceless %}
-        <div class="gallery">
-          <a href="" style="background-image: url('{% static 'img/construction.jpg' %}');"></a>
-          <a href="" style="background-image: url('{% static 'img/energy.jpg' %}');"></a>
-          <a href="" style="background-image: url('{% static 'img/fishing.jpg' %}');"></a>
-          <a href="" style="background-image: url('{% static 'img/forestry.jpg' %}');"></a>
-          <a href="" style="background-image: url('https://metabolismofcities.org/media/photos/Brussels.large.jpg');"></a>
-          <a href="" style="background-image: url('https://metabolismofcities.org/media/photos/Beijing.large.jpeg');"></a>
-        </div>
+      <div class="gallery">
+        <a href="" style="background-image: url('{% static 'img/construction.jpg' %}');"></a>
+        <a href="" style="background-image: url('{% static 'img/energy.jpg' %}');"></a>
+        <a href="" style="background-image: url('{% static 'img/fishing.jpg' %}');"></a>
+        <a href="" style="background-image: url('{% static 'img/forestry.jpg' %}');"></a>
+        <a href="" style="background-image: url('https://metabolismofcities.org/media/photos/Brussels.large.jpg');"></a>
+        <a href="" style="background-image: url('https://metabolismofcities.org/media/photos/Beijing.large.jpeg');"></a>
+      </div>
       {% endspaceless %}
     </section>
 
@@ -238,6 +237,57 @@
           </a>
         </div>
       </div>
+    </section>
+
+    <section id="partners">
+      <h3>Partners</h3>
+      <div class="row">
+        <div class="col-6 col-md-4 col-lg-3 mb-3">
+          <a class="btn btn-thumbnail" href="#">
+            <img src="https://metabolismofcities.org/media/projects/AgroCycle_8czbkcb.png" alt="AgroCycle">
+          </a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3 mb-3">
+          <a class="btn btn-thumbnail" href="#">
+            <img src="https://duckduckgo.com/assets/logo_homepage_mobile.normal.v108.unoptimized.svg" alt="duckduckgo">
+          </a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3 mb-3">
+          <a class="btn btn-thumbnail" href="#">
+            <img src="https://www.openstreetmap.org/assets/osm_logo-1dde6669365d9e3e9cfebe133a42a75ea8bedf84a43b3d6f7e124c62ca48be84.png" alt="osm">
+          </a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3 mb-3">
+          <a class="btn btn-thumbnail" href="#">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Chick_%28PSF%29.svg" alt="Pollito">
+          </a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3 mb-3">
+          <a class="btn btn-thumbnail" href="#">
+            <img src="https://static.cdn-decorrespondent.nl/assets/svg/logo-full.svg" alt="decorrespondent">
+          </a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3 mb-3">
+          <a class="btn btn-thumbnail" href="#">
+            <img src="https://leafletjs.com/docs/images/logo.png" alt="leaflet">
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="news">
+      <h3>Related News</h3>
+      <a href="#" class="card btn-card mb-3">
+        <div class="card-body media">
+          <img class="rounded" src="https://i.imgur.com/KcSDpdD.jpg" alt="...">
+          <div class="media-body pl-3 align-self-center">
+            <h5 class="mb-0">
+              <span class="mr-1">Lorem ipsum dolor sit amet, consectetur elit</span>
+              <small class="d-inline-block text-muted">26 March 2020</small>
+            </h5>
+          </div>
+        </div>
+      </a>
     </section>
   </div>
 </div>

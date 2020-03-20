@@ -1,0 +1,127 @@
+{% extends "_base.html" %}
+
+{% block title %}Timeline{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
+{% endblock %}
+
+{% block content %}
+  <!-- You must give your timeline a height and the "timeline" id - other styles can be found in main.scss under #timeline -->
+  <div id="timeline" style="height: 600px;"></div>
+{% endblock %}
+
+{% block footer %}
+  <script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
+  <script> 
+    // the contents of the timeline, in json format - reference at https://timeline.knightlab.com/docs/json-format.html
+    var timeline_json = {
+      "title": {
+        "media": {
+          "url": "//www.flickr.com/photos/tm_10001/2310475988/",
+          "caption": "Whitney Houston performing on her My Love is Your Love Tour in Hamburg.",
+          "credit": "flickr/<a href='http://www.flickr.com/photos/tm_10001/'>tm_10001</a>"
+        },
+        "text": {
+          "headline": "Whitney Houston<br/> 1963 - 2012",
+          "text": "<p>Houston's voice caught the imagination of the world propelling her to superstardom at an early age becoming one of the most awarded performers of our time. This is a look into the amazing heights she achieved and her personal struggles with substance abuse and a tumultuous marriage.</p>"
+        }
+      },
+      "events": [
+        {
+          "media": {
+            "url": "{{ static_url }}/img/examples/houston/family.jpg",
+            "caption": "Houston's mother and Gospel singer, Cissy Houston (left) and cousin Dionne Warwick.",
+            "credit": "Cissy Houston photo:<a href='http://www.flickr.com/photos/11447043@N00/418180903/'>Tom Marcello</a><br/><a href='http://commons.wikimedia.org/wiki/File%3ADionne_Warwick_television_special_1969.JPG'>Dionne Warwick: CBS Television via Wikimedia Commons</a>"
+          },
+          "start_date": {
+            "month": "8",
+            "day": "9",
+            "year": "1963"
+          },
+          "text": {
+            "headline": "A Musical Heritage",
+            "text": "<p>Born in New Jersey on August 9th, 1963, Houston grew up surrounded by the music business. Her mother is gospel singer Cissy Houston and her cousins are Dee Dee and Dionne Warwick.</p>"
+          }
+        },
+        {
+          "media": {
+            "url": "https://youtu.be/fSrO91XO1Ck",
+            "caption": "",
+            "credit": "<a href=\"http://unidiscmusic.com\">Unidisc Music</a>"
+          },
+          "start_date": {
+            "year": "1978"
+          },
+          "text": {
+            "headline": "First Recording",
+            "text": "At the age of 15 Houston was featured on Michael Zager's song, Life's a Party."
+          }
+        },
+        {
+          "media": {
+            "url": "https://youtu.be/_gvJCCZzmro",
+            "caption": "A young poised Whitney Houston in an interview with EbonyJet.",
+            "credit": "EbonyJet"
+          },
+          "start_date": {
+            "year": "1978"
+          },
+          "text": {
+            "headline": "The Early Years",
+            "text": "As a teen Houston's credits include background vocals for Jermaine Jackson, Lou Rawls and the Neville Brothers. She also sang on Chaka Khan's, 'I'm Every Woman,' a song which she later remade for the <i>Bodyguard</i> soundtrack which is the biggest selling soundtrack of all time. It sold over 42 million copies worldwide."
+          }
+        },
+        {
+          "media": {
+            "url": "https://youtu.be/H7_sqdkaAfo",
+            "caption": "I'm Every Women as performed by Whitney Houston.",
+            "credit": "Arista Records"
+          },
+          "start_date": {
+            "year": "1978"
+          },
+          "text": {
+            "headline": "Early Album Credits",
+            "text": "As a teen Houston's credits include background vocals for Jermaine Jackson, Lou Rawls and the Neville Brothers. She also sang on Chaka Khan's, 'I'm Every Woman,' a song which she later remade for the <i>Bodyguard</i> soundtrack which is the biggest selling soundtrack of all time. It sold over 42 million copies worldwide."
+          }
+        },
+        {
+          "media": {
+            "url": "https://youtu.be/A4jGzNm2yPI",
+            "caption": "Whitney Houston and Clive Davis discussing her discovery and her eponymous first album.",
+            "credit": "Sony Music Entertainment"
+          },
+          "start_date": {
+            "year": "1983"
+          },
+          "text": {
+            "headline": "Signed",
+            "text": "Houston is signed to Arista Records after exec Clive Davis sees her performing on stage with her mother in New York."
+          }
+        },
+        {
+          "media": {
+            "url": "https://youtu.be/m3-hY-hlhBg",
+            "caption": "The 'How Will I Know' video showcases the youthful energy that boosted Houston to stardom.",
+            "credit": "Arista Records Inc."
+          },
+          "start_date": {
+            "year": "1985"
+          },
+          "text": {
+            "headline": "Debut",
+            "text": "Whitney Houston's self titled first release sold over 12 million copies in the U.S. and included the hit singles 'How Will I Know,' 'You Give Good Love,' 'Saving All My Love For You' and 'Greatest Love of All.'"
+          }
+        },
+      ]
+    };
+
+    // custom options - reference at https://timeline.knightlab.com/docs/options.html
+    var options = {
+    }
+
+    // create timeline
+    window.timeline = new TL.Timeline("timeline", timeline_json, options);
+  </script>
+{% endblock %}

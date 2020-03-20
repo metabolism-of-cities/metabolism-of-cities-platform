@@ -2,21 +2,90 @@
 {% load static %}
 {% load sass_tags %}
 
-{% block page_name %}{% endblock %}
+{% block page_name %}forum topic{% endblock %}
+{% block title %}Interesting topic{% endblock %}
 
 {% block css %}
 {% endblock %}
 
 {% block content %}
-  <h1>Test topic</h1>
-  <p><strong>Fulano wrote:</strong></p>
-  {% lorem 1 p %} 
-  <p><strong>Another one wrote:</strong></p>
-  {% lorem 2 p %} 
 
-  <h2>Reply</h2>
-  <textarea></textarea>
-  <button>Submit</button>
+<h1 class="mb-0">Excepteur sint occaecat cupidatat</h1>
+<a href="#" class="badge badge-primary">Eum velit ipsa</a>
+<a href="#" class="badge badge-primary">Officiis dolorum</a>
+<a href="#" class="badge badge-primary">Nesciunt</a>
+<a href="#" class="badge badge-primary">Tenetur</a>
+
+<div class="row mt-4">
+  <div class="col-lg-7">
+    <div class="single-message">
+      <div class="row metadata">
+        <div class="col-8">
+          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg"> Paul Hoekman</a>
+        </div>
+        <div class="col-4 text-muted text-right">
+          2d 4h
+        </div>
+      </div>
+      <hr>
+      <div class="text">
+        {% lorem 1 p %}
+        <img src="https://i.imgur.com/cku5kjM.jpg">
+        {% lorem 1 p %}
+      </div>
+    </div>
+
+    <div class="single-message">
+      <div class="row metadata">
+        <div class="col-8">
+          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/photo_cv.thumbnail.jpg"> Aristide Athanassiadis</a> 
+        </div>
+        <div class="col-4 text-muted text-right">
+          1d 6h
+        </div>
+      </div>
+      <hr>
+      <div class="text">
+        {% lorem 2 p %} 
+      </div>
+      <div class="attachment mt-3">
+        <a class="btn btn-sm btn-primary-outline" href="#"><i class="far fa-paperclip"></i>  interesting-report.pdf</a>
+        <a class="btn btn-sm btn-primary-outline" href="#"><i class="far fa-paperclip"></i>  something-cool.odt</a>
+      </div>
+    </div>
+
+    <div class="single-message">
+      <div class="row metadata">
+        <div class="col-8">
+          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/team.rupert.thumbnail.jpg"> John Doe</a> 
+        </div>
+        <div class="col-4 text-muted text-right">
+          35m
+        </div>
+      </div>
+      <hr>
+      <div class="text">
+        <blockquote>
+          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </blockquote>
+        {% lorem 1 p %} 
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <form class="sticky-top">
+      <h4>Reply</h4>
+      <div class="form-group">
+        <textarea class="form-control" rows="5"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="files">File(s)</label>
+        <input type="file" class="form-control-file" id="files" multiple="multiple">
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
 {% endblock %}
 
 {% block footer %}
