@@ -15,7 +15,7 @@
 {% block content %}
   {% if is_saved %}
     <p><a href="{% url 'project_form' %}">Add another project</a></p>
-    <p><a href="#">Go to project list</a></p>
+    <p><a href="{% url 'projects' %}">Go to project list</a></p>
   {% else %}
     <form method="post" class="form form-horizontal" enctype="multipart/form-data">
       {% csrf_token %}
