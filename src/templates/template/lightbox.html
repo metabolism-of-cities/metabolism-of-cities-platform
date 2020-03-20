@@ -1,0 +1,29 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block title %}Lightbox{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.css">
+{% endblock %}
+
+{% block content %}
+  <div class="gallery">
+    <a href="/static/img/agriculture.jpg" data-caption="Image caption">
+      <img src="/static/img/agriculture.jpg" alt="First image">
+    </a>
+    <a href="/static/img/energy.jpg">
+      <img src="/static/img/energy.jpg" alt="Second image">
+    </a>
+  </div>
+{% endblock %}
+
+{% block footer %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.js">
+  </script>
+  <script>
+    baguetteBox.run(".gallery");
+  </script>
+{% endblock %}
