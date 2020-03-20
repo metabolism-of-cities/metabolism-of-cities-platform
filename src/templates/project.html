@@ -5,7 +5,19 @@
 {% block title %}{{ info }}{% endblock %}
 
 {% block content %}
-
+<div class="row mb-4">
+  <div class="col-md-6">
+    <input type="text" class="form-control" placeholder="Search by project title...">
+  </div>
+  <div class="col-md-6">
+    <select class="custom-select">
+      <option selected>Filter by category</option>
+      <option value="1">Seminars</option>
+      <option value="2">Conferences</option>
+      <option value="3">Something else</option>
+    </select>
+  </div>
+</div>
 <div class="row">
   <div class="col-lg-5">
     <div class="card sticky-top mb-4">

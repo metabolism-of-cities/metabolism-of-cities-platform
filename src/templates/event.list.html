@@ -4,6 +4,19 @@
 {% block css %}
 {% endblock %}
 {% block content %}
+<div class="row mb-4">
+  <div class="col-md-6">
+    <input type="text" class="form-control" placeholder="Search by project title...">
+  </div>
+  <div class="col-md-6">
+    <select class="custom-select">
+      <option selected>Filter by category</option>
+      <option value="1">Seminars</option>
+      <option value="2">Conferences</option>
+      <option value="3">Something else</option>
+    </select>
+  </div>
+</div>
 <section id="upcoming">
   <h2>Upcoming events</h2>
   <div class="row mb-5 mt-4">
