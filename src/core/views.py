@@ -223,6 +223,7 @@ def load_baseline(request):
 def project_form(request):
     ModelForm = modelform_factory(Project, fields=("title", "content", "email", "url", "image"))
     form = ModelForm(request.POST or None, request.FILES or None)
+    is_saved = False
     if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)
@@ -230,6 +231,7 @@ def project_form(request):
             info.save()
             info_id = info.id
             messages.success(request, "Information was saved.")
+            is_saved = True
             title = request.POST["title"]
             user_email = request.POST["user_email"]
             posted_by = request.POST["name"]
@@ -251,6 +253,7 @@ Link to review: {review_link}''',
         else:
             messages.error(request, 'We could not save your form, please fill out all fields')
     context = {
-    'form':form
+    'form':form,
+    'is_saved':is_saved
     }
     return render(request, "project.form.html", context)
