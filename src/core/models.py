@@ -46,6 +46,19 @@ class Event(Record):
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
 
+class Video(Record):
+    url = models.URLField(max_length=255)
+    embed_code = models.CharField(max_length=20, null=True, blank=True)
+    VIDEO_SITES = [
+        ("youtube", "Youtube"),
+        ("vimeo", "Vimeo"),
+        ("other", "Other"),
+    ]
+    video_site = models.CharField(max_length=14, choices=VIDEO_SITES)
+
+    def embed(self):
+        return "<iframe src=blabla></iframe>"
+
 class People(Record):
     affiliation = models.CharField(max_length=255,null=True, blank=True)
     site = models.ManyToManyField(Site)
@@ -90,64 +103,64 @@ class ArticleDesign(models.Model):
         return self.article.title
 
 #MOOC's
-class mooc(models.Model):
+class MOOC(models.Model):
     name = models.CharField(max_length=255)
-    desciption = models.TextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
 
-class mooc_module(models.Model):
-    mooc = models.ForeignKey(mooc, on_delete=models.CASCADE)
-    title = models.CharField(max_length=255)
+class MOOCModule(models.Model):
+    mooc = models.ForeignKey(MOOC, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
     instructions = models.TextField(null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
 
-class mooc_question(models.Model):
-    module = models.ForeignKey(mooc_module, on_delete=models.CASCADE)
+class MOOCQuestion(models.Model):
     question = models.CharField(max_length=255)
-    right_answer = models.IntegerField(db_index=True)
-    answer_explanation = models.TextField(null=True, blank=True)
     position = models.PositiveSmallIntegerField(db_index=True, null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.question
 
-class mooc_answer(models.Model):
-    question = models.ForeignKey(mooc_question, on_delete=models.CASCADE)
+class MOOCModuleQuestion(models.Model):
+    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE)
+    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+class MOOCVideo(models.Model):
+    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+class MOOCAnswer(models.Model):
+    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE)
     answer = models.CharField(max_length=255)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return self.answer
 
-class Video(Record):
-    module = models.ForeignKey(mooc_module, on_delete=models.CASCADE, null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
-    url = models.URLField(max_length=255)
-    embed_code = models.CharField(max_length=20, null=True, blank=True)
-    VIDEO_SITES = [
-        ("youtube", "Youtube"),
-        ("vimeo", "Vimeo"),
-        ("other", "Other"),
-    ]
-    video_site = models.CharField(max_length=14, choices=VIDEO_SITES)
-    position = models.PositiveSmallIntegerField(db_index=True, null=True, blank=True)
-    def embed(self):
-        return "<iframe src=blabla></iframe>"
-
-class mooc_progress(models.Model):
-    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+class MOOCProgress(models.Model):
+    video = models.ForeignKey(MOOCVideo, on_delete=models.CASCADE)
+    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
 
-class mooc_quiz_answers(models.Model):
-    question = models.ForeignKey(mooc_question, on_delete=models.CASCADE)
-    answer = models.ForeignKey(mooc_answer, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.module.name
+
+class MOOCQuizAnswers(models.Model):
+    mooc = models.ForeignKey(MOOC, on_delete=models.CASCADE)
+    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE)
+    answer = models.ForeignKey(MOOCAnswer, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.mooc.name
