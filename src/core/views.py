@@ -269,6 +269,11 @@ def sector(request, place, sector):
     context = {
     }
     return render(request, "data/sector.html", load_specific_design(context, PAGE_ID["multiplicity"]))
+
+def dataset(request, place, dataset):
+    context = {
+    }
+    return render(request, "data/dataset.html", load_specific_design(context, PAGE_ID["multiplicity"]))
     
 
 # People

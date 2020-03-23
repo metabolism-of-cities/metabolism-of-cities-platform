@@ -4,7 +4,7 @@
 {% block title %}Datatables{% endblock %}
 
 {% block css %}
-  <link href="{% static "css/datatables.min.css" %}" rel="stylesheet" />
+  <link href="{% static 'css/datatables.min.css' %}" rel="stylesheet" />
 {% endblock %}
 
 {% block content %}
@@ -97,7 +97,7 @@
 {% endblock %}
 
 {% block footer %}
-  <script src="{% static "js/datatables.min.js" %}"></script>
+  <script src="{% static 'js/datatables.min.js' %}"></script>
   <script>
     $("table").DataTable();
   </script>

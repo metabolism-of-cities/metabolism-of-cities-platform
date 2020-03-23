@@ -54,6 +54,7 @@ urlpatterns = [
     path("data/", views.data, name="data"),
     path("data/overview/", views.data_overview, name="data_overview"),
     path("data/<slug:place>/sectors/<slug:sector>/", views.sector, name="sector"),
+    path("data/<slug:place>/datasets/<slug:dataset>/", views.dataset, name="dataset"),
     path("data/<slug:place>/", views.dashboard, name="dashboard"),
 
     # Authentication

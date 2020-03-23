@@ -16,7 +16,6 @@ $basic-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
   &:hover {
     transform: translateY(-3px);
   }
-
 }
 
 %box-shadow {
@@ -26,7 +25,6 @@ $basic-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
   &:hover {
     box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.2);
   }
-
 }
 
 // FONTS
@@ -49,7 +47,6 @@ section {
   &:last-of-type {
     padding-bottom: 0;
   }
-
 }
 
 .main-content.container {
@@ -64,7 +61,6 @@ a {
     color: darken($primary, 20%);
     text-decoration: none;
   }
-
 }
 
 #admin-controls {
@@ -77,7 +73,6 @@ a {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
-
 }
 
 .sticky-top {
@@ -120,9 +115,7 @@ textarea.form-control:focus, input.form-control:focus, select.custom-select:focu
     .breadcrumb-item.active {
       color: $white;
     }
-
   }
-
 }
 
 nav {
@@ -137,7 +130,6 @@ nav {
     img {
       height: 52px;
     }
-
   }
 
   .dropdown-menu {
@@ -146,7 +138,6 @@ nav {
     a {
       color: $dark;
     }
-
   }
 
   li.nav-item:not(:last-of-type) {
@@ -169,11 +160,8 @@ nav {
       &[aria-expanded="true"] {
         opacity: 1 !important;
       }
-
     }
-
   }
-
 }
 
 .jumbotron {
@@ -188,7 +176,6 @@ nav {
   .lead {
     font-weight: normal;
   }
-
 }
 
 // FOOTERS
@@ -218,9 +205,7 @@ footer {
         color: $light;
         width: unset;
       }
-
     }
-
   }
 
   &#sitemap {
@@ -237,9 +222,7 @@ footer {
         color: $black;
         text-decoration: none;
       }
-
     }
-
   }
 
   &#info {
@@ -257,7 +240,6 @@ footer {
         max-width: 200px;
         width: 80%;
       }
-
     }
 
     a {
@@ -267,7 +249,6 @@ footer {
         color: $white;
         text-decoration: none;
       }
-
     }
 
     i {
@@ -282,9 +263,7 @@ footer {
       font-size: 1.5rem;
       margin-right: 12px;
     }
-
   }
-
 }
 
 // BUTTONS
@@ -310,7 +289,6 @@ footer {
     border-color: darken($primary, 5%) !important;
     background-color: darken($primary, 5%) !important;
   }
-
 }
 
 .btn-primary-outline {
@@ -329,7 +307,6 @@ footer {
     background-color: transparentize($primary, 0.9) !important;
     color: $primary;
   }
-
 }
 
 .btn-primary-basic {
@@ -342,7 +319,6 @@ footer {
     border-color: transparent;
     color: $primary;
   }
-
 }
 
 .btn-secondary {
@@ -358,7 +334,6 @@ footer {
     border-color: darken($secondary, 5%) !important;
     background-color: darken($secondary, 5%) !important;
   }
-
 }
 
 .btn-secondary-outline {
@@ -377,7 +352,6 @@ footer {
     background-color: transparentize($secondary, 0.9) !important;
     color: $secondary;
   }
-
 }
 
 .btn-secondary-basic {
@@ -390,7 +364,6 @@ footer {
     border-color: transparent;
     color: $secondary;
   }
-
 }
 
 .btn-default {
@@ -408,7 +381,6 @@ footer {
     border-color: darken($dark, 5%) !important;
     background-color: darken($dark, 5%) !important;
   }
-
 }
 
 .btn-default-outline {
@@ -427,7 +399,6 @@ footer {
     background-color: transparentize($dark, 0.9) !important;
     color: $dark;
   }
-
 }
 
 .btn-default-basic {
@@ -440,7 +411,6 @@ footer {
     border-color: transparent;
     color: $dark;
   }
-
 }
 
 .btn-inverse {
@@ -458,7 +428,6 @@ footer {
     border-color: darken($light, 5%) !important;
     background-color: darken($light, 5%) !important;
   }
-
 }
 
 .btn-inverse-outline {
@@ -477,7 +446,6 @@ footer {
     background-color: transparentize($light, 0.9) !important;
     color: $light;
   }
-
 }
 
 .btn-inverse-basic {
@@ -490,7 +458,6 @@ footer {
     border-color: transparent;
     color: $light;
   }
-
 }
 
 .btn-card {
@@ -510,7 +477,6 @@ footer {
     position: absolute;
     top: calc(50% - 3rem);
   }
-
 }
 
 // THUMBNAIL BUTTON
@@ -542,7 +508,6 @@ footer {
     text-shadow: 0px 0px 2px rgba(0, 0, 0, 1);
     font-weight: bold;
   }
-
 }
 
 // ICON BUTTON
@@ -566,7 +531,6 @@ footer {
     font-size: 1.5rem;
     margin-bottom: .5rem;
   }
-
 }
 
 // CARD
@@ -574,11 +538,31 @@ footer {
   border: none;
   box-shadow: $basic-shadow;
 
+  .card-header {
+    background-color: $primary;
+    color: $very-light;
+    font-weight: bold;
+  }
+
   .list-group-item.active {
     background-color: $primary;
     border-color: $primary;
   }
 
+  .list-group-item.table-item {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+
+    > div {
+      display: table-cell;
+      vertical-align: middle;
+
+      &:last-of-type {
+        text-align: right;
+      }
+    }
+  }
 }
 
 // CONTRIBUTE BOX
@@ -641,8 +625,8 @@ a.badge-secondary:focus {
 }
 
 .dataTables_wrapper input.form-control:focus, .dataTables_wrapper select.custom-select:focus {
-  border-color: $secondary;
-  box-shadow: 0 0 0 .2rem rgba(94, 39, 80, 0.16);
+  border-color: $primary;
+  box-shadow: 0 0 0 .2rem rgba($primary, 0.16);
 }
 
 .dataTables_wrapper .paginate_button.page-item .page-link:focus {
@@ -654,18 +638,18 @@ a.badge-secondary:focus {
 }
 
 .dataTables_wrapper .paginate_button.page-item.active .page-link {
-  background-color: $secondary;
-  border-color: $secondary;
+  background-color: $primary;
+  border-color: $primary;
   color: $white;
 
   &:hover {
-    border-color: darken($secondary, 5%);
-    background-color: darken($secondary, 5%);
+    border-color: darken($primary, 5%);
+    background-color: darken($primary, 5%);
   }
 
   &:active, &:focus {
-    border-color: darken($secondary, 5%) !important;
-    background-color: darken($secondary, 5%) !important;
+    border-color: darken($primary, 5%) !important;
+    background-color: darken($primary, 5%) !important;
   }
 
 }
@@ -729,7 +713,6 @@ body.projects, body.single-project {
   .card i {
     margin-right: .25rem;
   }
-
 }
 
 body.single-project {
@@ -749,13 +732,11 @@ body.single-project {
       width: 100%;
       object-fit: contain;
     }
-
   }
 
   #news img {
     width: 6rem;
   }
-
 }
 
 // CITY SUBSITE
@@ -782,7 +763,6 @@ body.city-subsite {
       color: $light;
       bottom: 1rem;
     }
-
   }
 
   .down-city-name {
@@ -804,7 +784,6 @@ body.city-subsite {
     a {
       float: left;
     }
-
   }
 
   &.scrolled-down .down-city-name {
@@ -824,11 +803,8 @@ body.city-subsite {
         color: darken($primary, 20%) !important;
         text-decoration: none !important;
       }
-
     }
-
   }
-
 }
 
 // EVENT AND NEWS LIST PAGES
@@ -838,19 +814,13 @@ body.event.list {
     object-fit: cover;
   }
 
-}
-
-body.event.list {
-  .card-body.media {
-    img {
-      width: 100px;
-      height: 50px;
-      object-fit: cover;
-    }
-
+  .card-body.media img {
+    width: 100px;
+    height: 50px;
+    object-fit: cover;
   }
-
 }
+
 
 // SINGLE EVENT AND NEWS PAGE
 body.event, body.news {
@@ -870,7 +840,6 @@ body.event, body.news {
   .basic-info.card {
     margin-bottom: 4rem;
   }
-
 }
 
 // GENERIC ARTICLE PAGE
@@ -891,9 +860,7 @@ body.article {
       aside {
         order: 1;
       }
-
     }
-
   }
 
   @media (min-width:992px) {
@@ -901,9 +868,7 @@ body.article {
       margin: 0 0 1rem 1rem;
       float: right;
     }
-
   }
-
 }
 
 // FORUM
@@ -930,7 +895,6 @@ body.forum {
       color: $light;
       display: inline-block;
     }
-
   }
 
   .narrow-cell {
@@ -965,9 +929,97 @@ body.forum {
         padding-left: .5rem;
         border-left: .25rem solid $gray;
       }
-
     }
+  }
+}
 
+// DATASET PAGE
+body.dataset {
+
+  .main-content img {
+    width: 100%;
+    box-shadow: $basic-shadow;
+    border-radius: .25rem;
   }
 
+  .rating {
+    .number {
+      display: inline-block;
+      margin-right: 1rem;
+      padding: 0 8px;
+      border-radius: .25rem;
+    }
+
+    .graph {
+      display: inline-block;
+      vertical-align: middle;
+
+      span {
+        height: 4px;
+        width: 8px;
+        display: block;
+        background-color: $light;
+        margin-bottom: 1px;
+
+        &:first-of-type {
+          border-top-right-radius: .125rem;
+          border-top-left-radius: .125rem;
+        }
+
+        &:last-of-type {
+          margin-bottom: 0;
+          border-bottom-right-radius: .125rem;
+          border-bottom-left-radius: .125rem;
+        }
+      }
+    }
+
+    &[data-rating="1"] {
+      .full {
+        background-color: #28a745;
+      }
+
+      .number {
+        background-color: #28a745;
+        color: $white;
+      }
+    }
+    &[data-rating="2"] {
+      .full {
+        background-color: $primary;
+      }
+
+      .number {
+        background-color: $primary;
+        color: $white;
+      }
+    }
+    &[data-rating="3"] {
+      .full {
+        background-color: #ffc107;
+      }
+
+      .number {
+        background-color: #ffc107;
+      }
+    }
+    &[data-rating="4"] {
+      .full {
+        background-color: $secondary;
+      }
+
+      .number {
+        background-color: $secondary;
+      }
+    }
+    &[data-rating="5"] {
+      .full {
+        background-color: #dc3545;;
+      }
+
+      .number {
+        background-color: #dc3545;;
+      }
+    }
+  }
 }
