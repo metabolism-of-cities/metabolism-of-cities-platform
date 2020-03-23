@@ -11,7 +11,7 @@ crossorigin=""/>
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="section">
   <div class="row mb-4">
     <div class="col-lg-9">
       <h2>What is this?</h2>
@@ -31,7 +31,8 @@ crossorigin=""/>
     </div>
   </div>
   <div id="map_pin" class="mb-4" style="height: 300px;"></div>
-
+</div>
+<section>
   <h2 class="text-center mb-1 mt-4">Latest updates</h2>
   <div class="row mb-4">
     <div class="col-lg-4 mt-3">
@@ -83,7 +84,9 @@ crossorigin=""/>
       </div>
     </div>
   </div>
+</section>
 
+<section>
   <div class="card contribute">
     <div class="card-body">
       <h4 class="card-title font-weight-bold">Contribute</h4>
@@ -97,11 +100,12 @@ crossorigin=""/>
       <a class="btn btn-secondary-outline mb-2" href="#">Add your city</a>
     </div>
   </div>
-
-  <h2 class="text-center mb-4 mt-4">Statistics</h2>
+</section>
+<section>
+  <h2 class="text-center">Statistics</h2>
   <div class="row">
     <div class="col infobox-icon">
-      <h3>Active cities</h3>
+      <h3>Active cities</h3>a
       <p>8</p>
     </div>
     <div class="col infobox-icon">
@@ -117,8 +121,7 @@ crossorigin=""/>
       <p>54</p>
     </div>
   </div>
-</div>
-
+</section>
 {% endblock %}
 
 {% block footer %}
@@ -148,6 +151,6 @@ crossorigin=""/>
     [51.509, -0.08],
     [51.503, -0.06],
     [51.51, -0.047]
-    ]).addTo(map_polygon);
-  </script>
-  {% endblock %}
+  ]).addTo(map_polygon);
+</script>
+{% endblock %}
