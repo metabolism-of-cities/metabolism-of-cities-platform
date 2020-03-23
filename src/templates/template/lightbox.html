@@ -7,15 +7,31 @@
 {% block css %}
   <link rel="stylesheet" 
         href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.css">
+  <style>
+    .gallery a {
+      width: 240px;
+      height: 180px;
+      display: inline-block;
+      overflow: hidden;
+      margin: 4px 6px;
+      box-shadow: 0 0 4px -1px #000;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
   <div class="gallery">
-    <a href="/static/img/agriculture.jpg" data-caption="Image caption">
-      <img src="/static/img/agriculture.jpg" alt="First image">
+    <a href="/static/img/agriculture.jpg">
+      <img src="/static/img/agriculture.jpg" alt="Firs image">
     </a>
     <a href="/static/img/energy.jpg">
       <img src="/static/img/energy.jpg" alt="Second image">
+    </a>
+    <a href="/static/img/construction.jpg">
+      <img src="/static/img/construction.jpg" alt="Third image">
+    </a>
+    <a href="/static/img/forestry.jpg">
+      <img src="/static/img/forestry.jpg" alt="Fourth image">
     </a>
   </div>
 {% endblock %}
@@ -23,7 +39,11 @@
 {% block footer %}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.js">
   </script>
-  <script>
-    baguetteBox.run(".gallery");
+  <script> 
+    baguetteBox.run(".gallery", {
+      captions: function(element) {
+        return element.getElementsByTagName("img")[0].alt;
+      }
+    });
   </script>
 {% endblock %}
