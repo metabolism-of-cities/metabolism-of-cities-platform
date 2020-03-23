@@ -461,6 +461,25 @@ footer {
 
 }
 
+.btn-warning {
+  background-color: gold;
+  border-color: gold;
+  color: $white;
+
+  &:hover {
+    border-color: gold;
+    background-color: gold;
+    color: $white;
+  }
+
+}
+.btn-danger {
+  background-color: red;
+  border-color: dark-red;
+  color: $white;
+}
+
+
 .btn-inverse-outline {
   background-color: transparent;
   border-color: $light;
@@ -477,7 +496,6 @@ footer {
     background-color: transparentize($light, 0.9) !important;
     color: $light;
   }
-
 }
 
 .btn-inverse-basic {
