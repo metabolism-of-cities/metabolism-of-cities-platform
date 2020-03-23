@@ -14,3 +14,13 @@ admin.site.register(ArticleDesign)
 admin.site.register(People)
 admin.site.register(Video)
 admin.site.register(Project)
+
+admin.site.register(MOOC)
+admin.site.register(MOOCModule)
+admin.site.register(MOOCQuestion)
+admin.site.register(MOOCModuleQuestion)
+admin.site.register(MOOCVideo)
+admin.site.register(MOOCAnswer)
+admin.site.register(MOOCProgress)
+admin.site.register(MOOCQuizAnswers)
+
