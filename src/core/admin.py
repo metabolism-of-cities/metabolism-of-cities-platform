@@ -7,7 +7,6 @@ class ArticleAdmin(admin.ModelAdmin):
     list_display = ['title', 'site', 'parent', 'active']
     search_fields = ['title', 'site']
     def response_change(self, request, obj):
-        print(obj.record.description)
         url = obj.get_absolute_url()
         return redirect(url)
 
