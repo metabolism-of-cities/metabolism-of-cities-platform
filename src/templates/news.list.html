@@ -7,10 +7,10 @@
 
 {% block content %}
 <div class="row mb-4">
-  <div class="col-md-6">
-    <input type="text" class="form-control" placeholder="Search by years...">
+  <div class="col-md-6 mb-2">
+    <input type="text" class="form-control" placeholder="Search...">
   </div>
-  <div class="col-md-6">
+  <div class="col-md-6 mb-2">
     <select class="custom-select">
       <option selected>Filter by years</option>
       <option value="1">2020</option>
@@ -21,119 +21,99 @@
 </div>
 
 <section>
-  <h2>News</h2>
   <div class="row">
-    <div class="col-md-6 col-lg-4 mb-4">
+    <div class="col-lg-4 mb-sm-4 mb-lg-0">
       <a class="card btn-card" href="/community/news/1">
         <img src="https://imgur.com/EjSgFEw.jpg" class="card-img-top" alt="...">
         <div class="card-body">
-          <h5 class="card-title">Title</h5>
+          <h5 class="card-title">
+            A short title <small class="d-inline-block text-muted">26 March 2020</small>
+          </h5>
           <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam pariatur maiores distinctio quam nobis optio minima voluptates magnam animi nostrum aliquid sit doloremque inventore quisquam, vel sapiente, necessitatibus minus nam.</p>
         </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> New York, USA
-          </li>
-          <li class="list-group-item">
-            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 16 March 2020 - 22 March 2020
-          </li>
-        </ul>
       </a>
     </div>
-    <div class="col-md-6 col-lg-4 mb-4">
+    <div class="col-lg-4 mb-sm-4 mb-lg-0">
       <a class="card btn-card" href="/community/events/1">
         <img src="https://imgur.com/gNylltZ.jpg" class="card-img-top" alt="...">
         <div class="card-body">
-          <h5 class="card-title">Title</h5>
+          <h5 class="card-title">
+            A longer title that on some screen might span over multiple lines <small class="d-inline-block text-muted">26 March 2020</small>
+          </h5>
           <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam pariatur maiores distinctio quam nobis optio minima voluptates magnam animi nostrum aliquid sit doloremque inventore quisquam, vel sapiente, necessitatibus minus nam.</p>
         </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> Johannesburg, S.A
-          </li>
-          <li class="list-group-item">
-            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 16 March 2020 - 22 March 2020
-          </li>
-        </ul>
       </a>
     </div>
-    <div class="col-md-6 col-lg-4 mb-4">
+    <div class="col-lg-4 mb-sm-4 mb-lg-0">
       <a class="card btn-card" href="/community/events/1">
         <img src="https://imgur.com/XN8gxJI.jpg" class="card-img-top" alt="...">
         <div class="card-body">
-          <h5 class="card-title">Title</h5>
+          <h5 class="card-title">
+            A medium length title: the article <small class="d-inline-block text-muted">26 March 2020</small>
+          </h5>
           <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam pariatur maiores distinctio quam nobis optio minima voluptates magnam animi nostrum aliquid sit doloremque inventore quisquam, vel sapiente, necessitatibus minus nam.</p>
         </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> Cape Town, S.A
-          </li>
-          <li class="list-group-item">
-            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 16 March 2020 - 22 March 2020
-          </li>
-        </ul>
       </a>
     </div>
   </div>
 </section>
 
-<!-- Yoleka I quickly put this here below from the other page but shouldn't have inline css. And the news items above (I thought maybe there could be three or four there, should look more like the cards like on the event.list.html page) -->
-
-<h3>Old news</h3>
-<div class="row">
-  <div class="col-lg-6 mb-3">
-    <a href="#" class="card btn-card">
-      <div class="card-body media">
-        <img class="rounded" src="https://i.imgur.com/KcSDpdD.jpg" alt="...">
-        <div class="media-body pl-3 align-self-center">
-          <h5 class="mb-0">
-            <span class="mr-1">Lorem ipsum dolor sit amet, consectetur elit</span>
-            <small class="d-inline-block text-muted">26 March 2020</small>
-          </h5>
+<section>
+  <div class="row">
+    <div class="col-lg-6 mb-3">
+      <a href="#" class="card btn-card">
+        <div class="card-body media">
+          <img class="rounded" src="https://i.imgur.com/KcSDpdD.jpg" alt="...">
+          <div class="media-body pl-3 align-self-center">
+            <h5 class="mb-0">
+              <span class="mr-1">Lorem ipsum dolor afsd aois dfpaos poa sdpo asdfpoasdfp0 sdf sdfoi sit amet, consectetur elit</span>
+              <small class="d-inline-block text-muted">26 March 2020</small>
+            </h5>
+          </div>
         </div>
-      </div>
-    </a>
-  </div>
-   <div class="col-lg-6 mb-3">
-    <a href="#" class="card btn-card">
-      <div class="card-body media">
-        <img class="rounded" src="https://i.imgur.com/KcSDpdD.jpg" alt="...">
-        <div class="media-body pl-3 align-self-center">
-          <h5 class="mb-0">
-            <span class="mr-1">Lorem ipsum dolor sit amet, consectetur elit</span>
-            <small class="d-inline-block text-muted">26 March 2020</small>
-          </h5>
+      </a>
+    </div>
+     <div class="col-lg-6 mb-3">
+      <a href="#" class="card btn-card">
+        <div class="card-body media">
+          <img class="rounded" src="https://i.imgur.com/KcSDpdD.jpg" alt="...">
+          <div class="media-body pl-3 align-self-center">
+            <h5 class="mb-0">
+              <span class="mr-1">Lorem ipsum dolor sit amet, consectetur elit</span>
+              <small class="d-inline-block text-muted">26 March 2020</small>
+            </h5>
+          </div>
         </div>
-      </div>
-    </a>
-  </div>
-   <div class="col-lg-6 mb-3">
-    <a href="#" class="card btn-card">
-      <div class="card-body media">
-        <img class="rounded" src="https://i.imgur.com/KcSDpdD.jpg" alt="...">
-        <div class="media-body pl-3 align-self-center">
-          <h5 class="mb-0">
-            <span class="mr-1">Lorem ipsum dolor sit amet, consectetur elit</span>
-            <small class="d-inline-block text-muted">26 March 2020</small>
-          </h5>
+      </a>
+    </div>
+     <div class="col-lg-6 mb-3">
+      <a href="#" class="card btn-card">
+        <div class="card-body media">
+          <img class="rounded" src="https://i.imgur.com/KcSDpdD.jpg" alt="...">
+          <div class="media-body pl-3 align-self-center">
+            <h5 class="mb-0">
+              <span class="mr-1">Lorem ipsum dolor sit amet, consectetur elit</span>
+              <small class="d-inline-block text-muted">26 March 2020</small>
+            </h5>
+          </div>
         </div>
-      </div>
-    </a>
-  </div>
-   <div class="col-lg-6 mb-3">
-    <a href="#" class="card btn-card">
-      <div class="card-body media">
-        <img class="rounded" src="https://i.imgur.com/KcSDpdD.jpg" alt="...">
-        <div class="media-body pl-3 align-self-center">
-          <h5 class="mb-0">
-            <span class="mr-1">Lorem ipsum dolor sit amet, consectetur elit</span>
-            <small class="d-inline-block text-muted">26 March 2020</small>
-          </h5>
+      </a>
+    </div>
+     <div class="col-lg-6 mb-3">
+      <a href="#" class="card btn-card">
+        <div class="card-body media">
+          <img class="rounded" src="https://i.imgur.com/KcSDpdD.jpg" alt="...">
+          <div class="media-body pl-3 align-self-center">
+            <h5 class="mb-0">
+              <span class="mr-1">Lorem ipsum dolor sit amet, consectetur elit</span>
+              <small class="d-inline-block text-muted">26 March 2020</small>
+            </h5>
+          </div>
         </div>
-      </div>
-    </a>
+      </a>
+    </div>
   </div>
-</div>
+</section>
 
 {% endblock %}
 
