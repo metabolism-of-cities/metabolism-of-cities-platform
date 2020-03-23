@@ -104,21 +104,41 @@ crossorigin=""/>
 <section>
   <h2 class="text-center">Statistics</h2>
   <div class="row">
-    <div class="col infobox-icon">
-      <h3>Active cities</h3>a
-      <p>8</p>
+    <div class="col-lg-3 mb-2">
+      <div class="card text-center btn btn-primary">
+        <i class="fa fa-bar-chart mt-4"></i>
+        <div class="card-body">
+          <h5 class="card-title">Active cities</h5>
+          <p class="card-text">8</p>
+        </div>
+      </div>
     </div>
-    <div class="col infobox-icon">
-      <h3>Datasets</h3>
-      <p>93</p>
+    <div class="col-lg-3 mb-2">
+      <div class="card text-center btn btn-success">
+        <i class="fa fa-bar-chart mt-4"></i>
+        <div class="card-body">
+          <h5 class="card-title">Data sets</h5>
+          <p class="card-text">93</p>
+        </div>
+      </div>
     </div>
-    <div class="col infobox-icon">
-      <h3>Data points</h3>
-      <p>5,394</p>
+    <div class="col-lg-3 mb-2">
+      <div class="card text-center btn btn-secondary">
+        <i class="fa fa-bar-chart mt-4"></i>
+        <div class="card-body">
+          <h5 class="card-title">Data points</h5>
+          <p class="card-text">5,394</p>
+        </div>
+      </div>
     </div>
-    <div class="col infobox-icon">
-      <h3>Contributors</h3>
-      <p>54</p>
+    <div class="col-lg-3 mb-2">
+      <div class="card text-center btn btn-danger">
+        <i class="fa fa-bar-chart mt-4"></i>
+        <div class="card-body">
+          <h5 class="card-title">Contributors</h5>
+          <p class="card-text">54</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -151,6 +171,6 @@ crossorigin=""/>
     [51.509, -0.08],
     [51.503, -0.06],
     [51.51, -0.047]
-  ]).addTo(map_polygon);
-</script>
-{% endblock %}
+    ]).addTo(map_polygon);
+  </script>
+  {% endblock %}
