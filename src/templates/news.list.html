@@ -1,11 +1,25 @@
 {% extends "_base.html" %}
+
 {% load static %}
-{% load sass_tags %}
-{% block title %}Events List{% endblock %}
+
+{% block title %}News List{% endblock %}
 {% block page_name %}event list{% endblock %}
-{% block css %}
-{% endblock %}
+
 {% block content %}
+<div class="row mb-4">
+  <div class="col-md-6">
+    <input type="text" class="form-control" placeholder="Search by project years...">
+  </div>
+  <div class="col-md-6">
+    <select class="custom-select">
+      <option selected>Filter by years</option>
+      <option value="1">2020</option>
+      <option value="2">2019</option>
+      <option value="3">2018</option>
+    </select>
+  </div>
+</div>
+
 <section>
   <h2>News</h2>
   <div class="row">
