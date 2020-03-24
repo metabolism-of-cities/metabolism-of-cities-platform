@@ -1,0 +1,139 @@
+{% extends "_base.html" %}
+
+{% block title %}Slideshow{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet"
+        type="text/css"
+        href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+{% endblock %}
+
+{% block content %}
+  <h1>Single Item</h1>
+  <div class="single-item">
+    <div>your content 1</div>
+    <div>your content 2</div>
+    <div>your content 3</div>
+    <div>your content 4</div>
+    <div>your content 5</div>
+    <div>your content 6</div>
+  </div>
+  <h1>Multiple Items</h1>
+  <div class="multiple-items">
+    <div>your content 1</div>
+    <div>your content 2</div>
+    <div>your content 3</div>
+    <div>your content 4</div>
+    <div>your content 5</div>
+    <div>your content 6</div>
+  </div>
+  <h1>Responsive Display</h1>
+  <div class="responsive">
+    <div>your content 1</div>
+    <div>your content 2</div>
+    <div>your content 3</div>
+    <div>your content 4</div>
+    <div>your content 5</div>
+    <div>your content 6</div>
+  </div>
+  <h1>Variable Width</h1>
+  <div class="variable-width">
+    <div>your content 1</div>
+    <div>your content 2</div>
+    <div>your content 3</div>
+    <div>your content 4</div>
+    <div>your content 5</div>
+    <div>your content 6</div>
+  </div>
+  <h1>Center Mode</h1>
+  <div class="center">
+    <div>your content 1</div>
+    <div>your content 2</div>
+    <div>your content 3</div>
+    <div>your content 4</div>
+    <div>your content 5</div>
+    <div>your content 6</div>
+  </div>
+{% endblock %}
+
+{% block footer %}
+  <script type="text/javascript"
+          src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js">
+  </script>
+  <script>
+    $('.single-item').slick();
+    $('.multiple-items').slick({
+      infinite: true,
+      slidesToShow: 3,
+      slidesToScroll: 3
+    });
+    $('.responsive').slick({
+      dots: true,
+      infinite: false,
+      speed: 300,
+      slidesToShow: 4,
+      slidesToScroll: 4,
+      responsive: [
+        {
+          breakpoint: 1024,
+          settings: {
+            slidesToShow: 3,
+            slidesToScroll: 3,
+            infinite: true,
+            dots: true
+          }
+        },
+        {
+          breakpoint: 600,
+          settings: {
+            slidesToShow: 2,
+            slidesToScroll: 2
+          }
+        },
+        {
+          breakpoint: 480,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1
+          }
+        }
+        // You can unslick at a given breakpoint now by adding:
+        // settings: "unslick"
+        // instead of a settings object
+      ]
+    });
+    $('.variable-width').slick({
+      dots: true,
+      infinite: true,
+      speed: 300,
+      slidesToShow: 1,
+      centerMode: true,
+      variableWidth: true
+    });
+    $('.center').slick({
+      centerMode: true,
+      centerPadding: '60px',
+      slidesToShow: 3,
+      responsive: [
+        {
+          breakpoint: 768,
+          settings: {
+            arrows: false,
+            centerMode: true,
+            centerPadding: '40px',
+            slidesToShow: 3
+          }
+        },
+        {
+          breakpoint: 480,
+          settings: {
+            arrows: false,
+            centerMode: true,
+            centerPadding: '40px',
+            slidesToShow: 1
+          }
+        }
+      ]
+    });
+  </script>
+{% endblock %}
