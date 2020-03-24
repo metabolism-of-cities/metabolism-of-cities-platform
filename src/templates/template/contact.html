@@ -1,0 +1,33 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block title %}Contact us{% endblock %}
+
+{% block content %}
+<h2>Contact Metabolism of Cities</h2>
+<p>You can e-mail us at <a class="font-weight-bold" href="mailto:info@metabolismofcities.org">info@metabolismofcities.org</a>, or by filling out the form below.</p>
+<div class="card">
+  <div class="card-body">
+    <form method="post">
+      <div class="form-group">
+        <label>Names</label>
+        <input type="text" name="names" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Affiliation</label>
+        <input type="text" name="Affiliation" class="form-control" placeholder="Optional" required>
+      </div>
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea class="form-control" id="message"></textarea>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
