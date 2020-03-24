@@ -304,7 +304,6 @@ footer {
     border-color: darken($primary, 5%) !important;
     background-color: darken($primary, 5%) !important;
   }
-
 }
 
 .btn-primary-outline {
@@ -323,7 +322,6 @@ footer {
     background-color: transparentize($primary, 0.9) !important;
     color: $primary;
   }
-
 }
 
 .btn-primary-basic {
@@ -336,7 +334,6 @@ footer {
     border-color: transparent;
     color: $primary;
   }
-
 }
 
 .btn-secondary {
@@ -352,7 +349,6 @@ footer {
     border-color: darken($secondary, 5%) !important;
     background-color: darken($secondary, 5%) !important;
   }
-
 }
 
 .btn-secondary-outline {
@@ -371,7 +367,6 @@ footer {
     background-color: transparentize($secondary, 0.9) !important;
     color: $secondary;
   }
-
 }
 
 .btn-secondary-basic {
@@ -384,7 +379,6 @@ footer {
     border-color: transparent;
     color: $secondary;
   }
-
 }
 
 .btn-default {
@@ -402,7 +396,6 @@ footer {
     border-color: darken($dark, 5%) !important;
     background-color: darken($dark, 5%) !important;
   }
-
 }
 
 .btn-default-outline {
@@ -421,7 +414,6 @@ footer {
     background-color: transparentize($dark, 0.9) !important;
     color: $dark;
   }
-
 }
 
 .btn-default-basic {
@@ -434,7 +426,6 @@ footer {
     border-color: transparent;
     color: $dark;
   }
-
 }
 
 .btn-inverse {
@@ -452,27 +443,7 @@ footer {
     border-color: darken($light, 5%) !important;
     background-color: darken($light, 5%) !important;
   }
-
 }
-
-.btn-warning {
-  background-color: gold;
-  border-color: gold;
-  color: $white;
-
-  &:hover {
-    border-color: gold;
-    background-color: gold;
-    color: $white;
-  }
-
-}
-.btn-danger {
-  background-color: red;
-  border-color: dark-red;
-  color: $white;
-}
-
 
 .btn-inverse-outline {
   background-color: transparent;
@@ -502,7 +473,6 @@ footer {
     border-color: transparent;
     color: $light;
   }
-
 }
 
 .btn-card {
@@ -522,7 +492,6 @@ footer {
     position: absolute;
     top: calc(50% - 3rem);
   }
-
 }
 
 // THUMBNAIL BUTTON
@@ -554,7 +523,6 @@ footer {
     text-shadow: 0px 0px 2px rgba(0, 0, 0, 1);
     font-weight: bold;
   }
-
 }
 
 // ICON BUTTON
@@ -578,7 +546,6 @@ footer {
     font-size: 1.5rem;
     margin-bottom: .5rem;
   }
-
 }
 
 // CARD
@@ -611,11 +578,16 @@ footer {
       }
     }
   }
+}
 
 // CONTRIBUTE BOX
-.contribute {
-  color: $dark;
-  background: $light;
+.contribute.card {
+  box-shadow: $basic-shadow;
+  color: $very-light;
+  background-color: #ff9d00;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1600 800'%3E%3Cg stroke='%23000' stroke-width='66.7' stroke-opacity='0.05' %3E%3Ccircle fill='%23ff9d00' cx='0' cy='0' r='1800'/%3E%3Ccircle fill='%23fb8d17' cx='0' cy='0' r='1700'/%3E%3Ccircle fill='%23f47d24' cx='0' cy='0' r='1600'/%3E%3Ccircle fill='%23ed6e2d' cx='0' cy='0' r='1500'/%3E%3Ccircle fill='%23e35f34' cx='0' cy='0' r='1400'/%3E%3Ccircle fill='%23d85239' cx='0' cy='0' r='1300'/%3E%3Ccircle fill='%23cc453e' cx='0' cy='0' r='1200'/%3E%3Ccircle fill='%23be3941' cx='0' cy='0' r='1100'/%3E%3Ccircle fill='%23b02f43' cx='0' cy='0' r='1000'/%3E%3Ccircle fill='%23a02644' cx='0' cy='0' r='900'/%3E%3Ccircle fill='%23901e44' cx='0' cy='0' r='800'/%3E%3Ccircle fill='%23801843' cx='0' cy='0' r='700'/%3E%3Ccircle fill='%236f1341' cx='0' cy='0' r='600'/%3E%3Ccircle fill='%235e0f3d' cx='0' cy='0' r='500'/%3E%3Ccircle fill='%234e0c38' cx='0' cy='0' r='400'/%3E%3Ccircle fill='%233e0933' cx='0' cy='0' r='300'/%3E%3Ccircle fill='%232e062c' cx='0' cy='0' r='200'/%3E%3Ccircle fill='%23210024' cx='0' cy='0' r='100'/%3E%3C/g%3E%3C/svg%3E");
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 // INFOBOX WITH ICON
@@ -631,6 +603,31 @@ footer {
   padding: 1rem;
   font-size: 1.25rem;
   margin: 1rem;
+}
+
+// STATISTICS BOX
+.statistics-box {
+  border-radius: .25rem;
+  box-shadow: $basic-shadow;
+  background-color: $white;
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+
+  .description {
+    font-size: 1.5rem;
+  }
+
+  .statistic {
+    font-size: 3rem;
+  }
+
+  i {
+    font-size: 7rem;
+    position: absolute;
+    right: -1rem;
+    bottom: -1rem;
+  }
 }
 
 // BADGES
@@ -719,12 +716,6 @@ a.badge-secondary:focus {
   .tl-timenav {
     background-color: $light;
   }
-
-}
-
-// CONTRIBUTE BOX
-.contribute {
-  background: $light;
 }
 
 // PHOTO GALLERY
@@ -742,7 +733,6 @@ a.badge-secondary:focus {
     padding-bottom: calc(50% - 1rem);
     width: calc(50% - 1rem);
   }
-
 }
 
 // RETURN BAR WHEN IN A SUBSITE
@@ -869,7 +859,6 @@ body.event.list {
     height: 180px;
     object-fit: cover;
   }
-}
 
   .card-body.media img {
     width: 100px;
@@ -1085,4 +1074,3 @@ body.dataset {
     }
   }
 }
->>>>>>> 6a6f2f80e9cb8df21aba67716d68f72145c71514
