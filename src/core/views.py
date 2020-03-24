@@ -386,8 +386,9 @@ def pdf(request):
 
 def mooc(request, id):
     mooc = get_object_or_404(MOOC, pk=id)
+    modules = mooc.moocmodule_set.all().order_by("id");
 
-    context = {"mooc": mooc}
+    context = {"mooc": mooc, "modules": modules}
 
     return render(request, "mooc/index.html", context);
 

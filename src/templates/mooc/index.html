@@ -10,5 +10,20 @@
 
 <p>{{ mooc.description }}</p>
 
+<ul>
+  {% for module in modules %}
+    <li>
+      <a href="">
+        {{ module.name }}
+      </a>
+      <ul>
+        {% for question in module.questions.all %}
+        <li>{{ question.question }}</li>
+        {% endfor %}
+      </ul>
+    </li>
+  {% endfor %}
+</ul>
+
 </body>
 </html>
