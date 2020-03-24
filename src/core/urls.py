@@ -65,4 +65,7 @@ urlpatterns = [
     path("baseline/", views.load_baseline),
     path("pdf/", views.pdf),
 
+    # MOOC
+    path("mooc/<int:id>/", views.mooc),
+
 ]

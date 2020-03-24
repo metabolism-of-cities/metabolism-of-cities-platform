@@ -382,6 +382,15 @@ def pdf(request):
 
     return response
 
+#MOOC
+
+def mooc(request, id):
+    mooc = get_object_or_404(MOOC, pk=id)
+
+    context = {"mooc": mooc}
+
+    return render(request, "mooc/index.html", context);
+
 def load_baseline(request):
     moc = Site.objects.get(pk=1)
     moc.name = "Metabolism of Cities"
