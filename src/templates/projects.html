@@ -14,10 +14,10 @@
 {% block content %}
 
 <div class="row mb-4">
-  <div class="col-md-6">
+  <div class="col-md-6 mb-2">
     <input type="text" class="form-control" placeholder="Search by project title...">
   </div>
-  <div class="col-md-6">
+  <div class="col-md-6 mb-2">
     <select class="custom-select">
       <option selected>Filter by category</option>
       <option value="1">Seminars</option>
@@ -31,7 +31,10 @@
   {% for each in PROJECTS %}
     <div class="col-xl-4 col-md-6 mb-4">
       <a class="card btn-card" href="{{ each.get_absolute_url }}">
-        <img src="https://metabolismofcities.org/media/projects/AgroCycle_8czbkcb.png" class="card-img-top" alt="...">
+        {% if each.image %}
+          <img class="card-img-top" src="{{ each.image.url }}" alt="" />
+        {% endif %}
+
         <div class="card-body">
           <h5 class="card-title">{{ each }}</h5>
           <p>Et doloremque dolorum doloremque aut deserunt debitis animi. Vel iste expedita repellendus veritatis. Et esse explicabo harum rem dolores architecto. Eos et expedita est. Laudantium sed qui sit.</p>

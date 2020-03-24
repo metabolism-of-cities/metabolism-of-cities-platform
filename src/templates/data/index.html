@@ -11,17 +11,16 @@ crossorigin=""/>
 {% endblock %}
 
 {% block content %}
-<div class="section">
+<section>
   <div class="row mb-4">
     <div class="col-lg-9">
       <h2>What is this?</h2>
       {% lorem 1 p %}
-      <p><a class="btn btn-primary-outline" href="http://">Read more &raquo;</a></p>
+      <p><a class="btn btn-primary" href="http://">Read more</a></p>
     </div>
     <div class="col-lg-3">
       <h3>Cities</h3>
       <div class="card basic-info">
-        <a href="/data/cape-town/" class="list-group-item">Cape Town</a>
         <a href="/data/cape-town/" class="list-group-item">Cape Town</a>
         <a href="/data/newyork/" class="list-group-item">New York</a>
         <a href="/data/toronto/" class="list-group-item">Toronto</a>
@@ -31,55 +30,41 @@ crossorigin=""/>
     </div>
   </div>
   <div id="map_pin" class="mb-4" style="height: 300px;"></div>
-</div>
+</section>
+
 <section>
-  <h2 class="text-center mb-1 mt-4">Latest updates</h2>
+  <h2>Latest updates</h2>
   <div class="row mb-4">
     <div class="col-lg-4 mt-3">
-      <h3>New datasets</h3>
       <div class="card basic-info">
-        <a href="http://" class="list-group-item">Water consumption <span class="text-dark">Cape Town</span>
-        </a>
-        <a href="http://" class="list-group-item">Electricity consumption <span class="text-dark">Cape Town</span>
-        </a>
-        <a href="http://" class="list-group-item">CO2 emissions <span class="text-dark">New York</span>
-        </a>
-        <a href="http://" class="list-group-item">Metal stock in buildings older than 20 years <span class="text-dark">Sydney</span>
-        </a>
-        <a href="http://" class="list-group-item">Crop yields by type of crop <span class="text-dark">Waterloo</span>
-        </a>
+        <div class="card-header">Datasets</div>
+        <a href="http://" class="list-group-item">Water consumption Cape Town</a>
+        <a href="http://" class="list-group-item">Electricity consumption Cape Town</a>
+        <a href="http://" class="list-group-item">CO2 emissions New York</a>
+        <a href="http://" class="list-group-item">Metal stock in buildings older than 20 years Sydney</a>
+        <a href="http://" class="list-group-item">Crop yields by type of crop Waterloo</a>
         <a href="http://" class="list-group-item">View all datasets</a>
       </div>
     </div>
     <div class="col-lg-4 mt-3">
-      <h3>New maps</h3>
       <div class="card basic-info">
-        <a href="http://" class="list-group-item">Wastewater treatment plants <span class="text-dark">Cape Town</span>
-        </a>
-        <a href="http://" class="list-group-item">Water treatment plants <span class="text-dark">Cape Town</span>
-        </a>
-        <a href="http://" class="list-group-item">Landfill sites <span class="text-dark">      Cape Town</span>
-        </a>
-        <a href="http://" class="list-group-item">Metro stations <span class="text-dark">New York</span>
-        </a>
-        <a href="http://" class="list-group-item">Bus stops <span class="text-dark">The Hague</span>
-        </a>
+        <div class="card-header">Maps</div>
+        <a href="http://" class="list-group-item">Wastewater treatment plants Cape Town</a>
+        <a href="http://" class="list-group-item">Water treatment plants Cape Town</a>
+        <a href="http://" class="list-group-item">Landfill sites Cape Town</a>
+        <a href="http://" class="list-group-item">Metro stations New York</a>
+        <a href="http://" class="list-group-item">Bus stops The Hague</a>
         <a href="http://" class="list-group-item">View all maps</a>
       </div>
     </div>
     <div class="col-lg-4 mt-3">
-      <h3>News</h3>
       <div class="card basic-info">
-        <a href="http://" class="list-group-item">New research on groundwater in Cape Town <span class="text-dark">Jan 1, 2020</span>
-        </a>
-        <a href="http://" class="list-group-item">New research on groundwater in Cape Town <span class="text-dark">Jan 1, 2020</span>
-        </a>
-        <a href="http://" class="list-group-item">New research on groundwater in Cape Town <span class="text-dark">Jan 1, 2020</span>
-        </a>
-        <a href="http://" class="list-group-item">New research on groundwater in Cape Town <span class="text-dark">Jan 1, 2020</span>
-        </a>
-        <a href="http://" class="list-group-item">New research on groundwater in Cape Town <span class="text-dark">Jan 1, 2020</span>
-        </a>
+        <div class="card-header">News</div>
+        <a href="http://" class="list-group-item">New research on groundwater in Cape Town</a>
+        <a href="http://" class="list-group-item">New research on groundwater in Cape Town</a>
+        <a href="http://" class="list-group-item">New research on groundwater in Cape Town</a>
+        <a href="http://" class="list-group-item">New research on groundwater in Cape Town</a>
+        <a href="http://" class="list-group-item">New research on groundwater in Cape Town</a>
         <a href="http://" class="list-group-item">View all news</a>
       </div>
     </div>
@@ -101,6 +86,7 @@ crossorigin=""/>
     </div>
   </div>
 </section>
+
 <section>
   <h2 class="text-center">Statistics</h2>
   <div class="row">

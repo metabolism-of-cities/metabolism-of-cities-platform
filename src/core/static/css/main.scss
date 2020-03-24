@@ -16,7 +16,6 @@ $basic-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
   &:hover {
     transform: translateY(-3px);
   }
-
 }
 
 %box-shadow {
@@ -26,7 +25,6 @@ $basic-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
   &:hover {
     box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.2);
   }
-
 }
 
 // FONTS
@@ -137,7 +135,6 @@ nav {
     img {
       height: 52px;
     }
-
   }
 
   .dropdown-menu {
@@ -169,11 +166,8 @@ nav {
       &[aria-expanded="true"] {
         opacity: 1 !important;
       }
-
     }
-
   }
-
 }
 
 .jumbotron {
@@ -592,12 +586,31 @@ footer {
   border: none;
   box-shadow: $basic-shadow;
 
+  .card-header {
+    background-color: $primary;
+    color: $very-light;
+    font-weight: bold;
+  }
+
   .list-group-item.active {
     background-color: $primary;
     border-color: $primary;
   }
 
-}
+  .list-group-item.table-item {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+
+    > div {
+      display: table-cell;
+      vertical-align: middle;
+
+      &:last-of-type {
+        text-align: right;
+      }
+    }
+  }
 
 // CONTRIBUTE BOX
 .contribute {
@@ -660,8 +673,8 @@ a.badge-secondary:focus {
 }
 
 .dataTables_wrapper input.form-control:focus, .dataTables_wrapper select.custom-select:focus {
-  border-color: $secondary;
-  box-shadow: 0 0 0 .2rem rgba(94, 39, 80, 0.16);
+  border-color: $primary;
+  box-shadow: 0 0 0 .2rem rgba($primary, 0.16);
 }
 
 .dataTables_wrapper .paginate_button.page-item .page-link:focus {
@@ -673,18 +686,18 @@ a.badge-secondary:focus {
 }
 
 .dataTables_wrapper .paginate_button.page-item.active .page-link {
-  background-color: $secondary;
-  border-color: $secondary;
+  background-color: $primary;
+  border-color: $primary;
   color: $white;
 
   &:hover {
-    border-color: darken($secondary, 5%);
-    background-color: darken($secondary, 5%);
+    border-color: darken($primary, 5%);
+    background-color: darken($primary, 5%);
   }
 
   &:active, &:focus {
-    border-color: darken($secondary, 5%) !important;
-    background-color: darken($secondary, 5%) !important;
+    border-color: darken($primary, 5%) !important;
+    background-color: darken($primary, 5%) !important;
   }
 
 }
@@ -856,7 +869,13 @@ body.event.list {
     height: 180px;
     object-fit: cover;
   }
+}
 
+  .card-body.media img {
+    width: 100px;
+    height: 50px;
+    object-fit: cover;
+  }
 }
 
 // SINGLE EVENT AND NEWS PAGE
@@ -910,7 +929,6 @@ body.article {
     }
 
   }
-
 }
 
 // FORUM
@@ -945,7 +963,8 @@ body.forum {
   }
 
   &.topic {
-    .single-message, form {
+    .single-message,
+    .reply {
       background-color: $white;
       box-shadow: $basic-shadow;
       border-radius: .25rem;
@@ -972,9 +991,98 @@ body.forum {
         padding-left: .5rem;
         border-left: .25rem solid $gray;
       }
-
     }
+  }
+}
 
+// DATASET PAGE
+body.dataset {
+
+  .main-content img {
+    width: 100%;
+    box-shadow: $basic-shadow;
+    border-radius: .25rem;
   }
 
+  .rating {
+    .number {
+      display: inline-block;
+      margin-right: 1rem;
+      padding: 0 8px;
+      border-radius: .25rem;
+    }
+
+    .graph {
+      display: inline-block;
+      vertical-align: middle;
+
+      span {
+        height: 4px;
+        width: 8px;
+        display: block;
+        background-color: $light;
+        margin-bottom: 1px;
+
+        &:first-of-type {
+          border-top-right-radius: .125rem;
+          border-top-left-radius: .125rem;
+        }
+
+        &:last-of-type {
+          margin-bottom: 0;
+          border-bottom-right-radius: .125rem;
+          border-bottom-left-radius: .125rem;
+        }
+      }
+    }
+
+    &[data-rating="1"] {
+      .full {
+        background-color: #28a745;
+      }
+
+      .number {
+        background-color: #28a745;
+        color: $white;
+      }
+    }
+    &[data-rating="2"] {
+      .full {
+        background-color: $primary;
+      }
+
+      .number {
+        background-color: $primary;
+        color: $white;
+      }
+    }
+    &[data-rating="3"] {
+      .full {
+        background-color: #ffc107;
+      }
+
+      .number {
+        background-color: #ffc107;
+      }
+    }
+    &[data-rating="4"] {
+      .full {
+        background-color: $secondary;
+      }
+
+      .number {
+        background-color: $secondary;
+      }
+    }
+    &[data-rating="5"] {
+      .full {
+        background-color: #dc3545;;
+      }
+
+      .number {
+        background-color: #dc3545;;
+      }
+    }
+  }
 }
+>>>>>>> 6a6f2f80e9cb8df21aba67716d68f72145c71514

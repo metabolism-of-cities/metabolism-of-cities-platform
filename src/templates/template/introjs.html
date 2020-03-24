@@ -1,0 +1,44 @@
+{% extends "_base.html" %}
+
+{% block title %}Introduction{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/introjs.css">
+{% endblock %}
+
+{% block content %}
+  <div class="jumbotron">
+    <h1 data-step="1" data-intro="This is a tooltip!">Introduction</h1>
+    <p class="lead" data-step="4" data-intro="Another step.">This is the basic usage of IntroJs, with <code>data-step</code> and <code>data-intro</code> attributes.</p>
+    <div class="btn btn-large btn-primary start-intro">Show me how</div>
+  </div>
+  <hr>
+  <div class="row-fluid marketing">
+    <div data-step="2" data-intro="Ok, wasn't that fun?" data-position="right">
+      <h4>Section One</h4>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis mollis augue a neque cursus ac blandit orci faucibus. Phasellus nec metus purus.</p>
+      <h4>Section Two</h4>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis mollis augue a neque cursus ac blandit orci faucibus. Phasellus nec metus purus.</p>
+      <h4>Section Three</h4>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis mollis augue a neque cursus ac blandit orci faucibus. Phasellus nec metus purus.</p>
+    </div>
+    <div data-step="3" data-intro="More features, more fun." data-position="left">
+      <h4>Section Four</h4>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis mollis augue a neque cursus ac blandit orci faucibus. Phasellus nec metus purus.</p>
+      <h4>Section Five</h4>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis mollis augue a neque cursus ac blandit orci faucibus. Phasellus nec metus purus.</p>
+      <h4>Section Six</h4>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis mollis augue a neque cursus ac blandit orci faucibus. Phasellus nec metus purus.</p>
+    </div>
+  </div>
+{% endblock %}
+
+{% block footer %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/intro.js"></script>
+
+  <script>
+    $(".start-intro.btn").click(function() {
+      introJs().setOption("showBullets", false).start();
+    })
+  </script>
+{% endblock %}
