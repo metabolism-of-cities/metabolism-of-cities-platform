@@ -3,63 +3,82 @@
 {% block title %}Slideshow{% endblock %}
 
 {% block css %}
-  <link rel="stylesheet"
-        type="text/css"
-        href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+  <style>
+    .slick-container {
+      margin: 0 auto;
+      padding: 40px;
+      width: 80%;
+      color: #333;
+      background: gray;
+    }
+
+    .slick-slide {
+      text-align: center;
+      color: gray;
+      background: white;
+    }
+
+    .slick-container > div {
+      margin-bottom: 50px;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
-  <h1>Single Item</h1>
-  <div class="single-item">
-    <div>your content 1</div>
-    <div>your content 2</div>
-    <div>your content 3</div>
-    <div>your content 4</div>
-    <div>your content 5</div>
-    <div>your content 6</div>
-  </div>
-  <h1>Multiple Items</h1>
-  <div class="multiple-items">
-    <div>your content 1</div>
-    <div>your content 2</div>
-    <div>your content 3</div>
-    <div>your content 4</div>
-    <div>your content 5</div>
-    <div>your content 6</div>
-  </div>
-  <h1>Responsive Display</h1>
-  <div class="responsive">
-    <div>your content 1</div>
-    <div>your content 2</div>
-    <div>your content 3</div>
-    <div>your content 4</div>
-    <div>your content 5</div>
-    <div>your content 6</div>
-  </div>
-  <h1>Variable Width</h1>
-  <div class="variable-width">
-    <div>your content 1</div>
-    <div>your content 2</div>
-    <div>your content 3</div>
-    <div>your content 4</div>
-    <div>your content 5</div>
-    <div>your content 6</div>
-  </div>
-  <h1>Center Mode</h1>
-  <div class="center">
-    <div>your content 1</div>
-    <div>your content 2</div>
-    <div>your content 3</div>
-    <div>your content 4</div>
-    <div>your content 5</div>
-    <div>your content 6</div>
+  <div class="slick-container">
+    <h1>Single Item</h1>
+    <div class="single-item">
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+    </div>
+    <h1>Multiple Items</h1>
+    <div class="multiple-items">
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+    </div>
+    <h1>Responsive Display</h1>
+    <div class="responsive">
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+    </div>
+    <h1>Variable Width</h1>
+    <div class="variable-width">
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+    </div>
+    <h1>Center Mode</h1>
+    <div class="center">
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+      <div><img src="https://i.imgur.com/KEFQnEp.jpg"></div>
+    </div>
   </div>
 {% endblock %}
 
 {% block footer %}
-  <script type="text/javascript"
-          src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js">
-  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.5.9/slick.min.js"></script>
+
   <script>
     $('.single-item').slick();
     $('.multiple-items').slick({
