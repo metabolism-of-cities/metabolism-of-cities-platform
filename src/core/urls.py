@@ -66,7 +66,7 @@ urlpatterns = [
     path("pdf/", views.pdf),
 
     # MOOC
-    path("mooc/<int:id>/<int:module>", views.mooc),
+    path("mooc/<int:id>/<int:module>/overview", views.mooc_module),
     path("mooc/<int:id>/overview", views.mooc),
 
 ]
