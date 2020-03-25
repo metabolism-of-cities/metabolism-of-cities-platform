@@ -1,109 +1,139 @@
 {% extends "_base.html" %}
 
-{% block content %}
+{% load static %}
 
-
-<div class="container">
-  <div class="row">
-    <div class="col-9">
-      <h2>What is this?</h2>
-      {% lorem 1 p %} 
-      <p><a href="http://">Read more &raquo;</a></p>
-    </div>
-    <div class="col">
-      <h2>Cities</h2>
-      <ul>
-        <li><a href="/data/cape-town/">Cape Town</a></li>
-        <li><a href="/data/newyork/">New York</a></li>
-        <li><a href="/data/toronto/">Toronto</a></li>
-        <li><a href="/data/sydney/">Sydney</a></li>
-        <li><a href="/data/overview/">View all</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col" style="height:250px;background:#333;color:#fff">
-      World map showing pins for each of the city. When the pin is clicked,
-      then the relevant dashboard opens (same as clicking the link in the menu)
-    </div>
-  </div>
-
-  <h2 style="text-align:center;margin-top:55px">Latest updates</h2>
-
-  <div class="row">
-    <div class="col">
-      <h3>New datasets</h3>
-      <ul>
-        <li><a href="http://">Water consumption</a> Cape Town</li>
-        <li><a href="http://">Electricity consumption</a> Cape Town</li>
-        <li><a href="http://">CO2 emissions</a> New York</li>
-        <li><a href="http://">Metal stock in buildings older than 20 years</a> Sydney</li>
-        <li><a href="http://">Crop yields by type of crop</a> Waterloo</li>
-        <li><a href="http://">View all datasets</a></li>
-      </ul>
-    </div>
-    <div class="col">
-      <h3>New maps</h3>
-      <ul>
-        <li><a href="http://">Wastewater treatment plants</a> Cape Town</li>
-        <li><a href="http://">Water treatment plants</a> Cape Town</li>
-        <li><a href="http://">Landfill sites</a> Cape Town</li>
-        <li><a href="http://">Metro stations</a> New York</li>
-        <li><a href="http://">Bus stops</a> The Hague</li>
-        <li><a href="http://">View all maps</a></li>
-      </ul>
-    </div>
-    <div class="col">
-      <h3>News</h3>
-      <ul>
-        <li><a href="http://">New research on groundwater in Cape Town</a> Jan 1, 2020</li>
-        <li><a href="http://">New research on groundwater in Cape Town</a> Jan 1, 2020</li>
-        <li><a href="http://">New research on groundwater in Cape Town</a> Jan 1, 2020</li>
-        <li><a href="http://">New research on groundwater in Cape Town</a> Jan 1, 2020</li>
-        <li><a href="http://">New research on groundwater in Cape Town</a> Jan 1, 2020</li>
-        <li><a href="http://">View all news</a></li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="card contribute"> 
-    <div class="card-body">
-      <h4 class="card-title font-weight-bold">Contribute</h4>
-      <p class="card-text">
-        This data hub is built, maintained, and expanded by people like <strong>you</strong>. 
-        Join our project now.
-      </p>
-      <a class="btn btn-light" href="#">Contribute data</a>
-      <a class="btn btn-light" href="#">Collect photos</a>
-      <a class="btn btn-light" href="#">Academic programmes</a>
-      <a class="btn btn-light" href="#">Add your city</a>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col">
-      <h2 style="text-align:center;margin-top:55px">Statistics</h2>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <h3>Active cities</h3>
-      <p>8</p>
-    </div>
-    <div class="col">
-      <h3>Datasets</h3>
-      <p>93</p>
-    </div>
-    <div class="col">
-      <h3>Data points</h3>
-      <p>5,394</p>
-    </div>
-    <div class="col">
-      <h3>Contributors</h3>
-      <p>54</p>
-    </div>
-  </div>
-
-</div>
-
+{% block title %}Index{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+crossorigin=""/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
 {% endblock %}
+
+{% block content %}
+<section>
+  <div class="row">
+    <div class="col-lg-9">
+      <h2>What is this?</h2>
+      {% lorem 1 p %}
+      <p><a class="btn btn-primary" href="http://">Read more</a></p>
+    </div>
+    <div class="col-lg-3">
+      <h3>Cities</h3>
+      <div class="card basic-info">
+        <a href="/data/cape-town/" class="list-group-item">Cape Town</a>
+        <a href="/data/newyork/" class="list-group-item">New York</a>
+        <a href="/data/toronto/" class="list-group-item">Toronto</a>
+        <a href="/data/sydney/" class="list-group-item">Sydney</a>
+        <a href="/data/overview/" class="list-group-item font-weight-bold">All cities</a>
+      </div>
+    </div>
+  </div>
+  <div id="map_pin" class="mt-4" style="height: 300px;"></div>
+</section>
+
+<section>
+  <div class="row">
+    <div class="col-sm-6 col-lg-3 mb-4">
+      <div class="statistics-box">
+        <div class="description">Active cities</div>
+        <div class="statistic">8</div>
+        <i class="fad fa-city text-success"></i>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3 mb-4">
+      <div class="statistics-box">
+        <div class="description">Datasets</div>
+        <div class="statistic">93</div>
+        <i class="fad fa-database text-danger"></i>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3 mb-4">
+      <div class="statistics-box">
+        <div class="description">Data points</div>
+        <div class="statistic">5,394</div>
+        <i class="fad fa-dot-circle text-warning"></i>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3 mb-4">
+      <div class="statistics-box">
+        <div class="description">Contributors</div>
+        <div class="statistic">54</div>
+        <i class="fad fa-user-friends text-info"></i>
+      </div>
+    </div>
+  </div>
+  
+  {% include "_contribute.html" %}
+</section>
+
+<section>
+  <h2>Latest updates</h2>
+  <div class="row">
+    <div class="col-lg-4 mb-4">
+      <div class="card basic-info">
+        <div class="card-header"><i class="far fa-fw fa-database mr-2"></i> Datasets</div>
+        <a href="http://" class="list-group-item">Water consumption Cape Town</a>
+        <a href="http://" class="list-group-item">Electricity consumption Cape Town</a>
+        <a href="http://" class="list-group-item">CO2 emissions New York</a>
+        <a href="http://" class="list-group-item">Metal stock in buildings older than 20 years Sydney</a>
+        <a href="http://" class="list-group-item">Crop yields by type of crop Waterloo</a>
+        <a href="http://" class="list-group-item font-weight-bold">All datasets</a>
+      </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+      <div class="card basic-info">
+        <div class="card-header"><i class="far fa-fw fa-globe-africa mr-2"></i>Maps</div>
+        <a href="http://" class="list-group-item">Wastewater treatment plants Cape Town</a>
+        <a href="http://" class="list-group-item">Water treatment plants Cape Town</a>
+        <a href="http://" class="list-group-item">Landfill sites Cape Town</a>
+        <a href="http://" class="list-group-item">Metro stations New York</a>
+        <a href="http://" class="list-group-item">Bus stops The Hague</a>
+        <a href="http://" class="list-group-item font-weight-bold">All maps</a>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card basic-info">
+        <div class="card-header"><i class="far fa-fw fa-newspaper mr-2"></i>News</div>
+        <a href="http://" class="list-group-item">New research on groundwater in Cape Town</a>
+        <a href="http://" class="list-group-item">New research on groundwater in Cape Town</a>
+        <a href="http://" class="list-group-item">New research on groundwater in Cape Town</a>
+        <a href="http://" class="list-group-item">New research on groundwater in Cape Town</a>
+        <a href="http://" class="list-group-item">New research on groundwater in Cape Town</a>
+        <a href="http://" class="list-group-item font-weight-bold">All news</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+<script>
+  var map_pin = L.map("map_pin").setView([51.505, -0.09], 13);
+  L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: "mapbox/streets-v11",
+    tileSize: 512,
+    zoomOffset: -1,
+    accessToken: "your.mapbox.access.token"
+  }).addTo(map_pin);
+  var marker = L.marker([51.5, -0.09]).addTo(map_pin);
+
+  var map_polygon = L.map("map_polygon").setView([51.505, -0.09], 13);
+  L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: "mapbox/streets-v11",
+    tileSize: 512,
+    zoomOffset: -1,
+    accessToken: "your.mapbox.access.token"
+  }).addTo(map_polygon);
+  var polygon = L.polygon([
+    [51.509, -0.08],
+    [51.503, -0.06],
+    [51.51, -0.047]
+    ]).addTo(map_polygon);
+  </script>
+  {% endblock %}
