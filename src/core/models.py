@@ -120,7 +120,7 @@ class MOOCQuestion(models.Model):
         return self.question
 
 class MOOCModule(models.Model):
-    mooc = models.ForeignKey(MOOC, on_delete=models.CASCADE)
+    mooc = models.ForeignKey(MOOC, on_delete=models.CASCADE, related_name="modules")
     questions = models.ManyToManyField(MOOCQuestion)
     name = models.CharField(max_length=255)
     instructions = models.TextField(null=True, blank=True)
@@ -128,12 +128,6 @@ class MOOCModule(models.Model):
 
     def __str__(self):
         return self.name
-
-
-#class MOOCModuleQuestion(models.Model):
-#    question = models.ManyToManyField(MOOCQuestion, on_delete=models.CASCADE)
-#    module = models.ManyToManyField(MOOCModule, on_delete=models.CASCADE)
-#    date_created = models.DateTimeField(auto_now_add=True)
 
 class MOOCVideo(models.Model):
     video = models.ForeignKey(Video, on_delete=models.CASCADE)
