@@ -34,6 +34,7 @@ SITE_EMAIL = 'info@metabolismofcities.org'
 
 INSTALLED_APPS = [
     'core.apps.CoreConfig',
+    'stafdb.apps.StafdbConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
