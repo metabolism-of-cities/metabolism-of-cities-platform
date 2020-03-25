@@ -5,37 +5,23 @@
 {% block title %}Slideshow{% endblock %}
 
 {% block css %}
-  <link rel="stylesheet" 
-        type="text/css"
-        href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-  <link rel="stylesheet"
-        type="text/css"
-        href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+  <link rel="stylesheet"  type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+
   <style>
     .slick-container {
-      margin: 0 auto;
       padding: 40px;
-      width: 80%;
       color: #333;
       background: gray;
-    }
-
-    .slick-slide {
-      text-align: center;
-      color: gray;
-      background: white;
-    }
-
-    .slick-container > div {
-      margin-bottom: 50px;
     }
   </style>
 {% endblock %}
 
 {% block content %}
-  <div class="slick-container">
-    <h1>Single Item</h1>
-    <div class="single-item">
+<div class="row">
+  <div class="col-md-8 col-lg-6 slick-wrapper">
+    <div class="arrows"></div>
+    <div class="slick">
       <div>
         <img src="/static/img/agriculture.jpg">
       </div>
@@ -52,170 +38,36 @@
         <img src="/static/img/forestry.jpg">
       </div>
       <div>
-        <img src="/static/img/manufacturing.jpg">
-      </div>
-    </div>
-    <h1>Multiple Items</h1>
-    <div class="multiple-items">
-      <div>
-        <img src="/static/img/agriculture.jpg">
-      </div>
-      <div>
-        <img src="/static/img/construction.jpg">
-      </div>
-      <div>
-        <img src="/static/img/energy.jpg">
-      </div>
-      <div>
-        <img src="/static/img/fishing.jpg">
-      </div>
-      <div>
-        <img src="/static/img/forestry.jpg">
-      </div>
-      <div>
-        <img src="/static/img/manufacturing.jpg">
-      </div>
-    </div>
-    <h1>Responsive Display</h1>
-    <div class="responsive">
-      <div>
-        <img src="/static/img/agriculture.jpg">
-      </div>
-      <div>
-        <img src="/static/img/construction.jpg">
-      </div>
-      <div>
-        <img src="/static/img/energy.jpg">
-      </div>
-      <div>
-        <img src="/static/img/fishing.jpg">
-      </div>
-      <div>
-        <img src="/static/img/forestry.jpg">
-      </div>
-      <div>
-        <img src="/static/img/manufacturing.jpg">
-      </div>
-    </div>
-    <h1>Variable Width</h1>
-    <div class="variable-width">
-      <div>
-        <img src="/static/img/agriculture.jpg">
-      </div>
-      <div>
-        <img src="/static/img/construction.jpg">
-      </div>
-      <div>
-        <img src="/static/img/energy.jpg">
-      </div>
-      <div>
-        <img src="/static/img/fishing.jpg">
-      </div>
-      <div>
-        <img src="/static/img/forestry.jpg">
-      </div>
-      <div>
-        <img src="/static/img/manufacturing.jpg">
-      </div>
-    </div>
-    <h1>Center Mode</h1>
-    <div class="center">
-      <div>
-        <img src="/static/img/agriculture.jpg">
-      </div>
-      <div>
-        <img src="/static/img/construction.jpg">
-      </div>
-      <div>
-        <img src="/static/img/energy.jpg">
-      </div>
-      <div>
-        <img src="/static/img/fishing.jpg">
-      </div>
-      <div>
-        <img src="/static/img/forestry.jpg">
-      </div>
-      <div>
-        <img src="/static/img/manufacturing.jpg">
+        <img src="https://i.imgur.com/wsXrlRx.jpg">
       </div>
     </div>
   </div>
+</div>
 {% endblock %}
 
 {% block footer %}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.5.9/slick.min.js">
-  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.5.9/slick.min.js"></script>
   <script>
-    $(".single-item").slick();
-    $(".multiple-items").slick({
-      infinite: true,
-      slidesToShow: 3,
-      slidesToScroll: 3
-    });
-    $(".responsive").slick({
-      dots: true,
-      infinite: false,
-      speed: 300,
-      slidesToShow: 4,
-      slidesToScroll: 4,
-      responsive: [
-        {
-          breakpoint: 1024,
-          settings: {
-            slidesToShow: 3,
-            slidesToScroll: 3,
-            infinite: true,
-            dots: true
-          }
-        },
-        {
-          breakpoint: 600,
-          settings: {
-            slidesToShow: 2,
-            slidesToScroll: 2
-          }
-        },
-        {
-          breakpoint: 480,
-          settings: {
-            slidesToShow: 1,
-            slidesToScroll: 1
-          }
-        }
-      ]
-    });
-    $(".variable-width").slick({
+    $(".slick").slick({
       dots: true,
       infinite: true,
       speed: 300,
       slidesToShow: 1,
+      fade: true,
       centerMode: true,
-      variableWidth: true
+      adaptiveHeight: true,
+      cssEase: "linear",
+      prevArrow: "<i class='fa fa-fw fa-caret-left prev'></i>",
+      nextArrow: "<i class='fa fa-fw fa-caret-right next'></i>",
+      appendArrows: ".arrows",
     });
-    $(".center").slick({
-      centerMode: true,
-      centerPadding: "60px",
-      slidesToShow: 3,
-      responsive: [
-        {
-          breakpoint: 768,
-          settings: {
-            arrows: false,
-            centerMode: true,
-            centerPadding: "40px",
-            slidesToShow: 3
-          }
-        },
-        {
-          breakpoint: 480,
-          settings: {
-            arrows: false,
-            centerMode: true,
-            centerPadding: "40px",
-            slidesToShow: 1
-          }
-        }
-      ]
-    });
+
+    // making custom buttoms work
+    $(".slick-wrapper .prev").click(function() {
+      $(".slick").slick("slickPrev")
+    })
+    $(".slick-wrapper .next").click(function() {
+      $(".slick").slick("slickNext")
+    })
   </script>
 {% endblock %}

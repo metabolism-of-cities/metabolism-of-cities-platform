@@ -744,6 +744,40 @@ a.badge-secondary:focus {
   }
 }
 
+// SLICK SLIDESHOW
+.slick-wrapper {
+
+  .slick {
+    width: 100%;
+    max-height: 400px;
+
+    img {
+      max-width: 400px;
+      width: 100%;
+      object-fit: cover;
+      box-shadow: $basic-shadow;
+      border-radius: .25rem;
+      margin: auto;
+    }
+
+  }
+  .arrows {
+    text-align: center;
+    font-size: 1.5rem;
+    color: $gray;
+
+    .prev,
+    .next {
+      cursor: pointer;
+      padding: 0 1.5rem;
+
+      &:hover {
+        color: $black;
+      }
+    }
+  }
+}
+
 // RETURN BAR WHEN IN A SUBSITE
 .return-bar {
   background-color: $light;
