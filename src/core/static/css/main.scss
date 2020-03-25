@@ -673,13 +673,22 @@ a.badge-secondary:focus {
   background-position: center;
   border-radius: .25rem;
   display: inline-block;
-  padding-bottom: calc(25% - 1rem);
-  width: calc(25% - 1rem);
-  margin: 0 1rem 1rem 0;
+  padding-bottom: 100%;
+  width: 100%;
+}
 
-  @media (max-width: 768px) {
-    padding-bottom: calc(50% - 1rem);
-    width: calc(50% - 1rem);
+// LIGHTBOX GALLERY
+#baguetteBox-overlay .full-image {
+  img {
+    border-radius: .25rem;
+  }
+
+  figcaption {
+    font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif !important;
+    line-height: 2 !important;
+    font-size: 1.25rem !important;
+    background-color: $dark !important;
+    color: $very-light !important;
   }
 }
 
@@ -706,6 +715,7 @@ body.single-project {
 body.single-project {
   .card-img-wrapper {
     position: relative;
+    border-radius: .25rem;
   }
 
   #partners .btn-thumbnail {
@@ -716,6 +726,7 @@ body.single-project {
 
     img {
       height: 100%;
+      border-radius: .25rem;
       max-height: 136px;
       width: 100%;
       object-fit: contain;
