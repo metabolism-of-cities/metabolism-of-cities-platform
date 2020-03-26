@@ -128,8 +128,8 @@ class MOOCModule(models.Model):
         return self.name
 
 class MOOCModuleQuestion(models.Model):
-    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE, related_name="modules")
-    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE, related_name="questions")
+    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE, related_name="mooc_mq_module")
+    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE, related_name="mooc_mq_question")
     position = models.PositiveSmallIntegerField(db_index=True, null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
