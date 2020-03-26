@@ -113,7 +113,6 @@ class MOOC(models.Model):
 
 class MOOCQuestion(models.Model):
     question = models.CharField(max_length=255)
-    position = models.PositiveSmallIntegerField(db_index=True, null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -121,7 +120,6 @@ class MOOCQuestion(models.Model):
 
 class MOOCModule(models.Model):
     mooc = models.ForeignKey(MOOC, on_delete=models.CASCADE, related_name="modules")
-    questions = models.ManyToManyField(MOOCQuestion)
     name = models.CharField(max_length=255)
     instructions = models.TextField(null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -129,10 +127,22 @@ class MOOCModule(models.Model):
     def __str__(self):
         return self.name
 
+class MOOCModuleQuestion(models.Model):
+    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE, related_name="modules")
+    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE, related_name="questions")
+    position = models.PositiveSmallIntegerField(db_index=True, null=True, blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.module.name + " - " + self.question.question
+
 class MOOCVideo(models.Model):
     video = models.ForeignKey(Video, on_delete=models.CASCADE)
     module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.module.name + " - " + self.video.video_site + " - " + self.video.url
 
 class MOOCAnswer(models.Model):
     question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE)
