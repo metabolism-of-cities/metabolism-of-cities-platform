@@ -16,7 +16,6 @@ $basic-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
   &:hover {
     transform: translateY(-3px);
   }
-
 }
 
 %box-shadow {
@@ -26,7 +25,6 @@ $basic-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
   &:hover {
     box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.2);
   }
-
 }
 
 // FONTS
@@ -137,7 +135,6 @@ nav {
     img {
       height: 52px;
     }
-
   }
 
   .dropdown-menu {
@@ -169,11 +166,8 @@ nav {
       &[aria-expanded="true"] {
         opacity: 1 !important;
       }
-
     }
-
   }
-
 }
 
 .jumbotron {
@@ -310,7 +304,6 @@ footer {
     border-color: darken($primary, 5%) !important;
     background-color: darken($primary, 5%) !important;
   }
-
 }
 
 .btn-primary-outline {
@@ -329,7 +322,6 @@ footer {
     background-color: transparentize($primary, 0.9) !important;
     color: $primary;
   }
-
 }
 
 .btn-primary-basic {
@@ -342,7 +334,6 @@ footer {
     border-color: transparent;
     color: $primary;
   }
-
 }
 
 .btn-secondary {
@@ -358,7 +349,6 @@ footer {
     border-color: darken($secondary, 5%) !important;
     background-color: darken($secondary, 5%) !important;
   }
-
 }
 
 .btn-secondary-outline {
@@ -377,7 +367,6 @@ footer {
     background-color: transparentize($secondary, 0.9) !important;
     color: $secondary;
   }
-
 }
 
 .btn-secondary-basic {
@@ -390,7 +379,6 @@ footer {
     border-color: transparent;
     color: $secondary;
   }
-
 }
 
 .btn-default {
@@ -408,7 +396,6 @@ footer {
     border-color: darken($dark, 5%) !important;
     background-color: darken($dark, 5%) !important;
   }
-
 }
 
 .btn-default-outline {
@@ -427,7 +414,6 @@ footer {
     background-color: transparentize($dark, 0.9) !important;
     color: $dark;
   }
-
 }
 
 .btn-default-basic {
@@ -440,7 +426,6 @@ footer {
     border-color: transparent;
     color: $dark;
   }
-
 }
 
 .btn-inverse {
@@ -458,27 +443,7 @@ footer {
     border-color: darken($light, 5%) !important;
     background-color: darken($light, 5%) !important;
   }
-
 }
-
-.btn-warning {
-  background-color: gold;
-  border-color: gold;
-  color: $white;
-
-  &:hover {
-    border-color: gold;
-    background-color: gold;
-    color: $white;
-  }
-
-}
-.btn-danger {
-  background-color: red;
-  border-color: dark-red;
-  color: $white;
-}
-
 
 .btn-inverse-outline {
   background-color: transparent;
@@ -508,7 +473,6 @@ footer {
     border-color: transparent;
     color: $light;
   }
-
 }
 
 .btn-card {
@@ -528,7 +492,6 @@ footer {
     position: absolute;
     top: calc(50% - 3rem);
   }
-
 }
 
 // THUMBNAIL BUTTON
@@ -560,7 +523,6 @@ footer {
     text-shadow: 0px 0px 2px rgba(0, 0, 0, 1);
     font-weight: bold;
   }
-
 }
 
 // ICON BUTTON
@@ -584,7 +546,6 @@ footer {
     font-size: 1.5rem;
     margin-bottom: .5rem;
   }
-
 }
 
 // CARD
@@ -592,17 +553,41 @@ footer {
   border: none;
   box-shadow: $basic-shadow;
 
+  .card-header {
+    background-color: $primary;
+    color: $very-light;
+    font-weight: bold;
+  }
+
   .list-group-item.active {
     background-color: $primary;
     border-color: $primary;
   }
 
+  .list-group-item.table-item {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+
+    > div {
+      display: table-cell;
+      vertical-align: middle;
+
+      &:last-of-type {
+        text-align: right;
+      }
+    }
+  }
 }
 
 // CONTRIBUTE BOX
-.contribute {
-  color: $dark;
-  background: $light;
+.contribute.card {
+  box-shadow: $basic-shadow;
+  color: $very-light;
+  background-color: #ff9d00;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1600 800'%3E%3Cg stroke='%23000' stroke-width='66.7' stroke-opacity='0.05' %3E%3Ccircle fill='%23ff9d00' cx='0' cy='0' r='1800'/%3E%3Ccircle fill='%23fb8d17' cx='0' cy='0' r='1700'/%3E%3Ccircle fill='%23f47d24' cx='0' cy='0' r='1600'/%3E%3Ccircle fill='%23ed6e2d' cx='0' cy='0' r='1500'/%3E%3Ccircle fill='%23e35f34' cx='0' cy='0' r='1400'/%3E%3Ccircle fill='%23d85239' cx='0' cy='0' r='1300'/%3E%3Ccircle fill='%23cc453e' cx='0' cy='0' r='1200'/%3E%3Ccircle fill='%23be3941' cx='0' cy='0' r='1100'/%3E%3Ccircle fill='%23b02f43' cx='0' cy='0' r='1000'/%3E%3Ccircle fill='%23a02644' cx='0' cy='0' r='900'/%3E%3Ccircle fill='%23901e44' cx='0' cy='0' r='800'/%3E%3Ccircle fill='%23801843' cx='0' cy='0' r='700'/%3E%3Ccircle fill='%236f1341' cx='0' cy='0' r='600'/%3E%3Ccircle fill='%235e0f3d' cx='0' cy='0' r='500'/%3E%3Ccircle fill='%234e0c38' cx='0' cy='0' r='400'/%3E%3Ccircle fill='%233e0933' cx='0' cy='0' r='300'/%3E%3Ccircle fill='%232e062c' cx='0' cy='0' r='200'/%3E%3Ccircle fill='%23210024' cx='0' cy='0' r='100'/%3E%3C/g%3E%3C/svg%3E");
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 // INFOBOX WITH ICON
@@ -618,6 +603,31 @@ footer {
   padding: 1rem;
   font-size: 1.25rem;
   margin: 1rem;
+}
+
+// STATISTICS BOX
+.statistics-box {
+  border-radius: .25rem;
+  box-shadow: $basic-shadow;
+  background-color: $white;
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+
+  .description {
+    font-size: 1.5rem;
+  }
+
+  .statistic {
+    font-size: 3rem;
+  }
+
+  i {
+    font-size: 7rem;
+    position: absolute;
+    right: -1rem;
+    bottom: -1rem;
+  }
 }
 
 // BADGES
@@ -660,8 +670,8 @@ a.badge-secondary:focus {
 }
 
 .dataTables_wrapper input.form-control:focus, .dataTables_wrapper select.custom-select:focus {
-  border-color: $secondary;
-  box-shadow: 0 0 0 .2rem rgba(94, 39, 80, 0.16);
+  border-color: $primary;
+  box-shadow: 0 0 0 .2rem rgba($primary, 0.16);
 }
 
 .dataTables_wrapper .paginate_button.page-item .page-link:focus {
@@ -673,18 +683,18 @@ a.badge-secondary:focus {
 }
 
 .dataTables_wrapper .paginate_button.page-item.active .page-link {
-  background-color: $secondary;
-  border-color: $secondary;
+  background-color: $primary;
+  border-color: $primary;
   color: $white;
 
   &:hover {
-    border-color: darken($secondary, 5%);
-    background-color: darken($secondary, 5%);
+    border-color: darken($primary, 5%);
+    background-color: darken($primary, 5%);
   }
 
   &:active, &:focus {
-    border-color: darken($secondary, 5%) !important;
-    background-color: darken($secondary, 5%) !important;
+    border-color: darken($primary, 5%) !important;
+    background-color: darken($primary, 5%) !important;
   }
 
 }
@@ -706,12 +716,6 @@ a.badge-secondary:focus {
   .tl-timenav {
     background-color: $light;
   }
-
-}
-
-// CONTRIBUTE BOX
-.contribute {
-  background: $light;
 }
 
 // PHOTO GALLERY
@@ -721,15 +725,57 @@ a.badge-secondary:focus {
   background-position: center;
   border-radius: .25rem;
   display: inline-block;
-  padding-bottom: calc(25% - 1rem);
-  width: calc(25% - 1rem);
-  margin: 0 1rem 1rem 0;
+  padding-bottom: 100%;
+  width: 100%;
+}
 
-  @media (max-width:768px) {
-    padding-bottom: calc(50% - 1rem);
-    width: calc(50% - 1rem);
+// LIGHTBOX GALLERY
+#baguetteBox-overlay .full-image {
+  img {
+    border-radius: .25rem;
   }
 
+  figcaption {
+    font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif !important;
+    line-height: 2 !important;
+    font-size: 1.25rem !important;
+    background-color: $dark !important;
+    color: $very-light !important;
+  }
+}
+
+// SLICK SLIDESHOW
+.slick-wrapper {
+
+  .slick {
+    width: 100%;
+    max-height: 400px;
+
+    img {
+      max-width: 400px;
+      width: 100%;
+      object-fit: cover;
+      box-shadow: $basic-shadow;
+      border-radius: .25rem;
+      margin: auto;
+    }
+
+  }
+  .arrows {
+    text-align: center;
+    font-size: 1.5rem;
+    color: $gray;
+
+    .prev,
+    .next {
+      cursor: pointer;
+      padding: 0 1.5rem;
+
+      &:hover {
+        color: $black;
+      }
+    }
+  }
 }
 
 // RETURN BAR WHEN IN A SUBSITE
@@ -754,6 +800,7 @@ body.projects, body.single-project {
 body.single-project {
   .card-img-wrapper {
     position: relative;
+    border-radius: .25rem;
   }
 
   #partners .btn-thumbnail {
@@ -764,6 +811,7 @@ body.single-project {
 
     img {
       height: 100%;
+      border-radius: .25rem;
       max-height: 136px;
       width: 100%;
       object-fit: contain;
@@ -857,6 +905,11 @@ body.event.list {
     object-fit: cover;
   }
 
+  .card-body.media img {
+    width: 100px;
+    height: 50px;
+    object-fit: cover;
+  }
 }
 
 // SINGLE EVENT AND NEWS PAGE
@@ -910,7 +963,6 @@ body.article {
     }
 
   }
-
 }
 
 // FORUM
@@ -945,7 +997,8 @@ body.forum {
   }
 
   &.topic {
-    .single-message, form {
+    .single-message,
+    .reply {
       background-color: $white;
       box-shadow: $basic-shadow;
       border-radius: .25rem;
@@ -972,9 +1025,97 @@ body.forum {
         padding-left: .5rem;
         border-left: .25rem solid $gray;
       }
-
     }
+  }
+}
 
+// DATASET PAGE
+body.dataset {
+
+  .main-content img {
+    width: 100%;
+    box-shadow: $basic-shadow;
+    border-radius: .25rem;
   }
 
+  .rating {
+    .number {
+      display: inline-block;
+      margin-right: 1rem;
+      padding: 0 8px;
+      border-radius: .25rem;
+    }
+
+    .graph {
+      display: inline-block;
+      vertical-align: middle;
+
+      span {
+        height: 4px;
+        width: 8px;
+        display: block;
+        background-color: $light;
+        margin-bottom: 1px;
+
+        &:first-of-type {
+          border-top-right-radius: .125rem;
+          border-top-left-radius: .125rem;
+        }
+
+        &:last-of-type {
+          margin-bottom: 0;
+          border-bottom-right-radius: .125rem;
+          border-bottom-left-radius: .125rem;
+        }
+      }
+    }
+
+    &[data-rating="1"] {
+      .full {
+        background-color: #28a745;
+      }
+
+      .number {
+        background-color: #28a745;
+        color: $white;
+      }
+    }
+    &[data-rating="2"] {
+      .full {
+        background-color: $primary;
+      }
+
+      .number {
+        background-color: $primary;
+        color: $white;
+      }
+    }
+    &[data-rating="3"] {
+      .full {
+        background-color: #ffc107;
+      }
+
+      .number {
+        background-color: #ffc107;
+      }
+    }
+    &[data-rating="4"] {
+      .full {
+        background-color: $secondary;
+      }
+
+      .number {
+        background-color: $secondary;
+      }
+    }
+    &[data-rating="5"] {
+      .full {
+        background-color: #dc3545;;
+      }
+
+      .number {
+        background-color: #dc3545;;
+      }
+    }
+  }
 }

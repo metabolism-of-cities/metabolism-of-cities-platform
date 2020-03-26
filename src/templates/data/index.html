@@ -11,133 +11,96 @@ crossorigin=""/>
 {% endblock %}
 
 {% block content %}
-<div class="section">
-  <div class="row mb-4">
+<section>
+  <div class="row">
     <div class="col-lg-9">
       <h2>What is this?</h2>
       {% lorem 1 p %}
-      <p><a class="btn btn-primary-outline" href="http://">Read more &raquo;</a></p>
+      <p><a class="btn btn-primary" href="http://">Read more</a></p>
     </div>
     <div class="col-lg-3">
       <h3>Cities</h3>
       <div class="card basic-info">
         <a href="/data/cape-town/" class="list-group-item">Cape Town</a>
-        <a href="/data/cape-town/" class="list-group-item">Cape Town</a>
         <a href="/data/newyork/" class="list-group-item">New York</a>
         <a href="/data/toronto/" class="list-group-item">Toronto</a>
         <a href="/data/sydney/" class="list-group-item">Sydney</a>
-        <a href="/data/overview/" class="list-group-item">View all</a>
+        <a href="/data/overview/" class="list-group-item font-weight-bold">All cities</a>
       </div>
     </div>
   </div>
-  <div id="map_pin" class="mb-4" style="height: 300px;"></div>
-</div>
-<section>
-  <h2 class="text-center mb-1 mt-4">Latest updates</h2>
-  <div class="row mb-4">
-    <div class="col-lg-4 mt-3">
-      <h3>New datasets</h3>
-      <div class="card basic-info">
-        <a href="http://" class="list-group-item">Water consumption <span class="text-dark">Cape Town</span>
-        </a>
-        <a href="http://" class="list-group-item">Electricity consumption <span class="text-dark">Cape Town</span>
-        </a>
-        <a href="http://" class="list-group-item">CO2 emissions <span class="text-dark">New York</span>
-        </a>
-        <a href="http://" class="list-group-item">Metal stock in buildings older than 20 years <span class="text-dark">Sydney</span>
-        </a>
-        <a href="http://" class="list-group-item">Crop yields by type of crop <span class="text-dark">Waterloo</span>
-        </a>
-        <a href="http://" class="list-group-item">View all datasets</a>
-      </div>
-    </div>
-    <div class="col-lg-4 mt-3">
-      <h3>New maps</h3>
-      <div class="card basic-info">
-        <a href="http://" class="list-group-item">Wastewater treatment plants <span class="text-dark">Cape Town</span>
-        </a>
-        <a href="http://" class="list-group-item">Water treatment plants <span class="text-dark">Cape Town</span>
-        </a>
-        <a href="http://" class="list-group-item">Landfill sites <span class="text-dark">      Cape Town</span>
-        </a>
-        <a href="http://" class="list-group-item">Metro stations <span class="text-dark">New York</span>
-        </a>
-        <a href="http://" class="list-group-item">Bus stops <span class="text-dark">The Hague</span>
-        </a>
-        <a href="http://" class="list-group-item">View all maps</a>
-      </div>
-    </div>
-    <div class="col-lg-4 mt-3">
-      <h3>News</h3>
-      <div class="card basic-info">
-        <a href="http://" class="list-group-item">New research on groundwater in Cape Town <span class="text-dark">Jan 1, 2020</span>
-        </a>
-        <a href="http://" class="list-group-item">New research on groundwater in Cape Town <span class="text-dark">Jan 1, 2020</span>
-        </a>
-        <a href="http://" class="list-group-item">New research on groundwater in Cape Town <span class="text-dark">Jan 1, 2020</span>
-        </a>
-        <a href="http://" class="list-group-item">New research on groundwater in Cape Town <span class="text-dark">Jan 1, 2020</span>
-        </a>
-        <a href="http://" class="list-group-item">New research on groundwater in Cape Town <span class="text-dark">Jan 1, 2020</span>
-        </a>
-        <a href="http://" class="list-group-item">View all news</a>
-      </div>
-    </div>
-  </div>
+  <div id="map_pin" class="mt-4" style="height: 300px;"></div>
 </section>
 
 <section>
-  <div class="card contribute">
-    <div class="card-body">
-      <h4 class="card-title font-weight-bold">Contribute</h4>
-      <p class="card-text">
-        This data hub is built, maintained, and expanded by people like <strong>you</strong>.
-        Join our project now.
-      </p>
-      <a class="btn btn-secondary-outline mb-2" href="#">Contribute data</a>
-      <a class="btn btn-secondary-outline mb-2" href="#">Collect photos</a>
-      <a class="btn btn-secondary-outline mb-2" href="#">Academic programmes</a>
-      <a class="btn btn-secondary-outline mb-2" href="#">Add your city</a>
+  <div class="row">
+    <div class="col-sm-6 col-lg-3 mb-4">
+      <div class="statistics-box">
+        <div class="description">Active cities</div>
+        <div class="statistic">8</div>
+        <i class="fad fa-city text-success"></i>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3 mb-4">
+      <div class="statistics-box">
+        <div class="description">Datasets</div>
+        <div class="statistic">93</div>
+        <i class="fad fa-database text-danger"></i>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3 mb-4">
+      <div class="statistics-box">
+        <div class="description">Data points</div>
+        <div class="statistic">5,394</div>
+        <i class="fad fa-dot-circle text-warning"></i>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3 mb-4">
+      <div class="statistics-box">
+        <div class="description">Contributors</div>
+        <div class="statistic">54</div>
+        <i class="fad fa-user-friends text-info"></i>
+      </div>
     </div>
   </div>
+  
+  {% include "_contribute.html" %}
 </section>
+
 <section>
-  <h2 class="text-center">Statistics</h2>
+  <h2>Latest updates</h2>
   <div class="row">
-    <div class="col-lg-3 mb-2">
-      <div class="card text-center btn btn-primary">
-        <i class="fa fa-bar-chart mt-4"></i>
-        <div class="card-body">
-          <h5 class="card-title">Active cities</h5>
-          <p class="card-text">8</p>
-        </div>
+    <div class="col-lg-4 mb-4">
+      <div class="card basic-info">
+        <div class="card-header"><i class="far fa-fw fa-database mr-2"></i> Datasets</div>
+        <a href="http://" class="list-group-item">Water consumption Cape Town</a>
+        <a href="http://" class="list-group-item">Electricity consumption Cape Town</a>
+        <a href="http://" class="list-group-item">CO2 emissions New York</a>
+        <a href="http://" class="list-group-item">Metal stock in buildings older than 20 years Sydney</a>
+        <a href="http://" class="list-group-item">Crop yields by type of crop Waterloo</a>
+        <a href="http://" class="list-group-item font-weight-bold">All datasets</a>
       </div>
     </div>
-    <div class="col-lg-3 mb-2">
-      <div class="card text-center btn btn-warning">
-        <i class="fa fa-bar-chart mt-4"></i>
-        <div class="card-body">
-          <h5 class="card-title">Data sets</h5>
-          <p class="card-text">93</p>
-        </div>
+    <div class="col-lg-4 mb-4">
+      <div class="card basic-info">
+        <div class="card-header"><i class="far fa-fw fa-globe-africa mr-2"></i>Maps</div>
+        <a href="http://" class="list-group-item">Wastewater treatment plants Cape Town</a>
+        <a href="http://" class="list-group-item">Water treatment plants Cape Town</a>
+        <a href="http://" class="list-group-item">Landfill sites Cape Town</a>
+        <a href="http://" class="list-group-item">Metro stations New York</a>
+        <a href="http://" class="list-group-item">Bus stops The Hague</a>
+        <a href="http://" class="list-group-item font-weight-bold">All maps</a>
       </div>
     </div>
-    <div class="col-lg-3 mb-2">
-      <div class="card text-center btn btn-secondary">
-        <i class="fa fa-bar-chart mt-4"></i>
-        <div class="card-body">
-          <h5 class="card-title">Data points</h5>
-          <p class="card-text">5,394</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-3 mb-2">
-      <div class="card text-center btn btn-danger">
-        <i class="fa fa-bar-chart mt-4"></i>
-        <div class="card-body">
-          <h5 class="card-title">Contributors</h5>
-          <p class="card-text">54</p>
-        </div>
+    <div class="col-lg-4">
+      <div class="card basic-info">
+        <div class="card-header"><i class="far fa-fw fa-newspaper mr-2"></i>News</div>
+        <a href="http://" class="list-group-item">New research on groundwater in Cape Town</a>
+        <a href="http://" class="list-group-item">New research on groundwater in Cape Town</a>
+        <a href="http://" class="list-group-item">New research on groundwater in Cape Town</a>
+        <a href="http://" class="list-group-item">New research on groundwater in Cape Town</a>
+        <a href="http://" class="list-group-item">New research on groundwater in Cape Town</a>
+        <a href="http://" class="list-group-item font-weight-bold">All news</a>
       </div>
     </div>
   </div>

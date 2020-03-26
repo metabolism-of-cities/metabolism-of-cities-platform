@@ -7,9 +7,11 @@
 
   {% if not header.type == "full" %}
     <h1>{{ info }}</h1>
-    <div class="breadcrumbs">
-      {{ header.breadcrumbs|safe }}
-    </div>
+    {% if False %}
+      <div class="breadcrumbs">
+        {{ header.breadcrumbs|safe }}
+      </div>
+    {% endif %}
   {% endif %}
 
   <div class="content-wrap">
@@ -31,13 +33,12 @@
     {% endif %}
 
     <article class="order-0">
-      {% if info.description %}
-        {{ info.description }}
+      {% if info.content %}
+        {{ info.content }}
       {% else %}
         {% lorem 7 p %}
       {% endif %}
     </article>
   </div>
-
 
 {% endblock %}

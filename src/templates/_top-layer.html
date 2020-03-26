@@ -101,9 +101,8 @@
       </div>
     </div>
   {% elif header.type == "image" %}
-  {% endif %}
-
-  {% if subsite.id == 51 and city %}
+    <div style="background-image: url('{{ header.image }}');height:800px;background-size:cover"></div>
+  {% elif subsite.id == 51 and city %}
     <div id="img-city" style="background-image: url('{{ header.image }}');">
       <div class="black-cover"></div>
 

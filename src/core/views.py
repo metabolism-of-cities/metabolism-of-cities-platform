@@ -33,6 +33,9 @@ from .models import *
 from django.contrib.sites.shortcuts import get_current_site
 
 from django.template import Context
+from django.forms import modelform_factory
+from django.core.mail import send_mail
+
 
 from weasyprint import HTML, CSS
 from weasyprint.fonts import FontConfiguration
@@ -269,6 +272,11 @@ def sector(request, place, sector):
     context = {
     }
     return render(request, "data/sector.html", load_specific_design(context, PAGE_ID["multiplicity"]))
+
+def dataset(request, place, dataset):
+    context = {
+    }
+    return render(request, "data/dataset.html", load_specific_design(context, PAGE_ID["multiplicity"]))
     
 
 # People
@@ -447,8 +455,9 @@ def load_baseline(request):
         { "id": 51, "title": "Cities", "parent": 19, "slug": "/data/", "position": None },
     ]
     projects = [
-        { "id": 20, "title": "Library", "parent": 19, "url": "/library/", "position": 1 },
-        { "id": 21, "title": "MultipliCity Data Hub", "parent": 19, "url": "/data/", "position": 2 },
+        { "id": 20, "title": "Library", "parent": 19, "url": "/library/", "position": 1, "image": "records/um_library.png", "content": "<p>The urban metabolism library has been one of the first projects undertaken by the Metabolism of Cities community. The goal of this project is to provide a central repository for all relevant documents and other material related to urban metabolism.</p><p>There are many research papers, theses, books, government reports, and other publications that have relevance to urban metabolism. The urban metabolism library aims to collect all of the relevant meta information (title, description, year of publication, abstract), and to provide visitors with an easy way to browse and filter the catalog. The library is constantly growing and visitors are encouraged to submit missing documents." },
+        { "id": 21, "title": "MultipliCity Data Hub", "parent": 19, "url": "/data/", "position": 2, "image": "records/datahub.png", "content": "<p>For urban metabolism researchers, obtaining data is one of the most important and time-consuming activities. This not only limits research activities, but it also creates a significant threshold for policy makers and others interested in using urban metabolism on a more practical level. The inconsistency and scattered nature of data furthermore complicate the uptake of urban metabolism tools and practices.</p><p>In 2018, the Metabolism of Cities community started a project called MultipliCity to try and take on this challenge. This project aims to develop a global network that maintains an online hub to centralize, visualize, and present datasets related to urban resource use and requirements. A network of local volunteers (students, researchers, city officials, citizens, etc) assists with the identification of relevant datasets, and the MultipliCity data hub takes care of indexing, processing, and standardizing the datasets. This allows for a large collection of in-depth data to become available to researchers and the general public, vastly improving access and allowing for more work to be done on analysis and interpretation, rather than on data collection." },
+
         { "id": 22, "title": "Stakeholders Initiative", "parent": 19, "url": "/stakeholders-initiative/", "position": 3 },
         { "id": 23, "title": "Cityloops", "parent": 19, "url": "/cityloops/", "position": 4 },
         { "id": 24, "title": "Seminar Series", "parent": 19, "url": "/seminarseries/", "position": 5 },
@@ -474,12 +483,14 @@ def load_baseline(request):
         )
     for each in projects:
         content = each["content"] if "content" in each else None
+        image = each["image"] if "image" in each else None
         Project.objects.create(
             id = each["id"],
             url = each["url"],
             title = each["title"],
             site = moc,
             content = content,
+            image = image,
         )
 
     messages.success(request, "UM, Community, Project, About pages were inserted/reset")
@@ -524,3 +535,41 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 
     return render(request, "template/blank.html")
 
+def project_form(request):
+    ModelForm = modelform_factory(Project, fields=("title", "content", "email", "url", "image"))
+    form = ModelForm(request.POST or None, request.FILES or None)
+    is_saved = False
+    if request.method == "POST":
+        if form.is_valid():
+            print(request.POST)
+            info = form.save(commit=False)
+            info.active = False
+            info.save()
+            info_id = info.id
+            messages.success(request, "Information was saved.")
+            is_saved = True
+            title = request.POST["title"]
+            user_email = request.POST["user_email"]
+            posted_by = request.POST["name"]
+            host_name = request.get_host()
+            review_link = f"{host_name}/admin/core/project/{info_id}/change/"
+            send_mail(
+                "New project created",
+f'''A new project was created, please review:
+
+Project name: {title} 
+Submitted by: {posted_by}
+Email: {user_email}
+
+Link to review: {review_link}''',
+                user_email,
+                ["info@metabolismofcities.org"],
+                fail_silently=False,
+            )
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+    context = {
+        "form": form,
+        "is_saved": is_saved
+    }
+    return render(request, "project.form.html", context)
