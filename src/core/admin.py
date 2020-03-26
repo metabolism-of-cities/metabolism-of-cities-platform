@@ -8,11 +8,11 @@ class ArticleAdmin(admin.ModelAdmin):
     search_fields = ['title', 'site']
 
     def response_change(self, request, obj):
-         if "_addanother" not in request.POST and "_continue" not in request.POST:
+        if "_addanother" not in request.POST and "_continue" not in request.POST:
             url = obj.get_absolute_url()
             return redirect(url)
-         else:
-             return super(ArticleAdmin, self).response_change(request, obj)
+        else:
+            return super(ArticleAdmin, self).response_change(request, obj)
 
     def response_add(self, request, obj, post_url_continue=None):
         if "_addanother" not in request.POST and "_continue" not in request.POST:
