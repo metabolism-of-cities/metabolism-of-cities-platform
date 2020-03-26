@@ -226,6 +226,7 @@ def project_form(request):
     is_saved = False
     if request.method == "POST":
         if form.is_valid():
+            print(request.POST)
             info = form.save(commit=False)
             info.active = False
             info.save()
@@ -251,9 +252,9 @@ Link to review: {review_link}''',
                 fail_silently=False,
             )
         else:
-            messages.error(request, 'We could not save your form, please fill out all fields')
+            messages.error(request, "We could not save your form, please fill out all fields")
     context = {
-    'form':form,
-    'is_saved':is_saved
+        "form": form,
+        "is_saved": is_saved
     }
     return render(request, "project.form.html", context)
