@@ -7,6 +7,7 @@ from stdimage.models import StdImageField
 from django.contrib.sites.models import Site
 from django.contrib.sites.managers import CurrentSiteManager
 from django.urls import reverse
+from django.forms import ModelForm
 
 class Record(models.Model):
     title = models.CharField(max_length=255)
@@ -98,4 +99,3 @@ class ArticleDesign(models.Model):
     custom_css = models.TextField(null=True, blank=True)
     def __str__(self):
         return self.article.title
-
