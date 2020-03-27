@@ -1,0 +1,91 @@
+{% extends "_base.html" %}
+{% load static %}
+{% block title %}Add research{% endblock %}
+{% block content %}
+<h2>Add research</h2>
+<div class="card">
+  <div class="card-body">
+    <form method="post">
+      <div class="form-group">
+        <label>Project Title</label>
+        <input type="text" name="project" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Researchers</label>
+        <input type="text" name="researchers" class="form-control" required>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label>Type</label>
+            <select class="custom-select">
+              <option selected disabled>Choose...</option>
+              <option>Theses</option>
+              <option>Projects</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="form-group">
+            <label>Thesis type</label>
+            <select class="custom-select">
+              <option selected disabled>Choose...</option>
+              <option>Bachelor</option>
+              <option>Master</option>
+              <option>PhD</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Institution</label>
+        <input type="text" name="institution" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Supervisor(s) / Project leader(s)</label>
+        <input type="text" name="leaders" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="message">Description</label>
+        <textarea class="form-control" id="message" rows="5" required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Target finish date</label>
+        <input type="text" name="target-date" class="form-control" required>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+         <div class="form-group">
+          <label>Start date</label>
+          <input type="date" name="date" class="form-control" required>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="form-group">
+          <label>End date</label>
+          <input type="date" name="date" class="form-control" required>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select class="custom-select">
+        <option>In progress</option>
+        <option>Finished</option>
+        <option>Cancelled</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>URL</label>
+      <input type="url" name="password" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-success" href=""><i class="fas fa-save"></i> Save</button>
+  </form>
+</div>
+</div>
+{% endblock %}
