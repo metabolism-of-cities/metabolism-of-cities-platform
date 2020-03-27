@@ -2,7 +2,7 @@ version: '3'
 
 services:  
   db:
-    image: postgres:10.4
+    image: postgres:latest
     container_name: moc_db
     environment:
        POSTGRES_HOST_AUTH_METHOD: trust
