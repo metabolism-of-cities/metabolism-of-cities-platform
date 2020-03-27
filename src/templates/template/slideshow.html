@@ -1,0 +1,73 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block title %}Slideshow{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet"  type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+
+  <style>
+    .slick-container {
+      padding: 40px;
+      color: #333;
+      background: gray;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-8 col-lg-6 slick-wrapper">
+    <div class="arrows"></div>
+    <div class="slick">
+      <div>
+        <img src="/static/img/agriculture.jpg">
+      </div>
+      <div>
+        <img src="/static/img/construction.jpg">
+      </div>
+      <div>
+        <img src="/static/img/energy.jpg">
+      </div>
+      <div>
+        <img src="/static/img/fishing.jpg">
+      </div>
+      <div>
+        <img src="/static/img/forestry.jpg">
+      </div>
+      <div>
+        <img src="https://i.imgur.com/wsXrlRx.jpg">
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.5.9/slick.min.js"></script>
+  <script>
+    $(".slick").slick({
+      dots: true,
+      infinite: true,
+      speed: 300,
+      slidesToShow: 1,
+      fade: true,
+      centerMode: true,
+      adaptiveHeight: true,
+      cssEase: "linear",
+      prevArrow: "<i class='fa fa-fw fa-caret-left prev'></i>",
+      nextArrow: "<i class='fa fa-fw fa-caret-right next'></i>",
+      appendArrows: ".arrows",
+    });
+
+    // making custom buttoms work
+    $(".slick-wrapper .prev").click(function() {
+      $(".slick").slick("slickPrev")
+    })
+    $(".slick-wrapper .next").click(function() {
+      $(".slick").slick("slickNext")
+    })
+  </script>
+{% endblock %}

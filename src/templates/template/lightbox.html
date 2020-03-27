@@ -1,0 +1,35 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block title %}Lightbox{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.css">
+{% endblock %}
+
+{% block content %}
+  {% spaceless %}
+  <div class="row lightbox gallery">
+    <div class="col-sm-6 col-md-3 col-lg-2">
+      <a href="{% static 'img/construction.jpg' %}" style="background-image: url('{% static 'img/construction.jpg' %}');" data-caption="Image caption"></a>
+    </div>
+    <div class="col-sm-6 col-md-3 col-lg-2">
+      <a href="{% static 'img/energy.jpg' %}" style="background-image: url('{% static 'img/energy.jpg' %}');" data-caption="Image caption"></a>
+    </div>
+    <div class="col-sm-6 col-md-3 col-lg-2">
+      <a href="{% static 'img/fishing.jpg' %}" style="background-image: url('{% static 'img/fishing.jpg' %}');" data-caption="Image caption"></a>
+    </div>
+    <div class="col-sm-6 col-md-3 col-lg-2">
+      <a href="{% static 'img/forestry.jpg' %}" style="background-image: url('{% static 'img/forestry.jpg' %}');" data-caption="Image caption"></a>
+    </div>
+  </div>
+  {% endspaceless %}
+{% endblock %}
+
+{% block footer %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.js"></script>
+  <script> 
+    baguetteBox.run(".lightbox");
+  </script>
+{% endblock %}

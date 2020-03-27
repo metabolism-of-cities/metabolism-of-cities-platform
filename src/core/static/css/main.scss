@@ -47,6 +47,7 @@ section {
   &:last-of-type {
     padding-bottom: 0;
   }
+
 }
 
 .main-content.container {
@@ -61,6 +62,7 @@ a {
     color: darken($primary, 20%);
     text-decoration: none;
   }
+
 }
 
 #admin-controls {
@@ -73,6 +75,7 @@ a {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
+
 }
 
 .sticky-top {
@@ -115,7 +118,9 @@ textarea.form-control:focus, input.form-control:focus, select.custom-select:focu
     .breadcrumb-item.active {
       color: $white;
     }
+
   }
+
 }
 
 nav {
@@ -138,6 +143,7 @@ nav {
     a {
       color: $dark;
     }
+
   }
 
   li.nav-item:not(:last-of-type) {
@@ -176,6 +182,7 @@ nav {
   .lead {
     font-weight: normal;
   }
+
 }
 
 // FOOTERS
@@ -205,7 +212,9 @@ footer {
         color: $light;
         width: unset;
       }
+
     }
+
   }
 
   &#sitemap {
@@ -222,7 +231,9 @@ footer {
         color: $black;
         text-decoration: none;
       }
+
     }
+
   }
 
   &#info {
@@ -240,6 +251,7 @@ footer {
         max-width: 200px;
         width: 80%;
       }
+
     }
 
     a {
@@ -249,6 +261,7 @@ footer {
         color: $white;
         text-decoration: none;
       }
+
     }
 
     i {
@@ -263,7 +276,9 @@ footer {
       font-size: 1.5rem;
       margin-right: 12px;
     }
+
   }
+
 }
 
 // BUTTONS
@@ -566,9 +581,13 @@ footer {
 }
 
 // CONTRIBUTE BOX
-.contribute {
-  color: $dark;
-  background: $light;
+.contribute.card {
+  box-shadow: $basic-shadow;
+  color: $very-light;
+  background-color: #ff9d00;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1600 800'%3E%3Cg stroke='%23000' stroke-width='66.7' stroke-opacity='0.05' %3E%3Ccircle fill='%23ff9d00' cx='0' cy='0' r='1800'/%3E%3Ccircle fill='%23fb8d17' cx='0' cy='0' r='1700'/%3E%3Ccircle fill='%23f47d24' cx='0' cy='0' r='1600'/%3E%3Ccircle fill='%23ed6e2d' cx='0' cy='0' r='1500'/%3E%3Ccircle fill='%23e35f34' cx='0' cy='0' r='1400'/%3E%3Ccircle fill='%23d85239' cx='0' cy='0' r='1300'/%3E%3Ccircle fill='%23cc453e' cx='0' cy='0' r='1200'/%3E%3Ccircle fill='%23be3941' cx='0' cy='0' r='1100'/%3E%3Ccircle fill='%23b02f43' cx='0' cy='0' r='1000'/%3E%3Ccircle fill='%23a02644' cx='0' cy='0' r='900'/%3E%3Ccircle fill='%23901e44' cx='0' cy='0' r='800'/%3E%3Ccircle fill='%23801843' cx='0' cy='0' r='700'/%3E%3Ccircle fill='%236f1341' cx='0' cy='0' r='600'/%3E%3Ccircle fill='%235e0f3d' cx='0' cy='0' r='500'/%3E%3Ccircle fill='%234e0c38' cx='0' cy='0' r='400'/%3E%3Ccircle fill='%233e0933' cx='0' cy='0' r='300'/%3E%3Ccircle fill='%232e062c' cx='0' cy='0' r='200'/%3E%3Ccircle fill='%23210024' cx='0' cy='0' r='100'/%3E%3C/g%3E%3C/svg%3E");
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 // INFOBOX WITH ICON
@@ -583,6 +602,32 @@ footer {
   margin-bottom: 1rem;
   padding: 1rem;
   font-size: 1.25rem;
+  margin: 1rem;
+}
+
+// STATISTICS BOX
+.statistics-box {
+  border-radius: .25rem;
+  box-shadow: $basic-shadow;
+  background-color: $white;
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+
+  .description {
+    font-size: 1.5rem;
+  }
+
+  .statistic {
+    font-size: 3rem;
+  }
+
+  i {
+    font-size: 7rem;
+    position: absolute;
+    right: -1rem;
+    bottom: -1rem;
+  }
 }
 
 // BADGES
@@ -671,12 +716,6 @@ a.badge-secondary:focus {
   .tl-timenav {
     background-color: $light;
   }
-
-}
-
-// CONTRIBUTE BOX
-.contribute {
-  background: $light;
 }
 
 // PHOTO GALLERY
@@ -686,15 +725,57 @@ a.badge-secondary:focus {
   background-position: center;
   border-radius: .25rem;
   display: inline-block;
-  padding-bottom: calc(25% - 1rem);
-  width: calc(25% - 1rem);
-  margin: 0 1rem 1rem 0;
+  padding-bottom: 100%;
+  width: 100%;
+}
 
-  @media (max-width:768px) {
-    padding-bottom: calc(50% - 1rem);
-    width: calc(50% - 1rem);
+// LIGHTBOX GALLERY
+#baguetteBox-overlay .full-image {
+  img {
+    border-radius: .25rem;
   }
 
+  figcaption {
+    font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif !important;
+    line-height: 2 !important;
+    font-size: 1.25rem !important;
+    background-color: $dark !important;
+    color: $very-light !important;
+  }
+}
+
+// SLICK SLIDESHOW
+.slick-wrapper {
+
+  .slick {
+    width: 100%;
+    max-height: 400px;
+
+    img {
+      max-width: 400px;
+      width: 100%;
+      object-fit: cover;
+      box-shadow: $basic-shadow;
+      border-radius: .25rem;
+      margin: auto;
+    }
+
+  }
+  .arrows {
+    text-align: center;
+    font-size: 1.5rem;
+    color: $gray;
+
+    .prev,
+    .next {
+      cursor: pointer;
+      padding: 0 1.5rem;
+
+      &:hover {
+        color: $black;
+      }
+    }
+  }
 }
 
 // RETURN BAR WHEN IN A SUBSITE
@@ -713,11 +794,13 @@ body.projects, body.single-project {
   .card i {
     margin-right: .25rem;
   }
+
 }
 
 body.single-project {
   .card-img-wrapper {
     position: relative;
+    border-radius: .25rem;
   }
 
   #partners .btn-thumbnail {
@@ -728,15 +811,18 @@ body.single-project {
 
     img {
       height: 100%;
+      border-radius: .25rem;
       max-height: 136px;
       width: 100%;
       object-fit: contain;
     }
+
   }
 
   #news img {
     width: 6rem;
   }
+
 }
 
 // CITY SUBSITE
@@ -763,6 +849,7 @@ body.city-subsite {
       color: $light;
       bottom: 1rem;
     }
+
   }
 
   .down-city-name {
@@ -784,6 +871,7 @@ body.city-subsite {
     a {
       float: left;
     }
+
   }
 
   &.scrolled-down .down-city-name {
@@ -803,8 +891,11 @@ body.city-subsite {
         color: darken($primary, 20%) !important;
         text-decoration: none !important;
       }
+
     }
+
   }
+
 }
 
 // EVENT AND NEWS LIST PAGES
@@ -820,7 +911,6 @@ body.event.list {
     object-fit: cover;
   }
 }
-
 
 // SINGLE EVENT AND NEWS PAGE
 body.event, body.news {
@@ -840,6 +930,7 @@ body.event, body.news {
   .basic-info.card {
     margin-bottom: 4rem;
   }
+
 }
 
 // GENERIC ARTICLE PAGE
@@ -860,7 +951,9 @@ body.article {
       aside {
         order: 1;
       }
+
     }
+
   }
 
   @media (min-width:992px) {
@@ -868,6 +961,7 @@ body.article {
       margin: 0 0 1rem 1rem;
       float: right;
     }
+
   }
 }
 
@@ -895,6 +989,7 @@ body.forum {
       color: $light;
       display: inline-block;
     }
+
   }
 
   .narrow-cell {

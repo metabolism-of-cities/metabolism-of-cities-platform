@@ -11,6 +11,8 @@
       section#team{display:block}
     </style>
   {% endif %}
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.css">
 {% endblock %}
 
 {% block content %}
@@ -218,16 +220,26 @@
 
     <section>
       <h3>Photos</h3>
-      {% spaceless %}
-      <div class="gallery">
-        <a href="" style="background-image: url('{% static 'img/construction.jpg' %}');"></a>
-        <a href="" style="background-image: url('{% static 'img/energy.jpg' %}');"></a>
-        <a href="" style="background-image: url('{% static 'img/fishing.jpg' %}');"></a>
-        <a href="" style="background-image: url('{% static 'img/forestry.jpg' %}');"></a>
-        <a href="" style="background-image: url('https://metabolismofcities.org/media/photos/Brussels.large.jpg');"></a>
-        <a href="" style="background-image: url('https://metabolismofcities.org/media/photos/Beijing.large.jpeg');"></a>
+      <div class="row lightbox gallery">
+        <div class="col-6 col-md-4 col-lg-3 mb-4">
+          <a href="{% static 'img/construction.jpg' %}" style="background-image: url('{% static 'img/construction.jpg' %}');" data-caption="Image caption"></a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3 mb-4">
+          <a href="{% static 'img/energy.jpg' %}" style="background-image: url('{% static 'img/energy.jpg' %}');" data-caption="Image caption"></a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3 mb-4">
+          <a href="{% static 'img/fishing.jpg' %}" style="background-image: url('{% static 'img/fishing.jpg' %}');" data-caption="Image caption"></a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3 mb-4">
+          <a href="{% static 'img/forestry.jpg' %}" style="background-image: url('{% static 'img/forestry.jpg' %}');" data-caption="Image caption"></a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3 mb-4">
+          <a href="https://metabolismofcities.org/media/photos/Brussels.large.jpg" style="background-image: url('https://metabolismofcities.org/media/photos/Brussels.large.jpg');" data-caption="Image caption"></a>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3 mb-4">
+          <a href="https://metabolismofcities.org/media/photos/Beijing.large.jpeg" style="background-image: url('https://metabolismofcities.org/media/photos/Beijing.large.jpeg');" data-caption="Image caption"></a>
+        </div>
       </div>
-      {% endspaceless %}
     </section>
 
     <section>
@@ -301,5 +313,11 @@
   </div>
 </div>
 
+{% endblock %}
 
+{% block footer %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.js"></script>
+  <script> 
+    baguetteBox.run(".lightbox");
+  </script>
 {% endblock %}

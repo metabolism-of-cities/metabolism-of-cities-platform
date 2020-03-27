@@ -33,6 +33,9 @@ from .models import *
 from django.contrib.sites.shortcuts import get_current_site
 
 from django.template import Context
+from django.forms import modelform_factory
+from django.core.mail import send_mail
+
 
 from weasyprint import HTML, CSS
 from weasyprint.fonts import FontConfiguration
@@ -387,6 +390,32 @@ def pdf(request):
 
     return response
 
+#MOOC
+
+def mooc(request, id):
+    mooc = get_object_or_404(MOOC, pk=id)
+    modules = mooc.modules.all().order_by("id")
+
+    context = {
+        "mooc": mooc,
+        "modules": modules,
+    }
+
+    return render(request, "mooc/index.html", context)
+
+def mooc_module(request, id, module):
+    mooc = get_object_or_404(MOOC, pk=id)
+    module = get_object_or_404(MOOCModule, pk=module)
+    questions = module.questions.all()
+
+    context = {
+        "mooc": mooc,
+        "module": module,
+        "questions": questions,
+    }
+
+    return render(request, "mooc/module.html", context)
+
 def load_baseline(request):
     moc = Site.objects.get(pk=1)
     moc.name = "Metabolism of Cities"
@@ -532,3 +561,41 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 
     return render(request, "template/blank.html")
 
+def project_form(request):
+    ModelForm = modelform_factory(Project, fields=("title", "content", "email", "url", "image"))
+    form = ModelForm(request.POST or None, request.FILES or None)
+    is_saved = False
+    if request.method == "POST":
+        if form.is_valid():
+            print(request.POST)
+            info = form.save(commit=False)
+            info.active = False
+            info.save()
+            info_id = info.id
+            messages.success(request, "Information was saved.")
+            is_saved = True
+            title = request.POST["title"]
+            user_email = request.POST["user_email"]
+            posted_by = request.POST["name"]
+            host_name = request.get_host()
+            review_link = f"{host_name}/admin/core/project/{info_id}/change/"
+            send_mail(
+                "New project created",
+f'''A new project was created, please review:
+
+Project name: {title} 
+Submitted by: {posted_by}
+Email: {user_email}
+
+Link to review: {review_link}''',
+                user_email,
+                ["info@metabolismofcities.org"],
+                fail_silently=False,
+            )
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+    context = {
+        "form": form,
+        "is_saved": is_saved
+    }
+    return render(request, "project.form.html", context)

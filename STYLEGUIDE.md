@@ -36,6 +36,12 @@ We should define a workflow.
 https://nvie.com/posts/a-successful-git-branching-model/ ?
 Maybe a slightly simplified version of that.
 
+## Comments
+
+Help out others and your future self by adding concise, useful comments. This includes explanations of what parts of code are for, how it interacts with other code, links to relevant documentation, links that have helped you write the code, etc.
+
+This is not a complete list. Use your own judgement, but remember that it's possible others will be reading your code without prior knowledge of the project, the libraries you used, or your intentions. Also keep in mind that you will absolutely forget things you have written. Copy-pasting the URL of a relevant StackOverflow answer you used to solve a problem takes 3 seconds. Finding that specific answer again in the future can take an hour. Write comments to help yourself as much as others.
+
 ## Front-end guidelines
 
 This is a list of front-end specific guidelines. Please keep in mind that as the project progresses, some guidelines will be added to the list, some will change, and perhaps a few will be removed.

@@ -18,6 +18,8 @@ urlpatterns = [
     # Projects
     path("projects/<int:id>/", views.project, name="project"),
     path("projects/", views.projects, name="projects"),
+    path("pdf/", views.pdf),
+    path("projects/create/", views.project_form, name="project_form"),
 
     # Urban metabolism
     path("urbanmetabolism/", views.article_list, { "id": 1 }, name="um"),
@@ -65,5 +67,9 @@ urlpatterns = [
     # Temporary
     path("baseline/", views.load_baseline),
     path("pdf/", views.pdf),
+
+    # MOOC
+    path("mooc/<int:id>/<int:module>/overview", views.mooc_module),
+    path("mooc/<int:id>/overview", views.mooc),
 
 ]

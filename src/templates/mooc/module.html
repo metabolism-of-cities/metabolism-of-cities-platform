@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ module.name }} | {{ mooc.name }}</title>
+</head>
+<body>
+
+<h1>{{ module.name }}</h1>
+
+<ul>
+  {% for question in questions %}
+  <li>{{ question.question }}</li>
+  {% endfor %}
+</ul>
+</body>
+</html>
