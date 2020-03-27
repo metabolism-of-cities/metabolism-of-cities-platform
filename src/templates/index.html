@@ -32,6 +32,17 @@
     (pwd = postgres)
   </div>
 
+  <div class="alert alert-warning">
+    <strong>Note!</strong>
+    If after March 27 you find an issue when trying to migrate, please run this:
+    <pre>
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+    </pre>
+    Please run this from <a href="http://localhost:8080/?pgsql=db&username=postgres&db=postgres&ns=public&sql=DROP%20SCHEMA%20public%20CASCADE%3B%0ACREATE%20SCHEMA%20public%3B%0A">here</a>
+    (pwd = postgres)
+  </div>
+
 {% endblock %}
 
 

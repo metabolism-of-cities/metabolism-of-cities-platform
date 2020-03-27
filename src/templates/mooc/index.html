@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ mooc.name }}</title>
+</head>
+<body>
+
+<h1>{{ mooc.name }}</h1>
+
+<p>{{ mooc.description }}</p>
+
+<ul>
+  {% for module in modules %}
+    <li>
+      <a href="/mooc/{{ mooc.id }}/{{ module.id }}/overview">
+        {{ module.name }}
+      </a>
+      <ul>
+        {% for module_questions in module.mooc_mq_module.all|dictsort:"position" %}
+        <li>{{ module_questions.question.question }}</li>
+        {% endfor %}
+      </ul>
+    </li>
+  {% endfor %}
+</ul>
+
+</body>
+</html>

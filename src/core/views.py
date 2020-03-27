@@ -390,6 +390,32 @@ def pdf(request):
 
     return response
 
+#MOOC
+
+def mooc(request, id):
+    mooc = get_object_or_404(MOOC, pk=id)
+    modules = mooc.modules.all().order_by("id")
+
+    context = {
+        "mooc": mooc,
+        "modules": modules,
+    }
+
+    return render(request, "mooc/index.html", context)
+
+def mooc_module(request, id, module):
+    mooc = get_object_or_404(MOOC, pk=id)
+    module = get_object_or_404(MOOCModule, pk=module)
+    questions = module.questions.all()
+
+    context = {
+        "mooc": mooc,
+        "module": module,
+        "questions": questions,
+    }
+
+    return render(request, "mooc/module.html", context)
+
 def load_baseline(request):
     moc = Site.objects.get(pk=1)
     moc.name = "Metabolism of Cities"
