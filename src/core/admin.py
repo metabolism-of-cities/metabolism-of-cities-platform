@@ -3,6 +3,11 @@ from .models import *
 from django.shortcuts import redirect
 # Register your models here.
 
+
+class ArticleDesign(admin.ModelAdmin):
+    class Media:
+        js = ("js/scripts.js",)
+
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ['title', 'site', 'parent', 'active']
     search_fields = ['title', 'site']
@@ -20,7 +25,6 @@ class ArticleAdmin(admin.ModelAdmin):
             return redirect(url)
         else:
             return super(ArticleAdmin, self).response_add(request, obj, post_url_continue=None)
-
 
 admin.site.register(Record)
 admin.site.register(Event)
