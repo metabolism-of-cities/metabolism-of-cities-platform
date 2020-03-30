@@ -1,0 +1,33 @@
+SUBLIME TEXT
+============
+
+https://www.sublimetext.com/docs/3/
+https://sublime-text-unofficial-documentation.readthedocs.io/en/latest/index.html
+
+## Settings
+
+- Set spaces rather than tabs
+- Set a tabsize of two spaces
+- Add/change shortcuts
+
+## Package control
+
+- Using package control
+- Finding useful packages
+- Installing packages
+
+## Shortcuts
+
+- Indentation
+- Editing on multiple places
+- Editing on multiple lines
+- Creating comments
+- Moving to front/end of lines
+- Autocompletion
+- Changing text case
+- Search, search/replace, search in folder
+
+## Other useful things
+
+- Using columns/rows to open files
+- Having the same file open twice to look at different parts
