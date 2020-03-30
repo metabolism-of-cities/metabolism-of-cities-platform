@@ -9,7 +9,7 @@
   <br>
   <button class="btn btn-primary mb-2 sweetalert create-account"><i class="fas fa-user-plus"></i> Create account</button>
   <br>
-  <button class="btn btn-primary mb-2 sweetalert write-message"><i class="fas fa-pencil"></i> Write message</button>
+  <button class="btn btn-primary mb-2 sweetalert enter-name"><i class="fas fa-pencil"></i> Enter your name</button>
 {% endblock %}
 
 {% block footer %}
@@ -86,39 +86,29 @@
       });
     });
 
-    // adding content other than a title and text, in this case an input
+    // adding content other than a title and text, in this case an input, the value of which can be used for any other function
+    // note the use of `` quotes, these are necessary to make ${name} work
     // https://sweetalert.js.org/docs/#content
-    $(".sweetalert.write-message").click(function(){
+    $(".sweetalert.enter-name").click(function(){
       swal({
-        title: "Write your message",
+        title: "Your name",
         closeOnClickOutside: false,
         closeOnEsc: false,
         content: {
-          element: "textarea",
+          element: "input",
           attributes: {
-            placeholder: "Your message",
+            placeholder: "Your name",
           },
         },
-        buttons: {
-          cancel: true,
-          confirm: {
-            text: "Submit",
-            visible: true,
-            closeModal: true
-          }
-        }
+        confirm: "Submit",
       })
-      .then((value) => {
-        switch (value) {
-       
-          case "home":
-            window.alert("go to the homepage")
-            // any other function
-            break;
-        }
-      });
-      .then((value) => {
-        window.alert(`Send message to server: ${value}`)
+      .then((name) => {
+        if (!name) {
+          window.alert("no name given");
+          throw null;
+        };
+
+        window.alert(`Send name to server: ${name}`)
       });
     });
   </script>
