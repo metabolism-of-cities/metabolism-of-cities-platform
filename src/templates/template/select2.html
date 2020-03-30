@@ -1,0 +1,80 @@
+{% extends "_base.html" %}
+
+{% block title %}Select2{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.3.2/dist/select2-bootstrap4.min.css"/>
+{% endblock %}
+
+{% block content %}
+<h2>Select2</h2>
+<div class="card basic-info">
+  <div class="card-body">
+    <form method="post">
+      <h3 class="mb-3">Basic select2</h3>
+      <div class="form-group">
+        <select class="select-with-arrow custom-select" name="state">
+          <option value="AB">........</option>
+          <option value="HI">Alabama</option>
+          <option value="WY">Wyoming</option>
+        </select>
+        <h3 class="mb-3 mt-3">Select Multiple</h3>
+        <select class="select-multiple form-control" name="states[]" multiple="multiple">
+          <option value="AL">Alabama</option>
+          <option value="WY">Wyoming</option>
+        </select>
+        <h3 class="mb-3 mt-3">Basic select2 disable options</h3>
+        <select class="select-disabled custom-select">
+          <option value="one">First</option>
+          <option value="two" disabled="disabled">Second (disabled)</option>
+          <option value="three">Third</option>
+        </select>
+        <h3 class="mb-3 mt-3">Select Multiple limited selections</h3>
+        <select class="select-multiple-limit form-control" name="states[]" multiple="multiple">
+          <option value="AL">Alabama</option>
+          <option value="WY">Wyoming</option>
+          <option value="Cb">Alabama</option>
+          <option value="QZ">Wyoming</option>
+          <option value="OP">Alabama</option>
+          <option value="WY">Wyoming</option>
+        </select>
+        <h3 class="mb-3 mt-3">Basic select groups</h3>
+        <select class="select-groups form-control">
+          <optgroup label="Group Name one">
+            <option>Nested option</option>
+          </optgroup>
+          <optgroup label="Group Name two">
+            <option>Nested option two</option>
+          </optgroup>
+          <optgroup label="Group Name three">
+            <option>Nested option three</option>
+          </optgroup>
+        </select>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+<script>
+  $(".select-with-arrow").select2({
+    theme: "bootstrap4",
+  });
+  $(".select-multiple").select2({
+    theme: "bootstrap4",
+  });
+  $(".select-disabled").select2({
+    theme: "bootstrap4",
+  });
+  $(".select-groups").select2({
+    theme: "bootstrap4",
+  });
+  $(".select-multiple-limit").select2({
+    maximumSelectionLength: 2,
+    theme: "bootstrap4",
+  });
+</script>
+{% endblock %}
