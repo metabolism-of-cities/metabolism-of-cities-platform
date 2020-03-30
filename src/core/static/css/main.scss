@@ -507,6 +507,62 @@ footer {
   }
 }
 
+// SWEET ALERT
+.swal-modal {
+  border-radius: .25rem;
+  box-shadow: $basic-shadow;
+}
+
+.swal-footer {
+  background-color: $very-light;
+  border-top: 1px solid $light;
+}
+
+.swal-button {
+  background-color: $primary;
+  color: $white;
+  border-radius: .25rem;
+  padding: .375rem .75rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  font-size: 1rem;
+  line-height: 1.5;
+
+  &:hover {
+    border-color: darken($primary, 5%) !important;
+    background-color: darken($primary, 5%) !important;
+  }
+
+  &:focus {
+    box-shadow: none !important;
+  }
+
+  &:active, &:focus {
+    background-color: $primary !important;
+  }
+
+  &.swal-button--cancel {
+    background-color: transparent !important;
+    color: $primary !important;
+
+    &:hover {
+      background-color: transparentize($primary, 0.9) !important;
+      color: $primary !important;
+    }
+  }
+
+  &.swal-button--danger {
+    background-color: #dc3545 !important;
+
+    &:hover {
+      background-color: #c82333 !important;
+    }
+
+    &:focus {
+      background-color: #c82333 !important;
+    }
+  }
+}
+
 // THUMBNAIL BUTTON
 .btn-thumbnail {
   @extend %raised-hover;

@@ -3,137 +3,122 @@
 {% block title %}Sweetalerts{% endblock %}
 
 {% block content %}
-  <button id="basic">Show basic Sweetalert</button>
-  <button id="title_and_content">Title & content</button>
-  <button id="success">succes tik 1</button>
-  <button id="successobject">succes tik 2</button>
-  <button id="success_button">Show custom button</button>
-  <button id="dangermode">Show danger mode</button>
-  <button id="switchcondition">Show basic Sweetalert</button>
-  <button id="seach_movie">show to search</button>
-  <button id="inputvalue">show write</button>
+  <button class="btn btn-primary mb-2 sweetalert send-message"><i class="fad fa-paper-plane"></i> Send message</button>
+  <br>
+  <button class="btn btn-danger mb-2 sweetalert delete-file"><i class="fas fa-trash"></i> Delete file</button>
+  <br>
+  <button class="btn btn-primary mb-2 sweetalert create-account"><i class="fas fa-user-plus"></i> Create account</button>
+  <br>
+  <button class="btn btn-primary mb-2 sweetalert write-message"><i class="fas fa-pencil"></i> Write message</button>
 {% endblock %}
 
 {% block footer %}
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script>
-    $("#basic").click(function(){
-      swal("Hello world!");
-    });
-    $("#title_and_content").click(function(){
-      swal("Here's the title!", "...and here's the text!");
-    });
-    $("#success").click(function(){
-      swal("Good job!", "You clicked the button!", "success");
-    });
-    $("#successobject").click(function(){
+  <script>
+    // sweet alert general documentation: https://sweetalert.js.org/docs/
+    
+    // an simple example with a title, some text, and an icon
+    // options for the icon are "warning", "error", "success", "info"
+    // https://sweetalert.js.org/docs/#icon
+    $(".sweetalert.send-message").click(function(){
       swal({
-        title: "Good job!",
-        text: "You clicked the button!",
+        title: "Message sent",
+        text: "Your message has been sent. We'll get back to you as soon as possible",
         icon: "success",
       });
     });
-    $("#success_button").click(function(){
+
+    // two buttons, one to cancel, the other to confirm the action
+    // note the dangerMode setting; set this to true to make the confirmation button red rather than the default colour
+    // https://sweetalert.js.org/docs/#buttons
+    $(".sweetalert.delete-file").click(function(){
       swal({
-        title: "Good job!",
-        text: "You clicked the button!",
-        icon: "success",
-        button: "Aww yiss!",
-      });
-    });
-    $("#dangermode").click(function(){
-      swal({
-        title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover this imaginary file!",
+        title: "Delete file",
+        text: "Are you sure you want to delete this file?",
         icon: "warning",
-        buttons: true,
         dangerMode: true,
-      })
-      .then((willDelete) => {
-        if (willDelete) {
-          swal("Poof! Your imaginary file has been deleted!", {
-            icon: "success",
-          });
-        } else {
-          swal("Your imaginary file is safe!");
+        buttons: {
+          cancel: true,
+          confirm: {
+            text: "Delete",
+            value: true,
+            visible: true,
+            closeModal: true
+          }
         }
       });
     });
-    $("#switchcondition").click(function(){
-      swal("A wild Pikachu appeared! What do you want to do?", {
+
+    // adding custom functions to buttons
+    // also note closeOnClickOutside and closeOnEsc; set these to true to force users to make an options, the modal can't be closed without the buttons
+    // https://sweetalert.js.org/docs/#buttons
+    $(".sweetalert.create-account").click(function(){
+      swal({
+        title: "Your account has been created!",
+        text: "What would you like to do now?",
+        icon: "success",
+        closeOnClickOutside: false,
+        closeOnEsc: false,
         buttons: {
-          cancel: "Run away!",
-          catch: {
-            text: "Throw Pokéball!",
-            value: "catch",
+          home: {
+            text: "MoC homepage",
+            value: "home",
           },
-          defeat: true,
+          account: {
+            text: "Your account",
+            value: "account",
+          }
         },
       })
       .then((value) => {
         switch (value) {
        
-          case "defeat":
-            swal("Pikachu fainted! You gained 500 XP!");
+          case "home":
+            window.alert("go to the homepage")
+            // any other function
             break;
        
-          case "catch":
-            swal("Gotcha!", "Pikachu was caught!", "success");
+          case "account":
+            window.alert("go to account page")
+            // any other function
             break;
-       
-          default:
-            swal("Got away safely!");
         }
       });
     });
-    $("#seach_movie").click(function(){
+
+    // adding content other than a title and text, in this case an input
+    // https://sweetalert.js.org/docs/#content
+    $(".sweetalert.write-message").click(function(){
       swal({
-        text: 'Search for a movie. e.g. "La La Land".',
-        content: "input",
-        button: {
-          text: "Search!",
-          closeModal: false,
+        title: "Write your message",
+        closeOnClickOutside: false,
+        closeOnEsc: false,
+        content: {
+          element: "textarea",
+          attributes: {
+            placeholder: "Your message",
+          },
         },
-      })
-      .then(name => {
-        if (!name) throw null;
-       
-        return fetch(`https://itunes.apple.com/search?term=${name}&entity=movie`);
-      })
-      .then(results => {
-        return results.json();
-      })
-      .then(json => {
-        const movie = json.results[0];
-       
-        if (!movie) {
-          return swal("No movie was found!");
+        buttons: {
+          cancel: true,
+          confirm: {
+            text: "Submit",
+            visible: true,
+            closeModal: true
+          }
         }
-       
-        const name = movie.trackName;
-        const imageURL = movie.artworkUrl100;
-       
-        swal({
-          title: "Top result:",
-          text: name,
-          icon: imageURL,
-        });
-      })
-      .catch(err => {
-        if (err) {
-          swal("Oh noes!", "The AJAX request failed!", "error");
-        } else {
-          swal.stopLoading();
-          swal.close();
-        }
-      });
-    });
-    $("#inputvalue").click(function(){
-      swal("Write something here:", {
-        content: "input",
       })
       .then((value) => {
-        swal(`You typed: ${value}`);
+        switch (value) {
+       
+          case "home":
+            window.alert("go to the homepage")
+            // any other function
+            break;
+        }
+      });
+      .then((value) => {
+        window.alert(`Send message to server: ${value}`)
       });
     });
   </script>
