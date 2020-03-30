@@ -1,0 +1,57 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block title %}Thesis{% endblock %}
+
+{% block content %}
+<section>
+  <h1>Material and energy flows through the urban (eco)system of San Luis Potosí, México</h1>
+  <div class="row">
+    <div class="col-lg-7 col-xl-8">
+      <p>This is a master thesis research project aiming at the creation of a first general model of the urban metabolism of San Luis Potosí (SLP), a one million inhabitant and rapidly growing city in central Mexico.</p>
+      <p>SLP's economy is increasingly turning towards manufacturing and industry, and away from mining and agriculture. The city attracts local and regional migration and national and foreign investment, and its growth has for decades exceeded urban planning capacities. As to data and stastiscal information, there is no central database where one can consult urban-related data for any city in Mexico, and in many cases even sectorial data is scattered and is of difficult access. Therefore, this excercise will result beneficial for subsequent research as well as for decision makers, as a cross-sectorial, multi disciplinary database will be gathered and made available for the first time in this city (and in any other in Mexico). The data gathering process will also allow for the the reporting of data gaps and further research opportunities.</p>
+      <p>Besides the general characterization of the urban metabolism and the building of the general model, some crucial flows will be quantified, using available data: water, energy and unprocessed food products, as well as the interlinking flows between them. A first approximation of the overall environmental burden of the city on its region, and on potential leverage points to intervene the system to steer it towards a more sustainabile behaviour will also be provided.</p>
+    </div>
+    <div class="col-lg-5 col-xl-4">
+      <div class="card">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <i class="far fa-fw fa-microscope mb-1 mr-1" aria-hidden="true"></i> Researcher(s)
+            <br>
+            <a class="btn btn-sm btn-primary-outline mt-1" href="">Lucia Benavides</a>
+          </li>
+          <a href="mailto:lasemillaelectrica@gmail.com" class="list-group-item">
+            <i class="far fa-envelope fa-fw mr-1"></i> lasemillaelectrica@gmail.com
+          </a>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-glasses-alt mb-1 mr-1" aria-hidden="true"></i> Supervisor(s)
+            <br>
+            <a class="btn btn-sm btn-primary-outline mt-1" href="">Dr. Johannes Hamhaber (TH Köln)</a>
+            <a class="btn btn-sm btn-primary-outline mt-1" href="">Dr. Alfredo Ávila (UASLP)</a>
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-university fa-fw mr-1"></i> UASLP (México) & TH-Köln (Germany)
+          </li>
+          <li class="list-group-item table-item">
+            <div><i class="far fa-fw fa-calendar-day mr-1"></i> Start date</div>
+            <div>01 February 2017</div>
+          </li>
+          <li class="list-group-item table-item">
+            <div><i class="far fa-fw fa-calendar-check mr-1"></i> End date</div>
+            <div>01 August 2017</div>
+          </li>
+          <li class="list-group-item table-item">
+            <div><i class="far fa-fw fa-check mr-1"></i> Status</div>
+            <div>Completed</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  {% include "_contribute.html" %}
+</section>
+{% endblock %}
