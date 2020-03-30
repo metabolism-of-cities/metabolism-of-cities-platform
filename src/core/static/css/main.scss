@@ -807,7 +807,18 @@ body.projects, body.single-project {
   .card i {
     margin-right: .25rem;
   }
+}
 
+body.projects {
+  .single-project.hidden {
+    display: none;  
+  }
+
+  .no-results {
+    &:not(.visible) {
+        display: none;
+    }
+  }
 }
 
 body.single-project {

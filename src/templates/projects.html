@@ -18,18 +18,18 @@
     <input type="text" class="form-control" placeholder="Search by project title...">
   </div>
   <div class="col-md-6 mb-2">
-    <select class="custom-select">
-      <option selected>Filter by category</option>
-      <option value="1">Seminars</option>
-      <option value="2">Conferences</option>
-      <option value="3">Something else</option>
+    <select class="type-filter custom-select">
+      <option value="all" selected>Filter by category</option>
+      <option value="seminar">Seminars</option>
+      <option value="conference">Conferences</option>
+      <option value="other">Something else</option>
     </select>
   </div>
 </div>
 
 <div class="row">
   {% for each in PROJECTS %}
-    <div class="col-xl-4 col-md-6 mb-4">
+    <div class="col-xl-4 col-md-6 mb-4 single-project" data-type="seminar">
       <a class="card btn-card" href="{{ each.get_absolute_url }}">
         {% if each.image %}
           <img class="card-img-top" src="{{ each.image.url }}" alt="" />
@@ -58,7 +58,54 @@
   {% endfor %}
 </div>
 
+<div class="card no-results">
+  <div class="card-body text-center">
+    <h2 class="my-4"><i class="fad fa-search"></i> No projects found</h2>
+    <button class="btn btn-lg btn-primary clear-filter my-4">Show all projects</button>
+  </div>
+</div>
+
 {% endblock %}
 
 {% block footer %}
+<script>
+  // function to make type dropdown work - checks data-type on single-project
+  function typeFilter() {
+    $(".single-project").addClass("hidden");
+
+    let value = $(".type-filter").val();
+    if (value == "all") {
+      $(".single-project").removeClass("hidden");
+    } else {
+      $(".single-project[data-type='" + value + "']").removeClass("hidden");
+    }
+
+    let projectCount = $(".single-project:not(.hidden)").length;
+    console.log(projectCount);
+    if (projectCount == 0) {
+      $(".no-results").addClass("visible");
+    } else {
+      $(".no-results").removeClass("visible");
+    }
+  }
+
+  $(".type-filter").change(function() {
+    typeFilter()
+  })
+
+  // function to clear filter - must also clear search once that works
+  function clearFilter() {
+    $(".type-filter").val("all");
+    typeFilter();
+  }
+
+  // clear filter on button click
+  $(".clear-filter").click(function() {
+    clearFilter();
+  })
+
+  // run filter at start in case dropdown is already set after refresh
+  typeFilter()
+
+</script>
 {% endblock %}
