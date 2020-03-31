@@ -1,3 +1,3 @@
-$(function(){
-    alert("loading...");
+$(document).ready(function() {
+    $('.field-article').addClass("hide");
 });

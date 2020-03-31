@@ -4,10 +4,6 @@ from django.shortcuts import redirect
 # Register your models here.
 
 
-class ArticleDesign(admin.ModelAdmin):
-    class Media:
-        js = ("js/scripts.js",)
-
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ['title', 'site', 'parent', 'active']
     search_fields = ['title', 'site']
@@ -26,11 +22,19 @@ class ArticleAdmin(admin.ModelAdmin):
         else:
             return super(ArticleAdmin, self).response_add(request, obj, post_url_continue=None)
 
+class ArticleDesignAdmin(admin.ModelAdmin):
+    class Media:
+        css = {
+            "all": ("css/styles.css",)
+        }
+        js = ("js/scripts.js",)
+
+
 admin.site.register(Record)
 admin.site.register(Event)
 admin.site.register(News)
 admin.site.register(Article, ArticleAdmin)
-admin.site.register(ArticleDesign)
+admin.site.register(ArticleDesign, ArticleDesignAdmin)
 admin.site.register(People)
 admin.site.register(Video)
 admin.site.register(Project)
