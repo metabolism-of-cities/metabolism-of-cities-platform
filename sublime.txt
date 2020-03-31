@@ -26,6 +26,8 @@ https://sublime-text-unofficial-documentation.readthedocs.io/en/latest/index.htm
 - Autocompletion
 - Changing text case
 - Search, search/replace, search in folder
+- Search for and open file
+- Toggle word wrap
 
 ## Other useful things
 
