@@ -7,20 +7,6 @@
 {% endblock %}
 {% block content %}
 
-<div class="row mb-4">
-  <div class="col-md-6 mb-2">
-    <input type="text" class="form-control" placeholder="Search by event name...">
-  </div>
-  <div class="col-md-6 mb-2">
-    <select class="custom-select">
-      <option selected>Filter by category</option>
-      <option value="1">Seminars</option>
-      <option value="2">Conferences</option>
-      <option value="3">Something else</option>
-    </select>
-  </div>
-</div>
-
 <section>
   <h2>Upcoming events</h2>
   <div class="row">
@@ -33,10 +19,13 @@
         </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item">
-            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> New York, USA
+            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> New York, United States
           </li>
           <li class="list-group-item">
             <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 16 March 2020 - 22 March 2020
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> Seminar
           </li>
         </ul>
       </a>
@@ -50,10 +39,13 @@
         </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item">
-            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> Johannesburg, S.A
+            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> Johannesburg, South Africa
           </li>
           <li class="list-group-item">
             <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 16 March 2020 - 22 March 2020
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> Conference
           </li>
         </ul>
       </a>
@@ -67,10 +59,13 @@
         </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item">
-            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> Cape Town, S.A
+            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> Cape Town, South Africa
           </li>
           <li class="list-group-item">
             <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 16 March 2020 - 22 March 2020
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> Conference
           </li>
         </ul>
       </a>
@@ -78,57 +73,193 @@
   </div>
 </section>
 
-<section>
-  <h2>Past events</h2>
-  <div class="row">
-    <div class="col-md-6 col-lg-4 mb-4">
-      <a class="card btn-card" href="#">
-        <img src="https://imgur.com/DZlQjTP.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title mb-0">Smart Waste Portugal 2019 Conference - A Circular Future</h5>
-        </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> Cape Town, S.A
-          </li>
-          <li class="list-group-item">
-            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 16 March 2019 - 22 March 2019
-          </li>
-        </ul>
-      </a>
+<section id="event-list">
+  <h2>Events archive</h2>
+  <input type="text" class="form-control search" placeholder="Search by event name...">
+
+  <div class="row my-2 filters">
+    <div class="col-md-4 mb-2">
+      <select class="custom-select" data-type="event-category">
+        <option value="all" selected>All categories</option>
+        <option value="Seminar">Seminars</option>
+        <option value="Conference">Conferences</option>
+        <option value="Something else">Something else</option>
+      </select>
     </div>
-    <div class="col-md-6 col-lg-4 mb-4">
-      <a class="card btn-card" href="#">
-        <img src="https://imgur.com/Wtp3vGa.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title mb-0">Research to Action: The Science of Drawdown</h5>
-        </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> The Hague, the Netherlands
-          </li>
-          <li class="list-group-item">
-            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 16 March 2019 - 22 March 2019
-          </li>
-        </ul>
-      </a>
+    <div class="col-md-4 mb-2">
+      <select class="custom-select" data-type="event-year">
+        <option value="all" selected>Anytime</option>
+        <option value="2020">2020</option>
+        <option value="2019">2019</option>
+        <option value="2018">2018</option>
+      </select>
     </div>
-    <div class="col-md-6 col-lg-4 mb-4">
+    <div class="col-md-4 mb-2">
+      <select class="custom-select" data-type="event-location">
+        <option value="all" selected>Any location</option>
+        <option value="Cape Town">Cape Town</option>
+        <option value="The Hague">The Hague</option>
+        <option value="Valencia">Valencia</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row list">
+    <div class="col-md-6 col-lg-4 mb-4 single-event">
       <a class="card btn-card" href="#">
         <img src="https://imgur.com/FUmqTuy.jpg" class="card-img-top" alt="...">
         <div class="card-body">
-          <h5 class="card-title mb-0">International Conference on Sustainable Development</h5>
+          <h5 class="card-title event-name mb-0">International Conference on Sustainable Development</h5>
         </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item">
-            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> Valencia, Spain
+            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> <span class="event-location">Valencia</span>, Spain
           </li>
           <li class="list-group-item">
-            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 16 March 2019 - 22 March 2019
+            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i><span class="event-year" hidden>2020</span> 16 March 2020 - 22 March 2020
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> <span class="event-category">Seminar</span>
+          </li>
+        </ul>
+      </a>
+    </div>
+    <div class="col-md-6 col-lg-4 mb-4 single-event">
+      <a class="card btn-card" href="#">
+        <img src="https://imgur.com/DZlQjTP.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title event-name mb-0">Smart Waste Portugal 2019 Conference - A Circular Future</h5>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> <span class="event-location">Cape Town</span>, South Africa
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i><span class="event-year" hidden>2019</span> 16 March 2019 - 22 March 2019
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> <span class="event-category">Seminar</span>
+          </li>
+        </ul>
+      </a>
+    </div>
+    <div class="col-md-6 col-lg-4 mb-4 single-event">
+      <a class="card btn-card" href="#">
+        <img src="https://imgur.com/Wtp3vGa.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title event-name mb-0">Research to Action: The Science of Drawdown</h5>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> <span class="event-location">The Hague</span>, the Netherlands
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i><span class="event-year" hidden>2018</span> 16 March 2018 - 22 March 2018
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> <span class="event-category">Conference</span>
           </li>
         </ul>
       </a>
     </div>
   </div>
+
+  <div class="card no-results">
+    <div class="card-body text-center">
+      <h2 class="my-4"><i class="fad fa-search"></i> No events found</h2>
+      <button class="btn btn-lg btn-primary clear-filter my-4">Show all events</button>
+    </div>
+  </div>
 </section>
+{% endblock %}
+
+{% block footer %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+<script>
+  var listOptions = {
+      valueNames: ["event-name", "event-category", "event-year", "event-location"]
+  };
+
+  var eventList = new List("event-list", listOptions);
+
+  // filters
+  // basic function to check if item matches filter
+  function eventFilter(type, value) {
+    if (value != "all") {
+      eventList.filter(function(item) {
+        if (item.values()[type] != value) {
+          item.values({inFilter: false})
+        }
+      });
+    }
+  }
+
+  // showing all items that match filters
+  function applyFilters() {
+    eventList.filter(function(item) {
+      if (item.values().inFilter == true) {
+         return true;
+      } else {
+         return false;
+      }
+    });
+  };
+
+  // function to check the number of matches
+  function checkCount() {
+    var count = $("#event-list .single-event:visible").length;
+    if (count == 0) {
+      $(".no-results").addClass("visible");
+    } else {
+      $(".no-results").removeClass("visible");
+    }
+  }
+
+  // function to apply filters on every dropdown
+  function runAllFilters() {
+    // set every item as matching filter
+    $(eventList.items).each(function() {
+      this.values({
+        inFilter: true,
+      });
+    });
+
+    // remove items that don't match filter
+    $(".filters select").each(function() {
+      var type = $(this).data("type");
+      var value = $(this).val()
+      eventFilter(type, value)
+    });
+
+    // show items that remain in filter
+    applyFilters();
+    checkCount();
+  }
+
+  // update contact count when searching by name
+  eventList.on("searchComplete", function(){
+    checkCount();
+  });
+
+  // make dropdowns work as filters
+  $(".filters select").change(function() {
+    runAllFilters()
+  });
+
+  // clear search and filters
+  function resetSearchFilters() {
+    eventList.search();
+    eventList.filter();
+    $(".filters select").val("all");
+    $("input.search").val("");
+  }
+
+  $(".clear-filter").click(function() {
+    resetSearchFilters();
+    checkCount();
+  })
+
+  // reset all filters on page load
+  resetSearchFilters()
+</script>
 {% endblock %}

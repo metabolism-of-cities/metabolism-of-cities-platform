@@ -900,13 +900,11 @@ body.single-project {
       width: 100%;
       object-fit: contain;
     }
-
   }
 
   #news img {
     width: 6rem;
   }
-
 }
 
 // CITY SUBSITE
@@ -933,7 +931,6 @@ body.city-subsite {
       color: $light;
       bottom: 1rem;
     }
-
   }
 
   .down-city-name {
@@ -955,7 +952,6 @@ body.city-subsite {
     a {
       float: left;
     }
-
   }
 
   &.scrolled-down .down-city-name {
@@ -975,11 +971,8 @@ body.city-subsite {
         color: darken($primary, 20%) !important;
         text-decoration: none !important;
       }
-
     }
-
   }
-
 }
 
 // EVENT AND NEWS LIST PAGES
@@ -993,6 +986,10 @@ body.event.list {
     width: 100px;
     height: 50px;
     object-fit: cover;
+  }
+
+  .no-results:not(.visible) {
+    display: none;
   }
 }
 
