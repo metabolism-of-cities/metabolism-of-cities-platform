@@ -1,0 +1,37 @@
+{% extends "_base.html" %}
+
+{% block title %}Metabolism Manager{% endblock %}
+
+{% block content %}
+  <h2>Cluster 1: Paper Companies</h2>
+  <ul>
+    <li><a href="/platformu/admin/entities/1/">Dunder Mifflin</a></li>
+    <li><a href="/platformu/admin/entities/1/">Staples</a></li>
+    <li><a href="/platformu/admin/entities/1/">Paper Inc.</a></li>
+    <li><a href="/platformu/admin/entities/1/">The Paper Company</a></li>
+  </ul>
+  <p>Options: <a href="/platformu/admin/cluster/4/add/">Add new company</a> | <a href="/platformu/admin/cluster/4/configure/">Cluster configuration</a></p>
+
+  <h2>Cluster 2: Oil Refineries</h2>
+  <ul>
+    <li><a href="/platformu/admin/entities/1/">Shell</a></li>
+    <li><a href="/platformu/admin/entities/1/">Chevron Refinery</a></li>
+  </ul>
+  <p>Options: <a href="/platformu/admin/cluster/4/add/">Add new company</a> | <a href="/platformu/admin/cluster/4/configure/">Cluster configuration</a></p>
+
+  <h2>Cluster 3: Households</h2>
+  <ul>
+    <li><a href="/platformu/admin/entities/1/">The Hoekman Family</a></li>
+    <li><a href="/platformu/admin/entities/1/">Martha Morgan</a></li>
+    <li><a href="/platformu/admin/entities/1/">George Mason</a></li>
+    <li><a href="/platformu/admin/entities/1/">Barbara Woolie</a></li>
+  </ul>
+  <p>Options: <a href="/platformu/admin/cluster/4/add/">Add new household</a> | <a href="/platformu/admin/cluster/4/configure/">Cluster configuration</a></p>
+
+  <h2>New cluster</h2>
+  <form method="post" class="form form-horizontal">
+    <input type="text" name="" />
+    <button type="submit">Add cluster</button>
+  </form>
+
+{% endblock %}

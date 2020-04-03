@@ -59,6 +59,11 @@ urlpatterns = [
     path("data/<slug:place>/datasets/<slug:dataset>/", views.dataset, name="dataset"),
     path("data/<slug:place>/", views.dashboard, name="dashboard"),
 
+    # Library
+    path("platformu/", views.metabolism_manager, name="platformu"),
+    path("platformu/admin/", views.metabolism_manager_admin),
+    path("platformu/admin/entities/<int:id>/", views.metabolism_manager_admin_entity),
+
     # Authentication
     path("register/", views.user_register, name="register"),
     path("login/", views.user_login, name="login"),
