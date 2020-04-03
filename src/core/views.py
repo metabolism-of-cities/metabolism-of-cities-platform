@@ -48,6 +48,7 @@ PAGE_ID = {
     "people": 12,
     "projects": 19,
     "multiplicity": 51,
+    "platformu": 53,
 }
 
 # We use getHeader to obtain the header settings (type of header, title, subtitle, image)
@@ -278,6 +279,22 @@ def dataset(request, place, dataset):
     }
     return render(request, "data/dataset.html", load_specific_design(context, PAGE_ID["multiplicity"]))
     
+# Metabolism Manager
+
+def metabolism_manager(request):
+    context = {
+    }
+    return render(request, "metabolism_manager/index.html", load_specific_design(context, PAGE_ID["platformu"]))
+
+def metabolism_manager_admin(request):
+    context = {
+    }
+    return render(request, "metabolism_manager/admin/index.html", load_specific_design(context, PAGE_ID["platformu"]))
+
+def metabolism_manager_admin_entity(request, id):
+    context = {
+    }
+    return render(request, "metabolism_manager/admin/entity.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 # People
 
@@ -479,6 +496,7 @@ def load_baseline(request):
         { "id": 50, "title": "View map", "parent": 39, "slug": "/library/casestudies/map/", "position": 4 },
 
         { "id": 51, "title": "Cities", "parent": 19, "slug": "/data/", "position": None },
+        { "id": 53, "title": "PlatformU", "parent": 19, "slug": "/platformu/", "position": None },
     ]
     projects = [
         { "id": 20, "title": "Library", "parent": 19, "url": "/library/", "position": 1, "image": "records/um_library.png", "content": "<p>The urban metabolism library has been one of the first projects undertaken by the Metabolism of Cities community. The goal of this project is to provide a central repository for all relevant documents and other material related to urban metabolism.</p><p>There are many research papers, theses, books, government reports, and other publications that have relevance to urban metabolism. The urban metabolism library aims to collect all of the relevant meta information (title, description, year of publication, abstract), and to provide visitors with an easy way to browse and filter the catalog. The library is constantly growing and visitors are encouraged to submit missing documents." },
@@ -531,6 +549,12 @@ background-size: cover;
 }"""
         },
         { "header": "small", "article": 51, "logo": "/logos/media-logo-datahub.png", "css": """.top-layer {
+background-color: #343434;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 100 100'%3E%3Cg stroke='%23000000' stroke-width='0' %3E%3Crect fill='%23313131' x='-60' y='-60' width='77' height='240'/%3E%3C/g%3E%3C/svg%3E");
+/* background by SVGBackgrounds.com */
+}"""
+        },
+        { "header": "small", "article": 53, "logo": "/logos/media-platformu.png", "css": """.top-layer {
 background-color: #343434;
 background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 100 100'%3E%3Cg stroke='%23000000' stroke-width='0' %3E%3Crect fill='%23313131' x='-60' y='-60' width='77' height='240'/%3E%3C/g%3E%3C/svg%3E");
 /* background by SVGBackgrounds.com */
