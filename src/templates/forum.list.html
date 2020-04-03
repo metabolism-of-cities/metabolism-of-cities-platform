@@ -36,54 +36,26 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>
-          <a href="/community/forum/1">Officiis consequatur expedita commodi</a>
-          <br>
-          <a href="#" class="badge badge-primary">Cape Town</a>
-          <a href="#" class="badge badge-primary">Water</a>
-        </td>
-        <td class="d-none d-lg-table-cell">
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg"></a>
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/photo_cv.thumbnail.jpg"></a>
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/guus.thumbnail.jpg"></a>
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/team.rupert.thumbnail.jpg"></a>
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/gabriela_fernandez_pic.thumbnail.png"></a>
-          <span class="avatar plus">+5</span>
-        </td>
-        <td class="d-none d-sm-table-cell narrow-cell text-center">100</td>
-        <td class="d-none d-md-table-cell narrow-cell text-center">26m</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/community/forum/1">Voluptatem vero animi voluptatibus</a>
-          <br>
-          <a href="#" class="badge badge-primary">Vero animi</a>
-        </td>
-        <td class="d-none d-lg-table-cell">
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/team.rupert.thumbnail.jpg"></a>
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/photo_cv.thumbnail.jpg"></a>
-        </td>
-        <td class="d-none d-sm-table-cell narrow-cell text-center">2</td>
-        <td class="d-none d-md-table-cell narrow-cell text-center">2h</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/community/forum/1">Voluptas molestias et autem</a>
-          <br>
-          <a href="#" class="badge badge-primary">Eum velit ipsa</a>
-          <a href="#" class="badge badge-primary">Officiis dolorum</a>
-          <a href="#" class="badge badge-primary">Nesciunt</a>
-          <a href="#" class="badge badge-primary">Tenetur</a>
-        </td>
-        <td class="d-none d-lg-table-cell">
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/photo_cv.thumbnail.jpg"></a>
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/gabriela_fernandez_pic.thumbnail.png"></a>
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg"></a>
-        </td>
-        <td class="d-none d-sm-table-cell narrow-cell text-center">2</td>
-        <td class="d-none d-md-table-cell narrow-cell text-center">4d</td>
-      </tr>
+      {% for details in list %}
+        <tr>
+          <td>
+            <a href="{% url "forum_topic" details.id %}">{{ details.title }}</a>
+            <br>
+            <a href="#" class="badge badge-primary">Cape Town</a>
+            <a href="#" class="badge badge-primary">Water</a>
+          </td>
+          <td class="d-none d-lg-table-cell">
+            <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg"></a>
+            <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/photo_cv.thumbnail.jpg"></a>
+            <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/guus.thumbnail.jpg"></a>
+            <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/team.rupert.thumbnail.jpg"></a>
+            <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/gabriela_fernandez_pic.thumbnail.png"></a>
+            <span class="avatar plus">+5</span>
+          </td>
+          <td class="d-none d-sm-table-cell narrow-cell text-center">100</td>
+          <td class="d-none d-md-table-cell narrow-cell text-center">{{ details.date_created|timesince }}</td>
+        </tr>
+      {% endfor %}
     </tbody>
   </table>
 {% endblock %}

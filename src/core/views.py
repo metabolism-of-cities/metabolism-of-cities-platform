@@ -337,16 +337,34 @@ def event(request, id):
 
 def forum_list(request):
     article = get_object_or_404(Article, pk=17)
+    list = ForumMessage.objects.filter(parent__isnull=True)
     context = {
         "header": getHeader(article),
+        "list": list,
     }
     return render(request, "forum.list.html", context)
 
 def forum_topic(request, id):
     article = get_object_or_404(Article, pk=17)
+    info = get_object_or_404(ForumMessage, pk=id)
+    list = ForumMessage.objects.filter(parent=id)
+    print(request)
     context = {
         "header": getHeader(article),
+        "info": info,
+        'list': list,
     }
+    if request.method == "POST":
+        info_record = Record()
+        info_record.save()
+
+        new = ForumMessage()
+        new.record = info_record
+        new.title = "Reply to: "+ info.title
+        new.content = request.POST["text"]
+        new.parent = info
+        new.user = User.objects.get(pk=1)
+        new.save()
     return render(request, "forum.topic.html", context)
 
 def forum_form(request, id=False):
@@ -354,6 +372,16 @@ def forum_form(request, id=False):
     context = {
         "header": getHeader(article),
     }
+    if request.method == "POST":
+        info = Record()
+        info.save()
+        
+        new = ForumMessage()
+        new.record = info
+        new.title = request.POST["title"]
+        new.content = request.POST["text"]
+        new.user = User.objects.get(pk=1)
+        new.save()
     return render(request, "forum.form.html", context)
 
 # VIDEOS
