@@ -348,7 +348,6 @@ def forum_topic(request, id):
     article = get_object_or_404(Article, pk=17)
     info = get_object_or_404(ForumMessage, pk=id)
     list = ForumMessage.objects.filter(parent=id)
-    print(request)
     context = {
         "header": getHeader(article),
         "info": info,

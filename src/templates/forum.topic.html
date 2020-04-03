@@ -24,24 +24,23 @@
           <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbna.jpg">{{ info.user.first_name }}</a>
         </div>
         <div class="col-4 text-muted text-right">
-          {{ info.date_created|timesince }}
+          {{ info.date_created|timesince }} ago
         </div>
       </div>
       <hr>
       <div class="text">
         {{ info.content }}
         <img src="https://i.imgur.com/cku5kjM.jpg">
-        {% lorem 1 p %}
       </div>
     </div>
     {% for details in list %}
       <div class="single-message">
         <div class="row metadata">
           <div class="col-8">
-            <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/photo_cv.thumbnail.jpg"> {{ details.user.first_name }}</a> 
+            <a href="#"><span class="avatar">{{ details.user.first_name|slice:"1" }}</span> {{ details.user.first_name }}</a> 
           </div>
           <div class="col-4 text-muted text-right">
-            {{ details.date_created|timesince }}
+            {{ details.date_created|timesince }} ago
           </div>
         </div>
         <hr>

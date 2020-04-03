@@ -45,15 +45,27 @@
             <a href="#" class="badge badge-primary">Water</a>
           </td>
           <td class="d-none d-lg-table-cell">
-            <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg"></a>
-            <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/photo_cv.thumbnail.jpg"></a>
-            <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/guus.thumbnail.jpg"></a>
-            <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/team.rupert.thumbnail.jpg"></a>
-            <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/gabriela_fernandez_pic.thumbnail.png"></a>
-            <span class="avatar plus">+5</span>
+            {% for subdetails in details.getReply %}
+              <span class="avatar plus">
+                {{ subdetails.user.first_name|slice:"1" }}
+              </span>
+            {% endfor %}
+            {% if details.getReply.count > 5 %}
+              <span class="avatar plus">+5</span>
+            {% endif %}
           </td>
-          <td class="d-none d-sm-table-cell narrow-cell text-center">100</td>
-          <td class="d-none d-md-table-cell narrow-cell text-center">{{ details.date_created|timesince }}</td>
+          <td class="d-none d-sm-table-cell narrow-cell text-center">
+            <a href="{% url "forum_topic" details.id %}">
+              {{ details.getReply.count }}
+            </a>
+          </td>
+          <td class="d-none d-md-table-cell narrow-cell text-center">
+            {% if details.getLastActivity.date_created %}
+              {{ details.getLastActivity.date_created|timesince }} ago
+            {% else %}
+               -
+            {% endif %}
+          </td>
         </tr>
       {% endfor %}
     </tbody>

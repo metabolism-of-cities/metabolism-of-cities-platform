@@ -111,6 +111,12 @@ class ForumMessage(Record):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     documents = models.ManyToManyField(Document)
 
+    def getReply(self):
+        return ForumMessage.objects.filter(parent=self)
+
+    def getLastActivity(self):
+        return ForumMessage.objects.filter(parent=self).last()
+
 #MOOC's
 class MOOC(models.Model):
     name = models.CharField(max_length=255)
