@@ -1291,3 +1291,104 @@ body.team .single-person {
 body.datahub .updates .list-group-item.table-item > div:last-of-type {
   width: 80px;
 }
+
+// PAGE WITH FULLY FEATURED MAP
+body.full.map {
+  .leaflet-map {
+    height: 80vh;
+  }
+
+  .container.main-content {
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: unset !important;
+  }
+
+  #map-control {
+    .legend {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid;
+    }
+
+    .card-header {
+      cursor: pointer;
+
+      i.fa-angle-down,
+      i.fa-angle-up, {
+        line-height: 1.5;
+        float: right;
+      }
+    }
+
+    .toggle-layer {
+      cursor: pointer;
+      i.fa-check-circle {
+        float: right;
+        line-height: 1.5;
+        opacity: 0;
+      }
+
+      &:hover {
+        background-color: $very-light;
+      }
+
+      &.visible {
+        background-color: $light;
+
+        i.fa-check-circle {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .leaflet-popup {
+    a.leaflet-popup-close-button {
+      color: $light;
+
+      &:hover {
+        color: $very-light;
+      }
+    }
+  }
+
+  .leaflet-popup-content-wrapper {
+    border-radius: .25rem;
+    box-shadow: $basic-shadow;
+    padding: 0;
+    font-size: 1rem;
+    font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+  }
+
+  .leaflet-popup-content,
+  .leaflet-popup-content p {
+    margin: 0;
+  }
+
+  .leaflet-popup-content p {
+    padding: .75rem;
+  }
+
+  .popup-title {
+    font-weight: bold;
+    background-color: $primary;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+    color: $very-light;
+    padding: .75rem;
+
+    > * {
+      margin-bottom: 0;
+    }
+  }
+
+  .leaflet-popup table {
+    margin-bottom: 0;
+
+    th {
+      background-color: $light;
+    }
+  }
+}
