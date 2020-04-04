@@ -1295,7 +1295,8 @@ body.datahub .updates .list-group-item.table-item > div:last-of-type {
 // PAGE WITH FULLY FEATURED MAP
 body.full.map {
   .leaflet-map {
-    height: 80vh;
+    position: sticky !important;
+    height: calc(100vh - 140px);
   }
 
   .container.main-content {
@@ -1305,11 +1306,19 @@ body.full.map {
   }
 
   #map-control {
-    .legend {
-      display: inline-block;
-      width: 1rem;
-      height: 1rem;
-      border: 2px solid;
+    .card-header.collapsed {
+      border-radius: calc(.25rem - 1px);
+    }
+
+    .list-group-item,
+    .card-header {
+      > i:first-of-type {
+        margin-right: .25rem;
+      }
+    }
+
+    .list-group.list-group-flush {
+      display: none;
     }
 
     .card-header {
@@ -1341,6 +1350,26 @@ body.full.map {
           opacity: 1;
         }
       }
+    }
+  }
+
+  .leaflet-control.clear-map.button {
+    width: 34px;
+    height: 34px;
+    line-height: 30px;
+    border-radius: 4px;
+    border: 2px solid #bbb;
+    background-color: #fff;
+    cursor: pointer;
+    font-family: "Font Awesome 5 Pro";
+    text-align: center;
+    font-size: 14px;
+    display: none;
+    &:hover {
+      background-color: #f4f4f4;
+    }
+    &::before {
+      content: "\f2ed";
     }
   }
 
@@ -1389,6 +1418,20 @@ body.full.map {
 
     th {
       background-color: $light;
+    }
+  }
+
+  // for very large screens, set a max width of the map control buttons
+  @media (min-width: 1200px) {
+    #map-control {
+      width: 300px;
+      flex: unset;
+    }
+
+    .col-map {
+      width: calc(100% - 300px);
+      max-width: unset;
+      flex: unset;
     }
   }
 }

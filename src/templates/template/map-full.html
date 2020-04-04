@@ -1,67 +1,118 @@
 {% extends '_base.html' %}
 
 {% block page_name %}full map{% endblock %}
-{% block title %}Map{% endblock %}
+{% block title %}Full map{% endblock %}
 
 {% block head %}
+  <!-- leaflet -->
   <link rel="stylesheet"
         href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
         integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
         crossorigin=""/>
-  <link rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+
+  <!-- leaflet fullscreen plugin -- https://github.com/Leaflet/Leaflet.fullscreen -->
+  <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
 {% endblock %}
 
 {% block content %}
   <div class="row">
-    <div class="col-lg-2" id="map-control">
-      <div class="card">
-        <div class="card-header">
-          <i class="fas fa-fw fa-tint"></i> Water
-          <i class="fas fa-fw fa-angle-down"></i>
+    <div class="col-lg-3" id="map-control">
+      <div class="row">
+        <div class="col-sm-6 col-md-4 col-lg-12">
+          <div class="card mb-3">
+            <div class="card-header collapsed">
+              <i class="fas fa-fw fa-tint"></i> Water
+              <i class="fas fa-fw fa-angle-down angle"></i>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item toggle-layer" data-layer="pumpsLayer"><i class="fad fa-swap-opacity fa-fw fa-circle" style="color: green"></i> Water pumps <i class="far fa-fw fa-check-circle"></i></li>
+              <li class="list-group-item toggle-layer" data-layer="plantsLayer"><i class="fad fa-swap-opacity fa-fw fa-circle" style="color: red"></i> Desalination plants <i class="far fa-fw fa-check-circle"></i></li>
+              <li class="list-group-item toggle-layer" data-layer="otherLayer"><i class="fad fa-swap-opacity fa-fw fa-circle"></i> Lakes <i class="far fa-fw fa-check-circle"></i></li>
+            </ul>
+          </div>
         </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item toggle-layer" data-layer="pumpsLayer"><i class="fad fa-swap-opacity fa-fw fa-square" style="color: green"></i> Water pumps <i class="far fa-fw fa-check-circle"></i></li>
-          <li class="list-group-item toggle-layer" data-layer="plantsLayer"><i class="fad fa-swap-opacity fa-fw fa-square" style="color: red"></i> Desalination plants <i class="far fa-fw fa-check-circle"></i></li>
-        </ul>
+        <div class="col-sm-6 col-md-4 col-lg-12">
+          <div class="card mb-3">
+            <div class="card-header collapsed">
+              <i class="fas fa-fw fa-bolt"></i> Electricity
+              <i class="fas fa-fw fa-angle-down angle"></i>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item toggle-layer" data-layer="otherLayer"><i class="fad fa-swap-opacity fa-fw fa-circle"></i> Transmission masts <i class="far fa-fw fa-check-circle"></i></li>
+              <li class="list-group-item toggle-layer" data-layer="otherLayer"><i class="fad fa-swap-opacity fa-fw fa-circle"></i> Wind turbines <i class="far fa-fw fa-check-circle"></i></li>
+              <li class="list-group-item toggle-layer" data-layer="otherLayer"><i class="fad fa-swap-opacity fa-fw fa-circle"></i> Energy storage <i class="far fa-fw fa-check-circle"></i></li>
+              <li class="list-group-item toggle-layer" data-layer="otherLayer"><i class="fad fa-swap-opacity fa-fw fa-circle"></i> Electric charging stations <i class="far fa-fw fa-check-circle"></i></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-12">
+          <div class="card mb-3">
+            <div class="card-header collapsed">
+              <i class="fas fa-fw fa-car-bus"></i> Transport
+              <i class="fas fa-fw fa-angle-down angle"></i>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item toggle-layer" data-layer="otherLayer"><i class="fad fa-swap-opacity fa-fw fa-circle"></i> Train stations <i class="far fa-fw fa-check-circle"></i></li>
+              <li class="list-group-item toggle-layer" data-layer="otherLayer"><i class="fad fa-swap-opacity fa-fw fa-circle"></i> Bus stops <i class="far fa-fw fa-check-circle"></i></li>
+              <li class="list-group-item toggle-layer" data-layer="otherLayer"><i class="fad fa-swap-opacity fa-fw fa-circle"></i> Tram stops <i class="far fa-fw fa-check-circle"></i></li>
+              <li class="list-group-item toggle-layer" data-layer="otherLayer"><i class="fad fa-swap-opacity fa-fw fa-circle"></i> Bicycle racks <i class="far fa-fw fa-check-circle"></i></li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="col-lg-10">
-      <div id="map" class="leaflet-map"></div>
+    <div class="col-lg-9 col-map">
+      <div id="map" class="leaflet-map sticky-top"></div>
     </div>
   </div>
 
 {% endblock %}
 
 {% block footer %}
+  <!-- leaflet -->
   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
           integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
           crossorigin="">
   </script>
+  <!-- leaflet fullscreen plugin -- https://github.com/Leaflet/Leaflet.fullscreen -->
+  <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+
   <script>
-    // https://leafletjs.com/reference-1.6.0.html
+    // create leaflet map -- https://leafletjs.com/reference-1.6.0.html
     var map = L.map("map", {
       center: [39.74739, -105],
       zoom: 13,
       minZoom: 2,
       maxZoom: 18,
       scrollWheelZoom: false,
+      fullscreenControl: true,
     })
 
-    L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+    // add tile layer
+    var tileLayer = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
       attribution: "Map data &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='https://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>",
       id: "mapbox/streets-v11",
       accessToken: "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q",
       tileSize: 512,
       zoomOffset: -1,
-    }).addTo(map);
+      // this "layer" option must be kept, as it prevents the tiles from disappearing when removing all other layers from the map
+      layer: "tiles",
+    })
 
+    tileLayer.addTo(map);
+
+    // enable popups so na user can click on an object on the map and see extra information
     function onEachFeature(feature, layer) {
       var popupContent = "<div class='popup-title'>" + feature.properties.name + "</div><div class='popup-content'><p>" + feature.properties.description + "</p><table class='table'>" + feature.properties.table + "</table></div>"
 
       layer.bindPopup(popupContent);
     }
 
+    // each group of objects must have its own variable and corresponding layer variable
+    // first we add the data in JSON format and assign a variable
+    // the type of the group must remain a FeatureCollection, but the types of each point, line, or area must be defined independently
+    // possible options are "Point", "LineString", "Polygon", and "MultiPolygon"
+    // there is currently space for a name, description, and table; depending on what the requirements will actually be this might change
     var pumps = {
       "type": "FeatureCollection",
       "features": [
@@ -76,7 +127,6 @@
             "description": "Some water pump, pumping water all day every day",
             "table": "<tr><th>Purpose</th><th>Quantity in ℓ</th></tr><tr><td>Drinking</td><td>1243213</td></tr><tr><td>Agriculture</td><td>123213</td></tr><tr><td>Business</td><td>5132432</td></tr>"
           },
-          "id": 51
         },
         {
           "geometry": {
@@ -106,64 +156,67 @@
           },
         },
         {
-            "type": "Feature",
-            "properties": {
-              "name": "Some area",
-              "description": "It's not just a spot, it's a whole area!",
-              "table": "<tr><th>Purpose</th><th>Quantity in ℓ</th></tr><tr><td>Drinking</td><td>1243213</td></tr><tr><td>Agriculture</td><td>123213</td></tr><tr><td>Business</td><td>5132432</td></tr>",
-            },
-            "geometry": {
-              "type": "MultiPolygon",
-              "coordinates": [
+          "type": "Feature",
+          "properties": {
+            "name": "Some area",
+            "description": "It's not just a spot, it's a whole area!",
+            "table": "<tr><th>Purpose</th><th>Quantity in ℓ</th></tr><tr><td>Drinking</td><td>1243213</td></tr><tr><td>Agriculture</td><td>123213</td></tr><tr><td>Business</td><td>5132432</td></tr>",
+          },
+          "geometry": {
+            "type": "MultiPolygon",
+            "coordinates": [
+              [
                 [
-                  [
-                    [-105.00432014465332, 39.74732195489861],
-                    [-105.00715255737305, 39.74620006835170],
-                    [-105.00921249389647, 39.74468219277038],
-                    [-105.01067161560059, 39.74362625960105],
-                    [-105.01195907592773, 39.74290029616054],
-                    [-105.00989913940431, 39.74078835902781],
-                    [-105.00758171081543, 39.74059036160317],
-                    [-105.00346183776855, 39.74059036160317],
-                    [-105.00097274780272, 39.74059036160317],
-                    [-105.00062942504881, 39.74072235994946],
-                    [-105.00020027160645, 39.74191033368865],
-                    [-105.00071525573731, 39.74276830198601],
-                    [-105.00097274780272, 39.74369225589818],
-                    [-105.00097274780272, 39.74461619742136],
-                    [-105.00123023986816, 39.74534214278395],
-                    [-105.00183105468751, 39.74613407445653],
-                    [-105.00432014465332, 39.74732195489861]
-                  ],[
-                    [-105.00361204147337, 39.74354376414072],
-                    [-105.00301122665405, 39.74278480127163],
-                    [-105.00221729278564, 39.74316428375108],
-                    [-105.00283956527711, 39.74390674342741],
-                    [-105.00361204147337, 39.74354376414072]
-                  ]
+                  [-105.00432014465332, 39.74732195489861],
+                  [-105.00715255737305, 39.74620006835170],
+                  [-105.00921249389647, 39.74468219277038],
+                  [-105.01067161560059, 39.74362625960105],
+                  [-105.01195907592773, 39.74290029616054],
+                  [-105.00989913940431, 39.74078835902781],
+                  [-105.00758171081543, 39.74059036160317],
+                  [-105.00346183776855, 39.74059036160317],
+                  [-105.00097274780272, 39.74059036160317],
+                  [-105.00062942504881, 39.74072235994946],
+                  [-105.00020027160645, 39.74191033368865],
+                  [-105.00071525573731, 39.74276830198601],
+                  [-105.00097274780272, 39.74369225589818],
+                  [-105.00097274780272, 39.74461619742136],
+                  [-105.00123023986816, 39.74534214278395],
+                  [-105.00183105468751, 39.74613407445653],
+                  [-105.00432014465332, 39.74732195489861]
                 ],[
-                  [
-                    [-105.00942707061768, 39.73989736613708],
-                    [-105.00942707061768, 39.73910536278566],
-                    [-105.00685214996338, 39.73923736397631],
-                    [-105.00384807586671, 39.73910536278566],
-                    [-105.00174522399902, 39.73903936209552],
-                    [-105.00041484832764, 39.73910536278566],
-                    [-105.00041484832764, 39.73979836621592],
-                    [-105.00535011291504, 39.73986436617916],
-                    [-105.00942707061768, 39.73989736613708]
-                  ]
+                  [-105.00361204147337, 39.74354376414072],
+                  [-105.00301122665405, 39.74278480127163],
+                  [-105.00221729278564, 39.74316428375108],
+                  [-105.00283956527711, 39.74390674342741],
+                  [-105.00361204147337, 39.74354376414072]
+                ]
+              ],[
+                [
+                  [-105.00942707061768, 39.73989736613708],
+                  [-105.00942707061768, 39.73910536278566],
+                  [-105.00685214996338, 39.73923736397631],
+                  [-105.00384807586671, 39.73910536278566],
+                  [-105.00174522399902, 39.73903936209552],
+                  [-105.00041484832764, 39.73910536278566],
+                  [-105.00041484832764, 39.73979836621592],
+                  [-105.00535011291504, 39.73986436617916],
+                  [-105.00942707061768, 39.73989736613708]
                 ]
               ]
-            }
+            ]
+          }
         }
       ]
     };
 
+    // we then define the layer that we'll add to the map, adding style for all types
+    // there's a repeat because points must be done slightly differently from other types and we'll need the style both
+    // the only variable in terms of style is the colour, the rest should be kept the same
     var pumpsLayer = L.geoJSON(pumps, {
       style: {
-        fillOpacity: .4,
         color: "green",
+        fillOpacity: .4,
         weight: 2,
       },
       // function to create the popup
@@ -171,13 +224,14 @@
 
       pointToLayer: function (feature, latlng) {
         return L.circleMarker(latlng, {
-          fillOpacity: .4,
           fillColor: "green",
+          fillOpacity: .4,
           weight: 2,
         });
       }
     });
 
+    // this is another group of data, only here to be able to toggle multiple layers on the map
     var plants = {
       "type": "FeatureCollection",
       "features": [
@@ -217,22 +271,45 @@
             "table": "<tr><th>Purpose</th><th>Quantity in ℓ</th></tr><tr><td>Drinking</td><td>1243213</td></tr><tr><td>Agriculture</td><td>123213</td></tr><tr><td>Business</td><td>5132432</td></tr>",
           },
         },
+        {
+          "type": "Feature",
+          "properties": {
+            "name": "Some area",
+            "description": "It's not just a spot, it's a whole area!",
+            "table": "<tr><th>Purpose</th><th>Quantity in ℓ</th></tr><tr><td>Drinking</td><td>1243213</td></tr><tr><td>Agriculture</td><td>123213</td></tr><tr><td>Business</td><td>5132432</td></tr>",
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [-105.01942707061768, 39.72989736613708],
+                [-105.01942707061768, 39.72910536278566],
+                [-105.01685214996338, 39.72923736397631],
+                [-105.01384807586671, 39.72910536278566],
+                [-105.01174522399902, 39.72903936209552],
+                [-105.01041484832764, 39.72910536278566],
+                [-105.01041484832764, 39.72979836621592],
+                [-105.01535011291504, 39.72986436617916],
+                [-105.01942707061768, 39.72989736613708]
+              ]
+            ]
+          }
+        }
       ]
     };
 
     var plantsLayer = L.geoJSON(plants, {
       style: {
-        fillOpacity: .4,
         color: "red",
+        fillOpacity: .4,
         weight: 2,
       },
-      // function to create the popup
       onEachFeature: onEachFeature,
 
       pointToLayer: function (feature, latlng) {
         return L.circleMarker(latlng, {
-          fillOpacity: .4,
           fillColor: "red",
+          fillOpacity: .4,
           weight: 2,
         });
       }
@@ -250,6 +327,57 @@
       }
 
       button.toggleClass("visible")
+
+      // check if any layers are visible to determine is clear map button should be visible
+      var layersVisible = $("#map-control .toggle-layer.visible").length
+
+      if (layersVisible == 0) {
+        $(".clear-map.button").hide()
+      } else {
+        $(".clear-map.button").show()
+      }
     })
+
+    // toggle visibility of menu
+    $("#map-control .card-header").click(function() {
+      $(this).next(".list-group").slideToggle("fast");
+      $(this).toggleClass("collapsed");
+      $("i.angle", this).toggleClass("fa-angle-down fa-angle-up");
+    })
+
+    // function to clear the map of markers, but not tiles
+    function clearMap() {
+      // remove the layers
+      map.eachLayer(function (layer) {
+        if ( layer.options.layer != "tiles" ) {
+          map.removeLayer(layer);
+        }
+      });
+
+      // remove visible states from all
+      $("#map-control .toggle-layer").removeClass("visible")
+
+      // hide clear map button because it's not needed until layers are added again
+      $(".clear-map.button").hide()
+    }
+
+    // add button to clear map
+    L.Control.clearMap = L.Control.extend({
+      onAdd: function(map) {
+        var button = L.DomUtil.create("div", "clear-map button");
+
+        return button;
+      }
+    });
+
+    L.control.clearmap = function(opts) {
+      return new L.Control.clearMap(opts)
+    }
+
+    L.control.clearmap({ position: 'topleft' }).addTo(map);
+
+    $(".clear-map.button").click(function() {
+      clearMap()
+    });
   </script>
 {% endblock %}
