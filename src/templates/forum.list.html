@@ -4,14 +4,16 @@
 
 {% block page_name %}forum{% endblock %}
 
-{% block css %}
-{% endblock %}
-
 {% block content %}
 
   <div class="row mb-4">
     <div class="col-md-4 mb-2">
-      <input type="text" class="form-control" placeholder="Search by topic title...">
+      <select class="custom-select">
+        <option selected>Filter by title</option>
+        {% for details in list %}
+          <option>{{ details.title }}</option>
+        {% endfor %}
+      </select>
     </div>
     <div class="col-md-4 mb-2">
       <select class="custom-select">
@@ -39,19 +41,29 @@
       {% for details in list %}
         <tr>
           <td>
-            <a href="{% url "forum_topic" details.id %}">{{ details.title }}</a>
+            <a href="{% url "forum_topic" details.id %}">
+              {{ details.title }}
+            </a>
             <br>
             <a href="#" class="badge badge-primary">Cape Town</a>
             <a href="#" class="badge badge-primary">Water</a>
           </td>
           <td class="d-none d-lg-table-cell">
-            {% for subdetails in details.getReply %}
-              <span class="avatar plus">
-                {{ subdetails.user.first_name|slice:"1" }}
-              </span>
-            {% endfor %}
             {% if details.getReply.count > 5 %}
-              <span class="avatar plus">+5</span>
+              {% for subdetails in details.getReply|slice:"5" %}
+                <span class="avatar plus">
+                  {{ subdetails.user.first_name|slice:"1" }}
+                </span>
+              {% endfor %}
+              {% with count_reply=details.getReply.count|add:"-5" %}
+                <span class="avatar plus">+{{ count_reply }}</span>
+              {% endwith %}
+            {% else %}
+              {% for subdetails in details.getReply %}
+                <span class="avatar plus">
+                  {{ subdetails.user.first_name|slice:"1" }}
+                </span>
+              {% endfor %}
             {% endif %}
           </td>
           <td class="d-none d-sm-table-cell narrow-cell text-center">
@@ -70,7 +82,4 @@
       {% endfor %}
     </tbody>
   </table>
-{% endblock %}
-
-{% block footer %}
 {% endblock %}
