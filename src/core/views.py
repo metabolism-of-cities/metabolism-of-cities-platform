@@ -351,7 +351,7 @@ def forum_topic(request, id):
     context = {
         "header": getHeader(article),
         "info": info,
-        'list': list,
+        "list": list,
     }
     if request.method == "POST":
         info_record = Record()
@@ -364,6 +364,14 @@ def forum_topic(request, id):
         new.parent = info
         new.user = User.objects.get(pk=1)
         new.save()
+
+        if request.FILES:
+            files = request.FILES.getlist("file")
+            for file in files:
+                info_document = Document()
+                info_document.file = file
+                info_document.save()
+                new.documents.add(info_document)
     return render(request, "forum.topic.html", context)
 
 def forum_form(request, id=False):
@@ -381,6 +389,14 @@ def forum_form(request, id=False):
         new.content = request.POST["text"]
         new.user = User.objects.get(pk=1)
         new.save()
+
+        if request.FILES:
+            files = request.FILES.getlist("file")
+            for file in files:
+                info_document = Document()
+                info_document.file = file
+                info_document.save()
+                new.documents.add(info_document)
     return render(request, "forum.form.html", context)
 
 # VIDEOS
