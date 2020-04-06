@@ -1,0 +1,48 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<div style="width:200px;background:#ccc;float:left;margin-right:20px;margin-bottom:10px;">
+  <ul>
+    <li><a href="/platformu/dashboard/">Dashboard</a></li>
+    <li><a href="/platformu/materials/electricity/">Electricity</a></li>
+    <li><a href="/platformu/materials/electricity/">Water</a></li>
+    <li><a href="/platformu/materials/electricity/">Paper</a></li>
+    <li><a href="/platformu/report/">My report</a></li>
+    <li><a href="/platformu/marketplace/">Marketplace</a></li>
+    <li><a href="/platformu/forum/">Forum</a></li>
+  </ul>
+</div>
+
+<h2>Electricity</h2>
+
+[ graph - bar chart ]
+
+<p>Followed by a table with the last 10 readings:</p>
+
+<p>Date | Quantity | comments</p>
+<p>February 2020 | 120 KwH | hot month, lots of airconditioning</p>
+<p>March 2020 | 129 KwH | </p>
+<p>April 2020 | 199 KwH</p>
+
+<hr>
+
+<p>Then some action buttons:</p>
+
+<p>
+  Button 1: Register data | 
+  Button 2: Learn more about electricity | 
+  Button 3: Become more efficient
+</p>
+
+<hr>
+
+<p>Then comes information from the main MoC website about electricity in the city:</p>
+
+<h3>Electricity in Cape Town</h3>
+
+<p><em>I'm thinking a photo grid with the different components, and if you click on it you go to MoC's main site</em></p>
+<p><em>Could be something like:</em></p>
+<p>Electricity generation | Distribution | Consumption | Environmental impact</p>
+
+{% endblock %}
