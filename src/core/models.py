@@ -117,6 +117,9 @@ class ForumMessage(Record):
     def getLastActivity(self):
         return ForumMessage.objects.filter(parent=self).last()
 
+    def getForumMessageFiles(self):
+        return self.documents.all()
+
 #MOOC's
 class MOOC(models.Model):
     name = models.CharField(max_length=255)

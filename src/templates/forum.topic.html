@@ -5,9 +5,6 @@
 {% block page_name %}forum topic{% endblock %}
 {% block title %}Interesting topic{% endblock %}
 
-{% block css %}
-{% endblock %}
-
 {% block content %}
 
 <h1 class="mb-0">{{ info.title }}</h1>
@@ -21,7 +18,10 @@
     <div class="single-message">
       <div class="row metadata">
         <div class="col-8">
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbna.jpg">{{ info.user.first_name }}</a>
+          <span class="avatar plus">
+            {{ info.user.first_name|slice:"1" }}
+          </span>
+          {{ info.user.first_name }}
         </div>
         <div class="col-4 text-muted text-right">
           {{ info.date_created|timesince }} ago
@@ -37,7 +37,10 @@
       <div class="single-message">
         <div class="row metadata">
           <div class="col-8">
-            <a href="#"><span class="avatar">{{ details.user.first_name|slice:"1" }}</span> {{ details.user.first_name }}</a> 
+            <span class="avatar">
+              {{ details.user.first_name|slice:"1" }}
+            </span> 
+            {{ details.user.first_name }}
           </div>
           <div class="col-4 text-muted text-right">
             {{ details.date_created|timesince }} ago
@@ -48,8 +51,9 @@
           {{ details.content }}
         </div>
         <div class="attachment mt-3">
-          <a class="btn btn-sm btn-primary-outline" href="#"><i class="far fa-paperclip"></i>  interesting-report.pdf</a>
-          <a class="btn btn-sm btn-primary-outline" href="#"><i class="far fa-paperclip"></i>  something-cool.odt</a>
+          {% for subdetails in details.getForumMessageFiles %}
+          <a class="btn btn-sm btn-primary-outline mb-1" href="{{ MEDIA_URL }}{{ subdetails.file.url }}" target="_blank"><i class="far fa-paperclip"></i> {{ subdetails.file.name }}</a>
+          {% endfor %}
         </div>
       </div>
     {% endfor %}
@@ -69,7 +73,4 @@
     </form>
   </div>
 </div>
-{% endblock %}
-
-{% block footer %}
 {% endblock %}
