@@ -5,27 +5,21 @@
 {% block page_name %}forum form{% endblock %}
 {% block title %}New post{% endblock %}
 
-{% block css %}
-{% endblock %}
-
 {% block content %}
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <div class="form-group">
-    <label for="title">Topic title</label>
-    <input type="text" class="form-control" id="title" name="title" required>
-  </div>
-  <div class="form-group">
-    <label for="text">Text</label>
-    <textarea class="form-control" id="text" rows="3" name="text" required></textarea>
-  </div>
-  <div class="form-group">
-    <label for="files">File(s)</label>
-    <input type="file" class="form-control-file" name="file" id="files" multiple="multiple">
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-{% endblock %}
-
-{% block footer %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="title">Topic title</label>
+      <input type="text" class="form-control" id="title" name="title" required>
+    </div>
+    <div class="form-group">
+      <label for="text">Text</label>
+      <textarea class="form-control" id="text" rows="3" name="text" required></textarea>
+    </div>
+    <div class="form-group">
+      <label for="files">File(s)</label>
+      <input type="file" class="form-control-file" name="file" id="files" multiple="multiple">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
 {% endblock %}
