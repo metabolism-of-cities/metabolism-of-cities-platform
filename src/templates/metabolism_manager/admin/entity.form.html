@@ -1,0 +1,50 @@
+{% extends "_base.html" %}
+
+{% block title %}Metabolism Manager{% endblock %}
+
+{% block content %}
+
+  <h1>Dunder Miflin</h1>
+  <p>
+    <a href="/platformu/admin/entities/1/">View details</a> | 
+    <a href="/platformu/admin/entities/1/edit/"><strong>Edit</strong></a> | 
+    <a href="/platformu/admin/entities/1/materials/">Materials and products</a> |
+    <a href="/platformu/admin/entities/1/data/">Data</a> | 
+    <a href="/platformu/admin/entities/1/log/">Log</a>
+  </p>
+
+  <hr>
+
+  <h2>General information</h2>
+  <p>Show form for:</p>
+  <p><strong>Company name</strong></p>
+  <p><strong>Logo</strong></p>
+  <p><strong>Description:</strong> </p>
+  <p><strong>Employees</strong> (number field)</p>
+  <p><strong>Location:</strong> </p>
+  <p><strong>Industry:</strong> (show select box with "Paper industry", "Oil and gas", "Transport")</p>
+  <p><strong>E-mail</strong></p>
+  <p><strong>Website</strong></p>
+  <p><strong>Active:</strong> <input type="checkbox" name="active" /></p>
+
+  <h2>Settings</h2>
+  <p><strong>Data sharing:</strong> public | public, but anonymized | private  <-- there needs to be some sort of help popup to explain what each of them means. For now a lorem ipsum is enough.</p>
+  <p><strong>Data delay</strong>: no delay | 1-year old data only | 2 year old data only</p>
+  <p><strong>Reporting:</strong> monthly | quarterly | annual</p>
+  <p><strong>Modules:</strong><br>
+    <input type="checkbox" name="" /> Corporate MFA<br>
+    <input type="checkbox" name="" /> Matchmaking platform<br>
+    <input type="checkbox" name="" /> Tips &amp; advice service<br>
+    <input type="checkbox" name="" /> Annual sustainability report<br>
+  </p>
+  <button type="submit">Save</button>
+
+  <h2>Users</h2>
+
+  <p>Table with users, and icons next to each name: view | edit | delete</p>
+  <p>Michael Scott | view | edit | delete</p>
+  <p>Pam Halpert | view | edit | delete</p>
+
+  <p><a href="">Add new user</a></p>
+
+{% endblock %}

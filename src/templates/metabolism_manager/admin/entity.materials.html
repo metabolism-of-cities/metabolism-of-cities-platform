@@ -1,0 +1,39 @@
+{% extends "_base.html" %}
+
+{% block title %}Metabolism Manager{% endblock %}
+
+{% block content %}
+
+  <h1>Dunder Miflin</h1>
+  <p>
+    <a href="/platformu/admin/entities/1/">View details</a> | 
+    <a href="/platformu/admin/entities/1/edit/">Edit</a> | 
+    <a href="/platformu/admin/entities/1/materials/"><strong>Materials and products</strong></a> |
+    <a href="/platformu/admin/entities/1/data/">Data</a> | 
+    <a href="/platformu/admin/entities/1/log/">Log</a>
+  </p>
+
+  <hr>
+
+  <p>Table with activated materials/products, and icons next to each name: view | edit | delete</p>
+  <hr>
+  <p><strong>Material | options</strong></p>
+  <p>Electricity consumption | view | <a href="/platformu/admin/entities/1/materials/create/">edit</a> | delete</p>
+  <p>Water consumption | view | <a href="/platformu/admin/entities/1/materials/create/">edit</a> | delete</p>
+  <p>Packaging materials (plastics) | view | <a href="/platformu/admin/entities/1/materials/create/">edit</a> | delete</p>
+  <p>Production output (paper) | view | <a href="/platformu/admin/entities/1/materials/create/">edit</a> | delete</p>
+  <hr>
+
+  <p><a href="/platformu/admin/entities/1/materials/create/">Add new material</a></p>
+  <p>Add existing material: </p>
+  <select>  
+    <option value=""></option>
+    <option value="">Toilet role consumption</option>
+    <option value="">Electricity generation (solar)</option>
+    <option value="">Electricity generation (wind)</option>
+    <option value="">Fuel consumption (diesel)</option>
+    <option value="">Fuel consumption (petrol)</option>
+  </select>
+  <button type="submit">Add</button>
+
+{% endblock %}

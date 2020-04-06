@@ -63,6 +63,12 @@ urlpatterns = [
     path("platformu/", views.metabolism_manager, name="platformu"),
     path("platformu/admin/", views.metabolism_manager_admin),
     path("platformu/admin/entities/<int:id>/", views.metabolism_manager_admin_entity),
+    path("platformu/admin/entities/<int:id>/edit/", views.metabolism_manager_admin_entity_form),
+    path("platformu/admin/entities/<int:id>/materials/", views.metabolism_manager_admin_entity_materials),
+    path("platformu/admin/entities/<int:id>/materials/create/", views.metabolism_manager_admin_entity_material),
+    path("platformu/admin/entities/<int:id>/materials/<int:material>/", views.metabolism_manager_admin_entity_material),
+    path("platformu/admin/entities/<int:id>/data/", views.metabolism_manager_admin_entity_data),
+    path("platformu/admin/entities/<int:id>/log/", views.metabolism_manager_admin_entity_log),
 
     # Authentication
     path("register/", views.user_register, name="register"),

@@ -296,6 +296,32 @@ def metabolism_manager_admin_entity(request, id):
     }
     return render(request, "metabolism_manager/admin/entity.html", load_specific_design(context, PAGE_ID["platformu"]))
 
+def metabolism_manager_admin_entity_form(request, id=None):
+    context = {
+    }
+    return render(request, "metabolism_manager/admin/entity.form.html", load_specific_design(context, PAGE_ID["platformu"]))
+
+def metabolism_manager_admin_entity_materials(request, id):
+    context = {
+    }
+    return render(request, "metabolism_manager/admin/entity.materials.html", load_specific_design(context, PAGE_ID["platformu"]))
+
+def metabolism_manager_admin_entity_material(request, id):
+    context = {
+    }
+    return render(request, "metabolism_manager/admin/entity.material.html", load_specific_design(context, PAGE_ID["platformu"]))
+
+def metabolism_manager_admin_entity_data(request, id):
+    context = {
+    }
+    return render(request, "metabolism_manager/admin/entity.data.html", load_specific_design(context, PAGE_ID["platformu"]))
+
+
+def metabolism_manager_admin_entity_log(request, id):
+    context = {
+    }
+    return render(request, "metabolism_manager/admin/entity.log.html", load_specific_design(context, PAGE_ID["platformu"]))
+
 # People
 
 def person(request, id):

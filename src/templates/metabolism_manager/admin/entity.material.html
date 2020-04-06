@@ -1,0 +1,91 @@
+{% extends "_base.html" %}
+
+{% block title %}Metabolism Manager{% endblock %}
+
+{% block content %}
+
+  <h1>Dunder Miflin</h1>
+  <p>
+    <a href="/platformu/admin/entities/1/">View details</a> | 
+    <a href="/platformu/admin/entities/1/edit/">Edit</a> | 
+    <a href="/platformu/admin/entities/1/materials/"><strong>Materials and products</strong></a> |
+    <a href="/platformu/admin/entities/1/data/">Data</a> | 
+    <a href="/platformu/admin/entities/1/log/">Log</a>
+  </p>
+
+  <hr>
+
+  <form method="post" class="form form-horizontal">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Name</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="text" name="name" value="Water consumption"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Material classification</label>
+      <div class="col-sm-10">
+        <select name="name" class="form-control">
+          <option value="">MF 4.00.493 Weazels</option>
+          <option value="" selected>MF 4.00.494 Water</option>
+          <option value="">MF 4.00.495 Watery balls</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Sector</label>
+      <div class="col-sm-10">
+        <select name="name" class="form-control">
+          <option value="" selected>2.31 Water and sanitation</option>
+          <option value="">2.32 Welding</option>
+          <option value="">2.33 Working from home</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Process</label>
+      <div class="col-sm-10">
+        <select name="name" class="form-control">
+          <option value="">Pre-consumption</option>
+          <option value="" selected>Consumption</option>
+          <option value="">Post-consumption</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Photo</label>
+        <div class="col-sm-10">
+            <input class="form-control" type="file" name="name" />
+        </div>
+    </div>
+
+    <p>Unit(s)</p>
+
+    <p><em>Volume</em></p>
+    <p><input type="checkbox" name="" /> m3</p>
+    <p><input type="checkbox" name="" /> litre</p>
+    <p><input type="checkbox" name="" /> gallon</p>
+
+    <p><em>Weight</em></p>
+    <p><input type="checkbox" name="" /> kg</p>
+    <p><input type="checkbox" name="" /> metric tonne</p>
+    <p><input type="checkbox" name="" /> kilo tonne</p>
+
+    <div class="control-group">
+        <label class="control-label">Instructions</label>
+        <div class="controls">
+            <textarea name="name"></textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </div>
+
+{% endblock %}
