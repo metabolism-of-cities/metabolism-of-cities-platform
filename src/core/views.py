@@ -40,6 +40,7 @@ from django.core.mail import send_mail
 from weasyprint import HTML, CSS
 from weasyprint.fonts import FontConfiguration
 from datetime import datetime
+from markdown import markdown
 
 # This array defines all the IDs in the database of the articles that are loaded for the
 # various pages in the menu. Here we can differentiate between the different sites.
@@ -360,7 +361,7 @@ def forum_topic(request, id):
         new = ForumMessage()
         new.record = info_record
         new.title = "Reply to: "+ info.title
-        new.content = request.POST["text"]
+        new.content = markdown(request.POST["text"])
         new.parent = info
         new.user = User.objects.get(pk=1)
         new.save()
@@ -386,7 +387,7 @@ def forum_form(request, id=False):
         new = ForumMessage()
         new.record = info
         new.title = request.POST["title"]
-        new.content = request.POST["text"]
+        new.content = markdown(request.POST["text"])
         new.user = User.objects.get(pk=1)
         new.save()
 

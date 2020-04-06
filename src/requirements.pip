@@ -13,3 +13,4 @@ django-bootstrap4
 django-tinymce4-lite
 xhtml2pdf
 weasyprint
+markdown
