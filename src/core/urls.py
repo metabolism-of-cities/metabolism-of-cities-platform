@@ -74,6 +74,10 @@ urlpatterns = [
 
     path("platformu/dashboard/", views.metabolism_manager_dashboard),
     path("platformu/materials/electricity/", views.metabolism_manager_material),
+    path("platformu/materials/electricity/create/", views.metabolism_manager_material_form),
+    path("platformu/report/", views.metabolism_manager_report),
+    path("platformu/marketplace/", views.metabolism_manager_marketplace),
+    path("platformu/forum/", views.metabolism_manager_forum),
 
     # Authentication
     path("register/", views.user_register, name="register"),

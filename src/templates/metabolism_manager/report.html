@@ -1,0 +1,30 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<div style="width:200px;background:#ccc;float:left;margin-right:20px;margin-bottom:10px;">
+  <ul>
+    <li><a href="/platformu/dashboard/">Dashboard</a></li>
+    <li><a href="/platformu/materials/electricity/">Electricity</a></li>
+    <li><a href="/platformu/materials/electricity/">Water</a></li>
+    <li><a href="/platformu/materials/electricity/">Paper</a></li>
+    <li><a href="/platformu/report/">My report</a></li>
+    <li><a href="/platformu/marketplace/">Marketplace</a></li>
+    <li><a href="/platformu/forum/">Forum</a></li>
+  </ul>
+</div>
+
+<h2>Report</h2>
+
+<p>
+  Time period: <input type="date" name="" /> until <input type="date" name="" />
+  <button type="submit">Create report</button>
+</p>
+
+<p>
+[ add the same graphs as the homepage ]
+</p>
+
+<p><a href="http://" class="btn btn-info">Export to PDF</a></p>
+
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<div style="width:200px;background:#ccc;float:left;margin-right:20px;margin-bottom:10px;">
+  <ul>
+    <li><a href="/platformu/dashboard/">Dashboard</a></li>
+    <li><a href="/platformu/materials/electricity/">Electricity</a></li>
+    <li><a href="/platformu/materials/electricity/">Water</a></li>
+    <li><a href="/platformu/materials/electricity/">Paper</a></li>
+    <li><a href="/platformu/report/">My report</a></li>
+    <li><a href="/platformu/marketplace/">Marketplace</a></li>
+    <li><a href="/platformu/forum/">Forum</a></li>
+  </ul>
+</div>
+
+<h2>Marketplace</h2>
+
+<p>
+  We can help you find a market for resources! Please fill out the form below to 
+  report any surplus resources or wasteflows that you may have, and we will 
+  try and find a destination for this.
+</p>
+
+<form method="post" class="form form-horizontal">
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Type</label>
+    <div class="col-sm-10">
+      <select name="name" class="form-control">
+        <option value="">I HAVE materials available</option>
+        <option value="I ">I am looking for available materials</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Material/product</label>
+    <div class="col-sm-10">
+      <input class="form-control" type="text" name="name" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Quantity</label>
+    <div class="col-sm-10">
+      <input class="form-control" type="text" name="name" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Frequency</label>
+    <div class="col-sm-10">
+      <input class="form-control" type="text" name="name" placeholder="E.g. once-off, weekly, monthly" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Location</label>
+    <div class="col-sm-10">
+      <input class="form-control" type="text" name="name" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Photo</label>
+    <div class="col-sm-10">
+      <input class="form-control" type="file" name="name"  />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Comments</label>
+    <div class="col-sm-10">
+      <textarea class="form-control" name="name"></textarea>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+  </div>
+
+</form>
+
+{% endblock %}

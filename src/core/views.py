@@ -282,7 +282,13 @@ def dataset(request, place, dataset):
 # Metabolism Manager
 
 def metabolism_manager(request):
+    info = get_object_or_404(Article, pk=PAGE_ID["platformu"])
+    if hasattr(info, "design"):
+        design_link = "/admin/core/articledesign/" + str(info.id) + "/change/"
+    else:
+        design_link = "/admin/core/articledesign/add/?article=" + str(info.id)
     context = {
+        "design_link": design_link,
     }
     return render(request, "metabolism_manager/index.html", load_specific_design(context, PAGE_ID["platformu"]))
 
@@ -335,6 +341,26 @@ def metabolism_manager_material(request):
     context = {
     }
     return render(request, "metabolism_manager/material.html", load_specific_design(context, PAGE_ID["platformu"]))
+
+def metabolism_manager_material_form(request):
+    context = {
+    }
+    return render(request, "metabolism_manager/material.form.html", load_specific_design(context, PAGE_ID["platformu"]))
+
+def metabolism_manager_report(request):
+    context = {
+    }
+    return render(request, "metabolism_manager/report.html", load_specific_design(context, PAGE_ID["platformu"]))
+
+def metabolism_manager_marketplace(request):
+    context = {
+    }
+    return render(request, "metabolism_manager/marketplace.html", load_specific_design(context, PAGE_ID["platformu"]))
+
+def metabolism_manager_forum(request):
+    context = {
+    }
+    return render(request, "forum.list.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 # People
 
@@ -595,8 +621,10 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 }"""
         },
         { "header": "small", "article": 53, "logo": "/logos/media-platformu.png", "css": """.top-layer {
-background-color: #343434;
-background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 100 100'%3E%3Cg stroke='%23000000' stroke-width='0' %3E%3Crect fill='%23313131' x='-60' y='-60' width='77' height='240'/%3E%3C/g%3E%3C/svg%3E");
+background-color: #59ff5b;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1600 800'%3E%3Cg stroke='%23000' stroke-width='66.7' stroke-opacity='0.13' %3E%3Ccircle fill='%2359ff5b' cx='0' cy='0' r='1800'/%3E%3Ccircle fill='%2355f659' cx='0' cy='0' r='1700'/%3E%3Ccircle fill='%2351ed57' cx='0' cy='0' r='1600'/%3E%3Ccircle fill='%234de556' cx='0' cy='0' r='1500'/%3E%3Ccircle fill='%2349dc54' cx='0' cy='0' r='1400'/%3E%3Ccircle fill='%2346d352' cx='0' cy='0' r='1300'/%3E%3Ccircle fill='%2342cb50' cx='0' cy='0' r='1200'/%3E%3Ccircle fill='%233fc24d' cx='0' cy='0' r='1100'/%3E%3Ccircle fill='%233cba4b' cx='0' cy='0' r='1000'/%3E%3Ccircle fill='%2339b249' cx='0' cy='0' r='900'/%3E%3Ccircle fill='%2336a947' cx='0' cy='0' r='800'/%3E%3Ccircle fill='%2333a144' cx='0' cy='0' r='700'/%3E%3Ccircle fill='%23319942' cx='0' cy='0' r='600'/%3E%3Ccircle fill='%232e913f' cx='0' cy='0' r='500'/%3E%3Ccircle fill='%232c893d' cx='0' cy='0' r='400'/%3E%3Ccircle fill='%232a813a' cx='0' cy='0' r='300'/%3E%3Ccircle fill='%23287938' cx='0' cy='0' r='200'/%3E%3Ccircle fill='%23267135' cx='0' cy='0' r='100'/%3E%3C/g%3E%3C/svg%3E");
+background-attachment: fixed;
+background-size: cover;
 /* background by SVGBackgrounds.com */
 }"""
         },
