@@ -1,29 +1,124 @@
 {% extends "_base.html" %}
 
 {% block title %}Metabolism Manager{% endblock %}
+{% block page_name %}entity materials{% endblock %}
 
 {% block content %}
   {% include "metabolism_manager/admin/_entity.menu.html" %}
 
-  <p>Table with activated materials/products, and icons next to each name: view | edit | delete</p>
-  <hr>
-  <p><strong>Material | options</strong></p>
-  <p>Electricity consumption | view | <a href="/platformu/admin/entities/1/materials/create/">edit</a> | delete</p>
-  <p>Water consumption | view | <a href="/platformu/admin/entities/1/materials/create/">edit</a> | delete</p>
-  <p>Packaging materials (plastics) | view | <a href="/platformu/admin/entities/1/materials/create/">edit</a> | delete</p>
-  <p>Production output (paper) | view | <a href="/platformu/admin/entities/1/materials/create/">edit</a> | delete</p>
-  <hr>
+  <h3>Materials</h3>
+  <table class="table users mt-2">
+    <tbody>
+      <tr>
+        <td>
+          <a class="align-middle" href="/platformu/admin/entities/1/materials/create/"><i class="fal fa-fw fa-bolt"></i> Electricity consumption</a>
+          <a class="btn btn-sm btn-danger float-right ml-2" href="/platformu/admin/entities/1/materials/create/"><i class="far fa-fw fa-trash-alt"></i></a>
+          <a class="btn btn-sm btn-primary float-right" href="/platformu/admin/entities/1/user/20/"><i class="far fa-fw fa-pencil"></i></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a class="align-middle" href="/platformu/admin/entities/1/materials/create/"><i class="fal fa-fw fa-tint"></i> Water consumption</a>
+          <a class="btn btn-sm btn-danger float-right ml-2" href="/platformu/admin/entities/1/materials/create/"><i class="far fa-fw fa-trash-alt"></i></a>
+          <a class="btn btn-sm btn-primary float-right" href="/platformu/admin/entities/1/user/20/"><i class="far fa-fw fa-pencil"></i></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a class="align-middle" href="/platformu/admin/entities/1/materials/create/"><i class="fal fa-fw fa-tape"></i> Packaging materials (plastics)</a>
+          <a class="btn btn-sm btn-danger float-right ml-2" href="/platformu/admin/entities/1/materials/create/"><i class="far fa-fw fa-trash-alt"></i></a>
+          <a class="btn btn-sm btn-primary float-right" href="/platformu/admin/entities/1/user/20/"><i class="far fa-fw fa-pencil"></i></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a class="align-middle" href="/platformu/admin/entities/1/materials/create/"><i class="fal fa-fw fa-newspaper"></i> Production output (paper)</a>
+          <a class="btn btn-sm btn-danger float-right ml-2" href="/platformu/admin/entities/1/materials/create/"><i class="far fa-fw fa-trash-alt"></i></a>
+          <a class="btn btn-sm btn-primary float-right" href="/platformu/admin/entities/1/user/20/"><i class="far fa-fw fa-pencil"></i></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-  <p><a href="/platformu/admin/entities/1/materials/create/">Add new material</a></p>
-  <p>Add existing material: </p>
-  <select>
-    <option value=""></option>
-    <option value="">Toilet role consumption</option>
-    <option value="">Electricity generation (solar)</option>
-    <option value="">Electricity generation (wind)</option>
-    <option value="">Fuel consumption (diesel)</option>
-    <option value="">Fuel consumption (petrol)</option>
-  </select>
-  <button type="submit">Add</button>
+  <button class="btn btn-primary add-existing mr-2"><i class="fas fa-plus"></i> Add existing material</button>
+  <a class="btn btn-primary-basic" href="/platformu/admin/entities/1/materials/create/"><i class="fas fa-plus"></i> Add new material</a>
 
+  <div class="card mt-4" id="add-material">
+    <div class="row card-body">
+      <div class="col-md-6 col-lg-4 pr-lg-4">
+        <div class="sticky-top">
+          <div class="form-group">
+            <input type="text" class="form-control" id="search" placeholder="Search...">
+          </div>
+          <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+              <a class="nav-link active" href="#"><i class="fal fa-fw fa-circle mr-2"></i> All materials</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"><i class="fal fa-fw fa-bolt mr-2"></i> Electricity</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"><i class="fal fa-fw fa-newspaper mr-2"></i> Paper</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"><i class="fal fa-fw fa-recycle mr-2"></i> Waste</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"><i class="fal fa-fw fa-tint mr-2"></i> Water</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-8 pl-lg-4">
+        <table class="table mb-0">
+          <tbody>
+            <tr><td class="align-middle">veil <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">coil <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">silk <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">donkey <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">van <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">branch <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">mask <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">drawer <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">needle <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">wax <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">snake <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">oven <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">discussion <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">division <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">thunder <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">eggs <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">cable <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">fact <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">lock <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">slip <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">fold <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">sofa <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">ladybug <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">design <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">attraction <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">gun <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">songs <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">rhythm <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">edge <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">soda <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">vacation <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">toothbrush <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">month <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+            <tr><td class="align-middle">tiger <a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block footer %}
+  <script>
+    $(".btn.add-existing").click(function() {
+      $("#add-material").show();
+      scrollToID("add-material");
+    })
+  </script>
 {% endblock %}

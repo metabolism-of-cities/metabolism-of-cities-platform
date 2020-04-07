@@ -5,9 +5,9 @@
 
 {% block content %}
 
-{% include "metabolism_manager/admin/_entity.menu.html" %}
+  {% include "metabolism_manager/admin/_entity.menu.html" %}
 
-<section>
+  <section>
   <form>
     <div class="card mb-4">
       <div class="card-header">
@@ -160,9 +160,9 @@
 
     <button class="btn btn-lg btn-primary my-4" type="submit"><i class="fas fa-save"></i> Save</button>
   </form>
-</section>
+  </section>
 
-<section>
+  <section>
   <h3>Users</h3>
   <table class="table users mt-2">
     <tbody>
@@ -184,7 +184,7 @@
   </table>
 
   <a class="btn btn-primary" href="/platformu/admin/entities/1/user/create/"><i class="fas fa-user-plus"></i> Add new user</a>
-</section>
+  </section>
 
 {% endblock %}
 

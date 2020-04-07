@@ -723,6 +723,22 @@ footer {
   }
 }
 
+// PILLS
+.nav-pills .nav-link {
+  transition: background-color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out
+}
+
+.nav-pills .nav-link:hover {
+  background-color: transparentize($primary, 0.9);
+  color: $primary;
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  background-color: $primary;
+  color: $white;
+}
+
 // BADGES
 .badge-primary {
   background-color: $primary;
@@ -791,7 +807,6 @@ a.badge-secondary:focus {
     border-color: darken($primary, 5%) !important;
     background-color: darken($primary, 5%) !important;
   }
-
 }
 
 // TIMELINE
@@ -1479,8 +1494,13 @@ body.entity.details {
 }
 
 // ENTITY EDIT PAGE
-body.entity.form {
-  table.users {
+body.entity.form,
+body.entity.materials {
+  table {
+    i {
+      margin-right: .5rem;
+    }
+
     .btn i {
        margin-right: 0;
     }
@@ -1493,5 +1513,9 @@ body.entity.form {
       padding-left: 0;
       padding-right: 0;
     }
+  }
+
+  #add-material {
+    display: none;
   }
 }
