@@ -334,7 +334,7 @@ def metabolism_manager_admin_entity_log(request, id):
 
 def metabolism_manager_admin_entity_user(request, id, user=None):
     context = {
-        "page": "entity_user"
+        "page": "entity_form"
     }
     return render(request, "metabolism_manager/admin/entity.user.html", load_specific_design(context, PAGE_ID["platformu"]))
 
