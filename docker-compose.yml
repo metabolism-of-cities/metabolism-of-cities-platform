@@ -1,13 +1,16 @@
-version: '3'  
+version: "3.1"
 
 services:  
   db:
-    image: postgres:latest
+    image: postgis/postgis:12-master
     container_name: moc_db
     environment:
        POSTGRES_HOST_AUTH_METHOD: trust
+       POSTGRES_PASSWORD: postgres
+       POSTGRES_USER: postgres
+       POSTGRES_DB: moc
   adminer:
-    image: adminer
+    image: adminer:4.7.6
     ports:
       - 8080:8080
     container_name: moc_adminer

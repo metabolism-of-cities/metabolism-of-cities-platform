@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     'django_cron',
     'stdimage',
     'sass_processor',
@@ -85,8 +86,8 @@ WSGI_APPLICATION = 'ie.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'moc',
         'USER': 'postgres',
         'HOST': 'db',
         'PORT': 5432,
