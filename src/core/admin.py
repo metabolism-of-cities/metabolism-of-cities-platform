@@ -21,6 +21,9 @@ class ArticleAdmin(admin.ModelAdmin):
         else:
             return super(ArticleAdmin, self).response_add(request, obj, post_url_continue=None)
 
+class VideoAdmin(admin.ModelAdmin):
+    class Media:
+        js = ("js/video.admin.js",)
 
 admin.site.register(Record)
 admin.site.register(Event)
@@ -28,7 +31,7 @@ admin.site.register(News)
 admin.site.register(Article, ArticleAdmin)
 admin.site.register(ArticleDesign)
 admin.site.register(People)
-admin.site.register(Video)
+admin.site.register(Video, VideoAdmin)
 admin.site.register(Project)
 
 admin.site.register(MOOC)

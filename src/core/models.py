@@ -67,12 +67,6 @@ class Video(Record):
         else:
             pass
 
-    def save(self):
-        if "youtube" in self.url or "" in self.url:
-            self.video_site = "youtube"
-            print(self.video_site)
-            super().save() 
-
 
 class People(Record):
     affiliation = models.CharField(max_length=255,null=True, blank=True)
