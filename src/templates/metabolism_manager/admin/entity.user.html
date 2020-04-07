@@ -3,17 +3,7 @@
 {% block title %}Metabolism Manager{% endblock %}
 
 {% block content %}
-
-  <h1>Dunder Miflin</h1>
-  <p>
-    <a href="/platformu/admin/entities/1/">View details</a> | 
-    <a href="/platformu/admin/entities/1/edit/"><strong>Edit</strong></a> | 
-    <a href="/platformu/admin/entities/1/materials/">Materials and products</a> |
-    <a href="/platformu/admin/entities/1/data/">Data</a> | 
-    <a href="/platformu/admin/entities/1/log/">Log</a>
-  </p>
-
-  <hr>
+  {% include "metabolism_manager/admin/_entity.menu.html" %}
 
   <form method="post" class="form form-horizontal">
     <div class="form-group">
@@ -32,7 +22,7 @@
       <div class="col-sm-offset-2 col-sm-10">
         <div class="checkbox">
           <label>
-            <input type="checkbox" name="active" value="1" /> 
+            <input type="checkbox" name="active" value="1" />
               Active
           </label>
         </div>

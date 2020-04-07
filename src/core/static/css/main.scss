@@ -791,6 +791,11 @@ a.badge-secondary:focus {
   }
 }
 
+// TABLE
+table thead th {
+  background-color: $light;
+}
+
 // PHOTO GALLERY
 .gallery a {
   @extend %raised-hover;
@@ -1433,5 +1438,20 @@ body.full.map {
       max-width: unset;
       flex: unset;
     }
+  }
+}
+
+// PLATFORM U
+
+// ENITITY DETAILS PAGE
+body.entity.details {
+  table tbody tr:first-of-type > * {
+    border-top: 0;
+  }
+
+  img {
+    border-radius: .25rem;
+    max-height: 250px;
+    max-width: 100%;
   }
 }

@@ -1,33 +1,72 @@
 {% extends "_base.html" %}
 
 {% block title %}Metabolism Manager{% endblock %}
+{% block page_name %}entity details{% endblock %}
 
 {% block content %}
+  {% include "metabolism_manager/admin/_entity.menu.html" %}
 
-  <h1>Dunder Miflin</h1>
-  <p>
-    <a href="/platformu/admin/entities/1/"><strong>View details</strong></a> | 
-    <a href="/platformu/admin/entities/1/edit/">Edit</a> | 
-    <a href="/platformu/admin/entities/1/materials/">Materials and products</a> |
-    <a href="/platformu/admin/entities/1/data/">Data</a> | 
-    <a href="/platformu/admin/entities/1/log/">Log</a>
-  </p>
+<div class="row">
+  <div class="col-md-4 mb-4">
+    <img class="mb-2" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Dunder_Mifflin%2C_Inc.svg/500px-Dunder_Mifflin%2C_Inc.svg.png">
+    <p>
+      Dolores omnis et maiores sint nesciunt iste qui. Quos officia quia architecto optio. Quod quidem minima eveniet temporibus. Sed nesciunt voluptas maiores totam voluptas at dolorem nulla. Magni necessitatibus illo quae aut asperiores. Voluptate adipisci omnis qui in ipsum.
+    </p>
+  </div>
+  <div class="col-md-8">
+    <div class="card">
+      <table class="table mb-0">
+        <tbody>
+          <tr>
+            <th>Employees</th>
+              <td> 44</td>
+            </tr>
+          <tr>
+            <th>Location</th>
+            <td>Scranton, PA</td>
+          </tr>
+          <tr>
+            <th>Industry</th>
+            <td>Paper</td>
+          </tr>
+          <tr>
+            <th>Registration date</th>
+            <td>22 January 2020</td>
+          </tr>
+          <tr>
+            <th>Email</th>
+            <td><a href="">info@dundermifflin.com</a></td>
+          </tr>
+          <tr>
+            <th>Website</th>
+            <td><a href="">dundermifflin.com</a></td>
+          </tr>
+          <tr>
+            <th>Last login</th>
+            <td>20 February 2020</td>
+          </tr>
+          <tr>
+            <th>Users</th>
+            <td>Michael Scott, Pam Halpert, Angela Martins</td>
+          </tr>
+          <tr>
+            <th>Status</th>
+            <td>Active</td>
+          </tr>
+          <tr>
+            <th>Data sharing</th>
+            <td>public</td>
+          </tr>
+          <tr>
+            <th>Reporting</th>
+            <td>monthly</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
-  <hr>
 
-  <p>Logo</p>
-
-  <p><strong>Description:</strong> Lorem ipsum ...</p>
-  <p><strong>Employees</strong>: 44</p>
-  <p><strong>Location:</strong> Scranton, PA</p>
-  <p><strong>Industry:</strong> Paper</p>
-  <p><strong>Registration date:</strong> Jan 22, 2020</p>
-  <p><strong>E-mail</strong>: info@dundermifflin.com</p>
-  <p><strong>Website</strong>: www.dundermifflin.com</p>
-  <p><strong>Last login:</strong> Feb 33, 2020</p>
-  <p><strong>Users</strong>: Michael Scott, Pam Halpert, Angela Martins</p>
-  <p><strong>Status:</strong> Active</p>
-  <p><strong>Data sharing:</strong> public</p>
-  <p><strong>Reporting:</strong> monthly</p>
 
 {% endblock %}

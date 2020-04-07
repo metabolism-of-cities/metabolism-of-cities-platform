@@ -126,7 +126,7 @@ def user_login(request):
 
     if request.user.is_authenticated:
         return redirect("index")
-    
+
     if request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
@@ -152,7 +152,7 @@ def index(request):
     return render(request, "index.html")
 
 # The template section allows contributors to see how some
-# commonly used elements are coded, and allows them to copy/paste 
+# commonly used elements are coded, and allows them to copy/paste
 
 def templates(request):
     return render(request, "template/index.html")
@@ -278,7 +278,7 @@ def dataset(request, place, dataset):
     context = {
     }
     return render(request, "data/dataset.html", load_specific_design(context, PAGE_ID["multiplicity"]))
-    
+
 # Metabolism Manager
 
 def metabolism_manager(request):
@@ -299,36 +299,43 @@ def metabolism_manager_admin(request):
 
 def metabolism_manager_admin_entity(request, id):
     context = {
+        "page": "entity"
     }
     return render(request, "metabolism_manager/admin/entity.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_admin_entity_form(request, id=None):
     context = {
+        "page": "entity_form"
     }
     return render(request, "metabolism_manager/admin/entity.form.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_admin_entity_materials(request, id):
     context = {
+        "page": "entity_materials"
     }
     return render(request, "metabolism_manager/admin/entity.materials.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_admin_entity_material(request, id):
     context = {
+        "page": "entity_materials"
     }
     return render(request, "metabolism_manager/admin/entity.material.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_admin_entity_data(request, id):
     context = {
+        "page": "entity_data"
     }
     return render(request, "metabolism_manager/admin/entity.data.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_admin_entity_log(request, id):
     context = {
+        "page": "entity_log"
     }
     return render(request, "metabolism_manager/admin/entity.log.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_admin_entity_user(request, id, user=None):
     context = {
+        "page": "entity_user"
     }
     return render(request, "metabolism_manager/admin/entity.user.html", load_specific_design(context, PAGE_ID["platformu"]))
 
@@ -675,7 +682,7 @@ def project_form(request):
                 "New project created",
 f'''A new project was created, please review:
 
-Project name: {title} 
+Project name: {title}
 Submitted by: {posted_by}
 Email: {user_email}
 

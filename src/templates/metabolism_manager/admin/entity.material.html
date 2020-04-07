@@ -3,17 +3,7 @@
 {% block title %}Metabolism Manager{% endblock %}
 
 {% block content %}
-
-  <h1>Dunder Miflin</h1>
-  <p>
-    <a href="/platformu/admin/entities/1/">View details</a> | 
-    <a href="/platformu/admin/entities/1/edit/">Edit</a> | 
-    <a href="/platformu/admin/entities/1/materials/"><strong>Materials and products</strong></a> |
-    <a href="/platformu/admin/entities/1/data/">Data</a> | 
-    <a href="/platformu/admin/entities/1/log/">Log</a>
-  </p>
-
-  <hr>
+  {% include "metabolism_manager/admin/_entity.menu.html" %}
 
   <form method="post" class="form form-horizontal">
     <div class="form-group">

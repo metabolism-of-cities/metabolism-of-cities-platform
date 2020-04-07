@@ -3,26 +3,50 @@
 {% block title %}Metabolism Manager{% endblock %}
 
 {% block content %}
+  {% include "metabolism_manager/admin/_entity.menu.html" %}
 
-  <h1>Dunder Miflin</h1>
-  <p>
-    <a href="/platformu/admin/entities/1/">View details</a> | 
-    <a href="/platformu/admin/entities/1/edit/">Edit</a> | 
-    <a href="/platformu/admin/entities/1/materials/">Materials and products</a> |
-    <a href="/platformu/admin/entities/1/data/">Data</a> | 
-    <a href="/platformu/admin/entities/1/log/"><strong>Log</strong></a>
-  </p>
+  <div class="card">
+    <div class="card-body">
+      <h3>Latest activity on this account</h3>
+    </div>
 
-  <hr>
-
-  <p>Latest activity on this account:</p>
-
-  <p>Date | Name | Action</p>
-  <p>Feb 10, 2020 | Jim Halpert | Log in</p>
-  <p>Feb 11, 2020 | Jim Halpert | Log out</p>
-  <p>Feb 12, 2020 | Pam Halpert | Log in</p>
-  <p>Feb 12, 2020 | Pam Halpert | Added paper production record</p>
-  <p>Feb 12, 2020 | Michael Scott | Deleted entire database</p>
+    <table class="table mb-0">
+      <thead>
+        <tr>
+          <th class="border-0">Date</th>
+          <th class="border-0">Name</th>
+          <th class="border-0">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>10 February 2020</td>
+          <td>Jim Halpert</td>
+          <td>Log in</td>
+        </tr>
+        <tr>
+          <td>11 February 2020</td>
+          <td>Jim Halpert</td>
+          <td>Log out</td>
+        </tr>
+        <tr>
+          <td>12 February 2020</td>
+          <td>Pam Halpert</td>
+          <td>Log in</td>
+        </tr>
+        <tr>
+          <td>12 February 2020</td>
+          <td>Pam Halpert</td>
+          <td>Added paper production record</td>
+        </tr>
+        <tr>
+          <td>12 February 2020</td>
+          <td>Michael Scott</td>
+          <td>Deleted entire database</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
 
 

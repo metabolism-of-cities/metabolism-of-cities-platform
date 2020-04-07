@@ -3,17 +3,7 @@
 {% block title %}Metabolism Manager{% endblock %}
 
 {% block content %}
-
-  <h1>Dunder Miflin</h1>
-  <p>
-    <a href="/platformu/admin/entities/1/">View details</a> | 
-    <a href="/platformu/admin/entities/1/edit/">Edit</a> | 
-    <a href="/platformu/admin/entities/1/materials/">Materials and products</a> |
-    <a href="/platformu/admin/entities/1/data/"><strong>Data</strong></a> | 
-    <a href="/platformu/admin/entities/1/log/">Log</a>
-  </p>
-
-  <hr>
+  {% include "metabolism_manager/admin/_entity.menu.html" %}
 
   <p>Date | Material | Type | Quantity</p>
   <p>February 2020 | Paper | Production output | 493 t</p>
@@ -21,7 +11,4 @@
   <p>February 2020 | Cardboard paper | Production output | 33 t</p>
   <p>March 2020 | Paper | Production output | 442 t</p>
   <p>April, 2020 | Paper | Production output | 413 t</p>
-
-
-
 {% endblock %}
