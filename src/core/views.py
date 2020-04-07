@@ -363,7 +363,7 @@ def forum_topic(request, id):
         new.title = "Reply to: "+ info.title
         new.content = markdown(request.POST["text"])
         new.parent = info
-        new.user = User.objects.get(pk=1)
+        new.user = request.user
         new.save()
 
         if request.FILES:
@@ -388,7 +388,7 @@ def forum_form(request, id=False):
         new.record = info
         new.title = request.POST["title"]
         new.content = markdown(request.POST["text"])
-        new.user = User.objects.get(pk=1)
+        new.user = request.user
         new.save()
 
         if request.FILES:
