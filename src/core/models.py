@@ -20,6 +20,9 @@ class Record(models.Model):
 
 class Document(Record):
     file = models.FileField(null=True, blank=True, upload_to="files")
+    def getFileName(self):
+      filename = str(self.file).split("/")[1]
+      return filename
 
 class Project(Record):
     email = models.EmailField(null=True, blank=True)

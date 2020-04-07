@@ -52,7 +52,8 @@
         </div>
         <div class="attachment mt-3">
           {% for subdetails in details.getForumMessageFiles %}
-          <a class="btn btn-sm btn-primary-outline mb-1" href="{{ MEDIA_URL }}{{ subdetails.file.url }}" target="_blank"><i class="far fa-paperclip"></i> {{ subdetails.file.name }}</a>
+            <a class="btn btn-sm btn-primary-outline mb-1" href="{{ MEDIA_URL }}{{ subdetails.file.url }}" target="_blank"><i class="far fa-paperclip"></i> {{ subdetails.getFileName }}
+            </a>
           {% endfor %}
         </div>
       </div>

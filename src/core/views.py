@@ -611,7 +611,6 @@ def project_form(request):
     is_saved = False
     if request.method == "POST":
         if form.is_valid():
-            print(request.POST)
             info = form.save(commit=False)
             info.active = False
             info.save()
