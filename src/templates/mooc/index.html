@@ -17,7 +17,7 @@
         {{ module.name }}
       </a>
       <ul>
-        {% for module_questions in module.mooc_mq_module.all|dictsort:"position" %}
+        {% for module_questions in module.questions.all %}
         <li>{{ module_questions.question.question }}</li>
         {% endfor %}
       </ul>

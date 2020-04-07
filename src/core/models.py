@@ -128,13 +128,16 @@ class MOOCModule(models.Model):
         return self.name
 
 class MOOCModuleQuestion(models.Model):
-    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE, related_name="mooc_mq_module")
-    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE, related_name="mooc_mq_question")
+    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE, related_name="questions")
+    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE)
     position = models.PositiveSmallIntegerField(db_index=True, null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.module.name + " - " + self.question.question
+
+    class Meta:
+        ordering = ["position"]
 
 class MOOCVideo(models.Model):
     video = models.ForeignKey(Video, on_delete=models.CASCADE)
