@@ -2,23 +2,11 @@
 
 {% block content %}
 
-<div style="width:200px;background:#ccc;float:left;margin-right:20px;margin-bottom:10px;">
-  <ul>
-    <li><a href="/platformu/dashboard/">Dashboard</a></li>
-    <li><a href="/platformu/materials/electricity/">Electricity</a></li>
-    <li><a href="/platformu/materials/electricity/">Water</a></li>
-    <li><a href="/platformu/materials/electricity/">Paper</a></li>
-    <li><a href="/platformu/report/">My report</a></li>
-    <li><a href="/platformu/marketplace/">Marketplace</a></li>
-    <li><a href="/platformu/forum/">Forum</a></li>
-  </ul>
-</div>
-
-<h2>Marketplace</h2>
+{% include "metabolism_manager/_user.menu.html" %}
 
 <p>
-  We can help you find a market for resources! Please fill out the form below to 
-  report any surplus resources or wasteflows that you may have, and we will 
+  We can help you find a market for resources! Please fill out the form below to
+  report any surplus resources or wasteflows that you may have, and we will
   try and find a destination for this.
 </p>
 

@@ -698,8 +698,7 @@ footer {
 
 // STATISTICS BOX
 .statistics-box {
-  @extend %raised-hover;
-  @extend %box-shadow;
+  box-shadow: $basic-shadow;
   display: block;
   border-radius: .25rem;
   background-color: $white;
@@ -721,6 +720,11 @@ footer {
     right: -1rem;
     bottom: -1rem;
   }
+}
+
+a.statistics-box {
+  @extend %raised-hover;
+  @extend %box-shadow;
 }
 
 // PILLS
@@ -832,6 +836,17 @@ a.badge-secondary:focus {
 table thead th {
   background-color: $light;
 }
+
+@media (min-width: 992px) {
+  table .narrow-cell {
+    width: 100px;
+  }
+
+  table .medium-cell {
+    width: 200px;
+  }
+}
+
 
 // PHOTO GALLERY
 .gallery a {
@@ -1112,11 +1127,6 @@ body.forum {
       color: $light;
       display: inline-block;
     }
-
-  }
-
-  .narrow-cell {
-    width: 100px;
   }
 
   &.topic {
@@ -1517,5 +1527,18 @@ body.entity.materials {
 
   #add-material {
     display: none;
+  }
+}
+
+// USER DASHBOARD PAGE
+body.metabolism.manager.dashboard {
+  .statistics-box {
+    .progress {
+      height: .25rem;
+    }
+
+    i {
+      font-size: 5rem;
+    }
   }
 }

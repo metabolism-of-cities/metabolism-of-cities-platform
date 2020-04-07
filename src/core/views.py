@@ -340,11 +340,13 @@ def metabolism_manager_admin_entity_user(request, id, user=None):
 
 def metabolism_manager_dashboard(request):
     context = {
+        "page": "dashboard"
     }
     return render(request, "metabolism_manager/dashboard.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_material(request):
     context = {
+        "page": "material"
     }
     return render(request, "metabolism_manager/material.html", load_specific_design(context, PAGE_ID["platformu"]))
 
@@ -355,11 +357,13 @@ def metabolism_manager_material_form(request):
 
 def metabolism_manager_report(request):
     context = {
+        "page": "report"
     }
     return render(request, "metabolism_manager/report.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_marketplace(request):
     context = {
+        "page": "marketplace"
     }
     return render(request, "metabolism_manager/marketplace.html", load_specific_design(context, PAGE_ID["platformu"]))
 

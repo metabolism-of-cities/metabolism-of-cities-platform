@@ -2,19 +2,7 @@
 
 {% block content %}
 
-<div style="width:200px;background:#ccc;float:left;margin-right:20px;margin-bottom:10px;">
-  <ul>
-    <li><a href="/platformu/dashboard/">Dashboard</a></li>
-    <li><a href="/platformu/materials/electricity/">Electricity</a></li>
-    <li><a href="/platformu/materials/electricity/">Water</a></li>
-    <li><a href="/platformu/materials/electricity/">Paper</a></li>
-    <li><a href="/platformu/report/">My report</a></li>
-    <li><a href="/platformu/marketplace/">Marketplace</a></li>
-    <li><a href="/platformu/forum/">Forum</a></li>
-  </ul>
-</div>
-
-<h2>Report</h2>
+{% include "metabolism_manager/_user.menu.html" %}
 
 <p>
   Time period: <input type="date" name="" /> until <input type="date" name="" />

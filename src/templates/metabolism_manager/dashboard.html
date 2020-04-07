@@ -1,30 +1,45 @@
 {% extends "_base.html" %}
 
+{% block page_name %}metabolism manager dashboard{% endblock %}
+{% block title %}Index{% endblock %}
+
 {% block content %}
 
-<div style="width:200px;background:#ccc;float:left;margin-right:20px;margin-bottom:10px;">
-  <ul>
-    <li><a href="/platformu/dashboard/">Dashboard</a></li>
-    <li><a href="/platformu/materials/electricity/">Electricity</a></li>
-    <li><a href="/platformu/materials/electricity/">Water</a></li>
-    <li><a href="/platformu/materials/electricity/">Paper</a></li>
-    <li><a href="/platformu/report/">My report</a></li>
-    <li><a href="/platformu/marketplace/">Marketplace</a></li>
-    <li><a href="/platformu/forum/">Forum</a></li>
-  </ul>
+{% include "metabolism_manager/_user.menu.html" %}
+
+<h3>Indicator scores</h3>
+<div class="row">
+  <div class="col-md-4 mb-4">
+    <div class="statistics-box" href="#">
+      <div class="description">Data entry</div>
+    <div class="progress">
+      <div class="progress-bar bg-warning" role="progressbar" style="width: 64%" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+      <div class="statistic">64%</div>
+      <i class="fad fa-database text-warning"></i>
+    </div>
+  </div>
+  <div class="col-md-4 mb-4">
+    <div class="statistics-box" href="#">
+      <div class="description">Resource management</div>
+    <div class="progress">
+      <div class="progress-bar bg-success" role="progressbar" style="width: 97%" aria-valuenow="97" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+      <div class="statistic">97%</div>
+      <i class="fad fa-tasks-alt text-success"></i>
+    </div>
+  </div>
+  <div class="col-md-4 mb-4">
+    <div class="statistics-box" href="#">
+      <div class="description">Circularity</div>
+    <div class="progress">
+      <div class="progress-bar bg-danger" role="progressbar" style="width: 27%" aria-valuenow="27" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+      <div class="statistic">27%</div>
+      <i class="fad fa-dot-circle text-danger"></i>
+    </div>
+  </div>
 </div>
-
-<h2>Dashboard</h2>
-
-<h3>Indicator scores:</h3>
-
-<p>round circles or something like that which can be red/orange/green, with a score there. The circles are:</p>
-
-<ul>
-  <li>Data entry: 87%</li>
-  <li>Resource management: 97%</li>
-  <li>Circularity: 27%</li>
-</ul>
 
 <h3>Electricity</h3>
 
