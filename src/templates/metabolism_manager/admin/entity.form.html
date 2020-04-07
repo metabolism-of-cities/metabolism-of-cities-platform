@@ -1,96 +1,195 @@
 {% extends "_base.html" %}
 
 {% block title %}Metabolism Manager{% endblock %}
+{% block page_name %}entity form{% endblock %}
 
 {% block content %}
-  {% include "metabolism_manager/admin/_entity.menu.html" %}
 
-  <div class="card">
-    <div class="card-header">
-      General information
+{% include "metabolism_manager/admin/_entity.menu.html" %}
+
+<section>
+  <form>
+    <div class="card mb-4">
+      <div class="card-header">
+        General information
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label for="name">Company name</label>
+          <input type="text" class="form-control" id="name">
+        </div>
+        <div class="form-group">
+          <label for="logo">Logo</label>
+          <div class="custom-file">
+            <input type="file" class="custom-file-input" id="customFile">
+            <label class="custom-file-label" for="customFile">Choose file</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" class="form-control"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="employees">Employees</label>
+          <input min="0" type="number" class="form-control" id="employees">
+        </div>
+        <div class="form-group">
+          <label for="location">Location</label>
+          <input type="text" class="form-control" id="location">
+        </div>
+        <div class="form-group">
+          <label>Industry</label>
+          <select class="custom-select" class="form-control">
+            <option selected>Open this select menu</option>
+            <option value="1">Paper industry</option>
+            <option value="2">Oil and gas</option>
+            <option value="3">Transport</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="">Email</label>
+          <input type="" id="" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="">Website</label>
+          <input type="" id="" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="">Active</label>
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="customCheck1">
+            <label class="custom-control-label" for="customCheck1"></label>
+          </div>
+        </div>
+      </div>
     </div>
-    <form class="card-body">
-      <div class="form-group">
-        <label for="name">Company name</label>
-        <input type="text" class="form-control" id="name">
+
+    <div class="card mb-4">
+      <div class="card-header">
+        Settings
       </div>
-      <div class="form-group">
-        <label for="logo">Logo</label>
-        <div class="custom-file">
-          <input type="file" class="custom-file-input" id="customFile">
-          <label class="custom-file-label" for="customFile">Choose file</label>
+      <div class="card-body">
+        <div class="form-group">
+          <label for="name">Company name</label>
+          <input type="text" class="form-control" id="name">
+        </div>
+        <div class="form-group">
+          <label for="logo">Logo</label>
+          <div class="custom-file">
+            <input type="file" class="custom-file-input" id="customFile">
+            <label class="custom-file-label" for="customFile">Choose file</label>
+          </div>
         </div>
       </div>
-      <div class="form-group">
-        <label for="description">Description</label>
-        <textarea id="description" class="form-control"></textarea>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        Users
       </div>
-      <div class="form-group">
-        <label for="employees">Employees</label>
-        <input min="0" type="number" class="form-control" id="employees">
-      </div>
-      <div class="form-group">
-        <label for="location">Location</label>
-        <input type="text" class="form-control" id="location">
-      </div>
-      <div class="form-group">
-        <label>Industry</label>
-        <select class="custom-select" class="form-control">
-          <option selected>Open this select menu</option>
-          <option value="1">Paper industry</option>
-          <option value="2">Oil and gas</option>
-          <option value="3">Transport</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="">Email</label>
-        <input type="" id="" class="form-control">
-      </div>
-      <div class="form-group">
-        <label for="">Website</label>
-        <input type="" id="" class="form-control">
-      </div>
-      <div class="form-group">
-        <label for="">Active</label>
-        <div class="custom-control custom-switch">
-          <input type="checkbox" class="custom-control-input" id="customCheck1">
-          <label class="custom-control-label" for="customCheck1"></label>
+      <div class="card-body">
+        <div class="form-group">
+          <label for="name">Data sharing</label>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="public" name="data-sharing" class="custom-control-input">
+            <label class="custom-control-label" for="public">Public</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="anonymized" name="data-sharing" class="custom-control-input">
+            <label class="custom-control-label" for="anonymized">Public, but anonymized</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="private" name="data-sharing" class="custom-control-input">
+            <label class="custom-control-label" for="private">Private</label>
+          </div>
+          <small class="form-text text-muted">
+            Delectus non quia recusandae vitae. Sed quam nihil quasi repellat ut voluptatem eius. Voluptas est aliquam hic voluptatem et eveniet dolorem expedita. Blanditiis fugiat sit quae ut et est cumque optio. Molestiae sit asperiores qui et iusto vel. Voluptate laudantium assumenda deleniti vel ullam dolorum.
+          </small>
+        </div>
+        <div class="form-group">
+          <label for="name">Data delay</label>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="none" name="data-delay" class="custom-control-input">
+            <label class="custom-control-label" for="none">No delay</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="1-year" name="data-delay" class="custom-control-input">
+            <label class="custom-control-label" for="1-year">1 year old data only</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="2-years" name="data-delay" class="custom-control-input">
+            <label class="custom-control-label" for="2-years">2 year old data only</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="name">Reporting</label>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="monthly" name="reporting" class="custom-control-input">
+            <label class="custom-control-label" for="monthly">Monthly</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="quarterly" name="reporting" class="custom-control-input">
+            <label class="custom-control-label" for="quarterly">Quarterly</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="annual" name="reporting" class="custom-control-input">
+            <label class="custom-control-label" for="annual">Annual</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="name">Modules</label>
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="mfa">
+            <label class="custom-control-label" for="mfa">Corporate MFA</label>
+          </div>
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="matchmaking">
+            <label class="custom-control-label" for="matchmaking">Matchmaking platform</label>
+          </div>
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="tips">
+            <label class="custom-control-label" for="tips">Tips and advice service</label>
+          </div>
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="report">
+            <label class="custom-control-label" for="report">Annual sustainability report</label>
+          </div>
         </div>
       </div>
-    </form>
-  </div>
-  <div class="card">
+    </div>
 
-  </div>
-  <div class="card">
+    <button class="btn btn-lg btn-primary my-4" type="submit"><i class="fas fa-save"></i> Save</button>
+  </form>
+</section>
 
-  </div>
+<section>
+  <h3>Users</h3>
+  <table class="table users mt-2">
+    <tbody>
+      <tr>
+        <td>
+          <a class="align-middle" href="/platformu/admin/entities/1/user/20/">Michael Scott</a>
+          <a class="btn btn-sm btn-danger float-right ml-2" href=""><i class="far fa-fw fa-trash-alt"></i></a>
+          <a class="btn btn-sm btn-primary float-right" href="/platformu/admin/entities/1/user/20/"><i class="far fa-fw fa-pencil"></i></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a class="align-middle" href="/platformu/admin/entities/1/user/20/">Pam Halpert</a>
+          <a class="btn btn-sm btn-danger float-right ml-2" href=""><i class="far fa-fw fa-trash-alt"></i></a>
+          <a class="btn btn-sm btn-primary float-right" href="/platformu/admin/entities/1/user/20/"><i class="far fa-fw fa-pencil"></i></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-
-  <h2>Settings</h2>
-  <p><strong>Data sharing:</strong> public | public, but anonymized | private  <-- there needs to be some sort of help popup to explain what each of them means. For now a lorem ipsum is enough.</p>
-  <p><strong>Data delay</strong>: no delay | 1-year old data only | 2 year old data only</p>
-  <p><strong>Reporting:</strong> monthly | quarterly | annual</p>
-  <p><strong>Modules:</strong><br>
-    <input type="checkbox" name="" /> Corporate MFA<br>
-    <input type="checkbox" name="" /> Matchmaking platform<br>
-    <input type="checkbox" name="" /> Tips &amp; advice service<br>
-    <input type="checkbox" name="" /> Annual sustainability report<br>
-  </p>
-  <button type="submit">Save</button>
-
-  <h2>Users</h2>
-
-  <p>Table with users, and icons next to each name: view | edit | delete</p>
-  <p>Michael Scott | view | <a href="/platformu/admin/entities/1/user/20/">edit</a> | delete</p>
-  <p>Pam Halpert | view | <a href="/platformu/admin/entities/1/user/20/">edit</a> | delete</p>
-
-  <p><a href="/platformu/admin/entities/1/user/create/">Add new user</a></p>
+  <a class="btn btn-primary" href="/platformu/admin/entities/1/user/create/"><i class="fas fa-user-plus"></i> Add new user</a>
+</section>
 
 {% endblock %}
 
 {% block footer %}
-  <!-- making the input look good and work well -- https://www.npmjs.com/package/bs-custom-file-input -->
+  <!-- making the browse for file input look good and work well -- https://www.npmjs.com/package/bs-custom-file-input -->
   <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
   <script>
     $(document).ready(function () {
