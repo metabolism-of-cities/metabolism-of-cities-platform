@@ -9,7 +9,6 @@ from django.db.models import Count
 from django.contrib import messages
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
-from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.contrib.auth import login
 from django.http import Http404, HttpResponseRedirect
@@ -427,16 +426,39 @@ def event(request, id):
 
 def forum_list(request):
     article = get_object_or_404(Article, pk=17)
+    list = ForumMessage.objects.filter(parent__isnull=True)
     context = {
         "header": getHeader(article),
+        "list": list,
     }
     return render(request, "forum.list.html", context)
 
 def forum_topic(request, id):
     article = get_object_or_404(Article, pk=17)
+    info = get_object_or_404(ForumMessage, pk=id)
+    list = ForumMessage.objects.filter(parent=id)
     context = {
         "header": getHeader(article),
+        "info": info,
+        "list": list,
     }
+    if request.method == "POST":
+
+        new = ForumMessage()
+        new.title = "Reply to: "+ info.title
+        new.content = request.POST["text"]
+        new.parent = info
+        new.user = request.user
+        new.save()
+
+        if request.FILES:
+            files = request.FILES.getlist("file")
+            for file in files:
+                info_document = Document()
+                info_document.file = file
+                info_document.save()
+                new.documents.add(info_document)
+        messages.success(request, "Your message has been posted.")
     return render(request, "forum.topic.html", context)
 
 def forum_form(request, id=False):
@@ -444,6 +466,22 @@ def forum_form(request, id=False):
     context = {
         "header": getHeader(article),
     }
+    if request.method == "POST":
+        new = ForumMessage()
+        new.title = request.POST["title"]
+        new.content = request.POST["text"]
+        new.user = request.user
+        new.save()
+
+        if request.FILES:
+            files = request.FILES.getlist("file")
+            for file in files:
+                info_document = Document()
+                info_document.file = file
+                info_document.save()
+                new.documents.add(info_document)
+        messages.success(request, "Your message has been posted.")
+        return redirect(new.get_absolute_url())
     return render(request, "forum.form.html", context)
 
 # VIDEOS
@@ -666,7 +704,6 @@ def project_form(request):
     is_saved = False
     if request.method == "POST":
         if form.is_valid():
-            print(request.POST)
             info = form.save(commit=False)
             info.active = False
             info.save()

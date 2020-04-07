@@ -9,6 +9,7 @@ from django.contrib.sites.managers import CurrentSiteManager
 from django.urls import reverse
 from django.forms import ModelForm
 from django.conf import settings
+from markdown import markdown
 
 class Record(models.Model):
     title = models.CharField(max_length=255)
@@ -20,6 +21,9 @@ class Record(models.Model):
 
 class Document(Record):
     file = models.FileField(null=True, blank=True, upload_to="files")
+    def getFileName(self):
+      filename = str(self.file).split("/")[1]
+      return filename
 
 class Project(Record):
     email = models.EmailField(null=True, blank=True)
@@ -111,6 +115,21 @@ class ForumMessage(Record):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     documents = models.ManyToManyField(Document)
 
+    def getReply(self):
+        return ForumMessage.objects.filter(parent=self)
+
+    def getLastActivity(self):
+        return ForumMessage.objects.filter(parent=self).last()
+
+    def getForumMessageFiles(self):
+        return self.documents.all()
+
+    def getContent(self):
+        return markdown(self.content)
+
+    def get_absolute_url(self):
+        return reverse("forum_topic", args=[self.id])
+
 #MOOC's
 class MOOC(models.Model):
     name = models.CharField(max_length=255)
@@ -137,13 +156,16 @@ class MOOCModule(models.Model):
         return self.name
 
 class MOOCModuleQuestion(models.Model):
-    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE, related_name="mooc_mq_module")
-    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE, related_name="mooc_mq_question")
+    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE, related_name="questions")
+    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE)
     position = models.PositiveSmallIntegerField(db_index=True, null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.module.name + " - " + self.question.question
+
+    class Meta:
+        ordering = ["position"]
 
 class MOOCVideo(models.Model):
     video = models.ForeignKey(Video, on_delete=models.CASCADE)
