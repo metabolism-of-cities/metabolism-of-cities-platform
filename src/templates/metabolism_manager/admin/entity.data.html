@@ -5,10 +5,49 @@
 {% block content %}
   {% include "metabolism_manager/admin/_entity.menu.html" %}
 
-  <p>Date | Material | Type | Quantity</p>
-  <p>February 2020 | Paper | Production output | 493 t</p>
-  <p>February 2020 | Toilet paper | Consumption | 3 t</p>
-  <p>February 2020 | Cardboard paper | Production output | 33 t</p>
-  <p>March 2020 | Paper | Production output | 442 t</p>
-  <p>April, 2020 | Paper | Production output | 413 t</p>
+  <div class="card">
+    <table class="table mb-0">
+      <thead>
+        <tr>
+          <th class="border-0">Date</th>
+          <th class="border-0">Material</th>
+          <th class="border-0">Type</th>
+          <th class="border-0">Quantity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>February 2020</td>
+          <td>Paper</td>
+          <td>Production output</td>
+          <td>493 t</td>
+        </tr>
+        <tr>
+          <td>February 2020</td>
+          <td>Toilet paper</td>
+          <td>Consumption</td>
+          <td>3 t</td>
+        </tr>
+        <tr>
+          <td>February 2020</td>
+          <td>Cardboard paper</td>
+          <td>Production output</td>
+          <td>33 t</td>
+        </tr>
+        <tr>
+          <td>March 2020</td>
+          <td>Paper</td>
+          <td>Production output</td>
+          <td>442 t</td>
+        </tr>
+        <tr>
+          <td>April 2020</td>
+          <td>Paper</td>
+          <td>Production output</td>
+          <td>413 t</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
 {% endblock %}
