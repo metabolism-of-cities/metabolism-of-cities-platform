@@ -99,6 +99,28 @@ textarea.form-control:focus, input.form-control:focus, select.custom-select:focu
   opacity: .25 !important;
 }
 
+.custom-control-input:checked ~ .custom-control-label::before {
+  border-color: $primary;
+  background-color: $primary;
+}
+
+.custom-control-input:not(:disabled):active ~ .custom-control-label::before {
+  background-color: transparentize($primary, .75);
+  border-color: transparentize($primary, .75);
+}
+
+.custom-control-input:focus ~ .custom-control-label::before {
+  box-shadow: 0 0 0 .2rem rgba($primary, .25)
+}
+
+.custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
+  border-color: $light;
+}
+
+.custom-file-input:focus ~ .custom-file-label {
+  border-color: $primary;
+  box-shadow: 0 0 0 .2rem rgba($primary, .25)
+}
 
 // COMMON ELEMENTS
 // NAVBAR AND HERO
@@ -1453,5 +1475,23 @@ body.entity.details {
     border-radius: .25rem;
     max-height: 250px;
     max-width: 100%;
+  }
+}
+
+// ENTITY EDIT PAGE
+body.entity.form {
+  table.users {
+    .btn i {
+       margin-right: 0;
+    }
+
+    tbody tr:first-of-type > * {
+      border-top: 0;
+    }
+
+    td {
+      padding-left: 0;
+      padding-right: 0;
+    }
   }
 }
