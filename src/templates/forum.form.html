@@ -11,14 +11,15 @@
 {% endblock %}
 
 {% block content %}
-<form>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
   <div class="form-group">
     <label for="title">Topic title</label>
-    <input type="text" class="form-control" id="title" required>
+    <input type="text" class="form-control" id="title" name="title" required>
   </div>
   <div class="form-group">
     <label for="text">Text</label>
-    <textarea class="form-control" id="text" rows="3" required></textarea>
+    <textarea class="form-control" id="text" rows="3" name="text" required></textarea>
   </div>
   <div class="form-group">
     <label for="tags">Tag(s)</label>
@@ -30,7 +31,7 @@
   </div>
   <div class="form-group">
     <label for="files">File(s)</label>
-    <input type="file" class="form-control-file" id="files" multiple="multiple">
+    <input type="file" class="form-control-file" name="file" id="files" multiple="multiple">
   </div>
   <button type="submit" class="btn btn-lg btn-primary mt-4">Submit</button>
 </form>

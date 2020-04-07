@@ -4,14 +4,16 @@
 
 {% block page_name %}forum{% endblock %}
 
-{% block css %}
-{% endblock %}
-
 {% block content %}
 
   <div class="row mb-4">
     <div class="col-md-4 mb-2">
-      <input type="text" class="form-control" placeholder="Search by topic title...">
+      <select class="custom-select">
+        <option selected>Filter by title</option>
+        {% for details in list %}
+          <option>{{ details.title }}</option>
+        {% endfor %}
+      </select>
     </div>
     <div class="col-md-4 mb-2">
       <select class="custom-select">
@@ -36,57 +38,48 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>
-          <a href="/community/forum/1">Officiis consequatur expedita commodi</a>
-          <br>
-          <a href="#" class="badge badge-primary">Cape Town</a>
-          <a href="#" class="badge badge-primary">Water</a>
-        </td>
-        <td class="d-none d-lg-table-cell">
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg"></a>
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/photo_cv.thumbnail.jpg"></a>
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/guus.thumbnail.jpg"></a>
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/team.rupert.thumbnail.jpg"></a>
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/gabriela_fernandez_pic.thumbnail.png"></a>
-          <span class="avatar plus">+5</span>
-        </td>
-        <td class="d-none d-sm-table-cell narrow-cell text-center">100</td>
-        <td class="d-none d-md-table-cell narrow-cell text-center">26m</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/community/forum/1">Voluptatem vero animi voluptatibus</a>
-          <br>
-          <a href="#" class="badge badge-primary">Vero animi</a>
-        </td>
-        <td class="d-none d-lg-table-cell">
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/team.rupert.thumbnail.jpg"></a>
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/photo_cv.thumbnail.jpg"></a>
-        </td>
-        <td class="d-none d-sm-table-cell narrow-cell text-center">2</td>
-        <td class="d-none d-md-table-cell narrow-cell text-center">2h</td>
-      </tr>
-      <tr>
-        <td>
-          <a href="/community/forum/1">Voluptas molestias et autem</a>
-          <br>
-          <a href="#" class="badge badge-primary">Eum velit ipsa</a>
-          <a href="#" class="badge badge-primary">Officiis dolorum</a>
-          <a href="#" class="badge badge-primary">Nesciunt</a>
-          <a href="#" class="badge badge-primary">Tenetur</a>
-        </td>
-        <td class="d-none d-lg-table-cell">
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/photo_cv.thumbnail.jpg"></a>
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/gabriela_fernandez_pic.thumbnail.png"></a>
-          <a href="#"><img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg"></a>
-        </td>
-        <td class="d-none d-sm-table-cell narrow-cell text-center">2</td>
-        <td class="d-none d-md-table-cell narrow-cell text-center">4d</td>
-      </tr>
+      {% for details in list %}
+        <tr>
+          <td>
+            <a href="{% url "forum_topic" details.id %}">
+              {{ details.title }}
+            </a>
+            <br>
+            <a href="#" class="badge badge-primary">Cape Town</a>
+            <a href="#" class="badge badge-primary">Water</a>
+          </td>
+          <td class="d-none d-lg-table-cell">
+            {% if details.getReply.count > 5 %}
+              {% for subdetails in details.getReply|slice:"5" %}
+                <span class="avatar plus">
+                  {{ subdetails.user.first_name|slice:"1" }}
+                </span>
+              {% endfor %}
+              {% with count_reply=details.getReply.count|add:"-5" %}
+                <span class="avatar plus">+{{ count_reply }}</span>
+              {% endwith %}
+            {% else %}
+              {% for subdetails in details.getReply %}
+                <span class="avatar plus">
+                  {{ subdetails.user.first_name|slice:"1" }}
+                </span>
+              {% endfor %}
+            {% endif %}
+          </td>
+          <td class="d-none d-sm-table-cell narrow-cell text-center">
+            <a href="{% url "forum_topic" details.id %}">
+              {{ details.getReply.count }}
+            </a>
+          </td>
+          <td class="d-none d-md-table-cell narrow-cell text-center">
+            {% if details.getLastActivity.date_created %}
+              {{ details.getLastActivity.date_created|timesince }} ago
+            {% else %}
+               -
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
     </tbody>
   </table>
-{% endblock %}
-
-{% block footer %}
 {% endblock %}
