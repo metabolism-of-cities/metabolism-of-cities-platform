@@ -7,50 +7,55 @@
 
 {% include "metabolism_manager/_user.menu.html" %}
 
-<h3>Indicator scores</h3>
-<div class="row">
-  <div class="col-md-4 mb-4">
-    <div class="statistics-box" href="#">
-      <div class="description">Data entry</div>
-    <div class="progress">
-      <div class="progress-bar bg-warning" role="progressbar" style="width: 64%" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100"></div>
+<section>
+  <h3>Indicator scores</h3>
+  <div class="row">
+    <div class="col-md-4 mb-4">
+      <div class="statistics-box" href="#">
+        <div class="description">Data entry</div>
+      <div class="progress">
+        <div class="progress-bar bg-warning" role="progressbar" style="width: 64%" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+        <div class="statistic">64%</div>
+        <i class="fad fa-database text-warning"></i>
+      </div>
     </div>
-      <div class="statistic">64%</div>
-      <i class="fad fa-database text-warning"></i>
+    <div class="col-md-4 mb-4">
+      <div class="statistics-box" href="#">
+        <div class="description">Resource management</div>
+      <div class="progress">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 97%" aria-valuenow="97" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+        <div class="statistic">97%</div>
+        <i class="fad fa-tasks-alt text-success"></i>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="statistics-box" href="#">
+        <div class="description">Circularity</div>
+      <div class="progress">
+        <div class="progress-bar bg-danger" role="progressbar" style="width: 27%" aria-valuenow="27" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+        <div class="statistic">27%</div>
+        <i class="fad fa-dot-circle text-danger"></i>
+      </div>
     </div>
   </div>
-  <div class="col-md-4 mb-4">
-    <div class="statistics-box" href="#">
-      <div class="description">Resource management</div>
-    <div class="progress">
-      <div class="progress-bar bg-success" role="progressbar" style="width: 97%" aria-valuenow="97" aria-valuemin="0" aria-valuemax="100"></div>
-    </div>
-      <div class="statistic">97%</div>
-      <i class="fad fa-tasks-alt text-success"></i>
-    </div>
-  </div>
-  <div class="col-md-4 mb-4">
-    <div class="statistics-box" href="#">
-      <div class="description">Circularity</div>
-    <div class="progress">
-      <div class="progress-bar bg-danger" role="progressbar" style="width: 27%" aria-valuenow="27" aria-valuemin="0" aria-valuemax="100"></div>
-    </div>
-      <div class="statistic">27%</div>
-      <i class="fad fa-dot-circle text-danger"></i>
-    </div>
-  </div>
-</div>
+</section>
 
-<h3>Electricity</h3>
+<section>
+  <h3>Electricity <small>- kW⋅h</small></h3>
+  <img class="chart" src="https://i.imgur.com/kqljYgX.png">
+</section>
 
-[ graph - bar chart ]
+<section>
+  <h3>Water <small>- litres</small></h3>
+  <img class="chart" src="https://i.imgur.com/iRikwoq.png">
+</section>
 
-<h3>Water</h3>
-
-[ graph  - bar chart]
-
-<h3>Paper</h3>
-
-[ graph - bar chart]
+<section>
+  <h3>Paper <small>- kg</small></h3>
+  <img class="chart" src="https://i.imgur.com/5MgpJyr.png">
+</section>
 
 {% endblock %}

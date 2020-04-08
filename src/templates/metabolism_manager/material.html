@@ -1,42 +1,107 @@
 {% extends "_base.html" %}
 
+{% block page_name %}metabolism manager material{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.css">
+{% endblock %}
+
 {% block content %}
 
 {% include "metabolism_manager/_user.menu.html" %}
 
-[ graph - bar chart ]
+<section>
+  <h3>Consumption by month <small>- kW⋅h</small></h3>
+  <img class="chart" src="https://i.imgur.com/kqljYgX.png">
+</section>
 
-<p>Followed by a table with the last 10 readings:</p>
+<section>
+  <div class="card table-responsive mb-4">
+    <table class="table mb-0">
+      <thead>
+        <tr>
+          <th class="border-0">Date</th>
+          <th class="border-0">Quantity</th>
+          <th class="border-0">Comments</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>February 2020</td>
+          <td>120 KwH</td>
+          <td>hot month, lots of airconditioning</td>
+        </tr>
+        <tr>
+          <td>March 2020</td>
+          <td>129 KwH</td>
+          <td></td>
+        <tr>
+          <td>April 2020</td>
+          <td>199 KwH</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-<p>Date | Quantity | comments</p>
-<p>February 2020 | 120 KwH | hot month, lots of airconditioning</p>
-<p>March 2020 | 129 KwH | </p>
-<p>April 2020 | 199 KwH</p>
+  <a class="btn btn-primary" href="/platformu/materials/electricity/create/"><i class="fas fa-fw fa-table"></i> Register data</a>
+  <a class="btn btn-primary-basic" href="">Learn more about electricity</a>
+  <a class="btn btn-primary-basic" href="">Become more efficient</a>
+</section>
 
-<hr>
+<section>
+  <h3>Photos</h3>
+  {% spaceless %}
+  <div class="row lightbox gallery mb-4">
+    <div class="col-sm-6 col-md-3 col-lg-2">
+      <a href="https://i.imgur.com/Dt1uTrR.jpg" style="background-image: url('https://i.imgur.com/Dt1uTrR.jpg');" data-caption="Image caption"></a>
+    </div>
+    <div class="col-sm-6 col-md-3 col-lg-2">
+      <a href="https://i.imgur.com/4UBXfQZ.jpg" style="background-image: url('https://i.imgur.com/4UBXfQZ.jpg');" data-caption="Image caption"></a>
+    </div>
+    <div class="col-sm-6 col-md-3 col-lg-2">
+      <a href="https://i.imgur.com/EJN4Fqc.jpg" style="background-image: url('https://i.imgur.com/EJN4Fqc.jpg');" data-caption="Image caption"></a>
+    </div>
+    <div class="col-sm-6 col-md-3 col-lg-2">
+      <a href="https://i.imgur.com/1CjEhsE.jpg" style="background-image: url('https://i.imgur.com/1CjEhsE.jpg');" data-caption="Image caption"></a>
+    </div>
+  </div>
+  <a class="btn btn-primary" href=""><i class="fas fa-camera"></i> Add photo</a>
+  {% endspaceless %}
+</section>
 
-<p>Then some action buttons:</p>
+<section>
+  <h3>Electricity in Cape Town</h3>
 
-<p>
-  Button 1: <a href="/platformu/materials/electricity/create/">Register data</a> |
-  Button 2: Learn more about electricity |
-  Button 3: Become more efficient
-</p>
+  <div class="row">
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('https://i.imgur.com/Dt1uTrR.jpg');">
+        <span class="title">Electricity generation</span>
+      </a>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('https://i.imgur.com/4UBXfQZ.jpg');">
+        <span class="title">Distribution</span>
+      </a>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('https://i.imgur.com/EJN4Fqc.jpg');">
+        <span class="title">Consumption</span>
+      </a>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('https://i.imgur.com/1CjEhsE.jpg');">
+        <span class="title">Environmental impact</span>
+      </a>
+    </div>
+  </div>
+</section>
 
-<hr>
+{% endblock %}
 
-<h2>Photos</h2>
-
-<p><em>A thumbnail list with photos that the user uploaded (e.g. their electricity meter, or the solar panel installed on their roof), with an option to upload a new pic.</em></p>
-
-<hr>
-
-<p>Then comes information from the main MoC website about electricity in the city:</p>
-
-<h3>Electricity in Cape Town</h3>
-
-<p><em>I'm thinking a photo grid with the different components, and if you click on it you go to MoC's main site</em></p>
-<p><em>Could be something like:</em></p>
-<p>Electricity generation | Distribution | Consumption | Environmental impact</p>
-
+{% block footer %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.js"></script>
+  <script>
+    baguetteBox.run(".lightbox");
+  </script>
 {% endblock %}

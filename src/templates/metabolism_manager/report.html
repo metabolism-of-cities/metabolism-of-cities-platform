@@ -1,18 +1,53 @@
 {% extends "_base.html" %}
 
+{% block page_name %}metabolism manager report{% endblock %}
+
 {% block content %}
 
 {% include "metabolism_manager/_user.menu.html" %}
 
-<p>
-  Time period: <input type="date" name="" /> until <input type="date" name="" />
-  <button type="submit">Create report</button>
-</p>
+<section>
+  <form>
+    <div class="form-row align-items-center">
+      <div class="col-auto">
+        <label class="sr-only" for="from">From</label>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <div class="input-group-text">From</div>
+          </div>
+          <input type="date" class="form-control" id="from">
+        </div>
+      </div>
+      <div class="col-auto">
+        <label class="sr-only" for="until">Until</label>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <div class="input-group-text">Until</div>
+          </div>
+          <input type="date" class="form-control" id="until">
+        </div>
+      </div>
+      <div class="col-auto">
+        <button type="submit" class="btn btn-primary mb-2"><i class="fas fa-fw fa-file-chart-line"></i> Create report</button>
+        <button href="http://" class="btn btn-primary-outline mb-2"><i class="far fa-fw fa-file-pdf"></i> Export to PDF</button>
+      </div>
 
-<p>
-[ add the same graphs as the homepage ]
-</p>
+    </div>
+  </form>
+</section>
 
-<p><a href="http://" class="btn btn-info">Export to PDF</a></p>
+<section>
+  <h3>Electricity <small>- kW⋅h</small></h3>
+  <img class="chart" src="https://i.imgur.com/kqljYgX.png">
+</section>
 
+<section>
+  <h3>Water <small>- litres</small></h3>
+  <img class="chart" src="https://i.imgur.com/iRikwoq.png">
+</section>
+
+<section>
+  <h3>Paper <small>- kg</small></h3>
+  <img class="chart" src="https://i.imgur.com/5MgpJyr.png">
+</section>
 {% endblock %}
