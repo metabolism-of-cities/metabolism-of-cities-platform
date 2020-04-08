@@ -2,14 +2,13 @@
   <li class="nav-item">
     <a class="nav-link{% if page == 'dashboard' %} active{% endif %}" href="/platformu/dashboard/">Dashboard</a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link{% if page == 'material' %} active{% endif %}" href="/platformu/materials/electricity/">Electricity</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link{% if page == 'water' %} active{% endif %}" href="/platformu/materials/electricity/">Water</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link{% if page == 'paper' %} active{% endif %}" href="/platformu/materials/electricity/">Paper</a>
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle{% if page == 'material' %} active{% endif %}" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Materials</a>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="/platformu/materials/electricity/">Electricity</a>
+      <a class="dropdown-item" href="/platformu/materials/electricity/">Water</a>
+      <a class="dropdown-item" href="/platformu/materials/electricity/">Paper</a>
+    </div>
   </li>
   <li class="nav-item">
     <a class="nav-link{% if page == 'report' %} active{% endif %}" href="/platformu/report/">My report</a>
@@ -21,3 +20,8 @@
     <a class="nav-link{% if page == 'forum' %} active{% endif %}" href="/platformu/forum/">Forum</a>
   </li>
 </ul>
+
+{% block footer %}
+  <!-- adding popper for the dropdown -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+{% endblock %}

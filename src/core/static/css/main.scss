@@ -750,6 +750,17 @@ a.statistics-box {
   border-bottom-color: $very-light;
 }
 
+// DROPDOWNS
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: $primary;
+}
+
+.dropdown-toggle::after {
+  margin-left: .5rem;
+}
+
+
 // BADGES
 .badge-primary {
   background-color: $primary;
