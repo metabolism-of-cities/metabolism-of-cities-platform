@@ -1,0 +1,30 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <h1>Upload GIS data</h1>
+  
+  <p>
+    <strong>Step 1: upload shapefile</strong> | 
+    Step 2: verify data | 
+    Step 3: enter metadata
+  </p>
+
+  <form method="post" class="form form-horizontal">
+    <input type="file" name="" />
+    <button type="submit">Submit</button>
+    {% csrf_token %}
+    <br>
+    Note for Guus: please show some sort of a progress uploader or a wheel to indicate that this is in progress...
+  </form>
+
+  <div class="alert alert-info">
+    <h4>Instructions</h4>
+    <ul>
+      <li>Obtain a shapefile with relevant data (.shp)</li>
+      <li>Ensure this is recorded with WS84 referencing system</li>
+      <li>Maximum 100MB (contact us if your file is larger)</li>
+    </ul>
+    <p>View instruction video [icon] -> show in modal</p>
+  </div>
+
+{% endblock %}

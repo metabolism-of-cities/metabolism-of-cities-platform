@@ -48,6 +48,7 @@ PAGE_ID = {
     "projects": 19,
     "multiplicity": 51,
     "platformu": 53,
+    "stafcp": 55,
 }
 
 # We use getHeader to obtain the header settings (type of header, title, subtitle, image)
@@ -372,6 +373,34 @@ def metabolism_manager_forum(request):
     }
     return render(request, "forum.list.html", load_specific_design(context, PAGE_ID["platformu"]))
 
+# STAFCP
+
+def stafcp(request):
+    context = {
+        "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
+    }
+    return render(request, "stafcp/index.html", load_specific_design(context, PAGE_ID["stafcp"]))
+
+def stafcp_upload_gis(request, id=None):
+    if request.method == "POST":
+        return redirect("stafcp_upload_gis_verify", id=1)
+    context = {
+        "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
+    }
+    return render(request, "stafcp/upload/gis.html", load_specific_design(context, PAGE_ID["stafcp"]))
+
+def stafcp_upload_gis_verify(request, id):
+    context = {
+        "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
+    }
+    return render(request, "stafcp/upload/gis.verify.html", load_specific_design(context, PAGE_ID["stafcp"]))
+
+def stafcp_upload_gis_meta(request, id):
+    context = {
+        "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
+    }
+    return render(request, "stafcp/upload/gis.meta.html", load_specific_design(context, PAGE_ID["stafcp"]))
+
 # People
 
 def person(request, id):
@@ -575,6 +604,7 @@ def load_baseline(request):
         { "id": 8, "title": "Urban metabolism for researchers", "parent": 1, "slug": "/urbanmetabolism/researchers/", "position": 7 },
         { "id": 9, "title": "Urban metabolism for organisations", "parent": 1, "slug": "/urbanmetabolism/organisations/", "position": 8 },
         { "id": 10, "title": "Urban metabolism for everyone", "parent": 1, "slug": "/urbanmetabolism/everyone/", "position": 9 },
+        { "id": 56, "title": "Glossary", "parent": 1, "slug": "/urbanmetabolism/glossary/", "position": 10 },
 
         { "id": 11, "title": "UM Community", "parent": None, "slug": "/community/", "position": 2 },
         { "id": 12, "title": "People", "parent": 11, "slug": "/community/people/", "position": 1, "content": "<p>This page contains an overview of people who are or have been active in the urban metabolism community.</p>" },
@@ -612,6 +642,7 @@ def load_baseline(request):
 
         { "id": 51, "title": "Cities", "parent": 19, "slug": "/data/", "position": None },
         { "id": 53, "title": "PlatformU", "parent": 19, "slug": "/platformu/", "position": None },
+        { "id": 55, "title": "STAFCP", "parent": 19, "slug": "/stafcp/", "position": None },
     ]
     projects = [
         { "id": 20, "title": "Library", "parent": 19, "url": "/library/", "position": 1, "image": "records/um_library.png", "content": "<p>The urban metabolism library has been one of the first projects undertaken by the Metabolism of Cities community. The goal of this project is to provide a central repository for all relevant documents and other material related to urban metabolism.</p><p>There are many research papers, theses, books, government reports, and other publications that have relevance to urban metabolism. The urban metabolism library aims to collect all of the relevant meta information (title, description, year of publication, abstract), and to provide visitors with an easy way to browse and filter the catalog. The library is constantly growing and visitors are encouraged to submit missing documents." },
@@ -626,8 +657,9 @@ def load_baseline(request):
         { "id": 27, "title": "MOOC", "parent": 19, "url": "/mooc/", "position": 9 },
         { "id": 28, "title": "GUMDB", "parent": 19, "url": "/gumdb/", "position": 10 },
         { "id": 29, "title": "STAFDB", "parent": 19, "url": "/stafdb/", "position": 11 },
-        { "id": 26, "title": "OMAT", "parent": 19, "url": "/omat/", "position": 12 },
-        { "id": 52, "title": "PlatformU", "parent": 19, "url": "/platformu/", "position": 13 },
+        { "id": 54, "title": "STAFCP", "parent": 19, "url": "/stafcp/", "position": 12, "content": "<p>The Stocks and Flows Community Portal is a platform where researchers, practitioners, and enthusiasts can upload data on stocks and flows, which will then be added to our global database. This database can be queried, visualised, and explored from within the STAFCP.</p>" },
+        { "id": 26, "title": "OMAT", "parent": 19, "url": "/omat/", "position": 13 },
+        { "id": 52, "title": "PlatformU", "parent": 19, "url": "/platformu/", "position": 14 },
     ]
     for each in articles:
         content = each["content"] if "content" in each else None
@@ -674,6 +706,12 @@ background-color: #59ff5b;
 background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1600 800'%3E%3Cg stroke='%23000' stroke-width='66.7' stroke-opacity='0.13' %3E%3Ccircle fill='%2359ff5b' cx='0' cy='0' r='1800'/%3E%3Ccircle fill='%2355f659' cx='0' cy='0' r='1700'/%3E%3Ccircle fill='%2351ed57' cx='0' cy='0' r='1600'/%3E%3Ccircle fill='%234de556' cx='0' cy='0' r='1500'/%3E%3Ccircle fill='%2349dc54' cx='0' cy='0' r='1400'/%3E%3Ccircle fill='%2346d352' cx='0' cy='0' r='1300'/%3E%3Ccircle fill='%2342cb50' cx='0' cy='0' r='1200'/%3E%3Ccircle fill='%233fc24d' cx='0' cy='0' r='1100'/%3E%3Ccircle fill='%233cba4b' cx='0' cy='0' r='1000'/%3E%3Ccircle fill='%2339b249' cx='0' cy='0' r='900'/%3E%3Ccircle fill='%2336a947' cx='0' cy='0' r='800'/%3E%3Ccircle fill='%2333a144' cx='0' cy='0' r='700'/%3E%3Ccircle fill='%23319942' cx='0' cy='0' r='600'/%3E%3Ccircle fill='%232e913f' cx='0' cy='0' r='500'/%3E%3Ccircle fill='%232c893d' cx='0' cy='0' r='400'/%3E%3Ccircle fill='%232a813a' cx='0' cy='0' r='300'/%3E%3Ccircle fill='%23287938' cx='0' cy='0' r='200'/%3E%3Ccircle fill='%23267135' cx='0' cy='0' r='100'/%3E%3C/g%3E%3C/svg%3E");
 background-attachment: fixed;
 background-size: cover;
+/* background by SVGBackgrounds.com */
+}"""
+        },
+        { "header": "small", "article": 55, "logo": "/logos/media-stafcp.png", "css": """.top-layer {
+background-color: #00b7ff;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='250' viewBox='0 0 1080 900'%3E%3Cg fill-opacity='0.06'%3E%3Cpolygon fill='%23444' points='90 150 0 300 180 300'/%3E%3Cpolygon points='90 150 180 0 0 0'/%3E%3Cpolygon fill='%23AAA' points='270 150 360 0 180 0'/%3E%3Cpolygon fill='%23DDD' points='450 150 360 300 540 300'/%3E%3Cpolygon fill='%23999' points='450 150 540 0 360 0'/%3E%3Cpolygon points='630 150 540 300 720 300'/%3E%3Cpolygon fill='%23DDD' points='630 150 720 0 540 0'/%3E%3Cpolygon fill='%23444' points='810 150 720 300 900 300'/%3E%3Cpolygon fill='%23FFF' points='810 150 900 0 720 0'/%3E%3Cpolygon fill='%23DDD' points='990 150 900 300 1080 300'/%3E%3Cpolygon fill='%23444' points='990 150 1080 0 900 0'/%3E%3Cpolygon fill='%23DDD' points='90 450 0 600 180 600'/%3E%3Cpolygon points='90 450 180 300 0 300'/%3E%3Cpolygon fill='%23666' points='270 450 180 600 360 600'/%3E%3Cpolygon fill='%23AAA' points='270 450 360 300 180 300'/%3E%3Cpolygon fill='%23DDD' points='450 450 360 600 540 600'/%3E%3Cpolygon fill='%23999' points='450 450 540 300 360 300'/%3E%3Cpolygon fill='%23999' points='630 450 540 600 720 600'/%3E%3Cpolygon fill='%23FFF' points='630 450 720 300 540 300'/%3E%3Cpolygon points='810 450 720 600 900 600'/%3E%3Cpolygon fill='%23DDD' points='810 450 900 300 720 300'/%3E%3Cpolygon fill='%23AAA' points='990 450 900 600 1080 600'/%3E%3Cpolygon fill='%23444' points='990 450 1080 300 900 300'/%3E%3Cpolygon fill='%23222' points='90 750 0 900 180 900'/%3E%3Cpolygon points='270 750 180 900 360 900'/%3E%3Cpolygon fill='%23DDD' points='270 750 360 600 180 600'/%3E%3Cpolygon points='450 750 540 600 360 600'/%3E%3Cpolygon points='630 750 540 900 720 900'/%3E%3Cpolygon fill='%23444' points='630 750 720 600 540 600'/%3E%3Cpolygon fill='%23AAA' points='810 750 720 900 900 900'/%3E%3Cpolygon fill='%23666' points='810 750 900 600 720 600'/%3E%3Cpolygon fill='%23999' points='990 750 900 900 1080 900'/%3E%3Cpolygon fill='%23999' points='180 0 90 150 270 150'/%3E%3Cpolygon fill='%23444' points='360 0 270 150 450 150'/%3E%3Cpolygon fill='%23FFF' points='540 0 450 150 630 150'/%3E%3Cpolygon points='900 0 810 150 990 150'/%3E%3Cpolygon fill='%23222' points='0 300 -90 450 90 450'/%3E%3Cpolygon fill='%23FFF' points='0 300 90 150 -90 150'/%3E%3Cpolygon fill='%23FFF' points='180 300 90 450 270 450'/%3E%3Cpolygon fill='%23666' points='180 300 270 150 90 150'/%3E%3Cpolygon fill='%23222' points='360 300 270 450 450 450'/%3E%3Cpolygon fill='%23FFF' points='360 300 450 150 270 150'/%3E%3Cpolygon fill='%23444' points='540 300 450 450 630 450'/%3E%3Cpolygon fill='%23222' points='540 300 630 150 450 150'/%3E%3Cpolygon fill='%23AAA' points='720 300 630 450 810 450'/%3E%3Cpolygon fill='%23666' points='720 300 810 150 630 150'/%3E%3Cpolygon fill='%23FFF' points='900 300 810 450 990 450'/%3E%3Cpolygon fill='%23999' points='900 300 990 150 810 150'/%3E%3Cpolygon points='0 600 -90 750 90 750'/%3E%3Cpolygon fill='%23666' points='0 600 90 450 -90 450'/%3E%3Cpolygon fill='%23AAA' points='180 600 90 750 270 750'/%3E%3Cpolygon fill='%23444' points='180 600 270 450 90 450'/%3E%3Cpolygon fill='%23444' points='360 600 270 750 450 750'/%3E%3Cpolygon fill='%23999' points='360 600 450 450 270 450'/%3E%3Cpolygon fill='%23666' points='540 600 630 450 450 450'/%3E%3Cpolygon fill='%23222' points='720 600 630 750 810 750'/%3E%3Cpolygon fill='%23FFF' points='900 600 810 750 990 750'/%3E%3Cpolygon fill='%23222' points='900 600 990 450 810 450'/%3E%3Cpolygon fill='%23DDD' points='0 900 90 750 -90 750'/%3E%3Cpolygon fill='%23444' points='180 900 270 750 90 750'/%3E%3Cpolygon fill='%23FFF' points='360 900 450 750 270 750'/%3E%3Cpolygon fill='%23AAA' points='540 900 630 750 450 750'/%3E%3Cpolygon fill='%23FFF' points='720 900 810 750 630 750'/%3E%3Cpolygon fill='%23222' points='900 900 990 750 810 750'/%3E%3Cpolygon fill='%23222' points='1080 300 990 450 1170 450'/%3E%3Cpolygon fill='%23FFF' points='1080 300 1170 150 990 150'/%3E%3Cpolygon points='1080 600 990 750 1170 750'/%3E%3Cpolygon fill='%23666' points='1080 600 1170 450 990 450'/%3E%3Cpolygon fill='%23DDD' points='1080 900 1170 750 990 750'/%3E%3C/g%3E%3C/svg%3E");
 /* background by SVGBackgrounds.com */
 }"""
         },

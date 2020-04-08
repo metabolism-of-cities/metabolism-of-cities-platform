@@ -1,0 +1,34 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <h1>Upload GIS data</h1>
+  
+  <p>
+    Step 1: upload shapefile | 
+    <strong>Step 2: verify data</strong> | 
+    Step 3: enter metadata
+  </p>
+
+  <p style="height:300px;background:#ccc;border:1px solid #333">[ show a map with a polygon ]</p>
+  <p>
+    <a href="{% url "stafcp_upload_gis" %}" class="btn btn-danger">&laquo; That looks bad, let's try again</a>
+    <a href="{% url "stafcp_upload_gis_meta" 1 %}" class="btn btn-success">That looks great, NEXT &raquo;</a>
+  </p>
+
+  <div class="alert alert-info">
+    <h4>Instructions</h4>
+    <ul>
+      <li>If your map looks good, go to the next step. </li>
+      <li>If not, you can try debugging this:
+        <ul>
+          <li>Check the CRS used</li>
+          <li>Try opening your map in QGIS</li>
+          <li>Verify this is a shapefile</li>
+          <li>If all else fails, <a href="/contact">ask MoC for help</a>, using this shapefile ID: 209873</li>
+        </ul>
+      </li>
+    </ul>
+    <p>View instruction video [icon] -> show in modal</p>
+  </div>
+
+{% endblock %}

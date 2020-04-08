@@ -59,7 +59,7 @@ urlpatterns = [
     path("data/<slug:place>/datasets/<slug:dataset>/", views.dataset, name="dataset"),
     path("data/<slug:place>/", views.dashboard, name="dashboard"),
 
-    # Library
+    # PlatformU
     path("platformu/", views.metabolism_manager, name="platformu"),
     path("platformu/admin/", views.metabolism_manager_admin),
     path("platformu/admin/entities/<int:id>/", views.metabolism_manager_admin_entity),
@@ -78,6 +78,12 @@ urlpatterns = [
     path("platformu/report/", views.metabolism_manager_report),
     path("platformu/marketplace/", views.metabolism_manager_marketplace),
     path("platformu/forum/", views.metabolism_manager_forum),
+
+    # STAFCP
+    path("stafcp/", views.stafcp),
+    path("stafcp/upload/gis/", views.stafcp_upload_gis, name="stafcp_upload_gis"),
+    path("stafcp/upload/gis/<int:id>/verify/", views.stafcp_upload_gis_verify, name="stafcp_upload_gis_verify"),
+    path("stafcp/upload/gis/<int:id>/meta/", views.stafcp_upload_gis_meta, name="stafcp_upload_gis_meta"),
 
     # Authentication
     path("register/", views.user_register, name="register"),

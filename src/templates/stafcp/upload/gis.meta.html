@@ -1,0 +1,53 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <h1>Upload GIS data</h1>
+  
+  <p>
+    Step 1: upload shapefile | 
+    Step 2: verify data | 
+    <strong>Step 3: enter metadata</strong>
+  </p>
+
+  <p>This information is available in your shapefile:</p>
+  <pre>
+Pop.   | Name         | Area size | ConvertStatusUp | Description
+98732  | Rondebosch   | 437       | true            | This is a ... 
+98733  | Rosebank     | 482       | true            | This where a ... 
+98734  | Mowbray      | 938       | false           | This also a ... 
+  </pre>
+
+  <p>Which of these columns contains the name?</p>
+  <ul>
+    <li><input type="radio" name="name" value="" /> Pop.</li>
+    <li><input type="radio" name="name" value="" /> Name</li>
+    <li><input type="radio" name="name" value="" /> Area size</li>
+    <li><input type="radio" name="name" value="" /> ConvertStatusUp</li>
+    <li><input type="radio" name="name" value="" /> Description</li>
+  </ul>
+
+  <h2>Data source</h2>
+  <p>Who has produced this shapefile?</p>
+  <p><input type="text" name="" /></p>
+  <p>Download URL or relevant website</p>
+  <p><input type="text" name="" /></p>
+  <p>Year of publication</p>
+  <p><input type="text" name="" /></p>
+  <p>Shapefile license</p>
+  <p><select name="">
+    <option value="">CC BY</option>
+    <option value="">CC BY SA</option>
+    <option value="">Copyright</option>
+  </select>
+  </p>
+  <p>Description</p>
+  <p><textarea></textarea></p>
+  <p>Data quality comments [?] -> this should show a popup where we explain a bit more what that means.</p>
+  <p><textarea></textarea></p>
+  <button type="submit">Submit</button>
+
+
+
+  <p><a href="{% url "stafcp_upload_gis_verify" 1 %}">&laquo; back</a></p>
+
+{% endblock %}

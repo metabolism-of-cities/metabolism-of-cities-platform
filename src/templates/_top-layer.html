@@ -26,10 +26,12 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
           
-          {% if subsite.id == 53 %}
-            {% include "_menu-platformu.html" %}
-          {% elif subsite.id == 51 %}
+          {% if subsite.id == 51 %}
             {% include "_menu-multiplicity.html" %}
+          {% elif subsite.id == 55 %}
+            {% include "_menu-stafcp.html" %}
+          {% elif subsite.id == 53 %}
+            {% include "_menu-platformu.html" %}
           {% elif subsite and menu %}
             {% for each in menu %}
               <li class="nav-item"><a class="nav-link" href="{{ each.get_absolute_url }}">{{ each }}</a></li>
