@@ -728,10 +728,6 @@ a.statistics-box {
 }
 
 // PILLS
-.nav-pills .nav-link {
-  transition: background-color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out
-}
-
 .nav-pills .nav-link:hover {
   background-color: transparentize($primary, 0.9);
   color: $primary;
@@ -1537,14 +1533,59 @@ body.entity.materials {
     tbody tr:first-of-type > * {
       border-top: 0;
     }
+  }
+}
 
-    td {
-      padding-left: 0;
-      padding-right: 0;
-    }
+body.entity.form {
+  table td {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+body.entity.materials {
+  table.users td {
+    padding-left: 0;
+    padding-right: 0;
   }
 
   #add-material {
+    display: none;
+
+    table tr td {
+      vertical-align: middle;
+
+      &:first-of-type {
+        padding-left: 1rem;
+      }
+
+      &:last-of-type {
+        padding-right: 1rem;
+      }
+    }
+  }
+
+  .btn-to-top {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .col-filter {
+    background-color: $light;
+    border-radius: .25rem 0 0;
+  }
+
+  @media (min-width: 768px) {
+    .col-filter {
+      border-radius: .25rem 0 0 .25rem;
+    }
+  }
+
+  .tag-filter .nav-link {
+    cursor: pointer;
+  }
+
+  .no-results:not(.visible) {
     display: none;
   }
 }
@@ -1560,7 +1601,6 @@ body.metabolism.manager.dashboard {
       font-size: 5rem;
     }
   }
-
 }
 
 body.metabolism.manager img.chart {
