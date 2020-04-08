@@ -1,0 +1,36 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <h1>{{ article.title }}</h1>
+  {{ article.content|safe }}
+
+  <form method="get" class="form form-horizontal">
+    Search: 
+    <select>
+      <option value=""></option>
+      <option value="">Keyword 1</option>
+      <option value="">Keyword 2</option>
+      <option value="">Keyword 3</option>
+      <option value="">Keyword 4</option>
+    </select>
+    <p style="background:yellow">Guus, the idea is that this is a select2 that will autofill keywords with our existing keyword list BUT it also allows for additional keywords to be entered that are not yet in that list)</p>
+
+    <p><a href="http://">Show advanced options</a></p>
+    <section>
+      <h2>Advanced search (section is hidden by default)</h2>
+      <p>Must be published before: <input type="number" min="1900" max="2025"></p>
+      <p>Must be published after: <input type="number" min="1900" max="2025"></p>
+      <p>Restrict by type:
+        <select multiple>
+          <option value="">Academic paper</option>
+          <option value="">Report</option>
+          <option value="">Newspaper article</option>
+        </select>
+      </p>
+
+    </section>
+
+    <button type="submit">Search</button>
+
+  </form>
+{% endblock %}

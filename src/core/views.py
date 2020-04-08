@@ -46,6 +46,7 @@ from datetime import datetime
 PAGE_ID = {
     "people": 12,
     "projects": 19,
+    "library": 38,
     "multiplicity": 51,
     "platformu": 53,
     "stafcp": 55,
@@ -97,7 +98,6 @@ def load_specific_design(context, design):
     context["subsite"] = header
     context["header"] = header
     return context
-
 
 # Authentication of users
 
@@ -407,6 +407,76 @@ def stafcp_upload_gis_meta(request, id):
     }
     return render(request, "stafcp/upload/gis.meta.html", load_specific_design(context, PAGE_ID["stafcp"]))
 
+# Library
+
+def library(request):
+    info = get_object_or_404(Article, pk=PAGE_ID["library"])
+    context = {
+        "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
+        "info": info,
+        "menu": Article.objects.filter(parent=info),
+    }
+    return render(request, "article.html", load_specific_design(context, PAGE_ID["library"]))
+
+def library_browse(request, article):
+    info = get_object_or_404(Article, pk=article)
+    context = {
+        "article": info,
+    }
+    return render(request, "library/browse.html", load_specific_design(context, PAGE_ID["library"]))
+
+def library_search(request, article):
+    info = get_object_or_404(Article, pk=article)
+    context = {
+        "article": info,
+    }
+    return render(request, "library/search.html", load_specific_design(context, PAGE_ID["library"]))
+
+def library_download(request):
+    info = get_object_or_404(Article, pk=PAGE_ID["library"])
+    context = {
+        "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
+        "info": info,
+        "menu": Article.objects.filter(parent=info),
+    }
+    return render(request, "article.html", load_specific_design(context, PAGE_ID["library"]))
+
+def library_casestudies(request, slug=None):
+    info = get_object_or_404(Article, pk=PAGE_ID["library"])
+    context = {
+        "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
+        "info": info,
+        "menu": Article.objects.filter(parent=info),
+    }
+    return render(request, "article.html", load_specific_design(context, PAGE_ID["library"]))
+
+def library_journals(request):
+    info = get_object_or_404(Article, pk=PAGE_ID["library"])
+    context = {
+        "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
+        "info": info,
+        "menu": Article.objects.filter(parent=info),
+    }
+    return render(request, "article.html", load_specific_design(context, PAGE_ID["library"]))
+
+def library_authors(request):
+    info = get_object_or_404(Article, pk=PAGE_ID["library"])
+    context = {
+        "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
+        "info": info,
+        "menu": Article.objects.filter(parent=info),
+    }
+    return render(request, "article.html", load_specific_design(context, PAGE_ID["library"]))
+
+def library_contribute(request):
+    info = get_object_or_404(Article, pk=PAGE_ID["library"])
+    context = {
+        "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
+        "info": info,
+        "menu": Article.objects.filter(parent=info),
+    }
+    return render(request, "article.html", load_specific_design(context, PAGE_ID["library"]))
+
 # People
 
 def person(request, id):
@@ -632,19 +702,18 @@ def load_baseline(request):
 
         { "id": 38, "title": "Urban Metabolism Library", "parent": 19, "slug": "/library/", "position": None },
         { "id": 39, "title": "Library", "parent": 38, "slug": "/library/overview/", "position": 1 },
-        { "id": 40, "title": "Case Studies", "parent": 38, "slug": "/library/casestudies/overview/", "position": 2 },
+        { "id": 40, "title": "Case Studies", "parent": 38, "slug": "/library/casestudies/", "position": 2 },
         { "id": 41, "title": "Journals", "parent": 38, "slug": "/library/journals/", "position": 3 },
         { "id": 42, "title": "Authors", "parent": 38, "slug": "/library/authors/", "position": 4 },
         { "id": 43, "title": "Contribute", "parent": 38, "slug": "/library/contribute/", "position": 5 },
 
-        { "id": 44, "title": "View library", "parent": 39, "slug": "/library/view/", "position": 1 },
-        { "id": 45, "title": "Search", "parent": 39, "slug": "/library/search/", "position": 2 },
+        { "id": 44, "title": "View library", "parent": 39, "slug": "/library/browse/", "position": 1, "content": "<p>Welcome to the Metabolism of Cities library, which holds publications related to urban metabolism and material flow analysis. The publications are mostly reports, theses or journal articles. The bulk of the publications are in English, but there are also many in Spanish, French, Dutch and German. <br>More and more publications are continuously added (Feel free to add publications yourself!) and then tagged by team members. This classification is valuable to better understand what to expect from a publication. </p>" },
+        { "id": 45, "title": "Search", "parent": 39, "slug": "/library/search/", "position": 2, "content": "<p>Please use the search box below to find publications of your interest. </p>" },
         { "id": 46, "title": "Download", "parent": 39, "slug": "/library/download/", "position": 3 },
 
-        { "id": 47, "title": "View all", "parent": 40, "slug": "/library/casestudies/", "position": 1 },
-        { "id": 48, "title": "By method", "parent": 39, "slug": "/library/casestudies/methods/", "position": 2 },
-        { "id": 49, "title": "By year", "parent": 39, "slug": "/library/casestudies/calendar/", "position": 3 },
-        { "id": 50, "title": "View map", "parent": 39, "slug": "/library/casestudies/map/", "position": 4 },
+        { "id": 48, "title": "By method", "parent": 40, "slug": "/library/casestudies/methods/", "position": 2 },
+        { "id": 49, "title": "By year", "parent": 40, "slug": "/library/casestudies/calendar/", "position": 3 },
+        { "id": 50, "title": "View map", "parent": 40, "slug": "/library/casestudies/map/", "position": 4 },
 
         { "id": 51, "title": "Cities", "parent": 19, "slug": "/data/", "position": None },
         { "id": 53, "title": "PlatformU", "parent": 19, "slug": "/platformu/", "position": None },

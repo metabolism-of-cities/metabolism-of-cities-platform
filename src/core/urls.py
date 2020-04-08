@@ -50,7 +50,15 @@ urlpatterns = [
     path("videos/<int:id>/", views.video, name="video"),
 
     # Library
-    path("library/", views.article, { "id": 38, "project": 38 }, name="library"),
+    path("library/", views.library, name="library"),
+    path("library/casestudies/", views.library_casestudies, name="library_casestudies"),
+    path("library/casestudies/<slug:slug>/", views.library_casestudies, name="library_casestudies"),
+    path("library/browse/", views.library_browse, { "article": 44 }, name="library_browse"),
+    path("library/download/", views.library_download, name="library_download"),
+    path("library/search/", views.library_search, { "article": 45 }, name="library_search"),
+    path("library/journals/", views.library_journals, name="library_journals"),
+    path("library/authors/", views.library_authors, name="library_authors"),
+    path("library/contribute/", views.library_contribute, name="library_contribute"),
 
     # MultipliCity
     path("data/", views.data, name="data"),
