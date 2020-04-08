@@ -1541,4 +1541,10 @@ body.metabolism.manager.dashboard {
       font-size: 5rem;
     }
   }
+
+  img.chart {
+    max-width: 100%;
+    box-shadow: $basic-shadow;
+    border-radius: .25rem;
+  }
 }
