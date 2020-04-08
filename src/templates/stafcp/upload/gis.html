@@ -3,28 +3,39 @@
 {% block content %}
   <h1>Upload GIS data</h1>
   
-  <p>
-    <strong>Step 1: upload shapefile</strong> | 
-    Step 2: verify data | 
-    Step 3: enter metadata
-  </p>
-
-  <form method="post" class="form form-horizontal">
-    <input type="file" name="" />
-    <button type="submit">Submit</button>
-    {% csrf_token %}
-    <br>
-    Note for Guus: please show some sort of a progress uploader or a wheel to indicate that this is in progress...
-  </form>
-
-  <div class="alert alert-info">
-    <h4>Instructions</h4>
-    <ul>
-      <li>Obtain a shapefile with relevant data (.shp)</li>
-      <li>Ensure this is recorded with WS84 referencing system</li>
-      <li>Maximum 100MB (contact us if your file is larger)</li>
-    </ul>
-    <p>View instruction video [icon] -> show in modal</p>
-  </div>
+  <ul>
+    <li>Boundaries
+      <ul>
+        <li><a href="{% url "stafcp_upload_gis_file" "countries" %}">Countries</a></li>
+        <li><a href="{% url "stafcp_upload_gis_file" "countries" %}">Continents</a></li>
+        <li><a href="{% url "stafcp_upload_gis_file" "countries" %}">Cities</a></li>
+        <li><a href="{% url "stafcp_upload_gis_file" "countries" %}">Departments</a></li>
+        <li><a href="{% url "stafcp_upload_gis_file" "countries" %}">States</a></li>
+        <li><a href="{% url "stafcp_upload_gis_file" "countries" %}">Provinces</a></li>
+        <li><a href="{% url "stafcp_upload_gis_file" "countries" %}">Territory</a></li>
+      </ul>
+    </li>
+    <li>Transport infastructure
+      <ul>
+        <li><a href="{% url "stafcp_upload_gis_file" "countries" %}">Airports</a></li>
+        <li><a href="{% url "stafcp_upload_gis_file" "countries" %}">Train stations</a></li>
+        <li><a href="{% url "stafcp_upload_gis_file" "countries" %}">Bus stops</a></li>
+        <li><a href="{% url "stafcp_upload_gis_file" "countries" %}">Gas stations</a></li>
+      </ul>
+    </li>
+    <li>Agricultural infrastructure
+      <ul>
+        <li><a href="{% url "stafcp_upload_gis_file" "countries" %}">Farms</a></li>
+        <li><a href="{% url "stafcp_upload_gis_file" "countries" %}">Silos</a></li>
+      </ul>
+    </li>
+    <li>
+      Land use
+      <ul>
+        <li><a href="{% url "stafcp_upload_gis_file" "countries" %}">Zoning</a></li>
+        <li><a href="{% url "stafcp_upload_gis_file" "countries" %}">Agricultural land use</a></li>
+      </ul>
+    </li>
+  </ul>
 
 {% endblock %}

@@ -82,6 +82,7 @@ urlpatterns = [
     # STAFCP
     path("stafcp/", views.stafcp),
     path("stafcp/upload/gis/", views.stafcp_upload_gis, name="stafcp_upload_gis"),
+    path("stafcp/upload/gis/<slug:id>/file/", views.stafcp_upload_gis_file, name="stafcp_upload_gis_file"),
     path("stafcp/upload/gis/<int:id>/verify/", views.stafcp_upload_gis_verify, name="stafcp_upload_gis_verify"),
     path("stafcp/upload/gis/<int:id>/meta/", views.stafcp_upload_gis_meta, name="stafcp_upload_gis_meta"),
 

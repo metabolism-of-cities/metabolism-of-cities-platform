@@ -382,12 +382,18 @@ def stafcp(request):
     return render(request, "stafcp/index.html", load_specific_design(context, PAGE_ID["stafcp"]))
 
 def stafcp_upload_gis(request, id=None):
+    context = {
+        "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
+    }
+    return render(request, "stafcp/upload/gis.html", load_specific_design(context, PAGE_ID["stafcp"]))
+
+def stafcp_upload_gis_file(request, id=None):
     if request.method == "POST":
         return redirect("stafcp_upload_gis_verify", id=1)
     context = {
         "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
     }
-    return render(request, "stafcp/upload/gis.html", load_specific_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/upload/gis.file.html", load_specific_design(context, PAGE_ID["stafcp"]))
 
 def stafcp_upload_gis_verify(request, id):
     context = {
