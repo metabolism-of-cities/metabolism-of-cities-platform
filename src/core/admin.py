@@ -1,12 +1,24 @@
 from django.contrib import admin
 from .models import *
 from django.shortcuts import redirect
-# Register your models here.
+from django.contrib.admin import AdminSite
+from django.utils.translation import ugettext_lazy
 
+class MyAdminSite(AdminSite):
+    # Text to put at the end of each page"s <title>.
+    site_title = ugettext_lazy("Metabolism of Cities Admin")
+
+    # Text to put in each page"s <h1> (and above login form).
+    site_header = ugettext_lazy("Metabolism of Cities Admin")
+
+    # Text to put at the top of the admin index page.
+    index_title = ugettext_lazy("Metabolism of Cities")
+
+admin_site = MyAdminSite()
 
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ['title', 'site', 'parent', 'active']
-    search_fields = ['title', 'site']
+    list_display = ["title", "site", "parent", "active"]
+    search_fields = ["title", "site"]
 
     def response_change(self, request, obj):
         if "_addanother" not in request.POST and "_continue" not in request.POST:
@@ -30,22 +42,22 @@ class ArticleDesignAdmin(admin.ModelAdmin):
         js = ("js/scripts.js",)
 
 
-admin.site.register(Tag)
-admin.site.register(Record)
-admin.site.register(Event)
-admin.site.register(News)
-admin.site.register(Article, ArticleAdmin)
-admin.site.register(ArticleDesign, ArticleDesignAdmin)
-admin.site.register(People)
-admin.site.register(Video)
-admin.site.register(Project)
+admin_site.register(Tag)
+admin_site.register(Record)
+admin_site.register(Event)
+admin_site.register(News)
+admin_site.register(Article, ArticleAdmin)
+admin_site.register(ArticleDesign, ArticleDesignAdmin)
+admin_site.register(People)
+admin_site.register(Video)
+admin_site.register(Project)
 
-admin.site.register(MOOC)
-admin.site.register(MOOCModule)
-admin.site.register(MOOCQuestion)
-admin.site.register(MOOCModuleQuestion)
-admin.site.register(MOOCVideo)
-admin.site.register(MOOCAnswer)
-admin.site.register(MOOCProgress)
-admin.site.register(MOOCQuizAnswers)
+admin_site.register(MOOC)
+admin_site.register(MOOCModule)
+admin_site.register(MOOCQuestion)
+admin_site.register(MOOCModuleQuestion)
+admin_site.register(MOOCVideo)
+admin_site.register(MOOCAnswer)
+admin_site.register(MOOCProgress)
+admin_site.register(MOOCQuizAnswers)
 

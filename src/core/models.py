@@ -14,7 +14,7 @@ from tinymce import HTMLField
 
 class Tag(models.Model):
     name = models.CharField(max_length=255)
-    description = HTMLField("description", null=True, blank=True)
+    description = HTMLField(null=True, blank=True)
     parent_tag = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True,
         limit_choices_to={"hidden": False}, related_name="children"
     )
@@ -38,7 +38,7 @@ class Tag(models.Model):
 
 class Record(models.Model):
     title = models.CharField(max_length=255)
-    content = models.TextField(null=True, blank=True)
+    content = HTMLField(null=True, blank=True)
     active = models.BooleanField(default=True)
     image = StdImageField(upload_to="records", variations={"thumbnail": (480, 480), "large": (1280, 1024)}, blank=True, null=True)
     def __str__(self):

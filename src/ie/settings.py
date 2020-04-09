@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'sass_processor',
     'django.contrib.sites',
     'bootstrap4',
+    'tinymce',
 ]
 
 MIDDLEWARE = [
