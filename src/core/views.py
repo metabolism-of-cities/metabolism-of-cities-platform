@@ -407,6 +407,13 @@ def stafcp_upload_gis_meta(request, id):
     }
     return render(request, "stafcp/upload/gis.meta.html", load_specific_design(context, PAGE_ID["stafcp"]))
 
+def stafcp_flowdiagram(request):
+    context = {
+        "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
+    }
+    return render(request, "stafcp/flowdiagram.html", load_specific_design(context, PAGE_ID["stafcp"]))
+
+
 # Library
 
 def library(request):

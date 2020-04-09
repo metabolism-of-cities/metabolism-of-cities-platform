@@ -94,6 +94,7 @@ urlpatterns = [
     path("stafcp/upload/gis/<slug:id>/file/", views.stafcp_upload_gis_file, name="stafcp_upload_gis_file"),
     path("stafcp/upload/gis/<int:id>/verify/", views.stafcp_upload_gis_verify, name="stafcp_upload_gis_verify"),
     path("stafcp/upload/gis/<int:id>/meta/", views.stafcp_upload_gis_meta, name="stafcp_upload_gis_meta"),
+    path("stafcp/flowdiagram/", views.stafcp_flowdiagram),
 
     # Authentication
     path("register/", views.user_register, name="register"),
