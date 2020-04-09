@@ -39,7 +39,7 @@ class Tag(models.Model):
 class Record(models.Model):
     title = models.CharField(max_length=255)
     content = HTMLField(null=True, blank=True)
-    active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
     image = StdImageField(upload_to="records", variations={"thumbnail": (480, 480), "large": (1280, 1024)}, blank=True, null=True)
     def __str__(self):
         return self.title

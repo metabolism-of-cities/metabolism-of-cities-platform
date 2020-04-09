@@ -6,9 +6,13 @@ class GeocodeSystem(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     url = models.URLField(null=True, blank=True)
+    coverage = models.ForeignKey("ReferenceSpace", on_delete=models.SET_NULL, null=True, blank=True)
     is_comprehensive = models.BooleanField(default=True, db_index=True)
+    is_deleted = models.BooleanField(default=False, db_index=True)
     def __str__(self):
         return self.name
+    class Meta:
+        db_table = "stafdb_geocode_system"
 
 # Lists all the different levels within the system. Could be a single level (e.g. Postal Code), but it 
 # could also include various levels, e.g.: Country > Province > City
@@ -18,6 +22,7 @@ class Geocode(models.Model):
     system = models.ForeignKey(GeocodeSystem, on_delete=models.CASCADE)
     depth = models.PositiveSmallIntegerField()
     description = models.TextField(null=True, blank=True)
+    is_deleted = models.BooleanField(default=False, db_index=True)
     def __str__(self):
         return self.name
 
@@ -27,7 +32,7 @@ class ReferenceSpace(models.Model):
     description = models.TextField(null=True, blank=True)
     slug = models.CharField(max_length=100, null=True)
     location = models.ForeignKey("ReferenceSpaceLocation", on_delete=models.SET_NULL, null=True, blank=True)
-    active = models.BooleanField(default=True, db_index=True)
+    is_deleted = models.BooleanField(default=False, db_index=True)
 
 class ReferenceSpaceLocation(models.Model):
     space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE)
@@ -35,16 +40,19 @@ class ReferenceSpaceLocation(models.Model):
     start = models.DateField(null=True, blank=True, db_index=True)
     end = models.DateField(null=True, blank=True, db_index=True)
     geometry = models.GeometryField()
-    active = models.BooleanField(default=True, db_index=True)
+    is_deleted = models.BooleanField(default=False, db_index=True)
     def __str__(self):
         return "Location for " + self.space.name
     class Meta:
         ordering = ["-start"]
+        db_table = "stafdb_referencespace_location"
 
 class ReferenceSpaceGeocode(models.Model):
     geocode = models.ForeignKey(Geocode, on_delete=models.CASCADE)
     space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE)
     identifier = models.CharField(max_length=255, db_index=True, null=True, blank=True)
+    class Meta:
+        db_table = "stafdb_referencespace_geocode"
 
 class Process(models.Model):
     name = models.CharField(max_length=255, db_index=True)

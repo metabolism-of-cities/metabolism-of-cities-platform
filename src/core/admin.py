@@ -17,7 +17,7 @@ class MyAdminSite(AdminSite):
 admin_site = MyAdminSite()
 
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ["title", "site", "parent", "active"]
+    list_display = ["title", "site", "parent", "is_deleted"]
     search_fields = ["title", "site"]
 
     def response_change(self, request, obj):
