@@ -9,7 +9,8 @@
 
   <hr>
   <pre>
-  COPY (SELECT * FROM core_tag) To '/sqlexport/tags.csv' With (FORMAT CSV,HEADER);
+ssh -t industrialecology 'csvdump "SELECT * FROM core_tag ORDER BY id" tags.csv'
   </pre>
+
 {% endblock %}
 

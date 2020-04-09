@@ -863,7 +863,7 @@ def dataimport(request):
     error = False
     if "table" in request.GET:
         messages.warning(request, "Trying to import " + request.GET["table"])
-        file = settings.MEDIA_ROOT + "tags.csv"
+        file = settings.MEDIA_ROOT + "/import/" + request.GET["table"] + ".csv"
         messages.warning(request, "Using file: " + file)
         if request.GET["table"] == "tags":
             # Enter code to import here
