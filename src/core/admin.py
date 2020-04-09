@@ -30,6 +30,7 @@ class ArticleDesignAdmin(admin.ModelAdmin):
         js = ("js/scripts.js",)
 
 
+admin.site.register(Tag)
 admin.site.register(Record)
 admin.site.register(Event)
 admin.site.register(News)

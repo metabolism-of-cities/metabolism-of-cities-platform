@@ -10,6 +10,31 @@ from django.urls import reverse
 from django.forms import ModelForm
 from django.conf import settings
 from markdown import markdown
+from tinymce import HTMLField
+
+class Tag(models.Model):
+    name = models.CharField(max_length=255)
+    description = HTMLField("description", null=True, blank=True)
+    parent_tag = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True,
+        limit_choices_to={"hidden": False}, related_name="children"
+    )
+    hidden = models.BooleanField(db_index=True, default=False, help_text="Mark if tag is superseded/not yet approved/deactivated")
+    include_in_glossary = models.BooleanField(db_index=True, default=False)
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def shortcode(self):
+        "Returns abbreviation -- text between parenthesis -- if there is any"
+        if "(" in self.name:
+            s = self.name
+            return s[s.find("(")+1:s.find(")")]
+        else:
+            return self.name
+
+    class Meta:
+        ordering = ["name"]
 
 class Record(models.Model):
     title = models.CharField(max_length=255)
