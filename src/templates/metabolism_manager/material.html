@@ -54,25 +54,36 @@
   {% spaceless %}
   <div class="row lightbox gallery mb-4">
     <div class="col-sm-6 col-md-3 col-lg-2">
-      <a href="https://i.imgur.com/Dt1uTrR.jpg" style="background-image: url('https://i.imgur.com/Dt1uTrR.jpg');" data-caption="Image caption"></a>
+      <a href="https://i.imgur.com/jXBNOdK.jpg" style="background-image: url('https://i.imgur.com/jXBNOdK.jpg');" data-caption="Image caption"></a>
     </div>
     <div class="col-sm-6 col-md-3 col-lg-2">
-      <a href="https://i.imgur.com/4UBXfQZ.jpg" style="background-image: url('https://i.imgur.com/4UBXfQZ.jpg');" data-caption="Image caption"></a>
+      <a href="https://i.imgur.com/WexZ5DR.jpg" style="background-image: url('https://i.imgur.com/WexZ5DR.jpg');" data-caption="Image caption"></a>
     </div>
     <div class="col-sm-6 col-md-3 col-lg-2">
-      <a href="https://i.imgur.com/EJN4Fqc.jpg" style="background-image: url('https://i.imgur.com/EJN4Fqc.jpg');" data-caption="Image caption"></a>
+      <a href="https://i.imgur.com/KGoIvkV.jpg" style="background-image: url('https://i.imgur.com/KGoIvkV.jpg');" data-caption="Image caption"></a>
     </div>
     <div class="col-sm-6 col-md-3 col-lg-2">
-      <a href="https://i.imgur.com/1CjEhsE.jpg" style="background-image: url('https://i.imgur.com/1CjEhsE.jpg');" data-caption="Image caption"></a>
+      <a href="https://i.imgur.com/SdYj0y7.jpg" style="background-image: url('https://i.imgur.com/SdYj0y7.jpg');" data-caption="Image caption"></a>
     </div>
   </div>
-  <a class="btn btn-primary" href=""><i class="fas fa-camera"></i> Add photo</a>
+  <button class="btn btn-primary btn-add-photo"><i class="fas fa-camera"></i> Add photo</button>
+  <form class="form-inline form-add-photo mt-2">
+    <input hidden type="file" name="photo-file" accept="image/*">
+    <div class="form-group mb-2">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <div class="input-group-text filename">photo filename</div>
+        </div>
+        <input type="text" class="form-control" name="photo-title" placeholder="Please add a title...">
+      </div>
+      <button type="submit" class="btn btn-primary"><i class="fas fa-upload"></i> Upload photo</button>
+    </div>
+  </form>
   {% endspaceless %}
 </section>
 
 <section>
   <h3>Electricity in Cape Town</h3>
-
   <div class="row">
     <div class="col-lg-3 col-sm-6 mb-4">
       <a href="#" class="btn-thumbnail" style="background-image: url('https://i.imgur.com/Dt1uTrR.jpg');">
@@ -102,6 +113,21 @@
 {% block footer %}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.js"></script>
   <script>
+    // enable lightbox
     baguetteBox.run(".lightbox");
+
+    // adding photo logic
+    var photoFileInput = $("input[name='photo-file']");
+
+    $(".btn-add-photo").click(function() {
+      photoFileInput.click();
+    })
+
+    photoFileInput.change(function() {
+      if ( photoFileInput.val() ) {
+        $(".form-add-photo").show()
+        $(".form-add-photo .filename").text( photoFileInput.val().replace(/C:\\fakepath\\/i, '') )
+      }
+    })
   </script>
 {% endblock %}

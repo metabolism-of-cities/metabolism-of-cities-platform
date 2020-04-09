@@ -353,6 +353,7 @@ def metabolism_manager_material(request):
 
 def metabolism_manager_material_form(request):
     context = {
+        "page": "material"
     }
     return render(request, "metabolism_manager/material.form.html", load_specific_design(context, PAGE_ID["platformu"]))
 

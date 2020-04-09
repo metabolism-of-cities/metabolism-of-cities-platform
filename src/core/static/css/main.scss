@@ -1608,3 +1608,20 @@ body.metabolism.manager img.chart {
   box-shadow: $basic-shadow;
   border-radius: .25rem;
 }
+
+body.metabolism.manager.material {
+  .form-add-photo {
+    display: none;
+
+    input[name="photo-title"] {
+      border-radius: 0;
+      width: 400px;
+      max-width: 30hw;
+    }
+
+    button[type="submit"] {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+}
