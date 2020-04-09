@@ -457,6 +457,13 @@ def library_journals(request, article):
     }
     return render(request, "library/journals.html", load_specific_design(context, PAGE_ID["library"]))
 
+def library_map(request, article):
+    info = get_object_or_404(Article, pk=article)
+    context = {
+        "article": info,
+    }
+    return render(request, "library/map.html", load_specific_design(context, PAGE_ID["library"]))
+
 def library_authors(request):
     info = get_object_or_404(Article, pk=PAGE_ID["library"])
     context = {

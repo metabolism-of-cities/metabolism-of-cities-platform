@@ -1,0 +1,9 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <h1>{{ article.title }}</h1>
+  {{ article.content|safe }}
+
+  <p>The map should go here.</p>
+
+{% endblock %}
