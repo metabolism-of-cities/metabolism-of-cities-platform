@@ -11,8 +11,11 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 
+" Custom admin section "
+from core.admin import admin_site  
+
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("admin/", admin_site.urls),
     path("tinymce/", include("tinymce.urls")),
     path("", include("core.urls")),
 ]
