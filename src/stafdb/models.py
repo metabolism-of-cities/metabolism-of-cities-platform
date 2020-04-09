@@ -5,31 +5,30 @@ class GeocodeSystem(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     url = models.URLField(null=True, blank=True)
+    is_comprehensive = models.BooleanField(default=True, db_index=True)
     def __str__(self):
         return self.name
 
 # Lists all the different levels within the system. Could be a single level (e.g. Postal Code), but it 
 # could also include various levels, e.g.: Country > Province > City
+# Depth should start at 0 and go up from there
 class Geocode(models.Model):
     name = models.CharField(max_length=255)
     system = models.ForeignKey(GeocodeSystem, on_delete=models.CASCADE)
-    parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
+    depth = models.PositiveSmallIntegerField()
     description = models.TextField(null=True, blank=True)
     def __str__(self):
         return self.name
 
 # The reference space, for instance the country "South Africa", the city "Cape Town", or the postal code 8000
-#class ReferenceSpace(models.Model):
-#    name = models.CharField(max_length=255, db_index=True)
-#    geocode = models.ForeignKey(Geocode, on_delete=models.CASCADE)
-#    city = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='city_location')
-#    country = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='country_location')
-#    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='child')
-#    description = models.TextField(null=True, blank=True)
-#    url = models.CharField(max_length=255, null=True, blank=True)
-#    slug = models.SlugField(db_index=True, max_length=255, null=True)
-#    location = models.ForeignKey('multiplicity.ReferenceSpaceLocation', on_delete=models.SET_NULL, null=True, blank=True)
-#    active = models.BooleanField(default=True, db_index=True)
+class ReferenceSpace(models.Model):
+    name = models.CharField(max_length=255, db_index=True)
+    description = models.TextField(null=True, blank=True)
+    slug = models.CharField(db_index=True, max_length=100, null=True)
+    location = models.ForeignKey('multiplicity.ReferenceSpaceLocation', on_delete=models.SET_NULL, null=True, blank=True)
+    active = models.BooleanField(default=True, db_index=True)
+
+    geocode = models.ForeignKey(Geocode, on_delete=models.CASCADE)
 
 class Process(models.Model):
     name = models.CharField(max_length=255, db_index=True)
