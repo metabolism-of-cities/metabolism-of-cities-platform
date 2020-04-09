@@ -1,0 +1,15 @@
+{% extends "_base.html" %}
+{% block title %}Data Import{% endblock %}
+
+{% block content %}
+  <h1>Data import</h1>   
+  <ul>
+    <li><a href="/dataimport/?table=tags">Tags</a></li>
+  </ul>
+
+  <hr>
+  <pre>
+  COPY (SELECT * FROM core_tag) To '/sqlexport/tags.csv' With (FORMAT CSV,HEADER);
+  </pre>
+{% endblock %}
+

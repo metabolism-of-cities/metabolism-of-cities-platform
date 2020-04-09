@@ -100,12 +100,13 @@ urlpatterns = [
     path("login/", views.user_login, name="login"),
     path("logout/", views.user_logout, name="logout"),
 
-    # Temporary
-    path("baseline/", views.load_baseline),
-    path("pdf/", views.pdf),
-
     # MOOC
     path("mooc/<int:id>/<int:module>/overview/", views.mooc_module),
     path("mooc/<int:id>/overview/", views.mooc),
+
+    # Temporary
+    path("baseline/", views.load_baseline),
+    path("pdf/", views.pdf),
+    path("dataimport/", views.dataimport),
 
 ]

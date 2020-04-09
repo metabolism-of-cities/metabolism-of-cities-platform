@@ -857,3 +857,22 @@ Link to review: {review_link}''',
         "is_saved": is_saved
     }
     return render(request, "project.form.html", context)
+
+# TEMPORARY
+def dataimport(request):
+    error = False
+    if "table" in request.GET:
+        messages.warning(request, "Trying to import " + request.GET["table"])
+        file = settings.MEDIA_ROOT + "tags.csv"
+        messages.warning(request, "Using file: " + file)
+        if request.GET["table"] == "tags":
+            # Enter code to import here
+            file = file
+        if error:
+            messages.error(request, "We could not import your data")
+        else:
+            messages.success(request, "Data was imported")
+    context = {
+
+    }
+    return render(request, "temp.import.html", context)
