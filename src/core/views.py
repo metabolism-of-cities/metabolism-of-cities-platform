@@ -450,14 +450,12 @@ def library_casestudies(request, slug=None):
     }
     return render(request, "article.html", load_specific_design(context, PAGE_ID["library"]))
 
-def library_journals(request):
-    info = get_object_or_404(Article, pk=PAGE_ID["library"])
+def library_journals(request, article):
+    info = get_object_or_404(Article, pk=article)
     context = {
-        "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
-        "info": info,
-        "menu": Article.objects.filter(parent=info),
+        "article": info,
     }
-    return render(request, "article.html", load_specific_design(context, PAGE_ID["library"]))
+    return render(request, "library/journals.html", load_specific_design(context, PAGE_ID["library"]))
 
 def library_authors(request):
     info = get_object_or_404(Article, pk=PAGE_ID["library"])

@@ -1,0 +1,9 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <h1>{{ article.title }}</h1>
+  {{ article.content|safe }}
+
+  <p>Please add the journals here. The part above should stay; it includes the title page and an introductory paragraph.</p>
+
+{% endblock %}
