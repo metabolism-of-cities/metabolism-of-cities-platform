@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.gis.db import models
 
 # The geocode system defines a particular standard, for instance 3166-1 or the South African postal code system
 class GeocodeSystem(models.Model):
@@ -24,11 +25,26 @@ class Geocode(models.Model):
 class ReferenceSpace(models.Model):
     name = models.CharField(max_length=255, db_index=True)
     description = models.TextField(null=True, blank=True)
-    slug = models.CharField(db_index=True, max_length=100, null=True)
-    location = models.ForeignKey('multiplicity.ReferenceSpaceLocation', on_delete=models.SET_NULL, null=True, blank=True)
+    slug = models.CharField(max_length=100, null=True)
+    location = models.ForeignKey("ReferenceSpaceLocation", on_delete=models.SET_NULL, null=True, blank=True)
     active = models.BooleanField(default=True, db_index=True)
 
+class ReferenceSpaceLocation(models.Model):
+    space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE)
+    description = models.TextField(null=True, blank=True)
+    start = models.DateField(null=True, blank=True, db_index=True)
+    end = models.DateField(null=True, blank=True, db_index=True)
+    geometry = models.GeometryField()
+    active = models.BooleanField(default=True, db_index=True)
+    def __str__(self):
+        return "Location for " + self.space.name
+    class Meta:
+        ordering = ["-start"]
+
+class ReferenceSpaceGeocode(models.Model):
     geocode = models.ForeignKey(Geocode, on_delete=models.CASCADE)
+    space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE)
+    identifier = models.CharField(max_length=255, db_index=True, null=True, blank=True)
 
 class Process(models.Model):
     name = models.CharField(max_length=255, db_index=True)
