@@ -78,8 +78,9 @@ urlpatterns = [
     path("platformu/admin/entities/<int:id>/materials/<int:material>/", views.metabolism_manager_admin_entity_material),
     path("platformu/admin/entities/<int:id>/data/", views.metabolism_manager_admin_entity_data),
     path("platformu/admin/entities/<int:id>/log/", views.metabolism_manager_admin_entity_log),
-    path("platformu/admin/entities/<int:id>/user/create/", views.metabolism_manager_admin_entity_user),
-    path("platformu/admin/entities/<int:id>/user/<int:user>/", views.metabolism_manager_admin_entity_user),
+    path("platformu/admin/entities/<int:id>/users/", views.metabolism_manager_admin_entity_users),
+    path("platformu/admin/entities/<int:id>/users/create/", views.metabolism_manager_admin_entity_user),
+    path("platformu/admin/entities/<int:id>/users/<int:user>/", views.metabolism_manager_admin_entity_user),
 
     path("platformu/dashboard/", views.metabolism_manager_dashboard),
     path("platformu/materials/electricity/", views.metabolism_manager_material),

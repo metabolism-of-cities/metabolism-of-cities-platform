@@ -6,6 +6,10 @@
 
 {% block content %}
 
+  {% if subsite.id == 53 %}
+    {% include "metabolism_manager/_user.menu.html" %}
+  {% endif %}
+
   <div class="row mb-4">
     <div class="col-md-4 mb-2">
       <select class="custom-select">

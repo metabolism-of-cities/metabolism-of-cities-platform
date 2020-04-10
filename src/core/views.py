@@ -309,6 +309,12 @@ def metabolism_manager_admin_entity_form(request, id=None):
     }
     return render(request, "metabolism_manager/admin/entity.form.html", load_specific_design(context, PAGE_ID["platformu"]))
 
+def metabolism_manager_admin_entity_users(request, id=None):
+    context = {
+        "page": "entity_users"
+    }
+    return render(request, "metabolism_manager/admin/entity.users.html", load_specific_design(context, PAGE_ID["platformu"]))
+
 def metabolism_manager_admin_entity_materials(request, id):
     context = {
         "page": "entity_materials"
@@ -370,7 +376,11 @@ def metabolism_manager_marketplace(request):
     return render(request, "metabolism_manager/marketplace.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_forum(request):
+    article = get_object_or_404(Article, pk=17)
+    list = ForumMessage.objects.filter(parent__isnull=True)
     context = {
+        "header": getHeader(article),
+        "list": list,
     }
     return render(request, "forum.list.html", load_specific_design(context, PAGE_ID["platformu"]))
 
@@ -790,11 +800,12 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 }"""
         },
         { "header": "small", "article": 53, "logo": "/logos/media-platformu.png", "css": """.top-layer {
-background-color: #000000;
-background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1600 800'%3E%3Cg stroke='%23960018' stroke-width='66.7' stroke-opacity='0.05' %3E%3Ccircle fill='%23000000' cx='0' cy='0' r='1800'/%3E%3Ccircle fill='%23100402' cx='0' cy='0' r='1700'/%3E%3Ccircle fill='%231a0804' cx='0' cy='0' r='1600'/%3E%3Ccircle fill='%23220c06' cx='0' cy='0' r='1500'/%3E%3Ccircle fill='%23280e08' cx='0' cy='0' r='1400'/%3E%3Ccircle fill='%2330100a' cx='0' cy='0' r='1300'/%3E%3Ccircle fill='%2338100c' cx='0' cy='0' r='1200'/%3E%3Ccircle fill='%2340110e' cx='0' cy='0' r='1100'/%3E%3Ccircle fill='%2348110f' cx='0' cy='0' r='1000'/%3E%3Ccircle fill='%23501211' cx='0' cy='0' r='900'/%3E%3Ccircle fill='%23581112' cx='0' cy='0' r='800'/%3E%3Ccircle fill='%23611113' cx='0' cy='0' r='700'/%3E%3Ccircle fill='%23691014' cx='0' cy='0' r='600'/%3E%3Ccircle fill='%23720e14' cx='0' cy='0' r='500'/%3E%3Ccircle fill='%237b0c15' cx='0' cy='0' r='400'/%3E%3Ccircle fill='%23840916' cx='0' cy='0' r='300'/%3E%3Ccircle fill='%238d0517' cx='0' cy='0' r='200'/%3E%3Ccircle fill='%23960018' cx='0' cy='0' r='100'/%3E%3C/g%3E%3C/svg%3E");
-background-attachment: fixed;
-background-size: cover;
-/* background by SVGBackgrounds.com */
+background-color:#fff;
+border:0;
+box-shadow:none;
+}
+nav a.nav-link {
+color:#333 !important;
 }"""
         },
         { "header": "small", "article": 55, "logo": "/logos/media-stafcp.png", "css": """.top-layer {

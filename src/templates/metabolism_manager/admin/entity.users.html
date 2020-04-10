@@ -1,0 +1,44 @@
+{% extends "_base.html" %}
+
+{% block title %}Metabolism Manager{% endblock %}
+{% block page_name %}entity form{% endblock %}
+
+{% block content %}
+
+  {% include "metabolism_manager/admin/_entity.menu.html" %}
+
+  <section>
+    <h3>Users</h3>
+    <table class="table users mt-2">
+      <tbody>
+        <tr>
+          <td>
+            <a class="align-middle" href="/platformu/admin/entities/1/users/20/">Michael Scott</a>
+            <a class="btn btn-sm btn-danger float-right ml-2" href=""><i class="far fa-fw fa-trash-alt"></i></a>
+            <a class="btn btn-sm btn-primary float-right" href="/platformu/admin/entities/1/users/20/"><i class="far fa-fw fa-pencil"></i></a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a class="align-middle" href="/platformu/admin/entities/1/users/20/">Pam Halpert</a>
+            <a class="btn btn-sm btn-danger float-right ml-2" href=""><i class="far fa-fw fa-trash-alt"></i></a>
+            <a class="btn btn-sm btn-primary float-right" href="/platformu/admin/entities/1/users/20/"><i class="far fa-fw fa-pencil"></i></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <a class="btn btn-primary" href="/platformu/admin/entities/1/users/create/"><i class="fas fa-user-plus"></i> Add new user</a>
+  </section>
+
+{% endblock %}
+
+{% block footer %}
+  <!-- making the browse for file input look good and work well -- https://www.npmjs.com/package/bs-custom-file-input -->
+  <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      bsCustomFileInput.init()
+    })
+  </script>
+{% endblock %}
