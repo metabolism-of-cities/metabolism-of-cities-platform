@@ -218,7 +218,6 @@ nav {
   .lead {
     font-weight: normal;
   }
-
 }
 
 // FOOTERS
@@ -314,7 +313,6 @@ footer {
     }
 
   }
-
 }
 
 // BUTTONS
@@ -527,6 +525,28 @@ footer {
     left: calc(50% - 3rem);
     position: absolute;
     top: calc(50% - 3rem);
+  }
+}
+
+// MARKDOWN TOOLBAR
+.markdown-textarea {
+  markdown-toolbar {
+    padding: .375rem;
+    display: block;
+    border: 1px solid #ced4da;
+    border-bottom-width: 0;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+    background-color: $white;
+
+    i {
+      margin-right: 0 !important;
+    }
+  }
+
+  textarea {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
   }
 }
 
