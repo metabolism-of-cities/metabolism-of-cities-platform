@@ -3,6 +3,8 @@ from .models import *
 from django.shortcuts import redirect
 from django.contrib.admin import AdminSite
 from django.utils.translation import ugettext_lazy
+from django.contrib.auth.models import User, Group
+from django_cron.models import CronJobLog
 
 class MyAdminSite(AdminSite):
     # Text to put at the end of each page"s <title>.
@@ -61,3 +63,6 @@ admin_site.register(MOOCAnswer)
 admin_site.register(MOOCProgress)
 admin_site.register(MOOCQuizAnswers)
 
+admin_site.register(Group)
+admin_site.register(User)
+admin_site.register(CronJobLog)
