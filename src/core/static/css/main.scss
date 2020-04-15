@@ -550,6 +550,40 @@ footer {
   }
 }
 
+// MARKDOWN HELP BOX
+.markdown-help {
+  table tbody tr td:first-of-type {
+    font-family: "Ubuntu Mono", "Fira Mono", "Liberation Mono", "Courier New", monospace;
+    width: 50%;
+  }
+
+  table,
+  table ul,
+  table ol {
+    margin-bottom: 0;
+  }
+
+  .card-body {
+    padding-bottom: .5rem;
+  }
+
+  i.fa-times {
+    line-height: 1.5rem;
+    cursor: pointer;
+    float: right;
+
+    &:hover {
+      color: $white;
+    }
+  }
+}
+
+// BLOCKQUOTE
+blockquote {
+  padding-left: .5rem;
+  border-left: 4px solid $light;
+}
+
 // SWEET ALERT
 .swal-modal {
   border-radius: .25rem;
@@ -1195,6 +1229,13 @@ body.forum {
         border-left: .25rem solid $gray;
       }
     }
+  }
+}
+
+body.forum.form {
+  .markdown-help {
+    display: none;
+    margin-top: 1rem;
   }
 }
 
