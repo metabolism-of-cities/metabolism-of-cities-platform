@@ -43,6 +43,9 @@ class ArticleDesignAdmin(admin.ModelAdmin):
         }
         js = ("js/scripts.js",)
 
+class VideoAdmin(admin.ModelAdmin):
+    class Media:
+        js = ("js/video.admin.js",)
 
 admin_site.register(Tag)
 admin_site.register(Record)
@@ -51,7 +54,7 @@ admin_site.register(News)
 admin_site.register(Article, ArticleAdmin)
 admin_site.register(ArticleDesign, ArticleDesignAdmin)
 admin_site.register(People)
-admin_site.register(Video)
+admin_site.register(Video, VideoAdmin)
 admin_site.register(Project)
 
 admin_site.register(MOOC)

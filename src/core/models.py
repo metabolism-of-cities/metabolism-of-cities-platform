@@ -89,7 +89,11 @@ class Video(Record):
     video_site = models.CharField(max_length=14, choices=VIDEO_SITES)
 
     def embed(self):
-        return "<iframe src=blabla></iframe>"
+        if self.video_site == "youtube":
+            return f'<iframe class="video-embed youtube-video" src="https://www.youtube.com/embed/{self.embed_code}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+        elif self.video_site == "vimeo":
+            return f'<iframe class="video-embed youtube-video" title="vimeo-player" src="https://player.vimeo.com/video/{self.embed_code}" frameborder="0" allowfullscreen></iframe>'
+
 
 class People(Record):
     affiliation = models.CharField(max_length=255,null=True, blank=True)

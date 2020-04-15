@@ -8,16 +8,8 @@
 
 {% block content %}
   <h1>{{ info.title }}</h1>
-  Embedded video: 
-
-{{ info.embed|safe }}
-
 <div>
-Should show this if youtube:
-<iframe src="https://www.youtube.com/embed/9YffrCViTVk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-And this if Vimeo:
-<iframe title="vimeo-player" src="https://player.vimeo.com/video/336812660" frameborder="0" allowfullscreen></iframe>
+{{ info.embed|safe }}
 </div>
 
 {% endblock %}
