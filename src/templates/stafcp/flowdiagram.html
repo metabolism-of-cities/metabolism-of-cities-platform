@@ -1,5 +1,90 @@
 {% extends "_base.html" %}
 
-{% block content %}
-  <h1>Flow Diagram</h1>
+{% block head %}
+<style>
+  svg * {
+    font-family: "Lato" !important;
+  }
+</style>
 {% endblock %}
+{% block content %}
+<div class="row mb-4">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header">
+        Example 1
+      </div>
+      <div class="card-body mermaid">
+        graph LR
+          A[Cape Town] --- B[Consumers]
+          A-->E[Farms]
+          E-->A
+          B-->C[Mines]
+          B-->D[Ocean]
+          C-->D
+          C-->E
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header">
+        Example 2
+      </div>
+      <div class="card-body mermaid">
+        graph TB
+          c1-->a2
+          subgraph CBD
+          a1-->a2
+          end
+          subgraph Woodstock
+          b1-->b2
+          end
+          subgraph Observatory
+          c1-->c2
+          end
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mermaid">
+  graph TB
+    subgraph Cape Town
+    A[Production]-->|Mill prod. 1.5|B[Fabrication and manufacturing]
+    B-->|Final products 1.5|C[Use]
+    C-->|0.73|D[Stock]
+    C-->|Discards 0.78|E[Waste management and recycling]
+    A-->|Tailings 0.083|F[Repositories]
+    A-->|Slag and y-products 0.018|F
+    A-->|Home scrap 0.11|A
+    B-->|Ind. scrap 0.17|E
+    C-->|In-use dissipation 0.011|F
+    E-->|Purchased scrap 0.73|A
+    E-->|Landfill, dispersion 0.32|F
+    G[Lith.]-->|Crude ore 0.45|A
+    end
+    H[Other regions]-->|Iron ore 0.017|A
+    H[Other regions]-->|Iron and steel products 0.77|A
+    H[Other regions]-->|Parts and final products 0.16|B
+    H[Other regions]-->|Scrap 0.090|E
+    style A fill:brown,stroke:black
+    style B fill:orange,stroke:black
+    style C fill:red,stroke:black
+    style D fill:blue,stroke:black
+    style E fill:green,stroke:black
+    style F fill:gold,stroke:black
+    style G fill:gray,stroke:black
+    style H fill:pink,stroke:black
+</div>
+{% endblock %}
+
+{% block footer %}
+<script src="https://unpkg.com/mermaid@8.5.0/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({
+    startOnLoad:true
+  });
+</script>
+{% endblock %}
+
