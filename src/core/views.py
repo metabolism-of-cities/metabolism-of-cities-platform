@@ -146,6 +146,9 @@ def user_logout(request):
     messages.warning(request, "You are now logged out")
     return redirect("login")
 
+def user_reset(request):
+    return render(request, "auth/reset.html")
+
 # Homepage
 
 def index(request):
