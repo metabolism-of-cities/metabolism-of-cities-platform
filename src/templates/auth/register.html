@@ -1,49 +1,25 @@
 {% extends "_base.html" %}
 
+{% block page_name %}register{% endblock %}
 {% block title %}Register Form{% endblock %}
 
 {% block content %}
-  <h1>Register</h1>
-  <hr>
-
-  <form method="post" action="">
-  {% csrf_token %}
-  <div class="form-group row">
-    <label for="email" class="col-sm-2 col-form-label">E-mail</label>
-    <div class="col-sm-10">
-      <input
-          type="email"
-          class="form-control"
-          id="email"
-          placeholder="email@example.com"
-          name="email"
-          value=""
-          required
-      >
+  <div class="card register">
+    <div class="card-body">
+      <h3>Register</h3>
+      <hr>
+      <form method="post" action="">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input type="email" class="form-control" id="email" name="email">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" class="form-control" id="password" name="password">
+        </div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-fw fa-user-plus"></i> Register</button>
+      </form>
     </div>
   </div>
-  <div class="form-group row">
-    <label for="password" class="col-sm-2 col-form-label">Password</label>
-    <div class="col-sm-10">
-      <input
-          type="password"
-          class="form-control"
-          id="password"
-          name="password"
-          value=""
-          required
-      >
-    </div>
-  </div>
-
-  <div class="form-group row">
-    <div class="col-sm-10">
-      <input
-          type="submit"
-          class="btn btn-primary"
-          value="Register"
-      >
-    </div>
-  </div>
-</form>
 {% endblock %}
