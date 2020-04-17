@@ -5,6 +5,8 @@ from django.contrib.admin import AdminSite
 from django.utils.translation import ugettext_lazy
 from django.contrib.auth.models import User, Group
 from django_cron.models import CronJobLog
+from stafdb.models import *
+from django.contrib.gis import admin
 
 class MyAdminSite(AdminSite):
     # Text to put at the end of each page"s <title>.
@@ -69,3 +71,9 @@ admin_site.register(MOOCQuizAnswers)
 admin_site.register(Group)
 admin_site.register(User)
 admin_site.register(CronJobLog)
+
+admin_site.register(GeocodeSystem)
+admin_site.register(Geocode)
+admin_site.register(ReferenceSpace)
+admin_site.register(ReferenceSpaceLocation, admin.GeoModelAdmin)
+admin_site.register(ReferenceSpaceGeocode)
