@@ -8,6 +8,62 @@
 </style>
 {% endblock %}
 {% block content %}
+<div class="row">
+  <div class="col-lg-6">
+    <form method="post" class="form form-horizontal">
+
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">From</label>
+        <div class="col-sm-10">
+          <select name="from" class="custom-select">
+            <option value="">Process 1</option>
+            <option value="">Process 2</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">To</label>
+        <div class="col-sm-10">
+          <select name="to" class="custom-select">
+            <option value="">Process 1</option>
+            <option value="">Process 2</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Label (optional)</label>
+        <div class="col-sm-10">
+          <input name="label" class="form-control">
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-md-10 offset-md-2">
+          <button class="btn btn-primary" type="submit"><i class="fas fa-save" aria-hidden="true"></i> Save</button>
+        </div>
+      </div>
+      {% csrf_token %}
+    </form>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header">
+        Example 1
+      </div>
+      <div class="card-body mermaid">
+        graph LR
+          A[Cape Town] --- B[Consumers]
+          A-->E[Farms]
+          E-->A
+          B-->C[Mines]
+          B-->D[Ocean]
+          C-->D
+          C-->E
+      </div>
+    </div>
+  </div>
+
+</div>
 <div class="row mb-4">
   <div class="col-lg-6">
     <div class="card">
