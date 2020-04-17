@@ -1640,33 +1640,7 @@ body.entity.form {
   }
 }
 
-body.entity.materials {
-  table.users td {
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  #add-material {
-    display: none;
-
-    table tr td {
-      vertical-align: middle;
-
-      &:first-of-type {
-        padding-left: 1rem;
-      }
-
-      &:last-of-type {
-        padding-right: 1rem;
-      }
-    }
-  }
-
-  .btn-to-top {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
+.filter-table {
   .col-filter {
     background-color: $light;
     border-radius: .25rem 0 0;
@@ -1678,12 +1652,44 @@ body.entity.materials {
     }
   }
 
-  .tag-filter .nav-link {
-    cursor: pointer;
+  table tr td {
+    vertical-align: middle;
+
+    &:first-of-type {
+      padding-left: 1rem;
+    }
+
+    &:last-of-type {
+      padding-right: 1rem;
+    }
+  }
+
+  tbody tr:first-of-type > * {
+    border-top: 0;
   }
 
   .no-results:not(.visible) {
     display: none;
+  }
+
+  .tag-filter .nav-link {
+    cursor: pointer;
+  }
+}
+
+body.entity.materials {
+  table.users td {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  #add-material {
+    display: none;
+  }
+
+  .btn-to-top {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 
