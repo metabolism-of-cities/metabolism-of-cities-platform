@@ -1722,3 +1722,55 @@ body.metabolism.manager.material {
     }
   }
 }
+
+body.our-story {
+  .timeline {
+    position: relative;
+    padding-left: 30px;
+
+    &:before {
+      content: ' ';
+      background: $light;
+      display: inline-block;
+      position: absolute;
+      left: 9px;
+      width: 2px;
+      height: 100%;
+      z-index: 400;
+    }
+
+    > .single-entry {
+      padding: 1rem;
+      background-color: $white;
+      max-width: 600px;
+      border-radius: .25rem;
+      box-shadow: $basic-shadow;
+
+      &:before {
+        content: " ";
+        background: $white;
+        display: inline-block;
+        position: absolute;
+        border-radius: 50%;
+        border: 6px solid $primary;
+        left: 0;
+        width: 20px;
+        height: 20px;
+        z-index: 400;
+      }
+    }
+    .single-entry {
+      margin-bottom: 2rem;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  }
+
+
+
+
+
+}
