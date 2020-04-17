@@ -580,8 +580,12 @@ footer {
 
 // BLOCKQUOTE
 blockquote {
+  font-size: 1rem;
+  background-color: $light;
+  padding: .25rem;
   padding-left: .5rem;
-  border-left: 4px solid $light;
+  border-left: .25rem solid $gray;
+  margin: .5rem 0;
 }
 
 // SWEET ALERT
@@ -1173,7 +1177,7 @@ body.article {
   }
 }
 
-// FORUM
+// FORUM LIST
 body.forum {
   thead th {
     border-top: none;
@@ -1188,7 +1192,7 @@ body.forum {
     height: 30px;
     line-height: 30px;
     width: 30px;
-    margin-right: .1rem;
+    margin-right: .25rem;
 
     &.plus {
       background-color: $gray;
@@ -1199,18 +1203,19 @@ body.forum {
     }
   }
 
-  &.topic {
-    .single-message,
-    .reply {
-      background-color: $white;
-      box-shadow: $basic-shadow;
-      border-radius: .25rem;
-      margin-bottom: 1rem;
-      width: 100%;
-      padding: 1rem;
-    }
+  .avatar-line-height {
+    line-height: 30px;
+  }
 
+  &.topic {
     .single-message {
+      margin-bottom: 1rem;
+
+      hr {
+        margin-left: -1.25rem;
+        width: calc(100% + 2.5rem);
+      }
+
       .text img {
         width: 100%;
         border-radius: .25rem;
@@ -1220,22 +1225,38 @@ body.forum {
       .text p:last-of-type {
         margin-bottom: 0;
       }
-
-      .text blockquote {
-        font-size: 1rem;
-        background-color: $very-light;
-        padding: .25rem;
-        padding-left: .5rem;
-        border-left: .25rem solid $gray;
-      }
     }
   }
 }
 
+body.forum.list {
+  table {
+    margin-bottom: 0;
+  }
+
+
+  .no-results {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
+    &:not(.visible) {
+      display: none;
+    }
+  }
+}
+
+// FORUM POST FORM
 body.forum.form {
   .markdown-help {
     display: none;
     margin-top: 1rem;
+  }
+}
+
+// FORUM POST
+body.forum.topic {
+  .reply {
+    margin-bottom: 1rem;
   }
 }
 

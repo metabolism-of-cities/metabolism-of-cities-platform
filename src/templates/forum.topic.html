@@ -8,70 +8,121 @@
 {% block content %}
 
 <h1 class="mb-0">{{ info.title }}</h1>
-<a href="#" class="badge badge-primary">Eum velit ipsa</a>
-<a href="#" class="badge badge-primary">Officiis dolorum</a>
-<a href="#" class="badge badge-primary">Nesciunt</a>
-<a href="#" class="badge badge-primary">Tenetur</a>
+<div class="tags">
+  <a href="#" class="badge badge-primary">Nesciunt</a>
+  <a href="#" class="badge badge-primary">Tenetur</a>
+</div>
+
+<a class="btn btn-sm btn-primary-basic mt-2" href="/community/forum"><i class="fas fa-angle-left"></i> Back to topic list</a>
 
 <div class="row mt-4">
   <div class="col-lg-7">
-    <div class="single-message">
-      <div class="row metadata">
-        <div class="col-8">
-          <span class="avatar plus">
-            {{ info.user.first_name|slice:"1" }}
-          </span>
-          {{ info.user.first_name }}
-        </div>
-        <div class="col-4 text-muted text-right">
-          {{ info.date_created|timesince }} ago
-        </div>
-      </div>
-      <hr>
-      <div class="text">
-        {{ info.getContent|safe }}
-        <img src="https://i.imgur.com/cku5kjM.jpg">
-      </div>
-    </div>
-    {% for details in list %}
-      <div class="single-message">
+    <div class="single-message card">
+      <div class="card-body">
         <div class="row metadata">
           <div class="col-8">
             <span class="avatar plus">
-              {{ details.user.first_name|slice:"1" }}
-            </span> 
-            {{ details.user.first_name }}
+              {{ info.user.first_name|slice:"1" }}
+            </span>
+            {{ info.user.first_name }} {{ info.user.last_name }}
           </div>
-          <div class="col-4 text-muted text-right">
-            {{ details.date_created|timesince }} ago
+          <div class="col-4 text-muted text-right avatar-line-height" title="{{ info.date_created|date:'l j F Y, H:i e' }}">
+            {{ info.date_created|timesince }} ago
           </div>
         </div>
         <hr>
         <div class="text">
-          {{ details.getContent|safe }}
+          {{ info.getContent|safe }}
         </div>
-        <div class="attachment mt-3">
-          {% for subdetails in details.getForumMessageFiles %}
-            <a class="btn btn-sm btn-primary-outline mb-1" href="{{ MEDIA_URL }}{{ subdetails.file.url }}" target="_blank"><i class="far fa-paperclip"></i> {{ subdetails.getFileName }}
-            </a>
-          {% endfor %}
+        {% if info.getForumMessageFiles %}
+          <div class="attachment mt-3">
+            {% for subdetails in info.getForumMessageFiles %}
+              <a class="btn btn-sm btn-primary-outline mb-1" href="{{ MEDIA_URL }}{{ subdetails.file.url }}" target="_blank"><i class="far fa-paperclip"></i> {{ subdetails.getFileName }}
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    {% for details in list %}
+      <div class="single-message card">
+        <div class="card-body">
+          <div class="row metadata">
+            <div class="col-8">
+              <span class="avatar plus">
+                {{ details.user.first_name|slice:"1" }}
+              </span>
+              {{ details.user.first_name }} {{ details.user.last_name }}
+            </div>
+            <div class="col-4 text-muted text-right avatar-line-height" title="{{ details.date_created|date:'l j F Y, H:i e' }}">
+              {{ details.date_created|timesince }} ago
+            </div>
+          </div>
+          <hr>
+          <div class="text">
+            {{ details.getContent|safe }}
+          </div>
+          {% if details.getForumMessageFiles %}
+            <div class="attachment mt-3">
+              {% for subdetails in details.getForumMessageFiles %}
+                <a class="btn btn-sm btn-primary-outline mb-1" href="{{ MEDIA_URL }}{{ subdetails.file.url }}" target="_blank"><i class="far fa-paperclip"></i> {{ subdetails.getFileName }}
+                </a>
+              {% endfor %}
+            </div>
+          {% endif %}
         </div>
       </div>
     {% endfor %}
   </div>
   <div class="col-lg-5">
-    <form class="sticky-top reply" method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      <h4>Reply</h4>
-      <div class="form-group">
-        <textarea class="form-control" name="text" rows="5"></textarea>
+    <div class="sticky-top">
+      <div class="reply card">
+        <div class="card-header">
+          <i class="fas fa-fw fa-comments-alt mr-2"></i>Reply
+        </div>
+        <div class="card-body">
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group markdown-textarea">
+              <markdown-toolbar for="text">
+                <md-header title="Header" class="btn btn-primary-basic btn-sm"><i class="fas fa-fw fa-heading"></i></md-header>
+                <md-bold title="Bold" class="btn btn-primary-basic btn-sm"><i class="fas fa-fw fa-bold"></i></md-bold>
+                <md-italic title="Italic" class="btn btn-primary-basic btn-sm mr-2"><i class="fas fa-fw fa-italic"></i></md-italic>
+                <md-link title="Link" class="btn btn-primary-basic btn-sm"><i class="fas fa-fw fa-link"></i></md-link>
+                <md-code title="Code" class="btn btn-primary-basic btn-sm"><i class="fas fa-fw fa-code"></i></md-code>
+                <md-quote title="Quote" class="btn btn-primary-basic btn-sm mr-2"><i class="fas fa-fw fa-quote-right"></i></md-quote>
+                <md-ordered-list title="Ordered list" class="btn btn-primary-basic btn-sm"><i class="fas fa-fw fa-list-ol"></i></md-ordered-list>
+                <md-unordered-list title="Unordered list" class="btn btn-primary-basic btn-sm"><i class="fas fa-fw fa-list"></i></md-unordered-list>
+                <md-task-list title="Task list" class="btn btn-primary-basic btn-sm"><i class="fas fa-fw fa-tasks"></i></md-task-list>
+              </markdown-toolbar>
+              <textarea class="form-control" id="text" name="text" rows="5"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="files"><i class="far fa-fw fa-paperclip"></i> File(s)</label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" name="files" id="files" multiple="multiple">
+                <label class="custom-file-label" for="files">Choose file</label>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-fw fa-comment-alt-plus"></i> Submit</button>
+          </form>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="files">File(s)</label>
-        <input type="file" name="file" class="form-control-file" id="files" multiple="multiple">
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+      <a class="btn btn-sm btn-primary-basic mb-3" href="/community/forum"><i class="fas fa-angle-left"></i> Back to topic list</a>
+    </div>
   </div>
 </div>
+{% endblock %}
+
+{% block footer %}
+<!-- markdown toolbar -- https://github.com/github/markdown-toolbar-element -->
+<script src="https://unpkg.com/@github/markdown-toolbar-element@latest/dist/index.umd.js"></script>
+
+<!-- making the browse for file input look good and work well -- https://www.npmjs.com/package/bs-custom-file-input -->
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+<script>
+  $(document).ready(function () {
+    bsCustomFileInput.init()
+  })
+</script>
 {% endblock %}

@@ -2,7 +2,7 @@
 {% load static %}
 {% load sass_tags %}
 
-{% block page_name %}forum{% endblock %}
+{% block page_name %}forum list{% endblock %}
 
 {% block content %}
 
@@ -10,80 +10,162 @@
     {% include "metabolism_manager/_user.menu.html" %}
   {% endif %}
 
-  <div class="row mb-4">
-    <div class="col-md-4 mb-2">
-      <select class="custom-select">
-        <option selected>Filter by title</option>
-        {% for details in list %}
-          <option>{{ details.title }}</option>
-        {% endfor %}
-      </select>
+  <div id="topic-list">
+    <div class="row mb-4">
+      <div class="col-md-4 mb-2">
+        <input class="search form-control" type="text" name="search" placeholder="Search by title">
+      </div>
+      <div class="col-md-4 mb-2">
+        <select class="custom-select tag-filter">
+          <option value="all">Filter by tag</option>
+          <option value="Conferences">Conferences</option>
+          <option value="Data">Data</option>
+          <option value="Logistics">Logistics</option>
+        </select>
+      </div>
+      <div class="col-md-4 mb-2">
+        <a class="btn btn-primary d-block" href="/community/forum/create/"><i class="fas fa-fw fa-comment-alt-plus"></i> Post new topic</a>
+      </div>
     </div>
-    <div class="col-md-4 mb-2">
-      <select class="custom-select">
-        <option selected>Filter by tag</option>
-        <option value="1">Seminars</option>
-        <option value="2">Conferences</option>
-        <option value="3">Something else</option>
-      </select>
+
+    <div class="card table-responsive">
+      <table class="table">
+        <thead>
+          <tr class="d-none d-sm-table-row">
+            <th class="topic">Topic</th>
+            <th class="d-none d-lg-table-cell"></th>
+            <th class="d-none d-sm-table-cell narrow-cell">Replies</th>
+            <th class="d-none d-md-table-cell medium-cell">Activity</th>
+          </tr>
+        </thead>
+        <tbody class="list">
+          {% for details in list %}
+            <tr>
+              <td>
+                <a href="{% url 'forum_topic' details.id %}" class="topic-title">{{ details.title }}</a>
+                <br>
+                <!-- for tag in details.tags -->
+                <a href="#" class="badge badge-primary">Data</a>
+                <a href="#" class="badge badge-primary">Logistics</a>
+                <!-- end for -->
+                <span class="topic-tags" hidden>
+                  <!-- for tag in details.tags -->
+                  Data Logistics
+                  <!-- end for -->
+                </span>
+              </td>
+              <td class="d-none d-lg-table-cell">
+                {% if details.getReply.count > 5 %}
+                  {% for subdetails in details.getReply|slice:"5" %}
+                    <span class="avatar plus" title="{{ subdetails.user.first_name }} {{ subdetails.user.last_name }}">
+                      {{ subdetails.user.first_name|slice:"1" }}
+                    </span>
+                  {% endfor %}
+                  {% with count_reply=details.getReply.count|add:"-5" %}
+                    <span class="avatar plus">+{{ count_reply }}</span>
+                  {% endwith %}
+                {% else %}
+                  {% for subdetails in details.getReply %}
+                    <span class="avatar plus" title="{{ subdetails.user.first_name }} {{ subdetails.user.last_name }}">
+                      {{ subdetails.user.first_name|slice:"1" }}
+                    </span>
+                  {% endfor %}
+                {% endif %}
+              </td>
+              <td class="d-none d-sm-table-cell narrow-cell">
+                <a href="{% url 'forum_topic' details.id %}">
+                  {{ details.getReply.count }}
+                </a>
+              </td>
+              <td class="d-none d-md-table-cell medium-cell">
+                {% if details.getLastActivity.date_created %}
+                  {{ details.getLastActivity.date_created|timesince }} ago
+                {% else %}
+                   -
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    <div class="col-md-4 mb-2">
-      <a class="btn btn-primary" href="/community/forum/create/">Post new topic</a>
+
+    <div class="card no-results">
+      <div class="card-body text-center">
+        <h2 class="my-4"><i class="fad fa-search"></i> No topics found</h2>
+        <button class="btn btn-lg btn-primary clear-filter my-4">Show all topics</button>
+      </div>
     </div>
   </div>
-  
-  <table class="table">
-    <thead>
-      <tr class="d-none d-sm-table-row">
-        <th class="topic">Topic</th>
-        <th class="d-none d-lg-table-cell"></th>
-        <th class="d-none d-sm-table-cell narrow-cell text-center">Replies</th>
-        <th class="d-none d-md-table-cell narrow-cell text-center">Activity</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for details in list %}
-        <tr>
-          <td>
-            <a href="{% url "forum_topic" details.id %}">
-              {{ details.title }}
-            </a>
-            <br>
-            <a href="#" class="badge badge-primary">Cape Town</a>
-            <a href="#" class="badge badge-primary">Water</a>
-          </td>
-          <td class="d-none d-lg-table-cell">
-            {% if details.getReply.count > 5 %}
-              {% for subdetails in details.getReply|slice:"5" %}
-                <span class="avatar plus">
-                  {{ subdetails.user.first_name|slice:"1" }}
-                </span>
-              {% endfor %}
-              {% with count_reply=details.getReply.count|add:"-5" %}
-                <span class="avatar plus">+{{ count_reply }}</span>
-              {% endwith %}
-            {% else %}
-              {% for subdetails in details.getReply %}
-                <span class="avatar plus">
-                  {{ subdetails.user.first_name|slice:"1" }}
-                </span>
-              {% endfor %}
-            {% endif %}
-          </td>
-          <td class="d-none d-sm-table-cell narrow-cell text-center">
-            <a href="{% url "forum_topic" details.id %}">
-              {{ details.getReply.count }}
-            </a>
-          </td>
-          <td class="d-none d-md-table-cell narrow-cell text-center">
-            {% if details.getLastActivity.date_created %}
-              {{ details.getLastActivity.date_created|timesince }} ago
-            {% else %}
-               -
-            {% endif %}
-          </td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+{% endblock %}
+
+{% block footer %}
+  <!-- add listjs to search and filter -- https://listjs.com/api/ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+
+  <script>
+    var listOptions = {
+      valueNames: ["topic-title", "topic-tags"]
+    };
+
+    var topicList = new List("topic-list", listOptions);
+
+    function filterList(tag) {
+      topicList.filter(function(item) {
+        if (tag == "all") {
+          return true;
+        } else {
+          console.log(item.values())
+          if (item.values()["topic-tags"].includes(tag)) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      });
+
+      checkCount()
+    }
+
+    $(".tag-filter").change(function() {
+      var tag = $(this).val()
+
+      filterList(tag)
+    })
+
+    // function to check the number of matches
+    function checkCount() {
+      var count = $("#topic-list tbody.list tr:visible").length;
+      if (count == 0) {
+        $(".no-results").addClass("visible");
+      } else {
+        $(".no-results").removeClass("visible");
+      }
+    }
+
+    // update contact count when searching by name
+    topicList.on("searchComplete", function(){
+      checkCount();
+    });
+
+    // clear search and filters
+    function resetSearchFilters() {
+      topicList.search();
+      filterList("all")
+
+      $("#topic-list input.search").val("");
+      $(".tag-filter").val("all")
+    }
+
+    $(".clear-filter").click(function() {
+      resetSearchFilters();
+      checkCount();
+    })
+
+    // reset all filters on page load
+    resetSearchFilters();
+
+    // make no results box invisible on load
+    $(".no-results").removeClass("visible");
+  </script>
 {% endblock %}
