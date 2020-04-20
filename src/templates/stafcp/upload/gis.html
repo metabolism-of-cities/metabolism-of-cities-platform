@@ -165,8 +165,9 @@
     // clear search and filters
     function resetSearchFilters() {
       materialList.search();
-
       $("#gis-list input.search").val("");
+
+      $(".tag-filter .nav-link[data-tag='all']").click()
     }
 
     $(".clear-filter").click(function() {

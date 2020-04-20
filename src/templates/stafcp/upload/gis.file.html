@@ -2,29 +2,63 @@
 
 {% block content %}
   <h1>Upload GIS data</h1>
-  
-  <p>
-    <strong>Step 1: upload shapefile</strong> | 
-    Step 2: verify data | 
-    Step 3: enter metadata
-  </p>
 
-  <form method="post" class="form form-horizontal">
-    <input type="file" name="" />
-    <button type="submit">Submit</button>
-    {% csrf_token %}
-    <br>
-    Note for Guus: please show some sort of a progress uploader or a wheel to indicate that this is in progress...
-  </form>
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+      <a class="nav-link disabled active" href="#">1. Upload shapefile</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link disabled" href="#">2. Verify data</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link disabled" href="#">3. Enter metadata</a>
+    </li>
+  </ul>
 
-  <div class="alert alert-info">
-    <h4>Instructions</h4>
-    <ul>
-      <li>Obtain a shapefile with relevant data (.shp)</li>
-      <li>Ensure this is recorded with WS84 referencing system</li>
-      <li>Maximum 100MB (contact us if your file is larger)</li>
-    </ul>
-    <p>View instruction video [icon] -> show in modal</p>
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <form method="post">
+        <div class="form-group">
+          <div class="custom-file">
+            <input type="file" class="custom-file-input" name="file" id="file">
+            <label class="custom-file-label" for="file">Choose file</label>
+          </div>
+        </div>
+        {% csrf_token %}
+        <button class="btn btn-primary upload-file" type="submit"><i class="fas fa-fw fa-upload"></i> Submit</button>
+      </form>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-fw fa-question-circle"></i> Instructions
+        </div>
+        <div class="card-body">
+          <ul>
+            <li>Obtain a shapefile with relevant data (<code>.shp</code>)</li>
+            <li>Ensure this is recorded with WS84 referencing system</li>
+            <li>Maximum 100MB (contact us if your file is larger)</li>
+          </ul>
+          <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="btn btn-primary"><i class="fas fa-fw fa-play"></i> View instruction video</a>
+        </div>
+      </div>
+    </div>
   </div>
+{% endblock %}
 
+{% block footer %}
+  <!-- show spinner when starting file upload -->
+  <script>
+    $("button.upload-file").click(function() {
+      $(this).html("<i class='fad fa-fw fa-spinner-third fa-spin'></i> Uploading file...")
+    })
+  </script>
+
+  <!-- making the browse for file input look good and work well -- https://www.npmjs.com/package/bs-custom-file-input -->
+  <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      bsCustomFileInput.init()
+    })
+  </script>
 {% endblock %}

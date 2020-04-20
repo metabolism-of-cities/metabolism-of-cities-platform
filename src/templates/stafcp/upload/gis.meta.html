@@ -1,53 +1,102 @@
 {% extends "_base.html" %}
 
+{% block page_name %}gis meta{% endblock %}
+
 {% block content %}
   <h1>Upload GIS data</h1>
-  
-  <p>
-    Step 1: upload shapefile | 
-    Step 2: verify data | 
-    <strong>Step 3: enter metadata</strong>
-  </p>
 
-  <p>This information is available in your shapefile:</p>
-  <pre>
-Pop.   | Name         | Area size | ConvertStatusUp | Description
-98732  | Rondebosch   | 437       | true            | This is a ... 
-98733  | Rosebank     | 482       | true            | This where a ... 
-98734  | Mowbray      | 938       | false           | This also a ... 
-  </pre>
-
-  <p>Which of these columns contains the name?</p>
-  <ul>
-    <li><input type="radio" name="name" value="" /> Pop.</li>
-    <li><input type="radio" name="name" value="" /> Name</li>
-    <li><input type="radio" name="name" value="" /> Area size</li>
-    <li><input type="radio" name="name" value="" /> ConvertStatusUp</li>
-    <li><input type="radio" name="name" value="" /> Description</li>
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+      <a class="nav-link disabled" href="#">1. Upload shapefile</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link disabled" href="#">2. Verify data</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link disabled active" href="#">3. Enter metadata</a>
+    </li>
   </ul>
 
-  <h2>Data source</h2>
-  <p>Who has produced this shapefile?</p>
-  <p><input type="text" name="" /></p>
-  <p>Download URL or relevant website</p>
-  <p><input type="text" name="" /></p>
-  <p>Year of publication</p>
-  <p><input type="text" name="" /></p>
-  <p>Shapefile license</p>
-  <p><select name="">
-    <option value="">CC BY</option>
-    <option value="">CC BY SA</option>
-    <option value="">Copyright</option>
-  </select>
-  </p>
-  <p>Description</p>
-  <p><textarea></textarea></p>
-  <p>Data quality comments [?] -> this should show a popup where we explain a bit more what that means.</p>
-  <p><textarea></textarea></p>
-  <button type="submit">Submit</button>
+  <div class="card">
+    <div class="card-body">
+      <form>
+        <p>The following information is available in your shapefile:</p>
+        <!-- the `pre` content can't have indentation as that will show up for the user too -->
+        <pre>
+          Pop.   | Name         | Area size | ConvertStatusUp | Description
+          98732  | Rondebosch   | 437       | true            | This is a ...
+          98733  | Rosebank     | 482       | true            | This where a ...
+          98734  | Mowbray      | 938       | false           | This also a ...
+        </pre>
 
+        <div class="form-group mb-4">
+          <label for="name">Which of these columns contains the name?</label>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="Pop." name="name" class="custom-control-input">
+            <label class="custom-control-label" for="Pop.">Pop.</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="Name" name="name" class="custom-control-input">
+            <label class="custom-control-label" for="Name">Name</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="Area size" name="name" class="custom-control-input">
+            <label class="custom-control-label" for="Area size">Area size</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="ConvertStatusUp" name="name" class="custom-control-input">
+            <label class="custom-control-label" for="ConvertStatusUp">ConvertStatusUp</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="Description" name="name" class="custom-control-input">
+            <label class="custom-control-label" for="Description">Description</label>
+          </div>
+        </div>
 
+        <h2>Data source</h2>
+        <div class="form-group">
+          <label for="author">Who has produced this shapefile?</label>
+          <input type="text" class="form-control" id="author">
+        </div>
 
-  <p><a href="{% url "stafcp_upload_gis_verify" 1 %}">&laquo; back</a></p>
+        <div class="form-group">
+          <label for="url">Download URL or relevant website</label>
+          <input type="text" class="form-control" id="url">
+        </div>
 
+        <div class="form-group">
+          <label for="year">Year of publication</label>
+          <input type="number" class="form-control" id="year" min="1900">
+        </div>
+
+        <div class="form-group">
+          <label for="year">Shapefile license</label>
+          <select class="custom-select">
+            <option hidden disabled selected></option>
+            <option value="">CC BY</option>
+            <option value="">CC BY SA</option>
+            <option value="">Copyright</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="year">Description</label>
+          <textarea class="form-control" rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="year">Data quality comments</label>
+          <textarea class="form-control" rows="3"></textarea>
+          <small class="form-text text-muted">
+            Cupiditate cum similique fugit aliquam labore autem sapiente eaque. Fuga velit explicabo praesentium perferendis ipsam. Qui ipsa aut nihil dolorem blanditiis dolores fugiat. Voluptas omnis a id est vitae cum sunt. Non reprehenderit voluptas autem nihil aut fuga quibusdam. Voluptas necessitatibus harum ipsum rem.
+          </small>
+        </div>
+
+        <button class="btn btn-primary" type="submit"><i class="fas fa-fw fa-upload"></i> Submit</button>
+
+        <a class="btn btn-primary-basic" href="{% url 'stafcp_upload_gis_verify' 1 %}"><i class="fas fa-fw fa-arrow-left"></i> Back to previous step</a>
+
+      </form>
+    </div>
+  </div>
 {% endblock %}

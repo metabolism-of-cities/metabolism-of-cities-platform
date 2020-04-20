@@ -1,34 +1,82 @@
 {% extends "_base.html" %}
 
+{% block head %}
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+{% endblock %}
+
+
 {% block content %}
   <h1>Upload GIS data</h1>
-  
-  <p>
-    Step 1: upload shapefile | 
-    <strong>Step 2: verify data</strong> | 
-    Step 3: enter metadata
-  </p>
 
-  <p style="height:300px;background:#ccc;border:1px solid #333">[ show a map with a polygon ]</p>
-  <p>
-    <a href="{% url "stafcp_upload_gis_file" "cities" %}" class="btn btn-danger">&laquo; That looks bad, let's try again</a>
-    <a href="{% url "stafcp_upload_gis_meta" 1 %}" class="btn btn-success">That looks great, NEXT &raquo;</a>
-  </p>
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+      <a class="nav-link disabled" href="#">1. Upload shapefile</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link disabled active" href="#">2. Verify data</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link disabled" href="#">3. Enter metadata</a>
+    </li>
+  </ul>
 
-  <div class="alert alert-info">
-    <h4>Instructions</h4>
-    <ul>
-      <li>If your map looks good, go to the next step. </li>
-      <li>If not, you can try debugging this:
-        <ul>
-          <li>Check the CRS used</li>
-          <li>Try opening your map in QGIS</li>
-          <li>Verify this is a shapefile</li>
-          <li>If all else fails, <a href="/contact">ask MoC for help</a>, using this shapefile ID: 209873</li>
-        </ul>
-      </li>
-    </ul>
-    <p>View instruction video [icon] -> show in modal</p>
+
+  <div class="row">
+    <div class="col-lg-6 mb-4">
+      <div id="map" class="leaflet-map mb-4"></div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-fw fa-question-circle"></i> Instructions
+        </div>
+        <div class="card-body">
+          <p>If your map looks good, go to the next step.</p>
+          <p>If not, you can try debugging this:</p>
+            <ul>
+              <li>Check the CRS used</li>
+              <li>Try opening your map in QGIS</li>
+              <li>Verify this is a shapefile</li>
+              <li>If all else fails, <a href="/contact">ask MoC for help</a>, using this shapefile ID: 209873</li>
+            </ul>
+          </li>
+          <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="btn btn-primary"><i class="fas fa-fw fa-play"></i> View instruction video</a>
+
+          <div class="mt-4">
+            <a href="{% url 'stafcp_upload_gis_file' 'cities' %}" class="btn btn-danger">
+              <i class="fas fa-fw fa-arrow-left mr-1"></i> It looks bad, try again
+            </a>
+            <a href="{% url 'stafcp_upload_gis_meta' 1 %}" class="btn btn-success">
+              It looks good <i class="fas fa-fw fa-arrow-right mr-0 ml-1"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+{% endblock %}
 
+{% block footer %}
+  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+          integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+          crossorigin="">
+  </script>
+  <script>
+    // https://leafletjs.com/reference-1.6.0.html
+
+    var map = L.map("map").setView([51.505, -0.09], 13);
+    L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 18,
+      id: "mapbox/streets-v11",
+      tileSize: 512,
+      zoomOffset: -1,
+    }).addTo(map);
+    var marker = L.marker([51.5, -0.09]).addTo(map);
+  </script>
 {% endblock %}
