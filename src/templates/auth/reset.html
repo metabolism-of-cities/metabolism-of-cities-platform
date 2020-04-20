@@ -1,17 +1,24 @@
 {% extends "_base.html" %}
-{% load static %}
-{% load sass_tags %}
 
-{% block page_name %}{% endblock %}
-
-{% block title %}Blank page{% endblock %}
-
-{% block css %}
-{% endblock %}
+{% block page_name %}reset{% endblock %}
+{% block title %}Reset your password{% endblock %}
 
 {% block content %}
-  Content goes here
-{% endblock %}
-
-{% block footer %}
+  <div class="card login">
+    <div class="card-body">
+      <h3>Reset your password</h3>
+      <hr>
+      <p>
+        Enter your email address below and we will send you an email with detailed instructions explaining how to reset your password.
+      </p>
+      <hr>
+      <form method="post" action="">
+        {% csrf_token %}
+        <div class="form-group">
+          <input type="email" class="form-control" id="email" name="email" placeholder="Your email address">
+        </div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-fw fa-key"></i> Reset password</button>
+      </form>
+    </div>
+  </div>
 {% endblock %}
