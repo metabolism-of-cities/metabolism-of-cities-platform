@@ -11,27 +11,14 @@
       section#team{display:block}
     </style>
   {% endif %}
-  
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.css">
 {% endblock %}
 
 {% block content %}
-<div class="row mb-4">
-  <div class="col-md-6">
-    <input type="text" class="form-control" placeholder="Search by project title...">
-  </div>
-  <div class="col-md-6">
-    <select class="custom-select">
-      <option selected>Filter by category</option>
-      <option value="1">Seminars</option>
-      <option value="2">Conferences</option>
-      <option value="3">Something else</option>
-    </select>
-  </div>
-</div>
 <div class="row">
   <div class="col-lg-5">
-    <div class="card sticky-top mb-3">
+    <div class="card sidebar sticky-top mb-3">
       {% if info.image %}
         <img class="card-img-top" src="{{ info.image.url }}" alt="" />
       {% endif %}
@@ -43,14 +30,14 @@
       <ul class="list-group list-group-flush">
         {% if info.location %}
         <li class="list-group-item">
-          <i class="far fa-fw fa-map-marker-alt"></i> Cape Town, South Africa
+          <i class="far fa-fw fa-map-marker-alt"></i> {{ info.location }}
         </li>
         {% endif %}
         <li class="list-group-item">
-          <i class="far fa-fw fa-calendar"></i> Start: 2014
+          <i class="far fa-fw fa-calendar"></i> 2014 - ongoing
         </li>
         <li class="list-group-item">
-          <i class="far fa-fw fa-play"></i> Status: Ongoing
+          <i class="far fa-fw fa-play"></i> Ongoing
         </li>
         <li class="list-group-item">
           <i class="far fa-fw fa-cabinet-filing"></i> Type: <a href="">Online tools and platforms</a>
@@ -317,7 +304,21 @@
 
 {% block footer %}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.js"></script>
-  <script> 
+  <script>
     baguetteBox.run(".lightbox");
+  </script>
+
+  <!-- check to see if sidebar is taller than screen - if so, remove sticky-top class so user can scroll down -->
+  <script>
+    var sidebar = $(".card.sidebar.sticky-top");
+    var sidebarHeight = sidebar.height() + 32;
+    var viewportHeight = $(window).height();
+
+    console.log(sidebarHeight);
+    console.log(viewportHeight);
+
+    if (sidebarHeight > viewportHeight) {
+      sidebar.removeClass("sticky-top");
+    }
   </script>
 {% endblock %}
