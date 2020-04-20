@@ -300,6 +300,12 @@ def metabolism_manager_admin(request):
     }
     return render(request, "metabolism_manager/admin/index.html", load_specific_design(context, PAGE_ID["platformu"]))
 
+def metabolism_manager_admin_map(request):
+    context = {
+        "page": "map"
+    }
+    return render(request, "metabolism_manager/admin/map.html", load_specific_design(context, PAGE_ID["platformu"]))
+
 def metabolism_manager_admin_entity(request, id):
     context = {
         "page": "entity"

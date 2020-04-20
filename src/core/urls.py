@@ -71,6 +71,7 @@ urlpatterns = [
     # PlatformU
     path("platformu/", views.metabolism_manager, name="platformu"),
     path("platformu/admin/", views.metabolism_manager_admin),
+    path("platformu/admin/map/", views.metabolism_manager_admin_map),
     path("platformu/admin/entities/<int:id>/", views.metabolism_manager_admin_entity),
     path("platformu/admin/entities/<int:id>/edit/", views.metabolism_manager_admin_entity_form),
     path("platformu/admin/entities/<int:id>/materials/", views.metabolism_manager_admin_entity_materials),
