@@ -39,6 +39,7 @@ from django.core.mail import send_mail
 from weasyprint import HTML, CSS
 from weasyprint.fonts import FontConfiguration
 from datetime import datetime
+import csv
 
 # This array defines all the IDs in the database of the articles that are loaded for the
 # various pages in the menu. Here we can differentiate between the different sites.
@@ -918,8 +919,15 @@ def dataimport(request):
         file = settings.MEDIA_ROOT + "/import/" + request.GET["table"] + ".csv"
         messages.warning(request, "Using file: " + file)
         if request.GET["table"] == "tags":
-            # Enter code to import here
-            file = file
+            Tag.objects.all().delete()
+            with open(file, "r") as csvfile:
+                file = csv.DictReader(csvfile)
+                for row in file:
+                    Tag.objects.create(id=row["id"], name=row["name"], description=row["description"], hidden=row["hidden"], include_in_glossary=row["include_in_glossary"])
+                for row in file:
+                    Tag.objects.create(parent_tag_id=row["parent_tag_id"])
+
+
         if error:
             messages.error(request, "We could not import your data")
         else:
