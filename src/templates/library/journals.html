@@ -1,9 +1,138 @@
 {% extends "_base.html" %}
+{% block title %}Events List{% endblock %}
+{% block page_name %}journals{% endblock %}
 
 {% block content %}
   <h1>{{ article.title }}</h1>
-  {{ article.content|safe }}
 
-  <p>Please add the journals here. The part above should stay; it includes the title page and an introductory paragraph.</p>
+  <p>
+    {{ article.content|safe }}
+  </p>
 
+  <section id="journal-list">
+    <input type="text" class="form-control search mb-4" placeholder="Search by journal name...">
+
+    <div class="row list">
+      <div class="col-md-6 col-xl-4 single-journal mb-4">
+        <a class="card btn-card" href="#">
+          <div class="card-body row">
+            <div class="col col-cover">
+              <img src="https://metabolismofcities.org/media/journals/Applied_Energy.gif" alt="...">
+            </div>
+            <div class="col">
+              <h5 class="journal-name">Applied Energy</h5>
+              <p>13 articles</p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 col-xl-4 single-journal mb-4">
+        <a class="card btn-card" href="#">
+          <div class="card-body row">
+            <div class="col col-cover">
+              <img src="https://metabolismofcities.org/media/journals/Agricultural_and_Forest_Meteorology_.gif" alt="...">
+            </div>
+            <div class="col">
+              <h5 class="journal-name">Agricultural and forest meteorology</h5>
+              <p>1 article</p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 col-xl-4 single-journal mb-4">
+        <a class="card btn-card" href="#">
+          <div class="card-body row">
+            <div class="col col-cover">
+              <div class="no-cover">
+                <i class="fad fa-book fa-3x"></i>
+              </div>
+            </div>
+            <div class="col">
+              <h5 class="journal-name">Ambio: A Journal of the Human Environment</h5>
+              <p>31 articles</p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 col-xl-4 single-journal mb-4">
+        <a class="card btn-card" href="#">
+          <div class="card-body row">
+            <div class="col col-cover">
+              <img src="https://metabolismofcities.org/media/journals/Antipode.jpg" alt="...">
+            </div>
+            <div class="col">
+              <h5 class="journal-name">Antipode: A Radical Journal of Geography</h5>
+              <p>11 articles</p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 col-xl-4 single-journal mb-4">
+        <a class="card btn-card" href="#">
+          <div class="card-body row">
+            <div class="col col-cover">
+              <img src="https://metabolismofcities.org/media/journals/Annual_Review_of_Environment_and_Resources.jpg" alt="...">
+            </div>
+            <div class="col">
+              <h5 class="journal-name">Annual Review of Environment and Resources</h5>
+              <p>6 articles</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="card no-results">
+      <div class="card-body text-center">
+        <h2 class="my-4"><i class="fad fa-search"></i> No journals found</h2>
+        <button class="btn btn-lg btn-primary clear-filter my-4">Show all journals</button>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}
+
+{% block footer %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+<script>
+  var listOptions = {
+      valueNames: ["journal-name"]
+  };
+
+  var journalList = new List("journal-list", listOptions);
+
+  // update contact count when searching by name
+  journalList.on("searchComplete", function(){
+    checkCount();
+  });
+
+  // function to check the number of matches
+  function checkCount() {
+    var count = $("#journal-list .single-journal:visible").length;
+    if (count == 0) {
+      $(".no-results").addClass("visible");
+    } else {
+      $(".no-results").removeClass("visible");
+    }
+  }
+
+  // make dropdowns work as filters
+  $(".filters select").change(function() {
+    runAllFilters()
+  });
+
+  // clear search and filters
+  function resetSearchFilters() {
+    journalList.search();
+    $("input.search").val("");
+  }
+
+  $(".clear-filter").click(function() {
+    resetSearchFilters();
+    checkCount();
+  })
+
+  // reset all filters on page load
+  resetSearchFilters()
+</script>
 {% endblock %}

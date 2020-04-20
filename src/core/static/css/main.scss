@@ -1788,6 +1788,37 @@ body.our-story {
   }
 }
 
+body.journals {
+  .no-results:not(.visible) {
+    display: none;
+  }
+
+  .single-journal .card {
+    height: 100%;
+
+    .col-cover {
+      max-width: 130px;
+    }
+
+    img {
+      object-fit: contain;
+      width: 100px;
+    }
+
+    .no-cover {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      background-color: $light;
+      border: 1px solid $primary;
+      width: 100px;
+      height: 100%;
+      text-align: center;
+      color: rgba($primary, .75);
+    }
+  }
+}
+
 body.gis.meta {
   .quality-info {
     cursor: pointer;
