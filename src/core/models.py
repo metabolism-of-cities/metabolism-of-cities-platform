@@ -64,6 +64,24 @@ class News(Record):
     class Meta:
         verbose_name_plural = "news"
 
+class Organization(Record):
+    url = models.CharField(max_length=255, null=True, blank=True)
+    logo = models.ImageField(null=True, blank=True, upload_to="organizations")
+    parent = models.ForeignKey("self", on_delete=models.SET_NULL, null=True, blank=True)
+    ORG_TYPE = (
+        ('academic', 'Research Institution'),
+        ('universities', 'Universities'),
+        ('city_government', 'City Government'),
+        ('regional_government', 'Regional Government'),
+        ('national_government', 'National Government'),
+        ('statistical_agency', 'Statistical Agency'),
+        ('private_sector', 'Private Sector'),
+        ('publisher', 'Publishers'),
+        ('ngo', 'NGO'),
+        ('other', 'Other'),
+    )
+    type = models.CharField(max_length=20, choices=ORG_TYPE)
+
 class Event(Record):
     EVENT_TYPE = [
         ("conference", "Conference"),
