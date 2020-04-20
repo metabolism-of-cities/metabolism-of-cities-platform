@@ -101,7 +101,7 @@ def load_specific_design(context, design):
 
 # Authentication of users
 
-def user_register(request):
+def user_register(request, subsite=None):
     if request.method == "POST":
         password = request.POST.get("password")
         email = request.POST.get("email")
@@ -113,14 +113,22 @@ def user_register(request):
                 messages.error(request, "A user already exists with this e-mail address. Please log in or reset your password instead.")
             else:
                 user = User.objects.create_user(email, email, password)
-                user.is_staff = True
-                user.is_superuser = True
+                if subsite == "platformu":
+                    user.is_superuser = False
+                    user.is_staff = False
+                else:
+                    user.is_staff = True
+                    user.is_superuser = True
                 user.save()
                 messages.success(request, "User was created.")
                 login(request, user)
                 return redirect("index")
 
-    return render(request, "auth/register.html")
+    context = {}
+    if subsite:
+        return render(request, "auth/register.html", load_specific_design(context, PAGE_ID[subsite]))
+    else:
+        return render(request, "auth/register.html", context)
 
 def user_login(request):
 
@@ -792,6 +800,22 @@ def load_baseline(request):
         )
 
     messages.success(request, "UM, Community, Project, About pages were inserted/reset")
+
+    relationships = [
+        {
+            "id": 1, "title": "Member", "description": "This user is a member of a group or organisation -- and will have the same permissions or access as the organisation itself",
+        }
+    ]
+
+    Relationship.objects.all().delete()
+    for each in relationships:
+        Relationship.objects.create(
+            id = each["id"],
+            title = each["title"],
+            description = each["description"],
+        )
+
+    messages.success(request, "Relationships were loaded")
 
     designs = [
         { "header": "small", "article": 38, "logo": "/logos/media-logo-library.png", "css": """.top-layer {

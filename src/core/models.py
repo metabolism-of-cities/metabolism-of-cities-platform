@@ -64,6 +64,46 @@ class News(Record):
     class Meta:
         verbose_name_plural = "news"
 
+class Organization(Record):
+    url = models.CharField(max_length=255, null=True, blank=True)
+    parent = models.ForeignKey("self", on_delete=models.SET_NULL, null=True, blank=True)
+    ORG_TYPE = (
+        ("academic", "Research Institution"),
+        ("universities", "Universities"),
+        ("city_government", "City Government"),
+        ("regional_government", "Regional Government"),
+        ("national_government", "National Government"),
+        ("statistical_agency", "Statistical Agency"),
+        ("private_sector", "Private Sector"),
+        ("publisher", "Publishers"),
+        ("ngo", "NGO"),
+        ("other", "Other"),
+    )
+    type = models.CharField(max_length=20, choices=ORG_TYPE)
+
+# This defines the relationships that may exist between users and records, or between records
+# For instance authors, admins, employee, funder
+class Relationship(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+    def __str__(self):
+        return self.title
+
+# This defines a particular relationship between a user and a record.
+# For instance: User 49 has the relationship "Author" of Record 599 (News article AAA)
+# For instance: User 11 has the relationship "Admin" of Record 381 (Company BBB)
+class UserRelationship(models.Model):
+    record = models.ForeignKey(Record, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    relationship = models.ForeignKey(Relationship, on_delete=models.CASCADE)
+
+# This defines a particular relationship between two records.
+# For instance: Record 100 (company AA) has the relationship "Funder" of Record 104 (Project BB)
+class RecordRelationship(models.Model):
+    record = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="record")
+    record_secondary = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="record_secondary")
+    relationship = models.ForeignKey(Relationship, on_delete=models.CASCADE)
+
 class Event(Record):
     EVENT_TYPE = [
         ("conference", "Conference"),
