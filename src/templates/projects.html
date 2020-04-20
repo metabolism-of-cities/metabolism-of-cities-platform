@@ -5,7 +5,7 @@
 {% block page_name %}projects{% endblock %}
 
 {% block title %}Blank page{% endblock %}
-
+t.js
 {% block css %}
 {% endblock %}
 
@@ -13,49 +13,51 @@
 
 {% block content %}
 
-<div class="row mb-4">
-  <div class="col-md-6 mb-2">
-    <input type="text" class="form-control" placeholder="Search by project title...">
-  </div>
-  <div class="col-md-6 mb-2">
-    <select class="type-filter custom-select">
-      <option value="all" selected>Filter by category</option>
-      <option value="seminar">Seminars</option>
-      <option value="conference">Conferences</option>
-      <option value="other">Something else</option>
-    </select>
-  </div>
-</div>
-
-<div class="row">
-  {% for each in PROJECTS %}
-    <div class="col-xl-4 col-md-6 mb-4 single-project" data-type="seminar">
-      <a class="card btn-card" href="{{ each.get_absolute_url }}">
-        {% if each.image %}
-          <img class="card-img-top" src="{{ each.image.url }}" alt="" />
-        {% endif %}
-
-        <div class="card-body">
-          <h5 class="card-title">{{ each }}</h5>
-          <p>Et doloremque dolorum doloremque aut deserunt debitis animi. Vel iste expedita repellendus veritatis. Et esse explicabo harum rem dolores architecto. Eos et expedita est. Laudantium sed qui sit.</p>
-        </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <i class="far fa-fw fa-map-marker-alt"></i> Cape Town, South Africa
-          </li>
-          <li class="list-group-item">
-            <i class="far fa-fw fa-calendar"></i> 12 March 2019 - 18 October 2022
-          </li>
-          <li class="list-group-item">
-            <i class="far fa-fw fa-play"></i> Ongoing
-          </li>
-          <li class="list-group-item">
-            <i class="far fa-fw fa-cabinet-filing"></i> Conferences and seminars
-          </li>
-        </ul>
-      </a>
+<div id="project-list">
+  <div class="row mb-4">
+    <div class="col-md-6 mb-2">
+      <input type="text" class="form-control search" placeholder="Search by project title...">
     </div>
-  {% endfor %}
+    <div class="col-md-6 mb-2">
+      <select class="type-filter custom-select">
+        <option value="all" selected>Filter by category</option>
+        <option value="seminar">Seminars</option>
+        <option value="conference">Conferences</option>
+        <option value="other">Something else</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row list">
+    {% for each in PROJECTS %}
+      <div class="col-xl-4 col-md-6 mb-4 single-project" data-type="seminar">
+        <a class="card btn-card" href="{{ each.get_absolute_url }}">
+          {% if each.image %}
+            <img class="card-img-top" src="{{ each.image.url }}" alt="" />
+          {% endif %}
+
+          <div class="card-body">
+            <h5 class="card-title project-name">{{ each }}</h5>
+            <p>Et doloremque dolorum doloremque aut deserunt debitis animi. Vel iste expedita repellendus veritatis. Et esse explicabo harum rem dolores architecto. Eos et expedita est. Laudantium sed qui sit.</p>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <i class="far fa-fw fa-map-marker-alt"></i> Cape Town, South Africa
+            </li>
+            <li class="list-group-item">
+              <i class="far fa-fw fa-calendar"></i> 12 March 2019 - 18 October 2022
+            </li>
+            <li class="list-group-item">
+              <i class="far fa-fw fa-play"></i> Ongoing
+            </li>
+            <li class="list-group-item">
+              <i class="far fa-fw fa-cabinet-filing"></i> Conferences and seminars
+            </li>
+          </ul>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
 </div>
 
 <div class="card no-results">
@@ -68,42 +70,92 @@
 {% endblock %}
 
 {% block footer %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
 <script>
-  // function to make type dropdown work - checks data-type on single-project
-  function typeFilter() {
-    $(".single-project").addClass("hidden");
+  var listOptions = {
+      valueNames: ["project-name"]
+  };
 
-    let value = $(".type-filter").val();
-    if (value == "all") {
-      $(".single-project").removeClass("hidden");
-    } else {
-      $(".single-project[data-type='" + value + "']").removeClass("hidden");
+  var projectList = new List("project-list", listOptions);
+
+  // filters
+  // basic function to check if item matches filter
+  function projectFilter(type, value) {
+    if (value != "all") {
+      projectList.filter(function(item) {
+        if (item.values()[type] != value) {
+          item.values({inFilter: false})
+        }
+      });
     }
+  }
 
-    let projectCount = $(".single-project:not(.hidden)").length;
-    if (projectCount == 0) {
+  // showing all items that match filters
+  function applyFilters() {
+    projectList.filter(function(item) {
+      if (item.values().inFilter == true) {
+         return true;
+      } else {
+         return false;
+      }
+    });
+  };
+
+  // function to check the number of matches
+  function checkCount() {
+    var count = $("#project-list .single-project:visible").length;
+    if (count == 0) {
       $(".no-results").addClass("visible");
     } else {
       $(".no-results").removeClass("visible");
     }
   }
 
-  $(".type-filter").change(function() {
-    typeFilter()
-  })
+  // function to apply filters on every dropdown
+  function runAllFilters() {
+    // set every item as matching filter
+    $(projectList.items).each(function() {
+      this.values({
+        inFilter: true,
+      });
+    });
 
-  // function to clear filter - must also clear search once that works
-  function clearFilter() {
-    $(".type-filter").val("all");
-    typeFilter();
+    // remove items that don't match filter
+    $(".filters select").each(function() {
+      var type = $(this).data("type");
+      var value = $(this).val()
+      projectFilter(type, value)
+    });
+
+    // show items that remain in filter
+    applyFilters();
+    checkCount();
   }
 
-  // clear filter on button click
+  // update contact count when searching by name
+  projectList.on("searchComplete", function(){
+    checkCount();
+  });
+
+  // make dropdowns work as filters
+  $(".filters select").change(function() {
+    runAllFilters()
+  });
+
+  // clear search and filters
+  function resetSearchFilters() {
+    projectList.search();
+    projectList.filter();
+    $(".filters select").val("all");
+    $("input.search").val("");
+  }
+
   $(".clear-filter").click(function() {
-    clearFilter();
+    resetSearchFilters();
+    checkCount();
   })
 
-  // run filter at start in case dropdown is already set after refresh
-  typeFilter()
+  // reset all filters on page load
+  resetSearchFilters()
 </script>
 {% endblock %}

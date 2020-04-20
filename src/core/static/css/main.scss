@@ -1353,16 +1353,24 @@ body.dataset {
 
 // LOGIN AND REGISTER PAGES
 body.login,
-body.register {
+body.register,
+body.reset {
   .login.card,
-  .register.card {
+  .register.card,
+  .reset.card {
     max-width: 600px !important;
     margin: 2.5rem auto;
+
+    hr {
+      margin-left: -1.25rem;
+      width: calc(100% + 2.5rem);
+    }
   }
 
   .no-account {
     margin-top: 4rem;
   }
+
 }
 
 // TEAM PAGE
