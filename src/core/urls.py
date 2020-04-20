@@ -70,7 +70,7 @@ urlpatterns = [
 
     # PlatformU
     path("platformu/", views.metabolism_manager, name="platformu"),
-    path("platformu/admin/", views.metabolism_manager_admin),
+    path("platformu/admin/", views.metabolism_manager_admin, name="platformu_admin"),
     path("platformu/admin/map/", views.metabolism_manager_admin_map),
     path("platformu/admin/entities/<int:id>/", views.metabolism_manager_admin_entity),
     path("platformu/admin/entities/<int:id>/edit/", views.metabolism_manager_admin_entity_form),
@@ -89,6 +89,8 @@ urlpatterns = [
     path("platformu/report/", views.metabolism_manager_report),
     path("platformu/marketplace/", views.metabolism_manager_marketplace),
     path("platformu/forum/", views.metabolism_manager_forum),
+
+    path("platformu/register/", views.user_register, { "subsite": "platformu" }),
 
     # STAFCP
     path("stafcp/", views.stafcp),
