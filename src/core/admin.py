@@ -59,6 +59,7 @@ admin_site.register(ArticleDesign, ArticleDesignAdmin)
 admin_site.register(People)
 admin_site.register(Video, VideoAdmin)
 admin_site.register(Project)
+admin_site.register(Relationship)
 
 admin_site.register(MOOC)
 admin_site.register(MOOCModule)

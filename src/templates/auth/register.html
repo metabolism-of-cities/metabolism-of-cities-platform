@@ -10,6 +10,12 @@
       <hr>
       <form method="post" action="">
         {% csrf_token %}
+        {% if subsite.id == 53 %}
+          <div class="form-group">
+            <label for="org">Organisation</label>
+            <input type="text" class="form-control" id="org" name="organization">
+          </div>
+        {% endif %}
         <div class="form-group">
           <label for="email">E-mail</label>
           <input type="email" class="form-control" id="email" name="email">
