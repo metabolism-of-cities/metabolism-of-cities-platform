@@ -708,10 +708,15 @@ def load_baseline(request):
         )
     messages.success(request, "Sites were inserted/updated")
 
-    Group.objects.create(name="PlatformU Admin")
-    Group.objects.create(name="STAF data admin")
-    messages.success(request, "Groups were created")
+    Group.objects.all().delete()
+    permissions = Permission.objects.all()
 
+    group_platformU = Group.objects.create(name="PlatformU Admin")
+    group_platformU.permissions.add(153, 154, 155, 156)
+
+    group_staff_data = Group.objects.create(name="STAF data admin")
+    group_staff_data.permissions.add(*permissions)
+    messages.success(request, "Groups were created")
 
     Record.objects.all().delete()
     articles = [
