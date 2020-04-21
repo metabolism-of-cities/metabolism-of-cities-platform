@@ -22,7 +22,7 @@ from django.conf import settings
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth import authenticate, login, logout
 
 
@@ -707,6 +707,11 @@ def load_baseline(request):
             domain = "https://metabolismofislands.org"
         )
     messages.success(request, "Sites were inserted/updated")
+
+    Group.objects.create(name="PlatformU Admin")
+    Group.objects.create(name="STAF data admin")
+    messages.success(request, "Groups were created")
+
 
     Record.objects.all().delete()
     articles = [
