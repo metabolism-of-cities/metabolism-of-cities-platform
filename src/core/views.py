@@ -921,13 +921,17 @@ def dataimport(request):
         if request.GET["table"] == "tags":
             Tag.objects.all().delete()
             with open(file, "r") as csvfile:
-                file = csv.DictReader(csvfile)
-                for row in file:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
                     Tag.objects.create(id=row["id"], name=row["name"], description=row["description"], hidden=row["hidden"], include_in_glossary=row["include_in_glossary"])
-                for row in file:
-                    info = Tag.objects.get(pk=int(row["id"]))
-                    info.parent_tag_id = row["parent_tag_id"]
-                    info.save()
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    print(row["parent_tag_id"])
+                    if row["parent_tag_id"]:
+                        info = Tag.objects.get(pk=row["id"])
+                        info.parent_tag_id = row["parent_tag_id"]
+                        info.save()
         if error:
             messages.error(request, "We could not import your data")
         else:
