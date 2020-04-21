@@ -1,36 +1,74 @@
 {% extends "_base.html" %}
 
+{% block page_name %}library search{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.3.2/dist/select2-bootstrap4.min.css"/>
+{% endblock %}
+
 {% block content %}
   <h1>{{ article.title }}</h1>
-  {{ article.content|safe }}
 
-  <form method="get" class="form form-horizontal">
-    Search: 
-    <select>
-      <option value=""></option>
-      <option value="">Keyword 1</option>
-      <option value="">Keyword 2</option>
-      <option value="">Keyword 3</option>
-      <option value="">Keyword 4</option>
+  <p>{{ article.content|safe }}</p>
+
+  <form method="get" id="search">
+    <select class="search">
+      <option disabled hidden selected>Search</option>
+      <option value="">Blue</option>
+      <option value="">Orange</option>
+      <option value="">Yellow</option>
+      <option value="">Red</option>
     </select>
-    <p style="background:yellow">Guus, the idea is that this is a select2 that will autofill keywords with our existing keyword list BUT it also allows for additional keywords to be entered that are not yet in that list)</p>
 
-    <p><a href="http://">Show advanced options</a></p>
-    <section>
-      <h2>Advanced search (section is hidden by default)</h2>
-      <p>Must be published before: <input type="number" min="1900" max="2025"></p>
-      <p>Must be published after: <input type="number" min="1900" max="2025"></p>
-      <p>Restrict by type:
-        <select multiple>
-          <option value="">Academic paper</option>
-          <option value="">Report</option>
-          <option value="">Newspaper article</option>
-        </select>
-      </p>
+    <div class="btn btn-primary-basic btn-advanced mt-2"><i class="far fa-tools"></i> Show advanced options</div>
 
+    <section class="advanced-options mt-2">
+      <div class="row">
+        <div class="col-sm-6 col-md-4">
+          <div class="form-group">
+            <label for="before">Published before</label>
+            <input type="number" class="form-control" id="before" min="1900" max="2025">
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+          <div class="form-group">
+            <label for="after">Published after</label>
+            <input type="number" class="form-control" id="after" min="1900" max="2025">
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+          <div class="form-group">
+            <label for="type">Restrict by type</label>
+            <select class="type" multiple>
+              <option value="paper">Academic paper</option>
+              <option value="report">Report</option>
+              <option value="article">Newspaper article</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </section>
-
-    <button type="submit">Search</button>
-
   </form>
+
+  <button class="btn btn-primary mt-4" type="submit" form="search"><i class="fas fa-search"></i> Search</button>
+{% endblock %}
+
+{% block footer %}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+<script>
+  $(".btn-advanced").click(function() {
+    $("section.advanced-options").show();
+    $(this).hide();
+  })
+
+  $("select.search").select2({
+    tags: true,
+    theme: "bootstrap4",
+  });
+
+  $("select.type").select2({
+    theme: "bootstrap4",
+  });
+</script>
 {% endblock %}

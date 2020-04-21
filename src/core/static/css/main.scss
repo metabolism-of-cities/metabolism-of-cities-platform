@@ -1828,3 +1828,13 @@ body.gis.meta {
     display: none;
   }
 }
+
+body.library.search {
+  select {
+    width: 100%;
+  }
+
+  .advanced-options {
+    display: none;
+  }
+}
