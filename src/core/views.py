@@ -925,9 +925,9 @@ def dataimport(request):
                 for row in file:
                     Tag.objects.create(id=row["id"], name=row["name"], description=row["description"], hidden=row["hidden"], include_in_glossary=row["include_in_glossary"])
                 for row in file:
-                    Tag.objects.create(parent_tag_id=row["parent_tag_id"])
-
-
+                    info = Tag.objects.get(pk=int(row["id"]))
+                    info.parent_tag_id = row["parent_tag_id"]
+                    info.save()
         if error:
             messages.error(request, "We could not import your data")
         else:
