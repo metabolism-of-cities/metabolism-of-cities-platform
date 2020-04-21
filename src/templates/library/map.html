@@ -1,9 +1,43 @@
 {% extends "_base.html" %}
 
+{% block head %}
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+
+  <!-- leaflet marker cluster plugin -- https://github.com/Leaflet/Leaflet.markercluster  -->
+
+{% endblock %}
+
 {% block content %}
   <h1>{{ article.title }}</h1>
   {{ article.content|safe }}
 
-  <p>The map should go here.</p>
+  <div class=""></div>
+  <div id="map" class="leaflet-map"></div>
 
+{% endblock %}
+
+{% block footer %}
+  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+          integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+          crossorigin="">
+  </script>
+
+  <!-- leaflet marker cluster plugin -- https://github.com/Leaflet/Leaflet.markercluster  -->
+  <script src="https://unpkg.com/browse/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
+  <script>
+    // https://leafletjs.com/reference-1.6.0.html
+    var map = L.map("map").setView([51.505, -0.09], 13);
+    L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 18,
+      id: "mapbox/streets-v11",
+      tileSize: 512,
+      zoomOffset: -1,
+    }).addTo(map);
+    var marker = L.marker([51.5, -0.09]).addTo(map);
+  </script>
 {% endblock %}
