@@ -5,11 +5,13 @@
   <h1>Data import</h1>   
   <ul>
     <li><a href="/dataimport/?table=tags">Tags</a></li>
+    <li><a href="/dataimport/?table=activities">Activities</a></li>
   </ul>
 
   <hr>
   <pre>
 ssh -t industrialecology 'csvdump "SELECT * FROM core_tag ORDER BY id" tags.csv'
+ssh -t industrialecology 'csvdump "SELECT * FROM staf_process ORDER BY id" activities.csv'
   </pre>
 
 {% endblock %}

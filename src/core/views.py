@@ -28,6 +28,7 @@ from django.contrib.auth import authenticate, login, logout
 
 from collections import defaultdict
 from .models import *
+from stafdb.models import *
 
 from django.contrib.sites.shortcuts import get_current_site
 
@@ -437,8 +438,11 @@ def stafcp_upload_gis_meta(request, id):
     return render(request, "stafcp/upload/gis.meta.html", load_specific_design(context, PAGE_ID["stafcp"]))
 
 def stafcp_flowdiagram(request):
+    activities = Activity.objects.all()
     context = {
         "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
+        "activities": activities,
+        "select2": True,
     }
     return render(request, "stafcp/flowdiagram.html", load_specific_design(context, PAGE_ID["stafcp"]))
 
@@ -927,11 +931,38 @@ def dataimport(request):
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
-                    print(row["parent_tag_id"])
                     if row["parent_tag_id"]:
                         info = Tag.objects.get(pk=row["id"])
                         info.parent_tag_id = row["parent_tag_id"]
                         info.save()
+        elif request.GET["table"] == "activities":
+            ActivityCatalog.objects.all().delete()
+            nace = ActivityCatalog.objects.create(name="Statistical Classification of Economic Activities in the European Community, Rev. 2 (2008)", url="https://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=LST_NOM_DTL&StrNom=NACE_REV2&StrLanguageCode=EN&IntPcKey=&StrLayoutCode=HIERARCHIC")
+            Activity.objects.all().delete()
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    if int(row["id"]) > 398480:
+                        Activity.objects.create(
+                            id = row["id"], 
+                            name = row["name"], 
+                            description = row["description"], 
+                            is_separator = row["is_separator"],
+                            code = row["code"],
+                            catalog = nace,
+                        )
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    if int(row["id"]) > 398480:
+                        if int(row["parent_id"]) == 398480:
+                            parent = None
+                        else:
+                            parent = row["parent_id"]
+                        if parent:
+                            info = Activity.objects.get(pk=row["id"])
+                            info.parent_id = parent
+                            info.save()
         if error:
             messages.error(request, "We could not import your data")
         else:

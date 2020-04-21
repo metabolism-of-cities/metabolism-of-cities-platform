@@ -54,11 +54,18 @@ class ReferenceSpaceGeocode(models.Model):
     class Meta:
         db_table = "stafdb_referencespace_geocode"
 
-class Process(models.Model):
+class ActivityCatalog(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+    url = models.URLField(null=True, blank=True)
+    def __str__(self):
+        return self.name
+
+class Activity(models.Model):
     name = models.CharField(max_length=255, db_index=True)
+    catalog = models.ForeignKey(ActivityCatalog, on_delete=models.CASCADE)
     code = models.CharField(max_length=255, null=True, blank=True, db_index=True)
     description = models.TextField(null=True, blank=True)
-    slug = models.SlugField(db_index=True, max_length=255, null=True, blank=True)
     parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="children")
     is_separator = models.BooleanField()
     def __str__(self):
@@ -81,8 +88,8 @@ class FlowDiagram(models.Model):
 # The 
 class FlowBlocks(models.Model):
     diagram = models.ForeignKey(FlowDiagram, on_delete=models.CASCADE)
-    origin = models.ForeignKey(Process, on_delete=models.CASCADE, related_name="blocks_from")
-    destination = models.ForeignKey(Process, on_delete=models.CASCADE, related_name="blocks_to")
+    origin = models.ForeignKey(Activity, on_delete=models.CASCADE, related_name="blocks_from")
+    destination = models.ForeignKey(Activity, on_delete=models.CASCADE, related_name="blocks_to")
     description = models.TextField(null=True, blank=True)
     def __str__(self):
         return self.origin.name + " - " + self.destination.name

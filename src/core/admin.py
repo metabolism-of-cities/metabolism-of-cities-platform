@@ -79,3 +79,6 @@ admin_site.register(Geocode)
 admin_site.register(ReferenceSpace)
 admin_site.register(ReferenceSpaceLocation, admin.GeoModelAdmin)
 admin_site.register(ReferenceSpaceGeocode)
+
+admin_site.register(ActivityCatalog)
+admin_site.register(Activity)
