@@ -1055,27 +1055,49 @@ def dataimport(request):
                         info.parent_id = old_ids[row["parent_id"]]
                         info.save()
         elif request.GET["table"] == "people":
-            pass
+            People.objects.all().delete()
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    info = People()
+                    info.title = row["firstname"] + " " + row["lastname"]
+                    info.firstname = row["firstname"]
+                    info.lastname = row["lastname"]
+                    info.affiliation = row["affiliation"]
+                    info.email = row["email"]
+                    info.email_public = row["email_public"]
+                    info.website = row["website"]
+                    info.twitter = row["twitter"]
+                    info.google_scholar = row["google_scholar"]
+                    info.orcid = row["orcid"]
+                    info.researchgate = row["researchgate"]
+                    info.linkedin = row["linkedin"]
+                    info.research_interests = row["research_interests"]
+                    info.status = row["status"]
+                    info.content = row["profile"]
+                    info.save()
+                    if row["site_id"]:
+                        info.site.add(row["site_id"])
         elif request.GET["table"] == "videos":
-                Video.objects.all().delete()
-                with open(file, "r") as csvfile:
-                    contents = csv.DictReader(csvfile)
-                    for row in contents:
-                        info = Video()
-                        info.title = row["title"]
-                        info.content = row["description"]
-                        info.video_site = row["website"]
-                        if row["website"] == "youtube" or row["website"] == "vimeo":
-                            info.embed_code = row["url"]
-                        if row["date"]:
-                            info.date = row["date"]
-                        if row["website"] == "youtube":
-                            info.url = "https://www.youtube.com/watch?v=" + row["url"]
-                        elif row["website"] == "vimeo":
-                            info.url = "https://vimeo.com/" + row["url"]
-                        else:
-                            info.url = row["url"]
-                        info.save()
+            Video.objects.all().delete()
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    info = Video()
+                    info.title = row["title"]
+                    info.content = row["description"]
+                    info.video_site = row["website"]
+                    if row["website"] == "youtube" or row["website"] == "vimeo":
+                        info.embed_code = row["url"]
+                    if row["date"]:
+                        info.date = row["date"]
+                    if row["website"] == "youtube":
+                        info.url = "https://www.youtube.com/watch?v=" + row["url"]
+                    elif row["website"] == "vimeo":
+                        info.url = "https://vimeo.com/" + row["url"]
+                    else:
+                        info.url = row["url"]
+                    info.save()
         if error:
             messages.error(request, "We could not import your data")
         else:
