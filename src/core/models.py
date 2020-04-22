@@ -61,6 +61,7 @@ class Project(Record):
     target_finish_date = models.CharField(max_length=255, null=True, blank=True)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
+    is_internal = models.BooleanField(db_index=True, default=False, help_text="Mark if this is a project undertaken by our own members within our own website")
     STATUS = (
         ("planned", "Planned"),
         ("ongoing", "In progress"),

@@ -812,6 +812,7 @@ def load_baseline(request):
             site = moc,
             content = content,
             image = image,
+            is_internal = True,
         )
 
     messages.success(request, "UM, Community, Project, About pages were inserted/reset")
@@ -974,7 +975,7 @@ def dataimport(request):
                             info.parent_id = parent
                             info.save()
         elif request.GET["table"] == "projects":
-            Project.objects.all().delete()
+            Project.objects.filter(is_internal=False).delete()
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
