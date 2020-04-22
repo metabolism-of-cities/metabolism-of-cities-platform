@@ -22,7 +22,7 @@ from django.conf import settings
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate, login, logout
 
 
@@ -118,13 +118,23 @@ def user_register(request, subsite=None):
                 if subsite == "platformu":
                     user.is_superuser = False
                     user.is_staff = False
+                    group = Group.objects.get(name="PlatformU Admin")
+                    user.groups.add(group)
+                    organization = Organization.objects.create(title=request.POST["organization"], type="other")
+                    user_relationship = UserRelationship()
+                    user_relationship.record = organization
+                    user_relationship.user = user
+                    user_relationship.relationship = Relationship.objects.get(pk=1)
+                    user_relationship.save()
+                    redirect_page = "platformu_admin"
                 else:
                     user.is_staff = True
                     user.is_superuser = True
+                    redirect_page = "index"
                 user.save()
                 messages.success(request, "User was created.")
                 login(request, user)
-                return redirect("index")
+                return redirect(redirect_page)
 
     context = {}
     if subsite:
