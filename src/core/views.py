@@ -709,13 +709,13 @@ def load_baseline(request):
     messages.success(request, "Sites were inserted/updated")
 
     Group.objects.all().delete()
-    permissions = Permission.objects.all()
-
+    organization_permissions = Permission.objects.filter(name__in=["Can add organization", "Can change organization", "Can view organization", "Can delete organization"])
     group_platformU = Group.objects.create(name="PlatformU Admin")
-    group_platformU.permissions.add(153, 154, 155, 156)
+    group_platformU.permissions.add(*organization_permissions)
 
-    group_staff_data = Group.objects.create(name="STAF data admin")
-    group_staff_data.permissions.add(*permissions)
+    group_staf_data = Group.objects.create(name="STAF data admin")
+    stafdb_permissions = Permission.objects.filter(content_type__app_label="stafdb")
+    group_staf_data.permissions.add(*stafdb_permissions)
     messages.success(request, "Groups were created")
 
     Record.objects.all().delete()
