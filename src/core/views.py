@@ -120,21 +120,20 @@ def user_register(request, subsite=None):
                     user.is_staff = False
                     group = Group.objects.get(name="PlatformU Admin")
                     user.groups.add(group)
-                    redirect_to = "platformu_admin"
+                    info = Organization.objects.create(title=request.POST["organization"], type="other")
+                    user_relationship = UserRelationship()
+                    user_relationship.record = info
+                    user_relationship.user = user
+                    user_relationship.relationship = Relationship.objects.get(pk=1)
+                    user_relationship.save()
+                    return redirect("platformu_admin")
                 else:
                     user.is_staff = True
                     user.is_superuser = True
-                    redirect_to = "index"
                 user.save()
-                info = Organization.objects.create(title=request.POST["organization"], type="other")
-                new = UserRelationship()
-                new.record = info
-                new.user = user
-                new.relationship = Relationship.objects.get(pk=1)
-                new.save()
                 messages.success(request, "User was created.")
                 login(request, user)
-                return redirect(redirect_to)
+                return redirect("index")
 
     context = {}
     if subsite:
