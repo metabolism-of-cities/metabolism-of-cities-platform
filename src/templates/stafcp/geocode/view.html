@@ -1,0 +1,32 @@
+{% extends "_base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+  <h1>{{ info }}</h1>
+
+  <p>Description:</p>
+  <p>{{ info.description }}</p>
+
+  <p>Read more: {{ info.url }}</p>
+
+  <hr>
+
+  <div class="card">
+    <div class="card-header">
+      Geocode overview
+    </div>
+    <div class="card-body mermaid">
+      graph TB
+        {% for each in geocodes %}
+        item{{ each.id }}-->item{{ each.id }}[{{ each.name }}]
+        {% endfor %}
+    </div>
+  </div>
+
+  <h2>Alternative view:</h2>
+  {% for each in geocodes %}
+    <p style="padding-left:{{ each.depth }}vw">{{ each.depth }}. {{ each.name }}</p>
+  {% endfor %}
+
+  <p><a href="{% url "stafcp_geocodes" %}" class="btn btn-primary">Back to schema list</a></p>
+{% endblock %}

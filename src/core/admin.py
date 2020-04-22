@@ -94,7 +94,7 @@ admin_site.register(Group)
 admin_site.register(User)
 admin_site.register(CronJobLog)
 
-admin_site.register(GeocodeSystem)
+admin_site.register(GeocodeScheme)
 admin_site.register(Geocode)
 admin_site.register(ReferenceSpace, ReferenceSpaceAdmin)
 admin_site.register(ReferenceSpaceLocation, admin.GeoModelAdmin)

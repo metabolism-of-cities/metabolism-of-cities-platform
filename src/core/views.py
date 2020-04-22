@@ -477,10 +477,58 @@ def stafcp_flowdiagram(request):
     context = {
         "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
         "activities": activities,
-        "select2": True,
+        "load_select2": True,
     }
     return render(request, "stafcp/flowdiagram.html", load_specific_design(context, PAGE_ID["stafcp"]))
 
+def stafcp_geocodes(request):
+    context = {
+        "list": GeocodeScheme.objects.all(),
+    }
+    return render(request, "stafcp/geocode/list.html", load_specific_design(context, PAGE_ID["stafcp"]))
+
+def stafcp_geocode(request, id):
+    info = GeocodeScheme.objects.get(pk=id)
+    geocodes = info.geocodes.all()
+    context = {
+        "info": info,
+        "geocodes": geocodes,
+        "load_mermaid": True,
+    }
+    return render(request, "stafcp/geocode/view.html", load_specific_design(context, PAGE_ID["stafcp"]))
+
+def stafcp_geocode_form(request, id=None):
+    ModelForm = modelform_factory(GeocodeScheme, fields=("name", "description", "url"))
+    if id:
+        info = GeocodeScheme.objects.get(pk=id)
+        form = ModelForm(request.POST or None, instance=info)
+    else:
+        info = None
+        form = ModelForm(request.POST or None)
+    if request.method == "POST":
+
+        if form.is_valid():
+            info = form.save()
+            geocodes = zip(
+                request.POST.getlist("geocode_level"),
+                request.POST.getlist("geocode_name"),
+            )
+            for level, name in geocodes:
+                Geocode.objects.create(
+                    scheme = info,
+                    name = name,
+                    depth = level,
+                )
+            messages.success(request, "The information was saved.")
+            return redirect(info.get_absolute_url())
+        else:
+            messages.error(request, "The form could not be saved, please review the errors below.")
+    context = {
+        "info": info,
+        "form": form,
+        "load_mermaid": True,
+    }
+    return render(request, "stafcp/geocode/form.html", load_specific_design(context, PAGE_ID["stafcp"]))
 
 # Library
 

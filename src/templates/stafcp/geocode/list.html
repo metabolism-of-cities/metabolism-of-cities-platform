@@ -1,0 +1,30 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <h1>Geocode schemes</h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>System</th>
+        <th>Description</th>
+        <th>Coverage</th>
+        <th>Options</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in list %}
+      <tr>
+        <td>{{ each.name }}</td>
+        <td>{{ each.description|truncatechars_html:100 }}</td>
+        <td>{{ each.coverage|default_if_none:"" }}</td>
+        <td>
+          <a class="btn btn-info" href="{% url "stafcp_geocode" each.id %}"><i class="fa fa-eye"></i> View</a>
+          <a class="btn btn-info" href="{% url "stafcp_geocode_form" each.id %}"><i class="fa fa-pencil"></i> Edit</a>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <p><a href="{% url "stafcp_geocode_form" %}" class="btn btn-primary">Add new geocode scheme</a></p>
+{% endblock %}

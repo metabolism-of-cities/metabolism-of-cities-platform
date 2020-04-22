@@ -80,7 +80,7 @@
   <script src="{% static "js/site.js" %}"></script>
 
   {% block footer %}{% endblock %}
-  {% if select2 %}
+  {% if load_select2 %}
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
     <script>
       $(".select2").select2({
@@ -88,6 +88,16 @@
       });
     </script>
   {% endif %}
+
+  {% if load_mermaid %}
+    <script src="https://unpkg.com/mermaid@8.5.0/dist/mermaid.min.js"></script>
+    <script>
+      mermaid.initialize({
+        startOnLoad:true
+      });
+    </script>
+  {% endif %}
+
 
 </body>
 </html>

@@ -100,6 +100,10 @@ urlpatterns = [
     path("stafcp/upload/gis/<int:id>/verify/", views.stafcp_upload_gis_verify, name="stafcp_upload_gis_verify"),
     path("stafcp/upload/gis/<int:id>/meta/", views.stafcp_upload_gis_meta, name="stafcp_upload_gis_meta"),
     path("stafcp/flowdiagram/", views.stafcp_flowdiagram),
+    path("stafcp/geocode/", views.stafcp_geocodes, name="stafcp_geocodes"),
+    path("stafcp/geocode/create/", views.stafcp_geocode_form, name="stafcp_geocode_form"),
+    path("stafcp/geocode/<int:id>/edit/", views.stafcp_geocode_form, name="stafcp_geocode_form"),
+    path("stafcp/geocode/<int:id>/", views.stafcp_geocode, name="stafcp_geocode"),
 
     # Authentication
     path("register/", views.user_register, name="register"),

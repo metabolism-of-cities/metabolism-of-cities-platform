@@ -1,8 +1,9 @@
 from django.db import models
 from django.contrib.gis.db import models
+from django.urls import reverse
 
-# The geocode system defines a particular standard, for instance 3166-1 or the South African postal code system
-class GeocodeSystem(models.Model):
+# The geocode scheme defines a particular standard, for instance 3166-1 or the South African postal code system
+class GeocodeScheme(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     url = models.URLField(null=True, blank=True)
@@ -12,14 +13,16 @@ class GeocodeSystem(models.Model):
     def __str__(self):
         return self.name
     class Meta:
-        db_table = "stafdb_geocode_system"
+        db_table = "stafdb_geocode_scheme"
+    def get_absolute_url(self):
+        return reverse("stafcp_geocode", args=[self.id])
 
 # Lists all the different levels within the system. Could be a single level (e.g. Postal Code), but it 
 # could also include various levels, e.g.: Country > Province > City
 # Depth should start at 0 and go up from there
 class Geocode(models.Model):
+    scheme = models.ForeignKey(GeocodeScheme, on_delete=models.CASCADE, related_name="geocodes")
     name = models.CharField(max_length=255)
-    system = models.ForeignKey(GeocodeSystem, on_delete=models.CASCADE)
     depth = models.PositiveSmallIntegerField()
     description = models.TextField(null=True, blank=True)
     is_deleted = models.BooleanField(default=False, db_index=True)

@@ -1,0 +1,73 @@
+{% extends "_base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+  <h1>Geocode scheme</h1>
+
+  <form method="post" class="form form-horizontal">
+
+    {% csrf_token %}
+    {% bootstrap_form form %}
+
+    <hr>
+
+    <h2>What levels are present in this schema?</h2>
+    <p>Example: level 1 = country, level 2 = province, level 3 = municipality</p>
+
+    <div class="row">
+      <div class="col-lg-6">
+        <p>
+          <select name="geocode_level">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+          </select>
+          <input type="text" name="geocode_name" />
+        </p>
+        <p>
+          <select name="geocode_level">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+          </select>
+          <input type="text" name="geocode_name" />
+        </p>
+        <p>
+          <select name="geocode_level">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+          </select>
+          <input type="text" name="geocode_name" />
+        </p>
+      </div>
+      <div class="col-lg-6" style="background:#ccc">
+        Show mermaid graph
+      </div>
+    </div>
+
+    {% buttons %}
+      <button type="submit" class="btn btn-success">Save</button>
+    {% endbuttons %}
+  </form>
+
+  <p><a href="{% url "stafcp_geocodes" %}" class="btn btn-primary">Back to schema list</a></p>
+{% endblock %}
