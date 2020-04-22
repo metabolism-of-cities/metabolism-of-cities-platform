@@ -105,6 +105,7 @@ urlpatterns = [
     path("login/", views.user_login, name="login"),
     path("passwordreset/", views.user_reset, name="passwordreset"),
     path("logout/", views.user_logout, name="logout"),
+    path("account/profile/", views.user_profile, name="user_profile"),
 
     # MOOC
     path("mooc/<int:id>/<int:module>/overview/", views.mooc_module),

@@ -22,7 +22,7 @@ from django.conf import settings
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
 
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth import authenticate, login, logout
 
 
@@ -52,6 +52,12 @@ PAGE_ID = {
     "multiplicity": 51,
     "platformu": 53,
     "stafcp": 55,
+}
+
+# This array does the same for user relationships
+
+USER_RELATIONSHIPS = {
+    "member": 1,
 }
 
 # We use getHeader to obtain the header settings (type of header, title, subtitle, image)
@@ -124,7 +130,7 @@ def user_register(request, subsite=None):
                     user_relationship = UserRelationship()
                     user_relationship.record = organization
                     user_relationship.user = user
-                    user_relationship.relationship = Relationship.objects.get(pk=1)
+                    user_relationship.relationship = Relationship.objects.get(pk=USER_RELATIONSHIPS["member"])
                     user_relationship.save()
                     redirect_page = "platformu_admin"
                 else:
@@ -168,6 +174,14 @@ def user_logout(request):
 
 def user_reset(request):
     return render(request, "auth/reset.html")
+
+def user_profile(request):
+    user = request.user
+    organizations = UserRelationship.objects.filter(relationship__id=USER_RELATIONSHIPS["member"], user=user)
+    context = {
+        "organizations": organizations,
+    }
+    return render(request, "auth/profile.html", context)
 
 # Homepage
 
@@ -319,6 +333,11 @@ def metabolism_manager_admin(request):
     context = {
     }
     return render(request, "metabolism_manager/admin/index.html", load_specific_design(context, PAGE_ID["platformu"]))
+
+def metabolism_manager_clusters(request):
+    context = {
+    }
+    return render(request, "metabolism_manager/admin/clusters.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_admin_map(request):
     context = {
@@ -722,6 +741,16 @@ def load_baseline(request):
             domain = "https://metabolismofislands.org"
         )
     messages.success(request, "Sites were inserted/updated")
+
+    Group.objects.all().delete()
+    organization_permissions = Permission.objects.filter(name__in=["Can add organization", "Can change organization", "Can view organization", "Can delete organization"])
+    group_platformU = Group.objects.create(name="PlatformU Admin")
+    group_platformU.permissions.add(*organization_permissions)
+
+    group_staf_data = Group.objects.create(name="STAF data admin")
+    stafdb_permissions = Permission.objects.filter(content_type__app_label="stafdb")
+    group_staf_data.permissions.add(*stafdb_permissions)
+    messages.success(request, "Groups were created")
 
     Record.objects.all().delete()
     articles = [
