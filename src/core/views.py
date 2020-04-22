@@ -1056,6 +1056,26 @@ def dataimport(request):
                         info.save()
         elif request.GET["table"] == "people":
             pass
+        elif request.GET["table"] == "videos":
+                Video.objects.all().delete()
+                with open(file, "r") as csvfile:
+                    contents = csv.DictReader(csvfile)
+                    for row in contents:
+                        info = Video()
+                        info.title = row["title"]
+                        info.content = row["description"]
+                        info.video_site = row["website"]
+                        if row["website"] == "youtube" or row["website"] == "vimeo":
+                            info.embed_code = row["url"]
+                        if row["date"]:
+                            info.date = row["date"]
+                        if row["website"] == "youtube":
+                            info.url = "https://www.youtube.com/watch?v=" + row["url"]
+                        elif row["website"] == "vimeo":
+                            info.url = "https://vimeo.com/" + row["url"]
+                        else:
+                            info.url = row["url"]
+                        info.save()
         if error:
             messages.error(request, "We could not import your data")
         else:
