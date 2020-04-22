@@ -1002,6 +1002,27 @@ def dataimport(request):
                             info = Activity.objects.get(pk=row["id"])
                             info.parent_id = parent
                             info.save()
+        elif request.GET["table"] == "organizations":
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    Organization.objects.create(
+                        id = row["id"],
+                        title = row["name"],
+                        content = row["description"],
+                        url = row["url"],
+                        twitter = row["twitter"],
+                        linkedin = row["linkedin"],
+                        researchgate = row["researchgate"],
+                        type = row["type"],
+                    )
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    if row["parent_id"]:
+                        info = Organization.objects.get(pk=row["id"])
+                        info.parent_id = row["parent_id"]
+                        info.save()
         if error:
             messages.error(request, "We could not import your data")
         else:
