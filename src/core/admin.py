@@ -49,16 +49,29 @@ class VideoAdmin(admin.ModelAdmin):
     class Media:
         js = ("js/video.admin.js",)
 
-admin_site.register(Tag)
-admin_site.register(Record)
-admin_site.register(Event)
-admin_site.register(News)
-admin_site.register(Organization)
+class SearchAdmin(admin.ModelAdmin):
+    search_fields = ["title"]
+
+class TagAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
+    list_display = ["name", "parent_tag", "include_in_glossary", "hidden"]
+
+class OrgAdmin(SearchAdmin):
+    list_display = ["title", "type"]
+
+class ProjectAdmin(SearchAdmin):
+    list_display = ["title", "is_internal", "start_date", "status"]
+
+admin_site.register(Tag, TagAdmin)
+admin_site.register(Record, SearchAdmin)
+admin_site.register(Event, SearchAdmin)
+admin_site.register(News, SearchAdmin)
+admin_site.register(Organization, OrgAdmin)
 admin_site.register(Article, ArticleAdmin)
 admin_site.register(ArticleDesign, ArticleDesignAdmin)
-admin_site.register(People)
+admin_site.register(People, SearchAdmin)
 admin_site.register(Video, VideoAdmin)
-admin_site.register(Project)
+admin_site.register(Project, ProjectAdmin)
 admin_site.register(Relationship)
 
 admin_site.register(MOOC)

@@ -1030,6 +1030,7 @@ def dataimport(request):
                         if row["start_date"]:
                             end_date = row["end_date"]
                         info.status = row["status"]
+                        info.save()
         elif request.GET["table"] == "organizations":
             Organization.objects.all().delete()
             old_ids = {}
@@ -1053,6 +1054,8 @@ def dataimport(request):
                         info = Organization.objects.get(title=row["name"])
                         info.parent_id = old_ids[row["parent_id"]]
                         info.save()
+        elif request.GET["table"] == "people":
+            pass
         if error:
             messages.error(request, "We could not import your data")
         else:
