@@ -841,6 +841,7 @@ def load_baseline(request):
             site = moc,
             content = content,
             image = image,
+            is_internal = True,
         )
 
     messages.success(request, "UM, Community, Project, About pages were inserted/reset")
@@ -1011,6 +1012,25 @@ def dataimport(request):
                             info = Activity.objects.get(pk=row["id"])
                             info.parent_id = parent
                             info.save()
+        elif request.GET["table"] == "projects":
+            Project.objects.filter(is_internal=False).delete()
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    if row["type"] == "projects":
+                        info = Project()
+                        info.title = row["name"]
+                        info.full_name = row["full_name"]
+                        info.email = row["email"]
+                        info.url = row["url"]
+                        info.site = Site.objects.get(pk=row["site_id"])
+                        info.target_finish_date = row["target_finish_date"]
+                        if row["start_date"]:
+                            info.start_date = row["start_date"]
+                        if row["start_date"]:
+                            end_date = row["end_date"]
+                        info.status = row["status"]
+                        info.save()
         if error:
             messages.error(request, "We could not import your data")
         else:
