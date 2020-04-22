@@ -19,6 +19,7 @@ class Tag(models.Model):
         limit_choices_to={"hidden": False}, related_name="children"
     )
     hidden = models.BooleanField(db_index=True, default=False, help_text="Mark if tag is superseded/not yet approved/deactivated")
+    is_public = models.BooleanField(db_index=True, default=True)
     include_in_glossary = models.BooleanField(db_index=True, default=False)
 
     def __str__(self):

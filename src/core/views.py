@@ -974,6 +974,15 @@ def dataimport(request):
                         info = Tag.objects.get(pk=row["id"])
                         info.parent_tag_id = row["parent_tag_id"]
                         info.save()
+            # We also need to add some additional tags that are required for the new site
+            # We will use non-used IDs for this or re-cycle non-used tags so that we know
+            # which ID they will have
+            website_tags = Tag.objects.create(name="Website-related tags")
+            tag = Tag.objects.get(pk=12)
+            tag.name = "PlatformU segments"
+            tag.parent = website_tags
+            tag.hidden = False
+            tag.save()
         elif request.GET["table"] == "activities":
             ActivityCatalog.objects.all().delete()
             nace = ActivityCatalog.objects.create(name="Statistical Classification of Economic Activities in the European Community, Rev. 2 (2008)", url="https://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=LST_NOM_DTL&StrNom=NACE_REV2&StrLanguageCode=EN&IntPcKey=&StrLayoutCode=HIERARCHIC")
