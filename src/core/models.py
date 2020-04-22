@@ -62,12 +62,12 @@ class Project(Record):
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
     STATUS = (
-        ('planned', 'Planned'),
-        ('ongoing', 'In progress'),
-        ('finished', 'Finished'),
-        ('cancelled', 'Cancelled'),
+        ("planned", "Planned"),
+        ("ongoing", "In progress"),
+        ("finished", "Finished"),
+        ("cancelled", "Cancelled"),
     )
-    status = models.CharField(max_length=20, choices=STATUS, default='ongoing')
+    status = models.CharField(max_length=20, choices=STATUS, default="ongoing")
     def get_absolute_url(self):
         return reverse("project", args=[self.id])
 
