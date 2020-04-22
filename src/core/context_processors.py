@@ -19,6 +19,6 @@ def site(request):
         "UM": Article.objects.filter(parent__id=1),
         "ABOUT": Article.objects.filter(parent__id=31),
         "COMMUNITY": Article.objects.filter(parent__id=11),
-        "PROJECTS": Project.on_site.all(),
+        "PROJECTS": Project.on_site.filter(is_internal=True),
 
     }
