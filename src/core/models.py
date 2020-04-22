@@ -41,6 +41,7 @@ class Record(models.Model):
     content = HTMLField(null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
     image = StdImageField(upload_to="records", variations={"thumbnail": (480, 480), "large": (1280, 1024)}, blank=True, null=True)
+    tags = models.ManyToManyField(Tag)
     def __str__(self):
         return self.title
 
@@ -78,6 +79,9 @@ class News(Record):
 class Organization(Record):
     url = models.CharField(max_length=255, null=True, blank=True)
     parent = models.ForeignKey("self", on_delete=models.SET_NULL, null=True, blank=True)
+    twitter = models.CharField(max_length=255, null=True, blank=True)
+    linkedin = models.CharField(max_length=255, null=True, blank=True)
+    researchgate = models.CharField(max_length=255, null=True, blank=True)
     ORG_TYPE = (
         ("academic", "Research Institution"),
         ("universities", "Universities"),
@@ -132,6 +136,7 @@ class Event(Record):
 class Video(Record):
     url = models.URLField(max_length=255)
     embed_code = models.CharField(max_length=20, null=True, blank=True)
+    date = models.DateField(blank=True, null=True)
     VIDEO_SITES = [
         ("youtube", "Youtube"),
         ("vimeo", "Vimeo"),
