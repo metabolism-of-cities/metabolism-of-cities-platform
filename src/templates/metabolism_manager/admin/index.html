@@ -3,138 +3,16 @@
 {% block title %}Metabolism Manager{% endblock %}
 
 {% block content %}
+
+  <p>
+    You are part of {{ organizations.count }} organisations. 
+    To manage your portfolio, select the organisation of your choice:
+  </p>
+
   <ul>
-    <li><a href="/platformu/admin/">Manage clusters</a></li>
-    <li><a href="/platformu/admin/map/">View map</a></li>
+    {% for each in organizations %}
+    <li><a href="{% url "platformu_admin_clusters" each.record.id %}">{{ each.record }}</a></li>
+    {% endfor %}
   </ul>
-  <section>
-    <h3>Cluster 1: Paper Companies</h3>
-    <div class="card mb-4 table-responsive">
-      <table class="table mb-0">
-        <thead>
-          <tr>
-            <th class="border-0">Name</th>
-            <th class="border-0 medium-cell">Employees</th>
-            <th class="border-0 medium-cell">Reporting</th>
-            <th class="border-0 narrow-cell">Active</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><a href="/platformu/admin/entities/1/">Dunder Mifflin</a></td>
-            <td>41</td>
-            <td>Monthly</td>
-            <td><i class="far fa-check-circle text-success"></i></td>
-          </tr>
-          <tr>
-            <td><a href="/platformu/admin/entities/1/">Staples</a></td>
-            <td>210</td>
-            <td>Quarterly</td>
-            <td><i class="far fa-check-circle text-success"></i></td>
-          </tr>
-          <tr>
-            <td><a href="/platformu/admin/entities/1/">Paper Inc.</a></td>
-            <td>4</td>
-            <td>Monthly</td>
-            <td><i class="far fa-check-circle text-success"></i></td>
-          </tr>
-          <tr>
-            <td><a href="/platformu/admin/entities/1/">The Paper Company</a></td>
-            <td>124</td>
-            <td>Yearly</td>
-            <td><i class="far fa-times-circle text-danger"></i></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <a class="btn btn-primary" href="/platformu/admin/cluster/4/add/"><i class="fas fa-plus"></i> Add new company</a>
-    <a class="btn btn-primary-basic" href="/platformu/admin/cluster/4/configure/"><i class="far fa-cog"></i> Cluster configuration</a>
-  </section>
 
-  <section>
-    <h3>Cluster 2: Oil Refineries</h3>
-    <div class="card mb-4 table-responsive">
-      <table class="table mb-0">
-        <thead>
-          <tr>
-            <th class="border-0">Name</th>
-            <th class="border-0 medium-cell">Employees</th>
-            <th class="border-0 medium-cell">Reporting</th>
-            <th class="border-0 narrow-cell">Active</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><a href="/platformu/admin/entities/1/">Shell</a></td>
-            <td>4,100</td>
-            <td>Monthly</td>
-            <td><i class="far fa-check-circle text-success"></i></td>
-          </tr>
-          <tr>
-            <td><a href="/platformu/admin/entities/1/">Chevron Refinery</a></td>
-            <td>21,000</td>
-            <td>Quarterly</td>
-            <td><i class="far fa-check-circle text-success"></i></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <a class="btn btn-primary" href="/platformu/admin/cluster/4/add/"><i class="fas fa-plus"></i> Add new company</a>
-    <a class="btn btn-primary-basic" href="/platformu/admin/cluster/4/configure/"><i class="far fa-cog"></i> Cluster configuration</a>
-  </section>
-
-  <section>
-    <h3>Cluster 3: Households</h3>
-    <div class="card mb-4 table-responsive">
-      <table class="table mb-0">
-        <thead>
-          <tr>
-            <th class="border-0">Name</th>
-            <th class="border-0 medium-cell">Members</th>
-            <th class="border-0 medium-cell">Reporting</th>
-            <th class="border-0 narrow-cell">Active</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><a href="/platformu/admin/entities/1/">The Hoekman Family</a></td>
-            <td>6</td>
-            <td>Monthly</td>
-            <td><i class="far fa-check-circle text-success"></i></td>
-          </tr>
-          <tr>
-            <td><a href="/platformu/admin/entities/1/">Martha Morgan</a></td>
-            <td>2</td>
-            <td>Quarterly</td>
-            <td><i class="far fa-check-circle text-success"></i></td>
-          </tr>
-          <tr>
-            <td><a href="/platformu/admin/entities/1/">George Mason</a></td>
-            <td>1</td>
-            <td>Quarterly</td>
-            <td><i class="far fa-times-circle text-danger"></i></td>
-          </tr>
-          <tr>
-            <td><a href="/platformu/admin/entities/1/">Barbara Woolie</a></td>
-            <td>1</td>
-            <td>Quarterly</td>
-            <td><i class="far fa-times-circle text-danger"></i></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <a class="btn btn-primary" href="/platformu/admin/cluster/4/add/"><i class="fas fa-plus"></i> Add new household</a>
-    <a class="btn btn-primary-basic" href="/platformu/admin/cluster/4/configure/"><i class="far fa-cog"></i> Cluster configuration</a>
-  </section>
-
-  <section>
-    <h3>New cluster</h3>
-    <form method="post" class="form-inline">
-      <div class="form-group mb-2 mr-2">
-        <label for="name" class="sr-only">Name</label>
-        <input type="text" class="form-control" id="name" placeholder="Name">
-      </div>
-      <button type="submit" class="btn btn-primary mb-2"><i class="fas fa-plus"></i> Add cluster</button>
-    </form>
-  </section>
 {% endblock %}

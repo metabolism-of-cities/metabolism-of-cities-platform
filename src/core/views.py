@@ -60,6 +60,10 @@ USER_RELATIONSHIPS = {
     "member": 1,
 }
 
+# This defines tags that are frequently used
+TAG_ID = {
+    "platformu_segments": Tag.objects.filter(name="PlatformU segments").values_list("id", flat=True)[0], # Let's replace this for the right number once things have settled down
+}
 # We use getHeader to obtain the header settings (type of header, title, subtitle, image)
 # This dictionary has to be created for many different pages so by simply calling this
 # function instead we don't repeat ourselves too often.
@@ -330,11 +334,13 @@ def metabolism_manager(request):
     return render(request, "metabolism_manager/index.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_admin(request):
+    organizations = UserRelationship.objects.filter(relationship__id=USER_RELATIONSHIPS["member"], user=request.user)
     context = {
+        "organizations": organizations,
     }
     return render(request, "metabolism_manager/admin/index.html", load_specific_design(context, PAGE_ID["platformu"]))
 
-def metabolism_manager_clusters(request):
+def metabolism_manager_clusters(request, organization):
     context = {
     }
     return render(request, "metabolism_manager/admin/clusters.html", load_specific_design(context, PAGE_ID["platformu"]))
@@ -981,7 +987,7 @@ def dataimport(request):
             website_tags = Tag.objects.create(name="Website-related tags")
             tag = Tag.objects.get(pk=12)
             tag.name = "PlatformU segments"
-            tag.parent = website_tags
+            tag.parent_tag = website_tags
             tag.hidden = False
             tag.save()
         elif request.GET["table"] == "activities":
