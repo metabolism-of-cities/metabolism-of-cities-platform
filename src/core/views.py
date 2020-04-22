@@ -1030,6 +1030,28 @@ def dataimport(request):
                         if row["start_date"]:
                             end_date = row["end_date"]
                         info.status = row["status"]
+        elif request.GET["table"] == "organizations":
+            Organization.objects.all().delete()
+            old_ids = {}
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    info = Organization.objects.create(
+                        title = row["name"],
+                        content = row["description"],
+                        url = row["url"],
+                        twitter = row["twitter"],
+                        linkedin = row["linkedin"],
+                        researchgate = row["researchgate"],
+                        type = row["type"],
+                    )
+                    old_ids[row["id"]] = info.id
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    if row["parent_id"]:
+                        info = Organization.objects.get(title=row["name"])
+                        info.parent_id = old_ids[row["parent_id"]]
                         info.save()
         if error:
             messages.error(request, "We could not import your data")
