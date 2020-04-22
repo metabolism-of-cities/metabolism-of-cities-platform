@@ -152,10 +152,30 @@ class Video(Record):
         elif self.video_site == "vimeo":
             return f'<iframe class="video-embed vimeo-video" title="vimeo-player" src="https://player.vimeo.com/video/{self.embed_code}" frameborder="0" allowfullscreen></iframe>'
 
-
 class People(Record):
+    firstname = models.CharField(max_length=255, null=True, blank=True)
+    lastname = models.CharField(max_length=255, null=True, blank=True)
     affiliation = models.CharField(max_length=255,null=True, blank=True)
+    email = models.CharField(max_length=255, null=True, blank=True)
+    email_public = models.BooleanField(default=False)
+    website = models.CharField(max_length=255, null=True, blank=True)
+    twitter = models.CharField(max_length=255, null=True, blank=True)
+    google_scholar = models.CharField(max_length=255, null=True, blank=True)
+    orcid = models.CharField(max_length=255, null=True, blank=True)
+    researchgate = models.CharField(max_length=255, null=True, blank=True)
+    linkedin = models.CharField(max_length=255, null=True, blank=True)
+    research_interests = models.TextField(null=True, blank=True)
+    PEOPLE_STATUS = (
+        ("active", "Active"),
+        ("retired", "Retired"),
+        ("deceased", "Deceased"),
+        ("inactive", "Inactive"),
+        ("pending", "Pending Review"),
+    )
+    status = models.CharField(max_length=8, choices=PEOPLE_STATUS, default="active")
     site = models.ManyToManyField(Site)
+    def __str__(self):
+        return "%s %s" % (self.firstname, self.lastname)
     def get_absolute_url(self):
         return reverse("person", args=[self.id])
     class Meta:

@@ -17,6 +17,7 @@ ssh -t industrialecology 'csvdump "SELECT * FROM staf_process ORDER BY id" activ
 ssh -t industrialecology 'csvdump "SELECT * FROM core_project ORDER BY id" projects.csv'
 ssh -t industrialecology 'csvdump "SELECT * FROM core_video ORDER BY id" videos.csv'
 ssh -t industrialecology 'csvdump "SELECT * FROM core_organization ORDER BY id" organizations.csv'
+ssh -t industrialecology 'csvdump "SELECT * FROM core_people ORDER BY id" people.csv'
   </pre>
 
 {% endblock %}
