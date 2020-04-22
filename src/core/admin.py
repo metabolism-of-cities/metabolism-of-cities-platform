@@ -58,9 +58,16 @@ class TagAdmin(admin.ModelAdmin):
 
 class OrgAdmin(SearchAdmin):
     list_display = ["title", "type"]
+    list_filter = ["type"]
 
 class ProjectAdmin(SearchAdmin):
     list_display = ["title", "is_internal", "start_date", "status"]
+
+class ReferenceSpaceAdmin(SearchAdmin):
+    list_display = ["name", "location_date", "is_deleted"]
+    search_fields = ["name"]
+    def location_date(self, obj):
+        return obj.location.start if obj.location else None
 
 admin_site.register(Tag, TagAdmin)
 admin_site.register(Record, SearchAdmin)
@@ -89,7 +96,7 @@ admin_site.register(CronJobLog)
 
 admin_site.register(GeocodeSystem)
 admin_site.register(Geocode)
-admin_site.register(ReferenceSpace)
+admin_site.register(ReferenceSpace, ReferenceSpaceAdmin)
 admin_site.register(ReferenceSpaceLocation, admin.GeoModelAdmin)
 admin_site.register(ReferenceSpaceGeocode)
 

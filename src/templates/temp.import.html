@@ -10,9 +10,12 @@
     <li><a href="/dataimport/?table=organizations">Organizations</a></li>
     <li><a href="/dataimport/?table=videos">Videos</a></li>
     <li><a href="/dataimport/?table=people">People</a></li>
+    <li><a href="/dataimport/?table=referencespaces">Reference Spaces</a></li>
+    <li><a href="/dataimport/?table=referencespacelocations">Reference Space Locations</a></li>
   </ul>
 
   <hr>
+  <p>Notes for Paul:</p>
   <pre>
 ssh -t industrialecology 'csvdump "SELECT * FROM core_tag ORDER BY id" tags.csv'
 ssh -t industrialecology 'csvdump "SELECT * FROM staf_process ORDER BY id" activities.csv'
@@ -20,6 +23,8 @@ ssh -t industrialecology 'csvdump "SELECT * FROM core_project ORDER BY id" proje
 ssh -t industrialecology 'csvdump "SELECT * FROM core_video ORDER BY id" videos.csv'
 ssh -t industrialecology 'csvdump "SELECT * FROM core_organization ORDER BY id" organizations.csv'
 ssh -t industrialecology 'csvdump "SELECT * FROM core_people ORDER BY id" people.csv'
+ssh -t industrialecology 'csvdump "SELECT * FROM multiplicity_referencespace ORDER BY id" referencespaces.csv'
+ssh -t industrialecology 'csvdump "SELECT * FROM multiplicity_referencespacelocation ORDER BY id" referencespacelocations.csv'
   </pre>
 
 {% endblock %}

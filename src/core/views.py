@@ -1104,6 +1104,51 @@ def dataimport(request):
                     else:
                         info.url = row["url"]
                     info.save()
+        elif request.GET["table"] == "referencespaces":
+            ReferenceSpace.objects.all().delete()
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    deleted = True if not row["active"] else False
+                    ReferenceSpace.objects.create(
+                        id = row["id"],
+                        name = row["name"],
+                        description = row["description"],
+                        slug = row["slug"],
+                        is_deleted = deleted,
+                    )
+        elif request.GET["table"] == "referencespacelocations":
+            import sys
+            csv.field_size_limit(sys.maxsize)
+            from django.contrib.gis.geos import Point
+
+            ReferenceSpaceLocation.objects.all().delete()
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    try:
+                        lat = float(row["lat"])
+                        lng = float(row["lng"])
+                    except:
+                        lat = None
+                        lng = None
+                    if row["geojson"] or lat:
+                        deleted = True if not row["active"] else False
+                        start = row["start"] if row["start"] else None
+                        end = row["end"] if row["end"] else None
+                        if row["geojson"]:
+                            geometry = Point(12.4604, 43.9420)
+                        elif lat and lng:
+                            geometry = Point(lng, lat)
+                        ReferenceSpaceLocation.objects.create(
+                            id = row["id"],
+                            space_id = row["space_id"],
+                            description = row["description"],
+                            start = start,
+                            end = end,
+                            is_deleted = deleted,
+                            geometry = geometry,
+                        )
         if error:
             messages.error(request, "We could not import your data")
         else:
