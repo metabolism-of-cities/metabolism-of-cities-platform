@@ -109,6 +109,10 @@ urlpatterns = [
     path("stafcp/geocode/create/", views.stafcp_geocode_form, name="stafcp_geocode_form"),
     path("stafcp/geocode/<int:id>/edit/", views.stafcp_geocode_form, name="stafcp_geocode_form"),
     path("stafcp/geocode/<int:id>/", views.stafcp_geocode, name="stafcp_geocode"),
+    path("stafcp/catalogs/about/", views.article, { "id": 57, "project": 55, }, name="stafcp_catalogs"),
+    path("stafcp/referencespaces/", views.stafcp_referencespaces, name="stafcp_referencespaces"),
+    path("stafcp/referencespaces/<int:id>/", views.stafcp_referencespaces_list, name="stafcp_referencespaces_list"),
+    path("stafcp/referencespaces/<slug:group>/", views.stafcp_referencespaces, name="stafcp_referencespaces"),
 
     # Authentication
     path("register/", views.user_register, name="register"),

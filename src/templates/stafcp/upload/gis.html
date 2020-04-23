@@ -16,84 +16,23 @@
             <li class="nav-item">
               <div class="nav-link active" data-tag="all"><i class="fal fa-fw fa-circle mr-2"></i> All types</div>
             </li>
+            {% for each in list %}
             <li class="nav-item">
-              <div class="nav-link" data-tag="boundaries"><i class="fal fa-fw fa-border-all mr-2"></i> Boundaries</div>
+              <div class="nav-link" data-tag="scheme-{{ each.id }}"><i class="{{ each.icon }} mr-2"></i> {{ each }}</div>
             </li>
-            <li class="nav-item">
-              <div class="nav-link" data-tag="transport"><i class="fal fa-fw fa-car-bus mr-2"></i> Transport infastructure</div>
-            </li>
-            <li class="nav-item">
-              <div class="nav-link" data-tag="agricultural"><i class="fal fa-fw fa-farm mr-2"></i> Agricultural infrastructure</div>
-            </li>
-            <li class="nav-item">
-              <div class="nav-link" data-tag="land"><i class="fal fa-fw fa-mountain mr-2"></i> Land use</div>
-            </li>
+            {% endfor %}
           </ul>
         </div>
       </div>
       <div class="col-md-6 col-lg-8 p-0">
         <table class="table mb-0">
           <tbody class="list">
+            {% for each in geocodes %}
             <tr><td>
-              <a class="data-name" href="{% url 'stafcp_upload_gis_file' 'countries' %}">Countries</a>
-              <span hidden class="data-tags">boundaries</span>
+              <a class="data-name" href="{% url 'stafcp_upload_gis_file' 'countries' %}">{{ each }}</a>
+              <span hidden class="data-tags">scheme-{{ each.scheme.id }}</span>
             </td></tr>
-            <tr><td>
-              <a class="data-name" href="{% url 'stafcp_upload_gis_file' 'countries' %}">Continents</a>
-              <span hidden class="data-tags">boundaries</span>
-            </td></tr>
-            <tr><td>
-              <a class="data-name" href="{% url 'stafcp_upload_gis_file' 'countries' %}">Cities</a>
-              <span hidden class="data-tags">boundaries</span>
-            </td></tr>
-            <tr><td>
-              <a class="data-name" href="{% url 'stafcp_upload_gis_file' 'countries' %}">Departments</a>
-              <span hidden class="data-tags">boundaries</span>
-            </td></tr>
-            <tr><td>
-              <a class="data-name" href="{% url 'stafcp_upload_gis_file' 'countries' %}">States</a>
-              <span hidden class="data-tags">boundaries</span>
-            </td></tr>
-            <tr><td>
-              <a class="data-name" href="{% url 'stafcp_upload_gis_file' 'countries' %}">Provinces</a>
-              <span hidden class="data-tags">boundaries</span>
-            </td></tr>
-            <tr><td>
-              <a class="data-name" href="{% url 'stafcp_upload_gis_file' 'countries' %}">Territory</a>
-              <span hidden class="data-tags">boundaries</span>
-            </td></tr>
-            <tr><td>
-              <a class="data-name" href="{% url 'stafcp_upload_gis_file' 'countries' %}">Airports</a>
-              <span hidden class="data-tags">transport</span>
-            </td></tr>
-            <tr><td>
-              <a class="data-name" href="{% url 'stafcp_upload_gis_file' 'countries' %}">Train stations</a>
-              <span hidden class="data-tags">transport</span>
-            </td></tr>
-            <tr><td>
-              <a class="data-name" href="{% url 'stafcp_upload_gis_file' 'countries' %}">Bus stops</a>
-              <span hidden class="data-tags">transport</span>
-            </td></tr>
-            <tr><td>
-              <a class="data-name" href="{% url 'stafcp_upload_gis_file' 'countries' %}">Gas stations</a>
-              <span hidden class="data-tags">transport</span>
-            </td></tr>
-            <tr><td>
-              <a class="data-name" href="{% url 'stafcp_upload_gis_file' 'countries' %}">Farms</a>
-              <span hidden class="data-tags">agricultural</span>
-            </td></tr>
-            <tr><td>
-              <a class="data-name" href="{% url 'stafcp_upload_gis_file' 'countries' %}">Silos</a>
-              <span hidden class="data-tags">agricultural</span>
-            </td></tr>
-            <tr><td>
-              <a class="data-name" href="{% url 'stafcp_upload_gis_file' 'countries' %}">Zoning</a>
-              <span hidden class="data-tags">land</span>
-            </td></tr>
-            <tr><td>
-              <a class="data-name" href="{% url 'stafcp_upload_gis_file' 'countries' %}">Agricultural land use</a>
-              <span hidden class="data-tags">land</span>
-            </td></tr>
+            {% endfor %}
           </tbody>
         </table>
         <div class="no-results text-center pt-4">

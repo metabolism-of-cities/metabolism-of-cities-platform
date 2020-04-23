@@ -3,8 +3,6 @@
     Data by type
   </a>
   <div class="dropdown-menu" aria-labelledby="cities-dropdown">
-    <a class="dropdown-item" href="{% url "stafcp_geocodes" %}">Geocode schemes</a>
-    <a class="dropdown-item" href="{% url "stafcp_flowdiagrams" %}">Flow diagrams</a>
     <a class="dropdown-item" href="/">Maps and shapefiles</a>
     <a class="dropdown-item" href="/data/overview/">Input-output data</a>
     <a class="dropdown-item" href="/data/overview/">Material extraction</a>
@@ -62,5 +60,19 @@
 </li>
 
 <li><a href="http://" class="nav-link">Download data</a></li>
+
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="catalogs-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Data catalogs
+  </a>
+  <div class="dropdown-menu" aria-labelledby="catalogs-dropdown">
+    <a class="dropdown-item" href="{% url "stafcp_catalogs" %}">Introduction</a>
+    <a class="dropdown-item" href="{% url "stafcp_geocodes" %}">Geocode schemes</a>
+    <a class="dropdown-item" href="{% url "stafcp_flowdiagrams" %}">Flow diagrams</a>
+    <a class="dropdown-item" href="{% url "stafcp_flowdiagrams" %}">Activities</a>
+    <a class="dropdown-item" href="{% url "stafcp_referencespaces" %}">Reference spaces</a>
+  </div>
+</li>
+
 
 <li><a href="http://" class="nav-link">About</a></li>

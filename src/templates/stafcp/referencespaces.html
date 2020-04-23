@@ -1,0 +1,176 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <h1>Reference Spaces</h1>
+
+  <p>What kind of reference spaces are you interested in?</p>
+
+  {% if not list %}
+  <div class="card-deck">
+    <div class="card">
+      <a href="{% url "stafcp_referencespaces" "administrative" %}">
+        <img src="https://images.pexels.com/photos/408503/pexels-photo-408503.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" class="card-img-top" alt="...">
+      </a>
+      <div class="card-body">
+        <h5 class="card-title">Administrative areas</h5>
+        <p class="card-text">
+          Countries, continents, regions, etc.
+        </p>
+      </div>
+      <div class="card-footer">
+        <small class="text-muted">2764 reference spaces</small>
+      </div>
+    </div>
+    <div class="card">
+      <a href="{% url "stafcp_referencespaces" "national" %}">
+        <img src="https://images.pexels.com/photos/108942/pexels-photo-108942.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" class="card-img-top" alt="...">
+      </a>
+      <div class="card-body">
+        <h5 class="card-title">National subdivisions</h5>
+        <p class="card-text">
+          Subdivisions of individual countries.
+        </p>
+      </div>
+      <div class="card-footer">
+        <small class="text-muted">8743 references spaces</small>
+      </div>
+    </div>
+    <div class="card">
+      <a href="{% url "stafcp_referencespaces" "sectoral" %}">
+        <img src="https://images.pexels.com/photos/2226458/pexels-photo-2226458.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" class="card-img-top" alt="...">
+      </a>
+      <div class="card-body">
+        <h5 class="card-title">Sectoral infrastructure</h5>
+        <p class="card-text">
+          Farms, power plants, markets, train stations, etc.
+        </p>
+      </div>
+      <div class="card-footer">
+        <small class="text-muted">587 reference spaces</small>
+      </div>
+    </div>
+  </div>
+
+  {% else %}
+    <div class="card container filter-table mt-4" id="gis-list">
+      <div class="row">
+        <div class="col-md-6 col-lg-4 py-3 col-filter">
+          <div class="sticky-top">
+            <div class="form-group">
+              <input type="text" class="form-control search" placeholder="Search...">
+            </div>
+            <ul class="nav nav-pills flex-column tag-filter">
+              <li class="nav-item">
+                <div class="nav-link active" data-tag="all"><i class="fal fa-fw fa-circle mr-2"></i> All types</div>
+              </li>
+              {% for each in list %}
+              <li class="nav-item">
+                <div class="nav-link" data-tag="scheme-{{ each.id }}"><i class="{{ each.icon }} mr-2"></i> {{ each }}</div>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-8 p-0">
+          <table class="table mb-0">
+            <tbody class="list">
+              {% for each in geocodes %}
+              <tr><td>
+                <a class="data-name" href="{% url 'stafcp_referencespaces_list' each.id %}">{{ each }}</a>
+                <span hidden class="data-tags">scheme-{{ each.scheme.id }}</span>
+              </td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <div class="no-results text-center pt-4">
+            <h2 class="my-4"><i class="fad fa-search"></i> No data types found</h2>
+            <button class="btn btn-lg btn-primary clear-filter my-4">Show all types</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+{% endblock %}
+
+{% block footer %}
+  <!-- add listjs to search and filter - -https://listjs.com/api/ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+
+  <script>
+    $(".tag-filter .nav-link").click(function() {
+      var tag = $(this).data("tag");
+
+      filterList(tag);
+
+      $(".tag-filter .nav-link").removeClass("active");
+      $(this).addClass("active");
+    })
+
+    var listOptions = {
+      valueNames: ["data-name", "data-tags"]
+    };
+
+    var materialList = new List("gis-list", listOptions);
+
+    function filterList(tag) {
+      materialList.filter(function(item) {
+        if (tag == "all") {
+          return true;
+        } else {
+          if (item.values()["data-tags"].includes(tag)) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      });
+
+      checkCount()
+    }
+
+    // function to check the number of matches
+    function checkCount() {
+      var count = $("#gis-list tbody.list tr:visible").length;
+      if (count == 0) {
+        $(".no-results").addClass("visible");
+      } else {
+        $(".no-results").removeClass("visible");
+      }
+    }
+
+    // update contact count when searching by name
+    materialList.on("searchComplete", function(){
+      checkCount();
+    });
+
+    // make dropdowns work as filters
+    $(".filters select").change(function() {
+      runAllFilters()
+    });
+
+    // clear search and filters
+    function resetSearchFilters() {
+      materialList.search();
+      $("#gis-list input.search").val("");
+
+      $(".tag-filter .nav-link[data-tag='all']").click()
+    }
+
+    $(".clear-filter").click(function() {
+      resetSearchFilters();
+      checkCount();
+    })
+
+    // reset all filters on page load
+    resetSearchFilters();
+
+    // make no results box invisible on load
+    $(".no-results").removeClass("visible");
+
+    // button to scroll back to top
+    $(".btn-to-top").click(function() {
+      scrollToID("gis-list");
+    })
+  </script>
+{% endblock %}

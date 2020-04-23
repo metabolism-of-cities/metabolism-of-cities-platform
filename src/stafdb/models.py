@@ -10,6 +10,7 @@ class GeocodeScheme(models.Model):
     coverage = models.ForeignKey("ReferenceSpace", on_delete=models.SET_NULL, null=True, blank=True)
     is_comprehensive = models.BooleanField(default=True, db_index=True)
     is_deleted = models.BooleanField(default=False, db_index=True)
+    icon = models.CharField(max_length=50, null=True, blank=True) # Web field
     def __str__(self):
         return self.name
     class Meta:
@@ -36,6 +37,7 @@ class ReferenceSpace(models.Model):
     slug = models.CharField(max_length=100, null=True)
     location = models.ForeignKey("ReferenceSpaceLocation", on_delete=models.SET_NULL, null=True, blank=True)
     is_deleted = models.BooleanField(default=False, db_index=True)
+    geocodes = models.ManyToManyField(Geocode, through="ReferenceSpaceGeocode")
     def __str__(self):
         return self.name
 

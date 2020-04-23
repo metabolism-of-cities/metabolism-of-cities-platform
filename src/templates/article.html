@@ -34,7 +34,7 @@
 
     <article class="order-0">
       {% if info.content %}
-        {{ info.content }}
+        {{ info.content|safe }}
       {% else %}
         {% lorem 7 p %}
       {% endif %}

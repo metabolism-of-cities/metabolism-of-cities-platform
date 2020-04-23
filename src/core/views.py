@@ -237,7 +237,7 @@ def article(request, id=None, prefix=None, slug=None, project=None):
     menu = None
     if id:
         info = get_object_or_404(Article, pk=id, site=site)
-        if not info.active and not request.user.is_staff:
+        if info.is_deleted and not request.user.is_staff:
             raise Http404("Article not found")
     elif slug:
         if prefix:
@@ -456,6 +456,8 @@ def stafcp(request):
 def stafcp_upload_gis(request, id=None):
     context = {
         "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
+        "list": GeocodeScheme.objects.filter(is_deleted=False),
+        "geocodes": Geocode.objects.filter(is_deleted=False, scheme__is_deleted=False),
     }
     return render(request, "stafcp/upload/gis.html", load_specific_design(context, PAGE_ID["stafcp"]))
 
@@ -478,6 +480,31 @@ def stafcp_upload_gis_meta(request, id):
         "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
     }
     return render(request, "stafcp/upload/gis.meta.html", load_specific_design(context, PAGE_ID["stafcp"]))
+
+def stafcp_referencespaces(request, group=None):
+    list = geocodes = None
+    if group == "administrative":
+        list = GeocodeScheme.objects.filter(is_deleted=False).exclude(name__startswith="Sector").exclude(name__startswith="Subdivision")
+        geocodes = Geocode.objects.filter(is_deleted=False).exclude(scheme__name__startswith="Sector").exclude(scheme__name__startswith="Subdivision")
+    elif group == "national":
+        list = GeocodeScheme.objects.filter(is_deleted=False, name__startswith="Subdivision")
+        geocodes = Geocode.objects.filter(is_deleted=False, scheme__name__startswith="Subdivision")
+    elif group == "sectoral":
+        list = GeocodeScheme.objects.filter(is_deleted=False, name__startswith="Sector")
+        geocodes = Geocode.objects.filter(is_deleted=False, scheme__name__startswith="Sector")
+    context = {
+        "list": list,
+        "geocodes": geocodes,
+    }
+    return render(request, "stafcp/referencespaces.html", load_specific_design(context, PAGE_ID["stafcp"]))
+
+def stafcp_referencespaces_list(request, id):
+    geocode = get_object_or_404(Geocode, pk=id)
+    context = {
+        "list": ReferenceSpace.objects.filter(geocodes=geocode),
+        "geocode": geocode,
+    }
+    return render(request, "stafcp/referencespaces.list.html", load_specific_design(context, PAGE_ID["stafcp"]))
 
 def stafcp_flowdiagrams(request):
     list = FlowDiagram.objects.all()
@@ -595,6 +622,14 @@ def stafcp_geocode_form(request, id=None):
         "load_mermaid": True,
     }
     return render(request, "stafcp/geocode/form.html", load_specific_design(context, PAGE_ID["stafcp"]))
+
+def stafcp_article(request, id):
+    context = {
+        "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
+
+    }
+    return render(request, "stafcp/index.html", load_specific_design(context, PAGE_ID["stafcp"]))
+
 
 # Library
 
@@ -922,6 +957,7 @@ def load_baseline(request):
         { "id": 51, "title": "Cities", "parent": 19, "slug": "/data/", "position": None },
         { "id": 53, "title": "PlatformU", "parent": 19, "slug": "/platformu/", "position": None },
         { "id": 55, "title": "STAFCP", "parent": 19, "slug": "/stafcp/", "position": None },
+        { "id": 57, "title": "About our data catalogues", "parent": 55, "slug": "/stafcp/catalogs/about/", "position": None, "content": "<p>This is a section with various data catalogues used.</p><p>A useful site if you want to learn more or contribute is:</p><ul><li><a href='https://unstats.un.org/unsd/classifications/'>UNSD Classificatoins</a></li></ul>" },
     ]
     projects = [
         { "id": 20, "title": "Library", "parent": 19, "url": "/library/", "position": 1, "image": "records/um_library.png", "content": "<p>The urban metabolism library has been one of the first projects undertaken by the Metabolism of Cities community. The goal of this project is to provide a central repository for all relevant documents and other material related to urban metabolism.</p><p>There are many research papers, theses, books, government reports, and other publications that have relevance to urban metabolism. The urban metabolism library aims to collect all of the relevant meta information (title, description, year of publication, abstract), and to provide visitors with an easy way to browse and filter the catalog. The library is constantly growing and visitors are encouraged to submit missing documents." },
@@ -982,6 +1018,141 @@ def load_baseline(request):
 
     messages.success(request, "Relationships were loaded")
 
+#Accommodation
+#Agriculture
+#Construction
+#Energy
+#Fishing
+#Food service
+#Forestry
+#Manufacturing
+#Mining
+#Repair
+#Storage
+#Transportation
+#Waste
+#Water
+#Wholesale and retail
+#Consumption
+
+    GeocodeScheme.objects.all().delete()
+    list = [
+        {
+            "name": "UN Statistics Division Groupings",
+            "icon": "fal fa-fw fa-universal-access",
+            "items": ["Least Developed Countries", "Land Locked Developing Countries", "Small Island Developing States", "Developed Regions", "Developing Regions"],
+        },
+        {
+            "name": "NUTS",
+            "icon": "fal fa-fw fa-globe-europe",
+            "items": ["NUTS 1"],
+            "items2": ["NUTS 2"],
+            "items3": ["NUTS 3"],
+            "items4": ["Local Administrative Unit (LAU)"],
+        },
+        {
+            "name": "ISO 3166-1",
+            "icon": "fal fa-fw fa-globe",
+            "items": ["Countries"],
+        },
+        {
+            "name": "Sector: Hotels and lodging",
+            "icon": "fal fa-fw fa-bed",
+            "items": ["Hotels", "Camping grounds"],
+        },
+        {
+            "name": "Sector: Agriculture",
+            "icon": "fal fa-fw fa-seedling",
+            "items": ["Farms"],
+        },
+        {
+            "name": "Sector: Construction",
+            "icon": "fal fa-fw fa-construction",
+            "items": ["Building site"],
+        },
+        {
+            "name": "Sector: Energy",
+            "icon": "fal fa-fw fa-bolt",
+            "items": ["Wind turbines", "Solar parks/farms", "Roof-top solar panels", "Power plants", "High voltage lines", "Substations"],
+        },
+        {
+            "name": "Sector: Fishing",
+            "icon": "fal fa-fw fa-fish",
+            "items": ["Fish farms"],
+        },
+        {
+            "name": "Sector: Food service",
+            "icon": "fal fa-fw fa-utensils",
+            "items": ["Restaurants", "Bars"],
+        },
+        {
+            "name": "Sector: Forestry",
+            "icon": "fal fa-fw fa-trees",
+            "items": ["Plantation"],
+        },
+        {
+            "name": "Sector: Manufacturing (Food)",
+            "icon": "fal fa-fw fa-hamburger",
+            "items": ["Abbatoir", "Bakery", "Bread mill", "Food processing plant"],
+        },
+        {
+            "name": "Subdivisions of South Africa",
+            "icon": "fal fa-fw fa-flag",
+            "items": ["Provinces"],
+            "items2": ["Metropolitan municipalities", "District municipalities"],
+            "items3": ["Local municipalilties"],
+            "items4": ["Wards"],
+        },
+        {
+            "name": "Subdivisions of Nicaragua",
+            "icon": "fal fa-fw fa-flag",
+            "items": ["Departments", "Autonomous regions"],
+            "items2": ["Municipalities"],
+        },
+        {
+            "name": "Subdivisions of Costa Rica",
+            "icon": "fal fa-fw fa-flag",
+            "items": ["Provinces"],
+            "items2": ["Cantons"],
+            "items3": ["Districts"],
+        },
+
+    ]
+    for each in list:
+        scheme = GeocodeScheme.objects.create(
+            name = each["name"],
+            is_comprehensive = False,
+            icon = each["icon"],
+        )
+        for name in each["items"]:
+            Geocode.objects.create(
+                scheme = scheme,
+                name = name,
+                depth = 1,
+            )
+        if "items2" in each:
+            for name in each["items2"]:
+                Geocode.objects.create(
+                    scheme = scheme,
+                    name = name,
+                    depth = 2,
+                )
+        if "items3" in each:
+            for name in each["items3"]:
+                Geocode.objects.create(
+                    scheme = scheme,
+                    name = name,
+                    depth = 3,
+                )
+        if "items4" in each:
+            for name in each["items4"]:
+                Geocode.objects.create(
+                    scheme = scheme,
+                    name = name,
+                    depth = 4,
+                )
+
+
     designs = [
         { "header": "small", "article": 38, "logo": "/logos/media-logo-library.png", "css": """.top-layer {
 background-color: #2e883b;
@@ -1022,19 +1193,6 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
             logo = each["logo"],
         )
 
-    names = ["Fulano de Tal", "Fulana de Tal", "Joanne Doe", "John Doe"]
-
-    id = 100 # Last ID from the list above
-    for each in names:
-        id += 1
-        info = People.objects.create(
-            id = id,
-            title = each,
-        )
-        info.site.add(moc)
-
-    messages.success(request, "People were inserted")
-
     return render(request, "template/blank.html")
 
 def project_form(request):
@@ -1044,7 +1202,7 @@ def project_form(request):
     if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)
-            info.active = False
+            info.is_deleted = True
             info.save()
             info_id = info.id
             messages.success(request, "Information was saved.")
@@ -1221,17 +1379,21 @@ def dataimport(request):
                     info.save()
         elif request.GET["table"] == "referencespaces":
             ReferenceSpace.objects.all().delete()
+            checkward = Geocode.objects.filter(name="Wards")
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
-                    deleted = True if not row["active"] else False
-                    ReferenceSpace.objects.create(
-                        id = row["id"],
-                        name = row["name"],
-                        description = row["description"],
-                        slug = row["slug"],
-                        is_deleted = deleted,
-                    )
+                    if row["active"] == "t":
+                        deleted = True if row["active"] == "t" else False
+                        space = ReferenceSpace.objects.create(
+                            id = row["id"],
+                            name = row["name"],
+                            description = row["description"],
+                            slug = row["slug"],
+                            is_deleted = deleted,
+                        )
+                        if int(row["type_id"]) == 45 and checkward:
+                            space.geocodes.add(checkward[0])
         elif request.GET["table"] == "referencespacelocations":
             import sys
             csv.field_size_limit(sys.maxsize)
