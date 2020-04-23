@@ -348,7 +348,7 @@ def metabolism_manager_clusters(request, organization):
             belongs_to = Record.objects.get(pk=organization)
         )
     context = {
-        "tags": Tag.objects.filter(belongs_to=organization)
+        "tags": Tag.objects.filter(belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"])
     }
     return render(request, "metabolism_manager/admin/clusters.html", load_specific_design(context, PAGE_ID["platformu"]))
 

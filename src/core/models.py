@@ -84,6 +84,7 @@ class Organization(Record):
     twitter = models.CharField(max_length=255, null=True, blank=True)
     linkedin = models.CharField(max_length=255, null=True, blank=True)
     researchgate = models.CharField(max_length=255, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
     ORG_TYPE = (
         ("academic", "Research Institution"),
         ("universities", "Universities"),
