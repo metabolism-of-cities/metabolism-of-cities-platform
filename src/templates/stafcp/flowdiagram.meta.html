@@ -1,0 +1,18 @@
+{% extends "_base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+  <h1>Flow Diagram</h1>
+
+  <form method="post" class="form form-horizontal">
+
+    {% csrf_token %}
+    {% bootstrap_form form %}
+
+    {% buttons %}
+      <button type="submit" class="btn btn-success">Save</button>
+    {% endbuttons %}
+  </form>
+
+  <p><a href="{% url "stafcp_flowdiagrams" %}" class="btn btn-primary">Back to flow diagram list</a></p>
+{% endblock %}

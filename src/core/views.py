@@ -472,14 +472,73 @@ def stafcp_upload_gis_meta(request, id):
     }
     return render(request, "stafcp/upload/gis.meta.html", load_specific_design(context, PAGE_ID["stafcp"]))
 
-def stafcp_flowdiagram(request):
+def stafcp_flowdiagrams(request):
+    list = FlowDiagram.objects.all()
+    context = {
+        "list": list,
+    }
+    return render(request, "stafcp/flowdiagrams.html", load_specific_design(context, PAGE_ID["stafcp"]))
+
+def stafcp_flowdiagram(request, id):
     activities = Activity.objects.all()
     context = {
         "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
         "activities": activities,
         "load_select2": True,
+        "load_mermaid": True,
     }
     return render(request, "stafcp/flowdiagram.html", load_specific_design(context, PAGE_ID["stafcp"]))
+
+def stafcp_flowdiagram_form(request, id):
+    info = get_object_or_404(FlowDiagram, pk=id)
+    if request.method == "POST":
+        if "delete" in request.POST:
+            item = FlowBlocks.objects.filter(diagram=info, pk=request.POST["delete"])
+            if item:
+                item.delete()
+                messages.success(request, "This block was removed.")
+        else:
+            FlowBlocks.objects.create(
+                diagram = info,
+                origin_id = request.POST["from"],
+                destination_id = request.POST["to"],
+                description = request.POST["label"],
+            )
+            messages.success(request, "The information was saved.")
+    blocks = info.blocks.all()
+    activities = Activity.objects.all()
+    context = {
+        "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
+        "activities": activities,
+        "load_select2": True,
+        "load_mermaid": True,
+        "info": info,
+        "blocks": blocks,
+    }
+    return render(request, "stafcp/flowdiagram.form.html", load_specific_design(context, PAGE_ID["stafcp"]))
+
+def stafcp_flowdiagram_meta(request, id=None):
+    ModelForm = modelform_factory(FlowDiagram, fields=("name", "description"))
+    if id:
+        info = FlowDiagram.objects.get(pk=id)
+        form = ModelForm(request.POST or None, instance=info)
+    else:
+        info = None
+        form = ModelForm(request.POST or None)
+    if request.method == "POST":
+
+        if form.is_valid():
+            info = form.save()
+            messages.success(request, "The information was saved.")
+            return redirect(reverse("stafcp_flowdiagram_form", args=[info.id]))
+        else:
+            messages.error(request, "The form could not be saved, please review the errors below.")
+    context = {
+        "info": info,
+        "form": form,
+        "load_mermaid": True,
+    }
+    return render(request, "stafcp/flowdiagram.meta.html", load_specific_design(context, PAGE_ID["stafcp"]))
 
 def stafcp_geocodes(request):
     context = {

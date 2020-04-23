@@ -1,7 +1,6 @@
 from django.contrib.sites.models import Site
 
 from core.models import Article, Project
-#from datetime import datetime, timedelta, time
 from django.conf import settings
 
 def site(request):

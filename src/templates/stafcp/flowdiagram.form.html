@@ -8,8 +8,27 @@
 </style>
 {% endblock %}
 {% block content %}
+
+<h1>{{ info }}</h1>
+
 <div class="row">
-  <div class="col-lg-6">
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        Flow diagram
+      </div>
+      <div class="card-body mermaid">
+        graph TB
+          {% for each in blocks %}
+          block{{ each.origin.id }}[{{ each.origin.name|escapejs }}] --> block{{ each.destination.id }}[{{ each.destination.name|escapejs }}]
+          {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-12">
     <form method="post" class="form form-horizontal">
 
       <div class="form-group row">
@@ -48,24 +67,33 @@
       {% csrf_token %}
     </form>
   </div>
-
-  <div class="col-lg-6">
-    <div class="card">
-      <div class="card-header">
-        Example 1
-      </div>
-      <div class="card-body mermaid">
-        graph LR
-          A[Cape Town] --- B[Consumers]
-          A-->E[Farms]
-          E-->A
-          B-->C[Mines]
-          B-->D[Ocean]
-          C-->D
-          C-->E
-      </div>
-    </div>
-  </div>
-
 </div>
+
+<h2>List</h2>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Origin</th>
+      <th>Destination</th>
+      <th>Options</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for each in blocks %}
+    <tr>
+      <td>{{ each.origin }}</td>
+      <td>{{ each.destination }}</td>
+      <td>
+        <form method="post" class="form form-horizontal">
+          <button type="submit" class="btn btn-danger">Delete</button>
+          {% csrf_token %}
+          <input type="hidden" name="delete" value="{{ each.id }}" />
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
 {% endblock %}

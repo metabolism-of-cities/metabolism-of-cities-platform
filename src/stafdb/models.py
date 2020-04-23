@@ -87,12 +87,14 @@ class Activity(models.Model):
 class FlowDiagram(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
+    def get_absolute_url(self):
+        return reverse("stafcp_flowdiagram", args=[self.id])
     def __str__(self):
         return self.name
 
 # The 
 class FlowBlocks(models.Model):
-    diagram = models.ForeignKey(FlowDiagram, on_delete=models.CASCADE)
+    diagram = models.ForeignKey(FlowDiagram, on_delete=models.CASCADE, related_name="blocks")
     origin = models.ForeignKey(Activity, on_delete=models.CASCADE, related_name="blocks_from")
     destination = models.ForeignKey(Activity, on_delete=models.CASCADE, related_name="blocks_to")
     description = models.TextField(null=True, blank=True)
