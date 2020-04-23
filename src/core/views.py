@@ -62,7 +62,7 @@ USER_RELATIONSHIPS = {
 
 # This defines tags that are frequently used
 TAG_ID = {
-    "platformu_segments": Tag.objects.filter(name="PlatformU segments").values_list("id", flat=True)[0], # Let's replace this for the right number once things have settled down
+    "platformu_segments": Tag.objects.filter(name="PlatformU segments").values_list("id", flat=True)[0] if Tag.objects.filter(name="PlatformU segments").values_list("id", flat=True) else 1, # Let's replace this for the right number once things have settled down
 }
 # We use getHeader to obtain the header settings (type of header, title, subtitle, image)
 # This dictionary has to be created for many different pages so by simply calling this
