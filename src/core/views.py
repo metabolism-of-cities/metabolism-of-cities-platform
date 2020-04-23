@@ -1092,6 +1092,7 @@ def dataimport(request):
             # We will use non-used IDs for this or re-cycle non-used tags so that we know
             # which ID they will have
             website_tags = Tag.objects.create(name="Website-related tags")
+            badgets = Tag.objects.create(name="Badges", parent_tag=website_tags)
             tag = Tag.objects.get(pk=12)
             tag.name = "PlatformU segments"
             tag.parent_tag = website_tags
