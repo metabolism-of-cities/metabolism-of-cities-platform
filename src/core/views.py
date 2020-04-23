@@ -341,7 +341,14 @@ def metabolism_manager_admin(request):
     return render(request, "metabolism_manager/admin/index.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_clusters(request, organization):
+    if request.method == "POST":
+        Tag.objects.create(
+            name = request.POST["name"],
+            parent_tag = Tag.objects.get(pk=TAG_ID["platformu_segments"]),
+            belongs_to = Record.objects.get(pk=organization)
+        )
     context = {
+        "tags": Tag.objects.filter(belongs_to=organization)
     }
     return render(request, "metabolism_manager/admin/clusters.html", load_specific_design(context, PAGE_ID["platformu"]))
 
