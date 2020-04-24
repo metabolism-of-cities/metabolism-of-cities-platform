@@ -1,6 +1,17 @@
 {% extends "_base.html" %}
 
+{% block page_name %}platformu admin map{% endblock %}
 {% block title %}Metabolism Manager{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+
+  <!-- leaflet fullscreen plugin -- https://github.com/Leaflet/Leaflet.fullscreen -->
+  <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+{% endblock %}
 
 {% block content %}
 
@@ -10,6 +21,339 @@
   </ul>
   <h3>Map</h3>
 
-    
+  <div id="listings"></div>
+  <form class="row filters mb-2">
+    <div class="col-md-6 col-lg-3 mb-2">
+      <label class="sr-only" for="status">Status</label>
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text">Status</div>
+        </div>
+        <select class="custom-select status filter">
+          <option value="all" selected>Any</option>
+          <option value="Offered">Offered</option>
+          <option value="Requested">Requested</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-2">
+      <label class="sr-only" for="material">Material</label>
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text">Material</div>
+        </div>
+        <select class="custom-select material filter">
+          <option value="Glass" selected="selected">Glass</option>
+          <option value="Wood">Wood</option>
+          <option value="Steel">Steel</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-2">
+      <label class="sr-only" for="from">From</label>
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text">From</div>
+        </div>
+        <input type="date" class="form-control from filter" id="from">
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-2">
+      <label class="sr-only" for="until">Until</label>
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text">Until</div>
+        </div>
+        <input type="date" class="form-control until filter" id="until">
+      </div>
+    </div>
+  </form>
 
+  <section id="map" class="leaflet-map"></section>
+
+  <section id="listings" class="row"></section>
+
+{% endblock %}
+
+{% block footer %}
+  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+          integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+          crossorigin="">
+  </script>
+
+  <!-- leaflet fullscreen plugin -- https://github.com/Leaflet/Leaflet.fullscreen -->
+  <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
+
+  <script>
+    // create leaflet map -- https://leafletjs.com/reference-1.6.0.html
+    var map = L.map("map", {
+      center: [-33.9815, 18.5319],
+      zoom: 11,
+      minZoom: 2,
+      maxZoom: 18,
+      scrollWheelZoom: false,
+      fullscreenControl: true,
+    })
+
+    // add tile layer
+    var tileLayer = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+      attribution: "Map data &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='https://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>",
+      id: "mapbox/streets-v11",
+      accessToken: "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q",
+      tileSize: 512,
+      zoomOffset: -1,
+    })
+
+    tileLayer.addTo(map);
+
+    // enable popups so na user can click on an object on the map and see extra information
+    function onEachFeature(feature, layer) {
+      var popupContent = "<div class='popup-title'>" + feature.properties.name + "</div><div class='popup-content'><p>" + feature.properties.address + "</p><table class='table'><tbody><tr><td>Material</td><td>" + feature.properties.material + "</td><tr><td>Quantity</td><td>" + feature.properties.quantity + "</td><tr><td>Status</td><td>" + feature.properties.status + "</td></tr><tr><td>Date</td><td>" + feature.properties.date + "</td></tr></table></div>"
+
+      layer.bindPopup(popupContent);
+    }
+
+    // a list of all the offers and requests for materials
+    const allListings = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [18.46804, -33.93987]
+          },
+          "type": "Feature",
+          "properties": {
+            "name": "Some company",
+            "address": "26 Oxford Road, Observatory",
+            "material": "Steel",
+            "quantity": "1092 kg",
+            "status": "Offered",
+            "from": 43831,
+            "to": 44132,
+            "size": 10,
+          },
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [18.47456, -33.95374]
+          },
+          "type": "Feature",
+          "properties": {
+            "name": "Some company",
+            "address": "Arundel Court, Rosebank",
+            "material": "Wood",
+            "quantity": "20 kg",
+            "status": "Requested",
+            "from": 43831,
+            "to": 44132,
+            "size": 60,
+          },
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [18.4254, -33.9217]
+          },
+          "type": "Feature",
+          "properties": {
+            "name": "Some company",
+            "address": "Another address",
+            "material": "Glass",
+            "quantity": "some amount",
+            "status": "Requested",
+            "from": 43892,
+            "to": 44132,
+            "size": 10,
+          },
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [18.4137, -33.9232]
+          },
+          "type": "Feature",
+          "properties": {
+            "name": "Some company",
+            "address": "Another address",
+            "material": "Wood",
+            "quantity": "some amount",
+            "status": "Offered",
+            "from": 43831,
+            "to": 44132,
+            "size": 10,
+          },
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [18.3912, -33.9155]
+          },
+          "type": "Feature",
+          "properties": {
+            "name": "Some company",
+            "address": "Another address",
+            "material": "Glass",
+            "quantity": "some amount",
+            "status": "Offered",
+            "from": 43831,
+            "to": 44132,
+            "size": 30,
+          },
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [18.5297, -33.9441]
+          },
+          "type": "Feature",
+          "properties": {
+            "name": "Some company",
+            "address": "Another address",
+            "material": "Steel",
+            "quantity": "some amount",
+            "status": "Requested",
+            "from": 43862,
+            "to": 44132,
+            "size": 35,
+          },
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [18.5341, -33.9330]
+          },
+          "type": "Feature",
+          "properties": {
+            "name": "Some company",
+            "address": "Another address",
+            "material": "Steel",
+            "quantity": "some amount",
+            "status": "Requested",
+            "from": 43862,
+            "to": 44132,
+            "size": 14,
+          },
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [18.6084, -34.0444]
+          },
+          "type": "Feature",
+          "properties": {
+            "name": "Some company",
+            "address": "Another address",
+            "material": "Wood",
+            "quantity": "some amount",
+            "status": "Offered",
+            "from": 43862,
+            "to": 44132,
+            "size": 7,
+          },
+        },
+        {
+          "geometry": {
+            "type": "Point",
+            "coordinates": [18.5904, -34.0154]
+          },
+          "type": "Feature",
+          "properties": {
+            "name": "Some company",
+            "address": "Another address",
+            "material": "Wood",
+            "quantity": "some amount",
+            "status": "Offered",
+            "from": 43862,
+            "to": 44132,
+            "size": 12,
+          },
+        },
+
+      ]
+    };
+
+    // creating layer variable, useful so that we can check its existence and manipulate it later
+    var filteredLayer = false;
+
+    // function to show filtered items on the map
+    function filterListings() {
+      // if it exists, remove the layer currentl on the map
+      if (filteredLayer != false) {
+        filteredLayer.removeFrom(map)
+      }
+
+      // check what the user has selected in the dropdowns
+      var status = $("form select.status").val()
+      var material = $("form select.material").val()
+
+      // add all listings to the filter array
+      var filteredListings = $.extend(true, {}, allListings);
+
+      // inefficiently filtering one by one -- could/should be improved
+      // filter status
+      for (var i = filteredListings.features.length - 1; i >= 0; i--) {
+        if (status != "all") {
+          if (filteredListings.features[i].properties.status != status) {
+            filteredListings.features.splice(i, 1);
+          }
+        }
+      }
+
+      // filter material
+      for (var i = filteredListings.features.length - 1; i >= 0; i--) {
+        if (material != "all") {
+          if (filteredListings.features[i].properties.material != material) {
+            filteredListings.features.splice(i, 1);
+          }
+        }
+      }
+
+      //  take the listings and add them to the map
+      filteredLayer = L.geoJSON(filteredListings, {
+        // function to create the popup
+        onEachFeature: onEachFeature,
+
+        pointToLayer: function (feature, latlng) {
+          return L.circleMarker(latlng, {
+            fillOpacity: .7,
+            weight: 2,
+            radius: feature.properties.size,
+          });
+        },
+
+        style: function(feature) {
+          switch (feature.properties.status) {
+            case "Offered": return {
+              color: "#144d58",
+              fillColor: "#144d58",
+            };
+            case "Requested": return {
+              color: "#dc3545",
+              fillColor: "#dc3545",
+            };
+          }
+        }
+      });
+
+      filteredLayer.addTo(map);
+
+      // add listings to the card overview
+      $("section#listings").html("");
+
+      $(filteredListings.features).each(function() {
+        console.log(this)
+        $("section#listings").append("<div class='col-md-6 col-lg-4 mb-4'><div class='card'><div class='card-header'>" + this.properties.name + "</div><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + this.properties.address + "</li><li class='list-group-item'><i class='far fa-fw fa-flask mr-2'></i>" + this.properties.material + "</li><li class='list-group-item'><i class='far fa-fw fa-box mr-2'></i>" + this.properties.quantity + "</li><li class='list-group-item'><i class='far fa-fw fa-recycle mr-2'></i>" + this.properties.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + this.properties.to + " - " + this.properties.from + "</li><li class='list-group-item'><i class='far fa-fw fa-phone mr-2'></i><a href='tel:123 456 789'>123 456 789</a></li><li class='list-group-item'><i class='far fa-fw fa-at mr-2'></i><a href='mailto:email@example.com'>email@example.com</a></li></ul></div></div>")
+      })
+    }
+
+    // run filter whenever one of the filters changes
+    $(".filter").change(function() {
+      filterListings()
+    })
+
+    // reset filters and show listings on load
+    filterListings();
+  </script>
 {% endblock %}

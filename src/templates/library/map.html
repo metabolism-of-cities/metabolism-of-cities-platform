@@ -7,14 +7,12 @@
         crossorigin=""/>
 
   <!-- leaflet marker cluster plugin -- https://github.com/Leaflet/Leaflet.markercluster  -->
-
 {% endblock %}
 
 {% block content %}
   <h1>{{ article.title }}</h1>
   {{ article.content|safe }}
 
-  <div class=""></div>
   <div id="map" class="leaflet-map"></div>
 
 {% endblock %}

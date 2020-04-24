@@ -854,6 +854,54 @@ a.badge-secondary:focus {
   height: 100%;
   min-height: 300px;
   width: 100%;
+
+  .leaflet-popup {
+    a.leaflet-popup-close-button {
+      color: $light;
+
+      &:hover {
+        color: $very-light;
+      }
+    }
+  }
+
+  .leaflet-popup-content-wrapper {
+    border-radius: .25rem;
+    box-shadow: $basic-shadow;
+    padding: 0;
+    font-size: 1rem;
+    font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+  }
+
+  .leaflet-popup-content,
+  .leaflet-popup-content p {
+    margin: 0;
+  }
+
+  .leaflet-popup-content p {
+    padding: .75rem;
+  }
+
+  .popup-title {
+    font-weight: bold;
+    background-color: $primary;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+    color: $very-light;
+    padding: .75rem;
+
+    > * {
+      margin-bottom: 0;
+    }
+  }
+
+  .leaflet-popup table {
+    margin-bottom: 0;
+
+    th {
+      background-color: $light;
+    }
+  }
 }
 
 // DATATABLE | the DataTables CSS file is loaded after this file, so this section requires some !important tags
@@ -1238,7 +1286,6 @@ body.forum.list {
     margin-bottom: 0;
   }
 
-
   .no-results {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
@@ -1266,7 +1313,6 @@ body.forum.topic {
 
 // DATASET PAGE
 body.dataset {
-
   .main-content img {
     width: 100%;
     box-shadow: $basic-shadow;
@@ -1549,54 +1595,6 @@ body.full.map {
     }
   }
 
-  .leaflet-popup {
-    a.leaflet-popup-close-button {
-      color: $light;
-
-      &:hover {
-        color: $very-light;
-      }
-    }
-  }
-
-  .leaflet-popup-content-wrapper {
-    border-radius: .25rem;
-    box-shadow: $basic-shadow;
-    padding: 0;
-    font-size: 1rem;
-    font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
-  }
-
-  .leaflet-popup-content,
-  .leaflet-popup-content p {
-    margin: 0;
-  }
-
-  .leaflet-popup-content p {
-    padding: .75rem;
-  }
-
-  .popup-title {
-    font-weight: bold;
-    background-color: $primary;
-    border-top-left-radius: .25rem;
-    border-top-right-radius: .25rem;
-    color: $very-light;
-    padding: .75rem;
-
-    > * {
-      margin-bottom: 0;
-    }
-  }
-
-  .leaflet-popup table {
-    margin-bottom: 0;
-
-    th {
-      background-color: $light;
-    }
-  }
-
   // for very large screens, set a max width of the map control buttons
   @media (min-width: 1200px) {
     #map-control {
@@ -1613,6 +1611,18 @@ body.full.map {
 }
 
 // PLATFORM U
+
+// ADMIN MAP
+body.platformu.admin.map {
+  #map {
+    height: 600px;
+    max-height: 100vh;
+  }
+
+  table {
+    margin-bottom: 0;
+  }
+}
 
 // ENITITY DETAILS PAGE
 body.entity.details {
