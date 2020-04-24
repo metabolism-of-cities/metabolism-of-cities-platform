@@ -1184,7 +1184,10 @@ def dataimport(request):
                         deleted = True if not row["active"] else False
                         start = row["start"] if row["start"] else None
                         end = row["end"] if row["end"] else None
-                        if row["geojson"]:
+                        if row["geojson"] and  int(row["id"]) == 73:
+                            import json 
+                            get_coordinate = json.loads(row["geojson"])
+                            print(get_coordinate["geometries"][0]["coordinates"][0][0][0])
                             geometry = Point(12.4604, 43.9420)
                         elif lat and lng:
                             geometry = Point(lng, lat)
@@ -1197,6 +1200,8 @@ def dataimport(request):
                             is_deleted = deleted,
                             geometry = geometry,
                         )
+                    if int(row["id"]) == 74:
+                        break
         if error:
             messages.error(request, "We could not import your data")
         else:
