@@ -129,8 +129,8 @@
             "material": "Steel",
             "quantity": "1092 kg",
             "status": "Offered",
-            "from": 43831,
-            "to": 44132,
+            "from": 1583020800,
+            "to": 1585958400,
             "size": 10,
           },
         },
@@ -146,8 +146,8 @@
             "material": "Wood",
             "quantity": "20 kg",
             "status": "Requested",
-            "from": 43831,
-            "to": 44132,
+            "from": 1583020800,
+            "to": 1585958400,
             "size": 60,
           },
         },
@@ -163,8 +163,8 @@
             "material": "Glass",
             "quantity": "some amount",
             "status": "Requested",
-            "from": 43892,
-            "to": 44132,
+            "from": 1583020800,
+            "to": 1586217600,
             "size": 10,
           },
         },
@@ -180,8 +180,8 @@
             "material": "Wood",
             "quantity": "some amount",
             "status": "Offered",
-            "from": 43831,
-            "to": 44132,
+            "from": 1584316800,
+            "to": 1585958400,
             "size": 10,
           },
         },
@@ -197,8 +197,8 @@
             "material": "Glass",
             "quantity": "some amount",
             "status": "Offered",
-            "from": 43831,
-            "to": 44132,
+            "from": 1584316800,
+            "to": 1586649600,
             "size": 30,
           },
         },
@@ -214,8 +214,8 @@
             "material": "Steel",
             "quantity": "some amount",
             "status": "Requested",
-            "from": 43862,
-            "to": 44132,
+            "from": 1584316800,
+            "to": 1586649600,
             "size": 35,
           },
         },
@@ -231,8 +231,8 @@
             "material": "Steel",
             "quantity": "some amount",
             "status": "Requested",
-            "from": 43862,
-            "to": 44132,
+            "from": 1585267200,
+            "to": 1585958400,
             "size": 14,
           },
         },
@@ -248,8 +248,8 @@
             "material": "Wood",
             "quantity": "some amount",
             "status": "Offered",
-            "from": 43862,
-            "to": 44132,
+            "from": 1585267200,
+            "to": 1586217600,
             "size": 7,
           },
         },
@@ -265,8 +265,8 @@
             "material": "Wood",
             "quantity": "some amount",
             "status": "Offered",
-            "from": 43862,
-            "to": 44132,
+            "from": 1585267200,
+            "to": 1586217600,
             "size": 12,
           },
         },
@@ -288,6 +288,17 @@
       var status = $("form select.status").val()
       var material = $("form select.material").val()
 
+      var from = $("form #from").val()
+          if (from != "") {
+            from = new Date(from).getTime();
+            from = from / 1000;
+          }
+      var to = $("form #to").val()
+          if (to != "") {
+            to = new Date(to).getTime();
+            to = to / 1000;
+          }
+
       // add all listings to the filter array
       var filteredListings = $.extend(true, {}, allListings);
 
@@ -305,6 +316,24 @@
       for (var i = filteredListings.features.length - 1; i >= 0; i--) {
         if (material != "all") {
           if (filteredListings.features[i].properties.material != material) {
+            filteredListings.features.splice(i, 1);
+          }
+        }
+      }
+
+      // filter start date
+      for (var i = filteredListings.features.length - 1; i >= 0; i--) {
+        if (from != "") {
+          if (filteredListings.features[i].properties.from < from) {
+            filteredListings.features.splice(i, 1);
+          }
+        }
+      }
+
+      // filter end date
+      for (var i = filteredListings.features.length - 1; i >= 0; i--) {
+        if (to != "") {
+          if (filteredListings.features[i].properties.to > to) {
             filteredListings.features.splice(i, 1);
           }
         }
@@ -342,9 +371,17 @@
       // add listings to the card overview
       $("section#listings").html("");
 
+      // date options
+      const dateOptions = {year: 'numeric', month: 'long', day: 'numeric'};
+
       $(filteredListings.features).each(function() {
-        console.log(this)
-        $("section#listings").append("<div class='col-md-6 col-lg-4 mb-4'><div class='card'><div class='card-header'>" + this.properties.name + "</div><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + this.properties.address + "</li><li class='list-group-item'><i class='far fa-fw fa-flask mr-2'></i>" + this.properties.material + "</li><li class='list-group-item'><i class='far fa-fw fa-box mr-2'></i>" + this.properties.quantity + "</li><li class='list-group-item'><i class='far fa-fw fa-recycle mr-2'></i>" + this.properties.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + this.properties.to + " - " + this.properties.from + "</li><li class='list-group-item'><i class='far fa-fw fa-phone mr-2'></i><a href='tel:123 456 789'>123 456 789</a></li><li class='list-group-item'><i class='far fa-fw fa-at mr-2'></i><a href='mailto:email@example.com'>email@example.com</a></li></ul></div></div>")
+        var uglyFrom = new Date(this.properties.from * 1000);
+        var prettyFrom = uglyFrom.toLocaleDateString('en-GB', dateOptions);
+
+        var uglyTo = new Date(this.properties.to * 1000);
+        var prettyTo = uglyTo.toLocaleDateString('en-GB', dateOptions);
+
+        $("section#listings").append("<div class='col-md-6 col-lg-4 mb-4'><div class='card'><div class='card-header'>" + this.properties.name + "</div><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + this.properties.address + "</li><li class='list-group-item'><i class='far fa-fw fa-flask mr-2'></i>" + this.properties.material + "</li><li class='list-group-item'><i class='far fa-fw fa-box mr-2'></i>" + this.properties.quantity + "</li><li class='list-group-item'><i class='far fa-fw fa-recycle mr-2'></i>" + this.properties.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item'><i class='far fa-fw fa-phone mr-2'></i><a href='tel:123 456 789'>123 456 789</a></li><li class='list-group-item'><i class='far fa-fw fa-at mr-2'></i><a href='mailto:email@example.com'>email@example.com</a></li></ul></div></div>")
       })
     }
 
