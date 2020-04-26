@@ -683,8 +683,8 @@ def library_journals(request, article):
     }
     return render(request, "library/journals.html", load_specific_design(context, PAGE_ID["library"]))
 
-def library_journal(request, id):
-    info = get_object_or_404(Journal, pk=id)
+def library_journal(request, slug):
+    info = get_object_or_404(Journal, slug=slug)
     context = {
         "info": info,
     }
@@ -1363,15 +1363,55 @@ def dataimport(request):
             # Once we import the publishers we will then do the journals. 
             # Best done in one go because we need publisher IDs
             file = settings.MEDIA_ROOT + "/import/journals.csv"
+            from django.template.defaultfilters import slugify
+            journal_ids = {}
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
-                    Journal.objects.create(
-                        title = row["name"],
-                        url = row["website"],
-                        content = row["description"],
-                        image = row["image"],
-                        publisher_id = old_ids[row["publisher_id"]] if row["publisher_id"] else None,
+                    if row["name"]:
+                        info = Journal.objects.create(
+                            title = row["name"],
+                            slug = slugify(row["name"]),
+                            url = row["website"],
+                            content = row["description"],
+                            image = row["image"],
+                            publisher_id = old_ids[row["publisher_id"]] if row["publisher_id"] else None,
+                        )
+                    journal_ids[row["id"]] = info.id
+            file = settings.MEDIA_ROOT + "/import/publications.csv"
+            LibraryItem.objects.all().delete()
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    info = LibraryItem.objects.create(
+                        title = row["title"],
+                        language = row["language"],
+                        title_original_language = row["title_original_language"],
+                        type_id = row["type_id"],
+                        published_in_id = journal_ids[row["journal_id"]] if row["journal_id"] in journal_ids else None,
+                        year = row["year"],
+                        content = row["abstract"],
+                        abstract_original_language = row["abstract_original_language"],
+                        date_added = row["date_added"],
+                        file = row["file"],
+                        open_access = row["open_access"],
+                        url = row["url"],
+                        doi = row["doi"],
+                        isbn = row["isbn"],
+                        comments = row["comments"],
+                        status = row["status"],
+                    )
+
+        elif request.GET["table"] == "librarytypes":
+            LibraryItemType.objects.all().delete()
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    info = LibraryItemType.objects.create(
+                        id = row["id"],
+                        name = row["name"],
+                        icon = row["icon"],
+                        group = row["group"],
                     )
         elif request.GET["table"] == "people":
             People.objects.all().delete()

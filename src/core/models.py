@@ -243,11 +243,84 @@ class ForumMessage(Record):
 class Journal(Record):
     url = models.URLField(max_length=255, null=True, blank=True)
     publisher = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True, blank=True)
+    slug = models.SlugField(db_index=True, max_length=255, null=True, blank=True)
     def get_absolute_url(self):
-        return reverse("library_journal", args=[self.id])
+        return reverse("library_journal", args=[self.slug])
 
     def __str__(self):
         return self.title
+
+class LibraryItemType(models.Model):
+    name = models.CharField(max_length=255)
+    icon = models.CharField(max_length=255, null=True, blank=True)
+    GROUP = (
+        ("academic", "Academic"),
+        ("theses", "Theses"),
+        ("reports", "Reports"),
+        ("multimedia", "Multimedia"),
+    )
+    group = models.CharField(max_length=20, choices=GROUP, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+    class Meta:
+        ordering = ["name"]
+
+class LibraryItem(Record):
+    LANGUAGES = (
+        ("EN", "English"),
+        ("ES", "Spanish"),
+        ("CH", "Chinese"),
+        ("FR", "French"),
+        ("GE", "German"),
+        ("NL", "Dutch"),
+        ("OT", "Other"),
+    )
+    language = models.CharField(max_length=2, choices=LANGUAGES)
+    title_original_language = models.CharField(max_length=255, blank=True, null=True)
+    authorlist = models.TextField()
+    type = models.ForeignKey(LibraryItemType, on_delete=models.CASCADE)
+    published_in = models.ForeignKey(Journal, on_delete=models.CASCADE, null=True, blank=True, help_text="If the journal does not appear in the list, please leave empty and add the name in the comments")
+    year = models.PositiveSmallIntegerField()
+    abstract_original_language = models.TextField(null=True, blank=True)
+    date_added = models.DateTimeField(null=True, blank=True, auto_now_add=True)
+    file = models.FileField(null=True, blank=True, upload_to="references", help_text="Only upload the file if you are the creator or you have permission to do so")
+    open_access = models.NullBooleanField(null=True, blank=True)
+    url = models.CharField(max_length=500, null=True, blank=True)
+    doi = models.CharField(max_length=255, null=True, blank=True)
+    isbn = models.CharField(max_length=255, null=True, blank=True)
+    comments = models.TextField(null=True, blank=True)
+    STATUS = (
+        ("pending", "Pending"),
+        ("active", "Active"),
+        ("deleted", "Deleted"),
+    )
+    status = models.CharField(max_length=8, choices=STATUS, db_index=True)
+    #authors = models.ManyToManyField(People, through="ReferenceAuthors")
+    #organizations = models.ManyToManyField(Organization, through="ReferenceOrganization")
+    #tags = models.ManyToManyField(Tag, blank=True, limit_choices_to={"hidden": False})
+    #processes = models.ManyToManyField("staf.Process", blank=True, limit_choices_to={"slug__isnull": False})
+    #materials = models.ManyToManyField("staf.Material", blank=True)
+    #spaces = models.ManyToManyField(ReferenceSpace, blank=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ["-year", "title"]
+
+    def source(self):
+        "Return details of where this reference was published at/in"
+        if self.journal:
+            return self.journal.name
+        elif self.event:
+            return self.event.name
+        else:
+            return self.type.name
+
+    def accountingMethods(self):
+        return self.tags.filter(is_accounting_method=True, hidden=False)
+
 
 #MOOC's
 class MOOC(models.Model):
