@@ -1,0 +1,54 @@
+{% if show_quantity %}
+  <div class="alert alert-info">
+    {{ references.count }} record(s) found.   
+  </div>
+{% endif %}
+
+{% if reference_types and reference_types.count > 1 %}
+  <p class="filter">
+  <i class="pli-filter-2"></i>
+    Filter by type:
+    {% for type in reference_types %}
+    <a href="#" data-type="{{ type.type__name|slugify }}" class="btn btn-default">
+      {{ type.type__name }}
+    </a>
+  {% endfor %}
+
+<script type="text/javascript">
+$(function(){
+  $(".filter a").click(function(e){
+    e.preventDefault();
+    $(".filter a").removeClass("btn-success");
+    $(this).addClass("btn-success");
+    var type = $(this).data("type");
+    $(".resourcelist a").hide();
+    $(".resourcelist a."+type).show('fast');
+  });
+});
+</script>
+
+{% endif %}
+
+<div class="resourcelist">
+  {% for details in references %}
+    <a class="single-resource bg-gray-light {{ details.type.name|slugify }}" href="{% url 'core:reference' details.id %}">
+      <div class="row pad-all">
+        <div class="col-lg-9">
+          <h3 class="title">{{ details.title }}</h3>
+          {% if details.authors.all %}
+            {% for author in details.authors.all %}
+              <span class="author">{{ author.firstname }} {{ author.lastname }}</span>{% if not forloop.counter == details.authors.all|length %},{% endif %}
+            {% endfor %}
+          {% else %}
+            {{ details.authorlist }}
+          {% endif %}
+        </div>
+        <div class="col-lg-3">
+          {% if details.journal.name %}<div class="journal-name">{{ details.journal.name }}</div>{% endif %}
+          {% if details.type %}<div class="type">{{ details.type }}</div>{% endif %}
+          {% if details.year %}<div class="year">{{ details.year }}</div>{% endif %}
+        </div>
+      </div>
+    </a>
+  {% endfor %}
+</div>

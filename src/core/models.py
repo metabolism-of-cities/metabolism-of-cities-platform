@@ -117,6 +117,7 @@ class UserRelationship(models.Model):
 
 # This defines a particular relationship between two records.
 # For instance: Record 100 (company AA) has the relationship "Funder" of Record 104 (Project BB)
+# It will always be in the form of RECORD is RELATIONSHIP of RECORD_SECONDARY (member/publisher/funder)
 class RecordRelationship(models.Model):
     record = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="record")
     record_secondary = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="record_secondary")
@@ -237,6 +238,16 @@ class ForumMessage(Record):
 
     def get_absolute_url(self):
         return reverse("forum_topic", args=[self.id])
+
+# Library items
+class Journal(Record):
+    url = models.URLField(max_length=255, null=True, blank=True)
+    publisher = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True, blank=True)
+    def get_absolute_url(self):
+        return reverse("library_journal", args=[self.id])
+
+    def __str__(self):
+        return self.title
 
 #MOOC's
 class MOOC(models.Model):

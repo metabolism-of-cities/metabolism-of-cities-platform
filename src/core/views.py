@@ -676,10 +676,19 @@ def library_casestudies(request, slug=None):
 
 def library_journals(request, article):
     info = get_object_or_404(Article, pk=article)
+    list = Journal.objects.all()
     context = {
         "article": info,
+        "list": list,
     }
     return render(request, "library/journals.html", load_specific_design(context, PAGE_ID["library"]))
+
+def library_journal(request, id):
+    info = get_object_or_404(Journal, pk=id)
+    context = {
+        "info": info,
+    }
+    return render(request, "library/journal.html", load_specific_design(context, PAGE_ID["library"]))
 
 def library_map(request, article):
     info = get_object_or_404(Article, pk=article)
@@ -1005,6 +1014,7 @@ def load_baseline(request):
     relationships = [
         {
             "id": 1, "title": "Member", "description": "This user is a member of a group or organisation -- and will have the same permissions or access as the organisation itself",
+            "id": 2, "title": "Publisher", "description": "For an article/paper to be published in a journal or magazine, or a publisher to publish a book",
         }
     ]
 
@@ -1338,6 +1348,31 @@ def dataimport(request):
                         info = Organization.objects.get(title=row["name"])
                         info.parent_id = old_ids[row["parent_id"]]
                         info.save()
+        elif request.GET["table"] == "publishers":
+            Organization.objects.filter(type="publisher").delete()
+            Journal.objects.all().delete()
+            old_ids = {}
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    info = Organization.objects.create(
+                        title = row["name"],
+                        type = "publisher",
+                    )
+                    old_ids[row["id"]] = info.id
+            # Once we import the publishers we will then do the journals. 
+            # Best done in one go because we need publisher IDs
+            file = settings.MEDIA_ROOT + "/import/journals.csv"
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    Journal.objects.create(
+                        title = row["name"],
+                        url = row["website"],
+                        content = row["description"],
+                        image = row["image"],
+                        publisher_id = old_ids[row["publisher_id"]] if row["publisher_id"] else None,
+                    )
         elif request.GET["table"] == "people":
             People.objects.all().delete()
             with open(file, "r") as csvfile:

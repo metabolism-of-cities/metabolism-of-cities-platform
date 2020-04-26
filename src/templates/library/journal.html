@@ -1,0 +1,35 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+{% if info.image %}
+<p class="text-center">
+  <img src="{{ info.image.url }}" alt="" class="thumbnail" />
+</p>
+{% endif %}
+
+<dl>
+  {% if info.publisher %}
+    <dt>Publisher</dt>
+    <dd>{{ info.publisher }}</dd>
+  {% endif %}
+
+  {% if info.url %}
+    <dt>More information</dt>
+    <dd><a href="{{ info.url }}">Visit website</a></dd>
+  {% endif %}
+</dl>
+
+<h3>{{ info.title }}</h3>
+
+{% if info.content %}
+  <p class="description">
+    {{ info.content|linebreaksbr }}
+  </p>
+{% endif %}
+
+
+<h3>Publications</h3>
+{% include "_references.list.html" %}
+
+{% endblock %}

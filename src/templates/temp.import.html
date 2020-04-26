@@ -12,6 +12,7 @@
     <li><a href="/dataimport/?table=people">People</a></li>
     <li><a href="/dataimport/?table=referencespaces">Reference Spaces</a></li>
     <li><a href="/dataimport/?table=referencespacelocations">Reference Space Locations</a></li>
+    <li><a href="/dataimport/?table=publishers">Publishers and journals</a></li>
   </ul>
 
   <hr>
@@ -25,6 +26,8 @@ ssh -t industrialecology 'csvdump "SELECT * FROM core_organization ORDER BY id" 
 ssh -t industrialecology 'csvdump "SELECT * FROM core_people ORDER BY id" people.csv'
 ssh -t industrialecology 'csvdump "SELECT * FROM multiplicity_referencespace ORDER BY id" referencespaces.csv'
 ssh -t industrialecology 'csvdump "SELECT * FROM multiplicity_referencespacelocation ORDER BY id" referencespacelocations.csv'
+ssh -t industrialecology 'csvdump "SELECT * FROM core_publisher ORDER BY id" publishers.csv'
+ssh -t industrialecology 'csvdump "SELECT * FROM core_journal ORDER BY id" journals.csv'
   </pre>
 
 {% endblock %}
