@@ -23,29 +23,6 @@
     <li><a href="/dataimport/">Data import</a></li>
   </ul>
 
-  <div class="alert alert-warning">
-    <strong>Note!</strong>
-    If you want to record new entries in the database, then you may need to run this command:
-    <pre>
-    SELECT setval('core_tag_id_seq', (SELECT MAX(id) FROM core_tag)+1);
-    SELECT setval('core_record_id_seq', (SELECT MAX(id) FROM core_record)+1);
-    SELECT setval('stafdb_activity_id_seq', (SELECT MAX(id) FROM stafdb_activity)+1);
-    </pre>
-    Please run this from <a href="http://localhost:8080/?pgsql=db&username=postgres&db=moc&ns=public&sql=%20%20%20%20SELECT%20setval(%27core_tag_id_seq%27%2C%20(SELECT%20MAX(id)%20FROM%20core_tag)%2B1)%3B%0A%20%20%20%20SELECT%20setval(%27core_record_id_seq%27%2C%20(SELECT%20MAX(id)%20FROM%20core_record)%2B1)%3B%0A%20%20%20%20SELECT%20setval(%27stafdb_activity_id_seq%27%2C%20(SELECT%20MAX(id)%20FROM%20stafdb_activity)%2B1)%3B%0A">here</a>
-    (pwd = postgres)
-  </div>
-
-  <div class="alert alert-warning">
-    <strong>Note!</strong>
-    If after March 27 you find an issue when trying to migrate, please run this:
-    <pre>
-DROP SCHEMA public CASCADE;
-CREATE SCHEMA public;
-    </pre>
-    Please run this from <a href="http://localhost:8080/?pgsql=db&username=postgres&db=moc&ns=public&sql=DROP%20SCHEMA%20public%20CASCADE%3B%0ACREATE%20SCHEMA%20public%3B%0A">here</a>
-    (pwd = postgres)
-  </div>
-
 {% endblock %}
 
 

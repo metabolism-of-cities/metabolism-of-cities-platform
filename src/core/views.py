@@ -1193,6 +1193,11 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
             logo = each["logo"],
         )
 
+    from django.db import migrations
+    migrations.RunSQL("SELECT setval('core_tag_id_seq', (SELECT MAX(id) FROM core_tag)+1);")
+    migrations.RunSQL("SELECT setval('core_record_id_seq', (SELECT MAX(id) FROM core_record)+1);")
+    migrations.RunSQL("SELECT setval('stafdb_activity_id_seq', (SELECT MAX(id) FROM stafdb_activity)+1);")
+
     return render(request, "template/blank.html")
 
 def project_form(request):
