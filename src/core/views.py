@@ -66,7 +66,7 @@ USER_RELATIONSHIPS = {
 
 # This defines tags that are frequently used
 TAG_ID = {
-    "platformu_segments": Tag.objects.filter(name="PlatformU segments").values_list("id", flat=True)[0] if Tag.objects.filter(name="PlatformU segments").values_list("id", flat=True) else 1, # Let's replace this for the right number once things have settled down
+    "platformu_segments": 747,
 }
 # We use getHeader to obtain the header settings (type of header, title, subtitle, image)
 # This dictionary has to be created for many different pages so by simply calling this
@@ -938,7 +938,7 @@ def load_baseline(request):
     group_staf_data.permissions.add(*stafdb_permissions)
     messages.success(request, "Groups were created")
 
-    Record.objects.all().delete()
+    Article.objects.all().delete()
     articles = [
         { "id": 1, "title": "Urban metabolism", "parent": None, "slug": "/urbanmetabolism/", "position": 1 },
         { "id": 2, "title": "Urban metabolism introduction", "parent": 1, "slug": "/urbanmetabolism/introduction/", "position": 1 },
@@ -1018,6 +1018,7 @@ def load_baseline(request):
             position = each["position"],
             content = content,
         )
+    Project.objects.filter(is_internal=True).delete()
     for each in projects:
         content = each["content"] if "content" in each else None
         image = each["image"] if "image" in each else None
@@ -1069,6 +1070,11 @@ def load_baseline(request):
 
     GeocodeScheme.objects.all().delete()
     list = [
+        {
+            "name": "System Types",
+            "icon": "fal fa-fw fa-layer-group",
+            "items": ["Company", "Island", "Rural", "Urban", "Household"],
+        },
         {
             "name": "UN Statistics Division Groupings",
             "icon": "fal fa-fw fa-universal-access",
@@ -1217,6 +1223,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
         },
     ]
 
+    ArticleDesign.objects.all().delete()
     for each in designs:
         ArticleDesign.objects.create(
             article_id = each["article"],
@@ -1290,18 +1297,11 @@ def dataimport(request):
                         info = Tag.objects.get(pk=row["id"])
                         info.parent_tag_id = row["parent_tag_id"]
                         info.save()
+            from django.db import migrations
+            migrations.RunSQL("SELECT setval('core_tag_id_seq', (SELECT MAX(id) FROM core_tag)+1);")
             # We also need to add some additional tags that are required for the new site
             # We will use non-used IDs for this or re-cycle non-used tags so that we know
             # which ID they will have
-            from django.db import migrations
-            migrations.RunSQL("SELECT setval('core_tag_id_seq', (SELECT MAX(id) FROM core_tag)+1);")
-            website_tags = Tag.objects.create(name="Website-related tags")
-            badgets = Tag.objects.create(name="Badges", parent_tag=website_tags)
-            tag = Tag.objects.get(pk=12)
-            tag.name = "PlatformU segments"
-            tag.parent_tag = website_tags
-            tag.hidden = False
-            tag.save()
         elif request.GET["table"] == "activities":
             ActivityCatalog.objects.all().delete()
             nace = ActivityCatalog.objects.create(name="Statistical Classification of Economic Activities in the European Community, Rev. 2 (2008)", url="https://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=LST_NOM_DTL&StrNom=NACE_REV2&StrLanguageCode=EN&IntPcKey=&StrLayoutCode=HIERARCHIC")
@@ -1461,6 +1461,26 @@ def dataimport(request):
                         item = LibraryItem.objects.get(old_id=row["reference_id"])
                         items[row["reference_id"]] = item
                     item.tags.add(tag)
+        elif request.GET["table"] == "libraryspaces":
+            list = LibraryItem.objects.all()
+            for each in list:
+                each.spaces.clear()
+            spaces = {}
+            items = {}
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    if row["space_id"] in spaces:
+                        space = spaces[row["space_id"]]
+                    else:
+                        space = ReferenceSpace.objects.get(pk=row["space_id"])
+                        spaces[row["space_id"]] = space
+                    if row["reference_id"] in items:
+                        item = items[row["reference_id"]]
+                    else:
+                        item = LibraryItem.objects.get(old_id=row["reference_id"])
+                        items[row["reference_id"]] = item
+                    item.spaces.add(space)
         elif request.GET["table"] == "people":
             People.objects.all().delete()
             with open(file, "r") as csvfile:
@@ -1512,7 +1532,7 @@ def dataimport(request):
                 contents = csv.DictReader(csvfile)
                 for row in contents:
                     if row["active"] == "t":
-                        deleted = True if row["active"] == "t" else False
+                        deleted = False if row["active"] == "t" else True
                         space = ReferenceSpace.objects.create(
                             id = row["id"],
                             name = row["name"],
