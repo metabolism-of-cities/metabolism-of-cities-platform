@@ -67,6 +67,8 @@ USER_RELATIONSHIPS = {
 # This defines tags that are frequently used
 TAG_ID = {
     "platformu_segments": 747,
+    "case_study": 1,
+    "urban": 11,
 }
 # We use getHeader to obtain the header settings (type of header, title, subtitle, image)
 # This dictionary has to be created for many different pages so by simply calling this
@@ -714,8 +716,12 @@ def library_item(request, id):
 
 def library_map(request, article):
     info = get_object_or_404(Article, pk=article)
+    items = LibraryItem.objects.filter(status="active", tags__id=TAG_ID["case_study"])
+    if request.site.id == 1:
+        items = items.filter(tags__id=TAG_ID["urban"])
     context = {
         "article": info,
+        "items": items,
     }
     return render(request, "library/map.html", load_specific_design(context, PAGE_ID["library"]))
 
@@ -1470,11 +1476,11 @@ def dataimport(request):
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
-                    if row["space_id"] in spaces:
-                        space = spaces[row["space_id"]]
+                    if row["referencespace_id"] in spaces:
+                        space = spaces[row["referencespace_id"]]
                     else:
-                        space = ReferenceSpace.objects.get(pk=row["space_id"])
-                        spaces[row["space_id"]] = space
+                        space = ReferenceSpace.objects.get(pk=row["referencespace_id"])
+                        spaces[row["referencespace_id"]] = space
                     if row["reference_id"] in items:
                         item = items[row["reference_id"]]
                     else:
@@ -1575,7 +1581,7 @@ def dataimport(request):
                         elif lat and lng:
                             geometry = Point(lng, lat)
                         try:
-                            ReferenceSpaceLocation.objects.create(
+                            location = ReferenceSpaceLocation.objects.create(
                                 id = row["id"],
                                 space_id = row["space_id"],
                                 description = row["description"],
@@ -1584,8 +1590,11 @@ def dataimport(request):
                                 is_deleted = deleted,
                                 geometry = geometry,
                             )
-                        except:
-                            print("Space not found!")
+                            space = ReferenceSpace.objects.get(pk=row["space_id"])
+                            space.location = location
+                            space.save()
+                        except Exception as e:
+                            print(e)
                             print(row["space_id"])
         if error:
             messages.error(request, "We could not import your data")

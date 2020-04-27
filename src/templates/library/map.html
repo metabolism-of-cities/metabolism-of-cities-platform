@@ -7,6 +7,7 @@
         crossorigin=""/>
 
   <!-- leaflet marker cluster plugin -- https://github.com/Leaflet/Leaflet.markercluster  -->
+
 {% endblock %}
 
 {% block content %}
@@ -14,6 +15,19 @@
   {{ article.content|safe }}
 
   <div id="map" class="leaflet-map"></div>
+
+  <h2>Records</h2>
+  {% for each in items %}
+    <h3><a href="{{ each.get_absolute_url }}">{{ each }}</a></h3>
+    <ul>
+    {% for space in each.spaces.all %}
+      {% if space.is_city and space.location.geometry %}
+        <li>{{ space }}: {{ space.location.geometry.centroid.0 }}, {{ space.location.geometry.centroid.1 }}</li>
+      {% endif %}
+    {% endfor %}
+    </ul>
+    
+  {% endfor %}
 
 {% endblock %}
 
