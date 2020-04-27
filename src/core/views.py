@@ -42,6 +42,10 @@ from weasyprint.fonts import FontConfiguration
 from datetime import datetime
 import csv
 
+from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
+from django.contrib.admin.utils import construct_change_message
+from django.contrib.contenttypes.models import ContentType
+
 # This array defines all the IDs in the database of the articles that are loaded for the
 # various pages in the menu. Here we can differentiate between the different sites.
 
@@ -595,13 +599,23 @@ def stafcp_geocode_form(request, id=None):
     if id:
         info = GeocodeScheme.objects.get(pk=id)
         form = ModelForm(request.POST or None, instance=info)
+        add = False
     else:
         info = None
         form = ModelForm(request.POST or None)
+        add = True
     if request.method == "POST":
-
         if form.is_valid():
             info = form.save()
+            change_message = construct_change_message(form, None, add)
+            LogEntry.objects.log_action(
+                user_id=request.user.id,
+                content_type_id=ContentType.objects.get_for_model(GeocodeScheme).pk,
+                object_id=info.id,
+                object_repr=info.name,
+                action_flag=CHANGE if not add else ADDITION,
+                change_message=change_message,
+            )
             geocodes = zip(
                 request.POST.getlist("geocode_level"),
                 request.POST.getlist("geocode_name"),

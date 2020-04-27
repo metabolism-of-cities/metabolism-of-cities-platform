@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from django.contrib.admin import AdminSite
 from django.utils.translation import ugettext_lazy
 from django.contrib.auth.models import User, Group
+from django.contrib.admin.models import LogEntry
 from django_cron.models import CronJobLog
 from stafdb.models import *
 from django.contrib.gis import admin
@@ -69,6 +70,36 @@ class ReferenceSpaceAdmin(SearchAdmin):
     def location_date(self, obj):
         return obj.location.start if obj.location else None
 
+class LogEntryAdmin(admin.ModelAdmin):
+    # to have a date-based drilldown navigation in the admin page
+    date_hierarchy = "action_time"
+
+    # to filter the resultes by users, content types and action flags
+    list_filter = [
+        "user",
+        "content_type",
+        "action_flag"
+    ]
+
+    list_display = [
+        "action_time",
+        "user",
+        "content_type",
+        "action_flag",
+    ]
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_view_permission(self, request, obj=None):
+        return request.user.is_superuser
+
 admin_site.register(Tag, TagAdmin)
 admin_site.register(Record, SearchAdmin)
 admin_site.register(Event, SearchAdmin)
@@ -95,6 +126,7 @@ admin_site.register(MOOCQuizAnswers)
 
 admin_site.register(Group)
 admin_site.register(User)
+admin_site.register(LogEntry, LogEntryAdmin)
 admin_site.register(CronJobLog)
 
 admin_site.register(GeocodeScheme)
