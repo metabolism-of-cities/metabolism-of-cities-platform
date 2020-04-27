@@ -1279,6 +1279,8 @@ def dataimport(request):
             # We also need to add some additional tags that are required for the new site
             # We will use non-used IDs for this or re-cycle non-used tags so that we know
             # which ID they will have
+            from django.db import migrations
+            migrations.RunSQL("SELECT setval('core_tag_id_seq', (SELECT MAX(id) FROM core_tag)+1);")
             website_tags = Tag.objects.create(name="Website-related tags")
             badgets = Tag.objects.create(name="Badges", parent_tag=website_tags)
             tag = Tag.objects.get(pk=12)
