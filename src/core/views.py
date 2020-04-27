@@ -1528,6 +1528,9 @@ def dataimport(request):
         elif request.GET["table"] == "referencespaces":
             ReferenceSpace.objects.all().delete()
             checkward = Geocode.objects.filter(name="Wards")
+            checkcities = Geocode.objects.filter(name="Urban")
+            checkcountries = Geocode.objects.filter(name="Countries")
+            checkisland = Geocode.objects.filter(name="Island")
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
@@ -1542,6 +1545,12 @@ def dataimport(request):
                         )
                         if int(row["type_id"]) == 45 and checkward:
                             space.geocodes.add(checkward[0])
+                        elif int(row["type_id"]) == 3 and checkcities:
+                            space.geocodes.add(checkcities[0])
+                        elif int(row["type_id"]) == 2 and checkcountries:
+                            space.geocodes.add(checkcountries[0])
+                        elif int(row["type_id"]) == 21 and checkisland:
+                            space.geocodes.add(checkisland[0])
         elif request.GET["table"] == "referencespacelocations":
             import sys
             csv.field_size_limit(sys.maxsize)
