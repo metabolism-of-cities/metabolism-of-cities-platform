@@ -1531,15 +1531,19 @@ def dataimport(request):
                             geometry = Point(12.4604, 43.9420)
                         elif lat and lng:
                             geometry = Point(lng, lat)
-                        ReferenceSpaceLocation.objects.create(
-                            id = row["id"],
-                            space_id = row["space_id"],
-                            description = row["description"],
-                            start = start,
-                            end = end,
-                            is_deleted = deleted,
-                            geometry = geometry,
-                        )
+                        try:
+                            ReferenceSpaceLocation.objects.create(
+                                id = row["id"],
+                                space_id = row["space_id"],
+                                description = row["description"],
+                                start = start,
+                                end = end,
+                                is_deleted = deleted,
+                                geometry = geometry,
+                            )
+                        except:
+                            print("Space not found!")
+                            print(row["space_id"])
         if error:
             messages.error(request, "We could not import your data")
         else:
