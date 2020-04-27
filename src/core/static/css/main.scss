@@ -1814,18 +1814,6 @@ body.journals {
       object-fit: contain;
       width: 100px;
     }
-
-    .no-cover {
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      background-color: $light;
-      border: 1px solid $primary;
-      width: 100px;
-      height: 100%;
-      text-align: center;
-      color: rgba($primary, .75);
-    }
   }
 }
 

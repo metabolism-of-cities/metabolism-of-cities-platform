@@ -10,25 +10,32 @@
   </p>
 
   <section id="journal-list">
-    <input type="text" class="form-control search mb-4" placeholder="Search by journal name...">
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <input type="text" class="form-control search" placeholder="Search by journal name...">
+      </div>
+      <div class="col-md-6 mb-4 text-md-right">
+        Sort by
+        <div class="btn-group ml-1 btn-group-sort" role="group">
+          <button type="button" class="btn btn-primary-outline btn-sort" data-sort="journal-name" data-direction="asc">Name</button>
+          <button type="button" class="btn btn-primary btn-sort" data-sort="journal-count" data-direction="desc">Number of publications</button>
+        </div>
+      </div>
+    </div>
 
     <div class="row list">
       {% for each in list %}
       <div class="col-md-6 col-xl-4 single-journal mb-4">
         <a class="card btn-card" href="{{ each.get_absolute_url }}">
           <div class="card-body row">
-            <div class="col col-cover">
-              {% if each.image %}
+            {% if each.image %}
+              <div class="col col-cover">
                 <img src="{{ each.image.url }}" alt="">
-              {% else %}
-                <div class="no-cover">
-                  <i class="fas fa-2x fa-book"></i>
-                </div>
-              {% endif %}
-            </div>
+              </div>
+            {% endif %}
             <div class="col">
               <h5 class="journal-name">{{ each }}</h5>
-              <p>{{ each.publications.count }} article{{ each.publications.count|pluralize }}</p>
+              <p><span class="journal-count">{{ each.publications.count }}</span> article{{ each.publications.count|pluralize }}</p>
             </div>
           </div>
         </a>
@@ -50,7 +57,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
 <script>
   var listOptions = {
-      valueNames: ["journal-name"]
+      valueNames: ["journal-name", "journal-count"]
   };
 
   var journalList = new List("journal-list", listOptions);
@@ -87,6 +94,24 @@
   })
 
   // reset all filters on page load
-  resetSearchFilters()
+  resetSearchFilters();
+
+  // sort publications
+  $(".btn-sort").click(function() {
+    const sortBy = $(this).data("sort");
+    const direction = $(this).data("direction");
+
+    if (sortedBy != sortBy) {
+      journalList.sort(sortBy, { order: direction });
+      sortedBy = sortBy;
+
+      $(".btn-sort").removeClass("btn-primary").addClass("btn-primary-outline")
+      $(this).removeClass("btn-primary-outline").addClass("btn-primary")
+    }
+  })
+
+  // start on sorted by count
+  journalList.sort("journal-count", { order: "desc" });
+  var sortedBy = "journal-count";
 </script>
 {% endblock %}
