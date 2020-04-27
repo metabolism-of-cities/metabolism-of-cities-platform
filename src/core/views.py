@@ -1347,6 +1347,7 @@ def dataimport(request):
                         linkedin = row["linkedin"],
                         researchgate = row["researchgate"],
                         type = row["type"],
+                        old_id = row["id"],
                     )
                     old_ids[row["id"]] = info.id
             with open(file, "r") as csvfile:
@@ -1366,6 +1367,7 @@ def dataimport(request):
                     info = Organization.objects.create(
                         title = row["name"],
                         type = "publisher",
+                        old_id = row["id"],
                     )
                     old_ids[row["id"]] = info.id
             # Once we import the publishers we will then do the journals. 
@@ -1384,6 +1386,7 @@ def dataimport(request):
                             content = row["description"],
                             image = row["image"],
                             publisher_id = old_ids[row["publisher_id"]] if row["publisher_id"] else None,
+                            old_id = row["id"],
                         )
                     journal_ids[row["id"]] = info.id
             file = settings.MEDIA_ROOT + "/import/publications.csv"
@@ -1408,6 +1411,7 @@ def dataimport(request):
                         isbn = row["isbn"],
                         comments = row["comments"],
                         status = row["status"],
+                        old_id = row["id"],
                     )
 
         elif request.GET["table"] == "librarytypes":
@@ -1421,6 +1425,26 @@ def dataimport(request):
                         icon = row["icon"],
                         group = row["group"],
                     )
+        elif request.GET["table"] == "librarytags":
+            list = LibraryItem.objects.all()
+            for each in list:
+                each.tags.clear()
+            tags = {}
+            items = {}
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    if row["tag_id"] in tags:
+                        tag = tags[row["tag_id"]]
+                    else:
+                        tag = Tag.objects.get(pk=row["tag_id"])
+                        tags[row["tag_id"]] = tag
+                    if row["reference_id"] in items:
+                        item = items[row["reference_id"]]
+                    else:
+                        item = LibraryItem.objects.get(old_id=row["reference_id"])
+                        items[row["reference_id"]] = item
+                    item.tags.add(tag)
         elif request.GET["table"] == "people":
             People.objects.all().delete()
             with open(file, "r") as csvfile:
