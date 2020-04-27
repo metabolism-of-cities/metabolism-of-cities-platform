@@ -17,14 +17,18 @@
       <div class="col-md-6 col-xl-4 single-journal mb-4">
         <a class="card btn-card" href="{{ each.get_absolute_url }}">
           <div class="card-body row">
-            {% if each.image %}
-              <div class="col col-cover">
+            <div class="col col-cover">
+              {% if each.image %}
                 <img src="{{ each.image.url }}" alt="">
-              </div>
-            {% endif %}
+              {% else %}
+                <div class="no-cover">
+                  <i class="fas fa-2x fa-book"></i>
+                </div>
+              {% endif %}
+            </div>
             <div class="col">
               <h5 class="journal-name">{{ each }}</h5>
-              <p>{{ each.publications.count }} articles</p>
+              <p>{{ each.publications.count }} article{{ each.publications.count|pluralize }}</p>
             </div>
           </div>
         </a>
