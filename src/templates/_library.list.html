@@ -1,6 +1,6 @@
 {% if show_quantity %}
   <div class="alert alert-info">
-    {{ references.count }} record(s) found.   
+    {{ items.count }} record(s) found.   
   </div>
 {% endif %}
 
@@ -30,11 +30,11 @@ $(function(){
 {% endif %}
 
 <div class="resourcelist">
-  {% for details in references %}
-    <a class="single-resource bg-gray-light {{ details.type.name|slugify }}" href="{% url 'core:reference' details.id %}">
+  {% for details in items %}
+    <a class="single-resource bg-gray-light {{ details.type.name|slugify }}" href="{{ details.get_absolute_url }}">
       <div class="row pad-all">
         <div class="col-lg-9">
-          <h3 class="title">{{ details.title }}</h3>
+          <h4 class="title">{{ details.title }}</h4>
           {% if details.authors.all %}
             {% for author in details.authors.all %}
               <span class="author">{{ author.firstname }} {{ author.lastname }}</span>{% if not forloop.counter == details.authors.all|length %},{% endif %}
@@ -44,7 +44,7 @@ $(function(){
           {% endif %}
         </div>
         <div class="col-lg-3">
-          {% if details.journal.name %}<div class="journal-name">{{ details.journal.name }}</div>{% endif %}
+          {% if details.published_in %}<div class="journal-name">{{ details.published_in }}</div>{% endif %}
           {% if details.type %}<div class="type">{{ details.type }}</div>{% endif %}
           {% if details.year %}<div class="year">{{ details.year }}</div>{% endif %}
         </div>

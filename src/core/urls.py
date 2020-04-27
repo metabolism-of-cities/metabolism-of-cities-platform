@@ -59,6 +59,7 @@ urlpatterns = [
     path("library/search/", views.library_search, { "article": 45 }, name="library_search"),
     path("library/journals/", views.library_journals, { "article": 41 }, name="library_journals"),
     path("library/journals/<slug:slug>/", views.library_journal, name="library_journal"),
+    path("library/items/<int:id>/", views.library_item, name="library_item"),
     path("library/authors/", views.library_authors, name="library_authors"),
     path("library/contribute/", views.library_contribute, name="library_contribute"),
 

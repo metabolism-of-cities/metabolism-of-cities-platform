@@ -43,6 +43,7 @@ class Record(models.Model):
     is_deleted = models.BooleanField(default=False)
     image = StdImageField(upload_to="records", variations={"thumbnail": (480, 480), "large": (1280, 1024)}, blank=True, null=True)
     tags = models.ManyToManyField(Tag)
+    old_id = models.IntegerField(null=True, blank=True, db_index=True, help_text="Only used for the migration between old and new structure")
     def __str__(self):
         return self.title
 
@@ -280,7 +281,7 @@ class LibraryItem(Record):
     title_original_language = models.CharField(max_length=255, blank=True, null=True)
     authorlist = models.TextField()
     type = models.ForeignKey(LibraryItemType, on_delete=models.CASCADE)
-    published_in = models.ForeignKey(Journal, on_delete=models.CASCADE, null=True, blank=True, help_text="If the journal does not appear in the list, please leave empty and add the name in the comments")
+    published_in = models.ForeignKey(Journal, on_delete=models.CASCADE, null=True, blank=True, help_text="If the journal does not appear in the list, please leave empty and add the name in the comments", related_name="publications")
     year = models.PositiveSmallIntegerField()
     abstract_original_language = models.TextField(null=True, blank=True)
     date_added = models.DateTimeField(null=True, blank=True, auto_now_add=True)
@@ -298,7 +299,6 @@ class LibraryItem(Record):
     status = models.CharField(max_length=8, choices=STATUS, db_index=True)
     #authors = models.ManyToManyField(People, through="ReferenceAuthors")
     #organizations = models.ManyToManyField(Organization, through="ReferenceOrganization")
-    #tags = models.ManyToManyField(Tag, blank=True, limit_choices_to={"hidden": False})
     #processes = models.ManyToManyField("staf.Process", blank=True, limit_choices_to={"slug__isnull": False})
     #materials = models.ManyToManyField("staf.Material", blank=True)
     #spaces = models.ManyToManyField(ReferenceSpace, blank=True)
@@ -320,6 +320,9 @@ class LibraryItem(Record):
 
     def accountingMethods(self):
         return self.tags.filter(is_accounting_method=True, hidden=False)
+
+    def get_absolute_url(self):
+        return reverse("library_item", args=[self.id])
 
 
 #MOOC's

@@ -1,0 +1,79 @@
+{% extends "_base.html" %}
+
+{% block title %}{{ info }}{% endblock %}
+
+{% block content %}
+  <p>{{ info.type }}</p>
+  <h1>{{ info }}</h1>
+  <p>{{ info.published_in }}</p>
+  <p><img src="{{ info.published_in.image.url }}" /></p>
+  <p>{{ info.authorlist }}</p>
+  <p>{{ info.year }}</p>
+
+  <hr>
+
+  <h2>Export</h2>
+
+  <ul>
+    <li>Export citation</li>
+    <li>Export RIS</li>
+    <li>Export Bibtex</li>
+    <li>Print</li>
+  </ul>
+  
+  <h2>Save</h2>
+
+  <ul>
+    <li>Save to my collection</li>
+    <li>Create new collection</li>
+  </ul>
+
+  <h2>Details</h2>
+  <dl>
+    <dt>Title</dt>
+    <dd>{{ info }}</dd>
+
+    <dt>Author(s)</dt>
+    {% for each in info.authors %}
+      <dd><a href="http://">{{ each }}</a></dd>
+    {% endfor %}
+
+    <dt>Published</dt>
+    <dd>{{ info.published_in.publisher }}</dd>
+
+    <dt>Summary</dt>
+    <dd>{{ info.content|safe }}</dd>
+
+    <dt>Language</dt>
+    <dd>{{ info.get_language_display }}</dd>
+
+    <dt>Tags</dt>
+    {% for each in info.tags.all %}
+      <dd><a href="http://">{{ each }}</a></dd>
+    {% endfor %}
+
+    {% if info.doi or info.isbn %}
+      <dt>Identifier</dt>
+      {% if info.doi %}
+        <dd><strong>DOI</strong>: {{ info.doi }}</dd>
+      {% endif %}
+      {% if info.isbn %}
+        <dd><strong>ISBN</strong>: {{ info.isbn }}</dd>
+      {% endif %}
+    {% endif %}
+
+    <dt>URL</dt>
+    <dd><a href="http://">{{ info.url }}</a></dd>
+
+    <dt>Open access</dt>
+    <dd>[checkbox/green] Yes</dd>
+
+    <dt>Options</dt>
+    <dd><a href="http://">Search on Google Scholar</a></dd>
+    <dd><a href="http://">Search on Google</a></dd>
+    <dd><a href="http://">Search UnPaywall</a></dd>
+
+  </dl>
+
+
+{% endblock %}

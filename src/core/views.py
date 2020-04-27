@@ -687,8 +687,16 @@ def library_journal(request, slug):
     info = get_object_or_404(Journal, slug=slug)
     context = {
         "info": info,
+        "items": info.publications.all(),
     }
     return render(request, "library/journal.html", load_specific_design(context, PAGE_ID["library"]))
+
+def library_item(request, id):
+    info = get_object_or_404(LibraryItem, pk=id)
+    context = {
+        "info": info,
+    }
+    return render(request, "library/item.html", load_specific_design(context, PAGE_ID["library"]))
 
 def library_map(request, article):
     info = get_object_or_404(Article, pk=article)
