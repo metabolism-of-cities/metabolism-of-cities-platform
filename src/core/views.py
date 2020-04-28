@@ -70,6 +70,15 @@ TAG_ID = {
     "case_study": 1,
     "urban": 11,
 }
+
+def get_site_tag(request):
+    if request.site.id == 1:
+        # For MoC, the urban tag should be used to filter items
+        return 11
+    elif request.site.id == 2:
+        # For MoI, the island tag should be used to filter items
+        return 219       
+
 # We use getHeader to obtain the header settings (type of header, title, subtitle, image)
 # This dictionary has to be created for many different pages so by simply calling this
 # function instead we don't repeat ourselves too often.
@@ -682,13 +691,13 @@ def library_download(request):
     return render(request, "article.html", load_specific_design(context, PAGE_ID["library"]))
 
 def library_casestudies(request, slug=None):
-    info = get_object_or_404(Article, pk=PAGE_ID["library"])
+    list = LibraryItem.objects.filter(status="active", tags__id=TAG_ID["case_study"])
+    list = list.filter(tags__id=get_site_tag(request))
     context = {
-        "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
-        "info": info,
-        "menu": Article.objects.filter(parent=info),
+        "list": list,
+        "load_datatables": True,
     }
-    return render(request, "article.html", load_specific_design(context, PAGE_ID["library"]))
+    return render(request, "library/casestudies.html", load_specific_design(context, PAGE_ID["library"]))
 
 def library_journals(request, article):
     info = get_object_or_404(Article, pk=article)
@@ -717,8 +726,7 @@ def library_item(request, id):
 def library_map(request, article):
     info = get_object_or_404(Article, pk=article)
     items = LibraryItem.objects.filter(status="active", tags__id=TAG_ID["case_study"])
-    if request.site.id == 1:
-        items = items.filter(tags__id=TAG_ID["urban"])
+    items = items.filter(tags__id=get_site_tag(request))
     context = {
         "article": info,
         "items": items,
