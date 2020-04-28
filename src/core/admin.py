@@ -70,6 +70,15 @@ class ReferenceSpaceAdmin(SearchAdmin):
     def location_date(self, obj):
         return obj.location.start if obj.location else None
 
+class LibraryAdmin(SearchAdmin):
+    list_filter = ["status", "year"]
+    list_display = ["title", "year", "published_in", "status"]
+
+class GeocodeAdmin(SearchAdmin):
+    list_filter = ["scheme"]
+    list_display = ["name", "scheme"]
+    search_fields = ["name"]
+
 class LogEntryAdmin(admin.ModelAdmin):
     # to have a date-based drilldown navigation in the admin page
     date_hierarchy = "action_time"
@@ -111,7 +120,7 @@ admin_site.register(People, SearchAdmin)
 admin_site.register(Video, VideoAdmin)
 admin_site.register(Project, ProjectAdmin)
 admin_site.register(Relationship)
-admin_site.register(LibraryItem, SearchAdmin)
+admin_site.register(LibraryItem, LibraryAdmin)
 admin_site.register(LibraryItemType, SearchAdmin)
 admin_site.register(Journal, SearchAdmin)
 
@@ -130,7 +139,7 @@ admin_site.register(LogEntry, LogEntryAdmin)
 admin_site.register(CronJobLog)
 
 admin_site.register(GeocodeScheme)
-admin_site.register(Geocode)
+admin_site.register(Geocode, GeocodeAdmin)
 admin_site.register(ReferenceSpace, ReferenceSpaceAdmin)
 admin_site.register(ReferenceSpaceLocation, admin.GeoModelAdmin)
 admin_site.register(ReferenceSpaceGeocode)

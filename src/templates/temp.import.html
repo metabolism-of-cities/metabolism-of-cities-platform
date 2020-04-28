@@ -15,6 +15,7 @@
     <li><a href="/dataimport/?table=librarytypes">Library item types</a></li>
     <li><a href="/dataimport/?table=publishers">Publishers, journals, and publications</a></li>
     <li><a href="/dataimport/?table=librarytags">Library item tags</a></li>
+    <li><a href="/dataimport/?table=libraryspaces">Library item spaces</a></li>
   </ul>
 
   <hr>
@@ -33,6 +34,7 @@ ssh -t industrialecology 'csvdump "SELECT * FROM core_journal ORDER BY id" journ
 ssh -t industrialecology 'csvdump "SELECT * FROM core_referencetype ORDER BY id" librarytypes.csv'
 ssh -t industrialecology 'csvdump "SELECT * FROM core_reference ORDER BY id" publications.csv'
 ssh -t industrialecology 'csvdump "SELECT * FROM core_reference_tags ORDER BY id" librarytags.csv'
+ssh -t industrialecology 'csvdump "SELECT * FROM core_reference_spaces ORDER BY id" libraryspaces.csv'
   </pre>
 
 {% endblock %}

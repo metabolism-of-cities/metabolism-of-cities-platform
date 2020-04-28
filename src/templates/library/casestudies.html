@@ -1,0 +1,31 @@
+{% extends "_base.html" %}
+
+{% block title %}Case studies{% endblock %}
+
+{% block content %}
+  <h1>Case studies</h1>
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Publication</th>
+        <th>Year</th>
+        <th>Location</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in list %}
+      <tr>
+        <td><a href="{{ each.get_absolute_url }}">{{ each }}</a></td>
+        <td>{{ each.year }}</td>
+        <td>
+          {% for space in each.spaces.all %}
+            {% if space.is_city %}
+              <span class="badge badge-light">{{ space }}</span>
+            {% endif %}
+          {% endfor %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

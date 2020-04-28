@@ -66,8 +66,19 @@ USER_RELATIONSHIPS = {
 
 # This defines tags that are frequently used
 TAG_ID = {
-    "platformu_segments": Tag.objects.filter(name="PlatformU segments").values_list("id", flat=True)[0] if Tag.objects.filter(name="PlatformU segments").values_list("id", flat=True) else 1, # Let's replace this for the right number once things have settled down
+    "platformu_segments": 747,
+    "case_study": 1,
+    "urban": 11,
 }
+
+def get_site_tag(request):
+    if request.site.id == 1:
+        # For MoC, the urban tag should be used to filter items
+        return 11
+    elif request.site.id == 2:
+        # For MoI, the island tag should be used to filter items
+        return 219       
+
 # We use getHeader to obtain the header settings (type of header, title, subtitle, image)
 # This dictionary has to be created for many different pages so by simply calling this
 # function instead we don't repeat ourselves too often.
@@ -352,6 +363,7 @@ def metabolism_manager_clusters(request, organization):
             belongs_to = Record.objects.get(pk=organization)
         )
     context = {
+        "info": Organization.objects.get(pk=organization),
         "tags": Tag.objects.filter(belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"])
     }
     return render(request, "metabolism_manager/admin/clusters.html", load_specific_design(context, PAGE_ID["platformu"]))
@@ -362,15 +374,48 @@ def metabolism_manager_admin_map(request):
     }
     return render(request, "metabolism_manager/admin/map.html", load_specific_design(context, PAGE_ID["platformu"]))
 
-def metabolism_manager_admin_entity(request, id):
+def metabolism_manager_admin_entity(request, organization, id):
     context = {
-        "page": "entity"
+        "page": "entity",
+        "organization": Organization.objects.get(pk=organization),
+        "info": Organization.objects.get(pk=id),
     }
     return render(request, "metabolism_manager/admin/entity.html", load_specific_design(context, PAGE_ID["platformu"]))
 
-def metabolism_manager_admin_entity_form(request, id=None):
+def metabolism_manager_admin_entity_form(request, organization, id=None):
+    organization = Organization.objects.get(pk=organization)
+    edit = False
+    if id:
+        info = Organization.objects.get(pk=id)
+        edit = True
+    else:
+        info = None
+    if request.method == "POST":
+        if not edit:
+            info = Organization()
+        info.title = request.POST["name"]
+        info.content = request.POST["description"]
+        info.url = request.POST["url"]
+        info.email = request.POST["email"]
+        if "status" in request.POST:
+            info.is_deleted = False
+        else:
+            info.is_deleted = True
+        if "image" in request.FILES:
+            info.image = request.FILES["image"]
+        info.save()
+        if "tag" in request.GET:
+            tag = Tag.objects.get(pk=request.GET["tag"])
+            info.tags.add(tag)
+        messages.success(request, "The information was saved.")
+        if edit:
+            return redirect(reverse("platformu_admin_entity", args=[organization.id, info.id]))
+        else:
+            return redirect(reverse("platformu_admin_clusters", args=[organization.id]))
     context = {
-        "page": "entity_form"
+        "page": "entity_form",
+        "organization": organization,
+        "info": info,
     }
     return render(request, "metabolism_manager/admin/entity.form.html", load_specific_design(context, PAGE_ID["platformu"]))
 
@@ -680,13 +725,20 @@ def library_download(request):
     return render(request, "article.html", load_specific_design(context, PAGE_ID["library"]))
 
 def library_casestudies(request, slug=None):
-    info = get_object_or_404(Article, pk=PAGE_ID["library"])
+    list = LibraryItem.objects.filter(status="active", tags__id=TAG_ID["case_study"])
+    list = list.filter(tags__id=get_site_tag(request))
+    totals = None
+    page = "casestudies.html"
+    if slug == "calendar":
+        page = "casestudies.calendar.html"
+        totals = list.values("year").annotate(total=Count("id")).order_by("year")
     context = {
-        "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
-        "info": info,
-        "menu": Article.objects.filter(parent=info),
+        "list": list,
+        "totals": totals,
+        "load_datatables": True,
+        "slug": slug,
     }
-    return render(request, "article.html", load_specific_design(context, PAGE_ID["library"]))
+    return render(request, "library/" + page, load_specific_design(context, PAGE_ID["library"]))
 
 def library_journals(request, article):
     info = get_object_or_404(Article, pk=article)
@@ -714,8 +766,11 @@ def library_item(request, id):
 
 def library_map(request, article):
     info = get_object_or_404(Article, pk=article)
+    items = LibraryItem.objects.filter(status="active", tags__id=TAG_ID["case_study"])
+    items = items.filter(tags__id=get_site_tag(request))
     context = {
         "article": info,
+        "items": items,
     }
     return render(request, "library/map.html", load_specific_design(context, PAGE_ID["library"]))
 
@@ -938,7 +993,7 @@ def load_baseline(request):
     group_staf_data.permissions.add(*stafdb_permissions)
     messages.success(request, "Groups were created")
 
-    Record.objects.all().delete()
+    Article.objects.all().delete()
     articles = [
         { "id": 1, "title": "Urban metabolism", "parent": None, "slug": "/urbanmetabolism/", "position": 1 },
         { "id": 2, "title": "Urban metabolism introduction", "parent": 1, "slug": "/urbanmetabolism/introduction/", "position": 1 },
@@ -1018,6 +1073,7 @@ def load_baseline(request):
             position = each["position"],
             content = content,
         )
+    Project.objects.filter(is_internal=True).delete()
     for each in projects:
         content = each["content"] if "content" in each else None
         image = each["image"] if "image" in each else None
@@ -1069,6 +1125,11 @@ def load_baseline(request):
 
     GeocodeScheme.objects.all().delete()
     list = [
+        {
+            "name": "System Types",
+            "icon": "fal fa-fw fa-layer-group",
+            "items": ["Company", "Island", "Rural", "Urban", "Household"],
+        },
         {
             "name": "UN Statistics Division Groupings",
             "icon": "fal fa-fw fa-universal-access",
@@ -1217,6 +1278,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
         },
     ]
 
+    ArticleDesign.objects.all().delete()
     for each in designs:
         ArticleDesign.objects.create(
             article_id = each["article"],
@@ -1290,18 +1352,11 @@ def dataimport(request):
                         info = Tag.objects.get(pk=row["id"])
                         info.parent_tag_id = row["parent_tag_id"]
                         info.save()
+            from django.db import migrations
+            migrations.RunSQL("SELECT setval('core_tag_id_seq', (SELECT MAX(id) FROM core_tag)+1);")
             # We also need to add some additional tags that are required for the new site
             # We will use non-used IDs for this or re-cycle non-used tags so that we know
             # which ID they will have
-            from django.db import migrations
-            migrations.RunSQL("SELECT setval('core_tag_id_seq', (SELECT MAX(id) FROM core_tag)+1);")
-            website_tags = Tag.objects.create(name="Website-related tags")
-            badgets = Tag.objects.create(name="Badges", parent_tag=website_tags)
-            tag = Tag.objects.get(pk=12)
-            tag.name = "PlatformU segments"
-            tag.parent_tag = website_tags
-            tag.hidden = False
-            tag.save()
         elif request.GET["table"] == "activities":
             ActivityCatalog.objects.all().delete()
             nace = ActivityCatalog.objects.create(name="Statistical Classification of Economic Activities in the European Community, Rev. 2 (2008)", url="https://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=LST_NOM_DTL&StrNom=NACE_REV2&StrLanguageCode=EN&IntPcKey=&StrLayoutCode=HIERARCHIC")
@@ -1461,6 +1516,26 @@ def dataimport(request):
                         item = LibraryItem.objects.get(old_id=row["reference_id"])
                         items[row["reference_id"]] = item
                     item.tags.add(tag)
+        elif request.GET["table"] == "libraryspaces":
+            list = LibraryItem.objects.all()
+            for each in list:
+                each.spaces.clear()
+            spaces = {}
+            items = {}
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    if row["referencespace_id"] in spaces:
+                        space = spaces[row["referencespace_id"]]
+                    else:
+                        space = ReferenceSpace.objects.get(pk=row["referencespace_id"])
+                        spaces[row["referencespace_id"]] = space
+                    if row["reference_id"] in items:
+                        item = items[row["reference_id"]]
+                    else:
+                        item = LibraryItem.objects.get(old_id=row["reference_id"])
+                        items[row["reference_id"]] = item
+                    item.spaces.add(space)
         elif request.GET["table"] == "people":
             People.objects.all().delete()
             with open(file, "r") as csvfile:
@@ -1508,11 +1583,14 @@ def dataimport(request):
         elif request.GET["table"] == "referencespaces":
             ReferenceSpace.objects.all().delete()
             checkward = Geocode.objects.filter(name="Wards")
+            checkcities = Geocode.objects.filter(name="Urban")
+            checkcountries = Geocode.objects.filter(name="Countries")
+            checkisland = Geocode.objects.filter(name="Island")
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
                     if row["active"] == "t":
-                        deleted = True if row["active"] == "t" else False
+                        deleted = False if row["active"] == "t" else True
                         space = ReferenceSpace.objects.create(
                             id = row["id"],
                             name = row["name"],
@@ -1522,6 +1600,12 @@ def dataimport(request):
                         )
                         if int(row["type_id"]) == 45 and checkward:
                             space.geocodes.add(checkward[0])
+                        elif int(row["type_id"]) == 3 and checkcities:
+                            space.geocodes.add(checkcities[0])
+                        elif int(row["type_id"]) == 2 and checkcountries:
+                            space.geocodes.add(checkcountries[0])
+                        elif int(row["type_id"]) == 21 and checkisland:
+                            space.geocodes.add(checkisland[0])
         elif request.GET["table"] == "referencespacelocations":
             import sys
             csv.field_size_limit(sys.maxsize)
@@ -1546,7 +1630,7 @@ def dataimport(request):
                         elif lat and lng:
                             geometry = Point(lng, lat)
                         try:
-                            ReferenceSpaceLocation.objects.create(
+                            location = ReferenceSpaceLocation.objects.create(
                                 id = row["id"],
                                 space_id = row["space_id"],
                                 description = row["description"],
@@ -1555,8 +1639,11 @@ def dataimport(request):
                                 is_deleted = deleted,
                                 geometry = geometry,
                             )
-                        except:
-                            print("Space not found!")
+                            space = ReferenceSpace.objects.get(pk=row["space_id"])
+                            space.location = location
+                            space.save()
+                        except Exception as e:
+                            print(e)
                             print(row["space_id"])
         if error:
             messages.error(request, "We could not import your data")

@@ -1,4 +1,5 @@
 from django.db import models
+from stafdb.models import ReferenceSpace
 
 # Used for image resizing
 from stdimage.models import StdImageField
@@ -301,7 +302,7 @@ class LibraryItem(Record):
     #organizations = models.ManyToManyField(Organization, through="ReferenceOrganization")
     #processes = models.ManyToManyField("staf.Process", blank=True, limit_choices_to={"slug__isnull": False})
     #materials = models.ManyToManyField("staf.Material", blank=True)
-    #spaces = models.ManyToManyField(ReferenceSpace, blank=True)
+    spaces = models.ManyToManyField(ReferenceSpace, blank=True)
 
     def __str__(self):
         return self.title

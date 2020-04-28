@@ -40,6 +40,16 @@ class ReferenceSpace(models.Model):
     geocodes = models.ManyToManyField(Geocode, through="ReferenceSpaceGeocode")
     def __str__(self):
         return self.name
+    @property
+    def is_city(self):
+        #check = self.geocodes.filter(id=123)
+        check = self.geocodes.filter(name="Urban")
+        return True if check else False
+    @property
+    def is_island(self):
+        #check = self.geocodes.filter(id=123)
+        check = self.geocodes.filter(name="Island")
+        return True if check else False
 
 class ReferenceSpaceLocation(models.Model):
     space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE)
