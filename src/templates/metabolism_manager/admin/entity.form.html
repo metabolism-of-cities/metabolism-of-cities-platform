@@ -5,10 +5,13 @@
 
 {% block content %}
 
-  {% include "metabolism_manager/admin/_entity.menu.html" %}
+  {% if id %}
+    {% include "metabolism_manager/admin/_entity.menu.html" %}
+  {% endif %}
 
   <section>
-    <form>
+    <form method="post">
+      {% csrf_token %}
       <div class="card mb-4">
         <div class="card-header">
           General information
@@ -16,18 +19,19 @@
         <div class="card-body">
           <div class="form-group">
             <label for="name">Company name</label>
-            <input type="text" class="form-control" id="name">
+            <input type="text" class="form-control" id="name" name="name" value="{% if info.title %}{{ info.title }}{% endif %}">
           </div>
           <div class="form-group">
             <label for="logo">Logo</label>
             <div class="custom-file">
-              <input type="file" class="custom-file-input" id="logo">
+              <input type="file" class="custom-file-input" id="logo" name="image">
               <label class="custom-file-label" for="logo">Choose file</label>
             </div>
           </div>
           <div class="form-group">
             <label for="description">Description</label>
-            <textarea id="description" class="form-control"></textarea>
+            <textarea id="description" class="form-control" name="description"
+             >{% if info.content %}{{ info.content }}{% endif %}</textarea>
           </div>
           <div class="form-group">
             <label for="employees">Employees</label>
@@ -35,11 +39,11 @@
           </div>
           <div class="form-group">
             <label for="location">Location</label>
-            <input type="text" class="form-control" id="location">
+            <input type="text" class="form-control" id="location" name="location">
           </div>
           <div class="form-group">
             <label>Industry</label>
-            <select class="custom-select" class="form-control">
+            <select class="custom-select" class="form-control" name="industry">
               <option hidden disabled selected value>Select an option</option>
               <option value="1">Paper industry</option>
               <option value="2">Oil and gas</option>
@@ -48,97 +52,97 @@
           </div>
           <div class="form-group">
             <label for="">Email</label>
-            <input type="" id="" class="form-control">
+            <input type="" id="" class="form-control" name="email" value="{% if info.email %}{{ info.email }}{% endif %}">
           </div>
           <div class="form-group">
             <label for="">Website</label>
-            <input type="" id="" class="form-control">
+            <input type="" id="" class="form-control" name="url" value="{% if info.url %}{{ info.url }}{% endif %}">
           </div>
           <div class="form-group">
             <label for="">Active</label>
             <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="active">
+              <input type="checkbox" class="custom-control-input" id="active" name="status" {% if not info.is_deleted %} checked {% endif %}>
               <label class="custom-control-label" for="active"></label>
             </div>
           </div>
         </div>
       </div>
-
-      <div class="card">
-        <div class="card-header">
-          Settings
+      {% if False %}
+        <div class="card">
+          <div class="card-header">
+            Settings
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="name">Data sharing</label>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="public" name="data-sharing" class="custom-control-input">
+                <label class="custom-control-label" for="public">Public</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="anonymized" name="data-sharing" class="custom-control-input">
+                <label class="custom-control-label" for="anonymized">Public, but anonymized</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="private" name="data-sharing" class="custom-control-input">
+                <label class="custom-control-label" for="private">Private</label>
+              </div>
+              <small class="form-text text-muted">
+                Delectus non quia recusandae vitae. Sed quam nihil quasi repellat ut voluptatem eius. Voluptas est aliquam hic voluptatem et eveniet dolorem expedita. Blanditiis fugiat sit quae ut et est cumque optio. Molestiae sit asperiores qui et iusto vel. Voluptate laudantium assumenda deleniti vel ullam dolorum.
+              </small>
+            </div>
+            <div class="form-group">
+              <label for="name">Data delay</label>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="none" name="data-delay" class="custom-control-input">
+                <label class="custom-control-label" for="none">No delay</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="1-year" name="data-delay" class="custom-control-input">
+                <label class="custom-control-label" for="1-year">1 year old data only</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="2-years" name="data-delay" class="custom-control-input">
+                <label class="custom-control-label" for="2-years">2 year old data only</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="name">Reporting</label>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="monthly" name="reporting" class="custom-control-input">
+                <label class="custom-control-label" for="monthly">Monthly</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="quarterly" name="reporting" class="custom-control-input">
+                <label class="custom-control-label" for="quarterly">Quarterly</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="annual" name="reporting" class="custom-control-input">
+                <label class="custom-control-label" for="annual">Annual</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="name">Modules</label>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="mfa">
+                <label class="custom-control-label" for="mfa">Corporate MFA</label>
+              </div>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="matchmaking">
+                <label class="custom-control-label" for="matchmaking">Matchmaking platform</label>
+              </div>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="tips">
+                <label class="custom-control-label" for="tips">Tips and advice service</label>
+              </div>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="report">
+                <label class="custom-control-label" for="report">Annual sustainability report</label>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="card-body">
-          <div class="form-group">
-            <label for="name">Data sharing</label>
-            <div class="custom-control custom-radio">
-              <input type="radio" id="public" name="data-sharing" class="custom-control-input">
-              <label class="custom-control-label" for="public">Public</label>
-            </div>
-            <div class="custom-control custom-radio">
-              <input type="radio" id="anonymized" name="data-sharing" class="custom-control-input">
-              <label class="custom-control-label" for="anonymized">Public, but anonymized</label>
-            </div>
-            <div class="custom-control custom-radio">
-              <input type="radio" id="private" name="data-sharing" class="custom-control-input">
-              <label class="custom-control-label" for="private">Private</label>
-            </div>
-            <small class="form-text text-muted">
-              Delectus non quia recusandae vitae. Sed quam nihil quasi repellat ut voluptatem eius. Voluptas est aliquam hic voluptatem et eveniet dolorem expedita. Blanditiis fugiat sit quae ut et est cumque optio. Molestiae sit asperiores qui et iusto vel. Voluptate laudantium assumenda deleniti vel ullam dolorum.
-            </small>
-          </div>
-          <div class="form-group">
-            <label for="name">Data delay</label>
-            <div class="custom-control custom-radio">
-              <input type="radio" id="none" name="data-delay" class="custom-control-input">
-              <label class="custom-control-label" for="none">No delay</label>
-            </div>
-            <div class="custom-control custom-radio">
-              <input type="radio" id="1-year" name="data-delay" class="custom-control-input">
-              <label class="custom-control-label" for="1-year">1 year old data only</label>
-            </div>
-            <div class="custom-control custom-radio">
-              <input type="radio" id="2-years" name="data-delay" class="custom-control-input">
-              <label class="custom-control-label" for="2-years">2 year old data only</label>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="name">Reporting</label>
-            <div class="custom-control custom-radio">
-              <input type="radio" id="monthly" name="reporting" class="custom-control-input">
-              <label class="custom-control-label" for="monthly">Monthly</label>
-            </div>
-            <div class="custom-control custom-radio">
-              <input type="radio" id="quarterly" name="reporting" class="custom-control-input">
-              <label class="custom-control-label" for="quarterly">Quarterly</label>
-            </div>
-            <div class="custom-control custom-radio">
-              <input type="radio" id="annual" name="reporting" class="custom-control-input">
-              <label class="custom-control-label" for="annual">Annual</label>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="name">Modules</label>
-            <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="mfa">
-              <label class="custom-control-label" for="mfa">Corporate MFA</label>
-            </div>
-            <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="matchmaking">
-              <label class="custom-control-label" for="matchmaking">Matchmaking platform</label>
-            </div>
-            <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="tips">
-              <label class="custom-control-label" for="tips">Tips and advice service</label>
-            </div>
-            <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="report">
-              <label class="custom-control-label" for="report">Annual sustainability report</label>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      {% endif %}
       <button class="btn btn-lg btn-primary my-4" type="submit"><i class="fas fa-save"></i> Save</button>
     </form>
   </section>

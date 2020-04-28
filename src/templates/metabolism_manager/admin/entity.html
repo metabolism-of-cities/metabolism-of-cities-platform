@@ -8,9 +8,9 @@
 
 <div class="row">
   <div class="col-md-4 mb-4">
-    <img class="mb-2" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Dunder_Mifflin%2C_Inc.svg/500px-Dunder_Mifflin%2C_Inc.svg.png">
+    <img class="mb-2" src="{% if info.image %}{{ info.image.url }}{% endif %}">
     <p>
-      Dolores omnis et maiores sint nesciunt iste qui. Quos officia quia architecto optio. Quod quidem minima eveniet temporibus. Sed nesciunt voluptas maiores totam voluptas at dolorem nulla. Magni necessitatibus illo quae aut asperiores. Voluptate adipisci omnis qui in ipsum.
+      {{ info.content }}
     </p>
   </div>
   <div class="col-md-8">
@@ -35,11 +35,11 @@
           </tr>
           <tr>
             <th>Email</th>
-            <td><a href="">info@dundermifflin.com</a></td>
+            <td><a href="">{{ info.email }}</a></td>
           </tr>
           <tr>
             <th>Website</th>
-            <td><a href="">dundermifflin.com</a></td>
+            <td><a href="">{{ info.url }}</a></td>
           </tr>
           <tr>
             <th>Last login</th>
@@ -51,7 +51,7 @@
           </tr>
           <tr>
             <th>Status</th>
-            <td>Active</td>
+            <td>{% if info.is_deleted %} Inactive {% else %} Active {% endif %}</td>
           </tr>
           <tr>
             <th>Data sharing</th>
@@ -66,7 +66,4 @@
     </div>
   </div>
 </div>
-
-
-
 {% endblock %}
