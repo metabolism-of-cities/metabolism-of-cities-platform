@@ -401,16 +401,17 @@ def metabolism_manager_admin_entity_form(request, organization, id=None):
             info.is_deleted = False
         else:
             info.is_deleted = True
-        info.image = request.POST["image"]
+        if "image" in request.FILES:
+            info.image = request.FILES["image"]
         info.save()
         if "tag" in request.GET:
             tag = Tag.objects.get(pk=request.GET["tag"])
             info.tags.add(tag)
         messages.success(request, "The information was saved.")
         if edit:
-            return redirect("/platformu/admin/" + str(organization.id) + "/entities/" + str(info.id) + "/")
+            return redirect(reverse("platformu_admin_entity", args=[organization.id, info.id]))
         else:
-            return redirect("/platformu/admin/" + str(organization.id) + "/clusters/")
+            return redirect(reverse("platformu_admin_clusters", args=[organization.id]))
     context = {
         "page": "entity_form",
         "organization": organization,
