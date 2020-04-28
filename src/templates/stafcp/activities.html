@@ -1,0 +1,26 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <h1>Activities</h1>
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Options</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in list %}
+      <tr>
+        <td>{{ each.code }}</td>
+        <td><a href="{% url "stafcp_activities" each.catalog.id each.id %}">{{ each.name }}</td>
+        <td>
+          <a class="btn btn-info" href="{% url "stafcp_activity" each.catalog.id each.id %}"><i class="fa fa-eye"></i> View</a>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

@@ -556,6 +556,31 @@ def stafcp_referencespaces_list(request, id):
     }
     return render(request, "stafcp/referencespaces.list.html", load_specific_design(context, PAGE_ID["stafcp"]))
 
+def stafcp_activities_catalogs(request):
+    context = {
+        "list": ActivityCatalog.objects.all(),
+    }
+    return render(request, "stafcp/activities.catalogs.html", load_specific_design(context, PAGE_ID["stafcp"]))
+
+def stafcp_activities(request, catalog, id=None):
+    catalog = ActivityCatalog.objects.get(pk=catalog)
+    list = Activity.objects.filter(catalog=catalog)
+    if id:
+        list = list.filter(parent_id=id)
+    else:
+        list = list.filter(parent__isnull=True)
+    context = {
+        "list": list,
+    }
+    return render(request, "stafcp/activities.html", load_specific_design(context, PAGE_ID["stafcp"]))
+
+def stafcp_activity(request, catalog, id):
+    list = Activity.objects.all()
+    context = {
+        "list": list,
+    }
+    return render(request, "stafcp/activities.html", load_specific_design(context, PAGE_ID["stafcp"]))
+
 def stafcp_flowdiagrams(request):
     list = FlowDiagram.objects.all()
     context = {
