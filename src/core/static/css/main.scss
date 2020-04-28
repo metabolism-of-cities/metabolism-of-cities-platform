@@ -759,8 +759,8 @@ blockquote {
   margin: 1rem;
 }
 
-// STATISTICS BOX
-.statistics-box {
+// LARGE ICON BUTTON
+.large-icon-box {
   box-shadow: $basic-shadow;
   display: block;
   border-radius: .25rem;
@@ -785,9 +785,10 @@ blockquote {
   }
 }
 
-a.statistics-box {
+a.large-icon-box {
   @extend %raised-hover;
   @extend %box-shadow;
+  color: $black;
 }
 
 // PILLS
@@ -1814,18 +1815,12 @@ body.journals {
       object-fit: contain;
       width: 100px;
     }
+  }
+}
 
-    .no-cover {
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      background-color: $light;
-      border: 1px solid $primary;
-      width: 100px;
-      height: 100%;
-      text-align: center;
-      color: rgba($primary, .75);
-    }
+body.journal {
+  img.thumbnail {
+    width: 100%;
   }
 }
 
@@ -1840,11 +1835,87 @@ body.gis.meta {
 }
 
 body.library.search {
-  select {
-    width: 100%;
+  .container.main-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: unset !important;
+  }
+
+  .search-wrapper {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    background-color: transparentize($primary, .8);
+
+    select {
+      width: 100% !important;
+    }
+
+    .search-select {
+      margin: auto;
+      max-width: 800px;
+
+      select {
+        width: calc(100% - 150px) !important;
+      }
+
+      .select2-selection {
+        height: 4rem !important;
+      }
+
+      .select2-selection__rendered {
+        padding-left: 1rem;
+      }
+
+      .select2-container--bootstrap4 .select2-selection {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+
+        &[aria-expanded="true"] {
+          border-bottom-left-radius: 0;
+        }
+      }
+
+      .select2-container--bootstrap4 .select2-selection--single .select2-selection__rendered {
+        line-height: 4rem;
+        font-size: 1.5rem;
+      }
+
+      .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow {
+        display: none;
+      }
+
+      .select2-container {
+        display: inline-block;
+      }
+    }
+
+    .select2-container--bootstrap4 .select2-selection {
+      border: none;
+    }
+
+
+    button[form="search"] {
+      height: 4rem;
+      width: 150px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
   }
 
   .advanced-options {
     display: none;
+  }
+
+  .large-icon-box {
+    .statistic {
+      font-size: 1rem;
+    }
+
+    i {
+      font-size: 5rem;
+      right: -.5rem;
+      bottom: -.5rem;
+    }
   }
 }

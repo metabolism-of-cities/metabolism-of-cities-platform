@@ -8,79 +8,119 @@
 {% endblock %}
 
 {% block content %}
-  <form method="get" id="search">
-    <select class="search">
-      <option disabled hidden selected>Search</option>
-      <option value="">Blue</option>
-      <option value="">Orange</option>
-      <option value="">Yellow</option>
-      <option value="">Red</option>
-    </select>
+  <section class="search-wrapper">
+    <form class="container" method="get" id="search">
+      {% spaceless %}
+        <div class="search-select">
+          <select class="search">
+            <option disabled hidden selected>Search through library</option>
+            <option value="">Blue</option>
+            <option value="">Orange</option>
+            <option value="">Yellow</option>
+            <option value="">Red</option>
+          </select>
 
-    <div class="btn btn-primary-basic btn-advanced mt-2"><i class="far fa-tools"></i> Show advanced options</div>
+          <button class="btn btn-lg btn-primary d-inlineblock" type="submit" form="search"><i class="fas fa-search"></i> Search</button>
 
-    <section class="advanced-options mt-2">
-      <div class="row">
-        <div class="col-sm-6 col-md-4">
-          <div class="form-group">
-            <label for="before">Published before</label>
-            <input type="number" class="form-control" id="before" min="1900" max="2025">
+          <div class="btn btn-primary-basic btn-advanced mt-2"><i class="far fa-tools"></i> Show advanced options</div>
+        </div>
+      {% endspaceless %}
+
+      <section class="advanced-options mt-4">
+        <div class="row">
+          <div class="col-sm-6 col-md-4">
+            <div class="form-group">
+              <label for="before">Published before</label>
+              <input type="number" class="form-control" id="before" min="1900" max="2025">
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <div class="form-group">
+              <label for="after">Published after</label>
+              <input type="number" class="form-control" id="after" min="1900" max="2025">
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <div class="form-group">
+              <label for="type">Restrict by type</label>
+              <select class="type" multiple>
+                <option value="paper">Academic paper</option>
+                <option value="report">Report</option>
+                <option value="article">Newspaper article</option>
+              </select>
+            </div>
           </div>
         </div>
-        <div class="col-sm-6 col-md-4">
-          <div class="form-group">
-            <label for="after">Published after</label>
-            <input type="number" class="form-control" id="after" min="1900" max="2025">
-          </div>
-        </div>
-        <div class="col-sm-6 col-md-4">
-          <div class="form-group">
-            <label for="type">Restrict by type</label>
-            <select class="type" multiple>
-              <option value="paper">Academic paper</option>
-              <option value="report">Report</option>
-              <option value="article">Newspaper article</option>
-            </select>
-          </div>
-        </div>
+      </section>
+    </form>
+  </section>
+
+  <section class="container">
+    {{ article.content|safe }}
+  </section>
+
+  <section class="container">
+    <div class="row">
+      <div class="col-sm-6 col-xl-3 mb-4">
+        <a class="large-icon-box" href="#">
+          <div class="description">Case studies</div>
+          <div class="statistic">103 articles</div>
+          <i class="fad fa-search text-success" aria-hidden="true"></i>
+        </a>
       </div>
-    </section>
-    <p><button class="btn btn-primary mt-4" type="submit" form="search"><i class="fas fa-search"></i> Search</button></p>
-  </form>
+      <div class="col-sm-6 col-xl-3 mb-4">
+        <a class="large-icon-box" href="#">
+          <div class="description">Review papers</div>
+          <div class="statistic">140 articles</div>
+          <i class="fad fa-file-alt text-danger" aria-hidden="true"></i>
+        </a>
+      </div>
+      <div class="col-sm-6 col-xl-3 mb-4">
+        <a class="large-icon-box" href="#">
+          <div class="description">Browse by method</div>
+          <div class="statistic">320 articles</div>
+          <i class="fad fa-vial text-warning" aria-hidden="true"></i>
+        </a>
+      </div>
+      <div class="col-sm-6 col-xl-3 mb-4">
+        <a class="large-icon-box" href="#">
+          <div class="description">Starter's Kit</div>
+          <div class="statistic">14 articles</div>
+          <i class="fad fa-play-circle text-info" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
 
-  <h1>{{ article.title }}</h1>
-  {{ article.content|safe }}
+    <a class="btn btn-primary mt-2" href="#">
+      <i class="fas fa-file-plus fa-fw"></i> Add a missing publication
+    </a>
+    <a class="btn btn-primary-basic mt-2" href="#">
+      <i class="far fa-user-plus fa-fw"></i> Join our curation team
+    </a>
+    <a class="btn btn-primary-basic mt-2" href="#">
+      <i class="far fa-video fa-fw"></i> Watch a digital tour
+    </a>
+  </section>
 
-  <h2>Explore our collections</h2>
+  <section class="container">
+    <h2>News</h2>
 
-  <ul>
-    <li><a href="http://">Case studies</a> 103 articles</li>
-    <li><a href="http://">Review papers</a> 140 articles</li>
-    <li><a href="http://">Browse by method</a> 320 articles</li>
-    <li><a href="http://">Starter's Kit</a> 14 articles</li>
-  </ul>
+    <ul>
+      <li><a href="http://">New library website launched</a> Feb 10, 2020</li>
+      <li><a href="http://">New publication: Evaluating urban water management using a water metabolism framework: A ...</a> Feb 3, 2020</li>
+      <li><a href="http://">New publication: A systematic review of factors influencing spatiotemporal variability in urban ...</a> Feb 1, 2020</li>
+      <li><a href="http://">New publication: A systematic review of factors influencing spatiotemporal variability in urban ...</a> Feb 1, 2020</li>
+      <li><a href="http://">New publication: A systematic review of factors influencing spatiotemporal variability in urban ...</a> Feb 1, 2020</li>
+    </ul>
 
-  <h2>Action buttons</h2>
-  <p><a href="http://">Add a missing publication</a></p>
-  <p><a href="http://">Join our curation team</a></p>
-  <p><a href="http://">Watch a digital tour (help video)</a></p>
-  <h2>News</h2>
+    <h2>Download and export options</h2>
 
-  <ul>
-    <li><a href="http://">New library website launched</a> Feb 10, 2020</li>
-    <li><a href="http://">New publication: Evaluating urban water management using a water metabolism framework: A ...</a> Feb 3, 2020</li>
-    <li><a href="http://">New publication: A systematic review of factors influencing spatiotemporal variability in urban ...</a> Feb 1, 2020</li>
-    <li><a href="http://">New publication: A systematic review of factors influencing spatiotemporal variability in urban ...</a> Feb 1, 2020</li>
-    <li><a href="http://">New publication: A systematic review of factors influencing spatiotemporal variability in urban ...</a> Feb 1, 2020</li>
-  </ul>
-
-  <h2>Download and export options</h2>
-
-  <ul>
-    <li><a href="http://">Download entire library (CSV file)</a> 1,497 articles</li>
-    <li><a href="http://">Download urban case studies only (CSV file)</a> 597 articles</li>
-    <li><a href="http://">Export library to Zotero</a></li>
-  </ul>
+    <ul>
+      <li><a href="http://">Download entire library (CSV file)</a> 1,497 articles</li>
+      <li><a href="http://">Download urban case studies only (CSV file)</a> 597 articles</li>
+      <li><a href="http://">Export library to Zotero</a></li>
+    </ul>
+  </section>
 
 {% endblock %}
 
