@@ -693,11 +693,18 @@ def library_download(request):
 def library_casestudies(request, slug=None):
     list = LibraryItem.objects.filter(status="active", tags__id=TAG_ID["case_study"])
     list = list.filter(tags__id=get_site_tag(request))
+    totals = None
+    page = "casestudies.html"
+    if slug == "calendar":
+        page = "casestudies.calendar.html"
+        totals = list.values("year").annotate(total=Count("id")).order_by("year")
     context = {
         "list": list,
+        "totals": totals,
         "load_datatables": True,
+        "slug": slug,
     }
-    return render(request, "library/casestudies.html", load_specific_design(context, PAGE_ID["library"]))
+    return render(request, "library/" + page, load_specific_design(context, PAGE_ID["library"]))
 
 def library_journals(request, article):
     info = get_object_or_404(Article, pk=article)
