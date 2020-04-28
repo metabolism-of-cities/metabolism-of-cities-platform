@@ -48,6 +48,9 @@ class Record(models.Model):
     def __str__(self):
         return self.title
 
+    def get_methodologies(self):
+        self.tags.filter(parent_tag__id=318)
+
 class Document(Record):
     file = models.FileField(null=True, blank=True, upload_to="files")
     def getFileName(self):

@@ -69,6 +69,7 @@ TAG_ID = {
     "platformu_segments": 747,
     "case_study": 1,
     "urban": 11,
+    "methodologies": 318,
 }
 
 def get_site_tag(request):
