@@ -1185,9 +1185,7 @@ def dataimport(request):
                         deleted = True if not row["active"] else False
                         start = row["start"] if row["start"] else None
                         end = row["end"] if row["end"] else None
-                        if row["geojson"] and  int(row["id"]) != 156:
-                            print(GEOSGeometry(row["geojson"]))
-                            print(row["id"])
+                        if row["geojson"]:
                             geometry = GEOSGeometry(row["geojson"])
                         elif lat and lng:
                             geometry = Point(lng, lat)
