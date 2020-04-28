@@ -1169,6 +1169,7 @@ def dataimport(request):
             import sys
             csv.field_size_limit(sys.maxsize)
             from django.contrib.gis.geos import Point
+            from django.contrib.gis.geos import GEOSGeometry
 
             ReferenceSpaceLocation.objects.all().delete()
             with open(file, "r") as csvfile:
@@ -1184,24 +1185,21 @@ def dataimport(request):
                         deleted = True if not row["active"] else False
                         start = row["start"] if row["start"] else None
                         end = row["end"] if row["end"] else None
-                        if row["geojson"] and  int(row["id"]) == 73:
-                            import json 
-                            get_coordinate = json.loads(row["geojson"])
-                            print(get_coordinate["geometries"][0]["coordinates"][0][0][0])
-                            geometry = Point(12.4604, 43.9420)
+                        if row["geojson"] and  int(row["id"]) != 156:
+                            print(GEOSGeometry(row["geojson"]))
+                            print(row["id"])
+                            geometry = GEOSGeometry(row["geojson"])
                         elif lat and lng:
                             geometry = Point(lng, lat)
-                        ReferenceSpaceLocation.objects.create(
-                            id = row["id"],
-                            space_id = row["space_id"],
-                            description = row["description"],
-                            start = start,
-                            end = end,
-                            is_deleted = deleted,
-                            geometry = geometry,
-                        )
-                    if int(row["id"]) == 74:
-                        break
+                            ReferenceSpaceLocation.objects.create(
+                                id = row["id"],
+                                space_id = row["space_id"],
+                                description = row["description"],
+                                start = start,
+                                end = end,
+                                is_deleted = deleted,
+                                geometry = geometry,
+                            )
         if error:
             messages.error(request, "We could not import your data")
         else:
