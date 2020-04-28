@@ -819,8 +819,12 @@ def people_list(request):
 
 def news_list(request):
     article = get_object_or_404(Article, pk=15)
+    list = News.on_site.all()
     context = {
         "header": getHeader(article),
+        "list": list[3:],
+        "shortlist": list[:3],
+        "add_link": "/admin/core/news/add/"
     }
     return render(request, "news.list.html", context)
 
@@ -828,6 +832,9 @@ def news(request, id):
     article = get_object_or_404(Article, pk=15)
     context = {
         "header": getHeader(article),
+        "info": get_object_or_404(News, pk=id),
+        "latest": News.on_site.all()[:3],
+        "edit_link": "/admin/core/news/" + str(id) + "/change/"
     }
     return render(request, "news.html", context)
 
@@ -1581,6 +1588,24 @@ def dataimport(request):
                     else:
                         info.url = row["url"]
                     info.save()
+        elif request.GET["table"] == "articles":
+            #Article.objects.filter(old_id__isnull=False).delete()
+            News.objects.filter(old_id__isnull=False).delete()
+            import sys
+            csv.field_size_limit(sys.maxsize)
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    if row["parent_id"] == "61" or row["parent_id"] == "142":
+                        News.objects.create(
+                            title = row["title"],
+                            content = row["content"],
+                            old_id = row["id"],
+                            site_id = row["site_id"],
+                            date = row["date"],
+                            image = row["image"],
+                            is_deleted = False if row["active"] == "t" else True,
+                        )
         elif request.GET["table"] == "referencespaces":
             ReferenceSpace.objects.all().delete()
             checkward = Geocode.objects.filter(name="Wards")

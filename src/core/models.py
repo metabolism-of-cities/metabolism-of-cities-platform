@@ -80,8 +80,14 @@ class Project(Record):
 
 class News(Record):
     date = models.DateField()
+    site = models.ForeignKey(Site, on_delete=models.CASCADE)
+    objects = models.Manager()
+    on_site = CurrentSiteManager()
     class Meta:
         verbose_name_plural = "news"
+        ordering = ["-date", "-id"]
+    def get_absolute_url(self):
+        return reverse("news", args=[self.id])
 
 class Organization(Record):
     url = models.CharField(max_length=255, null=True, blank=True)
