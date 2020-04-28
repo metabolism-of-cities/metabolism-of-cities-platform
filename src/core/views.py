@@ -363,6 +363,7 @@ def metabolism_manager_clusters(request, organization):
             belongs_to = Record.objects.get(pk=organization)
         )
     context = {
+        "info": Organization.objects.get(pk=organization),
         "tags": Tag.objects.filter(belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"])
     }
     return render(request, "metabolism_manager/admin/clusters.html", load_specific_design(context, PAGE_ID["platformu"]))
@@ -373,15 +374,47 @@ def metabolism_manager_admin_map(request):
     }
     return render(request, "metabolism_manager/admin/map.html", load_specific_design(context, PAGE_ID["platformu"]))
 
-def metabolism_manager_admin_entity(request, id):
+def metabolism_manager_admin_entity(request, organization, id):
     context = {
-        "page": "entity"
+        "page": "entity",
+        "organization": Organization.objects.get(pk=organization),
+        "info": Organization.objects.get(pk=id),
     }
     return render(request, "metabolism_manager/admin/entity.html", load_specific_design(context, PAGE_ID["platformu"]))
 
-def metabolism_manager_admin_entity_form(request, id=None):
+def metabolism_manager_admin_entity_form(request, organization, id=None):
+    organization = Organization.objects.get(pk=organization)
+    edit = False
+    if id:
+        info = Organization.objects.get(pk=id)
+        edit = True
+    else:
+        info = None
+    if request.method == "POST":
+        if not edit:
+            info = Organization()
+        info.title = request.POST["name"]
+        info.content = request.POST["description"]
+        info.url = request.POST["url"]
+        info.email = request.POST["email"]
+        if "status" in request.POST:
+            info.is_deleted = False
+        else:
+            info.is_deleted = True
+        info.image = request.POST["image"]
+        info.save()
+        if "tag" in request.GET:
+            tag = Tag.objects.get(pk=request.GET["tag"])
+            info.tags.add(tag)
+        messages.success(request, "The information was saved.")
+        if edit:
+            return redirect("/platformu/admin/" + str(organization.id) + "/entities/" + str(info.id) + "/")
+        else:
+            return redirect("/platformu/admin/" + str(organization.id) + "/clusters/")
     context = {
-        "page": "entity_form"
+        "page": "entity_form",
+        "organization": organization,
+        "info": info,
     }
     return render(request, "metabolism_manager/admin/entity.form.html", load_specific_design(context, PAGE_ID["platformu"]))
 
