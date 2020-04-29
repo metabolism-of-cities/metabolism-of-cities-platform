@@ -13,6 +13,7 @@ from django.conf import settings
 from markdown import markdown
 from tinymce import HTMLField
 import re
+from django.utils.text import slugify
 
 class Tag(models.Model):
     name = models.CharField(max_length=255)
@@ -345,6 +346,9 @@ class ActivatedSpace(models.Model):
         return reverse("dashboard", args=[self.slug])
     class Meta:
         unique_together = ["slug", "site"]
+    def save(self):
+        self.slug = slugify(self.space)
+        super().save()
 
 #MOOC's
 class MOOC(models.Model):

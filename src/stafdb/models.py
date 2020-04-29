@@ -4,6 +4,7 @@ from django.urls import reverse
 # Used for image resizing
 from stdimage.models import StdImageField
 from django.conf import settings
+from django.utils.text import slugify
 
 # The geocode scheme defines a particular standard, for instance 3166-1 or the South African postal code system
 class GeocodeScheme(models.Model):
@@ -43,6 +44,9 @@ class ReferenceSpace(models.Model):
     geocodes = models.ManyToManyField(Geocode, through="ReferenceSpaceGeocode")
     def __str__(self):
         return self.name
+    def save(self):
+        self.slug = slugify(self.name)
+        super().save()
     @property
     def is_city(self):
         #check = self.geocodes.filter(id=123)

@@ -81,6 +81,7 @@ class ReferenceSpaceAdmin(SearchAdmin):
     list_display = ["name", "location_date", "is_deleted"]
     search_fields = ["name"]
     autocomplete_fields = ["location"]
+    exclude = ("slug",)
     def location_date(self, obj):
         return obj.location.start if obj.location else None
 
@@ -97,6 +98,7 @@ class SpaceAdmin(admin.ModelAdmin):
     list_display = ["space", "slug", "site"]
     search_fields = ["space__name"]
     autocomplete_fields = ["space"]
+    exclude = ("slug",)
 
 class LocationAdmin(admin.GeoModelAdmin):
     search_fields = ["name"]
