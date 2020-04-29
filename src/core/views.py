@@ -593,6 +593,7 @@ def stafcp_referencespaces_list(request, id):
 def stafcp_referencespace(request, id):
     context = {
         "info": ReferenceSpace.objects.get(pk=id),
+        "location": info.location,
     }
     return render(request, "stafcp/referencespace.html", load_specific_design(context, PAGE_ID["stafcp"]))
 
