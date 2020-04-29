@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.gis.db import models
 from django.urls import reverse
+# Used for image resizing
+from stdimage.models import StdImageField
+from django.conf import settings
 
 # The geocode scheme defines a particular standard, for instance 3166-1 or the South African postal code system
 class GeocodeScheme(models.Model):
@@ -134,4 +137,3 @@ class Material(models.Model):
     description = models.TextField(null=True, blank=True)
     def __str__(self):
         return self.code + " - " + self.name
-

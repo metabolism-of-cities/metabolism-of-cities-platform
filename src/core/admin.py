@@ -99,6 +99,10 @@ class LocationAdmin(admin.GeoModelAdmin):
     search_fields = ["name"]
     autocomplete_fields = ["space"]
 
+class PhotoAdmin(admin.ModelAdmin):
+    search_fields = ["space__name"]
+    list_display = ["space", "uploaded_by", "description"]
+
 class LogEntryAdmin(admin.ModelAdmin):
     # to have a date-based drilldown navigation in the admin page
     date_hierarchy = "action_time"
@@ -144,6 +148,9 @@ admin_site.register(LibraryItem, LibraryAdmin)
 admin_site.register(LibraryItemType, SearchAdmin)
 admin_site.register(Journal, SearchCompleteAdmin)
 admin_site.register(ActivatedSpace, SpaceAdmin)
+
+admin_site.register(License)
+admin_site.register(Photo, PhotoAdmin)
 
 admin_site.register(MOOC)
 admin_site.register(MOOCModule)

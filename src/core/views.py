@@ -1633,6 +1633,52 @@ def dataimport(request):
                             image = row["image"],
                             is_deleted = False if row["active"] == "t" else True,
                         )
+        elif request.GET["table"] == "users":
+            User.objects.all().delete()
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    User.objects.create(
+                        id = row["id"],
+                        password = row["password"],
+                        last_login = row["last_login"] if row["last_login"] else None,
+                        is_superuser = row["is_superuser"],
+                        username = row["username"],
+                        first_name = row["first_name"],
+                        last_name = row["last_name"],
+                        email = row["email"],
+                        is_staff = row["is_staff"],
+                        is_active = row["is_active"],
+                        date_joined = row["date_joined"],
+                    )
+            from django.db import migrations
+            migrations.RunSQL("SELECT setval('auth_user_id_seq', (SELECT MAX(id) FROM auth_user)+1);")
+        elif request.GET["table"] == "photos":
+            License.objects.all().delete()
+            Photo.objects.all().delete()
+            with open(settings.MEDIA_ROOT + "/import/licenses.csv", "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    License.objects.create(
+                        id = row["id"],
+                        name = row["name"],
+                        url = row["url"],
+                    )
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    Photo.objects.create(
+                        image = row["image"],
+                        author = row["author"],
+                        source_url = row["source_url"],
+                        description = row["description"],
+                        space_id = row["secondary_space_id"] if row["secondary_space_id"] else row["primary_space_id"],
+                        uploaded_by_id = row["uploaded_by_id"],
+                        is_deleted = row["deleted"],
+                        license_id = row["license_id"],
+                        type = row["type"],
+                        position = row["position"],
+                    )
         elif request.GET["table"] == "referencespaces":
             ReferenceSpace.objects.all().delete()
             checkward = Geocode.objects.filter(name="Wards")
