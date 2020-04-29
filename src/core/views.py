@@ -1835,6 +1835,27 @@ def dataimport(request):
         else:
             messages.success(request, "Data was imported")
     context = {
-
+        "tags": Tag.objects.all().count(),
+        "activities": Activity.objects.all().count(),
+        "projects": Project.objects.all().count(),
+        "organizations": Organization.objects.all().count(),
+        "videos": Video.objects.all().count(),
+        "people": People.objects.all().count(),
+        "spaces": ReferenceSpace.objects.all().count(),
+        "locations": ReferenceSpaceLocation.objects.all().count(),
+        "libraryitems": LibraryItem.objects.all().count(),
+        "librarytypes": LibraryItemType.objects.all().count(),
+        "tttt": Tag.objects.all().count(),
+        "publishers": Organization.objects.filter(type="publisher").count(),
+        "news": News.objects.all().count(),
+        "journals": Journal.objects.all().count(),
+        "publications": LibraryItem.objects.all().count(),
+        "users": User.objects.all().count(),
+        "photos": Photo.objects.all().count(),
+        "sectors": Sector.objects.all().count(),
+        "sectoractivities": Tag.objects.all().count(),
+        "spacesectors": ReferenceSpaceSector.objects.all().count(),
+        "librarytags": LibraryItem.tags.through.objects.all().count(),
+        "libraryspaces": LibraryItem.spaces.through.objects.all().count(),
     }
     return render(request, "temp.import.html", context)
