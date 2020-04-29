@@ -281,7 +281,7 @@ def article(request, id=None, prefix=None, slug=None, project=None):
     context = {
         "info": info,
         "menu": menu,
-        "edit_link": "/admin/core/article/" + str(info.id) + "/change/",
+        "edit_link": "/admin/core/article/" + str(info.id) + "/change/?short=true",
         "add_link": "/admin/core/article/add/",
         "design_link": design_link,
         "header": getHeader(info),
