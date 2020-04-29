@@ -33,6 +33,8 @@ class Geocode(models.Model):
     is_deleted = models.BooleanField(default=False, db_index=True)
     def __str__(self):
         return self.name
+    class Meta:
+        ordering = ["depth", "id"]
 
 # The reference space, for instance the country "South Africa", the city "Cape Town", or the postal code 8000
 class ReferenceSpace(models.Model):

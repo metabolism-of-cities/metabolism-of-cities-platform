@@ -16,48 +16,28 @@
 
     <div class="row">
       <div class="col-lg-6">
-        <p>
-          <select name="geocode_level">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-          </select>
-          <input type="text" name="geocode_name" />
-        </p>
-        <p>
-          <select name="geocode_level">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-          </select>
-          <input type="text" name="geocode_name" />
-        </p>
-        <p>
-          <select name="geocode_level">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-          </select>
-          <input type="text" name="geocode_name" />
-        </p>
+        <div class="levels">
+          {% for each in geocodes %}
+            <p>
+              <select name="geocode_level">
+                <option value=""></option>
+                {% for depth in depths %}
+                  <option value="{{ depth }}" {% if each.depth == depth %}selected{% endif %}>{{ depth }}</option>
+                {% endfor %}
+              </select>
+              <input type="text" name="geocode_name" value="{{ each }}"/>
+            </p>
+          {% endfor %}
+          <p>
+            <select name="geocode_level">
+              <option value=""></option>
+              {% for depth in depths %}
+                <option value="{{ depth }}">{{ depth }}</option>
+              {% endfor %}
+            </select>
+            <input type="text" name="geocode_name" />
+          </p>
+        </div>
       </div>
       <div class="col-lg-6" style="background:#ccc">
         Show mermaid graph
@@ -70,4 +50,17 @@
   </form>
 
   <p><a href="{% url "stafcp_geocodes" %}" class="btn btn-primary">Back to schema list</a></p>
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+$(function(){
+  $("select[name=geocode_level]").change(function(){
+    empty_selects = $(".levels option:selected[value='']").length;
+    if (!empty_selects) {
+      $(this).closest("p").clone(true).appendTo(".levels");
+    }
+  });
+});
+</script>
 {% endblock %}

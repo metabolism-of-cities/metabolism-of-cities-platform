@@ -4,29 +4,24 @@
 {% block content %}
   <h1>{{ info }}</h1>
 
-  <p>Description:</p>
-  <p>{{ info.description }}</p>
+  {% if info.description %}
+    <p>Description:</p>
+    <p>{{ info.description }}</p>
+  {% endif %}
 
-  <p>Read more: {{ info.url }}</p>
+  {% if info.url %}
+    <p>Read more: {{ info.url }}</p>
+  {% endif %}
 
   <hr>
 
-  <div class="card">
-    <div class="card-header">
-      Geocode overview
-    </div>
-    <div class="card-body mermaid">
-      graph TB
-        {% for each in geocodes %}
-        item{{ each.id }}-->item{{ each.id }}[{{ each.name }}]
-        {% endfor %}
-    </div>
-  </div>
-
-  <h2>Alternative view:</h2>
+  <h2>Scheme levels:</h2>
   {% for each in geocodes %}
     <p style="padding-left:{{ each.depth }}vw">{{ each.depth }}. {{ each.name }}</p>
   {% endfor %}
 
-  <p><a href="{% url "stafcp_geocodes" %}" class="btn btn-primary">Back to schema list</a></p>
+  <p>
+    <a href="{% url "stafcp_geocodes" %}" class="btn btn-primary">Back to schema list</a>
+    <a href="{% url "stafcp_geocode_form" info.id %}" class="btn btn-primary">Edit</a>
+  </p>
 {% endblock %}

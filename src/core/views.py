@@ -713,10 +713,12 @@ def stafcp_geocode_form(request, id=None):
         info = GeocodeScheme.objects.get(pk=id)
         form = ModelForm(request.POST or None, instance=info)
         add = False
+        geocodes = info.geocodes.all()
     else:
         info = None
         form = ModelForm(request.POST or None)
         add = True
+        geocodes = Geocode()
     if request.method == "POST":
         if form.is_valid():
             info = form.save()
@@ -747,6 +749,8 @@ def stafcp_geocode_form(request, id=None):
         "info": info,
         "form": form,
         "load_mermaid": True,
+        "depths": range(1,11),
+        "geocodes": geocodes,
     }
     return render(request, "stafcp/geocode/form.html", load_specific_design(context, PAGE_ID["stafcp"]))
 
