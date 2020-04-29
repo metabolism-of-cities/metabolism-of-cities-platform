@@ -1186,7 +1186,8 @@ def dataimport(request):
                         start = row["start"] if row["start"] else None
                         end = row["end"] if row["end"] else None
                         if row["geojson"]:
-                            geometry = GEOSGeometry(row["geojson"])
+                            if int(row["id"]) != 156 and int(row["id"]) != 168 and int(row["id"]) != 261:
+                                geometry = GEOSGeometry(row["geojson"])
                         elif lat and lng:
                             geometry = Point(lng, lat)
                             ReferenceSpaceLocation.objects.create(
