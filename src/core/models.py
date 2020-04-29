@@ -13,7 +13,6 @@ from django.conf import settings
 from markdown import markdown
 from tinymce import HTMLField
 import re
-from django.utils.text import slugify
 
 class Tag(models.Model):
     name = models.CharField(max_length=255)
@@ -40,6 +39,10 @@ class Tag(models.Model):
     class Meta:
         ordering = ["name"]
 
+class ExcludeDeletedRecordManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().exclude(is_deleted=True)
+
 class Record(models.Model):
     title = models.CharField(max_length=255)
     content = HTMLField(null=True, blank=True)
@@ -52,6 +55,9 @@ class Record(models.Model):
 
     def get_methodologies(self):
         self.tags.filter(parent_tag__id=318)
+
+    objects_including_deleted = models.Manager()
+    objects = ExcludeDeletedRecordManager()
 
 class Document(Record):
     file = models.FileField(null=True, blank=True, upload_to="files")
@@ -346,9 +352,6 @@ class ActivatedSpace(models.Model):
         return reverse("dashboard", args=[self.slug])
     class Meta:
         unique_together = ["slug", "site"]
-    def save(self):
-        self.slug = slugify(self.space)
-        super().save()
 
 #MOOC's
 class MOOC(models.Model):
