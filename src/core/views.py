@@ -1755,27 +1755,27 @@ def dataimport(request):
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
-                    if row["active"] == "t":
-                        deleted = False if row["active"] == "t" else True
-                        space = ReferenceSpace.objects.create(
-                            id = row["id"],
-                            name = row["name"],
-                            description = row["description"],
-                            slug = row["slug"],
-                            is_deleted = deleted,
-                        )
-                        if int(row["type_id"]) == 45 and checkward:
-                            space.geocodes.add(checkward[0])
-                        elif int(row["type_id"]) == 3 and checkcities:
-                            space.geocodes.add(checkcities[0])
-                        elif int(row["type_id"]) == 2 and checkcountries:
-                            space.geocodes.add(checkcountries[0])
-                        elif int(row["type_id"]) == 21 and checkisland:
-                            space.geocodes.add(checkisland[0])
+                    deleted = False if row["active"] == "t" else True
+                    space = ReferenceSpace.objects.create(
+                        id = row["id"],
+                        name = row["name"],
+                        description = row["description"],
+                        slug = row["slug"],
+                        is_deleted = deleted,
+                    )
+                    if int(row["type_id"]) == 45 and checkward:
+                        space.geocodes.add(checkward[0])
+                    elif int(row["type_id"]) == 3 and checkcities:
+                        space.geocodes.add(checkcities[0])
+                    elif int(row["type_id"]) == 2 and checkcountries:
+                        space.geocodes.add(checkcountries[0])
+                    elif int(row["type_id"]) == 21 and checkisland:
+                        space.geocodes.add(checkisland[0])
         elif request.GET["table"] == "referencespacelocations":
             import sys
             csv.field_size_limit(sys.maxsize)
             from django.contrib.gis.geos import Point
+            from django.contrib.gis.geos import GEOSGeometry
 
             ReferenceSpaceLocation.objects.all().delete()
             with open(file, "r") as csvfile:
@@ -1792,7 +1792,12 @@ def dataimport(request):
                         start = row["start"] if row["start"] else None
                         end = row["end"] if row["end"] else None
                         if row["geojson"]:
-                            geometry = Point(12.4604, 43.9420)
+                            try:
+                                geometry = GEOSGeometry(row["geojson"])
+                            except Exception as e:
+                                print("Houston, we have a problem!")
+                                print(e)
+                                print(row["id"])
                         elif lat and lng:
                             geometry = Point(lng, lat)
                         try:
@@ -1809,6 +1814,7 @@ def dataimport(request):
                             space.location = location
                             space.save()
                         except Exception as e:
+                            print("Not imported because there is an error")
                             print(e)
                             print(row["space_id"])
         if error:
