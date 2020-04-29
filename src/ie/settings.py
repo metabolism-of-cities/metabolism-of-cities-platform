@@ -61,6 +61,10 @@ MIDDLEWARE = [
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
 ]
 
+CRON_CLASSES = [
+    'core.crons.CreateMapJS',
+]
+
 ROOT_URLCONF = 'ie.urls'
 
 TEMPLATES = [
