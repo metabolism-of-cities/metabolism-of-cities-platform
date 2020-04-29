@@ -1664,6 +1664,42 @@ def dataimport(request):
                             image = row["image"],
                             is_deleted = False if row["active"] == "t" else True,
                         )
+        elif request.GET["table"] == "sectors":
+            Sector.objects.all().delete()
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    Sector.objects.create(
+                        id = row["id"],
+                        name = row["name"],
+                        icon = row["icon"],
+                        slug = row["slug"],
+                        description = row["description"],
+                    )
+            from django.db import migrations
+            info = migrations.RunSQL("SELECT setval('stafdb_sector_id_seq', (SELECT MAX(id) FROM stafdb_sector)+1);")
+        elif request.GET["table"] == "sectoractivities":
+            sectors = Sector.objects.all()
+            for each in sectors:
+                each.activities.clear()
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                sectors = {}
+                for row in contents:
+                    row["processgroup_id"] = int(row["processgroup_id"])
+                    if row["processgroup_id"] not in sectors:
+                        sectors[row["processgroup_id"]] = Sector.objects.get(pk=row["processgroup_id"])
+                    sector = sectors[row["processgroup_id"]]
+                    sector.activities.add(Activity.objects.get(pk=row["process_id"]))
+        elif request.GET["table"] == "spacesectors":
+            ReferenceSpaceSector.objects.all().delete()
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    ReferenceSpaceSector.objects.create(
+                        space_id = row["space_id"],
+                        sector_id = row["process_group_id"],
+                    )
         elif request.GET["table"] == "users":
             User.objects.all().delete()
             with open(file, "r") as csvfile:

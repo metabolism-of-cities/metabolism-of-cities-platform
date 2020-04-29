@@ -19,6 +19,9 @@
     <li><a href="/dataimport/?table=articles">Articles</a></li>
     <li><a href="/dataimport/?table=users">Users</a></li>
     <li><a href="/dataimport/?table=photos">Photos</a></li>
+    <li><a href="/dataimport/?table=sectors">Sectors</a></li>
+    <li><a href="/dataimport/?table=sectoractivities">Sector activities</a></li>
+    <li><a href="/dataimport/?table=spacesectors">Space sectors</a></li>
   </ul>
 
   <hr>
@@ -42,6 +45,10 @@ ssh -t industrialecology 'csvdump "SELECT * FROM core_article ORDER BY id" artic
 ssh -t industrialecology 'csvdump "SELECT * FROM multiplicity_license ORDER BY id" licenses.csv'
 ssh -t industrialecology 'csvdump "SELECT * FROM multiplicity_photo ORDER BY id" photos.csv'
 ssh -t industrialecology 'csvdump "SELECT * FROM auth_user ORDER BY id" users.csv'
+ssh -t industrialecology 'csvdump "SELECT * FROM multiplicity_processgroup ORDER BY id" sectors.csv'
+ssh -t industrialecology 'csvdump "SELECT * FROM multiplicity_processgroup ORDER BY id" sectors.csv'
+ssh -t industrialecology 'csvdump "SELECT * FROM multiplicity_processgroup_processes ORDER BY id" sectoractivities.csv'
+ssh -t industrialecology 'csvdump "SELECT * FROM multiplicity_referencespacesector ORDER BY id" spacesectors.csv'
   </pre>
 
 {% endblock %}

@@ -142,3 +142,23 @@ class Material(models.Model):
     description = models.TextField(null=True, blank=True)
     def __str__(self):
         return self.code + " - " + self.name
+
+class Sector(models.Model):
+    name = models.CharField(max_length=255)
+    icon = models.CharField(max_length=255, null=True, blank=True)
+    photo = models.ForeignKey("core.Photo", on_delete=models.SET_NULL, null=True, blank=True)
+    slug = models.SlugField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+    activities = models.ManyToManyField(Activity)
+
+    def __str__(self):
+        return self.name
+    #def spaces(self):
+    #    return ReferenceSpaceType.objects.filter(processes__in=self.processes.all())
+    #def datasets(self):
+    #    return DatasetType.objects.filter(Q(origin_process__in=self.processes.all()) | Q(destination_process__in=self.processes.all()))
+
+class ReferenceSpaceSector(models.Model):
+    space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE, related_name="sectors")
+    sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
+
