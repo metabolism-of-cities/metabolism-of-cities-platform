@@ -39,6 +39,13 @@ class ArticleAdmin(admin.ModelAdmin):
         else:
             return super(ArticleAdmin, self).response_add(request, obj, post_url_continue=None)
 
+    def change_view(self, request, object_id, extra_content=None):
+         if "short" in request.GET:
+            self.fields = ["title", "content"]
+         else:
+            self.fields = ["title", "content", "is_deleted", "image", "tags","site", "slug", "position", "parent", "old_id"]
+         return super().change_view(request, object_id)
+
 class ArticleDesignAdmin(admin.ModelAdmin):
     class Media:
         css = {
