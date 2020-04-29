@@ -318,6 +318,7 @@ def datahub_dashboard(request, space):
     context = {
         "space": space,
         "header_image": space.photo,
+        "dashboard": True,
     }
     return render(request, "data/dashboard.html", load_specific_design(context, PAGE_ID["multiplicity"]))
 

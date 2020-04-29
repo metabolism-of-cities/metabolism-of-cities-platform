@@ -1100,6 +1100,14 @@ body.city-subsite {
     position: sticky;
     top: 0;
 
+    &.smaller {
+      height: 15vh;
+      // Attempt of Paul to reduce the height when class=smaller, doesn't work
+      // It's not hardcoded as a pure hack in top-layer.html
+      // If and when this is done properly in this scss file, please remove the style attribute
+      // from top-layer (search for img-city, it's inside that tag
+    }
+
     .black-cover {
       background-color: $black;
       opacity: .3;
@@ -1116,6 +1124,7 @@ body.city-subsite {
       bottom: 1rem;
     }
   }
+
 
   .down-city-name {
     font-weight: bold;

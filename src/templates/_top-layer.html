@@ -124,20 +124,21 @@
   {% elif header.type == "image" %}
     <div style="background-image: url('{{ header.image }}');height:800px;background-size:cover"></div>
   {% elif subsite.id == 51 and space %}
-    <div id="img-city" style="background-image: url('{{ space.photo.image.url }}');">
+    <div id="img-city" {% if not dashboard %}class="smaller"{% endif %} style="background-image: url('{{ space.photo.image.url }}'){% if not dashboard %}; height:20vh"{% endif %}">
       <div class="black-cover"></div>
 
-      <div class="container">
-        <div class="city-name">{{ space }}</div>
-      </div>
+      {% if not dashboard %}
+        <div class="container">
+          <div class="city-name" style="color:#fff;font-size:30px">{{ space }}</div>
+          <div class="down-city-name">
+            <a href="{% url "datahub_dashboard" space.slug %}"><i class="fad fa-arrow-circle-left"></i></a>
+            <span>Back to dashboard</span>
+          </div>
+        </div>
+      {% endif %}
+
     </div>
 
-    <div class="down-city-name">
-      <div class="container">
-        <a href="{{ SITE_URL }}"><i class="fad fa-arrow-circle-left"></i></a>
-        <span>{{ space }}</span>
-      </div>
-    </div>
   {% endif %}
 
 </div>
@@ -152,7 +153,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#">Overview</a>
+            <a class="nav-link" href="{% url "datahub_dashboard" space.slug %}">Overview</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">City Profile</a>
