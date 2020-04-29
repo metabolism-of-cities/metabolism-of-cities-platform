@@ -107,8 +107,8 @@ class SpaceAdmin(admin.ModelAdmin):
     autocomplete_fields = ["space"]
     exclude = ("slug",)
 
-class LocationAdmin(admin.GeoModelAdmin):
-    search_fields = ["name"]
+class LocationAdmin(admin.OSMGeoAdmin):
+    search_fields = ["referencespace__name"]
     autocomplete_fields = ["space"]
 
 class PhotoAdmin(admin.ModelAdmin):
