@@ -9,7 +9,7 @@
         integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
         crossorigin=""/>
 
-  <!-- leaflet fullscreen plugin -- https://github.com/Leaflet/Leaflet.fullscreen -->
+  <!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
   <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
 {% endblock %}
 
@@ -81,11 +81,11 @@
           crossorigin="">
   </script>
 
-  <!-- leaflet fullscreen plugin -- https://github.com/Leaflet/Leaflet.fullscreen -->
+  <!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
   <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
 
   <script>
-    // create leaflet map -- https://leafletjs.com/reference-1.6.0.html
+    // create leaflet map - https://leafletjs.com/reference-1.6.0.html
     var map = L.map("map", {
       center: [-33.9815, 18.5319],
       zoom: 11,
@@ -302,7 +302,7 @@
       // add all listings to the filter array
       var filteredListings = $.extend(true, {}, allListings);
 
-      // inefficiently filtering one by one -- could/should be improved
+      // inefficiently filtering one by one - could/should be improved
       // filter status
       for (var i = filteredListings.features.length - 1; i >= 0; i--) {
         if (status != "all") {

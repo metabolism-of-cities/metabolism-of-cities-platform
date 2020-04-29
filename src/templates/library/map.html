@@ -1,33 +1,46 @@
 {% extends "_base.html" %}
 
+{% block page_name %}library map{% endblock %}
+
 {% block head %}
   <link rel="stylesheet"
         href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
         integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
         crossorigin=""/>
 
-  <!-- leaflet marker cluster plugin -- https://github.com/Leaflet/Leaflet.markercluster  -->
-
+  <!-- leaflet marker cluster plugin - https://github.com/Leaflet/Leaflet.markercluster -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
 {% endblock %}
 
 {% block content %}
   <h1>{{ article.title }}</h1>
-  {{ article.content|safe }}
+  <p>
+    {{ article.content|safe }}
+  </p>
 
-  <div id="map" class="leaflet-map"></div>
+  <div id="map" class="leaflet-map mb-4"></div>
 
-  <h2>Records</h2>
-  {% for each in items %}
-    <h3><a href="{{ each.get_absolute_url }}">{{ each }}</a></h3>
-    <ul>
-    {% for space in each.spaces.all %}
-      {% if space.is_city and space.location.geometry %}
-        <li>{{ space }}: {{ space.location.geometry.centroid.0 }}, {{ space.location.geometry.centroid.1 }}</li>
-      {% endif %}
-    {% endfor %}
-    </ul>
-    
-  {% endfor %}
+  <h2 class="city-name mt-4"></h2>
+
+  <div id="article-list">
+    <div class="row">
+      {% for each in items %}
+        <div class="single-article col-md-6 mb-4" data-cities="{% for space in each.spaces.all %}{{ space }}{% if not forloop.last %} {% endif %}{% endfor %}">
+          <a class="card btn-card" href="{{ each.get_absolute_url }}">
+            <div class="card-body">
+              <div class="title">{{ each }}</div>
+              <div class="badges">
+                {% for space in each.spaces.all %}
+                  <span class="badge badge-primary">{{ space }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
 
 {% endblock %}
 
@@ -37,19 +50,78 @@
           crossorigin="">
   </script>
 
-  <!-- leaflet marker cluster plugin -- https://github.com/Leaflet/Leaflet.markercluster  -->
-  <script src="https://unpkg.com/browse/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+  <!-- leaflet marker cluster plugin - https://github.com/Leaflet/Leaflet.markercluster -->
+  <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
   <script>
     // https://leafletjs.com/reference-1.6.0.html
-    var map = L.map("map").setView([51.505, -0.09], 13);
+    const map = L.map("map", {
+      scrollWheelZoom: false,
+      center: [20, 0],
+      zoom: 2
+    });
     L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-      maxZoom: 18,
+      maxZoom: 15,
       id: "mapbox/streets-v11",
       tileSize: 512,
       zoomOffset: -1,
     }).addTo(map);
-    var marker = L.marker([51.5, -0.09]).addTo(map);
+
+    // add all cities to an array
+    var allCities = [];
+    {% for each in items %}
+      {% for space in each.spaces.all %}
+        {% if space.is_city and space.location.geometry %}
+          allCities.push({
+            "city": "{{ space }}",
+            "lat": {{ space.location.geometry.centroid.1 }},
+            "lon": {{ space.location.geometry.centroid.0 }},
+          });
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+
+    // remove duplicates from cities array
+    var cities = allCities.filter((city, index, self) =>
+      index === self.findIndex((t) => (
+        t.city === city.city
+      ))
+    )
+
+    // get number of articles per city - https://stackoverflow.com/a/43673826
+    var articlesPerCity = allCities.reduce( (acc, o) => (acc[o.city] = (acc[o.city] || 0)+1, acc), {} );
+
+    // loop through cities and add number of articles for each
+    let i;
+    for (i = 0; i < Object.keys(cities).length; i++) {
+      cities[i].articles = articlesPerCity[cities[i].city];
+    }
+
+    function openCity(e) {
+      let cityName = e.layer.options.city;
+
+      $("h2.city-name").text(cityName);
+      $(".single-article").removeClass("visible");
+      $(".single-article").each(function() {
+        if ( $(this).data("cities").includes(cityName) ) {
+          $(this).addClass("visible")
+        }
+      });
+    }
+
+    // create marker group for all cities
+    var citiesMarkers = L.markerClusterGroup();
+    cities.forEach(
+      city => citiesMarkers.addLayer(L.circleMarker([city.lat, city.lon], {
+        color: "#144d58",
+        fillOpacity: .7,
+        weight: 2,
+        radius: 5 + city.articles,
+        city: city.city,
+      })).on("click", openCity)
+    );
+
+    map.addLayer(citiesMarkers);
   </script>
 {% endblock %}

@@ -1934,3 +1934,13 @@ body.library.search {
     }
   }
 }
+
+body.library.map {
+  #map {
+    height: 500px;
+  }
+
+  .single-article:not(.visible) {
+    display: none;
+  }
+}
