@@ -339,6 +339,26 @@ def datahub_maps(request, space):
     }
     return render(request, "data/maps.html", load_specific_design(context, PAGE_ID["multiplicity"]))
 
+def datahub_library(request, space, type):
+    space = get_space(request, space)
+    list = LibraryItem.objects.filter(spaces=space)
+    if type == "articles":
+        title = "Journal articles"
+        list = list.filter(type__group="academic")
+    elif type == "reports":
+        list = list.filter(type__group="reports")
+        title = "Reports"
+    elif type == "theses":
+        list = list.filter(type__group="theses")
+        title = "Theses"
+    context = {
+        "space": space,
+        "header_image": space.photo,
+        "title": title,
+        "items": list,
+    }
+    return render(request, "data/library.html", load_specific_design(context, PAGE_ID["multiplicity"]))
+
 def datahub_sector(request, space, sector):
     context = {
     }

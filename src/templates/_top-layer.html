@@ -124,7 +124,7 @@
   {% elif header.type == "image" %}
     <div style="background-image: url('{{ header.image }}');height:800px;background-size:cover"></div>
   {% elif subsite.id == 51 and space %}
-    <div id="img-city" {% if not dashboard %}class="smaller"{% endif %} style="background-image: url('{{ space.photo.image.url }}'){% if not dashboard %}; height:20vh"{% endif %}">
+    <div id="img-city" {% if not dashboard %}class="smaller"{% endif %} style="background-image: url('{{ space.photo.image.url }}'){% if not dashboard %}; height:15vh"{% endif %}">
       <div class="black-cover"></div>
 
       {% if not dashboard %}
@@ -163,10 +163,10 @@
               Resources
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Agriculture</a>
-              <a class="dropdown-item" href="#">Water</a>
-              <a class="dropdown-item" href="#">Waste</a>
-              <a class="dropdown-item" href="#">Energy</a>
+              <a class="dropdown-item" href="{% url "datahub_journal_articles" space.slug %}">Journal articles</a>
+              <a class="dropdown-item" href="{% url "datahub_reports" space.slug %}">Reports</a>
+              <a class="dropdown-item" href="{% url "datahub_theses" space.slug %}">Theses</a>
+              <a class="dropdown-item" href="{% url "datahub_photos" space.slug %}">Photos</a>
             </div>
           </li>
           <li class="nav-item dropdown">

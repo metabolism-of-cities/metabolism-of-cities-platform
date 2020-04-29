@@ -69,7 +69,10 @@ urlpatterns = [
     path("data/<slug:space>/sectors/<slug:sector>/", views.datahub_sector, name="datahub_sector"),
     path("data/<slug:space>/datasets/<slug:dataset>/", views.datahub_dataset, name="datahub_dataset"),
     path("data/<slug:space>/", views.datahub_dashboard, name="datahub_dashboard"),
-    path("data/<slug:space>/photos/", views.datahub_photos, name="datahub_photos"),
+    path("data/<slug:space>/resources/photos/", views.datahub_photos, name="datahub_photos"),
+    path("data/<slug:space>/resources/reports/", views.datahub_library, {"type": "reports"}, name="datahub_reports"),
+    path("data/<slug:space>/resources/theses/", views.datahub_library, {"type": "theses"}, name="datahub_theses"),
+    path("data/<slug:space>/resources/journal-articles/", views.datahub_library, {"type": "articles"}, name="datahub_journal_articles"),
     path("data/<slug:space>/maps/", views.datahub_maps, name="datahub_maps"),
 
     # PlatformU
