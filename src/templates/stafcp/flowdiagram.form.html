@@ -20,7 +20,7 @@
       <div class="card-body mermaid">
         graph TB
           {% for each in blocks %}
-          block{{ each.origin.id }}[{{ each.origin.name|escapejs }}] --> block{{ each.destination.id }}[{{ each.destination.name|escapejs }}]
+          block{{ each.get_origin_slug }}[{{ each.get_origin|escapejs }}] --> block{{ each.get_destination_slug }}[{{ each.get_destination|escapejs }}]
           {% endfor %}
       </div>
     </div>
@@ -34,7 +34,7 @@
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">From</label>
         <div class="col-sm-10">
-          <select name="from" class="custom-select select2">
+          <select name="from" class="custom-select select2" required>
             <option value=""></option>
             {% for each in activities %}
               <option value="{{ each.id }}">{{ each }}</option>
@@ -42,10 +42,18 @@
           </select>
         </div>
       </div>
+
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">From label (optional)</label>
+        <div class="col-sm-10">
+          <input name="from_label" class="form-control">
+        </div>
+      </div>
+
       <div class="form-group row">
         <label class="col-sm-2 col-form-label">To</label>
         <div class="col-sm-10">
-          <select name="to" class="custom-select select2">
+          <select name="to" class="custom-select select2" required>
             <option value=""></option>
             {% for each in activities %}
               <option value="{{ each.id }}">{{ each }}</option>
@@ -53,12 +61,21 @@
           </select>
         </div>
       </div>
+
       <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Label (optional)</label>
+        <label class="col-sm-2 col-form-label">To label (optional)</label>
+        <div class="col-sm-10">
+          <input name="to_label" class="form-control">
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Material label (optional)</label>
         <div class="col-sm-10">
           <input name="label" class="form-control">
         </div>
       </div>
+
       <div class="form-group row">
         <div class="col-md-10 offset-md-2">
           <button class="btn btn-primary" type="submit"><i class="fas fa-save" aria-hidden="true"></i> Save</button>
@@ -82,8 +99,18 @@
   <tbody>
   {% for each in blocks %}
     <tr>
-      <td>{{ each.origin }}</td>
-      <td>{{ each.destination }}</td>
+      <td>
+        {% if each.origin_label %}
+          <strong>{{ each.origin_label }}</strong><br>
+        {% endif %}
+        {{ each.origin }}
+      </td>
+      <td>
+        {% if each.destination_label %}
+          <strong>{{ each.destination_label }}</strong><br>
+        {% endif %}
+        {{ each.destination }}
+      </td>
       <td>
         <form method="post" class="form form-horizontal">
           <button type="submit" class="btn btn-danger">Delete</button>

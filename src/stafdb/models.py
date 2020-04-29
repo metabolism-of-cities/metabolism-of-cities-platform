@@ -123,14 +123,23 @@ class FlowDiagram(models.Model):
     def __str__(self):
         return self.name
 
-# The 
 class FlowBlocks(models.Model):
     diagram = models.ForeignKey(FlowDiagram, on_delete=models.CASCADE, related_name="blocks")
     origin = models.ForeignKey(Activity, on_delete=models.CASCADE, related_name="blocks_from")
+    origin_label = models.CharField(max_length=255, null=True, blank=True)
     destination = models.ForeignKey(Activity, on_delete=models.CASCADE, related_name="blocks_to")
+    destination_label = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     def __str__(self):
         return self.origin.name + " - " + self.destination.name
+    def get_destination(self):
+        return self.destination_label if self.destination_label else self.destination.name
+    def get_origin(self):
+        return self.origin_label if self.origin_label else self.origin.name
+    def get_destination_slug(self):
+        return slugify(self.destination_label) if self.destination_label else slugify(self.destination.name)
+    def get_origin_slug(self):
+        return slugify(self.origin_label) if self.origin_label else slugify(self.origin.name)
 
 class MaterialCatalog(models.Model):
     name = models.CharField(max_length=255)

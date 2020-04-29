@@ -653,6 +653,8 @@ def stafcp_flowdiagram_form(request, id):
                 diagram = info,
                 origin_id = request.POST["from"],
                 destination_id = request.POST["to"],
+                origin_label = request.POST["from_label"],
+                destination_label = request.POST["to_label"],
                 description = request.POST["label"],
             )
             messages.success(request, "The information was saved.")
