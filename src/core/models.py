@@ -334,6 +334,14 @@ class LibraryItem(Record):
     def get_absolute_url(self):
         return reverse("library_item", args=[self.id])
 
+class ActivatedSpace(models.Model):
+    space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE)
+    site = models.ForeignKey(Site, on_delete=models.CASCADE)
+    slug = models.SlugField(max_length=255)
+    def __str__(self):
+        return self.space.name
+    def get_absolute_url(self):
+        return reverse("dashboard", args=[self.slug])
 
 #MOOC's
 class MOOC(models.Model):

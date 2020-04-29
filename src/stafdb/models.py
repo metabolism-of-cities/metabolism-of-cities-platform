@@ -34,7 +34,7 @@ class Geocode(models.Model):
 class ReferenceSpace(models.Model):
     name = models.CharField(max_length=255, db_index=True)
     description = models.TextField(null=True, blank=True)
-    slug = models.CharField(max_length=100, null=True)
+    slug = models.CharField(max_length=255, null=True)
     location = models.ForeignKey("ReferenceSpaceLocation", on_delete=models.SET_NULL, null=True, blank=True)
     is_deleted = models.BooleanField(default=False, db_index=True)
     geocodes = models.ManyToManyField(Geocode, through="ReferenceSpaceGeocode")
@@ -77,6 +77,8 @@ class ActivityCatalog(models.Model):
     url = models.URLField(null=True, blank=True)
     def __str__(self):
         return self.name
+    class Meta:
+        verbose_name_plural = "activity catalogs"
 
 class Activity(models.Model):
     name = models.CharField(max_length=255, db_index=True)
@@ -93,6 +95,9 @@ class Activity(models.Model):
 
     class Meta:
         ordering = ["id"]
+
+    class Meta:
+        verbose_name_plural = "activities"
 
 # The Flow Diagram describes a system (e.g. the Water sector) and describes the life-cycle based on 
 # the processes that take place within it (e.g. Water collection > Water treatment > Use > Wastewater treatment)

@@ -302,7 +302,9 @@ def data(request):
     return render(request, "data/index.html", load_specific_design(context, PAGE_ID["multiplicity"]))
 
 def data_overview(request):
+    list = ActivatedSpace.objects.filter(site=request.site)
     context = {
+        "list": list,
     }
     return render(request, "data/overview.html", load_specific_design(context, PAGE_ID["multiplicity"]))
 

@@ -50,27 +50,38 @@ class VideoAdmin(admin.ModelAdmin):
     class Media:
         js = ("js/video.admin.js",)
 
+class SearchCompleteAdmin(admin.ModelAdmin):
+    search_fields = ["title"]
+    autocomplete_fields = ["tags"]
+
 class SearchAdmin(admin.ModelAdmin):
     search_fields = ["title"]
+
+class ActivityAdmin(admin.ModelAdmin):
+    search_fields = ["name", "code"]
+    list_filter = ["catalog"]
+    list_display = ["code", "name", "catalog"]
+    autocomplete_fields = ["parent"]
 
 class TagAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     list_display = ["name", "parent_tag", "include_in_glossary", "hidden"]
 
-class OrgAdmin(SearchAdmin):
+class OrgAdmin(SearchCompleteAdmin):
     list_display = ["title", "type"]
     list_filter = ["type"]
 
-class ProjectAdmin(SearchAdmin):
+class ProjectAdmin(SearchCompleteAdmin):
     list_display = ["title", "is_internal", "start_date", "status"]
 
 class ReferenceSpaceAdmin(SearchAdmin):
     list_display = ["name", "location_date", "is_deleted"]
     search_fields = ["name"]
+    autocomplete_fields = ["location"]
     def location_date(self, obj):
         return obj.location.start if obj.location else None
 
-class LibraryAdmin(SearchAdmin):
+class LibraryAdmin(SearchCompleteAdmin):
     list_filter = ["status", "year"]
     list_display = ["title", "year", "published_in", "status"]
 
@@ -78,6 +89,15 @@ class GeocodeAdmin(SearchAdmin):
     list_filter = ["scheme"]
     list_display = ["name", "scheme"]
     search_fields = ["name"]
+
+class SpaceAdmin(admin.ModelAdmin):
+    list_display = ["space", "slug", "site"]
+    search_fields = ["space__name"]
+    autocomplete_fields = ["space"]
+
+class LocationAdmin(admin.GeoModelAdmin):
+    search_fields = ["name"]
+    autocomplete_fields = ["space"]
 
 class LogEntryAdmin(admin.ModelAdmin):
     # to have a date-based drilldown navigation in the admin page
@@ -110,19 +130,20 @@ class LogEntryAdmin(admin.ModelAdmin):
         return request.user.is_superuser
 
 admin_site.register(Tag, TagAdmin)
-admin_site.register(Record, SearchAdmin)
-admin_site.register(Event, SearchAdmin)
-admin_site.register(News, SearchAdmin)
+admin_site.register(Record, SearchCompleteAdmin)
+admin_site.register(Event, SearchCompleteAdmin)
+admin_site.register(News, SearchCompleteAdmin)
 admin_site.register(Organization, OrgAdmin)
 admin_site.register(Article, ArticleAdmin)
 admin_site.register(ArticleDesign, ArticleDesignAdmin)
-admin_site.register(People, SearchAdmin)
+admin_site.register(People, SearchCompleteAdmin)
 admin_site.register(Video, VideoAdmin)
 admin_site.register(Project, ProjectAdmin)
 admin_site.register(Relationship)
 admin_site.register(LibraryItem, LibraryAdmin)
 admin_site.register(LibraryItemType, SearchAdmin)
-admin_site.register(Journal, SearchAdmin)
+admin_site.register(Journal, SearchCompleteAdmin)
+admin_site.register(ActivatedSpace, SpaceAdmin)
 
 admin_site.register(MOOC)
 admin_site.register(MOOCModule)
@@ -141,8 +162,8 @@ admin_site.register(CronJobLog)
 admin_site.register(GeocodeScheme)
 admin_site.register(Geocode, GeocodeAdmin)
 admin_site.register(ReferenceSpace, ReferenceSpaceAdmin)
-admin_site.register(ReferenceSpaceLocation, admin.GeoModelAdmin)
+admin_site.register(ReferenceSpaceLocation, LocationAdmin)
 admin_site.register(ReferenceSpaceGeocode)
 
 admin_site.register(ActivityCatalog)
-admin_site.register(Activity)
+admin_site.register(Activity, ActivityAdmin)

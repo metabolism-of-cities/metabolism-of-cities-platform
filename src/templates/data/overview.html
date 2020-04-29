@@ -4,41 +4,16 @@
 
 {% block content %}
 <div class="row">
-  <div class="col-lg-4 col-md-6 col-sm-8 mb-4">
-    <a class="card btn-card" href="/data/sydney/">
-      <img src="/media/header_image/media-sydney.huge.jpg" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">Sydney, Australia</h5>
-        <h6 class="card-subtitle mb-2 text-muted">27 datasets</h6>
-      </div>
-    </a>
-  </div>
-  <div class="col-lg-4 col-md-6 col-sm-8 mb-4">
-    <a class="card btn-card" href="/data/cape-town/">
-      <img src="/media/header_image/media-capetown.huge.jpg" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">Cape Town, South Africa</h5>
-        <h6 class="card-subtitle mb-2 text-muted">19 datasets</h6>
-      </div>
-    </a>
-  </div>
-  <div class="col-lg-4 col-md-6 col-sm-8 mb-4">
-    <a class="card btn-card" href="/data/newyork/">
-      <img src="/media/header_image/media-newyork.huge.jpg" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">New York, United States of America</h5>
-        <h6 class="card-subtitle mb-2 text-muted">142 datasets</h6>
-      </div>
-    </a>
-  </div>
-  <div class="col-lg-4 col-md-6 col-sm-8 mb-4">
-    <a class="card btn-card" href="/data/toronto/">
-      <img src="/media/header_image/media-toronto.huge.jpg" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">Toronto, Canada</h5>
-        <h6 class="card-subtitle mb-2 text-muted">2 datasets</h6>
-      </div>
-    </a>
-  </div>
+  {% for each in list %}
+    <div class="col-lg-4 col-md-6 col-sm-8 mb-4">
+      <a class="card btn-card" href="/data/sydney/">
+        <img src="/media/header_image/media-sydney.huge.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{ each }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">27 datasets</h6>
+        </div>
+      </a>
+    </div>
+  {% endfor %}
 </div>
 {% endblock %}
