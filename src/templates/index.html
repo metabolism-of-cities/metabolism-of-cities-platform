@@ -23,6 +23,17 @@
     <li><a href="/dataimport/">Data import</a></li>
   </ul>
 
+  <div class="alert alert-warning">
+    <p>Please run this code <a href="http://localhost:8080/?pgsql=db&username=postgres&db=moc&ns=public&sql=">in adminer</a> after importing new info:</p>
+    <pre>
+SELECT setval('core_tag_id_seq', (SELECT MAX(id) FROM core_tag)+1);
+SELECT setval('core_record_id_seq', (SELECT MAX(id) FROM core_record)+1);
+SELECT setval('stafdb_activity_id_seq', (SELECT MAX(id) FROM stafdb_activity)+1);
+SELECT setval('stafdb_sector_id_seq', (SELECT MAX(id) FROM stafdb_sector)+1);
+SELECT setval('auth_user_id_seq', (SELECT MAX(id) FROM auth_user)+1);
+    </pre>
+  </div>
+
 {% endblock %}
 
 

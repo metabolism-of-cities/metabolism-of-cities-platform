@@ -123,6 +123,7 @@ urlpatterns = [
     path("stafcp/geocode/<int:id>/", views.stafcp_geocode, name="stafcp_geocode"),
     path("stafcp/catalogs/about/", views.article, { "id": 57, "project": 55, }, name="stafcp_catalogs"),
     path("stafcp/referencespaces/", views.stafcp_referencespaces, name="stafcp_referencespaces"),
+    path("stafcp/referencespaces/view/<int:id>/", views.stafcp_referencespace, name="stafcp_referencespace"),
     path("stafcp/referencespaces/<int:id>/", views.stafcp_referencespaces_list, name="stafcp_referencespaces_list"),
     path("stafcp/referencespaces/<slug:group>/", views.stafcp_referencespaces, name="stafcp_referencespaces"),
 

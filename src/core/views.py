@@ -586,8 +586,15 @@ def stafcp_referencespaces_list(request, id):
     context = {
         "list": ReferenceSpace.objects.filter(geocodes=geocode),
         "geocode": geocode,
+        "load_datatables": True,
     }
     return render(request, "stafcp/referencespaces.list.html", load_specific_design(context, PAGE_ID["stafcp"]))
+
+def stafcp_referencespace(request, id):
+    context = {
+        "info": ReferenceSpace.objects.get(pk=id),
+    }
+    return render(request, "stafcp/referencespace.html", load_specific_design(context, PAGE_ID["stafcp"]))
 
 def stafcp_activities_catalogs(request):
     context = {

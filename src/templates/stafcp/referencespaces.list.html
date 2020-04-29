@@ -2,7 +2,7 @@
 
 {% block content %}
   <h1>{{ geocode }}</h1>
-  <table class="table table-striped">
+  <table class="table table-striped datatable">
     <thead>
       <tr>
         <th>Name</th>
@@ -16,7 +16,7 @@
         <td>{{ each.name }}</td>
         <td>{{ each.description|truncatechars_html:100 }}</td>
         <td>
-          <a class="btn btn-info" href="{% url "stafcp_flowdiagram" each.id %}"><i class="fa fa-eye"></i> View</a>
+          <a class="btn btn-info" href="{% url "stafcp_referencespace" each.id %}"><i class="fa fa-eye"></i> View</a>
           <a class="btn btn-info" href="{% url "stafcp_flowdiagram_form" each.id %}"><i class="fa fa-pencil"></i> Edit</a>
         </td>
       </tr>
