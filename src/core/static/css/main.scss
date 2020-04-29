@@ -530,6 +530,17 @@ footer {
     position: absolute;
     top: calc(50% - 3rem);
   }
+
+  img {
+    height: 180px;
+    object-fit: cover;
+  }
+
+  .card-body.media img {
+    width: 100px;
+    height: 50px;
+    object-fit: cover;
+  }
 }
 
 // MARKDOWN TOOLBAR
@@ -1171,17 +1182,6 @@ body.city-subsite {
 
 // EVENT AND NEWS LIST PAGES
 body.event.list {
-  .btn-card img {
-    height: 180px;
-    object-fit: cover;
-  }
-
-  .card-body.media img {
-    width: 100px;
-    height: 50px;
-    object-fit: cover;
-  }
-
   .no-results:not(.visible) {
     display: none;
   }
@@ -1911,6 +1911,11 @@ body.library.search {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
     }
+  }
+
+  .select2-container--bootstrap4 .select2-dropdown {
+    box-shadow: $basic-shadow;
+    border: none;
   }
 
   .advanced-options {
