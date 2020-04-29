@@ -80,6 +80,11 @@ def get_site_tag(request):
         # For MoI, the island tag should be used to filter items
         return 219       
 
+def get_space(request, slug):
+    # Here we can build an expansion if we want particular people to see dashboards that are under construction
+    check = get_object_or_404(ActivatedSpace, slug=slug, site=request.site)
+    return check.space
+
 # We use getHeader to obtain the header settings (type of header, title, subtitle, image)
 # This dictionary has to be created for many different pages so by simply calling this
 # function instead we don't repeat ourselves too often.
@@ -296,44 +301,49 @@ def article_list(request, id):
 
 # Cities
 
-def data(request):
+def datahub(request):
     context = {
     }
     return render(request, "data/index.html", load_specific_design(context, PAGE_ID["multiplicity"]))
 
-def data_overview(request):
+def datahub_overview(request):
     list = ActivatedSpace.objects.filter(site=request.site)
     context = {
         "list": list,
     }
     return render(request, "data/overview.html", load_specific_design(context, PAGE_ID["multiplicity"]))
 
-def dashboard(request, place):
-    subsite = get_object_or_404(Article, pk=PAGE_ID["multiplicity"])
-    header = getHeader(subsite)
-    header["type"] = "image"
-    if place == "cape-town":
-        header["image"] = "/media/header_image/media-capetown.huge.jpg"
-    elif place == "newyork":
-        header["image"] = "/media/header_image/media-newyork.huge.jpg"
-    elif place == "sydney":
-        header["image"] = "/media/header_image/media-sydney.huge.jpg"
-    elif place == "toronto":
-        header["image"] = "/media/header_image/media-toronto.huge.jpg"
+def datahub_dashboard(request, space):
+    space = get_space(request, space)
     context = {
-        "subsite": header,
-        "header": header,
-        "city": "Cape Town",
-        "country": "South Africa",
+        "space": space,
+        "header_image": space.photo,
     }
-    return render(request, "data/dashboard.html", context)
+    return render(request, "data/dashboard.html", load_specific_design(context, PAGE_ID["multiplicity"]))
 
-def sector(request, place, sector):
+def datahub_photos(request, space):
+    space = get_space(request, space)
+    context = {
+        "space": space,
+        "header_image": space.photo,
+        "photos": Photo.objects.filter(space=space),
+    }
+    return render(request, "data/photos.html", load_specific_design(context, PAGE_ID["multiplicity"]))
+
+def datahub_maps(request, space):
+    space = get_space(request, space)
+    context = {
+        "space": space,
+        "header_image": space.photo,
+    }
+    return render(request, "data/maps.html", load_specific_design(context, PAGE_ID["multiplicity"]))
+
+def datahub_sector(request, space, sector):
     context = {
     }
     return render(request, "data/sector.html", load_specific_design(context, PAGE_ID["multiplicity"]))
 
-def dataset(request, place, dataset):
+def datahub_dataset(request, space, dataset):
     context = {
     }
     return render(request, "data/dataset.html", load_specific_design(context, PAGE_ID["multiplicity"]))

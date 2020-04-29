@@ -1,0 +1,15 @@
+{% extends "_base.html" %}
+
+{% block title %}Photos - {{ space }}{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+  {% for each in photos %}
+      <a href="{{ each.image.url }}" data-description="{{ each.description }}" data-author="{{ each.author }}" data-license="{{ each.license }}"><img src="{{ each.image.thumbnail.url }}"></a>
+    {% endfor %}
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

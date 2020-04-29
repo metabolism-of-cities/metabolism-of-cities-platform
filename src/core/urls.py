@@ -64,11 +64,13 @@ urlpatterns = [
     path("library/contribute/", views.library_contribute, name="library_contribute"),
 
     # MultipliCity
-    path("data/", views.data, name="data"),
-    path("data/overview/", views.data_overview, name="data_overview"),
-    path("data/<slug:place>/sectors/<slug:sector>/", views.sector, name="sector"),
-    path("data/<slug:place>/datasets/<slug:dataset>/", views.dataset, name="dataset"),
-    path("data/<slug:place>/", views.dashboard, name="dashboard"),
+    path("data/", views.datahub, name="datahub"),
+    path("data/overview/", views.datahub_overview, name="datahub_overview"),
+    path("data/<slug:space>/sectors/<slug:sector>/", views.datahub_sector, name="datahub_sector"),
+    path("data/<slug:space>/datasets/<slug:dataset>/", views.datahub_dataset, name="datahub_dataset"),
+    path("data/<slug:space>/", views.datahub_dashboard, name="datahub_dashboard"),
+    path("data/<slug:space>/photos/", views.datahub_photos, name="datahub_photos"),
+    path("data/<slug:space>/maps/", views.datahub_maps, name="datahub_maps"),
 
     # PlatformU
     path("platformu/", views.metabolism_manager, name="platformu"),

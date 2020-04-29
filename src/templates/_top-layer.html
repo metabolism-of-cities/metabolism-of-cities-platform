@@ -123,26 +123,26 @@
     </div>
   {% elif header.type == "image" %}
     <div style="background-image: url('{{ header.image }}');height:800px;background-size:cover"></div>
-  {% elif subsite.id == 51 and city %}
-    <div id="img-city" style="background-image: url('{{ header.image }}');">
+  {% elif subsite.id == 51 and space %}
+    <div id="img-city" style="background-image: url('{{ space.photo.image.url }}');">
       <div class="black-cover"></div>
 
       <div class="container">
-        <div class="city-name">{{ city }}, {{ country }}</div>
+        <div class="city-name">{{ space }}</div>
       </div>
     </div>
 
     <div class="down-city-name">
       <div class="container">
         <a href="{{ SITE_URL }}"><i class="fad fa-arrow-circle-left"></i></a>
-        <span>{{ city }}, {{ country }}</span>
+        <span>{{ space }}</span>
       </div>
     </div>
   {% endif %}
 
 </div>
 
-{% if subsite.id == 51 and city %}
+{% if subsite.id == 51 and space %}
   <nav class="navbar navbar-expand-lg navbar-city">
     <div class="container">
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -188,7 +188,7 @@
   </nav>
 {% endif%}
 
-{% if subsite.id == 51 and city %}
+{% if subsite.id == 51 and space %}
   {% block javascript %}
   <script>
      // When the user scrolls down 50px from the top of the document, resize the header's font size

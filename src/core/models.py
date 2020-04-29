@@ -338,11 +338,13 @@ class LibraryItem(Record):
 class ActivatedSpace(models.Model):
     space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE)
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
-    slug = models.SlugField(max_length=255)
+    slug = models.CharField(max_length=255, db_index=True)
     def __str__(self):
         return self.space.name
     def get_absolute_url(self):
         return reverse("dashboard", args=[self.slug])
+    class Meta:
+        unique_together = ["slug", "site"]
 
 #MOOC's
 class MOOC(models.Model):

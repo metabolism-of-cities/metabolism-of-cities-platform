@@ -53,6 +53,11 @@ class ReferenceSpace(models.Model):
         #check = self.geocodes.filter(id=123)
         check = self.geocodes.filter(name="Island")
         return True if check else False
+    def photo(self):
+        from core.models import Photo
+        photo = Photo.objects.filter(space=self, is_deleted=False).order_by("position")
+        if photo:
+            return photo[0]
 
 class ReferenceSpaceLocation(models.Model):
     space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE)

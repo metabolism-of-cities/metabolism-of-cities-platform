@@ -7,7 +7,9 @@
   {% for each in list %}
     <div class="col-lg-4 col-md-6 col-sm-8 mb-4">
       <a class="card btn-card" href="{{ each.get_absolute_url }}">
-        <img src="/media/header_image/media-sydney.huge.jpg" class="card-img-top" alt="...">
+        {% if each.space.photo %}
+          <img src="{{ each.space.photo.image.url }}" class="card-img-top" alt="">
+        {% endif %}
         <div class="card-body">
           <h5 class="card-title">{{ each }}</h5>
           <h6 class="card-subtitle mb-2 text-muted">27 datasets</h6>
