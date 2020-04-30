@@ -20,7 +20,7 @@
       <div class="card-body mermaid">
         graph TB
           {% for each in blocks %}
-          block{{ each.get_origin_slug }}[{{ each.get_origin|escapejs }}] --> block{{ each.get_destination_slug }}[{{ each.get_destination|escapejs }}]
+          block{{ each.origin.id }}{{ each.get_origin_slug }}[{{ each.get_origin|escapejs }}] --> block{{ each.destination.id }}{{ each.get_destination_slug }}[{{ each.get_destination|escapejs }}]
           {% endfor %}
       </div>
     </div>

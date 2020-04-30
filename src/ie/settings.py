@@ -30,6 +30,8 @@ ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
 SITE_ID = 1
 SITE_EMAIL = 'info@metabolismofcities.org'
 
+SENDGRID_API = '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'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -48,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'bootstrap4',
     'tinymce',
+    'anymail',
 ]
 
 MIDDLEWARE = [
@@ -155,5 +158,11 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
+ANYMAIL = {
+    "SENDGRID_API_KEY": SENDGRID_API,
+}
+#EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = '/src/logs/mail.log'
+DEFAULT_FROM_EMAIL = "info@metabolismofcities.org"
+SERVER_EMAIL = "info@metabolismofcities.org"

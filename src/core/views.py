@@ -34,7 +34,6 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from django.template import Context
 from django.forms import modelform_factory
-from django.core.mail import send_mail
 
 
 from weasyprint import HTML, CSS
@@ -138,6 +137,7 @@ def user_register(request, subsite=None):
     if request.method == "POST":
         password = request.POST.get("password")
         email = request.POST.get("email")
+        name = request.POST.get("name")
         if not password:
             messages.error(request, "You did not enter a password.")
         else:
@@ -165,6 +165,23 @@ def user_register(request, subsite=None):
                 user.save()
                 messages.success(request, "User was created.")
                 login(request, user)
+
+                msg_html = render_to_string("mailbody/welcome.html", mailcontext)
+                msg_plain = render_to_string("mailbody/welcome.txt", mailcontext)
+                sender = '"' + request.site.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
+                recipient = '"' + name + '" <' + email + '>'
+                mailcontext = {
+                    "name": name,
+                }
+
+                send_mail(
+                    "Welcome to Metabolism of Cities",
+                    msg_plain,
+                    sender,
+                    [recipient],
+                    html_message=msg_html,
+                )
+
                 return redirect(redirect_page)
 
     context = {}
@@ -1441,31 +1458,45 @@ def dataimport(request):
         elif request.GET["table"] == "activities":
             ActivityCatalog.objects.all().delete()
             nace = ActivityCatalog.objects.create(name="Statistical Classification of Economic Activities in the European Community, Rev. 2 (2008)", url="https://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=LST_NOM_DTL&StrNom=NACE_REV2&StrLanguageCode=EN&IntPcKey=&StrLayoutCode=HIERARCHIC")
+            natural = ActivityCatalog.objects.create(name="Rupertismo List of Natural Processes")
             Activity.objects.all().delete()
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
-                    if int(row["id"]) > 398480:
+                    id = int(row["id"])
+                    catalog = None
+                    if id > 398480:
+                        catalog = nace
+                    elif id > 65 and id < 95 and id != 92:
+                        catalog = natural
+                    if catalog:
                         Activity.objects.create(
                             id = row["id"], 
                             name = row["name"], 
                             description = row["description"], 
                             is_separator = row["is_separator"],
                             code = row["code"],
-                            catalog = nace,
+                            catalog = catalog,
                         )
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
-                    if int(row["id"]) > 398480:
+                    id = int(row["id"])
+                    parent = None
+                    if id > 398480:
                         if int(row["parent_id"]) == 398480:
                             parent = None
                         else:
                             parent = row["parent_id"]
-                        if parent:
-                            info = Activity.objects.get(pk=row["id"])
-                            info.parent_id = parent
-                            info.save()
+                    elif id > 65 and id < 95 and id != 92:
+                        if int(row["parent_id"]) == 92:
+                            parent = None
+                        else:
+                            parent = row["parent_id"]
+                    if parent:
+                        info = Activity.objects.get(pk=row["id"])
+                        info.parent_id = parent
+                        info.save()
         elif request.GET["table"] == "projects":
             Project.objects.filter(is_internal=False).delete()
             with open(file, "r") as csvfile:
@@ -1832,6 +1863,21 @@ def dataimport(request):
                             print("Not imported because there is an error")
                             print(e)
                             print(row["space_id"])
+        elif request.GET["table"] == "flowdiagrams":
+            FlowDiagram.objects.all().delete()
+            water = FlowDiagram.objects.create(id=1, name="Urban water cycle")
+            FlowBlocks.objects.create(origin_id=67, origin_label="Rain, rivers, and other natural water processes", destination_id=398932, destination_label="Collection of water in dams", diagram=water)
+            FlowBlocks.objects.create(origin_id=398932, origin_label="Collection of water in dams", destination_id=67, destination_label="Evaporation, leaking, and losses of water", diagram=water)
+            FlowBlocks.objects.create(origin_id=398932, origin_label="Collection of water in dams", destination_id=398932, destination_label="Water treatment", diagram=water)
+            FlowBlocks.objects.create(origin_id=398932, origin_label="Water treatment", destination_id=399133, destination_label="Reservoirs", diagram=water)
+            FlowBlocks.objects.create(origin_id=398932, origin_label="Water treatment", destination_id=67, destination_label="Evaporation, leaking, and losses of water", diagram=water)
+            FlowBlocks.objects.create(origin_id=399133, origin_label="Reservoirs", destination_id=67, destination_label="Evaporation, leaking, and losses of water", diagram=water)
+            FlowBlocks.objects.create(origin_id=399133, origin_label="Reservoirs", destination_id=399468, destination_label="Water consumption", diagram=water)
+            FlowBlocks.objects.create(origin_id=399468, origin_label="Water consumption", destination_id=67, destination_label="Evaporation, leaking, and losses of water", diagram=water)
+            FlowBlocks.objects.create(origin_id=399468, origin_label="Water consumption", destination_id=398935, destination_label="Wastewater treatment", diagram=water)
+            FlowBlocks.objects.create(origin_id=398935, origin_label="Wastewater treatment", destination_id=67, destination_label="Evaporation, leaking, and losses of water", diagram=water)
+            FlowBlocks.objects.create(origin_id=398935, origin_label="Wastewater treatment", destination_id=67, destination_label="Rain, rivers, and other natural water processes", diagram=water)
+            FlowBlocks.objects.create(origin_id=398935, origin_label="Wastewater treatment", destination_id=399468, destination_label="Water consumption", diagram=water)
         if error:
             messages.error(request, "We could not import your data")
         else:
@@ -1859,5 +1905,7 @@ def dataimport(request):
         "spacesectors": ReferenceSpaceSector.objects.all().count(),
         "librarytags": LibraryItem.tags.through.objects.all().count(),
         "libraryspaces": LibraryItem.spaces.through.objects.all().count(),
+        "flowdiagrams": FlowDiagram.objects.all().count(),
+        "flowblocks": FlowBlocks.objects.all().count(),
     }
     return render(request, "temp.import.html", context)

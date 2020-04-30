@@ -11,6 +11,7 @@ django-compressor
 django-sass-processor
 django-bootstrap4
 django-tinymce4-lite
+django-anymail[sendgrid]
 xhtml2pdf
 weasyprint
 markdown
