@@ -1960,6 +1960,15 @@ body.library.map {
     height: 500px;
   }
 
+  #article-list {
+    position: relative;
+
+    #list-anchor {
+      position: absolute;
+      top: -200px;
+    }
+  }
+
   .single-article:not(.visible) {
     display: none;
   }
