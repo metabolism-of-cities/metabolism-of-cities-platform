@@ -11,6 +11,9 @@
   <!-- leaflet marker cluster plugin - https://github.com/Leaflet/Leaflet.markercluster -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
+
+  <!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
+  <link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet" />
 {% endblock %}
 
 {% block content %}
@@ -53,12 +56,16 @@
   <!-- leaflet marker cluster plugin - https://github.com/Leaflet/Leaflet.markercluster -->
   <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
+  <!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
+  <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
+
   <script>
     // https://leafletjs.com/reference-1.6.0.html
     const map = L.map("map", {
       scrollWheelZoom: false,
       center: [20, 0],
-      zoom: 2
+      zoom: 2,
+      fullscreenControl: true,
     });
     L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -113,18 +120,74 @@
     }
 
     // create marker group for all cities
-    var citiesMarkers = L.markerClusterGroup();
+    var citiesMarkers = L.markerClusterGroup({
+      iconCreateFunction: function(cluster) {
+        var markers = cluster.getAllChildMarkers();
+        var n = 0;
+        for (var i = 0; i < markers.length; i++) {
+          n += markers[i].options.articles;
+        }
+        var icon = 0;
+        if (n < 20) {
+          icon = 30
+        } else if (n < 40) {
+          icon = 50
+        } else {
+          icon = 60
+        };
+        return L.divIcon({
+          html: n,
+          className: "cluster-circle",
+          iconSize: L.point(icon, icon)
+        });
+      },
+      polygonOptions: {
+        color: "#144d58"
+      }
+    });
+
     cities.forEach(
-      city => citiesMarkers.addLayer(L.circleMarker([city.lat, city.lon], {
-        color: "#144d58",
-        fillOpacity: .7,
-        weight: 2,
-        radius: 5 + city.articles,
+      city => citiesMarkers.addLayer(L.marker([city.lat, city.lon], {
+        articles: city.articles,
         city: city.city,
         id: city.id,
+        icon: L.divIcon({
+          className: "cluster-circle",
+          html: city.articles,
+          iconSize: L.point(30 + city.articles, 30 + city.articles),
+        }),
+        html: city.articles,
       })).on("click", openCity)
     );
 
     map.addLayer(citiesMarkers);
+
+    // show (basically) the whole world
+    function showWorld() {
+      map.fitBounds([
+        [68.0, -128],
+        [-41.0, 158]
+      ]);
+    }
+
+
+    // add show world button to map
+    L.Control.ShowWorld = L.Control.extend({
+      onAdd: function(map) {
+        var button = L.DomUtil.create("div", "show-world button");
+
+        return button;
+      }
+    });
+
+    L.control.showworld = function(opts) {
+        return new L.Control.ShowWorld(opts)
+      }
+
+    L.control.showworld({ position: "topleft" }).addTo(map);
+
+    $(".show-world.button").click(function() {
+      showWorld()
+    });
   </script>
 {% endblock %}
