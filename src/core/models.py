@@ -45,7 +45,7 @@ class ExcludeDeletedRecordManager(models.Manager):
         return super().get_queryset().exclude(is_deleted=True)
 
 class Record(models.Model):
-    title = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
     content = HTMLField(null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
     image = StdImageField(upload_to="records", variations={"thumbnail": (480, 480), "large": (1280, 1024)}, blank=True, null=True)
@@ -54,7 +54,7 @@ class Record(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     spaces = models.ManyToManyField(ReferenceSpace, blank=True)
     def __str__(self):
-        return self.title
+        return self.name
 
     def get_methodologies(self):
         self.tags.filter(parent_tag__id=318)
@@ -123,7 +123,7 @@ class Organization(Record):
     )
     type = models.CharField(max_length=20, choices=ORG_TYPE)
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
+        self.slug = slugify(self.name)
         super().save(*args, **kwargs)
     def get_absolute_url(self):
         return reverse("library_journal", args=[self.slug])
@@ -135,11 +135,11 @@ class Organization(Record):
 # This defines the relationships that may exist between users and records, or between records
 # For instance authors, admins, employee, funder
 class Relationship(models.Model):
-    title = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
     label = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     def __str__(self):
-        return self.title
+        return self.name
 
 # This defines a particular relationship between a user and a record.
 # For instance: User 49 has the relationship "Author" of Record 599 (News article AAA)
@@ -203,7 +203,7 @@ class People(Record):
     status = models.CharField(max_length=8, choices=PEOPLE_STATUS, default="active")
     site = models.ManyToManyField(Site)
     def __str__(self):
-        return self.title
+        return self.name
     def get_absolute_url(self):
         return reverse("person", args=[self.id])
     class Meta:
@@ -226,7 +226,7 @@ class Webpage(Record):
         constraints = [
             models.UniqueConstraint(fields=["site", "slug"], name="site_slug")
         ]
-        ordering = ["position", "title"]
+        ordering = ["position", "name"]
 
 class WebpageDesign(models.Model):
     webpage = models.OneToOneField(Webpage, on_delete=models.CASCADE, primary_key=True, related_name="design")
@@ -242,7 +242,7 @@ class WebpageDesign(models.Model):
     logo = StdImageField(upload_to="logos", variations={"thumbnail": (480, 260), "large": (800, 600)}, blank=True, null=True)
     custom_css = models.TextField(null=True, blank=True)
     def __str__(self):
-        return self.article.title
+        return self.article.name
 
 class ForumMessage(Record):
     parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
@@ -318,13 +318,16 @@ class LibraryItem(Record):
     #materials = models.ManyToManyField("staf.Material", blank=True)
 
     def __str__(self):
-        return self.title
+        return self.name
 
     class Meta:
-        ordering = ["-year", "title"]
+        ordering = ["-year", "name"]
 
     def get_absolute_url(self):
         return reverse("library_item", args=[self.id])
+
+    def authors(self):
+        return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)
 
 class Video(LibraryItem):
     embed_code = models.CharField(max_length=20, null=True, blank=True)

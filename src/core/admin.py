@@ -22,8 +22,8 @@ class MyAdminSite(AdminSite):
 admin_site = MyAdminSite()
 
 class WebpageAdmin(admin.ModelAdmin):
-    list_display = ["title", "site", "parent", "is_deleted"]
-    search_fields = ["title", "site"]
+    list_display = ["name", "site", "parent", "is_deleted"]
+    search_fields = ["name", "site"]
 
     def response_change(self, request, obj):
         if "_addanother" not in request.POST and "_continue" not in request.POST:
@@ -41,9 +41,9 @@ class WebpageAdmin(admin.ModelAdmin):
 
     def change_view(self, request, object_id, extra_content=None):
          if "short" in request.GET:
-            self.fields = ["title", "content"]
+            self.fields = ["name", "content"]
          else:
-            self.fields = ["title", "content", "is_deleted", "image", "tags","site", "slug", "position", "parent", "old_id"]
+            self.fields = ["name", "content", "is_deleted", "image", "tags","site", "slug", "position", "parent", "old_id"]
          return super().change_view(request, object_id)
 
 class WebpageDesignAdmin(admin.ModelAdmin):
@@ -58,11 +58,11 @@ class VideoAdmin(admin.ModelAdmin):
         js = ("js/video.admin.js",)
 
 class SearchCompleteAdmin(admin.ModelAdmin):
-    search_fields = ["title"]
+    search_fields = ["name"]
     autocomplete_fields = ["tags"]
 
 class SearchAdmin(admin.ModelAdmin):
-    search_fields = ["title"]
+    search_fields = ["name"]
 
 class SearchNameAdmin(admin.ModelAdmin):
     search_fields = ["name"]
@@ -78,12 +78,12 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ["name", "parent_tag", "include_in_glossary", "hidden"]
 
 class OrgAdmin(SearchCompleteAdmin):
-    list_display = ["title", "type"]
+    list_display = ["name", "type"]
     list_filter = ["type"]
     exclude = ["slug"]
 
 class ProjectAdmin(SearchCompleteAdmin):
-    list_display = ["title", "is_internal", "start_date", "status"]
+    list_display = ["name", "is_internal", "start_date", "status"]
 
 class ReferenceSpaceAdmin(SearchAdmin):
     list_display = ["name", "location_date", "is_deleted"]
@@ -95,7 +95,7 @@ class ReferenceSpaceAdmin(SearchAdmin):
 
 class LibraryAdmin(SearchCompleteAdmin):
     list_filter = ["status", "type", "year"]
-    list_display = ["title", "year", "status"]
+    list_display = ["name", "year", "status"]
 
 class GeocodeAdmin(SearchAdmin):
     list_filter = ["scheme"]
@@ -113,7 +113,7 @@ class LocationAdmin(admin.OSMGeoAdmin):
     autocomplete_fields = ["space"]
 
 class RecordRelationshipAdmin(admin.ModelAdmin):
-    search_fields = ["record_parent__title", "record_child__title"]
+    search_fields = ["record_parent__name", "record_child__name"]
     list_display = ["record_parent", "relationship", "record_child"]
     list_filter = ["relationship"]
     autocomplete_fields = ["record_parent", "record_child"]

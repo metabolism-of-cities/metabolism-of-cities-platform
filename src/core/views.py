@@ -97,9 +97,9 @@ def getHeader(info):
     header_image = design.header_image.huge.url if design.header_image else None
     breadcrumbs = '<li class="breadcrumb-item"><a href="/">Home</a></li>'
     if info.parent:
-        breadcrumbs += '<li class="breadcrumb-item"><a href="' + info.parent.get_absolute_url() + '">' + info.parent.title + '</a></li>'
+        breadcrumbs += '<li class="breadcrumb-item"><a href="' + info.parent.get_absolute_url() + '">' + info.parent.name + '</a></li>'
     if design.header != "full":
-        breadcrumbs += '<li class="breadcrumb-item active" aria-current="page">' + info.title + '</li>'
+        breadcrumbs += '<li class="breadcrumb-item active" aria-current="page">' + info.name + '</li>'
 
     if design.header_subtitle:
         subtitle = design.header_subtitle
@@ -112,7 +112,7 @@ def getHeader(info):
         "type": design.header,
         "custom_css": design.custom_css,
         "logo": design.logo.url if design.logo else None,
-        "title": design.header_title if design.header_title else info.title,
+        "title": design.header_title if design.header_title else info.name,
         "subtitle": subtitle,
         "breadcrumbs": breadcrumbs,
         "image": header_image,
@@ -153,7 +153,7 @@ def user_register(request, subsite=None):
                     user.is_staff = False
                     group = Group.objects.get(name="PlatformU Admin")
                     user.groups.add(group)
-                    organization = Organization.objects.create(title=request.POST["organization"], type="other")
+                    organization = Organization.objects.create(name=request.POST["organization"], type="other")
                     user_relationship = UserRelationship()
                     user_relationship.record = organization
                     user_relationship.user = user
@@ -261,8 +261,8 @@ def project(request, id):
     context = {
         "header": {
             "type": article.design.header if hasattr(article, "design") else "full",
-            "title": info.title,
-            "subtitle": header["breadcrumbs"] + '<li class="breadcrumb-item"><a href="/projects">Projects</a></li>' + '<li class="breadcrumb-item active" aria-current="page">' + info.title + '</li>',
+            "title": info.name,
+            "subtitle": header["breadcrumbs"] + '<li class="breadcrumb-item"><a href="/projects">Projects</a></li>' + '<li class="breadcrumb-item active" aria-current="page">' + info.name + '</li>',
         },
         "edit_link": "/admin/core/project/" + str(info.id) + "/change/",
         "info": info,
@@ -454,7 +454,7 @@ def metabolism_manager_admin_entity_form(request, organization, id=None):
     if request.method == "POST":
         if not edit:
             info = Organization()
-        info.title = request.POST["name"]
+        info.name = request.POST["name"]
         info.content = request.POST["description"]
         info.url = request.POST["url"]
         info.email = request.POST["email"]
@@ -1015,7 +1015,7 @@ def forum_topic(request, id):
     if request.method == "POST":
 
         new = ForumMessage()
-        new.title = "Reply to: "+ info.title
+        new.name = "Reply to: "+ info.name
         new.content = request.POST["text"]
         new.parent = info
         new.user = request.user
@@ -1038,7 +1038,7 @@ def forum_form(request, id=False):
     }
     if request.method == "POST":
         new = ForumMessage()
-        new.title = request.POST["title"]
+        new.name = request.POST["name"]
         new.content = request.POST["text"]
         new.user = request.user
         new.save()
@@ -1176,84 +1176,84 @@ def load_baseline(request):
 
     Webpage.objects.all().delete()
     articles = [
-        { "id": 1, "title": "Urban metabolism", "parent": None, "slug": "/urbanmetabolism/", "position": 1 },
-        { "id": 2, "title": "Urban metabolism introduction", "parent": 1, "slug": "/urbanmetabolism/introduction/", "position": 1 },
-        { "id": 3, "title": "History of urban metabolism", "parent": 1, "slug": "/urbanmetabolism/history/", "position": 2 },
-        { "id": 4, "title": "Starters Kit", "parent": 1, "slug": "/urbanmetabolism/starterskit/", "position": 3 },
-        { "id": 5, "title": "Urban metabolism for policy makers", "parent": 1, "slug": "/urbanmetabolism/policymakers/", "position": 4 },
-        { "id": 6, "title": "Urban metabolism for students", "parent": 1, "slug": "/urbanmetabolism/students/", "position": 5 },
-        { "id": 7, "title": "Urban metabolism for lecturers", "parent": 1, "slug": "/urbanmetabolism/lecturers/", "position": 6 },
-        { "id": 8, "title": "Urban metabolism for researchers", "parent": 1, "slug": "/urbanmetabolism/researchers/", "position": 7 },
-        { "id": 9, "title": "Urban metabolism for organisations", "parent": 1, "slug": "/urbanmetabolism/organisations/", "position": 8 },
-        { "id": 10, "title": "Urban metabolism for everyone", "parent": 1, "slug": "/urbanmetabolism/everyone/", "position": 9 },
-        { "id": 56, "title": "Glossary", "parent": 1, "slug": "/urbanmetabolism/glossary/", "position": 10 },
+        { "id": 1, "name": "Urban metabolism", "parent": None, "slug": "/urbanmetabolism/", "position": 1 },
+        { "id": 2, "name": "Urban metabolism introduction", "parent": 1, "slug": "/urbanmetabolism/introduction/", "position": 1 },
+        { "id": 3, "name": "History of urban metabolism", "parent": 1, "slug": "/urbanmetabolism/history/", "position": 2 },
+        { "id": 4, "name": "Starters Kit", "parent": 1, "slug": "/urbanmetabolism/starterskit/", "position": 3 },
+        { "id": 5, "name": "Urban metabolism for policy makers", "parent": 1, "slug": "/urbanmetabolism/policymakers/", "position": 4 },
+        { "id": 6, "name": "Urban metabolism for students", "parent": 1, "slug": "/urbanmetabolism/students/", "position": 5 },
+        { "id": 7, "name": "Urban metabolism for lecturers", "parent": 1, "slug": "/urbanmetabolism/lecturers/", "position": 6 },
+        { "id": 8, "name": "Urban metabolism for researchers", "parent": 1, "slug": "/urbanmetabolism/researchers/", "position": 7 },
+        { "id": 9, "name": "Urban metabolism for organisations", "parent": 1, "slug": "/urbanmetabolism/organisations/", "position": 8 },
+        { "id": 10, "name": "Urban metabolism for everyone", "parent": 1, "slug": "/urbanmetabolism/everyone/", "position": 9 },
+        { "id": 56, "name": "Glossary", "parent": 1, "slug": "/urbanmetabolism/glossary/", "position": 10 },
 
-        { "id": 11, "title": "UM Community", "parent": None, "slug": "/community/", "position": 2 },
-        { "id": 12, "title": "People", "parent": 11, "slug": "/community/people/", "position": 1, "content": "<p>This page contains an overview of people who are or have been active in the urban metabolism community.</p>" },
-        { "id": 13, "title": "Organisations", "parent": 11, "slug": "/community/organisations/", "position": 2 },
-        { "id": 14, "title": "Projects", "parent": 11, "slug": "/community/projects/", "position": 3 },
-        { "id": 15, "title": "News", "parent": 11, "slug": "/community/news/", "position": 4 },
-        { "id": 16, "title": "Events", "parent": 11, "slug": "/community/events/", "position": 5 },
-        { "id": 17, "title": "Forum", "parent": 11, "slug": "/community/forum/", "position": 6 },
-        { "id": 18, "title": "Join our community", "parent": 11, "slug": "/community/join/", "position": 7 },
+        { "id": 11, "name": "UM Community", "parent": None, "slug": "/community/", "position": 2 },
+        { "id": 12, "name": "People", "parent": 11, "slug": "/community/people/", "position": 1, "content": "<p>This page contains an overview of people who are or have been active in the urban metabolism community.</p>" },
+        { "id": 13, "name": "Organisations", "parent": 11, "slug": "/community/organisations/", "position": 2 },
+        { "id": 14, "name": "Projects", "parent": 11, "slug": "/community/projects/", "position": 3 },
+        { "id": 15, "name": "News", "parent": 11, "slug": "/community/news/", "position": 4 },
+        { "id": 16, "name": "Events", "parent": 11, "slug": "/community/events/", "position": 5 },
+        { "id": 17, "name": "Forum", "parent": 11, "slug": "/community/forum/", "position": 6 },
+        { "id": 18, "name": "Join our community", "parent": 11, "slug": "/community/join/", "position": 7 },
 
-        { "id": 19, "title": "Our Projects", "parent": None, "slug": "/projects/", "position": 3 },
+        { "id": 19, "name": "Our Projects", "parent": None, "slug": "/projects/", "position": 3 },
 
-        { "id": 31, "title": "About", "parent": None, "slug": "/about/", "position": 4 },
-        { "id": 32, "title": "Our Story", "parent": 31, "slug": "/about/our-story/", "position": 1 },
-        { "id": 33, "title": "Mission & values", "parent": 31, "slug": "/about/mission/", "position": 2 },
-        { "id": 34, "title": "Our Members", "parent": 31, "slug": "/about/members/", "position": 3 },
-        { "id": 35, "title": "Our Partners", "parent": 31, "slug": "/about/partners/", "position": 4 },
-        { "id": 36, "title": "Contact Us", "parent": 31, "slug": "/about/contact/", "position": 5 },
+        { "id": 31, "name": "About", "parent": None, "slug": "/about/", "position": 4 },
+        { "id": 32, "name": "Our Story", "parent": 31, "slug": "/about/our-story/", "position": 1 },
+        { "id": 33, "name": "Mission & values", "parent": 31, "slug": "/about/mission/", "position": 2 },
+        { "id": 34, "name": "Our Members", "parent": 31, "slug": "/about/members/", "position": 3 },
+        { "id": 35, "name": "Our Partners", "parent": 31, "slug": "/about/partners/", "position": 4 },
+        { "id": 36, "name": "Contact Us", "parent": 31, "slug": "/about/contact/", "position": 5 },
 
-        { "id": 38, "title": "Urban Metabolism Library", "parent": 19, "slug": "/library/", "position": None },
-        { "id": 39, "title": "Library", "parent": 38, "slug": "/library/overview/", "position": 1 },
-        { "id": 40, "title": "Case Studies", "parent": 38, "slug": "/library/casestudies/", "position": 2 },
-        { "id": 41, "title": "Journals", "parent": 38, "slug": "/library/journals/", "position": 3 },
-        { "id": 42, "title": "Authors", "parent": 38, "slug": "/library/authors/", "position": 4 },
-        { "id": 43, "title": "Contribute", "parent": 38, "slug": "/library/contribute/", "position": 5 },
+        { "id": 38, "name": "Urban Metabolism Library", "parent": 19, "slug": "/library/", "position": None },
+        { "id": 39, "name": "Library", "parent": 38, "slug": "/library/overview/", "position": 1 },
+        { "id": 40, "name": "Case Studies", "parent": 38, "slug": "/library/casestudies/", "position": 2 },
+        { "id": 41, "name": "Journals", "parent": 38, "slug": "/library/journals/", "position": 3 },
+        { "id": 42, "name": "Authors", "parent": 38, "slug": "/library/authors/", "position": 4 },
+        { "id": 43, "name": "Contribute", "parent": 38, "slug": "/library/contribute/", "position": 5 },
 
-        { "id": 60, "title": "Multimedia Library", "parent": 19, "slug": "/multimedia/", "position": 1 },
-        { "id": 61, "title": "Videos", "parent": 60, "slug": "/multimedia/videos/", "position": 2 },
-        { "id": 62, "title": "Podcasts", "parent": 60, "slug": "/multimedia/podcasts/", "position": 3 , "content": "<p>On this page you will find podcasts related to urban metabolism.</p>"},
-        { "id": 63, "title": "Data Visualisations", "parent": 60, "slug": "/multimedia/datavisualizations/", "position": 4, "content": "<p>In October-December 2016, Metabolism of Cities ran a project around data visualisations. The goal was to explore ways in which information can be illustrated, take stock of work in this field, host online discussions and publish blog posts. Below you will see the list of the around <em>100 data visualisations</em> that were collected.</p><p><strong>Why visualise urban metabolism data</strong></p><p>When we think about urban metabolism and other urban environmental assessments, we often think about numbers, data analysis, formulas and tables. While we may be very familiar with our own case study, it is often very difficult to share the relevance of our results with other researchers or with the general public and to synthesise all this amount of knowledge into something easy to grasp. This is one of the main reasons why researchers use visualisation techniques. Visualising data can not only enable to summarise big amounts of numbers, but it can also make it easier to share them and use them as policy instruments.</p><p><strong>Add more data visualisations</strong></p><p>Many more data visualisations exist and Metabolism of Cities wants to make them accessible in one central space. You can help by submitting more visualisations through the <a href='../../about/task-forces/resources'>Resources Task Force</a>!</p>" },
+        { "id": 60, "name": "Multimedia Library", "parent": 19, "slug": "/multimedia/", "position": 1 },
+        { "id": 61, "name": "Videos", "parent": 60, "slug": "/multimedia/videos/", "position": 2 },
+        { "id": 62, "name": "Podcasts", "parent": 60, "slug": "/multimedia/podcasts/", "position": 3 , "content": "<p>On this page you will find podcasts related to urban metabolism.</p>"},
+        { "id": 63, "name": "Data Visualisations", "parent": 60, "slug": "/multimedia/datavisualizations/", "position": 4, "content": "<p>In October-December 2016, Metabolism of Cities ran a project around data visualisations. The goal was to explore ways in which information can be illustrated, take stock of work in this field, host online discussions and publish blog posts. Below you will see the list of the around <em>100 data visualisations</em> that were collected.</p><p><strong>Why visualise urban metabolism data</strong></p><p>When we think about urban metabolism and other urban environmental assessments, we often think about numbers, data analysis, formulas and tables. While we may be very familiar with our own case study, it is often very difficult to share the relevance of our results with other researchers or with the general public and to synthesise all this amount of knowledge into something easy to grasp. This is one of the main reasons why researchers use visualisation techniques. Visualising data can not only enable to summarise big amounts of numbers, but it can also make it easier to share them and use them as policy instruments.</p><p><strong>Add more data visualisations</strong></p><p>Many more data visualisations exist and Metabolism of Cities wants to make them accessible in one central space. You can help by submitting more visualisations through the <a href='../../about/task-forces/resources'>Resources Task Force</a>!</p>" },
 
-        { "id": 44, "title": "View library", "parent": 39, "slug": "/library/browse/", "position": 1, "content": "<p>Welcome to the Metabolism of Cities library, which holds publications related to urban metabolism and material flow analysis. The publications are mostly reports, theses or journal articles. The bulk of the publications are in English, but there are also many in Spanish, French, Dutch and German. <br>More and more publications are continuously added (Feel free to add publications yourself!) and then tagged by team members. This classification is valuable to better understand what to expect from a publication. </p>" },
-        { "id": 45, "title": "Search", "parent": 39, "slug": "/library/search/", "position": 2, "content": "<p>Please use the search box below to find publications of your interest. </p>" },
-        { "id": 46, "title": "Download", "parent": 39, "slug": "/library/download/", "position": 3 },
+        { "id": 44, "name": "View library", "parent": 39, "slug": "/library/browse/", "position": 1, "content": "<p>Welcome to the Metabolism of Cities library, which holds publications related to urban metabolism and material flow analysis. The publications are mostly reports, theses or journal articles. The bulk of the publications are in English, but there are also many in Spanish, French, Dutch and German. <br>More and more publications are continuously added (Feel free to add publications yourself!) and then tagged by team members. This classification is valuable to better understand what to expect from a publication. </p>" },
+        { "id": 45, "name": "Search", "parent": 39, "slug": "/library/search/", "position": 2, "content": "<p>Please use the search box below to find publications of your interest. </p>" },
+        { "id": 46, "name": "Download", "parent": 39, "slug": "/library/download/", "position": 3 },
 
-        { "id": 48, "title": "By method", "parent": 40, "slug": "/library/casestudies/methods/", "position": 2 },
-        { "id": 49, "title": "By year", "parent": 40, "slug": "/library/casestudies/calendar/", "position": 3 },
-        { "id": 50, "title": "View map", "parent": 40, "slug": "/library/casestudies/map/", "position": 4 },
+        { "id": 48, "name": "By method", "parent": 40, "slug": "/library/casestudies/methods/", "position": 2 },
+        { "id": 49, "name": "By year", "parent": 40, "slug": "/library/casestudies/calendar/", "position": 3 },
+        { "id": 50, "name": "View map", "parent": 40, "slug": "/library/casestudies/map/", "position": 4 },
 
-        { "id": 51, "title": "Cities", "parent": 19, "slug": "/data/", "position": None },
-        { "id": 53, "title": "PlatformU", "parent": 19, "slug": "/platformu/", "position": None },
-        { "id": 55, "title": "STAFCP", "parent": 19, "slug": "/stafcp/", "position": None },
-        { "id": 57, "title": "About our data catalogues", "parent": 55, "slug": "/stafcp/catalogs/about/", "position": None, "content": "<p>This is a section with various data catalogues used.</p><p>A useful site if you want to learn more or contribute is:</p><ul><li><a href='https://unstats.un.org/unsd/classifications/'>UNSD Classificatoins</a></li></ul>" },
+        { "id": 51, "name": "Cities", "parent": 19, "slug": "/data/", "position": None },
+        { "id": 53, "name": "PlatformU", "parent": 19, "slug": "/platformu/", "position": None },
+        { "id": 55, "name": "STAFCP", "parent": 19, "slug": "/stafcp/", "position": None },
+        { "id": 57, "name": "About our data catalogues", "parent": 55, "slug": "/stafcp/catalogs/about/", "position": None, "content": "<p>This is a section with various data catalogues used.</p><p>A useful site if you want to learn more or contribute is:</p><ul><li><a href='https://unstats.un.org/unsd/classifications/'>UNSD Classificatoins</a></li></ul>" },
     ]
     projects = [
-        { "id": 20, "title": "Library", "parent": 19, "url": "/library/", "position": 1, "image": "records/um_library.png", "content": "<p>The urban metabolism library has been one of the first projects undertaken by the Metabolism of Cities community. The goal of this project is to provide a central repository for all relevant documents and other material related to urban metabolism.</p><p>There are many research papers, theses, books, government reports, and other publications that have relevance to urban metabolism. The urban metabolism library aims to collect all of the relevant meta information (title, description, year of publication, abstract), and to provide visitors with an easy way to browse and filter the catalog. The library is constantly growing and visitors are encouraged to submit missing documents.</p>" },
-        { "id": 59, "title": "Multimedia Library", "parent": 19, "url": "/multimedia/", "position": 2, "image": "records/um_multimedia.png", "content": "<p>The Multimedia Library contains videos, podcasts, and data visualizations.</p>" },
-        { "id": 21, "title": "MultipliCity Data Hub", "parent": 19, "url": "/data/", "position": 2, "image": "records/datahub.png", "content": "<p>For urban metabolism researchers, obtaining data is one of the most important and time-consuming activities. This not only limits research activities, but it also creates a significant threshold for policy makers and others interested in using urban metabolism on a more practical level. The inconsistency and scattered nature of data furthermore complicate the uptake of urban metabolism tools and practices.</p><p>In 2018, the Metabolism of Cities community started a project called MultipliCity to try and take on this challenge. This project aims to develop a global network that maintains an online hub to centralize, visualize, and present datasets related to urban resource use and requirements. A network of local volunteers (students, researchers, city officials, citizens, etc) assists with the identification of relevant datasets, and the MultipliCity data hub takes care of indexing, processing, and standardizing the datasets. This allows for a large collection of in-depth data to become available to researchers and the general public, vastly improving access and allowing for more work to be done on analysis and interpretation, rather than on data collection." },
+        { "id": 20, "name": "Library", "parent": 19, "url": "/library/", "position": 1, "image": "records/um_library.png", "content": "<p>The urban metabolism library has been one of the first projects undertaken by the Metabolism of Cities community. The goal of this project is to provide a central repository for all relevant documents and other material related to urban metabolism.</p><p>There are many research papers, theses, books, government reports, and other publications that have relevance to urban metabolism. The urban metabolism library aims to collect all of the relevant meta information (name, description, year of publication, abstract), and to provide visitors with an easy way to browse and filter the catalog. The library is constantly growing and visitors are encouraged to submit missing documents.</p>" },
+        { "id": 59, "name": "Multimedia Library", "parent": 19, "url": "/multimedia/", "position": 2, "image": "records/um_multimedia.png", "content": "<p>The Multimedia Library contains videos, podcasts, and data visualizations.</p>" },
+        { "id": 21, "name": "MultipliCity Data Hub", "parent": 19, "url": "/data/", "position": 2, "image": "records/datahub.png", "content": "<p>For urban metabolism researchers, obtaining data is one of the most important and time-consuming activities. This not only limits research activities, but it also creates a significant threshold for policy makers and others interested in using urban metabolism on a more practical level. The inconsistency and scattered nature of data furthermore complicate the uptake of urban metabolism tools and practices.</p><p>In 2018, the Metabolism of Cities community started a project called MultipliCity to try and take on this challenge. This project aims to develop a global network that maintains an online hub to centralize, visualize, and present datasets related to urban resource use and requirements. A network of local volunteers (students, researchers, city officials, citizens, etc) assists with the identification of relevant datasets, and the MultipliCity data hub takes care of indexing, processing, and standardizing the datasets. This allows for a large collection of in-depth data to become available to researchers and the general public, vastly improving access and allowing for more work to be done on analysis and interpretation, rather than on data collection." },
 
-        { "id": 22, "title": "Stakeholders Initiative", "parent": 19, "url": "/stakeholders-initiative/", "position": 3 },
-        { "id": 23, "title": "Cityloops", "parent": 19, "url": "/cityloops/", "position": 4 },
-        { "id": 24, "title": "Seminar Series", "parent": 19, "url": "/seminarseries/", "position": 5 },
-        { "id": 25, "title": "ASCuS Conference", "parent": 19, "url": "/ascus/", "position": 6 },
-        { "id": 37, "title": "Urban Metabolism & Minorities", "parent": 19, "url": "/minorities/", "position": 7 },
-        { "id": 30, "title": "Urban Metabolism Lab", "parent": 19, "url": "/um-lab/", "position": 8 },
-        { "id": 27, "title": "MOOC", "parent": 19, "url": "/mooc/", "position": 9 },
-        { "id": 28, "title": "GUMDB", "parent": 19, "url": "/gumdb/", "position": 10 },
-        { "id": 29, "title": "STAFDB", "parent": 19, "url": "/stafdb/", "position": 11 },
-        { "id": 54, "title": "STAFCP", "parent": 19, "url": "/stafcp/", "position": 12, "content": "<p>The Stocks and Flows Community Portal is a platform where researchers, practitioners, and enthusiasts can upload data on stocks and flows, which will then be added to our global database. This database can be queried, visualised, and explored from within the STAFCP.</p>" },
-        { "id": 26, "title": "OMAT", "parent": 19, "url": "/omat/", "position": 13 },
-        { "id": 52, "title": "PlatformU", "parent": 19, "url": "/platformu/", "position": 14 },
+        { "id": 22, "name": "Stakeholders Initiative", "parent": 19, "url": "/stakeholders-initiative/", "position": 3 },
+        { "id": 23, "name": "Cityloops", "parent": 19, "url": "/cityloops/", "position": 4 },
+        { "id": 24, "name": "Seminar Series", "parent": 19, "url": "/seminarseries/", "position": 5 },
+        { "id": 25, "name": "ASCuS Conference", "parent": 19, "url": "/ascus/", "position": 6 },
+        { "id": 37, "name": "Urban Metabolism & Minorities", "parent": 19, "url": "/minorities/", "position": 7 },
+        { "id": 30, "name": "Urban Metabolism Lab", "parent": 19, "url": "/um-lab/", "position": 8 },
+        { "id": 27, "name": "MOOC", "parent": 19, "url": "/mooc/", "position": 9 },
+        { "id": 28, "name": "GUMDB", "parent": 19, "url": "/gumdb/", "position": 10 },
+        { "id": 29, "name": "STAFDB", "parent": 19, "url": "/stafdb/", "position": 11 },
+        { "id": 54, "name": "STAFCP", "parent": 19, "url": "/stafcp/", "position": 12, "content": "<p>The Stocks and Flows Community Portal is a platform where researchers, practitioners, and enthusiasts can upload data on stocks and flows, which will then be added to our global database. This database can be queried, visualised, and explored from within the STAFCP.</p>" },
+        { "id": 26, "name": "OMAT", "parent": 19, "url": "/omat/", "position": 13 },
+        { "id": 52, "name": "PlatformU", "parent": 19, "url": "/platformu/", "position": 14 },
     ]
     for each in articles:
         content = each["content"] if "content" in each else None
         Webpage.objects.create(
             id = each["id"],
-            title = each["title"],
+            name = each["name"],
             parent_id = each["parent"],
             slug = each["slug"],
             site = moc,
@@ -1267,7 +1267,7 @@ def load_baseline(request):
         Project.objects.create(
             id = each["id"],
             url = each["url"],
-            title = each["title"],
+            name = each["name"],
             site = moc,
             content = content,
             image = image,
@@ -1282,23 +1282,23 @@ def load_baseline(request):
     # Paul Industries Inc. ... is the producer of 
     # Paul Inc. is the publisher of... 
     relationships = [
-        { "id": 1, "title": "PlatformU Admin", "label": "is a PlatformU admin user of", "description": "This user is a member of a group or organisation -- and will have the same permissions or access as the organisation itself", },
-        { "id": 2, "title": "Publisher", "label": "is the publisher of", "description": "For an article/paper to be published in a journal or magazine, or a publisher to publish a book", },
-        { "id": 3, "title": "Producer", "label": "is the producer of", "description": "For a podcast or video to be produced by a person or organization", },
-        { "id": 4, "title": "Author", "label": "is the author of", "description": "For a publication, book, etc.", },
-        { "id": 5, "title": "Funder", "label": "is the funder of", "description": "When an organisation funds a publication, project, etc.", },
-        { "id": 6, "title": "Team member", "label": "is a team member of", "description": "When someone participates in a project", },
-        { "id": 7, "title": "Former team member", "label": "is a former team member of", "description": "When someone participated previously in a project", },
-        { "id": 8, "title": "Commissioner", "label": "is commissioner of", "description": "When an organisation commissions something to be produced.", },
-        { "id": 9, "title": "Interviewee", "label": "is being interviewed in", "description": "When someone is being interviewed in a video, podcast, etc.", },
-        { "id": 10, "title": "Partner", "label": "is a partner in", "description": "When an organisation or person is a partner in a project.", },
+        { "id": 1, "name": "PlatformU Admin", "label": "is a PlatformU admin user of", "description": "This user is a member of a group or organisation -- and will have the same permissions or access as the organisation itself", },
+        { "id": 2, "name": "Publisher", "label": "is the publisher of", "description": "For an article/paper to be published in a journal or magazine, or a publisher to publish a book", },
+        { "id": 3, "name": "Producer", "label": "is the producer of", "description": "For a podcast or video to be produced by a person or organization", },
+        { "id": 4, "name": "Author", "label": "is the author of", "description": "For a publication, book, etc.", },
+        { "id": 5, "name": "Funder", "label": "is the funder of", "description": "When an organisation funds a publication, project, etc.", },
+        { "id": 6, "name": "Team member", "label": "is a team member of", "description": "When someone participates in a project", },
+        { "id": 7, "name": "Former team member", "label": "is a former team member of", "description": "When someone participated previously in a project", },
+        { "id": 8, "name": "Commissioner", "label": "is commissioner of", "description": "When an organisation commissions something to be produced.", },
+        { "id": 9, "name": "Interviewee", "label": "is being interviewed in", "description": "When someone is being interviewed in a video, podcast, etc.", },
+        { "id": 10, "name": "Partner", "label": "is a partner in", "description": "When an organisation or person is a partner in a project.", },
     ]
 
     Relationship.objects.all().delete()
     for each in relationships:
         Relationship.objects.create(
             id = each["id"],
-            title = each["title"],
+            name = each["name"],
             description = each["description"],
             label = each["label"],
         )
@@ -1502,7 +1502,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
     return render(request, "template/blank.html")
 
 def project_form(request):
-    ModelForm = modelform_factory(Project, fields=("title", "content", "email", "url", "image"))
+    ModelForm = modelform_factory(Project, fields=("name", "content", "email", "url", "image"))
     form = ModelForm(request.POST or None, request.FILES or None)
     is_saved = False
     if request.method == "POST":
@@ -1513,7 +1513,7 @@ def project_form(request):
             info_id = info.id
             messages.success(request, "Information was saved.")
             is_saved = True
-            title = request.POST["title"]
+            name = request.POST["name"]
             user_email = request.POST["user_email"]
             posted_by = request.POST["name"]
             host_name = request.get_host()
@@ -1522,7 +1522,7 @@ def project_form(request):
                 "New project created",
 f'''A new project was created, please review:
 
-Project name: {title}
+Project name: {name}
 Submitted by: {posted_by}
 Email: {user_email}
 
@@ -1613,7 +1613,7 @@ def dataimport(request):
                 for row in contents:
                     if row["type"] == "projects":
                         info = Project()
-                        info.title = row["name"]
+                        info.name = row["name"]
                         info.full_name = row["full_name"]
                         info.email = row["email"]
                         info.url = row["url"]
@@ -1632,7 +1632,7 @@ def dataimport(request):
                 contents = csv.DictReader(csvfile)
                 for row in contents:
                     info = Organization.objects.create(
-                        title = row["name"],
+                        name = row["name"],
                         content = row["description"],
                         url = row["url"],
                         twitter = row["twitter"],
@@ -1646,7 +1646,7 @@ def dataimport(request):
                 contents = csv.DictReader(csvfile)
                 for row in contents:
                     if row["parent_id"]:
-                        info = Organization.objects.get(title=row["name"])
+                        info = Organization.objects.get(name=row["name"])
                         info.parent_id = old_ids[row["parent_id"]]
                         info.save()
         elif request.GET["table"] == "publishers":
@@ -1657,7 +1657,7 @@ def dataimport(request):
                 contents = csv.DictReader(csvfile)
                 for row in contents:
                     info = Organization.objects.create(
-                        title = row["name"],
+                        name = row["name"],
                         type = "publisher",
                         old_id = row["id"],
                     )
@@ -1672,7 +1672,7 @@ def dataimport(request):
                 for row in contents:
                     if row["name"]:
                         info = Organization.objects.create(
-                            title = row["name"],
+                            name = row["name"],
                             url = row["website"],
                             content = row["description"],
                             image = row["image"],
@@ -1692,7 +1692,7 @@ def dataimport(request):
                 contents = csv.DictReader(csvfile)
                 for row in contents:
                     info = LibraryItem.objects.create(
-                        title = row["title"],
+                        name = row["name"],
                         language = row["language"],
                         title_original_language = row["title_original_language"],
                         type_id = row["type_id"],
@@ -1773,7 +1773,7 @@ def dataimport(request):
                 contents = csv.DictReader(csvfile)
                 for row in contents:
                     info = People()
-                    info.title = row["firstname"] + " " + row["lastname"]
+                    info.name = row["firstname"] + " " + row["lastname"]
                     info.firstname = row["firstname"]
                     info.lastname = row["lastname"]
                     info.affiliation = row["affiliation"]
@@ -1806,7 +1806,7 @@ def dataimport(request):
                         # WorkPiece!!
                         year = 2021
                     info = Video()
-                    info.title = row["title"]
+                    info.name = row["name"]
                     info.content = row["description"]
                     info.video_site = row["website"]
                     info.type_id = 31
@@ -1832,7 +1832,7 @@ def dataimport(request):
                 for row in contents:
                     if row["parent_id"] == "61" or row["parent_id"] == "142":
                         News.objects.create(
-                            title = row["title"],
+                            name = row["name"],
                             content = row["content"],
                             old_id = row["id"],
                             site_id = row["site_id"],
@@ -1961,11 +1961,11 @@ def dataimport(request):
             feed = feedparser.parse(file)
             for row in feed.entries:
                 author = row["author"]
-                check = People.objects.filter(title=author)
+                check = People.objects.filter(name=author)
                 if check:
                     author = check[0]
                 else:
-                    author = People.objects.create(title=author)
+                    author = People.objects.create(name=author)
                 import urllib.request
                 image = row["image"]["href"]
                 if image and False:
@@ -1979,7 +1979,7 @@ def dataimport(request):
 
                 mp3 = row["links"][1]["href"]
                 info = LibraryItem.objects.create(
-                    title = row["title"],
+                    name = row["title"],
                     language = "FR",
                     type = podcast,
                     #published_in_id = journal_ids[row["journal_id"]] if row["journal_id"] in journal_ids else None,
@@ -1994,7 +1994,11 @@ def dataimport(request):
                     #image = image,
                     file_url = mp3,
                 )
-                info.authors.add(author)
+                RecordRelationship.objects.create(
+                    record_parent = author,
+                    record_child = info,
+                    relationship = Relationship.objects.get(name="Author"),
+                )
         elif request.GET["table"] == "dataviz":
             DataViz.objects.all().delete()
             with open(file, "r") as csvfile:
@@ -2002,7 +2006,7 @@ def dataimport(request):
                 for row in contents:
                     DataViz.objects.create(
                         id = row["id"],
-                        title = row["title"],
+                        name = row["name"],
                         image = row["image"],
                         uploaded_by = People.objects.get(old_id=row["uploaded_by_id"]),
                         space_id = row["space_id"],
