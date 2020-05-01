@@ -11,9 +11,6 @@
   <!-- leaflet marker cluster plugin - https://github.com/Leaflet/Leaflet.markercluster -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
-
-  <!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
-  <link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet" />
 {% endblock %}
 
 {% block content %}
@@ -27,6 +24,7 @@
   <h2 class="city-name mt-4"></h2>
 
   <div id="article-list">
+    <div id="list-anchor"></div>
     <div class="row">
       {% for each in items %}
         <div class="single-article col-md-6 mb-4" data-cities="{% for space in each.spaces.all %}{{ space }}-{{ space.id }}{% if not forloop.last %} {% endif %}{% endfor %}">
@@ -56,16 +54,12 @@
   <!-- leaflet marker cluster plugin - https://github.com/Leaflet/Leaflet.markercluster -->
   <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
-  <!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
-  <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
-
   <script>
     // https://leafletjs.com/reference-1.6.0.html
     const map = L.map("map", {
       scrollWheelZoom: false,
       center: [20, 0],
       zoom: 2,
-      fullscreenControl: true,
     });
     L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -117,6 +111,8 @@
           $(this).addClass("visible")
         }
       });
+
+      scrollToID("list-anchor");
     }
 
     // create marker group for all cities
@@ -169,7 +165,6 @@
         [-41.0, 158]
       ]);
     }
-
 
     // add show world button to map
     L.Control.ShowWorld = L.Control.extend({
