@@ -612,7 +612,7 @@ def stafcp_referencespace(request, id):
     info = ReferenceSpace.objects.get(pk=id)
     context = {
         "info": info,
-        "location": info.location,
+        "location": info.location.geometry.geojson,
     }
     return render(request, "stafcp/referencespace.html", load_specific_design(context, PAGE_ID["stafcp"]))
 

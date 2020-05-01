@@ -1,6 +1,102 @@
 {% extends "_base.html" %}
 
+{% block css %}
+
+  <style>
+    #map_pin {
+      height: 400px;
+      margin-bottom: 30px;
+    }
+    #map_polygon {
+      height: 400px;
+      margin-bottom: 30px;
+    }
+  </style>
+{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+
+  <!-- leaflet marker cluster plugin - https://github.com/Leaflet/Leaflet.markercluster -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
+{% endblock %}
+
 {% block content %}
   <h1>{{ info }}</h1>
+  <p>{{location}}</p>
+  <div id="map_pin" class="leaflet-map"></div>
+  <div id="map_polygon" class="leaflet-map"></div>
+{% endblock %}
 
+{% block footer %}
+  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+          integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+          crossorigin="">
+  </script>
+
+  <!-- leaflet marker cluster plugin - https://github.com/Leaflet/Leaflet.markercluster -->
+  <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+  <script>
+    // https://leafletjs.com/reference-1.6.0.html
+  var map = L.map("map_pin").setView([-33.918861,18.423300], 13);
+  L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 10,
+    id: "mapbox/streets-v11",
+    tileSize: 512,
+    zoomOffset: -1,
+  }).addTo(map);
+  function onEachFeature(geometries, layer) {
+      var popupContent = "<p>Type: " +
+          geometries.type;
+
+      if (geometries.properties && geometries.properties.popupContent) {
+        popupContent += geometries.properties.popupContent;
+      }
+
+      layer.bindPopup(popupContent);
+    }
+
+    L.geoJSON({{location|safe}}, {
+
+      style: function (geometries) {
+        return geometries.properties && geometries.properties.style;
+      },
+
+      onEachFeature: onEachFeature,
+
+      pointToLayer: function (geometries, latlng) {
+        return L.circleMarker(latlng, {
+          radius: 8,
+          fillColor: "#ff7800",
+          color: "#000",
+          weight: 1,
+          opacity: 1,
+          fillOpacity: 0.8
+        });
+      }
+    }).addTo(map);
+
+  
+
+    // L.geoJSON(get_coordinates).addTo(map);
+
+    // var map_polygon = L.map("map_polygon").setView([51.505, -0.09], 13);
+    // L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+    //   attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    //   maxZoom: 18,
+    //   id: "mapbox/streets-v11",
+    //   tileSize: 512,
+    //   zoomOffset: -1,
+    // }).addTo(map_polygon);
+    // var polygon = L.polygon([
+    //   [51.509, -0.08],
+    //   [51.503, -0.06],
+    //   [51.51, -0.047]
+    // ]).addTo(map_polygon);
+  </script>
 {% endblock %}
