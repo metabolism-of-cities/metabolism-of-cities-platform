@@ -64,7 +64,7 @@ urlpatterns = [
     path("multimedia/videos/", views.video_list, name="video_list"),
     path("multimedia/videos/<int:id>/", views.video, name="video"),
     path("multimedia/podcasts/", views.podcast_list, name="podcast_list"),
-    path("multimedia/podcasts/<int:id>/", views.podcast, name="podcast"),
+    path("multimedia/podcasts/<int:id>/", views.library_item, {"section": "multimedia_library"}, name="podcast"),
     path("multimedia/datavisualizations/", views.dataviz_list, name="dataviz_list"),
     path("multimedia/datavisualizations/<int:id>/", views.dataviz, name="dataviz"),
 

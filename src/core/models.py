@@ -196,7 +196,7 @@ class People(Record):
     status = models.CharField(max_length=8, choices=PEOPLE_STATUS, default="active")
     site = models.ManyToManyField(Site)
     def __str__(self):
-        return "%s %s" % (self.firstname, self.lastname)
+        return self.title
     def get_absolute_url(self):
         return reverse("person", args=[self.id])
     class Meta:
@@ -306,6 +306,7 @@ class LibraryItem(Record):
     file = models.FileField(null=True, blank=True, upload_to="references", help_text="Only upload the file if you are the creator or you have permission to do so")
     open_access = models.NullBooleanField(null=True, blank=True)
     url = models.CharField(max_length=500, null=True, blank=True)
+    file_url = models.URLField(null=True, blank=True)
     doi = models.CharField(max_length=255, null=True, blank=True)
     isbn = models.CharField(max_length=255, null=True, blank=True)
     comments = models.TextField(null=True, blank=True)
@@ -315,7 +316,7 @@ class LibraryItem(Record):
         ("deleted", "Deleted"),
     )
     status = models.CharField(max_length=8, choices=STATUS, db_index=True)
-    #authors = models.ManyToManyField(People, through="ReferenceAuthors")
+    authors = models.ManyToManyField(People, through="LibraryItemAuthor")
     #organizations = models.ManyToManyField(Organization, through="ReferenceOrganization")
     #processes = models.ManyToManyField("staf.Process", blank=True, limit_choices_to={"slug__isnull": False})
     #materials = models.ManyToManyField("staf.Material", blank=True)
@@ -341,6 +342,13 @@ class LibraryItem(Record):
 
     def get_absolute_url(self):
         return reverse("library_item", args=[self.id])
+
+class LibraryItemAuthor(models.Model):
+    position = models.PositiveSmallIntegerField(default=1)
+    item = models.ForeignKey(LibraryItem, on_delete=models.CASCADE)
+    people = models.ForeignKey(People, on_delete=models.CASCADE)
+    class Meta:
+        db_table = "core_library_authors"
 
 class ActivatedSpace(models.Model):
     space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE)

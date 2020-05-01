@@ -93,7 +93,7 @@ class ReferenceSpaceAdmin(SearchAdmin):
         return obj.location.start if obj.location else None
 
 class LibraryAdmin(SearchCompleteAdmin):
-    list_filter = ["status", "year"]
+    list_filter = ["status", "type", "year"]
     list_display = ["title", "year", "published_in", "status"]
 
 class GeocodeAdmin(SearchAdmin):

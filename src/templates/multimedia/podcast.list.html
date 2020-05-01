@@ -1,0 +1,31 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <h1>{{ info }}</h1>
+  {{ info.content|safe }}
+
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Episode</th>
+        <th>Podcast</th>
+        <th>Language</th>
+        <th>Year</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in list %}
+      <tr>
+        <td><a href="{% url "podcast" each.id %}">{{ each }}</a></td>
+        <td>{{ each.published_in }}</td>
+        <td>{{ each.get_language_display }}</td>
+        <td>{{ each.year }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

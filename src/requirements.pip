@@ -12,6 +12,7 @@ django-sass-processor
 django-bootstrap4
 django-tinymce4-lite
 django-anymail[sendgrid]
+feedparser
 xhtml2pdf
 weasyprint
 markdown

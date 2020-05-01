@@ -849,12 +849,12 @@ def library_journal(request, slug):
     }
     return render(request, "library/journal.html", load_specific_design(context, PAGE_ID["library"]))
 
-def library_item(request, id):
+def library_item(request, id, section="library"):
     info = get_object_or_404(LibraryItem, pk=id)
     context = {
         "info": info,
     }
-    return render(request, "library/item.html", load_specific_design(context, PAGE_ID["library"]))
+    return render(request, "library/item.html", load_specific_design(context, PAGE_ID[section]))
 
 def library_map(request, article):
     info = get_object_or_404(Article, pk=article)
@@ -1030,6 +1030,9 @@ def video(request, id):
 
 def podcast_list(request):
     context = {
+        "info": get_object_or_404(Article, pk=62),
+        "list": LibraryItem.objects.filter(type__name="Podcast"),
+        "load_datatables": True,
     }
     return render(request, "multimedia/podcast.list.html", load_specific_design(context, PAGE_ID["multimedia_library"]))
 
@@ -1165,7 +1168,7 @@ def load_baseline(request):
 
         { "id": 60, "title": "Multimedia Library", "parent": 19, "slug": "/multimedia/", "position": 1 },
         { "id": 61, "title": "Videos", "parent": 60, "slug": "/multimedia/videos/", "position": 2 },
-        { "id": 62, "title": "Podcasts", "parent": 60, "slug": "/multimedia/podcasts/", "position": 3 },
+        { "id": 62, "title": "Podcasts", "parent": 60, "slug": "/multimedia/podcasts/", "position": 3 , "content": "<p>On this page you will find podcasts related to urban metabolism.</p>"},
         { "id": 63, "title": "Data Visualisations", "parent": 60, "slug": "/multimedia/datavisualizations/", "position": 4, "content": "<p>In October-December 2016, Metabolism of Cities ran a project around data visualisations. The goal was to explore ways in which information can be illustrated, take stock of work in this field, host online discussions and publish blog posts. Below you will see the list of the around <em>100 data visualisations</em> that were collected.</p><p><strong>Why visualise urban metabolism data</strong></p><p>When we think about urban metabolism and other urban environmental assessments, we often think about numbers, data analysis, formulas and tables. While we may be very familiar with our own case study, it is often very difficult to share the relevance of our results with other researchers or with the general public and to synthesise all this amount of knowledge into something easy to grasp. This is one of the main reasons why researchers use visualisation techniques. Visualising data can not only enable to summarise big amounts of numbers, but it can also make it easier to share them and use them as policy instruments.</p><p><strong>Add more data visualisations</strong></p><p>Many more data visualisations exist and Metabolism of Cities wants to make them accessible in one central space. You can help by submitting more visualisations through the <a href='../../about/task-forces/resources'>Resources Task Force</a>!</p>" },
 
         { "id": 44, "title": "View library", "parent": 39, "slug": "/library/browse/", "position": 1, "content": "<p>Welcome to the Metabolism of Cities library, which holds publications related to urban metabolism and material flow analysis. The publications are mostly reports, theses or journal articles. The bulk of the publications are in English, but there are also many in Spanish, French, Dutch and German. <br>More and more publications are continuously added (Feel free to add publications yourself!) and then tagged by team members. This classification is valuable to better understand what to expect from a publication. </p>" },
@@ -1620,7 +1623,7 @@ def dataimport(request):
                         )
                     journal_ids[row["id"]] = info.id
             file = settings.MEDIA_ROOT + "/import/publications.csv"
-            LibraryItem.objects.all().delete()
+            LibraryItem.objects.exclude(type__name="Podcast").delete()
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
@@ -1865,6 +1868,53 @@ def dataimport(request):
                         space.geocodes.add(checkcountries[0])
                     elif int(row["type_id"]) == 21 and checkisland:
                         space.geocodes.add(checkisland[0])
+        elif request.GET["table"] == "podcasts":
+            file = settings.MEDIA_ROOT + "/import/" + request.GET["table"] + ".xml"
+            podcast = LibraryItemType.objects.get(name="Podcast")
+            LibraryItem.objects.filter(type=podcast).delete()
+            import feedparser
+            from django.utils import timezone
+            import pytz
+            import urllib.request
+            from dateutil.parser import parse
+
+            feed = feedparser.parse(file)
+            for row in feed.entries:
+                author = row["author"]
+                check = People.objects.filter(title=author)
+                if check:
+                    author = check[0]
+                else:
+                    author = People.objects.create(title=author)
+                import urllib.request
+                image = row["image"]["href"]
+                if image and False:
+                    data = urllib.request.urlretrieve(image)
+                    image = data
+                    image = image[0]
+                    print(image)
+
+                date = parse(row["published"])
+                year = date.strftime("%Y")
+
+                mp3 = row["links"][1]["href"]
+                info = LibraryItem.objects.create(
+                    title = row["title"],
+                    language = "FR",
+                    type = podcast,
+                    #published_in_id = journal_ids[row["journal_id"]] if row["journal_id"] in journal_ids else None,
+                    #file = row["file"],
+                    year = year,
+                    content = row["summary"],
+                    authorlist = row["author"],
+                    date_added = timezone.now(),
+                    open_access = True,
+                    url = row["link"],
+                    status = "active",
+                    #image = image,
+                    file_url = mp3,
+                )
+                info.authors.add(author)
         elif request.GET["table"] == "dataviz":
             DataViz.objects.all().delete()
             with open(file, "r") as csvfile:

@@ -6,7 +6,9 @@
   <p>{{ info.type }}</p>
   <h1>{{ info }}</h1>
   <p>{{ info.published_in }}</p>
-  <p><img src="{{ info.published_in.image.url }}" /></p>
+  {% if info.published_in.image %}
+    <p><img src="{{ info.published_in.image.url }}" /></p>
+  {% endif %}
   <p>{{ info.authorlist }}</p>
   <p>{{ info.year }}</p>
 
@@ -29,12 +31,19 @@
   </ul>
 
   <h2>Details</h2>
+  {% if info.file_url and info.type.name == "Podcast" %}
+    <p>Listen now!</p>
+     <audio controls style="width:100%">
+       <source src="{{ info.file_url }}" type="audio/mp3">
+       Your browser does not support the audio tag.
+    </audio> 
+  {% endif %}
   <dl>
     <dt>Title</dt>
     <dd>{{ info }}</dd>
 
     <dt>Author(s)</dt>
-    {% for each in info.authors %}
+    {% for each in info.authors.all %}
       <dd><a href="http://">{{ each }}</a></dd>
     {% endfor %}
 
