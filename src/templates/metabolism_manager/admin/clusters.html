@@ -3,10 +3,10 @@
 {% block title %}Metabolism Manager{% endblock %}
 
 {% block content %}
-  <ul>
-    <li><a href="/platformu/admin/">Manage clusters</a></li>
-    <li><a href="/platformu/admin/map/">View map</a></li>
-  </ul>
+  <h2>Organisations</h2>
+  {% if not tags %}
+    <div class="alert alert-warning">You don't have any clusters yet. Please set up a cluster to get started.</div>
+  {% endif %}
   {% for each in tags %}
     <section>
       <h3>Cluster {{ forloop.counter }}: {{ each.name }}</h3>
@@ -24,7 +24,7 @@
             {% for details in each.record_set.all %}
               <tr>
                 <td><a href="/platformu/admin/{{ info.id }}/entities/{{ details.id }}/">{{ details.title }}</a></td>
-                <td>6</td>
+                <td>0</td>
                 <td>Monthly</td>
                 <td>
                   {% if details.is_deleted %}

@@ -7,13 +7,15 @@
   {% include "metabolism_manager/admin/_entity.menu.html" %}
 
 <div class="row">
-  <div class="col-md-4 mb-4">
-    <img class="mb-2" src="{% if info.image %}{{ info.image.url }}{% endif %}">
-    <p>
-      {{ info.content }}
-    </p>
-  </div>
-  <div class="col-md-8">
+  {% if info.image %}
+    <div class="col-md-4 mb-4">
+      <img class="mb-2" src="{{ info.image.url }}">
+      <p>
+        {{ info.content }}
+      </p>
+    </div>
+  {% endif %}
+  <div class="col-md-{% if info.image %}8{% else %}12{% endif %}">
     <div class="card">
       <table class="table mb-0">
         <tbody>

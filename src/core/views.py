@@ -147,6 +147,7 @@ def user_register(request, subsite=None):
                 messages.error(request, "A user already exists with this e-mail address. Please log in or reset your password instead.")
             else:
                 user = User.objects.create_user(email, email, password)
+                user.first_name = name
                 if subsite == "platformu":
                     user.is_superuser = False
                     user.is_staff = False
@@ -167,13 +168,13 @@ def user_register(request, subsite=None):
                 messages.success(request, "User was created.")
                 login(request, user)
 
+                mailcontext = {
+                    "name": name,
+                }
                 msg_html = render_to_string("mailbody/welcome.html", mailcontext)
                 msg_plain = render_to_string("mailbody/welcome.txt", mailcontext)
                 sender = '"' + request.site.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
                 recipient = '"' + name + '" <' + email + '>'
-                mailcontext = {
-                    "name": name,
-                }
 
                 send_mail(
                     "Welcome to Metabolism of Cities",
@@ -402,40 +403,48 @@ def metabolism_manager(request):
 
 def metabolism_manager_admin(request):
     organizations = UserRelationship.objects.filter(relationship__id=USER_RELATIONSHIPS["member"], user=request.user)
+    if organizations.count() == 1:
+        id = organizations[0].record.id
+        return redirect(reverse("platformu_admin_clusters", args=[id]))
     context = {
         "organizations": organizations,
     }
     return render(request, "metabolism_manager/admin/index.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_clusters(request, organization):
+    my_organization = Organization.objects.get(pk=organization)
     if request.method == "POST":
         Tag.objects.create(
             name = request.POST["name"],
             parent_tag = Tag.objects.get(pk=TAG_ID["platformu_segments"]),
-            belongs_to = Record.objects.get(pk=organization)
+            belongs_to = my_organization,
         )
     context = {
-        "info": Organization.objects.get(pk=organization),
-        "tags": Tag.objects.filter(belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"])
+        "info": my_organization,
+        "tags": Tag.objects.filter(belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"]).order_by("id"),
+        "my_organization": my_organization,
     }
     return render(request, "metabolism_manager/admin/clusters.html", load_specific_design(context, PAGE_ID["platformu"]))
 
-def metabolism_manager_admin_map(request):
+def metabolism_manager_admin_map(request, organization):
+    my_organization = Organization.objects.get(pk=organization)
     context = {
-        "page": "map"
+        "page": "map",
+        "my_organization": my_organization,
     }
     return render(request, "metabolism_manager/admin/map.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_admin_entity(request, organization, id):
+    my_organization = Organization.objects.get(pk=organization)
     context = {
         "page": "entity",
-        "organization": Organization.objects.get(pk=organization),
+        "my_organization": my_organization,
         "info": Organization.objects.get(pk=id),
     }
     return render(request, "metabolism_manager/admin/entity.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_admin_entity_form(request, organization, id=None):
-    organization = Organization.objects.get(pk=organization)
+    my_organization = Organization.objects.get(pk=organization)
     edit = False
     if id:
         info = Organization.objects.get(pk=id)
@@ -461,79 +470,117 @@ def metabolism_manager_admin_entity_form(request, organization, id=None):
             info.tags.add(tag)
         messages.success(request, "The information was saved.")
         if edit:
-            return redirect(reverse("platformu_admin_entity", args=[organization.id, info.id]))
+            return redirect(reverse("platformu_admin_entity", args=[my_organization.id, info.id]))
         else:
-            return redirect(reverse("platformu_admin_clusters", args=[organization.id]))
+            return redirect(reverse("platformu_admin_clusters", args=[my_organization.id]))
     context = {
         "page": "entity_form",
-        "organization": organization,
+        "my_organization": my_organization,
         "info": info,
+        "sectors": Sector.objects.all(),
     }
     return render(request, "metabolism_manager/admin/entity.form.html", load_specific_design(context, PAGE_ID["platformu"]))
 
-def metabolism_manager_admin_entity_users(request, id=None):
+def metabolism_manager_admin_entity_users(request, organization, id=None):
+    my_organization = Organization.objects.get(pk=organization)
+    info = Organization.objects.get(pk=id)
     context = {
-        "page": "entity_users"
+        "page": "entity_users",
+        "my_organization": my_organization,
+        "info": info,
     }
     return render(request, "metabolism_manager/admin/entity.users.html", load_specific_design(context, PAGE_ID["platformu"]))
 
-def metabolism_manager_admin_entity_materials(request, id):
+def metabolism_manager_admin_entity_materials(request, organization, id):
+    my_organization = Organization.objects.get(pk=organization)
+    info = Organization.objects.get(pk=id)
     context = {
-        "page": "entity_materials"
+        "page": "entity_materials",
+        "my_organization": my_organization,
+        "info": info,
     }
     return render(request, "metabolism_manager/admin/entity.materials.html", load_specific_design(context, PAGE_ID["platformu"]))
 
-def metabolism_manager_admin_entity_material(request, id):
+def metabolism_manager_admin_entity_material(request, organization, id):
+    my_organization = Organization.objects.get(pk=organization)
+    info = Organization.objects.get(pk=id)
     context = {
-        "page": "entity_materials"
+        "page": "entity_materials",
+        "my_organization": my_organization,
+        "info": info,
     }
     return render(request, "metabolism_manager/admin/entity.material.html", load_specific_design(context, PAGE_ID["platformu"]))
 
-def metabolism_manager_admin_entity_data(request, id):
+def metabolism_manager_admin_entity_data(request, organization, id):
+    my_organization = Organization.objects.get(pk=organization)
+    info = Organization.objects.get(pk=id)
     context = {
-        "page": "entity_data"
+        "page": "entity_data",
+        "my_organization": my_organization,
+        "info": info,
     }
     return render(request, "metabolism_manager/admin/entity.data.html", load_specific_design(context, PAGE_ID["platformu"]))
 
-def metabolism_manager_admin_entity_log(request, id):
+def metabolism_manager_admin_entity_log(request, organization, id):
+    my_organization = Organization.objects.get(pk=organization)
+    info = Organization.objects.get(pk=id)
     context = {
-        "page": "entity_log"
+        "page": "entity_log",
+        "my_organization": my_organization,
+        "info": info,
     }
     return render(request, "metabolism_manager/admin/entity.log.html", load_specific_design(context, PAGE_ID["platformu"]))
 
-def metabolism_manager_admin_entity_user(request, id, user=None):
+def metabolism_manager_admin_entity_user(request, organization, id, user=None):
+    my_organization = Organization.objects.get(pk=organization)
+    info = Organization.objects.get(pk=id)
     context = {
-        "page": "entity_form"
+        "page": "entity_form",
+        "my_organization": my_organization,
+        "info": info,
     }
     return render(request, "metabolism_manager/admin/entity.user.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_dashboard(request):
+    my_organization = Organization.objects.get(pk=organization)
+    info = Organization.objects.get(pk=id)
     context = {
-        "page": "dashboard"
+        "page": "dashboard",
+        "my_organization": my_organization,
+        "info": info,
     }
     return render(request, "metabolism_manager/dashboard.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_material(request):
+    my_organization = Organization.objects.get(pk=organization)
     context = {
-        "page": "material"
+        "page": "material",
+        "my_organization": my_organization,
+        "info": info,
     }
     return render(request, "metabolism_manager/material.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_material_form(request):
+    my_organization = Organization.objects.get(pk=organization)
     context = {
-        "page": "material"
+        "page": "material",
+        "my_organization": my_organization,
+        "info": info,
     }
     return render(request, "metabolism_manager/material.form.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_report(request):
+    my_organization = Organization.objects.get(pk=organization)
     context = {
-        "page": "report"
+        "page": "report",
+        "my_organization": my_organization,
+        "info": info,
     }
     return render(request, "metabolism_manager/report.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_marketplace(request):
     context = {
-        "page": "marketplace"
+        "page": "marketplace",
     }
     return render(request, "metabolism_manager/marketplace.html", load_specific_design(context, PAGE_ID["platformu"]))
 
@@ -1232,6 +1279,8 @@ def load_baseline(request):
     relationships = [
         {
             "id": 1, "title": "Member", "description": "This user is a member of a group or organisation -- and will have the same permissions or access as the organisation itself",
+        },
+        {
             "id": 2, "title": "Publisher", "description": "For an article/paper to be published in a journal or magazine, or a publisher to publish a book",
         }
     ]
