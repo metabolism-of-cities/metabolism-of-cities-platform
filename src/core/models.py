@@ -122,6 +122,7 @@ class Organization(Record):
 # For instance authors, admins, employee, funder
 class Relationship(models.Model):
     title = models.CharField(max_length=255)
+    label = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     def __str__(self):
         return self.title
@@ -131,16 +132,18 @@ class Relationship(models.Model):
 # For instance: User 11 has the relationship "Admin" of Record 381 (Company BBB)
 class UserRelationship(models.Model):
     record = models.ForeignKey(Record, on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     relationship = models.ForeignKey(Relationship, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    def __str__(self):
+        return str(self.record) + ' ' + str(self.relationship.label) + ' ' + str(self.user)
 
 # This defines a particular relationship between two records.
 # For instance: Record 100 (company AA) has the relationship "Funder" of Record 104 (Project BB)
 # It will always be in the form of RECORD is RELATIONSHIP of RECORD_SECONDARY (member/publisher/funder)
 class RecordRelationship(models.Model):
     record = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="record")
-    record_secondary = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="record_secondary")
     relationship = models.ForeignKey(Relationship, on_delete=models.CASCADE)
+    record_secondary = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="record_secondary")
 
 class Event(Record):
     EVENT_TYPE = [

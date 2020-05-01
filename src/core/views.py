@@ -1276,13 +1276,22 @@ def load_baseline(request):
 
     messages.success(request, "UM, Community, Project, About pages were inserted/reset")
 
+    # Individual record is the XXX of 
+
+    # Paul... is a member of
+    # Paul Industries Inc. ... is the producer of 
+    # Paul Inc. is the publisher of... 
     relationships = [
-        {
-            "id": 1, "title": "Member", "description": "This user is a member of a group or organisation -- and will have the same permissions or access as the organisation itself",
-        },
-        {
-            "id": 2, "title": "Publisher", "description": "For an article/paper to be published in a journal or magazine, or a publisher to publish a book",
-        }
+        { "id": 1, "title": "PlatformU Admin", "label": "is a PlatformU admin user of", "description": "This user is a member of a group or organisation -- and will have the same permissions or access as the organisation itself", },
+        { "id": 2, "title": "Publisher", "label": "is the publisher of", "description": "For an article/paper to be published in a journal or magazine, or a publisher to publish a book", },
+        { "id": 3, "title": "Producer", "label": "is the producer of", "description": "For a podcast or video to be produced by a person or organization", },
+        { "id": 4, "title": "Author", "label": "is the author of", "description": "For a publication, book, etc.", },
+        { "id": 5, "title": "Funder", "label": "is the funder of", "description": "When an organisation funds a publication, project, etc.", },
+        { "id": 6, "title": "Team member", "label": "is a team member of", "description": "When someone participates in a project", },
+        { "id": 7, "title": "Former team member", "label": "is a former team member of", "description": "When someone participated previously in a project", },
+        { "id": 8, "title": "Commissioner", "label": "is commissioner of", "description": "When an organisation commissions something to be produced.", },
+        { "id": 9, "title": "Interviewee", "label": "is being interviewed in", "description": "When someone is being interviewed in a video, podcast, etc.", },
+        { "id": 10, "title": "Partner", "label": "is a partner in", "description": "When an organisation or person is a partner in a project.", },
     ]
 
     Relationship.objects.all().delete()
@@ -1291,6 +1300,7 @@ def load_baseline(request):
             id = each["id"],
             title = each["title"],
             description = each["description"],
+            label = each["label"],
         )
 
     messages.success(request, "Relationships were loaded")
