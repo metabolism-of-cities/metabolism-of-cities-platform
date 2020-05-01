@@ -2025,5 +2025,6 @@ def dataimport(request):
         "flowdiagrams": FlowDiagram.objects.all().count(),
         "dataviz": DataViz.objects.all().count(),
         "flowblocks": FlowBlocks.objects.all().count(),
+        "podcasts": LibraryItem.objects.filter(type__name="Podcast").count(),
     }
     return render(request, "temp.import.html", context)
