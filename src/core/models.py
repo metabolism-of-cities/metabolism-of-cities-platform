@@ -13,6 +13,7 @@ from django.conf import settings
 from markdown import markdown
 from tinymce import HTMLField
 import re
+from django.utils.text import slugify
 
 class Tag(models.Model):
     name = models.CharField(max_length=255)
@@ -50,6 +51,8 @@ class Record(models.Model):
     image = StdImageField(upload_to="records", variations={"thumbnail": (480, 480), "large": (1280, 1024)}, blank=True, null=True)
     tags = models.ManyToManyField(Tag)
     old_id = models.IntegerField(null=True, blank=True, db_index=True, help_text="Only used for the migration between old and new structure")
+    date_created = models.DateTimeField(auto_now_add=True)
+    spaces = models.ManyToManyField(ReferenceSpace, blank=True)
     def __str__(self):
         return self.title
 
@@ -99,11 +102,11 @@ class News(Record):
 
 class Organization(Record):
     url = models.CharField(max_length=255, null=True, blank=True)
-    parent = models.ForeignKey("self", on_delete=models.SET_NULL, null=True, blank=True)
     twitter = models.CharField(max_length=255, null=True, blank=True)
     linkedin = models.CharField(max_length=255, null=True, blank=True)
     researchgate = models.CharField(max_length=255, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
+    slug = models.SlugField(max_length=255)
     ORG_TYPE = (
         ("academic", "Research Institution"),
         ("universities", "Universities"),
@@ -113,10 +116,21 @@ class Organization(Record):
         ("statistical_agency", "Statistical Agency"),
         ("private_sector", "Private Sector"),
         ("publisher", "Publishers"),
+        ("journal", "Journal"),
+        ("society", "Academic Society"),
         ("ngo", "NGO"),
         ("other", "Other"),
     )
     type = models.CharField(max_length=20, choices=ORG_TYPE)
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+    def get_absolute_url(self):
+        return reverse("library_journal", args=[self.slug])
+    def publications(self):
+        # To get all the publications we'll get the LibraryItems that are a child
+        # record that are linked to this organization (e.g. journal or publishing house) as a parent
+        return LibraryItem.objects.filter(child_list__record_parent=self, child_list__relationship__id=2)
 
 # This defines the relationships that may exist between users and records, or between records
 # For instance authors, admins, employee, funder
@@ -140,10 +154,17 @@ class UserRelationship(models.Model):
 # This defines a particular relationship between two records.
 # For instance: Record 100 (company AA) has the relationship "Funder" of Record 104 (Project BB)
 # It will always be in the form of RECORD is RELATIONSHIP of RECORD_SECONDARY (member/publisher/funder)
+# Wiley is the publisher of the JIE. Wiley = record_parent; JIE = record_child
+# Fulano is the author of Paper A. Fulano = record_parent; Paper A = record_child 
 class RecordRelationship(models.Model):
-    record = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="record")
+    record_parent = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="parent_list")
     relationship = models.ForeignKey(Relationship, on_delete=models.CASCADE)
-    record_secondary = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="record_secondary")
+    record_child = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="child_list")
+    def __str__(self):
+        return str(self.record_parent) + ' ' + str(self.relationship.label) + ' ' + str(self.record_child)
+    class Meta:
+        verbose_name_plural = "relationship manager"
+        verbose_name = "relationship manager"
 
 class Event(Record):
     EVENT_TYPE = [
@@ -158,23 +179,6 @@ class Event(Record):
     url = models.URLField(max_length=255, null=True, blank=True)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
-
-class Video(Record):
-    url = models.URLField(max_length=255)
-    embed_code = models.CharField(max_length=20, null=True, blank=True)
-    date = models.DateField(blank=True, null=True)
-    VIDEO_SITES = [
-        ("youtube", "Youtube"),
-        ("vimeo", "Vimeo"),
-        ("other", "Other"),
-    ]
-    video_site = models.CharField(max_length=14, choices=VIDEO_SITES)
-
-    def embed(self):
-        if self.video_site == "youtube":
-            return f'<iframe class="video-embed youtube-video" src="https://www.youtube.com/embed/{self.embed_code}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
-        elif self.video_site == "vimeo":
-            return f'<iframe class="video-embed vimeo-video" title="vimeo-player" src="https://player.vimeo.com/video/{self.embed_code}" frameborder="0" allowfullscreen></iframe>'
 
 class People(Record):
     firstname = models.CharField(max_length=255, null=True, blank=True)
@@ -207,7 +211,7 @@ class People(Record):
     objects = models.Manager()
     on_site = CurrentSiteManager()
 
-class Article(Record):
+class Webpage(Record):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     slug = models.CharField(db_index=True, max_length=100)
     position = models.PositiveSmallIntegerField(db_index=True, null=True, blank=True)
@@ -224,8 +228,8 @@ class Article(Record):
         ]
         ordering = ["position", "title"]
 
-class ArticleDesign(models.Model):
-    article = models.OneToOneField(Article, on_delete=models.CASCADE, primary_key=True, related_name="design")
+class WebpageDesign(models.Model):
+    webpage = models.OneToOneField(Webpage, on_delete=models.CASCADE, primary_key=True, related_name="design")
     HEADER = [
         ("full", "Full header with title and subtitle"),
         ("small", "Small header; menu only"),
@@ -242,7 +246,6 @@ class ArticleDesign(models.Model):
 
 class ForumMessage(Record):
     parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
-    date_created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     documents = models.ManyToManyField(Document)
 
@@ -260,17 +263,6 @@ class ForumMessage(Record):
 
     def get_absolute_url(self):
         return reverse("forum_topic", args=[self.id])
-
-# Library items
-class Journal(Record):
-    url = models.URLField(max_length=255, null=True, blank=True)
-    publisher = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True, blank=True)
-    slug = models.SlugField(db_index=True, max_length=255, null=True, blank=True)
-    def get_absolute_url(self):
-        return reverse("library_journal", args=[self.slug])
-
-    def __str__(self):
-        return self.title
 
 class LibraryItemType(models.Model):
     name = models.CharField(max_length=255)
@@ -302,14 +294,14 @@ class LibraryItem(Record):
     title_original_language = models.CharField(max_length=255, blank=True, null=True)
     authorlist = models.TextField()
     type = models.ForeignKey(LibraryItemType, on_delete=models.CASCADE)
-    published_in = models.ForeignKey(Journal, on_delete=models.CASCADE, null=True, blank=True, help_text="If the journal does not appear in the list, please leave empty and add the name in the comments", related_name="publications")
+    is_part_of = models.ForeignKey("self", on_delete=models.SET_NULL, null=True, blank=True)
     year = models.PositiveSmallIntegerField()
     abstract_original_language = models.TextField(null=True, blank=True)
     date_added = models.DateTimeField(null=True, blank=True, auto_now_add=True)
     file = models.FileField(null=True, blank=True, upload_to="references", help_text="Only upload the file if you are the creator or you have permission to do so")
-    open_access = models.NullBooleanField(null=True, blank=True)
     url = models.CharField(max_length=500, null=True, blank=True)
     file_url = models.URLField(null=True, blank=True)
+    open_access = models.NullBooleanField(null=True, blank=True)
     doi = models.CharField(max_length=255, null=True, blank=True)
     isbn = models.CharField(max_length=255, null=True, blank=True)
     comments = models.TextField(null=True, blank=True)
@@ -319,11 +311,11 @@ class LibraryItem(Record):
         ("deleted", "Deleted"),
     )
     status = models.CharField(max_length=8, choices=STATUS, db_index=True)
-    authors = models.ManyToManyField(People, through="LibraryItemAuthor")
+    #published_in = models.ForeignKey(Journal, on_delete=models.CASCADE, null=True, blank=True, help_text="If the journal does not appear in the list, please leave empty and add the name in the comments", related_name="publications")
+    #authors = models.ManyToManyField(People, through="LibraryItemAuthor")
     #organizations = models.ManyToManyField(Organization, through="ReferenceOrganization")
     #processes = models.ManyToManyField("staf.Process", blank=True, limit_choices_to={"slug__isnull": False})
     #materials = models.ManyToManyField("staf.Material", blank=True)
-    spaces = models.ManyToManyField(ReferenceSpace, blank=True)
 
     def __str__(self):
         return self.title
@@ -331,27 +323,24 @@ class LibraryItem(Record):
     class Meta:
         ordering = ["-year", "title"]
 
-    def source(self):
-        "Return details of where this reference was published at/in"
-        if self.journal:
-            return self.journal.name
-        elif self.event:
-            return self.event.name
-        else:
-            return self.type.name
-
-    def accountingMethods(self):
-        return self.tags.filter(is_accounting_method=True, hidden=False)
-
     def get_absolute_url(self):
         return reverse("library_item", args=[self.id])
 
-class LibraryItemAuthor(models.Model):
-    position = models.PositiveSmallIntegerField(default=1)
-    item = models.ForeignKey(LibraryItem, on_delete=models.CASCADE)
-    people = models.ForeignKey(People, on_delete=models.CASCADE)
-    class Meta:
-        db_table = "core_library_authors"
+class Video(LibraryItem):
+    embed_code = models.CharField(max_length=20, null=True, blank=True)
+    date = models.DateField(blank=True, null=True)
+    VIDEO_SITES = [
+        ("youtube", "Youtube"),
+        ("vimeo", "Vimeo"),
+        ("other", "Other"),
+    ]
+    video_site = models.CharField(max_length=14, choices=VIDEO_SITES)
+
+    def embed(self):
+        if self.video_site == "youtube":
+            return f'<iframe class="video-embed youtube-video" src="https://www.youtube.com/embed/{self.embed_code}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+        elif self.video_site == "vimeo":
+            return f'<iframe class="video-embed vimeo-video" title="vimeo-player" src="https://player.vimeo.com/video/{self.embed_code}" frameborder="0" allowfullscreen></iframe>'
 
 class ActivatedSpace(models.Model):
     space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE)
@@ -365,76 +354,76 @@ class ActivatedSpace(models.Model):
         unique_together = ["slug", "site"]
 
 #MOOC's
-class MOOC(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField(null=True, blank=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
-
-class MOOCQuestion(models.Model):
-    question = models.CharField(max_length=255)
-    date_created = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.question
-
-class MOOCModule(models.Model):
-    mooc = models.ForeignKey(MOOC, on_delete=models.CASCADE, related_name="modules")
-    name = models.CharField(max_length=255)
-    instructions = models.TextField(null=True, blank=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
-
-class MOOCModuleQuestion(models.Model):
-    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE, related_name="questions")
-    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE)
-    position = models.PositiveSmallIntegerField(db_index=True, null=True, blank=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.module.name + " - " + self.question.question
-
-    class Meta:
-        ordering = ["position"]
-
-class MOOCVideo(models.Model):
-    video = models.ForeignKey(Video, on_delete=models.CASCADE)
-    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE)
-    date_created = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.module.name + " - " + self.video.video_site + " - " + self.video.url
-
-class MOOCAnswer(models.Model):
-    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE)
-    answer = models.CharField(max_length=255)
-    date_created = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.answer
-
-class MOOCProgress(models.Model):
-    video = models.ForeignKey(MOOCVideo, on_delete=models.CASCADE)
-    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    date_created = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.module.name
-
-class MOOCQuizAnswers(models.Model):
-    mooc = models.ForeignKey(MOOC, on_delete=models.CASCADE)
-    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE)
-    answer = models.ForeignKey(MOOCAnswer, on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    date_created = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.mooc.name
+#class MOOC(models.Model):
+#    name = models.CharField(max_length=255)
+#    description = models.TextField(null=True, blank=True)
+#    date_created = models.DateTimeField(auto_now_add=True)
+#
+#    def __str__(self):
+#        return self.name
+#
+#class MOOCQuestion(models.Model):
+#    question = models.CharField(max_length=255)
+#    date_created = models.DateTimeField(auto_now_add=True)
+#
+#    def __str__(self):
+#        return self.question
+#
+#class MOOCModule(models.Model):
+#    mooc = models.ForeignKey(MOOC, on_delete=models.CASCADE, related_name="modules")
+#    name = models.CharField(max_length=255)
+#    instructions = models.TextField(null=True, blank=True)
+#    date_created = models.DateTimeField(auto_now_add=True)
+#
+#    def __str__(self):
+#        return self.name
+#
+#class MOOCModuleQuestion(models.Model):
+#    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE, related_name="questions")
+#    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE)
+#    position = models.PositiveSmallIntegerField(db_index=True, null=True, blank=True)
+#    date_created = models.DateTimeField(auto_now_add=True)
+#
+#    def __str__(self):
+#        return self.module.name + " - " + self.question.question
+#
+#    class Meta:
+#        ordering = ["position"]
+#
+#class MOOCVideo(models.Model):
+#    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+#    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE)
+#    date_created = models.DateTimeField(auto_now_add=True)
+#
+#    def __str__(self):
+#        return self.module.name + " - " + self.video.video_site + " - " + self.video.url
+#
+#class MOOCAnswer(models.Model):
+#    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE)
+#    answer = models.CharField(max_length=255)
+#    date_created = models.DateTimeField(auto_now_add=True)
+#
+#    def __str__(self):
+#        return self.answer
+#
+#class MOOCProgress(models.Model):
+#    video = models.ForeignKey(MOOCVideo, on_delete=models.CASCADE)
+#    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE)
+#    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+#    date_created = models.DateTimeField(auto_now_add=True)
+#
+#    def __str__(self):
+#        return self.module.name
+#
+#class MOOCQuizAnswers(models.Model):
+#    mooc = models.ForeignKey(MOOC, on_delete=models.CASCADE)
+#    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE)
+#    answer = models.ForeignKey(MOOCAnswer, on_delete=models.CASCADE)
+#    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+#    date_created = models.DateTimeField(auto_now_add=True)
+#
+#    def __str__(self):
+#        return self.mooc.name
 
 class License(models.Model):
     name = models.CharField(max_length=255)
@@ -471,21 +460,3 @@ class Photo(models.Model):
         else:
           description = "Photo by " + self.author + " - #" + str(self.id)
         return description
-
-class DataViz(models.Model):
-    title = models.CharField(max_length=255)
-    image = StdImageField(upload_to="dataviz", variations={"thumb": (300, 300), "large": (1024, 1024)})
-    uploaded_by = models.ForeignKey(People, on_delete=models.CASCADE)
-    space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE, null=True, blank=True)
-    reference = models.ForeignKey(LibraryItem, on_delete=models.CASCADE, null=True, blank=True)
-    sector = models.ForeignKey(Sector, on_delete=models.CASCADE, null=True, blank=True)
-    date = models.DateTimeField(auto_now_add=True)
-    description = HTMLField(null=True, blank=True)
-    url = models.CharField(max_length=255, null=True, blank=True, help_text="URL of the source website/article -- ONLY enter if this is not linked to a publication")
-    source = models.TextField(null=True, blank=True, help_text="Name of the source website/article -- ONLY enter if this is not linked to a publication")
-    year = models.PositiveSmallIntegerField(null=True, blank=True, help_text="Year of the data being visualized -- ONLY enter if this is not linked to a publication")
-    class Meta:
-        ordering = ["date"]
-    def __str__(self):
-        return self.title
-

@@ -1,6 +1,6 @@
 from django.contrib.sites.models import Site
 
-from core.models import Article, Project
+from core.models import Webpage, Project
 from django.conf import settings
 
 def site(request):
@@ -15,9 +15,9 @@ def site(request):
 
         # Temporary list while we stabilize the nav 
 
-        "UM": Article.objects.filter(parent__id=1),
-        "ABOUT": Article.objects.filter(parent__id=31),
-        "COMMUNITY": Article.objects.filter(parent__id=11),
+        "UM": Webpage.objects.filter(parent__id=1),
+        "ABOUT": Webpage.objects.filter(parent__id=31),
+        "COMMUNITY": Webpage.objects.filter(parent__id=11),
         "PROJECTS": Project.on_site.filter(is_internal=True),
 
     }

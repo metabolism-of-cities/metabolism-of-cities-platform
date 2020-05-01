@@ -21,7 +21,7 @@ class MyAdminSite(AdminSite):
 
 admin_site = MyAdminSite()
 
-class ArticleAdmin(admin.ModelAdmin):
+class WebpageAdmin(admin.ModelAdmin):
     list_display = ["title", "site", "parent", "is_deleted"]
     search_fields = ["title", "site"]
 
@@ -30,14 +30,14 @@ class ArticleAdmin(admin.ModelAdmin):
             url = obj.get_absolute_url()
             return redirect(url)
         else:
-            return super(ArticleAdmin, self).response_change(request, obj)
+            return super(WebpageAdmin, self).response_change(request, obj)
 
     def response_add(self, request, obj, post_url_continue=None):
         if "_addanother" not in request.POST and "_continue" not in request.POST:
             url = obj.get_absolute_url()
             return redirect(url)
         else:
-            return super(ArticleAdmin, self).response_add(request, obj, post_url_continue=None)
+            return super(WebpageAdmin, self).response_add(request, obj, post_url_continue=None)
 
     def change_view(self, request, object_id, extra_content=None):
          if "short" in request.GET:
@@ -46,7 +46,7 @@ class ArticleAdmin(admin.ModelAdmin):
             self.fields = ["title", "content", "is_deleted", "image", "tags","site", "slug", "position", "parent", "old_id"]
          return super().change_view(request, object_id)
 
-class ArticleDesignAdmin(admin.ModelAdmin):
+class WebpageDesignAdmin(admin.ModelAdmin):
     class Media:
         css = {
             "all": ("css/styles.css",)
@@ -80,6 +80,7 @@ class TagAdmin(admin.ModelAdmin):
 class OrgAdmin(SearchCompleteAdmin):
     list_display = ["title", "type"]
     list_filter = ["type"]
+    exclude = ["slug"]
 
 class ProjectAdmin(SearchCompleteAdmin):
     list_display = ["title", "is_internal", "start_date", "status"]
@@ -88,13 +89,13 @@ class ReferenceSpaceAdmin(SearchAdmin):
     list_display = ["name", "location_date", "is_deleted"]
     search_fields = ["name"]
     autocomplete_fields = ["location"]
-    exclude = ("slug",)
+    exclude = ["slug"]
     def location_date(self, obj):
         return obj.location.start if obj.location else None
 
 class LibraryAdmin(SearchCompleteAdmin):
     list_filter = ["status", "type", "year"]
-    list_display = ["title", "year", "published_in", "status"]
+    list_display = ["title", "year", "status"]
 
 class GeocodeAdmin(SearchAdmin):
     list_filter = ["scheme"]
@@ -105,11 +106,17 @@ class SpaceAdmin(admin.ModelAdmin):
     list_display = ["space", "slug", "site"]
     search_fields = ["space__name"]
     autocomplete_fields = ["space"]
-    exclude = ("slug",)
+    exclude = ["slug"]
 
 class LocationAdmin(admin.OSMGeoAdmin):
     search_fields = ["referencespace__name"]
     autocomplete_fields = ["space"]
+
+class RecordRelationshipAdmin(admin.ModelAdmin):
+    search_fields = ["record_parent__title", "record_child__title"]
+    list_display = ["record_parent", "relationship", "record_child"]
+    list_filter = ["relationship"]
+    autocomplete_fields = ["record_parent", "record_child"]
 
 class PhotoAdmin(admin.ModelAdmin):
     search_fields = ["space__name"]
@@ -150,30 +157,29 @@ admin_site.register(Record, SearchCompleteAdmin)
 admin_site.register(Event, SearchCompleteAdmin)
 admin_site.register(News, SearchCompleteAdmin)
 admin_site.register(Organization, OrgAdmin)
-admin_site.register(Article, ArticleAdmin)
-admin_site.register(ArticleDesign, ArticleDesignAdmin)
+admin_site.register(Webpage, WebpageAdmin)
+admin_site.register(WebpageDesign, WebpageDesignAdmin)
 admin_site.register(People, SearchCompleteAdmin)
 admin_site.register(Video, VideoAdmin)
 admin_site.register(Project, ProjectAdmin)
 admin_site.register(Relationship)
 admin_site.register(UserRelationship)
-admin_site.register(RecordRelationship)
+admin_site.register(RecordRelationship, RecordRelationshipAdmin)
 admin_site.register(LibraryItem, LibraryAdmin)
 admin_site.register(LibraryItemType, SearchAdmin)
-admin_site.register(Journal, SearchCompleteAdmin)
 admin_site.register(ActivatedSpace, SpaceAdmin)
 
 admin_site.register(License)
 admin_site.register(Photo, PhotoAdmin)
 
-admin_site.register(MOOC)
-admin_site.register(MOOCModule)
-admin_site.register(MOOCQuestion)
-admin_site.register(MOOCModuleQuestion)
-admin_site.register(MOOCVideo)
-admin_site.register(MOOCAnswer)
-admin_site.register(MOOCProgress)
-admin_site.register(MOOCQuizAnswers)
+#admin_site.register(MOOC)
+#admin_site.register(MOOCModule)
+#admin_site.register(MOOCQuestion)
+#admin_site.register(MOOCModuleQuestion)
+#admin_site.register(MOOCVideo)
+#admin_site.register(MOOCAnswer)
+#admin_site.register(MOOCProgress)
+#admin_site.register(MOOCQuizAnswers)
 
 admin_site.register(Group)
 admin_site.register(User)

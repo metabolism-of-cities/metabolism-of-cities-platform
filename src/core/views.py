@@ -92,7 +92,7 @@ def getHeader(info):
     if hasattr(info, "design"):
         design = info.design
     else:
-        design = ArticleDesign()
+        design = WebpageDesign()
 
     header_image = design.header_image.huge.url if design.header_image else None
     breadcrumbs = '<li class="breadcrumb-item"><a href="/">Home</a></li>'
@@ -126,7 +126,7 @@ def getHeader(info):
 # the subsite and header variables that are based on the subsite
 # that we are opening
 def load_specific_design(context, design):
-    info = get_object_or_404(Article, pk=design)
+    info = get_object_or_404(Webpage, pk=design)
     header = getHeader(info)
     context["subsite"] = header
     context["header"] = header
@@ -245,7 +245,7 @@ def template(request, slug):
 # The internal projects section
 
 def projects(request):
-    article = get_object_or_404(Article, pk=PAGE_ID["projects"])
+    article = get_object_or_404(Webpage, pk=PAGE_ID["projects"])
     context = {
         "header": getHeader(article),
         "edit_link": "/admin/core/project/" + str(article.id) + "/change/",
@@ -255,7 +255,7 @@ def projects(request):
     return render(request, "projects.html", context)
 
 def project(request, id):
-    article = get_object_or_404(Article, pk=PAGE_ID["projects"])
+    article = get_object_or_404(Webpage, pk=PAGE_ID["projects"])
     info = get_object_or_404(Project, pk=id)
     header = getHeader(article)
     context = {
@@ -269,34 +269,34 @@ def project(request, id):
     }
     return render(request, "project.html", context)
 
-# Article is used for general web pages, and they can be opened in
+# Webpage is used for general web pages, and they can be opened in
 # various ways (using ID, using slug). They can have different presentational formats
 
 def article(request, id=None, prefix=None, slug=None, project=None):
     site = get_current_site(request)
     menu = None
     if id:
-        info = get_object_or_404(Article, pk=id, site=site)
+        info = get_object_or_404(Webpage, pk=id, site=site)
         if info.is_deleted and not request.user.is_staff:
-            raise Http404("Article not found")
+            raise Http404("Webpage not found")
     elif slug:
         if prefix:
             slug = prefix + slug
         slug = slug + "/"
-        info = get_object_or_404(Article, slug=slug, site=site)
+        info = get_object_or_404(Webpage, slug=slug, site=site)
 
     if info.parent:
-        menu = Article.objects.filter(parent=info.parent)
+        menu = Webpage.objects.filter(parent=info.parent)
     if hasattr(info, "design"):
         design_link = "/admin/core/articledesign/" + str(info.id) + "/change/"
     else:
         design_link = "/admin/core/articledesign/add/?article=" + str(info.id)
     subsite = None
     if project:
-        project = get_object_or_404(Article, pk=project, site=site)
+        project = get_object_or_404(Webpage, pk=project, site=site)
         subsite = getHeader(project)
         subsite["id"] = project.id
-        menu = Article.objects.filter(parent=info)
+        menu = Webpage.objects.filter(parent=info)
     context = {
         "info": info,
         "menu": menu,
@@ -309,8 +309,8 @@ def article(request, id=None, prefix=None, slug=None, project=None):
     return render(request, "article.html", context)
 
 def article_list(request, id):
-    info = get_object_or_404(Article, pk=id)
-    list = Article.objects.filter(parent=info)
+    info = get_object_or_404(Webpage, pk=id)
+    list = Webpage.objects.filter(parent=info)
     context = {
         "info": info,
         "list": list,
@@ -391,7 +391,7 @@ def datahub_dataset(request, space, dataset):
 # Metabolism Manager
 
 def metabolism_manager(request):
-    info = get_object_or_404(Article, pk=PAGE_ID["platformu"])
+    info = get_object_or_404(Webpage, pk=PAGE_ID["platformu"])
     if hasattr(info, "design"):
         design_link = "/admin/core/articledesign/" + str(info.id) + "/change/"
     else:
@@ -585,7 +585,7 @@ def metabolism_manager_marketplace(request):
     return render(request, "metabolism_manager/marketplace.html", load_specific_design(context, PAGE_ID["platformu"]))
 
 def metabolism_manager_forum(request):
-    article = get_object_or_404(Article, pk=17)
+    article = get_object_or_404(Webpage, pk=17)
     list = ForumMessage.objects.filter(parent__isnull=True)
     context = {
         "header": getHeader(article),
@@ -832,34 +832,34 @@ def stafcp_article(request, id):
 # Library
 
 def library(request):
-    info = get_object_or_404(Article, pk=PAGE_ID["library"])
+    info = get_object_or_404(Webpage, pk=PAGE_ID["library"])
     context = {
         "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
         "info": info,
-        "menu": Article.objects.filter(parent=info),
+        "menu": Webpage.objects.filter(parent=info),
     }
     return render(request, "article.html", load_specific_design(context, PAGE_ID["library"]))
 
 def library_browse(request, article):
-    info = get_object_or_404(Article, pk=article)
+    info = get_object_or_404(Webpage, pk=article)
     context = {
         "article": info,
     }
     return render(request, "library/browse.html", load_specific_design(context, PAGE_ID["library"]))
 
 def library_search(request, article):
-    info = get_object_or_404(Article, pk=article)
+    info = get_object_or_404(Webpage, pk=article)
     context = {
         "article": info,
     }
     return render(request, "library/search.html", load_specific_design(context, PAGE_ID["library"]))
 
 def library_download(request):
-    info = get_object_or_404(Article, pk=PAGE_ID["library"])
+    info = get_object_or_404(Webpage, pk=PAGE_ID["library"])
     context = {
         "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
         "info": info,
-        "menu": Article.objects.filter(parent=info),
+        "menu": Webpage.objects.filter(parent=info),
     }
     return render(request, "article.html", load_specific_design(context, PAGE_ID["library"]))
 
@@ -880,8 +880,8 @@ def library_casestudies(request, slug=None):
     return render(request, "library/" + page, load_specific_design(context, PAGE_ID["library"]))
 
 def library_journals(request, article):
-    info = get_object_or_404(Article, pk=article)
-    list = Journal.objects.all()
+    info = get_object_or_404(Webpage, pk=article)
+    list = Organization.objects.filter(type="journal")
     context = {
         "article": info,
         "list": list,
@@ -889,10 +889,10 @@ def library_journals(request, article):
     return render(request, "library/journals.html", load_specific_design(context, PAGE_ID["library"]))
 
 def library_journal(request, slug):
-    info = get_object_or_404(Journal, slug=slug)
+    info = get_object_or_404(Organization, type="journal", slug=slug)
     context = {
         "info": info,
-        "items": info.publications.all(),
+        "items": info.publications,
     }
     return render(request, "library/journal.html", load_specific_design(context, PAGE_ID["library"]))
 
@@ -904,7 +904,7 @@ def library_item(request, id, section="library"):
     return render(request, "library/item.html", load_specific_design(context, PAGE_ID[section]))
 
 def library_map(request, article):
-    info = get_object_or_404(Article, pk=article)
+    info = get_object_or_404(Webpage, pk=article)
     items = LibraryItem.objects.filter(status="active", tags__id=TAG_ID["case_study"])
     items = items.filter(tags__id=get_site_tag(request))
     context = {
@@ -914,27 +914,27 @@ def library_map(request, article):
     return render(request, "library/map.html", load_specific_design(context, PAGE_ID["library"]))
 
 def library_authors(request):
-    info = get_object_or_404(Article, pk=PAGE_ID["library"])
+    info = get_object_or_404(Webpage, pk=PAGE_ID["library"])
     context = {
         "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
         "info": info,
-        "menu": Article.objects.filter(parent=info),
+        "menu": Webpage.objects.filter(parent=info),
     }
     return render(request, "article.html", load_specific_design(context, PAGE_ID["library"]))
 
 def library_contribute(request):
-    info = get_object_or_404(Article, pk=PAGE_ID["library"])
+    info = get_object_or_404(Webpage, pk=PAGE_ID["library"])
     context = {
         "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
         "info": info,
-        "menu": Article.objects.filter(parent=info),
+        "menu": Webpage.objects.filter(parent=info),
     }
     return render(request, "article.html", load_specific_design(context, PAGE_ID["library"]))
 
 # People
 
 def person(request, id):
-    article = get_object_or_404(Article, pk=PAGE_ID["people"])
+    article = get_object_or_404(Webpage, pk=PAGE_ID["people"])
     info = get_object_or_404(People, pk=id)
     context = {
         "header": getHeader(article),
@@ -944,7 +944,7 @@ def person(request, id):
     return render(request, "person.html", context)
 
 def people_list(request):
-    info = get_object_or_404(Article, pk=PAGE_ID["people"])
+    info = get_object_or_404(Webpage, pk=PAGE_ID["people"])
     context = {
         "header": getHeader(info),
         "edit_link": "/admin/core/article/" + str(info.id) + "/change/",
@@ -956,7 +956,7 @@ def people_list(request):
 # NEWS AND EVENTS
 
 def news_list(request):
-    article = get_object_or_404(Article, pk=15)
+    article = get_object_or_404(Webpage, pk=15)
     list = News.on_site.all()
     context = {
         "header": getHeader(article),
@@ -967,7 +967,7 @@ def news_list(request):
     return render(request, "news.list.html", context)
 
 def news(request, id):
-    article = get_object_or_404(Article, pk=15)
+    article = get_object_or_404(Webpage, pk=15)
     context = {
         "header": getHeader(article),
         "info": get_object_or_404(News, pk=id),
@@ -977,14 +977,14 @@ def news(request, id):
     return render(request, "news.html", context)
 
 def event_list(request):
-    article = get_object_or_404(Article, pk=16)
+    article = get_object_or_404(Webpage, pk=16)
     context = {
         "header": getHeader(article),
     }
     return render(request, "event.list.html", context)
 
 def event(request, id):
-    article = get_object_or_404(Article, pk=16)
+    article = get_object_or_404(Webpage, pk=16)
     header = getHeader(article)
     header["title"] = "The first and biggest circular economy festival in the US"
     context = {
@@ -995,7 +995,7 @@ def event(request, id):
 # FORUM
 
 def forum_list(request):
-    article = get_object_or_404(Article, pk=17)
+    article = get_object_or_404(Webpage, pk=17)
     list = ForumMessage.objects.filter(parent__isnull=True)
     context = {
         "header": getHeader(article),
@@ -1004,7 +1004,7 @@ def forum_list(request):
     return render(request, "forum.list.html", context)
 
 def forum_topic(request, id):
-    article = get_object_or_404(Article, pk=17)
+    article = get_object_or_404(Webpage, pk=17)
     info = get_object_or_404(ForumMessage, pk=id)
     list = ForumMessage.objects.filter(parent=id)
     context = {
@@ -1032,7 +1032,7 @@ def forum_topic(request, id):
     return render(request, "forum.topic.html", context)
 
 def forum_form(request, id=False):
-    article = get_object_or_404(Article, pk=17)
+    article = get_object_or_404(Webpage, pk=17)
     context = {
         "header": getHeader(article),
     }
@@ -1057,7 +1057,7 @@ def forum_form(request, id=False):
 # MULTIMEDIA
 
 def multimedia(request):
-    info = get_object_or_404(Article, pk=PAGE_ID["multimedia_library"])
+    info = get_object_or_404(Webpage, pk=PAGE_ID["multimedia_library"])
     context = {
         "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
         "info": info,
@@ -1077,7 +1077,7 @@ def video(request, id):
 
 def podcast_list(request):
     context = {
-        "info": get_object_or_404(Article, pk=62),
+        "info": get_object_or_404(Webpage, pk=62),
         "list": LibraryItem.objects.filter(type__name="Podcast"),
         "load_datatables": True,
     }
@@ -1091,7 +1091,7 @@ def podcast(request, id):
 
 def dataviz_list(request):
     context = {
-        "info": get_object_or_404(Article, pk=63),
+        "info": get_object_or_404(Webpage, pk=63),
         "list": DataViz.objects.all(),
     }
     return render(request, "multimedia/dataviz.list.html", load_specific_design(context, PAGE_ID["multimedia_library"]))
@@ -1174,7 +1174,7 @@ def load_baseline(request):
     group_staf_data.permissions.add(*stafdb_permissions)
     messages.success(request, "Groups were created")
 
-    Article.objects.all().delete()
+    Webpage.objects.all().delete()
     articles = [
         { "id": 1, "title": "Urban metabolism", "parent": None, "slug": "/urbanmetabolism/", "position": 1 },
         { "id": 2, "title": "Urban metabolism introduction", "parent": 1, "slug": "/urbanmetabolism/introduction/", "position": 1 },
@@ -1251,7 +1251,7 @@ def load_baseline(request):
     ]
     for each in articles:
         content = each["content"] if "content" in each else None
-        Article.objects.create(
+        Webpage.objects.create(
             id = each["id"],
             title = each["title"],
             parent_id = each["parent"],
@@ -1485,10 +1485,10 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
         },
     ]
 
-    ArticleDesign.objects.all().delete()
+    WebpageDesign.objects.all().delete()
     for each in designs:
-        ArticleDesign.objects.create(
-            article_id = each["article"],
+        WebpageDesign.objects.create(
+            webpage_id = each["article"],
             header = each["header"],
             custom_css = each["css"],
             logo = each["logo"],
@@ -1651,7 +1651,7 @@ def dataimport(request):
                         info.save()
         elif request.GET["table"] == "publishers":
             Organization.objects.filter(type="publisher").delete()
-            Journal.objects.all().delete()
+            Organization.objects.filter(type="journal").delete()
             old_ids = {}
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
@@ -1671,18 +1671,23 @@ def dataimport(request):
                 contents = csv.DictReader(csvfile)
                 for row in contents:
                     if row["name"]:
-                        info = Journal.objects.create(
+                        info = Organization.objects.create(
                             title = row["name"],
-                            slug = slugify(row["name"]),
                             url = row["website"],
                             content = row["description"],
                             image = row["image"],
-                            publisher_id = old_ids[row["publisher_id"]] if row["publisher_id"] else None,
                             old_id = row["id"],
+                            type = "journal",
                         )
+                        if row["publisher_id"]:
+                            RecordRelationship.objects.create(
+                                record_parent_id = old_ids[row["publisher_id"]],
+                                record_child = info,
+                                relationship_id = 2,
+                            )
                     journal_ids[row["id"]] = info.id
             file = settings.MEDIA_ROOT + "/import/publications.csv"
-            LibraryItem.objects.exclude(type__name="Podcast").delete()
+            LibraryItem.objects.exclude(type__group="Multimedia").delete()
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
@@ -1691,7 +1696,6 @@ def dataimport(request):
                         language = row["language"],
                         title_original_language = row["title_original_language"],
                         type_id = row["type_id"],
-                        published_in_id = journal_ids[row["journal_id"]] if row["journal_id"] in journal_ids else None,
                         year = row["year"],
                         content = row["abstract"],
                         abstract_original_language = row["abstract_original_language"],
@@ -1705,6 +1709,12 @@ def dataimport(request):
                         status = row["status"],
                         old_id = row["id"],
                     )
+                    if row["journal_id"]:
+                        RecordRelationship.objects.create(
+                            record_parent_id = journal_ids[row["journal_id"]],
+                            record_child = info,
+                            relationship_id = 2,
+                        )
 
         elif request.GET["table"] == "librarytypes":
             LibraryItemType.objects.all().delete()
@@ -1784,13 +1794,23 @@ def dataimport(request):
                         info.site.add(row["site_id"])
         elif request.GET["table"] == "videos":
             Video.objects.all().delete()
+            from dateutil.parser import parse
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
+                    if row["date"]:
+                        year = parse(row["date"])
+                        year = year.strftime("%Y")
+                    else:
+                        # We should definitely look into those without a date!
+                        # WorkPiece!!
+                        year = 2021
                     info = Video()
                     info.title = row["title"]
                     info.content = row["description"]
                     info.video_site = row["website"]
+                    info.type_id = 31
+                    info.year = year
                     if row["website"] == "youtube" or row["website"] == "vimeo":
                         info.embed_code = row["url"]
                     if row["date"]:
@@ -1803,7 +1823,7 @@ def dataimport(request):
                         info.url = row["url"]
                     info.save()
         elif request.GET["table"] == "articles":
-            #Article.objects.filter(old_id__isnull=False).delete()
+            #Webpage.objects.filter(old_id__isnull=False).delete()
             News.objects.filter(old_id__isnull=False).delete()
             import sys
             csv.field_size_limit(sys.maxsize)
@@ -2073,7 +2093,7 @@ def dataimport(request):
         "tttt": Tag.objects.all().count(),
         "publishers": Organization.objects.filter(type="publisher").count(),
         "news": News.objects.all().count(),
-        "journals": Journal.objects.all().count(),
+        "journals": Organization.objects.filter(type="journal").count(),
         "publications": LibraryItem.objects.all().count(),
         "users": User.objects.all().count(),
         "photos": Photo.objects.all().count(),
@@ -2083,7 +2103,7 @@ def dataimport(request):
         "librarytags": LibraryItem.tags.through.objects.all().count(),
         "libraryspaces": LibraryItem.spaces.through.objects.all().count(),
         "flowdiagrams": FlowDiagram.objects.all().count(),
-        "dataviz": DataViz.objects.all().count(),
+        "dataviz": LibraryItem.objects.filter(type__name="Image").count(),
         "flowblocks": FlowBlocks.objects.all().count(),
         "podcasts": LibraryItem.objects.filter(type__name="Podcast").count(),
     }
