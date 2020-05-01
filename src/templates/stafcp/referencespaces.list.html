@@ -6,7 +6,7 @@
     <thead>
       <tr>
         <th>Name</th>
-        <th>Description</th>
+        <th>Location details?</th>
         <th>Options</th>
       </tr>
     </thead>
@@ -14,7 +14,7 @@
     {% for each in list %}
       <tr>
         <td>{{ each.name }}</td>
-        <td>{{ each.description|truncatechars_html:100 }}</td>
+        <td>{% if each.location %}Yes{% endif %}</td>
         <td>
           <a class="btn btn-info" href="{% url "stafcp_referencespace" each.id %}"><i class="fa fa-eye"></i> View</a>
           <a class="btn btn-info" href="{% url "stafcp_flowdiagram_form" each.id %}"><i class="fa fa-pencil"></i> Edit</a>

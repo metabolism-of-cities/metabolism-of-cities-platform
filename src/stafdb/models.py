@@ -46,9 +46,9 @@ class ReferenceSpace(models.Model):
     geocodes = models.ManyToManyField(Geocode, through="ReferenceSpaceGeocode")
     def __str__(self):
         return self.name
-    def save(self):
+    def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        super().save()
+        super().save(*args, **kwargs)
     @property
     def is_city(self):
         #check = self.geocodes.filter(id=123)

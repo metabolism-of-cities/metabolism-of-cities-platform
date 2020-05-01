@@ -612,7 +612,7 @@ def stafcp_referencespace(request, id):
     info = ReferenceSpace.objects.get(pk=id)
     context = {
         "info": info,
-        "location": info.location.geometry.geojson,
+        "location": info.location,
     }
     return render(request, "stafcp/referencespace.html", load_specific_design(context, PAGE_ID["stafcp"]))
 
@@ -1844,6 +1844,7 @@ def dataimport(request):
                         position = row["position"],
                     )
         elif request.GET["table"] == "referencespaces":
+            ReferenceSpaceLocation.objects.all().delete()
             ReferenceSpace.objects.all().delete()
             checkward = Geocode.objects.filter(name="Wards")
             checkcities = Geocode.objects.filter(name="Urban")
