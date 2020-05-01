@@ -1690,9 +1690,10 @@ def dataimport(request):
             LibraryItem.objects.exclude(type__group="Multimedia").delete()
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
+                referenceoldids = {}
                 for row in contents:
                     info = LibraryItem.objects.create(
-                        name = row["name"],
+                        name = row["title"],
                         language = row["language"],
                         title_original_language = row["title_original_language"],
                         type_id = row["type_id"],
@@ -1709,12 +1710,22 @@ def dataimport(request):
                         status = row["status"],
                         old_id = row["id"],
                     )
+                    referenceoldids[row["id"]] = info.id
                     if row["journal_id"]:
                         RecordRelationship.objects.create(
                             record_parent_id = journal_ids[row["journal_id"]],
                             record_child = info,
                             relationship_id = 2,
                         )
+            file = settings.MEDIA_ROOT + "/import/authors.csv"
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    RecordRelationship.objects.create(
+                        record_child_id = referenceoldids[row["reference_id"]],
+                        record_parent = People.objects.get(old_id=row["people_id"]),
+                        relationship_id = 4,
+                    )
 
         elif request.GET["table"] == "librarytypes":
             LibraryItemType.objects.all().delete()
@@ -2000,15 +2011,15 @@ def dataimport(request):
                     relationship = Relationship.objects.get(name="Author"),
                 )
         elif request.GET["table"] == "dataviz":
-            DataViz.objects.all().delete()
+            LibraryItem.objects.filter(type__name="Image").delete()
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
-                    DataViz.objects.create(
-                        id = row["id"],
-                        name = row["name"],
+                    LibraryItem.objects.create(
+                        old_id = row["id"],
+                        name = row["title"],
                         image = row["image"],
-                        uploaded_by = People.objects.get(old_id=row["uploaded_by_id"]),
+                        #uploaded_by = People.objects.get(old_id=row["uploaded_by_id"]),
                         space_id = row["space_id"],
                         sector_id = row["process_group_id"],
                         reference = LibraryItem.objects.get(old_id=row["reference_id"]) if row["reference_id"] else None,

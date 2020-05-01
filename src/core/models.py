@@ -130,7 +130,9 @@ class Organization(Record):
     def publications(self):
         # To get all the publications we'll get the LibraryItems that are a child
         # record that are linked to this organization (e.g. journal or publishing house) as a parent
-        return LibraryItem.objects.filter(child_list__record_parent=self, child_list__relationship__id=2)
+        q = LibraryItem.objects.filter(child_list__record_parent=self, child_list__relationship__id=2)
+        print(q.query)
+        return q
 
 # This defines the relationships that may exist between users and records, or between records
 # For instance authors, admins, employee, funder
@@ -311,9 +313,6 @@ class LibraryItem(Record):
         ("deleted", "Deleted"),
     )
     status = models.CharField(max_length=8, choices=STATUS, db_index=True)
-    #published_in = models.ForeignKey(Journal, on_delete=models.CASCADE, null=True, blank=True, help_text="If the journal does not appear in the list, please leave empty and add the name in the comments", related_name="publications")
-    #authors = models.ManyToManyField(People, through="LibraryItemAuthor")
-    #organizations = models.ManyToManyField(Organization, through="ReferenceOrganization")
     #processes = models.ManyToManyField("staf.Process", blank=True, limit_choices_to={"slug__isnull": False})
     #materials = models.ManyToManyField("staf.Material", blank=True)
 
@@ -328,6 +327,10 @@ class LibraryItem(Record):
 
     def authors(self):
         return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)
+
+    def publisher(self):
+        list = Organization.objects.filter(parent_list__record_child=self, parent_list__relationship__id=2)
+        return list[0] if list else None
 
 class Video(LibraryItem):
     embed_code = models.CharField(max_length=20, null=True, blank=True)

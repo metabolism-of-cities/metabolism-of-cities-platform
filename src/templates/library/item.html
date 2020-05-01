@@ -5,9 +5,9 @@
 {% block content %}
   <p>{{ info.type }}</p>
   <h1>{{ info }}</h1>
-  <p>{{ info.published_in }}</p>
-  {% if info.published_in.image %}
-    <p><img src="{{ info.published_in.image.url }}" /></p>
+  <p>{{ info.publisher }}</p>
+  {% if info.publisher.image %}
+    <p><img src="{{ info.publisher.image.url }}" /></p>
   {% endif %}
   <p>{{ info.authorlist }}</p>
   <p>{{ info.year }}</p>
@@ -48,8 +48,10 @@
       <dd><a href="http://">{{ each }}</a></dd>
     {% endfor %}
 
-    <dt>Published</dt>
-    <dd>{{ info.published_in.publisher }}</dd>
+    {% if info.publisher %}
+      <dt>Published</dt>
+      <dd>{{ info.publisher }}</dd>
+    {% endif %}
 
     <dt>Summary</dt>
     <dd>{{ info.content|safe }}</dd>
