@@ -1,0 +1,28 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <h1>{{ info }}</h1>
+  {{ info.content|safe }}
+  <br>
+  <div class="row">
+    {% for details in list %}
+      <div class="col-md-4">
+          <div class="panel">
+            <div class="panel-body text-center">
+              <a href="{% url "dataviz" details.id %}">
+                <img alt="" class="img-lg mar-btm" src="{{ details.image.thumb.url }}">
+              </a>
+              <p class="text-lg text-semibold mar-no text-main">{{ details.title }}</p>
+              {% if details.space %}
+                <p class="text-muted">{{ details.space }}</p>
+              {% endif %}
+              <div class="mar-top">
+                <a href="{% url "dataviz" details.id %}" class="btn btn-mint">View</a>
+              </div>
+            </div>
+          </div>
+      </div>
+      {% if forloop.counter|divisibleby:3 %}</div><div class="row">{% endif %}
+    {% endfor %}
+  </div>
+{% endblock %}

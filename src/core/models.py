@@ -1,5 +1,5 @@
 from django.db import models
-from stafdb.models import ReferenceSpace
+from stafdb.models import ReferenceSpace, Sector
 
 # Used for image resizing
 from stdimage.models import StdImageField
@@ -460,4 +460,21 @@ class Photo(models.Model):
         else:
           description = "Photo by " + self.author + " - #" + str(self.id)
         return description
+
+class DataViz(models.Model):
+    title = models.CharField(max_length=255)
+    image = StdImageField(upload_to="dataviz", variations={"thumb": (300, 300), "large": (1024, 1024)})
+    uploaded_by = models.ForeignKey(People, on_delete=models.CASCADE)
+    space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE, null=True, blank=True)
+    reference = models.ForeignKey(LibraryItem, on_delete=models.CASCADE, null=True, blank=True)
+    sector = models.ForeignKey(Sector, on_delete=models.CASCADE, null=True, blank=True)
+    date = models.DateTimeField(auto_now_add=True)
+    description = HTMLField(null=True, blank=True)
+    url = models.CharField(max_length=255, null=True, blank=True, help_text="URL of the source website/article -- ONLY enter if this is not linked to a publication")
+    source = models.TextField(null=True, blank=True, help_text="Name of the source website/article -- ONLY enter if this is not linked to a publication")
+    year = models.PositiveSmallIntegerField(null=True, blank=True, help_text="Year of the data being visualized -- ONLY enter if this is not linked to a publication")
+    class Meta:
+        ordering = ["date"]
+    def __str__(self):
+        return self.title
 

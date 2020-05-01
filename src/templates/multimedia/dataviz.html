@@ -1,0 +1,66 @@
+{% extends "_base.html" %}
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-12 text-center">
+      <h3>{{ info.title }}</h3>
+      <p><img class="dataviz" alt="" src="{{ info.image.url }}" style="max-width:100%"></p>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-md-12" style="padding:20px 0">
+    {{ info.description|safe }}
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+      <div class="panel">
+        <div class="panel-body">
+
+          <dl class="dl dl-horizontal">
+
+            {% if info.source %}
+              <dt>Source</dt>
+              <dd>{{ info.source }}</dd>
+            {% endif %}
+
+            {% if info.year %}
+              <dt>Year</dt>
+              <dd>{{ info.year }}</dd>
+            {% endif %}
+
+            {% if info.uploaded_by %}
+              <dt>Uploaded by</dt>
+              <dd>{{ info.uploaded_by }}</dd>
+            {% endif %}
+
+            {% if info.url %}
+              <dt>URL</dt>
+              <dd><a href="{{ info.url }}">{{ info.url|truncatechars:40 }}</a></dd>
+            {% endif %}
+
+            {% if info.reference %}
+              <dt>Related publication</dt>
+              <dd><a href="{% url "library_item" info.reference.id %}">{{ info.reference }}</a></dd>
+            {% endif %}
+
+          </dl>
+        </div>
+      </div>
+
+        <p><a href="{% url "dataviz_list" %}">Back to list</a></p>
+  </div>
+</div>
+{% endblock %}
+
+{% block css %}
+<style type="text/css">
+.dataviz {
+  border: 1px solid #999;
+  padding:5px;
+}
+</style>
+{% endblock %}

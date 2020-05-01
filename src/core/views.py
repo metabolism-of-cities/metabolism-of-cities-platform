@@ -52,6 +52,7 @@ PAGE_ID = {
     "people": 12,
     "projects": 19,
     "library": 38,
+    "multimedia_library": 60,
     "multiplicity": 51,
     "platformu": 53,
     "stafcp": 55,
@@ -1006,18 +1007,50 @@ def forum_form(request, id=False):
         return redirect(new.get_absolute_url())
     return render(request, "forum.form.html", context)
 
-# VIDEOS
+# MULTIMEDIA
+
+def multimedia(request):
+    info = get_object_or_404(Article, pk=PAGE_ID["multimedia_library"])
+    context = {
+        "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
+        "info": info,
+    }
+    return render(request, "multimedia/index.html", load_specific_design(context, PAGE_ID["multimedia_library"]))
 
 def video_list(request):
     context = {
     }
-    return render(request, "video.list.html", context)
+    return render(request, "multimedia/video.list.html", load_specific_design(context, PAGE_ID["multimedia_library"]))
 
 def video(request, id):
     context = {
         "info": get_object_or_404(Video, pk=id),
     }
-    return render(request, "video.html", context)
+    return render(request, "multimedia/video.html", load_specific_design(context, PAGE_ID["multimedia_library"]))
+
+def podcast_list(request):
+    context = {
+    }
+    return render(request, "multimedia/podcast.list.html", load_specific_design(context, PAGE_ID["multimedia_library"]))
+
+def podcast(request, id):
+    context = {
+        "info": get_object_or_404(Video, pk=id),
+    }
+    return render(request, "multimedia/podcast.html", load_specific_design(context, PAGE_ID["multimedia_library"]))
+
+def dataviz_list(request):
+    context = {
+        "info": get_object_or_404(Article, pk=63),
+        "list": DataViz.objects.all(),
+    }
+    return render(request, "multimedia/dataviz.list.html", load_specific_design(context, PAGE_ID["multimedia_library"]))
+
+def dataviz(request, id):
+    context = {
+        "info": get_object_or_404(DataViz, pk=id),
+    }
+    return render(request, "multimedia/dataviz.html", load_specific_design(context, PAGE_ID["multimedia_library"]))
 
 
 # TEMPORARY PAGES DURING DEVELOPMENT
@@ -1130,6 +1163,11 @@ def load_baseline(request):
         { "id": 42, "title": "Authors", "parent": 38, "slug": "/library/authors/", "position": 4 },
         { "id": 43, "title": "Contribute", "parent": 38, "slug": "/library/contribute/", "position": 5 },
 
+        { "id": 60, "title": "Multimedia Library", "parent": 19, "slug": "/multimedia/", "position": 1 },
+        { "id": 61, "title": "Videos", "parent": 60, "slug": "/multimedia/videos/", "position": 2 },
+        { "id": 62, "title": "Podcasts", "parent": 60, "slug": "/multimedia/podcasts/", "position": 3 },
+        { "id": 63, "title": "Data Visualisations", "parent": 60, "slug": "/multimedia/datavisualizations/", "position": 4, "content": "<p>In October-December 2016, Metabolism of Cities ran a project around data visualisations. The goal was to explore ways in which information can be illustrated, take stock of work in this field, host online discussions and publish blog posts. Below you will see the list of the around <em>100 data visualisations</em> that were collected.</p><p><strong>Why visualise urban metabolism data</strong></p><p>When we think about urban metabolism and other urban environmental assessments, we often think about numbers, data analysis, formulas and tables. While we may be very familiar with our own case study, it is often very difficult to share the relevance of our results with other researchers or with the general public and to synthesise all this amount of knowledge into something easy to grasp. This is one of the main reasons why researchers use visualisation techniques. Visualising data can not only enable to summarise big amounts of numbers, but it can also make it easier to share them and use them as policy instruments.</p><p><strong>Add more data visualisations</strong></p><p>Many more data visualisations exist and Metabolism of Cities wants to make them accessible in one central space. You can help by submitting more visualisations through the <a href='../../about/task-forces/resources'>Resources Task Force</a>!</p>" },
+
         { "id": 44, "title": "View library", "parent": 39, "slug": "/library/browse/", "position": 1, "content": "<p>Welcome to the Metabolism of Cities library, which holds publications related to urban metabolism and material flow analysis. The publications are mostly reports, theses or journal articles. The bulk of the publications are in English, but there are also many in Spanish, French, Dutch and German. <br>More and more publications are continuously added (Feel free to add publications yourself!) and then tagged by team members. This classification is valuable to better understand what to expect from a publication. </p>" },
         { "id": 45, "title": "Search", "parent": 39, "slug": "/library/search/", "position": 2, "content": "<p>Please use the search box below to find publications of your interest. </p>" },
         { "id": 46, "title": "Download", "parent": 39, "slug": "/library/download/", "position": 3 },
@@ -1144,7 +1182,8 @@ def load_baseline(request):
         { "id": 57, "title": "About our data catalogues", "parent": 55, "slug": "/stafcp/catalogs/about/", "position": None, "content": "<p>This is a section with various data catalogues used.</p><p>A useful site if you want to learn more or contribute is:</p><ul><li><a href='https://unstats.un.org/unsd/classifications/'>UNSD Classificatoins</a></li></ul>" },
     ]
     projects = [
-        { "id": 20, "title": "Library", "parent": 19, "url": "/library/", "position": 1, "image": "records/um_library.png", "content": "<p>The urban metabolism library has been one of the first projects undertaken by the Metabolism of Cities community. The goal of this project is to provide a central repository for all relevant documents and other material related to urban metabolism.</p><p>There are many research papers, theses, books, government reports, and other publications that have relevance to urban metabolism. The urban metabolism library aims to collect all of the relevant meta information (title, description, year of publication, abstract), and to provide visitors with an easy way to browse and filter the catalog. The library is constantly growing and visitors are encouraged to submit missing documents." },
+        { "id": 20, "title": "Library", "parent": 19, "url": "/library/", "position": 1, "image": "records/um_library.png", "content": "<p>The urban metabolism library has been one of the first projects undertaken by the Metabolism of Cities community. The goal of this project is to provide a central repository for all relevant documents and other material related to urban metabolism.</p><p>There are many research papers, theses, books, government reports, and other publications that have relevance to urban metabolism. The urban metabolism library aims to collect all of the relevant meta information (title, description, year of publication, abstract), and to provide visitors with an easy way to browse and filter the catalog. The library is constantly growing and visitors are encouraged to submit missing documents.</p>" },
+        { "id": 59, "title": "Multimedia Library", "parent": 19, "url": "/multimedia/", "position": 2, "image": "records/um_multimedia.png", "content": "<p>The Multimedia Library contains videos, podcasts, and data visualizations.</p>" },
         { "id": 21, "title": "MultipliCity Data Hub", "parent": 19, "url": "/data/", "position": 2, "image": "records/datahub.png", "content": "<p>For urban metabolism researchers, obtaining data is one of the most important and time-consuming activities. This not only limits research activities, but it also creates a significant threshold for policy makers and others interested in using urban metabolism on a more practical level. The inconsistency and scattered nature of data furthermore complicate the uptake of urban metabolism tools and practices.</p><p>In 2018, the Metabolism of Cities community started a project called MultipliCity to try and take on this challenge. This project aims to develop a global network that maintains an online hub to centralize, visualize, and present datasets related to urban resource use and requirements. A network of local volunteers (students, researchers, city officials, citizens, etc) assists with the identification of relevant datasets, and the MultipliCity data hub takes care of indexing, processing, and standardizing the datasets. This allows for a large collection of in-depth data to become available to researchers and the general public, vastly improving access and allowing for more work to be done on analysis and interpretation, rather than on data collection." },
 
         { "id": 22, "title": "Stakeholders Initiative", "parent": 19, "url": "/stakeholders-initiative/", "position": 3 },
@@ -1348,6 +1387,14 @@ def load_baseline(request):
         { "header": "small", "article": 38, "logo": "/logos/media-logo-library.png", "css": """.top-layer {
 background-color: #2e883b;
 background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1600 800'%3E%3Cg %3E%3Cpath fill='%232c8339' d='M486 705.8c-109.3-21.8-223.4-32.2-335.3-19.4C99.5 692.1 49 703 0 719.8V800h843.8c-115.9-33.2-230.8-68.1-347.6-92.2C492.8 707.1 489.4 706.5 486 705.8z'/%3E%3Cpath fill='%232b7d37' d='M1600 0H0v719.8c49-16.8 99.5-27.8 150.7-33.5c111.9-12.7 226-2.4 335.3 19.4c3.4 0.7 6.8 1.4 10.2 2c116.8 24 231.7 59 347.6 92.2H1600V0z'/%3E%3Cpath fill='%23297834' d='M478.4 581c3.2 0.8 6.4 1.7 9.5 2.5c196.2 52.5 388.7 133.5 593.5 176.6c174.2 36.6 349.5 29.2 518.6-10.2V0H0v574.9c52.3-17.6 106.5-27.7 161.1-30.9C268.4 537.4 375.7 554.2 478.4 581z'/%3E%3Cpath fill='%23287332' d='M0 0v429.4c55.6-18.4 113.5-27.3 171.4-27.7c102.8-0.8 203.2 22.7 299.3 54.5c3 1 5.9 2 8.9 3c183.6 62 365.7 146.1 562.4 192.1c186.7 43.7 376.3 34.4 557.9-12.6V0H0z'/%3E%3Cpath fill='%23266e30' d='M181.8 259.4c98.2 6 191.9 35.2 281.3 72.1c2.8 1.1 5.5 2.3 8.3 3.4c171 71.6 342.7 158.5 531.3 207.7c198.8 51.8 403.4 40.8 597.3-14.8V0H0v283.2C59 263.6 120.6 255.7 181.8 259.4z'/%3E%3Cpath fill='%2323652c' d='M1600 0H0v136.3c62.3-20.9 127.7-27.5 192.2-19.2c93.6 12.1 180.5 47.7 263.3 89.6c2.6 1.3 5.1 2.6 7.7 3.9c158.4 81.1 319.7 170.9 500.3 223.2c210.5 61 430.8 49 636.6-16.6V0z'/%3E%3Cpath fill='%23205c28' d='M454.9 86.3C600.7 177 751.6 269.3 924.1 325c208.6 67.4 431.3 60.8 637.9-5.3c12.8-4.1 25.4-8.4 38.1-12.9V0H288.1c56 21.3 108.7 50.6 159.7 82C450.2 83.4 452.5 84.9 454.9 86.3z'/%3E%3Cpath fill='%231d5424' d='M1600 0H498c118.1 85.8 243.5 164.5 386.8 216.2c191.8 69.2 400 74.7 595 21.1c40.8-11.2 81.1-25.2 120.3-41.7V0z'/%3E%3Cpath fill='%231a4b21' d='M1397.5 154.8c47.2-10.6 93.6-25.3 138.6-43.8c21.7-8.9 43-18.8 63.9-29.5V0H643.4c62.9 41.7 129.7 78.2 202.1 107.4C1020.4 178.1 1214.2 196.1 1397.5 154.8z'/%3E%3Cpath fill='%2317431d' d='M1315.3 72.4c75.3-12.6 148.9-37.1 216.8-72.4h-723C966.8 71 1144.7 101 1315.3 72.4z'/%3E%3C/g%3E%3C/svg%3E\");
+background-attachment: fixed;
+background-size: cover;
+/* background by SVGBackgrounds.com */
+}"""
+        },
+        { "header": "small", "article": 60, "logo": "/logos/media-logo-multimedia.png", "css": """.top-layer {
+background-color: #271a00;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1600 800'%3E%3Cg %3E%3Cpath fill='%23251900' d='M486 705.8c-109.3-21.8-223.4-32.2-335.3-19.4C99.5 692.1 49 703 0 719.8V800h843.8c-115.9-33.2-230.8-68.1-347.6-92.2C492.8 707.1 489.4 706.5 486 705.8z'/%3E%3Cpath fill='%23231900' d='M1600 0H0v719.8c49-16.8 99.5-27.8 150.7-33.5c111.9-12.7 226-2.4 335.3 19.4c3.4 0.7 6.8 1.4 10.2 2c116.8 24 231.7 59 347.6 92.2H1600V0z'/%3E%3Cpath fill='%23211800' d='M478.4 581c3.2 0.8 6.4 1.7 9.5 2.5c196.2 52.5 388.7 133.5 593.5 176.6c174.2 36.6 349.5 29.2 518.6-10.2V0H0v574.9c52.3-17.6 106.5-27.7 161.1-30.9C268.4 537.4 375.7 554.2 478.4 581z'/%3E%3Cpath fill='%231f1800' d='M0 0v429.4c55.6-18.4 113.5-27.3 171.4-27.7c102.8-0.8 203.2 22.7 299.3 54.5c3 1 5.9 2 8.9 3c183.6 62 365.7 146.1 562.4 192.1c186.7 43.7 376.3 34.4 557.9-12.6V0H0z'/%3E%3Cpath fill='%231d1700' d='M181.8 259.4c98.2 6 191.9 35.2 281.3 72.1c2.8 1.1 5.5 2.3 8.3 3.4c171 71.6 342.7 158.5 531.3 207.7c198.8 51.8 403.4 40.8 597.3-14.8V0H0v283.2C59 263.6 120.6 255.7 181.8 259.4z'/%3E%3Cpath fill='%23231f08' d='M1600 0H0v136.3c62.3-20.9 127.7-27.5 192.2-19.2c93.6 12.1 180.5 47.7 263.3 89.6c2.6 1.3 5.1 2.6 7.7 3.9c158.4 81.1 319.7 170.9 500.3 223.2c210.5 61 430.8 49 636.6-16.6V0z'/%3E%3Cpath fill='%232a270e' d='M454.9 86.3C600.7 177 751.6 269.3 924.1 325c208.6 67.4 431.3 60.8 637.9-5.3c12.8-4.1 25.4-8.4 38.1-12.9V0H288.1c56 21.3 108.7 50.6 159.7 82C450.2 83.4 452.5 84.9 454.9 86.3z'/%3E%3Cpath fill='%23312f12' d='M1600 0H498c118.1 85.8 243.5 164.5 386.8 216.2c191.8 69.2 400 74.7 595 21.1c40.8-11.2 81.1-25.2 120.3-41.7V0z'/%3E%3Cpath fill='%23383716' d='M1397.5 154.8c47.2-10.6 93.6-25.3 138.6-43.8c21.7-8.9 43-18.8 63.9-29.5V0H643.4c62.9 41.7 129.7 78.2 202.1 107.4C1020.4 178.1 1214.2 196.1 1397.5 154.8z'/%3E%3Cpath fill='%2340401a' d='M1315.3 72.4c75.3-12.6 148.9-37.1 216.8-72.4h-723C966.8 71 1144.7 101 1315.3 72.4z'/%3E%3C/g%3E%3C/svg%3E");
 background-attachment: fixed;
 background-size: cover;
 /* background by SVGBackgrounds.com */
@@ -1659,6 +1706,7 @@ def dataimport(request):
                     info.lastname = row["lastname"]
                     info.affiliation = row["affiliation"]
                     info.email = row["email"]
+                    info.old_id = row["id"]
                     info.email_public = row["email_public"]
                     info.website = row["website"]
                     info.twitter = row["twitter"]
@@ -1817,6 +1865,25 @@ def dataimport(request):
                         space.geocodes.add(checkcountries[0])
                     elif int(row["type_id"]) == 21 and checkisland:
                         space.geocodes.add(checkisland[0])
+        elif request.GET["table"] == "dataviz":
+            DataViz.objects.all().delete()
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    DataViz.objects.create(
+                        id = row["id"],
+                        title = row["title"],
+                        image = row["image"],
+                        uploaded_by = People.objects.get(old_id=row["uploaded_by_id"]),
+                        space_id = row["space_id"],
+                        sector_id = row["process_group_id"],
+                        reference = LibraryItem.objects.get(old_id=row["reference_id"]) if row["reference_id"] else None,
+                        date = row["date"],
+                        description = row["description"],
+                        url = row["url"],
+                        source = row["source"],
+                        year = row["year"] if row["year"] else None,
+                    )
         elif request.GET["table"] == "referencespacelocations":
             import sys
             csv.field_size_limit(sys.maxsize)
@@ -1906,6 +1973,7 @@ def dataimport(request):
         "librarytags": LibraryItem.tags.through.objects.all().count(),
         "libraryspaces": LibraryItem.spaces.through.objects.all().count(),
         "flowdiagrams": FlowDiagram.objects.all().count(),
+        "dataviz": DataViz.objects.all().count(),
         "flowblocks": FlowBlocks.objects.all().count(),
     }
     return render(request, "temp.import.html", context)

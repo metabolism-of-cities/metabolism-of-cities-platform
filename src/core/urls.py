@@ -45,10 +45,6 @@ urlpatterns = [
 
     path("community/<slug:slug>/", views.article, { "prefix": "/community/" }, name="community"),
 
-    # Videos
-    path("videos/", views.video_list, name="video_list"),
-    path("videos/<int:id>/", views.video, name="video"),
-
     # Library
     path("library/", views.library, name="library"),
     path("library/casestudies/", views.library_casestudies, name="library_casestudies"),
@@ -62,6 +58,15 @@ urlpatterns = [
     path("library/items/<int:id>/", views.library_item, name="library_item"),
     path("library/authors/", views.library_authors, name="library_authors"),
     path("library/contribute/", views.library_contribute, name="library_contribute"),
+
+    # Multimedia Library
+    path("multimedia/", views.multimedia, name="multimedia"),
+    path("multimedia/videos/", views.video_list, name="video_list"),
+    path("multimedia/videos/<int:id>/", views.video, name="video"),
+    path("multimedia/podcasts/", views.podcast_list, name="podcast_list"),
+    path("multimedia/podcasts/<int:id>/", views.podcast, name="podcast"),
+    path("multimedia/datavisualizations/", views.dataviz_list, name="dataviz_list"),
+    path("multimedia/datavisualizations/<int:id>/", views.dataviz, name="dataviz"),
 
     # MultipliCity
     path("data/", views.datahub, name="datahub"),
