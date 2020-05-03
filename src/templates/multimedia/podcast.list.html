@@ -17,7 +17,7 @@
     {% for each in list %}
       <tr>
         <td><a href="{% url "podcast" each.id %}">{{ each }}</a></td>
-        <td>{{ each.published_in }}</td>
+        <td>{{ each.producer }}</td>
         <td>{{ each.get_language_display }}</td>
         <td>{{ each.year }}</td>
       </tr>

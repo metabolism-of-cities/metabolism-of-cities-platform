@@ -333,6 +333,10 @@ class LibraryItem(Record):
         list = Organization.objects.filter(parent_list__record_child=self, parent_list__relationship__id=2)
         return list[0] if list else None
 
+    def producer(self):
+        list = Organization.objects.filter(parent_list__record_child=self, parent_list__relationship__id=3)
+        return list[0] if list else None
+
 class Video(LibraryItem):
     embed_code = models.CharField(max_length=20, null=True, blank=True)
     date = models.DateField(blank=True, null=True)

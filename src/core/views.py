@@ -896,8 +896,11 @@ def library_journal(request, slug):
     }
     return render(request, "library/journal.html", load_specific_design(context, PAGE_ID["library"]))
 
-def library_item(request, id, section="library"):
+def library_item(request, id):
     info = get_object_or_404(LibraryItem, pk=id)
+    section = "library"
+    if info.type.group == "multimedia":
+        section = "multimedia_library"
     context = {
         "info": info,
     }
@@ -1057,10 +1060,16 @@ def forum_form(request, id=False):
 # MULTIMEDIA
 
 def multimedia(request):
-    info = get_object_or_404(Webpage, pk=PAGE_ID["multimedia_library"])
+    webpage = get_object_or_404(Webpage, pk=PAGE_ID["multimedia_library"])
+    videos = Video.objects.all().order_by("-date_created")[:5]
+    podcasts = LibraryItem.objects.filter(type__name="Podcast").order_by("-date_created")[:5]
+    dataviz = LibraryItem.objects.filter(type__name="Image").order_by("-date_created")[:5]
     context = {
-        "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
-        "info": info,
+        "design_link": "/admin/core/articledesign/" + str(webpage.id) + "/change/",
+        "webpage": webpage,
+        "videos": videos,
+        "podcasts": podcasts,
+        "dataviz": dataviz,
     }
     return render(request, "multimedia/index.html", load_specific_design(context, PAGE_ID["multimedia_library"]))
 
@@ -1215,7 +1224,7 @@ def load_baseline(request):
         { "id": 42, "name": "Authors", "parent": 38, "slug": "/library/authors/", "position": 4 },
         { "id": 43, "name": "Contribute", "parent": 38, "slug": "/library/contribute/", "position": 5 },
 
-        { "id": 60, "name": "Multimedia Library", "parent": 19, "slug": "/multimedia/", "position": 1 },
+        { "id": 60, "name": "Multimedia Library", "parent": 19, "slug": "/multimedia/", "position": 1, "content": "<p>This library contains videos, podcasts, and data visualisations related to urban metabolism. Please find the latest items elow, or search for specific items in our search.</p>" },
         { "id": 61, "name": "Videos", "parent": 60, "slug": "/multimedia/videos/", "position": 2, "content": "<p>This page contains videos related to urban metabolism.</p>", },
         { "id": 62, "name": "Podcasts", "parent": 60, "slug": "/multimedia/podcasts/", "position": 3 , "content": "<p>On this page you will find podcasts related to urban metabolism.</p>"},
         { "id": 63, "name": "Data Visualisations", "parent": 60, "slug": "/multimedia/datavisualizations/", "position": 4, "content": "<p>In October-December 2016, Metabolism of Cities ran a project around data visualisations. The goal was to explore ways in which information can be illustrated, take stock of work in this field, host online discussions and publish blog posts. Below you will see the list of the around <em>100 data visualisations</em> that were collected.</p><p><strong>Why visualise urban metabolism data</strong></p><p>When we think about urban metabolism and other urban environmental assessments, we often think about numbers, data analysis, formulas and tables. While we may be very familiar with our own case study, it is often very difficult to share the relevance of our results with other researchers or with the general public and to synthesise all this amount of knowledge into something easy to grasp. This is one of the main reasons why researchers use visualisation techniques. Visualising data can not only enable to summarise big amounts of numbers, but it can also make it easier to share them and use them as policy instruments.</p><p><strong>Add more data visualisations</strong></p><p>Many more data visualisations exist and Metabolism of Cities wants to make them accessible in one central space. You can help by submitting more visualisations through the <a href='../../about/task-forces/resources'>Resources Task Force</a>!</p>" },
@@ -1982,6 +1991,11 @@ def dataimport(request):
             from dateutil.parser import parse
 
             feed = feedparser.parse(file)
+            cmp = Organization.objects.filter(name="Circular Metabolism Podcast")
+            if not cmp:
+                cmp = Organization.objects.create(name="Circular Metabolism Podcast", type="other")
+            else:
+                cmp = cmp[0]
             for row in feed.entries:
                 author = row["author"]
                 check = People.objects.filter(name=author)
@@ -2021,6 +2035,11 @@ def dataimport(request):
                     record_parent = author,
                     record_child = info,
                     relationship = Relationship.objects.get(name="Author"),
+                )
+                RecordRelationship.objects.create(
+                    record_parent = cmp,
+                    record_child = info,
+                    relationship = Relationship.objects.get(name="Producer"),
                 )
         elif request.GET["table"] == "dataviz":
             image = LibraryItemType.objects.filter(name="Image")

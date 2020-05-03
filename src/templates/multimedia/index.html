@@ -1,8 +1,33 @@
 {% extends "_base.html" %}
 
-{% block title %}{{ info }}{% endblock %}
+{% block title %}{{ webpage }}{% endblock %}
 
 {% block content %}
-  <h1>{{ info }}</h1>   
-  {{ info.content|safe }}
+  <h1>{{ webpage }}</h1>   
+  {{ webpage.content|safe }}
+
+  <h2>Latest additions</h2>
+
+  <h3>Videos</h3>
+  <ul>
+    {% for each in videos %}
+      <li><a href="{{ each.get_absolute_url }}">{{ each }}</a></li>
+    {% endfor %}
+  </ul>
+
+  <h3>Podcasts</h3>
+  <ul>
+    {% for each in podcasts %}
+      <li><a href="{{ each.get_absolute_url }}">{{ each }}</a></li>
+    {% endfor %}
+  </ul>
+
+  <h3>Data visualisations</h3>
+  <ul>
+    {% for each in dataviz %}
+      <li><a href="{{ each.get_absolute_url }}">{{ each }}</a></li>
+    {% endfor %}
+  </ul>
+
+
 {% endblock %}
