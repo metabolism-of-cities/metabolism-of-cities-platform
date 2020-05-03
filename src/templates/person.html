@@ -6,7 +6,7 @@
 
   <h1>{{ info }}</h1>
   {% if info.image %}
-  <img src="{{ info.image.large.url }}" alt="" />
+    <img src="{{ info.image.url }}" alt="" />
   {% endif %}
   <p><strong>Description</strong>: {{ info.content|safe }}</p>
   <p><strong>Affiliation</strong>: {{ info.affiliation }}</p>

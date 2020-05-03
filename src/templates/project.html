@@ -17,7 +17,7 @@
 
 {% block content %}
 <div class="row">
-  <div class="col-lg-5">
+  <div class="col-lg-4">
     <div class="card sidebar sticky-top mb-3">
       {% if info.image %}
         <a href="{{ info.url }}">
@@ -67,7 +67,7 @@
       </ul>
     </div>
   </div>
-  <div class="col-lg-7">
+  <div class="col-lg-8">
     <div class="description mb-4">
       <h3>{{ info }}</h3>
       {% if info.content %}
@@ -149,11 +149,11 @@
 
     {% if team %}
       <section id="team">
-        <h3>Metabolism of Cities team</h3>
+        <h3>Current team members</h3>
         <div class="row">
           {% for each in team %}
-            <div class="col-6 col-sm-3 col-lg-2 mb-4">
-              <a href="{{ each.get_absolute_url }}" class="btn-thumbnail small" style="background-image: url('{{ each.image.thumbnail }}');">
+            <div class="col-3">
+              <a href="{{ each.get_absolute_url }}" class="btn-thumbnail" style="background-image: url('{{ each.image.thumbnail.url }}');">
                 <span class="title">{{ each }}</span>
               </a>
             </div>
@@ -162,13 +162,13 @@
       </section>
     {% endif %}
 
-    {% if team %}
+    {% if alumni %}
       <section id="team">
         <h3>Former team members</h3>
         <div class="row">
           {% for each in alumni %}
-            <div class="col-6 col-sm-3 col-lg-2 mb-4">
-              <a href="{{ each.get_absolute_url }}" class="btn-thumbnail small" style="background-image: url('{{ each.image.thumbnail }}');">
+            <div class="col-3">
+              <a href="{{ each.get_absolute_url }}" class="btn-thumbnail" style="background-image: url('{{ each.image.thumbnail.url }}');">
                 <span class="title">{{ each }}</span>
               </a>
             </div>
