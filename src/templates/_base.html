@@ -45,6 +45,10 @@
       <a class="btn btn-secondary" href="{{ edit_link }}"><i class="fas fa-edit fa-fw"></i> Edit</a>
     {% endif %}
 
+    {% if webpage and not edit_link and request.user.is_authenticated and request.user.is_staff %}
+      <a class="btn btn-secondary" href="/admin/core/webpage/{{ webpage.id }}/change/?short=true"><i class="fas fa-edit fa-fw"></i> Edit</a>
+    {% endif %}
+
     {% if article and request.user.is_authenticated and request.user.is_staff %}
       <a class="btn btn-secondary" href="/admin/core/article/{{ article.id }}/change/"><i class="fas fa-edit fa-fw"></i> Edit</a>
     {% endif %}

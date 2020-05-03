@@ -1066,6 +1066,8 @@ def multimedia(request):
 
 def video_list(request):
     context = {
+        "webpage": get_object_or_404(Webpage, pk=61),
+        "list": LibraryItem.objects.filter(type__name="Video Recording"),
     }
     return render(request, "multimedia/video.list.html", load_specific_design(context, PAGE_ID["multimedia_library"]))
 
@@ -1092,13 +1094,13 @@ def podcast(request, id):
 def dataviz_list(request):
     context = {
         "info": get_object_or_404(Webpage, pk=63),
-        "list": DataViz.objects.all(),
+        "list": LibraryItem.objects.filter(type__name="Image"),
     }
     return render(request, "multimedia/dataviz.list.html", load_specific_design(context, PAGE_ID["multimedia_library"]))
 
 def dataviz(request, id):
     context = {
-        "info": get_object_or_404(DataViz, pk=id),
+        "info": get_object_or_404(LibraryItem, pk=id),
     }
     return render(request, "multimedia/dataviz.html", load_specific_design(context, PAGE_ID["multimedia_library"]))
 
@@ -1214,7 +1216,7 @@ def load_baseline(request):
         { "id": 43, "name": "Contribute", "parent": 38, "slug": "/library/contribute/", "position": 5 },
 
         { "id": 60, "name": "Multimedia Library", "parent": 19, "slug": "/multimedia/", "position": 1 },
-        { "id": 61, "name": "Videos", "parent": 60, "slug": "/multimedia/videos/", "position": 2 },
+        { "id": 61, "name": "Videos", "parent": 60, "slug": "/multimedia/videos/", "position": 2, "content": "<p>This page contains videos related to urban metabolism.</p>", },
         { "id": 62, "name": "Podcasts", "parent": 60, "slug": "/multimedia/podcasts/", "position": 3 , "content": "<p>On this page you will find podcasts related to urban metabolism.</p>"},
         { "id": 63, "name": "Data Visualisations", "parent": 60, "slug": "/multimedia/datavisualizations/", "position": 4, "content": "<p>In October-December 2016, Metabolism of Cities ran a project around data visualisations. The goal was to explore ways in which information can be illustrated, take stock of work in this field, host online discussions and publish blog posts. Below you will see the list of the around <em>100 data visualisations</em> that were collected.</p><p><strong>Why visualise urban metabolism data</strong></p><p>When we think about urban metabolism and other urban environmental assessments, we often think about numbers, data analysis, formulas and tables. While we may be very familiar with our own case study, it is often very difficult to share the relevance of our results with other researchers or with the general public and to synthesise all this amount of knowledge into something easy to grasp. This is one of the main reasons why researchers use visualisation techniques. Visualising data can not only enable to summarise big amounts of numbers, but it can also make it easier to share them and use them as policy instruments.</p><p><strong>Add more data visualisations</strong></p><p>Many more data visualisations exist and Metabolism of Cities wants to make them accessible in one central space. You can help by submitting more visualisations through the <a href='../../about/task-forces/resources'>Resources Task Force</a>!</p>" },
 
@@ -1755,7 +1757,11 @@ def dataimport(request):
                     if row["reference_id"] in items:
                         item = items[row["reference_id"]]
                     else:
-                        item = LibraryItem.objects.get(old_id=row["reference_id"])
+                        item = LibraryItem.objects.filter(old_id=row["reference_id"]).exclude(type__name="Video Recording").exclude(type__name="Image")
+                        if item.count() == 1:
+                            item = item[0]
+                        else:
+                            print(item)
                         items[row["reference_id"]] = item
                     item.tags.add(tag)
         elif request.GET["table"] == "libraryspaces":
@@ -1775,7 +1781,12 @@ def dataimport(request):
                     if row["reference_id"] in items:
                         item = items[row["reference_id"]]
                     else:
-                        item = LibraryItem.objects.get(old_id=row["reference_id"])
+                        item = LibraryItem.objects.filter(old_id=row["reference_id"]).exclude(type__name="Video Recording").exclude(type__name="Image")
+                        if item.count() == 1:
+                            item = item[0]
+                        else:
+                            print("Duplication error!")
+                            print(item)
                         items[row["reference_id"]] = item
                     item.spaces.add(space)
         elif request.GET["table"] == "people":
@@ -1817,7 +1828,8 @@ def dataimport(request):
                         # WorkPiece!!
                         year = 2021
                     info = Video()
-                    info.name = row["name"]
+                    info.old_id = row["id"]
+                    info.name = row["title"]
                     info.content = row["description"]
                     info.video_site = row["website"]
                     info.type_id = 31
@@ -2011,24 +2023,40 @@ def dataimport(request):
                     relationship = Relationship.objects.get(name="Author"),
                 )
         elif request.GET["table"] == "dataviz":
-            LibraryItem.objects.filter(type__name="Image").delete()
+            image = LibraryItemType.objects.filter(name="Image")
+            image = image[0]
+            LibraryItem.objects.filter(type=image).delete()
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
-                    LibraryItem.objects.create(
+                    part_of = None
+                    if row["reference_id"]:
+                        part_of = LibraryItem.objects.filter(old_id=row["reference_id"]).exclude(type=image).exclude(type__name="Video Recording")
+                        if part_of.count() == 1:
+                            part_of = part_of[0]
+                        else:
+                            print("We have duplication!!")
+                            print(part_of)
+                    info = LibraryItem.objects.create(
                         old_id = row["id"],
                         name = row["title"],
                         image = row["image"],
-                        #uploaded_by = People.objects.get(old_id=row["uploaded_by_id"]),
-                        space_id = row["space_id"],
-                        sector_id = row["process_group_id"],
-                        reference = LibraryItem.objects.get(old_id=row["reference_id"]) if row["reference_id"] else None,
-                        date = row["date"],
-                        description = row["description"],
+                        type = image,
+                        is_part_of = part_of,
+                        date_created = row["date"],
+                        content = row["description"],
                         url = row["url"],
-                        source = row["source"],
-                        year = row["year"] if row["year"] else None,
+                        #uploaded_by = People.objects.get(old_id=row["uploaded_by_id"]),
+                        #source = row["source"],
+                        # WorkPiece, find all 2021 items and put right date in!
+                        year = row["year"] if row["year"] else 2021,
                     )
+                    if row["source"]:
+                        print(row["source"])
+                    if row["space_id"]:
+                        info.spaces.add(ReferenceSpace.objects.get(pk=row["space_id"]))
+                    if row["process_group_id"]:
+                        info.sectors.add(Sector.objects.get(pk=row["process_group_id"]))
         elif request.GET["table"] == "referencespacelocations":
             import sys
             csv.field_size_limit(sys.maxsize)

@@ -5,19 +5,21 @@
   {{ info.content|safe }}
   <br>
   <div class="row">
-    {% for details in list %}
+    {% for each in list %}
       <div class="col-md-4">
           <div class="panel">
             <div class="panel-body text-center">
-              <a href="{% url "dataviz" details.id %}">
-                <img alt="" class="img-lg mar-btm" src="{{ details.image.thumb.url }}">
+              <a href="{% url "dataviz" each.id %}">
+                <img alt="{{ each }}" class="img-lg mar-btm" src="{{ each.image.thumbnail.url }}">
               </a>
-              <p class="text-lg text-semibold mar-no text-main">{{ details.title }}</p>
-              {% if details.space %}
-                <p class="text-muted">{{ details.space }}</p>
+              <p class="text-lg text-semibold mar-no text-main">{{ each.title }}</p>
+              {% if each.spaces %}
+                {% for space in each.spaces.all %}
+                  <p class="text-muted">Space: {{ space }}</p>
+                {% endfor %}
               {% endif %}
               <div class="mar-top">
-                <a href="{% url "dataviz" details.id %}" class="btn btn-mint">View</a>
+                <a href="{% url "dataviz" each.id %}" class="btn btn-mint">View</a>
               </div>
             </div>
           </div>

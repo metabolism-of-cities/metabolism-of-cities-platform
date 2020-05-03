@@ -53,6 +53,7 @@ class Record(models.Model):
     old_id = models.IntegerField(null=True, blank=True, db_index=True, help_text="Only used for the migration between old and new structure")
     date_created = models.DateTimeField(auto_now_add=True)
     spaces = models.ManyToManyField(ReferenceSpace, blank=True)
+    sectors = models.ManyToManyField(Sector, blank=True)
     def __str__(self):
         return self.name
 
