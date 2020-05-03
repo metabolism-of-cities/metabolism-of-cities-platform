@@ -6,12 +6,8 @@
         <a class="card btn-card single-resource" href="{{ details.get_absolute_url }}">
           <div class="card-body">
             <strong class="resource-title">{{ details }}</strong>
-            {% if details.authors.all %}
-              {% for author in details.authors.all %}
-                <span class="resource-author">{{ author.firstname }} {{ author.lastname }}</span>{% if not forloop.counter == details.authors.all|length %},{% endif %}
-              {% endfor %}
-            {% else %}
-              {{ details.authorlist }}
+            {% if details.author_citation %}
+                <span class="resource-author">{{ details.author_citation }}</span>
             {% endif %}
             {% if details.published_in %}<div class="resource-journal">{{ details.published_in }}</div>{% endif %}
             {% if details.type %}<div class="resource-type">{{ details.type }}</div>{% endif %}

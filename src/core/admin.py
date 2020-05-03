@@ -22,7 +22,7 @@ class MyAdminSite(AdminSite):
 admin_site = MyAdminSite()
 
 class WebpageAdmin(admin.ModelAdmin):
-    list_display = ["name", "site", "parent", "is_deleted"]
+    list_display = ["name", "site", "is_deleted"]
     search_fields = ["name", "site"]
 
     def response_change(self, request, obj):
@@ -122,6 +122,11 @@ class PhotoAdmin(admin.ModelAdmin):
     search_fields = ["space__name"]
     list_display = ["space", "uploaded_by", "description"]
 
+class WorkPieceAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
+    list_display = ["name", "project", "related_to", "status", "priority", "complexity"]
+    list_filter = ["project", "status", "priority", "complexity"]
+
 class LogEntryAdmin(admin.ModelAdmin):
     # to have a date-based drilldown navigation in the admin page
     date_hierarchy = "action_time"
@@ -163,7 +168,6 @@ admin_site.register(People, SearchCompleteAdmin)
 admin_site.register(Video, VideoAdmin)
 admin_site.register(Project, ProjectAdmin)
 admin_site.register(Relationship)
-admin_site.register(UserRelationship)
 admin_site.register(RecordRelationship, RecordRelationshipAdmin)
 admin_site.register(LibraryItem, LibraryAdmin)
 admin_site.register(LibraryItemType, SearchAdmin)
@@ -193,5 +197,6 @@ admin_site.register(ReferenceSpaceLocation, LocationAdmin)
 admin_site.register(ReferenceSpaceGeocode)
 admin_site.register(Sector, SearchNameAdmin)
 
+admin_site.register(WorkPiece, WorkPieceAdmin)
 admin_site.register(ActivityCatalog)
 admin_site.register(Activity, ActivityAdmin)

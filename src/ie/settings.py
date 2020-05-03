@@ -51,9 +51,13 @@ INSTALLED_APPS = [
     'bootstrap4',
     'tinymce',
     'anymail',
+    'debug_toolbar',
 ]
 
+# When importing data please deactivate the DebugToolbar, otherwise
+# it will be even slower!
 MIDDLEWARE = [
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -69,6 +73,10 @@ CRON_CLASSES = [
 ]
 
 ROOT_URLCONF = 'ie.urls'
+
+INTERNAL_IPS = [
+    '172.28.0.1',
+]
 
 TEMPLATES = [
     {

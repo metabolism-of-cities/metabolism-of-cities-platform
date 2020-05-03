@@ -35,7 +35,7 @@
             {% endif %}
             <div class="col">
               <h5 class="journal-name">{{ each }}</h5>
-              <p><span class="journal-count">{{ each.publications.count }}</span> article{{ each.publications.count|pluralize }}</p>
+              <p><span class="journal-count">{{ each.parent_to.count }}</span> article{{ each.parent_to.count|pluralize }}</p>
             </div>
           </div>
         </a>

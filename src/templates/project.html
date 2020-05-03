@@ -20,13 +20,10 @@
   <div class="col-lg-5">
     <div class="card sidebar sticky-top mb-3">
       {% if info.image %}
-        <img class="card-img-top" src="{{ info.image.url }}" alt="" />
+        <a href="{{ info.url }}">
+          <img class="card-img-top" src="{{ info.image.url }}" alt="" />
+        </a>
       {% endif %}
-      <div class="card-body">
-        {% if info.url %}
-          <a class="btn btn-primary" href="{{ info.url }}">Visit website</a>
-        {% endif %}
-      </div>
       <ul class="list-group list-group-flush">
         {% if info.location %}
         <li class="list-group-item">
@@ -34,13 +31,16 @@
         </li>
         {% endif %}
         <li class="list-group-item">
-          <i class="far fa-fw fa-calendar"></i> 2014 - ongoing
+          <i class="far fa-fw fa-calendar"></i> 
+            <strong>Start</strong>: {{ info.start_date|date:"Y" }}
         </li>
         <li class="list-group-item">
-          <i class="far fa-fw fa-play"></i> Ongoing
+          <i class="far fa-fw fa-play"></i> 
+          <strong>Status</strong>: {{ info.get_status_display }}
         </li>
         <li class="list-group-item">
-          <i class="far fa-fw fa-cabinet-filing"></i> Type: <a href="">Online tools and platforms</a>
+          <i class="far fa-fw fa-cabinet-filing"></i> 
+          <strong>Type</strong>: <a href="">Online tools and platforms</a>
         </li>
         {% if info.id != 20 and info.id != 21 %}
         <li class="list-group-item">
@@ -69,7 +69,7 @@
   </div>
   <div class="col-lg-7">
     <div class="description mb-4">
-      <h3>Description</h3>
+      <h3>{{ info }}</h3>
       {% if info.content %}
         {{ info.content|safe }}
       {% else %}
@@ -77,7 +77,7 @@
       {% endif %}
 
       {% if info.url %}
-        <p>Website: <a href="{{ info.url }}">{{ info.url }}</a></p>
+        <p><a href="{{ info.url }}" class="btn btn-primary">Project website</a></p>
       {% endif %}
 
     </div>
@@ -147,41 +147,35 @@
       <a class="btn btn-primary-outline mb-4" href="">Pyrolisis</a>
     </section>
 
-    <section id="team">
-      <h3>Team</h3>
-      <div class="row">
-        <div class="col-6 col-sm-3 col-lg-2 mb-4">
-          <a href="#" class="btn-thumbnail small" style="background-image: url('https://backoffice.metabolismofcities.org/media/contacts/photo_cv.thumbnail.jpg');">
-            <span class="title">Aris</span>
-          </a>
+    {% if team %}
+      <section id="team">
+        <h3>Metabolism of Cities team</h3>
+        <div class="row">
+          {% for each in team %}
+            <div class="col-6 col-sm-3 col-lg-2 mb-4">
+              <a href="{{ each.get_absolute_url }}" class="btn-thumbnail small" style="background-image: url('{{ each.image.thumbnail }}');">
+                <span class="title">{{ each }}</span>
+              </a>
+            </div>
+          {% endfor %}
         </div>
-        <div class="col-6 col-sm-3 col-lg-2 mb-4">
-          <a href="#" class="btn-thumbnail small" style="background-image: url('https://backoffice.metabolismofcities.org/media/contacts/Carolin_South_Africa_2019_cropped.thumbnail.jpeg');">
-            <span class="title">Carolin</span>
-          </a>
+      </section>
+    {% endif %}
+
+    {% if team %}
+      <section id="team">
+        <h3>Former team members</h3>
+        <div class="row">
+          {% for each in alumni %}
+            <div class="col-6 col-sm-3 col-lg-2 mb-4">
+              <a href="{{ each.get_absolute_url }}" class="btn-thumbnail small" style="background-image: url('{{ each.image.thumbnail }}');">
+                <span class="title">{{ each }}</span>
+              </a>
+            </div>
+          {% endfor %}
         </div>
-        <div class="col-6 col-sm-3 col-lg-2 mb-4">
-          <a href="#" class="btn-thumbnail small" style="background-image: url('https://backoffice.metabolismofcities.org/media/contacts/gabriela_fernandez_pic.thumbnail.png');">
-            <span class="title">Gabriela</span>
-          </a>
-        </div>
-        <div class="col-6 col-sm-3 col-lg-2 mb-4">
-          <a href="#" class="btn-thumbnail small" style="background-image: url('https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg');">
-            <span class="title">Paul</span>
-          </a>
-        </div>
-        <div class="col-6 col-sm-3 col-lg-2 mb-4">
-          <a href="#" class="btn-thumbnail small" style="background-image: url('https://backoffice.metabolismofcities.org/media/contacts/team.ramiro_K5tF7DB.thumbnail.jpg');">
-            <span class="title">Ramiro</span>
-          </a>
-        </div>
-        <div class="col-6 col-sm-3 col-lg-2 mb-4">
-          <a href="#" class="btn-thumbnail small" style="background-image: url('https://backoffice.metabolismofcities.org/media/contacts/team.yves_QWpISsP.thumbnail.jpg');">
-            <span class="title">Yves</span>
-          </a>
-        </div>
-      </div>
-    </section>
+      </section>
+    {% endif %}
 
     <section>
       <h3>Publications</h3>

@@ -54,6 +54,9 @@ class Record(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     spaces = models.ManyToManyField(ReferenceSpace, blank=True)
     sectors = models.ManyToManyField(Sector, blank=True)
+    parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
+    child_of = models.ManyToManyField("self", through="RecordRelationship", through_fields=("record_child", "record_parent"), symmetrical=False, related_name="parent_of_child")
+    parent_to = models.ManyToManyField("self", through="RecordRelationship", through_fields=("record_parent", "record_child"), symmetrical=False, related_name="child_of_parent")
     def __str__(self):
         return self.name
 
@@ -82,7 +85,7 @@ class Project(Record):
     is_internal = models.BooleanField(db_index=True, default=False, help_text="Mark if this is a project undertaken by our own members within our own website")
     STATUS = (
         ("planned", "Planned"),
-        ("ongoing", "In progress"),
+        ("ongoing", "Ongoing"),
         ("finished", "Finished"),
         ("cancelled", "Cancelled"),
     )
@@ -131,32 +134,20 @@ class Organization(Record):
     def publications(self):
         # To get all the publications we'll get the LibraryItems that are a child
         # record that are linked to this organization (e.g. journal or publishing house) as a parent
-        q = LibraryItem.objects.filter(child_list__record_parent=self, child_list__relationship__id=2)
-        print(q.query)
-        return q
+        return LibraryItem.objects.select_related("type").filter(child_list__record_parent=self, child_list__relationship__id=2)
 
 # This defines the relationships that may exist between users and records, or between records
 # For instance authors, admins, employee, funder
 class Relationship(models.Model):
     name = models.CharField(max_length=255)
-    label = models.CharField(max_length=255, null=True, blank=True)
+    label = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     def __str__(self):
-        return self.name
-
-# This defines a particular relationship between a user and a record.
-# For instance: User 49 has the relationship "Author" of Record 599 (News article AAA)
-# For instance: User 11 has the relationship "Admin" of Record 381 (Company BBB)
-class UserRelationship(models.Model):
-    record = models.ForeignKey(Record, on_delete=models.CASCADE)
-    relationship = models.ForeignKey(Relationship, on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    def __str__(self):
-        return str(self.record) + ' ' + str(self.relationship.label) + ' ' + str(self.user)
+        return self.label
 
 # This defines a particular relationship between two records.
 # For instance: Record 100 (company AA) has the relationship "Funder" of Record 104 (Project BB)
-# It will always be in the form of RECORD is RELATIONSHIP of RECORD_SECONDARY (member/publisher/funder)
+# It will always be in the form of RECORD_PARENT is RELATIONSHIP of RECORD_CHILD
 # Wiley is the publisher of the JIE. Wiley = record_parent; JIE = record_child
 # Fulano is the author of Paper A. Fulano = record_parent; Paper A = record_child 
 class RecordRelationship(models.Model):
@@ -211,6 +202,7 @@ class People(Record):
         return reverse("person", args=[self.id])
     class Meta:
         verbose_name_plural = "people"
+        ordering = ["name"]
     objects = models.Manager()
     on_site = CurrentSiteManager()
 
@@ -218,7 +210,6 @@ class Webpage(Record):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     slug = models.CharField(db_index=True, max_length=100)
     position = models.PositiveSmallIntegerField(db_index=True, null=True, blank=True)
-    parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
 
     objects = models.Manager()
     on_site = CurrentSiteManager()
@@ -232,7 +223,7 @@ class Webpage(Record):
         ordering = ["position", "name"]
 
 class WebpageDesign(models.Model):
-    webpage = models.OneToOneField(Webpage, on_delete=models.CASCADE, primary_key=True, related_name="design")
+    webpage = models.OneToOneField(Record, on_delete=models.CASCADE, primary_key=True, related_name="design")
     HEADER = [
         ("full", "Full header with title and subtitle"),
         ("small", "Small header; menu only"),
@@ -248,7 +239,6 @@ class WebpageDesign(models.Model):
         return self.article.name
 
 class ForumMessage(Record):
-    parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     documents = models.ManyToManyField(Document)
 
@@ -295,7 +285,9 @@ class LibraryItem(Record):
     )
     language = models.CharField(max_length=2, choices=LANGUAGES)
     title_original_language = models.CharField(max_length=255, blank=True, null=True)
-    authorlist = models.TextField()
+    author_list = models.TextField(null=True, blank=True)
+    author_citation = models.TextField(null=True, blank=True)
+    bibtex_citation = models.TextField(null=True, blank=True)
     type = models.ForeignKey(LibraryItemType, on_delete=models.CASCADE)
     is_part_of = models.ForeignKey("self", on_delete=models.SET_NULL, null=True, blank=True)
     year = models.PositiveSmallIntegerField()
@@ -471,3 +463,45 @@ class Photo(models.Model):
         else:
           description = "Photo by " + self.author + " - #" + str(self.id)
         return description
+
+class WorkPiece(models.Model):
+    name = models.CharField(max_length=255)
+    description = HTMLField(null=True, blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    is_public = models.BooleanField(db_index=True, default=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={"is_internal": True}, related_name="workpieces")
+    STATUS = [
+        ("open", "Open"),
+        ("completed", "Completed"),
+        ("discarded", "Discarded"),
+        ("on_hold", "On Hold"),
+        ("progress", "In Progress"),
+    ]
+    status = models.CharField(max_length=14, choices=STATUS, default="open")
+    PRIORITY = [
+        ("low", "Low"),
+        ("med", "Medium"),
+        ("high", "High"),
+    ]
+    priority = models.CharField(max_length=4, choices=PRIORITY, default="med")
+    COMPLEXITY = [
+        ("low", "Low"),
+        ("med", "Medium"),
+        ("high", "High"),
+    ]
+    complexity = models.CharField(max_length=4, choices=COMPLEXITY, default="med")
+    TYPE = [
+        ("editorial", "Editorial"),
+        ("curation", "Curation"),
+        ("data_entry", "Data Entry"),
+        ("data_review", "Review of Data"),
+        ("design", "Design"),
+        ("quality_control", "Quality Control"),
+    ]
+    type = models.CharField(max_length=40, choices=TYPE)
+    related_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="workpieces_list")
+    assigned_to = models.ManyToManyField(People)
+
+    def __str__(self):
+        return self.name
+

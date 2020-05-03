@@ -16,3 +16,4 @@ feedparser
 xhtml2pdf
 weasyprint
 markdown
+django-debug-toolbar
