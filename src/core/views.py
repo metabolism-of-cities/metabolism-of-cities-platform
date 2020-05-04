@@ -623,8 +623,16 @@ def stafcp_upload_gis_file(request, id=None):
     return render(request, "stafcp/upload/gis.file.html", load_specific_design(context, PAGE_ID["stafcp"]))
 
 def stafcp_upload_gis_verify(request, id):
+    from django.contrib.gis.gdal import DataSource
+    file = settings.MEDIA_ROOT + "/shapefiles/District_Municipalities_2016.shp"
+    ds = DataSource(file)
+    layer = ds[0]
+    geojson = []
+    for details in layer:
+        geojson.append(details.geom.json)
     context = {
         "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
+        "geojson": geojson,
     }
     return render(request, "stafcp/upload/gis.verify.html", load_specific_design(context, PAGE_ID["stafcp"]))
 
