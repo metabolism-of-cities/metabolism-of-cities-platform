@@ -5,13 +5,15 @@
 
 {% block content %}
 
-  {% if not header.type == "full" %}
+  {% if not header_style == "full" %}
     <h1>{{ info }}</h1>
+
     {% if False %}
       <div class="breadcrumbs">
         {{ header.breadcrumbs|safe }}
       </div>
     {% endif %}
+
   {% endif %}
 
   <div class="content-wrap">

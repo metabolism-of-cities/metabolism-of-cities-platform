@@ -23,9 +23,9 @@
   {% block css %}{% endblock %}
   {% block head %}{% endblock %}
 
-  {% if header.custom_css %}
+  {% if custom_css %}
     <style type="text/css">
-      {{ header.custom_css|safe }}
+      {{ custom_css|safe }}
     </style>
   {% endif %}
 
@@ -37,8 +37,9 @@
   {% include "_top-layer.html" %}
 
   <div id="admin-controls" class="btn-group-vertical">
-    {% if design_link and request.user.is_authenticated and request.user.is_staff %}
-      <a class="btn btn-secondary" href="{{ design_link }}"><i class="fas fa-pencil fa-fw"></i> Design</a>
+
+    {% if request.user.is_authenticated and request.user.is_staff %}
+      <a class="btn btn-secondary" href="/admin/core/projectdesign/{{ project.id }}/change/"><i class="fas fa-pencil fa-fw"></i> Project design</a>
     {% endif %}
 
     {% if edit_link and request.user.is_authenticated and request.user.is_staff %}
