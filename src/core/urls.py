@@ -139,6 +139,9 @@ urlpatterns = [
 
     # AScUS
     path("ascus/", views.ascus),
+    path("ascus/login/", views.user_login, {"project": 8}),
+    path("ascus/register/", views.ascus_register),
+    path("ascus/<slug:slug>/", views.article, { "prefix": "/ascus/", "subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020", }, name="um"),
 
     # MOOC
     path("mooc/<int:id>/<int:module>/overview/", views.mooc_module),

@@ -93,6 +93,7 @@ def get_space(request, slug):
 # This dictionary has to be created for many different pages so by simply calling this
 # function instead we don't repeat ourselves too often.
 def load_design(context, project=1, webpage=None):
+    project = project if project else 1
     design = ProjectDesign.objects.select_related("project").get(pk=project)
     page_design = header_title = header_subtitle = None
     if webpage:
@@ -181,10 +182,14 @@ def user_register(request, subsite=None):
     else:
         return render(request, "auth/register.html", context)
 
-def user_login(request):
+def user_login(request, project=None):
 
     if request.user.is_authenticated:
-        return redirect("index")
+        if project:
+            project = get_object_or_404(Project, pk=project)
+            return redirect(project.url)
+        else:
+            return redirect("index")
 
     if request.method == "POST":
         email = request.POST.get("email")
@@ -198,7 +203,8 @@ def user_login(request):
         else:
             messages.error(request, "We could not authenticate you, please try again.")
 
-    return render(request, "auth/login.html")
+    context = {}
+    return render(request, "auth/login.html", load_design(context, project))
 
 def user_logout(request):
     logout(request)
@@ -1090,10 +1096,67 @@ def dataviz(request, id):
 def ascus(request):
     context = {
         "header_title": "AScUS Unconference",
-        "header_subtitle": "Actionable Science for Urban Sustainability - 3-5 June 2020",
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
     }
     return render(request, "multimedia/dataviz.html", load_design(context, PAGE_ID["ascus"]))
 
+def ascus_register(request):
+    if request.method == "POST":
+        password = request.POST.get("password")
+        email = request.POST.get("email")
+        name = request.POST.get("name")
+        if not password:
+            messages.error(request, "You did not enter a password.")
+        else:
+            check = User.objects.filter(email=email)
+            if check:
+                messages.error(request, "A user already exists with this e-mail address. Please log in or reset your password instead.")
+            else:
+                user = User.objects.create_user(email, email, password)
+                user.first_name = name
+                if subsite == "platformu":
+                    user.is_superuser = False
+                    user.is_staff = False
+                    group = Group.objects.get(name="PlatformU Admin")
+                    user.groups.add(group)
+                    organization = Organization.objects.create(name=request.POST["organization"], type="other")
+                    user_relationship = UserRelationship()
+                    user_relationship.record = organization
+                    user_relationship.user = user
+                    user_relationship.relationship = Relationship.objects.get(pk=USER_RELATIONSHIPS["member"])
+                    user_relationship.save()
+                    redirect_page = "platformu_admin"
+                else:
+                    user.is_staff = True
+                    user.is_superuser = True
+                    redirect_page = "index"
+                user.save()
+                messages.success(request, "User was created.")
+                login(request, user)
+
+                mailcontext = {
+                    "name": name,
+                }
+                msg_html = render_to_string("mailbody/welcome.html", mailcontext)
+                msg_plain = render_to_string("mailbody/welcome.txt", mailcontext)
+                sender = '"' + request.site.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
+                recipient = '"' + name + '" <' + email + '>'
+
+                send_mail(
+                    "Welcome to Metabolism of Cities",
+                    msg_plain,
+                    sender,
+                    [recipient],
+                    html_message=msg_html,
+                )
+
+                return redirect(redirect_page)
+
+    context = {
+        "header_title": "Register now",
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+    }
+    return render(request, "ascus/register.html", load_design(context, PAGE_ID["ascus"]))
 # TEMPORARY PAGES DURING DEVELOPMENT
 
 def pdf(request):
@@ -1229,6 +1292,9 @@ def load_baseline(request):
         { "id": 67, "name": "Data Visualisations", "parent": None, "slug": "/multimedia/datavisualizations/", "position": 4, "content": "<p>In October-December 2016, Metabolism of Cities ran a project around data visualisations. The goal was to explore ways in which information can be illustrated, take stock of work in this field, host online discussions and publish blog posts. Below you will see the list of the around <em>100 data visualisations</em> that were collected.</p><p><strong>Why visualise urban metabolism data</strong></p><p>When we think about urban metabolism and other urban environmental assessments, we often think about numbers, data analysis, formulas and tables. While we may be very familiar with our own case study, it is often very difficult to share the relevance of our results with other researchers or with the general public and to synthesise all this amount of knowledge into something easy to grasp. This is one of the main reasons why researchers use visualisation techniques. Visualising data can not only enable to summarise big amounts of numbers, but it can also make it easier to share them and use them as policy instruments.</p><p><strong>Add more data visualisations</strong></p><p>Many more data visualisations exist and Metabolism of Cities wants to make them accessible in one central space. You can help by submitting more visualisations through the <a href='../../about/task-forces/resources'>Resources Task Force</a>!</p>" },
 
         { "id": 68, "name": "About our data catalogues", "parent": None, "slug": "/stafcp/catalogs/about/", "position": None, "content": "<p>This is a section with various data catalogues used.</p><p>A useful site if you want to learn more or contribute is:</p><ul><li><a href='https://unstats.un.org/unsd/classifications/'>UNSD Classificatoins</a></li></ul>" },
+
+        { "id": 69, "name": "Program", "slug": "/ascus/program/" },
+        { "id": 70, "name": "Rates", "slug": "/ascus/rates/", },
     ]
     if "full" in request.GET:
         Record.objects.all().delete()
@@ -1264,6 +1330,7 @@ def load_baseline(request):
     Webpage.objects.filter(id__in=[57,58,59,60,61,62,63,64]).update(belongs_to_id=3) # Library
     Webpage.objects.filter(id__in=[65,66,67]).update(belongs_to_id=3) # Multimedia library
     Webpage.objects.filter(id__in=[68]).update(belongs_to_id=14) # STAFCP
+    Webpage.objects.filter(id__in=[69,70]).update(belongs_to_id=8) # ASCUS
 
     messages.success(request, "UM, Community, Project, About pages were inserted/reset")
 
