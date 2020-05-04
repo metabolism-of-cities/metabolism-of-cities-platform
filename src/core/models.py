@@ -44,6 +44,10 @@ class ExcludeDeletedRecordManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().exclude(is_deleted=True)
 
+class OnSiteExcludeDeletedRecordManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(site__id=settings.SITE_ID).exclude(is_deleted=True)
+
 class Record(models.Model):
     name = models.CharField(max_length=255)
     content = HTMLField(null=True, blank=True)
@@ -98,11 +102,29 @@ class News(Record):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     objects = models.Manager()
     on_site = CurrentSiteManager()
+    slug = models.SlugField(max_length=255)
     class Meta:
         verbose_name_plural = "news"
         ordering = ["-date", "-id"]
     def get_absolute_url(self):
         return reverse("news", args=[self.id])
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+class Blog(Record):
+    date = models.DateField()
+    site = models.ForeignKey(Site, on_delete=models.CASCADE)
+    objects = models.Manager()
+    on_site = CurrentSiteManager()
+    slug = models.SlugField(max_length=255)
+    class Meta:
+        ordering = ["-date", "-id"]
+    def get_absolute_url(self):
+        return reverse("blog", args=[self.id])
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 class Organization(Record):
     url = models.CharField(max_length=255, null=True, blank=True)
@@ -171,8 +193,21 @@ class Event(Record):
     ]
     type = models.CharField(max_length=20, blank=True, null=True, choices=EVENT_TYPE)
     url = models.URLField(max_length=255, null=True, blank=True)
+    location = models.CharField(max_length=255, null=True, blank=True)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
+    slug = models.SlugField(max_length=255)
+    site = models.ForeignKey(Site, on_delete=models.CASCADE)
+    objects_including_deleted = models.Manager()
+    objects = ExcludeDeletedRecordManager()
+    on_site = OnSiteExcludeDeletedRecordManager()
+    class Meta:
+        ordering = ["-start_date", "-id"]
+    def get_absolute_url(self):
+        return reverse("event", args=[self.id])
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 class People(Record):
     firstname = models.CharField(max_length=255, null=True, blank=True)

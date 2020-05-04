@@ -45,6 +45,9 @@ from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
 from django.contrib.admin.utils import construct_change_message
 from django.contrib.contenttypes.models import ContentType
 
+from django.utils import timezone
+import pytz
+
 # This array defines all the IDs in the database of the articles that are loaded for the
 # various pages in the menu. Here we can differentiate between the different sites.
 
@@ -976,17 +979,25 @@ def news(request, id):
 
 def event_list(request):
     article = get_object_or_404(Webpage, pk=16)
+    today = timezone.now().date()
     context = {
         "header": getHeader(article),
+        "upcoming": Event.on_site.filter(end_date__gte=today).order_by("start_date"),
+        "archive": Event.on_site.filter(end_date__lt=today),
+        "add_link": "/admin/core/event/add/",
     }
     return render(request, "event.list.html", context)
 
 def event(request, id):
     article = get_object_or_404(Webpage, pk=16)
     header = getHeader(article)
-    header["title"] = "The first and biggest circular economy festival in the US"
+    info = get_object_or_404(Event, pk=id)
+    header["title"] = info.name
+    today = timezone.now().date()
     context = {
         "header": header,
+        "info": info,
+        "upcoming": Event.on_site.filter(end_date__gte=today).order_by("start_date")[:3],
     }
     return render(request, "event.html", context)
 
@@ -1863,6 +1874,8 @@ def dataimport(request):
         elif request.GET["table"] == "articles":
             #Webpage.objects.filter(old_id__isnull=False).delete()
             News.objects.filter(old_id__isnull=False).delete()
+            Blog.objects.filter(old_id__isnull=False).delete()
+            Event.objects.filter(old_id__isnull=False).delete()
             import sys
             csv.field_size_limit(sys.maxsize)
             with open(file, "r") as csvfile:
@@ -1870,7 +1883,7 @@ def dataimport(request):
                 for row in contents:
                     if row["parent_id"] == "61" or row["parent_id"] == "142":
                         News.objects.create(
-                            name = row["name"],
+                            name = row["title"],
                             content = row["content"],
                             old_id = row["id"],
                             site_id = row["site_id"],
@@ -1878,6 +1891,37 @@ def dataimport(request):
                             image = row["image"],
                             is_deleted = False if row["active"] == "t" else True,
                         )
+                    if row["parent_id"] == "60":
+                        Blog.objects.create(
+                            name = row["title"],
+                            content = row["content"],
+                            old_id = row["id"],
+                            site_id = row["site_id"],
+                            date = row["date"],
+                            image = row["image"],
+                            is_deleted = False if row["active"] == "t" else True,
+                        )
+                    if row["parent_id"] == "59" or row["parent_id"] == "143":
+                        Event.objects.create(
+                            name = row["title"],
+                            content = row["content"],
+                            old_id = row["id"],
+                            site_id = row["site_id"],
+                            image = row["image"],
+                            is_deleted = True,
+                        )
+            file = settings.MEDIA_ROOT + "/import/events.csv"
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    event = Event.objects.get(old_id=row["article_id"])
+                    event.start_date = row["start"]
+                    event.end_date = row["end"]
+                    event.type = row["type"]
+                    event.is_deleted = False
+                    event.url = row["url"]
+                    event.location = row["location"]
+                    event.save()
         elif request.GET["table"] == "sectors":
             Sector.objects.all().delete()
             with open(file, "r") as csvfile:
@@ -2025,8 +2069,6 @@ def dataimport(request):
             podcast = LibraryItemType.objects.get(name="Podcast")
             LibraryItem.objects.filter(type=podcast).delete()
             import feedparser
-            from django.utils import timezone
-            import pytz
             import urllib.request
             from dateutil.parser import parse
 
@@ -2213,6 +2255,8 @@ def dataimport(request):
         "tttt": Tag.objects.all().count(),
         "publishers": Organization.objects.filter(type="publisher").count(),
         "news": News.objects.all().count(),
+        "blogs": Blog.objects.all().count(),
+        "events": Event.objects.all().count(),
         "journals": Organization.objects.filter(type="journal").count(),
         "publications": LibraryItem.objects.all().count(),
         "users": User.objects.all().count(),
@@ -2226,6 +2270,6 @@ def dataimport(request):
         "dataviz": LibraryItem.objects.filter(type__name="Image").count(),
         "flowblocks": FlowBlocks.objects.all().count(),
         "podcasts": LibraryItem.objects.filter(type__name="Podcast").count(),
-        "project_team_members": LibraryItem.objects.filter(type__name="Podcast").count(),
+        "project_team_members": RecordRelationship.objects.filter(relationship__name__in=["Team member", "Former team member"]).count(),
     }
     return render(request, "temp.import.html", context)

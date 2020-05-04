@@ -10,66 +10,33 @@
 <section>
   <h2>Upcoming events</h2>
   <div class="row">
+    {% for each in upcoming %}
     <div class="col-md-6 col-lg-4 mb-4">
-      <a class="card btn-card" href="/community/events/1">
-        <img src="https://imgur.com/EjSgFEw.jpg" class="card-img-top" alt="...">
+      <a class="card btn-card" href="{{ each.get_absolute_url }}">
+        {% if each.image %}
+          <img src="{{ each.image.url }}" class="card-img-top" alt="{{ each }}">
+        {% endif %}
         <div class="card-body">
-          <h5 class="card-title">Circular City Week</h5>
-          <p class="card-text">The first and biggest circular economy festival in the US</p>
+          <h5 class="card-title">{{ each }}</h5>
+          <p class="card-text">{{ each.content|truncatewords_html:20|safe }}</p>
         </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item">
-            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> New York, United States
+            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> 
+            {{ each.location }}
           </li>
           <li class="list-group-item">
-            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 16 March 2020 - 22 March 2020
+            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 
+            {{ each.start_date }} - {{ each.end_date }}
           </li>
           <li class="list-group-item">
-            <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> Seminar
+            <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> 
+            {{ each.get_type_display }}
           </li>
         </ul>
       </a>
     </div>
-    <div class="col-md-6 col-lg-4 mb-4">
-      <a class="card btn-card" href="/community/events/1">
-        <img src="https://imgur.com/gNylltZ.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">World Cities Day</h5>
-          <p class="card-text"> The United Nations General Assembly has designated the 31st of October as World Cities Day, by its resolution 68/239. The Day is expected to greatly promote the international community’s interest in global urbanization, push forward cooperation among countries in meeting opportunities and addressing challenges of urbanization, and contributing to sustainable ...</p>
-        </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> Johannesburg, South Africa
-          </li>
-          <li class="list-group-item">
-            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 16 March 2020 - 22 March 2020
-          </li>
-          <li class="list-group-item">
-            <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> Conference
-          </li>
-        </ul>
-      </a>
-    </div>
-    <div class="col-md-6 col-lg-4 mb-4">
-      <a class="card btn-card" href="/community/events/1">
-        <img src="https://imgur.com/XN8gxJI.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Urban Metabolism In Policy And Practice</h5>
-          <p class="card-text"> In collaboration with local partners and funded by the Urban Studies Foundation, Metabolism of Cities organises a three-part seminar series in 2019 to further the debate around the uptake of urban metabolism in policy and practice. The seminars will each be full-day events (1 day) and will take place in ...</p>
-        </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> Cape Town, South Africa
-          </li>
-          <li class="list-group-item">
-            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 16 March 2020 - 22 March 2020
-          </li>
-          <li class="list-group-item">
-            <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> Conference
-          </li>
-        </ul>
-      </a>
-    </div>
+    {% endfor %}
   </div>
 </section>
 
@@ -105,63 +72,30 @@
   </div>
 
   <div class="row list event-cards">
+    {% for each in archive %}
     <div class="col-md-6 col-lg-4 mb-4 single-event">
-      <a class="card btn-card" href="#">
-        <img src="https://imgur.com/FUmqTuy.jpg" class="card-img-top" alt="...">
+      <a class="card btn-card" href="{{ each.get_absolute_url }}">
+        {% if each.image %}
+          <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
+        {% endif %}
         <div class="card-body">
-          <h5 class="card-title event-name mb-0">International Conference on Sustainable Development</h5>
+          <h5 class="card-title event-name mb-0">{{ each }}</h5>
         </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item">
-            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> <span class="event-location">Valencia</span>, Spain
+            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> 
+            <span class="event-location">{{ each.location }}</span>
           </li>
           <li class="list-group-item">
-            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i><span class="event-year" hidden>2020</span> 16 March 2020 - 22 March 2020
+            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i><span class="event-year" hidden>{{ each.start_date|date:"Y" }}</span> {{ each.start_date }} - {{ each.end_date }}
           </li>
           <li class="list-group-item">
-            <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> <span class="event-category">Seminar</span>
+            <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> <span class="event-category">{{ each.get_type_display }}</span>
           </li>
         </ul>
       </a>
     </div>
-    <div class="col-md-6 col-lg-4 mb-4 single-event">
-      <a class="card btn-card" href="#">
-        <img src="https://imgur.com/DZlQjTP.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title event-name mb-0">Smart Waste Portugal 2019 Conference - A Circular Future</h5>
-        </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> <span class="event-location">Cape Town</span>, South Africa
-          </li>
-          <li class="list-group-item">
-            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i><span class="event-year" hidden>2019</span> 16 March 2019 - 22 March 2019
-          </li>
-          <li class="list-group-item">
-            <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> <span class="event-category">Seminar</span>
-          </li>
-        </ul>
-      </a>
-    </div>
-    <div class="col-md-6 col-lg-4 mb-4 single-event">
-      <a class="card btn-card" href="#">
-        <img src="https://imgur.com/Wtp3vGa.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title event-name mb-0">Research to Action: The Science of Drawdown</h5>
-        </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> <span class="event-location">The Hague</span>, the Netherlands
-          </li>
-          <li class="list-group-item">
-            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i><span class="event-year" hidden>2018</span> 16 March 2018 - 22 March 2018
-          </li>
-          <li class="list-group-item">
-            <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> <span class="event-category">Conference</span>
-          </li>
-        </ul>
-      </a>
-    </div>
+    {% endfor %}
   </div>
 
   <div class="card no-results">

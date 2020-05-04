@@ -59,7 +59,7 @@ class VideoAdmin(admin.ModelAdmin):
 
 class SearchCompleteAdmin(admin.ModelAdmin):
     search_fields = ["name"]
-    autocomplete_fields = ["tags"]
+    autocomplete_fields = ["spaces", "tags", "parent"]
 
 class SearchAdmin(admin.ModelAdmin):
     search_fields = ["name"]
@@ -161,6 +161,7 @@ admin_site.register(Tag, TagAdmin)
 admin_site.register(Record, SearchCompleteAdmin)
 admin_site.register(Event, SearchCompleteAdmin)
 admin_site.register(News, SearchCompleteAdmin)
+admin_site.register(Blog, SearchCompleteAdmin)
 admin_site.register(Organization, OrgAdmin)
 admin_site.register(Webpage, WebpageAdmin)
 admin_site.register(WebpageDesign, WebpageDesignAdmin)
