@@ -1921,7 +1921,7 @@ def dataimport(request):
                             name="Check year of publication",
                             description="In the previous website we did not save the date/year this was published. Please check (e.g. by going to the Youtube page) when this was published, and set the right date. (NOTE: 2021 was used as a temporary placeholder).",
                             complexity="low",
-                            project_id=59,
+                            project_id=3,
                             related_to=info,
                             type = "quality_control",
                         )
@@ -2064,7 +2064,7 @@ def dataimport(request):
                 all = RecordRelationship.objects.filter(record_child=each).filter(relationship__id__in=[6,7])
                 all.delete()
 
-            library = Project.objects.get(pk=20)
+            library = Project.objects.get(pk=2)
             team = ["Paul Hoekman", "Carolin Bellstedt", "Ramiro Schiavo"]
             former = ["Rachel Spiegel", "Gabriela Fernandez", "Aristide Athanassiadis"]
             member = Relationship.objects.get(name="Team member")
@@ -2074,15 +2074,15 @@ def dataimport(request):
             for each in former:
                 RecordRelationship.objects.create(record_parent = People.objects.filter(name=each)[0], record_child = library, relationship = former_member)
 
-            multiplicity = Project.objects.get(pk=21)
+            multiplicity = Project.objects.get(pk=4)
             team = ["Paul Hoekman", "Carolin Bellstedt", "Ramiro Schiavo", "Aristide Athanassiadis"]
             member = Relationship.objects.get(name="Team member")
             former_member = Relationship.objects.get(name="Former team member")
             for each in team:
                 RecordRelationship.objects.create(record_parent = People.objects.filter(name=each)[0], record_child = multiplicity, relationship = member)
 
-            multimedia = Project.objects.get(pk=59)
-            si = Project.objects.get(pk=22)
+            multimedia = Project.objects.get(pk=3)
+            si = Project.objects.get(pk=5)
             cityloops = Project.objects.get(pk=23)
             seminarseries = Project.objects.get(pk=24)
             ascus = Project.objects.get(pk=25)
@@ -2220,7 +2220,7 @@ def dataimport(request):
                             name="Check year of publication",
                             description="In the previous website we did not save the date/year this was published. Please check (e.g. by going to the original source) when this was published, and set the right date. (NOTE: 2021 was used as a temporary placeholder).",
                             complexity="low",
-                            project_id=59,
+                            project_id=3,
                             related_to=info,
                             type = "quality_control",
                         )
