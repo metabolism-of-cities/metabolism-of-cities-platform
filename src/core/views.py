@@ -630,8 +630,6 @@ def stafcp_upload_gis_verify(request, id):
     geojson = {}
     for details in layer:
         geojson = details.geom.json
-
-    print(geojson)
     context = {
         "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
         "geojson": geojson,
