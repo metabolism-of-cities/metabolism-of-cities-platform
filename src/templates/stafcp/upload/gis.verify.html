@@ -65,33 +65,15 @@
   </script>
 
   <script>
-      // https://leafletjs.com/reference-1.6.0.html
-    var map = L.map("map");
+    // https://leafletjs.com/reference-1.6.0.html
+    var map = L.map("map").setView([51.505, -0.09], 13);
     L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 18,
       id: "mapbox/streets-v11",
       tileSize: 512,
       zoomOffset: -1,
     }).addTo(map);
-
-    geojsonlayer = L.geoJSON({{geojson}}, {
-      style: function (geometries) {
-        return geometries.properties && geometries.properties.style;
-      },
-      onEachFeature: onEachFeature,
-      pointToLayer: function (geometries, latlng) {
-        return L.circleMarker(latlng, {
-          radius: 8,
-          fillColor: "#ff7800",
-          color: "#000",
-          weight: 1,
-          opacity: 1,
-          fillOpacity: 0.8
-        });
-      }
-    }).addTo(map);
-
-    map.fitBounds(geojsonlayer.getBounds());
-
+    var marker = L.marker([51.5, -0.09]).addTo(map);
   </script>
 {% endblock %}
