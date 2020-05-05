@@ -287,6 +287,7 @@ def article(request, id=None, slug=None, prefix=None, project=None, subtitle=Non
         "info": info,
         "header_title": info.name,
         "header_subtitle": subtitle,
+        "webpage": info,
     }
     return render(request, "article.html", load_design(context, project))
 
@@ -1097,8 +1098,10 @@ def ascus(request):
     context = {
         "header_title": "AScUS Unconference",
         "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "edit_link": "/admin/core/project/" + str(PAGE_ID["ascus"]) + "/change/",
+        "info": get_object_or_404(Project, pk=PAGE_ID["ascus"]),
     }
-    return render(request, "multimedia/dataviz.html", load_design(context, PAGE_ID["ascus"]))
+    return render(request, "article.html", load_design(context, PAGE_ID["ascus"]))
 
 def ascus_register(request):
     if request.method == "POST":

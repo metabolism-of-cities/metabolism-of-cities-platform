@@ -52,7 +52,7 @@ class Record(models.Model):
     name = models.CharField(max_length=255)
     content = HTMLField(null=True, blank=True)
     image = StdImageField(upload_to="records", variations={"thumbnail": (480, 480), "large": (1280, 1024)}, blank=True, null=True)
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
     spaces = models.ManyToManyField(ReferenceSpace, blank=True)
