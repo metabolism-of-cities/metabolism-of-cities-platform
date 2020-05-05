@@ -1968,7 +1968,8 @@ def dataimport(request):
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
-                    event = Event.objects.get(old_id=row["article_id"])
+                    event = Event.objects_including_deleted.filter(old_id=int(row["article_id"]))
+                    event = event[0]
                     event.start_date = row["start"]
                     event.end_date = row["end"]
                     event.type = row["type"]
