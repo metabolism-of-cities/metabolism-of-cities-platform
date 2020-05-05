@@ -42,6 +42,10 @@
       <a class="btn btn-secondary" href="/admin/core/projectdesign/{{ project.id }}/change/"><i class="fas fa-pencil fa-fw"></i> Project design</a>
     {% endif %}
 
+    {% if webpage_design_id and request.user.is_authenticated and request.user.is_staff %}
+      <a class="btn btn-secondary" href="/admin/core/webpagedesign/{{ webpage_design_id }}/change/"><i class="fas fa-pencil fa-fw"></i> Page design</a>
+    {% endif %}
+
     {% if edit_link and request.user.is_authenticated and request.user.is_staff %}
       <a class="btn btn-secondary" href="{{ edit_link }}"><i class="fas fa-edit fa-fw"></i> Edit</a>
     {% endif %}

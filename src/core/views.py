@@ -97,7 +97,9 @@ def load_design(context, project=1, webpage=None):
     design = ProjectDesign.objects.select_related("project").get(pk=project)
     page_design = header_title = header_subtitle = None
     if webpage:
-        page_design = WebpageDesign.objects.get(pk=webpage)
+        page_design = WebpageDesign.objects.filter(pk=webpage)
+        if page_design:
+            page_design = page_design[0]
     if "header_title" in context:
         header_title = context["header_title"]
     elif page_design and page_design.header_title:
@@ -118,6 +120,7 @@ def load_design(context, project=1, webpage=None):
         "breadcrumbs": None,
         "project": design.project,
         "webpage_id": webpage,
+        "webpage_design_id": webpage if page_design else None,
     }
 
     return {**context, **create_design}
@@ -289,7 +292,7 @@ def article(request, id=None, slug=None, prefix=None, project=None, subtitle=Non
         "header_subtitle": subtitle,
         "webpage": info,
     }
-    return render(request, "article.html", load_design(context, project))
+    return render(request, "article.html", load_design(context, project, info.id))
 
 def article_list(request, id):
     info = get_object_or_404(Webpage, pk=id)
@@ -1113,47 +1116,40 @@ def ascus_register(request):
         else:
             check = User.objects.filter(email=email)
             if check:
-                messages.error(request, "A user already exists with this e-mail address. Please log in or reset your password instead.")
+                messages.error(request, "A Metabolism of Cities account already exists with this e-mail address. Please log in or reset your password instead.")
             else:
                 user = User.objects.create_user(email, email, password)
                 user.first_name = name
-                if subsite == "platformu":
-                    user.is_superuser = False
-                    user.is_staff = False
-                    group = Group.objects.get(name="PlatformU Admin")
-                    user.groups.add(group)
-                    organization = Organization.objects.create(name=request.POST["organization"], type="other")
-                    user_relationship = UserRelationship()
-                    user_relationship.record = organization
-                    user_relationship.user = user
-                    user_relationship.relationship = Relationship.objects.get(pk=USER_RELATIONSHIPS["member"])
-                    user_relationship.save()
-                    redirect_page = "platformu_admin"
-                else:
-                    user.is_staff = True
-                    user.is_superuser = True
-                    redirect_page = "index"
+                user.is_superuser = False
+                user.is_staff = False
                 user.save()
-                messages.success(request, "User was created.")
+                check = People.objects.filter(name=name)
+                people = None
+                if check:
+                    check_people = check[0]
+                    if not check_people.user:
+                        people = check_people
+                if not people:
+                    people = People.objects.create(name=name)
+                people.user = user
+                people.save()
+                RecordRelationship.objects.create(
+                    record_parent = people,
+                    record_child_id = 8,
+                    relationship_id = 12,
+                )
+                WorkPiece.objects.create(
+                    name="Check on participant details",
+                    description="Affiliation: " + request.POST.get("organization") + " -- City: " + request.POST.get("city"),
+                    complexity="low",
+                    project_id=8,
+                    related_to=people,
+                    type = "administrative",
+                )
+                messages.success(request, "Your account was created successfully.")
                 login(request, user)
 
-                mailcontext = {
-                    "name": name,
-                }
-                msg_html = render_to_string("mailbody/welcome.html", mailcontext)
-                msg_plain = render_to_string("mailbody/welcome.txt", mailcontext)
-                sender = '"' + request.site.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
-                recipient = '"' + name + '" <' + email + '>'
-
-                send_mail(
-                    "Welcome to Metabolism of Cities",
-                    msg_plain,
-                    sender,
-                    [recipient],
-                    html_message=msg_html,
-                )
-
-                return redirect(redirect_page)
+                return redirect("/ascus/payment")
 
     context = {
         "header_title": "Register now",
@@ -1572,6 +1568,7 @@ background-attachment: scroll, scroll, scroll;
     migrations.RunSQL("SELECT setval('core_tag_id_seq', (SELECT MAX(id) FROM core_tag)+1);")
     migrations.RunSQL("SELECT setval('core_record_id_seq', (SELECT MAX(id) FROM core_record)+1);")
     migrations.RunSQL("SELECT setval('stafdb_activity_id_seq', (SELECT MAX(id) FROM stafdb_activity)+1);")
+    migrations.RunSQL("SELECT setval('auth_user_id_seq', (SELECT MAX(id) FROM auth_user)+1);")
 
     return redirect("/")
 

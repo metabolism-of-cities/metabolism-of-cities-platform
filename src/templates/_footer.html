@@ -1,20 +1,14 @@
 {% load static %}
 <footer id="involved">
   <div class="container pt-4 pb-4">
-    <h2>Get involved</h2>
-    <p class="mb-4">Veniam est in voluptas quidem accusamus atque saepe totam. Laboriosam et esse est ratione ex non amet rerum</p>
-    <a class="btn btn-inverse mt-2 mr-3" href="">Join the community</a>
-    <a class="btn btn-inverse mt-2 mr-3" href="">Contribute data</a>
-    <a class="btn btn-inverse mt-2 mr-3" href="">Submit a project/publication</a>
+    <h2>Join AScUS!</h2>
+    <p class="mb-4">Sign up before May 25.</p>
+    <a class="btn btn-inverse mt-2 mr-3" href="/ascus/register/">Register now</a>
+    <a class="btn btn-inverse mt-2 mr-3" href="/ascus/login/">Already registered? Log in</a>
 
-    <form id="newsletter" class="input-group mt-4">
-      <input type="text" class="form-control" placeholder="Your email address" aria-label="Your email address" aria-describedby="btn-newsletter">
-      <div class="input-group-append">
-        <button class="btn btn-inverse" type="button" id="btn-newsletter">Sign up for our newsletter</button>
-      </div>
-    </form>
   </div>
 </footer>
+{% if False %}
 <footer id="sitemap">
   <div class="container">
     <div class="row">
@@ -177,3 +171,4 @@
    </div>
   </div>
 </footer>
+{% endif %}

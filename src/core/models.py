@@ -15,6 +15,10 @@ from tinymce import HTMLField
 import re
 from django.utils.text import slugify
 
+from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 class Tag(models.Model):
     name = models.CharField(max_length=255)
     description = HTMLField(null=True, blank=True)
@@ -243,6 +247,7 @@ class People(Record):
     )
     status = models.CharField(max_length=8, choices=PEOPLE_STATUS, default="active")
     site = models.ManyToManyField(Site)
+    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.SET_NULL)
     def __str__(self):
         return self.name
     def get_absolute_url(self):
@@ -558,6 +563,7 @@ class WorkPiece(models.Model):
         ("data_review", "Review of Data"),
         ("design", "Design"),
         ("quality_control", "Quality Control"),
+        ("administrative", "Administrative"),
     ]
     type = models.CharField(max_length=40, choices=TYPE)
     related_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="workpieces_list")
