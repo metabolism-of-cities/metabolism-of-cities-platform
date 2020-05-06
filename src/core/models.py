@@ -247,7 +247,7 @@ class People(Record):
     )
     status = models.CharField(max_length=8, choices=PEOPLE_STATUS, default="active")
     site = models.ManyToManyField(Site)
-    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.SET_NULL, related_name="people")
+    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
     def get_absolute_url(self):
@@ -349,7 +349,7 @@ class LibraryItem(Record):
         ("NL", "Dutch"),
         ("OT", "Other"),
     )
-    language = models.CharField(max_length=2, choices=LANGUAGES)
+    language = models.CharField(max_length=2, choices=LANGUAGES, default="EN")
     title_original_language = models.CharField(max_length=255, blank=True, null=True)
     author_list = models.TextField(null=True, blank=True)
     author_citation = models.TextField(null=True, blank=True)

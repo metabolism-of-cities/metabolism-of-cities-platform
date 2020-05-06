@@ -1,14 +1,61 @@
 {% extends "_base.html" %}
+{% load bootstrap4 %}
 
 {% block title %}My Account{% endblock %}
 
+{% block css %}
+<style type="text/css">
+#id_author_list{height:50px}
+</style>
+{% endblock %}
+
 {% block content %}
 
-  {{ info.content|safe }}
+  {% if list %}
+    <p>You are the author of the following presentation(s):</p>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author(s)</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in list %}
+        <tr>
+          <td>{{ each }}</td>
+          <td>{{ each.author_list }}</td>
+          <td>{{ each.type }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
 
-  <a class="btn btn-inverse mt-2 mr-3" href="/ascus/account/presentation/?type=video">Upload video</a>
-  <a class="btn btn-inverse mt-2 mr-3" href="/ascus/account/presentation/?type=poster">Upload poster</a>
-  <a class="btn btn-inverse mt-2 mr-3" href="/ascus/account/presentation/?type=paper">Upload paper</a>
-  <a class="btn btn-inverse mt-2 mr-3" href="/ascus/account/presentation/?type=other">Upload other document</a>
+  {% if request.GET.type %}
+    <h2>Upload {{ request.GET.type }}</h2>
+    {% if request.GET.type == "video" %}
+      <div class="alert alert-info">
+        Make sure that your video is marked as publicly available on the video platform.
+      </div>
+    {% endif %}
+    <form method="post" class="form form-horizontal" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      {% buttons %}
+        <button type="submit" class="btn btn-primary">Save</button>
+      {% endbuttons %}
+    </form>
+  {% else %}
+
+    {{ info.content|safe }}
+
+    <a class="btn btn-inverse mt-2 mr-3" href="/ascus/account/presentation/?type=video">Upload video</a>
+    <a class="btn btn-inverse mt-2 mr-3" href="/ascus/account/presentation/?type=poster">Upload poster</a>
+    <a class="btn btn-inverse mt-2 mr-3" href="/ascus/account/presentation/?type=paper">Upload paper</a>
+    <a class="btn btn-inverse mt-2 mr-3" href="/ascus/account/presentation/?type=other">Upload other document</a>
+
+  {% endif %}
 
 {% endblock %}

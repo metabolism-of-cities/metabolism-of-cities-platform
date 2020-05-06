@@ -1117,6 +1117,7 @@ def ascus_account(request):
     except:
         return redirect("/ascus/register/?existing=true")
 
+    my_documents = LibraryItem.objects.filter(child_list__record_parent=request.user.people).filter(parent_list__record_child__id=PAGE_ID["ascus"])
     context = {
         "header_title": "My Account",
         "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
@@ -1128,11 +1129,45 @@ def ascus_account(request):
 @login_required
 def ascus_account_presentation(request):
     info = get_object_or_404(Webpage, slug="/ascus/account/presentation/")
+    form = None
+
+    my_documents = LibraryItem.objects.filter(child_list__record_parent=request.user.people).filter(parent_list__record_child__id=PAGE_ID["ascus"])
+    if request.GET.get("type") == "video":
+        ModelForm = modelform_factory(
+            Video, 
+            fields = ("name", "content", "author_list", "url", "is_public"), 
+            labels = { "content": "Description", "name": "Title", "url": "URL", "author_list": "Author(s)", "is_public": "After the unconference, make my contribution publicly available on this website." }
+        )
+        form = ModelForm(request.POST or None, request.FILES or None)
+        is_saved = False
+        if request.method == "POST":
+            if form.is_valid():
+                info = form.save(commit=False)
+                info.status = "active"
+                info.year = 2020
+                info.type = LibraryItemType.objects.get(name="Video Recording")
+                info.save()
+                messages.success(request, "Thanks, we have received your work! Our team will review your submission. You can still change the details until the deadline.")
+                RecordRelationship.objects.create(
+                    record_parent = info,
+                    record_child_id = PAGE_ID["ascus"],
+                    relationship = Relationship.objects.get(name="Presentation"),
+                )
+                RecordRelationship.objects.create(
+                    record_parent = request.user.people,
+                    record_child = info,
+                    relationship = Relationship.objects.get(name="Author"),
+                )
+                return redirect("/ascus/account/")
+            else:
+                messages.error(request, "We could not save your form, please fill out all fields")
     context = {
         "header_title": "My Presentation",
         "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
         "edit_link": "/admin/core/webpage/" + str(info.id) + "/change/",
         "info": info,
+        "form": form,
+        "list": my_documents,
     }
     return render(request, "ascus/account.presentation.html", load_design(context, PAGE_ID["ascus"]))
 
