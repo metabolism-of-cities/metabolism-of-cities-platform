@@ -624,12 +624,13 @@ def stafcp_upload_gis_file(request, id=None):
 
 def stafcp_upload_gis_verify(request, id):
     from django.contrib.gis.gdal import DataSource
+    import json
     file = settings.MEDIA_ROOT + "/shapefiles/District_Municipalities_2016.shp"
-    ds = DataSource(file)
-    layer = ds[0]
-    geojson = {}
-    for details in layer:
-        geojson = details.geom.json
+    import shapefile
+    shape = shapefile.Reader(file)
+    feature = shape.shape(0)
+    geojson = feature.__geo_interface__ 
+    geojson = json.dumps(geojson) 
     context = {
         "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
         "geojson": geojson,
