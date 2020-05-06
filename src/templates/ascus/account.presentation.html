@@ -11,7 +11,7 @@
 
 {% block content %}
 
-  {% if list %}
+  {% if list and not request.GET.type %}
     <p>You are the author of the following presentation(s):</p>
     <table class="table table-striped">
       <thead>

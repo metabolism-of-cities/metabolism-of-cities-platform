@@ -48,6 +48,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 import pytz
 
+from functools import wraps
+
 # This array defines all the IDs in the database of the articles that are loaded for the
 # various pages in the menu. Here we can differentiate between the different sites.
 
@@ -187,12 +189,14 @@ def user_register(request, subsite=None):
 
 def user_login(request, project=None):
 
+    if project:
+        project = get_object_or_404(Project, pk=project)
+        redirect_url = project.url
+    else:
+        redirect_url = "index"
+
     if request.user.is_authenticated:
-        if project:
-            project = get_object_or_404(Project, pk=project)
-            return redirect(project.url)
-        else:
-            return redirect("index")
+        return redirect(redirect_url)
 
     if request.method == "POST":
         email = request.POST.get("email")
@@ -202,7 +206,7 @@ def user_login(request, project=None):
         if user is not None:
             login(request, user)
             messages.success(request, "You are logged in.")
-            return redirect("index")
+            return redirect(redirect_url)
         else:
             messages.error(request, "We could not authenticate you, please try again.")
 
@@ -1097,6 +1101,25 @@ def dataviz(request, id):
 
 # AScUS conference
 
+def check_ascus_access(function):
+    @wraps(function)
+    def wrap(request, *args, **kwargs):
+        global PAGE_ID
+        check_participant = None
+        if not request.user.is_authenticated:
+            return redirect("/ascus/login/")
+        if request.user.is_authenticated and hasattr(request.user, "people"):
+            check_participant = RecordRelationship.objects.get(
+                record_parent = request.user.people,
+                record_child_id = PAGE_ID["ascus"],
+                relationship__name = "Participant",
+            )
+        if not check_participant:
+            return redirect("/ascus/register/?existing=true")
+        else:
+            return function(request, *args, **kwargs)
+    return wrap
+
 def ascus(request):
     context = {
         "header_title": "AScUS Unconference",
@@ -1106,61 +1129,216 @@ def ascus(request):
     }
     return render(request, "article.html", load_design(context, PAGE_ID["ascus"]))
 
-@login_required
+@check_ascus_access
 def ascus_account(request):
-    try:
-        check_participant = RecordRelationship.objects.get(
-            record_parent = People.objects.get(user=request.user),
-            record_child_id = PAGE_ID["ascus"],
-            relationship__name = "Participant",
-        )
-    except:
-        return redirect("/ascus/register/?existing=true")
-
-    my_documents = LibraryItem.objects.filter(child_list__record_parent=request.user.people).filter(parent_list__record_child__id=PAGE_ID["ascus"])
+    my_discussions = Event.objects \
+        .filter(child_list__record_parent=request.user.people) \
+        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(tags__id=770)
+    my_presentations = LibraryItem.objects \
+        .filter(child_list__record_parent=request.user.people) \
+        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(tags__id=771)
+    my_intro = LibraryItem.objects \
+        .filter(child_list__record_parent=request.user.people) \
+        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(tags__id=769)
+    my_roles = RecordRelationship.objects.filter(
+        record_parent = request.user.people, 
+        record_child__id = PAGE_ID["ascus"],
+    )
+    show_discussion = show_abstract = False
+    for each in my_roles:
+        if each.relationship.name == "Session organizer":
+            show_discussion = True
+        elif each.relationship.name == "Presenter":
+            show_abstract = True
     context = {
         "header_title": "My Account",
         "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
         "edit_link": "/admin/core/project/" + str(PAGE_ID["ascus"]) + "/change/",
         "info": get_object_or_404(Project, pk=PAGE_ID["ascus"]),
+        "my_discussions": my_discussions,
+        "my_presentations": my_presentations,
+        "my_intro": my_intro,
+        "show_discussion": show_discussion, 
+        "show_abstract": show_abstract,
     }
     return render(request, "ascus/account.html", load_design(context, PAGE_ID["ascus"]))
 
-@login_required
-def ascus_account_presentation(request):
-    info = get_object_or_404(Webpage, slug="/ascus/account/presentation/")
-    form = None
+@check_ascus_access
+def ascus_account_edit(request):
+    info = get_object_or_404(Webpage, slug="/ascus/account/edit/")
+    ModelForm = modelform_factory(
+        People, 
+        fields = ("name", "content", "research_interests", "image", "website", "email", "twitter", "google_scholar", "orcid", "researchgate", "linkedin"),
+        labels = { "content": "Profile/bio", "image": "Photo" }
+    )
+    form = ModelForm(request.POST or None, request.FILES or None, instance=request.user.people)
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save()
+            messages.success(request, "Your profile information was saved.")
+            if not info.image:
+                messages.warning(request, "Please do not forget to upload a profile photo!")
+            return redirect("/ascus/account/")
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+    context = {
+        "header_title": "Edit profile",
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "edit_link": "/admin/core/webpage/" + str(info.id) + "/change/",
+        "info": info,
+        "form": form,
+    }
+    return render(request, "ascus/account.edit.html", load_design(context, PAGE_ID["ascus"]))
 
-    my_documents = LibraryItem.objects.filter(child_list__record_parent=request.user.people).filter(parent_list__record_child__id=PAGE_ID["ascus"])
-    if request.GET.get("type") == "video":
+@check_ascus_access
+def ascus_account_discussion(request):
+    info = get_object_or_404(Webpage, slug="/ascus/account/discussion/")
+    my_discussions = Event.objects \
+        .filter(child_list__record_parent=request.user.people) \
+        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(tags__id=770)
+    ModelForm = modelform_factory(
+        Event, 
+        fields = ("name", "content"),
+        labels = { "name": "Title", "content": "Abstract (please include the goals, format, and names of all organizers)" }
+    )
+    event = None
+    form = ModelForm(request.POST or None, instance=event)
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save(commit=False)
+            info.site = request.site
+            info.is_public = False
+            info.type = "other"
+            info.save()
+            info.tags.add(Tag.objects.get(pk=770))
+            messages.success(request, "Your discussion topic was saved.")
+            RecordRelationship.objects.create(
+                record_parent = info,
+                record_child_id = PAGE_ID["ascus"],
+                relationship = Relationship.objects.get(name="Presentation"),
+            )
+            RecordRelationship.objects.create(
+                record_parent = request.user.people,
+                record_child = info,
+                relationship = Relationship.objects.get(name="Organizer"),
+            )
+            WorkPiece.objects.create(
+                name="Review discussion topic",
+                description="Please check to see if this looks good. If all is well, then please add any additional organizers to this record (as per the description).",
+                complexity="med",
+                project_id=8,
+                related_to=info,
+                type = "quality_control",
+            )
+            return redirect("/ascus/account/")
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+    context = {
+        "header_title": "Discussion topic",
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "edit_link": "/admin/core/webpage/" + str(info.id) + "/change/",
+        "info": info,
+        "form": form,
+        "list": my_discussions,
+    }
+    return render(request, "ascus/account.discussion.html", load_design(context, PAGE_ID["ascus"]))
+
+@check_ascus_access
+def ascus_account_presentation(request, introvideo=False):
+    form = None
+    if introvideo:
+        info = get_object_or_404(Webpage, slug="/ascus/account/introvideo/")
+        my_documents = LibraryItem.objects \
+            .filter(child_list__record_parent=request.user.people) \
+            .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+            .filter(tags__id=769)
         ModelForm = modelform_factory(
             Video, 
-            fields = ("name", "content", "author_list", "url", "is_public"), 
-            labels = { "content": "Description", "name": "Title", "url": "URL", "author_list": "Author(s)", "is_public": "After the unconference, make my contribution publicly available on this website." }
+            fields = ("file",),
         )
         form = ModelForm(request.POST or None, request.FILES or None)
-        is_saved = False
-        if request.method == "POST":
-            if form.is_valid():
-                info = form.save(commit=False)
-                info.status = "active"
-                info.year = 2020
+        html_page = "ascus/account.introvideo.html"
+    else:
+        info = get_object_or_404(Webpage, slug="/ascus/account/presentation/")
+        my_documents = LibraryItem.objects \
+            .filter(child_list__record_parent=request.user.people) \
+            .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+            .filter(tags__id=771)
+        html_page = "ascus/account.presentation.html"
+
+    type = None
+    if "type" in request.GET:
+        type = request.GET.get("type")
+        if type == "video":
+            ModelForm = modelform_factory(
+                Video, 
+                fields = ("name", "content", "author_list", "url", "is_public"), 
+                labels = { "content": "Abstract", "name": "Title", "url": "URL", "author_list": "Author(s)", "is_public": "After the unconference, make my contribution publicly available through the Metabolism of Cities digital library." }
+            )
+        elif type == "poster" or type == "paper":
+            ModelForm = modelform_factory(
+                LibraryItem, 
+                fields = ("name", "file", "content", "author_list", "is_public"), 
+                labels = { "content": "Abstract", "name": "Title", "author_list": "Author(s)", "is_public": "After the unconference, make my contribution publicly available through the Metabolism of Cities digital library." }
+            )
+        elif type == "other":
+            ModelForm = modelform_factory(
+                LibraryItem, 
+                fields = ("name", "file", "type", "content", "author_list", "is_public"), 
+                labels = { "content": "Abstract", "name": "Title", "author_list": "Author(s)", "is_public": "After the unconference, make my contribution publicly available through the Metabolism of Cities digital library." }
+            )
+        form = ModelForm(request.POST or None, request.FILES or None)
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save(commit=False)
+            info.status = "active"
+            info.year = 2020
+            if type == "video":
                 info.type = LibraryItemType.objects.get(name="Video Recording")
-                info.save()
-                messages.success(request, "Thanks, we have received your work! Our team will review your submission. You can still change the details until the deadline.")
-                RecordRelationship.objects.create(
-                    record_parent = info,
-                    record_child_id = PAGE_ID["ascus"],
-                    relationship = Relationship.objects.get(name="Presentation"),
-                )
-                RecordRelationship.objects.create(
-                    record_parent = request.user.people,
-                    record_child = info,
-                    relationship = Relationship.objects.get(name="Author"),
-                )
-                return redirect("/ascus/account/")
+            elif type == "poster":
+                info.type = LibraryItemType.objects.get(name="Poster")
+            elif type == "paper":
+                info.type = LibraryItemType.objects.get(name="Conference Paper")
+            elif introvideo:
+                info.type = LibraryItemType.objects.get(name="Video Recording")
+                info.name = "Introduction video: " + str(request.user.people)
+                info.is_public = False
+            info.save()
+            if introvideo:
+                # Adding the tag "Personal introduction video"
+                info.tags.add(Tag.objects.get(pk=769))
+                messages.success(request, "Thanks, we have received your introduction video!")
+                review_title = "Review and upload personal video"
             else:
-                messages.error(request, "We could not save your form, please fill out all fields")
+                # Adding the tag "Abstract presentation"
+                info.tags.add(Tag.objects.get(pk=771))
+                messages.success(request, "Thanks, we have received your work! Our team will review your submission and if there are any questions we will get in touch.")
+                review_title = "Review uploaded presentation"
+            RecordRelationship.objects.create(
+                record_parent = info,
+                record_child_id = PAGE_ID["ascus"],
+                relationship = Relationship.objects.get(name="Presentation"),
+            )
+            RecordRelationship.objects.create(
+                record_parent = request.user.people,
+                record_child = info,
+                relationship = Relationship.objects.get(name="Author"),
+            )
+            WorkPiece.objects.create(
+                name=review_title,
+                description="Please check to see if this looks good. If it's a video, audio schould be of decent quality. Make sure there are no glaring problems with this submission. If there are, contact the submitter and discuss. If all looks good, then please look at the co-authors and connect this (create new relationships) to the other authors as well.",
+                complexity="med",
+                project_id=8,
+                related_to=info,
+                type = "quality_control",
+            )
+            return redirect("/ascus/account/")
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
     context = {
         "header_title": "My Presentation",
         "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
@@ -1169,7 +1347,7 @@ def ascus_account_presentation(request):
         "form": form,
         "list": my_documents,
     }
-    return render(request, "ascus/account.presentation.html", load_design(context, PAGE_ID["ascus"]))
+    return render(request, html_page, load_design(context, PAGE_ID["ascus"]))
 
 def ascus_register(request):
     people = user = is_logged_in = None
@@ -1180,14 +1358,14 @@ def ascus_register(request):
         user = request.user
         if check:
             people = check[0]
-    if people:
-        check_participant = RecordRelationship.objects.filter(
-            record_parent = people,
-            record_child_id = PAGE_ID["ascus"],
-            relationship__name = "Participant",
-        )
-        if check_participant:
-            return redirect("/ascus/account/")
+        if people:
+            check_participant = RecordRelationship.objects.filter(
+                record_parent = people,
+                record_child_id = PAGE_ID["ascus"],
+                relationship__name = "Participant",
+            )
+            if check_participant:
+                return redirect("/ascus/account/")
     if request.method == "POST":
         error = None
         if not user:
@@ -1215,14 +1393,26 @@ def ascus_register(request):
                     if not check_people.user:
                         people = check_people
             if not people:
-                people = People.objects.create(name=name, is_public=False)
-                people.user = user
-                people.save()
+                people = People.objects.create(name=name, is_public=False, email=user.email)
+            people.user = user
+            people.save()
             RecordRelationship.objects.create(
                 record_parent = people,
                 record_child_id = 8,
                 relationship_id = 12,
             )
+            if request.POST.get("abstract") == "yes":
+                RecordRelationship.objects.create(
+                    record_parent = people,
+                    record_child_id = 8,
+                    relationship_id = 15,
+                )
+            if request.POST.get("discussion") == "yes":
+                RecordRelationship.objects.create(
+                    record_parent = people,
+                    record_child_id = 8,
+                    relationship_id = 16,
+                )
             if not is_logged_in:
                 WorkPiece.objects.create(
                     name="Link city and organization of participant",
@@ -1256,6 +1446,7 @@ def ascus_register(request):
         "tags": Tag.objects.filter(parent_tag__id=757)
     }
     return render(request, "ascus/register.html", load_design(context, PAGE_ID["ascus"]))
+
 # TEMPORARY PAGES DURING DEVELOPMENT
 
 def pdf(request):
@@ -1669,6 +1860,7 @@ background-attachment: scroll, scroll, scroll;
     migrations.RunSQL("SELECT setval('core_record_id_seq', (SELECT MAX(id) FROM core_record)+1);")
     migrations.RunSQL("SELECT setval('stafdb_activity_id_seq', (SELECT MAX(id) FROM stafdb_activity)+1);")
     migrations.RunSQL("SELECT setval('auth_user_id_seq', (SELECT MAX(id) FROM auth_user)+1);")
+    migrations.RunSQL("SELECT setval('core_libraryitemtype_id_seq', (SELECT MAX(id) FROM core_libraryitemtype)+1);")
 
     return redirect("/")
 

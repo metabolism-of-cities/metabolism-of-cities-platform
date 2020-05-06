@@ -1,0 +1,28 @@
+{% extends "_base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}Introduction video{% endblock %}
+
+{% block content %}
+
+    {{ info.content|safe }}
+
+    <h3 class="mt-5">Upload your video</h3>
+    <form method="post" class="form form-horizontal" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      {% buttons %}
+        <button type="submit" class="btn btn-primary">Save</button>
+      {% endbuttons %}
+    </form>
+
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+$(function(){
+  $("#id_file").attr("accept", "video/*") 
+  $("#id_file").attr("capture", "user") 
+});
+</script>
+{% endblock %}

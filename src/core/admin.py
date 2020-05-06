@@ -54,6 +54,8 @@ class WebpageDesignAdmin(admin.ModelAdmin):
         js = ("js/scripts.js",)
 
 class VideoAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
+    autocomplete_fields = ["spaces", "tags", "is_part_of"]
     class Media:
         js = ("js/video.admin.js",)
 
@@ -74,7 +76,7 @@ class ActivityAdmin(admin.ModelAdmin):
     autocomplete_fields = ["parent"]
 
 class TagAdmin(admin.ModelAdmin):
-    search_fields = ["name"]
+    search_fields = ["name", "parent_tag__name"]
     list_display = ["name", "parent_tag", "include_in_glossary", "hidden"]
 
 class OrgAdmin(SearchCompleteAdmin):

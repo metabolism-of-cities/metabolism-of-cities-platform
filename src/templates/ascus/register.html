@@ -34,6 +34,22 @@
             <input type="password" class="form-control" id="password" name="password" required>
           </div>
         {% endif %}
+        <p>Did you submit an accepted abstract?</p>
+        <p>
+        <select class="custom-select" name="abstract">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
+        </p>
+
+        <p>Did you submit an accepted discussion topic?</p>
+        <p>
+        <select class="custom-select" name="discussion">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
+        </p>
+
         <p>Please select <strong>up to 5</strong> topics of your interest.</p>
         {% for each in tags %}
           <div class="form-check">

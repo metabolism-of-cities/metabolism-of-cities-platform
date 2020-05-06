@@ -22,8 +22,10 @@
         <a class="btn btn-primary-basic" href="{% url 'passwordreset' %}">I forgot my password</a>
       </form>
 
-      <h4 class="no-account">Don't have an account yet?</h4>
-      <a href="{% url 'register' %}" class="btn btn-primary"><i class="fas fa-fw fa-user-plus"></i> Join Metabolism of Cities</a>
+      {% if not project %}
+        <h4 class="no-account">Don't have an account yet?</h4>
+        <a href="{% url 'register' %}" class="btn btn-primary"><i class="fas fa-fw fa-user-plus"></i> Join Metabolism of Cities</a>
+      {% endif %}
     </div>
   </div>
 {% endblock %}
