@@ -10,27 +10,42 @@
       <hr>
       <form method="post" action="">
         {% csrf_token %}
-        <div class="form-group">
-          <label for="name">Your name</label>
-          <input type="name" class="form-control" id="name" name="name">
-        </div>
-        <div class="form-group">
-          <label for="org">Affiliation</label>
-          <input type="text" class="form-control" id="org" name="organization">
-        </div>
-        <div class="form-group">
-          <label for="city">City</label>
-          <input type="text" class="form-control" id="city" name="city">
-        </div>
-        <div class="form-group">
-          <label for="email">E-mail</label>
-          <input type="email" class="form-control" id="email" name="email">
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" class="form-control" id="password" name="password">
-        </div>
-        <button type="submit" class="btn btn-primary"><i class="fas fa-fw fa-save"></i> Next step</button>
+        {% if request.user.is_authenticated %}
+          <p><strong>You are logged in as: </strong> {{ request.user }}</p>
+        {% else %}
+          <div class="form-group">
+            <label for="name">Full name</label>
+            <input type="name" class="form-control" id="name" name="name" required>
+          </div>
+          <div class="form-group">
+            <label for="org">Affiliation</label>
+            <input type="text" class="form-control" id="org" name="organization" required>
+          </div>
+          <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" class="form-control" id="city" name="city" required>
+          </div>
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+          </div>
+        {% endif %}
+        <p>Please select <strong>up to 5</strong> topics of your interest.</p>
+        {% for each in tags %}
+          <div class="form-check">
+            <input class="form-check-input" name="tags" type="checkbox" value="{{ each.id }}" id="tag-{{ each.id }}">
+            <label class="form-check-label" for="tag-{{ each.id }}">
+              {{ each }}
+            </label>
+          </div>
+        {% endfor %}
+        <p style="margin-top:15px">
+          <button type="submit" class="btn btn-primary"><i class="fas fa-fw fa-save"></i> Next step</button>
+        </p>
       </form>
     </div>
   </div>

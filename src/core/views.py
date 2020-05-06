@@ -1106,54 +1106,119 @@ def ascus(request):
     }
     return render(request, "article.html", load_design(context, PAGE_ID["ascus"]))
 
+@login_required
+def ascus_account(request):
+    try:
+        check_participant = RecordRelationship.objects.get(
+            record_parent = People.objects.get(user=request.user),
+            record_child_id = PAGE_ID["ascus"],
+            relationship__name = "Participant",
+        )
+    except:
+        return redirect("/ascus/register/?existing=true")
+
+    context = {
+        "header_title": "My Account",
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "edit_link": "/admin/core/project/" + str(PAGE_ID["ascus"]) + "/change/",
+        "info": get_object_or_404(Project, pk=PAGE_ID["ascus"]),
+    }
+    return render(request, "ascus/account.html", load_design(context, PAGE_ID["ascus"]))
+
+@login_required
+def ascus_account_presentation(request):
+    info = get_object_or_404(Webpage, slug="/ascus/account/presentation/")
+    context = {
+        "header_title": "My Presentation",
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "edit_link": "/admin/core/webpage/" + str(info.id) + "/change/",
+        "info": info,
+    }
+    return render(request, "ascus/account.presentation.html", load_design(context, PAGE_ID["ascus"]))
+
 def ascus_register(request):
+    people = user = is_logged_in = None
+    if request.user.is_authenticated:
+        is_logged_in = True
+        check = People.objects.filter(user=request.user)
+        name = str(request.user)
+        user = request.user
+        if check:
+            people = check[0]
+    if people:
+        check_participant = RecordRelationship.objects.filter(
+            record_parent = people,
+            record_child_id = PAGE_ID["ascus"],
+            relationship__name = "Participant",
+        )
+        if check_participant:
+            return redirect("/ascus/account/")
     if request.method == "POST":
-        password = request.POST.get("password")
-        email = request.POST.get("email")
-        name = request.POST.get("name")
-        if not password:
-            messages.error(request, "You did not enter a password.")
-        else:
+        error = None
+        if not user:
+            password = request.POST.get("password")
+            email = request.POST.get("email")
+            name = request.POST.get("name")
+            if not password:
+                messages.error(request, "You did not enter a password.")
+                error = True
             check = User.objects.filter(email=email)
             if check:
-                messages.error(request, "A Metabolism of Cities account already exists with this e-mail address. Please log in or reset your password instead.")
-            else:
+                messages.error(request, "A Metabolism of Cities account already exists with this e-mail address. Please <a href='/ascus/login/'>log in first</a> and then register for the AScUS unconference.")
+                error = True
+        if not error:
+            if not user:
                 user = User.objects.create_user(email, email, password)
                 user.first_name = name
                 user.is_superuser = False
                 user.is_staff = False
                 user.save()
+                login(request, user)
                 check = People.objects.filter(name=name)
-                people = None
                 if check:
                     check_people = check[0]
                     if not check_people.user:
                         people = check_people
-                if not people:
-                    people = People.objects.create(name=name)
+            if not people:
+                people = People.objects.create(name=name, is_public=False)
                 people.user = user
                 people.save()
-                RecordRelationship.objects.create(
-                    record_parent = people,
-                    record_child_id = 8,
-                    relationship_id = 12,
-                )
+            RecordRelationship.objects.create(
+                record_parent = people,
+                record_child_id = 8,
+                relationship_id = 12,
+            )
+            if not is_logged_in:
                 WorkPiece.objects.create(
-                    name="Check on participant details",
+                    name="Link city and organization of participant",
                     description="Affiliation: " + request.POST.get("organization") + " -- City: " + request.POST.get("city"),
-                    complexity="low",
+                    complexity="med",
                     project_id=8,
                     related_to=people,
                     type = "administrative",
                 )
-                messages.success(request, "Your account was created successfully.")
-                login(request, user)
+            location = request.POST.get("city", "not set")
+            WorkPiece.objects.create(
+                name="Monitor for payment",
+                description="Price should be based on their location: location = " + location,
+                complexity="low",
+                project_id=8,
+                related_to=people,
+                type = "administrative",
+            )
+            messages.success(request, "You are successfully registered for the AScUS Unconference.")
 
-                return redirect("/ascus/payment")
+            tags = request.POST.getlist("tags")
+            for each in tags:
+                tag = Tag.objects.get(pk=each, parent_tag__id=757)
+                people.tags.add(tag)
+
+            return redirect("/ascus/payment/")
 
     context = {
         "header_title": "Register now",
         "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "tags": Tag.objects.filter(parent_tag__id=757)
     }
     return render(request, "ascus/register.html", load_design(context, PAGE_ID["ascus"]))
 # TEMPORARY PAGES DURING DEVELOPMENT

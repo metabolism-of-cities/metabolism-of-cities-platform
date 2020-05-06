@@ -247,7 +247,7 @@ class People(Record):
     )
     status = models.CharField(max_length=8, choices=PEOPLE_STATUS, default="active")
     site = models.ManyToManyField(Site)
-    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.SET_NULL)
+    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.SET_NULL, related_name="people")
     def __str__(self):
         return self.name
     def get_absolute_url(self):
