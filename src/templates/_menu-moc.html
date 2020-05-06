@@ -1,0 +1,74 @@
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="about-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Urban metabolism
+  </a>
+  <div class="dropdown-menu" aria-labelledby="about-dropdown">
+      <a class="dropdown-item" href="/urbanmetabolism/">Urban metabolism introduction</a>
+      <a class="dropdown-item" href="/urbanmetabolism/history/">History of urban metabolism</a>
+      <a class="dropdown-item" href="/urbanmetabolism/starterskit/">Starters Kit</a>
+      <a class="dropdown-item" href="/urbanmetabolism/policymakers/">Urban metabolism for policy makers</a>
+      <a class="dropdown-item" href="/urbanmetabolism/students/">Urban metabolism for students</a>
+      <a class="dropdown-item" href="/urbanmetabolism/lecturers/">Urban metabolism for lecturers</a>
+      <a class="dropdown-item" href="/urbanmetabolism/researchers/">Urban metabolism for researchers</a>
+      <a class="dropdown-item" href="/urbanmetabolism/organisations/">Urban metabolism for organisations</a>
+      <a class="dropdown-item" href="/urbanmetabolism/everyone/">Urban metabolism for everyone</a>
+      <a class="dropdown-item" href="/urbanmetabolism/glossary/">Glossary</a>
+  </div>
+</li>
+
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="projects-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Our Projects
+  </a>
+  <div class="dropdown-menu" aria-labelledby="projects-dropdown">
+      <a class="dropdown-item" href="/projects/2/">Library</a>
+      <a class="dropdown-item" href="/projects/3/">Multimedia Library</a>
+      <a class="dropdown-item" href="/projects/4/">MultipliCity Data Hub</a>
+      <a class="dropdown-item" href="/projects/5/">Stakeholders Initiative</a>
+      <a class="dropdown-item" href="/projects/6/">Cityloops</a>
+      <a class="dropdown-item" href="/projects/7/">Seminar Series</a>
+      <a class="dropdown-item" href="/projects/8/">ASCuS Conference</a>
+      <a class="dropdown-item" href="/projects/9/">Urban Metabolism &amp; Minorities</a>
+      <a class="dropdown-item" href="/projects/10/">Urban Metabolism Lab</a>
+      <a class="dropdown-item" href="/projects/11/">MOOC</a>
+      <a class="dropdown-item" href="/projects/12/">GUMDB</a>
+      <a class="dropdown-item" href="/projects/13/">STAFDB</a>
+      <a class="dropdown-item" href="/projects/14/">STAFCP</a>
+      <a class="dropdown-item" href="/projects/15/">OMAT</a>
+      <a class="dropdown-item" href="/projects/16/">PlatformU</a>
+      <a class="dropdown-item" href="/projects/17/">Metabolism of Islands</a>
+      <a class="dropdown-item" href="/projects/18/">UM Community Hub</a>
+    
+  </div>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link" href="/community/news/">News</a>
+</li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="about-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    About
+  </a>
+  <div class="dropdown-menu" aria-labelledby="about-dropdown">
+      <a class="dropdown-item" href="/about/our-story/">Our Story</a>
+      <a class="dropdown-item" href="/about/mission/">Mission &amp; values</a>
+      <a class="dropdown-item" href="/about/members/">Our Members</a>
+      <a class="dropdown-item" href="/about/partners/">Our Partners</a>
+      <a class="dropdown-item" href="/about/contact/">Contact Us</a>
+  </div>
+</li>
+
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="account-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Account
+  </a>
+  <div class="dropdown-menu" aria-labelledby="account-dropdown">
+    {% if request.user.is_authenticated %}
+      <a class="dropdown-item" href="{% url 'user_profile' %}">My profile</a>
+      <a class="dropdown-item" href="{% url 'logout' %}">Sign out</a>
+    {% else %}
+      <a class="dropdown-item" href="{% url 'register' %}">Register</a>
+      <a class="dropdown-item" href="{% url 'login' %}">Sign in</a>
+    {% endif %}
+  </div>
+</li>

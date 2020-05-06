@@ -15,6 +15,10 @@ from tinymce import HTMLField
 import re
 from django.utils.text import slugify
 
+from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 class Tag(models.Model):
     name = models.CharField(max_length=255)
     description = HTMLField(null=True, blank=True)
@@ -51,16 +55,28 @@ class OnSiteExcludeDeletedRecordManager(models.Manager):
 class Record(models.Model):
     name = models.CharField(max_length=255)
     content = HTMLField(null=True, blank=True)
-    is_deleted = models.BooleanField(default=False)
     image = StdImageField(upload_to="records", variations={"thumbnail": (480, 480), "large": (1280, 1024)}, blank=True, null=True)
-    tags = models.ManyToManyField(Tag)
-    old_id = models.IntegerField(null=True, blank=True, db_index=True, help_text="Only used for the migration between old and new structure")
+    tags = models.ManyToManyField(Tag, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
+
     spaces = models.ManyToManyField(ReferenceSpace, blank=True)
     sectors = models.ManyToManyField(Sector, blank=True)
-    parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
+
+    # We use soft deleted
+    is_deleted = models.BooleanField(default=False) 
+
+    # Only public records are shown; non-public records are used for instance to manage records 
+    # belonging to logged-in users only
+    is_public = models.BooleanField(default=True) 
+
+    # These relationships are managed through separate tables, but they allow for prefetching to make 
+    # the queries run much more efficiently
     child_of = models.ManyToManyField("self", through="RecordRelationship", through_fields=("record_child", "record_parent"), symmetrical=False, related_name="parent_of_child")
     parent_to = models.ManyToManyField("self", through="RecordRelationship", through_fields=("record_parent", "record_child"), symmetrical=False, related_name="child_of_parent")
+
+    # We are going to delete this post-launch
+    old_id = models.IntegerField(null=True, blank=True, db_index=True, help_text="Only used for the migration between old and new structure")
+
     def __str__(self):
         return self.name
 
@@ -231,6 +247,7 @@ class People(Record):
     )
     status = models.CharField(max_length=8, choices=PEOPLE_STATUS, default="active")
     site = models.ManyToManyField(Site)
+    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.SET_NULL, related_name="people")
     def __str__(self):
         return self.name
     def get_absolute_url(self):
@@ -244,7 +261,7 @@ class People(Record):
 class Webpage(Record):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     slug = models.CharField(db_index=True, max_length=100)
-    position = models.PositiveSmallIntegerField(db_index=True, null=True, blank=True)
+    belongs_to = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={"is_internal": True}, related_name="webpages")
 
     objects = models.Manager()
     on_site = CurrentSiteManager()
@@ -255,23 +272,37 @@ class Webpage(Record):
         constraints = [
             models.UniqueConstraint(fields=["site", "slug"], name="site_slug")
         ]
-        ordering = ["position", "name"]
+        ordering = ["name"]
 
 class WebpageDesign(models.Model):
-    webpage = models.OneToOneField(Record, on_delete=models.CASCADE, primary_key=True, related_name="design")
+    webpage = models.OneToOneField(Record, on_delete=models.CASCADE, primary_key=True)
+    HEADER = [
+        ("inherit", "No custom header - use the project header"),
+        ("full", "Full header with title and subtitle"),
+        ("small", "Small header; menu only"),
+        ("image", "Image underneath menu"),
+    ]
+    header = models.CharField(max_length=7, choices=HEADER, default="full")
+    header_title = models.CharField(max_length=100, null=True, blank=True)
+    header_subtitle = models.CharField(max_length=255, null=True, blank=True)
+    header_image = StdImageField(upload_to="header_image", variations={"thumbnail": (480, 480), "large": (1280, 1024), "huge": (2560, 1440)}, blank=True, null=True)
+    custom_css = models.TextField(null=True, blank=True)
+    def __str__(self):
+        return self.webpage.name
+
+class ProjectDesign(models.Model):
+    project = models.OneToOneField(Project, on_delete=models.CASCADE, primary_key=True, related_name="design")
     HEADER = [
         ("full", "Full header with title and subtitle"),
         ("small", "Small header; menu only"),
         ("image", "Image underneath menu"),
     ]
     header = models.CharField(max_length=6, choices=HEADER, default="full")
-    header_title = models.CharField(max_length=100, null=True, blank=True)
-    header_subtitle = models.CharField(max_length=255, null=True, blank=True)
-    header_image = StdImageField(upload_to="header_image", variations={"thumbnail": (480, 480), "large": (1280, 1024), "huge": (2560, 1440)}, blank=True, null=True)
-    logo = StdImageField(upload_to="logos", variations={"thumbnail": (480, 260), "large": (800, 600)}, blank=True, null=True)
+    logo = models.FileField(null=True, blank=True, upload_to="logos")
     custom_css = models.TextField(null=True, blank=True)
+    back_link = models.BooleanField(default=True)
     def __str__(self):
-        return self.article.name
+        return self.project.name
 
 class ForumMessage(Record):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -532,6 +563,7 @@ class WorkPiece(models.Model):
         ("data_review", "Review of Data"),
         ("design", "Design"),
         ("quality_control", "Quality Control"),
+        ("administrative", "Administrative"),
     ]
     type = models.CharField(max_length=40, choices=TYPE)
     related_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="workpieces_list")

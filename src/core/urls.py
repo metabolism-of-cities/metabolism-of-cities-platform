@@ -22,8 +22,8 @@ urlpatterns = [
     path("projects/create/", views.project_form, name="project_form"),
 
     # Urban metabolism
-    path("urbanmetabolism/", views.article_list, { "id": 1 }, name="um"),
-    path("urbanmetabolism/<slug:slug>/", views.article, { "prefix": "/urbanmetabolism/" }, name="um"),
+    path("urbanmetabolism/", views.article, { "slug": "/urbanmetabolism", "subtitle": "Learn more about urban metabolism", }, name="um"),
+    path("urbanmetabolism/<slug:slug>/", views.article, { "prefix": "/urbanmetabolism/", "subtitle": "Learn more about urban metabolism", }, name="um"),
 
     # About pages
     path("about/", views.article_list, { "id": 31 }, name="about"),
@@ -124,7 +124,7 @@ urlpatterns = [
     path("stafcp/geocode/create/", views.stafcp_geocode_form, name="stafcp_geocode_form"),
     path("stafcp/geocode/<int:id>/edit/", views.stafcp_geocode_form, name="stafcp_geocode_form"),
     path("stafcp/geocode/<int:id>/", views.stafcp_geocode, name="stafcp_geocode"),
-    path("stafcp/catalogs/about/", views.article, { "id": 57, "project": 55, }, name="stafcp_catalogs"),
+    path("stafcp/catalogs/about/", views.article, { "id": 57, "project": 54, }, name="stafcp_catalogs"),
     path("stafcp/referencespaces/", views.stafcp_referencespaces, name="stafcp_referencespaces"),
     path("stafcp/referencespaces/view/<int:id>/", views.stafcp_referencespace, name="stafcp_referencespace"),
     path("stafcp/referencespaces/<int:id>/", views.stafcp_referencespaces_list, name="stafcp_referencespaces_list"),
@@ -136,6 +136,14 @@ urlpatterns = [
     path("passwordreset/", views.user_reset, name="passwordreset"),
     path("logout/", views.user_logout, name="logout"),
     path("account/profile/", views.user_profile, name="user_profile"),
+
+    # AScUS
+    path("ascus/", views.ascus),
+    path("ascus/login/", views.user_login, {"project": 8}),
+    path("ascus/register/", views.ascus_register),
+    path("ascus/account/", views.ascus_account),
+    path("ascus/account/presentation/", views.ascus_account_presentation),
+    path("ascus/<slug:slug>/", views.article, { "prefix": "/ascus/", "subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020", }, name="um"),
 
     # MOOC
     path("mooc/<int:id>/<int:module>/overview/", views.mooc_module),

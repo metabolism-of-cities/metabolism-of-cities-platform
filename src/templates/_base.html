@@ -23,9 +23,9 @@
   {% block css %}{% endblock %}
   {% block head %}{% endblock %}
 
-  {% if header.custom_css %}
+  {% if custom_css %}
     <style type="text/css">
-      {{ header.custom_css|safe }}
+      {{ custom_css|safe }}
     </style>
   {% endif %}
 
@@ -37,8 +37,13 @@
   {% include "_top-layer.html" %}
 
   <div id="admin-controls" class="btn-group-vertical">
-    {% if design_link and request.user.is_authenticated and request.user.is_staff %}
-      <a class="btn btn-secondary" href="{{ design_link }}"><i class="fas fa-pencil fa-fw"></i> Design</a>
+
+    {% if request.user.is_authenticated and request.user.is_staff %}
+      <a class="btn btn-secondary" href="/admin/core/projectdesign/{{ project.id }}/change/"><i class="fas fa-pencil fa-fw"></i> Project design</a>
+    {% endif %}
+
+    {% if webpage_design_id and request.user.is_authenticated and request.user.is_staff %}
+      <a class="btn btn-secondary" href="/admin/core/webpagedesign/{{ webpage_design_id }}/change/"><i class="fas fa-pencil fa-fw"></i> Page design</a>
     {% endif %}
 
     {% if edit_link and request.user.is_authenticated and request.user.is_staff %}
@@ -71,7 +76,7 @@
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          {{ message }}
+          {{ message|safe }}
         </div>
       {% endfor %}
     {% endif %}

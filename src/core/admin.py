@@ -47,7 +47,7 @@ class WebpageAdmin(admin.ModelAdmin):
          if "short" in request.GET:
             self.fields = ["name", "content"]
          else:
-            self.fields = ["name", "content", "is_deleted", "image", "tags","site", "slug", "position", "parent", "old_id"]
+            self.fields = ["name", "content", "is_deleted", "image", "tags","site", "slug", "old_id"]
          return super().change_view(request, object_id)
 
 class WebpageDesignAdmin(admin.ModelAdmin):
@@ -63,7 +63,7 @@ class VideoAdmin(admin.ModelAdmin):
 
 class SearchCompleteAdmin(admin.ModelAdmin):
     search_fields = ["name"]
-    autocomplete_fields = ["spaces", "tags", "parent"]
+    autocomplete_fields = ["spaces", "tags"]
 
 class SearchAdmin(admin.ModelAdmin):
     search_fields = ["name"]
@@ -170,6 +170,7 @@ admin_site.register(Blog, SearchCompleteAdmin)
 admin_site.register(Organization, OrgAdmin)
 admin_site.register(Webpage, WebpageAdmin)
 admin_site.register(WebpageDesign, WebpageDesignAdmin)
+admin_site.register(ProjectDesign)
 admin_site.register(People, SearchCompleteAdmin)
 admin_site.register(Video, VideoAdmin)
 admin_site.register(Project, ProjectAdmin)

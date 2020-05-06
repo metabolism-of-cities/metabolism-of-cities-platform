@@ -1,0 +1,64 @@
+{% extends "_base.html" %}
+
+{% block title %}My Account{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+
+<div class="card-deck">
+
+  <div class="card">
+    <h5 class="card-header text-white bg-danger">Pending</h5>
+    <div class="card-body">
+      <h5 class="card-title">Introduction video</h5>
+      <p class="card-text">
+        Upload a 1-minute introduction video of yourself.
+        Deadline: <strong>May 21</strong>.
+      </p>
+      <a href="#" class="btn btn-outline-dark">Read more</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h5 class="card-header text-white bg-danger">Pending</h5>
+    <div class="card-body">
+      <h5 class="card-title">Your profile</h5>
+      <p class="card-text">
+        Complete your profile so that people know more about 
+        your research interests and background.
+      </p>
+      <a href="#" class="btn btn-outline-dark">Complete now</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h5 class="card-header text-white bg-danger">Pending</h5>
+    <div class="card-body">
+      <h5 class="card-title">Upload presentation</h5>
+      <p class="card-text">
+        As an author we ask you to upload a presentation of your work
+        by <strong>May 15</strong>
+      </p>
+      <p><a href="/ascus/account/presentation/" class="btn btn-outline-dark">Upload now</a></p>
+      <p><a href="#" class="btn btn-outline-dark">A co-author will upload our work</a></p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h5 class="card-header text-white bg-danger">Pending</h5>
+    <div class="card-body">
+      <h5 class="card-title">Discussion topic</h5>
+      <p class="card-text">
+        Please upload a final title and overview of your session 
+        by <strong>May 10</strong>
+      </p>
+      <p><a href="#" class="btn btn-outline-dark">Read more</a></p>
+      <p><a href="#" class="btn btn-outline-dark">A co-author will upload our work</a></p>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

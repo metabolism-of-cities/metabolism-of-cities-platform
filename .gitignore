@@ -9,7 +9,7 @@ src/mydjango/__pycache__/settings.cpython-35.pyc
 src/media/*
 src/logs/*
 src/multiplicity/static/moc/css-preprocessors/*
-src/moc/settings.py
+src/ie/settings.py
 config/*production*
 .idea/*
 src/data/*

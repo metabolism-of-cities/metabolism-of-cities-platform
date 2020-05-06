@@ -1,0 +1,14 @@
+{% extends "_base.html" %}
+
+{% block title %}My Account{% endblock %}
+
+{% block content %}
+
+  {{ info.content|safe }}
+
+  <a class="btn btn-inverse mt-2 mr-3" href="/ascus/account/presentation/?type=video">Upload video</a>
+  <a class="btn btn-inverse mt-2 mr-3" href="/ascus/account/presentation/?type=poster">Upload poster</a>
+  <a class="btn btn-inverse mt-2 mr-3" href="/ascus/account/presentation/?type=paper">Upload paper</a>
+  <a class="btn btn-inverse mt-2 mr-3" href="/ascus/account/presentation/?type=other">Upload other document</a>
+
+{% endblock %}

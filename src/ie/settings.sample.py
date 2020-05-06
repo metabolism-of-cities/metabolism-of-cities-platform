@@ -145,7 +145,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/src/static/'
-SASS_PROCESSOR_ROOT = '/static/sass/'
+SASS_PROCESSOR_ROOT = STATIC_ROOT
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
