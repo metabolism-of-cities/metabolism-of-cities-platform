@@ -232,6 +232,8 @@ def user_profile(request):
 # Homepage
 
 def index(request):
+    if not settings.DEBUG:
+        return redirect("/ascus/")
     context = {
         "header_title": "Metabolism of Cities",
         "header_subtitle": "Your hub for anyting around urban metabolism",
