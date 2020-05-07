@@ -251,6 +251,7 @@ def index(request):
     context = {
         "header_title": "Metabolism of Cities",
         "header_subtitle": "Your hub for anyting around urban metabolism",
+        "show_project_design": True,
     }
     return render(request, "index.html", load_design(context))
 
@@ -328,6 +329,7 @@ def article_list(request, id):
 
 def datahub(request):
     context = {
+        "show_project_design": True,
     }
     return render(request, "data/index.html", load_design(context, PAGE_ID["multiplicity"]))
 
@@ -398,12 +400,8 @@ def datahub_dataset(request, space, dataset):
 
 def metabolism_manager(request):
     info = get_object_or_404(Project, pk=PAGE_ID["platformu"])
-    if hasattr(info, "design"):
-        design_link = "/admin/core/articledesign/" + str(info.id) + "/change/"
-    else:
-        design_link = "/admin/core/articledesign/add/?article=" + str(info.id)
     context = {
-        "design_link": design_link,
+        "show_project_design": True,
     }
     return render(request, "metabolism_manager/index.html", load_design(context, PAGE_ID["platformu"]))
 
@@ -603,7 +601,7 @@ def metabolism_manager_forum(request):
 
 def stafcp(request):
     context = {
-        "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
+        "show_project_design": True,
     }
     return render(request, "stafcp/index.html", load_design(context, PAGE_ID["stafcp"]))
 
@@ -838,6 +836,7 @@ def stafcp_article(request, id):
 
 def library(request):
     context = {
+        "show_project_design": True,
     }
     return render(request, "library/browse.html", load_design(context, PAGE_ID["library"]))
 
@@ -1067,7 +1066,8 @@ def multimedia(request):
     podcasts = LibraryItem.objects.filter(type__name="Podcast").order_by("-date_created")[:5]
     dataviz = LibraryItem.objects.filter(type__name="Image").order_by("-date_created")[:5]
     context = {
-        "design_link": "/admin/core/articledesign/" + str(webpage.id) + "/change/",
+        "edit_link": "/admin/core/project/" + str(webpage.id) + "/change/",
+        "show_project_design": True,
         "webpage": webpage,
         "videos": videos,
         "podcasts": podcasts,
@@ -1142,6 +1142,7 @@ def check_ascus_access(function):
 
 def ascus(request):
     context = {
+        "show_project_design": True,
         "header_title": "AScUS Unconference",
         "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
         "edit_link": "/admin/core/project/" + str(PAGE_ID["ascus"]) + "/change/",

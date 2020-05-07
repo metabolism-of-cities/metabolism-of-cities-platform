@@ -47,6 +47,7 @@ class WebpageAdmin(admin.ModelAdmin):
          return super().change_view(request, object_id)
 
 class WebpageDesignAdmin(admin.ModelAdmin):
+    autocomplete_fields = ["webpage"]
     class Media:
         css = {
             "all": ("css/styles.css",)
