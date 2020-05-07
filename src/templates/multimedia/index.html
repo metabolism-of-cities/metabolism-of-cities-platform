@@ -3,30 +3,69 @@
 {% block title %}{{ webpage }}{% endblock %}
 
 {% block content %}
-  <h1>{{ webpage }}</h1>   
+  <h1>{{ webpage }}</h1>
+
   {{ webpage.content|safe }}
 
   <h2>Latest additions</h2>
 
-  <h3>Videos</h3>
-  <ul>
-    {% for each in videos %}
-      <li><a href="{{ each.get_absolute_url }}">{{ each }}</a></li>
-    {% endfor %}
-  </ul>
-
-  <h3>Podcasts</h3>
-  <ul>
-    {% for each in podcasts %}
-      <li><a href="{{ each.get_absolute_url }}">{{ each }}</a></li>
-    {% endfor %}
-  </ul>
-
-  <h3>Data visualisations</h3>
-  <ul>
-    {% for each in dataviz %}
-      <li><a href="{{ each.get_absolute_url }}">{{ each }}</a></li>
-    {% endfor %}
-  </ul>
-
+  <div class="row">
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fas fa-fw fa-video mr-2"></i>
+          Videos
+        </div>
+        <ul class="list-group list-group-flush">
+          {% for each in videos %}
+            <a href="{{ each.get_absolute_url }}" class="list-group-item">
+              {{ each }}
+            </a>
+          {% endfor %}
+        </ul>
+      </div>
+      <a class="btn btn-primary mb-4" href="{% url 'video_list' %}">
+        <i class="fas fa-fw fa-list"></i>
+        All videos
+      </a>
+    </div>
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fas fa-fw fa-podcast mr-2"></i>
+          Podcasts
+        </div>
+        <ul class="list-group list-group-flush">
+          {% for each in podcasts %}
+            <a href="{{ each.get_absolute_url }}" class="list-group-item">
+              {{ each }}
+            </a>
+          {% endfor %}
+        </ul>
+      </div>
+      <a class="btn btn-primary mb-4" href="{% url 'podcast_list' %}">
+        <i class="fas fa-fw fa-list"></i>
+        All podcasts
+      </a>
+    </div>
+    <div class="col-md-6 col-lg-4">
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fas fa-fw fa-chart-area mr-2"></i>
+          Data visualisations
+        </div>
+        <ul class="list-group list-group-flush">
+          {% for each in dataviz %}
+            <a href="{{ each.get_absolute_url }}" class="list-group-item">
+              {{ each }}
+            </a>
+          {% endfor %}
+        </ul>
+      </div>
+      <a class="btn btn-primary" href="{% url 'dataviz_list' %}">
+        <i class="fas fa-fw fa-list"></i>
+        All data visualisations
+      </a>
+    </div>
+  </div>
 {% endblock %}

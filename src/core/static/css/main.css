@@ -1187,10 +1187,15 @@ body.metabolism.manager.material .form-add-photo {
   body.metabolism.manager.material .form-add-photo input[name="photo-title"] {
     border-radius: 0;
     width: 400px;
-    max-width: 30hw; }
+    max-width: 30vw; }
   body.metabolism.manager.material .form-add-photo button[type="submit"] {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0; }
+
+body.dataviz img.dataviz {
+  border-radius: .25rem;
+  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
+  max-width: 100%; }
 
 body.our-story .timeline {
   position: relative;
