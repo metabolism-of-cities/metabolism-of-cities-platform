@@ -1216,7 +1216,7 @@ def ascus_account_edit(request):
 @check_ascus_access
 def ascus_account_discussion(request):
     info = get_object_or_404(Webpage, slug="/ascus/account/discussion/")
-    my_discussions = Event.objects \
+    my_discussions = Event.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
         .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
         .filter(tags__id=770)
@@ -1272,7 +1272,7 @@ def ascus_account_presentation(request, introvideo=False):
     form = None
     if introvideo:
         info = get_object_or_404(Webpage, slug="/ascus/account/introvideo/")
-        my_documents = LibraryItem.objects \
+        my_documents = LibraryItem.objects_include_private \
             .filter(child_list__record_parent=request.user.people) \
             .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
             .filter(tags__id=769)
@@ -1284,7 +1284,7 @@ def ascus_account_presentation(request, introvideo=False):
         html_page = "ascus/account.introvideo.html"
     else:
         info = get_object_or_404(Webpage, slug="/ascus/account/presentation/")
-        my_documents = LibraryItem.objects \
+        my_documents = LibraryItem.objects_include_private \
             .filter(child_list__record_parent=request.user.people) \
             .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
             .filter(tags__id=771)
