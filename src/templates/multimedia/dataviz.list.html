@@ -13,11 +13,6 @@
                 <img alt="{{ each }}" class="img-lg mar-btm" src="{{ each.image.thumbnail.url }}">
               </a>
               <p class="text-lg text-semibold mar-no text-main">{{ each.title }}</p>
-              {% if each.spaces %}
-                {% for space in each.spaces.all %}
-                  <p class="text-muted">Space: {{ space }}</p>
-                {% endfor %}
-              {% endif %}
               <div class="mar-top">
                 <a href="{% url "dataviz" each.id %}" class="btn btn-mint">View</a>
               </div>

@@ -91,6 +91,16 @@ def get_space(request, slug):
     check = get_object_or_404(ActivatedSpace, slug=slug, site=request.site)
     return check.space
 
+# Get all the child relationships, but making sure we only show is_deleted=False and is_public=True
+def get_children(record):
+    list = RecordRelationship.objects.filter(record_parent=record).filter(record_child__is_deleted=False, record_child__is_public=True)
+    return list
+
+# Get all the parent relationships, but making sure we only show is_deleted=False and is_public=True
+def get_parents(record):
+    list = RecordRelationship.objects.filter(record_child=record).filter(record_parent__is_deleted=False, record_parent__is_public=True)
+    return list
+
 # We use getHeader to obtain the header settings (type of header, title, subtitle, image)
 # This dictionary has to be created for many different pages so by simply calling this
 # function instead we don't repeat ourselves too often.
@@ -1090,14 +1100,18 @@ def podcast(request, id):
 
 def dataviz_list(request):
     context = {
-        "info": get_object_or_404(Webpage, pk=63),
+        "info": get_object_or_404(Webpage, pk=67),
         "list": LibraryItem.objects.filter(type__name="Image"),
     }
     return render(request, "multimedia/dataviz.list.html", load_design(context, PAGE_ID["multimedia_library"]))
 
 def dataviz(request, id):
+    info = get_object_or_404(LibraryItem, pk=id)
+    parents = get_parents(info)
     context = {
-        "info": get_object_or_404(LibraryItem, pk=id),
+        "info": info,
+        "parents": parents,
+        "show_relationship": info.id,
     }
     return render(request, "multimedia/dataviz.html", load_design(context, PAGE_ID["multimedia_library"]))
 

@@ -23,7 +23,7 @@ admin_site = MyAdminSite()
 
 class WebpageAdmin(admin.ModelAdmin):
     list_display = ["name", "site", "is_deleted"]
-    search_fields = ["name", "site"]
+    search_fields = ["name"]
 
     def response_change(self, request, obj):
         if "_addanother" not in request.POST and "_continue" not in request.POST:
@@ -178,6 +178,7 @@ admin_site.register(LibraryItemType, SearchAdmin)
 admin_site.register(ActivatedSpace, SpaceAdmin)
 
 admin_site.register(License)
+admin_site.register(Site)
 admin_site.register(Photo, PhotoAdmin)
 
 #admin_site.register(MOOC)
