@@ -127,18 +127,6 @@ urlpatterns = [
     path("logout/", views.user_logout, name="logout"),
     path("account/profile/", views.user_profile, name="user_profile"),
 
-    # AScUS
-    path("ascus/", views.ascus),
-    path("ascus/login/", views.user_login, {"project": 8}),
-    path("ascus/register/", views.ascus_register),
-    path("ascus/logout/", views.user_logout, {"project": 8}),
-    path("ascus/account/", views.ascus_account),
-    path("ascus/account/presentation/", views.ascus_account_presentation),
-    path("ascus/account/introvideo/", views.ascus_account_presentation, {"introvideo": True}),
-    path("ascus/account/edit/", views.ascus_account_edit),
-    path("ascus/account/discussion/", views.ascus_account_discussion),
-    path("ascus/<slug:slug>/", views.article, { "prefix": "/ascus/", "subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020", }, name="um"),
-
     # MOOC
     path("mooc/<int:id>/<int:module>/overview/", views.mooc_module),
     path("mooc/<int:id>/overview/", views.mooc),

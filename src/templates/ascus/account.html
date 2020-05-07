@@ -18,7 +18,7 @@
         Upload a 1-minute introduction video of yourself.
         Deadline: <strong>May 21</strong>.
       </p>
-      <a href="/ascus/account/introvideo/" class="btn btn-outline-dark">Read more</a>
+      <a href="/account/introvideo/" class="btn btn-outline-dark">Read more</a>
     </div>
   </div>
 
@@ -35,9 +35,9 @@
         your research interests and background.
       </p>
       {% if request.user.people.image %}
-        <a href="/ascus/account/edit/" class="btn btn-outline-dark">Edit profile</a>
+        <a href="/account/edit/" class="btn btn-outline-dark">Edit profile</a>
       {% else %}
-        <a href="/ascus/account/edit/" class="btn btn-outline-dark">Complete now</a>
+        <a href="/account/edit/" class="btn btn-outline-dark">Complete now</a>
       {% endif %}
     </div>
   </div>
@@ -56,7 +56,7 @@
           by <strong>May 15</strong>
         </p>
         <p>
-          <a href="/ascus/account/presentation/" class="btn btn-outline-dark">{% if my_presentations %}Manage{% else %}Upload now{% endif %}</a>
+          <a href="/account/presentation/" class="btn btn-outline-dark">{% if my_presentations %}Manage{% else %}Upload now{% endif %}</a>
         </p>
         {% if False %}
           <p><a href="/" class="btn btn-outline-dark">A co-author will upload our work</a></p>
@@ -78,7 +78,7 @@
           Please upload a final title and overview of your session 
           by <strong>May 10</strong>
         </p>
-        <p><a href="/ascus/account/discussion/" class="btn btn-outline-dark">Read more</a></p>
+        <p><a href="/account/discussion/" class="btn btn-outline-dark">Read more</a></p>
         {% if False %}
           <p><a href="#" class="btn btn-outline-dark">A co-author will upload our work</a></p>
         {% endif %}
@@ -98,6 +98,6 @@
   </p>
 </div>
 
-<p><a href="/ascus/logout/" class="btn btn-light"><i class="fa fa-sign-out-alt fw"></i> Click here to log out</a></p>
+<p><a href="/logout/" class="btn btn-light"><i class="fa fa-sign-out-alt fw"></i> Click here to log out</a></p>
 
 {% endblock %}

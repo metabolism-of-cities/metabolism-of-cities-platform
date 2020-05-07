@@ -1,10 +1,10 @@
-<li class="nav-item"><a class="nav-link" href="/ascus/">Home</a></li>
-<li class="nav-item"><a class="nav-link" href="/ascus/program/">Program</a></li>
-<li class="nav-item"><a class="nav-link" href="/ascus/technology/">Technology</a></li>
-<li class="nav-item"><a class="nav-link" href="/ascus/rates/">Rates</a></li>
+<li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+<li class="nav-item"><a class="nav-link" href="/program/">Program</a></li>
+<li class="nav-item"><a class="nav-link" href="/technology/">Technology</a></li>
+<li class="nav-item"><a class="nav-link" href="/rates/">Rates</a></li>
 {% if request.user.is_authenticated %}
-  <li class="nav-item"><a class="nav-link" href="/ascus/account/">My account</a></li>
+  <li class="nav-item"><a class="nav-link" href="/account/">My account</a></li>
 {% else %}
-  <li class="nav-item"><a class="nav-link" href="/ascus/register/">Register now</a></li>
-  <li class="nav-item"><a class="nav-link" href="/ascus/login/">Login</a></li>
+  <li class="nav-item"><a class="nav-link" href="/register/">Register now</a></li>
+  <li class="nav-item"><a class="nav-link" href="/login/">Login</a></li>
 {% endif %}

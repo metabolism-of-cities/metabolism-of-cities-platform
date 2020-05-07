@@ -248,8 +248,6 @@ def user_profile(request):
 # Homepage
 
 def index(request):
-    if not settings.DEBUG:
-        return redirect("/ascus/")
     context = {
         "header_title": "Metabolism of Cities",
         "header_subtitle": "Your hub for anyting around urban metabolism",
@@ -1152,7 +1150,7 @@ def check_ascus_access(function):
         global PAGE_ID
         check_participant = None
         if not request.user.is_authenticated:
-            return redirect("/ascus/login/")
+            return redirect("/login/")
         if request.user.is_authenticated and hasattr(request.user, "people"):
             check_participant = RecordRelationship.objects.get(
                 record_parent = request.user.people,
@@ -1160,7 +1158,7 @@ def check_ascus_access(function):
                 relationship__name = "Participant",
             )
         if not check_participant:
-            return redirect("/ascus/register/?existing=true")
+            return redirect("/register/?existing=true")
         else:
             return function(request, *args, **kwargs)
     return wrap
@@ -1227,7 +1225,7 @@ def ascus_account_edit(request):
             messages.success(request, "Your profile information was saved.")
             if not info.image:
                 messages.warning(request, "Please do not forget to upload a profile photo!")
-            return redirect("/ascus/account/")
+            return redirect("/account/")
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
     context = {
@@ -1280,7 +1278,7 @@ def ascus_account_discussion(request):
                 related_to=info,
                 type = "quality_control",
             )
-            return redirect("/ascus/account/")
+            return redirect("/account/")
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
     context = {
@@ -1382,7 +1380,7 @@ def ascus_account_presentation(request, introvideo=False):
                 related_to=info,
                 type = "quality_control",
             )
-            return redirect("/ascus/account/")
+            return redirect("/account/")
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
     context = {
@@ -1411,7 +1409,7 @@ def ascus_register(request):
                 relationship__name = "Participant",
             )
             if check_participant:
-                return redirect("/ascus/account/")
+                return redirect("/account/")
     if request.method == "POST":
         error = None
         if not user:
@@ -1423,7 +1421,7 @@ def ascus_register(request):
                 error = True
             check = User.objects.filter(email=email)
             if check:
-                messages.error(request, "A Metabolism of Cities account already exists with this e-mail address. Please <a href='/ascus/login/'>log in first</a> and then register for the AScUS unconference.")
+                messages.error(request, "A Metabolism of Cities account already exists with this e-mail address. Please <a href='/login/'>log in first</a> and then register for the AScUS unconference.")
                 error = True
         if not error:
             if not user:
@@ -1484,7 +1482,7 @@ def ascus_register(request):
                 tag = Tag.objects.get(pk=each, parent_tag__id=757)
                 people.tags.add(tag)
 
-            return redirect("/ascus/payment/")
+            return redirect("/payment/")
 
     context = {
         "header_title": "Register now",
