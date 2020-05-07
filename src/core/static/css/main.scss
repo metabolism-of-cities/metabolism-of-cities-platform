@@ -40,6 +40,10 @@ body {
 section {
   padding: 2rem 0;
 
+  &.extra {
+    padding: 4rem 0;
+  }
+
   &:first-of-type {
     padding-top: 0;
   }
@@ -47,7 +51,6 @@ section {
   &:last-of-type {
     padding-bottom: 0;
   }
-
 }
 
 pre {
@@ -199,16 +202,15 @@ nav {
       padding: 15px;
 
       @media (min-width: 992px) {
-        max-width: 540px;
         left: 0;
         right: 0;
         margin-top: -0.875rem;
         margin-left: auto;
         margin-right: auto;
-        max-width: 960px;
+        max-width: 930px;
       }
       @media (min-width: 1200px) {
-        max-width: 1140px;
+        max-width: 1110px;
       }
 
       a {
@@ -728,11 +730,14 @@ blockquote {
   background-color: #fff;
   border-radius: .25rem;
   color: $black;
+  cursor: pointer;
   display: block;
   border: none;
   height: calc(100% - 1rem);
   margin-bottom: 1rem;
   padding: 1rem;
+  text-align: left;
+  width: 100%;
 
   &:hover {
     color: $black;
@@ -1104,6 +1109,62 @@ table thead th {
 }
 
 // PAGES
+// HOMEPAGE
+body.homepage {
+  .jumbotron {
+    padding-bottom: 17rem;
+  }
+
+  .projects {
+    &.featured-projects{
+      margin-top: -13rem;
+    }
+
+    .btn-card {
+      padding: .5rem;
+
+      img  {
+        height: 400px;
+        max-height: 80vh;
+      }
+
+      .card-title {
+        margin-bottom: 0;
+        position: absolute;
+        bottom: 0;
+        padding: 1rem 0;
+        color: $very-light;
+        background-color: rgba($black, .85);
+        width: 100%;
+        margin-left: -.5rem;
+        text-align: center;
+        font-weight: bold;
+        border-bottom-left-radius: .25rem;
+        border-bottom-right-radius: .25rem;
+      }
+    }
+  }
+
+  section.what {
+    .card {
+      height: 100%;
+    }
+
+    .icon {
+      font-size: 4rem;
+      text-align: center;
+      padding: 1rem 0;
+      background-color: rgba($primary, .25);
+      border-top-left-radius: .25rem;
+      border-top-right-radius: .25rem;
+    }
+
+    .card-header {
+      text-align: center;
+    }
+  }
+}
+
 // PROJECT PAGES
 body.projects, body.single-project {
   .card .card-img-top {
@@ -2024,5 +2085,11 @@ body.library.map {
     display: flex;
     justify-content: center;
     flex-direction: column;
+  }
+}
+
+body.library.item {
+  .item-title {
+    font-size: 2rem;
   }
 }

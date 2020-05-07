@@ -2,22 +2,157 @@
 {% load static %}
 {% load sass_tags %}
 
-{% block page_name %}{% endblock %}
+{% block page_name %}homepage{% endblock %}
 
 {% block title %}Homepage{% endblock %}
-
-{% block css %}
-{% endblock %}
 
 {% block subtitle %}Hello{% endblock %}
 
 {% block content %}
-  <h1>Homepage</h1>
-  <p>Welcome!</p>
-  <h2>Quick links</h2>
-  <ul>
-    <li><a href="/admin">Admin</a></li>
-    <li><a href="/templates">Templates</a></li>
-  </ul>
 
+<section class="extra">
+  <div class="row featured-projects projects">
+    <div class="col-lg-6 mb-4">
+      <a class="card btn-card" href="/projects/2/">
+        <img src="https://i.imgur.com/gLambfD.png" class="card-img-top" alt="...">
+        <h5 class="card-title">UM Library</h5>
+      </a>
+    </div>
+    <div class="col-lg-6 mb-4">
+      <a class="card btn-card" href="/projects/4/">
+        <img src="https://i.imgur.com/s7ePoYd.png" class="card-img-top" alt="...">
+        <h5 class="card-title">MultipliCity Data Hub</h5>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="what">
+  <h3>What we do</h3>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card">
+        <div class="icon">
+          <i class="far fa-fw fa-file-chart-line"></i>
+        </div>
+        <div class="card-header">Creating knowledge</div>
+        <div class="card-body">
+          <p class="what-text">
+            We aim to create new knowledge by participating and collaborating in research projects and developing new open source tools.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="icon">
+          <i class="far fa-fw fa-share-alt"></i>
+        </div>
+        <div class="card-header">Sharing knowledge</div>
+        <div class="card-body">
+          <p class="what-text">
+            We aim to gather and curate (all) knowledge around urban metabolism in one central platform in order to make it accessible to different target audiences.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="icon">
+          <i class="far fa-fw fa-wrench"></i>
+        </div>
+        <div class="card-header">Applying knowledge</div>
+        <div class="card-body">
+          <p class="what-text">
+            We help policy makers and practitioners to tackle their challenges with Urban Metabolism thinking.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="icon">
+          <i class="far fa-fw fa-user-friends"></i>
+        </div>
+        <div class="card-header">Fostering a community</div>
+        <div class="card-body">
+          <p class="what-text">
+            We believe that tackling the urban sustainability challenge can not be done alone. We want to foster a community of stakeholders that collaborates on developing solutions.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="extra">
+  <h3>Our projects</h3>
+  <div class="row projects">
+    <div class="col-lg-6 mb-4">
+      <a class="card btn-card" href="/projects/2/">
+        <img src="https://i.imgur.com/tRwcUEV.png" class="card-img-top" alt="...">
+        <h5 class="card-title">Mulimedia Library</h5>
+      </a>
+    </div>
+    <div class="col-lg-6 mb-4">
+      <a class="card btn-card" href="/projects/4/">
+        <img src="https://i.imgur.com/6rYGArv.png" class="card-img-top" alt="...">
+        <h5 class="card-title">AScUS Unconference</h5>
+      </a>
+    </div>
+  </div>
+
+  <a class="btn btn-primary btn-lg" href="">
+    <i class="fas fa-project-diagram"></i> All projects
+  </a>
+</section>
+
+<section class="extra">
+  <h3>Latest news</h3>
+  <div class="row">
+    <div class="col-lg-4 mb-sm-4 mb-lg-0">
+      <a class="card btn-card" href="">
+        <img src="https://i.imgur.com/qAvCcSH.jpg" class="card-img-top" alt="">
+        <div class="card-body">
+          <h5 class="card-title">
+            Praesentium in est id dolorem cumque
+          </h5>
+          <p class="card-text">
+            Esse cumque quo ratione ea eveniet sed. Non qui odit est nam tempora minus. Culpa ut illum eaque ut.
+          </p>
+        </div>
+      </a>
+    </div>
+    <div class="col-lg-4 mb-sm-4 mb-lg-0">
+      <a class="card btn-card" href="">
+        <img src="https://i.imgur.com/812pGkD.jpg" class="card-img-top" alt="">
+        <div class="card-body">
+          <h5 class="card-title">
+            Praesentium in est id dolorem cumque
+          </h5>
+          <p class="card-text">
+            Esse cumque quo ratione ea eveniet sed. Non qui odit est nam tempora minus. Culpa ut illum eaque ut.
+          </p>
+        </div>
+      </a>
+    </div>
+    <div class="col-lg-4 mb-sm-4 mb-lg-0">
+      <a class="card btn-card" href="">
+        <img src="https://i.imgur.com/PrFev5H.jpg" class="card-img-top" alt="">
+        <div class="card-body">
+          <h5 class="card-title">
+            Praesentium in est id dolorem cumque
+          </h5>
+          <p class="card-text">
+            Esse cumque quo ratione ea eveniet sed. Non qui odit est nam tempora minus. Culpa ut illum eaque ut.
+          </p>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <a class="btn btn-primary btn-lg mt-3" href="">
+    <i class="fas fa-newspaper"></i> All news
+  </a>
+</section>
 {% endblock %}

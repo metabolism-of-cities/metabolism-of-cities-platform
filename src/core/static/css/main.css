@@ -16,6 +16,8 @@ body {
 
 section {
   padding: 2rem 0; }
+  section.extra {
+    padding: 4rem 0; }
   section:first-of-type {
     padding-top: 0; }
   section:last-of-type {
@@ -123,16 +125,15 @@ nav .dropdown.projects-dropdown {
     padding: 15px; }
     @media (min-width: 992px) {
       nav .dropdown.projects-dropdown .projects-dropdown-menu {
-        max-width: 540px;
         left: 0;
         right: 0;
         margin-top: -0.875rem;
         margin-left: auto;
         margin-right: auto;
-        max-width: 960px; } }
+        max-width: 930px; } }
     @media (min-width: 1200px) {
       nav .dropdown.projects-dropdown .projects-dropdown-menu {
-        max-width: 1140px; } }
+        max-width: 1110px; } }
     nav .dropdown.projects-dropdown .projects-dropdown-menu a {
       display: block; }
 
@@ -469,11 +470,14 @@ blockquote {
   background-color: #fff;
   border-radius: .25rem;
   color: #000;
+  cursor: pointer;
   display: block;
   border: none;
   height: calc(100% - 1rem);
   margin-bottom: 1rem;
-  padding: 1rem; }
+  padding: 1rem;
+  text-align: left;
+  width: 100%; }
   .btn-icon:hover {
     color: #000; }
   .btn-icon .title {
@@ -722,6 +726,45 @@ table thead th {
 .return-bar {
   background-color: #efefef;
   padding: 4px 0; }
+
+body.homepage .jumbotron {
+  padding-bottom: 17rem; }
+
+body.homepage .projects.featured-projects {
+  margin-top: -13rem; }
+
+body.homepage .projects .btn-card {
+  padding: .5rem; }
+  body.homepage .projects .btn-card img {
+    height: 400px;
+    max-height: 80vh; }
+  body.homepage .projects .btn-card .card-title {
+    margin-bottom: 0;
+    position: absolute;
+    bottom: 0;
+    padding: 1rem 0;
+    color: #fbfbfb;
+    background-color: rgba(0, 0, 0, 0.85);
+    width: 100%;
+    margin-left: -.5rem;
+    text-align: center;
+    font-weight: bold;
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem; }
+
+body.homepage section.what .card {
+  height: 100%; }
+
+body.homepage section.what .icon {
+  font-size: 4rem;
+  text-align: center;
+  padding: 1rem 0;
+  background-color: rgba(20, 77, 88, 0.25);
+  border-top-left-radius: .25rem;
+  border-top-right-radius: .25rem; }
+
+body.homepage section.what .card-header {
+  text-align: center; }
 
 body.projects .card .card-img-top, body.single-project .card .card-img-top {
   padding: 1.25rem; }
@@ -1330,3 +1373,6 @@ body.library.map .cluster-circle {
   display: flex;
   justify-content: center;
   flex-direction: column; }
+
+body.library.item .item-title {
+  font-size: 2rem; }
