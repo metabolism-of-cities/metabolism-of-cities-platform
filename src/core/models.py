@@ -44,13 +44,16 @@ class Tag(models.Model):
     class Meta:
         ordering = ["name"]
 
-class ExcludeDeletedRecordManager(models.Manager):
+# By default we really only want to see those records that are both public and not deleted
+class PublicActiveRecordManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().exclude(is_deleted=True)
+        return super().get_queryset().filter(is_deleted=False, is_public=True)
 
-class OnSiteExcludeDeletedRecordManager(models.Manager):
+# This returns those records that are private (a check around ownership needs to take place in the codebase)
+# and that are not deleted
+class PrivateRecordManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(site__id=settings.SITE_ID).exclude(is_deleted=True)
+        return super().get_queryset().filter(is_deleted=False)
 
 class Record(models.Model):
     name = models.CharField(max_length=255)
@@ -83,14 +86,21 @@ class Record(models.Model):
     def get_methodologies(self):
         self.tags.filter(parent_tag__id=318)
 
-    objects_including_deleted = models.Manager()
-    objects = ExcludeDeletedRecordManager()
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
 
 class Document(Record):
     file = models.FileField(null=True, blank=True, upload_to="files")
+
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
+
     def getFileName(self):
       filename = str(self.file).split("/")[1]
       return filename
+
 
 class Project(Record):
     full_name = models.CharField(max_length=255, null=True, blank=True)
@@ -98,7 +108,6 @@ class Project(Record):
     url = models.URLField(max_length=255, null=True, blank=True)
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     objects = models.Manager()
-    on_site = CurrentSiteManager()
     target_finish_date = models.CharField(max_length=255, null=True, blank=True)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
@@ -112,6 +121,10 @@ class Project(Record):
     status = models.CharField(max_length=20, choices=STATUS, default="ongoing")
     def get_absolute_url(self):
         return reverse("project", args=[self.id])
+
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
 
 class News(Record):
     date = models.DateField()
@@ -128,6 +141,10 @@ class News(Record):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
+
 class Blog(Record):
     date = models.DateField()
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
@@ -141,6 +158,10 @@ class Blog(Record):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
 
 class Organization(Record):
     url = models.CharField(max_length=255, null=True, blank=True)
@@ -173,6 +194,10 @@ class Organization(Record):
         # To get all the publications we'll get the LibraryItems that are a child
         # record that are linked to this organization (e.g. journal or publishing house) as a parent
         return LibraryItem.objects.select_related("type").filter(child_list__record_parent=self, child_list__relationship__id=2)
+
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
 
 # This defines the relationships that may exist between users and records, or between records
 # For instance authors, admins, employee, funder
@@ -214,9 +239,6 @@ class Event(Record):
     end_date = models.DateTimeField(null=True, blank=True)
     slug = models.SlugField(max_length=255)
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
-    objects_including_deleted = models.Manager()
-    objects = ExcludeDeletedRecordManager()
-    on_site = OnSiteExcludeDeletedRecordManager()
     class Meta:
         ordering = ["-start_date", "-id"]
     def get_absolute_url(self):
@@ -224,6 +246,10 @@ class Event(Record):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
 
 class People(Record):
     firstname = models.CharField(max_length=255, null=True, blank=True)
@@ -255,16 +281,19 @@ class People(Record):
     class Meta:
         verbose_name_plural = "people"
         ordering = ["name"]
-    objects = models.Manager()
-    on_site = CurrentSiteManager()
+
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
 
 class Webpage(Record):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     slug = models.CharField(db_index=True, max_length=100)
     belongs_to = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={"is_internal": True}, related_name="webpages")
 
-    objects = models.Manager()
-    on_site = CurrentSiteManager()
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
 
     def get_absolute_url(self):
         return self.slug
@@ -322,6 +351,10 @@ class ForumMessage(Record):
 
     def get_absolute_url(self):
         return reverse("forum_topic", args=[self.id])
+
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
 
 class LibraryItemType(models.Model):
     name = models.CharField(max_length=255)
@@ -395,6 +428,10 @@ class LibraryItem(Record):
         list = Organization.objects.filter(parent_list__record_child=self, parent_list__relationship__id=3)
         return list[0] if list else None
 
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
+
 class Video(LibraryItem):
     embed_code = models.CharField(max_length=20, null=True, blank=True)
     date = models.DateField(blank=True, null=True)
@@ -410,6 +447,10 @@ class Video(LibraryItem):
             return f'<iframe class="video-embed youtube-video" src="https://www.youtube.com/embed/{self.embed_code}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
         elif self.video_site == "vimeo":
             return f'<iframe class="video-embed vimeo-video" title="vimeo-player" src="https://player.vimeo.com/video/{self.embed_code}" frameborder="0" allowfullscreen></iframe>'
+
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
 
 class ActivatedSpace(models.Model):
     space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE)

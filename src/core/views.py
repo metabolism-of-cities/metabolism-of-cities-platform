@@ -223,10 +223,14 @@ def user_login(request, project=None):
     context = {}
     return render(request, "auth/login.html", load_design(context, project))
 
-def user_logout(request):
+def user_logout(request, project=None):
     logout(request)
     messages.warning(request, "You are now logged out")
-    return redirect("login")
+    if project:
+        info = Project.objects.get(pk=project)
+        return redirect(info.url)
+    else:
+        return redirect("login")
 
 def user_reset(request):
     return render(request, "auth/reset.html")
@@ -1147,15 +1151,15 @@ def ascus(request):
 
 @check_ascus_access
 def ascus_account(request):
-    my_discussions = Event.objects \
+    my_discussions = Event.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
         .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
         .filter(tags__id=770)
-    my_presentations = LibraryItem.objects \
+    my_presentations = LibraryItem.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
         .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
         .filter(tags__id=771)
-    my_intro = LibraryItem.objects \
+    my_intro = LibraryItem.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
         .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
         .filter(tags__id=769)
