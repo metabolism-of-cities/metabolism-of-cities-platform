@@ -157,11 +157,6 @@ class Blog(Record):
         return reverse("blog", args=[self.id])
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        SocialMedia.objects.create(
-            record=self,
-            platform="twitter",
-            date=self.date,
-        )
         super().save(*args, **kwargs)
 
     objects_unfiltered = models.Manager()

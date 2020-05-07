@@ -17,9 +17,9 @@ from core.admin import admin_site
 urlpatterns = [
     path("admin/", admin_site.urls),
     path("tinymce/", include("tinymce.urls")),
+    path("community/", include("core.urls_community")),
     path("", include("core.urls")),
 ]
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
