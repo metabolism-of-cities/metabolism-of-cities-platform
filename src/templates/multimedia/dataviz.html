@@ -1,84 +1,76 @@
 {% extends "_base.html" %}
 
+{% block page_name %}dataviz{% endblock %}
+
 {% block content %}
 
-        <div class="alert alert-danger">
-          NOTE FOR GUUS: this page structure was copied from the old site, 
-          hence some old bootstrap tags. It can be completely redone if you so prefer.
+<h1>{{ info }}</h1>
+<a class="btn btn-primary-basic" href="{% url 'dataviz_list' %}">
+  <i class="far fa-angle-left"></i>
+  Back to list
+</a>
+
+<div class="row mt-4">
+  <div class="col-lg-8 mb-4">
+    <img class="dataviz" alt="" src="{{ info.image.url }}">
+  </div>
+  <div class="col-lg-4">
+    <div class="card mb-4">
+      {% if info.description %}
+        <div class="card-body">
+          {{ info.description|safe }}
         </div>
+      {% endif %}
+      <ul class="list-group list-group-flush">
+        {% if info.source %}
+          <li class="list-group-item">
+            <i class="far fa-fw fa-book mb-1 mr-1" aria-hidden="true"></i> {{ info.source }}
+          </li>
+        {% endif %}
+        {% if info.year %}
+          <li class="list-group-item">
+            <i class="far fa-fw fa-calendar mb-1 mr-1" aria-hidden="true"></i> {{ info.year }}
+          </li>
+        {% endif %}
+        {% if info.uploaded_by %}
+          <li class="list-group-item">
+            <i class="far fa-fw fa-calendar mb-1 mr-1" aria-hidden="true"></i> Uploaded by
+            <br>
+            {{ info.uploaded_by }}
+          </li>
+        {% endif %}
+        {% if info.url %}
+          <li class="list-group-item">
+            <a href="{{ info.url }}"><i class="far fa-fw fa-link mb-1 mr-1" aria-hidden="true"></i> {{ info.url|truncatechars:40 }}</a>
+          </li>
+        {% endif %}
+        {% if info.is_part_of %}
+          <li class="list-group-item">
+            <i class="far fa-fw fa-file-alt mb-1 mr-1" aria-hidden="true"></i> Related publication
+            <br>
+            <a href="{% url 'library_item' info.is_part_of.id %}">{{ info.is_part_of }}</a>
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-user-edit mb-1 mr-1" aria-hidden="true"></i> Author(s)
+            <br>
+            {{ info.is_part_of.author_citation }}
+          </li>
+        {% endif %}
+        {% if parents %}
+          {% for each in parents %}
+            <li class="list-group-item">
+              <i class="far fa-fw fa-info-circle mb-1 mr-1" aria-hidden="true"></i> {{ each.relationship.name }}
+              <br>
+              {{ each.record_parent }}
+            </li>
+          {% endfor %}
+        {% endif %}
+      </ul>
+    </div>
 
-
-<div class="row">
-  <div class="col-lg-12 text-center">
-      <h3>{{ info }}</h3>
-      <p><img class="dataviz" alt="" src="{{ info.image.url }}" style="max-width:100%"></p>
+    <a class="btn btn-primary" href="{{ info.image.url }}" target="_blank">
+      <i class="fas fa-download"></i> Download
+    </a>
   </div>
 </div>
-
-
-<div class="row">
-  <div class="col-md-12" style="padding:20px 0">
-    {{ info.description|safe }}
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-12">
-      <div class="panel">
-        <div class="panel-body">
-
-          <dl class="dl dl-horizontal">
-
-            {% if info.source %}
-              <dt>Source</dt>
-              <dd>{{ info.source }}</dd>
-            {% endif %}
-
-            {% if info.year %}
-              <dt>Year</dt>
-              <dd>{{ info.year }}</dd>
-            {% endif %}
-
-            {% if info.uploaded_by %}
-              <dt>Uploaded by</dt>
-              <dd>{{ info.uploaded_by }}</dd>
-            {% endif %}
-
-            {% if info.url %}
-              <dt>URL</dt>
-              <dd><a href="{{ info.url }}">{{ info.url|truncatechars:40 }}</a></dd>
-            {% endif %}
-
-            {% if info.is_part_of %}
-              <dt>Related publication</dt>
-              <dd><a href="{% url "library_item" info.is_part_of.id %}">{{ info.is_part_of }}</a></dd>
-
-              <dt>Author(s)</dt>
-              <dd>{{ info.is_part_of.author_citation }}</dd>
-            {% endif %}
-
-            {% if parents %}
-              {% for each in parents %}
-                <dt>{{ each.relationship.name }}</dt>
-                <dd>{{ each.record_parent }}</dd>
-              {% endfor %}
-            {% endif %}
-
-          </dl>
-        </div>
-      </div>
-
-      <p><a href="{% url "dataviz_list" %}">Back to list</a></p>
-
-  </div>
-</div>
-{% endblock %}
-
-{% block css %}
-<style type="text/css">
-.dataviz {
-  border: 1px solid #999;
-  padding:5px;
-}
-</style>
 {% endblock %}

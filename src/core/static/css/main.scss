@@ -1811,6 +1811,19 @@ body.metabolism.manager.material {
   }
 }
 
+// ALL DATA VISUALISATIONS
+
+
+// SINGLE DATAVIZ
+body.dataviz {
+  img.dataviz {
+    border-radius: .25rem;
+    box-shadow: $basic-shadow;
+    max-width: 100%;
+  }
+}
+
+// OUR STORY PAGE
 body.our-story {
   .timeline {
     position: relative;
