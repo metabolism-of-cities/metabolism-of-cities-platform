@@ -1,83 +1,15 @@
 <li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="about-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Urban metabolism
-  </a>
-  <div class="dropdown-menu" aria-labelledby="about-dropdown">
-      <a class="dropdown-item" href="/urbanmetabolism/introduction/">Urban metabolism introduction</a>
-      <a class="dropdown-item" href="/urbanmetabolism/history/">History of urban metabolism</a>
-      <a class="dropdown-item" href="/urbanmetabolism/starterskit/">Starters Kit</a>
-      <a class="dropdown-item" href="/urbanmetabolism/policymakers/">Urban metabolism for policy makers</a>
-      <a class="dropdown-item" href="/urbanmetabolism/students/">Urban metabolism for students</a>
-      <a class="dropdown-item" href="/urbanmetabolism/lecturers/">Urban metabolism for lecturers</a>
-      <a class="dropdown-item" href="/urbanmetabolism/researchers/">Urban metabolism for researchers</a>
-      <a class="dropdown-item" href="/urbanmetabolism/organisations/">Urban metabolism for organisations</a>
-      <a class="dropdown-item" href="/urbanmetabolism/everyone/">Urban metabolism for everyone</a>
-      <a class="dropdown-item" href="/urbanmetabolism/glossary/">Glossary</a>
-  </div>
-</li>
-<li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="community-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Community
+    Directories
   </a>
   <div class="dropdown-menu" aria-labelledby="community-dropdown">
       <a class="dropdown-item" href="/community/people/">People</a>
       <a class="dropdown-item" href="/community/organisations/">Organisations</a>
       <a class="dropdown-item" href="/community/projects/">Projects</a>
-      <a class="dropdown-item" href="/community/news/">News</a>
-      <a class="dropdown-item" href="/community/events/">Events</a>
-      <a class="dropdown-item" href="/community/forum/">Forum</a>
-      <a class="dropdown-item" href="/community/join/">Join our community</a>
   </div>
 </li>
 
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="projects-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Our Projects
-  </a>
-  <div class="dropdown-menu" aria-labelledby="projects-dropdown">
-      <a class="dropdown-item" href="/projects/20/">Library</a>
-      <a class="dropdown-item" href="/projects/59/">Multimedia Library</a>
-      <a class="dropdown-item" href="/projects/21/">MultipliCity Data Hub</a>
-      <a class="dropdown-item" href="/projects/22/">Stakeholders Initiative</a>
-      <a class="dropdown-item" href="/projects/23/">Cityloops</a>
-      <a class="dropdown-item" href="/projects/24/">Seminar Series</a>
-      <a class="dropdown-item" href="/projects/25/">ASCuS Conference</a>
-      <a class="dropdown-item" href="/projects/37/">Urban Metabolism &amp; Minorities</a>
-      <a class="dropdown-item" href="/projects/30/">Urban Metabolism Lab</a>
-      <a class="dropdown-item" href="/projects/27/">MOOC</a>
-      <a class="dropdown-item" href="/projects/28/">GUMDB</a>
-      <a class="dropdown-item" href="/projects/29/">STAFDB</a>
-      <a class="dropdown-item" href="/projects/54/">STAFCP</a>
-      <a class="dropdown-item" href="/projects/26/">OMAT</a>
-      <a class="dropdown-item" href="/projects/52/">PlatformU</a>
-    
-  </div>
-</li>
-
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="about-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    About
-  </a>
-  <div class="dropdown-menu" aria-labelledby="about-dropdown">
-      <a class="dropdown-item" href="/about/our-story/">Our Story</a>
-      <a class="dropdown-item" href="/about/mission/">Mission &amp; values</a>
-      <a class="dropdown-item" href="/about/members/">Our Members</a>
-      <a class="dropdown-item" href="/about/partners/">Our Partners</a>
-      <a class="dropdown-item" href="/about/contact/">Contact Us</a>
-  </div>
-</li>
-
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="account-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Account
-  </a>
-  <div class="dropdown-menu" aria-labelledby="account-dropdown">
-    {% if request.user.is_authenticated %}
-      <a class="dropdown-item" href="{% url 'user_profile' %}">My profile</a>
-      <a class="dropdown-item" href="{% url 'logout' %}">Sign out</a>
-    {% else %}
-      <a class="dropdown-item" href="{% url 'register' %}">Register</a>
-      <a class="dropdown-item" href="{% url 'login' %}">Sign in</a>
-    {% endif %}
-  </div>
-</li>
+<li class="nav-item"><a class="nav-link" href="/community/events/">Events</a></li>
+<li class="nav-item"><a class="nav-link" href="/community/news/">News</a></li>
+<li class="nav-item"><a class="nav-link" href="/community/forum/">Forum</a></li>
+<li class="nav-item"><a class="nav-link" href="/community/forum/">Join</a></li>

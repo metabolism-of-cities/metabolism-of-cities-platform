@@ -62,6 +62,8 @@ PAGE_ID = {
     "stafcp": 14,
     "platformu": 16,
     "ascus": 8,
+    "podcast": 3458,
+    "community": 18,
 }
 
 # This array does the same for user relationships
@@ -270,7 +272,7 @@ def template(request, slug):
 def projects(request):
     article = get_object_or_404(Webpage, pk=PAGE_ID["projects"])
     context = {
-        "list": Project.on_site.all(),
+        "list": Project.objects.all(),
         "article": article,
         "header_title": "Projects",
         "header_subtitle": "Overview of projects undertaken by the Metabolism of Cities community",
@@ -287,6 +289,7 @@ def project(request, id):
         "alumni": People.objects.filter(parent_list__record_child=info, parent_list__relationship__name="Former team member"),
         "header_title": str(info),
         "header_subtitle_link": "<a href='/projects/'>Projects</a>",
+        "show_relationship": info.id,
     }
     return render(request, "project.html", load_design(context))
 
@@ -321,9 +324,11 @@ def article_list(request, id):
     context = {
         "info": info,
         "list": list,
-        "header": getHeader(info),
     }
     return render(request, "article.list.html", context)
+
+
+
 
 # Cities
 
@@ -592,7 +597,6 @@ def metabolism_manager_forum(request):
     article = get_object_or_404(Webpage, pk=17)
     list = ForumMessage.objects.filter(parent__isnull=True)
     context = {
-        "header": getHeader(article),
         "list": list,
     }
     return render(request, "forum.list.html", load_design(context, PAGE_ID["platformu"]))
@@ -933,7 +937,6 @@ def person(request, id):
     article = get_object_or_404(Webpage, pk=PAGE_ID["people"])
     info = get_object_or_404(People, pk=id)
     context = {
-        "header": getHeader(article),
         "edit_link": "/admin/core/people/" + str(info.id) + "/change/",
         "info": info,
     }
@@ -942,10 +945,9 @@ def person(request, id):
 def people_list(request):
     info = get_object_or_404(Webpage, pk=PAGE_ID["people"])
     context = {
-        "header": getHeader(info),
         "edit_link": "/admin/core/article/" + str(info.id) + "/change/",
         "info": info,
-        "list": People.on_site.all(),
+        "list": People.objects.all(),
     }
     return render(request, "people.list.html", context)
 
@@ -953,46 +955,44 @@ def people_list(request):
 
 def news_list(request):
     article = get_object_or_404(Webpage, pk=15)
-    list = News.on_site.all()
+    list = News.objects.all()
     context = {
-        "header": getHeader(article),
         "list": list[3:],
         "shortlist": list[:3],
         "add_link": "/admin/core/news/add/"
     }
-    return render(request, "news.list.html", context)
+    return render(request, "news.list.html", load_design(context, PAGE_ID["community"]))
 
 def news(request, id):
     article = get_object_or_404(Webpage, pk=15)
     context = {
-        "header": getHeader(article),
         "info": get_object_or_404(News, pk=id),
-        "latest": News.on_site.all()[:3],
+        "latest": News.objects.all()[:3],
         "edit_link": "/admin/core/news/" + str(id) + "/change/"
     }
     return render(request, "news.html", context)
 
 def event_list(request):
-    article = get_object_or_404(Webpage, pk=16)
+    article = get_object_or_404(Webpage, pk=47)
     today = timezone.now().date()
     context = {
-        "header": getHeader(article),
-        "upcoming": Event.on_site.filter(end_date__gte=today).order_by("start_date"),
-        "archive": Event.on_site.filter(end_date__lt=today),
+        "upcoming": Event.objects.filter(end_date__gte=today).order_by("start_date"),
+        "archive": Event.objects.filter(end_date__lt=today),
         "add_link": "/admin/core/event/add/",
+        "header_title": "Events",
+        "header_subtitle": "Find out what is happening around you!",
     }
-    return render(request, "event.list.html", context)
+    return render(request, "event.list.html", load_design(context, PAGE_ID["community"]))
 
 def event(request, id):
     article = get_object_or_404(Webpage, pk=16)
-    header = getHeader(article)
     info = get_object_or_404(Event, pk=id)
     header["title"] = info.name
     today = timezone.now().date()
     context = {
         "header": header,
         "info": info,
-        "upcoming": Event.on_site.filter(end_date__gte=today).order_by("start_date")[:3],
+        "upcoming": Event.objects.filter(end_date__gte=today).order_by("start_date")[:3],
     }
     return render(request, "event.html", context)
 
@@ -1002,7 +1002,6 @@ def forum_list(request):
     article = get_object_or_404(Webpage, pk=17)
     list = ForumMessage.objects.filter(parent__isnull=True)
     context = {
-        "header": getHeader(article),
         "list": list,
     }
     return render(request, "forum.list.html", context)
@@ -1012,7 +1011,6 @@ def forum_topic(request, id):
     info = get_object_or_404(ForumMessage, pk=id)
     list = ForumMessage.objects.filter(parent=id)
     context = {
-        "header": getHeader(article),
         "info": info,
         "list": list,
     }
@@ -1038,7 +1036,6 @@ def forum_topic(request, id):
 def forum_form(request, id=False):
     article = get_object_or_404(Webpage, pk=17)
     context = {
-        "header": getHeader(article),
     }
     if request.method == "POST":
         new = ForumMessage()
@@ -1057,6 +1054,34 @@ def forum_form(request, id=False):
         messages.success(request, "Your message has been posted.")
         return redirect(new.get_absolute_url())
     return render(request, "forum.form.html", context)
+
+# Podcast series
+
+def podcast_series(request):
+    webpage = get_object_or_404(Project, pk=PAGE_ID["podcast"])
+    list = LibraryItem.objects.filter(type__name="Podcast").order_by("-date_created")
+    context = {
+        "show_project_design": True,
+        "webpage": webpage,
+        "header_title": "Podcast Series",
+        "header_subtitle": "Agressive questions. Violent answers.",
+        "list": list,
+    }
+    return render(request, "podcast/index.html", load_design(context, PAGE_ID["podcast"]))
+
+# Community hub
+
+def community(request):
+    webpage = get_object_or_404(Project, pk=PAGE_ID["community"])
+    context = {
+        "show_project_design": True,
+        "webpage": webpage,
+        "header_title": "Welcome!",
+        "header_subtitle": "Join for the money. Stay for the food.",
+        "list": list,
+    }
+    return render(request, "community/index.html", load_design(context, PAGE_ID["community"]))
+
 
 # MULTIMEDIA
 

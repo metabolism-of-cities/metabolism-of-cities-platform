@@ -85,6 +85,10 @@ class OrgAdmin(SearchCompleteAdmin):
     list_filter = ["type"]
     exclude = ["slug"]
 
+class SocialMediaAdmin(admin.ModelAdmin):
+    list_display = ["record", "platform", "date", "published"]
+    list_filter = ["platform", "published"]
+
 class ProjectAdmin(SearchCompleteAdmin):
     list_display = ["name", "is_internal", "start_date", "status"]
 
@@ -174,6 +178,7 @@ admin_site.register(Video, VideoAdmin)
 admin_site.register(Project, ProjectAdmin)
 admin_site.register(Relationship)
 admin_site.register(RecordRelationship, RecordRelationshipAdmin)
+admin_site.register(SocialMedia, SocialMediaAdmin)
 admin_site.register(LibraryItem, LibraryAdmin)
 admin_site.register(LibraryItemType, SearchAdmin)
 admin_site.register(ActivatedSpace, SpaceAdmin)

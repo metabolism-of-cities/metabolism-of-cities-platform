@@ -5,7 +5,7 @@
 {% block title %}{{ info }}{% endblock %}
 
 {% block css %}
-  {% if info.id == 20 or info.id == 21 %}
+  {% if info.id == 20 or info.id == 21 or True %}
     <style type="text/css">
       section{display:none}
       section#team{display:block}
@@ -22,6 +22,11 @@
       {% if info.image %}
         <a href="{{ info.url }}">
           <img class="card-img-top" src="{{ info.image.url }}" alt="" />
+        </a>
+      {% endif %}
+      {% if info.design.logo %}
+        <a href="{{ info.url }}">
+          <img class="card-img-top" src="{{ info.design.logo.url }}" alt="" />
         </a>
       {% endif %}
       <ul class="list-group list-group-flush">
@@ -42,7 +47,7 @@
           <i class="far fa-fw fa-cabinet-filing"></i> 
           <strong>Type</strong>: <a href="">Online tools and platforms</a>
         </li>
-        {% if info.id != 20 and info.id != 21 %}
+        {% if info.id != 20 and info.id != 21 and False %}
         <li class="list-group-item">
           <i class="far fa-fw fa-flask mb-1"></i> Materials
           <br>

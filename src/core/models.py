@@ -157,6 +157,11 @@ class Blog(Record):
         return reverse("blog", args=[self.id])
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
+        SocialMedia.objects.create(
+            record=self,
+            platform="twitter",
+            date=self.date,
+        )
         super().save(*args, **kwargs)
 
     objects_unfiltered = models.Manager()
@@ -222,6 +227,19 @@ class RecordRelationship(models.Model):
     class Meta:
         verbose_name_plural = "relationship manager"
         verbose_name = "relationship manager"
+
+class SocialMedia(models.Model):
+    record = models.ForeignKey(Record, on_delete=models.CASCADE)
+    PLATFORM = [
+        ("instagram", "Instagram"),
+        ("facebook", "Facebook"),
+        ("twitter", "Twitter"),
+        ("linkedin", "LinkedIn"),
+    ]
+    platform = models.CharField(max_length=20, blank=True, null=True, choices=PLATFORM)
+    date = models.DateTimeField(null=True, blank=True)
+    published = models.BooleanField(default=False)
+    blurb = models.TextField(null=True, blank=True)
 
 class Event(Record):
     EVENT_TYPE = [

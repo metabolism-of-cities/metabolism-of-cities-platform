@@ -8,24 +8,15 @@
 
 {% block subtitle %}Hello{% endblock %}
 
-{% block content %}
+{% block css %}
+<style type="text/css">
+body.homepage .projects.featured-projects {
+margin-top:20px
+}
+</style>
+{% endblock %}
 
-<section class="extra">
-  <div class="row featured-projects projects">
-    <div class="col-lg-6 mb-4">
-      <a class="card btn-card" href="/projects/2/">
-        <img src="https://i.imgur.com/gLambfD.png" class="card-img-top" alt="...">
-        <h5 class="card-title">UM Library</h5>
-      </a>
-    </div>
-    <div class="col-lg-6 mb-4">
-      <a class="card btn-card" href="/projects/4/">
-        <img src="https://i.imgur.com/s7ePoYd.png" class="card-img-top" alt="...">
-        <h5 class="card-title">MultipliCity Data Hub</h5>
-      </a>
-    </div>
-  </div>
-</section>
+{% block content %}
 
 <section class="what">
   <h3>What we do</h3>
@@ -85,8 +76,26 @@
   </div>
 </section>
 
+<h2>Our projects</h2>
+
 <section class="extra">
-  <h3>Our projects</h3>
+  <div class="row eatured-projects projects">
+    <div class="col-lg-6 mb-4">
+      <a class="card btn-card" href="/projects/2/">
+        <img src="https://i.imgur.com/gLambfD.png" class="card-img-top" alt="...">
+        <h5 class="card-title">UM Library</h5>
+      </a>
+    </div>
+    <div class="col-lg-6 mb-4">
+      <a class="card btn-card" href="/projects/4/">
+        <img src="https://i.imgur.com/s7ePoYd.png" class="card-img-top" alt="...">
+        <h5 class="card-title">MultipliCity Data Hub</h5>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="extra">
   <div class="row projects">
     <div class="col-lg-6 mb-4">
       <a class="card btn-card" href="/projects/2/">

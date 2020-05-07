@@ -32,7 +32,7 @@ urlpatterns = [
     # Community
     path("community/people/", views.people_list, name="people_list"),
     path("community/people/<int:id>/", views.person, name="person"),
-    path("community/", views.article_list, { "id": 1 }, name="community"),
+    #path("community/", views.article_list, { "id": 1 }, name="community"),
     path("community/news/", views.news_list, name="news"),
     path("community/news/<int:id>/", views.news, name="news"),
     path("community/events/", views.event_list, name="events"),
@@ -129,6 +129,12 @@ urlpatterns = [
     path("stafcp/referencespaces/view/<int:id>/", views.stafcp_referencespace, name="stafcp_referencespace"),
     path("stafcp/referencespaces/<int:id>/", views.stafcp_referencespaces_list, name="stafcp_referencespaces_list"),
     path("stafcp/referencespaces/<slug:group>/", views.stafcp_referencespaces, name="stafcp_referencespaces"),
+
+    # Podcast
+    path("podcast/", views.podcast_series),
+
+    # Community
+    path("community/", views.community),
 
     # Authentication
     path("register/", views.user_register, name="register"),

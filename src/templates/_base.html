@@ -39,13 +39,13 @@
   <div id="admin-controls" class="btn-group-vertical">
 
     {% if request.user.is_authenticated and request.user.is_staff and show_project_design %}
-      <a class="btn btn-secondary" href="/admin/core/projectdesign/{{ project.id }}/change/"><i class="fas fa-pencil fa-fw"></i> Project design</a>
+      <a class="btn btn-secondary" href="/admin/core/projectdesign/{{ project.id }}/change/"><i class="fas fa-palette fa-fw"></i> Project design</a>
     {% endif %}
 
     {% if webpage_design_id and request.user.is_authenticated and request.user.is_staff %}
-      <a class="btn btn-secondary" href="/admin/core/webpagedesign/{{ webpage_design_id }}/change/"><i class="fas fa-pencil fa-fw"></i> Page design</a>
+      <a class="btn btn-secondary" href="/admin/core/webpagedesign/{{ webpage_design_id }}/change/"><i class="fas fa-object-group fa-fw"></i> Page design</a>
     {% elif webpage and request.user.is_authenticated and request.user.is_staff %}
-      <a class="btn btn-secondary" href="/admin/core/webpagedesign/add/?webpage={{ webpage.id }}"><i class="fas fa-pencil fa-fw"></i> Page design</a>
+      <a class="btn btn-secondary" href="/admin/core/webpagedesign/add/?webpage={{ webpage.id }}"><i class="fas fa-object-group fa-fw"></i> Page design</a>
     {% endif %}
 
     {% if edit_link and request.user.is_authenticated and request.user.is_staff %}
