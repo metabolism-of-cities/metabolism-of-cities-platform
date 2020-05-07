@@ -13,6 +13,7 @@ urlpatterns = [
 
     path("", views.ascus),
     path("ascus/", views.ascus),
+    path("ascus/register/", views.ascus_register),
     path("login/", views.user_login, {"project": 8}),
     path("register/", views.ascus_register),
     path("logout/", views.user_logout, {"project": 8}),
