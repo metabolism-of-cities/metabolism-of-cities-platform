@@ -183,7 +183,36 @@ nav {
     a {
       color: $dark;
     }
+  }
 
+  .dropdown.projects-dropdown {
+    position: unset;
+
+    .projects-category {
+      font-weight: bold;
+      margin-bottom: .25rem;
+    }
+
+    .projects-dropdown-menu {
+      padding: 15px;
+
+      @media (min-width: 992px) {
+        max-width: 540px;
+        left: 0;
+        right: 0;
+        margin-top: -0.875rem;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 960px;
+      }
+      @media (min-width: 1200px) {
+        max-width: 1140px;
+      }
+
+      a {
+        display: block;
+      }
+    }
   }
 
   li.nav-item:not(:last-of-type) {
