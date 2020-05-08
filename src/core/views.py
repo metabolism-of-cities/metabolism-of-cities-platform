@@ -624,8 +624,16 @@ def stafcp_upload_gis_file(request, id=None):
     return render(request, "stafcp/upload/gis.file.html", load_design(context, PAGE_ID["stafcp"]))
 
 def stafcp_upload_gis_verify(request, id):
+    import shapefile
+    import json
+    file = settings.MEDIA_ROOT + "/shapefiles/District_Municipalities_2016.shp"
+    shape = shapefile.Reader(file)
+    feature = shape.shape(0)
+    geojson = feature.__geo_interface__ 
+    geojson = json.dumps(geojson) 
     context = {
         "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
+        "geojson": geojson,
     }
     return render(request, "stafcp/upload/gis.verify.html", load_design(context, PAGE_ID["stafcp"]))
 
