@@ -8,6 +8,7 @@ from django.contrib.admin.models import LogEntry
 from django_cron.models import CronJobLog
 from stafdb.models import *
 from django.contrib.gis import admin
+from django.contrib.auth.admin import UserAdmin
 
 class MyAdminSite(AdminSite):
     # Text to put at the end of each page"s <title>.
@@ -164,6 +165,11 @@ class LogEntryAdmin(admin.ModelAdmin):
     def has_view_permission(self, request, obj=None):
         return request.user.is_superuser
 
+class UserAdmin(admin.ModelAdmin):
+     list_display = ["username", "email", "is_staff", "is_active"]
+     list_filter = ["username", "email", "is_staff", "is_active"]
+     search_fields = ["username", "email"]
+
 admin_site.register(Tag, TagAdmin)
 admin_site.register(Record, SearchCompleteAdmin)
 admin_site.register(Event, SearchCompleteAdmin)
@@ -197,7 +203,7 @@ admin_site.register(Photo, PhotoAdmin)
 #admin_site.register(MOOCQuizAnswers)
 
 admin_site.register(Group)
-admin_site.register(User)
+admin_site.register(User, UserAdmin)
 admin_site.register(LogEntry, LogEntryAdmin)
 admin_site.register(CronJobLog)
 
