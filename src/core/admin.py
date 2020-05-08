@@ -217,6 +217,8 @@ admin_site.register(ReferenceSpace, ReferenceSpaceAdmin)
 admin_site.register(ReferenceSpaceLocation, LocationAdmin)
 admin_site.register(ReferenceSpaceGeocode)
 admin_site.register(Sector, SearchNameAdmin)
+admin_site.register(UploadSession)
+admin_site.register(UploadFile)
 
 admin_site.register(WorkPiece, WorkPieceAdmin)
 admin_site.register(ActivityCatalog)

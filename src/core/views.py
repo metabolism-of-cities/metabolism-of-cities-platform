@@ -615,25 +615,38 @@ def stafcp_upload_gis(request, id=None):
     }
     return render(request, "stafcp/upload/gis.html", load_design(context, PAGE_ID["stafcp"]))
 
+@login_required
 def stafcp_upload_gis_file(request, id=None):
     if request.method == "POST":
-        return redirect("stafcp_upload_gis_verify", id=1)
+        session = UploadSession.objects.create(user=request.user)
+        for each in request.FILES.getlist("file"):
+            UploadFile.objects.create(
+                session = session,
+                file = each,
+            )
+        return redirect("stafcp_upload_gis_verify", id=session.id)
     context = {
         "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
     }
     return render(request, "stafcp/upload/gis.file.html", load_design(context, PAGE_ID["stafcp"]))
 
+@login_required
 def stafcp_upload_gis_verify(request, id):
     import shapefile
     import json
-    file = settings.MEDIA_ROOT + "/shapefiles/District_Municipalities_2016.shp"
-    shape = shapefile.Reader(file)
-    feature = shape.shape(0)
-    geojson = feature.__geo_interface__ 
-    geojson = json.dumps(geojson) 
+    session = get_object_or_404(UploadSession, pk=id)
+    files = UploadFile.objects.filter(session=session)
+    geojson = None
+    try:
+        shape = shapefile.Reader(settings.MEDIA_ROOT + "/" + files[0].file.name)
+        feature = shape.shape(0)
+        geojson = feature.__geo_interface__ 
+        geojson = json.dumps(geojson) 
+    except Exception as e:
+        messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
     context = {
-        "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
         "geojson": geojson,
+        "session": session,
     }
     return render(request, "stafcp/upload/gis.verify.html", load_design(context, PAGE_ID["stafcp"]))
 

@@ -6,6 +6,11 @@ from stdimage.models import StdImageField
 from django.conf import settings
 from django.utils.text import slugify
 
+from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
+import uuid
+
 # The geocode scheme defines a particular standard, for instance 3166-1 or the South African postal code system
 class GeocodeScheme(models.Model):
     name = models.CharField(max_length=255)
@@ -178,3 +183,19 @@ class ReferenceSpaceSector(models.Model):
     space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE, related_name="sectors")
     sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
 
+class UploadSession(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date_created = models.DateTimeField(auto_now_add=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+    def __str__(self):
+        return "Session #" + str(self.id)
+
+def shapefile_directory(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/uuid/<filename>
+    return "{0}/{1}".format(instance.session.uuid, filename)
+
+class UploadFile(models.Model):
+    session = models.ForeignKey(UploadSession, on_delete=models.CASCADE)
+    file = models.FileField(upload_to=shapefile_directory)
+    def __str__(self):
+        return self.file.name
