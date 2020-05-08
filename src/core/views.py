@@ -1536,15 +1536,32 @@ def pdf(request):
 
     return response
 
-def twitter(request):
-    list = SocialMedia.objects.filter(published=False)
+def socialmedia(request, type):
+    list = SocialMedia.objects.filter(published=False, platform=type)
     for each in list:
-        message = each.blurb
         # send to api here
-        each.published = True
+        success = False
+        if type == "facebook":
+            # Send to FB API
+            message = each.blurb
+            response = "response-from-api"
+        elif type == "twitter":
+            message = each.blurb
+            response = "response-from-api"
+        elif type == "linkedin":
+            message = each.blurb
+            response = "response-from-api"
+        elif type == "instagram":
+            message = each.blurb
+            # In Instagram we need of course to post an image, so please use this as well:
+            image = each.record.image
+            response = "response-from-api"
+        if success:
+            each.published = True
+        each.response = response
         each.save()
 
-    messages.success(request, "Tweets were posted.")
+    messages.success(request, "Messages were posted.")
     return render(request, "template/blank.html")
 
 #MOOC

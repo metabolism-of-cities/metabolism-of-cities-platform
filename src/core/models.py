@@ -238,6 +238,7 @@ class SocialMedia(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     published = models.BooleanField(default=False)
     blurb = models.TextField(null=True, blank=True)
+    response = models.TextField(null=True, blank=True)
 
 class Event(Record):
     EVENT_TYPE = [
