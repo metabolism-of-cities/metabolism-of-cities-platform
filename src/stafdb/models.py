@@ -192,7 +192,7 @@ class UploadSession(models.Model):
 
 def shapefile_directory(instance, filename):
     # file will be uploaded to MEDIA_ROOT/uuid/<filename>
-    return "{0}/{1}".format(instance.session.uuid, filename)
+    return "stafdb/{0}/{1}".format(instance.session.uuid, filename)
 
 class UploadFile(models.Model):
     session = models.ForeignKey(UploadSession, on_delete=models.CASCADE)
