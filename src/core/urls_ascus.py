@@ -22,7 +22,8 @@ urlpatterns = [
     path("account/introvideo/", views.ascus_account_presentation, {"introvideo": True}),
     path("account/edit/", views.ascus_account_edit),
     path("account/discussion/", views.ascus_account_discussion),
-    path("<slug:slug>/", views.article, { "prefix": "/ascus/", "subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020", }, name="um"),
+    path("<slug:slug>/", views.article, { "prefix": "/ascus/", "subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020", }),
+    path("ascus/<slug:slug>/", views.article, { "prefix": "/ascus/", "subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020", }),
 
 ]
 
