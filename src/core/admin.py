@@ -10,6 +10,10 @@ from stafdb.models import *
 from django.contrib.gis import admin
 from django.contrib.auth.admin import UserAdmin
 
+class GeoModelAdmin(admin.ModelAdmin):
+     map_width = 100
+
+
 class MyAdminSite(AdminSite):
     # Text to put at the end of each page"s <title>.
     site_title = ugettext_lazy("Metabolism of Cities Admin")
@@ -119,6 +123,7 @@ class SpaceAdmin(admin.ModelAdmin):
 class LocationAdmin(admin.OSMGeoAdmin):
     search_fields = ["referencespace__name"]
     autocomplete_fields = ["space"]
+    num_zoom = 1
 
 class RecordRelationshipAdmin(admin.ModelAdmin):
     search_fields = ["record_parent__name", "record_child__name"]

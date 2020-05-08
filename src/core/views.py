@@ -663,9 +663,12 @@ def stafcp_referencespaces_list(request, id):
 
 def stafcp_referencespace(request, id):
     info = ReferenceSpace.objects.get(pk=id)
+    this_location = info.location.geometry
+    inside_the_space = ReferenceSpace.objects.filter(location__geometry__contains=this_location)
     context = {
         "info": info,
         "location": info.location,
+        "inside_the_space":inside_the_space,
     }
     return render(request, "stafcp/referencespace.html", load_design(context, PAGE_ID["stafcp"]))
 

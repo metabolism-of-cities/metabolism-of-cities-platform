@@ -22,6 +22,20 @@
   {% if location %}
   <h2>Location</h2>
     <div id="map" class="leaflet-map"></div>
+    {% for details in inside_the_space %}
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Spaces</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="{% url "stafcp_referencespace" details.id  %}">{{ details.name }}</a></td>
+          </tr>
+        </tbody>
+      </table>
+    {% endfor %}
   {% endif %}
 {% endblock %}
 
