@@ -13,7 +13,6 @@ from django.contrib.auth.admin import UserAdmin
 class GeoModelAdmin(admin.ModelAdmin):
      map_width = 100
 
-
 class MyAdminSite(AdminSite):
     # Text to put at the end of each page"s <title>.
     site_title = ugettext_lazy("Metabolism of Cities Admin")

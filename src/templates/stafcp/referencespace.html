@@ -18,25 +18,35 @@
 {% endblock %}
 
 {% block content %}
+
   <h1>{{ info }}</h1>
   {% if location %}
   <h2>Location</h2>
     <div id="map" class="leaflet-map"></div>
-    {% for details in inside_the_space %}
-      <table class="table table-bordered">
+      <table class="table table-bordered datatable">
         <thead>
           <tr>
-            <th>Spaces</th>
+            <th>Inside this space</th>
+            <th>Type</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td><a href="{% url "stafcp_referencespace" details.id  %}">{{ details.name }}</a></td>
-          </tr>
+          {% for each in inside_the_space %}
+            <tr>
+              <td><a href="{% url "stafcp_referencespace" each.id  %}">{{ each.name }}</a></td>
+              <td>
+                {% for geocode in each.geocodes.all %}
+                  {% if geocode.is_public and not geocode.is_deleted %}
+                    <span class="badge">{{ geocode }}</span>
+                  {% endif %}
+                {% endfor %}
+              </td>
+            </tr>
+          {% endfor %}
         </tbody>
       </table>
-    {% endfor %}
   {% endif %}
+
 {% endblock %}
 
 {% block footer %}

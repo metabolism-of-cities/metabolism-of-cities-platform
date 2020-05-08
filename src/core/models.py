@@ -66,11 +66,11 @@ class Record(models.Model):
     sectors = models.ManyToManyField(Sector, blank=True)
 
     # We use soft deleted
-    is_deleted = models.BooleanField(default=False) 
+    is_deleted = models.BooleanField(default=False, db_index=True)
 
     # Only public records are shown; non-public records are used for instance to manage records 
     # belonging to logged-in users only
-    is_public = models.BooleanField(default=True) 
+    is_public = models.BooleanField(default=True, db_index=True)
 
     # These relationships are managed through separate tables, but they allow for prefetching to make 
     # the queries run much more efficiently
