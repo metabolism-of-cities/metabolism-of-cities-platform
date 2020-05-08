@@ -83,6 +83,9 @@ class Record(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse("project", args=[self.id])
+
     def get_methodologies(self):
         self.tags.filter(parent_tag__id=318)
 
