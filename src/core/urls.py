@@ -136,4 +136,6 @@ urlpatterns = [
     path("pdf/", views.pdf),
     path("dataimport/", views.dataimport),
 
+    path("twitter/", views.twitter),
+
 ]

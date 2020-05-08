@@ -90,6 +90,7 @@ class OrgAdmin(SearchCompleteAdmin):
     exclude = ["slug"]
 
 class SocialMediaAdmin(admin.ModelAdmin):
+    autocomplete_fields = ["record"]
     list_display = ["record", "platform", "date", "published"]
     list_filter = ["platform", "published"]
 

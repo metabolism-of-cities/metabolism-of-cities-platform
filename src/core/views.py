@@ -1536,6 +1536,17 @@ def pdf(request):
 
     return response
 
+def twitter(request):
+    list = SocialMedia.objects.filter(published=False)
+    for each in list:
+        message = each.blurb
+        # send to api here
+        each.published = True
+        each.save()
+
+    messages.success(request, "Tweets were posted.")
+    return render(request, "template/blank.html")
+
 #MOOC
 
 def mooc(request, id):
