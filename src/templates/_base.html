@@ -18,7 +18,7 @@
     <meta name="theme-color" content="#ffffff">
   {% endif %}
 
-  <title>{% if title %}{{ title }} {% elif header.title %}{{ header.title }}{% else %}{% block title %}{% endblock %}{% endif %} - Metabolism of Cities</title>
+  <title>{% if title %}{{ title }} {% elif header_title %}{{ header_title }}{% else %}{% block title %}{% endblock %}{% endif %} | {% if project %}{{ project }}{% if back_link %} | {{ SITE_NAME }}{% endif %}{% else %}{{ SITE_NAME }}{% endif %}</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <link href="{% sass_src 'css/main.scss' %}" rel="stylesheet" type="text/css" />
 
