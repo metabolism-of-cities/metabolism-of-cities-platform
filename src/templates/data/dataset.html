@@ -11,228 +11,323 @@
 {% endblock %}
 
 {% block content %}
-  <section>
-    <h1>Agricultural product and foodstuffs unloaded in the Port of Brussels 2005-2017</h1>
-    <div class="description mb-4">
-      These are the agricultural product and foodstuffs that are offloaded in the port of Brussels through maritime traffic. 
-    </div>
+  <h1>Agricultural product and foodstuffs unloaded in the Port of Brussels 2005-2017</h1>
+  <div class="description mb-4">
+    These are the agricultural product and foodstuffs that are offloaded in the port of Brussels through maritime traffic.
+  </div>
 
-    <div class="row">
-      <div class="col-6">
-        <div class="card">
-          <div class="card-header">
-            Overview
-          </div>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-              <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> Brussels, Belgium
-            </li>
-            <li class="list-group-item">
-              <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 01 January 2012 - 31 December 2017
-            </li>
-            <li class="list-group-item">
-              <i class="far fa-fw fa-flask mb-1 mr-1" aria-hidden="true"></i> Materials
-              <br>
-              <a class="btn btn-sm btn-primary-outline mt-1" href="">Agricultural products</a>
-            </li>
-            <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-dot-circle mr-1"></i> Data points</div>
-              <div>13</div>
-            </li>
-            <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-database mr-1"></i> Source(s)</div>
-              <div><a href="https://metabolismofcities.org/resources/publications/851">Freight Transport</a></div>
-            </li>
-            <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-user mr-1"></i> Uploaded by</div>
-              <div><a href="">Fulano de Tal</a></div>
-            </li>
-            <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-calendar-day mr-1"></i> Upload date</div>
-              <div>12 March 2018</div>
-            </li>
-          </ul>
-        </div>
+  <div class="card">
+    <div class="card-body">
+      <div class="nav nav-pills nav-fill">
+        <a class="nav-item nav-link active" data-toggle="tab" href="#tab-chart">
+          <i class="fal fa-fw fa-analytics mr-2"></i>
+          Chart
+        </a>
+        <a class="nav-item nav-link" data-toggle="tab" href="#tab-map">
+          <i class="fal fa-fw fa-map-marked mr-2"></i>
+          Map
+        </a>
+        <a class="nav-item nav-link" data-toggle="tab" href="#tab-quality">
+          <i class="fal fa-fw fa-star mr-2"></i>
+          Data quality
+        </a>
+        <a class="nav-item nav-link" data-toggle="tab" href="#tab-metadata">
+          <i class="fal fa-fw fa-info-circle mr-2"></i>
+          Metadata
+        </a>
+        <a class="nav-item nav-link" data-toggle="tab" href="#tab-data">
+          <i class="fal fa-fw fa-table mr-2"></i>
+          Data
+        </a>
+        <a class="nav-item nav-link" data-toggle="tab" href="#tab-share">
+          <i class="fal fa-fw fa-share-alt mr-2"></i>
+          Share
+        </a>
       </div>
-      <div class="col-6">
-        <div class="card mb-4">
-          <div class="card-header">
-            Data quality
-          </div>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-star mr-1"></i> Reliability</div>
-              <div class="rating" data-rating="1">
-                <div class="number">1</div>
-                <div class="graph">
-                  <span class="full"></span>
-                  <span class="full"></span>
-                  <span class="full"></span>
-                  <span class="full"></span>
-                  <span class="full"></span>
-                </div>
-              </div>
-            </li>
-            <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-box-full mr-1"></i> Completeness</div>
-              <div class="rating" data-rating="2">
-                <div class="number">2</div>
-                <div class="graph">
-                  <span class=""></span>
-                  <span class="full"></span>
-                  <span class="full"></span>
-                  <span class="full"></span>
-                  <span class="full"></span>
-                </div>
-              </div>
-            </li>
-            <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-universal-access mr-1"></i> Access</div>
-              <div class="rating" data-rating="3">
-                <div class="number">3</div>
-                <div class="graph">
-                  <span class=""></span>
-                  <span class=""></span>
-                  <span class="full"></span>
-                  <span class="full"></span>
-                  <span class="full"></span>
-                </div>
-              </div>
-            </li>
-            <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-map-marked-alt mr-1"></i> Geographical correlation</div>
-              <div class="rating" data-rating="4">
-                <div class="number">4</div>
-                <div class="graph">
-                  <span class=""></span>
-                  <span class=""></span>
-                  <span class=""></span>
-                  <span class="full"></span>
-                  <span class="full"></span>
-                </div>
-              </div>
-            </li>
-          </ul>
+
+      <hr class="tab-divider">
+
+      <div class="tab-content">
+        <!-- chart -->
+        <div class="tab-pane show active" id="tab-chart">
+          <img class="rounded" src="https://i.imgur.com/6Vbpy82.png">
         </div>
 
-        <a class="btn btn-primary" href=""><i class="fas fa-download"></i> Download data</a>
-        <a class="btn btn-primary-basic" href="">Report an error</a>
+        <!-- map -->
+        <div class="tab-pane" id="tab-map">
+          <img class="rounded" src="https://i.imgur.com/3MFXHD0.png">
+        </div>
+
+        <!-- data quality -->
+        <div class="tab-pane" id="tab-quality">
+          <div class="row">
+            <div class="col-lg-6">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item table-item">
+                  <div><i class="far fa-fw fa-star mr-1"></i> Reliability</div>
+                  <div class="rating" data-rating="1">
+                    <div class="number">1</div>
+                    <div class="graph">
+                      <span class="full"></span>
+                      <span class="full"></span>
+                      <span class="full"></span>
+                      <span class="full"></span>
+                      <span class="full"></span>
+                    </div>
+                  </div>
+                </li>
+                <li class="list-group-item table-item">
+                  <div><i class="far fa-fw fa-box-full mr-1"></i> Completeness</div>
+                  <div class="rating" data-rating="2">
+                    <div class="number">2</div>
+                    <div class="graph">
+                      <span class=""></span>
+                      <span class="full"></span>
+                      <span class="full"></span>
+                      <span class="full"></span>
+                      <span class="full"></span>
+                    </div>
+                  </div>
+                </li>
+                <li class="list-group-item table-item">
+                  <div><i class="far fa-fw fa-universal-access mr-1"></i> Access</div>
+                  <div class="rating" data-rating="3">
+                    <div class="number">3</div>
+                    <div class="graph">
+                      <span class=""></span>
+                      <span class=""></span>
+                      <span class="full"></span>
+                      <span class="full"></span>
+                      <span class="full"></span>
+                    </div>
+                  </div>
+                </li>
+                <li class="list-group-item table-item">
+                  <div><i class="far fa-fw fa-map-marked-alt mr-1"></i> Geographical correlation</div>
+                  <div class="rating" data-rating="4">
+                    <div class="number">4</div>
+                    <div class="graph">
+                      <span class=""></span>
+                      <span class=""></span>
+                      <span class=""></span>
+                      <span class="full"></span>
+                      <span class="full"></span>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <div class="alert alert-light">
+                <strong>Reliability</strong>
+                <p>
+                  Fuga officiis illum eveniet. Voluptatem qui laudantium in iure amet. Nesciunt ut omnis atque iste voluptas natus. Inventore qui officiis consequatur culpa adipisci ea adipisci quaerat.
+                </p>
+
+                <strong>Completeness</strong>
+                <p>
+                  Nisi inventore suscipit illo iure similique assumenda. Hic beatae nihil ullam. Quis et aut iure laudantium
+                </p>
+
+                <strong>Access</strong>
+                <p>
+                  Quia sed ea eius voluptatem. Libero cum cum assumenda quia. Quas iste eius reprehenderit libero quam fugiat beatae.
+                </p>
+
+                <strong>Geographical correlation</strong>
+                <p>
+                  Est vel officia enim facere fuga occaecati. Exercitationem voluptate facilis ut reprehenderit quia similique. Voluptatibus nihil quia quaerat ipsam dicta et.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- metadata -->
+        <div class="tab-pane" id="tab-metadata">
+          <div class="row">
+            <div class="col-lg-6">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> Brussels, Belgium
+                </li>
+                <li class="list-group-item">
+                  <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 01 January 2012 - 31 December 2017
+                </li>
+                <li class="list-group-item">
+                  <i class="far fa-fw fa-flask mb-1 mr-1" aria-hidden="true"></i> Materials
+                  <br>
+                  <a class="btn btn-sm btn-primary-outline mt-1" href="">Agricultural products</a>
+                </li>
+                <li class="list-group-item table-item">
+                  <div><i class="far fa-fw fa-dot-circle mr-1"></i> Data points</div>
+                  <div>13</div>
+                </li>
+                <li class="list-group-item table-item">
+                  <div><i class="far fa-fw fa-database mr-1"></i> Source(s)</div>
+                  <div><a href="https://metabolismofcities.org/resources/publications/851">Freight Transport</a></div>
+                </li>
+                <li class="list-group-item table-item">
+                  <div><i class="far fa-fw fa-user mr-1"></i> Uploaded by</div>
+                  <div><a href="">Fulano de Tal</a></div>
+                </li>
+                <li class="list-group-item table-item">
+                  <div><i class="far fa-fw fa-calendar-day mr-1"></i> Upload date</div>
+                  <div>12 March 2018</div>
+                </li>
+              </ul>
+            </div>
+            <div class="col-lg-6">
+              <div class="alert alert-light">
+                <strong>Replication</strong>
+                <ol>
+                  <li>Enter the IBSA website http://ibsa.brussels</li>
+                  <li>Go in Themes page</li>
+                  <li>Go in Mobility and Transport page</li>
+                  <li>Download the Freight Transport .xls file (available just in French)</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- data -->
+        <div class="tab-pane" id="tab-data">
+          <a class="btn btn-primary mb-4" href=""><i class="fas fa-download"></i> Download data</a>
+          <a class="btn btn-primary-basic mb-4" href="">Report an error</a>
+
+          <table id="example" class="table table-striped">
+            <thead>
+              <tr>
+                <th>Column 1</th>
+                <th>Column 2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>kopano</td>
+                <td>yamkela</td>
+              </tr>
+              <tr>
+                <td>sizwe</td>
+                <td>vusi</td>
+              </tr>
+              <tr>
+                <td>ntandazo</td>
+                <td>khangelani</td>
+              </tr>
+              <tr>
+                <td>thuliswa</td>
+                <td>amkele</td>
+              </tr>
+              <tr>
+                <td>ntando</td>
+                <td>phumezo</td>
+              </tr>
+              <tr>
+                <td>khuselo</td>
+                <td>mpemey</td>
+              </tr>
+              <tr>
+                <td>zobuyo</td>
+                <td>thembela</td>
+              </tr>
+              <tr>
+                <td>siphamandla</td>
+                <td>akhanyile</td>
+              </tr>
+              <tr>
+                <td>phumlani</td>
+                <td>khuselo</td>
+              </tr>
+              <tr>
+                <td>thembela</td>
+                <td>ntandazo</td>
+              </tr>
+              <tr>
+                <td>likhona</td>
+                <td>yamkela</td>
+              </tr>
+              <tr>
+                <td>phumlani</td>
+                <td>khuselo</td>
+              </tr>
+              <tr>
+                <td>vusi</td>
+                <td>kopano</td>
+              </tr>
+              <tr>
+                <td>thuliswa</td>
+                <td>amkele</td>
+              </tr>
+              <tr>
+                <td>siphamandla</td>
+                <td>akhanyile</td>
+              </tr>
+              <tr>
+                <td>phumezo</td>
+                <td>ntandazo</td>
+              </tr>
+              <tr>
+                <td>thembela</td>
+                <td>ntandazo</td>
+              </tr>
+              <tr>
+                <td>ntando</td>
+                <td>phumezo</td>
+              </tr>
+              <tr>
+                <td>siphamandla</td>
+                <td>akhanyile</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- share -->
+        <div class="tab-pane" id="tab-share">
+          <div class="form-group">
+            <input id="share-url" class="form-control" value="https://metabolismofcities.org/cities/the-hague/datasets/52/" readonly>
+          </div>
+
+          <button class="btn btn-primary copy-url">
+            <i class="fas fa-copy"></i> Copy URL
+          </button>
+          <a class="btn btn-primary" href="">
+            <i class="fab fa-linkedin"></i> LinkedIn
+          </a>
+          <a class="btn btn-primary" href="">
+            <i class="fab fa-twitter"></i> Twitter
+          </a>
+          <a class="btn btn-primary" href="">
+            <i class="fab fa-facebook-square"></i> Facebook
+          </a>
+          <a class="btn btn-primary" href="">
+            <i class="fas fa-envelope"></i> E-mail
+          </a>
+        </div>
       </div>
     </div>
-  </section>
-
-  <section>
-    <h2>Charts</h2>
-    <img class="rounded" src="https://i.imgur.com/6Vbpy82.png">
-  </section>
-
-  <section>
-    <h2>Table</h2>
-    <table id="example" class="table table-striped">
-      <thead>
-        <tr>
-          <th>Column 1</th>
-          <th>Column 2</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>kopano</td>
-          <td>yamkela</td>
-        </tr>
-        <tr>
-          <td>sizwe</td>
-          <td>vusi</td>
-        </tr>
-        <tr>
-          <td>ntandazo</td>
-          <td>khangelani</td>
-        </tr>
-        <tr>
-          <td>thuliswa</td>
-          <td>amkele</td>
-        </tr>
-        <tr>
-          <td>ntando</td>
-          <td>phumezo</td>
-        </tr>
-        <tr>
-          <td>khuselo</td>
-          <td>mpemey</td>
-        </tr>
-        <tr>
-          <td>zobuyo</td>
-          <td>thembela</td>
-        </tr>
-        <tr>
-          <td>siphamandla</td>
-          <td>akhanyile</td>
-        </tr>
-        <tr>
-          <td>phumlani</td>
-          <td>khuselo</td>
-        </tr>
-        <tr>
-          <td>thembela</td>
-          <td>ntandazo</td>
-        </tr>
-        <tr>
-          <td>likhona</td>
-          <td>yamkela</td>
-        </tr>
-        <tr>
-          <td>phumlani</td>
-          <td>khuselo</td>
-        </tr>
-        <tr>
-          <td>vusi</td>
-          <td>kopano</td>
-        </tr>
-        <tr>
-          <td>thuliswa</td>
-          <td>amkele</td>
-        </tr>
-        <tr>
-          <td>siphamandla</td>
-          <td>akhanyile</td>
-        </tr>
-        <tr>
-          <td>phumezo</td>
-          <td>ntandazo</td>
-        </tr>
-        <tr>
-          <td>thembela</td>
-          <td>ntandazo</td>
-        </tr>
-        <tr>
-          <td>ntando</td>
-          <td>phumezo</td>
-        </tr>
-        <tr>
-          <td>siphamandla</td>
-          <td>akhanyile</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <a class="btn btn-primary mt-4" href=""><i class="fas fa-download"></i> Download data</a>
-    <a class="btn btn-primary-basic mt-4" href="">Report an error</a>
-  </section>
-
-  <section>
-    <h2>Replication</h2>
-    <ol>
-      <li>Enter the IBSA website http://ibsa.brussels</li>
-      <li>Go in Themes page</li>
-      <li>Go in Mobility and Transport page</li>
-      <li>Download the Freight Transport .xls file (available just in French)</li>
-    </ol>
-  </section>
+  </div>
 {% endblock %}
 
 {% block footer %}
   <script src="{% static 'js/datatables.min.js' %}"></script>
   <script>
     $("table").DataTable();
+
+    // copy url
+    const copyUrlButton = $(".copy-url");
+
+    copyUrlButton.click(function() {
+      $("#share-url").select();
+      document.execCommand("copy");
+
+      copyUrlButton.html("<i class='fas fa-check'></i> Copied to clipboard");
+
+      window.setTimeout(function() {
+        copyUrlButton.html("<i class='fas fa-copy'></i> Copy URL");
+      }, 3000);
+    });
   </script>
 {% endblock %}

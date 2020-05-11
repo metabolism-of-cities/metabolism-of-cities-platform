@@ -57,7 +57,7 @@
   </form>
 
   {% buttons %}
-    <button type="submit" form="id" class="btn btn-success btn-lg">
+    <button type="submit" form="schema" class="btn btn-success btn-lg">
       <i class="fas fa-save"></i>
       Save
     </button>
@@ -81,7 +81,7 @@
 
         if ( depth != "" ) {
           let padding = depth - 1;
-          $("<div class='graph-level' style='padding-left: calc(1rem * " + padding + ")'>" + name + "</div>").appendTo(".graph");
+          $("<div class='graph-level' style='padding-left: calc(1rem * " + padding + ")'>" + depth + ". " + name + "</div>").appendTo(".graph");
         }
       })
     }

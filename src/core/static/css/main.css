@@ -409,6 +409,16 @@ blockquote {
   border-left: 0.25rem solid #808080;
   margin: .5rem 0; }
 
+.alert.alert-primary {
+  color: #212529;
+  background-color: rgba(20, 77, 88, 0.2);
+  border-color: #144d58; }
+
+.alert.alert-light {
+  color: #212529;
+  background-color: #fbfbfb;
+  border-color: #efefef; }
+
 .swal-modal {
   border-radius: .25rem;
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2); }
@@ -934,10 +944,12 @@ body.forum.form .markdown-help {
 body.forum.topic .reply {
   margin-bottom: 1rem; }
 
-body.dataset .main-content img {
-  width: 100%;
-  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
-  border-radius: .25rem; }
+body.dataset .tab-divider {
+  margin: 20px 0 20px -20px;
+  width: calc(100% + 40px); }
+
+body.dataset #tab-chart img {
+  width: 100%; }
 
 body.dataset .rating .number {
   display: inline-block;

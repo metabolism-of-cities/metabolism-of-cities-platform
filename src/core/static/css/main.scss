@@ -634,6 +634,21 @@ blockquote {
   margin: .5rem 0;
 }
 
+// BOOTSTRAP ALERT
+.alert {
+  &.alert-primary {
+    color: $dark;
+    background-color: rgba($primary, .2);
+    border-color: $primary;
+  }
+
+  &.alert-light {
+    color: $dark;
+    background-color: $very-light;
+    border-color: $light;
+  }
+}
+
 // SWEET ALERT
 .swal-modal {
   border-radius: .25rem;
@@ -1434,10 +1449,13 @@ body.forum.topic {
 
 // DATASET PAGE
 body.dataset {
-  .main-content img {
+  .tab-divider {
+    margin: 20px 0 20px -20px;
+    width: calc(100% + 40px);
+  }
+
+  #tab-chart img {
     width: 100%;
-    box-shadow: $basic-shadow;
-    border-radius: .25rem;
   }
 
   .rating {

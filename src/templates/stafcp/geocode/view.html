@@ -27,7 +27,7 @@
       <div class="card">
         <div class="card-body">
           {% for each in geocodes %}
-            <div style="padding-left: calc({{ each.depth }} * 1rem)">{{ each.depth }}. {{ each.name }}</div>
+            <div style="padding-left: calc({{ each.depth }} * 1rem - 1rem)">{{ each.depth }}. {{ each.name }}</div>
           {% endfor %}
         </div>
       </div>
