@@ -49,6 +49,10 @@ from django.utils import timezone
 import pytz
 
 from functools import wraps
+import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 # This array defines all the IDs in the database of the articles that are loaded for the
 # various pages in the menu. Here we can differentiate between the different sites.
@@ -138,6 +142,26 @@ def load_design(context, project=1, webpage=None):
     }
 
     return {**context, **create_design}
+
+
+# General script to check if a user is part of a certain group
+# This is used for validating access to certain pages only, so superusers
+# must always have access.
+def is_member(user, group):
+    return user.is_superuser or user.groups.filter(name=group).exists()
+
+# If users ARE logged in, but they try to access pages that they don't have
+# access to, then we log this request for further debugging/review
+def unauthorized_access(request):
+    from django.core.exceptions import PermissionDenied
+    logger.error("No access to this UploadSession")
+    WorkPiece.objects.create(
+        name = "Unauthorized access detected",
+        description = request.META,
+        type = "sec",
+        priority = "high",
+    )
+    raise PermissionDenied
 
 # Authentication of users
 
@@ -626,15 +650,15 @@ def stafcp_upload_gis_file(request, id=None):
             )
         return redirect("stafcp_upload_gis_verify", id=session.id)
     context = {
-        "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
     }
     return render(request, "stafcp/upload/gis.file.html", load_design(context, PAGE_ID["stafcp"]))
 
 @login_required
 def stafcp_upload_gis_verify(request, id):
     import shapefile
-    import json
     session = get_object_or_404(UploadSession, pk=id)
+    if session.user is not request.user and not is_member(request.user, "Data administrators"):
+        unauthorized_access(request)
     files = UploadFile.objects.filter(session=session)
     geojson = None
     try:
@@ -651,8 +675,11 @@ def stafcp_upload_gis_verify(request, id):
     return render(request, "stafcp/upload/gis.verify.html", load_design(context, PAGE_ID["stafcp"]))
 
 def stafcp_upload_gis_meta(request, id):
+    session = get_object_or_404(UploadSession, pk=id)
+    if session.user is not request.user and not is_member(request.user, "Data administrators"):
+        unauthorized_access(request)
     context = {
-        "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
+        "session": session,
     }
     return render(request, "stafcp/upload/gis.meta.html", load_design(context, PAGE_ID["stafcp"]))
 

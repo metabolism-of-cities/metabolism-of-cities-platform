@@ -622,6 +622,8 @@ class WorkPiece(models.Model):
         ("design", "Design"),
         ("quality_control", "Quality Control"),
         ("administrative", "Administrative"),
+        ("programming", "Programming"),
+        ("sec", "Security"),
     ]
     type = models.CharField(max_length=40, choices=TYPE)
     related_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="workpieces_list")
