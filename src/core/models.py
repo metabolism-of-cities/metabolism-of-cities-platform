@@ -477,6 +477,9 @@ class ActivatedSpace(models.Model):
         return self.space.name
     def get_absolute_url(self):
         return reverse("dashboard", args=[self.slug])
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.space.name)
+        super().save(*args, **kwargs)
     class Meta:
         unique_together = ["slug", "site"]
 
