@@ -1376,3 +1376,40 @@ body.library.map .cluster-circle {
 
 body.library.item .item-title {
   font-size: 2rem; }
+
+body.geocode.list .single-item.card {
+  height: 100%; }
+  body.geocode.list .single-item.card .card-body {
+    display: flex;
+    flex-direction: column; }
+    body.geocode.list .single-item.card .card-body p {
+      flex-grow: 1; }
+  body.geocode.list .single-item.card .preview {
+    display: none; }
+  body.geocode.list .single-item.card .close-preview {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    cursor: pointer; }
+    body.geocode.list .single-item.card .close-preview:hover {
+      color: #dc3545; }
+
+body.geocode.form .levels .form-group {
+  display: flex; }
+
+body.geocode.form .levels select,
+body.geocode.form .levels input {
+  display: inline-block; }
+
+body.geocode.form .levels select {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: none;
+  width: 5rem;
+  text-align: center;
+  background-color: #efefef; }
+
+body.geocode.form .levels input {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  width: calc(100% - 5rem - 5px); }

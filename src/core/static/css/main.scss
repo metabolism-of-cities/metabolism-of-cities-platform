@@ -69,7 +69,6 @@ a {
     color: darken($primary, 20%);
     text-decoration: none;
   }
-
 }
 
 #admin-controls {
@@ -82,7 +81,6 @@ a {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
-
 }
 
 .sticky-top {
@@ -2091,5 +2089,70 @@ body.library.map {
 body.library.item {
   .item-title {
     font-size: 2rem;
+  }
+}
+
+// GEOCODE
+// LIST PAGE
+body.geocode.list {
+  .single-item.card {
+    height: 100%;
+
+    .card-body {
+      display: flex;
+      flex-direction: column;
+
+      p {
+        flex-grow: 1;
+      }
+    }
+
+    .preview {
+      display: none;
+    }
+
+    .close-preview {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      cursor: pointer;
+
+      &:hover {
+        color: #dc3545;
+      }
+    }
+  }
+}
+
+// FORM
+body.geocode.form {
+  .levels {
+    .form-group {
+      display: flex;
+    }
+
+    select,
+    input {
+      display: inline-block;
+    }
+
+    select {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right: none;
+      width: 5rem;
+      text-align: center;
+      background-color: $light;
+    }
+
+    input {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      width: calc(100% - 5rem - 5px);
+    }
+  }
+
+  .graph {
+
   }
 }

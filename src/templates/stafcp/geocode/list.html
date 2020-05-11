@@ -1,30 +1,78 @@
 {% extends "_base.html" %}
 
+{% block page_name %}geocode list{% endblock %}
+
 {% block content %}
   <h1>Geocode schemes</h1>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>System</th>
-        <th>Description</th>
-        <th>Coverage</th>
-        <th>Options</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for each in list %}
-      <tr>
-        <td>{{ each.name }}</td>
-        <td>{{ each.description|truncatechars_html:100 }}</td>
-        <td>{{ each.coverage|default_if_none:"" }}</td>
-        <td>
-          <a class="btn btn-info" href="{% url "stafcp_geocode" each.id %}"><i class="fa fa-eye"></i> View</a>
-          <a class="btn btn-info" href="{% url "stafcp_geocode_form" each.id %}"><i class="fa fa-pencil"></i> Edit</a>
-        </td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
 
-  <p><a href="{% url "stafcp_geocode_form" %}" class="btn btn-primary">Add new geocode scheme</a></p>
+  <a href="{% url 'stafcp_geocode_form' %}" class="btn btn-primary">
+    <i class="fas fa-plus"></i>
+    Add new geocode scheme
+  </a>
+
+  <div class="row mt-4">
+  {% for each in list %}
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card single-item">
+        <div class="card-body info">
+          <h4 class="card-title">{{ each.name }}</h4>
+          {% if each.coverage %}
+            <p>{{ each.coverage }}</p>
+          {% endif %}
+          {% if each.description %}
+            <p>{{ each.description|truncatechars_html:100 }}</p>
+          {% else %}
+            <p>{% lorem 20 w random %}...</p>
+          {% endif %}
+          <div class="buttons">
+            <button class="btn btn-sm btn-primary show-preview">
+              <i class="fas fa-fw fa-eye"></i>
+              Quick view
+            </button>
+            <a class="btn btn-sm btn-primary-basic" href="{% url 'stafcp_geocode' each.id %}">
+              <i class="fal fa-fw fa-list"></i>
+              Details
+            </a>
+            <a class="btn btn-sm btn-primary-basic" href="{% url 'stafcp_geocode_form' each.id %}">
+              <i class="fal fa-fw fa-pencil"></i>
+              Edit
+            </a>
+          </div>
+        </div>
+        <div class="card-body preview">
+          <i class="fas fa-times close-preview"></i>
+          <div style="padding-left: 0rem">1. NUTS 1</div>
+          <div style="padding-left: 1rem">2. NUTS 2</div>
+          <div style="padding-left: 2rem">3. NUTS 3</div>
+          <div style="padding-left: 3rem">4. Local Administrative Unit</div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  </div>
+{% endblock %}
+
+{% block footer %}
+  <script>
+    $(".show-preview").click(function() {
+      let geocodeItem = $(this).closest(".single-item");
+      let itemInfo = geocodeItem.find(".info");
+      let itemPreview = geocodeItem.find(".preview");
+
+      itemInfo.fadeOut(200, function() {
+        itemPreview.fadeIn(200)
+      })
+    })
+
+    $(".close-preview").click(function() {
+      let geocodeItem = $(this).closest(".single-item");
+      let itemInfo = geocodeItem.find(".info");
+      let itemPreview = geocodeItem.find(".preview");
+
+      itemPreview.fadeOut(200, function() {
+        itemInfo.fadeIn(200)
+      })
+    })
+
+  </script>
 {% endblock %}

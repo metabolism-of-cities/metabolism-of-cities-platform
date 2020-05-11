@@ -1,66 +1,95 @@
 {% extends "_base.html" %}
 {% load bootstrap4 %}
 
+{% block page_name %}geocode form{% endblock %}
+
 {% block content %}
-  <h1>Geocode scheme</h1>
+  <h1 class="mb-0">Geocode scheme</h1>
+  <a href="{% url 'stafcp_geocodes' %}" class="btn btn-primary-basic">
+    <i class="fal fa-angle-left"></i>
+    Back to schema list
+  </a>
 
-  <form method="post" class="form form-horizontal">
+  <form method="post" id="schema" class="form card my-4">
+    <div class="card-body">
+      <section>
+        {% csrf_token %}
+        {% bootstrap_form form %}
+      </section>
 
-    {% csrf_token %}
-    {% bootstrap_form form %}
+      <section>
+        <h2>What levels are present in this schema?</h2>
+        <p class="text-muted">For example: 1 = country, 2 = province, 3 = municipality</p>
 
-    <hr>
-
-    <h2>What levels are present in this schema?</h2>
-    <p>Example: level 1 = country, level 2 = province, level 3 = municipality</p>
-
-    <div class="row">
-      <div class="col-lg-6">
-        <div class="levels">
-          {% for each in geocodes %}
-            <p>
-              <select name="geocode_level">
-                <option value=""></option>
-                {% for depth in depths %}
-                  <option value="{{ depth }}" {% if each.depth == depth %}selected{% endif %}>{{ depth }}</option>
-                {% endfor %}
-              </select>
-              <input type="text" name="geocode_name" value="{{ each }}"/>
-            </p>
-          {% endfor %}
-          <p>
-            <select name="geocode_level">
-              <option value=""></option>
-              {% for depth in depths %}
-                <option value="{{ depth }}">{{ depth }}</option>
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="levels">
+              {% for each in geocodes %}
+                <div class="form-group">
+                  <select class="custom-select" name="geocode-level">
+                    <option value=""></option>
+                    {% for depth in depths %}
+                      <option value="{{ depth }}" {% if each.depth == depth %}selected{% endif %}>{{ depth }}</option>
+                    {% endfor %}
+                  </select>
+                  <input class="form-control" type="text" name="geocode-name" value="{{ each }}"/>
+                </div>
               {% endfor %}
-            </select>
-            <input type="text" name="geocode_name" />
-          </p>
-        </div>
-      </div>
-      <div class="col-lg-6" style="background:#ccc">
-        Show mermaid graph
-      </div>
-    </div>
+              <div class="form-group">
+                <select class="custom-select" name="geocode-level">
+                  <option value=""></option>
+                  {% for depth in depths %}
+                    <option value="{{ depth }}">{{ depth }}</option>
+                  {% endfor %}
+                </select>
+                <input class="form-control" type="text" name="geocode-name" />
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="graph">
 
-    {% buttons %}
-      <button type="submit" class="btn btn-success">Save</button>
-    {% endbuttons %}
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   </form>
 
-  <p><a href="{% url "stafcp_geocodes" %}" class="btn btn-primary">Back to schema list</a></p>
+  {% buttons %}
+    <button type="submit" form="id" class="btn btn-success btn-lg">
+      <i class="fas fa-save"></i>
+      Save
+    </button>
+  {% endbuttons %}
 {% endblock %}
 
 {% block footer %}
-<script type="text/javascript">
-$(function(){
-  $("select[name=geocode_level]").change(function(){
-    empty_selects = $(".levels option:selected[value='']").length;
-    if (!empty_selects) {
-      $(this).closest("p").clone(true).appendTo(".levels");
+  <script>
+    $("select[name=geocode-level]").change(function(){
+      emptySelects = $(".levels option:selected[value='']").length;
+      if (!emptySelects) {
+        $(this).closest(".form-group").clone(true).appendTo(".levels");
+      }
+    });
+
+    function generateChart() {
+      $(".graph").html("");
+      $(".levels .form-group").each(function(i) {
+        let depth = $("select", this).val();
+        let name = $("input", this).val();
+
+        if ( depth != "" ) {
+          let padding = depth - 1;
+          $("<div class='graph-level' style='padding-left: calc(1rem * " + padding + ")'>" + name + "</div>").appendTo(".graph");
+        }
+      })
     }
-  });
-});
-</script>
+
+    $(".levels select, .levels input").change(function() {
+      generateChart()
+    })
+
+    generateChart()
+  </script>
 {% endblock %}

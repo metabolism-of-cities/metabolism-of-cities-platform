@@ -1,27 +1,41 @@
 {% extends "_base.html" %}
 {% load bootstrap4 %}
 
+{% block title %}{{ info }}{% endblock %}
+
 {% block content %}
-  <h1>{{ info }}</h1>
+  <h1 class="mb-0">{{ info }}</h1>
+  <a href="{% url 'stafcp_geocodes' %}" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to schema list
+  </a>
 
-  {% if info.description %}
-    <p>Description:</p>
-    <p>{{ info.description }}</p>
-  {% endif %}
+  <div class="row">
+    {% if info.description or info.url %}
+      <div class="col-lg-6">
+        {{ info.description|safe|linebreaks }}
+        {% if info.url %}
+          <a href="{{ info.url }}" class="btn btn-primary-basic">
+            <i class="fal fa-link"></i>
+            More information
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+    <div class="col-lg-6">
+      <h4>Scheme levels</h4>
+      <div class="card">
+        <div class="card-body">
+          {% for each in geocodes %}
+            <div style="padding-left: calc({{ each.depth }} * 1rem)">{{ each.depth }}. {{ each.name }}</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
 
-  {% if info.url %}
-    <p>Read more: {{ info.url }}</p>
-  {% endif %}
-
-  <hr>
-
-  <h2>Scheme levels:</h2>
-  {% for each in geocodes %}
-    <p style="padding-left:{{ each.depth }}vw">{{ each.depth }}. {{ each.name }}</p>
-  {% endfor %}
-
-  <p>
-    <a href="{% url "stafcp_geocodes" %}" class="btn btn-primary">Back to schema list</a>
-    <a href="{% url "stafcp_geocode_form" info.id %}" class="btn btn-primary">Edit</a>
-  </p>
+  <a href="{% url 'stafcp_geocode_form' info.id %}" class="btn btn-primary mt-4">
+    <i class="fas fa-pencil"></i>
+    Edit
+  </a>
 {% endblock %}
