@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+
+<title>Metabolism of Cities is updating</title>
+<meta http-equiv="refresh" content="7">
+
+<style type="text/css">
+  body {
+    background-color: #efefef;
+    height: 100%;
+    margin: 0;
+    text-align: center;
+    font-family: "Open Sans", "Helvetica Neue", Arial, Helvetica, sans-serif;
+  }
+  .message {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .meter {
+    height: 5px;
+    position: relative;
+    background: #fff;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+
+  .meter span {
+    display: block;
+    height: 100%;
+  }
+
+  .progress {
+    background-color: #2185d0;
+    -webkit-animation: progressBar 7s linear;
+    -webkit-animation-fill-mode:both;
+    -moz-animation: progressBar 7s linear;
+    -moz-animation-fill-mode:both;
+  }
+
+  @-webkit-keyframes progressBar {
+    0% { width: 0; }
+    100% { width: 100%; }
+  }
+
+  @-moz-keyframes progressBar {
+    0% { width: 0; }
+    100% { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="message">
+  <h1>Metabolism of Cities is updating</h1>
+  <p>A system update is taking place. The page will automatically refresh when it's finished.</p>
+  <div class="meter">
+    <span style="width:100%;"><span class="progress"></span></span>
+  </div>
+</div>
+</body>
+</html>

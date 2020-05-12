@@ -1209,7 +1209,7 @@ def check_ascus_access(function):
                 record_child_id = PAGE_ID["ascus"],
                 relationship__name = "Participant",
             )
-        if not check_participant.exists():
+        if not check_participant or not check_participant.exists():
             return redirect("/register/?existing=true")
         else:
             check_organizer = RecordRelationship.objects.filter(
