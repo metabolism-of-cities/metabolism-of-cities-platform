@@ -1,0 +1,52 @@
+{% extends "_base.html" %}
+
+{% block css %}
+<style type="text/css">
+body.homepage .jumbotron{padding-bottom:3rem}
+body.homepage section.what .card{height:auto}
+</style>
+{% endblock %}
+
+{% block page_name %}homepage{% endblock %}
+{% block content %}
+
+<section class="what">
+  <div class="row">
+
+    <div class="col-md-4">
+      <a href="/account/admin/participant/">
+        <div class="card">
+          <div class="icon">
+            <i class="far fa-fw fa-users"></i>
+          </div>
+          <div class="card-header">People</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-md-4">
+      <a href="/account/admin/payments/">
+        <div class="card">
+          <div class="icon">
+            <i class="far fa-fw fa-money-check-alt"></i>
+          </div>
+          <div class="card-header">Payments</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-md-4">
+      <a href="/account/admin/participant/">
+        <div class="card">
+          <div class="icon">
+            <i class="far fa-fw fa-presentation"></i>
+          </div>
+          <div class="card-header">Documents</div>
+        </div>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}

@@ -115,7 +115,6 @@
   <script src="https://kit.fontawesome.com/7815588c96.js" crossorigin="anonymous"></script>
   <script src="{% static "js/site.js" %}"></script>
 
-  {% block footer %}{% endblock %}
   {% if load_select2 %}
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
     <script>
@@ -140,6 +139,8 @@
       $(".datatable").DataTable();
     </script>
   {% endif %}
+
+  {% block footer %}{% endblock %}
 
 </body>
 </html>

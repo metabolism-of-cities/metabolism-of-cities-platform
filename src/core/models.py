@@ -631,6 +631,7 @@ class WorkPiece(models.Model):
     type = models.CharField(max_length=40, choices=TYPE)
     related_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="workpieces_list")
     assigned_to = models.ManyToManyField(People)
+    tags = models.ManyToManyField(Tag, blank=True)
 
     def __str__(self):
         return self.name

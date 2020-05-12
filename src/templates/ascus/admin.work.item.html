@@ -1,0 +1,27 @@
+{% extends "_base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+  <h1>{{ info.related_to }}</h1>
+
+  <form method="post" class="form form-horizontal" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+      <button type="submit" class="btn btn-primary">Save</button>
+    {% endbuttons %}
+  </form>
+
+
+  <p class="mt-5"><a href="/account/admin/" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a></p>
+
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+  $("#id_tags").select2({
+    theme: "bootstrap4",
+  });
+</script>
+{% endblock %}

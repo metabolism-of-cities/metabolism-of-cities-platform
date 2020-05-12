@@ -1,0 +1,28 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Notes</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for each in list %}
+        <tr>
+          <td><a href="/account/admin/payments/{{ each.id }}/">{{ each.related_to }}</a></td>
+          <td data-sort="{{ each.date_created|date:"YmdHis" }}">{{ each.date_created }}</td>
+          <td>{{ each.description|linebreaksbr }}</td>
+          <td>{{ each.get_status_display }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <p class="mt-5"><a href="/account/admin/" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a></p>
+
+{% endblock %}

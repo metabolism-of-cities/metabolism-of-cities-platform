@@ -1475,7 +1475,15 @@ def ascus_account_presentation(request, introvideo=False):
 
 # AScUS admin section
 @check_ascus_admin_access
-def ascus_admin(request, type="participant"):
+def ascus_admin(request):
+    context = {
+        "header_title": "AScUS Admin",
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+    }
+    return render(request, "ascus/admin.html", load_design(context, PAGE_ID["ascus"]))
+
+@check_ascus_admin_access
+def ascus_admin_list(request, type="participant"):
     types = {
         "participant": "Participant", 
         "organizer": "Organizer", 
@@ -1496,6 +1504,49 @@ def ascus_admin(request, type="participant"):
         "type": type,
     }
     return render(request, "ascus/admin.list.html", load_design(context, PAGE_ID["ascus"]))
+
+@check_ascus_admin_access
+def ascus_admin_work(request):
+    list = WorkPiece.objects.filter(
+        project_id = PAGE_ID["ascus"],
+        name = "Monitor for payment",
+    )
+    context = {
+        "header_title": "AScUS Admin",
+        "header_subtitle": "Payments",
+        "list": list,
+        "load_datatables": True,
+    }
+    return render(request, "ascus/admin.work.html", load_design(context, PAGE_ID["ascus"]))
+
+@check_ascus_admin_access
+def ascus_admin_work_item(request, id):
+    info = WorkPiece.objects.get(
+        project_id = PAGE_ID["ascus"],
+        name = "Monitor for payment",
+        pk=id,
+    )
+    ModelForm = modelform_factory(
+        WorkPiece, 
+        fields = ("description", "status", "tags"),
+    )
+    form = ModelForm(request.POST or None, request.FILES or None, instance=info)
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save()
+            messages.success(request, "The details were saved.")
+            return redirect("/account/admin/payments/")
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    context = {
+        "header_title": "AScUS Admin",
+        "header_subtitle": "Payments",
+        "info": info,
+        "form": form,
+        "load_select2": True,
+    }
+    return render(request, "ascus/admin.work.item.html", load_design(context, PAGE_ID["ascus"]))
 
 
 def ascus_register(request):
