@@ -22,6 +22,8 @@ urlpatterns = [
     path("account/introvideo/", views.ascus_account_presentation, {"introvideo": True}),
     path("account/edit/", views.ascus_account_edit),
     path("account/discussion/", views.ascus_account_discussion),
+    path("account/admin/", views.ascus_admin),
+    path("account/admin/<slug:type>/", views.ascus_admin),
     path("<slug:slug>/", views.article, { "prefix": "/ascus/", "subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020", }),
     path("ascus/<slug:slug>/", views.article, { "prefix": "/ascus/", "subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020", }),
 

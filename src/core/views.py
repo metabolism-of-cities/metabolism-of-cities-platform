@@ -1204,14 +1204,41 @@ def check_ascus_access(function):
         if not request.user.is_authenticated:
             return redirect("/login/")
         if request.user.is_authenticated and hasattr(request.user, "people"):
-            check_participant = RecordRelationship.objects.get(
+            check_participant = RecordRelationship.objects.filter(
                 record_parent = request.user.people,
                 record_child_id = PAGE_ID["ascus"],
                 relationship__name = "Participant",
             )
-        if not check_participant:
+        if not check_participant.exists():
             return redirect("/register/?existing=true")
         else:
+            check_organizer = RecordRelationship.objects.filter(
+                record_parent = request.user.people,
+                record_child_id = PAGE_ID["ascus"],
+                relationship__name = "Organizer",
+            )
+            if check_organizer.exists():
+                request.user.is_ascus_organizer = True
+            return function(request, *args, **kwargs)
+    return wrap
+
+def check_ascus_admin_access(function):
+    @wraps(function)
+    def wrap(request, *args, **kwargs):
+        global PAGE_ID
+        check_organizer = None
+        if not request.user.is_authenticated:
+            return redirect("/login/")
+        if request.user.is_authenticated and hasattr(request.user, "people"):
+            check_organizer = RecordRelationship.objects.filter(
+                record_parent = request.user.people,
+                record_child_id = PAGE_ID["ascus"],
+                relationship__name = "Organizer",
+            )
+        if not check_organizer.exists():
+            return redirect("/register/?existing=true")
+        else:
+            request.user.is_ascus_organizer = True
             return function(request, *args, **kwargs)
     return wrap
 
@@ -1222,6 +1249,7 @@ def ascus(request):
         "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
         "edit_link": "/admin/core/project/" + str(PAGE_ID["ascus"]) + "/change/",
         "info": get_object_or_404(Project, pk=PAGE_ID["ascus"]),
+        "show_relationship": PAGE_ID["ascus"],
     }
     return render(request, "article.html", load_design(context, PAGE_ID["ascus"]))
 
@@ -1444,6 +1472,31 @@ def ascus_account_presentation(request, introvideo=False):
         "list": my_documents,
     }
     return render(request, html_page, load_design(context, PAGE_ID["ascus"]))
+
+# AScUS admin section
+@check_ascus_admin_access
+def ascus_admin(request, type="participant"):
+    types = {
+        "participant": "Participant", 
+        "organizer": "Organizer", 
+        "presenter": "Presenter", 
+        "session": "Session organizer",
+    }
+    get_type = types[type]
+    list = RecordRelationship.objects.filter(
+        record_child = Project.objects.get(pk=PAGE_ID["ascus"]),
+        relationship = Relationship.objects.get(name=get_type),
+    ).order_by("record_parent__name")
+    context = {
+        "header_title": "AScUS Admin",
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "list": list,
+        "load_datatables": True,
+        "types": types,
+        "type": type,
+    }
+    return render(request, "ascus/admin.list.html", load_design(context, PAGE_ID["ascus"]))
+
 
 def ascus_register(request):
     people = user = is_logged_in = None

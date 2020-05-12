@@ -1,0 +1,31 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <ul class="nav nav-tabs">
+    {% for key,value in types.items %}
+    <li class="nav-item">
+      <a class="nav-link {% if type == key %}active{% endif %}" href="/account/admin/{{ key }}/">{{ value }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Person</th>
+        <th>E-mail</th>
+        <th>Role</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for each in list %}
+        <tr>
+          <td>{{ each.record_parent }}</td>
+          <td>{{ each.record_parent.people.email }}</td>
+          <td>{{ each.relationship.name }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}
