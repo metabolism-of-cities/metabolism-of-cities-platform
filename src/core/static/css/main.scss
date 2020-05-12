@@ -19,7 +19,6 @@ $basic-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
 }
 
 %box-shadow {
-  box-shadow: $basic-shadow;
   transition: all .3s;
 
   &:hover {
@@ -34,7 +33,7 @@ $basic-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
 // GLOBALS
 body {
   background-color: #fcfcfc;
-  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-family: Lato, Helvetica Neue, Arial, Helvetica, sans-serif;
 }
 
 section {
@@ -1454,8 +1453,20 @@ body.dataset {
     width: calc(100% + 40px);
   }
 
-  #tab-chart img {
-    width: 100%;
+  .tab-pane {
+    min-height: 500px;
+  }
+
+  #tab-chart {
+    #chart {
+      height: 500px;
+      max-height: 100vh;
+    }
+
+    .highcharts-title,
+    .highcharts-subtitle {
+      display: none;
+    }
   }
 
   .rating {
