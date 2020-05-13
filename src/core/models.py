@@ -663,7 +663,31 @@ class WorkLog(models.Model):
     activity = models.ForeignKey(WorkActivity, on_delete=models.CASCADE, null=True, blank=True)
     related_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="workpieces_list")
     tags = models.ManyToManyField(Tag, blank=True)
-    #assigned_to = models.ForeignKey(People, on_delete=models.CASCADE, null=True, blank=True)
+    assigned_to = models.ForeignKey(People, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+class Work(Record):
+
+    class WorkStatus(models.IntegerChoices):
+        OPEN = 1, "Open"
+        COMPLETED = 2, "Completed"
+        DISCARDED = 3, "Discarded"
+        ONHOLD = 4, "On Hold"
+        PROGRESS = 5, "In Progress"
+
+    class WorkPriority(models.IntegerChoices):
+        LOW = 1, "Low"
+        MEDIUM = 2, "Medium"
+        HIGH = 3, "High"
+
+    status = models.IntegerField(choices=WorkStatus.choices, db_index=True, default=1)
+    priority = models.IntegerField(choices=WorkPriority.choices, db_index=True, default=2)
+    part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={"is_internal": True}, related_name="work")
+    activity = models.ForeignKey(WorkActivity, on_delete=models.CASCADE, null=True, blank=True)
+    related_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="my_work")
+    assigned_to = models.ForeignKey(People, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name

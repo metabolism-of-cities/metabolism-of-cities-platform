@@ -143,6 +143,11 @@ class WorkLogAdmin(admin.ModelAdmin):
     list_display = ["name", "project", "related_to", "status", "priority", "complexity"]
     list_filter = ["project", "status", "priority", "complexity"]
 
+class WorkAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
+    list_display = ["name", "part_of_project", "related_to", "status", "priority"]
+    list_filter = ["part_of_project", "status", "priority"]
+
 class LogEntryAdmin(admin.ModelAdmin):
     # to have a date-based drilldown navigation in the admin page
     date_hierarchy = "action_time"
@@ -225,6 +230,7 @@ admin_site.register(UploadSession)
 admin_site.register(UploadFile)
 
 admin_site.register(WorkLog, WorkLogAdmin)
+admin_site.register(Work, WorkAdmin)
 admin_site.register(WorkActivity)
 admin_site.register(ActivityCatalog)
 admin_site.register(Activity, ActivityAdmin)

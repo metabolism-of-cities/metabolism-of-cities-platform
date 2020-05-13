@@ -272,6 +272,29 @@ def user_profile(request):
 # Homepage
 
 def index(request):
+    if "migrate" in request.GET:
+        Work.objects.all().delete()
+        list = WorkLog.objects.all()
+        for each in list:
+            if each.type == "administrative":
+                activity_id = 13
+            elif each.type == "quality_control":
+                activity_id = 7
+            if each.status == "open":
+                status = 1
+            elif each.status == "discarded":
+                status = 3
+            elif each.status == "on_hold":
+                status = 4
+            Work.objects.create(
+                name = each.name,
+                content = each.description,
+                is_public = True,
+                part_of_project_id = each.project.id,
+                related_to_id = each.related_to.id,
+                activity_id = activity_id,
+                status = status,
+            )
     context = {
         "header_title": "Metabolism of Cities",
         "header_subtitle": "Your hub for anyting around urban metabolism",
