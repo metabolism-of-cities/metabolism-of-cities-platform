@@ -19,59 +19,27 @@
 
   <div class="card">
     <div class="card-body">
-      <form>
-        <p>The following information is available in your shapefile:</p>
-        <!-- the `pre` content can't have indentation as that will show up for the user too -->
-        <pre>
-          Pop.   | Name         | Area size | ConvertStatusUp | Description
-          98732  | Rondebosch   | 437       | true            | This is a ...
-          98733  | Rosebank     | 482       | true            | This where a ...
-          98734  | Mowbray      | 938       | false           | This also a ...
-        </pre>
-
-        <div class="form-group mb-4">
-          <label for="name">Which of these columns contains the name?</label>
-          <div class="custom-control custom-radio">
-            <input type="radio" id="Pop." name="name" class="custom-control-input">
-            <label class="custom-control-label" for="Pop.">Pop.</label>
-          </div>
-          <div class="custom-control custom-radio">
-            <input type="radio" id="Name" name="name" class="custom-control-input">
-            <label class="custom-control-label" for="Name">Name</label>
-          </div>
-          <div class="custom-control custom-radio">
-            <input type="radio" id="Area size" name="name" class="custom-control-input">
-            <label class="custom-control-label" for="Area size">Area size</label>
-          </div>
-          <div class="custom-control custom-radio">
-            <input type="radio" id="ConvertStatusUp" name="name" class="custom-control-input">
-            <label class="custom-control-label" for="ConvertStatusUp">ConvertStatusUp</label>
-          </div>
-          <div class="custom-control custom-radio">
-            <input type="radio" id="Description" name="name" class="custom-control-input">
-            <label class="custom-control-label" for="Description">Description</label>
-          </div>
-        </div>
-
+      <form method="post">
+        
         <h2>Data source</h2>
         <div class="form-group">
           <label for="author">Who has produced this shapefile?</label>
-          <input type="text" class="form-control" id="author">
+          <input type="text" class="form-control" id="author" name="author">
         </div>
 
         <div class="form-group">
           <label for="url">Download URL or relevant website</label>
-          <input type="text" class="form-control" id="url">
+          <input type="text" class="form-control" id="url" name="url">
         </div>
 
         <div class="form-group">
           <label for="year">Year of publication</label>
-          <input type="number" class="form-control" id="year" min="1900">
+          <input type="number" class="form-control" id="year" min="1900" name="year">
         </div>
 
         <div class="form-group">
           <label for="year">Shapefile license</label>
-          <select class="custom-select">
+          <select class="custom-select" name="license">
             <option hidden disabled selected></option>
             <option value="">CC BY</option>
             <option value="">CC BY SA</option>
@@ -81,17 +49,18 @@
 
         <div class="form-group">
           <label for="year">Description</label>
-          <textarea class="form-control" rows="3"></textarea>
+          <textarea class="form-control" rows="3" name="description"></textarea>
         </div>
 
         <div class="form-group">
           <label for="year">Data quality comments</label>
-          <textarea class="form-control" rows="3"></textarea>
+          <textarea class="form-control" rows="3" name="dataquality"></textarea>
           <small class="form-text text-muted">
             Cupiditate cum similique fugit aliquam labore autem sapiente eaque. Fuga velit explicabo praesentium perferendis ipsam. Qui ipsa aut nihil dolorem blanditiis dolores fugiat. Voluptas omnis a id est vitae cum sunt. Non reprehenderit voluptas autem nihil aut fuga quibusdam. Voluptas necessitatibus harum ipsum rem.
           </small>
         </div>
 
+        {% csrf_token %}
         <button class="btn btn-success" type="submit"><i class="fas fa-fw fa-upload"></i> Submit</button>
 
         <a class="btn btn-primary-basic" href="{% url 'stafcp_upload_gis_verify' 1 %}"><i class="fas fa-fw fa-arrow-left"></i> Back to previous step</a>

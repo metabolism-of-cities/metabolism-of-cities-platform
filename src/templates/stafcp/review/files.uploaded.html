@@ -1,0 +1,65 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-8">
+    <h2>Quick Stats</h2>
+
+    <ul>
+      <li><strong>{{ list.count }}</strong> pending uploads</li>
+      <li><strong>33</strong> uploads this month</li>
+      <li><strong>3432</strong> uploads all-time</li>
+    </ul>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User</th>
+          <th>Name</th>
+          <th>Date</th>
+          <th>Options</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in list %}
+        <tr>
+          <td>{{ each.id }}</td>
+          <td>{{ each.user }}</td>
+          <td>{{ each.name }}</td>
+          <td>{{ each.date_created }}</td>
+          <td>
+            <a href="{% url "stafcp_review_session" each.id %}">View</a> | 
+            <a href="http://">Work on this</a>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+    <p><a href="{% url "stafcp_review" %}" class="btn btn-info">Back to review portal</a></p>
+
+  </div>
+  <div class="col-4">
+    <h2>Instructions</h2>
+    <ul>
+      <li>Select a dataset</li>
+      <li>Review data</li>
+      <li>Curate and classify the data appropriately</li>
+      <li>etc.</li>
+      <li><a href="http://">Watch instruction video</a></li>
+    </ul>
+
+    <h2>Badge progress</h2>
+    <p>Complete review tasks to earn badges.</p>
+
+    <ul>
+      <li><span class="btn btn-info">[bronze] Custodian</span> review 1 dataset</li>
+      <li><span class="btn btn-info">[silver] Reviewer</span> review 10 dataset</li>
+      <li><span class="btn btn-info">[gold] Steward</span> review 100 dataset</li>
+    </ul>
+
+  </div>
+</div>
+{% endblock %}

@@ -10,19 +10,6 @@
   <li><strong>3432</strong> uploads all-time</li>
 </ul>
 
-<h2>Queue</h2>
-<ul class="nav nav-tabs">
-  <li class="nav-item">
-    <a class="nav-link {% if page == "pending" %}active{% endif %}" href="{% url "stafcp_review_pending" %}">Incomplete uploads</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link {% if page == "uploaded" %}active{% endif %}" href="{% url "stafcp_review_uploaded" %}">Ready for processing</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link {% if page == "uploaded" %}active{% endif %}" href="{% url "stafcp_review_uploaded" %}">Ready for publication</a>
-  </li>
-</ul>
-
 <table class="table table-striped">
   <thead>
     <tr>

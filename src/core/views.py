@@ -633,14 +633,20 @@ def stafcp(request):
     }
     return render(request, "stafcp/index.html", load_design(context, PAGE_ID["stafcp"]))
 
+def stafcp_review(request):
+    context = {
+    }
+    return render(request, "stafcp/review/index.html", load_design(context, PAGE_ID["stafcp"]))
+
 def stafcp_review_pending(request):
     context = {
-        "list": UploadSession.objects.filter(is_processed=False),
+        "list": UploadSession.objects.filter(is_uploaded=False),
     }
     return render(request, "stafcp/review/files.pending.html", load_design(context, PAGE_ID["stafcp"]))
 
 def stafcp_review_uploaded(request):
     context = {
+        "list": UploadSession.objects.filter(is_uploaded=True, is_processed=False),
     }
     return render(request, "stafcp/review/files.uploaded.html", load_design(context, PAGE_ID["stafcp"]))
 
@@ -648,6 +654,14 @@ def stafcp_review_processed(request):
     context = {
     }
     return render(request, "stafcp/review/files.processed.html", load_design(context, PAGE_ID["stafcp"]))
+
+def stafcp_review_session(request, id):
+    session = get_object_or_404(UploadSession, pk=id)
+    if session.user is not request.user and not is_member(request.user, "Data administrators"):
+        unauthorized_access(request)
+    context = {
+    }
+    return render(request, "stafcp/review/session.html", load_design(context, PAGE_ID["stafcp"]))
 
 def stafcp_upload_gis(request, id=None):
     context = {
@@ -670,6 +684,12 @@ def stafcp_upload_gis_file(request, id=None):
     context = {
     }
     return render(request, "stafcp/upload/gis.file.html", load_design(context, PAGE_ID["stafcp"]))
+
+@login_required
+def stafcp_upload(request):
+    context = {
+    }
+    return render(request, "stafcp/upload/index.html", load_design(context, PAGE_ID["stafcp"]))
 
 @login_required
 def stafcp_upload_gis_verify(request, id):
@@ -696,6 +716,12 @@ def stafcp_upload_gis_meta(request, id):
     session = get_object_or_404(UploadSession, pk=id)
     if session.user is not request.user and not is_member(request.user, "Data administrators"):
         unauthorized_access(request)
+    if request.method == "POST":
+        session.is_uploaded = True
+        session.meta_data = request.POST
+        session.save()
+        messages.success(request, "Thanks, the information has been uploaded! Our review team will review and process your information.")
+        return redirect("stafcp_upload")
     context = {
         "session": session,
     }

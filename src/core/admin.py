@@ -131,6 +131,9 @@ class RecordRelationshipAdmin(admin.ModelAdmin):
     list_filter = ["relationship"]
     autocomplete_fields = ["record_parent", "record_child"]
 
+class RelationshipAdmin(admin.ModelAdmin):
+    list_display = ["name", "label"]
+
 class PhotoAdmin(admin.ModelAdmin):
     search_fields = ["space__name"]
     list_display = ["space", "uploaded_by", "description"]
@@ -187,7 +190,7 @@ admin_site.register(ProjectDesign)
 admin_site.register(People, SearchCompleteAdmin)
 admin_site.register(Video, VideoAdmin)
 admin_site.register(Project, ProjectAdmin)
-admin_site.register(Relationship)
+admin_site.register(Relationship, RelationshipAdmin)
 admin_site.register(RecordRelationship, RecordRelationshipAdmin)
 admin_site.register(SocialMedia, SocialMediaAdmin)
 admin_site.register(LibraryItem, LibraryAdmin)

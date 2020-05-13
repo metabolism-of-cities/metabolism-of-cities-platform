@@ -618,15 +618,20 @@ class WorkPiece(models.Model):
     ]
     complexity = models.CharField(max_length=4, choices=COMPLEXITY, default="med")
     TYPE = [
+        ("data", "Data"),
         ("editorial", "Editorial"),
-        ("curation", "Curation"),
-        ("data_entry", "Data Entry"),
-        ("data_review", "Review of Data"),
-        ("design", "Design"),
-        ("quality_control", "Quality Control"),
-        ("administrative", "Administrative"),
+        ("participation", "Participation"),
+        ("moderation", "Moderation"),
         ("programming", "Programming"),
+        ("design", "Design"),
+        ("administrative", "Administrative"),
+
+        ("data_entry", "Data Entry"),
+        ("data_processing", "Data Processing"),
+
+        ("quality_control", "Quality Control"),
         ("sec", "Security"),
+        ("curation", "Curation"),
     ]
     type = models.CharField(max_length=40, choices=TYPE)
     related_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="workpieces_list")
@@ -635,4 +640,23 @@ class WorkPiece(models.Model):
 
     def __str__(self):
         return self.name
+
+class Badge(models.Model):
+    name = models.CharField(max_length=255)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={"is_internal": True})
+    TYPE = [
+        ("bronze", "Bronze"),
+        ("silver", "Silver"),
+        ("gold", "Gold"),
+    ]
+    type = models.CharField(max_length=20, choices=TYPE)
+    description = models.CharField(max_length=255)
+
+
+    
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ["name"]
 

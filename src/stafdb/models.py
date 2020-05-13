@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import JSONField
 from django.contrib.gis.db import models
 from django.urls import reverse
 # Used for image resizing
@@ -190,6 +191,8 @@ class UploadSession(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     space = models.ForeignKey(ReferenceSpace, on_delete=models.SET_NULL, null=True, blank=True)
     project = models.ForeignKey("core.Project", on_delete=models.SET_NULL, null=True, blank=True)
+    meta_data = JSONField(null=True, blank=True)
+    is_uploaded = models.BooleanField(default=False, db_index=True)
     is_processed = models.BooleanField(default=False, db_index=True)
     is_published = models.BooleanField(default=False, db_index=True)
     is_deleted = models.BooleanField(default=False, db_index=True)

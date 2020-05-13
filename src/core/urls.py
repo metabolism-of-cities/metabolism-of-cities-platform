@@ -90,6 +90,7 @@ urlpatterns = [
 
     # STAFCP
     path("stafcp/", views.stafcp),
+    path("stafcp/upload/", views.stafcp_upload, name="stafcp_upload"),
     path("stafcp/upload/gis/", views.stafcp_upload_gis, name="stafcp_upload_gis"),
     path("stafcp/upload/gis/<slug:id>/file/", views.stafcp_upload_gis_file, name="stafcp_upload_gis_file"),
     path("stafcp/upload/gis/<int:id>/verify/", views.stafcp_upload_gis_verify, name="stafcp_upload_gis_verify"),
@@ -114,10 +115,11 @@ urlpatterns = [
     path("stafcp/referencespaces/<int:id>/", views.stafcp_referencespaces_list, name="stafcp_referencespaces_list"),
     path("stafcp/referencespaces/<slug:group>/", views.stafcp_referencespaces, name="stafcp_referencespaces"),
 
-    path("stafcp/review/", views.stafcp_review_pending, name="stafcp_review"),
+    path("stafcp/review/", views.stafcp_review, name="stafcp_review"),
     path("stafcp/review/pending/", views.stafcp_review_pending, name="stafcp_review_pending"),
     path("stafcp/review/uploaded/", views.stafcp_review_uploaded, name="stafcp_review_uploaded"),
     path("stafcp/review/processed/", views.stafcp_review_processed, name="stafcp_review_processed"),
+    path("stafcp/review/<int:id>/", views.stafcp_review_session, name="stafcp_review_session"),
 
     # Podcast
     path("podcast/", views.podcast_series),
