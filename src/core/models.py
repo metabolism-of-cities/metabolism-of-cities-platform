@@ -57,7 +57,7 @@ class PrivateRecordManager(models.Manager):
 
 class Record(models.Model):
     name = models.CharField(max_length=255)
-    content = HTMLField(null=True, blank=True)
+    description = HTMLField(null=True, blank=True)
     image = StdImageField(upload_to="records", variations={"thumbnail": (480, 480), "large": (1280, 1024)}, blank=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -364,7 +364,7 @@ class ForumMessage(Record):
         return self.documents.all()
 
     def getContent(self):
-        return markdown(self.content)
+        return markdown(self.description)
 
     def get_absolute_url(self):
         return reverse("forum_topic", args=[self.id])
@@ -615,58 +615,6 @@ class WorkActivity(models.Model):
 
     class Meta:
         verbose_name_plural = "work activities"
-
-class WorkLog(models.Model):
-    name = models.CharField(max_length=255)
-    description = HTMLField(null=True, blank=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    is_public = models.BooleanField(db_index=True, default=True)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={"is_internal": True}, related_name="workpieces")
-    STATUS = [
-        ("open", "Open"),
-        ("completed", "Completed"),
-        ("discarded", "Discarded"),
-        ("on_hold", "On Hold"),
-        ("progress", "In Progress"),
-    ]
-    status = models.CharField(max_length=14, choices=STATUS, default="open")
-    PRIORITY = [
-        ("low", "Low"),
-        ("med", "Medium"),
-        ("high", "High"),
-    ]
-    priority = models.CharField(max_length=4, choices=PRIORITY, default="med")
-    COMPLEXITY = [
-        ("low", "Low"),
-        ("med", "Medium"),
-        ("high", "High"),
-    ]
-    complexity = models.CharField(max_length=4, choices=COMPLEXITY, default="med")
-    TYPE = [
-        ("data", "Data"),
-        ("editorial", "Editorial"),
-        ("participation", "Participation"),
-        ("moderation", "Moderation"),
-        ("programming", "Programming"),
-        ("design", "Design"),
-        ("administrative", "Administrative"),
-
-        ("data_entry", "Data Entry"),
-        ("data_processing", "Data Processing"),
-
-        ("quality_control", "Quality Control"),
-        ("sec", "Security"),
-        ("curation", "Curation"),
-    ]
-    # Delete type soon, but ensure ascus is good to roll
-    type = models.CharField(max_length=40, choices=TYPE)
-    activity = models.ForeignKey(WorkActivity, on_delete=models.CASCADE, null=True, blank=True)
-    related_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="workpieces_list")
-    tags = models.ManyToManyField(Tag, blank=True)
-    assigned_to = models.ForeignKey(People, on_delete=models.CASCADE, null=True, blank=True)
-
-    def __str__(self):
-        return self.name
 
 class Work(Record):
 

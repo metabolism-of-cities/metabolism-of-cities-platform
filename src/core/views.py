@@ -155,11 +155,10 @@ def is_member(user, group):
 def unauthorized_access(request):
     from django.core.exceptions import PermissionDenied
     logger.error("No access to this UploadSession")
-    WorkLog.objects.create(
+    Work.objects.create(
         name = "Unauthorized access detected",
         description = request.META,
-        type = "sec",
-        priority = "high",
+        priority = WorkPriority.HIGH,
     )
     raise PermissionDenied
 
@@ -272,29 +271,6 @@ def user_profile(request):
 # Homepage
 
 def index(request):
-    if "migrate" in request.GET:
-        Work.objects.all().delete()
-        list = WorkLog.objects.all()
-        for each in list:
-            if each.type == "administrative":
-                activity_id = 13
-            elif each.type == "quality_control":
-                activity_id = 7
-            if each.status == "open":
-                status = 1
-            elif each.status == "discarded":
-                status = 3
-            elif each.status == "on_hold":
-                status = 4
-            Work.objects.create(
-                name = each.name,
-                content = each.description,
-                is_public = True,
-                part_of_project_id = each.project.id,
-                related_to_id = each.related_to.id,
-                activity_id = activity_id,
-                status = status,
-            )
     context = {
         "header_title": "Metabolism of Cities",
         "header_subtitle": "Your hub for anyting around urban metabolism",
@@ -511,7 +487,7 @@ def metabolism_manager_admin_entity_form(request, organization, id=None):
         if not edit:
             info = Organization()
         info.name = request.POST["name"]
-        info.content = request.POST["description"]
+        info.description = request.POST["description"]
         info.url = request.POST["url"]
         info.email = request.POST["email"]
         if "status" in request.POST:
@@ -1135,7 +1111,7 @@ def forum_topic(request, id):
 
         new = ForumMessage()
         new.name = "Reply to: "+ info.name
-        new.content = request.POST["text"]
+        new.description = request.POST["text"]
         new.parent = info
         new.user = request.user
         new.save()
@@ -1157,7 +1133,7 @@ def forum_form(request, id=False):
     if request.method == "POST":
         new = ForumMessage()
         new.name = request.POST["name"]
-        new.content = request.POST["text"]
+        new.description = request.POST["text"]
         new.user = request.user
         new.save()
 
@@ -1362,8 +1338,8 @@ def ascus_account_edit(request):
     info = get_object_or_404(Webpage, slug="/ascus/account/edit/")
     ModelForm = modelform_factory(
         People, 
-        fields = ("name", "content", "research_interests", "image", "website", "email", "twitter", "google_scholar", "orcid", "researchgate", "linkedin"),
-        labels = { "content": "Profile/bio", "image": "Photo" }
+        fields = ("name", "description", "research_interests", "image", "website", "email", "twitter", "google_scholar", "orcid", "researchgate", "linkedin"),
+        labels = { "description": "Profile/bio", "image": "Photo" }
     )
     form = ModelForm(request.POST or None, request.FILES or None, instance=request.user.people)
     if request.method == "POST":
@@ -1393,8 +1369,8 @@ def ascus_account_discussion(request):
         .filter(tags__id=770)
     ModelForm = modelform_factory(
         Event, 
-        fields = ("name", "content"),
-        labels = { "name": "Title", "content": "Abstract (please include the goals, format, and names of all organizers)" }
+        fields = ("name", "description"),
+        labels = { "name": "Title", "description": "Abstract (please include the goals, format, and names of all organizers)" }
     )
     event = None
     form = ModelForm(request.POST or None, instance=event)
@@ -1417,13 +1393,12 @@ def ascus_account_discussion(request):
                 record_child = info,
                 relationship = Relationship.objects.get(name="Organizer"),
             )
-            WorkLog.objects.create(
-                name="Review discussion topic",
-                description="Please check to see if this looks good. If all is well, then please add any additional organizers to this record (as per the description).",
-                complexity="med",
-                project_id=8,
-                related_to=info,
-                type = "quality_control",
+            Work.objects.create(
+                name = "Review discussion topic",
+                description = "Please check to see if this looks good. If all is well, then please add any additional organizers to this record (as per the description).",
+                part_of_project_id = 8,
+                related_to = info,
+                activity_id = 14,
             )
             return redirect("/account/")
         else:
@@ -1467,20 +1442,20 @@ def ascus_account_presentation(request, introvideo=False):
         if type == "video":
             ModelForm = modelform_factory(
                 Video, 
-                fields = ("name", "content", "author_list", "url", "is_public"), 
-                labels = { "content": "Abstract", "name": "Title", "url": "URL", "author_list": "Author(s)", "is_public": "After the unconference, make my contribution publicly available through the Metabolism of Cities digital library." }
+                fields = ("name", "description", "author_list", "url", "is_public"), 
+                labels = { "description": "Abstract", "name": "Title", "url": "URL", "author_list": "Author(s)", "is_public": "After the unconference, make my contribution publicly available through the Metabolism of Cities digital library." }
             )
         elif type == "poster" or type == "paper":
             ModelForm = modelform_factory(
                 LibraryItem, 
-                fields = ("name", "file", "content", "author_list", "is_public"), 
-                labels = { "content": "Abstract", "name": "Title", "author_list": "Author(s)", "is_public": "After the unconference, make my contribution publicly available through the Metabolism of Cities digital library." }
+                fields = ("name", "file", "description", "author_list", "is_public"), 
+                labels = { "description": "Abstract", "name": "Title", "author_list": "Author(s)", "is_public": "After the unconference, make my contribution publicly available through the Metabolism of Cities digital library." }
             )
         elif type == "other":
             ModelForm = modelform_factory(
                 LibraryItem, 
-                fields = ("name", "file", "type", "content", "author_list", "is_public"), 
-                labels = { "content": "Abstract", "name": "Title", "author_list": "Author(s)", "is_public": "After the unconference, make my contribution publicly available through the Metabolism of Cities digital library." }
+                fields = ("name", "file", "type", "description", "author_list", "is_public"), 
+                labels = { "description": "Abstract", "name": "Title", "author_list": "Author(s)", "is_public": "After the unconference, make my contribution publicly available through the Metabolism of Cities digital library." }
             )
         form = ModelForm(request.POST or None, request.FILES or None)
     if request.method == "POST":
@@ -1519,13 +1494,12 @@ def ascus_account_presentation(request, introvideo=False):
                 record_child = info,
                 relationship = Relationship.objects.get(name="Author"),
             )
-            WorkLog.objects.create(
-                name=review_title,
-                description="Please check to see if this looks good. If it's a video, audio schould be of decent quality. Make sure there are no glaring problems with this submission. If there are, contact the submitter and discuss. If all looks good, then please look at the co-authors and connect this (create new relationships) to the other authors as well.",
-                complexity="med",
-                project_id=8,
-                related_to=info,
-                type = "quality_control",
+            Work.objects.create(
+                name = review_title,
+                description = "Please check to see if this looks good. If it's a video, audio schould be of decent quality. Make sure there are no glaring problems with this submission. If there are, contact the submitter and discuss. If all looks good, then please look at the co-authors and connect this (create new relationships) to the other authors as well.",
+                part_of_project_id = 8,
+                related_to = info,
+                activity_id = 14,
             )
             return redirect("/account/")
         else:
@@ -1574,8 +1548,8 @@ def ascus_admin_list(request, type="participant"):
 
 @check_ascus_admin_access
 def ascus_admin_work(request):
-    list = WorkLog.objects.filter(
-        project_id = PAGE_ID["ascus"],
+    list = Work.objects.filter(
+        part_of_project_id = PAGE_ID["ascus"],
         name = "Monitor for payment",
     )
     context = {
@@ -1588,13 +1562,13 @@ def ascus_admin_work(request):
 
 @check_ascus_admin_access
 def ascus_admin_work_item(request, id):
-    info = WorkLog.objects.get(
-        project_id = PAGE_ID["ascus"],
+    info = Work.objects.get(
+        part_of_project_id = PAGE_ID["ascus"],
         name = "Monitor for payment",
         pk=id,
     )
     ModelForm = modelform_factory(
-        WorkLog, 
+        Work, 
         fields = ("description", "status", "tags"),
     )
     form = ModelForm(request.POST or None, request.FILES or None, instance=info)
@@ -1681,22 +1655,20 @@ def ascus_register(request):
                     relationship_id = 16,
                 )
             if not is_logged_in:
-                WorkLog.objects.create(
-                    name="Link city and organization of participant",
-                    description="Affiliation: " + request.POST.get("organization") + " -- City: " + request.POST.get("city"),
-                    complexity="med",
-                    project_id=8,
-                    related_to=people,
-                    type = "administrative",
+                Work.objects.create(
+                    name = "Link city and organization of participant",
+                    description = "Affiliation: " + request.POST.get("organization") + " -- City: " + request.POST.get("city"),
+                    part_of_project_id = 8,
+                    related_to = people,
+                    activity_id = 14,
                 )
             location = request.POST.get("city", "not set")
-            WorkLog.objects.create(
-                name="Monitor for payment",
-                description="Price should be based on their location: location = " + location,
-                complexity="low",
-                project_id=8,
-                related_to=people,
-                type = "administrative",
+            Work.objects.create(
+                name = "Monitor for payment",
+                description = "Price should be based on their location: location = " + location,
+                part_of_project_id = 8,
+                related_to = people,
+                activity_id = 13,
             )
             messages.success(request, "You are successfully registered for the AScUS Unconference.")
 
@@ -2504,10 +2476,10 @@ def dataimport(request):
                         info.url = row["url"]
                     info.save()
                     if not row["date"]:
-                        WorkLog.objects.create(
-                            name="Check year of publication",
-                            description="In the previous website we did not save the date/year this was published. Please check (e.g. by going to the Youtube page) when this was published, and set the right date. (NOTE: 2021 was used as a temporary placeholder).",
-                            complexity="low",
+                        Work.objects.create(
+                            name = "Check year of publication",
+                            description = "In the previous website we did not save the date/year this was published. Please check (e.g. by going to the Youtube page) when this was published, and set the right date. (NOTE: 2021 was used as a temporary placeholder).",
+                            complexity = "low",
                             project_id=3,
                             related_to=info,
                             type = "quality_control",
@@ -2804,7 +2776,7 @@ def dataimport(request):
                     if row["process_group_id"]:
                         info.sectors.add(Sector.objects.get(pk=row["process_group_id"]))
                     if not year:
-                        WorkLog.objects.create(
+                        Work.objects.create(
                             name="Check year of publication",
                             description="In the previous website we did not save the date/year this was published. Please check (e.g. by going to the original source) when this was published, and set the right date. (NOTE: 2021 was used as a temporary placeholder).",
                             complexity="low",

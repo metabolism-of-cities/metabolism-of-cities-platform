@@ -45,9 +45,9 @@ class WebpageAdmin(admin.ModelAdmin):
 
     def change_view(self, request, object_id, extra_content=None):
          if "short" in request.GET:
-            self.fields = ["name", "content"]
+            self.fields = ["name", "description"]
          else:
-            self.fields = ["name", "content", "is_deleted", "image", "tags","site", "slug", "old_id"]
+            self.fields = ["name", "description", "is_deleted", "image", "tags","site", "slug", "old_id"]
          return super().change_view(request, object_id)
 
 class WebpageDesignAdmin(admin.ModelAdmin):
@@ -138,11 +138,6 @@ class PhotoAdmin(admin.ModelAdmin):
     search_fields = ["space__name"]
     list_display = ["space", "uploaded_by", "description"]
 
-class WorkLogAdmin(admin.ModelAdmin):
-    search_fields = ["name"]
-    list_display = ["name", "project", "related_to", "status", "priority", "complexity"]
-    list_filter = ["project", "status", "priority", "complexity"]
-
 class WorkAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     list_display = ["name", "part_of_project", "related_to", "status", "priority"]
@@ -229,7 +224,6 @@ admin_site.register(Sector, SearchNameAdmin)
 admin_site.register(UploadSession)
 admin_site.register(UploadFile)
 
-admin_site.register(WorkLog, WorkLogAdmin)
 admin_site.register(Work, WorkAdmin)
 admin_site.register(WorkActivity)
 admin_site.register(ActivityCatalog)

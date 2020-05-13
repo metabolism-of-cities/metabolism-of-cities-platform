@@ -5,7 +5,7 @@
 
 {% block content %}
 
-{{ info.content|safe }}
+{{ info.description|safe }}
 
 <form method="post" class="form form-horizontal" enctype="multipart/form-data">
   {% csrf_token %}
