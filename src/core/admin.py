@@ -225,5 +225,6 @@ admin_site.register(UploadSession)
 admin_site.register(UploadFile)
 
 admin_site.register(WorkLog, WorkLogAdmin)
+admin_site.register(WorkActivity)
 admin_site.register(ActivityCatalog)
 admin_site.register(Activity, ActivityAdmin)

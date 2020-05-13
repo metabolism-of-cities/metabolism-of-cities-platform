@@ -591,11 +591,30 @@ class Photo(models.Model):
           description = "Photo by " + self.author + " - #" + str(self.id)
         return description
 
-#class WorkActivity(models.Model):
-#    name = models.CharField(max_length=255)
-#    instructions = models.TextField(null=True, blank=True)
-#    def __str__(self):
-#        return self.name
+class WorkActivity(models.Model):
+
+    class WorkType(models.IntegerChoices):
+        CREATE = 1, "Creating"
+        UPLOAD = 2, "Uploading"
+        REVIEW = 3, "Reviewing"
+        CURATE = 4, "Curating"
+        SHARE = 5, "Sharing"
+        PARTICIPATE = 6, "Participating"
+        LEARN = 7, "Learning"
+        ADMIN = 8, "Administering"
+        PROGRAM = 9, "Programming"
+        DESIGN = 10, "Designing"
+
+    type = models.IntegerField(choices=WorkType.choices, db_index=True)
+    name = models.CharField(max_length=255)
+    instructions = models.TextField(null=True, blank=True)
+    default_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={"is_internal": True})
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "work activities"
 
 class WorkLog(models.Model):
     name = models.CharField(max_length=255)
@@ -639,7 +658,9 @@ class WorkLog(models.Model):
         ("sec", "Security"),
         ("curation", "Curation"),
     ]
+    # Delete type soon, but ensure ascus is good to roll
     type = models.CharField(max_length=40, choices=TYPE)
+    activity = models.ForeignKey(WorkActivity, on_delete=models.CASCADE, null=True, blank=True)
     related_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="workpieces_list")
     assigned_to = models.ManyToManyField(People)
     tags = models.ManyToManyField(Tag, blank=True)
