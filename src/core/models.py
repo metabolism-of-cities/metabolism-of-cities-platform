@@ -609,6 +609,7 @@ class WorkActivity(models.Model):
     name = models.CharField(max_length=255)
     instructions = models.TextField(null=True, blank=True)
     default_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={"is_internal": True})
+    points = models.PositiveSmallIntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.name
