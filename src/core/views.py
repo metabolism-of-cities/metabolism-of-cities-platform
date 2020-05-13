@@ -54,6 +54,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+import facebook
+
 # This array defines all the IDs in the database of the articles that are loaded for the
 # various pages in the menu. Here we can differentiate between the different sites.
 
@@ -1675,8 +1677,13 @@ def socialmedia(request, type):
         # send to api here
         success = False
         if type == "facebook":
-            # Send to FB API
+            fb_access_token = "EAAIneQS0vP0BAMyvUXkVv5dGjosVkcjdQs1YYRw6qZBX6FwlxBPgskZBLZCqnRNB1Egfe7toNtAiZCEvL18N03q92C9gyn2R1C7YMNSIB7XcYD6fZAu1VSviXxjx30pSzr7oRlBBif6EwSgRxPvL6kOqX0bxO9DPQj6kUQKZCUqAn7V0rXd4ehycqsNSE9hZBo5VZBKTL7HrkjIgajr17cYM"
+            graph = facebook.GraphAPI(access_token=fb_access_token, version="2.12")
             message = each.blurb
+            try:
+                response = graph.put_object(parent_object='me', connection_name='feed', message=message)
+            except Exception as e:
+                raise e
             response = "response-from-api"
         elif type == "twitter":
             message = each.blurb
