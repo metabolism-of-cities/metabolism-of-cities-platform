@@ -640,6 +640,9 @@ class Work(Record):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name_plural = "work items"
+
 class Badge(models.Model):
 
     class BadgeType(models.IntegerChoices):

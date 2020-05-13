@@ -139,9 +139,11 @@ class PhotoAdmin(admin.ModelAdmin):
     list_display = ["space", "uploaded_by", "description"]
 
 class WorkAdmin(admin.ModelAdmin):
-    search_fields = ["name"]
+    search_fields = ["name", "part_of_project__name", "related_to__name"]
     list_display = ["name", "part_of_project", "related_to", "status", "priority"]
     list_filter = ["part_of_project", "status", "priority"]
+    autocomplete_fields = ["spaces", "tags", "part_of_project", "related_to", "assigned_to"]
+    exclude = ["image"]
 
 class LogEntryAdmin(admin.ModelAdmin):
     # to have a date-based drilldown navigation in the admin page
@@ -226,5 +228,6 @@ admin_site.register(UploadFile)
 
 admin_site.register(Work, WorkAdmin)
 admin_site.register(WorkActivity)
+admin_site.register(Badge)
 admin_site.register(ActivityCatalog)
 admin_site.register(Activity, ActivityAdmin)
