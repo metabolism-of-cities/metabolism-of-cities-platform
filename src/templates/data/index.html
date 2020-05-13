@@ -16,31 +16,13 @@
   </p>
 
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 mt-4">
+    {% for each in list %}
     <div class="col mb-4">
-      <a href="/data/brussels/" class="btn-thumbnail" style="background-image: url('https://metabolismofcities.org/media/photos/Brussels.large.jpg');">
-        <span class="title">Brussels</span>
+      <a href="{% url "datahub_dashboard" each.slug %}" class="btn-thumbnail" style="background-image: url('{{ each.space.photo.image.medium.url }}');">
+        <span class="title">{{ each }}</span>
       </a>
     </div>
-    <div class="col mb-4">
-      <a href="/data/cape-town/" class="btn-thumbnail" style="background-image: url('/media/header_image/media-capetown.thumbnail.jpg');">
-        <span class="title">Cape Town</span>
-      </a>
-    </div>
-    <div class="col mb-4">
-      <a href="/data/newyork/" class="btn-thumbnail" style="background-image: url('/media/header_image/media-newyork.thumbnail.jpg');">
-        <span class="title">New York</span>
-      </a>
-    </div>
-    <div class="col mb-4">
-      <a href="/data/sydney/" class="btn-thumbnail" style="background-image: url('/media/header_image/media-sydney.thumbnail.jpg');">
-        <span class="title">Sydney</span>
-      </a>
-    </div>
-    <div class="col mb-4">
-      <a href="/data/toronto/" class="btn-thumbnail" style="background-image: url('/media/header_image/media-toronto.thumbnail.jpg');">
-        <span class="title">Toronto</span>
-      </a>
-    </div>
+    {% endfor %}
   </div>
 
   <div class="row">

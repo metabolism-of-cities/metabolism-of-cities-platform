@@ -355,8 +355,10 @@ def article_list(request, id):
 # Cities
 
 def datahub(request):
+    list = ActivatedSpace.objects.filter(site=request.site)
     context = {
         "show_project_design": True,
+        "list": list,
     }
     return render(request, "data/index.html", load_design(context, PAGE_ID["multiplicity"]))
 

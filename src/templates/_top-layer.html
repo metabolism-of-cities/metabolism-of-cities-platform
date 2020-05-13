@@ -62,7 +62,7 @@
     </div>
   {% elif header_style == "image" %}
     <div style="background-image: url('{{ header_image }}');height:800px;background-size:cover"></div>
-  {% elif subsite.id == 51 and space %}
+  {% elif project.id == 4 and space %}
     <div id="img-city" {% if not dashboard %}class="smaller"{% endif %} style="background-image: url('{{ space.photo.image.url }}'){% if not dashboard %}; height:15vh"{% endif %}">
       <div class="black-cover"></div>
 
@@ -82,7 +82,7 @@
 
 </div>
 
-{% if subsite.id == 51 and space %}
+{% if project.id == 4 and space %}
   <nav class="navbar navbar-expand-lg navbar-city">
     <div class="container">
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -128,7 +128,7 @@
   </nav>
 {% endif%}
 
-{% if subsite.id == 51 and space %}
+{% if project.id == 4 and space %}
   {% block javascript %}
   <script>
      // When the user scrolls down 50px from the top of the document, resize the header's font size

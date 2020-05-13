@@ -476,7 +476,7 @@ class ActivatedSpace(models.Model):
     def __str__(self):
         return self.space.name
     def get_absolute_url(self):
-        return reverse("dashboard", args=[self.slug])
+        return reverse("datahub_dashboard", args=[self.slug])
     def save(self, *args, **kwargs):
         self.slug = slugify(self.space.name)
         super().save(*args, **kwargs)
@@ -566,7 +566,7 @@ class License(models.Model):
         ordering = ["name"]
 
 class Photo(models.Model):
-    image = StdImageField(upload_to="photos", variations={"thumbnail": (200, 150), "large": (1024, 780), "medium": (640, 480)})
+    image = StdImageField(upload_to="photos", variations={"thumbnail": (400, 400), "large": (1024, 780), "medium": (640, 480)})
     author = models.CharField(max_length=255)
     source_url = models.CharField(max_length=255, null=True, blank=True)
     #process = models.ForeignKey('staf.Process', on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={'slug__isnull': False})
