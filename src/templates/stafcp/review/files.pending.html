@@ -1,0 +1,50 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<h2>Quick Stats</h2>
+
+<ul>
+  <li><strong>{{ list.count }}</strong> pending uploads</li>
+  <li><strong>33</strong> uploads this month</li>
+  <li><strong>3432</strong> uploads all-time</li>
+</ul>
+
+<h2>Queue</h2>
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link {% if page == "pending" %}active{% endif %}" href="{% url "stafcp_review_pending" %}">Incomplete uploads</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if page == "uploaded" %}active{% endif %}" href="{% url "stafcp_review_uploaded" %}">Ready for processing</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if page == "uploaded" %}active{% endif %}" href="{% url "stafcp_review_uploaded" %}">Ready for publication</a>
+  </li>
+</ul>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>User</th>
+      <th>Name</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for each in list %}
+    <tr>
+      <td>{{ each.id }}</td>
+      <td>{{ each.user }}</td>
+      <td>{{ each.name }}</td>
+      <td>{{ each.date_created }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

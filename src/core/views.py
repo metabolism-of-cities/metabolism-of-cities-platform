@@ -633,6 +633,22 @@ def stafcp(request):
     }
     return render(request, "stafcp/index.html", load_design(context, PAGE_ID["stafcp"]))
 
+def stafcp_review_pending(request):
+    context = {
+        "list": UploadSession.objects.filter(is_processed=False),
+    }
+    return render(request, "stafcp/review/files.pending.html", load_design(context, PAGE_ID["stafcp"]))
+
+def stafcp_review_uploaded(request):
+    context = {
+    }
+    return render(request, "stafcp/review/files.uploaded.html", load_design(context, PAGE_ID["stafcp"]))
+
+def stafcp_review_processed(request):
+    context = {
+    }
+    return render(request, "stafcp/review/files.processed.html", load_design(context, PAGE_ID["stafcp"]))
+
 def stafcp_upload_gis(request, id=None):
     context = {
         "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
@@ -644,7 +660,7 @@ def stafcp_upload_gis(request, id=None):
 @login_required
 def stafcp_upload_gis_file(request, id=None):
     if request.method == "POST":
-        session = UploadSession.objects.create(user=request.user)
+        session = UploadSession.objects.create(user=request.user, name=request.POST.get("name"))
         for each in request.FILES.getlist("file"):
             UploadFile.objects.create(
                 session = session,

@@ -114,6 +114,11 @@ urlpatterns = [
     path("stafcp/referencespaces/<int:id>/", views.stafcp_referencespaces_list, name="stafcp_referencespaces_list"),
     path("stafcp/referencespaces/<slug:group>/", views.stafcp_referencespaces, name="stafcp_referencespaces"),
 
+    path("stafcp/review/", views.stafcp_review_pending, name="stafcp_review"),
+    path("stafcp/review/pending/", views.stafcp_review_pending, name="stafcp_review_pending"),
+    path("stafcp/review/uploaded/", views.stafcp_review_uploaded, name="stafcp_review_uploaded"),
+    path("stafcp/review/processed/", views.stafcp_review_processed, name="stafcp_review_processed"),
+
     # Podcast
     path("podcast/", views.podcast_series),
 

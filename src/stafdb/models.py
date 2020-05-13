@@ -185,10 +185,17 @@ class ReferenceSpaceSector(models.Model):
 
 class UploadSession(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255, null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+    space = models.ForeignKey(ReferenceSpace, on_delete=models.SET_NULL, null=True, blank=True)
+    project = models.ForeignKey("core.Project", on_delete=models.SET_NULL, null=True, blank=True)
+    is_processed = models.BooleanField(default=False, db_index=True)
+    is_published = models.BooleanField(default=False, db_index=True)
+    is_deleted = models.BooleanField(default=False, db_index=True)
+    is_public = models.BooleanField(default=True, db_index=True)
     def __str__(self):
-        return "Session #" + str(self.id)
+        return self.name
 
 def shapefile_directory(instance, filename):
     # file will be uploaded to MEDIA_ROOT/uuid/<filename>

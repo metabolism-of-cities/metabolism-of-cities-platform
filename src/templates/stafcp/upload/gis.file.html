@@ -19,8 +19,12 @@
     <div class="col-md-6 mb-4">
       <form method="post" enctype="multipart/form-data">
         <div class="form-group">
+          <label for="what">What is in this shapefile?</label>
+          <input type="text" name="name" class="form-control" id="what" required>
+        </div>
+        <div class="form-group">
           <div class="custom-file">
-            <input type="file" class="custom-file-input" name="file" id="file" multiple>
+            <input type="file" class="custom-file-input" name="file" id="file" multiple required>
             <label class="custom-file-label" for="file">Choose file</label>
           </div>
         </div>
