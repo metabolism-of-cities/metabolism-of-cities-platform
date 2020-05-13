@@ -138,7 +138,7 @@ class PhotoAdmin(admin.ModelAdmin):
     search_fields = ["space__name"]
     list_display = ["space", "uploaded_by", "description"]
 
-class WorkPieceAdmin(admin.ModelAdmin):
+class WorkLogAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     list_display = ["name", "project", "related_to", "status", "priority", "complexity"]
     list_filter = ["project", "status", "priority", "complexity"]
@@ -224,6 +224,6 @@ admin_site.register(Sector, SearchNameAdmin)
 admin_site.register(UploadSession)
 admin_site.register(UploadFile)
 
-admin_site.register(WorkPiece, WorkPieceAdmin)
+admin_site.register(WorkLog, WorkLogAdmin)
 admin_site.register(ActivityCatalog)
 admin_site.register(Activity, ActivityAdmin)

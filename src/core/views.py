@@ -155,7 +155,7 @@ def is_member(user, group):
 def unauthorized_access(request):
     from django.core.exceptions import PermissionDenied
     logger.error("No access to this UploadSession")
-    WorkPiece.objects.create(
+    WorkLog.objects.create(
         name = "Unauthorized access detected",
         description = request.META,
         type = "sec",
@@ -1394,7 +1394,7 @@ def ascus_account_discussion(request):
                 record_child = info,
                 relationship = Relationship.objects.get(name="Organizer"),
             )
-            WorkPiece.objects.create(
+            WorkLog.objects.create(
                 name="Review discussion topic",
                 description="Please check to see if this looks good. If all is well, then please add any additional organizers to this record (as per the description).",
                 complexity="med",
@@ -1496,7 +1496,7 @@ def ascus_account_presentation(request, introvideo=False):
                 record_child = info,
                 relationship = Relationship.objects.get(name="Author"),
             )
-            WorkPiece.objects.create(
+            WorkLog.objects.create(
                 name=review_title,
                 description="Please check to see if this looks good. If it's a video, audio schould be of decent quality. Make sure there are no glaring problems with this submission. If there are, contact the submitter and discuss. If all looks good, then please look at the co-authors and connect this (create new relationships) to the other authors as well.",
                 complexity="med",
@@ -1551,7 +1551,7 @@ def ascus_admin_list(request, type="participant"):
 
 @check_ascus_admin_access
 def ascus_admin_work(request):
-    list = WorkPiece.objects.filter(
+    list = WorkLog.objects.filter(
         project_id = PAGE_ID["ascus"],
         name = "Monitor for payment",
     )
@@ -1565,13 +1565,13 @@ def ascus_admin_work(request):
 
 @check_ascus_admin_access
 def ascus_admin_work_item(request, id):
-    info = WorkPiece.objects.get(
+    info = WorkLog.objects.get(
         project_id = PAGE_ID["ascus"],
         name = "Monitor for payment",
         pk=id,
     )
     ModelForm = modelform_factory(
-        WorkPiece, 
+        WorkLog, 
         fields = ("description", "status", "tags"),
     )
     form = ModelForm(request.POST or None, request.FILES or None, instance=info)
@@ -1658,7 +1658,7 @@ def ascus_register(request):
                     relationship_id = 16,
                 )
             if not is_logged_in:
-                WorkPiece.objects.create(
+                WorkLog.objects.create(
                     name="Link city and organization of participant",
                     description="Affiliation: " + request.POST.get("organization") + " -- City: " + request.POST.get("city"),
                     complexity="med",
@@ -1667,7 +1667,7 @@ def ascus_register(request):
                     type = "administrative",
                 )
             location = request.POST.get("city", "not set")
-            WorkPiece.objects.create(
+            WorkLog.objects.create(
                 name="Monitor for payment",
                 description="Price should be based on their location: location = " + location,
                 complexity="low",
@@ -2481,7 +2481,7 @@ def dataimport(request):
                         info.url = row["url"]
                     info.save()
                     if not row["date"]:
-                        WorkPiece.objects.create(
+                        WorkLog.objects.create(
                             name="Check year of publication",
                             description="In the previous website we did not save the date/year this was published. Please check (e.g. by going to the Youtube page) when this was published, and set the right date. (NOTE: 2021 was used as a temporary placeholder).",
                             complexity="low",
@@ -2781,7 +2781,7 @@ def dataimport(request):
                     if row["process_group_id"]:
                         info.sectors.add(Sector.objects.get(pk=row["process_group_id"]))
                     if not year:
-                        WorkPiece.objects.create(
+                        WorkLog.objects.create(
                             name="Check year of publication",
                             description="In the previous website we did not save the date/year this was published. Please check (e.g. by going to the original source) when this was published, and set the right date. (NOTE: 2021 was used as a temporary placeholder).",
                             complexity="low",

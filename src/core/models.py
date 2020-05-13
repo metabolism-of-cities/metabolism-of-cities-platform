@@ -591,7 +591,13 @@ class Photo(models.Model):
           description = "Photo by " + self.author + " - #" + str(self.id)
         return description
 
-class WorkPiece(models.Model):
+#class WorkActivity(models.Model):
+#    name = models.CharField(max_length=255)
+#    instructions = models.TextField(null=True, blank=True)
+#    def __str__(self):
+#        return self.name
+
+class WorkLog(models.Model):
     name = models.CharField(max_length=255)
     description = HTMLField(null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -641,22 +647,16 @@ class WorkPiece(models.Model):
     def __str__(self):
         return self.name
 
-class Badge(models.Model):
-    name = models.CharField(max_length=255)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={"is_internal": True})
-    TYPE = [
-        ("bronze", "Bronze"),
-        ("silver", "Silver"),
-        ("gold", "Gold"),
-    ]
-    type = models.CharField(max_length=20, choices=TYPE)
-    description = models.CharField(max_length=255)
-
-
+#class Badge(models.Model):
+#    name = models.CharField(max_length=255)
+#    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={"is_internal": True})
+#    TYPE = [
+#        ("bronze", "Bronze"),
+#        ("silver", "Silver"),
+#        ("gold", "Gold"),
+#    ]
+#    type = models.CharField(max_length=20, choices=TYPE)
+#    description = models.CharField(max_length=255)
     
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ["name"]
-
+#    def __str__(self):
+#        return self.name
