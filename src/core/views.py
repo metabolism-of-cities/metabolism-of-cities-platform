@@ -1634,12 +1634,12 @@ def socialmedia(request, type):
             consumer_secret = "36WRxThs9Hx9cvzrhsAH9Ix2Op5AC5utZmDIUwlZWrLGkzjY9G"
             api = twitter.Api(consumer_key, consumer_secret, access_token, access_token_secret)
             message = each.blurb
+            response = ""
             try:
                 api.PostUpdate(message)
                 success = True
             except Exception as e:
-                print(e)
-            response = "response-from-api"
+                response = e
         elif type == "linkedin":
             message = each.blurb
             response = "response-from-api"
