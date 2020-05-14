@@ -35,7 +35,7 @@
           <i class="fal fa-fw fa-info-circle mr-2"></i>
           Metadata
         </a>
-        <a class="nav-item nav-link" data-toggle="tab" href="#tab-data">
+        <a class="nav-item nav-link load-data" data-toggle="tab" href="#tab-data">
           <i class="fal fa-fw fa-table mr-2"></i>
           Data
         </a>
@@ -227,92 +227,14 @@
           <a class="btn btn-primary mb-4" href=""><i class="fas fa-download"></i> Download data</a>
           <a class="btn btn-primary-basic mb-4" href="">Report an error</a>
 
-          <table id="example" class="table table-striped">
-            <thead>
-              <tr>
-                <th>Column 1</th>
-                <th>Column 2</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>kopano</td>
-                <td>yamkela</td>
-              </tr>
-              <tr>
-                <td>sizwe</td>
-                <td>vusi</td>
-              </tr>
-              <tr>
-                <td>ntandazo</td>
-                <td>khangelani</td>
-              </tr>
-              <tr>
-                <td>thuliswa</td>
-                <td>amkele</td>
-              </tr>
-              <tr>
-                <td>ntando</td>
-                <td>phumezo</td>
-              </tr>
-              <tr>
-                <td>khuselo</td>
-                <td>mpemey</td>
-              </tr>
-              <tr>
-                <td>zobuyo</td>
-                <td>thembela</td>
-              </tr>
-              <tr>
-                <td>siphamandla</td>
-                <td>akhanyile</td>
-              </tr>
-              <tr>
-                <td>phumlani</td>
-                <td>khuselo</td>
-              </tr>
-              <tr>
-                <td>thembela</td>
-                <td>ntandazo</td>
-              </tr>
-              <tr>
-                <td>likhona</td>
-                <td>yamkela</td>
-              </tr>
-              <tr>
-                <td>phumlani</td>
-                <td>khuselo</td>
-              </tr>
-              <tr>
-                <td>vusi</td>
-                <td>kopano</td>
-              </tr>
-              <tr>
-                <td>thuliswa</td>
-                <td>amkele</td>
-              </tr>
-              <tr>
-                <td>siphamandla</td>
-                <td>akhanyile</td>
-              </tr>
-              <tr>
-                <td>phumezo</td>
-                <td>ntandazo</td>
-              </tr>
-              <tr>
-                <td>thembela</td>
-                <td>ntandazo</td>
-              </tr>
-              <tr>
-                <td>ntando</td>
-                <td>phumezo</td>
-              </tr>
-              <tr>
-                <td>siphamandla</td>
-                <td>akhanyile</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="table-wrapper">
+            <div class="alert alert-light">
+              <h3 class="mb-0">
+                <i class="fal fa-spinner-third fa-spin mr-4"></i>
+                Loading table
+              </h3>
+            </div>
+          </div>
         </div>
 
         <!-- share -->
@@ -487,6 +409,19 @@
           type: chartType,
         },
       });
+    });
+
+    // when opening data tab, load table with ajax
+    let dataLoaded = false;
+
+    $(".nav-link.load-data").click(function() {
+      console.log("hi!");
+      if (!dataLoaded) {
+        $.get("the/url").done(function(data) {
+          $(".table-wrapper").html(data);
+          dataLoaded = true;
+        });
+      }
     });
   </script>
 
