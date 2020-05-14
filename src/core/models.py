@@ -645,7 +645,7 @@ class Badge(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={"is_internal": True})
-    worktype = models.ForeignKey(WorkActivity, on_delete=models.CASCADE, null=True, blank=True)
+    worktype = models.ManyToManyField(WorkActivity, blank=True) 
     required_quantity = models.PositiveSmallIntegerField(null=True, blank=True)
    
     def __str__(self):

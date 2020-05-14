@@ -176,6 +176,9 @@ class UserAdmin(admin.ModelAdmin):
      list_filter = ["is_staff", "is_active"]
      search_fields = ["username", "email"]
 
+class BadgeAdmin(admin.ModelAdmin):
+    list_display = ["name", "type", "description"]
+
 admin_site.register(Tag, TagAdmin)
 admin_site.register(Record, SearchCompleteAdmin)
 admin_site.register(Event, SearchCompleteAdmin)
@@ -224,6 +227,6 @@ admin_site.register(UploadFile)
 
 admin_site.register(Work, WorkAdmin)
 admin_site.register(WorkActivity)
-admin_site.register(Badge)
+admin_site.register(Badge, BadgeAdmin)
 admin_site.register(ActivityCatalog)
 admin_site.register(Activity, ActivityAdmin)
