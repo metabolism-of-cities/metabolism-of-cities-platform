@@ -1935,305 +1935,312 @@ def dataimport(request):
                         position = row["position"],
                     )
         elif request.GET["table"] == "referencespaces":
-            ReferenceSpaceLocation.objects.all().delete()
-            ReferenceSpace.objects.all().delete()
+            if int(request.GET["start"]) == 0:
+                ReferenceSpaceLocation.objects.all().delete()
+                ReferenceSpace.objects_unfiltered.all().delete()
 
-            GeocodeScheme.objects.all().delete()
-            list = [
-                {
-                    "name": "System Types",
-                    "icon": "fal fa-fw fa-layer-group",
-                    "items": ["Company", "Island", "Rural", "Urban", "Household"],
-                },
-                {
-                    "name": "UN Statistics Division Groupings",
-                    "icon": "fal fa-fw fa-universal-access",
-                    "items": ["Least Developed Countries", "Land Locked Developing Countries", "Small Island Developing States", "Developed Regions", "Developing Regions"],
-                },
-                {
-                    "name": "NUTS",
-                    "icon": "fal fa-fw fa-globe-europe",
-                    "items": ["NUTS 1"],
-                    "items2": ["NUTS 2"],
-                    "items3": ["NUTS 3"],
-                    "items4": ["Local Administrative Unit (LAU)"],
-                },
-                {
-                    "name": "ISO 3166-1",
-                    "icon": "fal fa-fw fa-globe",
-                    "items": ["Countries"],
-                },
-                {
-                    "name": "Sector: Hotels and lodging",
-                    "icon": "fal fa-fw fa-bed",
-                    "items": ["Hotels", "Camping grounds"],
-                },
-                {
-                    "name": "Sector: Transport",
-                    "icon": "fal fa-fw fa-car",
-                    "items": ["Bus stops", "Train stations", "Bicycle racks", "Bridges", "Electric charging stations", "Lighthouses", "Airports", "Ports", "Border Crossings"],
-                },
-                {
-                    "name": "Sector: Water and sanitation",
-                    "icon": "fal fa-fw fa-water",
-                    "items": ["Marine outfalls", "Dams", "Water reservoirs", "Wastewater treatment plants", "Water treatment plants", "Pumping stations"],
-                },
-                {
-                    "name": "Sector: Agriculture",
-                    "icon": "fal fa-fw fa-seedling",
-                    "items": ["Farms"],
-                },
-                {
-                    "name": "Sector: Mining",
-                    "icon": "fal fa-fw fa-digging",
-                    "items": ["Mines"],
-                },
-                {
-                    "name": "Sector: Construction",
-                    "icon": "fal fa-fw fa-construction",
-                    "items": ["Building site"],
-                },
-                {
-                    "name": "Sector: Energy",
-                    "icon": "fal fa-fw fa-bolt",
-                    "items": ["Wind turbines", "Solar parks/farms", "Roof-top solar panels", "Power plants", "High voltage lines", "Substations", "Transmission masts"],
-                },
-                {
-                    "name": "Sector: Waste",
-                    "icon": "fal fa-fw fa-dumpster",
-                    "items": ["Waste transfer station", "Waste drop-off sites", "Waste incinerators", "Landfills"],
-                },
-                {
-                    "name": "Sector: Storage",
-                    "icon": "fal fa-fw fa-container",
-                    "items": ["Fuel storage facilities", "Energy storage"],
-                },
-                {
-                    "name": "Sector: Fishing",
-                    "icon": "fal fa-fw fa-fish",
-                    "items": ["Fish farms"],
-                },
-                {
-                    "name": "Sector: Food service",
-                    "icon": "fal fa-fw fa-utensils",
-                    "items": ["Restaurants", "Bars"],
-                },
-                {
-                    "name": "Sector: Forestry",
-                    "icon": "fal fa-fw fa-trees",
-                    "items": ["Plantation"],
-                },
-                {
-                    "name": "Sector: Manufacturing (Food)",
-                    "icon": "fal fa-fw fa-hamburger",
-                    "items": ["Abbatoir", "Bakery", "Bread mill", "Food processing facilities"],
-                },
-                {
-                    "name": "Sector: Manufacturing (coke and petroleum products)",
-                    "icon": "fal fa-fw fa-oil-can",
-                    "items": ["Refineries"],
-                },
-                {
-                    "name": "Subdivisions of South Africa",
-                    "icon": "fal fa-fw fa-flag",
-                    "items": ["Provinces"],
-                    "items2": ["Metropolitan municipalities", "District municipalities"],
-                    "items3": ["Local municipalilties"],
-                    "items4": ["Wards"],
-                },
-                {
-                    "name": "Subdivisions of Nicaragua",
-                    "icon": "fal fa-fw fa-flag",
-                    "items": ["Departments", "Autonomous regions"],
-                    "items2": ["Municipalities"],
-                },
-                {
-                    "name": "Subdivisions of Costa Rica",
-                    "icon": "fal fa-fw fa-flag",
-                    "items": ["Provinces"],
-                    "items2": ["Cantons"],
-                    "items3": ["Districts"],
-                },
-                {
-                    "name": "Areas of France",
-                    "icon": "fal fa-fw fa-flag",
-                    "items": ["Ilots Regroupés pour l'information statistique (IRIS)", "Commune"],
-                },
-                {
-                    "name": "Areas of Singapore",
-                    "icon": "fal fa-fw fa-flag",
-                    "items": ["Master Plan 2014 Subzones"],
-                },
-                {
-                    "name": "Areas of Canada",
-                    "icon": "fal fa-fw fa-flag",
-                    "items": ["Neighbourhoods"],
-                },
-                {
-                    "name": "Areas of South Africa",
-                    "icon": "fal fa-fw fa-flag",
-                    "items": ["Suburbs"],
-                },
-                {
-                    "name": "Areas of the world",
-                    "icon": "fal fa-fw fa-flag",
-                    "items": ["Supra-national territory", "Sub-national territory"],
-                },
-                {
-                    "name": "Areas of The Netherlands",
-                    "icon": "fal fa-fw fa-flag",
-                    "items": ["Buurten", "Stadsdelen", "Wijken"],
-                },
-                {
-                    "name": "Areas of Belgium",
-                    "icon": "fal fa-fw fa-flag",
-                    "items": ["Quartiers", "Communes"],
-                },
-                {
-                    "name": "Subdivisions of Grenada",
-                    "icon": "fal fa-fw fa-flag",
-                    "items": ["Parishes", "Dependencies"],
-                },
+            if "creategeo" in request.GET:
+                GeocodeScheme.objects.all().delete()
+                list = [
+                    {
+                        "name": "System Types",
+                        "icon": "fal fa-fw fa-layer-group",
+                        "items": ["Company", "Island", "Rural", "Urban", "Household"],
+                    },
+                    {
+                        "name": "UN Statistics Division Groupings",
+                        "icon": "fal fa-fw fa-universal-access",
+                        "items": ["Least Developed Countries", "Land Locked Developing Countries", "Small Island Developing States", "Developed Regions", "Developing Regions"],
+                    },
+                    {
+                        "name": "NUTS",
+                        "icon": "fal fa-fw fa-globe-europe",
+                        "items": ["NUTS 1"],
+                        "items2": ["NUTS 2"],
+                        "items3": ["NUTS 3"],
+                        "items4": ["Local Administrative Unit (LAU)"],
+                    },
+                    {
+                        "name": "ISO 3166-1",
+                        "icon": "fal fa-fw fa-globe",
+                        "items": ["Countries"],
+                    },
+                    {
+                        "name": "Sector: Hotels and lodging",
+                        "icon": "fal fa-fw fa-bed",
+                        "items": ["Hotels", "Camping grounds"],
+                    },
+                    {
+                        "name": "Sector: Transport",
+                        "icon": "fal fa-fw fa-car",
+                        "items": ["Bus stops", "Train stations", "Bicycle racks", "Bridges", "Electric charging stations", "Lighthouses", "Airports", "Ports", "Border Crossings"],
+                    },
+                    {
+                        "name": "Sector: Water and sanitation",
+                        "icon": "fal fa-fw fa-water",
+                        "items": ["Marine outfalls", "Dams", "Water reservoirs", "Wastewater treatment plants", "Water treatment plants", "Pumping stations"],
+                    },
+                    {
+                        "name": "Sector: Agriculture",
+                        "icon": "fal fa-fw fa-seedling",
+                        "items": ["Farms"],
+                    },
+                    {
+                        "name": "Sector: Mining",
+                        "icon": "fal fa-fw fa-digging",
+                        "items": ["Mines"],
+                    },
+                    {
+                        "name": "Sector: Construction",
+                        "icon": "fal fa-fw fa-construction",
+                        "items": ["Building site"],
+                    },
+                    {
+                        "name": "Sector: Energy",
+                        "icon": "fal fa-fw fa-bolt",
+                        "items": ["Wind turbines", "Solar parks/farms", "Roof-top solar panels", "Power plants", "High voltage lines", "Substations", "Transmission masts"],
+                    },
+                    {
+                        "name": "Sector: Waste",
+                        "icon": "fal fa-fw fa-dumpster",
+                        "items": ["Waste transfer station", "Waste drop-off sites", "Waste incinerators", "Landfills"],
+                    },
+                    {
+                        "name": "Sector: Storage",
+                        "icon": "fal fa-fw fa-container",
+                        "items": ["Fuel storage facilities", "Energy storage"],
+                    },
+                    {
+                        "name": "Sector: Fishing",
+                        "icon": "fal fa-fw fa-fish",
+                        "items": ["Fish farms"],
+                    },
+                    {
+                        "name": "Sector: Food service",
+                        "icon": "fal fa-fw fa-utensils",
+                        "items": ["Restaurants", "Bars"],
+                    },
+                    {
+                        "name": "Sector: Forestry",
+                        "icon": "fal fa-fw fa-trees",
+                        "items": ["Plantation"],
+                    },
+                    {
+                        "name": "Sector: Manufacturing (Food)",
+                        "icon": "fal fa-fw fa-hamburger",
+                        "items": ["Abbatoir", "Bakery", "Bread mill", "Food processing facilities"],
+                    },
+                    {
+                        "name": "Sector: Manufacturing (coke and petroleum products)",
+                        "icon": "fal fa-fw fa-oil-can",
+                        "items": ["Refineries"],
+                    },
+                    {
+                        "name": "Subdivisions of South Africa",
+                        "icon": "fal fa-fw fa-flag",
+                        "items": ["Provinces"],
+                        "items2": ["Metropolitan municipalities", "District municipalities"],
+                        "items3": ["Local municipalilties"],
+                        "items4": ["Wards"],
+                    },
+                    {
+                        "name": "Subdivisions of Nicaragua",
+                        "icon": "fal fa-fw fa-flag",
+                        "items": ["Departments", "Autonomous regions"],
+                        "items2": ["Municipalities"],
+                    },
+                    {
+                        "name": "Subdivisions of Costa Rica",
+                        "icon": "fal fa-fw fa-flag",
+                        "items": ["Provinces"],
+                        "items2": ["Cantons"],
+                        "items3": ["Districts"],
+                    },
+                    {
+                        "name": "Areas of France",
+                        "icon": "fal fa-fw fa-flag",
+                        "items": ["Ilots Regroupés pour l'information statistique (IRIS)", "Commune"],
+                    },
+                    {
+                        "name": "Areas of Singapore",
+                        "icon": "fal fa-fw fa-flag",
+                        "items": ["Master Plan 2014 Subzones"],
+                    },
+                    {
+                        "name": "Areas of Canada",
+                        "icon": "fal fa-fw fa-flag",
+                        "items": ["Neighbourhoods"],
+                    },
+                    {
+                        "name": "Areas of South Africa",
+                        "icon": "fal fa-fw fa-flag",
+                        "items": ["Suburbs"],
+                    },
+                    {
+                        "name": "Areas of the world",
+                        "icon": "fal fa-fw fa-flag",
+                        "items": ["Supra-national territory", "Sub-national territory"],
+                    },
+                    {
+                        "name": "Areas of The Netherlands",
+                        "icon": "fal fa-fw fa-flag",
+                        "items": ["Buurten", "Stadsdelen", "Wijken"],
+                    },
+                    {
+                        "name": "Areas of Belgium",
+                        "icon": "fal fa-fw fa-flag",
+                        "items": ["Quartiers", "Communes"],
+                    },
+                    {
+                        "name": "Subdivisions of Grenada",
+                        "icon": "fal fa-fw fa-flag",
+                        "items": ["Parishes", "Dependencies"],
+                    },
 
-            ]
-            for each in list:
-                scheme = GeocodeScheme.objects.create(
-                    name = each["name"],
-                    is_comprehensive = False,
-                    icon = each["icon"],
-                )
-                for name in each["items"]:
-                    Geocode.objects.create(
-                        scheme = scheme,
-                        name = name,
-                        depth = 1,
+                ]
+                for each in list:
+                    scheme = GeocodeScheme.objects.create(
+                        name = each["name"],
+                        is_comprehensive = False,
+                        icon = each["icon"],
                     )
-                if "items2" in each:
-                    for name in each["items2"]:
+                    for name in each["items"]:
                         Geocode.objects.create(
                             scheme = scheme,
                             name = name,
-                            depth = 2,
+                            depth = 1,
                         )
-                if "items3" in each:
-                    for name in each["items3"]:
-                        Geocode.objects.create(
-                            scheme = scheme,
-                            name = name,
-                            depth = 3,
-                        )
-                if "items4" in each:
-                    for name in each["items4"]:
-                        Geocode.objects.create(
-                            scheme = scheme,
-                            name = name,
-                            depth = 4,
-                        )
+                    if "items2" in each:
+                        for name in each["items2"]:
+                            Geocode.objects.create(
+                                scheme = scheme,
+                                name = name,
+                                depth = 2,
+                            )
+                    if "items3" in each:
+                        for name in each["items3"]:
+                            Geocode.objects.create(
+                                scheme = scheme,
+                                name = name,
+                                depth = 3,
+                            )
+                    if "items4" in each:
+                        for name in each["items4"]:
+                            Geocode.objects.create(
+                                scheme = scheme,
+                                name = name,
+                                depth = 4,
+                            )
 
 
             checkward = Geocode.objects.filter(name="Wards")
             checkcities = Geocode.objects.filter(name="Urban")
             checkcountries = Geocode.objects.filter(name="Countries")
             checkisland = Geocode.objects.filter(name="Island")
+            count = 0
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
-                    deleted = False if row["active"] == "t" else True
-                    space = ReferenceSpace.objects.create(
-                        old_id = row["id"],
-                        name = row["name"],
-                        description = row["description"],
-                        slug = row["slug"],
-                        is_deleted = deleted,
-                    )
-                    if int(row["type_id"]) == 45 and checkward:
-                        space.geocodes.add(checkward[0])
-                    elif int(row["type_id"]) == 3 and checkcities:
-                        space.geocodes.add(checkcities[0])
-                    elif int(row["type_id"]) == 2 and checkcountries:
-                        space.geocodes.add(checkcountries[0])
-                    elif int(row["type_id"]) == 21 and checkisland:
-                        space.geocodes.add(checkisland[0])
-                    elif int(row["type_id"]) == 56:
-                        space.geocodes.add(Geocode.objects.get(name="Ilots Regroupés pour l'information statistique (IRIS)"))
-                    elif int(row["type_id"]) == 50:
-                        space.geocodes.add(Geocode.objects.get(name="Master Plan 2014 Subzones"))
-                    elif int(row["type_id"]) == 49:
-                        space.geocodes.add(Geocode.objects.get(name="Border Crossings"))
-                    elif int(row["type_id"]) == 47:
-                        space.geocodes.add(Geocode.objects.get(name="Neighbourhoods"))
-                    elif int(row["type_id"]) == 46:
-                        space.geocodes.add(Geocode.objects.get(name="Suburbs"))
-                    elif int(row["type_id"]) == 44:
-                        space.geocodes.add(Geocode.objects.get(name="Supra-national territory"))
-                    elif int(row["type_id"]) == 43:
-                        space.geocodes.add(Geocode.objects.get(name="Sub-national territory"))
-                    elif int(row["type_id"]) == 42:
-                        space.geocodes.add(Geocode.objects.get(name="Bus stops"))
-                    elif int(row["type_id"]) == 41:
-                        space.geocodes.add(Geocode.objects.get(name="Train stations"))
-                    elif int(row["type_id"]) == 40:
-                        space.geocodes.add(Geocode.objects.get(name="Transmission masts"))
-                    elif int(row["type_id"]) == 39:
-                        space.geocodes.add(Geocode.objects.get(name="Pumping stations"))
-                    elif int(row["type_id"]) == 38:
-                        space.geocodes.add(Geocode.objects.get(name="Bicycle racks"))
-                    elif int(row["type_id"]) == 37:
-                        space.geocodes.add(Geocode.objects.get(name="Bridges"))
-                    elif int(row["type_id"]) == 36:
-                        space.geocodes.add(Geocode.objects.get(name="Wind turbines"))
-                    elif int(row["type_id"]) == 35:
-                        space.geocodes.add(Geocode.objects.get(name="Electric charging stations"))
-                    elif int(row["type_id"]) == 34:
-                        space.geocodes.add(Geocode.objects.get(name="Buurten"))
-                    elif int(row["type_id"]) == 32:
-                        space.geocodes.add(Geocode.objects.get(name="Parishes"))
-                    elif int(row["type_id"]) == 31:
-                        space.geocodes.add(Geocode.objects.get(name="Quartiers"))
-                    elif int(row["type_id"]) == 30:
-                        space.geocodes.add(Geocode.objects.get(name="Communes"))
-                    elif int(row["type_id"]) == 29:
-                        space.geocodes.add(Geocode.objects.get(name="Stadsdelen"))
-                    elif int(row["type_id"]) == 28:
-                        space.geocodes.add(Geocode.objects.get(name="Wijken"))
-                    elif int(row["type_id"]) == 27:
-                        space.geocodes.add(Geocode.objects.get(name="Marine outfalls"))
-                    elif int(row["type_id"]) == 26:
-                        space.geocodes.add(Geocode.objects.get(name="Lighthouses"))
-                    elif int(row["type_id"]) == 25:
-                        space.geocodes.add(Geocode.objects.get(name="Airports"))
-                    elif int(row["type_id"]) == 24:
-                        space.geocodes.add(Geocode.objects.get(name="Fuel storage facilities"))
-                    elif int(row["type_id"]) == 23:
-                        space.geocodes.add(Geocode.objects.get(name="Waste transfer station"))
-                    elif int(row["type_id"]) == 22:
-                        space.geocodes.add(Geocode.objects.get(name="Waste drop-off sites"))
-                    elif int(row["type_id"]) == 19:
-                        space.geocodes.add(Geocode.objects.get(name="Energy storage"))
-                    elif int(row["type_id"]) == 18:
-                        space.geocodes.add(Geocode.objects.get(name="Waste incinerators"))
-                    elif int(row["type_id"]) == 17:
-                        space.geocodes.add(Geocode.objects.get(name="Landfills"))
-                    elif int(row["type_id"]) == 16:
-                        space.geocodes.add(Geocode.objects.get(name="Food processing facilities"))
-                    elif int(row["type_id"]) == 15:
-                        space.geocodes.add(Geocode.objects.get(name="Farms"))
-                    elif int(row["type_id"]) == 14:
-                        space.geocodes.add(Geocode.objects.get(name="Mines"))
-                    elif int(row["type_id"]) == 13:
-                        space.geocodes.add(Geocode.objects.get(name="Ports"))
-                    elif int(row["type_id"]) == 12:
-                        space.geocodes.add(Geocode.objects.get(name="Power plants"))
-                    elif int(row["type_id"]) == 11:
-                        space.geocodes.add(Geocode.objects.get(name="Refineries"))
-                    elif int(row["type_id"]) == 9:
-                        space.geocodes.add(Geocode.objects.get(name="Dams"))
-                    elif int(row["type_id"]) == 8:
-                        space.geocodes.add(Geocode.objects.get(name="Water reservoirs"))
-                    elif int(row["type_id"]) == 7:
-                        space.geocodes.add(Geocode.objects.get(name="Wastewater treatment plants"))
-                    elif int(row["type_id"]) == 6:
-                        space.geocodes.add(Geocode.objects.get(name="Water treatment plants"))
+                    count = count+1
+                    print(count)
+                    if count >= int(request.GET["start"]) and count < int(request.GET["end"]):
+                        deleted = False if row["active"] == "t" else True
+                        space = ReferenceSpace.objects.create(
+                            old_id = row["id"],
+                            name = row["name"],
+                            description = row["description"],
+                            slug = row["slug"],
+                            is_deleted = deleted,
+                        )
+                        if int(row["type_id"]) == 45 and checkward:
+                            space.geocodes.add(checkward[0])
+                        elif int(row["type_id"]) == 3 and checkcities:
+                            space.geocodes.add(checkcities[0])
+                        elif int(row["type_id"]) == 2 and checkcountries:
+                            space.geocodes.add(checkcountries[0])
+                        elif int(row["type_id"]) == 21 and checkisland:
+                            space.geocodes.add(checkisland[0])
+                        elif int(row["type_id"]) == 56:
+                            space.geocodes.add(Geocode.objects.get(name="Ilots Regroupés pour l'information statistique (IRIS)"))
+                        elif int(row["type_id"]) == 50:
+                            space.geocodes.add(Geocode.objects.get(name="Master Plan 2014 Subzones"))
+                        elif int(row["type_id"]) == 49:
+                            space.geocodes.add(Geocode.objects.get(name="Border Crossings"))
+                        elif int(row["type_id"]) == 47:
+                            space.geocodes.add(Geocode.objects.get(name="Neighbourhoods"))
+                        elif int(row["type_id"]) == 46:
+                            space.geocodes.add(Geocode.objects.get(name="Suburbs"))
+                        elif int(row["type_id"]) == 44:
+                            space.geocodes.add(Geocode.objects.get(name="Supra-national territory"))
+                        elif int(row["type_id"]) == 43:
+                            space.geocodes.add(Geocode.objects.get(name="Sub-national territory"))
+                        elif int(row["type_id"]) == 42:
+                            space.geocodes.add(Geocode.objects.get(name="Bus stops"))
+                        elif int(row["type_id"]) == 41:
+                            space.geocodes.add(Geocode.objects.get(name="Train stations"))
+                        elif int(row["type_id"]) == 40:
+                            space.geocodes.add(Geocode.objects.get(name="Transmission masts"))
+                        elif int(row["type_id"]) == 39:
+                            space.geocodes.add(Geocode.objects.get(name="Pumping stations"))
+                        elif int(row["type_id"]) == 38:
+                            space.geocodes.add(Geocode.objects.get(name="Bicycle racks"))
+                        elif int(row["type_id"]) == 37:
+                            space.geocodes.add(Geocode.objects.get(name="Bridges"))
+                        elif int(row["type_id"]) == 36:
+                            space.geocodes.add(Geocode.objects.get(name="Wind turbines"))
+                        elif int(row["type_id"]) == 35:
+                            space.geocodes.add(Geocode.objects.get(name="Electric charging stations"))
+                        elif int(row["type_id"]) == 34:
+                            space.geocodes.add(Geocode.objects.get(name="Buurten"))
+                        elif int(row["type_id"]) == 32:
+                            space.geocodes.add(Geocode.objects.get(name="Parishes"))
+                        elif int(row["type_id"]) == 31:
+                            space.geocodes.add(Geocode.objects.get(name="Quartiers"))
+                        elif int(row["type_id"]) == 30:
+                            space.geocodes.add(Geocode.objects.get(name="Communes"))
+                        elif int(row["type_id"]) == 29:
+                            space.geocodes.add(Geocode.objects.get(name="Stadsdelen"))
+                        elif int(row["type_id"]) == 28:
+                            space.geocodes.add(Geocode.objects.get(name="Wijken"))
+                        elif int(row["type_id"]) == 27:
+                            space.geocodes.add(Geocode.objects.get(name="Marine outfalls"))
+                        elif int(row["type_id"]) == 26:
+                            space.geocodes.add(Geocode.objects.get(name="Lighthouses"))
+                        elif int(row["type_id"]) == 25:
+                            space.geocodes.add(Geocode.objects.get(name="Airports"))
+                        elif int(row["type_id"]) == 24:
+                            space.geocodes.add(Geocode.objects.get(name="Fuel storage facilities"))
+                        elif int(row["type_id"]) == 23:
+                            space.geocodes.add(Geocode.objects.get(name="Waste transfer station"))
+                        elif int(row["type_id"]) == 22:
+                            space.geocodes.add(Geocode.objects.get(name="Waste drop-off sites"))
+                        elif int(row["type_id"]) == 19:
+                            space.geocodes.add(Geocode.objects.get(name="Energy storage"))
+                        elif int(row["type_id"]) == 18:
+                            space.geocodes.add(Geocode.objects.get(name="Waste incinerators"))
+                        elif int(row["type_id"]) == 17:
+                            space.geocodes.add(Geocode.objects.get(name="Landfills"))
+                        elif int(row["type_id"]) == 16:
+                            space.geocodes.add(Geocode.objects.get(name="Food processing facilities"))
+                        elif int(row["type_id"]) == 15:
+                            space.geocodes.add(Geocode.objects.get(name="Farms"))
+                        elif int(row["type_id"]) == 14:
+                            space.geocodes.add(Geocode.objects.get(name="Mines"))
+                        elif int(row["type_id"]) == 13:
+                            space.geocodes.add(Geocode.objects.get(name="Ports"))
+                        elif int(row["type_id"]) == 12:
+                            space.geocodes.add(Geocode.objects.get(name="Power plants"))
+                        elif int(row["type_id"]) == 11:
+                            space.geocodes.add(Geocode.objects.get(name="Refineries"))
+                        elif int(row["type_id"]) == 9:
+                            space.geocodes.add(Geocode.objects.get(name="Dams"))
+                        elif int(row["type_id"]) == 8:
+                            space.geocodes.add(Geocode.objects.get(name="Water reservoirs"))
+                        elif int(row["type_id"]) == 7:
+                            space.geocodes.add(Geocode.objects.get(name="Wastewater treatment plants"))
+                        elif int(row["type_id"]) == 6:
+                            space.geocodes.add(Geocode.objects.get(name="Water treatment plants"))
+
         elif request.GET["table"] == "dataviz":
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
