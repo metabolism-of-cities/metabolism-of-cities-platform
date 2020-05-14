@@ -381,6 +381,16 @@ class ForumMessage(Record):
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
 
+class License(models.Model):
+    name = models.CharField(max_length=255)
+    url = models.CharField(max_length=255, null=True, blank=True)
+    
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ["name"]
+
 class LibraryItemType(models.Model):
     name = models.CharField(max_length=255)
     icon = models.CharField(max_length=255, null=True, blank=True)
@@ -424,6 +434,7 @@ class LibraryItem(Record):
     doi = models.CharField(max_length=255, null=True, blank=True)
     isbn = models.CharField(max_length=255, null=True, blank=True)
     comments = models.TextField(null=True, blank=True)
+    license = models.ForeignKey(License, on_delete=models.CASCADE, null=True, blank=True)
     STATUS = (
         ("pending", "Pending"),
         ("active", "Active"),
@@ -473,6 +484,12 @@ class Video(LibraryItem):
         elif self.video_site == "vimeo":
             return f'<iframe class="video-embed vimeo-video" title="vimeo-player" src="https://player.vimeo.com/video/{self.embed_code}" frameborder="0" allowfullscreen></iframe>'
 
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
+
+class Photo(LibraryItem):
+    position = models.PositiveSmallIntegerField(null=True, blank=True, db_index=True)
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
@@ -562,42 +579,6 @@ class ActivatedSpace(models.Model):
 #
 #    def __str__(self):
 #        return self.mooc.name
-
-class License(models.Model):
-    name = models.CharField(max_length=255)
-    url = models.CharField(max_length=255, null=True, blank=True)
-    
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ["name"]
-
-class Photo(models.Model):
-    image = StdImageField(upload_to="photos", variations={"thumbnail": (400, 400), "large": (1024, 780), "medium": (640, 480)})
-    author = models.CharField(max_length=255)
-    source_url = models.CharField(max_length=255, null=True, blank=True)
-    #process = models.ForeignKey('staf.Process', on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={'slug__isnull': False})
-    description = models.TextField(null=True, blank=True)
-    space = models.ForeignKey("ReferenceSpace", null=True, blank=True, on_delete=models.CASCADE, related_name="photo_gallery") # This is the main system this photo belongs to
-    uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    is_deleted = models.BooleanField(default=False, db_index=True)
-    license = models.ForeignKey(License, on_delete=models.CASCADE, null=True, blank=True)
-    TYPES = (
-        ("photo", "Photo"),
-        ("map", "Map"),
-    )
-    type = models.CharField(max_length=6, choices=TYPES, default="photo")
-    position = models.PositiveSmallIntegerField(default=99)
-
-    def __str__(self):
-        if self.description:
-          cleanr = re.compile("<.*?>")
-          description = re.sub(cleanr, "", self.description)
-          description = description[:30] + " - " + self.author + " - #" + str(self.id)
-        else:
-          description = "Photo by " + self.author + " - #" + str(self.id)
-        return description
 
 class WorkActivity(models.Model):
 

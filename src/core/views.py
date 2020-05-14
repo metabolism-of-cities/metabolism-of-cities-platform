@@ -1915,16 +1915,6 @@ def dataimport(request):
                     sector = Sector.objects.get(old_id=row["process_group_id"])
                     space.sectors.add(sector)
         elif request.GET["table"] == "photos":
-            License.objects.all().delete()
-            Photo.objects.all().delete()
-            with open(settings.MEDIA_ROOT + "/import/licenses.csv", "r") as csvfile:
-                contents = csv.DictReader(csvfile)
-                for row in contents:
-                    License.objects.create(
-                        id = row["id"],
-                        name = row["name"],
-                        url = row["url"],
-                    )
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:

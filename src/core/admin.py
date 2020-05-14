@@ -134,10 +134,6 @@ class RecordRelationshipAdmin(admin.ModelAdmin):
 class RelationshipAdmin(admin.ModelAdmin):
     list_display = ["name", "label"]
 
-class PhotoAdmin(admin.ModelAdmin):
-    search_fields = ["space__name"]
-    list_display = ["id", "space", "uploaded_by", "description"]
-
 class WorkAdmin(admin.ModelAdmin):
     search_fields = ["name", "part_of_project__name", "related_to__name"]
     list_display = ["name", "part_of_project", "related_to", "status", "priority"]
@@ -196,12 +192,12 @@ admin_site.register(Relationship, RelationshipAdmin)
 admin_site.register(RecordRelationship, RecordRelationshipAdmin)
 admin_site.register(SocialMedia, SocialMediaAdmin)
 admin_site.register(LibraryItem, LibraryAdmin)
+admin_site.register(Photo, LibraryAdmin)
 admin_site.register(LibraryItemType, SearchAdmin)
 admin_site.register(ActivatedSpace, SpaceAdmin)
 
 admin_site.register(License)
 admin_site.register(Site)
-admin_site.register(Photo, PhotoAdmin)
 
 #admin_site.register(MOOC)
 #admin_site.register(MOOCModule)
