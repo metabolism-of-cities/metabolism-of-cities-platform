@@ -1805,6 +1805,7 @@ Link to review: {review_link}''',
 # TEMPORARY
 def dataimport(request):
     error = False
+    return redirect("/")
     if "table" in request.GET:
         messages.warning(request, "Trying to import " + request.GET["table"])
         file = settings.MEDIA_ROOT + "/import/" + request.GET["table"] + ".csv"
