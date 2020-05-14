@@ -1398,7 +1398,7 @@ def ascus_account_discussion(request):
                 description = "Please check to see if this looks good. If all is well, then please add any additional organizers to this record (as per the description).",
                 part_of_project_id = 8,
                 related_to = info,
-                activity_id = 14,
+                workactivity_id = 14,
             )
             return redirect("/account/")
         else:
@@ -1499,7 +1499,7 @@ def ascus_account_presentation(request, introvideo=False):
                 description = "Please check to see if this looks good. If it's a video, audio schould be of decent quality. Make sure there are no glaring problems with this submission. If there are, contact the submitter and discuss. If all looks good, then please look at the co-authors and connect this (create new relationships) to the other authors as well.",
                 part_of_project_id = 8,
                 related_to = info,
-                activity_id = 14,
+                workactivity_id = 14,
             )
             return redirect("/account/")
         else:
@@ -1660,7 +1660,7 @@ def ascus_register(request):
                     description = "Affiliation: " + request.POST.get("organization") + " -- City: " + request.POST.get("city"),
                     part_of_project_id = 8,
                     related_to = people,
-                    activity_id = 14,
+                    workactivity_id = 14,
                 )
             location = request.POST.get("city", "not set")
             Work.objects.create(
@@ -1668,7 +1668,7 @@ def ascus_register(request):
                 description = "Price should be based on their location: location = " + location,
                 part_of_project_id = 8,
                 related_to = people,
-                activity_id = 13,
+                workactivity_id = 13,
             )
             messages.success(request, "You are successfully registered for the AScUS Unconference.")
 
