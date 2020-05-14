@@ -606,6 +606,7 @@ class WorkActivity(models.Model):
 
     class Meta:
         verbose_name_plural = "work activities"
+        ordering = ["name"]
 
 class Work(Record):
 
@@ -645,7 +646,7 @@ class Badge(models.Model):
     code = models.CharField(max_length=20, null=True, blank=True, db_index=True)
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={"is_internal": True})
+    projects = models.ManyToManyField(Project, blank=True, limit_choices_to={"is_internal": True})
     worktype = models.ManyToManyField(WorkActivity, blank=True) 
     required_quantity = models.PositiveSmallIntegerField(null=True, blank=True)
    

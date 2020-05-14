@@ -141,6 +141,9 @@ class WorkAdmin(admin.ModelAdmin):
     autocomplete_fields = ["spaces", "tags", "part_of_project", "related_to", "assigned_to"]
     exclude = ["image"]
 
+class WorkActivityAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
+
 class LogEntryAdmin(admin.ModelAdmin):
     # to have a date-based drilldown navigation in the admin page
     date_hierarchy = "action_time"
@@ -177,7 +180,8 @@ class UserAdmin(admin.ModelAdmin):
      search_fields = ["username", "email"]
 
 class BadgeAdmin(admin.ModelAdmin):
-    list_display = ["name", "code", "type", "description"]
+    list_display = ["name", "type", "description"]
+    autocomplete_fields = ["projects"]
 
 admin_site.register(Tag, TagAdmin)
 admin_site.register(Record, SearchCompleteAdmin)
@@ -226,7 +230,7 @@ admin_site.register(UploadSession)
 admin_site.register(UploadFile)
 
 admin_site.register(Work, WorkAdmin)
-admin_site.register(WorkActivity)
+admin_site.register(WorkActivity, WorkActivityAdmin)
 admin_site.register(Badge, BadgeAdmin)
 admin_site.register(ActivityCatalog)
 admin_site.register(Activity, ActivityAdmin)
