@@ -440,7 +440,8 @@ class LibraryItem(Record):
         ("active", "Active"),
         ("deleted", "Deleted"),
     )
-    status = models.CharField(max_length=8, choices=STATUS, db_index=True)
+    # We will delete this after we inserted appropriate work tickets
+    status = models.CharField(max_length=8, choices=STATUS, db_index=True, null=True, blank=True, help_text="Old field, do not use")
     #processes = models.ManyToManyField("staf.Process", blank=True, limit_choices_to={"slug__isnull": False})
     #materials = models.ManyToManyField("staf.Material", blank=True)
 

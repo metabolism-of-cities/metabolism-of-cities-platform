@@ -1915,21 +1915,57 @@ def dataimport(request):
                     sector = Sector.objects.get(old_id=row["process_group_id"])
                     space.sectors.add(sector)
         elif request.GET["table"] == "photos":
+            Photo.objects_unfiltered.all().delete()
+            list = User.objects.all()
+            for each in list:
+                checkpeople = People.objects.filter(user=each)
+                if checkpeople:
+                    print("YES!!")
+                else:
+                    check = People.objects.filter(email=each.email)
+                    if check:
+                        try:
+                            print("WE FOUND A MATCH!!!!!!")
+                            p = check[0]
+                            p.user = each
+                            p.save()
+                        except:
+                            print("FAIL _------_--")
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
+                from dateutil.parser import parse
                 for row in contents:
-                    Photo.objects.create(
+                    deadline = parse(row["created_at"])
+                    year = deadline.strftime("%Y")
+                    info = Photo.objects.create(
+                        name = row["description"][:255],
+                        description = row["description"] if len(row["description"]) > 255 else None,
                         image = row["image"],
-                        author = row["author"],
-                        source_url = row["source_url"],
-                        description = row["description"],
-                        space_id = row["secondary_space_id"] if row["secondary_space_id"] else row["primary_space_id"],
-                        uploaded_by_id = row["uploaded_by_id"],
                         is_deleted = row["deleted"],
                         license_id = row["license_id"],
-                        type = row["type"],
+                        type = LibraryItemType.objects.get(name="Image"),
                         position = row["position"],
+                        year = year,
+                        author_list = row["author"],
+                        url = row["source_url"],
                     )
+                    people = People.objects_unfiltered.get(user__id=row["uploaded_by_id"])
+                    RecordRelationship.objects.create(
+                        relationship_id = 11,
+                        record_parent = people,
+                        record_child = info,
+                    )
+                    author = row["author"],
+                    check = People.objects.filter(name=author)
+                    if check:
+                        people = check[0]
+                        RecordRelationship.objects.create(
+                            relationship_id = 4,
+                            record_parent = people,
+                            record_child = info,
+                        )
+                    space_id = row["secondary_space_id"] if row["secondary_space_id"] else row["primary_space_id"]
+                    info.spaces.add(ReferenceSpace.objects.get(old_id=space_id))
         elif request.GET["table"] == "referencespaces":
             if int(request.GET["start"]) == 0:
                 ReferenceSpaceLocation.objects.all().delete()
