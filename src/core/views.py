@@ -2260,46 +2260,47 @@ def dataimport(request):
             from django.contrib.gis.geos import Point
             from django.contrib.gis.geos import GEOSGeometry
 
-            ReferenceSpaceLocation.objects.all().delete()
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
-                    try:
-                        lat = float(row["lat"])
-                        lng = float(row["lng"])
-                    except:
-                        lat = None
-                        lng = None
-                    if row["geojson"] or lat:
-                        deleted = True if not row["active"] else False
-                        start = row["start"] if row["start"] else None
-                        end = row["end"] if row["end"] else None
-                        if row["geojson"]:
-                            try:
-                                geometry = GEOSGeometry(row["geojson"])
-                            except Exception as e:
-                                print("Houston, we have a problem!")
-                                print(e)
-                                print(row["id"])
-                        elif lat and lng:
-                            geometry = Point(lng, lat)
+                    check = ReferenceSpaceLocation.objects.filter(pk=row["id"])
+                    if not check:
                         try:
-                            location = ReferenceSpaceLocation.objects.create(
-                                id = row["id"],
-                                space = ReferenceSpace.objects.get(old_id=row["space_id"]),
-                                description = row["description"],
-                                start = start,
-                                end = end,
-                                is_deleted = deleted,
-                                geometry = geometry,
-                            )
-                            space = ReferenceSpace.objects.get(old_id=row["space_id"])
-                            space.location = location
-                            space.save()
-                        except Exception as e:
-                            print("Not imported because there is an error")
-                            print(e)
-                            print(row["space_id"])
+                            lat = float(row["lat"])
+                            lng = float(row["lng"])
+                        except:
+                            lat = None
+                            lng = None
+                        if row["geojson"] or lat:
+                            deleted = True if not row["active"] else False
+                            start = row["start"] if row["start"] else None
+                            end = row["end"] if row["end"] else None
+                            if row["geojson"]:
+                                try:
+                                    geometry = GEOSGeometry(row["geojson"])
+                                except Exception as e:
+                                    print("Houston, we have a problem!")
+                                    print(e)
+                                    print(row["id"])
+                            elif lat and lng:
+                                geometry = Point(lng, lat)
+                            try:
+                                location = ReferenceSpaceLocation.objects.create(
+                                    id = row["id"],
+                                    space = ReferenceSpace.objects.get(old_id=row["space_id"]),
+                                    description = row["description"],
+                                    start = start,
+                                    end = end,
+                                    is_deleted = deleted,
+                                    geometry = geometry,
+                                )
+                                space = ReferenceSpace.objects.get(old_id=row["space_id"])
+                                space.location = location
+                                space.save()
+                            except Exception as e:
+                                print("Not imported because there is an error")
+                                print(e)
+                                print(row["space_id"])
         elif request.GET["table"] == "flowdiagrams":
             FlowDiagram.objects.all().delete()
             water = FlowDiagram.objects.create(name="Urban water cycle")
