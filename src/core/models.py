@@ -27,6 +27,10 @@ from django.contrib.gis.db import models
 # To be able to set an UUID
 import uuid
 
+# To be able to call just the filename in the file field
+# Maybe move to def filename @property?
+import os
+
 class Tag(models.Model):
     name = models.CharField(max_length=255)
     description = HTMLField(null=True, blank=True)
@@ -881,11 +885,15 @@ def upload_directory(instance, filename):
     return directory
 
 class UploadFile(models.Model):
-    session = models.ForeignKey(UploadSession, on_delete=models.CASCADE)
+    session = models.ForeignKey(UploadSession, on_delete=models.CASCADE, related_name="files")
     file = models.FileField(upload_to=upload_directory)
 
     def __str__(self):
         return self.file.name
+
+    @property
+    def filename(self):
+        return os.path.basename(self.file.name)
 
     class Meta:
         db_table = "stafdb_uploadfile"

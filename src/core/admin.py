@@ -132,7 +132,7 @@ class RecordRelationshipAdmin(admin.ModelAdmin):
     autocomplete_fields = ["record_parent", "record_child"]
 
 class RelationshipAdmin(admin.ModelAdmin):
-    list_display = ["name", "label"]
+    list_display = ["name", "label", "is_permission"]
 
 class WorkAdmin(admin.ModelAdmin):
     search_fields = ["name", "part_of_project__name", "related_to__name"]

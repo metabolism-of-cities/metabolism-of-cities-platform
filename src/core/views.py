@@ -673,14 +673,33 @@ def stafcp_upload_gis(request, id=None):
 
 @login_required
 def stafcp_upload_gis_file(request, id=None):
+    session = None
+    if id:
+        # Add validation code here
+        session = get_object_or_404(UploadSession, pk=id)
     if request.method == "POST":
         import os
-        session = UploadSession.objects.create(
-            user=request.user,
-            name=request.POST.get("name"), 
-            type="shapefile",
-            part_of_project_id = PAGE_ID["stafcp"],
-        )
+        if not session:
+            session = UploadSession.objects.create(
+                user=request.user,
+                name=request.POST.get("name"), 
+                type="shapefile",
+                part_of_project_id = PAGE_ID["stafcp"],
+            )
+        elif "name" in request.POST:
+            session.name = request.POST.get("name")
+            session.save()
+        if "remove-files" in request.POST:
+            files = UploadFile.objects.filter(session=session)
+            folder = settings.MEDIA_ROOT + "/uploads/"
+            if session.part_of_project:
+                folder += "project-" + str(session.part_of_project.id) + "/"
+            folder += session.type + "/" + str(session.uuid)
+            import shutil
+            shutil.rmtree(folder)
+            files.delete()
+            messages.success(request, "The files were removed - you can upload new files instead.")
+            return redirect("stafcp_upload_gis_file", id=session.id)
         for each in request.FILES.getlist("file"):
             filename, file_extension = os.path.splitext(str(each))
             allowed_files = [".shp", ".shx", ".dbf", ".prj", ".sbn", ".fbn", ".ain", ".ixs", ".mxs", ".atx", ".cpg", ".qix", ".aih", ".sbx", ".fbx"]
@@ -692,6 +711,7 @@ def stafcp_upload_gis_file(request, id=None):
                 )
         return redirect("stafcp_upload_gis_verify", id=session.id)
     context = {
+        "session": session,
     }
     return render(request, "stafcp/upload/gis.file.html", load_design(context, PAGE_ID["stafcp"]))
 
