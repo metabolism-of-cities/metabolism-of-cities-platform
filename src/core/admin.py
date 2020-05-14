@@ -180,7 +180,7 @@ class UserAdmin(admin.ModelAdmin):
      search_fields = ["username", "email"]
 
 class BadgeAdmin(admin.ModelAdmin):
-    list_display = ["name", "type", "description"]
+    list_display = ["name", "code", "type", "description"]
     autocomplete_fields = ["projects"]
 
 admin_site.register(Tag, TagAdmin)
