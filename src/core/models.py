@@ -642,6 +642,7 @@ class Badge(models.Model):
         GOLD = 3, "Gold"
 
     type = models.IntegerField(choices=BadgeType.choices, db_index=True)
+    code = models.CharField(max_length=20, null=True, blank=True, db_index=True)
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={"is_internal": True})
@@ -650,6 +651,9 @@ class Badge(models.Model):
    
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ["code", "type"]
 
 #
 #

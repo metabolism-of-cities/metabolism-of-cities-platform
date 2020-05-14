@@ -177,7 +177,7 @@ class UserAdmin(admin.ModelAdmin):
      search_fields = ["username", "email"]
 
 class BadgeAdmin(admin.ModelAdmin):
-    list_display = ["name", "type", "description"]
+    list_display = ["name", "code", "type", "description"]
 
 admin_site.register(Tag, TagAdmin)
 admin_site.register(Record, SearchCompleteAdmin)
