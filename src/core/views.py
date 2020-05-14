@@ -629,6 +629,7 @@ def metabolism_manager_forum(request):
 def stafcp(request):
     context = {
         "show_project_design": True,
+        "show_relationship": PAGE_ID["stafcp"],
     }
     return render(request, "stafcp/index.html", load_design(context, PAGE_ID["stafcp"]))
 
@@ -639,13 +640,13 @@ def stafcp_review(request):
 
 def stafcp_review_pending(request):
     context = {
-        "list": UploadSession.objects.filter(is_uploaded=False),
+        "list": UploadSession.objects.filter(meta_data__isnull=True),
     }
     return render(request, "stafcp/review/files.pending.html", load_design(context, PAGE_ID["stafcp"]))
 
 def stafcp_review_uploaded(request):
     context = {
-        "list": UploadSession.objects.filter(is_uploaded=True, is_processed=False),
+        "list": UploadSession.objects.filter(),
     }
     return render(request, "stafcp/review/files.uploaded.html", load_design(context, PAGE_ID["stafcp"]))
 
@@ -673,12 +674,22 @@ def stafcp_upload_gis(request, id=None):
 @login_required
 def stafcp_upload_gis_file(request, id=None):
     if request.method == "POST":
-        session = UploadSession.objects.create(user=request.user, name=request.POST.get("name"))
+        import os
+        session = UploadSession.objects.create(
+            user=request.user,
+            name=request.POST.get("name"), 
+            type="shapefile",
+            part_of_project_id = PAGE_ID["stafcp"],
+        )
         for each in request.FILES.getlist("file"):
-            UploadFile.objects.create(
-                session = session,
-                file = each,
-            )
+            filename, file_extension = os.path.splitext(str(each))
+            allowed_files = [".shp", ".shx", ".dbf", ".prj", ".sbn", ".fbn", ".ain", ".ixs", ".mxs", ".atx", ".cpg", ".qix", ".aih", ".sbx", ".fbx"]
+            file_extension = file_extension.lower()
+            if file_extension in allowed_files:
+                UploadFile.objects.create(
+                    session = session,
+                    file = each,
+                )
         return redirect("stafcp_upload_gis_verify", id=session.id)
     context = {
     }
@@ -699,7 +710,8 @@ def stafcp_upload_gis_verify(request, id):
     files = UploadFile.objects.filter(session=session)
     geojson = None
     try:
-        shape = shapefile.Reader(settings.MEDIA_ROOT + "/" + files[0].file.name)
+        filename = settings.MEDIA_ROOT + "/" + files[0].file.name
+        shape = shapefile.Reader(filename)
         feature = shape.shape(0)
         geojson = feature.__geo_interface__ 
         geojson = json.dumps(geojson) 

@@ -216,6 +216,7 @@ class Relationship(models.Model):
     name = models.CharField(max_length=255)
     label = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
+    is_permission = models.BooleanField(default=False, help_text="Mark if this relationship is about giving people permissions in the system")
     def __str__(self):
         return self.label
 
@@ -858,6 +859,12 @@ class UploadSession(Record):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     part_of_project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     meta_data = JSONField(null=True, blank=True)
+    TYPE = (
+        ("shapefile", "Shapefile"),
+        ("flowdata", "Material flow data"),
+        ("stockdata", "Material stock data"),
+    )
+    type = models.CharField(max_length=20, choices=TYPE)
 
     def __str__(self):
         return self.name
@@ -865,13 +872,17 @@ class UploadSession(Record):
     class Meta:
         db_table = "stafdb_uploadsession"
 
-def shapefile_directory(instance, filename):
+def upload_directory(instance, filename):
     # file will be uploaded to MEDIA_ROOT/uuid/<filename>
-    return "stafdb/{0}/{1}".format(instance.session.uuid, filename)
+    directory = "uploads/"
+    if instance.session.part_of_project:
+        directory += "project-" + str(instance.session.part_of_project.id) + "/"
+    directory += instance.session.type + "/" + str(instance.session.uuid) + "/" + filename
+    return directory
 
 class UploadFile(models.Model):
     session = models.ForeignKey(UploadSession, on_delete=models.CASCADE)
-    file = models.FileField(upload_to=shapefile_directory)
+    file = models.FileField(upload_to=upload_directory)
 
     def __str__(self):
         return self.file.name
@@ -879,3 +890,6 @@ class UploadFile(models.Model):
     class Meta:
         db_table = "stafdb_uploadfile"
 
+# Need to remove this (and from stafdb models) when resetting migrations
+def shapefile_directory():
+    pass
