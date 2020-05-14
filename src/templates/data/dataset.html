@@ -64,9 +64,13 @@
               </div>
             </div>
             <div class="col-lg-7">
-              <button class="btn btn-primary float-lg-right export-chart">
+              <button class="btn btn-primary float-lg-right export-svg">
                 <i class="fas fa-fw fa-save"></i>
-                Save as image
+                Save as SVG
+              </button>
+              <button class="btn btn-primary float-lg-right mr-2 export-png">
+                <i class="fas fa-fw fa-save"></i>
+                Save as PNG
               </button>
               <button class="btn btn-primary-basic float-lg-right mr-2 fullscreen-chart">
                 <i class="fal fa-fw fa-compress"></i>
@@ -457,9 +461,13 @@
       }]
     });
 
-    // export chart button
-    $(".export-chart").click(function() {
+    // export chart buttons
+    $(".export-png").click(function() {
       chart.exportChart();
+    });
+
+    $(".export-svg").click(function() {
+      chart.exportChart({type:"image/svg+xml"});
     });
 
     // fullscreen chart button
@@ -480,7 +488,6 @@
         },
       });
     });
-
   </script>
 
 {% endblock %}
