@@ -1863,7 +1863,12 @@ def dataimport(request):
                     if row["referencespace_id"] in spaces:
                         space = spaces[row["referencespace_id"]]
                     else:
-                        space = ReferenceSpace.objects.get(old_id=row["referencespace_id"])
+                        space = ReferenceSpace.objects.filter(old_id=row["referencespace_id"])
+                        if space:
+                            space = space[0]
+                        else:
+                            print("COULD NOT FIND THIS!!")
+                            print(row)
                         spaces[row["referencespace_id"]] = space
                     if row["reference_id"] in items:
                         item = items[row["reference_id"]]
@@ -1875,7 +1880,8 @@ def dataimport(request):
                             print("Duplication error!")
                             print(item)
                         items[row["reference_id"]] = item
-                    item.spaces.add(space)
+                    if space:
+                        item.spaces.add(space)
         elif request.GET["table"] == "sectors":
             Sector.objects.all().delete()
             with open(file, "r") as csvfile:
