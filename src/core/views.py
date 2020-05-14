@@ -1761,373 +1761,6 @@ def mooc_module(request, id, module):
     return render(request, "mooc/module.html", context)
 
 def load_baseline(request):
-    moc = Site.objects.get(pk=1)
-    moc.name = "Metabolism of Cities"
-    moc.domain = "https://metabolismofcities.org"
-    moc.domain = "http://0.0.0.0:8000"
-    moc.save()
-
-    moi = Site.objects.filter(pk=2)
-    if not moi:
-        moi = Site.objects.create(
-            name = "Metabolism of Islands",
-            domain = "https://metabolismofislands.org"
-        )
-    messages.success(request, "Sites were inserted/updated")
-
-    Group.objects.all().delete()
-    organization_permissions = Permission.objects.filter(name__in=["Can add organization", "Can change organization", "Can view organization", "Can delete organization"])
-    group_platformU = Group.objects.create(name="PlatformU Admin")
-    group_platformU.permissions.add(*organization_permissions)
-
-    group_staf_data = Group.objects.create(name="STAF data admin")
-    stafdb_permissions = Permission.objects.filter(content_type__app_label="stafdb")
-    group_staf_data.permissions.add(*stafdb_permissions)
-    messages.success(request, "Groups were created")
-
-    projects = [
-        { "id": 1, "name": "Metabolism of Cities", "parent": 19, "url": "/", "logo": "logos/logo.svg", },
-        { "id": 2, "name": "Library", "parent": 19, "url": "/library/", "position": 1, "image": "records/um_library.png", "content": "<p>The Metabolism of Cities library holds publications related to urban metabolism and material flow analysis. The publications are mostly reports, theses or journal articles. The bulk of the publications are in English, but there are also many in Spanish, French, Dutch and German. </p><p>The urban metabolism library aims to collect all of the relevant meta information (name, description, year of publication, abstract), and to provide visitors with an easy way to browse and filter the catalog. The library is constantly growing and visitors are encouraged to submit missing documents.</p>", "start_date": "2014-08-01" },
-        { "id": 3, "name": "Multimedia Library", "parent": 19, "url": "/multimedia/", "position": 2, "image": "records/um_multimedia.png", "content": "<p>The Multimedia Library contains videos, podcasts, and data visualizations.</p>" },
-        { "id": 4, "name": "MultipliCity Data Hub", "parent": 19, "url": "/data/", "position": 2, "image": "records/datahub.png", "content": "<p>For urban metabolism researchers, obtaining data is one of the most important and time-consuming activities. This not only limits research activities, but it also creates a significant threshold for policy makers and others interested in using urban metabolism on a more practical level. The inconsistency and scattered nature of data furthermore complicate the uptake of urban metabolism tools and practices.</p><p>In 2018, the Metabolism of Cities community started a project called MultipliCity to try and take on this challenge. This project aims to develop a global network that maintains an online hub to centralize, visualize, and present datasets related to urban resource use and requirements. A network of local volunteers (students, researchers, city officials, citizens, etc) assists with the identification of relevant datasets, and the MultipliCity data hub takes care of indexing, processing, and standardizing the datasets. This allows for a large collection of in-depth data to become available to researchers and the general public, vastly improving access and allowing for more work to be done on analysis and interpretation, rather than on data collection." },
-        { "id": 5, "name": "Stakeholders Initiative", "parent": 19, "url": "/stakeholders-initiative/", "position": 3 },
-        { "id": 6, "name": "Cityloops", "parent": 19, "url": "/cityloops/", "position": 4 },
-        { "id": 7, "name": "Seminar Series", "parent": 19, "url": "/seminarseries/", "position": 5 },
-        { "id": 8, "name": "ASCuS Conference", "parent": 19, "url": "/ascus/", "position": 6, "hide_back_link": True, },
-        { "id": 9, "name": "Urban Metabolism & Minorities", "parent": 19, "url": "/minorities/", "position": 7 },
-        { "id": 10, "name": "Urban Metabolism Lab", "parent": 19, "url": "/um-lab/", "position": 8 },
-        { "id": 11, "name": "MOOC", "parent": 19, "url": "/mooc/", "position": 9 },
-        { "id": 12, "name": "GUMDB", "parent": 19, "url": "/gumdb/", "position": 10 },
-        { "id": 13, "name": "STAFDB", "parent": 19, "url": "/stafdb/", "position": 11 },
-        { "id": 14, "name": "STAFCP", "parent": 19, "url": "/stafcp/", "position": 12, "content": "<p>The Stocks and Flows Community Portal is a platform where researchers, practitioners, and enthusiasts can upload data on stocks and flows, which will then be added to our global database. This database can be queried, visualised, and explored from within the STAFCP.</p>" },
-        { "id": 15, "name": "OMAT", "parent": 19, "url": "/omat/", "position": 13 },
-        { "id": 16, "name": "PlatformU", "parent": 19, "url": "/platformu/", "position": 14 },
-        { "id": 17, "name": "Metabolism of Islands", "parent": 19, "url": "/", "position": 14, "hide_back_link": True, },
-        { "id": 18, "name": "UM Community Hub", "parent": 19, "url": "/community/", "position": 14 },
-    ]
-
-    articles = [
-        { "id": 32, "name": "Urban metabolism introduction", "parent": 1, "slug": "/urbanmetabolism/", "position": 1 },
-        { "id": 33, "name": "History of urban metabolism", "parent": 1, "slug": "/urbanmetabolism/history/", "position": 2 },
-        { "id": 34, "name": "Starters Kit", "parent": 1, "slug": "/urbanmetabolism/starterskit/", "position": 3 },
-        { "id": 35, "name": "Urban metabolism for policy makers", "parent": 1, "slug": "/urbanmetabolism/policymakers/", "position": 4 },
-        { "id": 36, "name": "Urban metabolism for students", "parent": 1, "slug": "/urbanmetabolism/students/", "position": 5 },
-        { "id": 37, "name": "Urban metabolism for lecturers", "parent": 1, "slug": "/urbanmetabolism/lecturers/", "position": 6 },
-        { "id": 38, "name": "Urban metabolism for researchers", "parent": 1, "slug": "/urbanmetabolism/researchers/", "position": 7 },
-        { "id": 39, "name": "Urban metabolism for organisations", "parent": 1, "slug": "/urbanmetabolism/organisations/", "position": 8 },
-        { "id": 40, "name": "Urban metabolism for everyone", "parent": 1, "slug": "/urbanmetabolism/everyone/", "position": 9 },
-        { "id": 41, "name": "Glossary", "parent": 1, "slug": "/urbanmetabolism/glossary/", "position": 10 },
-
-        { "id": 42, "name": "UM Community", "parent": None, "slug": "/community/", "position": 2 },
-        { "id": 43, "name": "People", "parent": 11, "slug": "/community/people/", "position": 1, "content": "<p>This page contains an overview of people who are or have been active in the urban metabolism community.</p>" },
-        { "id": 44, "name": "Organisations", "parent": 11, "slug": "/community/organisations/", "position": 2 },
-        { "id": 45, "name": "Projects", "parent": 11, "slug": "/community/projects/", "position": 3 },
-        { "id": 46, "name": "News", "parent": 11, "slug": "/community/news/", "position": 4 },
-        { "id": 47, "name": "Events", "parent": 11, "slug": "/community/events/", "position": 5 },
-        { "id": 48, "name": "Forum", "parent": 11, "slug": "/community/forum/", "position": 6 },
-        { "id": 49, "name": "Join our community", "parent": 11, "slug": "/community/join/", "position": 7 },
-
-        { "id": 50, "name": "Our Projects", "parent": None, "slug": "/projects/", "position": 3 },
-        { "id": 51, "name": "About", "parent": None, "slug": "/about/", "position": 4 },
-        { "id": 52, "name": "Our Story", "parent": 31, "slug": "/about/our-story/", "position": 1 },
-        { "id": 53, "name": "Mission & values", "parent": 31, "slug": "/about/mission/", "position": 2 },
-        { "id": 54, "name": "Our Members", "parent": 31, "slug": "/about/members/", "position": 3 },
-        { "id": 55, "name": "Our Partners", "parent": 31, "slug": "/about/partners/", "position": 4 },
-        { "id": 56, "name": "Contact Us", "parent": 31, "slug": "/about/contact/", "position": 5 },
-
-        { "id": 57, "name": "Case Studies", "parent": None, "slug": "/library/casestudies/", "position": 2 },
-        { "id": 58, "name": "Journals", "parent": None, "slug": "/library/journals/", "position": 3 },
-        { "id": 59, "name": "Authors", "parent": None, "slug": "/library/authors/", "position": 4 },
-        { "id": 60, "name": "Contribute", "parent": None, "slug": "/library/contribute/", "position": 5 },
-        { "id": 61, "name": "Download", "parent": None, "slug": "/library/download/", "position": 3 },
-        { "id": 62, "name": "By method", "parent": 40, "slug": "/library/casestudies/methods/", "position": 2 },
-        { "id": 63, "name": "By year", "parent": 40, "slug": "/library/casestudies/calendar/", "position": 3 },
-        { "id": 64, "name": "View map", "parent": 40, "slug": "/library/casestudies/map/", "position": 4 },
-
-        { "id": 65, "name": "Videos", "parent": None, "slug": "/multimedia/videos/", "position": 2, "content": "<p>This page contains videos related to urban metabolism.</p>", },
-        { "id": 66, "name": "Podcasts", "parent": None, "slug": "/multimedia/podcasts/", "position": 3 , "content": "<p>On this page you will find podcasts related to urban metabolism.</p>"},
-        { "id": 67, "name": "Data Visualisations", "parent": None, "slug": "/multimedia/datavisualizations/", "position": 4, "content": "<p>In October-December 2016, Metabolism of Cities ran a project around data visualisations. The goal was to explore ways in which information can be illustrated, take stock of work in this field, host online discussions and publish blog posts. Below you will see the list of the around <em>100 data visualisations</em> that were collected.</p><p><strong>Why visualise urban metabolism data</strong></p><p>When we think about urban metabolism and other urban environmental assessments, we often think about numbers, data analysis, formulas and tables. While we may be very familiar with our own case study, it is often very difficult to share the relevance of our results with other researchers or with the general public and to synthesise all this amount of knowledge into something easy to grasp. This is one of the main reasons why researchers use visualisation techniques. Visualising data can not only enable to summarise big amounts of numbers, but it can also make it easier to share them and use them as policy instruments.</p><p><strong>Add more data visualisations</strong></p><p>Many more data visualisations exist and Metabolism of Cities wants to make them accessible in one central space. You can help by submitting more visualisations through the <a href='../../about/task-forces/resources'>Resources Task Force</a>!</p>" },
-
-        { "id": 68, "name": "About our data catalogues", "parent": None, "slug": "/stafcp/catalogs/about/", "position": None, "content": "<p>This is a section with various data catalogues used.</p><p>A useful site if you want to learn more or contribute is:</p><ul><li><a href='https://unstats.un.org/unsd/classifications/'>UNSD Classificatoins</a></li></ul>" },
-
-        { "id": 69, "name": "Program", "slug": "/ascus/program/" },
-        { "id": 70, "name": "Rates", "slug": "/ascus/rates/", },
-    ]
-    if "full" in request.GET:
-        Record.objects.all().delete()
-    Project.objects.filter(is_internal=True).delete()
-    for each in projects:
-        content = each["content"] if "content" in each else None
-        image = each["image"] if "image" in each else None
-        start = each["start_date"] if "start_date" in each else None
-        Project.objects.create(
-            id = each["id"],
-            url = each["url"],
-            name = each["name"],
-            site = moc,
-            content = content,
-            image = image,
-            is_internal = True,
-            start_date = start,
-            date_created = timezone.now().date(),
-        )
-
-    Webpage.objects.all().delete()
-    for each in articles:
-        content = each["content"] if "content" in each else None
-        Webpage.objects.create(
-            id = each["id"],
-            name = each["name"],
-            slug = each["slug"],
-            site = moc,
-            content = content,
-        )
-    Webpage.objects.filter(id__in=[32,33,34,35,36,37,38,38,39,40,41,50,51,52,53,54,55,56]).update(belongs_to_id=1) # MoC
-    Webpage.objects.filter(id__in=[42,43,44,45,46,47,48,49]).update(belongs_to_id=18) # Community Hub
-    Webpage.objects.filter(id__in=[57,58,59,60,61,62,63,64]).update(belongs_to_id=3) # Library
-    Webpage.objects.filter(id__in=[65,66,67]).update(belongs_to_id=3) # Multimedia library
-    Webpage.objects.filter(id__in=[68]).update(belongs_to_id=14) # STAFCP
-    Webpage.objects.filter(id__in=[69,70]).update(belongs_to_id=8) # ASCUS
-
-    messages.success(request, "UM, Community, Project, About pages were inserted/reset")
-
-    # Individual record is the XXX of 
-
-    # Paul... is a member of
-    # Paul Industries Inc. ... is the producer of 
-    # Paul Inc. is the publisher of... 
-    relationships = [
-        { "id": 1, "name": "PlatformU Admin", "label": "is a PlatformU admin user of", "description": "This user is a member of a group or organisation -- and will have the same permissions or access as the organisation itself", },
-        { "id": 2, "name": "Publisher", "label": "is the publisher of", "description": "For an article/paper to be published in a journal or magazine, or a publisher to publish a book", },
-        { "id": 3, "name": "Producer", "label": "is the producer of", "description": "For a podcast or video to be produced by a person or organization", },
-        { "id": 4, "name": "Author", "label": "is the author of", "description": "For a publication, book, etc.", },
-        { "id": 5, "name": "Funder", "label": "is the funder of", "description": "When an organisation funds a publication, project, etc.", },
-        { "id": 6, "name": "Team member", "label": "is a team member of", "description": "When someone participates in a project", },
-        { "id": 7, "name": "Former team member", "label": "is a former team member of", "description": "When someone participated previously in a project", },
-        { "id": 8, "name": "Commissioner", "label": "is commissioner of", "description": "When an organisation commissions something to be produced.", },
-        { "id": 9, "name": "Interviewee", "label": "is being interviewed in", "description": "When someone is being interviewed in a video, podcast, etc.", },
-        { "id": 10, "name": "Partner", "label": "is a partner in", "description": "When an organisation or person is a partner in a project.", },
-        { "id": 11, "name": "Uploader", "label": "uploaded", "description": "When someone uploads something.", },
-    ]
-
-    Relationship.objects.all().delete()
-    for each in relationships:
-        Relationship.objects.create(
-            id = each["id"],
-            name = each["name"],
-            description = each["description"],
-            label = each["label"],
-        )
-
-    messages.success(request, "Relationships were loaded")
-
-#Accommodation
-#Agriculture
-#Construction
-#Energy
-#Fishing
-#Food service
-#Forestry
-#Manufacturing
-#Mining
-#Repair
-#Storage
-#Transportation
-#Waste
-#Water
-#Wholesale and retail
-#Consumption
-
-    GeocodeScheme.objects.all().delete()
-    list = [
-        {
-            "name": "System Types",
-            "icon": "fal fa-fw fa-layer-group",
-            "items": ["Company", "Island", "Rural", "Urban", "Household"],
-        },
-        {
-            "name": "UN Statistics Division Groupings",
-            "icon": "fal fa-fw fa-universal-access",
-            "items": ["Least Developed Countries", "Land Locked Developing Countries", "Small Island Developing States", "Developed Regions", "Developing Regions"],
-        },
-        {
-            "name": "NUTS",
-            "icon": "fal fa-fw fa-globe-europe",
-            "items": ["NUTS 1"],
-            "items2": ["NUTS 2"],
-            "items3": ["NUTS 3"],
-            "items4": ["Local Administrative Unit (LAU)"],
-        },
-        {
-            "name": "ISO 3166-1",
-            "icon": "fal fa-fw fa-globe",
-            "items": ["Countries"],
-        },
-        {
-            "name": "Sector: Hotels and lodging",
-            "icon": "fal fa-fw fa-bed",
-            "items": ["Hotels", "Camping grounds"],
-        },
-        {
-            "name": "Sector: Agriculture",
-            "icon": "fal fa-fw fa-seedling",
-            "items": ["Farms"],
-        },
-        {
-            "name": "Sector: Construction",
-            "icon": "fal fa-fw fa-construction",
-            "items": ["Building site"],
-        },
-        {
-            "name": "Sector: Energy",
-            "icon": "fal fa-fw fa-bolt",
-            "items": ["Wind turbines", "Solar parks/farms", "Roof-top solar panels", "Power plants", "High voltage lines", "Substations"],
-        },
-        {
-            "name": "Sector: Fishing",
-            "icon": "fal fa-fw fa-fish",
-            "items": ["Fish farms"],
-        },
-        {
-            "name": "Sector: Food service",
-            "icon": "fal fa-fw fa-utensils",
-            "items": ["Restaurants", "Bars"],
-        },
-        {
-            "name": "Sector: Forestry",
-            "icon": "fal fa-fw fa-trees",
-            "items": ["Plantation"],
-        },
-        {
-            "name": "Sector: Manufacturing (Food)",
-            "icon": "fal fa-fw fa-hamburger",
-            "items": ["Abbatoir", "Bakery", "Bread mill", "Food processing plant"],
-        },
-        {
-            "name": "Subdivisions of South Africa",
-            "icon": "fal fa-fw fa-flag",
-            "items": ["Provinces"],
-            "items2": ["Metropolitan municipalities", "District municipalities"],
-            "items3": ["Local municipalilties"],
-            "items4": ["Wards"],
-        },
-        {
-            "name": "Subdivisions of Nicaragua",
-            "icon": "fal fa-fw fa-flag",
-            "items": ["Departments", "Autonomous regions"],
-            "items2": ["Municipalities"],
-        },
-        {
-            "name": "Subdivisions of Costa Rica",
-            "icon": "fal fa-fw fa-flag",
-            "items": ["Provinces"],
-            "items2": ["Cantons"],
-            "items3": ["Districts"],
-        },
-
-    ]
-    for each in list:
-        scheme = GeocodeScheme.objects.create(
-            name = each["name"],
-            is_comprehensive = False,
-            icon = each["icon"],
-        )
-        for name in each["items"]:
-            Geocode.objects.create(
-                scheme = scheme,
-                name = name,
-                depth = 1,
-            )
-        if "items2" in each:
-            for name in each["items2"]:
-                Geocode.objects.create(
-                    scheme = scheme,
-                    name = name,
-                    depth = 2,
-                )
-        if "items3" in each:
-            for name in each["items3"]:
-                Geocode.objects.create(
-                    scheme = scheme,
-                    name = name,
-                    depth = 3,
-                )
-        if "items4" in each:
-            for name in each["items4"]:
-                Geocode.objects.create(
-                    scheme = scheme,
-                    name = name,
-                    depth = 4,
-                )
-
-    designs = [
-        { "header": "full", "article": 1, "logo": "/logos/logo.svg", "css": "", "back_link": False, },
-        { "header": "small", "article": 2, "logo": "/logos/media-logo-library.png", "css": """.top-layer {
-background-color: #2e883b;
-background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1600 800'%3E%3Cg %3E%3Cpath fill='%232c8339' d='M486 705.8c-109.3-21.8-223.4-32.2-335.3-19.4C99.5 692.1 49 703 0 719.8V800h843.8c-115.9-33.2-230.8-68.1-347.6-92.2C492.8 707.1 489.4 706.5 486 705.8z'/%3E%3Cpath fill='%232b7d37' d='M1600 0H0v719.8c49-16.8 99.5-27.8 150.7-33.5c111.9-12.7 226-2.4 335.3 19.4c3.4 0.7 6.8 1.4 10.2 2c116.8 24 231.7 59 347.6 92.2H1600V0z'/%3E%3Cpath fill='%23297834' d='M478.4 581c3.2 0.8 6.4 1.7 9.5 2.5c196.2 52.5 388.7 133.5 593.5 176.6c174.2 36.6 349.5 29.2 518.6-10.2V0H0v574.9c52.3-17.6 106.5-27.7 161.1-30.9C268.4 537.4 375.7 554.2 478.4 581z'/%3E%3Cpath fill='%23287332' d='M0 0v429.4c55.6-18.4 113.5-27.3 171.4-27.7c102.8-0.8 203.2 22.7 299.3 54.5c3 1 5.9 2 8.9 3c183.6 62 365.7 146.1 562.4 192.1c186.7 43.7 376.3 34.4 557.9-12.6V0H0z'/%3E%3Cpath fill='%23266e30' d='M181.8 259.4c98.2 6 191.9 35.2 281.3 72.1c2.8 1.1 5.5 2.3 8.3 3.4c171 71.6 342.7 158.5 531.3 207.7c198.8 51.8 403.4 40.8 597.3-14.8V0H0v283.2C59 263.6 120.6 255.7 181.8 259.4z'/%3E%3Cpath fill='%2323652c' d='M1600 0H0v136.3c62.3-20.9 127.7-27.5 192.2-19.2c93.6 12.1 180.5 47.7 263.3 89.6c2.6 1.3 5.1 2.6 7.7 3.9c158.4 81.1 319.7 170.9 500.3 223.2c210.5 61 430.8 49 636.6-16.6V0z'/%3E%3Cpath fill='%23205c28' d='M454.9 86.3C600.7 177 751.6 269.3 924.1 325c208.6 67.4 431.3 60.8 637.9-5.3c12.8-4.1 25.4-8.4 38.1-12.9V0H288.1c56 21.3 108.7 50.6 159.7 82C450.2 83.4 452.5 84.9 454.9 86.3z'/%3E%3Cpath fill='%231d5424' d='M1600 0H498c118.1 85.8 243.5 164.5 386.8 216.2c191.8 69.2 400 74.7 595 21.1c40.8-11.2 81.1-25.2 120.3-41.7V0z'/%3E%3Cpath fill='%231a4b21' d='M1397.5 154.8c47.2-10.6 93.6-25.3 138.6-43.8c21.7-8.9 43-18.8 63.9-29.5V0H643.4c62.9 41.7 129.7 78.2 202.1 107.4C1020.4 178.1 1214.2 196.1 1397.5 154.8z'/%3E%3Cpath fill='%2317431d' d='M1315.3 72.4c75.3-12.6 148.9-37.1 216.8-72.4h-723C966.8 71 1144.7 101 1315.3 72.4z'/%3E%3C/g%3E%3C/svg%3E\");
-background-attachment: fixed;
-background-size: cover;
-/* background by SVGBackgrounds.com */
-}""", "back_link": True, 
-        },
-        { "header": "small", "article": 3, "logo": "/logos/media-logo-multimedia.png", "css": """.top-layer {
-background-color: #271a00;
-background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1600 800'%3E%3Cg %3E%3Cpath fill='%23251900' d='M486 705.8c-109.3-21.8-223.4-32.2-335.3-19.4C99.5 692.1 49 703 0 719.8V800h843.8c-115.9-33.2-230.8-68.1-347.6-92.2C492.8 707.1 489.4 706.5 486 705.8z'/%3E%3Cpath fill='%23231900' d='M1600 0H0v719.8c49-16.8 99.5-27.8 150.7-33.5c111.9-12.7 226-2.4 335.3 19.4c3.4 0.7 6.8 1.4 10.2 2c116.8 24 231.7 59 347.6 92.2H1600V0z'/%3E%3Cpath fill='%23211800' d='M478.4 581c3.2 0.8 6.4 1.7 9.5 2.5c196.2 52.5 388.7 133.5 593.5 176.6c174.2 36.6 349.5 29.2 518.6-10.2V0H0v574.9c52.3-17.6 106.5-27.7 161.1-30.9C268.4 537.4 375.7 554.2 478.4 581z'/%3E%3Cpath fill='%231f1800' d='M0 0v429.4c55.6-18.4 113.5-27.3 171.4-27.7c102.8-0.8 203.2 22.7 299.3 54.5c3 1 5.9 2 8.9 3c183.6 62 365.7 146.1 562.4 192.1c186.7 43.7 376.3 34.4 557.9-12.6V0H0z'/%3E%3Cpath fill='%231d1700' d='M181.8 259.4c98.2 6 191.9 35.2 281.3 72.1c2.8 1.1 5.5 2.3 8.3 3.4c171 71.6 342.7 158.5 531.3 207.7c198.8 51.8 403.4 40.8 597.3-14.8V0H0v283.2C59 263.6 120.6 255.7 181.8 259.4z'/%3E%3Cpath fill='%23231f08' d='M1600 0H0v136.3c62.3-20.9 127.7-27.5 192.2-19.2c93.6 12.1 180.5 47.7 263.3 89.6c2.6 1.3 5.1 2.6 7.7 3.9c158.4 81.1 319.7 170.9 500.3 223.2c210.5 61 430.8 49 636.6-16.6V0z'/%3E%3Cpath fill='%232a270e' d='M454.9 86.3C600.7 177 751.6 269.3 924.1 325c208.6 67.4 431.3 60.8 637.9-5.3c12.8-4.1 25.4-8.4 38.1-12.9V0H288.1c56 21.3 108.7 50.6 159.7 82C450.2 83.4 452.5 84.9 454.9 86.3z'/%3E%3Cpath fill='%23312f12' d='M1600 0H498c118.1 85.8 243.5 164.5 386.8 216.2c191.8 69.2 400 74.7 595 21.1c40.8-11.2 81.1-25.2 120.3-41.7V0z'/%3E%3Cpath fill='%23383716' d='M1397.5 154.8c47.2-10.6 93.6-25.3 138.6-43.8c21.7-8.9 43-18.8 63.9-29.5V0H643.4c62.9 41.7 129.7 78.2 202.1 107.4C1020.4 178.1 1214.2 196.1 1397.5 154.8z'/%3E%3Cpath fill='%2340401a' d='M1315.3 72.4c75.3-12.6 148.9-37.1 216.8-72.4h-723C966.8 71 1144.7 101 1315.3 72.4z'/%3E%3C/g%3E%3C/svg%3E");
-background-attachment: fixed;
-background-size: cover;
-/* background by SVGBackgrounds.com */
-}""", "back_link": True, 
-        },
-        { "header": "small", "article": 4, "logo": "/logos/media-logo-datahub.png", "css": """.top-layer {
-background-color: #343434;
-background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 100 100'%3E%3Cg stroke='%23000000' stroke-width='0' %3E%3Crect fill='%23313131' x='-60' y='-60' width='77' height='240'/%3E%3C/g%3E%3C/svg%3E");
-/* background by SVGBackgrounds.com */
-}""", "back_link": True, 
-        },
-        { "header": "small", "article": 16, "logo": "/logos/media-platformu.png", "css": """.top-layer {
-background-color:#fff;
-border:0;
-box-shadow:none;
-}
-nav a.nav-link {
-color:#333 !important;
-}""", "back_link": True, 
-        },
-        { "header": "small", "article": 14, "logo": "/logos/media-stafcp.png", "css": """.top-layer {
-background-color: #00b7ff;
-background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='250' viewBox='0 0 1080 900'%3E%3Cg fill-opacity='0.06'%3E%3Cpolygon fill='%23444' points='90 150 0 300 180 300'/%3E%3Cpolygon points='90 150 180 0 0 0'/%3E%3Cpolygon fill='%23AAA' points='270 150 360 0 180 0'/%3E%3Cpolygon fill='%23DDD' points='450 150 360 300 540 300'/%3E%3Cpolygon fill='%23999' points='450 150 540 0 360 0'/%3E%3Cpolygon points='630 150 540 300 720 300'/%3E%3Cpolygon fill='%23DDD' points='630 150 720 0 540 0'/%3E%3Cpolygon fill='%23444' points='810 150 720 300 900 300'/%3E%3Cpolygon fill='%23FFF' points='810 150 900 0 720 0'/%3E%3Cpolygon fill='%23DDD' points='990 150 900 300 1080 300'/%3E%3Cpolygon fill='%23444' points='990 150 1080 0 900 0'/%3E%3Cpolygon fill='%23DDD' points='90 450 0 600 180 600'/%3E%3Cpolygon points='90 450 180 300 0 300'/%3E%3Cpolygon fill='%23666' points='270 450 180 600 360 600'/%3E%3Cpolygon fill='%23AAA' points='270 450 360 300 180 300'/%3E%3Cpolygon fill='%23DDD' points='450 450 360 600 540 600'/%3E%3Cpolygon fill='%23999' points='450 450 540 300 360 300'/%3E%3Cpolygon fill='%23999' points='630 450 540 600 720 600'/%3E%3Cpolygon fill='%23FFF' points='630 450 720 300 540 300'/%3E%3Cpolygon points='810 450 720 600 900 600'/%3E%3Cpolygon fill='%23DDD' points='810 450 900 300 720 300'/%3E%3Cpolygon fill='%23AAA' points='990 450 900 600 1080 600'/%3E%3Cpolygon fill='%23444' points='990 450 1080 300 900 300'/%3E%3Cpolygon fill='%23222' points='90 750 0 900 180 900'/%3E%3Cpolygon points='270 750 180 900 360 900'/%3E%3Cpolygon fill='%23DDD' points='270 750 360 600 180 600'/%3E%3Cpolygon points='450 750 540 600 360 600'/%3E%3Cpolygon points='630 750 540 900 720 900'/%3E%3Cpolygon fill='%23444' points='630 750 720 600 540 600'/%3E%3Cpolygon fill='%23AAA' points='810 750 720 900 900 900'/%3E%3Cpolygon fill='%23666' points='810 750 900 600 720 600'/%3E%3Cpolygon fill='%23999' points='990 750 900 900 1080 900'/%3E%3Cpolygon fill='%23999' points='180 0 90 150 270 150'/%3E%3Cpolygon fill='%23444' points='360 0 270 150 450 150'/%3E%3Cpolygon fill='%23FFF' points='540 0 450 150 630 150'/%3E%3Cpolygon points='900 0 810 150 990 150'/%3E%3Cpolygon fill='%23222' points='0 300 -90 450 90 450'/%3E%3Cpolygon fill='%23FFF' points='0 300 90 150 -90 150'/%3E%3Cpolygon fill='%23FFF' points='180 300 90 450 270 450'/%3E%3Cpolygon fill='%23666' points='180 300 270 150 90 150'/%3E%3Cpolygon fill='%23222' points='360 300 270 450 450 450'/%3E%3Cpolygon fill='%23FFF' points='360 300 450 150 270 150'/%3E%3Cpolygon fill='%23444' points='540 300 450 450 630 450'/%3E%3Cpolygon fill='%23222' points='540 300 630 150 450 150'/%3E%3Cpolygon fill='%23AAA' points='720 300 630 450 810 450'/%3E%3Cpolygon fill='%23666' points='720 300 810 150 630 150'/%3E%3Cpolygon fill='%23FFF' points='900 300 810 450 990 450'/%3E%3Cpolygon fill='%23999' points='900 300 990 150 810 150'/%3E%3Cpolygon points='0 600 -90 750 90 750'/%3E%3Cpolygon fill='%23666' points='0 600 90 450 -90 450'/%3E%3Cpolygon fill='%23AAA' points='180 600 90 750 270 750'/%3E%3Cpolygon fill='%23444' points='180 600 270 450 90 450'/%3E%3Cpolygon fill='%23444' points='360 600 270 750 450 750'/%3E%3Cpolygon fill='%23999' points='360 600 450 450 270 450'/%3E%3Cpolygon fill='%23666' points='540 600 630 450 450 450'/%3E%3Cpolygon fill='%23222' points='720 600 630 750 810 750'/%3E%3Cpolygon fill='%23FFF' points='900 600 810 750 990 750'/%3E%3Cpolygon fill='%23222' points='900 600 990 450 810 450'/%3E%3Cpolygon fill='%23DDD' points='0 900 90 750 -90 750'/%3E%3Cpolygon fill='%23444' points='180 900 270 750 90 750'/%3E%3Cpolygon fill='%23FFF' points='360 900 450 750 270 750'/%3E%3Cpolygon fill='%23AAA' points='540 900 630 750 450 750'/%3E%3Cpolygon fill='%23FFF' points='720 900 810 750 630 750'/%3E%3Cpolygon fill='%23222' points='900 900 990 750 810 750'/%3E%3Cpolygon fill='%23222' points='1080 300 990 450 1170 450'/%3E%3Cpolygon fill='%23FFF' points='1080 300 1170 150 990 150'/%3E%3Cpolygon points='1080 600 990 750 1170 750'/%3E%3Cpolygon fill='%23666' points='1080 600 1170 450 990 450'/%3E%3Cpolygon fill='%23DDD' points='1080 900 1170 750 990 750'/%3E%3C/g%3E%3C/svg%3E");
-/* background by SVGBackgrounds.com */
-}""", "back_link": True, 
-        },
-        { "header": "full", "article": 8, "logo": "/logos/ascus.png", "css": """.top-layer {
-background-color: #212931;
-background-image: url("/static/img/ascus.overlay.png"), linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url("/static/img/ascus.bg.jpg");
-background-size: auto, auto, 100% auto;
-background-position: center, center, top center;
-background-repeat: repeat, no-repeat, no-repeat;
-background-attachment: scroll, scroll, scroll;
-/* background by SVGBackgrounds.com */
-}""", "back_link": False, 
-        },
-    ]
-
-    WebpageDesign.objects.all().delete()
-    ProjectDesign.objects.all().delete()
-    for each in designs:
-        ProjectDesign.objects.create(
-            project_id = each["article"],
-            header = each["header"],
-            custom_css = each["css"],
-            logo = each["logo"],
-            back_link = each["back_link"],
-        )
-
-    from django.db import migrations
-    migrations.RunSQL("SELECT setval('core_tag_id_seq', (SELECT MAX(id) FROM core_tag)+1);")
-    migrations.RunSQL("SELECT setval('core_record_id_seq', (SELECT MAX(id) FROM core_record)+1);")
-    migrations.RunSQL("SELECT setval('stafdb_activity_id_seq', (SELECT MAX(id) FROM stafdb_activity)+1);")
-    migrations.RunSQL("SELECT setval('auth_user_id_seq', (SELECT MAX(id) FROM auth_user)+1);")
-    migrations.RunSQL("SELECT setval('core_libraryitemtype_id_seq', (SELECT MAX(id) FROM core_libraryitemtype)+1);")
 
     return redirect("/")
 
@@ -2176,25 +1809,7 @@ def dataimport(request):
         messages.warning(request, "Trying to import " + request.GET["table"])
         file = settings.MEDIA_ROOT + "/import/" + request.GET["table"] + ".csv"
         messages.warning(request, "Using file: " + file)
-        if request.GET["table"] == "tags":
-            Tag.objects.all().delete()
-            with open(file, "r") as csvfile:
-                contents = csv.DictReader(csvfile)
-                for row in contents:
-                    Tag.objects.create(id=row["id"], name=row["name"], description=row["description"], hidden=row["hidden"], include_in_glossary=row["include_in_glossary"])
-            with open(file, "r") as csvfile:
-                contents = csv.DictReader(csvfile)
-                for row in contents:
-                    if row["parent_tag_id"]:
-                        info = Tag.objects.get(pk=row["id"])
-                        info.parent_tag_id = row["parent_tag_id"]
-                        info.save()
-            from django.db import migrations
-            migrations.RunSQL("SELECT setval('core_tag_id_seq', (SELECT MAX(id) FROM core_tag)+1);")
-            # We also need to add some additional tags that are required for the new site
-            # We will use non-used IDs for this or re-cycle non-used tags so that we know
-            # which ID they will have
-        elif request.GET["table"] == "activities":
+        if request.GET["table"] == "activities":
             ActivityCatalog.objects.all().delete()
             nace = ActivityCatalog.objects.create(name="Statistical Classification of Economic Activities in the European Community, Rev. 2 (2008)", url="https://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=LST_NOM_DTL&StrNom=NACE_REV2&StrLanguageCode=EN&IntPcKey=&StrLayoutCode=HIERARCHIC")
             natural = ActivityCatalog.objects.create(name="Rupertismo List of Natural Processes")
@@ -2210,7 +1825,7 @@ def dataimport(request):
                         catalog = natural
                     if catalog:
                         Activity.objects.create(
-                            id = row["id"], 
+                            old_id = row["id"], 
                             name = row["name"], 
                             description = row["description"], 
                             is_separator = row["is_separator"],
@@ -2226,174 +1841,16 @@ def dataimport(request):
                         if int(row["parent_id"]) == 398480:
                             parent = None
                         else:
-                            parent = row["parent_id"]
+                            parent = Activity.objects.get(old_id=row["parent_id"])
                     elif id > 65 and id < 95 and id != 92:
                         if int(row["parent_id"]) == 92:
                             parent = None
                         else:
-                            parent = row["parent_id"]
+                            parent = Activity.objects.get(old_id=row["parent_id"])
                     if parent:
-                        info = Activity.objects.get(pk=row["id"])
-                        info.parent_id = parent
+                        info = Activity.objects.get(old_id=row["id"])
+                        info.parent = parent
                         info.save()
-        elif request.GET["table"] == "projects":
-            Project.objects.filter(is_internal=False).delete()
-            with open(file, "r") as csvfile:
-                contents = csv.DictReader(csvfile)
-                for row in contents:
-                    if row["type"] == "projects":
-                        info = Project()
-                        info.name = row["name"]
-                        info.full_name = row["full_name"]
-                        info.email = row["email"]
-                        info.url = row["url"]
-                        info.site = Site.objects.get(pk=row["site_id"])
-                        info.target_finish_date = row["target_finish_date"]
-                        if row["start_date"]:
-                            info.start_date = row["start_date"]
-                        if row["start_date"]:
-                            end_date = row["end_date"]
-                        info.status = row["status"]
-                        info.save()
-        elif request.GET["table"] == "organizations":
-            Organization.objects.all().delete()
-            old_ids = {}
-            with open(file, "r") as csvfile:
-                contents = csv.DictReader(csvfile)
-                for row in contents:
-                    info = Organization.objects.create(
-                        name = row["name"],
-                        content = row["description"],
-                        url = row["url"],
-                        twitter = row["twitter"],
-                        linkedin = row["linkedin"],
-                        researchgate = row["researchgate"],
-                        type = row["type"],
-                        old_id = row["id"],
-                    )
-                    old_ids[row["id"]] = info.id
-            with open(file, "r") as csvfile:
-                contents = csv.DictReader(csvfile)
-                for row in contents:
-                    if row["parent_id"]:
-                        info = Organization.objects.get(name=row["name"])
-                        info.parent_id = old_ids[row["parent_id"]]
-                        info.save()
-        elif request.GET["table"] == "publishers":
-            Organization.objects.filter(type="publisher").delete()
-            Organization.objects.filter(type="journal").delete()
-            old_ids = {}
-            with open(file, "r") as csvfile:
-                contents = csv.DictReader(csvfile)
-                for row in contents:
-                    info = Organization.objects.create(
-                        name = row["name"],
-                        type = "publisher",
-                        old_id = row["id"],
-                    )
-                    old_ids[row["id"]] = info.id
-            # Once we import the publishers we will then do the journals. 
-            # Best done in one go because we need publisher IDs
-            file = settings.MEDIA_ROOT + "/import/journals.csv"
-            from django.template.defaultfilters import slugify
-            journal_ids = {}
-            with open(file, "r") as csvfile:
-                contents = csv.DictReader(csvfile)
-                for row in contents:
-                    if row["name"]:
-                        info = Organization.objects.create(
-                            name = row["name"],
-                            url = row["website"],
-                            content = row["description"],
-                            image = row["image"],
-                            old_id = row["id"],
-                            type = "journal",
-                        )
-                        if row["publisher_id"]:
-                            RecordRelationship.objects.create(
-                                record_parent_id = old_ids[row["publisher_id"]],
-                                record_child = info,
-                                relationship_id = 2,
-                            )
-                    journal_ids[row["id"]] = info.id
-            file = settings.MEDIA_ROOT + "/import/publications.csv"
-            LibraryItem.objects.exclude(type__group="Multimedia").delete()
-            with open(file, "r") as csvfile:
-                contents = csv.DictReader(csvfile)
-                referenceoldids = {}
-                for row in contents:
-                    info = LibraryItem.objects.create(
-                        name = row["title"],
-                        language = row["language"],
-                        title_original_language = row["title_original_language"],
-                        type_id = row["type_id"],
-                        author_list = row["authorlist"],
-                        author_citation = row["authorlist"],
-                        year = row["year"],
-                        content = row["abstract"],
-                        abstract_original_language = row["abstract_original_language"],
-                        date_added = row["date_added"],
-                        file = row["file"],
-                        open_access = row["open_access"],
-                        url = row["url"],
-                        doi = row["doi"],
-                        isbn = row["isbn"],
-                        comments = row["comments"],
-                        status = row["status"],
-                        old_id = row["id"],
-                    )
-                    referenceoldids[row["id"]] = info.id
-                    if row["journal_id"]:
-                        RecordRelationship.objects.create(
-                            record_parent_id = journal_ids[row["journal_id"]],
-                            record_child = info,
-                            relationship_id = 2,
-                        )
-            file = settings.MEDIA_ROOT + "/import/authors.csv"
-            with open(file, "r") as csvfile:
-                contents = csv.DictReader(csvfile)
-                for row in contents:
-                    RecordRelationship.objects.create(
-                        record_child_id = referenceoldids[row["reference_id"]],
-                        record_parent = People.objects.get(old_id=row["people_id"]),
-                        relationship_id = 4,
-                    )
-
-        elif request.GET["table"] == "librarytypes":
-            LibraryItemType.objects.all().delete()
-            with open(file, "r") as csvfile:
-                contents = csv.DictReader(csvfile)
-                for row in contents:
-                    info = LibraryItemType.objects.create(
-                        id = row["id"],
-                        name = row["name"],
-                        icon = row["icon"],
-                        group = row["group"],
-                    )
-        elif request.GET["table"] == "librarytags":
-            list = LibraryItem.objects.all()
-            for each in list:
-                each.tags.clear()
-            tags = {}
-            items = {}
-            with open(file, "r") as csvfile:
-                contents = csv.DictReader(csvfile)
-                for row in contents:
-                    if row["tag_id"] in tags:
-                        tag = tags[row["tag_id"]]
-                    else:
-                        tag = Tag.objects.get(pk=row["tag_id"])
-                        tags[row["tag_id"]] = tag
-                    if row["reference_id"] in items:
-                        item = items[row["reference_id"]]
-                    else:
-                        item = LibraryItem.objects.filter(old_id=row["reference_id"]).exclude(type__name="Video Recording").exclude(type__name="Image")
-                        if item.count() == 1:
-                            item = item[0]
-                        else:
-                            print(item)
-                        items[row["reference_id"]] = item
-                    item.tags.add(tag)
         elif request.GET["table"] == "libraryspaces":
             list = LibraryItem.objects.all()
             for each in list:
@@ -2406,7 +1863,7 @@ def dataimport(request):
                     if row["referencespace_id"] in spaces:
                         space = spaces[row["referencespace_id"]]
                     else:
-                        space = ReferenceSpace.objects.get(pk=row["referencespace_id"])
+                        space = ReferenceSpace.objects.get(old_id=row["referencespace_id"])
                         spaces[row["referencespace_id"]] = space
                     if row["reference_id"] in items:
                         item = items[row["reference_id"]]
@@ -2419,137 +1876,18 @@ def dataimport(request):
                             print(item)
                         items[row["reference_id"]] = item
                     item.spaces.add(space)
-        elif request.GET["table"] == "people":
-            People.objects.all().delete()
-            with open(file, "r") as csvfile:
-                contents = csv.DictReader(csvfile)
-                for row in contents:
-                    info = People()
-                    info.name = row["firstname"] + " " + row["lastname"]
-                    info.firstname = row["firstname"]
-                    info.lastname = row["lastname"]
-                    info.affiliation = row["affiliation"]
-                    info.email = row["email"]
-                    info.old_id = row["id"]
-                    info.email_public = row["email_public"]
-                    info.website = row["website"]
-                    info.twitter = row["twitter"]
-                    info.google_scholar = row["google_scholar"]
-                    info.orcid = row["orcid"]
-                    info.researchgate = row["researchgate"]
-                    info.linkedin = row["linkedin"]
-                    info.research_interests = row["research_interests"]
-                    info.status = row["status"]
-                    info.content = row["profile"]
-                    info.image = row["image"] if row["image"] else None
-                    info.save()
-                    if row["site_id"]:
-                        info.site.add(row["site_id"])
-        elif request.GET["table"] == "videos":
-            Video.objects.all().delete()
-            from dateutil.parser import parse
-            with open(file, "r") as csvfile:
-                contents = csv.DictReader(csvfile)
-                for row in contents:
-                    if row["date"]:
-                        year = parse(row["date"])
-                        year = year.strftime("%Y")
-                    else:
-                        # We should definitely look into those without a date!
-                        year = 2021
-                    info = Video()
-                    info.old_id = row["id"]
-                    info.name = row["title"]
-                    info.content = row["description"]
-                    info.video_site = row["website"]
-                    info.type_id = 31
-                    info.year = year
-                    if row["website"] == "youtube" or row["website"] == "vimeo":
-                        info.embed_code = row["url"]
-                    if row["date"]:
-                        info.date = row["date"]
-                    if row["website"] == "youtube":
-                        info.url = "https://www.youtube.com/watch?v=" + row["url"]
-                    elif row["website"] == "vimeo":
-                        info.url = "https://vimeo.com/" + row["url"]
-                    else:
-                        info.url = row["url"]
-                    info.save()
-                    if not row["date"]:
-                        Work.objects.create(
-                            name = "Check year of publication",
-                            description = "In the previous website we did not save the date/year this was published. Please check (e.g. by going to the Youtube page) when this was published, and set the right date. (NOTE: 2021 was used as a temporary placeholder).",
-                            complexity = "low",
-                            project_id=3,
-                            related_to=info,
-                            type = "quality_control",
-                        )
-        elif request.GET["table"] == "articles":
-            #Webpage.objects.filter(old_id__isnull=False).delete()
-            News.objects.filter(old_id__isnull=False).delete()
-            Blog.objects.filter(old_id__isnull=False).delete()
-            Event.objects.filter(old_id__isnull=False).delete()
-            import sys
-            csv.field_size_limit(sys.maxsize)
-            with open(file, "r") as csvfile:
-                contents = csv.DictReader(csvfile)
-                for row in contents:
-                    if row["parent_id"] == "61" or row["parent_id"] == "142":
-                        News.objects.create(
-                            name = row["title"],
-                            content = row["content"],
-                            old_id = row["id"],
-                            site_id = row["site_id"],
-                            date = row["date"],
-                            image = row["image"],
-                            is_deleted = False if row["active"] == "t" else True,
-                        )
-                    if row["parent_id"] == "60":
-                        Blog.objects.create(
-                            name = row["title"],
-                            content = row["content"],
-                            old_id = row["id"],
-                            site_id = row["site_id"],
-                            date = row["date"],
-                            image = row["image"],
-                            is_deleted = False if row["active"] == "t" else True,
-                        )
-                    if row["parent_id"] == "59" or row["parent_id"] == "143":
-                        Event.objects.create(
-                            name = row["title"],
-                            content = row["content"],
-                            old_id = row["id"],
-                            site_id = row["site_id"],
-                            image = row["image"],
-                            is_deleted = True,
-                        )
-            file = settings.MEDIA_ROOT + "/import/events.csv"
-            with open(file, "r") as csvfile:
-                contents = csv.DictReader(csvfile)
-                for row in contents:
-                    event = Event.objects_including_deleted.filter(old_id=int(row["article_id"]))
-                    event = event[0]
-                    event.start_date = row["start"]
-                    event.end_date = row["end"]
-                    event.type = row["type"]
-                    event.is_deleted = False
-                    event.url = row["url"]
-                    event.location = row["location"]
-                    event.save()
         elif request.GET["table"] == "sectors":
             Sector.objects.all().delete()
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
                     Sector.objects.create(
-                        id = row["id"],
+                        old_id = row["id"],
                         name = row["name"],
                         icon = row["icon"],
                         slug = row["slug"],
                         description = row["description"],
                     )
-            from django.db import migrations
-            info = migrations.RunSQL("SELECT setval('stafdb_sector_id_seq', (SELECT MAX(id) FROM stafdb_sector)+1);")
         elif request.GET["table"] == "sectoractivities":
             sectors = Sector.objects.all()
             for each in sectors:
@@ -2560,38 +1898,16 @@ def dataimport(request):
                 for row in contents:
                     row["processgroup_id"] = int(row["processgroup_id"])
                     if row["processgroup_id"] not in sectors:
-                        sectors[row["processgroup_id"]] = Sector.objects.get(pk=row["processgroup_id"])
+                        sectors[row["processgroup_id"]] = Sector.objects.get(old_id=row["processgroup_id"])
                     sector = sectors[row["processgroup_id"]]
-                    sector.activities.add(Activity.objects.get(pk=row["process_id"]))
+                    sector.activities.add(Activity.objects.get(old_id=row["process_id"]))
         elif request.GET["table"] == "spacesectors":
-            ReferenceSpaceSector.objects.all().delete()
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
-                    ReferenceSpaceSector.objects.create(
-                        space_id = row["space_id"],
-                        sector_id = row["process_group_id"],
-                    )
-        elif request.GET["table"] == "users":
-            User.objects.all().delete()
-            with open(file, "r") as csvfile:
-                contents = csv.DictReader(csvfile)
-                for row in contents:
-                    User.objects.create(
-                        id = row["id"],
-                        password = row["password"],
-                        last_login = row["last_login"] if row["last_login"] else None,
-                        is_superuser = row["is_superuser"],
-                        username = row["username"],
-                        first_name = row["first_name"],
-                        last_name = row["last_name"],
-                        email = row["email"],
-                        is_staff = row["is_staff"],
-                        is_active = row["is_active"],
-                        date_joined = row["date_joined"],
-                    )
-            from django.db import migrations
-            migrations.RunSQL("SELECT setval('auth_user_id_seq', (SELECT MAX(id) FROM auth_user)+1);")
+                    space = ReferenceSpace.objects.get(old_id=row["space_id"])
+                    sector = Sector.objects.get(old_id=row["process_group_id"])
+                    space.sectors.add(sector)
         elif request.GET["table"] == "photos":
             License.objects.all().delete()
             Photo.objects.all().delete()
@@ -2618,43 +1934,203 @@ def dataimport(request):
                         type = row["type"],
                         position = row["position"],
                     )
-        elif request.GET["table"] == "project_team_members":
-            list = Project.objects.filter(is_internal=True)
-            for each in list:
-                all = RecordRelationship.objects.filter(record_child=each).filter(relationship__id__in=[6,7])
-                all.delete()
-
-            library = Project.objects.get(pk=2)
-            team = ["Paul Hoekman", "Carolin Bellstedt", "Ramiro Schiavo"]
-            former = ["Rachel Spiegel", "Gabriela Fernandez", "Aristide Athanassiadis"]
-            member = Relationship.objects.get(name="Team member")
-            former_member = Relationship.objects.get(name="Former team member")
-            for each in team:
-                RecordRelationship.objects.create(record_parent = People.objects.filter(name=each)[0], record_child = library, relationship = member)
-            for each in former:
-                RecordRelationship.objects.create(record_parent = People.objects.filter(name=each)[0], record_child = library, relationship = former_member)
-
-            multiplicity = Project.objects.get(pk=4)
-            team = ["Paul Hoekman", "Carolin Bellstedt", "Ramiro Schiavo", "Aristide Athanassiadis"]
-            member = Relationship.objects.get(name="Team member")
-            former_member = Relationship.objects.get(name="Former team member")
-            for each in team:
-                RecordRelationship.objects.create(record_parent = People.objects.filter(name=each)[0], record_child = multiplicity, relationship = member)
-
-            multimedia = Project.objects.get(pk=3)
-            si = Project.objects.get(pk=5)
-            #cityloops = Project.objects.get(pk=23)
-            #seminarseries = Project.objects.get(pk=24)
-            #ascus = Project.objects.get(pk=25)
-            #mooc = Project.objects.get(pk=27)
-            #gumdb = Project.objects.get(pk=28)
-            #stafdb = Project.objects.get(pk=29)
-            #stafcp = Project.objects.get(pk=54)
-            #omat = Project.objects.get(pk=26)
-            #platformu = Project.objects.get(pk=52)
         elif request.GET["table"] == "referencespaces":
             ReferenceSpaceLocation.objects.all().delete()
             ReferenceSpace.objects.all().delete()
+
+            GeocodeScheme.objects.all().delete()
+            list = [
+                {
+                    "name": "System Types",
+                    "icon": "fal fa-fw fa-layer-group",
+                    "items": ["Company", "Island", "Rural", "Urban", "Household"],
+                },
+                {
+                    "name": "UN Statistics Division Groupings",
+                    "icon": "fal fa-fw fa-universal-access",
+                    "items": ["Least Developed Countries", "Land Locked Developing Countries", "Small Island Developing States", "Developed Regions", "Developing Regions"],
+                },
+                {
+                    "name": "NUTS",
+                    "icon": "fal fa-fw fa-globe-europe",
+                    "items": ["NUTS 1"],
+                    "items2": ["NUTS 2"],
+                    "items3": ["NUTS 3"],
+                    "items4": ["Local Administrative Unit (LAU)"],
+                },
+                {
+                    "name": "ISO 3166-1",
+                    "icon": "fal fa-fw fa-globe",
+                    "items": ["Countries"],
+                },
+                {
+                    "name": "Sector: Hotels and lodging",
+                    "icon": "fal fa-fw fa-bed",
+                    "items": ["Hotels", "Camping grounds"],
+                },
+                {
+                    "name": "Sector: Transport",
+                    "icon": "fal fa-fw fa-car",
+                    "items": ["Bus stops", "Train stations", "Bicycle racks", "Bridges", "Electric charging stations", "Lighthouses", "Airports", "Ports", "Border Crossings"],
+                },
+                {
+                    "name": "Sector: Water and sanitation",
+                    "icon": "fal fa-fw fa-water",
+                    "items": ["Marine outfalls", "Dams", "Water reservoirs", "Wastewater treatment plants", "Water treatment plants", "Pumping stations"],
+                },
+                {
+                    "name": "Sector: Agriculture",
+                    "icon": "fal fa-fw fa-seedling",
+                    "items": ["Farms"],
+                },
+                {
+                    "name": "Sector: Mining",
+                    "icon": "fal fa-fw fa-digging",
+                    "items": ["Mines"],
+                },
+                {
+                    "name": "Sector: Construction",
+                    "icon": "fal fa-fw fa-construction",
+                    "items": ["Building site"],
+                },
+                {
+                    "name": "Sector: Energy",
+                    "icon": "fal fa-fw fa-bolt",
+                    "items": ["Wind turbines", "Solar parks/farms", "Roof-top solar panels", "Power plants", "High voltage lines", "Substations", "Transmission masts"],
+                },
+                {
+                    "name": "Sector: Waste",
+                    "icon": "fal fa-fw fa-dumpster",
+                    "items": ["Waste transfer station", "Waste drop-off sites", "Waste incinerators", "Landfills"],
+                },
+                {
+                    "name": "Sector: Storage",
+                    "icon": "fal fa-fw fa-container",
+                    "items": ["Fuel storage facilities", "Energy storage"],
+                },
+                {
+                    "name": "Sector: Fishing",
+                    "icon": "fal fa-fw fa-fish",
+                    "items": ["Fish farms"],
+                },
+                {
+                    "name": "Sector: Food service",
+                    "icon": "fal fa-fw fa-utensils",
+                    "items": ["Restaurants", "Bars"],
+                },
+                {
+                    "name": "Sector: Forestry",
+                    "icon": "fal fa-fw fa-trees",
+                    "items": ["Plantation"],
+                },
+                {
+                    "name": "Sector: Manufacturing (Food)",
+                    "icon": "fal fa-fw fa-hamburger",
+                    "items": ["Abbatoir", "Bakery", "Bread mill", "Food processing facilities"],
+                },
+                {
+                    "name": "Sector: Manufacturing (coke and petroleum products)",
+                    "icon": "fal fa-fw fa-oil-can",
+                    "items": ["Refineries"],
+                },
+                {
+                    "name": "Subdivisions of South Africa",
+                    "icon": "fal fa-fw fa-flag",
+                    "items": ["Provinces"],
+                    "items2": ["Metropolitan municipalities", "District municipalities"],
+                    "items3": ["Local municipalilties"],
+                    "items4": ["Wards"],
+                },
+                {
+                    "name": "Subdivisions of Nicaragua",
+                    "icon": "fal fa-fw fa-flag",
+                    "items": ["Departments", "Autonomous regions"],
+                    "items2": ["Municipalities"],
+                },
+                {
+                    "name": "Subdivisions of Costa Rica",
+                    "icon": "fal fa-fw fa-flag",
+                    "items": ["Provinces"],
+                    "items2": ["Cantons"],
+                    "items3": ["Districts"],
+                },
+                {
+                    "name": "Areas of France",
+                    "icon": "fal fa-fw fa-flag",
+                    "items": ["Ilots Regroupés pour l'information statistique (IRIS)", "Commune"],
+                },
+                {
+                    "name": "Areas of Singapore",
+                    "icon": "fal fa-fw fa-flag",
+                    "items": ["Master Plan 2014 Subzones"],
+                },
+                {
+                    "name": "Areas of Canada",
+                    "icon": "fal fa-fw fa-flag",
+                    "items": ["Neighbourhoods"],
+                },
+                {
+                    "name": "Areas of South Africa",
+                    "icon": "fal fa-fw fa-flag",
+                    "items": ["Suburbs"],
+                },
+                {
+                    "name": "Areas of the world",
+                    "icon": "fal fa-fw fa-flag",
+                    "items": ["Supra-national territory", "Sub-national territory"],
+                },
+                {
+                    "name": "Areas of The Netherlands",
+                    "icon": "fal fa-fw fa-flag",
+                    "items": ["Buurten", "Stadsdelen", "Wijken"],
+                },
+                {
+                    "name": "Areas of Belgium",
+                    "icon": "fal fa-fw fa-flag",
+                    "items": ["Quartiers", "Communes"],
+                },
+                {
+                    "name": "Subdivisions of Grenada",
+                    "icon": "fal fa-fw fa-flag",
+                    "items": ["Parishes", "Dependencies"],
+                },
+
+            ]
+            for each in list:
+                scheme = GeocodeScheme.objects.create(
+                    name = each["name"],
+                    is_comprehensive = False,
+                    icon = each["icon"],
+                )
+                for name in each["items"]:
+                    Geocode.objects.create(
+                        scheme = scheme,
+                        name = name,
+                        depth = 1,
+                    )
+                if "items2" in each:
+                    for name in each["items2"]:
+                        Geocode.objects.create(
+                            scheme = scheme,
+                            name = name,
+                            depth = 2,
+                        )
+                if "items3" in each:
+                    for name in each["items3"]:
+                        Geocode.objects.create(
+                            scheme = scheme,
+                            name = name,
+                            depth = 3,
+                        )
+                if "items4" in each:
+                    for name in each["items4"]:
+                        Geocode.objects.create(
+                            scheme = scheme,
+                            name = name,
+                            depth = 4,
+                        )
+
+
             checkward = Geocode.objects.filter(name="Wards")
             checkcities = Geocode.objects.filter(name="Urban")
             checkcountries = Geocode.objects.filter(name="Countries")
@@ -2664,7 +2140,7 @@ def dataimport(request):
                 for row in contents:
                     deleted = False if row["active"] == "t" else True
                     space = ReferenceSpace.objects.create(
-                        id = row["id"],
+                        old_id = row["id"],
                         name = row["name"],
                         description = row["description"],
                         slug = row["slug"],
@@ -2678,117 +2154,98 @@ def dataimport(request):
                         space.geocodes.add(checkcountries[0])
                     elif int(row["type_id"]) == 21 and checkisland:
                         space.geocodes.add(checkisland[0])
-        elif request.GET["table"] == "podcasts":
-            file = settings.MEDIA_ROOT + "/import/" + request.GET["table"] + ".xml"
-            podcast = LibraryItemType.objects.get(name="Podcast")
-            LibraryItem.objects.filter(type=podcast).delete()
-            import feedparser
-            import urllib.request
-            from dateutil.parser import parse
-
-            feed = feedparser.parse(file)
-            cmp = Organization.objects.filter(name="Circular Metabolism Podcast")
-            if not cmp:
-                cmp = Organization.objects.create(name="Circular Metabolism Podcast", type="other")
-            else:
-                cmp = cmp[0]
-            for row in feed.entries:
-                author = row["author"]
-                check = People.objects.filter(name=author)
-                if check:
-                    author = check[0]
-                else:
-                    author = People.objects.create(name=author)
-                import urllib.request
-                image = row["image"]["href"]
-                if image and False:
-                    data = urllib.request.urlretrieve(image)
-                    image = data
-                    image = image[0]
-                    print(image)
-
-                date = parse(row["published"])
-                year = date.strftime("%Y")
-
-                mp3 = row["links"][1]["href"]
-                info = LibraryItem.objects.create(
-                    name = row["title"],
-                    language = "FR",
-                    type = podcast,
-                    #published_in_id = journal_ids[row["journal_id"]] if row["journal_id"] in journal_ids else None,
-                    #file = row["file"],
-                    year = year,
-                    content = row["summary"],
-                    author_list = row["author"],
-                    author_citation = row["author"],
-                    date_added = timezone.now(),
-                    open_access = True,
-                    url = row["link"],
-                    status = "active",
-                    #image = image,
-                    file_url = mp3,
-                )
-                RecordRelationship.objects.create(
-                    record_parent = author,
-                    record_child = info,
-                    relationship = Relationship.objects.get(name="Author"),
-                )
-                RecordRelationship.objects.create(
-                    record_parent = cmp,
-                    record_child = info,
-                    relationship = Relationship.objects.get(name="Producer"),
-                )
+                    elif int(row["type_id"]) == 56:
+                        space.geocodes.add(Geocode.objects.get(name="Ilots Regroupés pour l'information statistique (IRIS)"))
+                    elif int(row["type_id"]) == 50:
+                        space.geocodes.add(Geocode.objects.get(name="Master Plan 2014 Subzones"))
+                    elif int(row["type_id"]) == 49:
+                        space.geocodes.add(Geocode.objects.get(name="Border Crossings"))
+                    elif int(row["type_id"]) == 47:
+                        space.geocodes.add(Geocode.objects.get(name="Neighbourhoods"))
+                    elif int(row["type_id"]) == 46:
+                        space.geocodes.add(Geocode.objects.get(name="Suburbs"))
+                    elif int(row["type_id"]) == 44:
+                        space.geocodes.add(Geocode.objects.get(name="Supra-national territory"))
+                    elif int(row["type_id"]) == 43:
+                        space.geocodes.add(Geocode.objects.get(name="Sub-national territory"))
+                    elif int(row["type_id"]) == 42:
+                        space.geocodes.add(Geocode.objects.get(name="Bus stops"))
+                    elif int(row["type_id"]) == 41:
+                        space.geocodes.add(Geocode.objects.get(name="Train stations"))
+                    elif int(row["type_id"]) == 40:
+                        space.geocodes.add(Geocode.objects.get(name="Transmission masts"))
+                    elif int(row["type_id"]) == 39:
+                        space.geocodes.add(Geocode.objects.get(name="Pumping stations"))
+                    elif int(row["type_id"]) == 38:
+                        space.geocodes.add(Geocode.objects.get(name="Bicycle racks"))
+                    elif int(row["type_id"]) == 37:
+                        space.geocodes.add(Geocode.objects.get(name="Bridges"))
+                    elif int(row["type_id"]) == 36:
+                        space.geocodes.add(Geocode.objects.get(name="Wind turbines"))
+                    elif int(row["type_id"]) == 35:
+                        space.geocodes.add(Geocode.objects.get(name="Electric charging stations"))
+                    elif int(row["type_id"]) == 34:
+                        space.geocodes.add(Geocode.objects.get(name="Buurten"))
+                    elif int(row["type_id"]) == 32:
+                        space.geocodes.add(Geocode.objects.get(name="Parishes"))
+                    elif int(row["type_id"]) == 31:
+                        space.geocodes.add(Geocode.objects.get(name="Quartiers"))
+                    elif int(row["type_id"]) == 30:
+                        space.geocodes.add(Geocode.objects.get(name="Communes"))
+                    elif int(row["type_id"]) == 29:
+                        space.geocodes.add(Geocode.objects.get(name="Stadsdelen"))
+                    elif int(row["type_id"]) == 28:
+                        space.geocodes.add(Geocode.objects.get(name="Wijken"))
+                    elif int(row["type_id"]) == 27:
+                        space.geocodes.add(Geocode.objects.get(name="Marine outfalls"))
+                    elif int(row["type_id"]) == 26:
+                        space.geocodes.add(Geocode.objects.get(name="Lighthouses"))
+                    elif int(row["type_id"]) == 25:
+                        space.geocodes.add(Geocode.objects.get(name="Airports"))
+                    elif int(row["type_id"]) == 24:
+                        space.geocodes.add(Geocode.objects.get(name="Fuel storage facilities"))
+                    elif int(row["type_id"]) == 23:
+                        space.geocodes.add(Geocode.objects.get(name="Waste transfer station"))
+                    elif int(row["type_id"]) == 22:
+                        space.geocodes.add(Geocode.objects.get(name="Waste drop-off sites"))
+                    elif int(row["type_id"]) == 19:
+                        space.geocodes.add(Geocode.objects.get(name="Energy storage"))
+                    elif int(row["type_id"]) == 18:
+                        space.geocodes.add(Geocode.objects.get(name="Waste incinerators"))
+                    elif int(row["type_id"]) == 17:
+                        space.geocodes.add(Geocode.objects.get(name="Landfills"))
+                    elif int(row["type_id"]) == 16:
+                        space.geocodes.add(Geocode.objects.get(name="Food processing facilities"))
+                    elif int(row["type_id"]) == 15:
+                        space.geocodes.add(Geocode.objects.get(name="Farms"))
+                    elif int(row["type_id"]) == 14:
+                        space.geocodes.add(Geocode.objects.get(name="Mines"))
+                    elif int(row["type_id"]) == 13:
+                        space.geocodes.add(Geocode.objects.get(name="Ports"))
+                    elif int(row["type_id"]) == 12:
+                        space.geocodes.add(Geocode.objects.get(name="Power plants"))
+                    elif int(row["type_id"]) == 11:
+                        space.geocodes.add(Geocode.objects.get(name="Refineries"))
+                    elif int(row["type_id"]) == 9:
+                        space.geocodes.add(Geocode.objects.get(name="Dams"))
+                    elif int(row["type_id"]) == 8:
+                        space.geocodes.add(Geocode.objects.get(name="Water reservoirs"))
+                    elif int(row["type_id"]) == 7:
+                        space.geocodes.add(Geocode.objects.get(name="Wastewater treatment plants"))
+                    elif int(row["type_id"]) == 6:
+                        space.geocodes.add(Geocode.objects.get(name="Water treatment plants"))
         elif request.GET["table"] == "dataviz":
-            image = LibraryItemType.objects.filter(name="Image")
-            image = image[0]
-            LibraryItem.objects.filter(type=image).delete()
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
-                    part_of = None
-                    year = None
-                    if row["year"]:
-                        year = row["year"]
-                    if row["reference_id"]:
-                        part_of = LibraryItem.objects.filter(old_id=row["reference_id"]).exclude(type=image).exclude(type__name="Video Recording")
-                        if part_of.count() == 1:
-                            part_of = part_of[0]
-                            year = part_of.year
-                        else:
-                            print("We have duplication!!")
-                            print(part_of)
-                    info = LibraryItem.objects.create(
-                        old_id = row["id"],
-                        name = row["title"],
-                        image = row["image"],
-                        type = image,
-                        is_part_of = part_of,
-                        date_created = row["date"],
-                        content = row["description"],
-                        url = row["url"],
-                        #source = row["source"],
-                        year = year if year else 2021,
-                    )
-                    if row["source"]:
-                        print(row["source"])
+                    info = LibraryItem.objects.get(old_id=row["id"], name=row["title"])
+                    print(info)
                     if row["space_id"]:
-                        info.spaces.add(ReferenceSpace.objects.get(pk=row["space_id"]))
+                        info.spaces.add(ReferenceSpace.objects.get(old_id=row["space_id"]))
+                        print("Adding space!")
                     if row["process_group_id"]:
-                        info.sectors.add(Sector.objects.get(pk=row["process_group_id"]))
-                    if not year:
-                        Work.objects.create(
-                            name="Check year of publication",
-                            description="In the previous website we did not save the date/year this was published. Please check (e.g. by going to the original source) when this was published, and set the right date. (NOTE: 2021 was used as a temporary placeholder).",
-                            complexity="low",
-                            project_id=3,
-                            related_to=info,
-                            type = "quality_control",
-                        )
-                    RecordRelationship.objects.create(
-                        record_parent = People.objects.get(old_id=row["uploaded_by_id"]),
-                        record_child = info,
-                        relationship = Relationship.objects.get(name="Uploader"),
-                    )
+                        info.sectors.add(Sector.objects.get(old_id=row["process_group_id"]))
+                        print("Adding sector!")
 
         elif request.GET["table"] == "referencespacelocations":
             import sys
@@ -2822,14 +2279,14 @@ def dataimport(request):
                         try:
                             location = ReferenceSpaceLocation.objects.create(
                                 id = row["id"],
-                                space_id = row["space_id"],
+                                space = ReferenceSpace.objects.get(old_id=row["space_id"]),
                                 description = row["description"],
                                 start = start,
                                 end = end,
                                 is_deleted = deleted,
                                 geometry = geometry,
                             )
-                            space = ReferenceSpace.objects.get(pk=row["space_id"])
+                            space = ReferenceSpace.objects.get(old_id=row["space_id"])
                             space.location = location
                             space.save()
                         except Exception as e:
@@ -2838,19 +2295,22 @@ def dataimport(request):
                             print(row["space_id"])
         elif request.GET["table"] == "flowdiagrams":
             FlowDiagram.objects.all().delete()
-            water = FlowDiagram.objects.create(id=1, name="Urban water cycle")
-            FlowBlocks.objects.create(origin_id=67, origin_label="Rain, rivers, and other natural water processes", destination_id=398932, destination_label="Collection of water in dams", diagram=water)
-            FlowBlocks.objects.create(origin_id=398932, origin_label="Collection of water in dams", destination_id=67, destination_label="Evaporation, leaking, and losses of water", diagram=water)
-            FlowBlocks.objects.create(origin_id=398932, origin_label="Collection of water in dams", destination_id=398932, destination_label="Water treatment", diagram=water)
-            FlowBlocks.objects.create(origin_id=398932, origin_label="Water treatment", destination_id=399133, destination_label="Reservoirs", diagram=water)
-            FlowBlocks.objects.create(origin_id=398932, origin_label="Water treatment", destination_id=67, destination_label="Evaporation, leaking, and losses of water", diagram=water)
-            FlowBlocks.objects.create(origin_id=399133, origin_label="Reservoirs", destination_id=67, destination_label="Evaporation, leaking, and losses of water", diagram=water)
-            FlowBlocks.objects.create(origin_id=399133, origin_label="Reservoirs", destination_id=399468, destination_label="Water consumption", diagram=water)
-            FlowBlocks.objects.create(origin_id=399468, origin_label="Water consumption", destination_id=67, destination_label="Evaporation, leaking, and losses of water", diagram=water)
-            FlowBlocks.objects.create(origin_id=399468, origin_label="Water consumption", destination_id=398935, destination_label="Wastewater treatment", diagram=water)
-            FlowBlocks.objects.create(origin_id=398935, origin_label="Wastewater treatment", destination_id=67, destination_label="Evaporation, leaking, and losses of water", diagram=water)
-            FlowBlocks.objects.create(origin_id=398935, origin_label="Wastewater treatment", destination_id=67, destination_label="Rain, rivers, and other natural water processes", diagram=water)
-            FlowBlocks.objects.create(origin_id=398935, origin_label="Wastewater treatment", destination_id=399468, destination_label="Water consumption", diagram=water)
+            water = FlowDiagram.objects.create(name="Urban water cycle")
+            def activity(id):
+                a = Activity.objects.get(old_id=id)
+                return a.id
+            FlowBlocks.objects.create(origin_id=activity(67), origin_label="Rain, rivers, and other natural water processes", destination_id=activity(398932), destination_label="Collection of water in dams", diagram=water)
+            FlowBlocks.objects.create(origin_id=activity(398932), origin_label="Collection of water in dams", destination_id=activity(67), destination_label="Evaporation, leaking, and losses of water", diagram=water)
+            FlowBlocks.objects.create(origin_id=activity(398932), origin_label="Collection of water in dams", destination_id=activity(398932), destination_label="Water treatment", diagram=water)
+            FlowBlocks.objects.create(origin_id=activity(398932), origin_label="Water treatment", destination_id=activity(399133), destination_label="Reservoirs", diagram=water)
+            FlowBlocks.objects.create(origin_id=activity(398932), origin_label="Water treatment", destination_id=activity(67), destination_label="Evaporation, leaking, and losses of water", diagram=water)
+            FlowBlocks.objects.create(origin_id=activity(399133), origin_label="Reservoirs", destination_id=activity(67), destination_label="Evaporation, leaking, and losses of water", diagram=water)
+            FlowBlocks.objects.create(origin_id=activity(399133), origin_label="Reservoirs", destination_id=activity(399468), destination_label="Water consumption", diagram=water)
+            FlowBlocks.objects.create(origin_id=activity(399468), origin_label="Water consumption", destination_id=activity(67), destination_label="Evaporation, leaking, and losses of water", diagram=water)
+            FlowBlocks.objects.create(origin_id=activity(399468), origin_label="Water consumption", destination_id=activity(398935), destination_label="Wastewater treatment", diagram=water)
+            FlowBlocks.objects.create(origin_id=activity(398935), origin_label="Wastewater treatment", destination_id=activity(67), destination_label="Evaporation, leaking, and losses of water", diagram=water)
+            FlowBlocks.objects.create(origin_id=activity(398935), origin_label="Wastewater treatment", destination_id=activity(67), destination_label="Rain, rivers, and other natural water processes", diagram=water)
+            FlowBlocks.objects.create(origin_id=activity(398935), origin_label="Wastewater treatment", destination_id=activity(399468), destination_label="Water consumption", diagram=water)
         if error:
             messages.error(request, "We could not import your data")
         else:
@@ -2876,10 +2336,10 @@ def dataimport(request):
         "users": User.objects.all().count(),
         "photos": Photo.objects.all().count(),
         "sectors": Sector.objects.all().count(),
-        "sectoractivities": Tag.objects.all().count(),
-        "spacesectors": ReferenceSpaceSector.objects.all().count(),
+        "sectoractivities": Sector.activities.through.objects.all().count(),
         "librarytags": LibraryItem.tags.through.objects.all().count(),
         "libraryspaces": LibraryItem.spaces.through.objects.all().count(),
+        "spacesectors": ReferenceSpace.sectors.through.objects.all().count(),
         "flowdiagrams": FlowDiagram.objects.all().count(),
         "dataviz": LibraryItem.objects.filter(type__name="Image").count(),
         "flowblocks": FlowBlocks.objects.all().count(),

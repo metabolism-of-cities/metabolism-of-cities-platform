@@ -136,7 +136,7 @@ class RelationshipAdmin(admin.ModelAdmin):
 
 class PhotoAdmin(admin.ModelAdmin):
     search_fields = ["space__name"]
-    list_display = ["space", "uploaded_by", "description"]
+    list_display = ["id", "space", "uploaded_by", "description"]
 
 class WorkAdmin(admin.ModelAdmin):
     search_fields = ["name", "part_of_project__name", "related_to__name"]
@@ -179,3 +179,55 @@ class UserAdmin(admin.ModelAdmin):
      list_display = ["username", "email", "is_staff", "is_active"]
      list_filter = ["is_staff", "is_active"]
      search_fields = ["username", "email"]
+
+admin_site.register(Tag, TagAdmin)
+admin_site.register(Record, SearchCompleteAdmin)
+admin_site.register(Event, SearchCompleteAdmin)
+admin_site.register(News, SearchCompleteAdmin)
+admin_site.register(Blog, SearchCompleteAdmin)
+admin_site.register(Organization, OrgAdmin)
+admin_site.register(Webpage, WebpageAdmin)
+admin_site.register(WebpageDesign, WebpageDesignAdmin)
+admin_site.register(ProjectDesign)
+admin_site.register(People, SearchCompleteAdmin)
+admin_site.register(Video, VideoAdmin)
+admin_site.register(Project, ProjectAdmin)
+admin_site.register(Relationship, RelationshipAdmin)
+admin_site.register(RecordRelationship, RecordRelationshipAdmin)
+admin_site.register(SocialMedia, SocialMediaAdmin)
+admin_site.register(LibraryItem, LibraryAdmin)
+admin_site.register(LibraryItemType, SearchAdmin)
+admin_site.register(ActivatedSpace, SpaceAdmin)
+
+admin_site.register(License)
+admin_site.register(Site)
+admin_site.register(Photo, PhotoAdmin)
+
+#admin_site.register(MOOC)
+#admin_site.register(MOOCModule)
+#admin_site.register(MOOCQuestion)
+#admin_site.register(MOOCModuleQuestion)
+#admin_site.register(MOOCVideo)
+#admin_site.register(MOOCAnswer)
+#admin_site.register(MOOCProgress)
+#admin_site.register(MOOCQuizAnswers)
+
+admin_site.register(Group)
+admin_site.register(User, UserAdmin)
+admin_site.register(LogEntry, LogEntryAdmin)
+admin_site.register(CronJobLog)
+
+admin_site.register(GeocodeScheme)
+admin_site.register(Geocode, GeocodeAdmin)
+admin_site.register(ReferenceSpace, ReferenceSpaceAdmin)
+admin_site.register(ReferenceSpaceLocation, LocationAdmin)
+admin_site.register(ReferenceSpaceGeocode)
+admin_site.register(Sector, SearchNameAdmin)
+admin_site.register(UploadSession)
+admin_site.register(UploadFile)
+
+admin_site.register(Work, WorkAdmin)
+admin_site.register(WorkActivity)
+admin_site.register(Badge)
+admin_site.register(ActivityCatalog)
+admin_site.register(Activity, ActivityAdmin)
