@@ -47,7 +47,7 @@ class WebpageAdmin(admin.ModelAdmin):
          if "short" in request.GET:
             self.fields = ["name", "description"]
          else:
-            self.fields = ["name", "description", "is_deleted", "image", "tags","site", "slug", "old_id"]
+            self.fields = ["name", "description", "belongs_to", "image", "tags","site", "slug", "is_deleted"]
          return super().change_view(request, object_id)
 
 class WebpageDesignAdmin(admin.ModelAdmin):

@@ -1,0 +1,48 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <ul class="nav nav-tabs">
+    {% for key,value in types.items %}
+      {% if key != "topics" %}
+        <li class="nav-item">
+          <a class="nav-link {% if type == key %}active{% endif %}" href="/account/admin/documents/{{ key }}/">{{ value }}</a>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+
+  {% if type == "topics" %}
+    {% for each in list %}
+      <h3>{{ each }}</h3>
+      <p><span class="badge badge-info">Upload date: {{ each.date_created }}</span></p>
+      <p>{{ each.description|linebreaksbr }}</p>
+    {% endfor %}
+  {% else %}
+    <table class="table table-striped datatable">
+      <thead>
+        <tr>
+          <th>Document</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for each in list %}
+          <tr>
+            <td>
+              {% if each.file %}
+                <a href="{{ each.file.url }}">{{ each }}</a>
+              {% else %}
+                {{ each }}
+              {% endif %}
+            </td>
+            <td data-sort="{{ each.date_created|date:"U" }}">{{ each.date_created|date:"M d, Y" }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  <p class="mt-5"><a href="/account/admin/" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a></p>
+
+{% endblock %}

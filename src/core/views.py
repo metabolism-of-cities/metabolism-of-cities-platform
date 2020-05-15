@@ -1702,6 +1702,41 @@ def ascus_admin_list(request, type="participant"):
     return render(request, "ascus/admin.list.html", load_design(context, PAGE_ID["ascus"]))
 
 @check_ascus_admin_access
+def ascus_admin_documents(request, type="introvideos"):
+    types = {
+        "introvideos": "Introduction videos", 
+        "topics": "Discussion topics", 
+        "presentations": "Presentations", 
+    }
+    get_type = types[type]
+
+    if type == "topics":
+        list = Event.objects_include_private \
+            .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+            .filter(tags__id=770)
+    elif type == "presentations":
+        list = LibraryItem.objects_include_private \
+            .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+            .filter(tags__id=771)
+    elif type == "introvideos":
+        list = LibraryItem.objects_include_private \
+            .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+            .filter(tags__id=769)
+
+    context = {
+        "header_title": "AScUS Admin",
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "list": list,
+        "load_datatables": True,
+        "types": types,
+        "type": type,
+    }
+    if type == "topics":
+        return render(request, "ascus/admin.topics.html", load_design(context, PAGE_ID["ascus"]))
+    else:
+        return render(request, "ascus/admin.docs.html", load_design(context, PAGE_ID["ascus"]))
+
+@check_ascus_admin_access
 def ascus_admin_work(request):
     list = Work.objects.filter(
         part_of_project_id = PAGE_ID["ascus"],

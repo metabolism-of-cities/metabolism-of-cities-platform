@@ -1,0 +1,15 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1>Discussion topic overview</h1>
+
+  {% for each in list %}
+    <h3>{{ each }}</h3>
+    <p><span class="badge badge-info">Upload date: {{ each.date_created }}</span></p>
+    <p>{{ each.description|linebreaksbr }}</p>
+  {% endfor %}
+
+  <p class="mt-5"><a href="/account/admin/" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a></p>
+
+{% endblock %}
