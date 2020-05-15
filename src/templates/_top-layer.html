@@ -18,7 +18,7 @@
             {% if request.user.is_superuser %}
               <span class="badge badge-warning">Super user</span>
             {% endif %}
-            <a class="badge badge-success" href="{% url "stafcp_controlpanel" %}"><i class="fa fa-lock fa-fw"></i> Control Panel</a>
+            <a class="badge badge-success" href="/stafcp/controlpanel/"><i class="fa fa-lock fa-fw"></i> Control Panel</a>
           </div>
         {% endif %}
 
