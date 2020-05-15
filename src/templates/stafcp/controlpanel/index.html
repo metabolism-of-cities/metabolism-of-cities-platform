@@ -1,20 +1,61 @@
 {% extends "_base.html" %}
 
+{% block page_name %}stafcp controlpanel{% endblock %}
 {% block content %}
+  <section class="row">
+    <div class="col-md-3">
+      <a class="card icon-card btn-card" href="">
+        <div class="icon">
+          <i class="fal fa-fw fa-sliders-v-square"></i>
+        </div>
+        <div class="card-header">Project settings</div>
+      </a>
+    </div>
+    <div class="col-md-3">
+      <a class="card icon-card btn-card" href="users/">
+        <div class="icon">
+          <i class="fal fa-fw fa-users-medical"></i>
+        </div>
+        <div class="card-header">Our contributors</div>
+      </a>
+    </div>
+    <div class="col-md-3">
+      <a class="card icon-card btn-card" href="design/">
+        <div class="icon">
+          <i class="fal fa-fw fa-ruler"></i>
+        </div>
+        <div class="card-header">Website design</div>
+      </a>
+    </div>
+    <div class="col-md-3">
+      <a class="card icon-card btn-card" href="content/">
+        <div class="icon">
+          <i class="fal fa-fw fa-file-alt"></i>
+        </div>
+        <div class="card-header">Website content</div>
+      </a>
+    </div>
+  </section>
 
-  <h1>Control Panel</h1>
-
-  <ul>
-    <li><a href="">Project settings</a></li>
-    <li><a href="users/">Our contributors</a></li>
-    <li><a href="design/">Website design</a></li>
-    <li><a href="content/">Website content</a></li>
-  </ul>
-
-  <h2>Contributor tools</h2>
-  <ul>
-    <li><a href="../work/">Community work grid</a></li>
-    <li><a href="../curation/">Data curation platform</a></li>
-  </ul>
-
+  <section>
+    <h2>Contributor tools</h2>
+    <div class="row">
+      <div class="col-md-3">
+        <a class="card icon-card btn-card" href="../work/">
+          <div class="icon">
+            <i class="fal fa-fw fa-th"></i>
+          </div>
+          <div class="card-header">Community work grid</div>
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a class="card icon-card btn-card" href="../curation/">
+          <div class="icon">
+            <i class="fal fa-fw fa-database"></i>
+          </div>
+          <div class="card-header">Data curation platform</div>
+        </a>
+      </div>
+    </div>
+  </section>
 {% endblock %}

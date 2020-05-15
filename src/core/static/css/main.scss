@@ -62,10 +62,10 @@ pre {
 }
 
 a {
-  color: $primary;
+  color: lighten($primary, 15%);
 
   &:hover {
-    color: darken($primary, 20%);
+    color: $primary;
     text-decoration: none;
   }
 }
@@ -741,6 +741,7 @@ blockquote {
   @extend %box-shadow;
   background-color: #fff;
   border-radius: .25rem;
+  box-shadow: $basic-shadow;
   color: $black;
   cursor: pointer;
   display: block;
@@ -791,7 +792,26 @@ blockquote {
       }
     }
   }
+
+  // LARGE ICON CARD
+  &.icon-card {
+    height: 100%;
+
+    .icon {
+      font-size: 4rem;
+      text-align: center;
+      padding: 1rem 0;
+      background-color: rgba($primary, .25);
+      border-top-left-radius: .25rem;
+      border-top-right-radius: .25rem;
+    }
+
+    .card-header {
+      text-align: center;
+    }
+  }
 }
+
 
 // CONTRIBUTE BOX
 .contribute.card {
@@ -1156,25 +1176,6 @@ body.homepage {
       }
     }
   }
-
-  section.what {
-    .card {
-      height: 100%;
-    }
-
-    .icon {
-      font-size: 4rem;
-      text-align: center;
-      padding: 1rem 0;
-      background-color: rgba($primary, .25);
-      border-top-left-radius: .25rem;
-      border-top-right-radius: .25rem;
-    }
-
-    .card-header {
-      text-align: center;
-    }
-  }
 }
 
 // PROJECT PAGES
@@ -1466,6 +1467,12 @@ body.dataset {
     .highcharts-title,
     .highcharts-subtitle {
       display: none;
+    }
+  }
+
+  #tab-data {
+    .fa-spin {
+      animation: fa-spin 1s linear infinite;
     }
   }
 
@@ -2121,8 +2128,7 @@ body.library.item {
   }
 }
 
-// GEOCODE
-// LIST PAGE
+// GEOCODE LIST PAGE
 body.geocode.list {
   .single-item.card {
     height: 100%;
@@ -2153,7 +2159,7 @@ body.geocode.list {
   }
 }
 
-// FORM
+// GEOCODE FORM
 body.geocode.form {
   .levels {
     .form-group {
@@ -2180,8 +2186,28 @@ body.geocode.form {
       width: calc(100% - 5rem - 5px);
     }
   }
+}
 
-  .graph {
+// STAFCP CONTROL PANEL
+body.stafcp.controlpanel {
+  .icon-card .card-header {
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+  }
+}
 
+// STAFCP DESIGN FORM
+body.stafcp.design {
+  textarea#id_custom_css {
+    white-space: pre;
+    font-family: "Ubuntu Mono", "Fira Mono", "Liberation Mono", "Courier New", monospace;
+  }
+}
+
+// STAFCP COMMUNITY WORK GRID
+body.stafcp.workgrid {
+  .btn-filter {
+    white-space: nowrap;
+    height: 38px;
   }
 }

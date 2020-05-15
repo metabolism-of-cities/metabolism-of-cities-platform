@@ -1,48 +1,75 @@
 {% extends "_base.html" %}
+{% block page_name %}stafcp workgrid{% endblock %}
 
 {% block content %}
-  <h1>Community work grid</h1>
-  <div class="alert alert-secondary">
-    At Metabolism of Cities, we work <strong>together</strong>. We invite you to join
-    us in this project. We try to be open to anyone. Data miners, academics, students,
-    concerned citizens, retirees, designers, programmers, and others. Have a look at
-    what we are doing, and if you are keen to help then sign up today!
-    <br>
-    <a href="http://" class="btn btn-primary">Sign up now</a>
+  <h1 class="mb-0">Community work grid</h1>
+  <a href="../controlpanel" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+  <div class="alert alert-primary alert-dismissible">
+    <p>
+      At Metabolism of Cities, we work <strong>together</strong>. We invite you to join
+      us in this project. We try to be open to anyone. Data miners, academics, students,
+      concerned citizens, retirees, designers, programmers, and others. Have a look at
+      what we are doing, and if you are keen to help then sign up today!
+    </p>
+    <a href="" class="btn btn-primary">
+      <i class="fas fa-user-plus"></i>
+      Sign up now
+    </a>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <i class="far fa-times"></i>
+    </button>
   </div>
 
-  <form>
-    
-    <h3>Filter list</h3>
-
-    Type: 
-    <select name="type">
-      <option value=""></option>
-      {% for each in types %}
-        <option value="{{ each }}" {% if request.GET.type == label %}selected{% endif %}>{{ each }}</option>
-      {% endfor %}
-      <option value="">Flubber</option>
-      <option value="">Flabber</option>
-    </select>
-
-    Status:
-    <select name="status">
-      <option value=""></option>
-      {% for label,name in statuses %}
-        <option value="{{ label }}" {% if request.GET.status == label %}selected{% endif %}>{{ name }}</option>
-      {% endfor %}
-    </select>
-
-    Priority:
-    <select name="priority">
-      <option value=""></option>
-      {% for label,name in priorities %}
-        <option value="{{ label }}" {% if request.GET.priority == label %}selected{% endif %}>{{ name }}</option>
-      {% endfor %}
-    </select>
-
-    <button type="submit">Filter list</button>
-  
+  <form class="row mb-4">
+    <div class="col-lg mb-2">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Type</span>
+        </div>
+        <select name="type" class="custom-select">
+          <option value=""></option>
+          {% for each in types %}
+            <option value="{{ each }}" {% if request.GET.type == label %}selected{% endif %}>{{ each }}</option>
+          {% endfor %}
+          <option value="">Flubber</option>
+          <option value="">Flabber</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-lg mb-2">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Status</span>
+        </div>
+        <select name="status" class="custom-select">
+          <option value=""></option>
+          {% for label,name in statuses %}
+            <option value="{{ label }}" {% if request.GET.status == label %}selected{% endif %}>{{ name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="col-lg mb-2">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Priority</span>
+        </div>
+        <select name="status" class="custom-select">
+          <option value=""></option>
+          {% for label,name in priorities %}
+            <option value="{{ label }}" {% if request.GET.priority == label %}selected{% endif %}>{{ name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-filter mx-3" type="submit">
+      <i class="fas fa-filter"></i>
+      Filter list
+    </button>
   </form>
 
   <table class="table table-striped datatable">
@@ -70,4 +97,9 @@
     {% endfor %}
     </tbody>
   </table>
+
+  <a href="../controlpanel" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
 {% endblock %}
