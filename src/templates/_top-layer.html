@@ -4,21 +4,22 @@
   {% if back_link or PERMISSIONS or request.user.is_superuser %}
     <div class="return-bar">
       <div class="container">
-
         {% if back_link %}
           <a href="{{ SITE_URL }}"><i class="fad fa-arrow-circle-left"></i> Return to {{ SITE_NAME }}</a>
         {% endif %}
 
         {% if PERMISSIONS or request.user.is_superuser %}
           <div class="float-right">
-
             {% for each in PERMISSIONS %}
-              <span class="badge badge-warning">{{ each.relationship.name }}</span>
+              <span class="badge badge-light">{{ each.relationship.name }}</span>
             {% endfor %}
             {% if request.user.is_superuser %}
-              <span class="badge badge-warning">Super user</span>
+              <span class="badge badge-light">Super user</span>
             {% endif %}
-            <a class="badge badge-success" href="{% url "stafcp_controlpanel" %}"><i class="fa fa-lock fa-fw"></i> Control Panel</a>
+            <a class="badge badge-primary" href="{% url 'stafcp_controlpanel' %}">
+              <i class="fa fa-lock mr-1"></i>
+              Control Panel
+            </a>
           </div>
         {% endif %}
 

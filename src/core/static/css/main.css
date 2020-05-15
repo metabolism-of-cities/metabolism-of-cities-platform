@@ -746,7 +746,12 @@ table thead th {
 
 .return-bar {
   background-color: #efefef;
-  padding: 4px 0; }
+  padding: 4px 0;
+  min-height: 32px; }
+  .return-bar .badge-light {
+    background-color: #efefef; }
+  .return-bar .badge i {
+    font-size: 10px; }
 
 body.homepage .jumbotron {
   padding-bottom: 17rem; }

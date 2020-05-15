@@ -1138,6 +1138,15 @@ table thead th {
 .return-bar {
   background-color: $light;
   padding: 4px 0;
+  min-height: 32px;
+
+  .badge-light {
+    background-color: $light;
+  }
+
+  .badge i {
+    font-size: 10px;
+  }
 }
 
 // PAGES
