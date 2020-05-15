@@ -1845,6 +1845,11 @@ Link to review: {review_link}''',
     }
     return render(request, "project.form.html", context)
 
+def massmail(request):
+    context = {
+    }
+    return render(request, "massmail.html", context)
+
 # TEMPORARY
 def dataimport(request):
     error = False

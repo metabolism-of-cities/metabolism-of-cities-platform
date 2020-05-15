@@ -1,0 +1,17 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <h1>Send mail</h1>
+  <p>Your mail will be sent to:</p>
+  <ul>
+    <li>Fulano &laquo;info@test.com&raquo;</li>
+    <li>Fulano &laquo;info2@test.com&raquo;</li>
+    <li>Fulano &laquo;info3@test.com&raquo;</li>
+    <li>Fulano &laquo;info4@test.com&raquo;</li>
+  </ul>
+
+  <h2>Write mail</h2>
+  <textarea class="form-control" style="height:500px"></textarea>
+  <button type="submit">Send</button>
+  <button type="submit">Send preview to myself</button>
+{% endblock %}

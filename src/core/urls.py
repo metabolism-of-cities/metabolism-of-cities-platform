@@ -144,6 +144,7 @@ urlpatterns = [
     path("baseline/", views.load_baseline),
     path("pdf/", views.pdf),
     path("dataimport/", views.dataimport),
+    path("massmail/", views.massmail),
 
     path("socialmedia/<slug:type>/", views.socialmedia),
 
