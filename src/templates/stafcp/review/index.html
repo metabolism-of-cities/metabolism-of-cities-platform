@@ -2,13 +2,27 @@
 
 {% block content %}
 
-<h1>Review</h1>
+<h1>Data Curation Platform</h1>
+
+<p>
+Thanks for helping out! Curation is one of the most important but challenging tasks. 
+Anybody can upload a dataset, but we need YOUR help to ensure that information is 
+properly processed, labelled, and only published when it should be published.
+<br>
+As you gain experience, you will gain access to more sections in the data curation
+platform. So 
+</p>
 
 <ul>
-  <li><a href="{% url "stafcp_review_pending" %}">Incomplete uploads</a>
+  <li>
+    <a href="{% url "stafcp_review_pending" %}">Incomplete uploads</a>
   </li>
-  <li><a href="{% url "stafcp_review_uploaded" %}">Ready for processing</a></li>
-  <li><a href="{% url "stafcp_review_processed" %}">Ready for publication</a></li>
+  <li>
+    <a href="{% url "stafcp_review_uploaded" %}">Ready for processing</a>
+  </li>
+  <li>
+    <a href="{% url "stafcp_review_processed" %}">Ready for publication</a>
+  </li>
 </ul>
 
 {% endblock %}

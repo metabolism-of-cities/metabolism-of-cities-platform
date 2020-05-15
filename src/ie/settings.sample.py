@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'tinymce',
     'anymail',
     'debug_toolbar',
+    'django.contrib.humanize',
 ]
 
 # When importing data please deactivate the DebugToolbar, otherwise
