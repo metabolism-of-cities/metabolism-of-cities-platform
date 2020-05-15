@@ -28,7 +28,6 @@ from django.contrib.auth import authenticate, login, logout
 
 from collections import defaultdict
 from .models import *
-from stafdb.models import *
 
 from django.contrib.sites.shortcuts import get_current_site
 
@@ -689,74 +688,6 @@ def stafcp_upload_gis(request, id=None):
     }
     return render(request, "stafcp/upload/gis.html", load_design(context, PAGE_ID["stafcp"]))
 
-
-@login_required
-def controlpanel(request):
-    if not has_permission(request, PAGE_ID["stafcp"], ["curator", "admin", "publisher"]):
-        unauthorized_access(request)
-    context = {
-    }
-    return render(request, "stafcp/controlpanel/index.html", load_design(context, PAGE_ID["stafcp"]))
-
-@login_required
-def controlpanel_users(request):
-    if not has_permission(request, PAGE_ID["stafcp"], ["curator", "admin", "publisher"]):
-        unauthorized_access(request)
-    context = {
-        "users": RecordRelationship.objects.filter(record_child_id=PAGE_ID["stafcp"], relationship__is_permission=True),
-        "load_datatables": True,
-    }
-    return render(request, "stafcp/controlpanel/users.html", load_design(context, PAGE_ID["stafcp"]))
-
-@login_required
-def controlpanel_design(request):
-
-    project = PAGE_ID["stafcp"]
-    if not has_permission(request, project, ["curator", "admin", "publisher"]):
-        unauthorized_access(request)
-
-    info = ProjectDesign.objects.get(pk=project)
-    ModelForm = modelform_factory(
-        ProjectDesign,
-        fields = ("header", "logo", "custom_css", "back_link"),
-    )
-    form = ModelForm(request.POST or None, request.FILES or None, instance=info)
-    if request.method == "POST":
-        if form.is_valid():
-            info = form.save()
-            messages.success(request, "The new design was saved")
-
-    context = {
-        "form": form,
-    }
-    return render(request, "stafcp/controlpanel/design.html", load_design(context, PAGE_ID["stafcp"]))
-
-@login_required
-def controlpanel_work(request):
-
-    project = PAGE_ID["stafcp"]
-    if not has_permission(request, project, ["curator", "admin", "publisher"]):
-        unauthorized_access(request)
-
-    context = {
-        "users": RecordRelationship.objects.filter(record_child_id=PAGE_ID["stafcp"], relationship__is_permission=True),
-        "load_datatables": True,
-    }
-    return render(request, "stafcp/controlpanel/users.html", load_design(context, PAGE_ID["stafcp"]))
-
-@login_required
-def controlpanel_content(request):
-
-    project = PAGE_ID["stafcp"]
-    if not has_permission(request, project, ["curator", "admin", "publisher"]):
-        unauthorized_access(request)
-
-    context = {
-        "pages": Webpage.objects.filter(belongs_to_id=project),
-        "load_datatables": True,
-    }
-    return render(request, "stafcp/controlpanel/content.html", load_design(context, PAGE_ID["stafcp"]))
-
 @login_required
 def stafcp_upload_gis_file(request, id=None):
     session = None
@@ -1049,6 +980,98 @@ def stafcp_article(request, id):
 
     }
     return render(request, "stafcp/index.html", load_design(context, PAGE_ID["stafcp"]))
+
+# Control panel and general contribution components
+
+@login_required
+def controlpanel(request):
+    if not has_permission(request, PAGE_ID["stafcp"], ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+    context = {
+    }
+    return render(request, "stafcp/controlpanel/index.html", load_design(context, PAGE_ID["stafcp"]))
+
+@login_required
+def controlpanel_users(request):
+    if not has_permission(request, PAGE_ID["stafcp"], ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+    context = {
+        "users": RecordRelationship.objects.filter(record_child_id=PAGE_ID["stafcp"], relationship__is_permission=True),
+        "load_datatables": True,
+    }
+    return render(request, "stafcp/controlpanel/users.html", load_design(context, PAGE_ID["stafcp"]))
+
+@login_required
+def controlpanel_design(request):
+
+    project = PAGE_ID["stafcp"]
+    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    info = ProjectDesign.objects.get(pk=project)
+    ModelForm = modelform_factory(
+        ProjectDesign,
+        fields = ("header", "logo", "custom_css", "back_link"),
+    )
+    form = ModelForm(request.POST or None, request.FILES or None, instance=info)
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save()
+            messages.success(request, "The new design was saved")
+
+    context = {
+        "form": form,
+    }
+    return render(request, "stafcp/controlpanel/design.html", load_design(context, PAGE_ID["stafcp"]))
+
+@login_required
+def controlpanel_work(request):
+
+    project = PAGE_ID["stafcp"]
+    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    context = {
+        "users": RecordRelationship.objects.filter(record_child_id=PAGE_ID["stafcp"], relationship__is_permission=True),
+        "load_datatables": True,
+    }
+    return render(request, "stafcp/controlpanel/users.html", load_design(context, PAGE_ID["stafcp"]))
+
+@login_required
+def controlpanel_content(request):
+
+    project = PAGE_ID["stafcp"]
+    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    context = {
+        "pages": Webpage.objects.filter(belongs_to_id=project),
+        "load_datatables": True,
+    }
+    return render(request, "stafcp/controlpanel/content.html", load_design(context, PAGE_ID["stafcp"]))
+
+def work_grid(request):
+    project = PAGE_ID["stafcp"]
+    list = Work.objects.filter(part_of_project_id=8)
+    if request.GET.get("status"):
+        list = list.filter(status=request.GET["status"])
+    if request.GET.get("priority"):
+        list = list.filter(priority=request.GET["priority"])
+    context = {
+        "list": list,
+        "load_datatables": True,
+        "statuses": Work.WorkStatus.choices,
+        "priorities": Work.WorkPriority.choices,
+    }
+    return render(request, "contribution/work.grid.html", load_design(context, PAGE_ID["stafcp"]))
+
+def work_item(request, id):
+    # To do: validate user has access to this ticket
+    # if at all needed?
+    context = {
+        "info": Work.objects.get(pk=id),
+    }
+    return render(request, "contribution/work.item.html", load_design(context, PAGE_ID["stafcp"]))
 
 # Library
 

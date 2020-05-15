@@ -1,0 +1,73 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <h1>Community work grid</h1>
+  <div class="alert alert-secondary">
+    At Metabolism of Cities, we work <strong>together</strong>. We invite you to join
+    us in this project. We try to be open to anyone. Data miners, academics, students,
+    concerned citizens, retirees, designers, programmers, and others. Have a look at
+    what we are doing, and if you are keen to help then sign up today!
+    <br>
+    <a href="http://" class="btn btn-primary">Sign up now</a>
+  </div>
+
+  <form>
+    
+    <h3>Filter list</h3>
+
+    Type: 
+    <select name="type">
+      <option value=""></option>
+      {% for each in types %}
+        <option value="{{ each }}" {% if request.GET.type == label %}selected{% endif %}>{{ each }}</option>
+      {% endfor %}
+      <option value="">Flubber</option>
+      <option value="">Flabber</option>
+    </select>
+
+    Status:
+    <select name="status">
+      <option value=""></option>
+      {% for label,name in statuses %}
+        <option value="{{ label }}" {% if request.GET.status == label %}selected{% endif %}>{{ name }}</option>
+      {% endfor %}
+    </select>
+
+    Priority:
+    <select name="priority">
+      <option value=""></option>
+      {% for label,name in priorities %}
+        <option value="{{ label }}" {% if request.GET.priority == label %}selected{% endif %}>{{ name }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit">Filter list</button>
+  
+  </form>
+
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Task</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th>Priority</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in list %}
+      <tr>
+        <td>
+          <a href="{{ each.id }}/">
+            {{ each }}<br>
+            {{ each.related_to }}
+          </a>
+        </td>
+        <td>{{ each.workactivity }}</td>
+        <td>{{ each.get_status_display }}</td>
+        <td data-sort="{{ each.priority }}">{{ each.get_priority_display }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

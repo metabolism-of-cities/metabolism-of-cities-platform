@@ -1,0 +1,65 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1>Task # {{ info.id }}</h1>
+
+  <p>Task: {{ info }}</p>
+  <p>Description: {{ info.description }}{% lorem %}</p>
+  <p>Status: {{ info.get_status_display }} <a href="">[see all]</a></p>
+  <p>Priority: {{ info.get_priority_display }}</p>
+  <p>Type: {{ info.workactivity }} <a href="">[see all]</a></p>
+  <p>Related to: {{ info.related_to }}</p>
+  <p>Assigned to: {{ info.assigned_to }}</p>
+  <p>Creation date: {{ info.date_created|date:"r" }}</p>
+
+  <hr>
+
+  <h2>Action buttons</h2>
+  <p>If not assigned to me:</p>
+  <p>
+    <a href="http://" class="btn btn-primary">Assign to me</a>
+    <a href="http://" class="btn btn-primary">Edit task</a>
+  </p>
+  
+  <p>If assigned to me:</p>
+  <p>
+    <a href="http://" class="btn btn-primary">Start work</a>
+    <a href="http://" class="btn btn-primary">Mark as completed</a>
+    <a href="http://" class="btn btn-primary">Unassign (stop work on this task)</a>
+    <a href="http://" class="btn btn-primary">Edit task</a>
+  </p>
+
+  <h2>History and discussion</h2>
+
+  <h4>4 days ago by Fulano | comment 1</h4>
+  <p> Do you have a suggestion about how translated choices labels should be defined?</p>
+
+  <h4>4 days ago by Fulano2 | comment 2</h4>
+  <p>
+ To be honest, I haven't though about this, because I don't translate them. Hmm.. Good question. Implicit translation?! :/ Decorator? That are not so good ideas.<br> 
+Or you could swap the positions, e.g. FR = _("Freshman") , because you'll never translate the key which is stored in the DB, right?!
+  </p>
+
+  <h4>3 days ago by Flubber | comment 3</h4>
+
+  <p><em>Person change</em>. Flubber is now assigned to this task.</p>
+
+  <h4>3 days ago by Flubber | comment 4</h4>
+
+  <p><em>Status update</em>. Marked as in progress</p>
+
+  <h4>2 days ago by Flubber | comment 5</h4>
+
+  <p><em>Status update</em>. Marked as completed</p>
+
+  <form method="post">
+
+    <textarea></textarea>
+    <button type="submit">Add comment</button>
+  
+  </form>
+
+  <p><a href="../" class="btn btn-primary">Back to work list</a></p>
+
+{% endblock %}

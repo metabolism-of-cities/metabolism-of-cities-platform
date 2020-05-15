@@ -127,6 +127,8 @@ class Project(Record):
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
     is_internal = models.BooleanField(db_index=True, default=False, help_text="Mark if this is a project undertaken by our own members within our own website")
+    contributor_page = HTMLField(null=True, blank=True)
+    support_page = HTMLField(null=True, blank=True)
     STATUS = (
         ("planned", "Planned"),
         ("ongoing", "Ongoing"),

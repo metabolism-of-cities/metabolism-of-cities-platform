@@ -127,6 +127,8 @@ urlpatterns = [
     path("stafcp/controlpanel/work/", views.controlpanel_work, name="stafcp_controlpanel_work"),
     path("stafcp/controlpanel/design/", views.controlpanel_design, name="stafcp_controlpanel_design"),
     path("stafcp/controlpanel/content/", views.controlpanel_content, name="stafcp_controlpanel_content"),
+    path("stafcp/work/", views.work_grid, name="stafcp_work_grid"),
+    path("stafcp/work/<int:id>/", views.work_item, name="stafcp_work_item"),
 
     # Podcast
     path("podcast/", views.podcast_series),
