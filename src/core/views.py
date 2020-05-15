@@ -1845,8 +1845,41 @@ Link to review: {review_link}''',
     }
     return render(request, "project.form.html", context)
 
-def massmail(request):
+def massmail(request,people=None):
+    list = False
+    if "people" in request.GET:
+        ids = request.GET["people"].split(',')
+        list = People.objects.filter(id__in=ids)
+    if request.method == "POST":
+        message = request.POST["content"]
+        mailcontext = {
+            "message": message,
+        }
+        msg_html = render_to_string("mailbody/mail.template.html", mailcontext)
+        msg_plain = message
+        sender = '"' + request.site.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
+        for each in list:
+            #Let check if the person has an email address before we send the mail
+            if each.email:
+                recipient = '"' + each.name + '" <' + each.email + '>'
+                send_mail(
+                    "Welcome to Metabolism of Cities",
+                    msg_plain,
+                    sender,
+                    [recipient],
+                    html_message=msg_html,
+                )
+        if "send_preview" in request.POST:
+            recipient = '"' + request.user.first_name + '" <' + request.user.email + '>'
+            send_mail(
+                "Welcome to Metabolism of Cities",
+                msg_plain,
+                sender,
+                [recipient],
+                html_message=msg_html,
+            )
     context = {
+        "list": list
     }
     return render(request, "massmail.html", context)
 
