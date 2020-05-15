@@ -219,6 +219,7 @@ class Organization(Record):
 class Relationship(models.Model):
     name = models.CharField(max_length=255)
     label = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=20, db_index=True, unique=True, blank=True, null=True, help_text="Should only be set for permissions, and should only be modified by the programming team")
     description = models.TextField(null=True, blank=True)
     is_permission = models.BooleanField(default=False, help_text="Mark if this relationship is about giving people permissions in the system")
     def __str__(self):

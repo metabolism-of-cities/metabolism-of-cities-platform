@@ -1,0 +1,25 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h2>Web page content</h2>
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Page title</th>
+        <th>Creation date</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in pages %}
+      <tr>
+        <td><a href="{{ each.id }}/">{{ each }}</a></td>
+        <td>{{ each.date_created|date:"M d, Y" }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <p><a href="../" class="btn btn-secondary-outline">&laquo; Back to control panel</a></p>
+
+{% endblock %}

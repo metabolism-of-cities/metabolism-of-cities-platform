@@ -1,0 +1,25 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h2>Our contributors</h2>
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in users %}
+      <tr>
+        <td>{{ each.record_parent }}</td>
+        <td>{{ each.relationship.name }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <p><a href="../" class="btn btn-secondary-outline">&laquo; Back to control panel</a></p>
+
+{% endblock %}

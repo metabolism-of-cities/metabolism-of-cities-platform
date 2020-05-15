@@ -1,0 +1,18 @@
+{% extends "_base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+  <h1>Design</h1>
+
+  <form method="post" class="form form-horizontal" enctype="multipart/form-data">
+
+    {% csrf_token %}
+    {% bootstrap_form form %}
+
+    {% buttons %}
+      <button type="submit" class="btn btn-success">Save</button>
+    {% endbuttons %}
+  </form>
+
+  <p><a href="../" class="btn btn-secondary-outline">&laquo; Back to control panel</a></p>
+{% endblock %}

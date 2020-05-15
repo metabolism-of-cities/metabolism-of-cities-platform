@@ -122,7 +122,12 @@ urlpatterns = [
     path("stafcp/review/processed/", views.stafcp_review_processed, name="stafcp_review_processed"),
     path("stafcp/review/<int:id>/", views.stafcp_review_session, name="stafcp_review_session"),
 
-    path("stafcp/controlpanel/", views.stafcp_controlpanel, name="stafcp_controlpanel"),
+    path("stafcp/controlpanel/", views.controlpanel, name="stafcp_controlpanel"),
+    path("stafcp/controlpanel/users/", views.controlpanel_users, name="stafcp_controlpanel_users"),
+    path("stafcp/controlpanel/work/", views.controlpanel_work, name="stafcp_controlpanel_work"),
+    path("stafcp/controlpanel/design/", views.controlpanel_design, name="stafcp_controlpanel_design"),
+    path("stafcp/controlpanel/content/", views.controlpanel_content, name="stafcp_controlpanel_content"),
+
     # Podcast
     path("podcast/", views.podcast_series),
 

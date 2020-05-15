@@ -77,6 +77,18 @@
 
 <li><a href="http://" class="nav-link">About</a></li>
 
-{% if PERMISSIONS %}
-  <li><a href="{% url "stafcp_controlpanel" %}" class="nav-link"><i class="fa fa-tools"></i></a></li>
+{% if PERMISSIONS or request.user.is_superuser %}
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" role="button" id="controlpanel-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="{% url "stafcp_controlpanel" %}" class="nav-link"><i class="fa fa-tools"></i></a>
+    <div class="dropdown-menu" aria-labelledby="controlpanel-dropdown">
+      <a class="dropdown-item" href="{% url "stafcp_controlpanel" %}">Control panel</a>
+      <p>My permissions:</p>
+      {% for each in PERMISSIONS %}
+        <p>{{ each.relationship.name }}</p>
+      {% endfor %}
+      {% if request.user.is_superuser %}
+        <p>Super user</p>
+      {% endif %}
+    </div>
+  </li>
 {% endif %}

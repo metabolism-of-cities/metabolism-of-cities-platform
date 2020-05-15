@@ -150,6 +150,24 @@ def load_design(context, project=1, webpage=None):
 def is_member(user, group):
     return user.is_superuser or user.groups.filter(name=group).exists()
 
+
+# General script to check if a user has a certain permission
+# This is used for validating access to certain pages only, so superusers
+# will always have access
+def has_permission(request, record_id, allowed_permissions):
+    if request.user.is_authenticated and request.user.is_superuser:
+        return True
+    try:
+        people = request.user.people
+        check = RecordRelationship.objects.filter(
+            relationship__slug__in = permissions,
+            record_parent = request.user.people,
+            record_child_id = record_id,
+        )
+    except:
+        return False
+    return True if check.exists() else False
+
 # If users ARE logged in, but they try to access pages that they don't have
 # access to, then we log this request for further debugging/review
 def unauthorized_access(request):
@@ -671,13 +689,73 @@ def stafcp_upload_gis(request, id=None):
     }
     return render(request, "stafcp/upload/gis.html", load_design(context, PAGE_ID["stafcp"]))
 
+
 @login_required
-def stafcp_controlpanel(request):
+def controlpanel(request):
+    if not has_permission(request, PAGE_ID["stafcp"], ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+    context = {
+    }
+    return render(request, "stafcp/controlpanel/index.html", load_design(context, PAGE_ID["stafcp"]))
+
+@login_required
+def controlpanel_users(request):
+    if not has_permission(request, PAGE_ID["stafcp"], ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
     context = {
         "users": RecordRelationship.objects.filter(record_child_id=PAGE_ID["stafcp"], relationship__is_permission=True),
         "load_datatables": True,
     }
-    return render(request, "stafcp/controlpanel/index.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/controlpanel/users.html", load_design(context, PAGE_ID["stafcp"]))
+
+@login_required
+def controlpanel_design(request):
+
+    project = PAGE_ID["stafcp"]
+    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    info = ProjectDesign.objects.get(pk=project)
+    ModelForm = modelform_factory(
+        ProjectDesign,
+        fields = ("header", "logo", "custom_css", "back_link"),
+    )
+    form = ModelForm(request.POST or None, request.FILES or None, instance=info)
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save()
+            messages.success(request, "The new design was saved")
+
+    context = {
+        "form": form,
+    }
+    return render(request, "stafcp/controlpanel/design.html", load_design(context, PAGE_ID["stafcp"]))
+
+@login_required
+def controlpanel_work(request):
+
+    project = PAGE_ID["stafcp"]
+    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    context = {
+        "users": RecordRelationship.objects.filter(record_child_id=PAGE_ID["stafcp"], relationship__is_permission=True),
+        "load_datatables": True,
+    }
+    return render(request, "stafcp/controlpanel/users.html", load_design(context, PAGE_ID["stafcp"]))
+
+@login_required
+def controlpanel_content(request):
+
+    project = PAGE_ID["stafcp"]
+    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    context = {
+        "pages": Webpage.objects.filter(belongs_to_id=project),
+        "load_datatables": True,
+    }
+    return render(request, "stafcp/controlpanel/content.html", load_design(context, PAGE_ID["stafcp"]))
 
 @login_required
 def stafcp_upload_gis_file(request, id=None):
