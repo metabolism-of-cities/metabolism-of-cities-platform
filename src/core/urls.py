@@ -122,6 +122,7 @@ urlpatterns = [
     path("stafcp/review/processed/", views.stafcp_review_processed, name="stafcp_review_processed"),
     path("stafcp/review/<int:id>/", views.stafcp_review_session, name="stafcp_review_session"),
 
+    path("stafcp/controlpanel/", views.stafcp_controlpanel, name="stafcp_controlpanel"),
     # Podcast
     path("podcast/", views.podcast_series),
 
@@ -129,11 +130,11 @@ urlpatterns = [
     path("community/", views.community),
 
     # Authentication
-    path("register/", views.user_register, name="register"),
-    path("login/", views.user_login, name="login"),
-    path("passwordreset/", views.user_reset, name="passwordreset"),
-    path("logout/", views.user_logout, name="logout"),
-    path("account/profile/", views.user_profile, name="user_profile"),
+    path("accounts/register/", views.user_register, name="register"),
+    path("accounts/login/", views.user_login, name="login"),
+    path("accounts/passwordreset/", views.user_reset, name="passwordreset"),
+    path("accounts/logout/", views.user_logout, name="logout"),
+    path("accounts/profile/", views.user_profile, name="user_profile"),
 
     # MOOC
     path("mooc/<int:id>/<int:module>/overview/", views.mooc_module),

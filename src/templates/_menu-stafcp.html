@@ -76,3 +76,7 @@
 
 
 <li><a href="http://" class="nav-link">About</a></li>
+
+{% if PERMISSIONS %}
+  <li><a href="{% url "stafcp_controlpanel" %}" class="nav-link"><i class="fa fa-tools"></i></a></li>
+{% endif %}

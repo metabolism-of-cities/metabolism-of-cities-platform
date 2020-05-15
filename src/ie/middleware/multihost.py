@@ -16,6 +16,7 @@ class MultiHostMiddleware:
 
     def __call__(self, request):
         host = request.META.get("HTTP_HOST")
+        request.project = 14
         try:
             if host in settings.HOST_URL_LIST:
                 new_urls = settings.HOST_URL_LIST[host]

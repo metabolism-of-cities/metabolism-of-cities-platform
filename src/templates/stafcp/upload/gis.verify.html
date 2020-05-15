@@ -18,7 +18,11 @@
       <a class="nav-link disabled active" href="#">2. Verify data</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link disabled" href="#">3. Enter metadata</a>
+        {% if not error %}
+          <a class="nav-link" href="{% url "stafcp_upload_gis_meta" session.id %}">3. Enter metadata</a>
+        {% else %}
+          <a class="nav-link disabled" href="#">3. Enter metadata</a>
+        {% endif %}
     </li>
   </ul>
   <div class="row">
@@ -46,9 +50,11 @@
             <a href="{% url "stafcp_upload_gis_file" session.id %}" class="btn btn-danger">
               <i class="fas fa-fw fa-arrow-left mr-1"></i> It looks bad, try again
             </a>
+            {% if not error %}
             <a href="{% url "stafcp_upload_gis_meta" session.id %}" class="btn btn-success">
               It looks good <i class="fas fa-fw fa-arrow-right mr-0 ml-1"></i>
             </a>
+            {% endif %}
           </div>
         </div>
       </div>

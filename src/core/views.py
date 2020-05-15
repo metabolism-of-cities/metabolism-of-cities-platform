@@ -672,6 +672,14 @@ def stafcp_upload_gis(request, id=None):
     return render(request, "stafcp/upload/gis.html", load_design(context, PAGE_ID["stafcp"]))
 
 @login_required
+def stafcp_controlpanel(request):
+    context = {
+        "users": RecordRelationship.objects.filter(record_child_id=PAGE_ID["stafcp"], relationship__is_permission=True),
+        "load_datatables": True,
+    }
+    return render(request, "stafcp/controlpanel/index.html", load_design(context, PAGE_ID["stafcp"]))
+
+@login_required
 def stafcp_upload_gis_file(request, id=None):
     session = None
     if id:
@@ -729,6 +737,7 @@ def stafcp_upload_gis_verify(request, id):
         unauthorized_access(request)
     files = UploadFile.objects.filter(session=session)
     geojson = None
+    error = False
     try:
         filename = settings.MEDIA_ROOT + "/" + files[0].file.name
         shape = shapefile.Reader(filename)
@@ -737,9 +746,11 @@ def stafcp_upload_gis_verify(request, id):
         geojson = json.dumps(geojson) 
     except Exception as e:
         messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
+        error = True
     context = {
         "geojson": geojson,
         "session": session,
+        "error": error,
     }
     return render(request, "stafcp/upload/gis.verify.html", load_design(context, PAGE_ID["stafcp"]))
 

@@ -1,0 +1,38 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  {% if not PERMISSIONS %}
+    <div class="alert alert-danger">
+      Sorry, you do not have permission to access this page.
+      <br>
+      User: <strong>{{ request.user }}</strong>
+    </div>
+  {% else %}
+    <h1>Control Panel</h1>
+
+    <ul>
+      <li><a href="{% url "stafcp_review" %}">Our contributors</a></li>
+      <li><a href="{% url "stafcp_review" %}">Work</a></li>
+      <li><a href="{% url "stafcp_review" %}">Website Design</a></li>
+      <li><a href="{% url "stafcp_review" %}">Website Content</a></li>
+    </ul>
+
+    <h2>Our contributors</h2>
+    <table class="table table-striped datatable">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in users %}
+        <tr>
+          <td>{{ each.record_parent }}</td>
+          <td>{{ each.relationship.name }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+{% endblock %}
