@@ -30,9 +30,9 @@ pre {
   padding-bottom: 36px; }
 
 a {
-  color: #144d58; }
+  color: #228496; }
   a:hover {
-    color: #010405;
+    color: #144d58;
     text-decoration: none; }
 
 #admin-controls {
@@ -478,6 +478,7 @@ blockquote {
 .btn-icon {
   background-color: #fff;
   border-radius: .25rem;
+  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
   color: #000;
   cursor: pointer;
   display: block;
@@ -512,6 +513,17 @@ blockquote {
       vertical-align: middle; }
       .card .list-group-item.table-item > div:last-of-type {
         text-align: right; }
+  .card.icon-card {
+    height: 100%; }
+    .card.icon-card .icon {
+      font-size: 4rem;
+      text-align: center;
+      padding: 1rem 0;
+      background-color: rgba(20, 77, 88, 0.25);
+      border-top-left-radius: .25rem;
+      border-top-right-radius: .25rem; }
+    .card.icon-card .card-header {
+      text-align: center; }
 
 .contribute.card {
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
@@ -761,20 +773,6 @@ body.homepage .projects .btn-card {
     border-bottom-left-radius: .25rem;
     border-bottom-right-radius: .25rem; }
 
-body.homepage section.what .card {
-  height: 100%; }
-
-body.homepage section.what .icon {
-  font-size: 4rem;
-  text-align: center;
-  padding: 1rem 0;
-  background-color: rgba(20, 77, 88, 0.25);
-  border-top-left-radius: .25rem;
-  border-top-right-radius: .25rem; }
-
-body.homepage section.what .card-header {
-  text-align: center; }
-
 body.projects .card .card-img-top, body.single-project .card .card-img-top {
   padding: 1.25rem; }
 
@@ -957,6 +955,9 @@ body.dataset #tab-chart #chart {
 body.dataset #tab-chart .highcharts-title,
 body.dataset #tab-chart .highcharts-subtitle {
   display: none; }
+
+body.dataset #tab-data .fa-spin {
+  animation: fa-spin 1s linear infinite; }
 
 body.dataset .rating .number {
   display: inline-block;
@@ -1432,3 +1433,15 @@ body.geocode.form .levels input {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   width: calc(100% - 5rem - 5px); }
+
+body.stafcp.controlpanel .icon-card .card-header {
+  border-bottom-left-radius: .25rem;
+  border-bottom-right-radius: .25rem; }
+
+body.stafcp.design textarea#id_custom_css {
+  white-space: pre;
+  font-family: "Ubuntu Mono", "Fira Mono", "Liberation Mono", "Courier New", monospace; }
+
+body.stafcp.workgrid .btn-filter {
+  white-space: nowrap;
+  height: 38px; }
