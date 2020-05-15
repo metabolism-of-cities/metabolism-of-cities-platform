@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% load humanize %}
 
 {% block content %}
 
@@ -12,11 +13,10 @@
       <li><strong>3432</strong> uploads all-time</li>
     </ul>
 
-    <table class="table table-striped">
+    <table class="table table-striped datatable">
       <thead>
         <tr>
           <th>ID</th>
-          <th>User</th>
           <th>Name</th>
           <th>Date</th>
           <th>Options</th>
@@ -25,10 +25,9 @@
       <tbody>
       {% for each in list %}
         <tr>
-          <td>{{ each.id }}</td>
-          <td>{{ each.user }}</td>
-          <td>{{ each.name }}</td>
-          <td>{{ each.date_created }}</td>
+          <td><code>{{ each.id }}</code></td>
+          <td>{{ each.related_to }}</td>
+          <td data-sort="{{ each.date_created|date:"U" }}">{{ each.date_created|naturaltime }}</td>
           <td>
             <a href="{% url "stafcp_review_session" each.id %}">View</a> | 
             <a href="http://">Work on this</a>

@@ -662,8 +662,10 @@ def stafcp_review_pending(request):
     return render(request, "stafcp/review/files.pending.html", load_design(context, PAGE_ID["stafcp"]))
 
 def stafcp_review_uploaded(request):
+
     context = {
-        "list": UploadSession.objects.filter(),
+        "list": Work.objects.filter(status=Work.WorkStatus.OPEN, part_of_project_id=PAGE_ID["stafcp"], workactivity_id=2),
+        "load_datatables": True,
     }
     return render(request, "stafcp/review/files.uploaded.html", load_design(context, PAGE_ID["stafcp"]))
 
@@ -691,6 +693,7 @@ def stafcp_upload_gis(request, id=None):
 @login_required
 def stafcp_upload_gis_file(request, id=None):
     session = None
+    project = PAGE_ID["stafcp"]
     if id:
         # Add validation code here
         session = get_object_or_404(UploadSession, pk=id)
@@ -701,7 +704,14 @@ def stafcp_upload_gis_file(request, id=None):
                 user=request.user,
                 name=request.POST.get("name"), 
                 type="shapefile",
-                part_of_project_id = PAGE_ID["stafcp"],
+                part_of_project_id = project,
+            )
+            Work.objects.create(
+                status = Work.WorkStatus.PROGRESS,
+                part_of_project_id = project,
+                workactivity_id = 1,
+                related_to = session,
+                assigned_to = request.user.people,
             )
         elif "name" in request.POST:
             session.name = request.POST.get("name")
@@ -772,6 +782,20 @@ def stafcp_upload_gis_meta(request, id):
         session.meta_data = request.POST
         session.save()
         messages.success(request, "Thanks, the information has been uploaded! Our review team will review and process your information.")
+
+        # We mark the uploading work as completed
+        work = Work.objects.get(related_to=session, workactivity_id=1)
+        work.status = Work.WorkStatus.COMPLETED
+        work.save()
+
+        # And we create a new task to process the shapefile
+        Work.objects.create(
+            status = Work.WorkStatus.OPEN,
+            part_of_project_id = work.part_of_project,
+            workactivity_id = 2,
+            related_to = session,
+        )
+
         return redirect("stafcp_upload")
     context = {
         "session": session,
@@ -1025,19 +1049,6 @@ def controlpanel_design(request):
     return render(request, "stafcp/controlpanel/design.html", load_design(context, PAGE_ID["stafcp"]))
 
 @login_required
-def controlpanel_work(request):
-
-    project = PAGE_ID["stafcp"]
-    if not has_permission(request, project, ["curator", "admin", "publisher"]):
-        unauthorized_access(request)
-
-    context = {
-        "users": RecordRelationship.objects.filter(record_child_id=PAGE_ID["stafcp"], relationship__is_permission=True),
-        "load_datatables": True,
-    }
-    return render(request, "stafcp/controlpanel/users.html", load_design(context, PAGE_ID["stafcp"]))
-
-@login_required
 def controlpanel_content(request):
 
     project = PAGE_ID["stafcp"]
@@ -1052,7 +1063,7 @@ def controlpanel_content(request):
 
 def work_grid(request):
     project = PAGE_ID["stafcp"]
-    list = Work.objects.filter(part_of_project_id=8)
+    list = Work.objects.filter(part_of_project_id=project)
     if request.GET.get("status"):
         list = list.filter(status=request.GET["status"])
     if request.GET.get("priority"):
