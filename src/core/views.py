@@ -1673,18 +1673,19 @@ def pdf(request):
 
 def socialmedia(request, type):
     list = SocialMedia.objects.filter(published=False, platform=type)
+    response = ""
     for each in list:
         # send to api here
         success = False
         if type == "facebook":
-            fb_access_token = "EAAIneQS0vP0BAMyvUXkVv5dGjosVkcjdQs1YYRw6qZBX6FwlxBPgskZBLZCqnRNB1Egfe7toNtAiZCEvL18N03q92C9gyn2R1C7YMNSIB7XcYD6fZAu1VSviXxjx30pSzr7oRlBBif6EwSgRxPvL6kOqX0bxO9DPQj6kUQKZCUqAn7V0rXd4ehycqsNSE9hZBo5VZBKTL7HrkjIgajr17cYM"
+            fb_access_token = "EAAIneQS0vP0BAIDanGZAH72CLHaYALhqsPplkaZBZCXzK2TS1TtIuZB8IMaiv116YmYlxUj8lHWm89B27DupaQg6JoKc87DhA9och4NG0LQ2ZBZAdicGd0qnVt49P4opLP2W0Lq8ONRltBzWkzT0UVFk34GgqhDWR2xzckd6KkwBOQVax3XK2Op8zkg8L0kpxTfXp6LWprzfjEBEJa3iao"
             graph = facebook.GraphAPI(access_token=fb_access_token, version="2.12")
             message = each.blurb
             try:
-                response = graph.put_object(parent_object='me', connection_name='feed', message=message)
+                graph.put_object(parent_object='me', connection_name='feed', message=message)
+                success = True
             except Exception as e:
-                raise e
-            response = "response-from-api"
+                response = e
         elif type == "twitter":
             message = each.blurb
             response = "response-from-api"
