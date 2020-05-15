@@ -1214,7 +1214,7 @@ def multimedia(request):
     webpage = get_object_or_404(Project, pk=PAGE_ID["multimedia_library"])
     videos = Video.objects.all().order_by("-date_created")[:5]
     podcasts = LibraryItem.objects.filter(type__name="Podcast").order_by("-date_created")[:5]
-    dataviz = LibraryItem.objects.filter(type__name="Image").order_by("-date_created")[:5]
+    dataviz = LibraryItem.objects.filter(type__name="Data visualisation").order_by("-date_created")[:5]
     context = {
         "edit_link": "/admin/core/project/" + str(webpage.id) + "/change/",
         "show_project_design": True,
@@ -1255,7 +1255,7 @@ def podcast(request, id):
 def dataviz_list(request):
     context = {
         "info": get_object_or_404(Webpage, pk=67),
-        "list": LibraryItem.objects.filter(type__name="Image"),
+        "list": LibraryItem.objects.filter(type__name="Data visualisation"),
     }
     return render(request, "multimedia/dataviz.list.html", load_design(context, PAGE_ID["multimedia_library"]))
 
