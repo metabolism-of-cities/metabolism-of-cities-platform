@@ -1152,20 +1152,12 @@ table thead th {
 // PAGES
 // HOMEPAGE
 body.homepage {
-  .jumbotron {
-    padding-bottom: 17rem;
-  }
-
   .projects {
-    &.featured-projects{
-      margin-top: -13rem;
-    }
-
     .btn-card {
       padding: .5rem;
 
       img  {
-        height: 400px;
+        height: 300px;
         max-height: 80vh;
       }
 
@@ -1175,7 +1167,7 @@ body.homepage {
         bottom: 0;
         padding: 1rem 0;
         color: $very-light;
-        background-color: rgba($black, .85);
+        background-color: rgba($primary, .75);
         width: 100%;
         margin-left: -.5rem;
         text-align: center;
@@ -2202,6 +2194,7 @@ body.stafcp.controlpanel {
   .icon-card .card-header {
     border-bottom-left-radius: .25rem;
     border-bottom-right-radius: .25rem;
+    height: 100%;
   }
 }
 

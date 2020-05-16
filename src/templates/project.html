@@ -36,15 +36,15 @@
         </li>
         {% endif %}
         <li class="list-group-item">
-          <i class="far fa-fw fa-calendar"></i> 
+          <i class="far fa-fw fa-calendar"></i>
             <strong>Start</strong>: {{ info.start_date|date:"Y" }}
         </li>
         <li class="list-group-item">
-          <i class="far fa-fw fa-play"></i> 
+          <i class="far fa-fw fa-play"></i>
           <strong>Status</strong>: {{ info.get_status_display }}
         </li>
         <li class="list-group-item">
-          <i class="far fa-fw fa-cabinet-filing"></i> 
+          <i class="far fa-fw fa-cabinet-filing"></i>
           <strong>Type</strong>: <a href="">Online tools and platforms</a>
         </li>
         {% if info.id != 20 and info.id != 21 and False %}
@@ -82,7 +82,10 @@
       {% endif %}
 
       {% if info.url %}
-        <p><a href="{{ info.url }}" class="btn btn-primary">Project website</a></p>
+        <a href="{{ info.url }}" class="btn btn-primary">
+          <i class="fas fa-browser"></i>
+          Project website
+        </a>
       {% endif %}
 
     </div>

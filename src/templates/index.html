@@ -8,20 +8,12 @@
 
 {% block subtitle %}Hello{% endblock %}
 
-{% block css %}
-<style type="text/css">
-body.homepage .projects.featured-projects {
-margin-top:20px
-}
-</style>
-{% endblock %}
-
 {% block content %}
 
 <section class="what">
   <h3>What we do</h3>
   <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-3 mb-4">
       <div class="card icon-card">
         <div class="icon">
           <i class="far fa-fw fa-file-chart-line"></i>
@@ -34,7 +26,7 @@ margin-top:20px
         </div>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3 mb-4">
       <div class="card icon-card">
         <div class="icon">
           <i class="far fa-fw fa-share-alt"></i>
@@ -47,7 +39,7 @@ margin-top:20px
         </div>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3 mb-4">
       <div class="card icon-card">
         <div class="icon">
           <i class="far fa-fw fa-wrench"></i>
@@ -60,7 +52,7 @@ margin-top:20px
         </div>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3 mb-4">
       <div class="card icon-card">
         <div class="icon">
           <i class="far fa-fw fa-user-friends"></i>
@@ -76,10 +68,10 @@ margin-top:20px
   </div>
 </section>
 
-<h2>Our projects</h2>
 
 <section class="extra">
-  <div class="row eatured-projects projects">
+  <h2>Our projects</h2>
+  <div class="row projects">
     <div class="col-lg-6 mb-4">
       <a class="card btn-card" href="/projects/2/">
         <img src="https://i.imgur.com/gLambfD.png" class="card-img-top" alt="...">
@@ -92,11 +84,6 @@ margin-top:20px
         <h5 class="card-title">MultipliCity Data Hub</h5>
       </a>
     </div>
-  </div>
-</section>
-
-<section class="extra">
-  <div class="row projects">
     <div class="col-lg-6 mb-4">
       <a class="card btn-card" href="/projects/2/">
         <img src="https://i.imgur.com/tRwcUEV.png" class="card-img-top" alt="...">
