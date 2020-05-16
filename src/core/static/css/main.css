@@ -516,6 +516,7 @@ blockquote {
   .card.icon-card {
     height: 100%; }
     .card.icon-card .icon {
+      height: 128px;
       font-size: 4rem;
       text-align: center;
       padding: 1rem 0;

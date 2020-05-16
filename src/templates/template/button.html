@@ -4,6 +4,8 @@
   {% block title %}Icon buttons{% endblock %}
   {% block content %}
 
+  <h3>Defining buttons</h3>
+
   <a class="btn btn-primary" href="">btn btn-primary</a>
   <a class="btn btn-primary-outline" href="">btn btn-primary-outline</a>
   <a class="btn btn-primary-basic" href="">btn btn-primary-basic</a>
@@ -28,13 +30,66 @@
     <a class="btn btn-inverse-basic" href="">btn btn-inverse-basic</a>
   </div>
 
+  <h3 class="mt-4">Using buttons</h3>
+
+  <div class="alert alert-light mt-4">
+    <ul class="mb-0">
+      <li>Use an icon on buttons, unless it's not possible or if the button is being used as a tag / category link</li>
+      <li>Use solid icons (<code>fas</code>) on solid buttons</li>
+      <li>Light icons (<code>fal</code>) on basic and outline buttons</li>
+      <li>Use solid buttons for key actions like saving, submitting, or deleting</li>
+      <li>Basic and outline buttons are for secondary actions</li>
+      <ul>
+        <li>Basic buttons are preferred</li>
+        <li>Outline buttons are useful in groups and as a clickable tag or category</li>
+      </ul>
+    </ul>
+  </div>
+
+  <a class="btn btn-primary" href=""><i class="fas fa-save"></i> Save</a>
+  <a class="btn btn-danger" href=""><i class="fas fa-times"></i> Cancel</a>
+  <a class="btn btn-default-basic" href=""><i class="fal fa-plus"></i> Add</a>
+  <a class="btn btn-default-basic" href=""><i class="fal fa-edit"></i> Edit</a>
+  <a class="btn btn-default-basic" href=""><i class="fal fa-folder-open"></i> Open</a>
 
   <br><br>
 
-  <a class="btn btn-success" href=""><i class="fas fa-save"></i> Save</a>
-  <a class="btn btn-danger" href=""><i class="fas fa-times"></i> Cancel</a>
-  <a class="btn btn-default-basic" href=""><i class="fas fa-plus"></i> Add</a>
-  <a class="btn btn-default-basic" href=""><i class="fas fa-edit"></i> Edit</a>
-  <a class="btn btn-default-basic" href=""><i class="fas fa-folder-open"></i> Open</a>
+  <a href="" class="btn btn-primary-basic">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
 
+  <br><br>
+
+  <div class="row">
+    <div class="col-lg-4">
+      <div class="card basic-info">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i>
+            Managua, Nicaragua
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i>
+            10 May - 15 May
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Type of event
+            <br>
+            <a class="btn btn-sm btn-primary-outline mt-1" href="">Conference</a>
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-share-alt mb-1 mr-1" aria-hidden="true"></i> Share
+            <br>
+            <div class="btn-group share mt-1" role="group">
+              <a class="btn btn-sm btn-primary-outline"><i class="fab fa-fw mr-0 fa-twitter"></i></a>
+              <a class="btn btn-sm btn-primary-outline"><i class="fab fa-fw mr-0 fa-linkedin-in"></i></a>
+              <a class="btn btn-sm btn-primary-outline"><i class="fab fa-fw mr-0 fa-facebook-f"></i></a>
+              <a class="btn btn-sm btn-primary-outline"><i class="fas fa-fw mr-0 fa-envelope"></i></a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
   {% endblock %}
