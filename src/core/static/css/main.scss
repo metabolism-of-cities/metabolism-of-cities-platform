@@ -1922,19 +1922,20 @@ body.dataviz {
 body.our-story {
   .timeline {
     position: relative;
-    padding-left: 30px;
+    padding-left: 60px;
     display: none;
 
-    &:before {
-      content: ' ';
+    &::before {
+      content: " ";
       background: $light;
       display: inline-block;
       position: absolute;
-      left: 9px;
+      left: 29px;
       width: 2px;
       height: 100%;
       z-index: 400;
     }
+
 
     > .single-entry {
       padding: 1rem;
@@ -1943,17 +1944,27 @@ body.our-story {
       border-radius: .25rem;
       box-shadow: $basic-shadow;
 
-      &:before {
-        content: " ";
-        background: $white;
+      &::before {
+        font-family: "Font Awesome 5 Pro";
+        background: $very-light;
+        color: $primary;
         display: inline-block;
+        font-size: 25px;
+        height: 40px;
+        left: 10px;
+        margin-top: -5px;
         position: absolute;
-        border-radius: 50%;
-        border: 6px solid $primary;
-        left: 0;
-        width: 20px;
-        height: 20px;
+        text-align: center;
+        width: 40px;
         z-index: 400;
+      }
+
+      &.people::before {
+        content: "\f0c0"
+      }
+
+      &.message::before {
+        content: "\f0e0"
       }
     }
 
