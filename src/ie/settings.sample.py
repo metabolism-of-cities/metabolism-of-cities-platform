@@ -71,6 +71,18 @@ PROJECT_LIST = {
 INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'stafdb.apps.StafdbConfig',
+    'library.apps.LibraryConfig',
+    'multimedia.apps.MultimediaConfig',
+    'data.apps.DataConfig',
+    'seminarseries.apps.SeminarseriesConfig',
+    'ascus.apps.AscusConfig',
+    'mooc.apps.MoocConfig',
+    'staf.apps.StafConfig',
+    'omat.apps.OmatConfig',
+    'platformu.apps.PlatformuConfig',
+    'islands.apps.IslandsConfig',
+    'community.apps.CommunityConfig',
+    'podcast.apps.PodcastConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -85,8 +97,8 @@ INSTALLED_APPS = [
     'bootstrap4',
     'tinymce',
     'anymail',
-    'debug_toolbar',
     'django.contrib.humanize',
+#    'debug_toolbar',
 ]
 
 # When importing data please deactivate the DebugToolbar, otherwise
