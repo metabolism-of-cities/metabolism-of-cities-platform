@@ -2,16 +2,28 @@
 
 {% block content %}
   <h1>Send mail</h1>
-  <p>Your mail will be sent to:</p>
-  <ul>
-    <li>Fulano &laquo;info@test.com&raquo;</li>
-    <li>Fulano &laquo;info2@test.com&raquo;</li>
-    <li>Fulano &laquo;info3@test.com&raquo;</li>
-    <li>Fulano &laquo;info4@test.com&raquo;</li>
-  </ul>
+    <p>Your mail will be sent to:</p>
 
-  <h2>Write mail</h2>
-  <textarea class="form-control" style="height:500px"></textarea>
-  <button type="submit">Send</button>
-  <button type="submit">Send preview to myself</button>
+    {% if not list.count %}
+      <p>No people selected</p>
+    {% else %}
+      <ul>
+        {% if list %}
+          {% for each in list %}
+            <li {% if not each.email %} class="text-danger" {% endif %}>{{ each.firstname }} {% if each.email %}&laquo;{{ each.email }}&raquo;{% endif %}</li>
+          {% endfor %}
+        {% endif %}
+      </ul>
+
+      <h2>Write mail</h2>
+      <form method="post">
+        {% csrf_token %}
+        Subject: 
+        <input type="text" name="subject" required />
+        <br>
+        <textarea name="content" class="form-control" style="height:500px" required></textarea>
+        <button type="submit" name="send">Send</button>
+        <button type="submit" name="send_preview">Send preview to myself</button>
+      </form>
+    {% endif %}
 {% endblock %}
