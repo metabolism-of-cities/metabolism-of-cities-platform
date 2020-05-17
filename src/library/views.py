@@ -18,14 +18,14 @@ def index(request):
     }
     return render(request, "library/browse.html", context)
 
-def library_search(request, article):
+def search(request, article):
     info = get_object_or_404(Webpage, pk=article)
     context = {
         "article": info,
     }
     return render(request, "library/search.html", context)
 
-def library_download(request):
+def download(request):
     info = get_object_or_404(Webpage, pk=PAGE_ID["library"])
     context = {
         "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
@@ -34,7 +34,7 @@ def library_download(request):
     }
     return render(request, "article.html", context)
 
-def library_casestudies(request, slug=None):
+def casestudies(request, slug=None):
     list = LibraryItem.objects.filter(status="active", tags__id=TAG_ID["case_study"])
     totals = None
     page = "casestudies.html"
@@ -49,7 +49,7 @@ def library_casestudies(request, slug=None):
     }
     return render(request, "library/" + page, context)
 
-def library_journals(request, article):
+def journals(request, article):
     info = get_object_or_404(Webpage, pk=article)
     list = Organization.objects.prefetch_related("parent_to").filter(type="journal")
     context = {
@@ -58,7 +58,7 @@ def library_journals(request, article):
     }
     return render(request, "library/journals.html", context)
 
-def library_journal(request, slug):
+def journal(request, slug):
     info = get_object_or_404(Organization, type="journal", slug=slug)
     context = {
         "info": info,
@@ -66,7 +66,7 @@ def library_journal(request, slug):
     }
     return render(request, "library/journal.html", context)
 
-def library_item(request, id):
+def item(request, id):
     info = get_object_or_404(LibraryItem, pk=id)
     section = "library"
     if info.type.group == "multimedia":
@@ -76,7 +76,7 @@ def library_item(request, id):
     }
     return render(request, "library/item.html", context)
 
-def library_map(request, article):
+def map(request, article):
     info = get_object_or_404(Webpage, pk=article)
     items = LibraryItem.objects.filter(status="active", tags__id=TAG_ID["case_study"])
     context = {
@@ -85,7 +85,7 @@ def library_map(request, article):
     }
     return render(request, "library/map.html", context)
 
-def library_authors(request):
+def authors(request):
     info = get_object_or_404(Webpage, pk=PAGE_ID["library"])
     context = {
         "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
@@ -94,7 +94,7 @@ def library_authors(request):
     }
     return render(request, "article.html", context)
 
-def library_contribute(request):
+def contribute(request):
     info = get_object_or_404(Webpage, pk=PAGE_ID["library"])
     context = {
         "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",

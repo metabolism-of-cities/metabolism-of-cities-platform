@@ -6,6 +6,8 @@ from django.views.generic.base import RedirectView
 
 from . import views
 
+app_name = "core"
+
 urlpatterns = [
 
     # Homepage
@@ -28,15 +30,6 @@ urlpatterns = [
     # About pages
     path("about/", views.article_list, { "id": 31 }, name="about"),
     path("about/<slug:slug>/", views.article, { "prefix": "/about/" }, name="about"),
-
-    # Multimedia Library
-    path("multimedia/", views.multimedia, name="multimedia"),
-    path("multimedia/videos/", views.video_list, name="video_list"),
-    path("multimedia/videos/<int:id>/", views.video, name="video"),
-    path("multimedia/podcasts/", views.podcast_list, name="podcast_list"),
-    #path("multimedia/podcasts/<int:id>/", views.library_item, name="podcast"),
-    path("multimedia/datavisualizations/", views.dataviz_list, name="dataviz_list"),
-    path("multimedia/datavisualizations/<int:id>/", views.dataviz, name="dataviz"),
 
     # MultipliCity
     path("data/", views.datahub, name="datahub"),

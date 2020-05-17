@@ -14,7 +14,7 @@ body.homepage section.what .card{height:auto}
   <div class="row">
 
     <div class="col-md-3">
-      <a class="card icon-card btn-card" href="/account/admin/participant/">
+      <a class="card icon-card btn-card" href="{% url "ascus:admin_list" "participant" %}">
         <div class="icon">
           <i class="far fa-fw fa-users"></i>
         </div>
@@ -23,7 +23,7 @@ body.homepage section.what .card{height:auto}
     </div>
 
     <div class="col-md-3">
-      <a class="card icon-card btn-card" href="/account/admin/payments/">
+      <a class="card icon-card btn-card" href="{% url "ascus:admin_payments" %}">
         <div class="icon">
           <i class="far fa-fw fa-money-check-alt"></i>
         </div>
@@ -32,7 +32,7 @@ body.homepage section.what .card{height:auto}
     </div>
 
     <div class="col-md-3">
-      <a class="card icon-card btn-card" href="/account/admin/documents/introvideos/">
+      <a class="card icon-card btn-card" href="{% url "ascus:admin_documents" "introvideos" %}">
         <div class="icon">
           <i class="far fa-fw fa-presentation"></i>
         </div>
@@ -41,7 +41,7 @@ body.homepage section.what .card{height:auto}
     </div>
 
     <div class="col-md-3">
-      <a class="card icon-card btn-card" href="/account/admin/documents/topics/">
+      <a class="card icon-card btn-card" href="{% url "ascus:admin_documents" "topics" %}">
         <div class="icon">
           <i class="far fa-fw fa-users-class"></i>
         </div>

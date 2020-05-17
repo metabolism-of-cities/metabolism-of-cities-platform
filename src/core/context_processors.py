@@ -7,16 +7,19 @@ def site(request):
     site = Site.objects.get_current()
     permissions = project = None
 
-    if request.user.is_authenticated and request.user.people and hasattr(request, "project"):
-        people = request.user.people
+    if hasattr(request, "project"):
         project = Project.objects.get(pk=request.project)
+    else:
+        project = 1
+
+    if request.user.is_authenticated and request.user.people:
+        people = request.user.people
         permissions = RecordRelationship.objects.filter(
             record_parent_id = request.user.people.id, 
             record_child = project, 
             relationship__is_permission = True
         )
 
-    project = project if project else 1
     design = ProjectDesign.objects.select_related("project").get(pk=project)
 
     return {

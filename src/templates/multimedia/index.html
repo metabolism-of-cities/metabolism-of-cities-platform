@@ -5,7 +5,7 @@
 {% block content %}
   <h1>{{ webpage }}</h1>
 
-  {{ webpage.content|safe }}
+  {{ webpage.description|safe }}
 
   <h2>Latest additions</h2>
 
@@ -24,7 +24,7 @@
           {% endfor %}
         </ul>
       </div>
-      <a class="btn btn-primary mb-4" href="{% url 'video_list' %}">
+      <a class="btn btn-primary mb-4" href="{% url "multimedia:video_list" %}">
         <i class="fas fa-fw fa-list"></i>
         All videos
       </a>
@@ -43,7 +43,7 @@
           {% endfor %}
         </ul>
       </div>
-      <a class="btn btn-primary mb-4" href="{% url 'podcast_list' %}">
+      <a class="btn btn-primary mb-4" href="{% url "multimedia:podcast_list" %}">
         <i class="fas fa-fw fa-list"></i>
         All podcasts
       </a>
@@ -62,7 +62,7 @@
           {% endfor %}
         </ul>
       </div>
-      <a class="btn btn-primary" href="{% url 'dataviz_list' %}">
+      <a class="btn btn-primary" href="{% url "multimedia:dataviz_list" %}">
         <i class="fas fa-fw fa-list"></i>
         All data visualisations
       </a>

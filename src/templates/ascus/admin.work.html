@@ -14,7 +14,7 @@
     <tbody>
       {% for each in list %}
         <tr>
-          <td><a href="/account/admin/payments/{{ each.id }}/">{{ each.related_to }}</a></td>
+          <td><a href="{% url "ascus:admin_payment" each.id %}">{{ each.related_to }}</a></td>
           <td data-sort="{{ each.date_created|date:"YmdHis" }}">{{ each.date_created }}</td>
           <td>{{ each.description|linebreaksbr }}</td>
           <td>{{ each.get_status_display }}</td>
@@ -23,6 +23,6 @@
     </tbody>
   </table>
 
-  <p class="mt-5"><a href="/account/admin/" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a></p>
+  <p class="mt-5"><a href="{% url "ascus:admin" %}" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a></p>
 
 {% endblock %}

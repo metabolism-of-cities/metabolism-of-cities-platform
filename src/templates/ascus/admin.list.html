@@ -5,7 +5,7 @@
   <ul class="nav nav-tabs">
     {% for key,value in types.items %}
     <li class="nav-item">
-      <a class="nav-link {% if type == key %}active{% endif %}" href="/account/admin/{{ key }}/">{{ value }}</a>
+      <a class="nav-link {% if type == key %}active{% endif %}" href="{% url "ascus:admin_list" key %}">{{ value }}</a>
     </li>
     {% endfor %}
   </ul>
@@ -28,6 +28,6 @@
     </tbody>
   </table>
 
-  <p class="mt-5"><a href="/account/admin/" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a></p>
+  <p class="mt-5"><a href="{% url "ascus:admin" %}" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a></p>
 
 {% endblock %}

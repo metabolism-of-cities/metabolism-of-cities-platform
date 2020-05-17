@@ -1,78 +1,83 @@
 {% load static %}
-{% if project.id == 8 %}
-<footer id="involved">
-  <div class="container pt-4 pb-4">
-    <div class="row">
-      <div class="col-8">
-        <h2>Join AScUS!</h2>
-        <p class="mb-4">Sign up before May 25.</p>
-        <a class="btn btn-inverse mt-2 mr-3" href="/register/">Register now</a>
-        <a class="btn btn-inverse mt-2 mr-3" href="/login/">Already registered? Log in</a>
-      </div>
-      <div class="col-4">
-        <p>Virtually hosted by:</p>
-        <p class="logos">
-          <img src="/media/records/05_Architecture_H_300.jpg" alt="" />
-          <img src="/media/records/CFSC_IE_Logos-with_Clear_2.png" alt="" />
-        </p>
-      </div>
-    </div>
 
-  </div>
-</footer>
+{% if PROJECT.id == 8 %}
+
+  <footer id="involved">
+    <div class="container pt-4 pb-4">
+      <div class="row">
+        <div class="col-8">
+          <h2>Join AScUS!</h2>
+          <p class="mb-4">Sign up before May 25.</p>
+          <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus:register" %}">Register now</a>
+          <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus:login" %}">Already registered? Log in</a>
+        </div>
+        <div class="col-4">
+          <p>Virtually hosted by:</p>
+          <p class="logos">
+            <img src="/media/records/05_Architecture_H_300.jpg" alt="" />
+            <img src="/media/records/CFSC_IE_Logos-with_Clear_2.png" alt="" />
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
 {% else %}
-<footer id="involved">
-  <div class="container pt-4 pb-4">
-    <div class="row">
-      <div class="col-8">
-        <h2>This is an open source, community effort</h2>
-        <h3 class="mb-3">Join us now!</h3>
-        <a class="btn btn-inverse mt-2 mr-3" href="/register/">Become a contributor</a>
-        <a class="btn btn-inverse mt-2 mr-3" href="/login/">Support this project</a>
-        <a class="btn btn-inverse-outline mt-2 mr-3" href="/login/">View open tasks</a>
+
+  <footer id="involved">
+    <div class="container pt-4 pb-4">
+      <div class="row">
+        <div class="col-8">
+          <h2>This is an open source, community effort</h2>
+          <h3 class="mb-3">Join us now!</h3>
+          <a class="btn btn-inverse mt-2 mr-3" href="/register/">Become a contributor</a>
+          <a class="btn btn-inverse mt-2 mr-3" href="/login/">Support this project</a>
+          <a class="btn btn-inverse-outline mt-2 mr-3" href="/login/">View open tasks</a>
+        </div>
       </div>
+
     </div>
+  </footer>
+  <footer id="sitemap">
+    <div class="container">
 
-  </div>
-</footer>
-<footer id="sitemap">
-  <div class="container">
+      <h3 style="text-align:center;padding-bottom:25px">Explore our projects</h3>
+      {% include "_project-menu.html" %}
+      
+    </div>
+  </footer>
+  <footer id="info">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <div class="links">
+            <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="mb-2">
+              <i class="fab fa-creative-commons"></i> Creative Commons Attribution 4.0 International license
+            </a>
+            <a href="https://gitlab.com/metabolism-of-cities/metabolism-of-cities-platform" class="mb-2">
+              <i class="fab fa-gitlab"></i> Our source code is available on Gitlab
+            </a>
+            <a href="#">
+              <i class="fas fa-comments"></i> Contact us
+            </a>
+          </div>
+          <div class="social mt-4 mb-2">
+            <a href="https://twitter.com/CityMetabolism"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.youtube.com/metabolismofcities"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.instagram.com/MetabolismOfCities/"><i class="fab fa-instagram"></i></a>
+            <a href="https://linkedin.com/company/metabolism-of-cities"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+        <div class="col-md-6 logos text-md-right">
+          <a href="#"><img class="main-logo mb-4" alt="Metabolism of Cities" class="mb-4" src="{% static 'img/logo.svg' %}"></a>
+          <br>
+          <strong>Visit our twin site</strong>
+          <br>
+          <a href="#"><img class="second-logo" alt="Metabolism of Islands" src="{% static 'img/islands-logo.svg' %}"></a>
+        </div>
+     </div>
+    </div>
+  </footer>
 
-    <h3 style="text-align:center;padding-bottom:25px">Explore our projects</h3>
-    {% include "_project-menu.html" %}
-    
-  </div>
-</footer>
-<footer id="info">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6 mb-4">
-        <div class="links">
-          <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="mb-2">
-            <i class="fab fa-creative-commons"></i> Creative Commons Attribution 4.0 International license
-          </a>
-          <a href="https://gitlab.com/metabolism-of-cities/metabolism-of-cities-platform" class="mb-2">
-            <i class="fab fa-gitlab"></i> Our source code is available on Gitlab
-          </a>
-          <a href="#">
-            <i class="fas fa-comments"></i> Contact us
-          </a>
-        </div>
-        <div class="social mt-4 mb-2">
-          <a href="https://twitter.com/CityMetabolism"><i class="fab fa-twitter"></i></a>
-          <a href="https://www.youtube.com/metabolismofcities"><i class="fab fa-youtube"></i></a>
-          <a href="https://www.instagram.com/MetabolismOfCities/"><i class="fab fa-instagram"></i></a>
-          <a href="https://linkedin.com/company/metabolism-of-cities"><i class="fab fa-linkedin"></i></a>
-        </div>
-      </div>
-      <div class="col-md-6 logos text-md-right">
-        <a href="#"><img class="main-logo mb-4" alt="Metabolism of Cities" class="mb-4" src="{% static 'img/logo.svg' %}"></a>
-        <br>
-        <strong>Visit our twin site</strong>
-        <br>
-        <a href="#"><img class="second-logo" alt="Metabolism of Islands" src="{% static 'img/islands-logo.svg' %}"></a>
-      </div>
-   </div>
-  </div>
-</footer>
 {% endif %}

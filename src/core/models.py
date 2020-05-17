@@ -134,6 +134,12 @@ class Project(Record):
     def get_absolute_url(self):
         return reverse("project", args=[self.id])
 
+    def get_website(self):
+        if self.has_subsite:
+            return "/" + self.slug + "/"
+        else:
+            return reverse("core:project", args=[self.id])
+
     def get_image(self):
         if self.image:
             return self.image
@@ -335,7 +341,7 @@ class People(Record):
     def __str__(self):
         return self.name
     def get_absolute_url(self):
-        return reverse("person", args=[self.id])
+        return reverse("community:person", args=[self.id])
     class Meta:
         verbose_name_plural = "people"
         ordering = ["name"]

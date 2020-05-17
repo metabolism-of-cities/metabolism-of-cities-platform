@@ -99,7 +99,7 @@
     {% endif %}
 
     {% if request.user.is_authenticated and request.user.is_ascus_organizer %}
-      <a class="btn btn-info" href="/account/admin/"><i class="fas fa-user-lock fa-fw"></i> AScUS Admin</a>
+      <a class="btn btn-info" href="{% url "ascus:admin" %}"><i class="fas fa-user-lock fa-fw"></i> AScUS Admin</a>
     {% endif %}
 
   </div>

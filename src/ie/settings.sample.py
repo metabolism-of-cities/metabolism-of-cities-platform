@@ -51,6 +51,21 @@ PROJECT_ID_LIST = {
     "podcast": 3458,
 }
 
+PROJECT_LIST = {
+    "library": { "id": 2, "url": "library/" },
+    "multimedia": { "id": 3, "url": "multimedia/" },
+    "data": { "id": 4, "url": "data/" },
+    "seminarseries": { "id": 7, "url": "seminarseries/" },
+    "ascus": { "id": 8, "url": "ascus/" },
+    "mooc": { "id": 11, "url": "mooc/" },
+    "staf": { "id": 14, "url": "staf/" },
+    "omat": { "id": 15, "url": "omat/" },
+    "platformu": { "id": 16, "url": "platformu/" },
+    "islands": { "id": 17, "url": "islands/" },
+    "community": { "id": 18, "url": "community/" },
+    "podcast": { "id": 3458, "url": "podcast/" },
+}
+
 # Application definition
 
 INSTALLED_APPS = [
