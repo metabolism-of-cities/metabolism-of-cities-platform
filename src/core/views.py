@@ -53,6 +53,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Social media imports
+import twitter
+
 # This array defines all the IDs in the database of the articles that are loaded for the
 # various pages in the menu. Here we can differentiate between the different sites.
 
@@ -1906,8 +1909,18 @@ def socialmedia(request, type):
             message = each.blurb
             response = "response-from-api"
         elif type == "twitter":
+            access_token = settings.TWITTER_API_ACCESS_TOKEN
+            access_token_secret = settings.TWITTER_API_ACCESS_TOKEN_SECRET
+            consumer_key = settings.TWITTER_API_CONSUMER_KEY
+            consumer_secret = settings.TWITTER_API_CONSUMER_SECRET
+            api = twitter.Api(consumer_key, consumer_secret, access_token, access_token_secret)
             message = each.blurb
-            response = "response-from-api"
+            response = None
+            try:
+                api.PostUpdate(message)
+                success = True
+            except Exception as e:
+                response = e
         elif type == "linkedin":
             message = each.blurb
             response = "response-from-api"
