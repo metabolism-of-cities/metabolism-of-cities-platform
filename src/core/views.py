@@ -54,6 +54,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Social media imports
 import twitter
 
 # This array defines all the IDs in the database of the articles that are loaded for the
@@ -1628,13 +1629,13 @@ def socialmedia(request, type):
             message = each.blurb
             response = "response-from-api"
         elif type == "twitter":
-            access_token = "1260102383004254209-N4EAP8vcZWxD6Iusinp6Ldwc330P2j"
-            access_token_secret = "O6zP7sPWX9ggpLAH6pnBuWEneoWggF5LeBuuXOKzNpkuJ"
-            consumer_key = "rqg1qYdbba9nAz0sIFXPrAkXa"
-            consumer_secret = "36WRxThs9Hx9cvzrhsAH9Ix2Op5AC5utZmDIUwlZWrLGkzjY9G"
+            access_token = settings.TWITTER_API_ACCESS_TOKEN
+            access_token_secret = settings.TWITTER_API_ACCESS_TOKEN_SECRET
+            consumer_key = settings.TWITTER_API_CONSUMER_KEY
+            consumer_secret = settings.TWITTER_API_CONSUMER_SECRET
             api = twitter.Api(consumer_key, consumer_secret, access_token, access_token_secret)
             message = each.blurb
-            response = ""
+            response = None
             try:
                 api.PostUpdate(message)
                 success = True
