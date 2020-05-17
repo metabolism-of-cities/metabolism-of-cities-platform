@@ -1845,11 +1845,14 @@ Link to review: {review_link}''',
     }
     return render(request, "project.form.html", context)
 
+@login_required
 def massmail(request,people=None):
-    list = False
-    if "people" in request.GET:
-        ids = request.GET["people"].split(',')
+    try:
+        ids = request.GET["people"].split(",")
         list = People.objects.filter(id__in=ids)
+    except:
+        messages.error(request, "You did not select any people to send this mail to!")
+        list = None
     if request.method == "POST":
         message = request.POST["content"]
         mailcontext = {
@@ -1858,26 +1861,21 @@ def massmail(request,people=None):
         msg_html = render_to_string("mailbody/mail.template.html", mailcontext)
         msg_plain = message
         sender = '"' + request.site.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
+        if "send_preview" in request.POST:
+            # If a preview is being sent, then it must ONLY go to the logged-in user
+            list = People.objects_unfiltered.filter(user=request.user)
         for each in list:
-            #Let check if the person has an email address before we send the mail
+            # Let check if the person has an email address before we send the mail
             if each.email:
                 recipient = '"' + each.name + '" <' + each.email + '>'
                 send_mail(
-                    "Welcome to Metabolism of Cities",
+                    request.POST["subject"],
                     msg_plain,
                     sender,
                     [recipient],
                     html_message=msg_html,
                 )
-        if "send_preview" in request.POST:
-            recipient = '"' + request.user.first_name + '" <' + request.user.email + '>'
-            send_mail(
-                "Welcome to Metabolism of Cities",
-                msg_plain,
-                sender,
-                [recipient],
-                html_message=msg_html,
-            )
+        messages.success(request, "The message was sent.")
     context = {
         "list": list
     }
