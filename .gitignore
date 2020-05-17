@@ -12,4 +12,3 @@ src/multiplicity/static/moc/css-preprocessors/*
 src/ie/settings.py
 config/*production*
 .idea/*
-src/data/*
