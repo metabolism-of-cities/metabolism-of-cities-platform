@@ -118,11 +118,8 @@ class Document(Record):
 
 
 class Project(Record):
-    full_name = models.CharField(max_length=255, null=True, blank=True)
-    email = models.EmailField(null=True, blank=True)
     url = models.URLField(max_length=255, null=True, blank=True)
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
-    target_finish_date = models.CharField(max_length=255, null=True, blank=True)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
     is_internal = models.BooleanField(db_index=True, default=False, help_text="Mark if this is a project undertaken by our own members within our own website")
@@ -135,6 +132,7 @@ class Project(Record):
         ("cancelled", "Cancelled"),
     )
     status = models.CharField(max_length=20, choices=STATUS, default="ongoing")
+    slug = models.SlugField(max_length=50, unique=True, blank=True, null=True)
     def get_absolute_url(self):
         return reverse("project", args=[self.id])
 
