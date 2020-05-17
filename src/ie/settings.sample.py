@@ -36,6 +36,21 @@ TWITTER_API_CONSUMER_KEY = '123123123'
 TWITTER_API_CONSUMER_SECRET = '123123123'
 FACEBOOK_ACCESS_TOKEN = '123123123'
 
+PROJECT_ID_LIST = {
+    "library": 2,
+    "multimedia": 3,
+    "data": 4,
+    "seminarseries": 7,
+    "ascus": 8,
+    "mooc": 11,
+    "staf": 14,
+    "omat": 15,
+    "platformu": 16,
+    "islands": 17,
+    "community": 18,
+    "podcast": 3458,
+}
+
 # Application definition
 
 INSTALLED_APPS = [

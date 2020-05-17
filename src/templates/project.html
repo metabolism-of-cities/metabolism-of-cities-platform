@@ -19,16 +19,15 @@
 <div class="row">
   <div class="col-lg-4">
     <div class="card sidebar sticky-top mb-3">
-      {% if info.image %}
-        <a href="{{ info.url }}">
-          <img class="card-img-top" src="{{ info.image.url }}" alt="" />
+
+      {% if info.has_subsite and info.get_image %}
+        <a href="/{{ info.slug }}/">
+          <img class="card-img-top" src="{{ info.get_image.url }}" alt="" />
         </a>
+      {% elif info.get_image %}
+        <img class="card-img-top" src="{{ info.get_image.url }}" alt="" />
       {% endif %}
-      {% if info.design.logo %}
-        <a href="{{ info.url }}">
-          <img class="card-img-top" src="{{ info.design.logo.url }}" alt="" />
-        </a>
-      {% endif %}
+
       <ul class="list-group list-group-flush">
         {% if info.location %}
         <li class="list-group-item">
@@ -75,14 +74,14 @@
   <div class="col-lg-8">
     <div class="description mb-4">
       <h3>Description</h3>
-      {% if info.content %}
-        {{ info.content|safe }}
+      {% if info.description %}
+        {{ info.description|safe }}
       {% else %}
         {% lorem 2 p %}
       {% endif %}
 
-      {% if info.url %}
-        <a href="{{ info.url }}" class="btn btn-primary">
+      {% if info.has_subsite %}
+        <a href="/{{ info.slug }}/" class="btn btn-primary">
           <i class="fas fa-browser"></i>
           Project website
         </a>

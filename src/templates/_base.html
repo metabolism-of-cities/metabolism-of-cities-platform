@@ -18,7 +18,21 @@
     <meta name="theme-color" content="#ffffff">
   {% endif %}
 
-  <title>{% if title %}{{ title }} {% elif header_title %}{{ header_title }}{% else %}{% block title %}{% endblock %}{% endif %} | {% if project %}{{ project }}{% if back_link %} | {{ SITE_NAME }}{% endif %}{% else %}{{ SITE_NAME }}{% endif %}</title>
+  <title>
+  {% if title %}
+    {{ title }} 
+  {% elif header_title %}
+    {{ header_title }}
+  {% else %}
+    {% block title %}{% endblock %}
+  {% endif %} 
+  | 
+  {{ PROJECT }}
+  {% if PROJECT.back_link %} 
+    | Metabolism of Cities
+  {% endif %}
+  </title>
+
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
   <link href="{% sass_src 'css/main.scss' %}" rel="stylesheet" type="text/css" />
 
@@ -35,9 +49,9 @@
   {% block css %}{% endblock %}
   {% block head %}{% endblock %}
 
-  {% if custom_css %}
+  {% if CUSTOM_CSS %}
     <style type="text/css">
-      {{ custom_css|safe }}
+      {{ CUSTOM_CSS|safe }}
     </style>
   {% endif %}
 
@@ -51,7 +65,7 @@
   <div id="admin-controls" class="btn-group-vertical">
 
     {% if request.user.is_authenticated and request.user.is_staff and show_project_design %}
-      <a class="btn btn-secondary" href="/admin/core/projectdesign/{{ project.id }}/change/"><i class="fas fa-palette fa-fw"></i> Project design</a>
+      <a class="btn btn-secondary" href="/admin/core/projectdesign/{{ PROJECT.id }}/change/"><i class="fas fa-palette fa-fw"></i> Project design</a>
     {% endif %}
 
     {% if webpage_design_id and request.user.is_authenticated and request.user.is_staff %}

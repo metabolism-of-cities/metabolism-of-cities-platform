@@ -32,13 +32,12 @@ t.js
     {% for each in list %}
       <div class="col-xl-4 col-md-6 mb-4 single-project" data-type="seminar">
         <a class="card btn-card" href="{{ each.get_absolute_url }}">
-          {% if each.image %}
-            <img class="card-img-top" src="{{ each.image.url }}" alt="" />
+          {% if each.get_image %}
+            <img class="card-img-top" src="{{ each.get_image.url }}" alt="" />
           {% endif %}
 
           <div class="card-body">
             <h5 class="card-title project-name">{{ each }}</h5>
-            <p>Et doloremque dolorum doloremque aut deserunt debitis animi. Vel iste expedita repellendus veritatis. Et esse explicabo harum rem dolores architecto. Eos et expedita est. Laudantium sed qui sit.</p>
           </div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item">

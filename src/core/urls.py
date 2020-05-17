@@ -29,24 +29,12 @@ urlpatterns = [
     path("about/", views.article_list, { "id": 31 }, name="about"),
     path("about/<slug:slug>/", views.article, { "prefix": "/about/" }, name="about"),
 
-    # Library
-    path("library/", views.library, name="library"),
-    path("library/casestudies/", views.library_casestudies, name="library_casestudies"),
-    path("library/casestudies/map/", views.library_map, { "article": 50 }, name="library_map"),
-    path("library/casestudies/<slug:slug>/", views.library_casestudies, name="library_casestudies"),
-    path("library/download/", views.library_download, name="library_download"),
-    path("library/journals/", views.library_journals, { "article": 41 }, name="library_journals"),
-    path("library/journals/<slug:slug>/", views.library_journal, name="library_journal"),
-    path("library/items/<int:id>/", views.library_item, name="library_item"),
-    path("library/authors/", views.library_authors, name="library_authors"),
-    path("library/contribute/", views.library_contribute, name="library_contribute"),
-
     # Multimedia Library
     path("multimedia/", views.multimedia, name="multimedia"),
     path("multimedia/videos/", views.video_list, name="video_list"),
     path("multimedia/videos/<int:id>/", views.video, name="video"),
     path("multimedia/podcasts/", views.podcast_list, name="podcast_list"),
-    path("multimedia/podcasts/<int:id>/", views.library_item, name="podcast"),
+    #path("multimedia/podcasts/<int:id>/", views.library_item, name="podcast"),
     path("multimedia/datavisualizations/", views.dataviz_list, name="dataviz_list"),
     path("multimedia/datavisualizations/<int:id>/", views.dataviz, name="dataviz"),
 

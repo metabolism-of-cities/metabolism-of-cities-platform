@@ -1,11 +1,11 @@
 {% load static %}
 <div class="top-layer">
 
-  {% if back_link or PERMISSIONS or request.user.is_superuser %}
+  {% if BACK_LINK or PERMISSIONS or request.user.is_superuser %}
     <div class="return-bar">
       <div class="container">
-        {% if back_link %}
-          <a href="{{ SITE_URL }}"><i class="fad fa-arrow-circle-left"></i> Return to {{ SITE_NAME }}</a>
+        {% if BACK_LINK %}
+          <a href="/"><i class="fad fa-arrow-circle-left"></i> Return to {{ SITE_NAME }}</a>
         {% endif %}
 
         {% if PERMISSIONS or request.user.is_superuser %}
@@ -28,8 +28,8 @@
 
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-      <a class="navbar-brand" href="{{ project.url }}">
-        <img alt="{{ project }}" src="{{ logo }}">
+      <a class="navbar-brand" href="{{ PROJECT.url }}">
+        <img alt="{{ PROJECT }}" src="{{ LOGO }}">
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -38,19 +38,19 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
 
-          {% if project.id == 4 %}
+          {% if PROJECT.id == 4 %}
             {% include "_menu-multiplicity.html" %}
-          {% elif project.id == 14 %}
+          {% elif PROJECT.id == 14 %}
             {% include "_menu-stafcp.html" %}
-          {% elif project.id == 3 %}
+          {% elif PROJECT.id == 3 %}
             {% include "_menu-multimedia.html" %}
-          {% elif project.id == 2 %}
+          {% elif PROJECT.id == 2 %}
             {% include "_menu-library.html" %}
-          {% elif project.id == 8 %}
+          {% elif PROJECT.id == 8 %}
             {% include "_menu-ascus.html" %}
-          {% elif project.id == 16 %}
+          {% elif PROJECT.id == 16 %}
             {% include "_menu-platformu.html" %}
-          {% elif project.id == 18 %}
+          {% elif PROJECT.id == 18 %}
             {% include "_menu-community.html" %}
           {% else %}
             {% include "_menu-moc.html" %}
@@ -80,7 +80,7 @@
     </div>
   {% elif header_style == "image" %}
     <div style="background-image: url('{{ header_image }}');height:800px;background-size:cover"></div>
-  {% elif project.id == 4 and space %}
+  {% elif PROJECT.id == 4 and space %}
     <div id="img-city" {% if not dashboard %}class="smaller"{% endif %} style="background-image: url('{{ space.photo.image.url }}'){% if not dashboard %}; height:15vh"{% endif %}">
       <div class="black-cover"></div>
 
@@ -100,7 +100,7 @@
 
 </div>
 
-{% if project.id == 4 and space %}
+{% if PROJECT.id == 4 and space %}
   <nav class="navbar navbar-expand-lg navbar-city">
     <div class="container">
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -146,7 +146,7 @@
   </nav>
 {% endif%}
 
-{% if project.id == 4 and space %}
+{% if PROJECT.id == 4 and space %}
   {% block javascript %}
   <script>
      // When the user scrolls down 50px from the top of the document, resize the header's font size

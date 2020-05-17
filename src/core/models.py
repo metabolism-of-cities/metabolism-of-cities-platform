@@ -130,9 +130,18 @@ class Project(Record):
     status = models.CharField(max_length=20, choices=STATUS, default="ongoing")
     has_subsite = models.BooleanField(default=False)
     slug = models.SlugField(max_length=50, unique=True, blank=True, null=True)
+
     def get_absolute_url(self):
         return reverse("project", args=[self.id])
 
+    def get_image(self):
+        if self.image:
+            return self.image
+        elif self.design.logo:
+            return self.design.logo
+        else:
+            return None
+    
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()

@@ -15,16 +15,38 @@ class MultiHostMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        host = request.META.get("HTTP_HOST")
-        request.project = 14
+        # If things fail, we have our fallback project = 1 (MoC main section)
+        project = 1
+
+        try:
+            if settings.DEBUG:
+                # In local mode we want to open /subsite so we need to load
+                # the project in a different way
+                host = "123"
+                url = request.path
+                # If we have a URL, say
+                # https://metabolismofcities.org/library/casestudies/
+                # Then we'll get path = /library/casestudies/
+                # So we split it by /, up to 2 items max (no need to go further), and 
+                # we get the second item, in this case it would be ["", "library"] -> getting library
+                folder = url.split("/", 2)[1]
+                projects = settings.PROJECT_ID_LIST
+                if folder in projects:
+                    project = projects[folder]
+            else:
+                host = request.META.get("HTTP_HOST")
+        except:
+            pass
+
         try:
             if host in settings.HOST_URL_LIST:
                 new_urls = settings.HOST_URL_LIST[host]
                 request.urlconf = new_urls
                 set_urlconf(new_urls)
-        except KeyError:
+        except:
             pass 
 
+        request.project = project
         response = self.get_response(request)
 
         return response

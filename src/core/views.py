@@ -25,7 +25,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth import authenticate, login, logout
 
-
 from collections import defaultdict
 from .models import *
 
@@ -33,7 +32,6 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from django.template import Context
 from django.forms import modelform_factory
-
 
 from weasyprint import HTML, CSS
 from weasyprint.fonts import FontConfiguration
@@ -60,32 +58,8 @@ import facebook
 # This array defines all the IDs in the database of the articles that are loaded for the
 # various pages in the menu. Here we can differentiate between the different sites.
 
-PAGE_ID = {
-    "people": 12,
-    "projects": 50,
-    "library": 2,
-    "multimedia_library": 3,
-    "multiplicity": 4,
-    "stafcp": 14,
-    "platformu": 16,
-    "ascus": 8,
-    "podcast": 3458,
-    "community": 18,
-}
-
-# This array does the same for user relationships
-
-USER_RELATIONSHIPS = {
-    "member": 1,
-}
-
-# This defines tags that are frequently used
-TAG_ID = {
-    "platformu_segments": 747,
-    "case_study": 1,
-    "urban": 11,
-    "methodologies": 318,
-}
+TAG_ID = settings.TAG_ID_LIST
+PAGE_ID = settings.PAGE_ID_LIST
 
 def get_site_tag(request):
     if request.site.id == 1:
@@ -238,10 +212,7 @@ def user_register(request, subsite=None):
                 return redirect(redirect_page)
 
     context = {}
-    if subsite:
-        return render(request, "auth/register.html", load_design(context, PAGE_ID[subsite]))
-    else:
-        return render(request, "auth/register.html", context)
+    return render(request, "auth/register.html", context)
 
 def user_login(request, project=None):
 
@@ -380,14 +351,14 @@ def datahub(request):
         "show_project_design": True,
         "list": list,
     }
-    return render(request, "data/index.html", load_design(context, PAGE_ID["multiplicity"]))
+    return render(request, "data/index.html", context)
 
 def datahub_overview(request):
     list = ActivatedSpace.objects.filter(site=request.site)
     context = {
         "list": list,
     }
-    return render(request, "data/overview.html", load_design(context, PAGE_ID["multiplicity"]))
+    return render(request, "data/overview.html", context)
 
 def datahub_dashboard(request, space):
     space = get_space(request, space)
@@ -396,7 +367,7 @@ def datahub_dashboard(request, space):
         "header_image": space.photo,
         "dashboard": True,
     }
-    return render(request, "data/dashboard.html", load_design(context, PAGE_ID["multiplicity"]))
+    return render(request, "data/dashboard.html", context)
 
 def datahub_photos(request, space):
     space = get_space(request, space)
@@ -405,7 +376,7 @@ def datahub_photos(request, space):
         "header_image": space.photo,
         "photos": Photo.objects.filter(space=space),
     }
-    return render(request, "data/photos.html", load_design(context, PAGE_ID["multiplicity"]))
+    return render(request, "data/photos.html", context)
 
 def datahub_maps(request, space):
     space = get_space(request, space)
@@ -413,7 +384,7 @@ def datahub_maps(request, space):
         "space": space,
         "header_image": space.photo,
     }
-    return render(request, "data/maps.html", load_design(context, PAGE_ID["multiplicity"]))
+    return render(request, "data/maps.html", context)
 
 def datahub_library(request, space, type):
     space = get_space(request, space)
@@ -433,17 +404,17 @@ def datahub_library(request, space, type):
         "title": title,
         "items": list,
     }
-    return render(request, "data/library.html", load_design(context, PAGE_ID["multiplicity"]))
+    return render(request, "data/library.html", context)
 
 def datahub_sector(request, space, sector):
     context = {
     }
-    return render(request, "data/sector.html", load_design(context, PAGE_ID["multiplicity"]))
+    return render(request, "data/sector.html", context)
 
 def datahub_dataset(request, space, dataset):
     context = {
     }
-    return render(request, "data/dataset.html", load_design(context, PAGE_ID["multiplicity"]))
+    return render(request, "data/dataset.html", context)
 
 # Metabolism Manager
 
@@ -452,7 +423,7 @@ def metabolism_manager(request):
     context = {
         "show_project_design": True,
     }
-    return render(request, "metabolism_manager/index.html", load_design(context, PAGE_ID["platformu"]))
+    return render(request, "metabolism_manager/index.html", context)
 
 def metabolism_manager_admin(request):
     organizations = UserRelationship.objects.filter(relationship__id=USER_RELATIONSHIPS["member"], user=request.user)
@@ -462,7 +433,7 @@ def metabolism_manager_admin(request):
     context = {
         "organizations": organizations,
     }
-    return render(request, "metabolism_manager/admin/index.html", load_design(context, PAGE_ID["platformu"]))
+    return render(request, "metabolism_manager/admin/index.html", context)
 
 def metabolism_manager_clusters(request, organization):
     my_organization = Organization.objects.get(pk=organization)
@@ -477,7 +448,7 @@ def metabolism_manager_clusters(request, organization):
         "tags": Tag.objects.filter(belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"]).order_by("id"),
         "my_organization": my_organization,
     }
-    return render(request, "metabolism_manager/admin/clusters.html", load_design(context, PAGE_ID["platformu"]))
+    return render(request, "metabolism_manager/admin/clusters.html", context)
 
 def metabolism_manager_admin_map(request, organization):
     my_organization = Organization.objects.get(pk=organization)
@@ -485,7 +456,7 @@ def metabolism_manager_admin_map(request, organization):
         "page": "map",
         "my_organization": my_organization,
     }
-    return render(request, "metabolism_manager/admin/map.html", load_design(context, PAGE_ID["platformu"]))
+    return render(request, "metabolism_manager/admin/map.html", context)
 
 def metabolism_manager_admin_entity(request, organization, id):
     my_organization = Organization.objects.get(pk=organization)
@@ -494,7 +465,7 @@ def metabolism_manager_admin_entity(request, organization, id):
         "my_organization": my_organization,
         "info": Organization.objects.get(pk=id),
     }
-    return render(request, "metabolism_manager/admin/entity.html", load_design(context, PAGE_ID["platformu"]))
+    return render(request, "metabolism_manager/admin/entity.html", context)
 
 def metabolism_manager_admin_entity_form(request, organization, id=None):
     my_organization = Organization.objects.get(pk=organization)
@@ -532,7 +503,7 @@ def metabolism_manager_admin_entity_form(request, organization, id=None):
         "info": info,
         "sectors": Sector.objects.all(),
     }
-    return render(request, "metabolism_manager/admin/entity.form.html", load_design(context, PAGE_ID["platformu"]))
+    return render(request, "metabolism_manager/admin/entity.form.html", context)
 
 def metabolism_manager_admin_entity_users(request, organization, id=None):
     my_organization = Organization.objects.get(pk=organization)
@@ -542,7 +513,7 @@ def metabolism_manager_admin_entity_users(request, organization, id=None):
         "my_organization": my_organization,
         "info": info,
     }
-    return render(request, "metabolism_manager/admin/entity.users.html", load_design(context, PAGE_ID["platformu"]))
+    return render(request, "metabolism_manager/admin/entity.users.html", context)
 
 def metabolism_manager_admin_entity_materials(request, organization, id):
     my_organization = Organization.objects.get(pk=organization)
@@ -552,7 +523,7 @@ def metabolism_manager_admin_entity_materials(request, organization, id):
         "my_organization": my_organization,
         "info": info,
     }
-    return render(request, "metabolism_manager/admin/entity.materials.html", load_design(context, PAGE_ID["platformu"]))
+    return render(request, "metabolism_manager/admin/entity.materials.html", context)
 
 def metabolism_manager_admin_entity_material(request, organization, id):
     my_organization = Organization.objects.get(pk=organization)
@@ -562,7 +533,7 @@ def metabolism_manager_admin_entity_material(request, organization, id):
         "my_organization": my_organization,
         "info": info,
     }
-    return render(request, "metabolism_manager/admin/entity.material.html", load_design(context, PAGE_ID["platformu"]))
+    return render(request, "metabolism_manager/admin/entity.material.html", context)
 
 def metabolism_manager_admin_entity_data(request, organization, id):
     my_organization = Organization.objects.get(pk=organization)
@@ -572,7 +543,7 @@ def metabolism_manager_admin_entity_data(request, organization, id):
         "my_organization": my_organization,
         "info": info,
     }
-    return render(request, "metabolism_manager/admin/entity.data.html", load_design(context, PAGE_ID["platformu"]))
+    return render(request, "metabolism_manager/admin/entity.data.html", context)
 
 def metabolism_manager_admin_entity_log(request, organization, id):
     my_organization = Organization.objects.get(pk=organization)
@@ -582,7 +553,7 @@ def metabolism_manager_admin_entity_log(request, organization, id):
         "my_organization": my_organization,
         "info": info,
     }
-    return render(request, "metabolism_manager/admin/entity.log.html", load_design(context, PAGE_ID["platformu"]))
+    return render(request, "metabolism_manager/admin/entity.log.html", context)
 
 def metabolism_manager_admin_entity_user(request, organization, id, user=None):
     my_organization = Organization.objects.get(pk=organization)
@@ -592,7 +563,7 @@ def metabolism_manager_admin_entity_user(request, organization, id, user=None):
         "my_organization": my_organization,
         "info": info,
     }
-    return render(request, "metabolism_manager/admin/entity.user.html", load_design(context, PAGE_ID["platformu"]))
+    return render(request, "metabolism_manager/admin/entity.user.html", context)
 
 def metabolism_manager_dashboard(request):
     my_organization = Organization.objects.get(pk=organization)
@@ -602,7 +573,7 @@ def metabolism_manager_dashboard(request):
         "my_organization": my_organization,
         "info": info,
     }
-    return render(request, "metabolism_manager/dashboard.html", load_design(context, PAGE_ID["platformu"]))
+    return render(request, "metabolism_manager/dashboard.html", context)
 
 def metabolism_manager_material(request):
     my_organization = Organization.objects.get(pk=organization)
@@ -611,7 +582,7 @@ def metabolism_manager_material(request):
         "my_organization": my_organization,
         "info": info,
     }
-    return render(request, "metabolism_manager/material.html", load_design(context, PAGE_ID["platformu"]))
+    return render(request, "metabolism_manager/material.html", context)
 
 def metabolism_manager_material_form(request):
     my_organization = Organization.objects.get(pk=organization)
@@ -620,7 +591,7 @@ def metabolism_manager_material_form(request):
         "my_organization": my_organization,
         "info": info,
     }
-    return render(request, "metabolism_manager/material.form.html", load_design(context, PAGE_ID["platformu"]))
+    return render(request, "metabolism_manager/material.form.html", context)
 
 def metabolism_manager_report(request):
     my_organization = Organization.objects.get(pk=organization)
@@ -629,13 +600,13 @@ def metabolism_manager_report(request):
         "my_organization": my_organization,
         "info": info,
     }
-    return render(request, "metabolism_manager/report.html", load_design(context, PAGE_ID["platformu"]))
+    return render(request, "metabolism_manager/report.html", context)
 
 def metabolism_manager_marketplace(request):
     context = {
         "page": "marketplace",
     }
-    return render(request, "metabolism_manager/marketplace.html", load_design(context, PAGE_ID["platformu"]))
+    return render(request, "metabolism_manager/marketplace.html", context)
 
 def metabolism_manager_forum(request):
     article = get_object_or_404(Webpage, pk=17)
@@ -643,7 +614,7 @@ def metabolism_manager_forum(request):
     context = {
         "list": list,
     }
-    return render(request, "forum.list.html", load_design(context, PAGE_ID["platformu"]))
+    return render(request, "forum.list.html", context)
 
 # STAFCP
 
@@ -652,18 +623,18 @@ def stafcp(request):
         "show_project_design": True,
         "show_relationship": PAGE_ID["stafcp"],
     }
-    return render(request, "stafcp/index.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/index.html", context)
 
 def stafcp_review(request):
     context = {
     }
-    return render(request, "stafcp/review/index.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/review/index.html", context)
 
 def stafcp_review_pending(request):
     context = {
         "list": UploadSession.objects.filter(meta_data__isnull=True),
     }
-    return render(request, "stafcp/review/files.pending.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/review/files.pending.html", context)
 
 def stafcp_review_uploaded(request):
 
@@ -671,12 +642,12 @@ def stafcp_review_uploaded(request):
         "list": Work.objects.filter(status=Work.WorkStatus.OPEN, part_of_project_id=PAGE_ID["stafcp"], workactivity_id=2),
         "load_datatables": True,
     }
-    return render(request, "stafcp/review/files.uploaded.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/review/files.uploaded.html", context)
 
 def stafcp_review_processed(request):
     context = {
     }
-    return render(request, "stafcp/review/files.processed.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/review/files.processed.html", context)
 
 def stafcp_review_session(request, id):
     session = get_object_or_404(UploadSession, pk=id)
@@ -684,7 +655,7 @@ def stafcp_review_session(request, id):
         unauthorized_access(request)
     context = {
     }
-    return render(request, "stafcp/review/session.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/review/session.html", context)
 
 def stafcp_upload_gis(request, id=None):
     context = {
@@ -692,7 +663,7 @@ def stafcp_upload_gis(request, id=None):
         "list": GeocodeScheme.objects.filter(is_deleted=False),
         "geocodes": Geocode.objects.filter(is_deleted=False, scheme__is_deleted=False),
     }
-    return render(request, "stafcp/upload/gis.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/upload/gis.html", context)
 
 @login_required
 def stafcp_upload_gis_file(request, id=None):
@@ -744,13 +715,13 @@ def stafcp_upload_gis_file(request, id=None):
     context = {
         "session": session,
     }
-    return render(request, "stafcp/upload/gis.file.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/upload/gis.file.html", context)
 
 @login_required
 def stafcp_upload(request):
     context = {
     }
-    return render(request, "stafcp/upload/index.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/upload/index.html", context)
 
 @login_required
 def stafcp_upload_gis_verify(request, id):
@@ -775,7 +746,7 @@ def stafcp_upload_gis_verify(request, id):
         "session": session,
         "error": error,
     }
-    return render(request, "stafcp/upload/gis.verify.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/upload/gis.verify.html", context)
 
 def stafcp_upload_gis_meta(request, id):
     session = get_object_or_404(UploadSession, pk=id)
@@ -804,7 +775,7 @@ def stafcp_upload_gis_meta(request, id):
     context = {
         "session": session,
     }
-    return render(request, "stafcp/upload/gis.meta.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/upload/gis.meta.html", context)
 
 def stafcp_referencespaces(request, group=None):
     list = geocodes = None
@@ -821,7 +792,7 @@ def stafcp_referencespaces(request, group=None):
         "list": list,
         "geocodes": geocodes,
     }
-    return render(request, "stafcp/referencespaces.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/referencespaces.html", context)
 
 def stafcp_referencespaces_list(request, id):
     geocode = get_object_or_404(Geocode, pk=id)
@@ -830,7 +801,7 @@ def stafcp_referencespaces_list(request, id):
         "geocode": geocode,
         "load_datatables": True,
     }
-    return render(request, "stafcp/referencespaces.list.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/referencespaces.list.html", context)
 
 def stafcp_referencespace(request, id):
     info = ReferenceSpace.objects.get(pk=id)
@@ -842,13 +813,13 @@ def stafcp_referencespace(request, id):
         "inside_the_space":inside_the_space,
         "load_datatables": True,
     }
-    return render(request, "stafcp/referencespace.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/referencespace.html", context)
 
 def stafcp_activities_catalogs(request):
     context = {
         "list": ActivityCatalog.objects.all(),
     }
-    return render(request, "stafcp/activities.catalogs.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/activities.catalogs.html", context)
 
 def stafcp_activities(request, catalog, id=None):
     catalog = ActivityCatalog.objects.get(pk=catalog)
@@ -860,21 +831,21 @@ def stafcp_activities(request, catalog, id=None):
     context = {
         "list": list,
     }
-    return render(request, "stafcp/activities.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/activities.html", context)
 
 def stafcp_activity(request, catalog, id):
     list = Activity.objects.all()
     context = {
         "list": list,
     }
-    return render(request, "stafcp/activities.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/activities.html", context)
 
 def stafcp_flowdiagrams(request):
     list = FlowDiagram.objects.all()
     context = {
         "list": list,
     }
-    return render(request, "stafcp/flowdiagrams.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/flowdiagrams.html", context)
 
 def stafcp_flowdiagram(request, id):
     activities = Activity.objects.all()
@@ -884,7 +855,7 @@ def stafcp_flowdiagram(request, id):
         "load_select2": True,
         "load_mermaid": True,
     }
-    return render(request, "stafcp/flowdiagram.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/flowdiagram.html", context)
 
 def stafcp_flowdiagram_form(request, id):
     info = get_object_or_404(FlowDiagram, pk=id)
@@ -914,7 +885,7 @@ def stafcp_flowdiagram_form(request, id):
         "info": info,
         "blocks": blocks,
     }
-    return render(request, "stafcp/flowdiagram.form.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/flowdiagram.form.html", context)
 
 def stafcp_flowdiagram_meta(request, id=None):
     ModelForm = modelform_factory(FlowDiagram, fields=("name", "description"))
@@ -937,13 +908,13 @@ def stafcp_flowdiagram_meta(request, id=None):
         "form": form,
         "load_mermaid": True,
     }
-    return render(request, "stafcp/flowdiagram.meta.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/flowdiagram.meta.html", context)
 
 def stafcp_geocodes(request):
     context = {
         "list": GeocodeScheme.objects.all(),
     }
-    return render(request, "stafcp/geocode/list.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/geocode/list.html", context)
 
 def stafcp_geocode(request, id):
     info = GeocodeScheme.objects.get(pk=id)
@@ -953,7 +924,7 @@ def stafcp_geocode(request, id):
         "geocodes": geocodes,
         "load_mermaid": True,
     }
-    return render(request, "stafcp/geocode/view.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/geocode/view.html", context)
 
 def stafcp_geocode_form(request, id=None):
     ModelForm = modelform_factory(GeocodeScheme, fields=("name", "description", "url"))
@@ -1000,14 +971,14 @@ def stafcp_geocode_form(request, id=None):
         "depths": range(1,11),
         "geocodes": geocodes,
     }
-    return render(request, "stafcp/geocode/form.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/geocode/form.html", context)
 
 def stafcp_article(request, id):
     context = {
         "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
 
     }
-    return render(request, "stafcp/index.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/index.html", context)
 
 # Control panel and general contribution components
 
@@ -1017,7 +988,7 @@ def controlpanel(request):
         unauthorized_access(request)
     context = {
     }
-    return render(request, "stafcp/controlpanel/index.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/controlpanel/index.html", context)
 
 @login_required
 def controlpanel_users(request):
@@ -1027,7 +998,7 @@ def controlpanel_users(request):
         "users": RecordRelationship.objects.filter(record_child_id=PAGE_ID["stafcp"], relationship__is_permission=True),
         "load_datatables": True,
     }
-    return render(request, "stafcp/controlpanel/users.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/controlpanel/users.html", context)
 
 @login_required
 def controlpanel_design(request):
@@ -1050,7 +1021,7 @@ def controlpanel_design(request):
     context = {
         "form": form,
     }
-    return render(request, "stafcp/controlpanel/design.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/controlpanel/design.html", context)
 
 @login_required
 def controlpanel_content(request):
@@ -1063,7 +1034,7 @@ def controlpanel_content(request):
         "pages": Webpage.objects.filter(belongs_to_id=project),
         "load_datatables": True,
     }
-    return render(request, "stafcp/controlpanel/content.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "stafcp/controlpanel/content.html", context)
 
 def work_grid(request):
     project = PAGE_ID["stafcp"]
@@ -1078,7 +1049,7 @@ def work_grid(request):
         "statuses": Work.WorkStatus.choices,
         "priorities": Work.WorkPriority.choices,
     }
-    return render(request, "contribution/work.grid.html", load_design(context, PAGE_ID["stafcp"]))
+    return render(request, "contribution/work.grid.html", context)
 
 def work_item(request, id):
     # To do: validate user has access to this ticket
@@ -1086,102 +1057,7 @@ def work_item(request, id):
     context = {
         "info": Work.objects.get(pk=id),
     }
-    return render(request, "contribution/work.item.html", load_design(context, PAGE_ID["stafcp"]))
-
-# Library
-
-def library(request):
-    context = {
-        "show_project_design": True,
-    }
-    return render(request, "library/browse.html", load_design(context, PAGE_ID["library"]))
-
-def library_search(request, article):
-    info = get_object_or_404(Webpage, pk=article)
-    context = {
-        "article": info,
-    }
-    return render(request, "library/search.html", load_design(context, PAGE_ID["library"]))
-
-def library_download(request):
-    info = get_object_or_404(Webpage, pk=PAGE_ID["library"])
-    context = {
-        "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
-        "info": info,
-        "menu": Webpage.objects.filter(parent=info),
-    }
-    return render(request, "article.html", load_design(context, PAGE_ID["library"]))
-
-def library_casestudies(request, slug=None):
-    list = LibraryItem.objects.filter(status="active", tags__id=TAG_ID["case_study"])
-    list = list.filter(tags__id=get_site_tag(request))
-    totals = None
-    page = "casestudies.html"
-    if slug == "calendar":
-        page = "casestudies.calendar.html"
-        totals = list.values("year").annotate(total=Count("id")).order_by("year")
-    context = {
-        "list": list,
-        "totals": totals,
-        "load_datatables": True,
-        "slug": slug,
-    }
-    return render(request, "library/" + page, load_design(context, PAGE_ID["library"]))
-
-def library_journals(request, article):
-    info = get_object_or_404(Webpage, pk=article)
-    list = Organization.objects.prefetch_related("parent_to").filter(type="journal")
-    context = {
-        "article": info,
-        "list": list,
-    }
-    return render(request, "library/journals.html", load_design(context, PAGE_ID["library"]))
-
-def library_journal(request, slug):
-    info = get_object_or_404(Organization, type="journal", slug=slug)
-    context = {
-        "info": info,
-        "items": info.publications,
-    }
-    return render(request, "library/journal.html", load_design(context, PAGE_ID["library"]))
-
-def library_item(request, id):
-    info = get_object_or_404(LibraryItem, pk=id)
-    section = "library"
-    if info.type.group == "multimedia":
-        section = "multimedia_library"
-    context = {
-        "info": info,
-    }
-    return render(request, "library/item.html", load_design(context, PAGE_ID[section]))
-
-def library_map(request, article):
-    info = get_object_or_404(Webpage, pk=article)
-    items = LibraryItem.objects.filter(status="active", tags__id=TAG_ID["case_study"])
-    items = items.filter(tags__id=get_site_tag(request))
-    context = {
-        "article": info,
-        "items": items,
-    }
-    return render(request, "library/map.html", load_design(context, PAGE_ID["library"]))
-
-def library_authors(request):
-    info = get_object_or_404(Webpage, pk=PAGE_ID["library"])
-    context = {
-        "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
-        "info": info,
-        "menu": Webpage.objects.filter(parent=info),
-    }
-    return render(request, "article.html", load_design(context, PAGE_ID["library"]))
-
-def library_contribute(request):
-    info = get_object_or_404(Webpage, pk=PAGE_ID["library"])
-    context = {
-        "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
-        "info": info,
-        "menu": Webpage.objects.filter(parent=info),
-    }
-    return render(request, "article.html", load_design(context, PAGE_ID["library"]))
+    return render(request, "contribution/work.item.html", context)
 
 # People
 
@@ -1213,7 +1089,7 @@ def news_list(request):
         "shortlist": list[:3],
         "add_link": "/admin/core/news/add/"
     }
-    return render(request, "news.list.html", load_design(context, PAGE_ID["community"]))
+    return render(request, "news.list.html", context)
 
 def news(request, id):
     article = get_object_or_404(Webpage, pk=15)
@@ -1234,7 +1110,7 @@ def event_list(request):
         "header_title": "Events",
         "header_subtitle": "Find out what is happening around you!",
     }
-    return render(request, "event.list.html", load_design(context, PAGE_ID["community"]))
+    return render(request, "event.list.html", context)
 
 def event(request, id):
     article = get_object_or_404(Webpage, pk=16)
@@ -1319,7 +1195,7 @@ def podcast_series(request):
         "header_subtitle": "Agressive questions. Violent answers.",
         "list": list,
     }
-    return render(request, "podcast/index.html", load_design(context, PAGE_ID["podcast"]))
+    return render(request, "podcast/index.html", context)
 
 # Community hub
 
@@ -1332,7 +1208,7 @@ def community(request):
         "header_subtitle": "Join for the money. Stay for the food.",
         "list": list,
     }
-    return render(request, "community/index.html", load_design(context, PAGE_ID["community"]))
+    return render(request, "community/index.html", context)
 
 
 # MULTIMEDIA
@@ -1350,20 +1226,20 @@ def multimedia(request):
         "podcasts": podcasts,
         "dataviz": dataviz,
     }
-    return render(request, "multimedia/index.html", load_design(context, PAGE_ID["multimedia_library"]))
+    return render(request, "multimedia/index.html", context)
 
 def video_list(request):
     context = {
         "webpage": get_object_or_404(Webpage, pk=61),
         "list": LibraryItem.objects.filter(type__name="Video Recording"),
     }
-    return render(request, "multimedia/video.list.html", load_design(context, PAGE_ID["multimedia_library"]))
+    return render(request, "multimedia/video.list.html", context)
 
 def video(request, id):
     context = {
         "info": get_object_or_404(Video, pk=id),
     }
-    return render(request, "multimedia/video.html", load_design(context, PAGE_ID["multimedia_library"]))
+    return render(request, "multimedia/video.html", context)
 
 def podcast_list(request):
     context = {
@@ -1371,20 +1247,20 @@ def podcast_list(request):
         "list": LibraryItem.objects.filter(type__name="Podcast"),
         "load_datatables": True,
     }
-    return render(request, "multimedia/podcast.list.html", load_design(context, PAGE_ID["multimedia_library"]))
+    return render(request, "multimedia/podcast.list.html", context)
 
 def podcast(request, id):
     context = {
         "info": get_object_or_404(Video, pk=id),
     }
-    return render(request, "multimedia/podcast.html", load_design(context, PAGE_ID["multimedia_library"]))
+    return render(request, "multimedia/podcast.html", context)
 
 def dataviz_list(request):
     context = {
         "info": get_object_or_404(Webpage, pk=67),
         "list": LibraryItem.objects.filter(type__name="Data visualisation"),
     }
-    return render(request, "multimedia/dataviz.list.html", load_design(context, PAGE_ID["multimedia_library"]))
+    return render(request, "multimedia/dataviz.list.html", context)
 
 def dataviz(request, id):
     info = get_object_or_404(LibraryItem, pk=id)
@@ -1394,7 +1270,7 @@ def dataviz(request, id):
         "parents": parents,
         "show_relationship": info.id,
     }
-    return render(request, "multimedia/dataviz.html", load_design(context, PAGE_ID["multimedia_library"]))
+    return render(request, "multimedia/dataviz.html", context)
 
 # AScUS conference
 
@@ -1453,7 +1329,7 @@ def ascus(request):
         "info": get_object_or_404(Project, pk=PAGE_ID["ascus"]),
         "show_relationship": PAGE_ID["ascus"],
     }
-    return render(request, "article.html", load_design(context, PAGE_ID["ascus"]))
+    return render(request, "article.html", context)
 
 @check_ascus_access
 def ascus_account(request):
@@ -1490,7 +1366,7 @@ def ascus_account(request):
         "show_discussion": show_discussion, 
         "show_abstract": show_abstract,
     }
-    return render(request, "ascus/account.html", load_design(context, PAGE_ID["ascus"]))
+    return render(request, "ascus/account.html", context)
 
 @check_ascus_access
 def ascus_account_edit(request):
@@ -1517,7 +1393,7 @@ def ascus_account_edit(request):
         "info": info,
         "form": form,
     }
-    return render(request, "ascus/account.edit.html", load_design(context, PAGE_ID["ascus"]))
+    return render(request, "ascus/account.edit.html", context)
 
 @check_ascus_access
 def ascus_account_discussion(request):
@@ -1570,7 +1446,7 @@ def ascus_account_discussion(request):
         "form": form,
         "list": my_discussions,
     }
-    return render(request, "ascus/account.discussion.html", load_design(context, PAGE_ID["ascus"]))
+    return render(request, "ascus/account.discussion.html", context)
 
 @check_ascus_access
 def ascus_account_presentation(request, introvideo=False):
@@ -1671,7 +1547,7 @@ def ascus_account_presentation(request, introvideo=False):
         "form": form,
         "list": my_documents,
     }
-    return render(request, html_page, load_design(context, PAGE_ID["ascus"]))
+    return render(request, html_page, context)
 
 # AScUS admin section
 @check_ascus_admin_access
@@ -1680,7 +1556,7 @@ def ascus_admin(request):
         "header_title": "AScUS Admin",
         "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
     }
-    return render(request, "ascus/admin.html", load_design(context, PAGE_ID["ascus"]))
+    return render(request, "ascus/admin.html", context)
 
 @check_ascus_admin_access
 def ascus_admin_list(request, type="participant"):
@@ -1703,7 +1579,7 @@ def ascus_admin_list(request, type="participant"):
         "types": types,
         "type": type,
     }
-    return render(request, "ascus/admin.list.html", load_design(context, PAGE_ID["ascus"]))
+    return render(request, "ascus/admin.list.html", context)
 
 @check_ascus_admin_access
 def ascus_admin_documents(request, type="introvideos"):
@@ -1736,9 +1612,9 @@ def ascus_admin_documents(request, type="introvideos"):
         "type": type,
     }
     if type == "topics":
-        return render(request, "ascus/admin.topics.html", load_design(context, PAGE_ID["ascus"]))
+        return render(request, "ascus/admin.topics.html", context)
     else:
-        return render(request, "ascus/admin.docs.html", load_design(context, PAGE_ID["ascus"]))
+        return render(request, "ascus/admin.docs.html", context)
 
 @check_ascus_admin_access
 def ascus_admin_work(request):
@@ -1752,7 +1628,7 @@ def ascus_admin_work(request):
         "list": list,
         "load_datatables": True,
     }
-    return render(request, "ascus/admin.work.html", load_design(context, PAGE_ID["ascus"]))
+    return render(request, "ascus/admin.work.html", context)
 
 @check_ascus_admin_access
 def ascus_admin_work_item(request, id):
@@ -1781,7 +1657,7 @@ def ascus_admin_work_item(request, id):
         "form": form,
         "load_select2": True,
     }
-    return render(request, "ascus/admin.work.item.html", load_design(context, PAGE_ID["ascus"]))
+    return render(request, "ascus/admin.work.item.html", context)
 
 
 def ascus_register(request):
@@ -1878,7 +1754,7 @@ def ascus_register(request):
         "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
         "tags": Tag.objects.filter(parent_tag__id=757)
     }
-    return render(request, "ascus/register.html", load_design(context, PAGE_ID["ascus"]))
+    return render(request, "ascus/register.html", context)
 
 # TEMPORARY PAGES DURING DEVELOPMENT
 
