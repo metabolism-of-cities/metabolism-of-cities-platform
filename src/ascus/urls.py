@@ -27,8 +27,6 @@ urlpatterns = [
     path("account/edit/", views.ascus_account_edit, name="account_edit"),
     path("account/discussion/", views.ascus_account_discussion, name="account_discussion"),
 
-    path("<slug:slug>/", core.article, { "prefix": "/ascus/", "subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020", "project": 8}, name="article"),
-
     # Admin section
     path("account/admin/", views.ascus_admin, name="admin"),
     path("account/admin/payments/", views.ascus_admin_work, name="admin_payments"),
@@ -39,6 +37,8 @@ urlpatterns = [
     # We had some old URLs, can be removed after June 10th 2020
     path("ascus/", RedirectView.as_view(pattern_name="ascus:index", permanent=True)),
     path("ascus/<slug:slug>/", RedirectView.as_view(pattern_name="ascus:article")),
+
+    path("<slug:slug>/", core.article, { "prefix": "/ascus/", "subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020", "project": 8}, name="article"),
 
 ]
 
