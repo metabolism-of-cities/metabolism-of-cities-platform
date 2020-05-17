@@ -55,6 +55,7 @@ logger = logging.getLogger(__name__)
 
 # Social media imports
 import twitter
+import facebook
 
 # This array defines all the IDs in the database of the articles that are loaded for the
 # various pages in the menu. Here we can differentiate between the different sites.
@@ -1891,7 +1892,7 @@ def pdf(request):
     context = Context({"name": name, "score": score, "date": date, "site": site.domain})
 
     response = HttpResponse(content_type="application/pdf")
-    response['Content-Disposition'] = "inline; filename=test.pdf"
+    response["Content-Disposition"] = "inline; filename=test.pdf"
     html = render_to_string("pdf_template.html", context.flatten())
 
     font_config = FontConfiguration()
@@ -1901,13 +1902,19 @@ def pdf(request):
 
 def socialmedia(request, type):
     list = SocialMedia.objects.filter(published=False, platform=type)
+    response = ""
     for each in list:
         # send to api here
         success = False
         if type == "facebook":
-            # Send to FB API
+            fb_access_token = settings.FACEBOOK_ACCESS_TOKEN
+            graph = facebook.GraphAPI(access_token=fb_access_token, version="2.12")
             message = each.blurb
-            response = "response-from-api"
+            try:
+                graph.put_object(parent_object="me", connection_name="feed", message=message)
+                success = True
+            except Exception as e:
+                response = e
         elif type == "twitter":
             access_token = settings.TWITTER_API_ACCESS_TOKEN
             access_token_secret = settings.TWITTER_API_ACCESS_TOKEN_SECRET
