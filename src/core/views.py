@@ -185,8 +185,6 @@ def user_register(request, subsite=None):
                     user_relationship.save()
                     redirect_page = "platformu_admin"
                 else:
-                    user.is_staff = True
-                    user.is_superuser = True
                     redirect_page = "index"
                 user.save()
                 messages.success(request, "User was created.")

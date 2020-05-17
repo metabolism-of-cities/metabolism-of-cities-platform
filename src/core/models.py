@@ -237,7 +237,7 @@ class Organization(Record):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
     def get_absolute_url(self):
-        return reverse("library_journal", args=[self.slug])
+        return reverse("library:journal", args=[self.slug])
     def publications(self):
         # To get all the publications we'll get the LibraryItems that are a child
         # record that are linked to this organization (e.g. journal or publishing house) as a parent
@@ -491,7 +491,7 @@ class LibraryItem(Record):
         ordering = ["-year", "name"]
 
     def get_absolute_url(self):
-        return reverse("library_item", args=[self.id])
+        return reverse("library:item", args=[self.id])
 
     def authors(self):
         return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)

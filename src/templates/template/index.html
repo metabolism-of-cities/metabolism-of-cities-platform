@@ -13,32 +13,32 @@
   <p>Please find ready-to-use templates in the "template" folder. You can find the following items there:</p>
   <h2>General snippets and content</h2>
   <ul>
-    <li><a href="{% url 'template' 'blank' %}">blank.html: Blank page with all possible (empty) blocks</a></li>
-    <li><a href="{% url 'template' 'grid' %}">grid.html: Image grid</a></li>
-    <li><a href="{% url 'template' 'contribute' %}">contribute.html: contribute box</a></li>
-    <li><a href="{% url 'template' 'icon-button' %}">icon-button.html: icon-buttons</a></li>
-    <li><a href="{% url 'template' 'card' %}">card.html: card</a></li>
-    <li><a href="{% url 'template' 'button' %}">button.html: button</a></li>
+    <li><a href="{% url 'core:template' 'blank' %}">blank.html: Blank page with all possible (empty) blocks</a></li>
+    <li><a href="{% url 'core:template' 'grid' %}">grid.html: Image grid</a></li>
+    <li><a href="{% url 'core:template' 'contribute' %}">contribute.html: contribute box</a></li>
+    <li><a href="{% url 'core:template' 'icon-button' %}">icon-button.html: icon-buttons</a></li>
+    <li><a href="{% url 'core:template' 'card' %}">card.html: card</a></li>
+    <li><a href="{% url 'core:template' 'button' %}">button.html: button</a></li>
     <li><a href="/community/news/">news.list.html: news list</a></li>
-    <li><a href="{% url 'news' 100 %}">news.html: news page</a></li>
+    <li><a href="{% url 'community:news' 100 %}">news.html: news page</a></li>
     <li><a href="/community/events/">event.list.html: event list</a></li>
-    <li><a href="{% url 'event' 100 %}">event.html: event page</a></li>
+    <li><a href="{% url 'community:event' 100 %}">event.html: event page</a></li>
   </ul>
 
   <h2>Javascript plugins</h2>
   <ul>
-    <li><a href="{% url 'template' 'map' %}">map.html: Leaflet map</a></li>
-    <li><a href="{% url 'template' 'flowdiagram' %}">flowdiagram.html: Mermaid flow diagram</a></li>
-    <li><a href="{% url 'template' 'map-full' %}">map-full.html: Fully featured Leaflet map</a></li>
-    <li><a href="{% url 'template' 'datatables' %}">datatables.html: Data tables</a></li>
-    <li><a href="{% url 'template' 'select2' %}">select2.html: Select2 form plugin</a></li>
-    <li><a href="{% url 'template' 'timeline' %}">timeline.html: TimelineJS</a></li>
-    <li><a href="{% url 'template' 'sweetalerts' %}">sweetalerts.html: Sweet Alerts</a></li>
-    <li><a href="{% url 'template' 'introjs' %}">introjs.html: IntroJS: explain elements on a page</a></li>
-    <li><a href="{% url 'template' 'slideshow' %}">slideshow.html: Photo slideshow</a></li>
-    <li><a href="{% url 'template' 'fancytree' %}">fancytree.html: Explore tree-based data structures</a></li>
-    <li><a href="{% url 'template' 'fancytree-browser' %}">fancytree-browser.html: Browing tree-based data structures</a></li>
-    <li><a href="{% url 'template' 'markdown' %}">markdown.html: A simple markdown toolbar for the forum</a></li>
+    <li><a href="{% url 'core:template' 'map' %}">map.html: Leaflet map</a></li>
+    <li><a href="{% url 'core:template' 'flowdiagram' %}">flowdiagram.html: Mermaid flow diagram</a></li>
+    <li><a href="{% url 'core:template' 'map-full' %}">map-full.html: Fully featured Leaflet map</a></li>
+    <li><a href="{% url 'core:template' 'datatables' %}">datatables.html: Data tables</a></li>
+    <li><a href="{% url 'core:template' 'select2' %}">select2.html: Select2 form plugin</a></li>
+    <li><a href="{% url 'core:template' 'timeline' %}">timeline.html: TimelineJS</a></li>
+    <li><a href="{% url 'core:template' 'sweetalerts' %}">sweetalerts.html: Sweet Alerts</a></li>
+    <li><a href="{% url 'core:template' 'introjs' %}">introjs.html: IntroJS: explain elements on a page</a></li>
+    <li><a href="{% url 'core:template' 'slideshow' %}">slideshow.html: Photo slideshow</a></li>
+    <li><a href="{% url 'core:template' 'fancytree' %}">fancytree.html: Explore tree-based data structures</a></li>
+    <li><a href="{% url 'core:template' 'fancytree-browser' %}">fancytree-browser.html: Browing tree-based data structures</a></li>
+    <li><a href="{% url 'core:template' 'markdown' %}">markdown.html: A simple markdown toolbar for the forum</a></li>
   </ul>
 {% endblock %}
 
