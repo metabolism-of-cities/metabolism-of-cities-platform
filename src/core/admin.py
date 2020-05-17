@@ -95,7 +95,10 @@ class SocialMediaAdmin(admin.ModelAdmin):
     list_filter = ["platform", "published"]
 
 class ProjectAdmin(SearchCompleteAdmin):
-    list_display = ["name", "is_internal", "start_date", "status"]
+    list_display = ["name", "start_date", "status"]
+
+class PublicProjectAdmin(SearchCompleteAdmin):
+    list_display = ["name", "start_date", "status"]
 
 class ReferenceSpaceAdmin(SearchAdmin):
     list_display = ["name", "location_date", "is_deleted"]
@@ -195,6 +198,7 @@ admin_site.register(ProjectDesign)
 admin_site.register(People, SearchCompleteAdmin)
 admin_site.register(Video, VideoAdmin)
 admin_site.register(Project, ProjectAdmin)
+admin_site.register(PublicProject, PublicProjectAdmin)
 admin_site.register(Relationship, RelationshipAdmin)
 admin_site.register(RecordRelationship, RecordRelationshipAdmin)
 admin_site.register(SocialMedia, SocialMediaAdmin)

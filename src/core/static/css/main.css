@@ -118,8 +118,9 @@ nav .dropdown.projects-dropdown {
   nav .dropdown.projects-dropdown .projects-category {
     font-weight: bold;
     margin-bottom: .25rem;
-    border-bottom: 1px solid #a76117;
-    color: #a76117; }
+    border-bottom: 1px solid #696969;
+    color: #696969;
+    font-size: 1.1rem; }
   nav .dropdown.projects-dropdown .projects-dropdown-menu {
     padding: 15px; }
     @media (min-width: 992px) {
