@@ -16,7 +16,7 @@ class MultiHostMiddleware:
 
     def __call__(self, request):
         # If things fail, we have our fallback project = 1 (MoC main section)
-        project = 8
+        project = 1
         host = request.META.get("HTTP_HOST")
 
         try:
@@ -36,7 +36,7 @@ class MultiHostMiddleware:
             else:
                 # Online we use the full host to figure out which
                 # project we are navigating.
-                project = HOST_URL_LIST[host]["id"]
+                project = settings.HOST_URL_LIST[host]["id"]
         except:
             pass
 
