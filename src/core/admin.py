@@ -95,7 +95,7 @@ class SocialMediaAdmin(admin.ModelAdmin):
     list_filter = ["platform", "published"]
 
 class ProjectAdmin(SearchCompleteAdmin):
-    list_display = ["name", "start_date", "status"]
+    list_display = ["name", "start_date", "slug", "has_subsite", "status"]
 
 class PublicProjectAdmin(SearchCompleteAdmin):
     list_display = ["name", "start_date", "status"]

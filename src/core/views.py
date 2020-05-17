@@ -292,29 +292,6 @@ def user_profile(request):
 # Homepage
 
 def index(request):
-    if "projects" in request.GET:
-        PublicProject.objects_unfiltered.all().delete()
-        projects = Project.objects_unfiltered.filter(is_internal=False)
-        for each in projects:
-            PublicProject.objects.create(
-                full_name = each.full_name,
-                email = each.email,
-                url = each.url,
-                site_id = each.site_id,
-                target_finish_date = each.target_finish_date,
-                start_date = each.start_date,
-                end_date = each.end_date,
-                status = each.status,
-                name = each.name,
-                description = each.description,
-                image = each.image,
-                date_created = each.date_created,
-                is_deleted = each.is_deleted,
-                is_public = each.is_public,
-                old_id = each.old_id,
-            )
-        Project.objects_unfiltered.filter(is_internal=False).delete()
-
     context = {
         "header_title": "Metabolism of Cities",
         "header_subtitle": "Your hub for anyting around urban metabolism",
