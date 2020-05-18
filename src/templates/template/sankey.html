@@ -1,0 +1,81 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block title %}Sankey{% endblock %}
+
+{% block css %}
+<style>
+  #container {
+    min-width: 300px;
+    height: 600px;
+  }
+
+  #csv {
+    display: none;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div id="container"></div>
+
+{% endblock %}
+
+{% block footer %}
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/sankey.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+<script>
+  const defaultColors = ["#144d58", "#ff8a4e", "#ED561B", "#DDDF00", "#24CBE5", "#64E572", "#FF9655", "#FFF263", "#6AF9C4"]
+  const defaultFont = "Lato, Helvetica Neue, Arial, Helvetica, sans-serif";
+
+  Highcharts.chart('container', {
+    chart: {
+      marginLeft: 100,
+      marginBottom: 200,
+      marginRight: 200
+    },
+    title: {
+      text: 'Highcharts Sankey Diagram'
+    },
+    series: [{
+      colors: ["#4242a4", "#b73232", "#1f1fa8", "#365cb7", "#6389e3", "#3d1c6c", "#4b92d0", "blue", "green", "#56b756", "orange", "gold"],
+      keys: ['from', 'to', 'weight'],
+      data: [
+        ["Bagazo", "Generation", 14308],
+        ["Carbón", "Generation", 9366],
+        ["Gas natural", "Generation", 165559],
+        ["Diesel", "Generation", 15232],
+        ["Fuel oil", "Generation", 6203],
+        ["Hydro", "Generation", 130771],
+        ["Solar", "Generation", 1186],
+        ["Generation", "Pérdidas de transformación", 157099],
+        ["Generation", "Electricity", 189839],
+        ["Electricity", "Transmission loss", 20000],
+        ["Electricity", "Consumption", 169839],
+        ["Consumption", "Generation", 40000],
+        ["Transmission loss", "Generation", 10000],
+      ],
+      clip: false,
+      type: 'sankey',
+    }]
+
+  });
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
