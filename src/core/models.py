@@ -116,7 +116,15 @@ class Document(Record):
       filename = str(self.file).split("/")[1]
       return filename
 
+class ProjectType(models.Model):
+    name = models.CharField(max_length=255)
+    icon = models.CharField(max_length=50, help_text="Only include the icon name, not fa- classes --- see https://fontawesome.com/icons?d=gallery")
+
+    def __str__(self):
+        return self.name
+
 class Project(Record):
+    type = models.ForeignKey(ProjectType, on_delete=models.CASCADE, null=True, blank=True)
     contributor_page = HTMLField(null=True, blank=True)
     support_page = HTMLField(null=True, blank=True)
     start_date = models.DateField(blank=True, null=True)
