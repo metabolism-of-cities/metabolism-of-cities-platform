@@ -132,7 +132,7 @@ class Project(Record):
     slug = models.SlugField(max_length=50, unique=True, blank=True, null=True)
 
     def get_absolute_url(self):
-        return reverse("project", args=[self.id])
+        return reverse("core:project", args=[self.id])
 
     def get_website(self):
         if self.has_subsite:
