@@ -1,4 +1,9 @@
 from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
+from core.models import *
+
+PROJECT_ID = settings.PROJECT_ID_LIST
 
 def index(request):
     context = {
@@ -24,9 +29,8 @@ def people_list(request):
     }
     return render(request, "people.list.html", context)
 
-def news_list(request):
-    article = get_object_or_404(Webpage, pk=15)
-    list = News.objects.all()
+def news_list(request, project_name):
+    list = News.objects.filter(projects=PROJECT_ID[project_name])
     context = {
         "list": list[3:],
         "shortlist": list[:3],
@@ -34,10 +38,9 @@ def news_list(request):
     }
     return render(request, "news.list.html", context)
 
-def news(request, id):
-    article = get_object_or_404(Webpage, pk=15)
+def news(request, slug):
     context = {
-        "info": get_object_or_404(News, pk=id),
+        "info": get_object_or_404(News, slug=slug),
         "latest": News.objects.all()[:3],
         "edit_link": "/admin/core/news/" + str(id) + "/change/"
     }

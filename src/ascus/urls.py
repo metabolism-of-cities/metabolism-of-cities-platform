@@ -6,6 +6,7 @@ from django.views.generic.base import RedirectView
 
 from . import views
 from core import views as core
+from community import views as community
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -40,14 +41,16 @@ urlpatterns = [
     path("ascus/", RedirectView.as_view(pattern_name="ascus:index", permanent=True)),
     path("ascus/<slug:slug>/", RedirectView.as_view(pattern_name="ascus:article")),
 
+    path("<slug:slug>/", core.article, { "prefix": "/ascus/", "subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020", "project": 8}, name="article"),
 
+    # Control panel URLS from baseline
     path("controlpanel/", core.controlpanel, { "project_name": app_name }, name="controlpanel"),
     path("controlpanel/users/", core.controlpanel_users, { "project_name": app_name }, name="controlpanel_users"),
     path("controlpanel/design/", core.controlpanel_design, { "project_name": app_name }, name="controlpanel_design"),
     path("controlpanel/content/", core.controlpanel_content, { "project_name": app_name }, name="controlpanel_content"),
+
+    # Work URLs from baseline
     path("work/", core.work_grid, { "project_name": app_name }, name="work_grid"),
     path("work/<int:id>/", core.work_item, { "project_name": app_name }, name="work_item"),
-
-    path("<slug:slug>/", core.article, { "prefix": "/ascus/", "subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020", "project": 8}, name="article"),
 
 ]

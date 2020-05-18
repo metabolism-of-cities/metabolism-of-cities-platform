@@ -24,7 +24,7 @@
   <div class="row">
     {% for each in shortlist %}
       <div class="col-lg-4 mb-sm-4 mb-lg-0">
-        <a class="card btn-card" href="{{ each.get_absolute_url }}">
+        <a class="card btn-card" href="/news/{{ each.slug }}/">
           {% if each.image %}
             <img src="{{ each.image.url }}" class="card-img-top" alt="">
           {% endif %}

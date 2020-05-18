@@ -17,6 +17,12 @@ urlpatterns = [
     path("templates/", views.templates, name="templates"),
     path("templates/<slug:slug>/", views.template, name="template"),
 
+    # News
+    path("news/", views.news_list, name="news"),
+    path("news/<slug:slug>/", views.news, name="news"),
+    path("events/", views.event_list, name="events"),
+    path("events/<slug:slug>/", views.event, name="event"),
+
     # Projects
     path("projects/<int:id>/", views.project, name="project"),
     path("projects/", views.projects, name="projects"),

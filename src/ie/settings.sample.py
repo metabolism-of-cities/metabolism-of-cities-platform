@@ -37,6 +37,8 @@ TWITTER_API_CONSUMER_SECRET = '123123123'
 FACEBOOK_ACCESS_TOKEN = '123123123'
 
 PROJECT_ID_LIST = {
+    "moc": 1,
+    "core": 1,
     "library": 2,
     "multimedia": 3,
     "data": 4,

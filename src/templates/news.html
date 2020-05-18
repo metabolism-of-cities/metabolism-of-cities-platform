@@ -18,7 +18,7 @@
     </div>
     {% endif %}
 
-    {{ info.content|safe }}
+    {{ info.description|safe }}
 
   </article>
   <div class="col-lg-4">
@@ -50,12 +50,12 @@
     <div class="card">
       <div class="list-group list-group-flush">
         {% for each in latest %}
-        <a href="{{ each.get_absolute_url }}" class="list-group-item">
+        <a href="/news/{{ each.slug }}/" class="list-group-item">
           <div>{{ each }}</div>
           <div class="text-muted mb-0">{{ each.date }}</div>
         </a>
         {% endfor %}
-        <a href="{% url "news" %}" class="list-group-item font-weight-bold">News archive</a>
+        <a href="/news/" class="list-group-item font-weight-bold">News archive</a>
       </div>
     </div>
 

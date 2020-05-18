@@ -21,9 +21,9 @@ t.js
     <div class="col-md-6 mb-2">
       <select class="type-filter custom-select">
         <option value="all" selected>Filter by category</option>
-        <option value="seminar">Seminars</option>
-        <option value="conference">Conferences</option>
-        <option value="other">Something else</option>
+        {% for each in types %}
+          <option value="{{ each.id }}">{{ each }}</option>
+        {% endfor %}
       </select>
     </div>
   </div>
@@ -40,17 +40,22 @@ t.js
             <h5 class="card-title project-name">{{ each }}</h5>
           </div>
           <ul class="list-group list-group-flush">
+            {% if False %}
             <li class="list-group-item">
               <i class="far fa-fw fa-map-marker-alt"></i> Cape Town, South Africa
             </li>
+            {% endif %}
             <li class="list-group-item">
-              <i class="far fa-fw fa-calendar"></i> 12 March 2019 - 18 October 2022
+              <i class="far fa-fw fa-calendar"></i>
+              {{ each.start_date }}
+              {% if each.end_date %}{{ each.end_date }}{% endif %}
             </li>
             <li class="list-group-item">
-              <i class="far fa-fw fa-play"></i> Ongoing
+              <i class="far fa-fw fa-{% if each.status == "ongoing" %}play{% else %}check{% endif %}"></i> {{ each.get_status_display }}
             </li>
             <li class="list-group-item">
-              <i class="far fa-fw fa-cabinet-filing"></i> Conferences and seminars
+              <i class="far fa-fw fa-{{ each.type.icon }}"></i> 
+              {{ each.type }}
             </li>
           </ul>
         </a>

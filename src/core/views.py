@@ -2,14 +2,21 @@ from io import BytesIO
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
+from .models import *
 
+# Contrib imports
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
 from django.contrib import messages
-from django.db.models import Q
-from django.http import JsonResponse, HttpResponse
 from django.contrib.sites.models import Site
+from django.contrib.auth.models import User, Group, Permission
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.sites.shortcuts import get_current_site
+
+from django.db.models import Count
+from django.db.models import Q
+
+from django.http import JsonResponse, HttpResponse
 from django.http import Http404, HttpResponseRedirect
 
 # These are used so that we can send mail
@@ -21,13 +28,7 @@ from django.conf import settings
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
 
-from django.contrib.auth.models import User, Group, Permission
-from django.contrib.auth import authenticate, login, logout
-
 from collections import defaultdict
-from .models import *
-
-from django.contrib.sites.shortcuts import get_current_site
 
 from django.template import Context
 from django.forms import modelform_factory
@@ -59,6 +60,11 @@ import facebook
 
 TAG_ID = settings.TAG_ID_LIST
 PAGE_ID = settings.PAGE_ID_LIST
+
+# If we add any new project, we should add it to this list. 
+# We must make sure to filter like this to exclude non-project news
+# (which we want in the community section but not here), as well as MoI news
+MOC_PROJECTS = [1,2,3,4,7,8,11,14,15,16,18,3458]
 
 def get_site_tag(request):
     if request.site.id == 1:
@@ -251,9 +257,10 @@ def user_reset(request):
 
 def user_profile(request):
     user = request.user
-    organizations = UserRelationship.objects.filter(relationship__id=USER_RELATIONSHIPS["member"], user=user)
+    if user.people:
+        relationships = RecordRelationship.objects.filter(record_parent=user.people)
     context = {
-        "organizations": organizations,
+        "relationships": relationships,
     }
     return render(request, "auth/profile.html", context)
 
@@ -266,6 +273,52 @@ def index(request):
         "show_project_design": True,
     }
     return render(request, "index.html", load_design(context))
+
+# News and events
+
+def news_list(request):
+    list = News.objects.filter(projects__in=MOC_PROJECTS).distinct()
+    context = {
+        "list": list[3:],
+        "shortlist": list[:3],
+        "add_link": "/admin/core/news/add/"
+    }
+    return render(request, "news.list.html", context)
+
+def news(request, slug):
+    list = News.objects.filter(projects__in=MOC_PROJECTS).distinct()
+    context = {
+        "info": get_object_or_404(News, slug=slug),
+        "latest": list[:3],
+        "edit_link": "/admin/core/news/" + str(id) + "/change/"
+    }
+    return render(request, "news.html", context)
+
+def event_list(request):
+    article = get_object_or_404(Webpage, pk=47)
+    today = timezone.now().date()
+    context = {
+        "upcoming": Event.objects.filter(end_date__gte=today).order_by("start_date"),
+        "archive": Event.objects.filter(end_date__lt=today),
+        "add_link": "/admin/core/event/add/",
+        "header_title": "Events",
+        "header_subtitle": "Find out what is happening around you!",
+    }
+    return render(request, "event.list.html", context)
+
+def event(request, id):
+    article = get_object_or_404(Webpage, pk=16)
+    info = get_object_or_404(Event, pk=id)
+    header["title"] = info.name
+    today = timezone.now().date()
+    context = {
+        "header": header,
+        "info": info,
+        "upcoming": Event.objects.filter(end_date__gte=today).order_by("start_date")[:3],
+    }
+    return render(request, "event.html", context)
+
+
 
 # The template section allows contributors to see how some
 # commonly used elements are coded, and allows them to copy/paste
@@ -282,8 +335,9 @@ def template(request, slug):
 def projects(request):
     article = get_object_or_404(Webpage, pk=PAGE_ID["projects"])
     context = {
-        "list": Project.objects.all(),
+        "list": Project.objects.all().exclude(id=1).order_by("name"),
         "article": article,
+        "types": ProjectType.objects.all().order_by("name"),
         "header_title": "Projects",
         "header_subtitle": "Overview of projects undertaken by the Metabolism of Cities community",
     }

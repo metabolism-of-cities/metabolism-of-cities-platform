@@ -184,18 +184,21 @@ class PublicProject(Record):
 
 class News(Record):
     date = models.DateField()
-    site = models.ForeignKey(Site, on_delete=models.CASCADE)
     objects = models.Manager()
-    on_site = CurrentSiteManager()
     slug = models.SlugField(max_length=255)
-    class Meta:
-        verbose_name_plural = "news"
-        ordering = ["-date", "-id"]
+    projects = models.ManyToManyField(Project)
+    include_in_timeline = models.BooleanField(default=False)
+
     def get_absolute_url(self):
-        return reverse("news", args=[self.id])
+        return reverse("community:news", args=[self.slug])
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = "news"
+        ordering = ["-date", "-id"]
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()

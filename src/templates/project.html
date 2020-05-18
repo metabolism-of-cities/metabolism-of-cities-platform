@@ -43,9 +43,18 @@
           <strong>Status</strong>: {{ info.get_status_display }}
         </li>
         <li class="list-group-item">
-          <i class="far fa-fw fa-cabinet-filing"></i>
-          <strong>Type</strong>: <a href="">Online tools and platforms</a>
+          <i class="far fa-fw fa-{{ info.type.icon }}"></i>
+          <strong>Type</strong>: <a href="{% url "core:projects" %}?type={{ info.type.id }}">{{ info.type }}</a>
         </li>
+
+        {% if info.get_website %}
+          <li class="list-group-item">
+            <a href="{{ info.get_website }}" class="btn btn-primary-outline">
+              <i class="fas fa-link"></i>
+              Project website
+            </a>
+          </li>
+        {% endif %}
         {% if info.id != 20 and info.id != 21 and False %}
         <li class="list-group-item">
           <i class="far fa-fw fa-flask mb-1"></i> Materials
@@ -80,10 +89,10 @@
         {% lorem 2 p %}
       {% endif %}
 
-      {% if info.has_subsite %}
-        <a href="/{{ info.slug }}/" class="btn btn-primary">
-          <i class="fas fa-browser"></i>
-          Project website
+      {% if info.get_website %}
+        <a href="{{ info.get_website }}" class="btn btn-primary-outline">
+          <i class="fas fa-link"></i>
+          Go to project website
         </a>
       {% endif %}
 

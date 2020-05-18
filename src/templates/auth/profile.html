@@ -9,21 +9,21 @@
   <p>Date joined: {{ request.user.date_joined }}</p>
   <p>Last login: {{ request.user.last_login }}</p>
 
-  {% if organizations %}
-  <h2>Organisations</h2>
-  <p>This user belongs to the following organisations:</p>
+  {% if relationships %}
+  <h2>Relationships</h2>
+  <p>This user has the following record</p>
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>Organisation</th>
         <th>Role</th>
+        <th>Related to</th>
       </tr>
     </thead>
     <tbody>
-    {% for each in organizations %}
+    {% for each in relationships %}
       <tr>
-        <td>{{ each.record }}</td>
-        <td>{{ each.relationship }}</td>
+        <td>{{ each.relationship.name }}</td>
+        <td>{{ each.record_child }}</td>
       </tr>
     {% endfor %}
     </tbody>
