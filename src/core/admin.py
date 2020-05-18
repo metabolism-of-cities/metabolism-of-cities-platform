@@ -95,8 +95,8 @@ class SocialMediaAdmin(admin.ModelAdmin):
     list_filter = ["platform", "published"]
 
 class ProjectAdmin(SearchCompleteAdmin):
-    list_display = ["id", "name", "start_date", "slug", "has_subsite", "status"]
-    list_filter = ["has_subsite", "status"]
+    list_display = ["name", "type", "start_date", "slug", "has_subsite", "status"]
+    list_filter = ["has_subsite", "status", "type"]
 
 class PublicProjectAdmin(SearchCompleteAdmin):
     list_display = ["name", "start_date", "status"]
@@ -196,6 +196,7 @@ admin_site.register(Organization, OrgAdmin)
 admin_site.register(Webpage, WebpageAdmin)
 admin_site.register(WebpageDesign, WebpageDesignAdmin)
 admin_site.register(ProjectDesign)
+admin_site.register(ProjectType)
 admin_site.register(People, SearchCompleteAdmin)
 admin_site.register(Video, VideoAdmin)
 admin_site.register(Project, ProjectAdmin)
