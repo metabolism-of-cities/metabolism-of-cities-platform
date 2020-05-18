@@ -1,0 +1,62 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1>{{ info }}</h1>
+
+  <div class="alert alert-secondary">
+    <h3>Instructions</h3>
+    <p>
+      Please review this video and if all is well, upload it to YouTube.
+      On YouTube please make sure it's unlisted, and once it's uploaded
+      copy the URL in the form below. 
+      Alternatively, you may decide to remove the video (e.g. if it's a 
+      duplication), or to request that the author upload a new video 
+      (e.g. inaudible).
+    </p>
+  </div>
+
+  <p>
+    <a class="btn btn-primary" href="{{ info.file.url }}"><i class="fa fa-fw fa-download"></i> Download video</a>
+  </p>
+
+  <form method="post">
+  
+    <h2 class="mt-5">If the video is good...</h2>
+
+    <div class="form-group">
+      <label for="yt">Youtube URL</label>
+      <input type="url" class="form-control" id="yt" value="{{ info.file_url|default_if_none:"" }}" name="youtube" required>
+      <small id="emailHelp" class="form-text text-muted">Enter the full Youtube URL of the video</small>
+    </div>
+
+    <div class="form-group">
+      <label>Internal comments (optional)</label>
+      <textarea class="form-control" name="comments" rows="3">{% if info.file_url %}{{ work.description|default_if_none:"" }}{% endif %}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button>
+    {% csrf_token %}
+
+  </form>
+
+  <form method="post">
+  
+    <h2 class="mt-5">If it is not good...</h2>
+
+    <div class="form-group">
+      <label>Internal comments</label>
+      <textarea required class="form-control" name="comments" rows="3">{% if work.get_status_display != "Open" %}{{ work.description|default_if_none:"" }}{% endif %}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-danger" name="discard" value="true">Discard video</button>
+    {% csrf_token %}
+
+  </form>
+
+  <p class="mt-5">
+    <a href="{% url "ascus:admin" %}" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a>
+    <a href="{% url "ascus:admin_introvideos" %}" class="btn btn-info"><i class="fa fa-video"></i> Back to video list</a>
+  </p>
+
+{% endblock %}

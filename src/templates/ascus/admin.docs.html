@@ -2,16 +2,6 @@
 
 {% block content %}
 
-  <ul class="nav nav-tabs">
-    {% for key,value in types.items %}
-      {% if key != "topics" %}
-        <li class="nav-item">
-          <a class="nav-link {% if type == key %}active{% endif %}" href="{% url "ascus:admin_documents" key %}">{{ value }}</a>
-        </li>
-      {% endif %}
-    {% endfor %}
-  </ul>
-
   {% if type == "topics" %}
     {% for each in list %}
       <h3>{{ each }}</h3>

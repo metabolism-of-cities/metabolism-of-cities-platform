@@ -980,27 +980,27 @@ def stafcp_article(request, id):
 # Control panel and general contribution components
 
 @login_required
-def controlpanel(request):
-    if not has_permission(request, PAGE_ID["stafcp"], ["curator", "admin", "publisher"]):
+def controlpanel(request, project_name):
+    if not has_permission(request, PAGE_ID[project_name], ["curator", "admin", "publisher"]):
         unauthorized_access(request)
     context = {
     }
-    return render(request, "stafcp/controlpanel/index.html", context)
+    return render(request, "controlpanel/index.html", context)
 
 @login_required
-def controlpanel_users(request):
-    if not has_permission(request, PAGE_ID["stafcp"], ["curator", "admin", "publisher"]):
+def controlpanel_users(request, project_name):
+    if not has_permission(request, PAGE_ID[project_name], ["curator", "admin", "publisher"]):
         unauthorized_access(request)
     context = {
-        "users": RecordRelationship.objects.filter(record_child_id=PAGE_ID["stafcp"], relationship__is_permission=True),
+        "users": RecordRelationship.objects.filter(record_child_id=PAGE_ID[project_name], relationship__is_permission=True),
         "load_datatables": True,
     }
-    return render(request, "stafcp/controlpanel/users.html", context)
+    return render(request, "controlpanel/users.html", context)
 
 @login_required
-def controlpanel_design(request):
+def controlpanel_design(request, project_name):
 
-    project = PAGE_ID["stafcp"]
+    project = PAGE_ID[project_name]
     if not has_permission(request, project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
@@ -1018,12 +1018,12 @@ def controlpanel_design(request):
     context = {
         "form": form,
     }
-    return render(request, "stafcp/controlpanel/design.html", context)
+    return render(request, "controlpanel/design.html", context)
 
 @login_required
-def controlpanel_content(request):
+def controlpanel_content(request, project_name):
 
-    project = PAGE_ID["stafcp"]
+    project = PAGE_ID[project_name]
     if not has_permission(request, project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
@@ -1031,10 +1031,10 @@ def controlpanel_content(request):
         "pages": Webpage.objects.filter(belongs_to_id=project),
         "load_datatables": True,
     }
-    return render(request, "stafcp/controlpanel/content.html", context)
+    return render(request, "controlpanel/content.html", context)
 
-def work_grid(request):
-    project = PAGE_ID["stafcp"]
+def work_grid(request, project_name):
+    project = PAGE_ID[project_name]
     list = Work.objects.filter(part_of_project_id=project)
     if request.GET.get("status"):
         list = list.filter(status=request.GET["status"])
@@ -1048,7 +1048,7 @@ def work_grid(request):
     }
     return render(request, "contribution/work.grid.html", context)
 
-def work_item(request, id):
+def work_item(request, project_name, id):
     # To do: validate user has access to this ticket
     # if at all needed?
     context = {

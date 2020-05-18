@@ -1,0 +1,28 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Video</th>
+        <th>Date</th>
+        <th>Upload status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for each in list %}
+        <tr>
+          <td>
+            <a href="{% url "ascus:admin_introvideo" each.id %}">{{ each.related_to }}</a>
+          </td>
+          <td data-sort="{{ each.date_created|date:"U" }}">{{ each.date_created|date:"M d, Y" }}</td>
+          <td>{{ each.get_status_display }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <p class="mt-5"><a href="{% url "ascus:admin" %}" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a></p>
+
+{% endblock %}

@@ -31,6 +31,8 @@ urlpatterns = [
     path("account/admin/", views.ascus_admin, name="admin"),
     path("account/admin/payments/", views.ascus_admin_work, name="admin_payments"),
     path("account/admin/documents/<slug:type>/", views.ascus_admin_documents, name="admin_documents"),
+    path("account/admin/introvideos/", views.ascus_admin_introvideos, name="admin_introvideos"),
+    path("account/admin/introvideos/<int:id>/", views.ascus_admin_introvideo, name="admin_introvideo"),
     path("account/admin/payments/<int:id>/", views.ascus_admin_work_item, name="admin_payment"),
     path("account/admin/<slug:type>/", views.ascus_admin_list, name="admin_list"),
 
@@ -38,8 +40,14 @@ urlpatterns = [
     path("ascus/", RedirectView.as_view(pattern_name="ascus:index", permanent=True)),
     path("ascus/<slug:slug>/", RedirectView.as_view(pattern_name="ascus:article")),
 
+
+    path("controlpanel/", core.controlpanel, { "project_name": app_name }, name="controlpanel"),
+    path("controlpanel/users/", core.controlpanel_users, { "project_name": app_name }, name="controlpanel_users"),
+    path("controlpanel/design/", core.controlpanel_design, { "project_name": app_name }, name="controlpanel_design"),
+    path("controlpanel/content/", core.controlpanel_content, { "project_name": app_name }, name="controlpanel_content"),
+    path("work/", core.work_grid, { "project_name": app_name }, name="work_grid"),
+    path("work/<int:id>/", core.work_item, { "project_name": app_name }, name="work_item"),
+
     path("<slug:slug>/", core.article, { "prefix": "/ascus/", "subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020", "project": 8}, name="article"),
 
 ]
-
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

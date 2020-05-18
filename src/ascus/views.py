@@ -358,6 +358,52 @@ def ascus_admin_documents(request, type="introvideos"):
         return render(request, "ascus/admin.docs.html", context)
 
 @check_ascus_admin_access
+def ascus_admin_introvideos(request):
+    list = Work.objects \
+        .filter(related_to__parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(related_to__tags__id=769)
+
+    context = {
+        "list": list,
+        "load_datatables": True,
+    }
+    return render(request, "ascus/admin.introvideos.html", context)
+
+@check_ascus_admin_access
+def ascus_admin_introvideo(request, id):
+    work = Work.objects.get(related_to__parent_list__record_child__id=PAGE_ID["ascus"], related_to__tags__id=769, pk=id)
+    info = work.related_to
+    info = Video.objects_unfiltered.get(pk=info.id)
+
+    if "youtube" in request.POST:
+        info.file_url = request.POST.get("youtube")
+        info.save()
+
+        work.status = Work.WorkStatus.COMPLETED
+        work.description = request.POST.get("comments")
+        work.save()
+
+        messages.success(request, "The Youtube URL was recorded")
+        return redirect("ascus:admin_introvideos")
+
+    if "discard" in request.POST:
+        info.is_deleted = True
+        info.save()
+
+        work.status = Work.WorkStatus.DISCARDED
+        work.description = request.POST.get("comments")
+        work.save()
+
+        messages.success(request, "The video was discarded")
+        return redirect("ascus:admin_introvideos")
+
+    context = {
+        "info": info,
+        "work": work,
+    }
+    return render(request, "ascus/admin.introvideo.html", context)
+
+@check_ascus_admin_access
 def ascus_admin_work(request):
     list = Work.objects.filter(
         part_of_project_id = PAGE_ID["ascus"],

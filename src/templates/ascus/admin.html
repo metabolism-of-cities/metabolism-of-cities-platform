@@ -32,7 +32,16 @@ body.homepage section.what .card{height:auto}
     </div>
 
     <div class="col-md-3">
-      <a class="card icon-card btn-card" href="{% url "ascus:admin_documents" "introvideos" %}">
+      <a class="card icon-card btn-card" href="{% url "ascus:admin_introvideos" %}">
+        <div class="icon">
+          <i class="far fa-fw fa-video"></i>
+        </div>
+        <div class="card-header">Introduction videos</div>
+      </a>
+    </div>
+
+    <div class="col-md-3">
+      <a class="card icon-card btn-card" href="{% url "ascus:admin_documents" "presentations" %}">
         <div class="icon">
           <i class="far fa-fw fa-presentation"></i>
         </div>
