@@ -20,6 +20,7 @@ from community import views as community
 app_name = "appname_goes_here"
 
 baseline_urlpatterns = [
+
     # Control panel URLS from baseline
     path("controlpanel/", core.controlpanel, { "project_name": app_name }, name="controlpanel"),
     path("controlpanel/users/", core.controlpanel_users, { "project_name": app_name }, name="controlpanel_users"),

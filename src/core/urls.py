@@ -37,18 +37,6 @@ urlpatterns = [
     path("about/", views.article_list, { "id": 31 }, name="about"),
     path("about/<slug:slug>/", views.article, { "prefix": "/about/" }, name="about"),
 
-    # MultipliCity
-    path("data/", views.datahub, name="datahub"),
-    path("data/overview/", views.datahub_overview, name="datahub_overview"),
-    path("data/<slug:space>/sectors/<slug:sector>/", views.datahub_sector, name="datahub_sector"),
-    path("data/<slug:space>/datasets/<slug:dataset>/", views.datahub_dataset, name="datahub_dataset"),
-    path("data/<slug:space>/", views.datahub_dashboard, name="datahub_dashboard"),
-    path("data/<slug:space>/resources/photos/", views.datahub_photos, name="datahub_photos"),
-    path("data/<slug:space>/resources/reports/", views.datahub_library, {"type": "reports"}, name="datahub_reports"),
-    path("data/<slug:space>/resources/theses/", views.datahub_library, {"type": "theses"}, name="datahub_theses"),
-    path("data/<slug:space>/resources/journal-articles/", views.datahub_library, {"type": "articles"}, name="datahub_journal_articles"),
-    path("data/<slug:space>/maps/", views.datahub_maps, name="datahub_maps"),
-
     # PlatformU
     path("platformu/", views.metabolism_manager, name="platformu"),
     path("platformu/admin/", views.metabolism_manager_admin, name="platformu_admin"),

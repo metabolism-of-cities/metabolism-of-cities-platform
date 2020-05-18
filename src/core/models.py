@@ -771,7 +771,7 @@ class ReferenceSpace(Record):
 
     def photo(self):
         from core.models import Photo
-        photo = Photo.objects.filter(space=self, is_deleted=False).order_by("position")
+        photo = Photo.objects.filter(spaces=self, is_deleted=False).order_by("position")
         if photo:
             return photo[0]
 

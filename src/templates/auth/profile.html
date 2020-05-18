@@ -3,6 +3,7 @@
 {% block title %}User Profile{% endblock %}
 
 {% block content %}
+
   <h1>User profile</h1>
   <p>User name: {{ request.user }}</p>
   <p>E-mail: {{ request.user.email }}</p>
@@ -10,31 +11,33 @@
   <p>Last login: {{ request.user.last_login }}</p>
 
   {% if relationships %}
-  <h2>Relationships</h2>
-  <p>This user has the following record</p>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Role</th>
-        <th>Related to</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for each in relationships %}
-      <tr>
-        <td>{{ each.relationship.name }}</td>
-        <td>{{ each.record_child }}</td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-
+    <h2>Relationships</h2>
+    <p>This user has the following record</p>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Related to</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in relationships %}
+        <tr>
+          <td>{{ each.relationship.name }}</td>
+          <td>{{ each.record_child }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
   {% endif %}
 
-  <section class="alert alert-warning">
-    <h2>Admin info</h2>
-    <p>Is staff? {{ request.user.is_staff }}</p>
-    <p>Super user? {{ request.user.is_superuser }}</p>
-    <p>Active? {{ request.user.is_active }}</p>
-  </section>
+  {% if request.user.is_superuser %}
+    <section class="alert alert-warning">
+      <h2>Admin info</h2>
+      <p>Is staff? {{ request.user.is_staff }}</p>
+      <p>Super user? {{ request.user.is_superuser }}</p>
+      <p>Active? {{ request.user.is_active }}</p>
+    </section>
+  {% endif %}
+
 {% endblock %}
