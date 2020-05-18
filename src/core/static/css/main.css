@@ -5,7 +5,8 @@
     transform: translateY(-3px); }
 
 .gallery a, a.large-icon-box, .btn-icon, .btn-thumbnail, .btn-card {
-  transition: all .3s; }
+  transition: all .3s;
+  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2); }
   .gallery a:hover, a.large-icon-box:hover, .btn-icon:hover, .btn-thumbnail:hover, .btn-card:hover {
     box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.2); }
 
@@ -368,9 +369,11 @@ footer {
     left: calc(50% - 3rem);
     position: absolute;
     top: calc(50% - 3rem); }
-  .btn-card img {
+  .btn-card img.card-img-top {
     height: 180px;
     object-fit: cover; }
+  .btn-card.contain img.card-img-top {
+    object-fit: contain; }
   .btn-card .card-body.media img {
     width: 100px;
     height: 50px;
@@ -488,7 +491,6 @@ blockquote {
 .btn-icon {
   background-color: #fff;
   border-radius: .25rem;
-  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
   color: #000;
   cursor: pointer;
   display: block;

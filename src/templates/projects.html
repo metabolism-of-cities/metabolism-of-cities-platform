@@ -31,7 +31,7 @@ t.js
   <div class="row list">
     {% for each in list %}
       <div class="col-xl-4 col-md-6 mb-4 single-project" data-type="seminar">
-        <a class="card btn-card" href="{{ each.get_absolute_url }}">
+        <a class="card btn-card contain" href="{{ each.get_absolute_url }}">
           {% if each.get_image %}
             <img class="card-img-top" src="{{ each.get_image.url }}" alt="" />
           {% endif %}

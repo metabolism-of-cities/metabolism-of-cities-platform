@@ -20,6 +20,7 @@ $basic-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
 
 %box-shadow {
   transition: all .3s;
+  box-shadow: $basic-shadow;
 
   &:hover {
     box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.2);
@@ -571,9 +572,13 @@ footer {
     top: calc(50% - 3rem);
   }
 
-  img {
+  img.card-img-top {
     height: 180px;
     object-fit: cover;
+  }
+
+  &.contain img.card-img-top {
+    object-fit: contain;
   }
 
   .card-body.media img {
@@ -751,7 +756,6 @@ blockquote {
   @extend %box-shadow;
   background-color: #fff;
   border-radius: .25rem;
-  box-shadow: $basic-shadow;
   color: $black;
   cursor: pointer;
   display: block;
