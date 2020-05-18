@@ -45,7 +45,7 @@ def photos(request, space):
     context = {
         "space": space,
         "header_image": space.photo,
-        "photos": Photo.objects.filter(space=space),
+        "photos": Photo.objects.filter(spaces=space),
     }
     return render(request, "data/photos.html", context)
 
@@ -74,16 +74,31 @@ def library(request, space, type):
         "header_image": space.photo,
         "title": title,
         "items": list,
+        "load_datatables": True,
     }
     return render(request, "data/library.html", context)
 
 def sector(request, space, sector):
+    space = get_space(request, space)
     context = {
+        "space": space,
+        "header_image": space.photo,
+    }
+    return render(request, "data/sector.html", context)
+
+def sectors(request, space):
+    space = get_space(request, space)
+    context = {
+        "space": space,
+        "header_image": space.photo,
     }
     return render(request, "data/sector.html", context)
 
 def dataset(request, space, dataset):
+    space = get_space(request, space)
     context = {
+        "space": space,
+        "header_image": space.photo,
     }
     return render(request, "data/dataset.html", context)
 

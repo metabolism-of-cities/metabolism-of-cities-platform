@@ -60,6 +60,7 @@ import facebook
 
 TAG_ID = settings.TAG_ID_LIST
 PAGE_ID = settings.PAGE_ID_LIST
+PROJECT_ID = settings.PROJECT_ID_LIST
 
 # If we add any new project, we should add it to this list. 
 # We must make sure to filter like this to exclude non-project news
@@ -391,7 +392,7 @@ def article_list(request, id):
 # Metabolism Manager
 
 def metabolism_manager(request):
-    info = get_object_or_404(Project, pk=PAGE_ID["platformu"])
+    info = get_object_or_404(Project, pk=PROJECT_ID["platformu"])
     context = {
         "show_project_design": True,
     }
@@ -593,7 +594,7 @@ def metabolism_manager_forum(request):
 def stafcp(request):
     context = {
         "show_project_design": True,
-        "show_relationship": PAGE_ID["stafcp"],
+        "show_relationship": PROJECT_ID["stafcp"],
     }
     return render(request, "stafcp/index.html", context)
 
@@ -611,7 +612,7 @@ def stafcp_review_pending(request):
 def stafcp_review_uploaded(request):
 
     context = {
-        "list": Work.objects.filter(status=Work.WorkStatus.OPEN, part_of_project_id=PAGE_ID["stafcp"], workactivity_id=2),
+        "list": Work.objects.filter(status=Work.WorkStatus.OPEN, part_of_project_id=PROJECT_ID["stafcp"], workactivity_id=2),
         "load_datatables": True,
     }
     return render(request, "stafcp/review/files.uploaded.html", context)
@@ -631,7 +632,7 @@ def stafcp_review_session(request, id):
 
 def stafcp_upload_gis(request, id=None):
     context = {
-        "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
+        "design_link": "/admin/core/articledesign/" + str(PROJECT_ID["stafcp"]) + "/change/",
         "list": GeocodeScheme.objects.filter(is_deleted=False),
         "geocodes": Geocode.objects.filter(is_deleted=False, scheme__is_deleted=False),
     }
@@ -640,7 +641,7 @@ def stafcp_upload_gis(request, id=None):
 @login_required
 def stafcp_upload_gis_file(request, id=None):
     session = None
-    project = PAGE_ID["stafcp"]
+    project = PROJECT_ID["stafcp"]
     if id:
         # Add validation code here
         session = get_object_or_404(UploadSession, pk=id)
@@ -822,7 +823,7 @@ def stafcp_flowdiagrams(request):
 def stafcp_flowdiagram(request, id):
     activities = Activity.objects.all()
     context = {
-        "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
+        "design_link": "/admin/core/articledesign/" + str(PROJECT_ID["stafcp"]) + "/change/",
         "activities": activities,
         "load_select2": True,
         "load_mermaid": True,
@@ -850,7 +851,7 @@ def stafcp_flowdiagram_form(request, id):
     blocks = info.blocks.all()
     activities = Activity.objects.all()
     context = {
-        "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
+        "design_link": "/admin/core/articledesign/" + str(PROJECT_ID["stafcp"]) + "/change/",
         "activities": activities,
         "load_select2": True,
         "load_mermaid": True,
@@ -947,7 +948,7 @@ def stafcp_geocode_form(request, id=None):
 
 def stafcp_article(request, id):
     context = {
-        "design_link": "/admin/core/articledesign/" + str(PAGE_ID["stafcp"]) + "/change/",
+        "design_link": "/admin/core/articledesign/" + str(PROJECT_ID["stafcp"]) + "/change/",
 
     }
     return render(request, "stafcp/index.html", context)
@@ -956,7 +957,7 @@ def stafcp_article(request, id):
 
 @login_required
 def controlpanel(request, project_name):
-    if not has_permission(request, PAGE_ID[project_name], ["curator", "admin", "publisher"]):
+    if not has_permission(request, PROJECT_ID[project_name], ["curator", "admin", "publisher"]):
         unauthorized_access(request)
     context = {
     }
@@ -964,10 +965,10 @@ def controlpanel(request, project_name):
 
 @login_required
 def controlpanel_users(request, project_name):
-    if not has_permission(request, PAGE_ID[project_name], ["curator", "admin", "publisher"]):
+    if not has_permission(request, PROJECT_ID[project_name], ["curator", "admin", "publisher"]):
         unauthorized_access(request)
     context = {
-        "users": RecordRelationship.objects.filter(record_child_id=PAGE_ID[project_name], relationship__is_permission=True),
+        "users": RecordRelationship.objects.filter(record_child_id=PROJECT_ID[project_name], relationship__is_permission=True),
         "load_datatables": True,
     }
     return render(request, "controlpanel/users.html", context)
@@ -975,7 +976,7 @@ def controlpanel_users(request, project_name):
 @login_required
 def controlpanel_design(request, project_name):
 
-    project = PAGE_ID[project_name]
+    project = PROJECT_ID[project_name]
     if not has_permission(request, project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
@@ -998,7 +999,7 @@ def controlpanel_design(request, project_name):
 @login_required
 def controlpanel_content(request, project_name):
 
-    project = PAGE_ID[project_name]
+    project = PROJECT_ID[project_name]
     if not has_permission(request, project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
@@ -1009,7 +1010,7 @@ def controlpanel_content(request, project_name):
     return render(request, "controlpanel/content.html", context)
 
 def work_grid(request, project_name):
-    project = PAGE_ID[project_name]
+    project = PROJECT_ID[project_name]
     list = Work.objects.filter(part_of_project_id=project)
     if request.GET.get("status"):
         list = list.filter(status=request.GET["status"])
@@ -1038,7 +1039,7 @@ def work_item(request, project_name, id):
 # Podcast series
 
 def podcast_series(request):
-    webpage = get_object_or_404(Project, pk=PAGE_ID["podcast"])
+    webpage = get_object_or_404(Project, pk=PROJECT_ID["podcast"])
     list = LibraryItem.objects.filter(type__name="Podcast").order_by("-date_created")
     context = {
         "show_project_design": True,
@@ -1052,7 +1053,7 @@ def podcast_series(request):
 # Community hub
 
 def community(request):
-    webpage = get_object_or_404(Project, pk=PAGE_ID["community"])
+    webpage = get_object_or_404(Project, pk=PROJECT_ID["community"])
     context = {
         "show_project_design": True,
         "webpage": webpage,

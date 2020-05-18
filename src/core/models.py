@@ -515,6 +515,50 @@ class LibraryItem(Record):
         list = Organization.objects.filter(parent_list__record_child=self, parent_list__relationship__id=3)
         return list[0] if list else None
 
+    # The 'author_list' part will be highly varied... some contain Firstname Lastname, Firstname Lastname 
+    # others contain Lastname, Firstname and Lastname, Firstname
+    # others contain Firstname Lastname; Firstname Lastname; etc.
+    # This script tries to get the author_list ready for in-text citation (up to two authors; adding et al 
+    # if there are more). 
+    def get_author_citation(self):
+        if self.author_citation:
+            return self.author_citation
+        else:
+            author_array = []
+            author_list = self.author_list
+            if " and " in author_list:
+                authors = author_list.split(" and ")
+                for each in authors:
+                    if "," in each:
+                        lastname = each.split(",", 1)[0]
+                    else:
+                        lastname = each.rpartition(" ")[2]
+                    author_array.append(lastname)
+            elif ";" in author_list:
+                authors = author_list.split(";")
+                for each in authors:
+                    if "," in each:
+                        lastname = each.split(",", 1)[0]
+                    else:
+                        lastname = each.rpartition(" ")[2]
+                    author_array.append(lastname)
+            elif "," in author_list:
+                authors = author_list.split(",")
+                for each in authors:
+                    lastname = each.rpartition(" ")[2]
+                    author_array.append(lastname)
+            else:
+                lastname = author_list.rpartition(" ")[2]
+                author_array.append(lastname)
+            if len(author_array) == 1:
+                return author_array[0]
+            elif len(author_array) == 2:
+                return author_array[0] + " and " + author_array[1]
+            elif len(author_array) > 2:
+                return author_array[0] + " <em>et al.</em>"
+            else:
+                return ""
+
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()

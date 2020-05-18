@@ -63,6 +63,7 @@ def journal(request, slug):
     context = {
         "info": info,
         "items": info.publications,
+        "load_datatables": True,
     }
     return render(request, "library/journal.html", context)
 

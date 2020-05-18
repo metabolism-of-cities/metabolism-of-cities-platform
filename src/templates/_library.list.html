@@ -1,27 +1,29 @@
 <div id="resource-list">
-  <input class="form-control search mb-4" type="text" placeholder="Search by title, author or year...">
-  <div class="row list">
-    {% for details in items %}
-      <div class="col-md-6 mb-4">
-        <a class="card btn-card single-resource" href="{{ details.get_absolute_url }}">
-          <div class="card-body">
-            <strong class="resource-title">{{ details }}</strong>
-            {% if details.author_citation %}
-                <span class="resource-author">{{ details.author_citation }}</span>
-            {% endif %}
-            {% if details.published_in %}<div class="resource-journal">{{ details.published_in }}</div>{% endif %}
-            {% if details.type %}<div class="resource-type">{{ details.type }}</div>{% endif %}
-            {% if details.year %}<div class="resource-year">{{ details.year }}</div>{% endif %}
-          </div>
-        </a>
-      </div>
-    {% endfor %}
-  </div>
 
-  <div class="card no-results">
-    <div class="card-body text-center">
-      <h2 class="my-4"><i class="fad fa-search"></i> No publications found</h2>
-      <button class="btn btn-lg btn-primary clear-filter my-4">Show all publications</button>
-    </div>
-  </div>
+<table class="table table-striped datatable">
+  <thead>
+    <tr>
+      <th>Year</th>
+      <th>Title</th>
+      <th>Author(s)</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for details in items %}
+      <tr>
+        <td>
+            <a href="{{ details.get_absolute_url }}">{{ details }}</a>
+          <br>
+          <em>{{ details.type }}</em>
+          {% if details.publisher %} 
+            | {{ details.publisher }}
+          {% endif %}
+        </td>
+        <td>{{ details.get_author_citation|safe }}</td>
+        <td>{{ details.year }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
 </div>
