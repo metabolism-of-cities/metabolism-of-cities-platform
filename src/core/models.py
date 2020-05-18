@@ -549,13 +549,17 @@ class ActivatedSpace(models.Model):
     space = models.ForeignKey("ReferenceSpace", on_delete=models.CASCADE)
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     slug = models.CharField(max_length=255, db_index=True)
+
     def __str__(self):
         return self.space.name
+
     def get_absolute_url(self):
-        return reverse("datahub_dashboard", args=[self.slug])
+        return reverse("data:dashboard", args=[self.slug])
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.space.name)
         super().save(*args, **kwargs)
+
     class Meta:
         unique_together = ["slug", "site"]
 

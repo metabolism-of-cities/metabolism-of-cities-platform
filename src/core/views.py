@@ -74,11 +74,6 @@ def get_site_tag(request):
         # For MoI, the island tag should be used to filter items
         return 219       
 
-def get_space(request, slug):
-    # Here we can build an expansion if we want particular people to see dashboards that are under construction
-    check = get_object_or_404(ActivatedSpace, slug=slug, site=request.site)
-    return check.space
-
 # Get all the child relationships, but making sure we only show is_deleted=False and is_public=True
 def get_children(record):
     list = RecordRelationship.objects.filter(record_parent=record).filter(record_child__is_deleted=False, record_child__is_public=True)

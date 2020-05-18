@@ -11,6 +11,11 @@ from django.utils import timezone
 import pytz
 from functools import wraps
 
+def get_space(request, slug):
+    # Here we can build an expansion if we want particular people to see dashboards that are under construction
+    check = get_object_or_404(ActivatedSpace, slug=slug, site=request.site)
+    return check.space
+
 def index(request):
     list = ActivatedSpace.objects.filter(site=request.site)
     context = {

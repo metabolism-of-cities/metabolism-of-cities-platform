@@ -88,7 +88,7 @@
         <div class="container">
           <div class="city-name" style="color:#fff;font-size:30px">{{ space }}</div>
           <div class="down-city-name">
-            <a href="{% url 'datahub_dashboard' space.slug %}"><i class="fad fa-arrow-circle-left"></i></a>
+            <a href="{% url "data:dashboard" space.slug %}"><i class="fad fa-arrow-circle-left"></i></a>
             <span>Back to dashboard</span>
           </div>
         </div>
@@ -110,7 +110,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'datahub_dashboard' space.slug %}">Overview</a>
+            <a class="nav-link" href="{% url "data:dashboard" space.slug %}">Overview</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">City Profile</a>
@@ -120,10 +120,10 @@
               Resources
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{% url 'datahub_journal_articles' space.slug %}">Journal articles</a>
-              <a class="dropdown-item" href="{% url 'datahub_reports' space.slug %}">Reports</a>
-              <a class="dropdown-item" href="{% url 'datahub_theses' space.slug %}">Theses</a>
-              <a class="dropdown-item" href="{% url 'datahub_photos' space.slug %}">Photos</a>
+              <a class="dropdown-item" href="{% url "data:journal_articles" space.slug %}">Journal articles</a>
+              <a class="dropdown-item" href="{% url "data:reports" space.slug %}">Reports</a>
+              <a class="dropdown-item" href="{% url "data:theses" space.slug %}">Theses</a>
+              <a class="dropdown-item" href="{% url "data:photos" space.slug %}">Photos</a>
             </div>
           </li>
           <li class="nav-item dropdown">

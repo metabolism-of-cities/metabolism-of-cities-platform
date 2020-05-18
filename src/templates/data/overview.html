@@ -8,7 +8,7 @@
     <div class="col-lg-4 col-md-6 col-sm-8 mb-4">
       <a class="card btn-card" href="{{ each.get_absolute_url }}">
         {% if each.space.photo %}
-          <img src="{{ each.space.photo.image.medium.url }}" class="card-img-top" alt="">
+          <img src="{{ each.space.photo.image.url }}" class="card-img-top" alt="">
         {% endif %}
         <div class="card-body">
           <h5 class="card-title">{{ each }}</h5>
