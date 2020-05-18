@@ -191,8 +191,8 @@ nav {
     .projects-category {
       font-weight: bold;
       margin-bottom: .25rem;
-      border-bottom: 1px solid #696969;
-      color: #696969;
+      border-bottom: 2px solid rgba($primary, .25);
+      color: $primary;
       font-size: 1.1rem;
     }
 
@@ -213,6 +213,12 @@ nav {
 
       a {
         display: block;
+        padding-bottom: .125rem;
+        padding-top: .125rem;
+
+        &:hover {
+          background-color: #f8f9fa;
+        }
       }
     }
   }
@@ -294,16 +300,19 @@ footer {
       color: $secondary;
     }
 
-    a {
+    .projects-category {
+      font-weight: bold;
+      margin-bottom: .25rem;
+      border-bottom: 2px solid rgba($dark, .5);
       color: $dark;
-
-      &:hover {
-        color: $black;
-        text-decoration: none;
-      }
-
+      font-size: 1.1rem;
     }
 
+    a {
+      display: block;
+      padding-bottom: .125rem;
+      padding-top: .125rem;
+    }
   }
 
   &#info {

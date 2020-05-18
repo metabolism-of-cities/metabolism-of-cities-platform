@@ -118,8 +118,8 @@ nav .dropdown.projects-dropdown {
   nav .dropdown.projects-dropdown .projects-category {
     font-weight: bold;
     margin-bottom: .25rem;
-    border-bottom: 1px solid #696969;
-    color: #696969;
+    border-bottom: 2px solid rgba(20, 77, 88, 0.25);
+    color: #144d58;
     font-size: 1.1rem; }
   nav .dropdown.projects-dropdown .projects-dropdown-menu {
     padding: 15px; }
@@ -135,7 +135,11 @@ nav .dropdown.projects-dropdown {
       nav .dropdown.projects-dropdown .projects-dropdown-menu {
         max-width: 1110px; } }
     nav .dropdown.projects-dropdown .projects-dropdown-menu a {
-      display: block; }
+      display: block;
+      padding-bottom: .125rem;
+      padding-top: .125rem; }
+      nav .dropdown.projects-dropdown .projects-dropdown-menu a:hover {
+        background-color: #f8f9fa; }
 
 nav li.nav-item:not(:last-of-type) {
   margin-right: 1rem; }
@@ -181,11 +185,16 @@ footer {
     background-color: #efefef; }
     footer#sitemap .header {
       color: #ff8a4e; }
+    footer#sitemap .projects-category {
+      font-weight: bold;
+      margin-bottom: .25rem;
+      border-bottom: 2px solid rgba(33, 37, 41, 0.5);
+      color: #212529;
+      font-size: 1.1rem; }
     footer#sitemap a {
-      color: #212529; }
-      footer#sitemap a:hover {
-        color: #000;
-        text-decoration: none; }
+      display: block;
+      padding-bottom: .125rem;
+      padding-top: .125rem; }
   footer#info {
     background-color: #212529;
     padding-top: 30px;
