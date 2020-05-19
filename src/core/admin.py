@@ -118,6 +118,9 @@ class GeocodeAdmin(SearchAdmin):
     list_display = ["name", "scheme"]
     search_fields = ["name"]
 
+class LibraryItemTypeAdmin(SearchAdmin):
+    list_display = ["name", "icon"]
+
 class SpaceAdmin(admin.ModelAdmin):
     list_display = ["space", "slug", "site"]
     search_fields = ["space__name"]
@@ -206,7 +209,7 @@ admin_site.register(RecordRelationship, RecordRelationshipAdmin)
 admin_site.register(SocialMedia, SocialMediaAdmin)
 admin_site.register(LibraryItem, LibraryAdmin)
 admin_site.register(Photo, LibraryAdmin)
-admin_site.register(LibraryItemType, SearchAdmin)
+admin_site.register(LibraryItemType, LibraryItemTypeAdmin)
 admin_site.register(ActivatedSpace, SpaceAdmin)
 
 admin_site.register(License)
