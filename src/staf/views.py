@@ -6,12 +6,13 @@ from django.contrib import messages
 from django.http import Http404, HttpResponseRedirect
 from django.forms import modelform_factory
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 from django.utils import timezone
 import pytz
 from functools import wraps
 
-from django.contrib.auth.decorators import login_required
+import json
 
 PROJECT_ID = settings.PROJECT_ID_LIST
 
@@ -165,7 +166,7 @@ def upload_gis_meta(request, id):
         # And we create a new task to process the shapefile
         Work.objects.create(
             status = Work.WorkStatus.OPEN,
-            part_of_project_id = work.part_of_project,
+            part_of_project = work.part_of_project,
             workactivity_id = 2,
             related_to = session,
         )

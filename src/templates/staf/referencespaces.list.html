@@ -16,13 +16,13 @@
         <td>{{ each.name }}</td>
         <td>{% if each.location %}Yes{% endif %}</td>
         <td>
-          <a class="btn btn-info" href="{% url "stafcp_referencespace" each.id %}"><i class="fa fa-eye"></i> View</a>
-          <a class="btn btn-info" href="{% url "stafcp_flowdiagram_form" each.id %}"><i class="fa fa-pencil"></i> Edit</a>
+          <a class="btn btn-info" href="{% url "staf:referencespace" each.id %}"><i class="fa fa-eye"></i> View</a>
+          <a class="btn btn-info" href="{% url "staf:flowdiagram_form" each.id %}"><i class="fa fa-pencil"></i> Edit</a>
         </td>
       </tr>
     {% endfor %}
     </tbody>
   </table>
 
-  <p><a href="{% url "stafcp_flowdiagram_meta" %}" class="btn btn-primary">Add new flow diagram</a></p>
+  <p><a href="{% url "staf:flowdiagram_meta" %}" class="btn btn-primary">Add new flow diagram</a></p>
 {% endblock %}

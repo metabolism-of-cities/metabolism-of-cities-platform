@@ -29,7 +29,7 @@
           <td>{{ each.related_to }}</td>
           <td data-sort="{{ each.date_created|date:"U" }}">{{ each.date_created|naturaltime }}</td>
           <td>
-            <a href="{% url "stafcp_review_session" each.id %}">View</a> | 
+            <a href="{% url "staf:review_session" each.id %}">View</a> | 
             <a href="http://">Work on this</a>
           </td>
         </tr>
@@ -37,7 +37,7 @@
       </tbody>
     </table>
 
-    <p><a href="{% url "stafcp_review" %}" class="btn btn-info">Back to review portal</a></p>
+    <p><a href="{% url "staf:review" %}" class="btn btn-info">Back to review portal</a></p>
 
   </div>
   <div class="col-4">

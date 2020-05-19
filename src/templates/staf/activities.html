@@ -14,9 +14,9 @@
     {% for each in list %}
       <tr>
         <td>{{ each.code }}</td>
-        <td><a href="{% url "stafcp_activities" each.catalog.id each.id %}">{{ each.name }}</td>
+        <td><a href="{% url "staf:activities" each.catalog.id each.id %}">{{ each.name }}</td>
         <td>
-          <a class="btn btn-info" href="{% url "stafcp_activity" each.catalog.id each.id %}"><i class="fa fa-eye"></i> View</a>
+          <a class="btn btn-info" href="{% url "staf:activity" each.catalog.id each.id %}"><i class="fa fa-eye"></i> View</a>
         </td>
       </tr>
     {% endfor %}

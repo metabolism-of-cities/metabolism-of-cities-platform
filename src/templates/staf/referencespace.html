@@ -33,7 +33,7 @@
         <tbody>
           {% for each in inside_the_space %}
             <tr>
-              <td><a href="{% url "stafcp_referencespace" each.id  %}">{{ each.name }}</a></td>
+              <td><a href="{% url "staf:referencespace" each.id  %}">{{ each.name }}</a></td>
               <td>
                 {% for geocode in each.geocodes.all %}
                   {% if geocode.is_public and not geocode.is_deleted %}
