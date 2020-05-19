@@ -80,70 +80,64 @@
     </div>
   {% elif HEADER_STYLE == "image" %}
     <div class="img-header" style="background-image: url('{{ header_image }}')"></div>
-  {% elif PROJECT.id == 4 and space %}
-    <div id="img-city" {% if not dashboard %}class="smaller"{% endif %} style="background-image: url('{{ space.photo.image.url }}')">
-      <div class="black-cover"></div>
-
-      {% if not dashboard %}
-        <div class="container">
-          <div class="city-name" style="color:#fff;font-size:30px">{{ space }}</div>
-          <div class="down-city-name">
-            <a href="{% url "data:dashboard" space.slug %}"><i class="fad fa-arrow-circle-left"></i></a>
-            <span>Back to dashboard</span>
-          </div>
-        </div>
-      {% endif %}
-    </div>
   {% endif %}
 
 </div>
 
 {% if PROJECT.id == 4 and space %}
-  <nav id="navbar-city" class="navbar navbar-expand-lg sticky-top">
-    <div class="container">
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <div class="city-name-small">{{ space }}</div>
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'data:dashboard' space.slug %}">Overview</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Sectors
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{% url 'data:sector' space.slug 'agriculture' %}">Agriculture</a>
-              <a class="dropdown-item" href="{% url 'data:sector' space.slug 'water' %}">Water</a>
-              <a class="dropdown-item" href="{% url 'data:sector' space.slug 'waste' %}">Waste</a>
-              <a class="dropdown-item" href="{% url 'data:sector' space.slug 'energy' %}">Energy</a>
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">City Profile</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Resources
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Journal articles</a>
-              <a class="dropdown-item" href="{% url 'data:reports' space.slug %}">Reports</a>
-              <a class="dropdown-item" href="{% url 'data:theses' space.slug %}">Theses</a>
-              <a class="dropdown-item" href="{% url 'data:photos' space.slug %}">Photos</a>
-              <a class="dropdown-item" href="{% url 'data:maps' space.slug %}">Maps</a>
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Upload</a>
-          </li>
-        </ul>
+  <div {% if not dashboard %}class="make-this-baby-stick"{% endif %}>
+    <div id="img-city" {% if not dashboard %}class="smaller"{% endif %} style="background-image: url('{{ space.photo.image.url }}')">
+      <div class="black-cover"></div>
+      <div class="container">
+        <div class="city-name" style="color:#fff;font-size:30px">{{ space }}</div>
       </div>
     </div>
-  </nav>
+    <nav id="navbar-city" class="navbar navbar-expand-lg ssticky-top">
+      <div class="container">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <div class="city-name-small">{{ space }}</div>
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'data:dashboard' space.slug %}">Overview</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Sectors
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{% url 'data:sector' space.slug 'agriculture' %}">Agriculture</a>
+                <a class="dropdown-item" href="{% url 'data:sector' space.slug 'water' %}">Water</a>
+                <a class="dropdown-item" href="{% url 'data:sector' space.slug 'waste' %}">Waste</a>
+                <a class="dropdown-item" href="{% url 'data:sector' space.slug 'energy' %}">Energy</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">City Profile</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Journal articles</a>
+                <a class="dropdown-item" href="{% url 'data:reports' space.slug %}">Reports</a>
+                <a class="dropdown-item" href="{% url 'data:theses' space.slug %}">Theses</a>
+                <a class="dropdown-item" href="{% url 'data:photos' space.slug %}">Photos</a>
+                <a class="dropdown-item" href="{% url 'data:maps' space.slug %}">Maps</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Upload</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
 {% endif%}
 
 {% if PROJECT.id == 4 and space %}
