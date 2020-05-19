@@ -364,7 +364,7 @@ class People(Record):
 class Webpage(Record):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     slug = models.CharField(db_index=True, max_length=100)
-    belongs_to = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={"is_internal": True}, related_name="webpages")
+    belongs_to = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, related_name="webpages")
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
@@ -700,7 +700,7 @@ class WorkActivity(models.Model):
     type = models.IntegerField(choices=WorkType.choices, db_index=True)
     name = models.CharField(max_length=255)
     instructions = models.TextField(null=True, blank=True)
-    default_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={"is_internal": True})
+    default_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     points = models.PositiveSmallIntegerField(null=True, blank=True)
 
     def __str__(self):
@@ -726,7 +726,7 @@ class Work(Record):
 
     status = models.IntegerField(choices=WorkStatus.choices, db_index=True, default=1)
     priority = models.IntegerField(choices=WorkPriority.choices, db_index=True, default=2)
-    part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, limit_choices_to={"is_internal": True}, related_name="work")
+    part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     workactivity = models.ForeignKey(WorkActivity, on_delete=models.CASCADE, null=True, blank=True)
     related_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="my_work")
     assigned_to = models.ForeignKey(People, on_delete=models.CASCADE, null=True, blank=True)
@@ -748,7 +748,7 @@ class Badge(models.Model):
     code = models.CharField(max_length=20, null=True, blank=True, db_index=True)
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
-    projects = models.ManyToManyField(Project, blank=True, limit_choices_to={"is_internal": True})
+    projects = models.ManyToManyField(Project, blank=True)
     worktype = models.ManyToManyField(WorkActivity, blank=True) 
     required_quantity = models.PositiveSmallIntegerField(null=True, blank=True)
    
