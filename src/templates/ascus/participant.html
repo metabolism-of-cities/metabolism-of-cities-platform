@@ -2,17 +2,37 @@
 
 {% block content %}
 
-<img src="{{ info.image.url }}" alt="" />
+<div class="row">
+  <div class="col-9">
 
-<p><strong>Profile/bio</strong></p>
+    <p><strong>Profile/bio</strong></p>
 
-<p>{{ info.description|linebreaksbr }}</p>
+    <p>{{ info.description|linebreaksbr }}</p>
 
-{% if info.research_interests %}
+    {% if info.research_interests %}
 
-<p><strong>Research interests</strong></p>
-<p>{{ info.research_interests|linebreaksbr }}</p>
+    <p><strong>Research interests</strong></p>
+    <p>{{ info.research_interests|linebreaksbr }}</p>
 
-{% endif %}
+    {% endif %}
+
+  </div>
+
+  <div class="col-3">
+
+    <div class="card" style="width: 18rem;">
+      <img src="{{ info.image.thumbnail.url }}" class="card-img-top">
+      <div class="card-body">
+        <h5 class="card-title">{{ info }}</h5>
+        <p class="card-text">{{ info.affiliation }}</p>
+        <p class="card-text">{{ info.email }}</p>
+        {% if info.twitter %}
+          <p class="card-text">@{{ info.twitter }}</p>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
 
 {% endblock %}
