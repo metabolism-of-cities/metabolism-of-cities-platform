@@ -79,6 +79,9 @@ textarea.form-control:focus, input.form-control:focus, select.custom-select:focu
   border-color: #144d58;
   box-shadow: 0 0 0 0.2rem rgba(20, 77, 88, 0.25); }
 
+.custom-file label.custom-file-label {
+  overflow: hidden; }
+
 .top-layer {
   box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.1);
   background-color: #144d58;

@@ -127,6 +127,12 @@ textarea.form-control:focus, input.form-control:focus, select.custom-select:focu
   box-shadow: 0 0 0 .2rem rgba($primary, .25)
 }
 
+// hide overflow of multiple file inputs
+// https://backoffice.metabolismofcities.org/projects/1582/?tab=tasks&task=1909
+.custom-file label.custom-file-label {
+  overflow: hidden;
+}
+
 // COMMON ELEMENTS
 // NAVBAR AND HERO
 .top-layer {
