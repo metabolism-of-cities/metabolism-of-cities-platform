@@ -515,6 +515,10 @@ class LibraryItem(Record):
         list = Organization.objects.filter(parent_list__record_child=self, parent_list__relationship__id=3)
         return list[0] if list else None
 
+    def uploader(self):
+        list = People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=11)
+        return list[0] if list else None
+
     # The 'author_list' part will be highly varied... some contain Firstname Lastname, Firstname Lastname 
     # others contain Lastname, Firstname and Lastname, Firstname
     # others contain Firstname Lastname; Firstname Lastname; etc.
@@ -952,7 +956,7 @@ class Sector(Record):
     #    return DatasetType.objects.filter(Q(origin_process__in=self.processes.all()) | Q(destination_process__in=self.processes.all()))
 
 class UploadSession(Record):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    uploader = models.ForeignKey(People, on_delete=models.CASCADE)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     part_of_project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     meta_data = JSONField(null=True, blank=True)

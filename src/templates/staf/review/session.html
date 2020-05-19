@@ -2,9 +2,43 @@
 
 {% block content %}
 
-<h2>Item # {{ info.id }}</h2>
+<div class="row">
 
-<p>Uploaded by: {{ info.user }}</p>
-<p>Title: {{ info.name }}</p>
+  <div class="col-9">
+
+    <ul class="nav nav-tabs mb-3">
+      <li class="nav-item">
+        <a class="nav-link active" href="#">Overview</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Data Classification</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Meta information</a>
+      </li>
+    </ul>
+
+  </div>
+
+  <div class="col-3">
+
+    <div class="card icon-card">
+      <div class="icon">
+        <i class="far fa-fw fa-info-circle" aria-hidden="true"></i>
+      </div>
+      <div class="card-body text-center">
+        <p><strong>{{ session }}</strong><br>
+        <code>{{ session.id }}</code></p>
+        <p><strong>Uploader</strong><br> {{ session.uploader }}</p>
+        <form method="post">
+          <button type="submit" name="start_work" value="true" class="btn btn-success">Start working on this</button>
+          {% csrf_token %}
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+</div>
 
 {% endblock %}

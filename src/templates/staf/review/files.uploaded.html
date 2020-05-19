@@ -18,20 +18,17 @@
         <tr>
           <th>ID</th>
           <th>Name</th>
+          <th>Uploader</th>
           <th>Date</th>
-          <th>Options</th>
         </tr>
       </thead>
       <tbody>
       {% for each in list %}
         <tr>
-          <td><code>{{ each.id }}</code></td>
-          <td>{{ each.related_to }}</td>
+          <td><code>{{ each.related_to.id }}</code></td>
+          <td><a href="{% url "staf:review_session" each.related_to.id %}">{{ each.related_to }}</a></td>
+          <td>{{ each.related_to.uploader }}</td>
           <td data-sort="{{ each.date_created|date:"U" }}">{{ each.date_created|naturaltime }}</td>
-          <td>
-            <a href="{% url "staf:review_session" each.id %}">View</a> | 
-            <a href="http://">Work on this</a>
-          </td>
         </tr>
       {% endfor %}
       </tbody>

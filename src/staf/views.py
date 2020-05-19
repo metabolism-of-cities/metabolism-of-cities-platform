@@ -52,9 +52,21 @@ def review_processed(request):
 
 def review_session(request, id):
     session = get_object_or_404(UploadSession, pk=id)
-    if session.user is not request.user and not is_member(request.user, "Data administrators"):
+    if session.uploader is not request.user.people and not is_member(request.user, "Data administrators"):
         unauthorized_access(request)
+
+    if "start_work" in request.POST:
+        try:
+            work = Work.objects.get(status=Work.WorkStatus.OPEN, part_of_project_id=PROJECT_ID["staf"], workactivity_id=2, assigned_to__isnull=True),
+            work.status = Work.WorkStatus.PROGRESS
+            work.assigned_to = request.user.people
+            work.save()
+            messages.success(request, "You are now in charge of this dataset - good luck!")
+        except Exception as e:
+            messages.error(request, "Sorry, we could not assign you -- perhaps someone else grabbed this work in the meantime? Otherwise please report this error. <br><strong>Error code: " + str(e) + "</strong>")
+
     context = {
+        "session": session,
     }
     return render(request, "staf/review/session.html", context)
 
@@ -76,7 +88,7 @@ def upload_gis_file(request, id=None):
         import os
         if not session:
             session = UploadSession.objects.create(
-                user=request.user,
+                uploader=request.user.people,
                 name=request.POST.get("name"), 
                 type="shapefile",
                 part_of_project_id = project,
@@ -127,7 +139,7 @@ def upload(request):
 def upload_gis_verify(request, id):
     import shapefile
     session = get_object_or_404(UploadSession, pk=id)
-    if session.user is not request.user and not is_member(request.user, "Data administrators"):
+    if session.uploader is not request.user.people and not is_member(request.user, "Data administrators"):
         unauthorized_access(request)
     files = UploadFile.objects.filter(session=session)
     geojson = None
@@ -150,7 +162,7 @@ def upload_gis_verify(request, id):
 
 def upload_gis_meta(request, id):
     session = get_object_or_404(UploadSession, pk=id)
-    if session.user is not request.user and not is_member(request.user, "Data administrators"):
+    if session.uploader is not request.user.people and not is_member(request.user, "Data administrators"):
         unauthorized_access(request)
     if request.method == "POST":
         session.is_uploaded = True
