@@ -2,13 +2,15 @@
 .gallery a, a.large-icon-box, .btn-icon, .btn-thumbnail, .btn-card {
   transition: all .3s; }
   .gallery a:hover, a.large-icon-box:hover, .btn-icon:hover, .btn-thumbnail:hover, .btn-card:hover {
-    transform: translateY(-3px); }
+    transform: translateY(-3px);
+    text-decoration: none; }
 
 .gallery a, a.large-icon-box, .btn-icon, .btn-thumbnail, .btn-card {
   transition: all .3s;
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2); }
   .gallery a:hover, a.large-icon-box:hover, .btn-icon:hover, .btn-thumbnail:hover, .btn-card:hover {
-    box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.2); }
+    box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.2);
+    text-decoration: none; }
 
 body {
   background-color: #fcfcfc;
@@ -35,6 +37,10 @@ a {
   a:hover {
     color: #144d58;
     text-decoration: none; }
+
+p a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px; }
 
 #admin-controls {
   position: fixed;
@@ -221,6 +227,9 @@ footer {
     footer#info .social i {
       font-size: 1.5rem;
       margin-right: 12px; }
+
+.btn:hover {
+  text-decoration: none; }
 
 .btn:not(.btn-icon) i {
   margin-right: .35rem; }
