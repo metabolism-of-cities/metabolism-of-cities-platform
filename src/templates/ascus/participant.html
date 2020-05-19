@@ -1,0 +1,18 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<img src="{{ info.image.url }}" alt="" />
+
+<p><strong>Profile/bio</strong></p>
+
+<p>{{ info.description|linebreaksbr }}</p>
+
+{% if info.research_interests %}
+
+<p><strong>Research interests</strong></p>
+<p>{{ info.research_interests|linebreaksbr }}</p>
+
+{% endif %}
+
+{% endblock %}

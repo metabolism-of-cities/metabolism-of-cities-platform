@@ -74,6 +74,8 @@ def ascus(request):
     }
     return render(request, "article.html", context)
 
+
+
 def overview(request):
     discussions = Event.objects_include_private \
         .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
@@ -84,6 +86,36 @@ def overview(request):
         "discussions": discussions,
     }
     return render(request, "ascus/program.html", context)
+
+# AScUS participants only!
+
+@check_ascus_access
+def participants(request):
+    list = RecordRelationship.objects.filter(
+        record_child = Project.objects.get(pk=PAGE_ID["ascus"]),
+        relationship = Relationship.objects.get(name="Participant"),
+    ).order_by("record_parent__name")
+    context = {
+        "header_title": "Participant list",
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "list": list,
+    }
+    return render(request, "ascus/participants.html", context)
+
+@check_ascus_access
+def participant(request, id):
+    info = RecordRelationship.objects.get(
+        record_child = Project.objects.get(pk=PAGE_ID["ascus"]),
+        relationship = Relationship.objects.get(name="Participant"),
+        record_parent_id=id,
+    )
+    info = info.record_parent
+    context = {
+        "header_title": info.name,
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "info": info,
+    }
+    return render(request, "ascus/participant.html", context)
 
 @check_ascus_access
 def ascus_account(request):
