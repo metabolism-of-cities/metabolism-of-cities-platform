@@ -79,9 +79,9 @@
       </div>
     </div>
   {% elif HEADER_STYLE == "image" %}
-    <div style="background-image: url('{{ header_image }}');height:800px;background-size:cover"></div>
+    <div class="img-header" style="background-image: url('{{ header_image }}')"></div>
   {% elif PROJECT.id == 4 and space %}
-    <div id="img-city" {% if not dashboard %}class="smaller"{% endif %} style="background-image: url('{{ space.photo.image.url }}'){% if not dashboard %}; height:15vh"{% endif %}">
+    <div id="img-city" {% if not dashboard %}class="smaller"{% endif %} style="background-image: url('{{ space.photo.image.url }}')">
       <div class="black-cover"></div>
 
       {% if not dashboard %}
@@ -93,34 +93,33 @@
           </div>
         </div>
       {% endif %}
-
     </div>
-
   {% endif %}
 
 </div>
 
 {% if PROJECT.id == 4 and space %}
-  <nav class="navbar navbar-expand-lg navbar-city">
+  <nav id="navbar-city" class="navbar navbar-expand-lg sticky-top">
     <div class="container">
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="city-name-small">{{ space }}</div>
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a class="nav-link" href="{% url "data:dashboard" space.slug %}">Overview</a>
+            <a class="nav-link" href="{% url 'data:dashboard' space.slug %}">Overview</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Sectors
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{% url "data:sector" space.slug "agriculture" %}">Agriculture</a>
-              <a class="dropdown-item" href="{% url "data:sector" space.slug "water" %}">Water</a>
-              <a class="dropdown-item" href="{% url "data:sector" space.slug "waste" %}">Waste</a>
-              <a class="dropdown-item" href="{% url "data:sector" space.slug "energy" %}">Energy</a>
+              <a class="dropdown-item" href="{% url 'data:sector' space.slug 'agriculture' %}">Agriculture</a>
+              <a class="dropdown-item" href="{% url 'data:sector' space.slug 'water' %}">Water</a>
+              <a class="dropdown-item" href="{% url 'data:sector' space.slug 'waste' %}">Waste</a>
+              <a class="dropdown-item" href="{% url 'data:sector' space.slug 'energy' %}">Energy</a>
             </div>
           </li>
           <li class="nav-item">
@@ -131,11 +130,11 @@
               Resources
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{% url "data:journal_articles" space.slug %}">Journal articles</a>
-              <a class="dropdown-item" href="{% url "data:reports" space.slug %}">Reports</a>
-              <a class="dropdown-item" href="{% url "data:theses" space.slug %}">Theses</a>
-              <a class="dropdown-item" href="{% url "data:photos" space.slug %}">Photos</a>
-              <a class="dropdown-item" href="{% url "data:maps" space.slug %}">Maps</a>
+              <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Journal articles</a>
+              <a class="dropdown-item" href="{% url 'data:reports' space.slug %}">Reports</a>
+              <a class="dropdown-item" href="{% url 'data:theses' space.slug %}">Theses</a>
+              <a class="dropdown-item" href="{% url 'data:photos' space.slug %}">Photos</a>
+              <a class="dropdown-item" href="{% url 'data:maps' space.slug %}">Maps</a>
             </div>
           </li>
           <li class="nav-item">
@@ -148,20 +147,16 @@
 {% endif%}
 
 {% if PROJECT.id == 4 and space %}
-  {% block javascript %}
   <script>
-     // When the user scrolls down 50px from the top of the document, resize the header's font size
-    window.onscroll = function() {
-      scrollFunction()
-    };
+    // add class when navbar becomes sticky - https://stackoverflow.com/a/57991537/1685643
+    // get the sticky element
+    const navbarCity = document.getElementById("navbar-city")
 
-    function scrollFunction() {
-      if ($(window).scrollTop() > $(".navbar-city").position().top) {
-        $("body").addClass("scrolled-down");
-      } else {
-        $("body").removeClass("scrolled-down");
-      }
-    }
+    const observer = new IntersectionObserver(
+      ([e]) => e.target.classList.toggle("is-sticky", e.intersectionRatio < 1),
+      {threshold: [1]}
+    );
+
+    observer.observe(navbarCity)
   </script>
-  {% endblock %}
 {% endif %}
