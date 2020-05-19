@@ -31,6 +31,7 @@ urlpatterns = [
     # Admin section
     path("account/admin/", views.ascus_admin, name="admin"),
     path("account/admin/payments/", views.ascus_admin_work, name="admin_payments"),
+    path("account/admin/documents/<int:id>/", views.ascus_admin_document, name="admin_document"),
     path("account/admin/documents/<slug:type>/", views.ascus_admin_documents, name="admin_documents"),
     path("account/admin/introvideos/", views.ascus_admin_introvideos, name="admin_introvideos"),
     path("account/admin/introvideos/<int:id>/", views.ascus_admin_introvideo, name="admin_introvideo"),

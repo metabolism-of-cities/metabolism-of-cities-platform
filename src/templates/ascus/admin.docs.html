@@ -8,29 +8,34 @@
       <p><span class="badge badge-info">Upload date: {{ each.date_created }}</span></p>
       <p>{{ each.description|linebreaksbr }}</p>
     {% endfor %}
+
   {% else %}
+
+    <h2>Presentation review queue</h2>
     <table class="table table-striped datatable">
       <thead>
         <tr>
           <th>Document</th>
           <th>Date</th>
+          <th>Status</th>
         </tr>
       </thead>
       <tbody>
         {% for each in list %}
           <tr>
             <td>
-              {% if each.file %}
-                <a href="{{ each.file.url }}">{{ each }}</a>
-              {% else %}
-                {{ each }}
-              {% endif %}
+              <a href="{% url "ascus:admin_document" each.id %}">
+                {{ each.related_to|truncatewords:13 }}<br>
+                <em>{{ each.related_to.uploader }}</em>
+              </a>
             </td>
             <td data-sort="{{ each.date_created|date:"U" }}">{{ each.date_created|date:"M d, Y" }}</td>
+            <td>{{ each.get_status_display }}</td>
           </tr>
         {% endfor %}
       </tbody>
     </table>
+
   {% endif %}
 
   <p class="mt-5"><a href="{% url "ascus:admin" %}" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a></p>

@@ -335,9 +335,9 @@ def ascus_admin_documents(request, type="introvideos"):
             .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
             .filter(tags__id=770)
     elif type == "presentations":
-        list = LibraryItem.objects_include_private \
-            .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
-            .filter(tags__id=771)
+        list = Work.objects_include_private \
+            .filter(related_to__parent_list__record_child__id=PAGE_ID["ascus"]) \
+            .filter(related_to__tags__id=771)
     elif type == "introvideos":
         list = LibraryItem.objects_include_private \
             .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
@@ -401,6 +401,37 @@ def ascus_admin_introvideo(request, id):
         "work": work,
     }
     return render(request, "ascus/admin.introvideo.html", context)
+
+@check_ascus_admin_access
+def ascus_admin_document(request, id):
+    work = Work.objects.get(related_to__parent_list__record_child__id=PAGE_ID["ascus"], related_to__tags__id=771, pk=id)
+    info = work.related_to
+    info = LibraryItem.objects_unfiltered.get(pk=info.id)
+
+    if "approve" in request.POST:
+        work.status = Work.WorkStatus.COMPLETED
+        work.description = request.POST.get("comments")
+        work.save()
+
+        messages.success(request, "The document was approved")
+        return redirect("ascus:admin_documents", type="presentations")
+
+    if "discard" in request.POST:
+        info.is_deleted = True
+        info.save()
+
+        work.status = Work.WorkStatus.DISCARDED
+        work.description = request.POST.get("comments")
+        work.save()
+
+        messages.success(request, "The document was discarded")
+        return redirect("ascus:admin_documents", type="presentations")
+
+    context = {
+        "info": info,
+        "work": work,
+    }
+    return render(request, "ascus/admin.document.html", context)
 
 @check_ascus_admin_access
 def ascus_admin_work(request):

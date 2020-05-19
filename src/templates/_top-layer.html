@@ -61,7 +61,7 @@
     </div>
   </nav>
 
-  {% if header_style == "full" %}
+  {% if HEADER_STYLE == "full" %}
     <div class="jumbotron jumbotron-fluid text-light">
       <div class="container">
         {% if header_title %}
@@ -78,7 +78,7 @@
         {% endif %}
       </div>
     </div>
-  {% elif header_style == "image" %}
+  {% elif HEADER_STYLE == "image" %}
     <div style="background-image: url('{{ header_image }}');height:800px;background-size:cover"></div>
   {% elif PROJECT.id == 4 and space %}
     <div id="img-city" {% if not dashboard %}class="smaller"{% endif %} style="background-image: url('{{ space.photo.image.url }}'){% if not dashboard %}; height:15vh"{% endif %}">
