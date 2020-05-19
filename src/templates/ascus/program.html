@@ -1,0 +1,30 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <p>
+    The unconference will revolve around a variety of discussion topics which will take 
+    place throughout the duration of AScUS. Some of these discussion sessions have initial
+    homework / exploratory exercises that are part of the pre-conference program. 
+    The exact date and time for each of these sessions will be released soon. Click on the 
+    name of a discussion topic to learn more about its goal, format, and content.
+  </p>
+  <ol>
+  {% for each in discussions %}
+    <li><a href="#topic-{{ each.id }}">{{ each }}</a></li>
+  {% endfor %}
+  </ol>
+
+  {% for each in discussions %}
+
+    <div class="card mb-4" id="topic-{{ each.id }}">
+      <div class="card-header">
+        {{ each }}
+      </div>
+      <div class="card-body">
+        {{ each.description|linebreaksbr }}
+      </div>
+    </div>
+
+  {% endfor %}
+
+{% endblock %}

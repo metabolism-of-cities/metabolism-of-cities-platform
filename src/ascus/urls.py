@@ -20,6 +20,7 @@ urlpatterns = [
     path("login/", core.user_login, {"project": 8}, name="login"),
     path("register/", views.ascus_register, name="register"),
     path("logout/", core.user_logout, {"project": 8}, name="logout"),
+    path("overview/", views.overview, name="overview"),
 
     # Account section
     path("account/", views.ascus_account, name="account"),
