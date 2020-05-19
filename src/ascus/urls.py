@@ -28,6 +28,7 @@ urlpatterns = [
     path("account/introvideo/", views.ascus_account_presentation, {"introvideo": True}, name="account_introvideo"),
     path("account/edit/", views.ascus_account_edit, name="account_edit"),
     path("account/discussion/", views.ascus_account_discussion, name="account_discussion"),
+    path("account/discussion/<int:id>/", views.ascus_account_discussion, name="account_discussion"),
 
     # Admin section
     path("account/admin/", views.ascus_admin, name="admin"),

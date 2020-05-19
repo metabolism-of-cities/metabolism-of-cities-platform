@@ -246,45 +246,55 @@ def ascus_account_edit(request):
     return render(request, "ascus/account.edit.html", context)
 
 @check_ascus_access
-def ascus_account_discussion(request):
+def ascus_account_discussion(request, id=None):
     info = get_object_or_404(Webpage, slug="/ascus/account/discussion/")
     my_discussions = Event.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
         .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
         .filter(tags__id=770)
+    event = None
+    if id:
+        event = Event.objects_include_private \
+            .filter(pk=id) \
+            .filter(child_list__record_parent=request.user.people) \
+            .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+            .filter(tags__id=770)
+        event = event[0] if event else None
     ModelForm = modelform_factory(
         Event, 
         fields = ("name", "description"),
         labels = { "name": "Title", "description": "Abstract (please include the goals, format, and names of all organizers)" }
     )
-    event = None
     form = ModelForm(request.POST or None, instance=event)
     if request.method == "POST":
         if form.is_valid():
-            info = form.save(commit=False)
-            info.site = request.site
-            info.is_public = False
-            info.type = "other"
-            info.save()
-            info.tags.add(Tag.objects.get(pk=770))
-            messages.success(request, "Your discussion topic was saved.")
-            RecordRelationship.objects.create(
-                record_parent = info,
-                record_child_id = PAGE_ID["ascus"],
-                relationship = Relationship.objects.get(name="Presentation"),
-            )
-            RecordRelationship.objects.create(
-                record_parent = request.user.people,
-                record_child = info,
-                relationship = Relationship.objects.get(name="Organizer"),
-            )
-            Work.objects.create(
-                name = "Review discussion topic",
-                description = "Please check to see if this looks good. If all is well, then please add any additional organizers to this record (as per the description).",
-                part_of_project_id = 8,
-                related_to = info,
-                workactivity_id = 14,
-            )
+            if event:
+                info = form.save()
+            else:
+                info = form.save(commit=False)
+                info.site = request.site
+                info.is_public = False
+                info.type = "other"
+                info.save()
+                info.tags.add(Tag.objects.get(pk=770))
+                messages.success(request, "Your discussion topic was saved.")
+                RecordRelationship.objects.create(
+                    record_parent = info,
+                    record_child_id = PAGE_ID["ascus"],
+                    relationship = Relationship.objects.get(name="Presentation"),
+                )
+                RecordRelationship.objects.create(
+                    record_parent = request.user.people,
+                    record_child = info,
+                    relationship = Relationship.objects.get(name="Organizer"),
+                )
+                Work.objects.create(
+                    name = "Review discussion topic",
+                    description = "Please check to see if this looks good. If all is well, then please add any additional organizers to this record (as per the description).",
+                    part_of_project_id = 8,
+                    related_to = info,
+                    workactivity_id = 14,
+                )
             return redirect("ascus:account")
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
@@ -295,6 +305,7 @@ def ascus_account_discussion(request):
         "info": info,
         "form": form,
         "list": my_discussions,
+        "event": event,
     }
     return render(request, "ascus/account.discussion.html", context)
 
