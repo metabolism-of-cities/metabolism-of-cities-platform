@@ -1,0 +1,37 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<h1>Data Curation Platform</h1>
+
+<div class="row">
+
+  <div class="col-9">
+    {% include "staf/review/_review-nav.html" %}
+  </div>
+
+  <div class="col-3">
+    <p><em>If logged in:</em></p>
+    <p>[ profile photo ]</p>
+    <p>
+      [ gold dot ] 3 | [ silver dot ] 4 | [ bronze dot ] 33
+    </p>
+    <p>2837 points</p>
+    <p><a href="http://" class="btn btn-primary">My profile</a></p>
+
+    <p><em>Else</em></p>
+    <p>
+    <strong>Thanks for helping out!</strong>
+    Curation is one of the most important but challenging tasks. 
+    Anybody can upload a dataset, but we need YOUR help to ensure that information is 
+    properly processed, labelled, and only published when it should be published.
+    </p>
+    <p><a href="">Learn more about data curation</a>.</p>
+    <p><a href="">Become a data curator</a>.</p>
+
+  </div>
+
+</div>
+
+{% endblock %}
+

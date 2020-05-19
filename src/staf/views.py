@@ -31,6 +31,16 @@ def review(request):
     }
     return render(request, "staf/review/index.html", context)
 
+def review_scoreboard(request):
+    context = {
+    }
+    return render(request, "staf/review/scoreboard.html", context)
+
+def review_work(request):
+    context = {
+    }
+    return render(request, "staf/review/work.html", context)
+
 def review_pending(request):
     context = {
         "list": UploadSession.objects.filter(meta_data__isnull=True),
