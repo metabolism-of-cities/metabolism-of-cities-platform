@@ -459,8 +459,10 @@ def admin_massmail(request):
             sender = '"AScUS Unconference" <ascus@metabolismofcities.org>'
             if "send_preview" in request.POST:
                 # If a preview is being sent, then it must ONLY go to the logged-in user
-                list = People.objects_unfiltered.filter(user=request.user)
-            for each in list:
+                recipients = People.objects_unfiltered.filter(user=request.user)
+            else:
+                recipients = list
+            for each in recipients:
                 # Let check if the person has an email address before we send the mail
                 if each.email:
                     recipient = '"' + each.name + '" <' + each.email + '>'
