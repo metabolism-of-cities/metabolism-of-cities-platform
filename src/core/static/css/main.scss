@@ -173,9 +173,17 @@ textarea.form-control:focus, input.form-control:focus, select.custom-select:focu
     .breadcrumb-item.active {
       color: $white;
     }
-
   }
 
+  .img-header {
+    height: 800px;
+    max-height: 75vh;
+    background-size: cover;
+  }
+
+  .img-city {
+
+  }
 }
 
 nav {
@@ -1274,10 +1282,6 @@ body.city-subsite {
 
     &.smaller {
       height: 15vh;
-      // Attempt of Paul to reduce the height when class=smaller, doesn't work
-      // It's not hardcoded as a pure hack in top-layer.html
-      // If and when this is done properly in this scss file, please remove the style attribute
-      // from top-layer (search for img-city, it's inside that tag
     }
 
     .black-cover {
@@ -1297,37 +1301,11 @@ body.city-subsite {
     }
   }
 
-
-  .down-city-name {
-    font-weight: bold;
-    text-align: center;
-    background-color: $light;
-    position: fixed;
-    width: 100%;
-    height: 40px;
-    line-height: 40px;
-    font-size: 1rem;
-    top: 0;
-    opacity: 0;
-    transition: .3s;
-    z-index: 500000;
-    pointer-events: none;
-    box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.1);
-
-    a {
-      float: left;
-    }
-  }
-
-  &.scrolled-down .down-city-name {
-    pointer-events: unset;
-    opacity: 1;
-  }
-
-  .navbar-city {
+  #navbar-city {
+    top: -1px;
     background-color: $light;
     padding-bottom: .2rem;
-    padding-top: .2rem;
+    padding-top: calc(.2rem + 1px);
 
     a.nav-link {
       color: $primary !important;
@@ -1335,6 +1313,20 @@ body.city-subsite {
       &:hover {
         color: darken($primary, 20%) !important;
         text-decoration: none !important;
+      }
+    }
+
+    .city-name-small {
+      display: none;
+      font-weight: bold;
+      margin-right: 1rem;
+    }
+
+    &.is-sticky {
+      box-shadow: $basic-shadow;
+
+      .city-name-small {
+        display: inline-block;
       }
     }
   }
