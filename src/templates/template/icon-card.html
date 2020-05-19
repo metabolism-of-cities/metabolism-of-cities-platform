@@ -1,0 +1,106 @@
+{% extends '_base.html' %}
+{% load static %}
+{% block title %}Icon cards{% endblock %}
+{% block css %}
+  <style>
+    .btn-cards .icon-card .card-header {
+      border-bottom-left-radius: .25rem;
+      border-bottom-right-radius: .25rem;
+      height: 100%;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <section class="row">
+    <div class="col-md-6 col-lg-3 mb-4">
+      <div class="card icon-card">
+        <div class="icon">
+          <i class="far fa-fw fa-file-chart-line"></i>
+        </div>
+        <div class="card-header">Creating</div>
+        <div class="card-body">
+          <p class="what-text">
+            We aim to create new knowledge by participating and collaborating in research projects and developing new open source tools.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-4">
+      <div class="card icon-card">
+        <div class="icon">
+          <i class="far fa-fw fa-share-alt"></i>
+        </div>
+        <div class="card-header">Sharing knowledge</div>
+        <div class="card-body">
+          <p class="what-text">
+            We aim to gather and curate (all) knowledge around urban metabolism in one central platform in order to make it accessible to different target audiences.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-4">
+      <div class="card icon-card">
+        <div class="icon">
+          <i class="far fa-fw fa-wrench"></i>
+        </div>
+        <div class="card-header">Applying knowledge</div>
+        <div class="card-body">
+          <p class="what-text">
+            We help policy makers and practitioners to tackle their challenges with Urban Metabolism thinking.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-4">
+      <div class="card icon-card">
+        <div class="icon">
+          <i class="far fa-fw fa-user-friends"></i>
+        </div>
+        <div class="card-header">Fostering a community</div>
+        <div class="card-body">
+          <p class="what-text">
+            We believe that tackling the urban sustainability challenge can not be done alone. We want to foster a community of stakeholders that collaborates on developing solutions.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <h3 class="mb-0">Combine with <code>btn-card</code> class to turn it into a link</h3>
+
+  <section class="row btn-cards">
+    <div class="col-md-3 mb-3">
+      <a class="card icon-card btn-card" href="">
+        <div class="icon">
+          <i class="fal fa-fw fa-sliders-v-square"></i>
+        </div>
+        <div class="card-header">Project settings</div>
+      </a>
+    </div>
+    <div class="col-md-3 mb-3">
+      <a class="card icon-card btn-card" href="users/">
+        <div class="icon">
+          <i class="fal fa-fw fa-users-medical"></i>
+        </div>
+        <div class="card-header">Our contributors</div>
+      </a>
+    </div>
+    <div class="col-md-3 mb-3">
+      <a class="card icon-card btn-card" href="design/">
+        <div class="icon">
+          <i class="fal fa-fw fa-ruler"></i>
+        </div>
+        <div class="card-header">Website design</div>
+      </a>
+    </div>
+    <div class="col-md-3 mb-3">
+      <a class="card icon-card btn-card" href="content/">
+        <div class="icon">
+          <i class="fal fa-fw fa-file-alt"></i>
+        </div>
+        <div class="card-header">Website content</div>
+      </a>
+    </div>
+  </section>
+{% endblock %}
