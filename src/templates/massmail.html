@@ -7,23 +7,27 @@
     {% if not list.count %}
       <p>No people selected</p>
     {% else %}
-      <ul>
+      <ol>
         {% if list %}
           {% for each in list %}
-            <li {% if not each.email %} class="text-danger" {% endif %}>{{ each.firstname }} {% if each.email %}&laquo;{{ each.email }}&raquo;{% endif %}</li>
+            <li {% if not each.email %} class="text-danger" {% endif %}>{{ each }} {% if each.email %}&laquo;{{ each.email }}&raquo;{% endif %}</li>
           {% endfor %}
         {% endif %}
-      </ul>
+      </ol>
 
       <h2>Write mail</h2>
       <form method="post">
         {% csrf_token %}
-        Subject: 
-        <input type="text" name="subject" required />
-        <br>
-        <textarea name="content" class="form-control" style="height:500px" required></textarea>
-        <button type="submit" name="send">Send</button>
-        <button type="submit" name="send_preview">Send preview to myself</button>
+        <div class="form-group">
+          <label>Subject</label>
+          <input type="text" class="form-control" name="subject" required />
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea name="content" class="form-control" style="height:500px" required></textarea>
+        </div>
+        <button type="submit" name="send_preview" class="btn btn-primary">Send preview to myself</button>
+        <button type="submit" class="btn btn-success" name="send">Send</button>
       </form>
     {% endif %}
 {% endblock %}

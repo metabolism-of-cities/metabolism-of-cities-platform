@@ -28,6 +28,7 @@
     </tbody>
   </table>
 
-  <p class="mt-5"><a href="{% url "ascus:admin" %}" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a></p>
+  <p class="mt-5"><a href="{% url "ascus:admin_massmail" %}?people={% for each in list %}{{ each.record_parent.people.id }},{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Send mass mail</a></p>
+  <p><a href="{% url "ascus:admin" %}" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a></p>
 
 {% endblock %}

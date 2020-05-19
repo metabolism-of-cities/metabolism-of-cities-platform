@@ -36,6 +36,7 @@ urlpatterns = [
     path("account/admin/introvideos/", views.ascus_admin_introvideos, name="admin_introvideos"),
     path("account/admin/introvideos/<int:id>/", views.ascus_admin_introvideo, name="admin_introvideo"),
     path("account/admin/payments/<int:id>/", views.ascus_admin_work_item, name="admin_payment"),
+    path("account/admin/massmail/", views.admin_massmail, name="admin_massmail"),
     path("account/admin/<slug:type>/", views.ascus_admin_list, name="admin_list"),
 
     # We had some old URLs, can be removed after June 10th 2020

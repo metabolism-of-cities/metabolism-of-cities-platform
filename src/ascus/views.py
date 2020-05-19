@@ -11,6 +11,9 @@ from django.utils import timezone
 import pytz
 from functools import wraps
 
+from django.core.mail import send_mail
+from django.template.loader import render_to_string, get_template
+
 TAG_ID = settings.TAG_ID_LIST
 PAGE_ID = settings.PAGE_ID_LIST
 
@@ -432,6 +435,46 @@ def ascus_admin_document(request, id):
         "work": work,
     }
     return render(request, "ascus/admin.document.html", context)
+
+@check_ascus_admin_access
+def admin_massmail(request):
+    try:
+        id_list = request.GET["people"]
+        last_char = id_list[-1]
+        if last_char == ",":
+            id_list = id_list[:-1]
+        ids = id_list.split(",")
+        list = People.objects_unfiltered.filter(id__in=ids)
+    except Exception as e:
+        messages.error(request, "You did not select any people to send this mail to! <br><strong>Error: " + str(e) + "</strong>")
+        list = None
+    if request.method == "POST":
+        message = request.POST["content"]
+        mailcontext = {
+            "message": message,
+        }
+        msg_html = render_to_string("mailbody/mail.template.html", mailcontext)
+        msg_plain = message
+        sender = '"AScUS Unconference" <ascus@metabolismofcities.org>'
+        if "send_preview" in request.POST:
+            # If a preview is being sent, then it must ONLY go to the logged-in user
+            list = People.objects_unfiltered.filter(user=request.user)
+        for each in list:
+            # Let check if the person has an email address before we send the mail
+            if each.email:
+                recipient = '"' + each.name + '" <' + each.email + '>'
+                send_mail(
+                    request.POST["subject"],
+                    msg_plain,
+                    sender,
+                    [recipient],
+                    html_message=msg_html,
+                )
+        messages.success(request, "The message was sent.")
+    context = {
+        "list": list
+    }
+    return render(request, "massmail.html", context)
 
 @check_ascus_admin_access
 def ascus_admin_work(request):

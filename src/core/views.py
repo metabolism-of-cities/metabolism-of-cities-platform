@@ -844,10 +844,14 @@ Link to review: {review_link}''',
 @login_required
 def massmail(request,people=None):
     try:
-        ids = request.GET["people"].split(",")
+        id_list = request.GET["people"]
+        last_char = id_list[-1]
+        if last_char == ",":
+            id_list = id_list[:-1]
+        ids = id_list.split(",")
         list = People.objects.filter(id__in=ids)
-    except:
-        messages.error(request, "You did not select any people to send this mail to!")
+    except Exception as e:
+        messages.error(request, "You did not select any people to send this mail to! <br><strong>Error: " + str(e) + "</strong>")
         list = None
     if request.method == "POST":
         message = request.POST["content"]
