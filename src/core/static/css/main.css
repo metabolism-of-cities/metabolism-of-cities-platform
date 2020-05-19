@@ -1216,11 +1216,17 @@ body.entity.form table td {
 
 .filter-table .col-filter {
   background-color: #efefef;
-  border-radius: .25rem 0 0; }
+  border-radius: .25rem 0 0;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto; }
 
 @media (min-width: 768px) {
   .filter-table .col-filter {
     border-radius: .25rem 0 0 .25rem; } }
+
+.filter-table .col-results {
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto; }
 
 .filter-table table tr td {
   vertical-align: middle; }
@@ -1433,6 +1439,18 @@ body.library.map .cluster-circle {
 body.library.item .item-title {
   font-size: 2rem; }
 
+body.library.item .btn-icon .title {
+  font-size: 1.25rem; }
+  body.library.item .btn-icon .title i {
+    margin-right: .25rem; }
+
+body.library.item .journal-cover {
+  max-width: 100%;
+  width: 250px;
+  display: block;
+  border-radius: .25rem;
+  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2); }
+
 body.geocode.list .single-item.card {
   height: 100%; }
   body.geocode.list .single-item.card .card-body {
@@ -1482,3 +1500,23 @@ body.stafcp.design textarea#id_custom_css {
 body.stafcp.workgrid .btn-filter {
   white-space: nowrap;
   height: 38px; }
+
+body.upload-portal.index .container.main-content {
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: unset !important;
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0; }
+
+body.upload-portal.index .icon-card .card-header {
+  border-bottom-left-radius: .25rem;
+  border-bottom-right-radius: .25rem; }
+
+body.upload-portal.index section {
+  padding-top: 4rem;
+  padding-bottom: 4rem; }
+
+body.upload-portal.index #data,
+body.upload-portal.index #geospatial {
+  background-color: #efefef; }

@@ -1850,12 +1850,19 @@ body.entity.form {
   .col-filter {
     background-color: $light;
     border-radius: .25rem 0 0;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
   }
 
   @media (min-width: 768px) {
     .col-filter {
       border-radius: .25rem 0 0 .25rem;
     }
+  }
+
+  .col-results {
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
   }
 
   table tr td {
@@ -2189,6 +2196,22 @@ body.library.item {
   .item-title {
     font-size: 2rem;
   }
+
+  .btn-icon .title {
+    font-size: 1.25rem;
+
+    i {
+      margin-right: .25rem;
+    }
+  }
+
+  .journal-cover {
+    max-width: 100%;
+    width: 250px;
+    display: block;
+    border-radius: .25rem;
+    box-shadow: $basic-shadow;
+  }
 }
 
 // GEOCODE LIST PAGE
@@ -2273,5 +2296,32 @@ body.stafcp.workgrid {
   .btn-filter {
     white-space: nowrap;
     height: 38px;
+  }
+}
+
+// STAF UPLOAD PORTAL INDEX
+body.upload-portal.index {
+  .container.main-content {
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: unset !important;
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+  }
+
+  .icon-card .card-header {
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+  }
+
+  section {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  #data,
+  #geospatial {
+    background-color: $light;
   }
 }

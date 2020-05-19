@@ -1,130 +1,106 @@
 {% extends "_base.html" %}
+{% block page_name %}upload-portal index{% endblock %}
+{% block title %}Upload portal{% endblock %}
 
 {% block content %}
-  <h2>Upload portal</h2>
+  <div class="container pb-4">
+    <h1>Upload portal</h1>
 
-  <p>
-    Help us improve and expand! Please upload data and information to the sytem. You can 
-    select a category below and start uploading, or you can watch our <a href="videos">instruction videos</a> 
-    to get a better idea of how you should go about collecting and uploading information.
-  </p>
+    <p>
+      Help us improve and expand! Please upload data and information to the sytem. You can
+      select a category below and start uploading, or you can watch our <a href="videos">instruction videos</a>
+      to get a better idea of how you should go about collecting and uploading information.
+    </p>
+  </div>
 
- <section>
-
-  <h3>Data</h3>
-   <div class="row">
-      <div class="col-md-4 mb-3">
-        <a class="card icon-card btn-card" href="infrastructure/">
-          <div class="icon">
-            <i class="fal fa-fw fa-industry"></i>
-          </div>
-          <div class="card-header">Infrastructure</div>
-        </a>
-      </div>
-      <div class="col-md-4 mb-3">
-        <a class="card icon-card btn-card" href="flows/">
-          <div class="icon">
-            <i class="fas fa-fw fa-chart-bar"></i>
-          </div>
-          <div class="card-header">Material flow data</div>
-        </a>
-      </div>
-      <div class="col-md-4 mb-3">
-        <a class="card icon-card btn-card" href="stock/">
-          <div class="icon">
-            <i class="fal fa-fw fa-chimney"></i>
-          </div>
-          <div class="card-header">Material stock data</div>
-        </a>
-      </div>
-    </div>
-
-  </section>
-
- <section>
-  <h3>Resources</h3>
-   <div class="row">
-      <div class="col-lg-2 col-sm-4 mb-3">
-        <a class="card icon-card btn-card" href="journalarticle/">
-          <div class="icon">
-            <i class="fal fa-fw fa-file"></i>
-          </div>
-          <div class="card-header">Journal article</div>
-        </a>
-      </div>
-      <div class="col-lg-2 col-sm-4 mb-3">
-        <a class="card icon-card btn-card" href="thesis/">
-          <div class="icon">
-            <i class="fal fa-fw fa-file-alt"></i>
-          </div>
-          <div class="card-header">Thesis</div>
-        </a>
-      </div>
-      <div class="col-lg-2 col-sm-4 mb-3">
-        <a class="card icon-card btn-card" href="report/">
-          <div class="icon">
-            <i class="fal fa-fw fa-file-invoice"></i>
-          </div>
-          <div class="card-header">Report</div>
-        </a>
-      </div>
-      <div class="col-lg-2 col-sm-4 mb-3">
-        <a class="card icon-card btn-card" href="video/">
-          <div class="icon">
-            <i class="fal fa-fw fa-film"></i>
-          </div>
-          <div class="card-header">Video</div>
-        </a>
-      </div>
-      <div class="col-lg-2 col-sm-4 mb-3">
-        <a class="card icon-card btn-card" href="photo/">
-          <div class="icon">
-            <i class="fal fa-fw fa-image"></i>
-          </div>
-          <div class="card-header">Photo</div>
-        </a>
-      </div>
-      <div class="col-lg-2 col-sm-4 mb-3">
-        <a class="card icon-card btn-card" href="presentation/">
-          <div class="icon">
-            <i class="fal fa-fw fa-presentation"></i>
-          </div>
-          <div class="card-header">Presentation</div>
-        </a>
+  <section id="data">
+    <div class="container">
+      <h2>Data</h2>
+      <div class="row">
+        <div class="col-lg-4 col-md-6 mb-3">
+          <a class="btn-icon" href="infrastructure/">
+            <div class="title"><i class="fal fa-industry fa-fw"></i> Infrastructure</div>
+            <div class="text">Quam dolorem omnis dignissimos omnis nihil odit ut</div>
+          </a>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-3">
+          <a class="btn-icon" href="flows/">
+            <div class="title"><i class="fal fa-chart-bar fa-fw"></i> Material flow data</div>
+            <div class="text">Quisquam totam nulla hic temporibus omnis nemo</div>
+          </a>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-3">
+          <a class="btn-icon" href="stock/">
+            <div class="title"><i class="fal fa-chimney fa-fw"></i> Material stock data</div>
+            <div class="text">Eos sunt voluptatum eos aspernatur perspiciatis perspiciatis</div>
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
- <section>
-
-  <h3>Geo-spatial</h3>
-   <div class="row">
-      <div class="col-md-4 mb-3">
-        <a class="card icon-card btn-card" href="systemboundaries/">
-          <div class="icon">
-            <i class="fal fa-fw fa-globe-africa"></i>
-          </div>
-          <div class="card-header">System boundaries</div>
-        </a>
-      </div>
-      <div class="col-md-4 mb-3">
-        <a class="card icon-card btn-card" href="subdivisions/">
-          <div class="icon">
-            <i class="fas fa-fw fa-game-board-alt"></i>
-          </div>
-          <div class="card-header">Territorial subdivisions</div>
-        </a>
-      </div>
-      <div class="col-md-4 mb-3">
-        <a class="card icon-card btn-card" href="gis/">
-          <div class="icon">
-            <i class="fal fa-fw fa-layer-group"></i>
-          </div>
-          <div class="card-header">Other GIS data</div>
-        </a>
+  <section id="resources">
+    <div class="container">
+      <h2>Resources</h2>
+      <div class="row">
+        <div class="col-lg-4 col-md-6 mb-3">
+          <a class="btn-icon" href="journalarticle/">
+            <div class="title mb-0"><i class="fal fa-file fa-fw"></i> Journal article</div>
+          </a>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-3">
+          <a class="btn-icon" href="thesis/">
+            <div class="title mb-0"><i class="fal fa-file-alt fa-fw"></i> Thesis</div>
+          </a>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-3">
+          <a class="btn-icon" href="report/">
+            <div class="title mb-0"><i class="fal fa-file-invoice fa-fw"></i> Report</div>
+          </a>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-3">
+          <a class="btn-icon" href="video/">
+            <div class="title mb-0"><i class="fal fa-film fa-fw"></i> Video</div>
+          </a>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-3">
+          <a class="btn-icon" href="photo/">
+            <div class="title mb-0"><i class="fal fa-image fa-fw"></i> Photo</div>
+          </a>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-3">
+          <a class="btn-icon" href="presentation/">
+            <div class="title mb-0"><i class="fal fa-presentation fa-fw"></i> Presentation</div>
+          </a>
+        </div>
       </div>
     </div>
+  </section>
 
+  <section id="geospatial">
+    <div class="container">
+      <h2>Geospatial</h2>
+      <div class="row">
+        <div class="col-lg-4 col-md-6 mb-3">
+          <a class="btn-icon" href="systemboundaries/">
+            <div class="title"><i class="fal fa-globe-africa fa-fw"></i> System boundaries</div>
+            <div class="text">Quam dolorem omnis dignissimos omnis nihil odit ut</div>
+          </a>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-3">
+          <a class="btn-icon" href="subdivisions/">
+            <div class="title"><i class="fal fa-game-board-alt fa-fw"></i> Territorial subdivisions</div>
+            <div class="text">Quisquam totam nulla hic temporibus omnis nemo</div>
+          </a>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-3">
+          <a class="btn-icon" href="gis/">
+            <div class="title"><i class="fal fa-layer-group fa-fw"></i> Other GIS data</div>
+            <div class="text">Eos sunt voluptatum eos aspernatur perspiciatis perspiciatis</div>
+          </a>
+        </div>
+      </div>
+    </div>
   </section>
 
 {% endblock %}
