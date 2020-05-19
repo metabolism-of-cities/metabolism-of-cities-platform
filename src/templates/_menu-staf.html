@@ -43,7 +43,7 @@
     Upload data
   </a>
   <div class="dropdown-menu" aria-labelledby="cities-dropdown">
-    <a class="dropdown-item" href="{% url "stafcp_upload_gis" %}">GIS data</a>
+    <a class="dropdown-item" href="{% url "staf:upload_gis" %}">GIS data</a>
     <a class="dropdown-item" href="/data/overview/">Input-output data</a>
     <a class="dropdown-item" href="/data/overview/">Material extraction</a>
     <a class="dropdown-item" href="/data/cape-town/">GHG emissions</a>
@@ -66,11 +66,11 @@
     Data catalogs
   </a>
   <div class="dropdown-menu" aria-labelledby="catalogs-dropdown">
-    <a class="dropdown-item" href="{% url "stafcp_catalogs" %}">Introduction</a>
-    <a class="dropdown-item" href="{% url "stafcp_geocodes" %}">Geocode schemes</a>
-    <a class="dropdown-item" href="{% url "stafcp_flowdiagrams" %}">Flow diagrams</a>
-    <a class="dropdown-item" href="{% url "stafcp_activities_catalogs" %}">Activities</a>
-    <a class="dropdown-item" href="{% url "stafcp_referencespaces" %}">Reference spaces</a>
+    <a class="dropdown-item" href="{% url "staf:catalogs" %}">Introduction</a>
+    <a class="dropdown-item" href="{% url "staf:geocodes" %}">Geocode schemes</a>
+    <a class="dropdown-item" href="{% url "staf:flowdiagrams" %}">Flow diagrams</a>
+    <a class="dropdown-item" href="{% url "staf:activities_catalogs" %}">Activities</a>
+    <a class="dropdown-item" href="{% url "staf:referencespaces" %}">Reference spaces</a>
   </div>
 </li>
 

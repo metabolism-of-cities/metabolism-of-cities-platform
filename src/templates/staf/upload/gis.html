@@ -29,7 +29,7 @@
           <tbody class="list">
             {% for each in geocodes %}
             <tr><td>
-              <a class="data-name" href="{% url "stafcp_upload_gis_file" %}?type={{ each.id }}">{{ each }}</a>
+              <a class="data-name" href="{% url "staf:upload_gis_file" %}?type={{ each.id }}">{{ each }}</a>
               <span hidden class="data-tags">scheme-{{ each.scheme.id }}</span>
             </td></tr>
             {% endfor %}
