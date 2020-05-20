@@ -1281,7 +1281,7 @@ body.city-subsite {
     top: 0;
 
     &.smaller {
-      height: 15vh;
+      height: 80px;
     }
 
     .black-cover {
@@ -1299,6 +1299,10 @@ body.city-subsite {
       color: $very-light;
       bottom: 1rem;
     }
+
+    & a {
+      color: #fff;
+    }
   }
 
   #img-city-wrapper {
@@ -1311,8 +1315,9 @@ body.city-subsite {
 
   #navbar-city {
     background-color: $light;
-    padding-bottom: .25rem;
-    padding-top: .25rem;
+    border-bottom: 1px solid #999;
+    padding-top: .3rem;
+    padding-bottom: 0;
 
     a.nav-link {
       color: $primary !important;
@@ -1321,6 +1326,14 @@ body.city-subsite {
       &:hover {
         color: darken($primary, 20%) !important;
         text-decoration: none !important;
+      }
+      &.active {
+        background: #fff;
+        border: 1px solid #999;
+        border-bottom: 1px solid #fff;
+        position: relative;
+        top: 1px;
+        opacity: 1 !important;
       }
     }
   }

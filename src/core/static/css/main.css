@@ -840,7 +840,7 @@ body.city-subsite #img-city {
   position: relative;
   top: 0; }
   body.city-subsite #img-city.smaller {
-    height: 15vh; }
+    height: 80px; }
   body.city-subsite #img-city .black-cover {
     background-color: #000;
     opacity: .3;
@@ -853,6 +853,8 @@ body.city-subsite #img-city {
     text-shadow: 0px 0px 2px black;
     color: #fbfbfb;
     bottom: 1rem; }
+  body.city-subsite #img-city a {
+    color: #fff; }
 
 body.city-subsite #img-city-wrapper {
   top: -1px; }
@@ -861,14 +863,22 @@ body.city-subsite #img-city-wrapper {
 
 body.city-subsite #navbar-city {
   background-color: #efefef;
-  padding-bottom: .25rem;
-  padding-top: .25rem; }
+  border-bottom: 1px solid #999;
+  padding-top: .3rem;
+  padding-bottom: 0; }
   body.city-subsite #navbar-city a.nav-link {
     color: #144d58 !important;
     white-space: nowrap; }
     body.city-subsite #navbar-city a.nav-link:hover {
       color: #010405 !important;
       text-decoration: none !important; }
+    body.city-subsite #navbar-city a.nav-link.active {
+      background: #fff;
+      border: 1px solid #999;
+      border-bottom: 1px solid #fff;
+      position: relative;
+      top: 1px;
+      opacity: 1 !important; }
 
 body.event.list .no-results:not(.visible) {
   display: none; }

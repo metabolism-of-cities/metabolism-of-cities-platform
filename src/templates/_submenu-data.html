@@ -1,0 +1,81 @@
+<div {% if not dashboard %}id="img-city-wrapper" class="sticky-top"{% endif %}>
+  <div id="img-city" {% if not dashboard %}class="smaller"{% endif %} style="background-image: url('{{ space.photo.image.url }}')">
+    <div class="black-cover"></div>
+    <div class="container">
+      <div class="city-name"><a href="{% url "data:dashboard" space.slug %}">{{ space }}</a></div>
+    </div>
+  </div>
+  <nav id="navbar-city" class="navbar navbar-light navbar-expand-md">
+    <div class="container">
+      <button class="navbar-toggler ml-3" type="button" data-toggle="collapse" data-target="#city-navbar" aria-controls="city-navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="city-navbar">
+        <ul class="navbar-nav mr-auto ml-3 ml-md-0">
+          <li class="nav-item">
+            <a class="nav-link{% if dashboard %} active{% endif %}" href="{% url 'data:dashboard' space.slug %}"><i class="fa fa-fw fa-home"></i></a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle{% if menu == "industries" %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Local industries
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'data:sector' space.slug 'agriculture' %}">Agriculture</a>
+              <a class="dropdown-item" href="{% url 'data:sector' space.slug 'water' %}">Water</a>
+              <a class="dropdown-item" href="{% url 'data:sector' space.slug 'waste' %}">Waste</a>
+              <a class="dropdown-item" href="{% url 'data:sector' space.slug 'energy' %}">Energy</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle{% if menu == "resource_use" %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Resource use
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Journal articles</a>
+              <a class="dropdown-item" href="{% url 'data:reports' space.slug %}">Reports</a>
+              <a class="dropdown-item" href="{% url 'data:theses' space.slug %}">Theses</a>
+              <a class="dropdown-item" href="{% url 'data:photos' space.slug %}">Photos</a>
+              <a class="dropdown-item" href="{% url 'data:maps' space.slug %}">Maps</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle{% if menu == "waste" %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Waste
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Journal articles</a>
+              <a class="dropdown-item" href="{% url 'data:reports' space.slug %}">Reports</a>
+              <a class="dropdown-item" href="{% url 'data:theses' space.slug %}">Theses</a>
+              <a class="dropdown-item" href="{% url 'data:photos' space.slug %}">Photos</a>
+              <a class="dropdown-item" href="{% url 'data:maps' space.slug %}">Maps</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle{% if menu == "library" %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Information library
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Datasets</a>
+              <a class="dropdown-item" href="{% url 'data:maps' space.slug %}">Maps</a>
+              <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Journal articles</a>
+              <a class="dropdown-item" href="{% url 'data:reports' space.slug %}">Reports</a>
+              <a class="dropdown-item" href="{% url 'data:theses' space.slug %}">Theses</a>
+              <a class="dropdown-item" href="{% url 'data:photos' space.slug %}">Photos</a>
+              <a class="dropdown-item" href="{% url 'data:photos' space.slug %}">Videos</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle{% if menu == "data" %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Data
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Upload data</a>
+              <a class="dropdown-item" href="{% url 'data:maps' space.slug %}">Download</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>

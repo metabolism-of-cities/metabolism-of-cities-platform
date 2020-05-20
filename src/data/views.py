@@ -46,6 +46,7 @@ def photos(request, space):
         "space": space,
         "header_image": space.photo,
         "photos": Photo.objects.filter(spaces=space),
+        "menu": "library",
     }
     return render(request, "data/photos.html", context)
 
@@ -54,6 +55,7 @@ def maps(request, space):
     context = {
         "space": space,
         "header_image": space.photo,
+        "menu": "library",
     }
     return render(request, "data/maps.html", context)
 
@@ -75,6 +77,7 @@ def library(request, space, type):
         "title": title,
         "items": list,
         "load_datatables": True,
+        "menu": "library",
     }
     return render(request, "data/library.html", context)
 
@@ -83,6 +86,7 @@ def sector(request, space, sector):
     context = {
         "space": space,
         "header_image": space.photo,
+        "menu": "industries",
     }
     return render(request, "data/sector.html", context)
 
@@ -91,6 +95,7 @@ def sectors(request, space):
     context = {
         "space": space,
         "header_image": space.photo,
+        "menu": "industries",
     }
     return render(request, "data/sector.html", context)
 
@@ -99,6 +104,7 @@ def dataset(request, space, dataset):
     context = {
         "space": space,
         "header_image": space.photo,
+        "menu": "library",
     }
     return render(request, "data/dataset.html", context)
 
