@@ -1,17 +1,114 @@
 {% extends "_base.html" %}
-{% load static %}
-{% load sass_tags %}
-
-{% block page_name %}{% endblock %}
-
-{% block title %}Blank page{% endblock %}
-
-{% block css %}
-{% endblock %}
 
 {% block content %}
-  Content goes here
-{% endblock %}
 
-{% block footer %}
+  <div class="row">
+
+    <div class="col-9">
+      <h1>Local Industries</h1>
+
+      <h3>Manufacturing</h3>
+      <p>{% lorem %}</p>
+      <div class="row">
+        <div class="col-lg-3 col-sm-6 mb-4">
+          <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/agriculture.jpg');">
+            <span class="title">Bread</span>
+          </a>
+          <div class="progress">
+            <div class="progress-bar bg-success" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Stub</div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-sm-6 mb-4">
+          <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/construction.jpg');">
+            <span class="title">Beverages</span>
+          </a>
+          <div class="progress">
+            <div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Complete article</div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-sm-6 mb-4">
+          <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/energy.jpg');">
+            <span class="title">Wine</span>
+          </a>
+          <div class="progress">
+            <div class="progress-bar bg-success" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Medium article</div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-sm-6 mb-4">
+          <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/fishing.jpg');">
+            <span class="title">Processed foods</span>
+          </a>
+        </div>
+        <div class="col-lg-3 col-sm-6 mb-4">
+          <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/forestry.jpg');">
+            <span class="title">Paper manufacturing</span>
+          </a>
+        </div>
+        <div class="col-lg-3 col-sm-6 mb-4">
+          <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/manufacturing.jpg');">
+            <span class="title">Clothes</span>
+          </a>
+        </div>
+
+      </div>
+
+      <h3>Extractive industries</h3>
+      <p>{% lorem %}</p>
+      <div class="row">
+
+        <div class="col-lg-3 col-sm-6 mb-4">
+          <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/mining.jpg');">
+            <span class="title">Mining</span>
+          </a>
+        </div>
+        <div class="col-lg-3 col-sm-6 mb-4">
+          <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/retail.jpg');">
+            <span class="title">Fishing</span>
+          </a>
+        </div>
+        <div class="col-lg-3 col-sm-6 mb-4">
+          <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/transport.jpg');">
+            <span class="title">Agriculture</span>
+          </a>
+        </div>
+        <div class="col-lg-3 col-sm-6 mb-4">
+          <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/waste.jpg');">
+            <span class="title">Forestry</span>
+          </a>
+        </div>
+      </div>
+
+
+      <h2>Overview</h2>
+    </div>
+
+    <div class="col-3">
+      <h3>Related resources:</h3>
+
+      <div class="list-group">
+        <a class="list-group-item d-flex justify-content-between align-items-center" href="">
+          Datasets <span class="badge badge-primary badge-pill">14</span>
+        </a>
+        <a class="list-group-item d-flex justify-content-between align-items-center" href="">
+          Journal articles <span class="badge badge-primary badge-pill">14</span>
+        </a>
+        <a class="list-group-item d-flex justify-content-between align-items-center" href="">
+          Theses <span class="badge badge-primary badge-pill">14</span>
+        </a>
+        <a class="list-group-item d-flex justify-content-between align-items-center" href="">
+          Maps <span class="badge badge-primary badge-pill">14</span>
+        </a>
+        <a class="list-group-item d-flex justify-content-between align-items-center" href="">
+          Reports <span class="badge badge-primary badge-pill">14</span>
+        </a>
+        <a class="list-group-item d-flex justify-content-between align-items-center" href="">
+          Photos <span class="badge badge-primary badge-pill">14</span>
+        </a>
+        <a class="list-group-item d-flex justify-content-between align-items-center" href="">
+          Videos <span class="badge badge-primary badge-pill">14</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
 {% endblock %}
