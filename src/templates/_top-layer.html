@@ -31,11 +31,11 @@
       <a class="navbar-brand" href="{{ PROJECT.get_website }}">
         <img alt="{{ PROJECT }}" src="{{ LOGO }}">
       </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#project-navbar" aria-controls="project-navbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="collapse navbar-collapse" id="project-navbar">
         <ul class="navbar-nav ml-auto">
 
           {% if PROJECT.id == 4 %}
@@ -85,24 +85,23 @@
 </div>
 
 {% if PROJECT.id == 4 and space %}
-  <div {% if not dashboard %}class="make-this-baby-stick"{% endif %}>
+  <div {% if not dashboard %}id="img-city-wrapper" class="sticky-top"{% endif %}>
     <div id="img-city" {% if not dashboard %}class="smaller"{% endif %} style="background-image: url('{{ space.photo.image.url }}')">
       <div class="black-cover"></div>
       <div class="container">
-        <div class="city-name" style="color:#fff;font-size:30px">{{ space }}</div>
+        <div class="city-name">{{ space }}</div>
       </div>
     </div>
-    <nav id="navbar-city" class="navbar navbar-expand-lg ssticky-top">
+    <nav id="navbar-city" class="navbar navbar-light navbar-expand-md">
       <div class="container">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler ml-3" type="button" data-toggle="collapse" data-target="#city-navbar" aria-controls="city-navbar" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <div class="city-name-small">{{ space }}</div>
-          <ul class="navbar-nav mr-auto">
+        <div class="collapse navbar-collapse" id="city-navbar">
+          <ul class="navbar-nav mr-auto ml-3 ml-md-0">
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'data:dashboard' space.slug %}">Overview</a>
+              <a class="nav-link pl-md-0" href="{% url 'data:dashboard' space.slug %}">Overview</a>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -144,13 +143,13 @@
   <script>
     // add class when navbar becomes sticky - https://stackoverflow.com/a/57991537/1685643
     // get the sticky element
-    const navbarCity = document.getElementById("navbar-city")
+    const imgCityWrapper = document.getElementById("img-city-wrapper")
 
     const observer = new IntersectionObserver(
       ([e]) => e.target.classList.toggle("is-sticky", e.intersectionRatio < 1),
       {threshold: [1]}
     );
 
-    observer.observe(navbarCity)
+    observer.observe(imgCityWrapper)
   </script>
 {% endif %}
