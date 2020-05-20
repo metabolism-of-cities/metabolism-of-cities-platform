@@ -9,6 +9,7 @@ from django_cron.models import CronJobLog
 from stafdb.models import *
 from django.contrib.gis import admin
 from django.contrib.auth.admin import UserAdmin
+from django.utils.html import format_html
 
 class GeoModelAdmin(admin.ModelAdmin):
      map_width = 100
@@ -143,10 +144,29 @@ class RelationshipAdmin(admin.ModelAdmin):
 
 class WorkAdmin(admin.ModelAdmin):
     search_fields = ["name", "part_of_project__name", "related_to__name"]
-    list_display = ["name", "part_of_project", "related_to", "status", "priority"]
+    list_display = ["name", "part_of_project", "related_to", "status", "priority", "view", "edit"]
     list_filter = ["part_of_project", "status", "priority"]
     autocomplete_fields = ["spaces", "tags", "part_of_project", "related_to", "assigned_to"]
     exclude = ["image"]
+    list_display_links = ["name" ,"edit"]
+
+    def edit(self, obj):
+        return "Edit"
+
+    def view(self, obj):
+        view_link = format_html("<a href='/admin/{}/{}/{}/change/?view=true'>View</a>",
+             obj._meta.app_label, 
+             obj._meta.model_name, 
+             obj.id)
+        return view_link
+
+    def change_view(self, request, object_id, extra_content=None):
+        if "view" in request.GET:
+            print("View is in")
+            self.readonly_fields = ("name", "description", "is_public", "project", "complexity", "type",  "priority")
+        else:
+            self.fields = ("name", "description", "is_public", "project", "complexity", "type", "related_to", "priority","assigned_to")
+            return super().change_view(request, object_id)
 
 class WorkActivityAdmin(admin.ModelAdmin):
     search_fields = ["name"]
