@@ -43,7 +43,7 @@
     Upload data
   </a>
   <div class="dropdown-menu" aria-labelledby="cities-dropdown">
-    <a class="dropdown-item" href="{% url "staf:upload_gis" %}">GIS data</a>
+    <a class="dropdown-item" href="{% url 'staf:upload_gis' %}">GIS data</a>
     <a class="dropdown-item" href="/data/overview/">Input-output data</a>
     <a class="dropdown-item" href="/data/overview/">Material extraction</a>
     <a class="dropdown-item" href="/data/cape-town/">GHG emissions</a>
@@ -59,20 +59,20 @@
   </div>
 </li>
 
-<li><a href="http://" class="nav-link">Download data</a></li>
+<li class="nav-item"><a href="http://" class="nav-link">Download data</a></li>
 
 <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="catalogs-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Data catalogs
   </a>
   <div class="dropdown-menu" aria-labelledby="catalogs-dropdown">
-    <a class="dropdown-item" href="{% url "staf:catalogs" %}">Introduction</a>
-    <a class="dropdown-item" href="{% url "staf:geocodes" %}">Geocode schemes</a>
-    <a class="dropdown-item" href="{% url "staf:flowdiagrams" %}">Flow diagrams</a>
-    <a class="dropdown-item" href="{% url "staf:activities_catalogs" %}">Activities</a>
-    <a class="dropdown-item" href="{% url "staf:referencespaces" %}">Reference spaces</a>
+    <a class="dropdown-item" href="{% url 'staf:catalogs' %}">Introduction</a>
+    <a class="dropdown-item" href="{% url 'staf:geocodes' %}">Geocode schemes</a>
+    <a class="dropdown-item" href="{% url 'staf:flowdiagrams' %}">Flow diagrams</a>
+    <a class="dropdown-item" href="{% url 'staf:activities_catalogs' %}">Activities</a>
+    <a class="dropdown-item" href="{% url 'staf:referencespaces' %}">Reference spaces</a>
   </div>
 </li>
 
 
-<li><a href="http://" class="nav-link">About</a></li>
+<li class="nav-item"><a href="http://" class="nav-link">About</a></li>

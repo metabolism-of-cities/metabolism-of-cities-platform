@@ -1,19 +1,30 @@
 {% extends "_base.html" %}
 {% load humanize %}
+{% block page_name %}staf-review uploaded{% endblock %}
 
 {% block content %}
 
-<div class="row">
-  <div class="col-8">
-    <h2>Quick Stats</h2>
+<h1 class="mb-0">Uploaded files</h1>
+<a href="{% url 'staf:review' %}" class="btn btn-primary-basic mb-4">
+  <i class="fal fa-angle-left"></i>
+  Back to review portal
+</a>
 
-    <ul>
-      <li><strong>{{ list.count }}</strong> pending uploads</li>
-      <li><strong>33</strong> uploads this month</li>
-      <li><strong>3432</strong> uploads all-time</li>
+<div class="row">
+  <div class="col-lg-8">
+    <ul class="list-group list-group-horizontal mb-4">
+      <li class="list-group-item">
+        <span class="statistic">{{ list.count }}</span> pending uploads
+      </li>
+      <li class="list-group-item">
+        <span class="statistic">33</span> uploads this month
+      </li>
+      <li class="list-group-item">
+        <span class="statistic">3432</span> uploads all-time
+      </li>
     </ul>
 
-    <table class="table table-striped datatable">
+    <table class="table datatable">
       <thead>
         <tr>
           <th>ID</th>
@@ -34,28 +45,10 @@
       </tbody>
     </table>
 
-    <p><a href="{% url "staf:review" %}" class="btn btn-info">Back to review portal</a></p>
-
   </div>
-  <div class="col-4">
-    <h2>Instructions</h2>
-    <ul>
-      <li>Select a dataset</li>
-      <li>Review data</li>
-      <li>Curate and classify the data appropriately</li>
-      <li>etc.</li>
-      <li><a href="http://">Watch instruction video</a></li>
-    </ul>
-
-    <h2>Badge progress</h2>
-    <p>Complete review tasks to earn badges.</p>
-
-    <ul>
-      <li><span class="btn btn-info">[bronze] Custodian</span> review 1 dataset</li>
-      <li><span class="btn btn-info">[silver] Reviewer</span> review 10 dataset</li>
-      <li><span class="btn btn-info">[gold] Steward</span> review 100 dataset</li>
-    </ul>
-
+  <div class="col-lg-4 sidebar">
+    {% include "staf/review/_badge-progress.html" %}
+    {% include "staf/review/_instructions.html" %}
   </div>
 </div>
 {% endblock %}
