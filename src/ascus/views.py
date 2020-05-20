@@ -283,7 +283,7 @@ def ascus_account_discussion(request, id=None):
     my_discussions = Event.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
         .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
-        .filter(tags__id=770)
+        .filter(tags__id=770).distinct()
     event = None
     if id:
         event = Event.objects_include_private \

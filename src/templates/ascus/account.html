@@ -75,8 +75,12 @@
       <div class="card-body">
         <h5 class="card-title">Discussion topic</h5>
         <p class="card-text">
+          {% if my_discussions %}
+          Use this section to update your discussion session. 
+          {% else %}
           Please upload a final title and overview of your session 
           by <strong>May 10</strong>
+          {% endif %}
         </p>
         <p><a href="{% url "ascus:account_discussion" %}" class="btn btn-outline-dark">Read more</a></p>
         {% if False %}
