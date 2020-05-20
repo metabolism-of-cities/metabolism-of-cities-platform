@@ -80,6 +80,9 @@ def item(request, id):
 def map(request, article):
     info = get_object_or_404(Webpage, pk=article)
     items = LibraryItem.objects.filter(status="active", tags__id=TAG_ID["case_study"])
+    allCities = {}
+    for each in items:
+        print(each)
     context = {
         "article": info,
         "items": items,
