@@ -18,10 +18,10 @@
       </tr>
     </thead>
     <tbody>
-    {% for each in pages %}
+    {% for each in list %}
       <tr>
         <td><a href="{{ each.id }}/">{{ each }}</a></td>
-        <td>{{ each.get_group_display }}</td>
+        <td>{{ each.get_category_display }}</td>
         <td>{{ each.date_created|date:"M d, Y" }}</td>
       </tr>
     {% endfor %}

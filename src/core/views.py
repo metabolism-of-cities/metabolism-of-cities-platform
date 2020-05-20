@@ -669,7 +669,7 @@ def controlpanel_data_articles(request, project_name, space):
 
     space = get_space(request, space)
     context = {
-        "articles": DataArticle.objects.filter(part_of_project_id=project, spaces=space),
+        "list": DataArticle.objects.filter(part_of_project_id=project, spaces=space),
         "load_datatables": True,
         "space": space,
     }
@@ -688,16 +688,18 @@ def controlpanel_data_article(request, project_name, space, id=None):
         fields=("name", "category", "sub_category", "completion"),
         labels = { "name": "Title", "sub_category": "Sub category (optional)" },
     )
-    info = get_object_or_404(DataArticle, pk=id, project=project) if id else None
+    info = get_object_or_404(DataArticle, pk=id, part_of_project_id=project) if id else None
     form = ModelForm(request.POST or None, instance=info)
     if request.method == 'POST':
         if form.is_valid():
             info = form.save(commit=False)
-            info.content = request.POST.get("text")
+            info.part_of_project_id = project
+            info.description = request.POST.get("text")
             info.save()
-
-            messages.success(request, 'Information was saved.')
-            return redirect(reverse('finances_settings'))
+            if not id:
+                info.spaces.add(space)
+            messages.success(request, "The data article was added.")
+            return redirect("data:controlpanel_data_articles", space=space.slug)
         else:
             messages.error(request, 'We could not save your form, please fill out all fields')
 
@@ -706,6 +708,7 @@ def controlpanel_data_article(request, project_name, space, id=None):
         "load_datatables": True,
         "space": space,
         "form": form,
+        "info": info,
     }
     return render(request, "controlpanel/data-article.html", context)
 
