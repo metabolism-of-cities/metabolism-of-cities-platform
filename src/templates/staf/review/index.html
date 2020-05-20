@@ -1,76 +1,161 @@
 {% extends "_base.html" %}
 
+{% block page_name %}staf-review index{% endblock %}
 {% block content %}
 
 <h1>Data Curation Platform</h1>
 
+{% include "staf/review/_review-nav.html" %}
+
 <div class="row">
-
-  <div class="col-9">
-
-    {% include "staf/review/_review-nav.html" %}
-
-    <ul>
-      <li>
-        <i class="fal fa-fw fa-layer-group" aria-hidden="true"></i>
-        [ 104 / 33 ]
-        <a href="{% url "staf:review_uploaded" %}">GIS processing queue</a><br>
-        Description: convert shapefiles to reference spaces
-      </li>
-      <li>
-        <i class="fal fa-fw fa-layer-group" aria-hidden="true"></i>
-        [ 33 / 10 ]
-        <a href="{% url "staf:review_processed" %}">GIS publication queue</a><br>
-        Review and publish shapefile information
-      </li>
-      <li>
-        <i class="fas fa-fw fa-chart-bar" aria-hidden="true"></i>
-        [ 104 / 33 ]
-        <a href="{% url "staf:review_uploaded" %}">Stock &amp; flow data queue</a><br>
-        Process material stock and flow datasets.
-      </li>
-      <li>
-        <i class="fas fa-fw fa-chart-bar" aria-hidden="true"></i>
-        [ 33 / 10 ]
-        <a href="{% url "staf:review_processed" %}">Stock &amp; flow publication queue</a><br>
-        Review and publish material stock and flow datasets.
-      </li>
-      <li>
-        <i class="fal fa-fw fa-file-alt" aria-hidden="true"></i>
-        [ 33 / 10 ]
-        <a href="{% url "staf:review_processed" %}">Resources review and publication queue</a><br>
-        Review and publish journal articles, reports, and other resources.
-      </li>
-      <li>
-        [ 442 ]
-        <a href="{% url "staf:review_pending" %}">Incomplete uploads</a><br>
-        Description: overview of information not completely uploaded
-      </li>
-    </ul>
-
+  <div class="col-lg-8 data-types">
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <a href="{% url 'staf:review_uploaded' %}" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-layer-group" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>GIS processing queue</strong>
+                <br>
+                <small>Convert shapefiles to reference spaces</small>
+                <br>
+                <span class="badge badge-light">
+                  104 tasks
+                </span>
+                <span class="badge badge-primary">
+                  34 unassigned
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <a href="{% url 'staf:review_processed' %}" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-layer-group" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>GIS publication queue</strong>
+                <br>
+                <small>Review and publish shapefile information</small>
+                <br>
+                <span class="badge badge-light">
+                  104 tasks
+                </span>
+                <span class="badge badge-primary">
+                  34 unassigned
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <a href="{% url 'staf:review_uploaded' %}" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-chart-bar" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>Stock and flow data queue</strong>
+                <br>
+                <small>Process material stock and flow datasets</small>
+                <br>
+                <span class="badge badge-light">
+                  104 tasks
+                </span>
+                <span class="badge badge-primary">
+                  34 unassigned
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <a href="{% url 'staf:review_processed' %}" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-chart-bar" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>Stock and flow publication queue</strong>
+                <br>
+                <small>Review and publish material stock and flow datasets</small>
+                <br>
+                <span class="badge badge-light">
+                  104 tasks
+                </span>
+                <span class="badge badge-primary">
+                  34 unassigned
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <a href="{% url 'staf:review_processed' %}" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-file-alt" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>Resources review and publication queue</strong>
+                <br>
+                <small>Review and publish journal articles, reports, and other resources</small>
+                <br>
+                <span class="badge badge-light">
+                  104 tasks
+                </span>
+                <span class="badge badge-primary">
+                  34 unassigned
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <a href="{% url 'staf:review_pending' %}" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-clipboard-list-check" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>Incomplete uploads</strong>
+                <br>
+                <small>Overview of information not completely uploaded</small>
+                <br>
+                <span class="badge badge-light">
+                  104 tasks
+                </span>
+                <span class="badge badge-primary">
+                  34 unassigned
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
   </div>
 
-  <div class="col-3">
-    <p><em>If logged in:</em></p>
-    <p>[ profile photo ]</p>
-    <p>
-      [ gold dot ] 3 | [ silver dot ] 4 | [ bronze dot ] 33
-    </p>
-    <p>2837 points</p>
-    <p><a href="http://" class="btn btn-primary">My profile</a></p>
-
-    <p><em>Else</em></p>
-    <p>
-    <strong>Thanks for helping out!</strong>
-    Curation is one of the most important but challenging tasks. 
-    Anybody can upload a dataset, but we need YOUR help to ensure that information is 
-    properly processed, labelled, and only published when it should be published.
-    </p>
-    <p><a href="">Learn more about data curation</a>.</p>
-    <p><a href="">Become a data curator</a>.</p>
-
+  <div class="col-lg-4 sidebar">
+    {% include "staf/review/_badge-progress.html" %}
+    <!-- or -->
+    <!-- {% include "staf/review/_introduction.html" %} -->
   </div>
-
 </div>
 
 {% endblock %}

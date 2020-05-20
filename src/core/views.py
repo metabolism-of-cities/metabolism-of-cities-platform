@@ -75,6 +75,11 @@ def get_site_tag(request):
         # For MoI, the island tag should be used to filter items
         return 219       
 
+def get_space(request, slug):
+    # Here we can build an expansion if we want particular people to see dashboards that are under construction
+    check = get_object_or_404(ActivatedSpace, slug=slug, site=request.site)
+    return check.space
+
 # Get all the child relationships, but making sure we only show is_deleted=False and is_public=True
 def get_children(record):
     list = RecordRelationship.objects.filter(record_parent=record).filter(record_child__is_deleted=False, record_child__is_public=True)
@@ -597,10 +602,15 @@ def metabolism_manager_forum(request):
 # Control panel and general contribution components
 
 @login_required
-def controlpanel(request, project_name):
+def controlpanel(request, project_name, space=None):
     if not has_permission(request, PROJECT_ID[project_name], ["curator", "admin", "publisher"]):
         unauthorized_access(request)
+    
+    if space:
+        space = get_space(request, space)
+
     context = {
+        "space": space,
     }
     return render(request, "controlpanel/index.html", context)
 
@@ -649,6 +659,55 @@ def controlpanel_content(request, project_name):
         "load_datatables": True,
     }
     return render(request, "controlpanel/content.html", context)
+
+@login_required
+def controlpanel_data_articles(request, project_name, space):
+
+    project = PROJECT_ID[project_name]
+    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    space = get_space(request, space)
+    context = {
+        "articles": DataArticle.objects.filter(part_of_project_id=project, spaces=space),
+        "load_datatables": True,
+        "space": space,
+    }
+    return render(request, "controlpanel/data-articles.html", context)
+
+@login_required
+def controlpanel_data_article(request, project_name, space, id=None):
+
+    project = PROJECT_ID[project_name]
+    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    space = get_space(request, space)
+    ModelForm = modelform_factory(
+        DataArticle, 
+        fields=("name", "description"),
+        labels = { "name": "Title", "description": "content" },
+    )
+    info = get_object_or_404(DataArticle, pk=id, project=project) if id else None
+    form = ModelForm(request.POST or None, instance=info)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            info = form.save(commit=False)
+            info.save()
+
+            messages.success(request, 'Information was saved.')
+            return redirect(reverse('finances_settings'))
+        else:
+            messages.error(request, 'We could not save your form, please fill out all fields')
+
+    context = {
+        "articles": DataArticle.objects.filter(part_of_project_id=project, spaces=space),
+        "load_datatables": True,
+        "space": space,
+        "form": form,
+    }
+    return render(request, "controlpanel/data-article.html", context)
 
 def work_grid(request, project_name):
     project = PROJECT_ID[project_name]

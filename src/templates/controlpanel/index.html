@@ -19,22 +19,33 @@
         <div class="card-header">Our contributors</div>
       </a>
     </div>
-    <div class="col-md-3 mb-3">
-      <a class="card icon-card btn-card" href="design/">
-        <div class="icon">
-          <i class="fal fa-fw fa-ruler"></i>
-        </div>
-        <div class="card-header">Website design</div>
-      </a>
-    </div>
-    <div class="col-md-3 mb-3">
-      <a class="card icon-card btn-card" href="content/">
-        <div class="icon">
-          <i class="fal fa-fw fa-file-alt"></i>
-        </div>
-        <div class="card-header">Website content</div>
-      </a>
-    </div>
+      <div class="col-md-3 mb-3">
+        <a class="card icon-card btn-card" href="design/">
+          <div class="icon">
+            <i class="fal fa-fw fa-ruler"></i>
+          </div>
+          <div class="card-header">Website design</div>
+        </a>
+      </div>
+    {% if space %}
+      <div class="col-md-3 mb-3">
+        <a class="card icon-card btn-card" href="data-articles/">
+          <div class="icon">
+            <i class="fal fa-fw fa-file-alt"></i>
+          </div>
+          <div class="card-header">Data articles</div>
+        </a>
+      </div>
+    {% else %}
+      <div class="col-md-3 mb-3">
+        <a class="card icon-card btn-card" href="content/">
+          <div class="icon">
+            <i class="fal fa-fw fa-file-alt"></i>
+          </div>
+          <div class="card-header">Website content</div>
+        </a>
+      </div>
+    {% endif %}
   </section>
 
   <section>

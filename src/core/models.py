@@ -361,6 +361,27 @@ class People(Record):
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
 
+# We use this to keep a version history of records (which is done for some, not all)
+# We save the record name/title and the description, which allows us to go 
+# back in time when needed / see a revision history
+# It also allows for people to draft a NEW version and review this first before going live
+class RecordHistory(models.Model):
+
+    class Status(models.IntegerChoices):
+        HISTORIC = 1, "Historic version"
+        DRAFT = 2, "New draft version (unapproved)"
+        REJECTED = 3, "Rejected version"
+
+    status = models.IntegerField(choices=Status.choices, db_index=True)
+    name = models.CharField(max_length=255)
+    description = HTMLField(null=True, blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    record = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="history")
+    people = models.ForeignKey(People, on_delete=models.CASCADE, related_name="record_history")
+
+    class Meta:
+        ordering = ["-id"]
+
 class Webpage(Record):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     slug = models.CharField(db_index=True, max_length=100)
@@ -372,6 +393,7 @@ class Webpage(Record):
 
     def get_absolute_url(self):
         return self.slug
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=["site", "slug"], name="site_slug")
@@ -994,6 +1016,33 @@ class UploadFile(models.Model):
 
     class Meta:
         db_table = "stafdb_uploadfile"
+
+class DataArticle(Record):
+
+    class Category(models.IntegerChoices):
+        LOCAL_INDUSTRIES = 1, "Local industries"
+        RESOURCE_USE = 2, "Resource use"
+        MATERIAL_STOCK = 3, "Material stock"
+        WASTE = 4, "Waste"
+
+    class SubCategory(models.IntegerChoices):
+        MANUFACTURING = 1, "Manufacturing industries"
+        EXTRACTIVE = 2, "Extractive industries"
+        OTHER = 3, "Other industries"
+
+    class Completion(models.IntegerChoices):
+        STUB = 1, "Stub"
+        HALF = 2, "Medium article"
+        COMPLETE = 3, "Complete article"
+
+    category = models.IntegerField(choices=Category.choices, db_index=True)
+    sub_category = models.IntegerField(choices=SubCategory.choices, db_index=True, null=True, blank=True)
+    completion = models.IntegerField(choices=Completion.choices)
+    part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
 
 # Need to remove this (and from stafdb models) when resetting migrations
 def shapefile_directory():

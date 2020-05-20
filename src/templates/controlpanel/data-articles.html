@@ -1,0 +1,35 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1 class="mb-0">Data articles</h1>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+  <a class="btn btn-default-basic float-right" href="create/"><i class="fal fa-plus" aria-hidden="true"></i> Create new data article</a>
+  <table class="table table-striped datatable table-card">
+    <thead>
+      <tr>
+        <th>Article title</th>
+        <th>Section</th>
+        <th>Creation date</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in pages %}
+      <tr>
+        <td><a href="{{ each.id }}/">{{ each }}</a></td>
+        <td>{{ each.get_group_display }}</td>
+        <td>{{ each.date_created|date:"M d, Y" }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <a href="../" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+{% endblock %}

@@ -5,20 +5,8 @@
 {% block content %}
 
 <div class="form-group markdown-textarea">
-  <markdown-toolbar for="text">
-    <md-header title="Header" class="btn btn-primary-basic btn-sm"><i class="fas fa-fw fa-heading"></i></md-header>
-    <md-bold title="Bold" class="btn btn-primary-basic btn-sm"><i class="fas fa-fw fa-bold"></i></md-bold>
-    <md-italic title="Italic" class="btn btn-primary-basic btn-sm mr-4"><i class="fas fa-fw fa-italic"></i></md-italic>
-    <md-link title="Link" class="btn btn-primary-basic btn-sm"><i class="fas fa-fw fa-link"></i></md-link>
-    <md-code title="Code" class="btn btn-primary-basic btn-sm"><i class="fas fa-fw fa-code"></i></md-code>
-    <md-quote title="Quote" class="btn btn-primary-basic btn-sm mr-4"><i class="fas fa-fw fa-quote-right"></i></md-quote>
-    <md-ordered-list title="Ordered list" class="btn btn-primary-basic btn-sm"><i class="fas fa-fw fa-list-ol"></i></md-ordered-list>
-    <md-unordered-list title="Unordered list" class="btn btn-primary-basic btn-sm"><i class="fas fa-fw fa-list"></i></md-unordered-list>
-    <md-task-list title="Task list" class="btn btn-primary-basic btn-sm"><i class="fas fa-fw fa-tasks"></i></md-task-list>
-    <div class="btn btn-primary float-right btn-sm open-markdown-help"><i class="fas fa-fw fa-question-circle"></i> Help</div>
-  </markdown-toolbar>
-  <textarea class="form-control mb-4" id="text" rows="6" name="text" required></textarea>
-  {% include "_markdown-help.html" %}
+  {% include "_markdown.html" %}
+  <textarea class="form-control mb-4" id="text" rows="30" name="text" required></textarea>
 </div>
 
 {% endblock %}
