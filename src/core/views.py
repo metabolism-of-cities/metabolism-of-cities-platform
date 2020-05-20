@@ -685,15 +685,15 @@ def controlpanel_data_article(request, project_name, space, id=None):
     space = get_space(request, space)
     ModelForm = modelform_factory(
         DataArticle, 
-        fields=("name", "description"),
-        labels = { "name": "Title", "description": "content" },
+        fields=("name", "category", "sub_category", "completion"),
+        labels = { "name": "Title", "sub_category": "Sub category (optional)" },
     )
     info = get_object_or_404(DataArticle, pk=id, project=project) if id else None
     form = ModelForm(request.POST or None, instance=info)
     if request.method == 'POST':
         if form.is_valid():
-            form.save()
             info = form.save(commit=False)
+            info.content = request.POST.get("text")
             info.save()
 
             messages.success(request, 'Information was saved.')
