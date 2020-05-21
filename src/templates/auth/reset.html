@@ -12,10 +12,10 @@
         Enter your email address below and we will send you an email with detailed instructions explaining how to reset your password.
       </p>
       <hr>
-      <form method="post" action="">
+      <form method="post">
         {% csrf_token %}
         <div class="form-group">
-          <input type="email" class="form-control" id="email" name="email" placeholder="Your email address">
+          <input type="email" class="form-control" id="email" name="email" placeholder="Your email address" required="required">
         </div>
         <button type="submit" class="btn btn-primary"><i class="fas fa-fw fa-key"></i> Reset password</button>
       </form>
