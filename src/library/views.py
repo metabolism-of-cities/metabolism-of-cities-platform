@@ -82,7 +82,10 @@ def map(request, article):
     items = LibraryItem.objects.filter(status="active", tags__id=TAG_ID["case_study"])
     allCities = {}
     for each in items:
-        print(each)
+        for space in each.spaces.all():
+            if space.is_city and space.location.geometry:
+                print(space)
+
     context = {
         "article": info,
         "items": items,
