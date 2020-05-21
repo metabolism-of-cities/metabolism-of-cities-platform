@@ -3,101 +3,9 @@
 {% block title %}Fancytree{% endblock %}
 
 {% block css %}
-  <link href="//cdn.jsdelivr.net/npm/jquery.fancytree@2.25/dist/skin-win8/ui.fancytree.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/jquery.fancytree@2.35.0/dist/skin-bootstrap/ui.fancytree.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/gh/ewya/PlainScrollbar/plain-scrollbar.css" rel="stylesheet">
   <style>
-    .page-container {
-      /* background: rgba(255, 255, 255, .1); */
-      padding: 10px;
-    }
-    .flexbox-parent {
-        width: 100%;
-        height: 100%;
-
-        display: flex;
-        flex-direction: column;
-
-        justify-content: flex-start; /* align items in Main Axis */
-        align-items: stretch; /* align items in Cross Axis */
-        align-content: stretch; /* Extra space in Cross Axis */
-    }
-    .flexbox-item {
-        padding: 8px;
-    }
-    .flexbox-item-grow {
-        flex: 1; /* same as flex: 1 1 auto; */
-    }
-
-    /* .flexbox-item.header {
-        background: rgba(255, 0, 0, .1);
-    }
-    .flexbox-item.footer {
-        background: rgba(0, 255, 0, .1);
-    }
-    .flexbox-item.content {
-        background: rgba(0, 0, 255, .1);
-    } */
-    .fill-area {
-        display: flex;
-        flex-direction: row;
-
-        justify-content: flex-start; /* align items in Main Axis */
-        align-items: stretch; /* align items in Cross Axis */
-        align-content: stretch; /* Extra space in Cross Axis */
-
-    }
-    .fill-area-content {
-        background: rgba(0, 0, 0, .3);
-        border: 1px solid #000000;
-
-        /* Needed for when the area gets squished too far and there is content that can't be displayed */
-        overflow: auto;
-    }
-
-    header, footer {
-      /* flex: 0 0; */
-      background-color: #f7f7f7;
-      /* padding: 1rem; */
-    }
-    /* custom alignment (set by 'renderColumns' event) */
-    table.fancytree-ext-table {
-       /* flex: 1; */
-       width: 100%;
-       border-collapse: collapse;
-       border: 1px dotted #f4f4f8;
-       caption-side: bottom;
-    }
-    /* Support scrolling  */
-    div.fancytree-grid-container {
-      /* Use whole parent heigt*/
-      flex: 1;
-      /* Stretch embedded table */
-      display: flex;
-      flex-direction: column;
-      min-height: 30px;
-      /*  */
-      padding: 0;
-      border: 1px solid gray;
-      /* The div should not be stretched by the content rows, because we want to
-         adust the row count from div height instead: */
-      overflow-y: hidden;
-    }
-
-    div.fancytree-grid-container > table.fancytree-ext-grid {
-      flex: 1;
-      width: 100%;
-      border: 0;
-      margin: 1px 0 1px 0;  /* 1px above and below. */
-    }
-    /* Ext-grid breaks if another extension hides rows. */
-    table.fancytree-ext-grid tbody tr.fancytree-hide {
-        display: table-row;
-    }
-
-    /* Set alternating row colors (define BEFORE standard css). */
-    table.fancytree-ext-table tbody tr:nth-child(even){
-      background-color: #fafafa;
-    }
-
     table.fancytree-ext-table thead th.parent-path {
        text-align: left;
     }
@@ -111,297 +19,255 @@
        text-align: center;
     }
 
+    tr.fancytree-statusnode-nodata {
+      pointer-events: none;
+    }
+
+    tr.fancytree-statusnode-nodata td:nth-child(1),
+    tr.fancytree-statusnode-nodata td:nth-child(2),
+    tr.fancytree-statusnode-nodata td:nth-child(4),
+    tr.fancytree-statusnode-nodata td:nth-child(5) {
+      opacity: 0;
+    }
+
+    .plain-scrollbar[data-scrollable="false"] {
+      visibility: hidden;
+    }
   </style>
 {% endblock %}
 
 {% block content %}
-  <div id="tree">
-    <ul>
-    <li class="folder expanded">Documentation
-      <ul>
-        <li class="external">
-          <a target="_blank" href="https://github.com/mar10/fancytree/">Project home</a>
-        </li>
-        <li class="external">
-          <a target="_blank" href="https://github.com/mar10/fancytree/wiki/">Documentation</a>
-        </li>
-        <li class="external">
-          <a target="_blank" href="../doc/jsdoc/">API reference</a>
-        </li>
-      </ul>
-    <li class="folder expanded"> Examples
-      <ul>
-        <li><a target="content" href="welcome.html">Welcome</a></li>
-        <li><a target="content" href="sample-default.html">Default Options</a></li>
-        <li><a target="content" href="sample-playground.html">Playground</a></li>
-        <li><a target="content" href="sample-configurator.html">Option Configurator</a></li>
-        <li><a target="content" href="sample-multi-ext.html">Complex Demo</a></li>
-        <li><a target="content" href="sample-ext-grid.html">Grid/Viewport</a></li>
-        <li><a target="content" href="sample-source.html">Initialization</a></li>
-        <li><a target="content" href="sample-events.html">Event Handling</a></li>
-        <li><a target="content" href="sample-api.html">Programming API</a></li>
-        <li><a target="content" href="sample-select.html">Checkbox &amp; Select</a></li>
-        <li class="external">
-          <a target="_blank" href="sample-aria.html">WAI-ARIA</a>
-        </li>
-        <li class="folder">Glyph Themes
-          <ul>
-            <li><a target="content" href="sample-ext-glyph-awesome4.html">Font Awesome 4</a></li>
-            <li><a target="content" href="sample-ext-glyph-awesome5.html">Font Awesome 5</a></li>
-            <li><a target="content" href="sample-ext-glyph-bootstrap3.html">Bootstrap</a></li>
-            <li><a target="content" href="sample-ext-glyph-material.html">Material</a></li>
-            <li><a target="content" href="sample-ext-glyph-svg.html">SVG</a></li>
-          </ul>
-        </li>
-        <li><a target="content" href="sample-theming.html">Custom Theming</a></li>
-        <li><a target="content" href="sample-form.html">Embed in Forms</a></li>
-        <li class="external">
-          <a target="_blank" href="https://wwWendt.de/tech/fancytree/demo/taxonomy-browser/">
-            Taxonomy Browser</a>
-        </li>
-        <li class="folder">Extensions
-          <ul>
-            <li><a target="content" href="sample-ext-childcounter.html">Child Counter</a></li>
-            <li><a target="content" href="sample-ext-clones.html">Clones</a></li>
-            <li><a target="content" href="sample-ext-columnview.html">Column View</a></li>
-            <li><a target="content" href="sample-ext-menu.html">Context Menu</a></li>
-            <li><a target="content" href="sample-ext-dnd5.html">Drag'n'Drop</a></li>
-            <li><a target="content" href="sample-ext-dnd.html">Drag'n'Drop (jQuery UI)</a></li>
-            <li><a target="content" href="sample-ext-edit.html">Edit</a></li>
-            <li><a target="content" href="sample-ext-filter.html">Filter</a></li>
-            <li><a target="content" href="sample-ext-fixed.html">Fixed Headers</a></li>
-            <li><a target="content" href="sample-ext-glyph-bootstrap3.html">Glyph Fonts</a></li>
-            <li><a target="content" href="sample-ext-grid.html">Grid/Viewport</a></li>
-            <li><a target="content" href="sample-ext-logger.html">Logger</a></li>
-            <li><a target="content" href="sample-ext-multi.html">Multi-Select</a></li>
-            <li class="external"><a target="_blank" href="sample-ext-persist.html">Persist</a></li>
-            <li><a target="content" href="sample-ext-table.html">Table</a></li>
-            <li><a target="content" href="sample-ext-themeroller.html">ThemeRoller</a></li>
-            <li><a target="content" href="sample-ext-wide.html">Wide</a></li>
-          </ul>
-        </li>
-        <li class="folder">Tweaks
-          <ul>
-            <li><a target="content" href="sample-iframe.html">URL Navigation and &lt;iframe></a></li>
-            <li><a target="content" href="sample-accordion.html">Accordion</a></li>
-            <li><a target="content" href="sample-load-errors.html">Lazy Load Error Handling</a></li>
-            <li><a target="content" href="sample-rtl.html">RTL</a></li>
-            <li><a target="content" href="sample-types.html">Node Types</a></li>
-            <li><a target="content" href="sample-multiline.html">Large nodes</a></li>
-            <li><a target="content" href="sample-multi-dnd5.html">Multiple D'n'd</a></li>
-            <!-- <li><a target="content" href="sample-multi-dnd.html">Multiple D'n'd (jQuery UI)</a></li> -->
-            <li><a target="content" href="sample-scroll.html">Smart Scrolling</a></li>
-            <li><a target="content" href="sample-webservice.html">Webservice</a></li>
-            <li><a target="content" href="../test/test-ext-keyboard.html">Keyboard Nav.</a></li>
-          </ul>
-        </li>
-        <li class="folder">Test
-          <ul>
-            <li class="external"><a target="_blank" href="../test/unit/test-core.html">Core Unit Tests</a></li>
-            <li class="external"><a target="_blank" href="../test/unit/test-suite.html">Suite</a></li>
-            <li><a target="content" href="../test/test-ext-dnd.html">Drag'n'Drop</a></li>
-            <li class="external"><a target="_blank" href="../test/unit/test-bench.html">Benchmarks</a></li>
-  <!--
-            <li><a target="content" href="sample-pyserver.html">Local server</a>
-            <li class="folder">DTD
-              <ul>
-                <li><a target="content" href="../test/doctypes/doctype-none.html">No DTD</a></li>
-                <li><a target="content" href="../test/doctypes/doctype-html4-loose.html">HTML4 transitional</a></li>
-                <li><a target="content" href="../test/doctypes/doctype-html4-strict.html">HTML4 strict</a></li>
-                <li><a target="content" href="../test/doctypes/doctype-html5.html">HTML5</a></li>
-                <li><a target="content" href="../test/doctypes/doctype-xml-transitional.html">XHTML transitional</a></li>
-                <li><a target="content" href="../test/doctypes/doctype-xml-strict.html">XHTML strict</a></li>
-              </ul>
-            </li>
-  -->
-          </ul>
-        </li>
-      </ul>
-      <li class="folder expanded">3rd Party
-        <ul>
-          <li class="folder">Extensions
-            <ul>
-              <li><a target="content" href="../3rd-party/extensions/contextmenu/contextmenu.html">jQuery contextMenu Extension</a></li>
-              <li><a target="content" href="../3rd-party/extensions/hotkeys/hotkeys.html">hotkeys</a></li>
-            </ul>
-          </li>
-          <li class="folder">Samples
-            <ul>
-              <li><a target="content" href="sample-3rd-confirm.html">jquery-confirm</a></li>
-              <li><a target="content" href="sample-3rd-jQuery-contextMenu.html">jQuery contextMenu</a></li>
-              <li><a target="content" href="sample-3rd-ui-contextmenu.html">ui-contextmenu</a></li>
-              <li><a target="content" href="sample-3rd-contextmenu-abs.html">Context menu (ABS), Copy/paste</a></li>
-              <li><a target="content" href="sample-3rd-grid-scrollbar.html">Scrollbar for ext-grid</a></li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
-    <div class="page-container flexbox-parent">
-        <header class="description flexbox-item">
-          <h1>Example: Viewport Feature</h1>
-          <p>
-            Restrict rendering of DOM elements to sub range.
-          </p>
-          <p>
-            This example loads a data model with
-            <a href="https://cdn.jsdelivr.net/gh/mar10/assets@master/fancytree/ajax_101k.json">about 100k nodes</a>
-            completely into the client browser, however only the rows visible in the
-            current viewport are rendered.
-          </p>
-          <p>
-            <b>NOTE:</b> See also an
-            <a target="_top" href="index.html#sample-3rd-grid-scrollbar.html"> example with scrollbar support</a>.
-          </p>
-          <p>
-            <b>Status:</b> experimental.
-            <b>Details:</b>
-            <a href="https://github.com/mar10/fancytree/wiki/ExtTable"
-              target="_blank" class="external">ext-grid</a>.
-          </p>
-        </header>
-
-        <!-- Add a <table> element where the tree should appear: -->
-        <div class="flexbox-item">
-          <label for="vpStart">Viewport start:</label>
-          <input id="vpStart" type="number" value="0" min="0" style="width: 6em;" >
-
-          <label for="vpCount">, count:</label>
-          <input id="vpCount" type="number" value="15" min="1" style="width: 3em;" readonly >
-          <span class="statistics"></span>
-
-          <br>
-          <label for="filter">Filter:</label>
-          <input type="search" name="search" incremental placeholder="Search text" autocomplete="off">
-          <span class="matches"></span>
-
-          <form id="optionsForm">
-            <label>Cell Navigation:
-              <select name="cellFocus">
-                <option value="start">start</option>
-                <option value="allow" selected="selected">allow</option>
-                <option value="force">force</option>
-                <option value="off">off</option>
-              </select>
-            </label>
-            (Please reload page for changes to take effect.)
-          </form>
-
-          <div>
-            <button type="button" id="expandAll">Expand all</button>
-            <button type="button" id="collapseAll">Collapse all</button>
-            <button type="button" id="redraw">Redraw viewport</button>
-          </div>
-        </div>
-
-        <div class="fancytree-grid-container flexbox-item-grow">
-          <table id="treetable">
-            <!-- <caption>Loading&hellip;</caption> -->
-            <colgroup>
-              <col width="30px"></col>
-              <col width="30px"></col>
-              <col width="*"></col>
-              <col width="50px"></col>
-              <col width="30px"></col>
-            </colgroup>
-            <thead>
-              <tr> <th></th> <th>#</th> <th class="parent-path"></th> <th>RowIdx</th> <th>Order</th> </tr>
-            </thead>
-          </table>
-        </div>
-
-        <!-- (Irrelevant source removed.) -->
-      </div>
-
+  <div class="input-group mb-3">
+    <input placeholder="Search" name="search" type="search" class="form-control search-fancytree">
+    <div class="input-group-append">
+      <button class="btn btn-primary-outline clear-search" hidden>
+        <i class="fal fa-times mr-0"></i>
+      </button>
+      <span class="input-group-text matches" hidden></span>
+      <button class="btn btn-primary btn-search" type="button">
+        <i class="fas fa-search"></i>
+        Search
+      </button>
     </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="fancytree-grid-container flexbox-item-grow">
+        <table id="treetable" class="table-hover">
+          <colgroup>
+            <col width="30px">
+            <col width="30px">
+            <col width="*">
+            <col width="50px">
+            <col width="30px">
+          </colgroup>
+          <thead>
+            <tr>
+              <th></th>
+              <th>#</th>
+              <th class="parent-path"></th>
+              <th>RowIdx</th>
+              <th>Order</th>
+            </tr>
+          </thead>
+        </table>
+        <div id="verticalScrollbar" style="top:19px; height:calc(100% - 18px);"></div>
+      </div>
+    </div>
+  </div>
+
 {% endblock %}
 
 {% block footer %}
-  <script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-  <!-- Bundled Fancytree core and most extensions: -->
-  <script src="//cdn.jsdelivr.net/npm/jquery.fancytree@2.27/dist/jquery.fancytree-all.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/jquery.fancytree@2.27/dist/jquery.fancytree-all-deps.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery.fancytree@2.35.0/dist/jquery.fancytree-all-deps.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery.fancytree@2.35.0/dist/modules/jquery.fancytree.grid.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery.fancytree@2.35.0/dist/modules/jquery.fancytree.ariagrid.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ewya/PlainScrollbar/plain-scrollbar.js"></script>
+
   <script>
-    $(function(){
-      // --- Initialize sample trees
-      $("#tree").fancytree({
-        treeId: "nav",
-        autoActivate: false, // we use scheduleAction()
-        autoCollapse: true,
-    //      autoFocus: true,
-        autoScroll: true,
-        clickFolderMode: 3, // expand with single click
-        minExpandLevel: 2,
-        tabindex: "-1", // we don't want the focus frame
-        // toggleEffect: { effect: "blind", options: {direction: "vertical", scale: "box"}, duration: 2000 },
-        // scrollParent: null, // use $container
-        tooltip: function(event, data) {
-          return data.node.title;
-        },
-        focus: function(event, data) {
-          var node = data.node;
-          // Auto-activate focused node after 1 second
-          if(node.data.href){
-            node.scheduleAction("activate", 1000);
-          }
-        },
-        blur: function(event, data) {
-          data.node.scheduleAction("cancel");
-        },
-        beforeActivate: function(event, data){
-          var node = data.node;
+    $("#optionsForm [name=cellFocus]" ).change( function( e ) {
+      var value = $( this ).find( ":selected" ).val();
 
-          if( node.data.href && node.data.target === "_blank") {
-            window.open(node.data.href, "_blank");
-            return false; // don't activate
+      window.sessionStorage.setItem( "cellFocus", value );
+      $.ui.fancytree.getTree( "#treegrid" ).setOption("ariagrid.cellFocus", value);
+    }).val( window.sessionStorage.getItem( "cellFocus" ) || "allow" );
+
+    var modelCount = 0;
+    var sourceUrl = "https://cdn.jsdelivr.net/gh/mar10/assets@master/fancytree/ajax_101k.json";
+
+    $("#treetable").fancytree({
+      extensions: ["clones", "dnd5", "edit", "filter", "grid", "ariagrid", "glyph"],
+      checkbox: true,
+      quicksearch: true,
+      autoScroll: true,
+      debugLevel: 5,
+      ariagrid: {
+        // Internal behavior flags
+        activateCellOnDoubelclick: true,
+        cellFocus: $( "#optionsForm [name=cellFocus]" ).find( ":selected" ).val(),
+        // TODO: use a global tree option `name` or `title` instead?:
+        label: "Tree Grid", // Added as `aria-label` attribute
+      },
+      dnd5: {
+        autoExpandMS: 1500,
+        dragStart: function(node, data) {
+          return true;
+        },
+        dragEnter: function(node, data) {
+          return true;
+        },
+        dragDrop: function(node, data) {
+          var transfer = data.dataTransfer;
+
+          if( data.otherNode ) {
+            data.otherNode.moveTo(node, data.hitMode);
+          } else {
+            node.addNode({
+              title: transfer.getData("text")
+            }, data.hitMode);
+          }
+          // Expand target node when a child was created:
+          if (data.hitMode === "over") {
+            node.setExpanded();
           }
         },
-        activate: function(event, data){
-          var node = data.node,
-            orgEvent = data.originalEvent || {};
+      },
+      glyph: {
+        preset: "awesome5",
+        map: {}
+      },
+      filter: {
+        autoExpand: true,
+      },
+      table: {
+        indentation: 20,       // indent 20px per node level
+        nodeColumnIdx: 2,      // render the node title into the 2nd column
+        checkboxColumnIdx: 0,  // render the checkboxes into the 1st column
+      },
+      viewport: {
+        enabled: true,
+        count: 15,
+      },
+      source: {
+        url: sourceUrl,
+        cache: true,
+      },
+      preInit: function(event, data) {
+          var tree = data.tree;
 
-          // Open href (force new window if Ctrl is pressed)
-          if(node.data.href){
-            window.open(node.data.href, (orgEvent.ctrlKey || orgEvent.metaKey) ? "_blank" : node.data.target);
-          }
-          // When an external link was clicked, we don't want the node to become
-          // active. Also the URL fragment should not be changed
-          if( node.data.target === "_blank") {
-            return false;
-          }
-          // Append #HREF to URL without actually loading content
-          // (We check for this value on page load re-activate the node.)
-          if( window.parent &&  parent.history && parent.history.pushState ) {
-            parent.history.pushState({title: node.title}, "", "#" + (node.data.href || ""));
-          }
-        },
-        click: function(event, data){
-          // We implement this in the `click` event, because `activate` is not
-          // triggered if the node already was active.
-          // We want to allow re-loads by clicking again.
-          var node = data.node,
-            orgEvent = data.originalEvent;
+          tree.verticalScrollbar = new PlainScrollbar({
+            alwaysVisible: true,
+            arrows: true,
+            orientation: "vertical",
+            onSet: function(numberOfItems) {
+              tree.setViewport({
+                start: Math.round(numberOfItems.start),
+                // count: tree.viewport.count,
+              });
+            },
+            scrollbarElement: document.getElementById("verticalScrollbar"),
+          });
+      },
+      init: function(event, data) {
+        modelCount = data.tree.count();
+        $("#treetable caption").text("Loaded " + modelCount + " nodes.");
+        data.tree.getNodeByKey("1.1.88").setActive();
+        // data.tree.getNodeByKey("10_2_1").setActive();
+        // Recalc the viewport's row count from the flexed size of the container:
+        data.tree.adjustViewportSize();
+        // data.tree.addPagingNode();
+      },
+      activateCell: function(event, data) {
+        data.node.debug(event.type, data);
+      },
+      defaultGridAction: function( event, data ) {
+        // Called when ENTER is pressed in cell-mode.
+        data.node.debug(event.type, data);
+      },
+      renderColumns: function(event, data) {
+        var node = data.node,
+          $tdList = $(node.tr).find(">td");
+        // (index #0 is rendered by fancytree by adding the checkbox)
+        $tdList.eq(1).text(node.getIndexHier());  //.addClass("alignRight");
+        // (index #2 is rendered by fancytree)
+        $tdList.eq(3).text(node._rowIdx);
+        // $tdList.eq(3).text(node.data.qty);
+        $tdList.eq(4).html("<input type='checkbox' name='like' value='" + node.key + "'>");
+      },
+      updateViewport: function(event, data) {
+        var tree = data.tree,
+          topNode = tree.visibleNodeList[tree.viewport.start],
+          path = (topNode && !topNode.isTopLevel()) ? topNode.getPath(false) + "/..." : "";
 
-          // Open href (force new window if Ctrl is pressed)
-          if(node.isActive() && node.data.href){
-            window.open(node.data.href, (orgEvent.ctrlKey || orgEvent.metaKey) ? "_blank" : node.data.target);
-          }
+        tree.debug(event.type, data);
+
+        // Display breadcrumb/parent-path in header
+        tree.$container.find("thead th.parent-path").text(path);
+        // Update edit controls
+        if (!tree.isVpUpdating ) {
+          $("input#vpStart").val(tree.viewport.start);
+          $("input#vpCount").val(tree.viewport.count);
+          $("span.statistics").text(
+            ", rows: " +
+            (tree.visibleNodeList ? tree.visibleNodeList.length : "-") +
+            "/" +
+            modelCount
+          );
         }
-      });
-      // On page load, activate node if node.data.href matches the url#href
-      var tree = $.ui.fancytree.getTree(),
-        frameHash = window.parent && window.parent.location.hash;
 
-      if( frameHash ) {
-        frameHash = frameHash.replace("#", "");
-        tree.visit(function(n) {
-          if( n.data.href && n.data.href === frameHash ) {
-            n.setActive();
-            return false; // done: break traversal
-          }
-        });
-      }
+        // Handle PlainScrollbar events
+        tree.verticalScrollbar.set({
+          start: tree.viewport.start,
+          total: tree.visibleNodeList.length,
+          visible: tree.viewport.count,
+        }, true);  // do not trigger `onSet`
+      },
     });
+
+    const searchBox = $("input.search-fancytree");
+
+    function searchFancyTree() {
+      var n,
+        tree = $.ui.fancytree.getTree(),
+        match = $.trim(searchBox.val());
+
+      // Pass a string to perform case insensitive matching
+      n = tree.filterNodes(match, { mode: "hide" });
+      // This will adjust the start value in case the filtered row set
+      // is not inside the current viewport
+      // tree.setViewport();
+
+      $("span.matches").removeAttr("hidden").text(n ? n + " matches" : "no matches");
+
+      if (n) {
+        $("#treetable").addClass("table-hover")
+      } else {
+        $("#treetable").removeClass("table-hover")
+      }
+
+      $(".clear-search").removeAttr("hidden");
+    }
+
+    $(".btn-search").click(function() {
+      searchFancyTree();
+    })
+
+    searchBox.on("change search", function(){
+      searchFancyTree();
+    });
+
+    $(window).on("resize", function(e){
+      var tree = $.ui.fancytree.getTree();
+
+      // Re-calculate viewport.count from current wrapper height:
+      tree.adjustViewportSize();
+    }).resize();
+
+    $(".clear-search").click(function() {
+      searchBox.val("");
+      searchFancyTree();
+      $(".matches, .clear-search").attr("hidden");
+    })
   </script>
 {% endblock %}

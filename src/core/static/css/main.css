@@ -694,6 +694,35 @@ a.badge-secondary:focus {
     .leaflet-map .show-world.button::before {
       content: "\f7a2"; }
 
+div.fancytree-grid-container > table.fancytree-ext-grid {
+  width: 100%; }
+
+table.fancytree-container .fancytree-active > td {
+  background-color: #144d58 !important;
+  color: #fbfbfb !important; }
+
+table.fancytree-container thead th {
+  background-color: #efefef !important; }
+
+table.fancytree-container td,
+table.fancytree-container th {
+  padding: .5rem; }
+
+span.fancytree-node span.fancytree-expander:hover {
+  color: #ff8a4e !important; }
+
+table.fancytree-ext-table {
+  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif !important; }
+
+.fancytree-ext-filter-hide span.fancytree-node.fancytree-submatch span.fancytree-title,
+.fancytree-ext-filter-hide tr.fancytree-submatch span.fancytree-title {
+  font-weight: normal !important;
+  opacity: .25; }
+
+table.fancytree-container mark {
+  padding: 0;
+  background-color: #ff8a4e; }
+
 .dataTables_wrapper thead tr th {
   border-top: none; }
 

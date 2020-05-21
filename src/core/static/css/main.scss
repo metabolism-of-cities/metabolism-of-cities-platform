@@ -1054,6 +1054,45 @@ a.badge-secondary:focus {
   }
 }
 
+// FANCYTREE
+div.fancytree-grid-container > table.fancytree-ext-grid {
+  width: 100%;
+}
+
+table.fancytree-container .fancytree-active > td {
+  background-color: $primary !important;
+  color: $very-light !important;
+}
+
+
+table.fancytree-container thead th {
+  background-color: $light !important;
+}
+
+table.fancytree-container td,
+table.fancytree-container th {
+  padding: .5rem;
+}
+
+span.fancytree-node span.fancytree-expander:hover {
+  color: $secondary !important;
+}
+
+table.fancytree-ext-table {
+  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif !important;
+}
+
+.fancytree-ext-filter-hide span.fancytree-node.fancytree-submatch span.fancytree-title,
+.fancytree-ext-filter-hide tr.fancytree-submatch span.fancytree-title {
+  font-weight: normal !important;
+  opacity: .25;
+}
+
+table.fancytree-container mark {
+  padding: 0;
+  background-color: $secondary;
+}
+
 // DATATABLE | the DataTables CSS file is loaded after this file, so this section requires some !important tags
 .dataTables_wrapper thead tr th {
   border-top: none;
