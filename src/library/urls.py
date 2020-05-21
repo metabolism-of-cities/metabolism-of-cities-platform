@@ -14,5 +14,6 @@ urlpatterns = [
     path("items/<int:id>/", views.item, name="item"),
     path("authors/", views.authors, name="authors"),
     path("contribute/", views.contribute, name="contribute"),
+    path("create/", views.form, name="form"),
 
 ]

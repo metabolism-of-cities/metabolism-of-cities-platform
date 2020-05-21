@@ -633,6 +633,25 @@ class ActivatedSpace(models.Model):
     class Meta:
         unique_together = ["slug", "site"]
 
+class LibraryDataset(LibraryItem):
+    data_year_start = models.IntegerField(null=True, blank=True)
+    data_year_end = models.IntegerField(null=True, blank=True)
+    update_frequency = models.CharField(max_length=50, null=True, blank=True)
+    api_type = models.CharField(max_length=50, null=True, blank=True)
+    api_endpoint = models.CharField(max_length=50, null=True, blank=True)
+
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
+
+class LibraryDataPortal(LibraryItem):
+    portal_software = models.CharField(max_length=50, null=True, blank=True)
+
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
+
+
 #MOOC's
 #class MOOC(models.Model):
 #    name = models.CharField(max_length=255)

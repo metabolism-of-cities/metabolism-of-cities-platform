@@ -1,0 +1,30 @@
+{% extends "_base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+  <form method="post">
+    
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+      <button type="submit" class="btn btn-success">
+        <i class="fa fa-save"></i>
+        Save
+      </button>
+    {% endbuttons %}
+
+  </form>
+
+{% endblock %}
+
+{% block footer %}
+  <script>
+    $("#id_tags").select2({
+      theme: "bootstrap4",
+    });
+    $("#id_spaces").select2({
+      theme: "bootstrap4",
+    });
+  </script>
+{% endblock %}
