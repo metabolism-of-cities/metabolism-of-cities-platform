@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.db.models import Count
 from django.contrib import messages
 from django.http import Http404, HttpResponseRedirect
+from django.forms import modelform_factory
 
 from django.utils import timezone
 import pytz
@@ -104,4 +105,46 @@ def contribute(request):
     }
     return render(request, "article.html", context)
 
+def form(request, id=None):
+    type = request.GET.get("type")
+    if type == "dataset":
+        ModelForm = modelform_factory(
+            LibraryDataset, 
+            fields=("name", "description", "url", "tags", "spaces", "year", "language", "license", "data_year_start", "data_year_end", "update_frequency", "api_type", "api_endpoint"),
+            labels = {
+                "year": "Year created",
+            }
+        )
+    else:
+        ModelForm = modelform_factory(
+            LibraryDataPortal, 
+            fields=("name", "description", "url", "tags", "spaces", "year", "language", "license", "portal_software"),
+            labels = {
+                "year": "Year launched",
+            }
+        )
+    if id:
+        info = get_object_or_404(LibraryItem, pk=id)
+        form = ModelForm(request.POST or None, instance=info)
+    else:
+        form = ModelForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save(commit=False)
+            if type == "dataset":
+                info.type_id = 10
+            else:
+                info.type_id = 39
+            info.save()
 
+            messages.success(request, "The item was added to the library.")
+            return redirect("library:form")
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    
+    context = {
+        "form": form,
+        "load_select2": True,
+    }
+    return render(request, "library/form.html", context)
