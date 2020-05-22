@@ -6,6 +6,7 @@ from django.db.models import Count
 from django.contrib import messages
 from django.http import Http404, HttpResponseRedirect
 from django.forms import modelform_factory
+from django.contrib.auth.decorators import login_required
 
 from django.utils import timezone
 import pytz
@@ -19,12 +20,16 @@ def index(request):
     }
     return render(request, "library/browse.html", context)
 
-def search(request, article):
-    info = get_object_or_404(Webpage, pk=article)
+def list(request, type):
+    if type == "dataportals":
+        list = LibraryDataPortal.objects_unfiltered.all()
+    elif type == "datasets":
+        list = LibraryDataset.objects_unfiltered.all()
     context = {
-        "article": info,
+        "items": list,
+        "type": type,
     }
-    return render(request, "library/search.html", context)
+    return render(request, "library/list.html", context)
 
 def download(request):
     info = get_object_or_404(Webpage, pk=PAGE_ID["library"])
@@ -105,6 +110,7 @@ def contribute(request):
     }
     return render(request, "article.html", context)
 
+@login_required
 def form(request, id=None):
     type = request.GET.get("type")
     if type == "dataset":
@@ -137,8 +143,16 @@ def form(request, id=None):
             else:
                 info.type_id = 39
             info.save()
+            form.save_m2m()
 
-            messages.success(request, "The item was added to the library.")
+            if not id:
+                RecordRelationship.objects.create(
+                    record_parent = request.user.people,
+                    record_child = info,
+                    relationship_id = 11,
+                )
+
+            messages.success(request, "The item was added to the library. <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=2&amp;record_child=" + str(info.id) + "'>Link to publisher</a> |  <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=4&amp;record_child=" + str(info.id) + "'>Link to author</a> ||| <a href='/admin/core/organization/add/' target='_blank'>Add a new organization</a>")
             return redirect("library:form")
         else:
             messages.error(request, "We could not save your form, please fill out all fields")

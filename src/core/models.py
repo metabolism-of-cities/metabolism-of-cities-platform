@@ -555,7 +555,7 @@ class LibraryItem(Record):
     def get_author_citation(self):
         if self.author_citation:
             return self.author_citation
-        else:
+        elif self.author_list:
             author_array = []
             author_list = self.author_list
             if " and " in author_list:
@@ -590,6 +590,8 @@ class LibraryItem(Record):
                 return author_array[0] + " <em>et al.</em>"
             else:
                 return ""
+        else:
+            return ""
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()

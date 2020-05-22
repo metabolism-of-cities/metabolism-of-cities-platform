@@ -4,6 +4,9 @@
 {% block content %}
 
   <h1>Adding: {{ request.GET.type }}</h1>
+  {% if info %}
+
+  {% endif %}
   <form method="post">
     
     {% csrf_token %}
