@@ -74,9 +74,18 @@ def ascus(request):
     }
     return render(request, "article.html", context)
 
-
-
 def overview(request):
+    discussions = Event.objects_include_private \
+        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(tags__id=770).order_by("name").distinct()
+    context = {
+        "header_title": "Discussion sessions",
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "discussions": discussions,
+    }
+    return render(request, "ascus/program.html", context)
+
+def preconference(request):
     discussions = Event.objects_include_private \
         .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
         .filter(tags__id=770).order_by("name").distinct()
@@ -279,31 +288,56 @@ def ascus_account_edit(request):
 
 @check_ascus_access
 def ascus_account_discussion(request, id=None):
+    organizer_editing = False
     info = get_object_or_404(Webpage, slug="/ascus/account/discussion/")
     my_discussions = Event.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
         .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
         .filter(tags__id=770).distinct()
     event = None
-    if id:
+    if id and "org_mode" in request.GET:
+        check_organizer = RecordRelationship.objects.filter(
+            record_parent = request.user.people,
+            record_child_id = PAGE_ID["ascus"],
+            relationship__name = "Organizer",
+        )
+        if check_organizer.exists():
+            # Organizers can edit any event
+            organizer_editing = True
+            event = Event.objects_include_private \
+                .filter(pk=id) \
+                .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+                .filter(tags__id=770)
+            event = event[0] if event else None
+    elif id:
         event = Event.objects_include_private \
             .filter(pk=id) \
             .filter(child_list__record_parent=request.user.people) \
             .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
             .filter(tags__id=770)
         event = event[0] if event else None
-    ModelForm = modelform_factory(
-        Event, 
-        fields = ("name", "description"),
-        labels = { "name": "Title", "description": "Abstract (please include the goals, format, and names of all organizers)" }
-    )
+    if not organizer_editing:
+        ModelForm = modelform_factory(
+            Event, 
+            fields = ("name",),
+            labels = { "name": "Title", }
+        )
+    else:
+        ModelForm = modelform_factory(
+            Event, 
+            fields = ("name", "start_date", "end_date", "url"),
+            labels = { "name": "Title", }
+        )
     form = ModelForm(request.POST or None, instance=event)
     if request.method == "POST":
         if form.is_valid():
             if event:
-                info = form.save()
+                info = form.save(commit=False)
+                info.description = request.POST.get("text")
+                info.save()
             else:
                 info = form.save(commit=False)
+                info.description = request.POST.get("text")
                 info.site = request.site
                 info.is_public = False
                 info.type = "other"
@@ -327,7 +361,11 @@ def ascus_account_discussion(request, id=None):
                     related_to = info,
                     workactivity_id = 14,
                 )
-            return redirect("ascus:account")
+            if organizer_editing:
+                messages.success(request, "The changes were saved.")
+                return redirect("ascus:admin_documents", type="topics")
+            else:
+                return redirect("ascus:account")
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
     context = {
@@ -486,7 +524,7 @@ def ascus_admin_documents(request, type="introvideos"):
     if type == "topics":
         list = Event.objects_include_private \
             .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
-            .filter(tags__id=770)
+            .filter(tags__id=770).order_by("name")
     elif type == "presentations":
         list = Work.objects_include_private \
             .filter(related_to__parent_list__record_child__id=PAGE_ID["ascus"]) \

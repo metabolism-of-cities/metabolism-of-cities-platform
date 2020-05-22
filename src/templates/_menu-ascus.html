@@ -1,5 +1,17 @@
 <li class="nav-item"><a class="nav-link" href="{% url "ascus:index" %}"><i class="fa fa-home fa-fw"></i></a></li>
-<li class="nav-item"><a class="nav-link" href="{% url "ascus:article" "program" %}">Program</a></li>
+
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="program-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Program
+  </a>
+  <div class="dropdown-menu" aria-labelledby="program-dropdown">
+    <a class="dropdown-item" href="{% url "ascus:article" "program" %}">Schedule</a>
+    <a style="display:none" class="dropdown-item" href="{% url "ascus:preconference" %}">Pre-conference program</a>
+    <a class="dropdown-item" href="{% url "ascus:overview" %}">Discussion sessions</a>
+  </div>
+</li>
+
+
 <li class="nav-item"><a class="nav-link" href="{% url "ascus:article" "keynotes" %}">Keynotes</a></li>
 <li class="nav-item"><a class="nav-link" href="{% url "ascus:article" "technology" %}">Technology</a></li>
 <li class="nav-item"><a class="nav-link" href="{% url "ascus:article" "rates" %}">Rates</a></li>

@@ -636,16 +636,30 @@ class ActivatedSpace(models.Model):
 class LibraryDataset(LibraryItem):
     data_year_start = models.IntegerField(null=True, blank=True)
     data_year_end = models.IntegerField(null=True, blank=True)
+    data_interval = models.CharField(max_length=50, null=True, blank=True)
     update_frequency = models.CharField(max_length=50, null=True, blank=True)
-    api_type = models.CharField(max_length=50, null=True, blank=True)
-    api_endpoint = models.CharField(max_length=50, null=True, blank=True)
+    has_api = models.BooleanField(default=True, db_index=True)
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
 
 class LibraryDataPortal(LibraryItem):
-    portal_software = models.CharField(max_length=50, null=True, blank=True)
+
+    class Software(models.IntegerChoices):
+        CKAN = 1, "CKAN"
+        DKAN = 2, "DKAN"
+        JUNAR = 3, "Junar"
+        ODS = 4, "OpenDataSoft"
+        SIXCMS = 5, "sixcms"
+        SOCRATA = 6, "Socrata"
+        TERRA = 7, "terraCatalogue"
+        CUSTOM = 8, "Custom / inhouse implementation"
+        OTHER = 9, "Other platform"
+        ARCGIS = 10, "ArcGIS Open Data"
+
+    software = models.IntegerField(choices=Software.choices, null=True, blank=True)
+    has_api = models.BooleanField(default=True, db_index=True)
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()

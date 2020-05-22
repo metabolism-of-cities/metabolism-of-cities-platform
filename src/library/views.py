@@ -110,17 +110,18 @@ def form(request, id=None):
     if type == "dataset":
         ModelForm = modelform_factory(
             LibraryDataset, 
-            fields=("name", "description", "url", "tags", "spaces", "year", "language", "license", "data_year_start", "data_year_end", "update_frequency", "api_type", "api_endpoint"),
+            fields=("name", "author_list", "description", "url", "tags", "spaces", "year", "language", "license", "data_year_start", "data_year_end", "update_frequency", "data_interval", "has_api"),
             labels = {
-                "year": "Year created",
+                "year": "Year created (required)",
+                "author_list": "Authors (people)",
             }
         )
     else:
         ModelForm = modelform_factory(
             LibraryDataPortal, 
-            fields=("name", "description", "url", "tags", "spaces", "year", "language", "license", "portal_software"),
+            fields=("name", "description", "url", "tags", "spaces", "year", "language", "license", "software", "has_api"),
             labels = {
-                "year": "Year launched",
+                "year": "Year created (required)",
             }
         )
     if id:

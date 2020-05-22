@@ -21,6 +21,7 @@ urlpatterns = [
     path("register/", views.ascus_register, name="register"),
     path("logout/", core.user_logout, {"project": 8}, name="logout"),
     path("overview/", views.overview, name="overview"),
+    path("preconference/", views.preconference, name="preconference"),
     path("participants/", views.participants, name="participants"),
     path("participants/<int:id>/", views.participant, name="participant"),
 

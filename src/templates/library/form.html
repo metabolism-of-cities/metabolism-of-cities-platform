@@ -3,6 +3,7 @@
 
 {% block content %}
 
+  <h1>Adding: {{ request.GET.type }}</h1>
   <form method="post">
     
     {% csrf_token %}
