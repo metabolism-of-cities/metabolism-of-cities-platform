@@ -169,22 +169,6 @@
             scrollbarElement: document.getElementById("verticalScrollbar"),
           });
       },
-      init: function(event, data) {
-        modelCount = data.tree.count();
-        $("#treetable caption").text("Loaded " + modelCount + " nodes.");
-        data.tree.getNodeByKey("1.1.88").setActive();
-        // data.tree.getNodeByKey("10_2_1").setActive();
-        // Recalc the viewport's row count from the flexed size of the container:
-        data.tree.adjustViewportSize();
-        // data.tree.addPagingNode();
-      },
-      activateCell: function(event, data) {
-        data.node.debug(event.type, data);
-      },
-      defaultGridAction: function( event, data ) {
-        // Called when ENTER is pressed in cell-mode.
-        data.node.debug(event.type, data);
-      },
       renderColumns: function(event, data) {
         var node = data.node,
           $tdList = $(node.tr).find(">td");
@@ -199,8 +183,6 @@
         var tree = data.tree,
           topNode = tree.visibleNodeList[tree.viewport.start],
           path = (topNode && !topNode.isTopLevel()) ? topNode.getPath(false) + "/..." : "";
-
-        tree.debug(event.type, data);
 
         // Display breadcrumb/parent-path in header
         tree.$container.find("thead th.parent-path").text(path);
@@ -267,7 +249,8 @@
     $(".clear-search").click(function() {
       searchBox.val("");
       searchFancyTree();
-      $(".matches, .clear-search").attr("hidden");
+      $(".matches").attr("hidden", "hidden");
+      $(".clear-search").attr("hidden", "hidden");
     })
   </script>
 {% endblock %}
