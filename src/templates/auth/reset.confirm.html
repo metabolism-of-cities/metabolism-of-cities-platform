@@ -1,0 +1,33 @@
+{% extends "_base.html" %}
+
+{% block page_name %}reset{% endblock %}
+{% block title %}Confirm password reset{% endblock %}
+
+{% block css %}
+  <style>
+    .errorlist{
+      color: #dc3545;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="card login">
+    <div class="card-body">
+      {% if validlink %}
+        <h3>Reset your password</h3>
+        <hr>
+         <form method="post">
+           {% csrf_token %}
+           {{ form.as_p }}
+            <button type="submit" class="btn btn-primary"><i class="fas fa-fw fa-key"></i>Reset password</button>
+         </form>
+       {% else %}
+         <div class="alert alert-warning">
+           The password reset link was invalid, possibly because it has already been used.
+           Please request a new password reset <a href="{% url "core:password_reset" %}">here</a>.
+         </div>
+       {% endif %}
+    </div>
+  </div>
+{% endblock %}

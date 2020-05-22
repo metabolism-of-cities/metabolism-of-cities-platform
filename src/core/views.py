@@ -250,40 +250,6 @@ def user_logout(request, project=None):
     else:
         return redirect("core:login")
 
-def user_reset(request):
-    if request.method == "POST":
-        if request.POST["email"]:
-            email = request.POST.get("email")
-            check = User.objects.filter(email=email)
-            if check:
-                print(vars(check))
-                name  = "ch"
-                # link = request.get_host() accounts/reset/<uidb64>/<token>/
-                link = None
-                mailcontext = {
-                    "name": name,
-                    "link": link
-                }
-                msg_html = render_to_string("mailbody/password.reset.html", mailcontext)
-                msg_plain = render_to_string("mailbody/password.reset.txt", mailcontext)
-                sender = '"' + request.site.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
-                recipient = '"' + name + '" <' + email + '>'
-
-                send_mail(
-                    "Password reset link",
-                    msg_plain,
-                    sender,
-                    [recipient],
-                    html_message=msg_html,
-                )
-                messages.success(request, "Please check your email , we've sent you a password reset link.")
-            else:
-                messages.error(request, "Invalid email")
-        else:
-            messages.error(request, "Please provide an email")
-
-    return render(request, "auth/reset.html")
-
 def user_profile(request):
     user = request.user
     if user.people:
