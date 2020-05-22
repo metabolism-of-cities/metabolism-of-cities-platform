@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from core import views as core
 
 app_name = "library"
 
@@ -17,5 +18,8 @@ urlpatterns = [
     path("authors/", views.authors, name="authors"),
     path("contribute/", views.contribute, name="contribute"),
     path("create/", views.form, name="form"),
+
+    # Accounts functions
+    path("accounts/login/", core.user_login, name="login"),
 
 ]
