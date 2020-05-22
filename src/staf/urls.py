@@ -32,6 +32,8 @@ urlpatterns = [
     path("referencespaces/<int:id>/", views.referencespaces_list, name="referencespaces_list"),
     path("referencespaces/<slug:group>/", views.referencespaces, name="referencespaces"),
 
+    path("curation/publish/dataset/", views.dataset_editor, name="dataset_editor"),
+
     path("curation/", views.review, name="review"),
     path("curation/pending/", views.review_pending, name="review_pending"),
     path("curation/scoreboard/", views.review_scoreboard, name="review_scoreboard"),

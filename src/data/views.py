@@ -107,4 +107,3 @@ def dataset(request, space, dataset):
         "menu": "library",
     }
     return render(request, "data/dataset.html", context)
-

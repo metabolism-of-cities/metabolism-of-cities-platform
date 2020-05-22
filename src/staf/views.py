@@ -398,3 +398,8 @@ def article(request, id):
 
     }
     return render(request, "staf/index.html", context)
+
+def dataset_editor(request):
+    context = {
+    }
+    return render(request, "staf/publish/dataset.html", context)
