@@ -74,32 +74,28 @@ def ascus(request):
     }
     return render(request, "article.html", context)
 
-def overview(request):
+def overview(request, preconf=False):
     discussions = Event.objects_include_private \
         .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
         .filter(tags__id=770).order_by("name").distinct() \
         .order_by("start_date")
+    if preconf:
+        discussions = discussions.filter(name__contains="Pre-conference")
+        title = "Pre-conference events"
+    else:
+        discussions = discussions.exclude(name__contains="Pre-conference")
+        title = "Discussion sessions"
     if request.user.is_authenticated and hasattr(request.user, "people"):
         my_topic_registrations = Event.objects_include_private \
             .filter(child_list__record_parent=request.user.people, child_list__relationship__id=12) \
             .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
             .filter(tags__id=770)
     context = {
-        "header_title": "Discussion sessions",
+        "header_title": title,
         "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
         "discussions": discussions,
         "my_topic_registrations": my_topic_registrations,
-    }
-    return render(request, "ascus/program.html", context)
-
-def preconference(request):
-    discussions = Event.objects_include_private \
-        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
-        .filter(tags__id=770).order_by("name").distinct()
-    context = {
-        "header_title": "Discussion sessions",
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
-        "discussions": discussions,
+        "preconf": preconf,
     }
     return render(request, "ascus/program.html", context)
 
