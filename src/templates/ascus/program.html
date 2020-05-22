@@ -6,12 +6,16 @@
     The unconference will revolve around a variety of discussion topics which will take 
     place throughout the duration of AScUS. Some of these discussion sessions have initial
     homework / exploratory exercises that are part of the pre-conference program. 
-    The exact date and time for each of these sessions will be released soon. Click on the 
-    name of a discussion topic to learn more about its goal, format, and content.
+    Click on the name of a discussion topic to learn more about its goal, format, and content.
+    <a href="{% url "ascus:article" "program" %}">Click here to view our full schedule.</a>
   </p>
+  <p><strong>All times are Central European Summer Time (CEST)</strong> - see our schedule for conversion tables</p>
   <ol>
   {% for each in discussions %}
-    <li><a href="#topic-{{ each.id }}">{{ each }}</a></li>
+    <li>
+        <a href="#topic-{{ each.id }}">{{ each }}</a><br>
+        <em>{{ each.start_date|date:"l d M Y · H:i" }}-{{ each.end_date|date:"H-i" }}</em>
+    </li>
   {% endfor %}
   </ol>
 
@@ -22,8 +26,29 @@
         {{ each }}
       </div>
       <div class="card-body">
-        {{ each.description|linebreaksbr }}
+        <p>
+          <em>{{ each.start_date|date:"l d M · Y H:i" }}-{{ each.end_date|date:"H:i" }} CEST</em>
+        </p>
+        {{ each.get_markdown_description|safe }}
+
+      <h3>Attend this session</h3>
+      {% if not request.user.is_authenticated %}
+        <p><em>You are not logged in. Please log in first and then register for this session.</em></p>
+      {% else %}
+        <form method="post" class="form form-horizontal" action="{% url "ascus:account" %}">
+          {% csrf_token %}
+          {% if each in my_topic_registrations %}
+            <div class="alert alert-success">
+              <i class="fa fa-check"></i> You are registered for this session!
+            </div>
+          {% else %}
+            <button type="submit" class="btn btn-success" name="register" value="{{ each.id }}">Register for this session.</button>
+          {% endif %}
+        </form>
+      {% endif %}
+
       </div>
+
     </div>
 
   {% endfor %}

@@ -4,107 +4,150 @@
 
 {% block content %}
 
-<div class="card-deck">
+{% if not request.POST %}
 
-  <div class="card">
-    {% if my_intro %}
-      <h5 class="card-header text-white bg-success"><i class="fa fa-check fa-fw"></i> Submitted</h5>
-    {% else %}
-      <h5 class="card-header text-white bg-danger">Pending</h5>
-    {% endif %}
-    <div class="card-body">
-      <h5 class="card-title">Introduction video</h5>
-      <p class="card-text">
-        Upload a 1-minute introduction video of yourself.
-        Deadline: <strong>May 21</strong>.
-      </p>
-      <a href="{% url "ascus:account_introvideo" %}" class="btn btn-outline-dark">Read more</a>
+  <div class="card-deck">
+
+    <div class="card">
+      {% if my_intro %}
+        <h5 class="card-header text-white bg-success"><i class="fa fa-check fa-fw"></i> Submitted</h5>
+      {% else %}
+        <h5 class="card-header text-white bg-danger">Pending</h5>
+      {% endif %}
+      <div class="card-body">
+        <h5 class="card-title">Introduction video</h5>
+        <p class="card-text">
+          Upload a 1-minute introduction video of yourself.
+          Deadline: <strong>May 21</strong>.
+        </p>
+        <a href="{% url "ascus:account_introvideo" %}" class="btn btn-outline-dark">Read more</a>
+      </div>
     </div>
-  </div>
 
-  <div class="card">
-    {% if request.user.people.image %}
-      <h5 class="card-header text-white bg-success"><i class="fa fa-check fa-fw"></i> Submitted</h5>
-    {% else %}
-      <h5 class="card-header text-white bg-danger">Pending</h5>
-    {% endif %}
-    <div class="card-body">
-      <h5 class="card-title">Your profile</h5>
-      <p class="card-text">
-        Complete your profile so that people know more about 
-        your research interests and background.
-      </p>
+    <div class="card">
       {% if request.user.people.image %}
-        <a href="{% url "ascus:account_edit" %}" class="btn btn-outline-dark">Edit profile</a>
+        <h5 class="card-header text-white bg-success"><i class="fa fa-check fa-fw"></i> Submitted</h5>
       {% else %}
-        <a href="{% url "ascus:account_edit" %}" class="btn btn-outline-dark">Complete now</a>
+        <h5 class="card-header text-white bg-danger">Pending</h5>
       {% endif %}
+      <div class="card-body">
+        <h5 class="card-title">Your profile</h5>
+        <p class="card-text">
+          Complete your profile so that people know more about 
+          your research interests and background.
+        </p>
+        {% if request.user.people.image %}
+          <a href="{% url "ascus:account_edit" %}" class="btn btn-outline-dark">Edit profile</a>
+        {% else %}
+          <a href="{% url "ascus:account_edit" %}" class="btn btn-outline-dark">Complete now</a>
+        {% endif %}
+      </div>
     </div>
+
+    {% if show_abstract %}
+      <div class="card">
+        {% if my_presentations %}
+          <h5 class="card-header text-white bg-success"><i class="fa fa-check fa-fw"></i> Submitted</h5>
+        {% else %}
+          <h5 class="card-header text-white bg-danger">Pending</h5>
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">Upload presentation</h5>
+          <p class="card-text">
+            As an author we ask you to upload a presentation of your work
+            by <strong>May 15</strong>
+          </p>
+          <p>
+            <a href="{% url "ascus:account_presentation" %}" class="btn btn-outline-dark">{% if my_presentations %}Manage{% else %}Upload now{% endif %}</a>
+          </p>
+          {% if False %}
+            <p><a href="/" class="btn btn-outline-dark">A co-author will upload our work</a></p>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if show_discussion %}
+      <div class="card">
+        {% if my_discussions %}
+          <h5 class="card-header text-white bg-success"><i class="fa fa-check fa-fw"></i> Submitted</h5>
+        {% else %}
+          <h5 class="card-header text-white bg-danger">Pending</h5>
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">Discussion topic</h5>
+          <p class="card-text">
+            {% if my_discussions %}
+            Use this section to update your discussion session. 
+            {% else %}
+            Please upload a final title and overview of your session 
+            by <strong>May 10</strong>
+            {% endif %}
+          </p>
+          <p><a href="{% url "ascus:account_discussion" %}" class="btn btn-outline-dark">Read more</a></p>
+          {% if False %}
+            <p><a href="#" class="btn btn-outline-dark">A co-author will upload our work</a></p>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
   </div>
 
-  {% if show_abstract %}
-    <div class="card">
-      {% if my_presentations %}
-        <h5 class="card-header text-white bg-success"><i class="fa fa-check fa-fw"></i> Submitted</h5>
-      {% else %}
-        <h5 class="card-header text-white bg-danger">Pending</h5>
-      {% endif %}
-      <div class="card-body">
-        <h5 class="card-title">Upload presentation</h5>
-        <p class="card-text">
-          As an author we ask you to upload a presentation of your work
-          by <strong>May 15</strong>
-        </p>
-        <p>
-          <a href="{% url "ascus:account_presentation" %}" class="btn btn-outline-dark">{% if my_presentations %}Manage{% else %}Upload now{% endif %}</a>
-        </p>
-        {% if False %}
-          <p><a href="/" class="btn btn-outline-dark">A co-author will upload our work</a></p>
+  <p class="mt-3">Did you complete your payment yet? If not, please find the <a href="{% url "ascus:article" "payment" %}">payment instructions</a> here.</p>
+
+{% endif %}
+
+<h2>Program</h2>
+
+<p>
+  Below you find an overview of the discussion sessions during the unconference. 
+  Please click the REGISTER button to register for individual sessions.
+</p>
+
+<table class="table table-striped">
+  <tr>
+    <th>Topic</th>
+    <th>Date</th>
+    <th>Register</th>
+  </tr>
+{% for each in topics %}
+  <tr>
+    <td><a href="{% url "ascus:overview" %}#topic-{{ each.id }}">{{ each }}</a></td>
+    <td>{{ each.start_date|date:"l d M Y · H:i" }}-{{ each.end_date|date:"H-i" }}</td>
+    <td>
+      <form method="post" class="form form-horizontal">
+        {% csrf_token %}
+        {% if each in my_topic_registrations %}
+          <i class="fa fa-check"></i> You are registered!
+          <button type="submit" class="btn btn-primary-outline" name="unregister" value="{{ each.id }}">Unregister</button>
+        {% else %}
+          <button type="submit" class="btn btn-success" name="register" value="{{ each.id }}">Register</button>
         {% endif %}
-      </div>
-    </div>
-  {% endif %}
+      </form>
+    </td>
+  </tr>
+{% endfor %}
+</table>
 
-  {% if show_discussion %}
-    <div class="card">
-      {% if my_discussions %}
-        <h5 class="card-header text-white bg-success"><i class="fa fa-check fa-fw"></i> Submitted</h5>
-      {% else %}
-        <h5 class="card-header text-white bg-danger">Pending</h5>
-      {% endif %}
-      <div class="card-body">
-        <h5 class="card-title">Discussion topic</h5>
-        <p class="card-text">
-          {% if my_discussions %}
-          Use this section to update your discussion session. 
-          {% else %}
-          Please upload a final title and overview of your session 
-          by <strong>May 10</strong>
-          {% endif %}
-        </p>
-        <p><a href="{% url "ascus:account_discussion" %}" class="btn btn-outline-dark">Read more</a></p>
-        {% if False %}
-          <p><a href="#" class="btn btn-outline-dark">A co-author will upload our work</a></p>
-        {% endif %}
-      </div>
-    </div>
-  {% endif %}
+{% if request.POST %}
 
-</div>
+  <p><a href="{% url "ascus:account" %}" class="btn btn-primary">Back to my account</a></p>
 
-<p class="mt-3">Did you complete your payment yet? If not, please find the <a href="{% url "ascus:article" "payment" %}">payment instructions</a> here.</p>
+{% else %}
 
+  <div class="mt-5 alert alert-secondary">
+    <h3>Keep an eye on this space (and your e-mail)! </h3>
+    <p>
+      We will be expanding this section with new material and information as we get
+      closer to the event. You will be able to view the program, select the pre-conference
+      activities you want to participate in, and see contributions by other participants.
+      We will notify you by email when new information becomes available.
+    </p>
+  </div>
 
-<div class="mt-5 alert alert-secondary">
-  <h3>Keep an eye on this space (and your e-mail)! </h3>
-  <p>
-    We will be expanding this section with new material and information as we get
-    closer to the event. You will be able to view the program, select the pre-conference
-    activities you want to participate in, and see contributions by other participants.
-    We will notify you by email when new information becomes available.
-  </p>
-</div>
+  <p><a href="{% url "ascus:logout" %}" class="btn btn-light"><i class="fa fa-sign-out-alt fw"></i> Click here to log out</a></p>
 
-<p><a href="{% url "ascus:logout" %}" class="btn btn-light"><i class="fa fa-sign-out-alt fw"></i> Click here to log out</a></p>
+{% endif %}
 
 {% endblock %}

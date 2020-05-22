@@ -101,6 +101,9 @@ class Record(models.Model):
     def get_methodologies(self):
         self.tags.filter(parent_tag__id=318)
 
+    def get_markdown_description(self):
+        return markdown(self.description)
+
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
@@ -278,11 +281,14 @@ class RecordRelationship(models.Model):
     record_parent = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="parent_list")
     relationship = models.ForeignKey(Relationship, on_delete=models.CASCADE)
     record_child = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="child_list")
+
     def __str__(self):
         return str(self.record_parent) + ' ' + str(self.relationship.label) + ' ' + str(self.record_child)
+
     class Meta:
         verbose_name_plural = "relationship manager"
         verbose_name = "relationship manager"
+        unique_together = ["record_parent", "relationship", "record_child"]
 
 class SocialMedia(models.Model):
     record = models.ForeignKey(Record, on_delete=models.CASCADE)

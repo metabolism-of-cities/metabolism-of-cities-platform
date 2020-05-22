@@ -77,11 +77,18 @@ def ascus(request):
 def overview(request):
     discussions = Event.objects_include_private \
         .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
-        .filter(tags__id=770).order_by("name").distinct()
+        .filter(tags__id=770).order_by("name").distinct() \
+        .order_by("start_date")
+    if request.user.is_authenticated and hasattr(request.user, "people"):
+        my_topic_registrations = Event.objects_include_private \
+            .filter(child_list__record_parent=request.user.people, child_list__relationship__id=12) \
+            .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+            .filter(tags__id=770)
     context = {
         "header_title": "Discussion sessions",
         "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
         "discussions": discussions,
+        "my_topic_registrations": my_topic_registrations,
     }
     return render(request, "ascus/program.html", context)
 
@@ -130,6 +137,7 @@ def participant(request, id):
 def ascus_account(request):
     my_discussions = Event.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
+        .filter(child_list__record_parent=request.user.people, child_list__relationship__id=14) \
         .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
         .filter(tags__id=770)
     my_presentations = LibraryItem.objects_include_private \
@@ -145,11 +153,54 @@ def ascus_account(request):
         record_child__id = PAGE_ID["ascus"],
     )
     show_discussion = show_abstract = False
+
+    my_topic_registrations = Event.objects_include_private \
+        .filter(child_list__record_parent=request.user.people, child_list__relationship__id=12) \
+        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(tags__id=770)
+
+    topics = Event.objects_include_private \
+        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(tags__id=770).order_by("start_date")
+
     for each in my_roles:
         if each.relationship.name == "Session organizer":
             show_discussion = True
         elif each.relationship.name == "Presenter":
             show_abstract = True
+
+    if request.method == "POST":
+        if "register" in request.POST:
+            try:
+                topic = Event.objects_include_private \
+                    .filter(pk=request.POST["register"]) \
+                    .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+                    .filter(tags__id=770)[0]
+                session = request.POST["register"]
+                RecordRelationship.objects.create(
+                    record_parent = request.user.people,
+                    record_child = topic,
+                    relationship_id = 12,
+                )
+                messages.success(request, "You have been successfully registered for this session. The URL will be provided in your account closer to the date.")
+            except:
+                messages.error(request, "Sorry, we could not register you. Try again or contact us if this issue persists.")
+        elif "unregister" in request.POST:
+            try:
+                topic = Event.objects_include_private \
+                    .filter(pk=request.POST["unregister"]) \
+                    .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+                    .filter(tags__id=770)[0]
+                registration = RecordRelationship.objects.get(
+                    record_parent = request.user.people,
+                    record_child = topic,
+                    relationship_id = 12,
+                )
+                registration.delete()
+                messages.success(request, "We have removed your registration.")
+            except:
+                messages.error(request, "Sorry, we could not unregister you. Try again or contact us if this issue persists.")
+
     context = {
         "header_title": "My Account",
         "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
@@ -160,6 +211,8 @@ def ascus_account(request):
         "my_intro": my_intro,
         "show_discussion": show_discussion, 
         "show_abstract": show_abstract,
+        "topics": topics,
+        "my_topic_registrations": my_topic_registrations,
     }
     return render(request, "ascus/account.html", context)
 
@@ -291,8 +344,8 @@ def ascus_account_discussion(request, id=None):
     organizer_editing = False
     info = get_object_or_404(Webpage, slug="/ascus/account/discussion/")
     my_discussions = Event.objects_include_private \
-        .filter(child_list__record_parent=request.user.people) \
         .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(child_list__record_parent=request.user.people, child_list__relationship__id=14) \
         .filter(tags__id=770).distinct()
     event = None
     if id and "org_mode" in request.GET:
