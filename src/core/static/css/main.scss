@@ -1374,6 +1374,7 @@ body.city-subsite {
         color: darken($primary, 20%) !important;
         text-decoration: none !important;
       }
+
       &.active {
         background: #fff;
         border: 1px solid #999;
@@ -1636,6 +1637,20 @@ body.dataset {
         background-color: #dc3545;;
       }
     }
+  }
+}
+
+// DATASET EDITOR PAGE
+body.dataset.editor {
+  .preview-wrap {
+    padding: 1rem;
+    border: 1px solid $gray;
+    border-radius: .25rem;
+  }
+
+  form label.category {
+    font-weight: bold;
+    font-size: 1.25rem;
   }
 }
 

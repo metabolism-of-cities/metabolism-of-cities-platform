@@ -60,6 +60,7 @@
                 <select class="custom-select change-chart-type">
                   <option value="column" selected>Column</option>
                   <option value="bar">Bar</option>
+                  <option value="pie">Pie</option>
                 </select>
               </div>
             </div>
@@ -410,17 +411,6 @@
         },
       });
     });
-
-    // add moc logo to chart
-    chart.renderer.rect(20, 20, 20, 20, 20)
-    .attr({
-        fill: '#FFFFEF',
-        stroke: 'gray',
-        'stroke-width': 1,
-        zIndex: 4
-    })
-    .add();
-
 
     // when opening data tab, load table with ajax
     let dataLoaded = false;

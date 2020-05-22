@@ -1071,6 +1071,15 @@ body.dataset .rating[data-rating="5"] .full {
 body.dataset .rating[data-rating="5"] .number {
   background-color: #dc3545; }
 
+body.dataset.editor .preview-wrap {
+  padding: 1rem;
+  border: 1px solid #808080;
+  border-radius: .25rem; }
+
+body.dataset.editor form label.category {
+  font-weight: bold;
+  font-size: 1.25rem; }
+
 body.login .login.card,
 body.login .register.card,
 body.login .reset.card,
