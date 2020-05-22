@@ -642,6 +642,7 @@ class ActivatedSpace(models.Model):
         unique_together = ["slug", "site"]
 
 class LibraryDataset(LibraryItem):
+    data_formats = models.ManyToManyField(Tag, blank=True, related_name="library_datasets", limit_choices_to={"parent_tag_id": 786})
     data_year_start = models.IntegerField(null=True, blank=True)
     data_year_end = models.IntegerField(null=True, blank=True)
     data_interval = models.CharField(max_length=50, null=True, blank=True)
