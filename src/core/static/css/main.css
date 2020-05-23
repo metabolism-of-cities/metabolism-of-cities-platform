@@ -1106,6 +1106,9 @@ body.dataset.editor #color-schemes .single-color {
     border-top-right-radius: .25rem;
     border-bottom-right-radius: .25rem; }
 
+body.dataset.editor input#tooltip-label {
+  font-family: "Ubuntu Mono", "Fira Mono", "Liberation Mono", "Courier New", monospace; }
+
 .highcharts-container .highcharts-drillup-button {
   cursor: pointer; }
   .highcharts-container .highcharts-drillup-button text {

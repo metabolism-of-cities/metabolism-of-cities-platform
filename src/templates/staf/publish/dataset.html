@@ -63,7 +63,8 @@
             </div>
              -->
           </div>
-
+        </div>
+        <div class="col-md-6">
           <div class="form-group">
             <label class="category">Initial chart type</label>
             <select class="custom-select" id="initial-chart-type">
@@ -78,10 +79,27 @@
               <option hidden value="drilldown">Drilldown</option>
             </select>
           </div>
+
+          <div class="form-group">
+            <label class="category">Tooltip label</label>
+            <input type="text" class="form-control" id="tooltip-label" value="Catch in 2013: <b>{point.y} tonnes</b>">
+          </div>
         </div>
+      </div>
+      <div class="row mt-4">
         <div class="col-md-6">
           <div class="form-group">
             <label class="category">X-axis</label>
+
+            <div class="form-group">
+              <label>Type</label>
+              <select class="custom-select" id="xaxis-type">
+                <option value="linear">Linear</option>
+                <option value="logarithmic">Logarithmic</option>
+                <option value="datetime">Date / time</option>
+                <option selected value="category">Category</option>
+              </select>
+            </div>
             <div class="custom-control custom-switch">
               <input type="checkbox" class="custom-control-input" id="xaxis-label">
               <label class="custom-control-label" for="xaxis-label">Label</label>
@@ -102,9 +120,20 @@
               </div>
             </div>
           </div>
-
-          <div class="form-group mt-4">
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
             <label class="category">Y-axis</label>
+
+            <div class="form-group">
+              <label>Type</label>
+              <select class="custom-select" id="yaxis-type">
+                <option selected value="linear">Linear</option>
+                <option value="logarithmic">Logarithmic</option>
+                <option value="datetime">Date / time</option>
+                <option value="category">Category</option>
+              </select>
+            </div>
             <div class="custom-control custom-switch">
               <input type="checkbox" class="custom-control-input" id="yaxis-label" checked>
               <label class="custom-control-label" for="yaxis-label">Label</label>
@@ -231,8 +260,16 @@
       <div class="form-group">
         <label class="category">Other settings</label>
         <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="data-labels">
+          <label class="custom-control-label" for="data-labels">Data labels</label>
+        </div>
+        <div class="custom-control custom-switch">
           <input type="checkbox" class="custom-control-input" id="legend">
           <label class="custom-control-label" for="legend">Legend</label>
+        </div>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="individual-colors">
+          <label class="custom-control-label" for="individual-colors">Different color for each data point</label>
         </div>
         <div class="custom-control custom-switch">
           <input type="checkbox" class="custom-control-input" id="map">
@@ -546,7 +583,7 @@
   <script src="https://code.highcharts.com/modules/exporting.js"></script>
   <script src="https://code.highcharts.com/modules/drilldown.js"></script>
   <script>
-    // color schemes
+    // color scheme definitions from colorbrewer2.org combined with default MoC colours
     var moc = ["#144d58","#a6cee3","#33a02c","#b2df8a","#e31a1c","#fb9a99","#ff7f00","#fdbf6f","#6a3d9a","#cab2d6","#b15928","#ffff99"];
     var accent = ["#7fc97f","#beaed4","#fdc086","#ffff99","#386cb0","#f0027f","#bf5b17","#666666"];
     var dark = ["#1b9e77","#d95f02","#7570b3","#e7298a","#66a61e","#e6ab02","#a6761d","#666666"];
@@ -555,15 +592,37 @@
     var dozen = ["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"];
 
     // user settings
+    // titles
     let title = "Cape Town fish catch in 2013";
     let subtitle = "Aquatic agriculture catch from Cape Town in 2013, measured in tonnes";
+
+    // color scheme
     let colorScheme = moc;
+
+    // chart types
     let chartTypes = ["column", "bar", "pie"]
     let startingChart = "column";
+
+    // tooltip label
+    let tooltipLabel = "Catch in 2013: <b>{point.y} tonnes</b>";
+
+    // x-axis
+    let xAxisType = "category";
     let xAxisLabelText = " ";
+    let xAxisMin = null;
+    let xAxisMax = null;
+
+    // y-axis
+    let yAxisType = "linear";
     let yAxisLabelText = "Catch (in tonnes)";
+    let yAxisMin = null;
+    let yAxisMax = null;
+
+    // other settings
+    let showDataLabels = false;
     let showLegend = false;
     let showMap = true;
+    let showIndividualColors = false;
 
     // function to gather user settings and generate dataset preview
     function generatePreview() {
@@ -589,17 +648,32 @@
       // initial chart type
       startingChart = $("#initial-chart-type").val()
 
+      // tooltip label
+      tooltipLabel = $("#tooltip-label").val();
+
       // x-axis
+      xAxisType = $("#xaxis-type").val();
+      xAxisMin = $("#xaxis-range").is(":checked") ? $("#xaxis-min").val() : null;
+      xAxisMax = $("#xaxis-range").is(":checked") ? $("#xaxis-max").val() : null;
       xAxisLabelText = $("#xaxis-label").is(":checked") ? $(".xaxis-label-text input").val() : " ";
 
       // y-axis
+      yAxisType = $("#yaxis-type").val();
+      yAxisMin = $("#yaxis-range").is(":checked") ? $("#yaxis-min").val() : null;
+      yAxisMax = $("#yaxis-range").is(":checked") ? $("#yaxis-max").val() : null;
       yAxisLabelText = $("#yaxis-label").is(":checked") ? $(".yaxis-label-text input").val() : " ";
+
+      // data labels
+      showDataLabels = $("#data-labels").is(":checked") ? true : false;
 
       // legend
       showLegend = $("#legend").is(":checked") ? true : false;
 
       // map
       showMap = $("#map").is(":checked") ? true : false;
+
+      // individual-colors
+      showIndividualColors = $("#individual-colors").is(":checked") ? true : false;
 
       // take variables and apply them to the preview
       // titles
@@ -632,17 +706,34 @@
         },
         colors: colorScheme,
         xAxis: {
+          type: xAxisType,
+          min: xAxisMin,
+          max: xAxisMax,
           title: {
             text: xAxisLabelText
           }
         },
         yAxis: {
+          type: yAxisType,
+          min: yAxisMin,
+          max: yAxisMax,
           title: {
             text: yAxisLabelText
           }
         },
         legend: {
           enabled: showLegend
+        },
+        tooltip: {
+          pointFormat: tooltipLabel
+        },
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: showDataLabels,
+            },
+            colorByPoint: showIndividualColors,
+          }
         },
       });
 
@@ -657,6 +748,14 @@
           yAxis: {
             title: {
               text: null,
+            }
+          },
+          plotOptions: {
+            series: {
+              colorByPoint: true,
+              dataLabels: {
+                enabled: true,
+              },
             }
           },
         });
@@ -692,7 +791,41 @@
     });
 
     // toggle relevant inputs for axes
+    // x-axis label
+    $("#xaxis-label").change(function() {
+      if ( $(this).is(":checked") ) {
+        $(".xaxis-label-text").removeAttr("hidden")
+      } else {
+        $(".xaxis-label-text").attr("hidden", "hidden")
+      }
+    })
 
+    // y-axis label
+    $("#yaxis-label").change(function() {
+      if ( $(this).is(":checked") ) {
+        $(".yaxis-label-text").removeAttr("hidden")
+      } else {
+        $(".yaxis-label-text").attr("hidden", "hidden")
+      }
+    })
+
+    // x-axis data range
+    $("#xaxis-range").change(function() {
+      if ( $(this).is(":checked") ) {
+        $(".xaxis-range-form").removeAttr("hidden")
+      } else {
+        $(".xaxis-range-form").attr("hidden", "hidden")
+      }
+    })
+
+    // y-axis data range
+    $("#yaxis-range").change(function() {
+      if ( $(this).is(":checked") ) {
+        $(".yaxis-range-form").removeAttr("hidden")
+      } else {
+        $(".yaxis-range-form").attr("hidden", "hidden")
+      }
+    })
 
     // highchart defaults
     const defaultFont = "Lato, Helvetica Neue, Arial, Helvetica, sans-serif";
@@ -722,11 +855,11 @@
       },
 
       xAxis: {
+        type: xAxisType,
         lineColor: "#808080",
-        type: "category",
         title: {
           text: xAxisLabelText,
-          margin: 30,
+          margin: 15,
           style: {
             fontSize: "14px",
           }
@@ -739,7 +872,7 @@
       },
 
       yAxis: {
-        min: 0,
+        type: yAxisType,
         gridLineColor: "#efefef",
         lineColor: "#808080",
         title: {
@@ -761,7 +894,7 @@
       },
 
       tooltip: {
-        pointFormat: "Catch in 2013: <b>{point.y} tonnes</b>"
+        pointFormat: tooltipLabel
       },
 
       exporting: {
@@ -776,7 +909,11 @@
             inactive: {
               enabled: false
             }
-          }
+          },
+          dataLabels: {
+            enabled: showDataLabels,
+          },
+          colorByPoint: showIndividualColors,
         }
       },
 
@@ -786,6 +923,7 @@
         style: {
           fontSize: "12px",
           cursor: "default",
+          height: "50px",
         },
       },
 
@@ -919,6 +1057,14 @@
           yAxis: {
             title: {
               text: null,
+            }
+          },
+          plotOptions: {
+            series: {
+              colorByPoint: true,
+              dataLabels: {
+                enabled: true,
+              },
             }
           },
         });
