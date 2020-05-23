@@ -17,7 +17,7 @@
     {% for each in list %}
       <tr>
         <td><a href="{{ each.get_absolute_url }}">{{ each }}</a></td>
-        <td>{{ each.producer }}</td>
+        <td>{{ each.producer|default_if_none:"" }}</td>
         <td>{{ each.get_language_display }}</td>
         <td>{{ each.year }}</td>
       </tr>

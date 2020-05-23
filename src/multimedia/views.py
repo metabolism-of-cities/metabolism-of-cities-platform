@@ -12,16 +12,18 @@ def get_parents(record):
 def index(request):
     webpage = get_object_or_404(Project, pk=PAGE_ID["multimedia_library"])
     videos = Video.objects.filter(tags__parent_tag__id=749).distinct()
-    podcasts = LibraryItem.objects.filter(type__name="Podcast").order_by("-date_created")[:5]
-    dataviz = LibraryItem.objects.filter(type__name="Data visualisation").order_by("-date_created")[:5]
+    podcasts = LibraryItem.objects.filter(type__name="Podcast").order_by("-date_created")
+    dataviz = LibraryItem.objects.filter(type__name="Data visualisation").order_by("-date_created")
     context = {
         "edit_link": "/admin/core/project/" + str(webpage.id) + "/change/",
         "show_project_design": True,
         "webpage": webpage,
         "videos_count": videos.count(),
         "videos": videos.order_by("-date_created")[:5],
-        "podcasts": podcasts,
-        "dataviz": dataviz,
+        "podcasts_count": podcasts.count(),
+        "podcasts": podcasts[:5],
+        "dataviz": dataviz[:5],
+        "dataviz_count": dataviz.count(),
     }
     if "import" in request.GET:
         from django.core.files import File
