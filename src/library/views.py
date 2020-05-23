@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.http import Http404, HttpResponseRedirect
 from django.forms import modelform_factory
 from django.contrib.auth.decorators import login_required
+import json
+from django.http import JsonResponse
 
 from django.utils import timezone
 import pytz
@@ -15,10 +17,56 @@ TAG_ID = settings.TAG_ID_LIST
 PAGE_ID = settings.PAGE_ID_LIST
 
 def index(request):
+    tags = [324, 322, 664, 318, 739]
+    show_results = False
+    tag = list = search_tag = None
+    urban_only = True
+    if "find" in request.GET:
+        show_results = True
+        list = LibraryItem.objects.filter(type__group="academic")
+        if not request.GET.get("urban_only"):
+            urban_only = False
+        if urban_only:
+            list = list.filter(tags__id=11)
+    if "search" in request.GET:
+        tag = Tag.objects.get(id=request.GET.get("search"))
+        list = list.filter(tags=tag)
+    if "after" in request.GET and request.GET["after"]:
+        list = list.filter(year__gte=request.GET["after"])
+    if "before" in request.GET and request.GET["before"]:
+        list = list.filter(year__lte=request.GET["before"])
     context = {
         "show_project_design": True,
+        "tag": tag,
+        "tags": Tag.objects.filter(parent_tag__id__in=tags),
+        "items": list,
+        "show_results": show_results,
+        "load_datatables": True if show_results else False,
+        "urban_only": urban_only,
     }
-    return render(request, "library/browse.html", context)
+    return render(request, "library/index.html", context)
+
+def tags(request):
+    context = {
+    }
+    return render(request, "library/tags.html", context)
+
+def tags_json(request):
+    id = request.GET.get("id")
+    if id:
+        tags = Tag.objects.filter(parent_tag_id=id, hidden=False)
+    else:
+        tags = Tag.objects.filter(parent_tag__isnull=True, hidden=False)
+    tag_list = []
+    for each in tags:
+        this_tag = {
+            "title": each.name,
+            "key": each.id,
+            "children": {}
+        }
+        tag_list.append(this_tag)
+    response = JsonResponse(tag_list, safe=False)
+    return response
 
 def list(request, type):
     if type == "dataportals":

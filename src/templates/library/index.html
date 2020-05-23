@@ -1,0 +1,229 @@
+{% extends "_base.html" %}
+
+{% block page_name %}library search{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.3.2/dist/select2-bootstrap4.min.css"/>
+  {% if request.GET.before or request.GET.after %}
+    <style type="text/css">
+      body.library.search .advanced-options {
+        display:block;
+      }
+      .btn-advanced {
+        display:none;
+      }
+    </style>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <section class="search-wrapper">
+    <form class="container" method="get" id="search">
+      {% spaceless %}
+        <div class="search-select">
+          <select class="search" name="search">
+            <option disabled hidden selected>Search through library</option>
+            {% for each in tags %}
+              <option value="{{ each.id }}" {% if each == tag %}selected {% endif %}>{{ each }}</option>
+            {% endfor %}
+          </select>
+
+          <button class="btn btn-lg btn-primary d-inlineblock" name="find" value="true" type="submit" form="search"><i class="fas fa-search"></i> Search</button>
+
+          <div class="">
+            <label>
+              <input type="checkbox" name="urban_only" value="true" {% if urban_only %}checked{% endif %} />
+              Only show work on an urban scale
+            </label>
+          </div>
+          <div class="btn btn-primary-basic btn-advanced mt-2"><i class="far fa-tools"></i> Show advanced options</div>
+        </div>
+      {% endspaceless %}
+
+      <section class="advanced-options mt-4">
+        <div class="row">
+          <div class="col-sm-6 col-md-4">
+            <div class="form-group">
+              <label for="before">Published before</label>
+              <input type="number" class="form-control" id="before" min="1900" max="2025" name="before" value="{{ request.GET.before }}">
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <div class="form-group">
+              <label for="after">Published after</label>
+              <input type="number" class="form-control" id="after" min="1900" max="2025" name="after" value="{{ request.GET.after }}">
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <div class="form-group">
+              <label for="after">Find by place</label>
+              <div><a class="btn btn-primary" href="{% url "library:casestudies" "map" %}"><i class="fa fa-globe"></i> View our map</a></div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4" style="display:none">
+            <div class="form-group">
+              <label for="type">Restrict by type</label>
+              <select class="type" multiple>
+                <option value="paper">Academic paper</option>
+                <option value="report">Report</option>
+                <option value="article">Newspaper article</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+    </form>
+  </section>
+
+  {% if show_results %}
+
+    <section class="container">
+      <h3>Publications</h3>
+      {% include "_library.list.html" %}
+    </section>
+
+  {% else %}
+
+    <section class="container">
+      {{ article.content|safe }}
+    </section>
+
+    <section class="container">
+      <div class="row">
+        <div class="col-sm-6 col-xl-3 mb-4">
+          <a class="large-icon-box" href="#">
+            <div class="description">Case studies</div>
+            <div class="statistic">103 articles</div>
+            <i class="fad fa-search text-success" aria-hidden="true"></i>
+          </a>
+        </div>
+        <div class="col-sm-6 col-xl-3 mb-4">
+          <a class="large-icon-box" href="#">
+            <div class="description">Review papers</div>
+            <div class="statistic">140 articles</div>
+            <i class="fad fa-file-alt text-danger" aria-hidden="true"></i>
+          </a>
+        </div>
+        <div class="col-sm-6 col-xl-3 mb-4">
+          <a class="large-icon-box" href="#">
+            <div class="description">Browse by method</div>
+            <div class="statistic">320 articles</div>
+            <i class="fad fa-vial text-warning" aria-hidden="true"></i>
+          </a>
+        </div>
+        <div class="col-sm-6 col-xl-3 mb-4">
+          <a class="large-icon-box" href="#">
+            <div class="description">Starter's Kit</div>
+            <div class="statistic">14 articles</div>
+            <i class="fad fa-play-circle text-info" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+
+      <a class="btn btn-primary mt-2" href="#">
+        <i class="fas fa-file-plus fa-fw"></i> Add a missing publication
+      </a>
+      <a class="btn btn-primary-basic mt-2" href="#">
+        <i class="far fa-user-plus fa-fw"></i> Join our curation team
+      </a>
+      <a class="btn btn-primary-basic mt-2" href="#">
+        <i class="far fa-video fa-fw"></i> Watch a digital tour
+      </a>
+    </section>
+
+    <section class="container">
+      <h2>News</h2>
+
+      <div class="row">
+        <div class="col-md-6 col-lg-4 mb-4">
+          <a class="card btn-card" href="/community/events/1">
+            <img src="https://imgur.com/EjSgFEw.jpg" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">
+                New library website launched
+                <small class="d-inline-block text-muted">12 April 2020</small>
+              </h5>
+              <p class="card-text">
+                Illo et ab in omnis ipsum nulla. Excepturi eaque nemo voluptas laborum iure. Ipsum incidunt molestiae dignissimos id voluptas modi et illum.
+              </p>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+          <a class="card btn-card" href="/community/events/1">
+            <img src="https://imgur.com/gNylltZ.jpg" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">
+                New publication: Evaluating urban water management using a water metabolism framework...
+                <small class="d-inline-block text-muted">9 April 2020</small>
+              </h5>
+              <p class="card-text">
+                Fugit sint sint quia vitae in at corporis. At repellendus autem voluptatibus magnam explicabo ea. Nihil repellat ea asperiores. In recusandae id molestiae perspiciatis.
+              </p>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+          <a class="card btn-card" href="/community/events/1">
+            <img src="https://imgur.com/XN8gxJI.jpg" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">
+                New publication: A systematic review of factors influencing spatiotemporal variability in urban...
+                <small class="d-inline-block text-muted">7 April 2020</small>
+              </h5>
+              <p class="card-text">
+                Nihil dolorem sed ea qui ut. Est sit aliquid impedit earum. Omnis numquam quas sed unde. Tenetur expedita vitae veritatis omnis quae ut nobis.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="container pb-4 mb-4">
+      <h2>Download or export</h2>
+      <div class="row">
+        <div class="col-md-4">
+          <a class="btn-icon" href="/cities/the-hague/datasets/">
+            <div class="title"><i class="fal fa-file-download fa-fw"></i> Download entire library</div>
+            <div class="text">A CSV file of all 1,497 articles in the library</div>
+          </a>
+        </div>
+        <div class="col-md-4">
+          <a class="btn-icon" href="/cities/the-hague/datasets/">
+            <div class="title"><i class="fal fa-file-download fa-fw"></i> Urban case studies</div>
+            <div class="text">Download just the 597 urban case studies</div>
+          </a>
+        </div>
+        <div class="col-md-4">
+          <a class="btn-icon" href="/cities/the-hague/datasets/">
+            <div class="title"><i class="fal fa-file-export fa-fw"></i> Export to Zotero</div>
+            <div class="text">Manage the complete library with Zotero</div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  {% endif %}
+
+{% endblock %}
+
+{% block footer %}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+<script>
+  $(".btn-advanced").click(function() {
+    $("section.advanced-options").show();
+    $(this).hide();
+  })
+
+  $("select.search").select2({
+    tags: true,
+    theme: "bootstrap4",
+  });
+
+  $("select.type").select2({
+    theme: "bootstrap4",
+  });
+</script>
+{% endblock %}
