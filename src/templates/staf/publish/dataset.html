@@ -45,13 +45,10 @@
               <label class="custom-control-label" for="pie">Pie</label>
             </div>
             <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="datetime">
-              <label class="custom-control-label" for="datetime">Time series</label>
-            </div>
-            <div class="custom-control custom-switch">
               <input type="checkbox" class="custom-control-input" id="area">
               <label class="custom-control-label" for="area">Area</label>
             </div>
+            <!-- these don't work with this dataset, switching to them makes the whole thing stop working and requires a page refresh
             <div class="custom-control custom-switch">
               <input type="checkbox" class="custom-control-input" id="streamgraph">
               <label class="custom-control-label" for="streamgraph">Stream</label>
@@ -61,9 +58,10 @@
               <label class="custom-control-label" for="columnrange">Column range</label>
             </div>
             <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="drilldown">
-              <label class="custom-control-label" for="drilldown">Drilldown</label>
+              <input type="checkbox" class="custom-control-input" id="datetime">
+              <label class="custom-control-label" for="datetime">Time series</label>
             </div>
+             -->
           </div>
 
           <div class="form-group">
@@ -112,7 +110,7 @@
               <label class="custom-control-label" for="yaxis-label">Label</label>
             </div>
             <div class="form-group yaxis-label-text">
-              <input type="text" class="form-control" placeholder="Label text" value="Population (millions)">
+              <input type="text" class="form-control" placeholder="Label text" value="Catch (in tonnes)">
             </div>
             <div class="custom-control custom-switch">
               <input type="checkbox" class="custom-control-input" id="yaxis-range">
@@ -261,7 +259,7 @@
     </p>
 
     <div class="preview-wrap">
-      <h3 class="preview-title">Agricultural product and foodstuffs unloaded in the Port of Brussels 2005-2017</h3>
+      <h3 class="preview-title">Cape Town fish catch in 2013</h3>
       <div class="preview-subtitle description mb-4">
         Aquatic agriculture catch from Cape Town in 2013, measured in tonnes
       </div>
@@ -563,7 +561,7 @@
     let chartTypes = ["column", "bar", "pie"]
     let startingChart = "column";
     let xAxisLabelText = null;
-    let yAxisLabelText = "Population (millions)";
+    let yAxisLabelText = "Catch (in tonnes)";
     let showLegend = false;
     let showMap = true;
 
