@@ -4,6 +4,12 @@
 
 <h3>{{ title }}</h3>
 
+{% if webpage %}
+  <div class="mb-3">
+    {{ webpage.description|safe }}
+  </div>
+{% endif %}
+
 {% include "_library.list.html" %}
 
 {% endblock %}

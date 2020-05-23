@@ -71,6 +71,7 @@ def tags_json(request):
 
 def list(request, type):
     title = type
+    webpage = None
     if type == "dataportals":
         list = LibraryDataPortal.objects_unfiltered.all()
     elif type == "datasets":
@@ -78,12 +79,17 @@ def list(request, type):
     elif type == "reviews":
         list = LibraryItem.objects.filter(tags__id=3)
         title = "Review papers"
+    elif type == "starterskit":
+        list = LibraryItem.objects.filter(tags__id=791)
+        title = "Starter's Kit"
+        webpage = Webpage.objects.get(pk=34)
     context = {
         "items": list,
         "type": type,
         "title": title,
         "load_datatables": True,
         "menu": "library",
+        "webpage": webpage,
     }
     if type == "dataportals" or type == "datasets":
         return render(request, "library/list.temp.html", context)
