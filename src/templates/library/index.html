@@ -22,7 +22,7 @@
     <form class="container" method="get" id="search">
       {% spaceless %}
         <div class="search-select">
-          <select class="search" name="search">
+          <select class="search" name="search" multiple>
             <option disabled hidden selected>Search through library</option>
             {% for each in tags %}
               <option value="{{ each.id }}" {% if each == tag %}selected {% endif %}>{{ each }}</option>
@@ -92,16 +92,16 @@
     <section class="container">
       <div class="row">
         <div class="col-sm-6 col-xl-3 mb-4">
-          <a class="large-icon-box" href="#">
+          <a class="large-icon-box" href="{% url "library:casestudies" "map" %}">
             <div class="description">Case studies</div>
-            <div class="statistic">103 articles</div>
-            <i class="fad fa-search text-success" aria-hidden="true"></i>
+            <div class="statistic">Browse our map</div>
+            <i class="fad fa-globe text-success" aria-hidden="true"></i>
           </a>
         </div>
         <div class="col-sm-6 col-xl-3 mb-4">
-          <a class="large-icon-box" href="#">
+          <a class="large-icon-box" href="{% url "library:list" "reviews" %}">
             <div class="description">Review papers</div>
-            <div class="statistic">140 articles</div>
+            <div class="statistic">30 articles</div>
             <i class="fad fa-file-alt text-danger" aria-hidden="true"></i>
           </a>
         </div>

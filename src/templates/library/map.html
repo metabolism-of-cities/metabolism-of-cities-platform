@@ -11,6 +11,9 @@
   <!-- leaflet marker cluster plugin - https://github.com/Leaflet/Leaflet.markercluster -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
+  <style type="text/css">
+  table.results{display:none}
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -26,20 +29,30 @@
   <div id="article-list">
     <div id="list-anchor"></div>
     <div class="row">
+    <table class="table table-striped results">
+      <tr>
+        <th>Title</th>
+        <th>Author(s)</th>
+        <th>Space(s)</th>
+      </tr>
       {% for each in items %}
-        <div class="single-article col-md-6 mb-4" data-cities="{% for space in each.spaces.all %}{{ space }}-{{ space.id }}{% if not forloop.last %} {% endif %}{% endfor %}">
-          <a class="card btn-card" href="{{ each.get_absolute_url }}">
-            <div class="card-body">
-              <div class="title">{{ each }}</div>
-              <div class="badges">
-                {% for space in each.spaces.all %}
-                  <span class="badge badge-primary">{{ space }}</span>
-                {% endfor %}
-              </div>
-            </div>
-          </a>
-        </div>
+        <tr class="single-article" data-cities="{% for space in each.spaces.all %}{{ space }}-{{ space.id }}{% if not forloop.last %} {% endif %}{% endfor %}">
+        <td>
+            <a href="{{ each.get_absolute_url }}">{{ each }}</a>
+          <br>
+          <em>{{ each.type }}</em>
+        </td>
+        <td>{{ each.get_author_citation|safe }}</td>
+        <td>
+          <div class="badges">
+            {% for space in each.spaces.all %}
+              <span class="badge badge-primary">{{ space }}</span>
+            {% endfor %}
+          </div>
+        </td>
+      </tr>
       {% endfor %}
+      </table>
     </div>
   </div>
 
@@ -104,6 +117,7 @@
       let cityName = e.layer.options.city;
       let cityId = e.layer.options.id;
 
+      $("table.results").show();
       $("h2.city-name").text(cityName);
       $(".single-article").removeClass("visible");
       $(".single-article").each(function() {

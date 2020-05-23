@@ -69,15 +69,24 @@ def tags_json(request):
     return response
 
 def list(request, type):
+    title = type
     if type == "dataportals":
         list = LibraryDataPortal.objects_unfiltered.all()
     elif type == "datasets":
         list = LibraryDataset.objects_unfiltered.all()
+    elif type == "reviews":
+        list = LibraryItem.objects.filter(tags__id=3)
+        title = "Review papers"
     context = {
         "items": list,
         "type": type,
+        "title": title,
+        "load_datatables": True,
     }
-    return render(request, "library/list.html", context)
+    if type == "dataportals" or type == "datasets":
+        return render(request, "library/list.temp.html", context)
+    else:
+        return render(request, "library/list.html", context)
 
 def download(request):
     info = get_object_or_404(Webpage, pk=PAGE_ID["library"])

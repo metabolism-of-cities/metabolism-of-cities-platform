@@ -1,0 +1,41 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<h3>{{ type|title }}</h3>
+
+<table class="table table-striped datatable">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Space(s)</th>
+      <th>Tag(s)</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for details in items %}
+      <tr>
+        <td>
+            <a href="{{ details.url }}">{{ details }}</a>
+        </td>
+        <td>
+          {% for each in details.spaces.all %}
+            <span class="badge badge-info">{{ each }}</span>
+          {% endfor %}
+        </td>
+        <td>
+          {% for each in details.tags.all %}
+            <span class="badge badge-info">{{ each }}</span>
+          {% endfor %}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<p>
+  <a href="{% url "library:form" %}?type=dataset">Add new dataset</a> |
+  <a href="{% url "library:form" %}?type=dataportal">Add new data portal</a> 
+</p>
+
+{% endblock %}

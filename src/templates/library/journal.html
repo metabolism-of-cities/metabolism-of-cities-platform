@@ -7,15 +7,19 @@
 <section class="row">
   {% if info.description %}
     <div class="col-md-8">
+      <div>
         {{ info.description|safe }}
+      </div>
       {% if info.publisher %}
         <p>Published by {{ info.publisher }}.</p>
       {% endif %}
 
       {% if info.url %}
-        <a class="btn btn-primary mb-4" href="{{ info.url }}" target="_blank">
-          <i class="fas fa-fw fa-external-link"></i> Visit website
-        </a>
+        <div class="mt-3">
+          <a class="btn btn-primary mb-4" href="{{ info.url }}" target="_blank">
+            <i class="fas fa-fw fa-external-link"></i> Visit website
+          </a>
+        </div>
       {% endif %}
     </div>
   {% endif %}
