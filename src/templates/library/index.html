@@ -22,7 +22,7 @@
     <form class="container" method="get" id="search">
       {% spaceless %}
         <div class="search-select">
-          <select class="search" name="search" multiple>
+          <select class="search" name="search">
             <option disabled hidden selected>Search through library</option>
             {% for each in tags %}
               <option value="{{ each.id }}" {% if each == tag %}selected {% endif %}>{{ each }}</option>

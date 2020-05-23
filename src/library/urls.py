@@ -10,6 +10,7 @@ urlpatterns = [
     path("tags/", views.tags, name="tags"),
     path("tags/json/", views.tags_json, name="tags_json"),
     path("list/", views.list, name="list"),
+    path("methods/", views.methodologies, name="methods"),
     path("list/<slug:type>/", views.list, name="list"),
     path("casestudies/map/", views.map, { "article": 50 }, name="map"),
     path("casestudies/<slug:slug>/", views.casestudies, name="casestudies"),

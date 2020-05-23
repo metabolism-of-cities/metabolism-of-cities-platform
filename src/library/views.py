@@ -88,6 +88,13 @@ def list(request, type):
     else:
         return render(request, "library/list.html", context)
 
+def methodologies(request):
+    context = {
+        "tags": Tag.objects.filter(parent_tag__id=792),
+        "old": Tag.objects.filter(parent_tag__id=318),
+    }
+    return render(request, "library/methods.html", context)
+
 def download(request):
     info = get_object_or_404(Webpage, pk=PAGE_ID["library"])
     context = {
