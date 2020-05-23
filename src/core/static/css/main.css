@@ -1021,6 +1021,11 @@ body.dataset #tab-chart .highcharts-title,
 body.dataset #tab-chart .highcharts-subtitle {
   display: none; }
 
+body.dataset #tab-chart .highcharts-drillup-button {
+  cursor: pointer; }
+  body.dataset #tab-chart .highcharts-drillup-button text {
+    fill: #fff !important; }
+
 body.dataset #tab-data .fa-spin {
   animation: fa-spin 1s linear infinite; }
 

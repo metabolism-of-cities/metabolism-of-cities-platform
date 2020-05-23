@@ -1562,6 +1562,14 @@ body.dataset {
     .highcharts-subtitle {
       display: none;
     }
+
+    .highcharts-drillup-button {
+      cursor: pointer;
+
+      text {
+        fill: $white !important;
+      }
+    }
   }
 
   #tab-data {
