@@ -104,6 +104,18 @@ p a {
   color: $secondary !important;
 }
 
+// Full-width containers
+body.fullwidth {
+  .container.main-content {
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: unset !important;
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+  }
+}
+
 // NORMAL AND SElECT2 INPUTS
 textarea.form-control:focus, input.form-control:focus, select.custom-select:focus,
 .select2-container--bootstrap4.select2-container--focus .select2-selection {

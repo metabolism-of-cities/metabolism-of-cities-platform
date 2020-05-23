@@ -1,139 +1,170 @@
 {% extends "_base.html" %}
 
-{% block page_name %}library item{% endblock %}
+{% block page_name %}library item fullwidth{% endblock %}
 {% block title %}{{ info }}{% endblock %}
+
+{% block css %}
+  <style type="text/css">
+    .export {
+      background:#f4f4f4;
+    }
+    .journal {
+      max-height:160px;
+    }
+  </style>
+{% endblock %}
 
 {% block content %}
 
-  <div class="basic-details mb-4">
-    <h1 class="item-title">{{ info }}</h1>
-    <div>{{ info.type }}</div>
-    <div>{{ info.publisher }}</div>
-    <div>{{ info.year }}</div>
-    <div>{{ info.authorlist }}</div>
-  </div>
-
-  <div class="row">
-    <div class="col-lg-8 mb-4">
-      <h4>Export</h4>
-      <div class="row">
-        <div class="col-md-6">
-          <button class="btn-icon">
-            <div class="title mb-0"><i class="fal fa-file-export fa-fw"></i> RIS</div>
-          </button>
-        </div>
-        <div class="col-md-6">
-          <button class="btn-icon">
-            <div class="title mb-0"><i class="fal fa-file-export fa-fw"></i> Bibtex</div>
-          </button>
-        </div>
-        <div class="col-md-6">
-          <a class="btn-icon" href="#">
-            <div class="title mb-0"><i class="fal fa-quote-right fa-fw"></i> Citation</div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4 text-center">
+        {% if info.publisher.image %}
+          <a href="{{ info.publisher.get_absolute_url }}">
+            <img src="{{ info.publisher.image.url }}" class="journal mt-4">
           </a>
-        </div>
-        <div class="col-md-6">
-          <a class="btn-icon" href="#">
-            <div class="title mb-0"><i class="fal fa-print fa-fw"></i> Print</div>
-          </a>
-        </div>
+        {% endif %}
       </div>
-    </div>
-    <div class="col-lg-4 mb-4">
-      <h4>Save</h4>
-      <div class="row">
-        <div class="col-md-12">
-          <a class="btn-icon" href="#">
-            <div class="title mb-0"><i class="fal fa-save fa-fw"></i> To my collection</div>
-          </a>
-        </div>
-        <div class="col-md-12">
-          <a class="btn-icon" href="#">
-            <div class="title mb-0"><i class="fal fa-folder-plus fa-fw"></i> Create new collection</div>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  {% if info.file_url and info.type.name == "Podcast" %}
-    <p>Listen now!</p>
-     <audio controls style="width:100%">
-       <source src="{{ info.file_url }}" type="audio/mp3">
-       Your browser does not support the audio tag.
-    </audio>
-    <p><a href="{{ info.file_url }}">Download</a></p>
-  {% endif %}
-
-  <div class="row">
-    <div class="col-lg-8 mb-4">
-      {{ info.description|safe|linebreaks }}
-
-      {% if info.publisher.image %}
-        <img src="{{ info.publisher.image.url }}" class="journal-cover mt-4">
-      {% endif %}
-    </div>
-    <div class="col-lg-4">
-      <div class="card">
-        <div class="card-header">
-          {{ info }}
-        </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <i class="far fa-fw fa-user-edit mb-1 mr-1" aria-hidden="true"></i> Author(s)
-            <br>
-            {% for each in info.authors %}
-              <a class="btn btn-sm btn-primary-outline mt-1" href="">{{ each }}</a>
-            {% endfor %}
-          </li>
+      <div class="col-lg-8 mb-4">
+        <div class="basic-details mb-4">
+          <h1 class="item-title">{{ info }}</h1>
+          <div><em>{{ info.type }}</em></div>
           {% if info.publisher %}
+            <div><a href="{{ info.publisher.get_absolute_url }}">{{ info.publisher }}</a></div>
+          {% endif %}
+          <div>{{ info.year }}</div>
+          <div>{{ info.authorlist }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="export">
+    <div class="container">
+      <div class="row pt-4">
+        <div class="col-lg-4 mb-4">
+          <h4>Save</h4>
+          <div class="row">
+            <div class="col-md-12">
+              <a class="btn-icon" href="#">
+                <div class="title mb-0"><i class="fal fa-save fa-fw"></i> To my collection</div>
+              </a>
+            </div>
+            <div class="col-md-12">
+              <a class="btn-icon" href="#">
+                <div class="title mb-0"><i class="fal fa-folder-plus fa-fw"></i> Create new collection</div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-8 mb-4">
+          <h4>Export</h4>
+          <div class="row">
+
+            <div class="col-md-6">
+              <button class="btn-icon">
+                <div class="title mb-0"><i class="fal fa-file-export fa-fw"></i> RIS</div>
+              </button>
+            </div>
+            <div class="col-md-6">
+              <button class="btn-icon">
+                <div class="title mb-0"><i class="fal fa-file-export fa-fw"></i> Bibtex</div>
+              </button>
+            </div>
+            <div class="col-md-6">
+              <a class="btn-icon" href="#">
+                <div class="title mb-0"><i class="fal fa-quote-right fa-fw"></i> Citation</div>
+              </a>
+            </div>
+            <div class="col-md-6">
+              <a class="btn-icon" href="javascript:print()">
+                <div class="title mb-0"><i class="fal fa-print fa-fw"></i> Print</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container pb-5 pt-3">
+
+    {% if info.file_url and info.type.name == "Podcast" %}
+      <p>Listen now!</p>
+       <audio controls style="width:100%">
+         <source src="{{ info.file_url }}" type="audio/mp3">
+         Your browser does not support the audio tag.
+      </audio>
+      <p><a href="{{ info.file_url }}">Download</a></p>
+    {% endif %}
+
+    <div class="row">
+
+      <div class="col-lg-4">
+        <div class="card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <i class="far fa-fw fa-user-edit mb-1 mr-1" aria-hidden="true"></i> Author(s)
+              <br>
+              {% for each in info.authors %}
+                <a class="btn btn-sm btn-primary-outline mt-1" href="">{{ each }}</a>
+              {% endfor %}
+            </li>
+            {% if info.publisher %}
+              <li class="list-group-item table-item">
+                <div><i class="far fa-fw fa-book mr-1"></i> Publisher</div>
+                <div>{{ info.publisher }}</div>
+              </li>
+            {% endif %}
+            <li class="list-group-item">
+              <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Tags
+              <br>
+              {% for each in info.tags.all %}
+                <a class="btn btn-sm btn-primary-outline mt-1" href="{% url "library:index" %}?find=true&amp;search={{ each.id }}">{{ each }}</a>
+              {% endfor %}
+            </li>
             <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-book mr-1"></i> Publisher</div>
-              <div>{{ info.publisher }}</div>
+              <div><i class="far fa-fw fa-language mr-1"></i> Language</div>
+              <div>{{ info.get_language_display }}</div>
             </li>
-          {% endif %}
-          <li class="list-group-item">
-            <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Tags
-            <br>
-            {% for each in info.tags.all %}
-              <a class="btn btn-sm btn-primary-outline mt-1" href="">{{ each }}</a>
-            {% endfor %}
-          </li>
-          <li class="list-group-item table-item">
-            <div><i class="far fa-fw fa-language mr-1"></i> Language</div>
-            <div>{{ info.get_language_display }}</div>
-          </li>
-          <li class="list-group-item table-item">
-            <div><i class="far fa-fw fa-universal-access mr-1"></i> Open access</div>
-            <div><i class="fas fa-fw text-success fa-check-circle"></i></div>
-          </li>
-          {% if info.url %}
-            <a class="list-group-item" href="{{ info.url }}">
-              <i class="far fa-fw fa-link mb-1 mr-1" aria-hidden="true"></i> External site
-            </a>
-          {% endif %}
-          {% if info.doi %}
+            <li class="list-group-item table-item">
+              <div><i class="far fa-fw fa-universal-access mr-1"></i> Open access</div>
+              <div><i class="fas fa-fw text-success fa-check-circle"></i></div>
+            </li>
+            {% if info.url %}
+              <a class="list-group-item" href="{{ info.url }}">
+                <i class="far fa-fw fa-link mb-1 mr-1" aria-hidden="true"></i> External site
+              </a>
+            {% endif %}
+            {% if info.doi %}
+              <li class="list-group-item">
+                <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> DOI
+                <br>
+                <a class="badge badge-primary" href="https://doi.org/{{ info.doi }}">
+                  {{ info.doi }}
+                </a>
+              </li>
+            {% endif %}
+            {% if info.isbn %}
+              <li class="list-group-item">
+                <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> ISBN
+                <br>
+                <span class="badge badge-primary">{{ info.isbn }}</span>
+              </li>
+            {% endif %}
             <li class="list-group-item">
-              <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> DOI
+              <i class="far fa-fw fa-search mb-1 mr-1" aria-hidden="true"></i> Search
               <br>
-              <span class="badge badge-primary">{{ info.doi }}</span>
+              <a class="btn btn-sm btn-primary-outline mt-1" href="https://unpaywall.org/{{ info.doi }}">UnPaywall</a>
+              <a class="btn btn-sm btn-primary-outline mt-1" href="https://scholar.google.com/scholar?q={{ info|urlencode }}">Google Scholar</a>
+              <a class="btn btn-sm btn-primary-outline mt-1" href="https://google.com/search?q={{ info|urlencode }}">Google</a>
             </li>
-          {% endif %}
-          {% if info.isbn %}
-            <li class="list-group-item">
-              <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> ISBN
-              <br>
-              <span class="badge badge-primary">{{ info.isbn }}</span>
-            </li>
-          {% endif %}
-          <li class="list-group-item">
-            <i class="far fa-fw fa-search mb-1 mr-1" aria-hidden="true"></i> Search
-            <br>
-            <a class="btn btn-sm btn-primary-outline mt-1" href="">UnPaywall</a>
-            <a class="btn btn-sm btn-primary-outline mt-1" href="">Google Scholar</a>
-            <a class="btn btn-sm btn-primary-outline mt-1" href="">Google</a>
-          </li>
-        </ul>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-lg-8 mb-4">
+        {{ info.description|safe|linebreaks }}
       </div>
     </div>
   </div>
