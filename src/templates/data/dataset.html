@@ -4,16 +4,16 @@
 
 {% block page_name %}dataset{% endblock %}
 
-{% block title %}Agricultural product and foodstuffs unloaded in th Port of Brussels 2005-2017{% endblock %}
+{% block title %}Cape Town fish catch in 2013{% endblock %}
 
 {% block css %}
   <link href="{% static 'css/datatables.min.css' %}" rel="stylesheet" />
 {% endblock %}
 
 {% block content %}
-  <h1>Agricultural product and foodstuffs unloaded in the Port of Brussels 2005-2017</h1>
+  <h1>Cape Town fish catch in 2013</h1>
   <div class="description mb-4">
-    These are the agricultural product and foodstuffs that are offloaded in the port of Brussels through maritime traffic.
+    Aquatic agriculture catch from Cape Town in 2013, measured in tonnes
   </div>
 
   <div class="card">
@@ -290,6 +290,7 @@
   <!-- load highcharts -->
   <script src="https://code.highcharts.com/highcharts.js"></script>
   <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/drilldown.js"></script>
   <script>
     // highchart defaults
     const defaultColors = ["#144d58", "#ff8a4e", "#ED561B", "#DDDF00", "#24CBE5", "#64E572", "#FF9655", "#FFF263", "#6AF9C4"]
@@ -297,6 +298,9 @@
 
     Highcharts.setOptions({
       colors: defaultColors,
+      lang: {
+        drillUpText: "Back to {series.name}"
+      }
     });
 
     var chart = Highcharts.chart("chart", {
@@ -325,10 +329,10 @@
         }
       },
       title: {
-        text: "World's largest cities per 2017",
+        text: "Cape Town fish catch in 2013",
       },
       subtitle: {
-        text: "Source: <a href='http://en.wikipedia.org/wiki/List_of_cities_proper_by_population'>Wikipedia</a>"
+        text: "Aquatic agriculture catch from Cape Town in 2013, measured in tonnes"
       },
       xAxis: {
         lineColor: "#808080",
@@ -351,7 +355,7 @@
         gridLineColor: "#efefef",
         lineColor: "#808080",
         title: {
-          text: "Population (millions)",
+          text: "Catch (tonnes)",
           margin: 30,
           style: {
             fontSize: "14px",
@@ -367,21 +371,79 @@
         enabled: false
       },
       tooltip: {
-        pointFormat: 'Population in 2017: <b>{point.y:.1f} millions</b>'
+        pointFormat: 'Catch in 2013: <b>{point.y:.1f} tonnes</b>'
       },
       series: [{
-        name: 'Population',
+        name: "Sea catch",
         data: [
-          ['Shanghai', 24.2],
-          ['Beijing', 20.8],
-          ['Karachi', 14.9],
-          ['Shenzhen', 13.7],
-          ['Guangzhou', 13.1],
-          ['Seoul', 9.8],
-          ['Foshan', 9.3],
-          ['Tokyo', 9.3]
-        ],
-      }]
+          {
+            name: "Wild fish",
+            y: 35271,
+            drilldown: "Wild fish"
+          },
+          {
+            name: "Non-fish",
+            y: 14000,
+            drilldown: "Non-fish"
+          },
+          {
+            name: "Aquatic plant",
+            y: 37400,
+            drilldown: "Aquatic plant"
+          },
+        ]
+      }],
+      drilldown: {
+        drillUpButton: {
+          theme: {
+            fill: "#144d58",
+            color: "#fff",
+            stroke: "#144d58",
+            r: 4,
+            states: {
+              hover: {
+                fill: "#0f3b43",
+              },
+            },
+          }
+        },
+        activeAxisLabelStyle: {
+          "color": "#144d58",
+          "fontWeight": "normal",
+        },
+        series: [
+          {
+            name: "Wild fish",
+            id: "Wild fish",
+            data: [
+              ["Abalone", 10],
+              ["Small pelagics", 14490],
+              ["Hake longline", 8188],
+              ["Patagonian toothfish", 120],
+              ["West Coast Rock Lobster", 1205],
+              ["Commercial line fishers", 3378],
+              ["Sharks", 24],
+              ["Tuna & swordfish longline/pelagic shark", 3256],
+              ["Tuna pole", 4600],
+            ]
+          },
+          {
+            name: "Non-fish",
+            id: "Non-fish",
+            data: [
+              ["Squid", 11000],
+              ["Octopus", 3000],
+            ]
+          },
+          {
+            name: "Aquatic plant",
+            id: "Aquatic plant",
+            data: [
+              ["Kelp", 37400],
+            ]
+          },
+        ]
+      }
     });
 
     // export chart buttons
