@@ -1690,6 +1690,10 @@ body.dataset.editor {
       }
     }
   }
+
+  input#tooltip-label {
+    font-family: "Ubuntu Mono", "Fira Mono", "Liberation Mono", "Courier New", monospace;
+  }
 }
 
 // ANY HIGHCHART
