@@ -5,11 +5,9 @@
 
 <h3>{{ info }}</h3>
 <section class="row">
-  {% if info.content %}
+  {% if info.description %}
     <div class="col-md-8">
-      <p>
-        {{ info.content|linebreaksbr }}
-      </p>
+        {{ info.description|safe }}
       {% if info.publisher %}
         <p>Published by {{ info.publisher }}.</p>
       {% endif %}

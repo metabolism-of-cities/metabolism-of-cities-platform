@@ -69,6 +69,7 @@ def journal(request, slug):
     context = {
         "info": info,
         "items": info.publications,
+        "edit_link": "/admin/core/organization/" + str(info.id) + "/change/",
         "load_datatables": True,
     }
     return render(request, "library/journal.html", context)
