@@ -19,7 +19,7 @@ def index(request):
     }
     return render(request, "multimedia/index.html", context)
 
-def video_list(request):
+def videos(request):
     context = {
         "webpage": get_object_or_404(Webpage, pk=61),
         "list": LibraryItem.objects.filter(type__name="Video Recording"),
@@ -32,7 +32,7 @@ def video(request, id):
     }
     return render(request, "multimedia/video.html", context)
 
-def podcast_list(request):
+def podcasts(request):
     context = {
         "info": get_object_or_404(Webpage, pk=62),
         "list": LibraryItem.objects.filter(type__name="Podcast"),
@@ -46,7 +46,7 @@ def podcast(request, id):
     }
     return render(request, "multimedia/podcast.html", context)
 
-def dataviz_list(request):
+def datavisualizations(request):
     context = {
         "info": get_object_or_404(Webpage, pk=67),
         "list": LibraryItem.objects.filter(type__name="Data visualisation"),

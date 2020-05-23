@@ -9,7 +9,7 @@
   <div class="row">
     {% for each in list %}
       <div class="col-md-4 col-lg-3 single-viz mb-4">
-        <a class="card btn-card" href="{% url 'dataviz' each.id %}">
+        <a class="card btn-card" href="{% url "multimedia:dataviz" each.id %}">
           <img alt="{{ each }}" src="{{ each.image.thumbnail.url }}" class="rounded-top">
           <div class="description p-2">
             {{ each }}
