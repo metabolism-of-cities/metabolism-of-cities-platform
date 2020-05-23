@@ -1,6 +1,8 @@
 window.addEventListener("load", function() {
   (function($) {
-    $(".field-embed_code").css('visibility', 'hidden');
+    $(".field-type").css("visibility", "hidden");
+    $("#id_type").val(31);
+    $(".field-embed_code").css("visibility", "hidden");
     var url ;
     var embed_code;
     var video_site = $("#id_video_site");

@@ -61,6 +61,11 @@ class WebpageDesignAdmin(admin.ModelAdmin):
 class VideoAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     autocomplete_fields = ["spaces", "tags", "is_part_of"]
+
+    def add_view(self, request, extra_content=None):
+        self.fields = ["name", "description", "tags", "image", "language", "type", "year", "url", "license", "embed_code", "date", "video_site"]
+        return super().add_view(request)
+
     class Media:
         js = ("js/video.admin.js",)
 
