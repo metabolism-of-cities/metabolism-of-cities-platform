@@ -2,70 +2,127 @@
 
 {% block title %}{{ webpage }}{% endblock %}
 
+{% block css %}
+  <style type="text/css">
+    h5.card-title a{
+      color:#000;
+      font-weight:bold;
+     }
+  </style>
+{% endblock %}
+
 {% block content %}
   <h1>{{ webpage }}</h1>
 
   {{ webpage.description|safe }}
 
-  <h2>Latest additions</h2>
 
   <div class="row">
-    <div class="col-md-6 col-lg-4 mb-4">
-      <div class="card mb-3">
-        <div class="card-header">
-          <i class="fas fa-fw fa-video mr-2"></i>
-          Videos
+
+    <div class="col-4">
+      <div class="card">
+        <a href="{% url "multimedia:videos" %}">
+          <img src="https://images.pexels.com/photos/2041396/pexels-photo-2041396.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" class="card-img-top" alt="">
+        </a>
+        <div class="card-body">
+          <h5 class="card-title">
+            <a href="{% url "multimedia:videos" %}">
+              <i class="fal fa-fw fa-video mr-2"></i>
+              Videos
+            </a>
+          </h5>
+          <p>
+            Lectures, interviews, training videos, and more.
+          </p>
+          <p><a href="{% url "multimedia:videos" %}">44 videos</a> found.</p>
         </div>
-        <ul class="list-group list-group-flush">
+        <div class="card-header">
+          Latest additions
+        </div>
+        <div class="card-body">
+          <div class="list-group list-group-flush">
           {% for each in videos %}
-            <a href="{{ each.get_absolute_url }}" class="list-group-item">
+            <a class="list-group-item" href="{{ each.get_absolute_url }}">
               {{ each }}
             </a>
           {% endfor %}
-        </ul>
-      </div>
-      <a class="btn btn-primary mb-4" href="{% url "multimedia:video_list" %}">
-        <i class="fas fa-fw fa-list"></i>
-        All videos
-      </a>
-    </div>
-    <div class="col-md-6 col-lg-4 mb-4">
-      <div class="card mb-3">
-        <div class="card-header">
-          <i class="fas fa-fw fa-podcast mr-2"></i>
-          Podcasts
+          </div>
         </div>
-        <ul class="list-group list-group-flush">
+      </div>
+
+    </div>
+
+    <div class="col-4">
+
+      <div class="card">
+        <a href="{% url "multimedia:podcasts" %}">
+          <img src="https://images.pexels.com/photos/2041396/pexels-photo-2041396.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" class="card-img-top" alt="">
+        </a>
+        <div class="card-body">
+          <h5 class="card-title">
+            <a href="{% url "multimedia:podcasts" %}">
+              <i class="fas fa-fw fa-podcast mr-2"></i>
+              Podcasts
+            </a>
+          </h5>
+          <p>
+            Podcast episodes from the Circular Metabolism podcast.
+          </p>
+          <p><a href="{% url "multimedia:podcasts" %}">44 podcasts</a> found.</p>
+        </div>
+        <div class="card-header">
+          Latest additions
+        </div>
+        <div class="card-body">
+          <div class="list-group list-group-flush">
           {% for each in podcasts %}
-            <a href="{{ each.get_absolute_url }}" class="list-group-item">
+            <a class="list-group-item" href="{{ each.get_absolute_url }}">
               {{ each }}
             </a>
           {% endfor %}
-        </ul>
-      </div>
-      <a class="btn btn-primary mb-4" href="{% url "multimedia:podcast_list" %}">
-        <i class="fas fa-fw fa-list"></i>
-        All podcasts
-      </a>
-    </div>
-    <div class="col-md-6 col-lg-4">
-      <div class="card mb-3">
-        <div class="card-header">
-          <i class="fas fa-fw fa-chart-area mr-2"></i>
-          Data visualisations
+          </div>
         </div>
-        <ul class="list-group list-group-flush">
+      </div>
+    </div>
+
+    <div class="col-4">
+      <div class="card">
+        <a href="{% url "multimedia:datavisualizations" %}">
+          <img src="https://images.pexels.com/photos/2041396/pexels-photo-2041396.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" class="card-img-top" alt="">
+        </a>
+        <div class="card-body">
+          <h5 class="card-title">
+            <a href="{% url "multimedia:datavisualizations" %}">
+              <i class="fas fa-fw fa-chart-area mr-2"></i>
+              Data visualisations
+            </a>
+          </h5>
+          <p>
+            Sankey diagrams, choropleth maps, system diagrams, and more.
+          </p>
+          <p><a href="{% url "multimedia:datavisualizations" %}">44 datavisualizations</a> found.</p>
+        </div>
+        <div class="card-header">
+          Latest additions
+        </div>
+        <div class="card-body">
+          <div class="list-group list-group-flush">
           {% for each in dataviz %}
-            <a href="{{ each.get_absolute_url }}" class="list-group-item">
+            <a class="list-group-item" href="{{ each.get_absolute_url }}">
               {{ each }}
             </a>
           {% endfor %}
-        </ul>
+          </div>
+        </div>
       </div>
-      <a class="btn btn-primary" href="{% url "multimedia:dataviz_list" %}">
-        <i class="fas fa-fw fa-list"></i>
-        All data visualisations
-      </a>
+
     </div>
+
   </div>
+
+
+
+
+  </div>
+
 {% endblock %}

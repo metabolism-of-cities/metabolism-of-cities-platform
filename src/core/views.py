@@ -232,7 +232,7 @@ def user_login(request, project=None):
         return redirect(redirect_url)
 
     if request.method == "POST":
-        email = request.POST.get("email")
+        email = request.POST.get("email").lower()
         password = request.POST.get("password")
         user = authenticate(request, username=email, password=password)
 
