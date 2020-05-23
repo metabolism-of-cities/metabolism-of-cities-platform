@@ -1,6 +1,15 @@
 {% extends "_base.html" %}
 
+{% block css %}
+<style type="text/css">
+  .video {
+    display: none;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
+
   <h1>{{ webpage }}</h1>  
   {{ webpage.content|safe }}
 
@@ -8,16 +17,28 @@
   <div class="col-3">
     <div class="nav flex-column nav-pills" id="video-menu" role="tablist" aria-orientation="vertical">
       {% for each in categories %}
-        <a class="nav-link {% if each.id == 100 %}active{% endif %}" data-toggle="pill" href="#" data-id="{{ each.id }}" role="tab" aria-controls="v-pills-home" aria-selected="true">
+        <a class="nav-link {% if each.id == 750 %}active{% endif %}" data-toggle="pill" href="#" data-id="{{ each.id }}" role="tab" aria-controls="v-pills-home" aria-selected="true">
           {{ each }}
         </a>
       {% endfor %}
     </div>
   </div>
   <div class="col-9">
-    {% for each in list %}
-      {{ each }}
-    {% endfor %}
+
+
+    <div class="row">
+      {% for each in list %}
+        <div class="video col-lg-4 col-md-6 col-sm-8 {% for tag in each.tags.all %}tag-{{ tag.id }} {% endfor %}">
+          <a class="card btn-card" href="{{ each.get_absolute_url }}">
+            <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
+            <div class="card-body">
+              <h5 class="card-title">{{ each }}</h5>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+
   </div>
 </div>
 
@@ -30,5 +51,6 @@
     $(".video").hide();
     $(".tag-"+id).show();
   });
+  $("#video-menu .active").click();
 </script>
 {% endblock %}

@@ -6,43 +6,34 @@ PAGE_ID = settings.PAGE_ID_LIST
 
 def index(request):
     webpage = get_object_or_404(Project, pk=PAGE_ID["multimedia_library"])
-    videos = Video.objects.all().order_by("-date_created")[:5]
+    videos = Video.objects.filter(tags__parent_tag__id=749).distinct()
     podcasts = LibraryItem.objects.filter(type__name="Podcast").order_by("-date_created")[:5]
     dataviz = LibraryItem.objects.filter(type__name="Data visualisation").order_by("-date_created")[:5]
     context = {
         "edit_link": "/admin/core/project/" + str(webpage.id) + "/change/",
         "show_project_design": True,
         "webpage": webpage,
-        "videos": videos,
+        "videos_count": videos.count(),
+        "videos": videos.order_by("-date_created")[:5],
         "podcasts": podcasts,
         "dataviz": dataviz,
     }
     if "import" in request.GET:
-        import csv
-        matches = {
-            "1": 753,
-            "2": 752,
-            "3": 751,
-            "4": 750,
-            "5": 754,
-            "6": 799,
-        }
-
-        file = settings.MEDIA_ROOT + "/import/videocollections.csv"
-        with open(file, "r") as csvfile:
-            contents = csv.DictReader(csvfile)
-            for row in contents:
-                video = row["video_id"]
-                collection = row["videocollection_id"]
+        from django.core.files import File
+        from urllib import request as rq
+        import os
+        for each in videos:
+            if each.video_site == "youtube":
                 try:
-                    match = matches[collection]
-                    video = Video.objects.get(old_id=video)
-                    print(match)
-                    print(video)
-                    video.tags.add(Tag.objects.get(pk=match))
-                except Exception as e:
-                    print("PROBLEMO!!")
-                    print(e)
+                    url = "http://i3.ytimg.com/vi/" + each.embed_code + "/maxresdefault.jpg"
+                    result = rq.urlretrieve(url)
+                    each.image.save(
+                        os.path.basename(url),
+                        File(open(result[0], 'rb'))
+                    )
+                    each.save()
+                except:
+                    print("Sorry, no luck")
 
     return render(request, "multimedia/index.html", context)
 
@@ -50,7 +41,7 @@ def videos(request):
     collections = Tag.objects.get(pk=749)
     context = {
         "webpage": get_object_or_404(Webpage, pk=61),
-        "list": Video.objects.filter(tags__parent_tag=collections),
+        "list": Video.objects.filter(tags__parent_tag=collections).distinct(),
         "categories": Tag.objects.filter(parent_tag=collections).order_by("id"),
     }
     return render(request, "multimedia/video.list.html", context)

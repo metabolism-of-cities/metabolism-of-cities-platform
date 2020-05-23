@@ -1493,6 +1493,35 @@ def dataimport(request):
             FlowBlocks.objects.create(origin_id=activity(398935), origin_label="Wastewater treatment", destination_id=activity(67), destination_label="Evaporation, leaking, and losses of water", diagram=water)
             FlowBlocks.objects.create(origin_id=activity(398935), origin_label="Wastewater treatment", destination_id=activity(67), destination_label="Rain, rivers, and other natural water processes", diagram=water)
             FlowBlocks.objects.create(origin_id=activity(398935), origin_label="Wastewater treatment", destination_id=activity(399468), destination_label="Water consumption", diagram=water)
+
+        # Quick copy import script
+        if "import" in request.GET:
+            import csv
+            matches = {
+                "1": 753,
+                "2": 752,
+                "3": 751,
+                "4": 750,
+                "5": 754,
+                "6": 799,
+            }
+
+            file = settings.MEDIA_ROOT + "/import/videocollections.csv"
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    video = row["video_id"]
+                    collection = row["videocollection_id"]
+                    try:
+                        match = matches[collection]
+                        video = Video.objects.get(old_id=video)
+                        print(match)
+                        print(video)
+                        video.tags.add(Tag.objects.get(pk=match))
+                    except Exception as e:
+                        print("PROBLEMO!!")
+                        print(e)
+
         if error:
             messages.error(request, "We could not import your data")
         else:
