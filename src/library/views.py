@@ -43,6 +43,7 @@ def index(request):
         "show_results": show_results,
         "load_datatables": True if show_results else False,
         "urban_only": urban_only,
+        "menu": "library",
     }
     return render(request, "library/index.html", context)
 
@@ -82,6 +83,7 @@ def list(request, type):
         "type": type,
         "title": title,
         "load_datatables": True,
+        "menu": "library",
     }
     if type == "dataportals" or type == "datasets":
         return render(request, "library/list.temp.html", context)
@@ -89,11 +91,52 @@ def list(request, type):
         return render(request, "library/list.html", context)
 
 def methodologies(request):
+    webpage = Webpage.objects.get(pk=18607)
     context = {
+        "webpage": webpage,
         "tags": Tag.objects.filter(parent_tag__id=792),
         "old": Tag.objects.filter(parent_tag__id=318),
+        "menu": "library",
     }
     return render(request, "library/methods.html", context)
+
+def methodology(request, slug, id):
+    info = Tag.objects.get(pk=id, parent_tag_id=792)
+
+    tagged_items = LibraryItem.tags.through.objects \
+        .filter(tag__parent_tag=info, record__is_public=True, record__is_deleted=False) \
+        .values("tag").annotate(total=Count("tag"))
+    total = {}
+    for each in tagged_items:
+        total[each["tag"]] = each["total"]
+    context = {
+        "info": info,
+        "title": info.name,
+        "tags": Tag.objects.filter(parent_tag__id=792),
+        "edit_link": "/admin/core/tag/" + str(info.id) + "/change/",
+        "list": Tag.objects.filter(parent_tag=info),
+        "total": total,
+        "menu": "library",
+    }
+    return render(request, "library/method.html", context)
+
+def methodology_list(request, slug, id):
+
+    info = Tag.objects.get(pk=id)
+    if info.parent_tag.parent_tag.id != 792:
+        raise Http404("Tag was not found.")
+
+    context = {
+        "info": info,
+        "title": info.name,
+        "tags": Tag.objects.filter(parent_tag_id=792),
+        "edit_link": "/admin/core/tag/" + str(info.id) + "/change/",
+        "list": Tag.objects.filter(parent_tag=info),
+        "items": LibraryItem.objects.filter(tags=info),
+        "load_datatables": True,
+        "menu": "library",
+    }
+    return render(request, "library/method.list.html", context)
 
 def download(request):
     info = get_object_or_404(Webpage, pk=PAGE_ID["library"])
@@ -116,6 +159,7 @@ def casestudies(request, slug=None):
         "totals": totals,
         "load_datatables": True,
         "slug": slug,
+        "menu": "casestudies",
     }
     return render(request, "library/" + page, context)
 
@@ -125,6 +169,7 @@ def journals(request, article):
     context = {
         "article": info,
         "list": list,
+        "menu": "journals",
     }
     return render(request, "library/journals.html", context)
 
@@ -135,6 +180,7 @@ def journal(request, slug):
         "items": info.publications,
         "edit_link": "/admin/core/organization/" + str(info.id) + "/change/",
         "load_datatables": True,
+        "menu": "journals",
     }
     return render(request, "library/journal.html", context)
 
@@ -155,6 +201,7 @@ def map(request, article):
     context = {
         "article": info,
         "items": items,
+        "menu": "casestudies",
     }
     return render(request, "library/map.html", context)
 

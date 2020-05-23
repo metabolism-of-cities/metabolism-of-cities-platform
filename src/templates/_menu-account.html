@@ -9,7 +9,7 @@
       <a class="dropdown-item" href=/accounts/logout/>Sign out</a>
     {% else %}
       <a class="dropdown-item" href=/accounts/register/>Register</a>
-      <a class="dropdown-item" href="/accounts/login/">Sign in</a>
+      <a class="dropdown-item" href="/accounts/login/?next={{ request.get_full_path }}">Sign in</a>
     {% endif %}
   </div>
 </li>

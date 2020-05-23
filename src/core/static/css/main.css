@@ -1442,6 +1442,10 @@ body.gis.meta .quality-info {
 body.gis.meta .quality-info-explainer {
   display: none; }
 
+.main-nav-project-2 a.active {
+  border-bottom: 2px solid #fff;
+  opacity: 1 !important; }
+
 body.library.search .container.main-content {
   padding: 0 !important;
   margin: 0 !important;

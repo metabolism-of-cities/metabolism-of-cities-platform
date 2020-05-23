@@ -1,15 +1,27 @@
-<li class="nav-item"><a class="nav-link" href="{% url "library:index" %}">Library</a></li>
 <li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="case-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <a class="nav-link dropdown-toggle {% if menu == "library" %}active{% endif %}" href="#" id="library-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Library
+  </a>
+  <div class="dropdown-menu" aria-labelledby="library-dropdown">
+    <a class="dropdown-item" href="{% url "library:index" %}">Search</a>
+    <a class="dropdown-item" href="{% url "library:list" "reviews" %}">Review papers</a>
+    <a class="dropdown-item" href="{% url "library:methods" %}">Methods</a>
+    <a class="dropdown-item" href="{% url "library:list" "starterskit" %}">Starter's Kit</a>
+  </div>
+</li>
+
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle {% if menu == "casestudies" %}active{% endif %}" href="#" id="case-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Case studies
   </a>
   <div class="dropdown-menu" aria-labelledby="case-dropdown">
     <a class="dropdown-item" href="{% url "library:casestudies" %}">View all</a>
-    <a style="display:none" class="dropdown-item" href="/library/casestudies/methods/">By method</a>
     <a style="display:none" class="dropdown-item" href="/library/casestudies/calendar/">By year</a>
     <a class="dropdown-item" href="{% url "library:casestudies" "map" %}">Map</a>
   </div>
 </li>
-<li class="nav-item"><a class="nav-link" href="{% url "library:journals" %}">Journals</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url "library:authors" %}">Authors</a></li>
-<li class="nav-item"><a class="nav-link" href="#">Contribute</a></li>
+
+<li class="nav-item"><a class="nav-link {% if menu == "journals" %}active{% endif %}"" href="{% url "library:journals" %}">Journals</a></li>
+<li class="nav-item"><a class="nav-link {% if menu == "authors" %}active{% endif %}"" href="{% url "library:authors" %}">Authors</a></li>
+
+{% include "_menu-account.html" %}

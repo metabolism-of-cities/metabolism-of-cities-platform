@@ -31,6 +31,17 @@ import uuid
 # Maybe move to def filename @property?
 import os
 
+# By default we really only want to see those records that are both public and not deleted
+class PublicActiveRecordManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_deleted=False, is_public=True)
+
+# This returns those records that are private (a check around ownership needs to take place in the codebase)
+# and that are not deleted
+class PrivateRecordManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_deleted=False)
+
 class Tag(models.Model):
     name = models.CharField(max_length=255)
     description = HTMLField(null=True, blank=True)
@@ -40,6 +51,9 @@ class Tag(models.Model):
     hidden = models.BooleanField(db_index=True, default=False, help_text="Mark if tag is superseded/not yet approved/deactivated")
     include_in_glossary = models.BooleanField(db_index=True, default=False)
     belongs_to = models.ForeignKey("Record", on_delete=models.CASCADE, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False, db_index=True)
+    is_public = models.BooleanField(default=True, db_index=True)
+    icon = models.CharField(max_length=50, null=True, blank=True, help_text="Only include the icon name, not fa- classes --- see https://fontawesome.com/icons?d=gallery")
 
     def __str__(self):
         return self.name
@@ -56,16 +70,9 @@ class Tag(models.Model):
     class Meta:
         ordering = ["name"]
 
-# By default we really only want to see those records that are both public and not deleted
-class PublicActiveRecordManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(is_deleted=False, is_public=True)
-
-# This returns those records that are private (a check around ownership needs to take place in the codebase)
-# and that are not deleted
-class PrivateRecordManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(is_deleted=False)
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
 
 class Record(models.Model):
     name = models.CharField(max_length=255)

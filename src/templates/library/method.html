@@ -1,0 +1,47 @@
+{% extends "_base.html" %}
+{% load moc_extras %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-3">
+    <h2>Categories</h2>
+    <div class="nav flex-column nav-pills" id="video-menu" role="tablist" aria-orientation="vertical">
+      {% for each in tags %}
+        <a class="nav-link {% if each == info %}active{% endif %}"  href="{% url "library:method" each.id each.name|slugify %}">
+          {{ each }}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="col-9">
+
+    <div class="row">
+      <h1>{{ info }}</h1>
+      <div>{{ info.description|safe }}</div>
+
+      <h2>Methods</h2>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Publications</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for each in list %}
+          <tr>
+            <td><a href="{% url "library:method_list" each.id each.name|slugify %}">{{ each.name }}</a></td>
+            <td>{{ total|get_item:each.id }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -1,33 +1,26 @@
 {% extends "_base.html" %}
 
 {% block content %}
-  <h1>Methods</h1>
+
+<h1>{{ webpage }}</h1>
+
+{{ webpage.description|safe }}
+
+<section class="row btn-cards">
 
   {% for each in tags %}
 
-  <h2>{{ each }}</h2>
-  <p><a href="/admin/core/tag/{{ each.id }}/change/" target="_blank">Edit</a></p>
-  {{ each.description|safe }}
-
-  <h3>Tags listed under this one:</h3>
-
-  <ul>
-  {% for each in each.children.all %}
-    <li>{{ each }} | <a href="/admin/core/tag/{{ each.id }}/change/">edit</a></li>
-  {% endfor %}
-  </ul>
-
-  <hr>
+      <div class="col-md-4 mb-4">
+        <a class="card icon-card btn-card" href="{% url "library:method" each.id each.name|slugify %}">
+          <div class="icon">
+            <i class="fal fa-fw fa-{{ each.icon }}"></i>
+          </div>
+          <div class="card-header">{{ each }}</div>
+        </a>
+      </div>
 
   {% endfor %}
 
-  <h1>Unclassified methods</h1>
-  <p>Remember: only classify the ones that appear in the <a href="https://docs.google.com/document/d/1gXMbC5qdsQ34z65qNeUzdlcxWpIhlhgki9Ecm6RxJ8U/edit">literature review</a> - the rest can stay here.</p>
-
-  <ul>
-  {% for each in old %}
-    <li>{{ each }} | <a href="/admin/core/tag/{{ each.id }}/change/" target="_blank">edit</a></li>
-  {% endfor %}
-  </ul>
+</section>
 
 {% endblock %}
