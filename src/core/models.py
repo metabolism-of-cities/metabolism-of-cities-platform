@@ -536,6 +536,9 @@ class LibraryItem(Record):
         elif self.type_id == 33:
             # Data viz are opened in the multimedia library
             return reverse("multimedia:dataviz", args=[self.id])
+        elif self.type_id == 24:
+            # Podcasts are opened in the multimedia library
+            return reverse("multimedia:podcast", args=[self.id])
         else:
             return reverse("library:item", args=[self.id])
 

@@ -53,7 +53,7 @@ def videos(request):
 
 def podcasts(request):
     context = {
-        "info": get_object_or_404(Webpage, pk=62),
+        "webpage": get_object_or_404(Webpage, pk=62),
         "list": LibraryItem.objects.filter(type__name="Podcast"),
         "load_datatables": True,
     }

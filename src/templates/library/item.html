@@ -5,7 +5,7 @@
 
 {% block css %}
   <style type="text/css">
-    .export {
+    .export, .audioblock {
       background:#f4f4f4;
     }
     .journal {
@@ -60,6 +60,29 @@
         {{ info.video.embed|safe }}
     </div>
 
+  {% elif info.type.name == "Podcast" %}
+
+    {% if info.file_url or info.file %}
+
+      <div class="audioblock">
+        <div class="container pt-5 pb-5">
+          <h3>Listen now!</h3>
+           <audio controls style="width:100%">
+             <source src="{% if info.file_url %}{{ info.file_url }}{% else %}{{ info.file.url }}{% endif %}" type="audio/mp3">
+             Your browser does not support the audio tag.
+          </audio>
+          <div>
+            <a class="btn btn-default-outline" href="{% if info.file_url %}{{ info.file_url }}{% else %}{{ info.file.url }}{% endif %}">
+              <i class="fa fa-download"></i>
+              Download
+            </a>
+          </div>
+        </div>
+      </div>
+
+    {% endif %}
+
+
   {% else %}
 
     <div class="export">
@@ -113,15 +136,6 @@
   {% endif %}
 
   <div class="container pb-5 pt-3">
-
-    {% if info.file_url and info.type.name == "Podcast" %}
-      <p>Listen now!</p>
-       <audio controls style="width:100%">
-         <source src="{{ info.file_url }}" type="audio/mp3">
-         Your browser does not support the audio tag.
-      </audio>
-      <p><a href="{{ info.file_url }}">Download</a></p>
-    {% endif %}
 
     <div class="row">
 
