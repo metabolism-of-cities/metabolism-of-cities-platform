@@ -85,6 +85,7 @@ def overview(request, preconf=False):
     else:
         discussions = discussions.exclude(name__contains="Pre-conference")
         title = "Discussion sessions"
+    my_topic_registrations = None
     if request.user.is_authenticated and hasattr(request.user, "people"):
         my_topic_registrations = Event.objects_include_private \
             .filter(child_list__record_parent=request.user.people, child_list__relationship__id=12) \
