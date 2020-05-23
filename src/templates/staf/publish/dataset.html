@@ -1,7 +1,7 @@
 {% extends "_base.html" %}
 {% load static %}
 {% block page_name %}dataset editor{% endblock %}
-{% block title %}Dataset editor for Agricultural product and foodstuffs unloaded in the Port of Brussels 2005-2017{% endblock %}
+{% block title %}Dataset editor for Cape Town fish catch in 2013{% endblock %}
 
 {% block css %}
   <link href="{% static 'css/datatables.min.css' %}" rel="stylesheet" />
@@ -18,11 +18,11 @@
     <form id="dataset">
       <div class="form-group">
         <label class="category">Title</label>
-        <input type="text" class="form-control" id="title" value="Agricultural product and foodstuffs unloaded in the Port of Brussels 2005-2017">
+        <input type="text" class="form-control" id="title" value="Cape Town fish catch in 2013">
       </div>
       <div class="form-group">
         <label class="category">Subtitle</label>
-        <input type="text" class="form-control" id="subtitle" value="Agricultural product and foodstuffs that are offloaded in the port of Brussels through maritime traffic">
+        <input type="text" class="form-control" id="subtitle" value="Aquatic agriculture catch from Cape Town in 2013, measured in tonnes">
       </div>
       <div class="row mt-4">
         <div class="col-md-6">
@@ -41,7 +41,7 @@
               <label class="custom-control-label" for="line">Line</label>
             </div>
             <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="pie">
+              <input type="checkbox" class="custom-control-input" id="pie" checked>
               <label class="custom-control-label" for="pie">Pie</label>
             </div>
             <div class="custom-control custom-switch">
@@ -71,13 +71,13 @@
             <select class="custom-select" id="initial-chart-type">
               <option value="column" selected>Column</option>
               <option value="bar">Bar</option>
-              <option hidden value="line">Line</label>
-              <option hidden value="pie">Pie</label>
-              <option hidden value="datetime">Time series</label>
-              <option hidden value="area">Area</label>
-              <option hidden value="streamgraph">Stream</label>
-              <option hidden value="columnrange">Column range</label>
-              <option hidden value="drilldown">Drilldown</label>
+              <option hidden value="line">Line</option>
+              <option value="pie">Pie</option>
+              <option hidden value="datetime">Time series</option>
+              <option hidden value="area">Area</option>
+              <option hidden value="streamgraph">Stream</option>
+              <option hidden value="columnrange">Column range</option>
+              <option hidden value="drilldown">Drilldown</option>
             </select>
           </div>
         </div>
@@ -131,6 +131,106 @@
       </div>
 
       <div class="form-group">
+        <label class="category">Color scheme</label>
+        <div id="color-schemes" class="row">
+          <div class="col-md-6 mb-3">
+            <div class="single-scheme active" data-scheme="moc">
+              <div class='row no-gutters'>
+                <div class="col single-color" style="background-color: #144d58">&nbsp;</div>
+                <div class="col single-color" style="background-color: #a6cee3">&nbsp;</div>
+                <div class="col single-color" style="background-color: #33a02c">&nbsp;</div>
+                <div class="col single-color" style="background-color: #b2df8a">&nbsp;</div>
+                <div class="col single-color" style="background-color: #e31a1c">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fb9a99">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ff7f00">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fdbf6f">&nbsp;</div>
+                <div class="col single-color" style="background-color: #6a3d9a">&nbsp;</div>
+                <div class="col single-color" style="background-color: #cab2d6">&nbsp;</div>
+                <div class="col single-color" style="background-color: #b15928">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ffff99">&nbsp;</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="single-scheme" data-scheme="dozen">
+              <div class='row no-gutters'>
+                <div class="col single-color" style="background-color: #8dd3c7">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ffffb3">&nbsp;</div>
+                <div class="col single-color" style="background-color: #bebada">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fb8072">&nbsp;</div>
+                <div class="col single-color" style="background-color: #80b1d3">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fdb462">&nbsp;</div>
+                <div class="col single-color" style="background-color: #b3de69">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fccde5">&nbsp;</div>
+                <div class="col single-color" style="background-color: #d9d9d9">&nbsp;</div>
+                <div class="col single-color" style="background-color: #bc80bd">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ccebc5">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ffed6f">&nbsp;</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="single-scheme" data-scheme="pastel">
+              <div class='row no-gutters'>
+                <div class="col single-color" style="background-color: #fbb4ae">&nbsp;</div>
+                <div class="col single-color" style="background-color: #b3cde3">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ccebc5">&nbsp;</div>
+                <div class="col single-color" style="background-color: #decbe4">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fed9a6">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ffffcc">&nbsp;</div>
+                <div class="col single-color" style="background-color: #e5d8bd">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fddaec">&nbsp;</div>
+                <div class="col single-color" style="background-color: #f2f2f2">&nbsp;</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="single-scheme" data-scheme="set">
+              <div class='row no-gutters'>
+                <div class="col single-color" style="background-color: #e41a1c">&nbsp;</div>
+                <div class="col single-color" style="background-color: #377eb8">&nbsp;</div>
+                <div class="col single-color" style="background-color: #4daf4a">&nbsp;</div>
+                <div class="col single-color" style="background-color: #984ea3">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ff7f00">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ffff33">&nbsp;</div>
+                <div class="col single-color" style="background-color: #a65628">&nbsp;</div>
+                <div class="col single-color" style="background-color: #f781bf">&nbsp;</div>
+                <div class="col single-color" style="background-color: #999999">&nbsp;</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="single-scheme" data-scheme="accent">
+              <div class='row no-gutters'>
+                <div class="col single-color" style="background-color: #7fc97f">&nbsp;</div>
+                <div class="col single-color" style="background-color: #beaed4">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fdc086">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ffff99">&nbsp;</div>
+                <div class="col single-color" style="background-color: #386cb0">&nbsp;</div>
+                <div class="col single-color" style="background-color: #f0027f">&nbsp;</div>
+                <div class="col single-color" style="background-color: #bf5b17">&nbsp;</div>
+                <div class="col single-color" style="background-color: #666666">&nbsp;</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="single-scheme" data-scheme="dark">
+              <div class='row no-gutters'>
+                <div class="col single-color" style="background-color: #1b9e77">&nbsp;</div>
+                <div class="col single-color" style="background-color: #d95f02">&nbsp;</div>
+                <div class="col single-color" style="background-color: #7570b3">&nbsp;</div>
+                <div class="col single-color" style="background-color: #e7298a">&nbsp;</div>
+                <div class="col single-color" style="background-color: #66a61e">&nbsp;</div>
+                <div class="col single-color" style="background-color: #e6ab02">&nbsp;</div>
+                <div class="col single-color" style="background-color: #a6761d">&nbsp;</div>
+                <div class="col single-color" style="background-color: #666666">&nbsp;</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
         <label class="category">Other settings</label>
         <div class="custom-control custom-switch">
           <input type="checkbox" class="custom-control-input" id="legend">
@@ -154,7 +254,7 @@
     </button>
   </section>
 
-  <section id="preview" hidden>
+  <section id="preview">
     <h2>Preview</h2>
     <p>
       Below is what users will see when opening the dataset or when it's embedded in an article. Click on the generate preview button after you alter any settings to see your changes.
@@ -163,7 +263,7 @@
     <div class="preview-wrap">
       <h3 class="preview-title">Agricultural product and foodstuffs unloaded in the Port of Brussels 2005-2017</h3>
       <div class="preview-subtitle description mb-4">
-        These are the agricultural product and foodstuffs that are offloaded in the port of Brussels through maritime traffic.
+        Aquatic agriculture catch from Cape Town in 2013, measured in tonnes
       </div>
 
       <div class="card">
@@ -209,6 +309,7 @@
                     <select class="custom-select change-chart-type">
                       <option value="column" selected>Column</option>
                       <option value="bar">Bar</option>
+                      <option value="pie">Pie</option>
                     </select>
                   </div>
                 </div>
@@ -445,12 +546,21 @@
   <!-- load highcharts -->
   <script src="https://code.highcharts.com/highcharts.js"></script>
   <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/drilldown.js"></script>
   <script>
+    // color schemes
+    var moc = ["#144d58","#a6cee3","#33a02c","#b2df8a","#e31a1c","#fb9a99","#ff7f00","#fdbf6f","#6a3d9a","#cab2d6","#b15928","#ffff99"];
+    var accent = ["#7fc97f","#beaed4","#fdc086","#ffff99","#386cb0","#f0027f","#bf5b17","#666666"];
+    var dark = ["#1b9e77","#d95f02","#7570b3","#e7298a","#66a61e","#e6ab02","#a6761d","#666666"];
+    var pastel = ["#fbb4ae","#b3cde3","#ccebc5","#decbe4","#fed9a6","#ffffcc","#e5d8bd","#fddaec","#f2f2f2"];
+    var set = ["#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00","#ffff33","#a65628","#f781bf","#999999"];
+    var dozen = ["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"];
+
     // user settings
-    let colors = ["#144d58", "#ff8a4e", "#ED561B", "#DDDF00", "#24CBE5", "#64E572", "#FF9655", "#FFF263", "#6AF9C4"];
-    let title = "Agricultural product and foodstuffs unloaded in the Port of Brussels 2005-2017";
-    let subtitle = "Agricultural product and foodstuffs that are offloaded in the port of Brussels through maritime traffic";
-    let chartTypes = ["column", "bar"]
+    let title = "Cape Town fish catch in 2013";
+    let subtitle = "Aquatic agriculture catch from Cape Town in 2013, measured in tonnes";
+    let colorScheme = moc;
+    let chartTypes = ["column", "bar", "pie"]
     let startingChart = "column";
     let xAxisLabelText = null;
     let yAxisLabelText = "Population (millions)";
@@ -522,6 +632,7 @@
         chart: {
           type: startingChart,
         },
+        colors: colorScheme,
         xAxis: {
           title: {
             text: xAxisLabelText
@@ -537,6 +648,22 @@
         },
       });
 
+      if (startingChart == "pie") {
+        chart.update({
+          xAxis: {
+            lineColor: "transparent",
+            title: {
+              text: null,
+            },
+          },
+          yAxis: {
+            title: {
+              text: null,
+            }
+          },
+        });
+      }
+
       // revert button icon
       $(".btn-generate-preview i").toggleClass("fa-cog fa-spin fa-eye");
       scrollToID("preview")
@@ -544,6 +671,15 @@
 
     $(".btn-generate-preview").click(function() {
       generatePreview();
+    })
+
+    // pick color scheme
+    $(".single-scheme").click(function() {
+      $(".single-scheme").removeClass("active")
+      $(this).addClass("active");
+
+      let scheme = $(this).data("scheme");
+      colorScheme = window[scheme]
     })
 
     // update initial chart type select when changing available chart types
@@ -564,7 +700,9 @@
     const defaultFont = "Lato, Helvetica Neue, Arial, Helvetica, sans-serif";
 
     Highcharts.setOptions({
-      colors: colors,
+      lang: {
+        drillUpText: "Back to {series.name}"
+      }
     });
 
     var chart = Highcharts.chart("chart", {
@@ -576,6 +714,7 @@
         },
       },
 
+      colors: colorScheme,
       title: {
         text: title,
       },
@@ -624,7 +763,7 @@
       },
 
       tooltip: {
-        pointFormat: "Population in 2017: <b>{point.y:.1f} millions</b>"
+        pointFormat: "Catch in 2013: <b>{point.y} tonnes</b>"
       },
 
       exporting: {
@@ -634,7 +773,12 @@
 
       plotOptions: {
         series: {
-          animation: false
+          animation: false,
+          states: {
+            inactive: {
+              enabled: false
+            }
+          }
         }
       },
 
@@ -648,18 +792,84 @@
       },
 
       series: [{
-        name: 'Population',
+        name: "Sea catch",
         data: [
-          ['Shanghai', 24.2],
-          ['Beijing', 20.8],
-          ['Karachi', 14.9],
-          ['Shenzhen', 13.7],
-          ['Guangzhou', 13.1],
-          ['Seoul', 9.8],
-          ['Foshan', 9.3],
-          ['Tokyo', 9.3]
-        ],
-      }]
+          {
+            name: "Wild fish",
+            y: 35271,
+            drilldown: "Wild fish"
+          },
+          {
+            name: "Non-fish",
+            y: 14000,
+            drilldown: "Non-fish"
+          },
+          {
+            name: "Aquatic plant",
+            y: 37400,
+            drilldown: "Aquatic plant"
+          },
+        ]
+      }],
+
+      drilldown: {
+        drillUpButton: {
+          theme: {
+            fill: "#144d58",
+            color: "#fff",
+            stroke: "#144d58",
+            r: 4,
+            states: {
+              hover: {
+                fill: "#0f3b43",
+              },
+            },
+          }
+        },
+
+        activeAxisLabelStyle: {
+          "color": "#144d58",
+          "fontWeight": "normal",
+        },
+
+        activeDataLabelStyle: {
+          "color": "#144d58",
+          "fontWeight": "normal",
+        },
+
+        series: [
+          {
+            name: "Wild fish",
+            id: "Wild fish",
+            data: [
+              ["Abalone", 10],
+              ["Small pelagics", 14490],
+              ["Hake longline", 8188],
+              ["Patagonian toothfish", 120],
+              ["West Coast Rock Lobster", 1205],
+              ["Commercial line fishers", 3378],
+              ["Sharks", 24],
+              ["Tuna & swordfish longline/pelagic shark", 3256],
+              ["Tuna pole", 4600],
+            ]
+          },
+          {
+            name: "Non-fish",
+            id: "Non-fish",
+            data: [
+              ["Squid", 11000],
+              ["Octopus", 3000],
+            ]
+          },
+          {
+            name: "Aquatic plant",
+            id: "Aquatic plant",
+            data: [
+              ["Kelp", 37400],
+            ]
+          },
+        ]
+      }
     });
 
     // export chart buttons
@@ -687,7 +897,34 @@
         chart: {
           type: chartType,
         },
+        xAxis: {
+          lineColor: "#808080",
+          title: {
+            text: xAxisLabelText,
+          },
+        },
+        yAxis: {
+          title: {
+            text: yAxisLabelText,
+          }
+        }
       });
+
+      if (chartType == "pie") {
+        chart.update({
+          xAxis: {
+            lineColor: "transparent",
+            title: {
+              text: null,
+            },
+          },
+          yAxis: {
+            title: {
+              text: null,
+            }
+          },
+        });
+      }
     });
 
     // when opening data tab, load table with ajax

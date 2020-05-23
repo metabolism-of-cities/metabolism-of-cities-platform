@@ -1021,11 +1021,6 @@ body.dataset #tab-chart .highcharts-title,
 body.dataset #tab-chart .highcharts-subtitle {
   display: none; }
 
-body.dataset #tab-chart .highcharts-drillup-button {
-  cursor: pointer; }
-  body.dataset #tab-chart .highcharts-drillup-button text {
-    fill: #fff !important; }
-
 body.dataset #tab-data .fa-spin {
   animation: fa-spin 1s linear infinite; }
 
@@ -1092,6 +1087,29 @@ body.dataset.editor .preview-wrap {
 body.dataset.editor form label.category {
   font-weight: bold;
   font-size: 1.25rem; }
+
+body.dataset.editor #color-schemes .single-scheme {
+  padding: .5rem;
+  cursor: pointer;
+  border-radius: .25rem;
+  border: 1px solid #efefef; }
+  body.dataset.editor #color-schemes .single-scheme.active {
+    background-color: #efefef;
+    border-color: #ced4da; }
+
+body.dataset.editor #color-schemes .single-color {
+  height: 2rem; }
+  body.dataset.editor #color-schemes .single-color:first-child {
+    border-top-left-radius: .25rem;
+    border-bottom-left-radius: .25rem; }
+  body.dataset.editor #color-schemes .single-color:last-child {
+    border-top-right-radius: .25rem;
+    border-bottom-right-radius: .25rem; }
+
+.highcharts-container .highcharts-drillup-button {
+  cursor: pointer; }
+  .highcharts-container .highcharts-drillup-button text {
+    fill: #fff !important; }
 
 body.login .login.card,
 body.login .register.card,

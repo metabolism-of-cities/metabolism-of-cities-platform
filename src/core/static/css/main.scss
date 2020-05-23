@@ -104,16 +104,14 @@ p a {
   color: $secondary !important;
 }
 
-// Full-width containers
-body.fullwidth {
-  .container.main-content {
-    margin: 0 !important;
-    width: 100% !important;
-    max-width: unset !important;
-    padding-left: 0;
-    padding-right: 0;
-    padding-bottom: 0;
-  }
+// FULL WIDTH CONTAINERS
+body.fullwidth .container.main-content {
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: unset !important;
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0;
 }
 
 // NORMAL AND SElECT2 INPUTS
@@ -1562,14 +1560,6 @@ body.dataset {
     .highcharts-subtitle {
       display: none;
     }
-
-    .highcharts-drillup-button {
-      cursor: pointer;
-
-      text {
-        fill: $white !important;
-      }
-    }
   }
 
   #tab-data {
@@ -1671,6 +1661,45 @@ body.dataset.editor {
   form label.category {
     font-weight: bold;
     font-size: 1.25rem;
+  }
+
+  #color-schemes {
+    .single-scheme {
+      padding: .5rem;
+      cursor: pointer;
+      border-radius: .25rem;
+      border: 1px solid $light;
+
+      &.active {
+        background-color: $light;
+        border-color: #ced4da;
+      }
+    }
+
+    .single-color {
+      height: 2rem;
+
+      &:first-child {
+        border-top-left-radius: .25rem;
+        border-bottom-left-radius: .25rem;
+      }
+
+      &:last-child {
+        border-top-right-radius: .25rem;
+        border-bottom-right-radius: .25rem;
+      }
+    }
+  }
+}
+
+// ANY HIGHCHART
+.highcharts-container {
+  .highcharts-drillup-button {
+    cursor: pointer;
+
+    text {
+      fill: $white !important;
+    }
   }
 }
 
