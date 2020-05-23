@@ -63,8 +63,12 @@ class VideoAdmin(admin.ModelAdmin):
     autocomplete_fields = ["spaces", "tags", "is_part_of"]
 
     def add_view(self, request, extra_content=None):
-        self.fields = ["name", "description", "tags", "image", "language", "type", "year", "url", "license", "embed_code", "date", "video_site"]
+        self.fields = ["name", "description", "tags", "image", "language", "author_list", "type", "year", "url", "license", "embed_code", "date", "video_site"]
         return super().add_view(request)
+
+    def change_view(self, request, object_id, extra_content=None):
+        self.fields = ["name", "description", "tags", "image", "language", "author_list", "type", "year", "url", "license", "embed_code", "date", "video_site"]
+        return super().change_view(request, object_id)
 
     class Media:
         js = ("js/video.admin.js",)

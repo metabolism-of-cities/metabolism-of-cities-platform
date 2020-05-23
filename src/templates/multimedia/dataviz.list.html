@@ -2,9 +2,23 @@
 
 {% block page_name %}datavisualistions{% endblock %}
 
+{% block css %}
+<style type="text/css">
+  .single-viz img {
+    border-bottom: 1px solid #999;
+  }
+  .single-viz {
+    text-align: center;
+  }
+  .single-viz a.card {
+    background: #f4f4f4;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-  <h1>{{ info }}</h1>
-  {{ info.content|safe }}
+  <h1>{{ webpage }}</h1>
+  {{ webpage.description|safe }}
 
   <div class="row">
     {% for each in list %}

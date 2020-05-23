@@ -4,6 +4,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 PAGE_ID = settings.PAGE_ID_LIST
 
+# Get all the parent relationships, but making sure we only show is_deleted=False and is_public=True
+def get_parents(record):
+    list = RecordRelationship.objects.filter(record_child=record).filter(record_parent__is_deleted=False, record_parent__is_public=True)
+    return list
+
 def index(request):
     webpage = get_object_or_404(Project, pk=PAGE_ID["multimedia_library"])
     videos = Video.objects.filter(tags__parent_tag__id=749).distinct()
@@ -62,8 +67,8 @@ def podcast(request, id):
 
 def datavisualizations(request):
     context = {
-        "info": get_object_or_404(Webpage, pk=67),
-        "list": LibraryItem.objects.filter(type__name="Data visualisation"),
+        "webpage": get_object_or_404(Webpage, pk=67),
+        "list": LibraryItem.objects.filter(type__name="Data visualisation").order_by("-date_created"),
     }
     return render(request, "multimedia/dataviz.list.html", context)
 
@@ -74,5 +79,6 @@ def dataviz(request, id):
         "info": info,
         "parents": parents,
         "show_relationship": info.id,
+        "title": info.name,
     }
     return render(request, "multimedia/dataviz.html", context)

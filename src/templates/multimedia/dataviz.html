@@ -5,7 +5,7 @@
 {% block content %}
 
 <h1>{{ info }}</h1>
-<a class="btn btn-primary-basic" href="{% url 'dataviz_list' %}">
+<a class="btn btn-primary-basic" href="{% url "multimedia:datavisualizations" %}">
   <i class="far fa-angle-left"></i>
   Back to list
 </a>
@@ -48,12 +48,12 @@
           <li class="list-group-item">
             <i class="far fa-fw fa-file-alt mb-1 mr-1" aria-hidden="true"></i> Related publication
             <br>
-            <a href="{% url 'library_item' info.is_part_of.id %}">{{ info.is_part_of }}</a>
+            <a href="{{ info.is_part_of.get_absolute_url }}">{{ info.is_part_of }}</a>
           </li>
           <li class="list-group-item">
             <i class="far fa-fw fa-user-edit mb-1 mr-1" aria-hidden="true"></i> Author(s)
             <br>
-            {{ info.is_part_of.author_citation }}
+            {{ info.is_part_of.get_author_citation|safe }}
           </li>
         {% endif %}
         {% if parents %}
