@@ -560,7 +560,7 @@
     let colorScheme = moc;
     let chartTypes = ["column", "bar", "pie"]
     let startingChart = "column";
-    let xAxisLabelText = null;
+    let xAxisLabelText = " ";
     let yAxisLabelText = "Catch (in tonnes)";
     let showLegend = false;
     let showMap = true;
@@ -590,10 +590,10 @@
       startingChart = $("#initial-chart-type").val()
 
       // x-axis
-      xAxisLabelText = $("#xaxis-label").is(":checked") ? $(".xaxis-label-text input").val() : null;
+      xAxisLabelText = $("#xaxis-label").is(":checked") ? $(".xaxis-label-text input").val() : " ";
 
       // y-axis
-      yAxisLabelText = $("#yaxis-label").is(":checked") ? $(".yaxis-label-text input").val() : null;
+      yAxisLabelText = $("#yaxis-label").is(":checked") ? $(".yaxis-label-text input").val() : " ";
 
       // legend
       showLegend = $("#legend").is(":checked") ? true : false;
