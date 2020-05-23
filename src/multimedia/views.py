@@ -17,20 +17,43 @@ def index(request):
         "podcasts": podcasts,
         "dataviz": dataviz,
     }
+    if "import" in request.GET:
+        import csv
+        matches = {
+            "1": 753,
+            "2": 752,
+            "3": 751,
+            "4": 750,
+            "5": 754,
+            "6": 799,
+        }
+
+        file = settings.MEDIA_ROOT + "/import/videocollections.csv"
+        with open(file, "r") as csvfile:
+            contents = csv.DictReader(csvfile)
+            for row in contents:
+                video = row["video_id"]
+                collection = row["videocollection_id"]
+                try:
+                    match = matches[collection]
+                    video = Video.objects.get(old_id=video)
+                    print(match)
+                    print(video)
+                    video.tags.add(Tag.objects.get(pk=match))
+                except Exception as e:
+                    print("PROBLEMO!!")
+                    print(e)
+
     return render(request, "multimedia/index.html", context)
 
 def videos(request):
+    collections = Tag.objects.get(pk=749)
     context = {
         "webpage": get_object_or_404(Webpage, pk=61),
-        "list": LibraryItem.objects.filter(type__name="Video Recording"),
+        "list": Video.objects.filter(tags__parent_tag=collections),
+        "categories": Tag.objects.filter(parent_tag=collections).order_by("id"),
     }
     return render(request, "multimedia/video.list.html", context)
-
-def video(request, id):
-    context = {
-        "info": get_object_or_404(Video, pk=id),
-    }
-    return render(request, "multimedia/video.html", context)
 
 def podcasts(request):
     context = {

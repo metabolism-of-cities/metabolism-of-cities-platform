@@ -4,141 +4,31 @@
   <h1>{{ webpage }}</h1>  
   {{ webpage.content|safe }}
 
-<div id="video-list">
-  <div class="row mb-4">
-    <div class="col-md-6 mb-2">
-      <input type="text" class="form-control search" placeholder="Search by video title...">
-    </div>
-    <div class="col-md-6 mb-2">
-      <select class="type-filter custom-select">
-        <option value="all" selected>Filter by category</option>
-        <option value="seminar">Seminars</option>
-        <option value="conference">Conferences</option>
-        <option value="other">Something else</option>
-      </select>
+<div class="row">
+  <div class="col-3">
+    <div class="nav flex-column nav-pills" id="video-menu" role="tablist" aria-orientation="vertical">
+      {% for each in categories %}
+        <a class="nav-link {% if each.id == 100 %}active{% endif %}" data-toggle="pill" href="#" data-id="{{ each.id }}" role="tab" aria-controls="v-pills-home" aria-selected="true">
+          {{ each }}
+        </a>
+      {% endfor %}
     </div>
   </div>
-
-  <div class="row list">
+  <div class="col-9">
     {% for each in list %}
-      <div class="col-xl-4 col-md-6 mb-4 single-video" data-type="seminar">
-        <a class="card btn-card" href="{{ each.get_absolute_url }}">
-          {% if each.image %}
-            <img class="card-img-top" src="{{ each.image.thumbnail }}" alt="" />
-          {% endif %}
-
-          <div class="card-body">
-            <h5 class="card-title video-title">{{ each }}</h5>
-          </div>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-              <i class="far fa-fw fa-play"></i> {{ each.year }}
-            </li>
-            <li class="list-group-item">
-              <i class="far fa-fw fa-cabinet-filing"></i> Conferences and seminars
-            </li>
-          </ul>
-        </a>
-      </div>
+      {{ each }}
     {% endfor %}
   </div>
 </div>
 
-<div class="card no-results">
-  <div class="card-body text-center">
-    <h2 class="my-4"><i class="fad fa-search"></i> No videos found</h2>
-    <button class="btn btn-lg btn-primary clear-filter my-4">Show all videos</button>
-  </div>
-</div>
 {% endblock %}
 
 {% block footer %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-<script>
-  var listOptions = {
-      valueNames: ["video-title"]
-  };
-
-  var videoList = new List("video-list", listOptions);
-
-  // filters
-  // basic function to check if item matches filter
-  function videoFilter(type, value) {
-    if (value != "all") {
-      videoList.filter(function(item) {
-        if (item.values()[type] != value) {
-          item.values({inFilter: false})
-        }
-      });
-    }
-  }
-
-  // showing all items that match filters
-  function applyFilters() {
-    videoList.filter(function(item) {
-      if (item.values().inFilter == true) {
-         return true;
-      } else {
-         return false;
-      }
-    });
-  };
-
-  // function to check the number of matches
-  function checkCount() {
-    var count = $("#video-list .single-video:visible").length;
-    if (count == 0) {
-      $(".no-results").addClass("visible");
-    } else {
-      $(".no-results").removeClass("visible");
-    }
-  }
-
-  // function to apply filters on every dropdown
-  function runAllFilters() {
-    // set every item as matching filter
-    $(videoList.items).each(function() {
-      this.values({
-        inFilter: true,
-      });
-    });
-
-    // remove items that don't match filter
-    $(".filters select").each(function() {
-      var type = $(this).data("type");
-      var value = $(this).val()
-      videoFilter(type, value)
-    });
-
-    // show items that remain in filter
-    applyFilters();
-    checkCount();
-  }
-
-  // update contact count when searching by name
-  videoList.on("searchComplete", function(){
-    checkCount();
+<script type="text/javascript">
+  $("#video-menu a").click(function(e){
+    var id = $(this).data("id");
+    $(".video").hide();
+    $(".tag-"+id).show();
   });
-
-  // make dropdowns work as filters
-  $(".filters select").change(function() {
-    runAllFilters()
-  });
-
-  // clear search and filters
-  function resetSearchFilters() {
-    videoList.search();
-    videoList.filter();
-    $(".filters select").val("all");
-    $("input.search").val("");
-  }
-
-  $(".clear-filter").click(function() {
-    resetSearchFilters();
-    checkCount();
-  })
-
-  // reset all filters on page load
-  resetSearchFilters()
 </script>
 {% endblock %}

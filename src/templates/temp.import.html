@@ -63,6 +63,8 @@ ssh -t industrialecology 'csvdump "SELECT * FROM multiplicity_referencespacesect
 ssh -t industrialecology 'csvdump "SELECT * FROM core_dataviz ORDER BY id" dataviz.csv'
 ssh -t industrialecology 'csvdump "SELECT * FROM core_reference_authors ORDER BY id" authors.csv'
 ssh -t industrialecology 'csvdump "SELECT * FROM core_event" events.csv'
+
+ssh -t industrialecology 'csvdump "SELECT * FROM core_video_collections" videocollections.csv'
   </pre>
 
 {% endblock %}

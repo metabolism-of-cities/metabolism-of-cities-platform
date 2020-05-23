@@ -530,7 +530,18 @@ class LibraryItem(Record):
         ordering = ["-year", "name"]
 
     def get_absolute_url(self):
-        return reverse("library:item", args=[self.id])
+        if self.type_id == 31:
+            # Videos are opened in the multimedia library
+            return reverse("multimedia:video", args=[self.id])
+        else:
+            return reverse("library:item", args=[self.id])
+
+    def get_edit_link(self):
+        if self.type_id == 31:
+            # Videos are opened in the multimedia library
+            return "/admin/core/video/" + str(self.id) + "/change/"
+        else:
+            return "/admin/core/libraryitem/" + str(self.id) + "/change/"
 
     def authors(self):
         return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)
@@ -606,6 +617,8 @@ class Video(LibraryItem):
         ("other", "Other"),
     ]
     video_site = models.CharField(max_length=14, choices=VIDEO_SITES)
+    def get_absolute_url(self):
+        return reverse("multimedia:video", args=[self.id])
 
     def embed(self):
         if self.video_site == "youtube":

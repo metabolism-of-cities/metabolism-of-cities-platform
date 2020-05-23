@@ -250,7 +250,7 @@ def user_logout(request, project=None):
     logout(request)
     messages.warning(request, "You are now logged out")
     if project:
-        info = Project.objects.get(pk=project)
+        info = Project.objects.get(pk=PROJECT_ID[project])
         return redirect(info.get_website())
     else:
         return redirect("core:login")

@@ -145,6 +145,7 @@ def item(request, id):
         section = "multimedia_library"
     context = {
         "info": info,
+        "edit_link": info.get_edit_link(),
     }
     return render(request, "library/item.html", context)
 

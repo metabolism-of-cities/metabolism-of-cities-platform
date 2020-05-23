@@ -11,6 +11,17 @@
     .journal {
       max-height:160px;
     }
+    .videoblock {
+      background: #000;
+    }
+    .video-embed {
+      width: 100%;
+      height: 70vh;
+    }
+    .largeicon {
+      font-size: 5rem;
+    }
+      
   </style>
 {% endblock %}
 
@@ -23,6 +34,10 @@
           <a href="{{ info.publisher.get_absolute_url }}">
             <img src="{{ info.publisher.image.url }}" class="journal mt-4">
           </a>
+        {% else %}
+          <span class="largeicon">
+            <i class="fal fa-{{ info.type.icon }}"></i>
+          </span>
         {% endif %}
       </div>
       <div class="col-lg-8 mb-4">
@@ -39,53 +54,63 @@
     </div>
   </div>
 
-  <div class="export">
-    <div class="container">
-      <div class="row pt-4">
-        <div class="col-lg-4 mb-4">
-          <h4>Save</h4>
-          <div class="row">
-            <div class="col-md-12">
-              <a class="btn-icon" href="#">
-                <div class="title mb-0"><i class="fal fa-save fa-fw"></i> To my collection</div>
-              </a>
-            </div>
-            <div class="col-md-12">
-              <a class="btn-icon" href="#">
-                <div class="title mb-0"><i class="fal fa-folder-plus fa-fw"></i> Create new collection</div>
-              </a>
+  {% if info.type.name == "Video Recording" %}
+
+    <div class="videoblock">
+        {{ info.video.embed|safe }}
+    </div>
+
+  {% else %}
+
+    <div class="export">
+      <div class="container">
+        <div class="row pt-4">
+          <div class="col-lg-4 mb-4">
+            <h4>Save</h4>
+            <div class="row">
+              <div class="col-md-12">
+                <a class="btn-icon" href="#">
+                  <div class="title mb-0"><i class="fal fa-save fa-fw"></i> To my collection</div>
+                </a>
+              </div>
+              <div class="col-md-12">
+                <a class="btn-icon" href="#">
+                  <div class="title mb-0"><i class="fal fa-folder-plus fa-fw"></i> Create new collection</div>
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-lg-8 mb-4">
-          <h4>Export</h4>
-          <div class="row">
+          <div class="col-lg-8 mb-4">
+            <h4>Export</h4>
+            <div class="row">
 
-            <div class="col-md-6">
-              <button class="btn-icon">
-                <div class="title mb-0"><i class="fal fa-file-export fa-fw"></i> RIS</div>
-              </button>
-            </div>
-            <div class="col-md-6">
-              <button class="btn-icon">
-                <div class="title mb-0"><i class="fal fa-file-export fa-fw"></i> Bibtex</div>
-              </button>
-            </div>
-            <div class="col-md-6">
-              <a class="btn-icon" href="#">
-                <div class="title mb-0"><i class="fal fa-quote-right fa-fw"></i> Citation</div>
-              </a>
-            </div>
-            <div class="col-md-6">
-              <a class="btn-icon" href="javascript:print()">
-                <div class="title mb-0"><i class="fal fa-print fa-fw"></i> Print</div>
-              </a>
+              <div class="col-md-6">
+                <button class="btn-icon">
+                  <div class="title mb-0"><i class="fal fa-file-export fa-fw"></i> RIS</div>
+                </button>
+              </div>
+              <div class="col-md-6">
+                <button class="btn-icon">
+                  <div class="title mb-0"><i class="fal fa-file-export fa-fw"></i> Bibtex</div>
+                </button>
+              </div>
+              <div class="col-md-6">
+                <a class="btn-icon" href="#">
+                  <div class="title mb-0"><i class="fal fa-quote-right fa-fw"></i> Citation</div>
+                </a>
+              </div>
+              <div class="col-md-6">
+                <a class="btn-icon" href="javascript:print()">
+                  <div class="title mb-0"><i class="fal fa-print fa-fw"></i> Print</div>
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+
+  {% endif %}
 
   <div class="container pb-5 pt-3">
 
@@ -152,6 +177,7 @@
                 <span class="badge badge-primary">{{ info.isbn }}</span>
               </li>
             {% endif %}
+            {% if info.type.group != "multimedia" %}
             <li class="list-group-item">
               <i class="far fa-fw fa-search mb-1 mr-1" aria-hidden="true"></i> Search
               <br>
@@ -159,6 +185,7 @@
               <a class="btn btn-sm btn-primary-outline mt-1" href="https://scholar.google.com/scholar?q={{ info|urlencode }}">Google Scholar</a>
               <a class="btn btn-sm btn-primary-outline mt-1" href="https://google.com/search?q={{ info|urlencode }}">Google</a>
             </li>
+            {% endif %}
           </ul>
         </div>
       </div>
