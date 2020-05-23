@@ -106,16 +106,16 @@
           </a>
         </div>
         <div class="col-sm-6 col-xl-3 mb-4">
-          <a class="large-icon-box" href="#">
+          <a class="large-icon-box" href="{% url "library:methods" %}">
             <div class="description">Browse by method</div>
-            <div class="statistic">320 articles</div>
+            <div class="statistic">29 methods</div>
             <i class="fad fa-vial text-warning" aria-hidden="true"></i>
           </a>
         </div>
         <div class="col-sm-6 col-xl-3 mb-4">
-          <a class="large-icon-box" href="#">
+          <a class="large-icon-box" href="{% url "library:list" "starterskit" %}">
             <div class="description">Starter's Kit</div>
-            <div class="statistic">14 articles</div>
+            <div class="statistic">{{ starterskit }} articles</div>
             <i class="fad fa-play-circle text-info" aria-hidden="true"></i>
           </a>
         </div>

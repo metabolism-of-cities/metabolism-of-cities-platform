@@ -44,6 +44,7 @@ def index(request):
         "load_datatables": True if show_results else False,
         "urban_only": urban_only,
         "menu": "library",
+        "starterskit": LibraryItem.objects.filter(tags__id=791).count(),
     }
     return render(request, "library/index.html", context)
 
