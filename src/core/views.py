@@ -223,10 +223,10 @@ def user_login(request, project=None):
     if request.GET.get("next"):
         redirect_url = request.GET.get("next")  
     elif project:
-        project = get_object_or_404(Project, pk=project)
+        project = get_object_or_404(Project, pk=PROJECT_ID[project])
         redirect_url = "/" + project.slug + "/"
     else:
-        redirect_url = "index"
+        redirect_url = "core:index"
 
     if request.user.is_authenticated:
         return redirect(redirect_url)
@@ -258,7 +258,7 @@ def user_logout(request, project=None):
 def user_reset(request):
     return render(request, "auth/reset.html")
 
-def user_profile(request):
+def user_profile(request, project=None):
     user = request.user
     if user.people:
         relationships = RecordRelationship.objects.filter(record_parent=user.people)

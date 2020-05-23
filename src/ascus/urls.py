@@ -17,9 +17,9 @@ urlpatterns = [
 
     path("", views.ascus, name="index"),
 
-    path("login/", core.user_login, {"project": 8}, name="login"),
+    path("login/", core.user_login, {"project": app_name}, name="login"),
     path("register/", views.ascus_register, name="register"),
-    path("logout/", core.user_logout, {"project": 8}, name="logout"),
+    path("logout/", core.user_logout, {"project": app_name}, name="logout"),
     path("overview/", views.overview, name="overview"),
     path("preconference/", views.overview, { "preconf": True}, name="preconference"),
     path("participants/", views.participants, name="participants"),
