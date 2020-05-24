@@ -5,7 +5,11 @@
     <div class="return-bar">
       <div class="container">
         {% if BACK_LINK %}
-          <a href="/"><i class="fad fa-arrow-circle-left"></i> Return to {{ SITE_NAME }}</a>
+          {% if DEBUG %}
+            <a href="/"><i class="fad fa-arrow-circle-left"></i> Return to {{ SITE_NAME }}</a>
+          {% else %}
+            <a href="https://new.metabolismofcities.org/"><i class="fad fa-arrow-circle-left"></i> Return to {{ SITE_NAME }}</a>
+          {% endif %}
         {% endif %}
 
         {% if PERMISSIONS or request.user.is_superuser %}

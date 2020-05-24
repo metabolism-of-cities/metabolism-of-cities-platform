@@ -150,15 +150,18 @@ class Project(Record):
     status = models.CharField(max_length=20, choices=STATUS, default="ongoing")
     has_subsite = models.BooleanField(default=False)
     slug = models.SlugField(max_length=50, unique=True, blank=True, null=True)
+    url = models.URLField(max_length=255, null=True, blank=True)
 
     def get_absolute_url(self):
         return reverse("core:project", args=[self.id])
 
     def get_website(self):
-        if self.has_subsite:
+        if self.url:
+            return self.url
+        elif self.has_subsite:
             return "/" + self.slug + "/"
         else:
-            return reverse("core:project", args=[self.id])
+            return reverse("core:project", args=[self.slug])
 
     def get_image(self):
         if self.image:

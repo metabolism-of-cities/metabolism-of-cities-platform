@@ -24,7 +24,7 @@ urlpatterns = [
     path("events/<slug:slug>/", views.event, name="event"),
 
     # Projects
-    path("projects/<int:id>/", views.project, name="project"),
+    path("projects/<slug:slug>/", views.project, name="project"),
     path("projects/", views.projects, name="projects"),
     path("pdf/", views.pdf),
     path("projects/create/", views.project_form, name="project_form"),

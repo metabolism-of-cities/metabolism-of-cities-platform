@@ -47,9 +47,9 @@
           <strong>Type</strong>: <a href="{% url "core:projects" %}?type={{ info.type.id }}">{{ info.type }}</a>
         </li>
 
-        {% if info.get_website %}
+        {% if info.url %}
           <li class="list-group-item">
-            <a href="{{ info.get_website }}" class="btn btn-primary-outline">
+            <a href="{{ info.url }}" class="btn btn-primary-outline">
               <i class="fas fa-link"></i>
               Project website
             </a>
@@ -89,8 +89,8 @@
         {% lorem 2 p %}
       {% endif %}
 
-      {% if info.get_website %}
-        <a href="{{ info.get_website }}" class="btn btn-primary-outline">
+      {% if info.url %}
+        <a href="{{ info.url }}" class="btn btn-primary-outline">
           <i class="fas fa-link"></i>
           Go to project website
         </a>

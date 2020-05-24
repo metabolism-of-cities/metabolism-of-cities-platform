@@ -1,38 +1,38 @@
 <div class="row">
   <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
     <div class="projects-category"><i class="mr-2 far fa-fw fa-play-circle"></i>Media</div>
-    <a href="/projects/2/">Library</a>
-    <a href="/projects/3/">Multimedia Library</a>
-    <a href="/projects/3458/">Circular Metabolism Podcast</a>
+    <a href="{% url "core:project" "library" %}">Library</a>
+    <a href="{% url "core:project" "multimedia" %}">Multimedia Library</a>
+    <a href="{% url "core:project" "podcast" %}">Circular Metabolism Podcast</a>
     <br>
     <div class="projects-category"><i class="mr-2 far fa-fw fa-users"></i>Community</div>
-    <a href="/projects/18/">UM Community Hub</a>
+    <a href="{% url "core:project" "community" %}">UM Community Hub</a>
     <br>
     <div class="projects-category"><i class="mr-2 fal fa-fw fa-digging"></i>Intervention Projects</div>
-    <a href="/projects/6/">Cityloops</a>
+    <a href="{% url "core:project" "cityloops" %}">Cityloops</a>
   </div>
   <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
     <div class="projects-category"><i class="mr-2 far fa-fw fa-toolbox"></i>Data Platforms &amp; Tools</div>
-    <a href="/projects/4/">Metabolism of Cities Data Hub</a>
-    <a href="/projects/13/">Stocks and Flows Database Schema (STAFdbs)</a>
-    <a href="/projects/14/">Stocks and Flows Data Hub (STAFdatahub)</a>
-    <a href="/projects/15/">Online Material Flow Analysis Tool (OMAT)</a>
-    <a href="/projects/16/">PlatformU</a>
-    <a href="/projects/12/">Global Urban Metabolism Dataset (GUMDB)</a>
+    <a href="{% url "core:project" "data" %}">Metabolism of Cities Data Hub</a>
+    <a href="{% url "core:project" "stafdbs" %}">Stocks and Flows Database Schema (STAFdbs)</a>
+    <a href="{% url "core:project" "staf" %}">Stocks and Flows Data Hub (STAFdatahub)</a>
+    <a href="{% url "core:project" "omat" %}">Online Material Flow Analysis Tool (OMAT)</a>
+    <a href="{% url "core:project" "platformu" %}">PlatformU</a>
+    <a href="{% url "core:project" "gumdb" %}">Global Urban Metabolism Dataset (GUMDB)</a>
     <br>
     <div class="projects-category"><i class="mr-2 far fa-fw fa-object-ungroup"></i>Twin sites</div>
-    <a href="/projects/17/">Metabolism of Islands</a>
+    <a href="{% url "core:project" "islands" %}">Metabolism of Islands</a>
   </div>
   <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
     <div class="projects-category"><i class="mr-2 far fa-fw fa-user-graduate"></i>Education</div>
-    <a href="/projects/11/">Online courses (MOOC)</a>
-    <a href="/projects/9/">Urban Metabolism &amp; Minorities</a>
-    <a href="/projects/10/">Urban Metabolism Lab</a>
+    <a href="{% url "core:project" "mooc" %}">Online courses (MOOC)</a>
+    <a href="{% url "core:project" "urban-metabolism-minorities" %}">Urban Metabolism &amp; Minorities</a>
+    <a href="{% url "core:project" "um-lab" %}">Urban Metabolism Lab</a>
     <br>
     <div class="projects-category"><i class="mr-2 far fa-fw fa-projector"></i>Conferences &amp; Events</div>
-    <a href="/projects/8/">ASCuS Conference 2020</a>
-    <a href="/projects/7/">Seminar Series 2019</a>
-    <a href="/projects/18380/">Urban Flux Exhibition 2018/2019</a>
-    <a href="/projects/18379/">Masterclass Designing with Flows 2016/2017</a>
+    <a href="{% url "core:project" "ascus" %}">ASCuS Conference 2020</a>
+    <a href="{% url "core:project" "seminarseries" %}">Seminar Series 2019</a>
+    <a href="{% url "core:project" "urban-flux-exhibition" %}">Urban Flux Exhibition 2018/2019</a>
+    <a href="{% url "core:project" "masterclass-designing-with-flows" %}">Masterclass Designing with Flows 2016/2017</a>
   </div>
 </div>

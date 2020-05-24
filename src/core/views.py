@@ -346,9 +346,8 @@ def projects(request):
     }
     return render(request, "projects.html", load_design(context))
 
-def project(request, id):
-    article = get_object_or_404(Webpage, pk=PAGE_ID["projects"])
-    info = get_object_or_404(Project, pk=id)
+def project(request, slug):
+    info = get_object_or_404(Project, slug=slug)
     context = {
         "edit_link": "/admin/core/project/" + str(info.id) + "/change/",
         "info": info,
