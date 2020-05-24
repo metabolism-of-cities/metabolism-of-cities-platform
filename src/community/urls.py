@@ -13,6 +13,15 @@ urlpatterns = [
     path("forum/<int:id>/", views.forum_topic, name="forum_topic"),
     path("forum/create/", views.forum_form, name="forum_form"),
 
+    # Projects
+    path("projects/", views.projects, name="projects"),
+    path("projects/<int:id>/", views.project, name="project"),
+
+    # Organizations
+    path("organisations/", views.organizations, name="organizations"),
+    path("organisations/<slug:slug>/", views.organizations, name="organizations"),
+    path("organisations/<slug:slug>/<int:id>/", views.organization, name="organization"),
+
     # Authentication and contributor functions
     path("accounts/register/", core.user_register, { "project": app_name }, name="register"),
     path("accounts/login/", core.user_login, { "project": app_name }, name="login"),

@@ -29,6 +29,42 @@ def people_list(request):
     }
     return render(request, "people.list.html", context)
 
+
+def projects(request):
+    list = ForumMessage.objects.filter(parent__isnull=True)
+    context = {
+        "list": list,
+    }
+    return render(request, "community/projects.html", context)
+
+def project(request, id):
+    list = ForumMessage.objects.filter(parent__isnull=True)
+    context = {
+        "list": list,
+    }
+    return render(request, "community/project.html", context)
+
+def organizations(request, slug=None):
+    list = Organization.objects.filter(type=slug)
+    context = {
+        "list": list,
+        "load_datatables": True,
+        "slug": slug,
+        "header_title": slug,
+        "header_subtitle": "List of organisations active in the field of urban metabolism",
+    }
+    return render(request, "community/organizations.html", context)
+
+def organization(request, slug, id):
+    info = get_object_or_404(Organization, pk=id)
+    context = {
+        "info": info,
+        "header_title": info.name,
+        "header_subtitle": info.get_type_display,
+        "edit_link": "/admin/core/organization/" + str(info.id) + "/change/",
+    }
+    return render(request, "community/organization.html", context)
+
 # FORUM
 
 def forum_list(request):

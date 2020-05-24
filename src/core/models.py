@@ -259,11 +259,14 @@ class Organization(Record):
         ("other", "Other"),
     )
     type = models.CharField(max_length=20, choices=ORG_TYPE)
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
     def get_absolute_url(self):
         return reverse("library:journal", args=[self.slug])
+
     def publications(self):
         # To get all the publications we'll get the LibraryItems that are a child
         # record that are linked to this organization (e.g. journal or publishing house) as a parent

@@ -1,14 +1,16 @@
 <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="community-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Directories
+    Organisations
   </a>
   <div class="dropdown-menu" aria-labelledby="community-dropdown">
-      <a class="dropdown-item" href="/community/people/">People</a>
-      <a class="dropdown-item" href="/community/organisations/">Organisations</a>
-      <a class="dropdown-item" href="/community/projects/">Projects</a>
+      <a class="dropdown-item" href="{% url "community:organizations" "universities" %}">Universities</a>
+      <a class="dropdown-item" href="{% url "community:organizations" "academic" %}">Research Organisations</a>
+      <a class="dropdown-item" href="{% url "community:organizations" "private_sector" %}">Private Sector</a>
+      <a class="dropdown-item" href="{% url "community:organizations" "society" %}">Academic Societies</a>
   </div>
 </li>
 
+<li class="nav-item"><a class="nav-link" href="{% url "community:projects" %}">Projects</a></li>
 <li class="nav-item"><a class="nav-link" href="{% url "community:events" %}">Events</a></li>
 <li class="nav-item"><a class="nav-link" href="{% url "community:news" %}">News</a></li>
 <li class="nav-item"><a class="nav-link" href="/community/forum/">Forum</a></li>

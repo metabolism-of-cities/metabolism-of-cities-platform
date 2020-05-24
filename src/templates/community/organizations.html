@@ -1,0 +1,26 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Location</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in list %}
+      <tr>
+        <td><a href="{{ each.id }}">{{ each }}</a></td>
+        <td>
+          {% for space in each.spaces.all %}
+            {{ space }}
+          {% endfor %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

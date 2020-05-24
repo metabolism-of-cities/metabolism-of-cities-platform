@@ -1,0 +1,80 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <div class="container pb-5 pt-3">
+
+    <div class="row">
+
+      <div class="col-lg-4">
+        <div class="card">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <i class="far fa-fw fa-user-edit mb-1 mr-1" aria-hidden="true"></i> Author(s)
+              <br>
+              {% for each in info.authors %}
+                <a class="btn btn-sm btn-primary-outline mt-1" href="">{{ each }}</a>
+              {% endfor %}
+            </li>
+            {% if info.publisher %}
+              <li class="list-group-item table-item">
+                <div><i class="far fa-fw fa-book mr-1"></i> Publisher</div>
+                <div>{{ info.publisher }}</div>
+              </li>
+            {% endif %}
+            <li class="list-group-item">
+              <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Tags
+              <br>
+              {% for each in info.tags.all %}
+                <a class="btn btn-sm btn-primary-outline mt-1" href="{% url "library:index" %}?find=true&amp;search={{ each.id }}">{{ each }}</a>
+              {% endfor %}
+            </li>
+            <li class="list-group-item table-item">
+              <div><i class="far fa-fw fa-language mr-1"></i> Language</div>
+              <div>{{ info.get_language_display }}</div>
+            </li>
+            <li class="list-group-item table-item">
+              <div><i class="far fa-fw fa-universal-access mr-1"></i> Open access</div>
+              <div><i class="fas fa-fw text-success fa-check-circle"></i></div>
+            </li>
+            {% if info.url %}
+              <a class="list-group-item" href="{{ info.url }}">
+                <i class="far fa-fw fa-link mb-1 mr-1" aria-hidden="true"></i> External site
+              </a>
+            {% endif %}
+            {% if info.doi %}
+              <li class="list-group-item">
+                <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> DOI
+                <br>
+                <a class="badge badge-primary" href="https://doi.org/{{ info.doi }}">
+                  {{ info.doi }}
+                </a>
+              </li>
+            {% endif %}
+            {% if info.isbn %}
+              <li class="list-group-item">
+                <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> ISBN
+                <br>
+                <span class="badge badge-primary">{{ info.isbn }}</span>
+              </li>
+            {% endif %}
+            {% if info.type.group != "multimedia" %}
+            <li class="list-group-item">
+              <i class="far fa-fw fa-search mb-1 mr-1" aria-hidden="true"></i> Search
+              <br>
+              <a class="btn btn-sm btn-primary-outline mt-1" href="https://unpaywall.org/{{ info.doi }}">UnPaywall</a>
+              <a class="btn btn-sm btn-primary-outline mt-1" href="https://scholar.google.com/scholar?q={{ info|urlencode }}">Google Scholar</a>
+              <a class="btn btn-sm btn-primary-outline mt-1" href="https://google.com/search?q={{ info|urlencode }}">Google</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-lg-8 mb-4">
+        {{ info.description|safe|linebreaks }}
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
