@@ -353,7 +353,12 @@ def templates(request):
 
 def template(request, slug):
     page = "template/" + slug + ".html"
-    return render (request, page)
+
+    context = {}
+    if slug == "lightbox":
+        context["load_lightbox"] = True
+
+    return render (request, page, context)
 
 # The internal projects section
 

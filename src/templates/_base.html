@@ -47,6 +47,10 @@
     <link href="{% static 'css/datatables.min.css' %}" rel="stylesheet" />
   {% endif %}
 
+  {% if load_lightbox %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.css">
+  {% endif %}
+
   <!-- custom CSS and head, if necessary -->
   {% block css %}{% endblock %}
   {% block head %}{% endblock %}
@@ -165,6 +169,13 @@
     <script src="{% static 'js/datatables.min.js' %}"></script>
     <script>
       $(".datatable").DataTable();
+    </script>
+  {% endif %}
+
+  {% if load_lightbox %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.js"></script>
+    <script>
+      baguetteBox.run(".lightbox");
     </script>
   {% endif %}
 

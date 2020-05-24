@@ -4,11 +4,10 @@
 
 {% block title %}Lightbox{% endblock %}
 
-{% block css %}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.css">
-{% endblock %}
-
 {% block content %}
+
+  <div class="alert alert-warning">Set load_lightbox=True in the view to load the required CSS/JS.</div>
+
   {% spaceless %}
   <div class="row lightbox gallery">
     <div class="col-sm-6 col-md-3 col-lg-2">
@@ -27,9 +26,3 @@
   {% endspaceless %}
 {% endblock %}
 
-{% block footer %}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.js"></script>
-  <script>
-    baguetteBox.run(".lightbox");
-  </script>
-{% endblock %}

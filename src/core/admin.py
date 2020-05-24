@@ -132,6 +132,7 @@ class ReferenceSpaceAdmin(SearchAdmin):
 class LibraryAdmin(SearchCompleteAdmin):
     list_filter = ["status", "type", "year"]
     list_display = ["name", "year", "status"]
+    autocomplete_fields = ["is_part_of"]
 
 class GeocodeAdmin(SearchAdmin):
     list_filter = ["scheme"]

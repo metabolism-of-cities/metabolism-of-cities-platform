@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% load static %}
 
 {% block page_name %}fullwidth{% endblock %}
 
@@ -58,7 +59,34 @@
 </div>
 
 <div class="container">
-  {% lorem 3 %}
+    <h2>Pomace use in distilleries</h2>
+    <p>{% lorem 2 %}</p>
+
+    <div class="row lightbox gallery mt-4 mb-4">
+      <div class="col-sm-6 col-md-3 col-lg-2">
+        <a href="{% static 'img/construction.jpg' %}" style="background-image: url('{% static 'img/construction.jpg' %}');" data-caption="Image caption"></a>
+      </div>
+      <div class="col-sm-6 col-md-3 col-lg-2">
+        <a href="{% static 'img/energy.jpg' %}" style="background-image: url('{% static 'img/energy.jpg' %}');" data-caption="Image caption"></a>
+      </div>
+      <div class="col-sm-6 col-md-3 col-lg-2">
+        <a href="{% static 'img/fishing.jpg' %}" style="background-image: url('{% static 'img/fishing.jpg' %}');" data-caption="Image caption"></a>
+      </div>
+      <div class="col-sm-6 col-md-3 col-lg-2">
+        <a href="{% static 'img/forestry.jpg' %}" style="background-image: url('{% static 'img/forestry.jpg' %}');" data-caption="Image caption"></a>
+      </div>
+      <div class="col-sm-6 col-md-3 col-lg-2">
+        <a href="{% static 'img/energy.jpg' %}" style="background-image: url('{% static 'img/energy.jpg' %}');" data-caption="Image caption"></a>
+      </div>
+      <div class="col-sm-6 col-md-3 col-lg-2">
+        <a href="{% static 'img/fishing.jpg' %}" style="background-image: url('{% static 'img/fishing.jpg' %}');" data-caption="Image caption"></a>
+      </div>
+    </div>
+
+  <p>{% lorem 1 %}</p>
+  <h2>Associated exports and imports</h2>
+  <p>{% lorem 2 %}</p>
+
 </div>
 
 <div class="fullwidth-wrapper mt-4 mb-4">
@@ -67,5 +95,15 @@
   </div>
 </div>
 
+<div class="fullwidth-wrapper mt-4 mb-4">
+  <div class="container">
+    <iframe class="dataset card" src="/data/cape-town/datasets/123/"></iframe>
+  </div>
+</div>
+
+<div class="container">
+  <p>{% lorem 1 %}</p>
+  <p>{% lorem 2 %}</p>
+</div>
 
 {% endblock %}

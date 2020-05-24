@@ -98,6 +98,7 @@ def article(request, space, sector, article):
         "space": space,
         "header_image": space.photo,
         "menu": "industries",
+        "load_lightbox": True,
     }
     return render(request, "data/article.html", context)
 
