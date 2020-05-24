@@ -65,7 +65,6 @@ urlpatterns = [
 
     # STAFCP
     # Podcast
-    path("podcast/", views.podcast_series),
 
     # Community
     path("community/", views.community),
