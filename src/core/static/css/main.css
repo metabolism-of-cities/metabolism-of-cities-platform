@@ -60,14 +60,6 @@ p a {
 .text-secondary {
   color: #ff8a4e !important; }
 
-body.fullwidth .container.main-content {
-  margin: 0 !important;
-  width: 100% !important;
-  max-width: unset !important;
-  padding-left: 0;
-  padding-right: 0;
-  padding-bottom: 0; }
-
 textarea.form-control:focus, input.form-control:focus, select.custom-select:focus,
 .select2-container--bootstrap4.select2-container--focus .select2-selection {
   border-color: #144d58 !important;
@@ -1445,6 +1437,20 @@ body.gis.meta .quality-info-explainer {
 .main-nav-project-2 a.active {
   border-bottom: 2px solid #fff;
   opacity: 1 !important; }
+
+body.fullwidth .container.main-content {
+  margin: 0 !important;
+  width: 100% !important;
+  max-width: unset !important;
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0; }
+  body.fullwidth .container.main-content > .alert {
+    text-align: center; }
+  body.fullwidth .container.main-content .fullwidth-wrapper {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    background-color: rgba(20, 77, 88, 0.2); }
 
 body.library.search .container.main-content {
   padding: 0 !important;

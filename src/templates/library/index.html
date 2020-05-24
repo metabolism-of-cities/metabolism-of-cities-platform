@@ -78,7 +78,11 @@
 
   {% if show_results %}
 
-    <section class="container">
+    <div class="alert alert-warning text-center">
+      <i class="fa fa-search"></i> Your search yielded <strong>{{ items.count }}</strong> results.
+    </div>
+
+    <section class="container pb-5">
       <h3>Publications</h3>
       {% include "_library.list.html" %}
     </section>

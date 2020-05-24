@@ -737,7 +737,23 @@ def work_item(request, project_name, id):
 
 # People
 
-# NEWS AND EVENTS
+def contributor(request, project_name):
+    project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+    if request.method == "POST":
+        Work.objects.create(
+            name = "Process collaborator signup form: " + request.POST.get("name"),
+            status = Work.WorkStatus.OPEN,
+            priority = Work.WorkPriority.HIGH,
+            part_of_project = project,
+            workactivity_id = 16,
+            meta_data = request.POST,
+        )
+        messages.success(request, "Thanks! Our team will be in touch with you soon.")
+    context = {
+        "info": project,
+        "title": "Contributor page",
+    }
+    return render(request, "contribution/contributor.page.html", context)
 
 # Podcast series
 
@@ -767,9 +783,6 @@ def community(request):
     return render(request, "community/index.html", context)
 
 
-# MULTIMEDIA
-
-# AScUS conference
 
 # TEMPORARY PAGES DURING DEVELOPMENT
 

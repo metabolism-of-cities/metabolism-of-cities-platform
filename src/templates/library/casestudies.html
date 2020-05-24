@@ -14,17 +14,19 @@
     </thead>
     <tbody>
     {% for each in list %}
-      <tr>
-        <td><a href="{{ each.get_absolute_url }}">{{ each }}</a></td>
-        <td>{{ each.year }}</td>
-        <td>
-          {% for space in each.spaces.all %}
-            {% if space.is_city %}
-              <span class="badge badge-light">{{ space }}</span>
-            {% endif %}
-          {% endfor %}
-        </td>
-      </tr>
+      {% if each.spaces.all %}
+        <tr>
+          <td><a href="{{ each.get_absolute_url }}">{{ each }}</a></td>
+          <td>{{ each.year }}</td>
+          <td>
+            {% for space in each.spaces.all %}
+              {% if space.is_city %}
+                <span class="badge badge-light">{{ space }}</span>
+              {% endif %}
+            {% endfor %}
+          </td>
+        </tr>
+      {% endif %}
     {% endfor %}
     </tbody>
   </table>

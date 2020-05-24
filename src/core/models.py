@@ -99,6 +99,8 @@ class Record(models.Model):
     # We are going to delete this post-launch
     old_id = models.IntegerField(null=True, blank=True, db_index=True, help_text="Only used for the migration between old and new structure")
 
+    meta_data = JSONField(null=True, blank=True)
+
     def __str__(self):
         return self.name
 
@@ -1049,7 +1051,6 @@ class UploadSession(Record):
     uploader = models.ForeignKey(People, on_delete=models.CASCADE)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     part_of_project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
-    meta_data = JSONField(null=True, blank=True)
     TYPE = (
         ("shapefile", "Shapefile"),
         ("flowdata", "Material flow data"),

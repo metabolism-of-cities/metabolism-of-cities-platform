@@ -77,6 +77,9 @@ urlpatterns = [
     path("accounts/logout/", views.user_logout, name="logout"),
     path("accounts/profile/", views.user_profile, name="user_profile"),
 
+    # Interaction links
+    path("contributor/", views.contributor, { "project_name": app_name }, name="contributor"),
+
     # MOOC
     path("mooc/<int:id>/<int:module>/overview/", views.mooc_module),
     path("mooc/<int:id>/overview/", views.mooc),
