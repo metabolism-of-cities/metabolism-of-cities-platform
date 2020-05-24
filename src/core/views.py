@@ -244,7 +244,7 @@ def user_login(request, project=None):
             messages.error(request, "We could not authenticate you, please try again.")
 
     context = {}
-    return render(request, "auth/login.html", load_design(context, project))
+    return render(request, "auth/login.html", context)
 
 def user_logout(request, project=None):
     logout(request)
@@ -275,7 +275,7 @@ def index(request):
         "header_subtitle": "Your hub for anyting around urban metabolism",
         "show_project_design": True,
     }
-    return render(request, "index.html", load_design(context))
+    return render(request, "index.html", context)
 
 # News and events
 
@@ -344,7 +344,7 @@ def projects(request):
         "header_title": "Projects",
         "header_subtitle": "Overview of projects undertaken by the Metabolism of Cities community",
     }
-    return render(request, "projects.html", load_design(context))
+    return render(request, "projects.html", context)
 
 def project(request, slug):
     info = get_object_or_404(Project, slug=slug)
@@ -357,7 +357,7 @@ def project(request, slug):
         "header_subtitle_link": "<a href='/projects/'>Projects</a>",
         "show_relationship": info.id,
     }
-    return render(request, "project.html", load_design(context))
+    return render(request, "project.html", context)
 
 # Webpage is used for general web pages, and they can be opened in
 # various ways (using ID, using slug). They can have different presentational formats
