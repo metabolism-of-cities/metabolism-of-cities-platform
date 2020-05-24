@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% load humanize %}
 
 {% block content %}
 
@@ -9,10 +10,9 @@
       <div class="col-lg-4">
         <div class="card">
         {% if info.image %}
-        <div class="card-header">
-          <img src="{{ info.image.thumbnail.url }}" alt="" />
-        </div>
+          <img src="{{ info.image.url }}" alt="" />
         {% endif %}
+
           <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Tags
@@ -21,6 +21,24 @@
                 <a class="btn btn-sm btn-primary-outline mt-1" href="{% url "library:index" %}?find=true&amp;search={{ each.id }}">{{ each }}</a>
               {% endfor %}
             </li>
+
+            {% if info.meta_data.budget %}
+              <li class="list-group-item">
+                <i class="far fa-fw fa-wallet mb-1 mr-1" aria-hidden="true"></i> Budget
+                {{ info.meta_data.budget_currency }}
+                {{ info.meta_data.budget|intcomma }}
+              </li>
+            {% endif %}
+
+            {% if relationships %}
+              {% for each in relationships %}
+              <li class="list-group-item">
+                <i class="far fa-fw fa-wallet mb-1 mr-1" aria-hidden="true"></i> 
+                {{ each }}
+              </li>
+              {% endfor %}
+            {% endif %}
+
             {% if info.url %}
               <a class="list-group-item" href="{{ info.url }}">
                 <i class="far fa-fw fa-link mb-1 mr-1" aria-hidden="true"></i> Project website

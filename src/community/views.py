@@ -106,6 +106,8 @@ def project(request, id):
         "header_title": info.name,
         "header_subtitle": "Projects",
         "edit_link": "/admin/core/publicproject/" + str(info.id) + "/change/",
+        "show_relationship": info.id,
+        "relationships": info.child_list.all(),
     }
     return render(request, "community/project.html", context)
 
