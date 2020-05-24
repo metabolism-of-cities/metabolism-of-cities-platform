@@ -6,9 +6,11 @@ from core.models import *
 PROJECT_ID = settings.PROJECT_ID_LIST
 
 def index(request):
+
     context = {
         "show_project_design": True,
     }
+
     return render(request, "template/blank.html", context)
 
 def person(request, id):
@@ -31,16 +33,79 @@ def people_list(request):
 
 
 def projects(request):
-    list = ForumMessage.objects.filter(parent__isnull=True)
+
+    if "import" in request.GET:
+        import csv
+        print("importing")
+        file = settings.MEDIA_ROOT + "/import/projects.csv"
+        funders = {}
+        with open(file, "r") as csvfile:
+            contents = csv.DictReader(csvfile)
+            for row in contents:
+                meta = {}
+                name = row["name"]
+                print(name)
+                check = PublicProject.objects.filter(name=name)
+                if check:
+                    info = check[0]
+                    info.description = row["description"]
+                    if row["start_date"]:
+                        info.start_date = row["start_date"]
+                    if row["end_date"]:
+                        info.end_date = row["end_date"]
+                    if row["logo"] and not info.image:
+                        info.image = row["logo"]
+
+                    if row["funding_program"]:
+                        funder = row["funding_program"]
+                        if funder in funders:
+                            funder_id = funders[funder]
+                        else:
+                            checkfunder = Organization.objects.filter(name=funder)
+                            if checkfunder:
+                                f = checkfunder[0]
+                            else:
+                                f = Organization.objects.create(
+                                    type = "funding_program",
+                                    name = funder,
+                                )
+                            funder_id = f.id
+                            funders[funder] = f.id
+
+                        try:
+                            RecordRelationship.objects.create(
+                                relationship_id = 5,
+                                record_parent_id = funder_id,
+                                record_child = info,
+                            )
+                        except:
+                            print("Error!")
+
+                    if row["budget"]:
+                        meta["budget"] = row["budget"]
+                        meta["budget_currency"] = "EUR"
+                    if row["institution"]:
+                        meta["institution"] = row["institution"]
+                    info.meta_data = meta
+                    info.save()
+
+
+
+    list = PublicProject.objects.all()
     context = {
         "list": list,
+        "header_title": "Projects",
+        "header_subtitle": "Research and intervention projects that are happening all over the world.",
     }
     return render(request, "community/projects.html", context)
 
 def project(request, id):
-    list = ForumMessage.objects.filter(parent__isnull=True)
+    info = PublicProject.objects.get(pk=id)
     context = {
-        "list": list,
+        "info": info,
+        "header_title": info.name,
+        "header_subtitle": "Projects",
+        "edit_link": "/admin/core/publicproject/" + str(info.id) + "/change/",
     }
     return render(request, "community/project.html", context)
 

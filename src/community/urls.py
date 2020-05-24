@@ -46,6 +46,4 @@ urlpatterns = [
     path("events/", core.event_list, { "project_name": app_name }, name="events"),
     path("events/<int:id>/", core.event, { "project_name": app_name }, name="event"),
 
-    path("<slug:slug>/", core.article, { "prefix": "/community/" }, name="community"),
-
 ]

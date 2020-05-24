@@ -1,0 +1,40 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <div class="container pb-5 pt-3">
+
+    <div class="row">
+
+      <div class="col-lg-4">
+        <div class="card">
+        {% if info.image %}
+        <div class="card-header">
+          <img src="{{ info.image.thumbnail.url }}" alt="" />
+        </div>
+        {% endif %}
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Tags
+              <br>
+              {% for each in info.tags.all %}
+                <a class="btn btn-sm btn-primary-outline mt-1" href="{% url "library:index" %}?find=true&amp;search={{ each.id }}">{{ each }}</a>
+              {% endfor %}
+            </li>
+            {% if info.url %}
+              <a class="list-group-item" href="{{ info.url }}">
+                <i class="far fa-fw fa-link mb-1 mr-1" aria-hidden="true"></i> Project website
+              </a>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-lg-8 mb-4">
+        {{ info.description|safe|linebreaks }}
+      </div>
+    </div>
+
+  </div>
+
+{% endblock %}

@@ -191,7 +191,7 @@ class PublicProject(Record):
     )
     status = models.CharField(max_length=20, choices=STATUS, default="ongoing")
     def get_absolute_url(self):
-        return reverse("project", args=[self.id])
+        return reverse("community:project", args=[self.id])
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
@@ -256,6 +256,7 @@ class Organization(Record):
         ("journal", "Journal"),
         ("society", "Academic Society"),
         ("ngo", "NGO"),
+        ("funding_program", "Funding Programme"),
         ("other", "Other"),
     )
     type = models.CharField(max_length=20, choices=ORG_TYPE)
