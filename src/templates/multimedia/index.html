@@ -5,9 +5,20 @@
 {% block css %}
   <style type="text/css">
     h5.card-title a{
-      color:#000;
-      font-weight:bold;
+      color: #144d58;
+      font-weight: bold;
      }
+     .card-header a {
+       color:#fff;
+       text-decoration: underline;
+       text-align: center;
+     }
+     .card-header a:hover {
+       text-decoration: none;
+     }
+     .card-header {
+        text-align: center;
+      }
   </style>
 {% endblock %}
 
@@ -21,9 +32,6 @@
 
     <div class="col-4">
       <div class="card">
-        <a href="{% url "multimedia:videos" %}">
-          <img src="https://images.pexels.com/photos/2041396/pexels-photo-2041396.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" class="card-img-top" alt="">
-        </a>
         <div class="card-body">
           <h5 class="card-title">
             <a href="{% url "multimedia:videos" %}">
@@ -34,19 +42,22 @@
           <p>
             Lectures, interviews, training videos, and more.
           </p>
-          <p><a href="{% url "multimedia:videos" %}">{{ videos_count }} videos</a> found.</p>
         </div>
+        <div class="card-header"><a href="{% url "multimedia:videos" %}">{{ videos_count }} videos</a> found.</div>
+      </div>
+      <div class="card mt-5">
+        <a href="{% url "multimedia:videos" %}">
+          <img src="https://images.pexels.com/photos/2041396/pexels-photo-2041396.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" class="card-img-top" alt="">
+        </a>
         <div class="card-header">
           Latest additions
         </div>
-        <div class="card-body">
-          <div class="list-group list-group-flush">
-          {% for each in videos %}
-            <a class="list-group-item" href="{{ each.get_absolute_url }}">
-              {{ each }}
-            </a>
-          {% endfor %}
-          </div>
+        <div class="list-group list-group-flush">
+        {% for each in videos %}
+          <a class="list-group-item" href="{{ each.get_absolute_url }}">
+            {{ each }}
+          </a>
+        {% endfor %}
         </div>
       </div>
 
@@ -55,9 +66,6 @@
     <div class="col-4">
 
       <div class="card">
-        <a href="{% url "multimedia:podcasts" %}">
-          <img src="/media/records/maxresdefaultPCM01.jpg" class="card-img-top" alt="">
-        </a>
         <div class="card-body">
           <h5 class="card-title">
             <a href="{% url "multimedia:podcasts" %}">
@@ -68,28 +76,30 @@
           <p>
             Podcast episodes from the Circular Metabolism podcast.
           </p>
-          <p><a href="{% url "multimedia:podcasts" %}">{{ podcasts_count }} podcasts</a> found.</p>
         </div>
+        <div class="card-header">
+          <a href="{% url "multimedia:podcasts" %}">{{ podcasts_count }} podcasts</a> found.
+        </div>
+      </div>
+      <div class="card mt-5">
+        <a href="{% url "multimedia:podcasts" %}">
+          <img src="/media/records/maxresdefaultPCM01.jpg" class="card-img-top" alt="">
+        </a>
         <div class="card-header">
           Latest additions
         </div>
-        <div class="card-body">
-          <div class="list-group list-group-flush">
-          {% for each in podcasts %}
-            <a class="list-group-item" href="{{ each.get_absolute_url }}">
-              {{ each }}
-            </a>
-          {% endfor %}
-          </div>
+        <div class="list-group list-group-flush">
+        {% for each in podcasts %}
+          <a class="list-group-item" href="{{ each.get_absolute_url }}">
+            {{ each }}
+          </a>
+        {% endfor %}
         </div>
       </div>
     </div>
 
     <div class="col-4">
       <div class="card">
-        <a href="{% url "multimedia:datavisualizations" %}">
-          <img src="/media/dataviz/26.jpg" class="card-img-top" alt="">
-        </a>
         <div class="card-body">
           <h5 class="card-title">
             <a href="{% url "multimedia:datavisualizations" %}">
@@ -100,19 +110,24 @@
           <p>
             Sankey diagrams, choropleth maps, system diagrams, and more.
           </p>
-          <p><a href="{% url "multimedia:datavisualizations" %}">{{ dataviz_count }} datavisualizations</a> found.</p>
         </div>
+        <div class="card-header">
+          <a href="{% url "multimedia:datavisualizations" %}">{{ dataviz_count }} datavisualizations</a> found.
+        </div>
+      </div>
+      <div class="card mt-5">
+        <a href="{% url "multimedia:datavisualizations" %}">
+          <img src="/media/dataviz/26.jpg" class="card-img-top" alt="">
+        </a>
         <div class="card-header">
           Latest additions
         </div>
-        <div class="card-body">
-          <div class="list-group list-group-flush">
-          {% for each in dataviz %}
-            <a class="list-group-item" href="{{ each.get_absolute_url }}">
-              {{ each }}
-            </a>
-          {% endfor %}
-          </div>
+        <div class="list-group list-group-flush">
+        {% for each in dataviz %}
+          <a class="list-group-item" href="{{ each.get_absolute_url }}">
+            {{ each }}
+          </a>
+        {% endfor %}
         </div>
       </div>
 
