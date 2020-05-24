@@ -513,6 +513,7 @@ class LibraryItem(Record):
         ("GE", "German"),
         ("NL", "Dutch"),
         ("OT", "Other"),
+        ("PT", "Portuguese"),
     )
     language = models.CharField(max_length=2, choices=LANGUAGES, default="EN")
     title_original_language = models.CharField(max_length=255, blank=True, null=True)
