@@ -31,6 +31,7 @@ urlpatterns = [
 
     path("<slug:space>/sectors/", views.sectors, name="sectors"),
     path("<slug:space>/sectors/<slug:sector>/", views.sector, name="sector"),
+    path("<slug:space>/sectors/<slug:sector>/<slug:article>/", views.article, name="article"),
     path("<slug:space>/datasets/<slug:dataset>/", views.dataset, name="dataset"),
     path("<slug:space>/resources/photos/", views.photos, name="photos"),
     path("<slug:space>/resources/reports/", views.library, {"type": "reports"}, name="reports"),

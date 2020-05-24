@@ -1,6 +1,5 @@
 {% extends "_base.html" %}
 {% load static %}
-{% load sass_tags %}
 
 {% block page_name %}dataset{% endblock %}
 
@@ -10,13 +9,14 @@
   <link href="{% static 'css/datatables.min.css' %}" rel="stylesheet" />
 {% endblock %}
 
-{% block content %}
-  <h1>Cape Town fish catch in 2013</h1>
-  <div class="description mb-4">
+{% block iframe_content %}
+
+  <h1 class="text-center">Cape Town fish catch in 2013</h1>
+  <div class="description mb-4 text-center">
     Aquatic agriculture catch from Cape Town in 2013, measured in tonnes
+    <hr>
   </div>
 
-  <div class="card">
     <div class="card-body">
       <div class="nav nav-pills nav-fill">
         <a class="nav-item nav-link active" data-toggle="tab" href="#tab-chart">
@@ -262,7 +262,7 @@
         </div>
       </div>
     </div>
-  </div>
+
 {% endblock %}
 
 {% block footer %}

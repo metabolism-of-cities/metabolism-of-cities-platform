@@ -1071,6 +1071,11 @@ body.dataset .rating[data-rating="5"] .full {
 body.dataset .rating[data-rating="5"] .number {
   background-color: #dc3545; }
 
+iframe.dataset {
+  width: 100%;
+  border: none;
+  height: 900px; }
+
 body.dataset.editor .preview-wrap {
   padding: 1rem;
   border: 1px solid #808080;

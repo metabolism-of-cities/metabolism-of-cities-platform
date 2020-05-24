@@ -11,6 +11,8 @@ from django.utils import timezone
 import pytz
 from functools import wraps
 
+from django.views.decorators.clickjacking import xframe_options_exempt
+
 def get_space(request, slug):
     # Here we can build an expansion if we want particular people to see dashboards that are under construction
     check = get_object_or_404(ActivatedSpace, slug=slug, site=request.site)
@@ -90,6 +92,15 @@ def sector(request, space, sector):
     }
     return render(request, "data/sector.html", context)
 
+def article(request, space, sector, article):
+    space = get_space(request, space)
+    context = {
+        "space": space,
+        "header_image": space.photo,
+        "menu": "industries",
+    }
+    return render(request, "data/article.html", context)
+
 def sectors(request, space):
     space = get_space(request, space)
     context = {
@@ -99,11 +110,13 @@ def sectors(request, space):
     }
     return render(request, "data/sector.html", context)
 
+@xframe_options_exempt
 def dataset(request, space, dataset):
     space = get_space(request, space)
     context = {
         "space": space,
         "header_image": space.photo,
         "menu": "library",
+        "iframe": True,
     }
     return render(request, "data/dataset.html", context)

@@ -1640,6 +1640,16 @@ body.dataset {
   }
 }
 
+// DATASET IFRAME INCLUSION
+
+iframe.dataset {
+  width: 100%;
+  border: none;
+  height: 900px;
+}
+.iframeblock {
+}
+
 // DATASET EDITOR PAGE
 body.dataset.editor {
   .preview-wrap {
