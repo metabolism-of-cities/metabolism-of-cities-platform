@@ -281,30 +281,48 @@ def index(request):
 
 # News and events
 
-def news_list(request):
+def news_list(request, header_subtitle=None, project_name=None):
     list = News.objects.filter(projects__in=MOC_PROJECTS).distinct()
     context = {
         "list": list[3:],
         "shortlist": list[:3],
-        "add_link": "/admin/core/news/add/"
+        "add_link": "/admin/core/news/add/",
+        "header_title": "News",
+        "header_subtitle": header_subtitle,
     }
     return render(request, "news.list.html", context)
 
-def news(request, slug):
-    list = News.objects.filter(projects__in=MOC_PROJECTS).distinct()
+def news(request, slug, project_name=None):
+    if project_name:
+        project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+        list = News.objects.filter(projects=project)
+    else:
+        list = News.objects.filter(projects__in=MOC_PROJECTS).distinct()
+    info = get_object_or_404(News, slug=slug)
     context = {
-        "info": get_object_or_404(News, slug=slug),
+        "header_title": "News",
+        "header_subtitle": info,
+        "info": info,
         "latest": list[:3],
         "edit_link": "/admin/core/news/" + str(id) + "/change/"
     }
     return render(request, "news.html", context)
 
-def event_list(request):
+def event_list(request, header_subtitle=None, project_name=None):
+
     article = get_object_or_404(Webpage, pk=47)
     today = timezone.now().date()
+    list = Event.objects.filter(end_date__gte=today).order_by("start_date")
+    upcoming = Event.objects.filter(end_date__lt=today)
+
+    if project_name:
+        project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+        list = list.filter(projects=project)
+        upcoming = upcoming.filter(projects=project)
+
     context = {
-        "upcoming": Event.objects.filter(end_date__gte=today).order_by("start_date"),
-        "archive": Event.objects.filter(end_date__lt=today),
+        "upcoming": upcoming,
+        "archive": list,
         "add_link": "/admin/core/event/add/",
         "header_title": "Events",
         "header_subtitle": "Find out what is happening around you!",

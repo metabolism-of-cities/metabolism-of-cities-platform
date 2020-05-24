@@ -24,7 +24,7 @@
   <div class="row">
     {% for each in shortlist %}
       <div class="col-lg-4 mb-sm-4 mb-lg-0">
-        <a class="card btn-card" href="/news/{{ each.slug }}/">
+        <a class="card btn-card" href="{{ each.slug }}/">
           {% if each.image %}
             <img src="{{ each.image.url }}" class="card-img-top" alt="">
           {% endif %}
@@ -47,7 +47,7 @@
   <div class="row">
     {% for each in list %}
       <div class="col-lg-6 mb-3">
-        <a href="{{ each.get_absolute_url }}" class="card btn-card">
+        <a href="{{ each.slug }}/" class="card btn-card">
           <div class="card-body media">
             {% if each.image %}
               <img class="rounded" src="{{ each.image.url }}" alt="">

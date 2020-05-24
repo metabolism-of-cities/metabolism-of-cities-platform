@@ -331,7 +331,7 @@ class Event(Record):
     start_date = models.DateTimeField(null=True, blank=True)
     end_date = models.DateTimeField(null=True, blank=True)
     slug = models.SlugField(max_length=255)
-    site = models.ForeignKey(Site, on_delete=models.CASCADE)
+    projects = models.ManyToManyField(Project)
     class Meta:
         ordering = ["-start_date", "-id"]
     def get_absolute_url(self):

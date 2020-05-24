@@ -29,47 +29,6 @@ def people_list(request):
     }
     return render(request, "people.list.html", context)
 
-def news_list(request, project_name):
-    list = News.objects.filter(projects=PROJECT_ID[project_name])
-    context = {
-        "list": list[3:],
-        "shortlist": list[:3],
-        "add_link": "/admin/core/news/add/"
-    }
-    return render(request, "news.list.html", context)
-
-def news(request, slug):
-    context = {
-        "info": get_object_or_404(News, slug=slug),
-        "latest": News.objects.all()[:3],
-        "edit_link": "/admin/core/news/" + str(id) + "/change/"
-    }
-    return render(request, "news.html", context)
-
-def event_list(request):
-    article = get_object_or_404(Webpage, pk=47)
-    today = timezone.now().date()
-    context = {
-        "upcoming": Event.objects.filter(end_date__gte=today).order_by("start_date"),
-        "archive": Event.objects.filter(end_date__lt=today),
-        "add_link": "/admin/core/event/add/",
-        "header_title": "Events",
-        "header_subtitle": "Find out what is happening around you!",
-    }
-    return render(request, "event.list.html", context)
-
-def event(request, id):
-    article = get_object_or_404(Webpage, pk=16)
-    info = get_object_or_404(Event, pk=id)
-    header["title"] = info.name
-    today = timezone.now().date()
-    context = {
-        "header": header,
-        "info": info,
-        "upcoming": Event.objects.filter(end_date__gte=today).order_by("start_date")[:3],
-    }
-    return render(request, "event.html", context)
-
 # FORUM
 
 def forum_list(request):
