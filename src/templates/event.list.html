@@ -12,7 +12,7 @@
   <div class="row">
     {% for each in upcoming %}
     <div class="col-md-6 col-lg-4 mb-4">
-      <a class="card btn-card" href="{{ each.get_absolute_url }}">
+      <a class="card btn-card" href="{{ each.id }}/">
         {% if each.image %}
           <img src="{{ each.image.url }}" class="card-img-top" alt="{{ each }}">
         {% endif %}
@@ -27,7 +27,7 @@
           </li>
           <li class="list-group-item">
             <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 
-            {{ each.start_date }} - {{ each.end_date }}
+            {{ each.start_date|date:"M d, Y" }}{% if each.start_date != each.end_date %} - {{ each.end_date|date:"M d, Y" }}{% endif %}
           </li>
           <li class="list-group-item">
             <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> 
@@ -74,7 +74,7 @@
   <div class="row list event-cards">
     {% for each in archive %}
     <div class="col-md-6 col-lg-4 mb-4 single-event">
-      <a class="card btn-card" href="{{ each.get_absolute_url }}">
+      <a class="card btn-card" href="{{ each.id }}/">
         {% if each.image %}
           <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
         {% endif %}
@@ -87,7 +87,8 @@
             <span class="event-location">{{ each.location }}</span>
           </li>
           <li class="list-group-item">
-            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i><span class="event-year" hidden>{{ each.start_date|date:"Y" }}</span> {{ each.start_date }} - {{ each.end_date }}
+            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i><span class="event-year" hidden>{{ each.start_date|date:"Y" }}</span> 
+            {{ each.start_date|date:"M d, Y" }}{% if each.start_date != each.end_date %} - {{ each.end_date|date:"M d, Y" }}{% endif %}
           </li>
           <li class="list-group-item">
             <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> <span class="event-category">{{ each.get_type_display }}</span>

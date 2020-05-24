@@ -312,13 +312,14 @@ def event_list(request, header_subtitle=None, project_name=None):
 
     article = get_object_or_404(Webpage, pk=47)
     today = timezone.now().date()
-    list = Event.objects.filter(end_date__gte=today).order_by("start_date")
-    upcoming = Event.objects.filter(end_date__lt=today)
+    list = Event.objects.filter(end_date__lt=today).order_by("start_date")
+    upcoming = Event.objects.filter(end_date__gte=today).order_by("start_date")
 
     if project_name:
         project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
-        list = list.filter(projects=project)
-        upcoming = upcoming.filter(projects=project)
+        # Just un-comment this once all events have been properly tagged
+        #list = list.filter(projects=project)
+        #upcoming = upcoming.filter(projects=project)
 
     context = {
         "upcoming": upcoming,
@@ -329,15 +330,14 @@ def event_list(request, header_subtitle=None, project_name=None):
     }
     return render(request, "event.list.html", context)
 
-def event(request, id):
-    article = get_object_or_404(Webpage, pk=16)
+def event(request, id, project_name=None):
     info = get_object_or_404(Event, pk=id)
-    header["title"] = info.name
     today = timezone.now().date()
     context = {
-        "header": header,
         "info": info,
         "upcoming": Event.objects.filter(end_date__gte=today).order_by("start_date")[:3],
+        "header_title": "Events",
+        "header_subtitle": info.name,
     }
     return render(request, "event.html", context)
 

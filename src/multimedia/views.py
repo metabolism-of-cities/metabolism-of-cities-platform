@@ -30,7 +30,7 @@ def index(request):
         from urllib import request as rq
         import os
         for each in videos:
-            if each.video_site == "youtube":
+            if each.video_site == "youtube" and not each.image:
                 try:
                     url = "http://i3.ytimg.com/vi/" + each.embed_code + "/maxresdefault.jpg"
                     result = rq.urlretrieve(url)

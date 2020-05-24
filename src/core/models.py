@@ -332,10 +332,13 @@ class Event(Record):
     end_date = models.DateTimeField(null=True, blank=True)
     slug = models.SlugField(max_length=255)
     projects = models.ManyToManyField(Project)
+
     class Meta:
         ordering = ["-start_date", "-id"]
+
     def get_absolute_url(self):
-        return reverse("event", args=[self.id])
+        return reverse("community:event", args=[self.id])
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
