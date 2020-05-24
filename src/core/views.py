@@ -165,7 +165,7 @@ def unauthorized_access(request):
 
 # Authentication of users
 
-def user_register(request, subsite=None):
+def user_register(request, project=None):
     if request.method == "POST":
         password = request.POST.get("password")
         email = request.POST.get("email")
