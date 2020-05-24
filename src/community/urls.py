@@ -13,8 +13,6 @@ urlpatterns = [
     path("forum/<int:id>/", views.forum_topic, name="forum_topic"),
     path("forum/create/", views.forum_form, name="forum_form"),
 
-    path("<slug:slug>/", core.article, { "prefix": "/community/" }, name="community"),
-
     # Control panel URLS from baseline
     path("controlpanel/", core.controlpanel, { "project_name": app_name }, name="controlpanel"),
     path("controlpanel/users/", core.controlpanel_users, { "project_name": app_name }, name="controlpanel_users"),
@@ -30,4 +28,7 @@ urlpatterns = [
     path("news/<slug:slug>/", views.news, { "project_name": app_name }, name="news"),
     path("events/", views.event_list, { "project_name": app_name }, name="events"),
     path("events/<int:id>/", views.event, { "project_name": app_name }, name="event"),
+
+    path("<slug:slug>/", core.article, { "prefix": "/community/" }, name="community"),
+
 ]

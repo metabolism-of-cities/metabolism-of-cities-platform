@@ -32,4 +32,10 @@ urlpatterns = [
     path("accounts/profile/", core.user_profile, { "project": app_name }, name="user_profile"),
     path("contributor/", core.contributor, { "project_name": app_name }, name="contributor"),
 
+    # Control panel URLS from baseline
+    path("controlpanel/", core.controlpanel, { "project_name": app_name }, name="controlpanel"),
+    path("controlpanel/users/", core.controlpanel_users, { "project_name": app_name }, name="controlpanel_users"),
+    path("controlpanel/design/", core.controlpanel_design, { "project_name": app_name }, name="controlpanel_design"),
+    path("controlpanel/content/", core.controlpanel_content, { "project_name": app_name }, name="controlpanel_content"),
+
 ]

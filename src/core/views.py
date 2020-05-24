@@ -643,6 +643,8 @@ def controlpanel_design(request, project_name):
 
     context = {
         "form": form,
+        "header_title": "Design",
+        "header_subtitle": "Use this section to manage the design of this site",
     }
     return render(request, "controlpanel/design.html", context)
 

@@ -1,7 +1,7 @@
 {% load static %}
 <div class="top-layer">
 
-  {% if BACK_LINK or PERMISSIONS or request.user.is_superuser %}
+  {% if BACK_LINK or PERMISSIONS or request.user.is_staff %}
     <div class="return-bar">
       <div class="container">
         {% if BACK_LINK %}
@@ -12,11 +12,14 @@
           {% endif %}
         {% endif %}
 
-        {% if PERMISSIONS or request.user.is_superuser %}
+        {% if PERMISSIONS or request.user.is_staff or request.user.is_superuser %}
           <div class="float-right">
             {% for each in PERMISSIONS %}
               <span class="badge badge-light">{{ each.relationship.name }}</span>
             {% endfor %}
+            {% if request.user.is_staff %}
+              <span class="badge badge-light">MoC team member</span>
+            {% endif %}
             {% if request.user.is_superuser %}
               <span class="badge badge-light">Super user</span>
             {% endif %}
