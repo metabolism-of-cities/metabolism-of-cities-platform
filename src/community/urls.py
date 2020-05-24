@@ -13,6 +13,14 @@ urlpatterns = [
     path("forum/<int:id>/", views.forum_topic, name="forum_topic"),
     path("forum/create/", views.forum_form, name="forum_form"),
 
+    # Authentication and contributor functions
+    path("accounts/register/", core.user_register, { "project": app_name }, name="register"),
+    path("accounts/login/", core.user_login, { "project": app_name }, name="login"),
+    path("accounts/passwordreset/", core.user_reset, { "project": app_name }, name="passwordreset"),
+    path("accounts/logout/", core.user_logout, { "project": app_name }, name="logout"),
+    path("accounts/profile/", core.user_profile, { "project": app_name }, name="user_profile"),
+    path("contributor/", core.contributor, { "project_name": app_name }, name="contributor"),
+
     # Control panel URLS from baseline
     path("controlpanel/", core.controlpanel, { "project_name": app_name }, name="controlpanel"),
     path("controlpanel/users/", core.controlpanel_users, { "project_name": app_name }, name="controlpanel_users"),
