@@ -27,6 +27,14 @@ urlpatterns = [
     path("curation/processed/", staf.review_processed, name="review_processed"),
     path("curation/<int:id>/", staf.review_session, name="review_session"),
 
+    # Authentication and contributor functions
+    path("accounts/register/", core.user_register, { "project": app_name }, name="register"),
+    path("accounts/login/", core.user_login, { "project": app_name }, name="login"),
+    path("accounts/passwordreset/", core.user_reset, { "project": app_name }, name="passwordreset"),
+    path("accounts/logout/", core.user_logout, { "project": app_name }, name="logout"),
+    path("accounts/profile/", core.user_profile, { "project": app_name }, name="user_profile"),
+    path("contributor/", core.contributor, { "project_name": app_name }, name="contributor"),
+
     path("overview/", views.overview, name="overview"),
 
     path("<slug:space>/sectors/", views.sectors, name="sectors"),
