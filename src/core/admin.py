@@ -76,6 +76,7 @@ class VideoAdmin(admin.ModelAdmin):
 class SearchCompleteAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     autocomplete_fields = ["spaces", "tags"]
+    exclude = ["old_id", "meta_data"]
 
 class SearchAdmin(admin.ModelAdmin):
     search_fields = ["name"]
@@ -96,7 +97,17 @@ class TagAdmin(admin.ModelAdmin):
 class OrgAdmin(SearchCompleteAdmin):
     list_display = ["name", "type"]
     list_filter = ["type"]
-    exclude = ["slug"]
+    exclude = ["old_id", "meta_data", "slug"]
+
+class NewsAdmin(SearchCompleteAdmin):
+    list_display = ["name", "date", "is_public"]
+    list_filter = ["is_public", "is_deleted", "projects"]
+    exclude = ["old_id", "meta_data", "slug", "sectors"]
+
+class EventAdmin(SearchCompleteAdmin):
+    list_display = ["name", "start_date", "is_public"]
+    list_filter = ["is_public", "is_deleted", "projects"]
+    exclude = ["old_id", "meta_data", "slug", "sectors"]
 
 class SocialMediaAdmin(admin.ModelAdmin):
     autocomplete_fields = ["record"]
@@ -201,8 +212,8 @@ class BadgeAdmin(admin.ModelAdmin):
 
 admin_site.register(Tag, TagAdmin)
 admin_site.register(Record, SearchCompleteAdmin)
-admin_site.register(Event, SearchCompleteAdmin)
-admin_site.register(News, SearchCompleteAdmin)
+admin_site.register(Event, EventAdmin)
+admin_site.register(News, NewsAdmin)
 admin_site.register(Blog, SearchCompleteAdmin)
 admin_site.register(Organization, OrgAdmin)
 admin_site.register(Webpage, WebpageAdmin)
