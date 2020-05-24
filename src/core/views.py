@@ -243,7 +243,9 @@ def user_login(request, project=None):
         else:
             messages.error(request, "We could not authenticate you, please try again.")
 
-    context = {}
+    context = {
+        "project": project,
+    }
     return render(request, "auth/login.html", context)
 
 def user_logout(request, project=None):
