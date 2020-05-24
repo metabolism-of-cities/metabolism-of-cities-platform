@@ -140,6 +140,8 @@ def is_member(user, group):
 def has_permission(request, record_id, allowed_permissions):
     if request.user.is_authenticated and request.user.is_superuser:
         return True
+    elif request.user.is_authenticated and request.user.is_staff:
+        return True
     try:
         people = request.user.people
         check = RecordRelationship.objects.filter(
@@ -159,7 +161,7 @@ def unauthorized_access(request):
     Work.objects.create(
         name = "Unauthorized access detected",
         description = request.META,
-        priority = WorkPriority.HIGH,
+        priority = Work.WorkPriority.HIGH,
     )
     raise PermissionDenied
 
