@@ -1,0 +1,38 @@
+{% extends "_base.html" %}
+
+{% block css %}
+<style type="text/css">
+table i{font-size:1.3rem;}
+</style>
+{% endblock %}
+
+{% block content %}
+ 
+  {{ webpage.description|safe }}
+
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Title</th>
+        <th>Author(s)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for each in items %}
+        <tr>
+          <td><i class="fa fa-{{ each.type.icon }}"></i></td>
+          <td>
+              <a href="{{ each.id }}/">{{ each }}</a>
+            <br>
+            <em>{{ each.type }}</em>
+            {% if each.publisher %} 
+              | {{ each.publisher }}
+            {% endif %}
+          </td>
+          <td>{{ each.get_author_citation|safe }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

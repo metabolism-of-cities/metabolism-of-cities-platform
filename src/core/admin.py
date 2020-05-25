@@ -26,8 +26,9 @@ class MyAdminSite(AdminSite):
 admin_site = MyAdminSite()
 
 class WebpageAdmin(admin.ModelAdmin):
-    list_display = ["name", "site", "is_deleted"]
-    search_fields = ["name"]
+    list_display = ["name", "belongs_to", "is_deleted"]
+    list_filter = ["belongs_to"]
+    search_fields = ["name", "belongs_to__name"]
 
     def response_change(self, request, obj):
         if "_addanother" not in request.POST and "_continue" not in request.POST:

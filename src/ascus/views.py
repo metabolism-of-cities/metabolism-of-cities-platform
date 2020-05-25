@@ -530,6 +530,22 @@ def ascus_account_presentation(request, introvideo=False):
     }
     return render(request, html_page, context)
 
+# Participant-only stuff, but NOT their own account
+@check_ascus_access
+def presentations(request):
+    info = get_object_or_404(Webpage, pk=18664)
+    list = LibraryItem.objects_include_private \
+        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(tags__id=771) \
+        .order_by("name")
+    context = {
+        "header_title": info.name,
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "items": list,
+        "webpage": info,
+    }
+    return render(request, "ascus/presentations.html", context)
+
 # AScUS admin section
 @check_ascus_admin_access
 def ascus_admin(request):

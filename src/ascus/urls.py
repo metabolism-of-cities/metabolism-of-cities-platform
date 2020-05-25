@@ -7,6 +7,7 @@ from django.views.generic.base import RedirectView
 from . import views
 from core import views as core
 from community import views as community
+from library import views as library
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -24,6 +25,10 @@ urlpatterns = [
     path("preconference/", views.overview, { "preconf": True}, name="preconference"),
     path("participants/", views.participants, name="participants"),
     path("participants/<int:id>/", views.participant, name="participant"),
+
+    # Participant-only stuff
+    path("presentations/", views.presentations, name="presentations"),
+    path("presentations/<int:id>/", library.item, { "show_export": False }, name="presentation"),
 
     # Account section
     path("account/", views.ascus_account, name="account"),

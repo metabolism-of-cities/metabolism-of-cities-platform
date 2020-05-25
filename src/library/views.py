@@ -191,7 +191,7 @@ def journal(request, slug):
     }
     return render(request, "library/journal.html", context)
 
-def item(request, id):
+def item(request, id, show_export=True):
     info = get_object_or_404(LibraryItem, pk=id)
     section = "library"
     if info.type.group == "multimedia":
@@ -199,6 +199,9 @@ def item(request, id):
     context = {
         "info": info,
         "edit_link": info.get_edit_link(),
+        "show_export": show_export,
+        "show_relationship": info.id,
+        "authors": People.objects_unfiltered.filter(parent_list__record_child=info),
     }
     return render(request, "library/item.html", context)
 
