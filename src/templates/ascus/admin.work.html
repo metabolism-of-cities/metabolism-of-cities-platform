@@ -2,6 +2,13 @@
 
 {% block content %}
 
+  {% if not request.GET %}
+    <p><a href="?pending=true">View pending payments</a></p>
+  {% else %}
+    <div class="alert alert-warning">
+      {{ list.count }} pending payments.
+    </div>
+  {% endif %}
   <table class="table table-striped datatable">
     <thead>
       <tr>
@@ -23,6 +30,9 @@
     </tbody>
   </table>
 
-  <p class="mt-5"><a href="{% url "ascus:admin" %}" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a></p>
+  <p class="mt-5"><a href="{% url "ascus:admin_massmail" %}?people={% for each in list %}{{ each.related_to.people.id }},{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Send mass mail</a></p>
+  <p>
+    <a href="{% url "ascus:admin" %}" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a>
+  </p>
 
 {% endblock %}

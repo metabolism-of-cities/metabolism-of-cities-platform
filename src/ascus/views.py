@@ -757,6 +757,8 @@ def ascus_admin_work(request):
         part_of_project_id = PAGE_ID["ascus"],
         name = "Monitor for payment",
     )
+    if "pending" in request.GET:
+        list = list.filter(status=Work.WorkStatus.OPEN)
     context = {
         "header_title": "AScUS Admin",
         "header_subtitle": "Payments",

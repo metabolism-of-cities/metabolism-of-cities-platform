@@ -70,7 +70,7 @@
 
     {% include "_top-layer.html" %}
 
-  <div id="admin-controls" class="btn-group-vertical" {% if DEBUG %}style="display:none"{% endif %}>
+  <div id="admin-controls" class="btn-group-vertical"> 
 
     {% if request.user.is_authenticated and request.user.is_staff and show_project_design %}
       <a class="btn btn-secondary" href="/admin/core/projectdesign/{{ PROJECT.id }}/change/"><i class="fas fa-palette fa-fw"></i> Project design</a>
