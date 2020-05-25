@@ -113,13 +113,20 @@
   </tr>
 {% for each in topics %}
   <tr>
-    <td><a href="{% if "Pre-conference" in each.name %}{% url "ascus:preconference" %}{% else %}{% url "ascus:overview" %}{% endif %}#topic-{{ each.id }}">{{ each }}</a></td>
+    <td><a href="{% if "Pre-conference" in each.name %}{% url "ascus:preconference" %}{% else %}{% url "ascus:overview" %}{% endif %}#topic-{{ each.id }}">{{ each }}</a>
+    {% if each in my_topic_registrations %}
+    {% endif %}
+
+    </td>
     <td>{{ each.start_date|date:"l d M Y · H:i" }}-{{ each.end_date|date:"H-i" }}</td>
     <td>
       <form method="post" class="form form-horizontal">
         {% csrf_token %}
         {% if each in my_topic_registrations %}
           <i class="fa fa-check"></i> You are registered!
+          {% if each.url %}
+            <a class="btn btn-info" href="{{ each.url }}">Open room</a>
+          {% endif %}
           <button type="submit" class="btn btn-primary-outline" name="unregister" value="{{ each.id }}">Unregister</button>
         {% else %}
           <button type="submit" class="btn btn-success" name="register" value="{{ each.id }}">Register</button>

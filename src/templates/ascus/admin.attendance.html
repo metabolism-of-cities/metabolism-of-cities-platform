@@ -1,0 +1,30 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<h2>{{ info }}</h2>
+<p>{{ info.start_date }}</p>
+<p>URL: {{ info.url }}</p>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for each in list %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ each.record_parent }}</td>
+      <td>{{ each.record_parent.people.email }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<p class="mt-5"><a href="{% url "ascus:admin_massmail" %}?people={% for each in list %}{{ each.record_parent.people.id }},{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Send mass mail</a></p>
+<p><a href="javascript:history.back()" class="btn btn-primary">&laquo; Back</a></p>
+
+{% endblock %}

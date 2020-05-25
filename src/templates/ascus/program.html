@@ -51,6 +51,10 @@
           {% if each in my_topic_registrations %}
             <div class="alert alert-success">
               <i class="fa fa-check"></i> You are registered for this session!
+              {% if each.url %}
+                <a class="ml-4 btn btn-info" href="{{ each.url }}">Open room</a>
+                <em>Please sign onto the WOW room as <strong>guest user</strong></em>
+              {% endif %}
             </div>
           {% else %}
             <button type="submit" class="btn btn-success" name="register" value="{{ each.id }}">Register for this session.</button>

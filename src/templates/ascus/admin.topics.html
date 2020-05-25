@@ -7,12 +7,18 @@
   <table class="table table-striped">
     <tr>
       <th>Topic</th>
-      <th>Date</th>
+      <th>Options</th>
     </tr>
   {% for each in list %}
     <tr>
-      <td><a href="{% url "ascus:account_discussion" each.id %}?org_mode=true">{{ each }}</a></td>
-      <td>{{ each.start_date }}</td>
+      <td data-sort="{{ each.start_date|date:"U" }}">
+        <strong>{{ each|truncatewords:10 }}</strong><br>
+        <em>{{ each.start_date|date:"l M d, Y H:i" }}-{{ each.end_date|date:"H:i" }}</em>
+      </td>
+      <td>
+        <a href="{% url "ascus:account_discussion" each.id %}?org_mode=true" class="btn btn-default-outline"><i class="fa fa-pencil"></i> Edit</a>
+        <a href="{% url "ascus:admin_discussion_attendance" each.id %}" class="btn btn-default-outline"><i class="fa fa-users"></i> Attendance</a>
+      </td>
     </tr>
   {% endfor %}
   </table>

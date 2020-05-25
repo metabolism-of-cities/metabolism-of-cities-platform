@@ -563,6 +563,22 @@ def ascus_admin_list(request, type="participant"):
     return render(request, "ascus/admin.list.html", context)
 
 @check_ascus_admin_access
+def admin_discussion_attendance(request, id):
+    info = Event.objects_include_private \
+        .filter(pk=id) \
+        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(tags__id=770)[0]
+    list = info.child_list.filter(relationship_id=12).order_by("record_parent__name")
+    context = {
+        "header_title": "Attendance register",
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "info": info,
+        "list": list,
+    }
+    return render(request, "ascus/admin.attendance.html", context)
+
+
+@check_ascus_admin_access
 def ascus_admin_documents(request, type="introvideos"):
     types = {
         "introvideos": "Introduction videos", 
@@ -574,7 +590,7 @@ def ascus_admin_documents(request, type="introvideos"):
     if type == "topics":
         list = Event.objects_include_private \
             .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
-            .filter(tags__id=770).order_by("name")
+            .filter(tags__id=770).order_by("start_date")
     elif type == "presentations":
         list = Work.objects_include_private \
             .filter(related_to__parent_list__record_child__id=PAGE_ID["ascus"]) \

@@ -43,6 +43,7 @@ urlpatterns = [
     path("account/admin/payments/<int:id>/", views.ascus_admin_work_item, name="admin_payment"),
     path("account/admin/massmail/", views.admin_massmail, name="admin_massmail"),
     path("account/admin/<slug:type>/", views.ascus_admin_list, name="admin_list"),
+    path("account/admin/attendance/<int:id>/", views.admin_discussion_attendance, name="admin_discussion_attendance"),
 
     # We had some old URLs, can be removed after June 10th 2020
     path("ascus/", RedirectView.as_view(pattern_name="ascus:index", permanent=True)),
