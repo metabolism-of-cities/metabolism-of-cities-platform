@@ -126,11 +126,33 @@
         </a>
       </div>
       <div class="col-md-6 mb-4">
-        <a href="{% url 'staf:review_pending' %}" class="card btn-card">
+        <a href="{% url 'data:review_articles' %}" class="card btn-card">
           <div class="card-body">
             <div class="row">
               <div class="col icon">
                 <i class="fal fa-fw fa-clipboard-list-check" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>Data article publication queue</strong>
+                <br>
+                <small>Review data articles before publication.</small>
+                <br>
+                <span class="badge badge-light">
+                  104 tasks
+                </span>
+                <span class="badge badge-primary">
+                  34 unassigned
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div><div class="col-md-6 mb-4">
+        <a href="{% url 'staf:review_pending' %}" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-file" aria-hidden="true"></i>
               </div>
               <div class="col">
                 <strong>Incomplete uploads</strong>

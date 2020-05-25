@@ -16,27 +16,49 @@
           <li class="nav-item">
             <a class="nav-link{% if dashboard %} active{% endif %}" href="{% url 'data:dashboard' space.slug %}"><i class="fa fa-fw fa-home"></i></a>
           </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle{% if menu == "industries" %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+          <li class="nav-item dropdown projects-dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="projects-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Local industries
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{% url 'data:sector' space.slug 'agriculture' %}">Agriculture</a>
-              <a class="dropdown-item" href="{% url 'data:sector' space.slug 'water' %}">Water</a>
-              <a class="dropdown-item" href="{% url 'data:sector' space.slug 'waste' %}">Waste</a>
-              <a class="dropdown-item" href="{% url 'data:sector' space.slug 'energy' %}">Energy</a>
+            <div class="dropdown-menu projects-dropdown-menu" aria-labelledby="projects-dropdown" style="max-width:700px;top:60px;left:-402px;">
+
+                <div class="row">
+                  <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+                    <div class="projects-category"><i class="mr-2 far fa-fw fa-play-circle"></i>Manufacturing</div>
+                    <a href="{% url "core:project" "library" %}">Bread and baked goods</a>
+                    <a href="{% url "core:project" "multimedia" %}">Wine</a>
+                    <a href="{% url "core:project" "podcast" %}">Processed foods</a>
+                    <a href="{% url "core:project" "podcast" %}">Paper manufacturing</a>
+                    <a href="{% url "core:project" "podcast" %}">Clothes</a>
+                  </div>
+                  <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+                    <div class="projects-category"><i class="mr-2 far fa-fw fa-toolbox"></i>Extractive industries</div>
+                    <a href="{% url "core:project" "data" %}">Fishing</a>
+                    <a href="{% url "core:project" "stafdbs" %}">Mining</a>
+                    <a href="{% url "core:project" "staf" %}">Agriculture</a>
+                  </div>
+                  <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+                    <div class="projects-category"><i class="mr-2 far fa-fw fa-user-graduate"></i>Other industries</div>
+                    <a href="{% url "core:project" "mooc" %}">Water and sanitation</a>
+                    <a href="{% url "core:project" "urban-metabolism-minorities" %}">Retail and wholesale</a>
+                    <a href="{% url "core:project" "masterclass-designing-with-flows" %}">Transportation</a>
+                    <a href="{% url "core:project" "masterclass-designing-with-flows" %}">Construction</a>
+                  </div>
+                </div>
             </div>
           </li>
+
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle{% if menu == "resource_use" %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Resource use
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Journal articles</a>
-              <a class="dropdown-item" href="{% url 'data:reports' space.slug %}">Reports</a>
-              <a class="dropdown-item" href="{% url 'data:theses' space.slug %}">Theses</a>
-              <a class="dropdown-item" href="{% url 'data:photos' space.slug %}">Photos</a>
-              <a class="dropdown-item" href="{% url 'data:maps' space.slug %}">Maps</a>
+              <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Overview</a>
+              <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Water</a>
+              <a class="dropdown-item" href="{% url 'data:reports' space.slug %}">Electricity</a>
+              <a class="dropdown-item" href="{% url 'data:theses' space.slug %}">Construction materials</a>
+              <a class="dropdown-item" href="{% url 'data:photos' space.slug %}">Food</a>
             </div>
           </li>
           <li class="nav-item dropdown">
@@ -54,11 +76,11 @@
               Waste
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Journal articles</a>
-              <a class="dropdown-item" href="{% url 'data:reports' space.slug %}">Reports</a>
-              <a class="dropdown-item" href="{% url 'data:theses' space.slug %}">Theses</a>
-              <a class="dropdown-item" href="{% url 'data:photos' space.slug %}">Photos</a>
-              <a class="dropdown-item" href="{% url 'data:maps' space.slug %}">Maps</a>
+              <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Overview</a>
+              <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Emissions</a>
+              <a class="dropdown-item" href="{% url 'data:reports' space.slug %}">Organic waste</a>
+              <a class="dropdown-item" href="{% url 'data:theses' space.slug %}">Municipal solid waste</a>
+              <a class="dropdown-item" href="{% url 'data:maps' space.slug %}">Wastewater</a>
             </div>
           </li>
           <li class="nav-item dropdown">

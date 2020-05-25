@@ -1,0 +1,78 @@
+{% extends "_base.html" %}
+
+{% block page_name %}staf-review scoreboard{% endblock %}
+
+{% block content %}
+
+<h1>Data Curation Platform</h1>
+
+{% include "staf/review/_review-nav.html" %}
+
+<div class="row">
+  <div class="col-lg-8 order-2 order-lg-1">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Article</th>
+          <th>Type</th>
+          <th>City</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="15">Wine</a></td>
+          <td>Local industry</td>
+          <td>Cape Town</td>
+          <td>
+            <a class="btn btn-default-outline" href="15"><i class="fa fa-pencil"></i> Edit</a>
+            <a class="btn btn-default-outline" href="15"><i class="fa fa-check" ></i> Publish</a>
+          </td>
+        </tr>
+        <tr>
+          <td><a href="15">Alcoholic beverages</a></td>
+          <td>Local industry</td>
+          <td>Cape Town</td>
+          <td>
+            <a class="btn btn-default-outline" href="15"><i class="fa fa-pencil"></i> Edit</a>
+            <a class="btn btn-default-outline" href="15"><i class="fa fa-check" ></i> Publish</a>
+          </td>
+        </tr>
+        <tr>
+          <td><a href="15">Food processing</a></td>
+          <td>Local industry</td>
+          <td>Cape Town</td>
+          <td>
+            <a class="btn btn-default-outline" href="15"><i class="fa fa-pencil"></i> Edit</a>
+            <a class="btn btn-default-outline" href="15"><i class="fa fa-check" ></i> Publish</a>
+          </td>
+        </tr>
+        <tr>
+          <td><a href="15">Construction materials</a></td>
+          <td>Resource use</td>
+          <td>Cape Town</td>
+          <td>
+            <a class="btn btn-default-outline" href="15"><i class="fa fa-pencil"></i> Edit</a>
+            <a class="btn btn-default-outline" href="15"><i class="fa fa-check" ></i> Publish</a>
+          </td>
+        </tr>
+        <tr>
+          <td><a href="15">Water</a></td>
+          <td>Resource use</td>
+          <td>Cape Town</td>
+          <td>
+            <a class="btn btn-default-outline" href="15"><i class="fa fa-pencil"></i> Edit</a>
+            <a class="btn btn-default-outline" href="15"><i class="fa fa-check" ></i> Publish</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-lg-4 order-1 order-lg-2 sidebar">
+    {% include "staf/review/_badge-progress.html" %}
+  </div>
+</div>
+
+{% endblock %}
+

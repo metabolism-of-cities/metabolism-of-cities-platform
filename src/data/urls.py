@@ -26,6 +26,9 @@ urlpatterns = [
     path("curation/uploaded/", staf.review_uploaded, name="review_uploaded"),
     path("curation/processed/", staf.review_processed, name="review_processed"),
     path("curation/<int:id>/", staf.review_session, name="review_session"),
+    path("curation/articles/", staf.review_articles, name="review_articles"),
+    path("curation/articles/<int:id>/", staf.review_article, name="review_article"),
+
 
     # Authentication and contributor functions
     path("accounts/register/", core.user_register, { "project": app_name }, name="register"),

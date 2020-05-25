@@ -31,6 +31,16 @@ def review(request):
     }
     return render(request, "staf/review/index.html", context)
 
+def review_articles(request):
+    context = {
+    }
+    return render(request, "staf/review/articles.html", context)
+
+def review_article(request, id):
+    context = {
+    }
+    return render(request, "staf/review/article.html", context)
+
 def review_scoreboard(request):
     context = {
     }

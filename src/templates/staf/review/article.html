@@ -1,0 +1,66 @@
+{% extends "_base.html" %}
+
+{% block page_name %}staf-review scoreboard{% endblock %}
+
+{% block content %}
+
+<h1>Data Curation Platform</h1>
+
+{% include "staf/review/_review-nav.html" %}
+
+<form method="post">
+
+
+  <div class="form-group">
+    <label>Text</label>
+    <input type="text" name="name" class="form-control" required value="Wine" />
+  </div>
+
+  <div class="form-group markdown-textarea">
+    {% include "_markdown.html" %}
+    <textarea class="form-control mb-4" id="text" rows="30" name="text" required>## Introduction
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Eum adipisci autem consequuntur aspernatur cumque sint, aut magnam a provident? Sapiente at dolorum possimus doloremque atque sequi veritatis dignissimos est recusandae quo, repudiandae quam obcaecati ad dolore dicta voluptate, facere optio porro beatae consequatur eveniet, impedit alias accusamus eveniet ab nisi illum fuga magnam fugiat, accusamus suscipit fugit distinctio possimus aspernatur aliquam dolorum non id natus.
+
+## Overview
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+[Dataset 1874]
+
+## Pomace use in distilleries
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Aspernatur perferendis et praesentium doloribus alias quae possimus quam iste at quisquam, doloremque vero sit, quod distinctio consequuntur magnam veniam eaque iste maiores. Mollitia ducimus repellat velit vero vitae placeat corrupti, animi perspiciatis nulla quaerat vitae atque corrupti quasi suscipit modi, maxime iusto dolorum?
+
+[Photo 4934 287 332 9843 4554 457]
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+## Associated exports and imports
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Assumenda autem architecto fugiat omnis, ad saepe quae modi libero non? Ipsam inventore eveniet quod animi deleniti voluptatum architecto, tempora perferendis expedita mollitia ea accusamus quaerat sequi minima ipsa id delectus, voluptas quae dolore, recusandae nemo natus quidem animi eos laudantium qui, facilis nam rerum ipsam tenetur nisi est.
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Dolores est dolorum, delectus reprehenderit placeat veritatis nihil quidem quasi sequi ea exercitationem maiores molestias? Labore sunt quibusdam dicta dolores temporibus itaque consectetur laudantium praesentium hic, optio illum eum rem sunt temporibus aut eos accusamus. Error repudiandae rem facilis labore, aliquid sapiente modi explicabo asperiores eius sequi dolor obcaecati maxime et, corporis culpa dolorem error delectus ipsam atque, ut quaerat placeat nam reprehenderit recusandae porro maiores accusantium, sapiente ex ut fugiat? Aspernatur repudiandae est quibusdam et? Possimus ab iste quidem hic praesentium cupiditate natus perferendis, similique culpa dicta illo dolorum tempora neque, voluptatibus obcaecati ad nostrum, eaque sint sapiente laborum nemo necessitatibus tempora vel praesentium? Eveniet assumenda facilis officiis illo.
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Iste et corrupti quo dolorum dolore unde culpa, ratione obcaecati doloribus rem beatae, iure in aliquam illo veniam facere officiis quisquam, dolor quis nostrum nisi corporis optio? Ullam tempora aliquid accusantium ab, quod officiis accusamus. Repellat fuga ratione provident, nemo illum illo accusamus quas voluptatem cumque doloremque, veniam officia dolore assumenda unde? Rem aperiam illum repellat esse ea iusto?
+
+[Dataset 4874]
+
+[Dataset 5243]
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Facere ex ut tenetur accusamus quibusdam natus consequatur impedit quia. Laboriosam libero ab incidunt quidem ea nemo iure debitis, repellendus nemo voluptatum rem perferendis, esse alias laboriosam veritatis recusandae vitae deserunt sint aperiam qui, quaerat fugiat commodi repellendus delectus amet natus non dolorum eius. Delectus aspernatur dolore eum, quia tempora ipsum ipsam quibusdam fugiat nam, nisi facere sit praesentium fugit nemo iste, dolorum nemo libero quis beatae vel dolore, quas optio ratione quae fuga quo veritatis similique molestias omnis tempora iusto.</textarea>
+  </div>
+
+  <p><button type="submit" class="btn btn-success">Save</button></p>
+
+</form>
+
+{% endblock %}
+
+
+{% block footer %}
+<!-- markdown toolbar - https://github.com/github/markdown-toolbar-element -->
+<script src="https://unpkg.com/@github/markdown-toolbar-element@latest/dist/index.umd.js"></script>
+{% endblock %}
