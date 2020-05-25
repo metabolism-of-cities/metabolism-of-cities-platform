@@ -18,7 +18,7 @@
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 mt-4">
     {% for each in list %}
     <div class="col mb-4">
-      <a href="{% url "data:dashboard" each.slug %}" class="btn-thumbnail" style="background-image: url('{{ each.space.photo.image.medium.url }}');">
+      <a href="{% url "data:dashboard" each.slug %}" class="btn-thumbnail" style="background-image: url('{{ each.space.photo.image.url }}');">
         <span class="title">{{ each }}</span>
       </a>
     </div>
