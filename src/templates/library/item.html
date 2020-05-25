@@ -167,18 +167,18 @@
 
           {% for each in authors %}
             <div class="card mb-4 mt-4">
+              <a href="{% url "ascus:participant" each.id %}">
+                <img class="card-img-top" src="{{ each.image.thumbnail.url }}">
+              </a>
               <div class="card-body">
                 <div class="mb-4">
                   <h3>Uploaded by</h3>
-                  <a href="">
-                    <img class="avatar" src="{{ each.image.thumbnail.url }}">
-                  </a>
                   <span class="details">
-                    <a href=""><strong>{{ each }}</strong></a>
+                    <a href="{% url "ascus:participant" each.id %}"><strong>{{ each }}</strong></a>
                     <br>
                     {{ each.email }}<br>
                   </span>
-                  <p class="mt-4"><a href="http://">View profile</a></p>
+                  <p class="mt-4"><a href="{% url "ascus:participant" each.id %}">View profile</a></p>
                 </div>
 
               </div>
@@ -258,6 +258,8 @@
 
       <div class="col-lg-8 mb-4">
         {{ info.description|safe|linebreaks }}
+        
+        <div class="mt-4"><a href="javascript:history.back()" class="btn btn-default-outline">&laquo; Back</a></div>
       </div>
     </div>
   </div>

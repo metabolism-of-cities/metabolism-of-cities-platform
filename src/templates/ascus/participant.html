@@ -23,8 +23,13 @@
     <div class="card" style="width: 18rem;">
       <img src="{{ info.image.thumbnail.url }}" class="card-img-top">
       <div class="card-body">
+
         <h5 class="card-title">{{ info }}</h5>
+
+        {% if info.affiliation %}
         <p class="card-text">{{ info.affiliation }}</p>
+        {% endif %}
+
         <p class="card-text">{{ info.email }}</p>
         {% if info.twitter %}
           <p class="card-text">@{{ info.twitter }}</p>

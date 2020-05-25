@@ -122,7 +122,7 @@ def participant(request, id):
         relationship = Relationship.objects.get(name="Participant"),
         record_parent_id=id,
     )
-    info = info.record_parent
+    info = info.record_parent.people
     context = {
         "header_title": info.name,
         "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
