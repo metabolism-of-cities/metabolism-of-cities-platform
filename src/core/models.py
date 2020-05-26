@@ -461,7 +461,7 @@ class Message(Record):
 
     def author(self):
         try:
-            return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)[0]
+            return People.objects_unfiltered.filter(parent_list__record_child=self, parent_list__relationship__id=4)[0]
         except:
             return None
 
