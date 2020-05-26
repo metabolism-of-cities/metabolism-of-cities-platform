@@ -455,24 +455,30 @@ class ProjectDesign(models.Model):
     def __str__(self):
         return self.project.name
 
-class ForumMessage(Record):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    documents = models.ManyToManyField(Document)
+class Message(Record):
+    attachments = models.ManyToManyField(Document)
+    parent = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="messages")
+
+    def author(self):
+        try:
+            return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)[0]
+        except:
+            return None
 
     def getReply(self):
-        return ForumMessage.objects.filter(parent=self)
+        return Message.objects.filter(parent=self)
 
     def getLastActivity(self):
-        return ForumMessage.objects.filter(parent=self).last()
+        return Message.objects.filter(parent=self).last()
 
     def getForumMessageFiles(self):
-        return self.documents.all()
+        return self.attachments.all()
 
     def getContent(self):
         return markdown(self.description)
 
     def get_absolute_url(self):
-        return reverse("forum_topic", args=[self.id])
+        return reverse("community:forum_topic", args=[self.id])
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
@@ -571,6 +577,12 @@ class LibraryItem(Record):
 
     def authors(self):
         return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)
+
+    def author(self):
+        try:
+            author = People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)[0]
+        except:
+            author = None
 
     def publisher(self):
         list = Organization.objects.filter(parent_list__record_child=self, parent_list__relationship__id=2)

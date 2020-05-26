@@ -5,6 +5,7 @@ from django.conf.urls import include
 from django.views.generic.base import RedirectView
 
 from . import views
+from community import views as community
 
 app_name = "core"
 
@@ -92,4 +93,5 @@ urlpatterns = [
     path("socialmedia/<slug:type>/callback", views.socialmediaCallback),
     path("socialmedia/<slug:type>/", views.socialmedia),
 
+    path("forum/<int:id>/", community.forum, { "project_name": app_name }, name="forum"),
 ]

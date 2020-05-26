@@ -2,8 +2,18 @@ from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from core.models import *
+from django.contrib import messages
 
 PROJECT_ID = settings.PROJECT_ID_LIST
+RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
+
+# Quick function to make someone the author of something
+def set_autor(author, item):
+    RecordRelationship.objects.create(
+        relationship_id = RELATIONSHIP_ID["author"],
+        record_parent_id = author,
+        record_child_id = item,
+    )
 
 def index(request):
 
@@ -135,28 +145,28 @@ def organization(request, slug, id):
 # FORUM
 
 def forum_list(request):
-    list = ForumMessage.objects.filter(parent__isnull=True)
+    list = Message.objects.filter(parent__isnull=True)
     context = {
         "list": list,
     }
     return render(request, "forum.list.html", context)
 
-def forum_topic(request, id):
-    article = get_object_or_404(Webpage, pk=17)
-    info = get_object_or_404(ForumMessage, pk=id)
-    list = ForumMessage.objects.filter(parent=id)
+def forum(request, id, project_name=None):
+    info = get_object_or_404(Record, pk=id)
+    list = Message.objects.filter(parent=id)
     context = {
         "info": info,
-        "list": list,
+        "list_messages": list,
+        "load_messaging": True,
     }
     if request.method == "POST":
 
-        new = ForumMessage()
-        new.name = "Reply to: "+ info.name
-        new.description = request.POST["text"]
-        new.parent = info
-        new.user = request.user
-        new.save()
+        message = Message.objects.create(
+            name = "Reply to: " + info.name,
+            description = request.POST.get("text"),
+            parent = info,
+        )
+        set_autor(request.user.people.id, message.id)
 
         if request.FILES:
             files = request.FILES.getlist("file")
@@ -164,20 +174,22 @@ def forum_topic(request, id):
                 info_document = Document()
                 info_document.file = file
                 info_document.save()
-                new.documents.add(info_document)
+                new.attachments.add(info_document)
         messages.success(request, "Your message has been posted.")
+
+        if "return" in request.POST:
+            return redirect(request.POST["return"])
     return render(request, "forum.topic.html", context)
 
 def forum_form(request, id=False):
-    article = get_object_or_404(Webpage, pk=17)
     context = {
     }
     if request.method == "POST":
-        new = ForumMessage()
-        new.name = request.POST["name"]
-        new.description = request.POST["text"]
-        new.user = request.user
-        new.save()
+        message = Message.objects.create(
+            name = request.POST.get("title"),
+            description = request.POST.get("text"),
+        )
+        set_autor(request.user.people.id, message.id)
 
         if request.FILES:
             files = request.FILES.getlist("file")
@@ -185,8 +197,8 @@ def forum_form(request, id=False):
                 info_document = Document()
                 info_document.file = file
                 info_document.save()
-                new.documents.add(info_document)
+                message.attachments.add(info_document)
         messages.success(request, "Your message has been posted.")
-        return redirect(new.get_absolute_url())
+        return redirect(message.get_absolute_url())
     return render(request, "forum.form.html", context)
 
