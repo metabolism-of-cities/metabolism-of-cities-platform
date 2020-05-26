@@ -2,7 +2,13 @@
 
 {% block css %}
 <style type="text/css">
-table i{font-size:1.3rem;}
+.card img {
+  transition-property: opacity;
+  transition-duration: 0.2s;
+  max-height:200px;
+  border-bottom:1px solid #999;
+}
+.card img:hover{opacity:0.7;}
 </style>
 {% endblock %}
 
@@ -13,7 +19,7 @@ table i{font-size:1.3rem;}
   <div class="row row-cols-1 row-cols-md-3">
     {% for each in items %}
     <div class="col mb-4">
-      <div class="card">
+      <div class="card h-100">
         <a href="{{ each.id }}/">
           <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
         </a>
