@@ -247,7 +247,7 @@ def form(request, id=None):
                 "author_list": "Authors (people)",
             }
         )
-    else:
+    elif type == "dataportal":
         ModelForm = modelform_factory(
             LibraryDataPortal, 
             fields=("name", "description", "url", "tags", "spaces", "year", "language", "license", "software", "has_api"),
@@ -255,18 +255,27 @@ def form(request, id=None):
                 "year": "Year created (required)",
             }
         )
+    else:
+        ModelForm = modelform_factory(
+            LibraryItem, 
+            fields=("name", "description", "url", "image", "author_list", "file"),
+            labels = {
+                "image": "Screenshot",
+            }
+        )
     if id:
         info = get_object_or_404(LibraryItem, pk=id)
-        form = ModelForm(request.POST or None, instance=info)
+        form = ModelForm(request.POST or None, request.FILES or None, instance=info)
     else:
         form = ModelForm(request.POST or None)
     if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)
-            if type == "dataset":
-                info.type_id = 10
-            else:
-                info.type_id = 39
+            if not id:
+                if type == "dataset":
+                    info.type_id = 10
+                else:
+                    info.type_id = 39
             info.save()
             form.save_m2m()
 
@@ -277,8 +286,12 @@ def form(request, id=None):
                     relationship_id = 11,
                 )
 
-            messages.success(request, "The item was added to the library. <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=2&amp;record_child=" + str(info.id) + "'>Link to publisher</a> |  <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=4&amp;record_child=" + str(info.id) + "'>Link to author</a> ||| <a href='/admin/core/organization/add/' target='_blank'>Add a new organization</a>")
-            return redirect("library:form")
+            if "return" in request.GET:
+                messages.success(request, "The changes were saved")
+                return redirect(request.GET["return"])
+            else:
+                messages.success(request, "The item was added to the library. <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=2&amp;record_child=" + str(info.id) + "'>Link to publisher</a> |  <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=4&amp;record_child=" + str(info.id) + "'>Link to author</a> ||| <a href='/admin/core/organization/add/' target='_blank'>Add a new organization</a>")
+                return redirect("library:form")
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
 

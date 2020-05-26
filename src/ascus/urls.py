@@ -28,6 +28,7 @@ urlpatterns = [
     # Participant-only stuff
     path("presentations/", views.presentations, name="presentations"),
     path("presentations/<int:id>/", library.item, { "show_export": False }, name="presentation"),
+    path("presentations/<int:id>/edit/", library.form, name="edit_presentation"),
 
     # Account section
     path("account/", views.ascus_account, name="account"),
