@@ -54,6 +54,15 @@ PROJECT_ID_LIST = {
     "stocks": 18683,
 }
 
+RELATIONSHIP_ID_LIST = { 
+    "author": 4, 
+    "uploader": 11, 
+    "participant": 12, 
+    "participant": 12, 
+    "member": 6, 
+    "publisher": 2, 
+}
+
 PROJECT_LIST = {
     "library": { "id": 2, "url": "library/" },
     "multimedia": { "id": 3, "url": "multimedia/" },

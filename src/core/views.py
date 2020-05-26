@@ -61,6 +61,7 @@ import facebook
 TAG_ID = settings.TAG_ID_LIST
 PAGE_ID = settings.PAGE_ID_LIST
 PROJECT_ID = settings.PROJECT_ID_LIST
+RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
 
 # If we add any new project, we should add it to this list. 
 # We must make sure to filter like this to exclude non-project news

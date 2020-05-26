@@ -42,7 +42,7 @@
           {% for details in list %}
             <tr>
               <td>
-                <a href="{% url 'forum_topic' details.id %}" class="topic-title">{{ details.title }}</a>
+                <a href="{% url 'community:forum_topic' details.id %}" class="topic-title">{{ details.title }}</a>
                 <br>
                 <!-- for tag in details.tags -->
                 <a href="#" class="badge badge-primary">Data</a>
@@ -73,7 +73,7 @@
                 {% endif %}
               </td>
               <td class="d-none d-sm-table-cell narrow-cell">
-                <a href="{% url 'forum_topic' details.id %}">
+                <a href="{% url 'community:forum_topic' details.id %}">
                   {{ details.getReply.count }}
                 </a>
               </td>

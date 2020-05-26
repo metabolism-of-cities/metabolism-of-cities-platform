@@ -948,38 +948,38 @@ body.article .card .card-body {
     margin: 0 0 1rem 1rem;
     float: right; } }
 
-body.forum thead th {
+.forum thead th {
   border-top: none; }
 
-body.forum th.topic {
+.forum th.topic {
   min-width: 50%; }
 
-body.forum .avatar {
+.forum .avatar {
   border-radius: 500px;
   height: 30px;
   line-height: 30px;
   width: 30px;
   margin-right: .25rem; }
-  body.forum .avatar.plus {
+  .forum .avatar.plus {
     background-color: #808080;
     font-weight: bold;
     text-align: center;
     color: #efefef;
     display: inline-block; }
 
-body.forum .avatar-line-height {
+.forum .avatar-line-height {
   line-height: 30px; }
 
-body.forum.topic .single-message {
+.forum.topic .single-message {
   margin-bottom: 1rem; }
-  body.forum.topic .single-message hr {
+  .forum.topic .single-message hr {
     margin-left: -1.25rem;
     width: calc(100% + 2.5rem); }
-  body.forum.topic .single-message .text img {
+  .forum.topic .single-message .text img {
     width: 100%;
     border-radius: .25rem;
     margin-bottom: 1rem; }
-  body.forum.topic .single-message .text p:last-of-type {
+  .forum.topic .single-message .text p:last-of-type {
     margin-bottom: 0; }
 
 body.forum.list table {

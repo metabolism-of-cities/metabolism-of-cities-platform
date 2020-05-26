@@ -10,7 +10,7 @@ urlpatterns = [
     path("people/<int:id>/", views.person, name="person"),
 
     path("forum/", views.forum_list, name="forum_list"),
-    path("forum/<int:id>/", views.forum_topic, name="forum_topic"),
+    path("forum/<int:id>/", views.forum, name="forum"),
     path("forum/create/", views.forum_form, name="forum_form"),
 
     # Projects

@@ -179,6 +179,21 @@
     </script>
   {% endif %}
 
+  {% if load_markdown or load_messaging %}
+    <!-- markdown toolbar - https://github.com/github/markdown-toolbar-element -->
+    <script src="https://unpkg.com/@github/markdown-toolbar-element@latest/dist/index.umd.js"></script>
+  {% endif %}
+
+  {% if load_messaging %}
+    <!-- making the browse for file input look good and work well - https://www.npmjs.com/package/bs-custom-file-input -->
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        bsCustomFileInput.init()
+      })
+    </script>
+  {% endif %}
+
   {% block footer %}{% endblock %}
 </body>
 </html>
