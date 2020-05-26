@@ -15,8 +15,6 @@
 <li class="nav-item"><a class="nav-link" href="{% url "ascus:article" "keynotes" %}">Keynotes</a></li>
 <li class="nav-item"><a class="nav-link" href="{% url "ascus:article" "technology" %}">Technology</a></li>
 <li class="nav-item"><a class="nav-link" href="{% url "ascus:article" "rates" %}">Rates</a></li>
-{% if request.user.is_authenticated %}
-  <li class="nav-item"><a class="nav-link" href="{% url "ascus:article" "account" %}">My account</a></li>
-{% else %}
+{% if not request.user.is_authenticated %}
   <li class="nav-item"><a class="nav-link" href="{% url "ascus:article" "login" %}">Login</a></li>
 {% endif %}
