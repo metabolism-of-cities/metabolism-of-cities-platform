@@ -213,6 +213,7 @@ def ascus_account(request):
     }
     return render(request, "ascus/account.html", context)
 
+@check_ascus_access
 def forum(request):
     list = ForumTopic.objects.filter(part_of_project_id=8).order_by("-last_update")
     context = {
