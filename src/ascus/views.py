@@ -351,6 +351,23 @@ def ascus_account_edit(request):
     return render(request, "ascus/account.edit.html", context)
 
 @check_ascus_access
+def account_discussion_attendance(request, id):
+    info = Event.objects_include_private \
+        .filter(pk=id) \
+        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(child_list__record_parent=request.user.people, child_list__relationship__id=14) \
+        .filter(tags__id=770)[0]
+    list = info.child_list.filter(relationship_id=12).order_by("record_parent__name")
+    context = {
+        "header_title": "Attendance register",
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "info": info,
+        "list": list,
+        "hide_mail": True,
+    }
+    return render(request, "ascus/admin.attendance.html", context)
+
+@check_ascus_access
 def ascus_account_discussion(request, id=None):
     organizer_editing = False
     info = get_object_or_404(Webpage, slug="/ascus/account/discussion/")

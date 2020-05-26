@@ -37,6 +37,7 @@ urlpatterns = [
     path("account/edit/", views.ascus_account_edit, name="account_edit"),
     path("account/discussion/", views.ascus_account_discussion, name="account_discussion"),
     path("account/discussion/<int:id>/", views.ascus_account_discussion, name="account_discussion"),
+    path("account/discussion/<int:id>/attendance/", views.account_discussion_attendance, name="account_discussion_attendance"),
 
     # Admin section
     path("account/admin/", views.ascus_admin, name="admin"),
