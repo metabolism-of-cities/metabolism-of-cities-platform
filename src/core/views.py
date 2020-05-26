@@ -861,10 +861,42 @@ def socialmedia(request, type):
             except Exception as e:
                 response = e
         elif type == "linkedin":
+            import requests
+
+            message = each.blurb
+            message = "This is a test comment"
+
             LINKEDIN_API_ACCESS_TOKEN = "AQWK3cfYBPf7GsNQr1-PG1NXGZsKcVCLoNVz8o7j1e1U7LvZAQ6oLk4aZRp9ChHQpzvXqdiwMoU7cNDTUb6SWWjprePCW16NsJtvRGPzzqoyc3JSN1g_x9Vr1UgNMeyca97kaKYrFkdNHnXITCsveRTSiE33UXJPJcXu_caV0m_BBhRuVCXDfBPT3BH_Zu12IXpf9n8I7pJWC790ZVJo1TWmV_UUPNHpIFiyqIQnXwuKpIJjDI2v7l0tTqE9hBuGyDBvEhBzylCc___njboDxc-xQUYK8bjdM7qfcDrA13dZgoad3DrXHcdHU5MoG4d74enfw4RgzMEQQlg4isoEggJsdAxfsg"
             access_token = LINKEDIN_API_ACCESS_TOKEN
-            message = each.blurb
-            response = "response-from-api"
+            urn = 68363246
+            author = f"urn:li:person:{urn}"
+
+            api_url = "https://api.linkedin.com/v2/ugcPosts"
+
+            headers = {
+                "X-Restli-Protocol-Version": "2.0.0",
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {access_token}",
+            }
+
+            post_data = {
+                "author": author,
+                "lifecycleState": "PUBLISHED",
+                "specificContent": {
+                    "com.linkedin.ugc.ShareContent": {
+                        "shareCommentary": {
+                            "text": message
+                        },
+                        "shareMediaCategory": "NONE"
+                    },
+                },
+                "visibility": {
+                    "com.linkedin.ugc.MemberNetworkVisibility": "CONNECTIONS"
+                },
+            }
+
+            response = requests.post(api_url, headers=headers, json=post_data)
+
         elif type == "instagram":
             message = each.blurb
             # In Instagram we need of course to post an image, so please use this as well:
