@@ -18,6 +18,5 @@
 {% if request.user.is_authenticated %}
   <li class="nav-item"><a class="nav-link" href="{% url "ascus:article" "account" %}">My account</a></li>
 {% else %}
-  <li class="nav-item"><a class="nav-link" href="{% url "ascus:article" "register" %}">Register now</a></li>
   <li class="nav-item"><a class="nav-link" href="{% url "ascus:article" "login" %}">Login</a></li>
 {% endif %}
