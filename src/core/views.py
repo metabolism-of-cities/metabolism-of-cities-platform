@@ -881,7 +881,7 @@ def socialmediaCallback(request, type):
         "callback": type
     }
 
-    return render(request, "template/blank.html", context)
+    return render(request, "template/callback.html", context)
 #MOOC
 
 def mooc(request, id):

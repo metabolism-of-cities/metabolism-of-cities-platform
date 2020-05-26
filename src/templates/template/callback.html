@@ -11,6 +11,9 @@
 
 {% block content %}
   Content goes here
+  {% if callback %}
+    {{ callback }}
+  {% endif %}
 {% endblock %}
 
 {% block footer %}
