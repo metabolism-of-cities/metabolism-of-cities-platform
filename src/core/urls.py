@@ -89,6 +89,7 @@ urlpatterns = [
     path("dataimport/", views.dataimport),
     path("massmail/", views.massmail),
 
+    path("socialmedia/<slug:type>/callback", views.socialmediaCallback),
     path("socialmedia/<slug:type>/", views.socialmedia),
 
 ]

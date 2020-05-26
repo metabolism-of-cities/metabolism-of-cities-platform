@@ -876,6 +876,12 @@ def socialmedia(request, type):
     messages.success(request, "Messages were posted.")
     return render(request, "template/blank.html")
 
+def socialmediaCallback(request, type):
+    context = {
+        "callback": type
+    }
+
+    return render(request, "template/blank.html", context)
 #MOOC
 
 def mooc(request, id):
