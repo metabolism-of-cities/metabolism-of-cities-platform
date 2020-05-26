@@ -3,6 +3,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from core.models import *
 from django.contrib import messages
+from django.db.models import Q
+from django.utils import timezone
+import pytz
 
 PROJECT_ID = settings.PROJECT_ID_LIST
 RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
@@ -153,11 +156,12 @@ def forum_list(request):
 
 def forum(request, id, project_name=None):
     info = get_object_or_404(Record, pk=id)
-    list = Message.objects.filter(parent=id)
+    list = Message.objects.filter(Q(parent=id) | Q(id=id))
     context = {
         "info": info,
         "list_messages": list,
         "load_messaging": True,
+        "forum_title": info.name,
     }
     if request.method == "POST":
 
@@ -167,6 +171,10 @@ def forum(request, id, project_name=None):
             parent = info,
         )
         set_autor(request.user.people.id, message.id)
+
+        if hasattr(info, "forumtopic"):
+            info.forumtopic.last_update = timezone.now()
+            info.forumtopic.save()
 
         if request.FILES:
             files = request.FILES.getlist("file")
@@ -181,13 +189,23 @@ def forum(request, id, project_name=None):
             return redirect(request.POST["return"])
     return render(request, "forum.topic.html", context)
 
-def forum_form(request, id=False):
-    context = {
-    }
+def forum_form(request, id=False, project_name=None):
+
+    project = None
+    if project_name:
+        project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+
     if request.method == "POST":
+        info = ForumTopic.objects.create(
+            part_of_project = project,
+            name = request.POST.get("title"),
+            last_update = timezone.now(),
+        )
+        set_autor(request.user.people.id, info.id)
         message = Message.objects.create(
             name = request.POST.get("title"),
             description = request.POST.get("text"),
+            parent = info,
         )
         set_autor(request.user.people.id, message.id)
 
@@ -199,6 +217,14 @@ def forum_form(request, id=False):
                 info_document.save()
                 message.attachments.add(info_document)
         messages.success(request, "Your message has been posted.")
+
+        if project_name == "ascus":
+            return redirect(project_name + ":forum", info.id)
+
         return redirect(message.get_absolute_url())
+
+    context = {
+        "load_messaging": True,
+    }
     return render(request, "forum.form.html", context)
 

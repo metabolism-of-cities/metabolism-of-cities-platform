@@ -213,7 +213,19 @@ def ascus_account(request):
     }
     return render(request, "ascus/account.html", context)
 
+def forum(request):
+    list = ForumTopic.objects.filter(part_of_project_id=8).order_by("-last_update")
+    context = {
+        "list": list,
+        "header_title": "Forum",
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+    }
+    return render(request, "forum.list.html", context)
+
 def ascus_register(request):
+    # Disabling registration
+    return redirect("/")
+
     people = user = is_logged_in = None
     if request.user.is_authenticated:
         is_logged_in = True

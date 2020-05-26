@@ -215,6 +215,7 @@ class BadgeAdmin(admin.ModelAdmin):
 admin_site.register(Tag, TagAdmin)
 admin_site.register(Record, SearchCompleteAdmin)
 admin_site.register(Message, SearchCompleteAdmin)
+admin_site.register(ForumTopic, SearchCompleteAdmin)
 admin_site.register(Event, EventAdmin)
 admin_site.register(News, NewsAdmin)
 admin_site.register(Blog, SearchCompleteAdmin)
