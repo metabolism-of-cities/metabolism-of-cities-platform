@@ -16,7 +16,8 @@
     {% for details in items %}
       <tr>
         <td>
-            <a href="{{ details.url }}">{{ details }}</a>
+            <a href="{{ details.url }}"><i class="fa fa-link fa-fw"></i></a>
+            <a href="{% url "library:form" details.id %}">{{ details }}</a>
         </td>
         <td>
           {% for each in details.spaces.all %}

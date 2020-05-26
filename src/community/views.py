@@ -135,7 +135,6 @@ def organization(request, slug, id):
 # FORUM
 
 def forum_list(request):
-    article = get_object_or_404(Webpage, pk=17)
     list = ForumMessage.objects.filter(parent__isnull=True)
     context = {
         "list": list,
