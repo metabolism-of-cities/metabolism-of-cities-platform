@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.http import Http404, HttpResponseRedirect
 from django.forms import modelform_factory
 from django.contrib.auth import authenticate, login, logout
+from markdown import markdown
 
 from django.utils import timezone
 import pytz
@@ -735,7 +736,7 @@ def admin_massmail(request):
         try:
             message = request.POST["content"]
             mailcontext = {
-                "message": message,
+                "message": markdown(message),
             }
             msg_html = render_to_string("mailbody/mail.template.html", mailcontext)
             msg_plain = message
@@ -760,7 +761,8 @@ def admin_massmail(request):
         except Exception as e:
             messages.error(request, "We could not send your mail, please review the error.<br><strong>" + str(e) + "</strong>")
     context = {
-        "list": list
+        "list": list,
+        "load_markdown": True,
     }
     return render(request, "massmail.html", context)
 

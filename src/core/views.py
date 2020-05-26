@@ -1023,8 +1023,10 @@ def massmail(request,people=None):
                     html_message=msg_html,
                 )
         messages.success(request, "The message was sent.")
+
     context = {
-        "list": list
+        "list": list,
+        "load_markdown": True,
     }
     return render(request, "massmail.html", context)
 
