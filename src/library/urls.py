@@ -23,6 +23,7 @@ urlpatterns = [
     path("authors/", views.authors, name="authors"),
     path("contribute/", views.contribute, name="contribute"),
     path("create/", views.form, name="form"),
+    path("item/<int:id>/", views.form, name="form"),
 
     # Authentication and contributor functions
     path("accounts/register/", core.user_register, { "project": app_name }, name="register"),
