@@ -907,8 +907,12 @@ def socialmedia(request, type):
         each.response = response
         each.save()
 
+    context = {
+        "response": response,
+    }
+
     messages.success(request, "Messages were posted.")
-    return render(request, "template/blank.html")
+    return render(request, "template/socialmedia.html", context)
 
 def socialmediaCallback(request, type):
     context = {
