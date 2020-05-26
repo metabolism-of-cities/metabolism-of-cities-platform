@@ -861,6 +861,8 @@ def socialmedia(request, type):
             except Exception as e:
                 response = e
         elif type == "linkedin":
+            LINKEDIN_API_ACCESS_TOKEN = "AQWK3cfYBPf7GsNQr1-PG1NXGZsKcVCLoNVz8o7j1e1U7LvZAQ6oLk4aZRp9ChHQpzvXqdiwMoU7cNDTUb6SWWjprePCW16NsJtvRGPzzqoyc3JSN1g_x9Vr1UgNMeyca97kaKYrFkdNHnXITCsveRTSiE33UXJPJcXu_caV0m_BBhRuVCXDfBPT3BH_Zu12IXpf9n8I7pJWC790ZVJo1TWmV_UUPNHpIFiyqIQnXwuKpIJjDI2v7l0tTqE9hBuGyDBvEhBzylCc___njboDxc-xQUYK8bjdM7qfcDrA13dZgoad3DrXHcdHU5MoG4d74enfw4RgzMEQQlg4isoEggJsdAxfsg"
+            access_token = LINKEDIN_API_ACCESS_TOKEN
             message = each.blurb
             response = "response-from-api"
         elif type == "instagram":
@@ -878,7 +880,7 @@ def socialmedia(request, type):
 
 def socialmediaCallback(request, type):
     context = {
-        "callback": type
+        "callback": request
     }
 
     return render(request, "template/callback.html", context)

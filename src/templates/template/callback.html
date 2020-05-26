@@ -10,9 +10,10 @@
 {% endblock %}
 
 {% block content %}
-  Content goes here
   {% if callback %}
-    {{ callback }}
+  <code>
+    code: {{ callback }}
+  </code>
   {% endif %}
 {% endblock %}
 
