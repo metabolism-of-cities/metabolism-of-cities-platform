@@ -61,7 +61,7 @@ iframe{
 <div class="fullwidth-wrapper mt-3 mb-5">
   <div class="container">
     <h2>Introduction video</h2>
-    {% if video %}
+    {% if video and video.get_embed_code %}
       <iframe class="video-embed youtube-video" src="https://www.youtube.com/embed/{{ video.get_embed_code }}?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     {% else %}
       <p><em>This participant has not yet uploaded an introduction video.</em></p>
