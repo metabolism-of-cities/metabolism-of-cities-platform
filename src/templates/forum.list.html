@@ -12,10 +12,10 @@
 
   <div id="topic-list">
     <div class="row mb-4">
-      <div class="col-md-4 mb-2">
+      <div class="col-md-8 mb-2">
         <input class="search form-control" type="text" name="search" placeholder="Search by title">
       </div>
-      <div class="col-md-4 mb-2">
+      <div class="col-md-4 mb-2" style="display:none">
         <select class="custom-select tag-filter">
           <option value="all">Filter by tag</option>
           <option value="Conferences">Conferences</option>
@@ -24,7 +24,7 @@
         </select>
       </div>
       <div class="col-md-4 mb-2">
-        <a class="btn btn-primary d-block" href="/community/forum/create/"><i class="fas fa-fw fa-comment-alt-plus"></i> Post new topic</a>
+        <a class="btn btn-primary d-block" href="create/"><i class="fas fa-fw fa-comment-alt-plus"></i> Post new topic</a>
       </div>
     </div>
 
@@ -33,56 +33,56 @@
         <thead>
           <tr class="d-none d-sm-table-row">
             <th class="topic">Topic</th>
-            <th class="d-none d-lg-table-cell"></th>
-            <th class="d-none d-sm-table-cell narrow-cell">Replies</th>
+            {% if False %}
+              <th class="d-none d-lg-table-cell"></th>
+            {% endif %}
+            <th class="d-none d-sm-table-cell narrow-cell">Messages</th>
             <th class="d-none d-md-table-cell medium-cell">Activity</th>
           </tr>
         </thead>
         <tbody class="list">
-          {% for details in list %}
+          {% for each in list %}
             <tr>
               <td>
-                <a href="{% url 'community:forum_topic' details.id %}" class="topic-title">{{ details.title }}</a>
+                <a href="{{ each.id }}/" class="topic-title">{{ each }}</a>
+                <div style="display:none">
                 <br>
-                <!-- for tag in details.tags -->
+                <!-- for tag in each.tags -->
                 <a href="#" class="badge badge-primary">Data</a>
                 <a href="#" class="badge badge-primary">Logistics</a>
                 <!-- end for -->
                 <span class="topic-tags" hidden>
-                  <!-- for tag in details.tags -->
+                  <!-- for tag in each.tags -->
                   Data Logistics
                   <!-- end for -->
                 </span>
+                </div>
               </td>
+              {% if False %}
               <td class="d-none d-lg-table-cell">
-                {% if details.getReply.count > 5 %}
-                  {% for subdetails in details.getReply|slice:"5" %}
+                {% if each.getReply.count > 5 %}
+                  {% for subdetails in each.getReply|slice:"5" %}
                     <span class="avatar plus" title="{{ subdetails.user.first_name }} {{ subdetails.user.last_name }}">
                       {{ subdetails.user.first_name|slice:"1" }}
                     </span>
                   {% endfor %}
-                  {% with count_reply=details.getReply.count|add:"-5" %}
+                  {% with count_reply=each.getReply.count|add:"-5" %}
                     <span class="avatar plus">+{{ count_reply }}</span>
                   {% endwith %}
                 {% else %}
-                  {% for subdetails in details.getReply %}
+                  {% for subdetails in each.getReply %}
                     <span class="avatar plus" title="{{ subdetails.user.first_name }} {{ subdetails.user.last_name }}">
                       {{ subdetails.user.first_name|slice:"1" }}
                     </span>
                   {% endfor %}
                 {% endif %}
               </td>
+              {% endif %}
               <td class="d-none d-sm-table-cell narrow-cell">
-                <a href="{% url 'community:forum_topic' details.id %}">
-                  {{ details.getReply.count }}
-                </a>
+                {{ each.messages.count }}
               </td>
               <td class="d-none d-md-table-cell medium-cell">
-                {% if details.getLastActivity.date_created %}
-                  {{ details.getLastActivity.date_created|timesince }} ago
-                {% else %}
-                   -
-                {% endif %}
+                  {{ each.last_update|timesince }} ago
               </td>
             </tr>
           {% endfor %}

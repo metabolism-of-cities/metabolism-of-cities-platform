@@ -28,6 +28,7 @@ urlpatterns = [
     # Participant-only stuff
     path("presentations/", views.presentations, name="presentations"),
     path("presentations/<int:id>/", library.item, { "show_export": False }, name="presentation"),
+    path("presentations/<int:id>/edit/", library.form, name="edit_presentation"),
 
     # Account section
     path("account/", views.ascus_account, name="account"),
@@ -36,6 +37,7 @@ urlpatterns = [
     path("account/edit/", views.ascus_account_edit, name="account_edit"),
     path("account/discussion/", views.ascus_account_discussion, name="account_discussion"),
     path("account/discussion/<int:id>/", views.ascus_account_discussion, name="account_discussion"),
+    path("account/discussion/<int:id>/attendance/", views.account_discussion_attendance, name="account_discussion_attendance"),
 
     # Admin section
     path("account/admin/", views.ascus_admin, name="admin"),
@@ -53,8 +55,6 @@ urlpatterns = [
     path("ascus/", RedirectView.as_view(pattern_name="ascus:index", permanent=True)),
     path("ascus/<slug:slug>/", RedirectView.as_view(pattern_name="ascus:article")),
 
-    path("<slug:slug>/", core.article, { "prefix": "/ascus/", "subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020", "project": 8}, name="article"),
-
     # Control panel URLS from baseline
     path("controlpanel/", core.controlpanel, { "project_name": app_name }, name="controlpanel"),
     path("controlpanel/users/", core.controlpanel_users, { "project_name": app_name }, name="controlpanel_users"),
@@ -66,6 +66,11 @@ urlpatterns = [
     path("work/<int:id>/", core.work_item, { "project_name": app_name }, name="work_item"),
 
     # Forum and messaging from baseline
+    path("forum/", views.forum, name="forum"),
+    path("forum/create/", community.forum_form, { "project_name": app_name }),
     path("forum/<int:id>/", community.forum, { "project_name": app_name }, name="forum"),
+
+    path("<slug:slug>/", core.article, { "prefix": "/ascus/", "subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020", "project": 8}, name="article"),
+
 
 ]

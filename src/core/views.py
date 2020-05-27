@@ -19,6 +19,8 @@ from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
 from django.http import Http404, HttpResponseRedirect
 
+from markdown import markdown
+
 # These are used so that we can send mail
 from django.core.mail import send_mail
 from django.template.loader import render_to_string, get_template
@@ -1009,7 +1011,7 @@ def massmail(request,people=None):
     if request.method == "POST":
         message = request.POST["content"]
         mailcontext = {
-            "message": message,
+            "message": markdown(message),
         }
         msg_html = render_to_string("mailbody/mail.template.html", mailcontext)
         msg_plain = message
@@ -1029,8 +1031,10 @@ def massmail(request,people=None):
                     html_message=msg_html,
                 )
         messages.success(request, "The message was sent.")
+
     context = {
-        "list": list
+        "list": list,
+        "load_markdown": True,
     }
     return render(request, "massmail.html", context)
 

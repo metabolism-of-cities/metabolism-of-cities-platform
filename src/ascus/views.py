@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.http import Http404, HttpResponseRedirect
 from django.forms import modelform_factory
 from django.contrib.auth import authenticate, login, logout
+from markdown import markdown
 
 from django.utils import timezone
 import pytz
@@ -213,7 +214,20 @@ def ascus_account(request):
     }
     return render(request, "ascus/account.html", context)
 
+@check_ascus_access
+def forum(request):
+    list = ForumTopic.objects.filter(part_of_project_id=8).order_by("-last_update")
+    context = {
+        "list": list,
+        "header_title": "Forum",
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+    }
+    return render(request, "forum.list.html", context)
+
 def ascus_register(request):
+    # Disabling registration
+    return redirect("/")
+
     people = user = is_logged_in = None
     if request.user.is_authenticated:
         is_logged_in = True
@@ -335,6 +349,23 @@ def ascus_account_edit(request):
         "form": form,
     }
     return render(request, "ascus/account.edit.html", context)
+
+@check_ascus_access
+def account_discussion_attendance(request, id):
+    info = Event.objects_include_private \
+        .filter(pk=id) \
+        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(child_list__record_parent=request.user.people, child_list__relationship__id=14) \
+        .filter(tags__id=770)[0]
+    list = info.child_list.filter(relationship_id=12).order_by("record_parent__name")
+    context = {
+        "header_title": "Attendance register",
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "info": info,
+        "list": list,
+        "hide_mail": True,
+    }
+    return render(request, "ascus/admin.attendance.html", context)
 
 @check_ascus_access
 def ascus_account_discussion(request, id=None):
@@ -722,7 +753,7 @@ def admin_massmail(request):
         try:
             message = request.POST["content"]
             mailcontext = {
-                "message": message,
+                "message": markdown(message),
             }
             msg_html = render_to_string("mailbody/mail.template.html", mailcontext)
             msg_plain = message
@@ -747,7 +778,8 @@ def admin_massmail(request):
         except Exception as e:
             messages.error(request, "We could not send your mail, please review the error.<br><strong>" + str(e) + "</strong>")
     context = {
-        "list": list
+        "list": list,
+        "load_markdown": True,
     }
     return render(request, "massmail.html", context)
 

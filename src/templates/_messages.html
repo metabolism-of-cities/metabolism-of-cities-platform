@@ -3,7 +3,7 @@
   <div class="row mt-4">
 
     {% if list_messages %}
-      <h3 class="mt-3">Comments</h3>
+      <h3 class="mt-3">{% if forum_title %}{{ forum_title }}{% else %}Comments{% endif %}</h3>
         <div class="col-lg-12">
           {% for each in list_messages %}
             <div class="single-message card">

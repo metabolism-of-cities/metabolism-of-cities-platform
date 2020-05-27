@@ -95,7 +95,9 @@
 
 {% if PROJECT.id == 4 and space %}
   {% include "_submenu-data.html" %}
-{% endif%}
+{% elif PROJECT.id == 8 and request.user.is_authenticated %}
+  {% include "_submenu-ascus.html" %}
+{% endif %}
 
 {% if PROJECT.id == 4 and space %}
   <script>

@@ -2,7 +2,13 @@
 
 {% block css %}
 <style type="text/css">
-table i{font-size:1.3rem;}
+.card img {
+  transition-property: opacity;
+  transition-duration: 0.2s;
+  max-height:200px;
+  border-bottom:1px solid #999;
+}
+.card img:hover{opacity:0.7;}
 </style>
 {% endblock %}
 
@@ -10,29 +16,28 @@ table i{font-size:1.3rem;}
  
   {{ webpage.description|safe }}
 
-  <table class="table table-striped datatable">
-    <thead>
-      <tr>
-        <th></th>
-        <th>Title</th>
-        <th>Author(s)</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for each in items %}
-        <tr>
-          <td><i class="fa fa-{{ each.type.icon }}"></i></td>
-          <td>
-              <a href="{{ each.id }}/">{{ each }}</a>
-            <br>
-            <em>{{ each.type }}</em>
-            {% if each.publisher %} 
-              | {{ each.publisher }}
-            {% endif %}
-          </td>
-          <td>{{ each.get_author_citation|safe }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="row row-cols-1 row-cols-md-3">
+    {% for each in items %}
+    <div class="col mb-4">
+      <div class="card h-100">
+        <a href="{{ each.id }}/">
+          <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
+        </a>
+        <div class="card-body">
+          <h5 class="card-title"><a href="{{ each.id }}/">{{ each }}</a></h5>
+          {% if each.get_author_citation %}
+          <p>{{ each.get_author_citation|safe }}</p>
+          {% endif %}
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">
+          <i class="fa fa-{{ each.type.icon }}"></i>
+          {{ each.type }}
+          </small>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  </div>
+
 {% endblock %}
