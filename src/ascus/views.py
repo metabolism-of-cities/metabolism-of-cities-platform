@@ -137,10 +137,35 @@ def participant(request, id):
         record_parent_id=id,
     )
     info = info.record_parent.people
+    video = Video.objects_include_private \
+        .filter(child_list__record_parent=info) \
+        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(tags__id=769)
+    if video:
+        video = video[0]
+    else:
+        video = None
+    presentations = LibraryItem.objects_include_private \
+        .filter(child_list__record_parent=info) \
+        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(tags__id=771)
+    discussions = Event.objects_include_private \
+        .filter(child_list__record_parent=info, child_list__relationship__id=14) \
+        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(tags__id=770)
+    attendance = Event.objects_include_private \
+        .filter(child_list__record_parent=info, child_list__relationship__id=12) \
+        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(tags__id=770) \
+        .order_by("start_date")
     context = {
         "header_title": info.name,
         "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
         "info": info,
+        "video": video,
+        "presentations": presentations,
+        "discussions": discussions,
+        "attendance": attendance,
     }
     return render(request, "ascus/participant.html", context)
 
