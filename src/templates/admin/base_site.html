@@ -15,3 +15,14 @@
   }
 </style>
 {% endblock %}
+
+{% block footer %}
+  <script src="https://cdn.tiny.cloud/1/e95vc4ojyw2kjg9e2s0kbpemiqt45qqzsoiac1xgftzn2p9s/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+  <script>
+    tinymce.init({
+      selector: "textarea",
+      content_css: "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css",
+      content_css_cors: true
+    });
+  </script>
+{% endblock %}
