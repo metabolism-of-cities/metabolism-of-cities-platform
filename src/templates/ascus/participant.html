@@ -113,7 +113,7 @@ iframe{
       {% for each in attendance %}
         <tr>
           <td>
-            <a href="{% url "ascus:presentation" each.id %}">{{ each }}</a>
+            {{ each }}
           </td>
           <td>
             <strong>{{ each.start_date|date:"l M d" }}</strong><br>
