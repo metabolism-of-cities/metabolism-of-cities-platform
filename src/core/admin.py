@@ -163,9 +163,9 @@ class WorkAdmin(admin.ModelAdmin):
     def change_view(self, request, object_id, extra_content=None):
         if "view" in request.GET:
             print("View is in")
-            self.readonly_fields = ("name", "description", "is_public", "project", "complexity", "type",  "priority")
+            self.readonly_fields = ("name", "description", "is_public", "priority")
         else:
-            self.fields = ("name", "description", "is_public", "project", "complexity", "type", "related_to", "priority","assigned_to")
+            self.fields = ("name", "description", "is_public","related_to", "priority","assigned_to")
             return super().change_view(request, object_id)
 
 class WorkActivityAdmin(admin.ModelAdmin):
