@@ -23,6 +23,7 @@ urlpatterns = [
     path("overview/", views.overview, name="overview"),
     path("preconference/", views.overview, { "preconf": True}, name="preconference"),
     path("participants/", views.participants, name="participants"),
+    path("introvideos/", views.introvideos, name="introvideos"),
     path("participants/<int:id>/", views.participant, name="participant"),
 
     # Participant-only stuff

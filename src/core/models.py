@@ -31,6 +31,9 @@ import uuid
 # Maybe move to def filename @property?
 import os
 
+# For youtube url parsing
+from urllib.parse import urlparse, parse_qs
+
 # By default we really only want to see those records that are both public and not deleted
 class PublicActiveRecordManager(models.Manager):
     def get_queryset(self):
@@ -584,7 +587,8 @@ class LibraryItem(Record):
 
     def author(self):
         try:
-            author = People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)[0]
+            author = People.objects_unfiltered.filter(parent_list__record_child=self, parent_list__relationship__id=4)[0]
+            return author
         except:
             author = None
 
@@ -662,9 +666,29 @@ class Video(LibraryItem):
     def get_absolute_url(self):
         return reverse("multimedia:video", args=[self.id])
 
+    def get_embed_code(self):
+        url = self.url
+        if not url:
+            # This is for ascus only, we should fix / remove later
+            url = self.file_url
+        if url:
+            # Thank you https://stackoverflow.com/questions/4356538/how-can-i-extract-video-id-from-youtubes-link-in-python
+            # Examples:
+            # - http://youtu.be/SA2iWivDJiE
+            # - http://www.youtube.com/watch?v=_oPAwA_Udwc&feature=feedu
+            # - http://www.youtube.com/embed/SA2iWivDJiE
+            # - http://www.youtube.com/v/SA2iWivDJiE?version=3&amp;hl=en_US
+            query = urlparse(url)
+            if query.hostname == "youtu.be": return query.path[1:]
+            if query.hostname in ("www.youtube.com", "youtube.com"):
+                if query.path == "/watch": return parse_qs(query.query)["v"][0]
+                if query.path[:7] == "/embed/": return query.path.split("/")[2]
+                if query.path[:3] == "/v/": return query.path.split("/")[2]
+                return None
+
     def embed(self):
         if self.video_site == "youtube":
-            return f'<iframe class="video-embed youtube-video" src="https://www.youtube.com/embed/{self.embed_code}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+            return f'<iframe class="video-embed youtube-video" src="https://www.youtube.com/embed/{self.embed_code}?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
         elif self.video_site == "vimeo":
             return f'<iframe class="video-embed vimeo-video" title="vimeo-player" src="https://player.vimeo.com/video/{self.embed_code}" frameborder="0" allowfullscreen></iframe>'
 

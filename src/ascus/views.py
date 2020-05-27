@@ -117,6 +117,19 @@ def participants(request):
     return render(request, "ascus/participants.html", context)
 
 @check_ascus_access
+def introvideos(request):
+    list = LibraryItem.objects_include_private \
+        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(tags__id=769) \
+        .order_by("name")
+    context = {
+        "header_title": "Introduction videos",
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "list": list,
+    }
+    return render(request, "ascus/introvideos.html", context)
+
+@check_ascus_access
 def participant(request, id):
     info = RecordRelationship.objects.get(
         record_child = Project.objects.get(pk=PAGE_ID["ascus"]),
