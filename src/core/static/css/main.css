@@ -1678,3 +1678,17 @@ body.staf-review.uploaded .statistic {
   display: block;
   font-size: 1.25rem;
   font-weight: bold; }
+
+body.material-stocks.landing .landing-image {
+  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  min-height: 400px;
+  border-radius: .25rem;
+  background-image: url("https://i.imgur.com/IsgSBAy.jpg");
+  background-size: cover;
+  background-position: center;
+  text-align: center;
+  padding: 4rem 10vw;
+  color: #fbfbfb; }
+  body.material-stocks.landing .landing-image .logo {
+    max-width: 100%; }

@@ -2564,3 +2564,28 @@ body.staf-review.uploaded {
     font-weight: bold;
   }
 }
+
+// MATERIAL STOCKS PAGES
+body.material-stocks {
+
+}
+
+// MATERIAL STOCKS LANDING PAGE
+body.material-stocks.landing {
+  .landing-image {
+    box-shadow: $basic-shadow;
+    width: 100%;
+    min-height: 400px;
+    border-radius: .25rem;
+    background-image: url("https://i.imgur.com/IsgSBAy.jpg");
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+    padding: 4rem 10vw;
+    color: $very-light;
+
+    .logo {
+      max-width: 100%;
+    }
+  }
+}
