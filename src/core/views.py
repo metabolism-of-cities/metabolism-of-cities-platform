@@ -897,6 +897,12 @@ def socialmedia(request, type):
 
             response = requests.post(api_url, headers=headers, json=post_data)
 
+            if response.status_code == 201:
+                print("Success")
+                print(response.content)
+            else:
+                print(response.content)
+
         elif type == "instagram":
             message = each.blurb
             # In Instagram we need of course to post an image, so please use this as well:
