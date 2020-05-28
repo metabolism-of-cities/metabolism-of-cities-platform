@@ -487,6 +487,9 @@ class Message(Record):
     def get_absolute_url(self):
         return reverse("community:forum_topic", args=[self.id])
 
+    class Meta:
+        ordering = ["date_created"]
+
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()

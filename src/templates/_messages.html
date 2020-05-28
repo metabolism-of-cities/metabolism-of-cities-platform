@@ -14,6 +14,9 @@
                     {{ each.author }}
                   </div>
                   <div class="col-4 text-muted text-right avatar-line-height" title="{{ each.date_created|date:'l j F Y, H:i e' }}">
+                    {% if each.author == request.user.people %}
+                      <a href="edit/{{ each.id }}/"><i class="fa fa-pencil"></i></a>
+                    {% endif %}
                     {{ each.date_created|timesince }} ago
                   </div>
                 </div>
@@ -40,12 +43,12 @@
 
     <div class="col-lg-12">
 
-      <h3 class="mt-4">{% if list_messages %}Reply{% else %}Leave a comment{% endif %}</h3>
-      <form method="post" enctype="multipart/form-data" action="/forum/{% if forum_id %}{{ forum_id }}{% else %}{{ info.id }}{% endif %}/">
+      <h3 class="mt-4">{% if list_messages %}Reply{% elif message %}Edit message{% else %}Leave a comment{% endif %}</h3>
+      <form method="post" enctype="multipart/form-data" {% if not message %}action="/forum/{% if forum_id %}{{ forum_id }}{% else %}{{ info.id }}{% endif %}/"{% endif %}>
         {% csrf_token %}
         <div class="form-group markdown-textarea">
           {% include "_markdown.html" %}
-          <textarea class="form-control" id="text" name="text" rows="5"></textarea>
+          <textarea class="form-control" id="text" name="text" rows="7">{{ message.description }}</textarea>
         </div>
         <div class="form-group" style="display:none">
           <label for="files"><i class="far fa-fw fa-paperclip"></i> File(s)</label>

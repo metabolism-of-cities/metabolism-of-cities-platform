@@ -70,6 +70,7 @@ urlpatterns = [
     path("forum/", views.forum, name="forum"),
     path("forum/create/", community.forum_form, { "project_name": app_name }),
     path("forum/<int:id>/", community.forum, { "project_name": app_name }, name="forum"),
+    path("forum/<int:id>/edit/<int:edit>/", community.forum_edit, { "project_name": app_name }, name="forum_edit"),
 
     path("<slug:slug>/", core.article, { "prefix": "/ascus/", "subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020", "project": 8}, name="article"),
 

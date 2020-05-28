@@ -49,8 +49,8 @@ import pytz
 
 from functools import wraps
 import json
-import logging
 
+import logging
 logger = logging.getLogger(__name__)
 
 # Social media imports

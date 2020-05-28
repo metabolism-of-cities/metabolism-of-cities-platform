@@ -7,6 +7,9 @@ from django.db.models import Q
 from django.utils import timezone
 import pytz
 
+import logging
+logger = logging.getLogger(__name__)
+
 PROJECT_ID = settings.PROJECT_ID_LIST
 RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
 
@@ -17,6 +20,16 @@ def set_autor(author, item):
         record_parent_id = author,
         record_child_id = item,
     )
+
+def unauthorized_access(request):
+    from django.core.exceptions import PermissionDenied
+    logger.error("No access to this UploadSession")
+    Work.objects.create(
+        name = "Unauthorized access detected",
+        description = request.META,
+        priority = Work.WorkPriority.HIGH,
+    )
+    raise PermissionDenied
 
 def index(request):
 
@@ -156,7 +169,7 @@ def forum_list(request):
 
 def forum(request, id, project_name=None):
     info = get_object_or_404(Record, pk=id)
-    list = Message.objects.filter(Q(parent=id) | Q(id=id))
+    list = Message.objects.filter(parent=id)
     context = {
         "info": info,
         "list_messages": list,
@@ -187,6 +200,23 @@ def forum(request, id, project_name=None):
 
         if "return" in request.POST:
             return redirect(request.POST["return"])
+    return render(request, "forum.topic.html", context)
+
+def forum_edit(request, id, edit, project_name=None):
+    info = get_object_or_404(Record, pk=id)
+    message = get_object_or_404(Message, pk=edit)
+    if message.author() != request.user.people:
+        unauthorized_access(request)
+    if request.method == "POST":
+        message.description = request.POST.get("text")
+        message.save()
+        messages.success(request, "Changes were saved")
+        return redirect(project_name + ":forum", id)
+    context = {
+        "message": message,
+        "info": info,
+        "load_messaging": True,
+    }
     return render(request, "forum.topic.html", context)
 
 def forum_form(request, id=False, project_name=None):
