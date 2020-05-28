@@ -9,6 +9,8 @@
     function resizeIframe(obj) {
       obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
     }
+
+    window.addEventListener("resize", resizeAllIframes);
   </script>
 {% endblock %}
 
@@ -122,4 +124,17 @@
   {% include "_library.list.html" %}
 </section>
 
+{% endblock %}
+
+{% block footer %}
+  <script>
+    // function to give iframes proper height when resizing screen
+    function resizeAllIframes() {
+      $("iframe").each(function() {
+        resizeIframe(this)
+      });
+    };
+
+    window.addEventListener("resize", resizeAllIframes);
+  </script>
 {% endblock %}
