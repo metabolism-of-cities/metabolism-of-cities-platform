@@ -10,14 +10,13 @@
 {% endblock %}
 
 {% block iframe_content %}
-
-  <h1 class="text-center">Cape Town fish catch in 2013</h1>
-  <div class="description mb-4 text-center">
-    Aquatic agriculture catch from Cape Town in 2013, measured in tonnes
-    <hr>
-  </div>
-
+  <div class="card shadow-none">
     <div class="card-body">
+      <h1>Cape Town fish catch in 2013</h1>
+      <div class="description">
+        Aquatic agriculture catch from Cape Town in 2013, measured in tonnes
+      </div>
+      <hr class="tab-divider">
       <div class="nav nav-pills nav-fill">
         <a class="nav-item nav-link active" data-toggle="tab" href="#tab-chart">
           <i class="fal fa-fw fa-analytics mr-2"></i>
@@ -262,6 +261,7 @@
         </div>
       </div>
     </div>
+  </div>
 
 {% endblock %}
 

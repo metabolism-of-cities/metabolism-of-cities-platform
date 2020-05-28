@@ -3,115 +3,123 @@
 
 {% block page_name %}fullwidth{% endblock %}
 
+{% block head %}
+  <script>
+    // function to make iframe the same size as its content
+    function resizeIframe(obj) {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+    }
+  </script>
+{% endblock %}
+
 {% block content %}
 
-  <div class="container">
+<section class="container">
+  <div class="row">
+    <div class="col-9">
+      <h1>Wine Industry</h1>
 
-    <div class="row">
+      <h3>Introduction</h3>
+      <p>{% lorem 2 %}</p>
 
-      <div class="col-9">
-        <h1>Wine Industry</h1>
-
-        <h3>Introduction</h3>
-        <p>{% lorem 2 %}</p>
-
-        <h2>Overview</h2>
-        <p>{% lorem 1 %}</p>
-
-      </div>
-
-      <div class="col-3">
-        <h3>Related resources:</h3>
-
-        <div class="list-group">
-          <a class="list-group-item d-flex justify-content-between align-items-center" href="">
-            Datasets <span class="badge badge-primary badge-pill">14</span>
-          </a>
-          <a class="list-group-item d-flex justify-content-between align-items-center" href="">
-            Journal articles <span class="badge badge-primary badge-pill">14</span>
-          </a>
-          <a class="list-group-item d-flex justify-content-between align-items-center" href="">
-            Theses <span class="badge badge-primary badge-pill">14</span>
-          </a>
-          <a class="list-group-item d-flex justify-content-between align-items-center" href="">
-            Maps <span class="badge badge-primary badge-pill">14</span>
-          </a>
-          <a class="list-group-item d-flex justify-content-between align-items-center" href="">
-            Reports <span class="badge badge-primary badge-pill">14</span>
-          </a>
-          <a class="list-group-item d-flex justify-content-between align-items-center" href="">
-            Photos <span class="badge badge-primary badge-pill">14</span>
-          </a>
-          <a class="list-group-item d-flex justify-content-between align-items-center" href="">
-            Videos <span class="badge badge-primary badge-pill">14</span>
-          </a>
-        </div>
-      </div>
-
-  </div>
-
-</div>
-
-<div class="fullwidth-wrapper mt-4 mb-4">
-  <div class="container">
-    <iframe class="dataset card" src="/data/cape-town/datasets/123/"></iframe>
-  </div>
-</div>
-
-<div class="container">
-    <h2>Pomace use in distilleries</h2>
-    <p>{% lorem 2 %}</p>
-
-    <div class="row lightbox gallery mt-4 mb-4">
-      <div class="col-sm-6 col-md-3 col-lg-2">
-        <a href="{% static 'img/construction.jpg' %}" style="background-image: url('{% static 'img/construction.jpg' %}');" data-caption="Image caption"></a>
-      </div>
-      <div class="col-sm-6 col-md-3 col-lg-2">
-        <a href="{% static 'img/energy.jpg' %}" style="background-image: url('{% static 'img/energy.jpg' %}');" data-caption="Image caption"></a>
-      </div>
-      <div class="col-sm-6 col-md-3 col-lg-2">
-        <a href="{% static 'img/fishing.jpg' %}" style="background-image: url('{% static 'img/fishing.jpg' %}');" data-caption="Image caption"></a>
-      </div>
-      <div class="col-sm-6 col-md-3 col-lg-2">
-        <a href="{% static 'img/forestry.jpg' %}" style="background-image: url('{% static 'img/forestry.jpg' %}');" data-caption="Image caption"></a>
-      </div>
-      <div class="col-sm-6 col-md-3 col-lg-2">
-        <a href="{% static 'img/energy.jpg' %}" style="background-image: url('{% static 'img/energy.jpg' %}');" data-caption="Image caption"></a>
-      </div>
-      <div class="col-sm-6 col-md-3 col-lg-2">
-        <a href="{% static 'img/fishing.jpg' %}" style="background-image: url('{% static 'img/fishing.jpg' %}');" data-caption="Image caption"></a>
+      <h2>Overview</h2>
+      <p>{% lorem 1 %}</p>
+    </div>
+    <div class="col-3">
+      <h3>Related resources:</h3>
+      <div class="list-group">
+        <a class="list-group-item d-flex justify-content-between align-items-center" href="">
+          Datasets <span class="badge badge-primary badge-pill">14</span>
+        </a>
+        <a class="list-group-item d-flex justify-content-between align-items-center" href="">
+          Journal articles <span class="badge badge-primary badge-pill">14</span>
+        </a>
+        <a class="list-group-item d-flex justify-content-between align-items-center" href="">
+          Theses <span class="badge badge-primary badge-pill">14</span>
+        </a>
+        <a class="list-group-item d-flex justify-content-between align-items-center" href="">
+          Maps <span class="badge badge-primary badge-pill">14</span>
+        </a>
+        <a class="list-group-item d-flex justify-content-between align-items-center" href="">
+          Reports <span class="badge badge-primary badge-pill">14</span>
+        </a>
+        <a class="list-group-item d-flex justify-content-between align-items-center" href="">
+          Photos <span class="badge badge-primary badge-pill">14</span>
+        </a>
+        <a class="list-group-item d-flex justify-content-between align-items-center" href="">
+          Videos <span class="badge badge-primary badge-pill">14</span>
+        </a>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="fullwidth-wrapper">
+  <div class="container">
+    <iframe class="dataset card" src="/data/cape-town/datasets/123/" onload="resizeIframe(this)"></iframe>
+  </div>
+</section>
+
+<section class="container">
+  <h2>Pomace use in distilleries</h2>
+  <p>{% lorem 2 %}</p>
+
+  <div class="row lightbox gallery mt-4 mb-4">
+    <div class="col-sm-6 col-md-3 col-lg-2">
+      <a href="{% static 'img/construction.jpg' %}" style="background-image: url('{% static 'img/construction.jpg' %}');" data-caption="Image caption"></a>
+    </div>
+    <div class="col-sm-6 col-md-3 col-lg-2">
+      <a href="{% static 'img/energy.jpg' %}" style="background-image: url('{% static 'img/energy.jpg' %}');" data-caption="Image caption"></a>
+    </div>
+    <div class="col-sm-6 col-md-3 col-lg-2">
+      <a href="{% static 'img/fishing.jpg' %}" style="background-image: url('{% static 'img/fishing.jpg' %}');" data-caption="Image caption"></a>
+    </div>
+    <div class="col-sm-6 col-md-3 col-lg-2">
+      <a href="{% static 'img/forestry.jpg' %}" style="background-image: url('{% static 'img/forestry.jpg' %}');" data-caption="Image caption"></a>
+    </div>
+    <div class="col-sm-6 col-md-3 col-lg-2">
+      <a href="{% static 'img/energy.jpg' %}" style="background-image: url('{% static 'img/energy.jpg' %}');" data-caption="Image caption"></a>
+    </div>
+    <div class="col-sm-6 col-md-3 col-lg-2">
+      <a href="{% static 'img/fishing.jpg' %}" style="background-image: url('{% static 'img/fishing.jpg' %}');" data-caption="Image caption"></a>
+    </div>
+  </div>
 
   <p>{% lorem 1 %}</p>
   <h2>Associated exports and imports</h2>
   <p>{% lorem 2 %}</p>
   <p>{% lorem 3 %}</p>
   <p>{% lorem 2 %}</p>
+</section>
 
-</div>
-
-<div class="fullwidth-wrapper mt-4 mb-4">
+<section class="fullwidth-wrapper mt-4 mb-4">
   <div class="container">
-    <iframe class="dataset card" src="/data/cape-town/datasets/123/"></iframe>
+    <iframe class="dataset card" src="/data/cape-town/datasets/123/" onload="resizeIframe(this)"></iframe>
   </div>
-</div>
+</section>
 
-<div class="fullwidth-wrapper mt-4 mb-4">
-  <div class="container">
-    <iframe class="dataset card" src="/data/cape-town/datasets/123/"></iframe>
-  </div>
-</div>
-
-<div class="container">
+<section class="container">
   <p>{% lorem 1 %}</p>
   <p>{% lorem 2 %}</p>
 
-  <section>
+  <div>
     <h3>Publications</h3>
     {% include "_library.list.html" %}
-  </section>
+  </div>
+</section>
 
-</div>
+<section class="fullwidth-wrapper mt-4 mb-4">
+  <div class="container">
+    <iframe class="dataset card" src="/data/cape-town/datasets/123/" onload="resizeIframe(this)"></iframe>
+  </div>
+</section>
+
+<section class="container">
+  <p>{% lorem 1 %}</p>
+  <p>{% lorem 2 %}</p>
+
+  <h3 class="mt-4">Publications</h3>
+  {% include "_library.list.html" %}
+</section>
 
 {% endblock %}

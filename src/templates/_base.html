@@ -20,17 +20,17 @@
 
   <title>
   {% if title %}
-    {{ title }} 
+    {{ title }}
   {% elif header_title %}
     {{ header_title }}
   {% elif webpage.name %}
     {{ webpage.name }}
   {% else %}
     {% block title %}{% endblock %}
-  {% endif %} 
-  | 
+  {% endif %}
+  |
   {{ PROJECT }}
-  {% if PROJECT.back_link %} 
+  {% if PROJECT.back_link %}
     | Metabolism of Cities
   {% endif %}
   </title>
@@ -70,7 +70,7 @@
 
     {% include "_top-layer.html" %}
 
-  <div id="admin-controls" class="btn-group-vertical"> 
+  <div id="admin-controls" class="btn-group-vertical">
 
     {% if request.user.is_authenticated and request.user.is_staff and show_project_design %}
       <a class="btn btn-secondary" href="/admin/core/projectdesign/{{ PROJECT.id }}/change/"><i class="fas fa-palette fa-fw"></i> Project design</a>
@@ -111,12 +111,10 @@
     {% if request.user.is_authenticated and request.user.is_ascus_organizer %}
       <a class="btn btn-info" href="{% url "ascus:admin" %}"><i class="fas fa-user-lock fa-fw"></i> AScUS Admin</a>
     {% endif %}
-
   </div>
 
   <!-- page content -->
   <div class="container main-content">
-
     {% if messages %}
       {% for message in messages %}
         <div class="alert {{ message.tags }} alert-dismissible" role="alert">
@@ -129,16 +127,14 @@
     {% endif %}
 
     {% block content %}{% endblock %}
-
   </div>
-
 
   <!-- footers -->
   {% include "_footer.html" %}
 
   {% else %}
 
-    <div class="iframeblock p-2">
+    <div class="iframeblock">
       {% block iframe_content %}{% endblock %}
     </div>
 
