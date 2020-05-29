@@ -162,6 +162,8 @@ class RecordRelationshipAdmin(admin.ModelAdmin):
 
 class RelationshipAdmin(admin.ModelAdmin):
     list_display = ["name", "label", "is_permission"]
+    class Media:
+        js = ("js/relationship.admin.js",)
 
 class WorkAdmin(admin.ModelAdmin):
     search_fields = ["name", "part_of_project__name", "related_to__name"]
