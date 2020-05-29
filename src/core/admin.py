@@ -187,10 +187,13 @@ class WorkAdmin(admin.ModelAdmin):
         return "View"
     
     def related_to_link(self, obj):
-        url = reverse("admin:core_record_change", args=[obj.related_to.id])
-        link = format_html("<a href='{}'>{}</a>",url,  obj.related_to.name if obj.related_to.name else obj.workactivity.name)
+        if obj.related_to:
+            url = reverse("admin:core_record_change", args=[obj.related_to.id])
+            link = format_html("<a href='{}'>{}</a>",url,  obj.related_to.name if obj.related_to.name else obj.workactivity.name)
+        else:
+            link = ""
         return link
-    related_to_link.short_description = 'Related to'
+    related_to_link.short_description = "Related to"
 
     def get_readonly_fields(self, request, obj=None):
         if obj and "edit" not in request.GET:
