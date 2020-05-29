@@ -1,5 +1,6 @@
 from django.urls import path
 from django.contrib.auth import urls
+from django.contrib.auth import views as auth_views
 from django.conf.urls import include
 
 from django.views.generic.base import RedirectView
@@ -72,7 +73,35 @@ urlpatterns = [
     path("forum/<int:id>/", community.forum, { "project_name": app_name }, name="forum"),
     path("forum/<int:id>/edit/<int:edit>/", community.forum_edit, { "project_name": app_name }, name="forum_edit"),
 
-    path("<slug:slug>/", core.article, { "prefix": "/ascus/", "subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020", "project": 8}, name="article"),
+    # Password reset forms
+    path(
+        "accounts/passwordreset/",
+        auth_views.PasswordResetView.as_view(
+            template_name = "auth/reset.html", 
+            email_template_name = "mailbody/password.reset.txt", 
+            html_email_template_name = "mailbody/password.reset.html", 
+            subject_template_name = "mailbody/password.reset.subject.txt", 
+            success_url = "/accounts/passwordreset/sent/",
+            extra_email_context = { "domain": "https://ascus.metabolismofcities.org" },
+        ), 
+        name="password_reset", 
+    ),
+    path(  
+        "accounts/passwordreset/sent/",
+         auth_views.PasswordResetDoneView.as_view(template_name="auth/reset.sent.html"),
+         name="password_reset_done",
+    ),
+    path(  
+        "accounts/passwordreset/confirm/<uidb64>/<token>/",
+        auth_views.PasswordResetConfirmView.as_view(template_name="auth/reset.confirm.html", success_url="/accounts/passwordreset/complete/"),
+        name="password_reset_confirm",
+    ),
+    path(  
+        "accounts/passwordreset/complete/",
+        auth_views.PasswordResetCompleteView.as_view(template_name="auth/reset.success.html"),
+        name="password_reset_complete",
+    ),
 
+    path("<slug:slug>/", core.article, { "prefix": "/ascus/", "subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020", "project": 8}, name="article"),
 
 ]

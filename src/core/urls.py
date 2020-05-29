@@ -7,6 +7,8 @@ from django.views.generic.base import RedirectView
 from . import views
 from community import views as community
 
+from django.contrib.auth import views as auth_views
+
 app_name = "core"
 
 urlpatterns = [
@@ -73,13 +75,40 @@ urlpatterns = [
     # Authentication
     path("accounts/register/", views.user_register, name="register"),
     path("accounts/login/", views.user_login, name="login"),
-    path("accounts/passwordreset/", views.user_reset, name="passwordreset"),
     path("accounts/logout/", views.user_logout, name="logout"),
     path("accounts/profile/", views.user_profile, name="user_profile"),
 
     # Interaction links
     path("contributor/", views.contributor, { "project_name": app_name }, name="contributor"),
 
+    # Password reset forms
+    path(
+        "accounts/passwordreset/",
+        auth_views.PasswordResetView.as_view(
+            template_name = "auth/reset.html", 
+            email_template_name = "mailbody/password.reset.txt", 
+            html_email_template_name = "mailbody/password.reset.html", 
+            subject_template_name = "mailbody/password.reset.subject.txt", 
+            success_url = "/accounts/passwordreset/sent/",
+            extra_email_context = { "domain": "https://metabolismofcities.org" },
+        ), 
+        name="password_reset", 
+    ),
+    path(  
+        "accounts/passwordreset/sent/",
+         auth_views.PasswordResetDoneView.as_view(template_name="auth/reset.sent.html"),
+         name="password_reset_done",
+    ),
+    path(  
+        "accounts/passwordreset/confirm/<uidb64>/<token>/",
+        auth_views.PasswordResetConfirmView.as_view(template_name="auth/reset.confirm.html", success_url="/accounts/passwordreset/complete/"),
+        name="password_reset_confirm",
+    ),
+    path(  
+        "accounts/passwordreset/complete/",
+        auth_views.PasswordResetCompleteView.as_view(template_name="auth/reset.success.html"),
+        name="password_reset_complete",
+    ),
     # MOOC
     path("mooc/<int:id>/<int:module>/overview/", views.mooc_module),
     path("mooc/<int:id>/overview/", views.mooc),
