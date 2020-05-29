@@ -9,6 +9,7 @@ from django_cron.models import CronJobLog
 from stafdb.models import *
 from django.contrib.gis import admin
 from django.contrib.auth.admin import UserAdmin
+from django.utils.html import format_html
 
 class GeoModelAdmin(admin.ModelAdmin):
      map_width = 100
@@ -167,11 +168,36 @@ class RelationshipAdmin(admin.ModelAdmin):
 
 class WorkAdmin(admin.ModelAdmin):
     search_fields = ["name", "part_of_project__name", "related_to__name"]
-    list_display = ["name", "part_of_project", "related_to", "status", "priority"]
+    list_display = ["name", "part_of_project", "related_to_link", "status", "priority", "view", "edit"]
     list_filter = ["part_of_project", "status", "priority"]
     autocomplete_fields = ["spaces", "tags", "part_of_project", "related_to", "assigned_to"]
     exclude = ["image"]
+    list_display_links = ["name" ,"view"]
 
+    fields = ["name", "description", "tags", "spaces", "sectors", "is_deleted", "is_public", "old_id", "priority","part_of_project", "workactivity","related_to", "assigned_to", "status"]
+
+    def edit(self, obj):
+        edit_link = format_html("<a href='/admin/{}/{}/{}/change/?edit=true'>Edit</a>",
+             obj._meta.app_label, 
+             obj._meta.model_name, 
+             obj.id)
+        return edit_link
+
+    def view(self, obj):
+        return "View"
+    
+    def related_to_link(self, obj):
+        url = reverse("admin:core_record_change", args=[obj.related_to.id])
+        link = format_html("<a href='{}'>{}</a>",url,  obj.related_to.name if obj.related_to.name else obj.workactivity.name)
+        return link
+    related_to_link.short_description = 'Related to'
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj and "edit" not in request.GET:
+            return["name", "description", "tags", "spaces", "sectors", "is_deleted", "is_public", "old_id", "priority","part_of_project", "workactivity","related_to"]
+        else:
+            return[]
+    
 class WorkActivityAdmin(admin.ModelAdmin):
     search_fields = ["name"]
 
