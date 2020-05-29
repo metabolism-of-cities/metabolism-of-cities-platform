@@ -1531,18 +1531,26 @@ body.forum.topic {
 
 // DATASET PAGE
 body.dataset {
+  background-color: $white;
+
   .tab-divider {
     margin: 20px 0 20px -20px;
     width: calc(100% + 40px);
   }
 
+  .nav.nav-pills {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
   .tab-pane {
-    min-height: 500px;
+    height: 500px;
+    max-height: 100vh;
   }
 
   #tab-chart {
     #chart {
-      height: 500px;
       max-height: 100vh;
     }
 
@@ -1641,13 +1649,14 @@ body.dataset {
 }
 
 // DATASET IFRAME INCLUSION
-
 iframe.dataset {
   width: 100%;
   border: none;
-  height: 900px;
+  min-height: 700px;
 }
+
 .iframeblock {
+
 }
 
 // DATASET EDITOR PAGE
@@ -2575,17 +2584,23 @@ body.material-stocks.landing {
   .landing-image {
     box-shadow: $basic-shadow;
     width: 100%;
-    min-height: 400px;
+    min-height: 600px;
     border-radius: .25rem;
     background-image: url("https://i.imgur.com/IsgSBAy.jpg");
     background-size: cover;
     background-position: center;
     text-align: center;
-    padding: 4rem 10vw;
+    padding: 8rem 10vw;
     color: $very-light;
 
     .logo {
       max-width: 100%;
     }
+  }
+
+  .navbar-nav,
+  .return-bar,
+  footer {
+    display: none;
   }
 }

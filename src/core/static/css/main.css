@@ -868,6 +868,7 @@ body.single-project #news img {
   width: 6rem; }
 
 body.city-subsite #img-city {
+  display: none;
   background-position: center;
   background-size: cover;
   width: 100%;
@@ -998,83 +999,73 @@ body.forum.form .markdown-help {
 body.forum.topic .reply {
   margin-bottom: 1rem; }
 
-body.dataset .tab-divider {
-  margin: 20px 0 20px -20px;
-  width: calc(100% + 40px); }
-
-body.dataset .tab-pane {
-  min-height: 500px; }
-
-body.dataset #tab-chart #chart {
-  height: 500px;
-  max-height: 100vh; }
-
-body.dataset #tab-chart .highcharts-title,
-body.dataset #tab-chart .highcharts-subtitle {
-  display: none; }
-
-body.dataset #tab-data .fa-spin {
-  animation: fa-spin 1s linear infinite; }
-
-body.dataset .rating .number {
-  display: inline-block;
-  margin-right: 1rem;
-  padding: 0 8px;
-  border-radius: .25rem; }
-
-body.dataset .rating .graph {
-  display: inline-block;
-  vertical-align: middle; }
-  body.dataset .rating .graph span {
-    height: 4px;
-    width: 8px;
-    display: block;
-    background-color: #efefef;
-    margin-bottom: 1px; }
-    body.dataset .rating .graph span:first-of-type {
-      border-top-right-radius: .125rem;
-      border-top-left-radius: .125rem; }
-    body.dataset .rating .graph span:last-of-type {
-      margin-bottom: 0;
-      border-bottom-right-radius: .125rem;
-      border-bottom-left-radius: .125rem; }
-
-body.dataset .rating[data-rating="1"] .full {
-  background-color: #28a745; }
-
-body.dataset .rating[data-rating="1"] .number {
-  background-color: #28a745;
-  color: #fff; }
-
-body.dataset .rating[data-rating="2"] .full {
-  background-color: #144d58; }
-
-body.dataset .rating[data-rating="2"] .number {
-  background-color: #144d58;
-  color: #fff; }
-
-body.dataset .rating[data-rating="3"] .full {
-  background-color: #ffc107; }
-
-body.dataset .rating[data-rating="3"] .number {
-  background-color: #ffc107; }
-
-body.dataset .rating[data-rating="4"] .full {
-  background-color: #ff8a4e; }
-
-body.dataset .rating[data-rating="4"] .number {
-  background-color: #ff8a4e; }
-
-body.dataset .rating[data-rating="5"] .full {
-  background-color: #dc3545; }
-
-body.dataset .rating[data-rating="5"] .number {
-  background-color: #dc3545; }
+body.dataset {
+  background-color: #fff; }
+  body.dataset .tab-divider {
+    margin: 20px 0 20px -20px;
+    width: calc(100% + 40px); }
+  body.dataset .nav.nav-pills {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    white-space: nowrap; }
+  body.dataset .tab-pane {
+    height: 500px;
+    max-height: 100vh; }
+  body.dataset #tab-chart #chart {
+    max-height: 100vh; }
+  body.dataset #tab-chart .highcharts-title,
+  body.dataset #tab-chart .highcharts-subtitle {
+    display: none; }
+  body.dataset #tab-data .fa-spin {
+    animation: fa-spin 1s linear infinite; }
+  body.dataset .rating .number {
+    display: inline-block;
+    margin-right: 1rem;
+    padding: 0 8px;
+    border-radius: .25rem; }
+  body.dataset .rating .graph {
+    display: inline-block;
+    vertical-align: middle; }
+    body.dataset .rating .graph span {
+      height: 4px;
+      width: 8px;
+      display: block;
+      background-color: #efefef;
+      margin-bottom: 1px; }
+      body.dataset .rating .graph span:first-of-type {
+        border-top-right-radius: .125rem;
+        border-top-left-radius: .125rem; }
+      body.dataset .rating .graph span:last-of-type {
+        margin-bottom: 0;
+        border-bottom-right-radius: .125rem;
+        border-bottom-left-radius: .125rem; }
+  body.dataset .rating[data-rating="1"] .full {
+    background-color: #28a745; }
+  body.dataset .rating[data-rating="1"] .number {
+    background-color: #28a745;
+    color: #fff; }
+  body.dataset .rating[data-rating="2"] .full {
+    background-color: #144d58; }
+  body.dataset .rating[data-rating="2"] .number {
+    background-color: #144d58;
+    color: #fff; }
+  body.dataset .rating[data-rating="3"] .full {
+    background-color: #ffc107; }
+  body.dataset .rating[data-rating="3"] .number {
+    background-color: #ffc107; }
+  body.dataset .rating[data-rating="4"] .full {
+    background-color: #ff8a4e; }
+  body.dataset .rating[data-rating="4"] .number {
+    background-color: #ff8a4e; }
+  body.dataset .rating[data-rating="5"] .full {
+    background-color: #dc3545; }
+  body.dataset .rating[data-rating="5"] .number {
+    background-color: #dc3545; }
 
 iframe.dataset {
   width: 100%;
   border: none;
-  height: 900px; }
+  min-height: 700px; }
 
 body.dataset.editor .preview-wrap {
   padding: 1rem;
@@ -1682,13 +1673,18 @@ body.staf-review.uploaded .statistic {
 body.material-stocks.landing .landing-image {
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
   width: 100%;
-  min-height: 400px;
+  min-height: 600px;
   border-radius: .25rem;
   background-image: url("https://i.imgur.com/IsgSBAy.jpg");
   background-size: cover;
   background-position: center;
   text-align: center;
-  padding: 4rem 10vw;
+  padding: 8rem 10vw;
   color: #fbfbfb; }
   body.material-stocks.landing .landing-image .logo {
     max-width: 100%; }
+
+body.material-stocks.landing .navbar-nav,
+body.material-stocks.landing .return-bar,
+body.material-stocks.landing footer {
+  display: none; }
