@@ -868,7 +868,6 @@ body.single-project #news img {
   width: 6rem; }
 
 body.city-subsite #img-city {
-  display: none;
   background-position: center;
   background-size: cover;
   width: 100%;
@@ -1670,11 +1669,12 @@ body.staf-review.uploaded .statistic {
   font-size: 1.25rem;
   font-weight: bold; }
 
+body.material-stocks.landing .container.main-content {
+  padding: 0 !important; }
+
 body.material-stocks.landing .landing-image {
-  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
   width: 100%;
-  min-height: 600px;
-  border-radius: .25rem;
+  min-height: 100vh;
   background-image: url("https://i.imgur.com/IsgSBAy.jpg");
   background-size: cover;
   background-position: center;
@@ -1684,6 +1684,7 @@ body.material-stocks.landing .landing-image {
   body.material-stocks.landing .landing-image .logo {
     max-width: 100%; }
 
+body.material-stocks.landing .top-layer,
 body.material-stocks.landing .navbar-nav,
 body.material-stocks.landing .return-bar,
 body.material-stocks.landing footer {

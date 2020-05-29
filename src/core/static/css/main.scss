@@ -2581,11 +2581,13 @@ body.material-stocks {
 
 // MATERIAL STOCKS LANDING PAGE
 body.material-stocks.landing {
+  .container.main-content {
+    padding: 0 !important;
+  }
+
   .landing-image {
-    box-shadow: $basic-shadow;
     width: 100%;
-    min-height: 600px;
-    border-radius: .25rem;
+    min-height: 100vh;
     background-image: url("https://i.imgur.com/IsgSBAy.jpg");
     background-size: cover;
     background-position: center;
@@ -2598,6 +2600,7 @@ body.material-stocks.landing {
     }
   }
 
+  .top-layer,
   .navbar-nav,
   .return-bar,
   footer {
