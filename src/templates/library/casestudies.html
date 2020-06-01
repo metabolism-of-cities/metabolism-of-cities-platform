@@ -10,6 +10,7 @@
         <th>Publication</th>
         <th>Year</th>
         <th>Location</th>
+        <th>Method(s)</th>
       </tr>
     </thead>
     <tbody>
@@ -22,6 +23,13 @@
             {% for space in each.spaces.all %}
               {% if space.is_city %}
                 <span class="badge badge-light">{{ space }}</span>
+              {% endif %}
+            {% endfor %}
+          </td>
+          <td>
+            {% for tag in each.tags.all %}
+              {% if tag.parent_tag.parent_tag.id == 792 %}
+                <span class="badge badge-light">{{ tag }}</span><br>
               {% endif %}
             {% endfor %}
           </td>
