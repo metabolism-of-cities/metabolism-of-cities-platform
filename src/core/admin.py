@@ -93,8 +93,21 @@ class ActivityAdmin(admin.ModelAdmin):
     autocomplete_fields = ["parent"]
 
 class TagAdmin(admin.ModelAdmin):
-    search_fields = ["name", "parent_tag__name"]
-    list_display = ["name", "parent_tag", "include_in_glossary", "hidden"]
+    search_fields = ["name", "parent_tag__name","parent_tag__id"]
+    list_display = ["name", "parent_tag", "include_in_glossary", "hidden", "view_link"]
+
+    def get_queryset(self, request):
+        if "parent_tag__id" in request.GET:
+            parent_id = request.GET["parent_tag__id"]
+            return Tag.objects.filter(parent_tag=parent_id)
+        else:
+            return Tag.objects.filter(parent_tag__isnull=True)
+
+    def view_link(self, obj):
+        url = reverse("admin:core_tag_changelist") + "?parent_tag__id=" + str(obj.id)
+        link = format_html("<a href='{}'>View</a>",url )
+        return link
+    view_link.short_description = "View"
 
 class OrgAdmin(SearchCompleteAdmin):
     list_display = ["name", "type"]
