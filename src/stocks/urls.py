@@ -25,4 +25,6 @@ urlpatterns = [
     path("accounts/profile/", core.user_profile, { "project": app_name }, name="user_profile"),
     path("contributor/", core.contributor, { "project_name": app_name }, name="contributor"),
 
+    # Map page to show Aris
+    path("map/", views.stocks_map, name="stocks_map"),
 ]

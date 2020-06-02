@@ -1547,7 +1547,7 @@ body.dataset {
 
   #tab-map {
     #map {
-      height: 500px;
+      height: 430px;
       width: 100%;
       border-radius: .25rem;
     }
@@ -2598,5 +2598,12 @@ body.material-stocks.landing {
   .return-bar,
   footer {
     display: none;
+  }
+}
+
+body.material-stocks.map {
+  #map {
+    height: 600px;
+    max-height: 90vh;
   }
 }

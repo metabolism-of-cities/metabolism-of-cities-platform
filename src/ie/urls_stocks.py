@@ -7,7 +7,7 @@ See urls.py for more information
 from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
-from core.admin import admin_site  
+from core.admin import admin_site
 
 current_site = "stocks"
 
