@@ -2,7 +2,7 @@
   <div id="img-city" {% if not dashboard %}class="smaller"{% endif %} style="background-image: url('{{ space.photo.image.url }}')">
     <div class="black-cover"></div>
     <div class="container">
-      <div class="city-name"><a href="{% url "data:dashboard" space.slug %}">{{ space }}</a></div>
+      <div class="city-name"><a href="{% url 'data:dashboard' space.slug %}">{{ space }}</a></div>
     </div>
   </div>
   <nav id="navbar-city" class="navbar navbar-light navbar-expand-md">
@@ -14,7 +14,9 @@
       <div class="collapse navbar-collapse" id="city-navbar">
         <ul class="navbar-nav mr-auto ml-3 ml-md-0">
           <li class="nav-item">
-            <a class="nav-link{% if dashboard %} active{% endif %}" href="{% url 'data:dashboard' space.slug %}"><i class="fa fa-fw fa-home"></i></a>
+            <a class="nav-link{% if dashboard %} active{% endif %}" href="{% url 'data:dashboard' space.slug %}">
+              <i class="fa fa-fw fa-home"></i>
+            </a>
           </li>
 
           <li class="nav-item dropdown projects-dropdown">
@@ -22,35 +24,34 @@
               Local industries
             </a>
             <div class="dropdown-menu projects-dropdown-menu" aria-labelledby="projects-dropdown" style="max-width:700px;top:60px;left:-402px;">
-
                 <div class="row">
                   <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
                     <div class="projects-category"><i class="mr-2 far fa-fw fa-play-circle"></i>Manufacturing</div>
-                    <a href="{% url "core:project" "library" %}">Bread and baked goods</a>
-                    <a href="{% url "core:project" "multimedia" %}">Wine</a>
-                    <a href="{% url "core:project" "podcast" %}">Processed foods</a>
-                    <a href="{% url "core:project" "podcast" %}">Paper manufacturing</a>
-                    <a href="{% url "core:project" "podcast" %}">Clothes</a>
+                    <a href="{% url 'core:project' 'library' %}">Bread and baked goods</a>
+                    <a href="{% url 'core:project' 'multimedia' %}">Wine</a>
+                    <a href="{% url 'core:project' 'podcast' %}">Processed foods</a>
+                    <a href="{% url 'core:project' 'podcast' %}">Paper manufacturing</a>
+                    <a href="{% url 'core:project' 'podcast' %}">Clothes</a>
                   </div>
                   <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
                     <div class="projects-category"><i class="mr-2 far fa-fw fa-toolbox"></i>Extractive industries</div>
-                    <a href="{% url "core:project" "data" %}">Fishing</a>
-                    <a href="{% url "core:project" "stafdbs" %}">Mining</a>
-                    <a href="{% url "core:project" "staf" %}">Agriculture</a>
+                    <a href="{% url 'core:project' 'data' %}">Fishing</a>
+                    <a href="{% url 'core:project' 'stafdbs' %}">Mining</a>
+                    <a href="{% url 'core:project' 'staf' %}">Agriculture</a>
                   </div>
                   <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
                     <div class="projects-category"><i class="mr-2 far fa-fw fa-user-graduate"></i>Other industries</div>
-                    <a href="{% url "core:project" "mooc" %}">Water and sanitation</a>
-                    <a href="{% url "core:project" "urban-metabolism-minorities" %}">Retail and wholesale</a>
-                    <a href="{% url "core:project" "masterclass-designing-with-flows" %}">Transportation</a>
-                    <a href="{% url "core:project" "masterclass-designing-with-flows" %}">Construction</a>
+                    <a href="{% url 'core:project' 'mooc' %}">Water and sanitation</a>
+                    <a href="{% url 'core:project' 'urban-metabolism-minorities' %}">Retail and wholesale</a>
+                    <a href="{% url 'core:project' 'masterclass-designing-with-flows' %}">Transportation</a>
+                    <a href="{% url 'core:project' 'masterclass-designing-with-flows' %}">Construction</a>
                   </div>
                 </div>
             </div>
           </li>
 
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle{% if menu == "resource_use" %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link dropdown-toggle{% if menu == 'resource_use' %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Resource use
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -62,7 +63,7 @@
             </div>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle{% if menu == "resource_use" %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link dropdown-toggle{% if menu == 'resource_use' %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Material stock
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -72,7 +73,7 @@
             </div>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle{% if menu == "waste" %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link dropdown-toggle{% if menu == 'waste' %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Waste
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -84,7 +85,7 @@
             </div>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle{% if menu == "library" %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link dropdown-toggle{% if menu == 'library' %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Information library
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -98,7 +99,7 @@
             </div>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle{% if menu == "data" %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link dropdown-toggle{% if menu == 'data' %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Data
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -111,7 +112,7 @@
       </div>
 
       <div class="float-right">
-        <a class="badge badge-primary" href="{% url "data:controlpanel" space.slug %}">
+        <a class="badge badge-primary" href="{% url 'data:controlpanel' space.slug %}">
           <i class="fa fa-lock mr-1" aria-hidden="true"></i>
           City control panel
         </a>

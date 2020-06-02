@@ -188,10 +188,6 @@ textarea.form-control:focus, input.form-control:focus, select.custom-select:focu
     max-height: 75vh;
     background-size: cover;
   }
-
-  .img-city {
-
-  }
 }
 
 nav {
@@ -1362,26 +1358,15 @@ body.city-subsite {
 
   #navbar-city {
     background-color: $light;
-    border-bottom: 1px solid #999;
     padding-top: .3rem;
     padding-bottom: 0;
 
     a.nav-link {
-      color: $primary !important;
+      color: $dark !important;
       white-space: nowrap;
 
       &:hover {
-        color: darken($primary, 20%) !important;
-        text-decoration: none !important;
-      }
-
-      &.active {
-        background: #fff;
-        border: 1px solid #999;
-        border-bottom: 1px solid #fff;
-        position: relative;
-        top: 1px;
-        opacity: 1 !important;
+        color: $black !important;
       }
     }
   }
@@ -1534,7 +1519,7 @@ body.dataset {
   background-color: $white;
 
   .tab-divider {
-    margin: 20px 0 20px -20px;
+    margin: 15px 0 15px -20px;
     width: calc(100% + 40px);
   }
 
@@ -1557,6 +1542,14 @@ body.dataset {
     .highcharts-title,
     .highcharts-subtitle {
       display: none;
+    }
+  }
+
+  #tab-map {
+    #map {
+      height: 500px;
+      width: 100%;
+      border-radius: .25rem;
     }
   }
 

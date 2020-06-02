@@ -898,22 +898,13 @@ body.city-subsite #img-city-wrapper {
 
 body.city-subsite #navbar-city {
   background-color: #efefef;
-  border-bottom: 1px solid #999;
   padding-top: .3rem;
   padding-bottom: 0; }
   body.city-subsite #navbar-city a.nav-link {
-    color: #144d58 !important;
+    color: #212529 !important;
     white-space: nowrap; }
     body.city-subsite #navbar-city a.nav-link:hover {
-      color: #010405 !important;
-      text-decoration: none !important; }
-    body.city-subsite #navbar-city a.nav-link.active {
-      background: #fff;
-      border: 1px solid #999;
-      border-bottom: 1px solid #fff;
-      position: relative;
-      top: 1px;
-      opacity: 1 !important; }
+      color: #000 !important; }
 
 body.event.list .no-results:not(.visible) {
   display: none; }
@@ -1001,7 +992,7 @@ body.forum.topic .reply {
 body.dataset {
   background-color: #fff; }
   body.dataset .tab-divider {
-    margin: 20px 0 20px -20px;
+    margin: 15px 0 15px -20px;
     width: calc(100% + 40px); }
   body.dataset .nav.nav-pills {
     flex-wrap: nowrap;
@@ -1015,6 +1006,10 @@ body.dataset {
   body.dataset #tab-chart .highcharts-title,
   body.dataset #tab-chart .highcharts-subtitle {
     display: none; }
+  body.dataset #tab-map #map {
+    height: 500px;
+    width: 100%;
+    border-radius: .25rem; }
   body.dataset #tab-data .fa-spin {
     animation: fa-spin 1s linear infinite; }
   body.dataset .rating .number {
