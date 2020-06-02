@@ -84,6 +84,7 @@
 
     var choropleth = L.geoJson(statesData, {
       style: style,
+      renderer: L.canvas(),
     })
 
     var bubbles = L.circle([40,-100], {
