@@ -33,6 +33,24 @@
 
     <p><a href="/wow-room-hosts/" class="btn btn-primary">Guidelines for hosting sessions</a></p>
 
+  {% if request.user.id == 1 %}
+  <form method="post" class="form form-horizontal" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {% bootstrap_form form %}
+
+    <p>Abstract</p>
+    <div class="form-group markdown-textarea">
+      {% include "_markdown.html" %}
+      <textarea class="form-control mb-4" id="text" rows="30" name="text" required>{{ event.description }}</textarea>
+    </div>
+
+    {% buttons %}
+      <button type="submit" class="btn btn-primary">Save</button>
+    {% endbuttons %}
+  </form>
+  {% endif %}
+
   {% endif %}
 
 {% else %}

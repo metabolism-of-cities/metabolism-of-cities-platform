@@ -197,6 +197,7 @@ def ascus_account(request):
 
     topics = Event.objects_include_private \
         .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(start_date__gte=timezone.now().date()) \
         .filter(tags__id=770).order_by("start_date")
 
     for each in my_roles:
