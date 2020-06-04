@@ -23,6 +23,7 @@
 {% endblock %}
 
 {% block footer %}
+  {% if False %}
   <script>
     tinymce.init({
       selector: "textarea",
@@ -30,4 +31,5 @@
       content_css_cors: true
     });
   </script>
+  {% endif %}
 {% endblock %}

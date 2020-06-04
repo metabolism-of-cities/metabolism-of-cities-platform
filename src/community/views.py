@@ -7,6 +7,10 @@ from django.db.models import Q
 from django.utils import timezone
 import pytz
 
+# These are used so that we can send mail
+from django.core.mail import send_mail
+from django.template.loader import render_to_string, get_template
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -178,12 +182,54 @@ def forum(request, id, project_name=None):
     }
     if request.method == "POST":
 
+        text = request.POST.get("text")
         message = Message.objects.create(
             name = "Reply to: " + info.name,
-            description = request.POST.get("text"),
+            description = text,
             parent = info,
         )
+
         set_autor(request.user.people.id, message.id)
+        authors_of_underlying_object = info.authors().distinct()
+        recipients = []
+        for each in authors_of_underlying_object:
+            if each not in recipients:
+                recipients.append(each)
+
+        project = None
+        if project_name:
+            project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+
+        # If the forum function becomes more popular, this will get out of hand quickly
+        # In that case we should write a separate cron that runs every 5-10 min to send
+        # out these notifications instead. But to get us started, this should do.
+
+        try:
+            mailcontext = {
+                "message": markdown(text),
+                "text": text,
+                "project": project,
+                "info": info,
+                "url": "https://ascus.metabolismofcities.org" + request.POST["return"] if "return" in request.POST else info.get_absolute_url(),
+            }
+
+            msg_html = render_to_string("mailbody/message.notification.html", mailcontext)
+            msg_plain = render_to_string("mailbody/message.notification.txt", mailcontext)
+            sender = '"AScUS Unconference" <ascus@metabolismofcities.org>'
+            for each in recipients:
+                # Let check if the person has an email address before we send the mail
+                if each.email:
+                    recipient = '"' + each.name + '" <' + each.email + '>'
+                    send_mail(
+                        "New message notification",
+                        msg_plain,
+                        sender,
+                        [recipient],
+                        html_message=msg_html,
+                    )
+
+        except Exception as e:
+            pass
 
         if hasattr(info, "forumtopic"):
             info.forumtopic.last_update = timezone.now()

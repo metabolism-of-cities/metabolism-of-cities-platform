@@ -1,0 +1,9 @@
+This is a notification of a message posted on {% if project %}{{ project }}{% else %}Metabolism of Cities{% endif %}. This message is posted in a thread related to {{ info }}. Please find the details below:
+
+-----------------
+
+{{ text }}
+
+-----------------
+
+To respond, please go to: {{ url }}

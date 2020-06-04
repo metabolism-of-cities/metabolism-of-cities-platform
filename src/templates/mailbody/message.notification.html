@@ -1,0 +1,11 @@
+{% extends "mailbody/_mailbase.html" %}
+
+{% block content %}
+<p>This is a notification of a message posted on {% if project %}{{ project }}{% else %}Metabolism of Cities{% endif %}. This message is posted in a thread related to <strong>{{ info }}</strong>. Please find the details below:</p>
+
+<hr>
+{{ message|safe }}
+<hr>
+<p>To respond, please go to: <a href="{{ url }}">{{ url }}</a></p>
+
+{% endblock %}

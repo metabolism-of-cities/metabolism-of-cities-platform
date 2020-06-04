@@ -116,6 +116,15 @@ class Record(models.Model):
     def get_markdown_description(self):
         return markdown(self.description)
 
+    def authors(self):
+        return People.objects_unfiltered.filter(parent_list__record_child=self, parent_list__relationship__id=4)
+
+    def author(self):
+        try:
+            return People.objects_unfiltered.filter(parent_list__record_child=self, parent_list__relationship__id=4)[0]
+        except:
+            return None
+
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
@@ -466,12 +475,6 @@ class Message(Record):
     attachments = models.ManyToManyField(Document)
     parent = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="messages")
 
-    def author(self):
-        try:
-            return People.objects_unfiltered.filter(parent_list__record_child=self, parent_list__relationship__id=4)[0]
-        except:
-            return None
-
     def getReply(self):
         return Message.objects.filter(parent=self)
 
@@ -584,16 +587,6 @@ class LibraryItem(Record):
             return "/admin/core/video/" + str(self.id) + "/change/"
         else:
             return "/admin/core/libraryitem/" + str(self.id) + "/change/"
-
-    def authors(self):
-        return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)
-
-    def author(self):
-        try:
-            author = People.objects_unfiltered.filter(parent_list__record_child=self, parent_list__relationship__id=4)[0]
-            return author
-        except:
-            author = None
 
     def publisher(self):
         list = Organization.objects.filter(parent_list__record_child=self, parent_list__relationship__id=2)

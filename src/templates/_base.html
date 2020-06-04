@@ -179,7 +179,7 @@
 
   {% if load_markdown or load_messaging %}
     <!-- markdown toolbar - https://github.com/github/markdown-toolbar-element -->
-    <script src="https://unpkg.com/@github/markdown-toolbar-element@latest/dist/index.umd.js"></script>
+    <script src="{% static "js/markdown-toolbar.js" %}"></script>
   {% endif %}
 
   {% if load_messaging %}

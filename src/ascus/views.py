@@ -219,7 +219,7 @@ def ascus_account(request):
                     record_child = topic,
                     relationship_id = 12,
                 )
-                messages.success(request, "You have been successfully registered for this session. The URL will be provided in your account closer to the date.")
+                messages.success(request, "You have been successfully registered for this session. The link to the room is provided in the table below.")
             except:
                 messages.error(request, "Sorry, we could not register you. Try again or contact us if this issue persists.")
         elif "unregister" in request.POST:
