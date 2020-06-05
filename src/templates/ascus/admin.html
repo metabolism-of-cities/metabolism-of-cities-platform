@@ -75,4 +75,29 @@ body.homepage section.what .card{height:auto}
   </div>
 </section>
 
+<div class="">
+  <h1>Voting</h1>
+
+  {% for key,value in voting.items %}
+    <h2>{{ key }}</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Votes</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in value %}
+        <tr>
+          <td>{{ each.record_child__name }}</td>
+          <td>{{ each.total }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+  {% endfor %}
+</div>
+
 {% endblock %}

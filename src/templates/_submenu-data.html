@@ -26,7 +26,13 @@
             <div class="dropdown-menu projects-dropdown-menu" aria-labelledby="projects-dropdown" style="max-width:700px;top:60px;left:-402px;">
                 <div class="row">
                   <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
-                    <div class="projects-category"><i class="mr-2 far fa-fw fa-play-circle"></i>Manufacturing</div>
+                    <div class="projects-category"><i class="mr-2 far fa-fw fa-toolbox"></i>Primary sector</div>
+                    <a href="{% url 'core:project' 'data' %}">Fishing</a>
+                    <a href="{% url 'core:project' 'stafdbs' %}">Mining</a>
+                    <a href="{% url 'core:project' 'staf' %}">Agriculture</a>
+                  </div>
+                  <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+                    <div class="projects-category"><i class="mr-2 far fa-fw fa-play-circle"></i>Secondary sector</div>
                     <a href="{% url 'core:project' 'library' %}">Bread and baked goods</a>
                     <a href="{% url 'core:project' 'multimedia' %}">Wine</a>
                     <a href="{% url 'core:project' 'podcast' %}">Processed foods</a>
@@ -34,13 +40,7 @@
                     <a href="{% url 'core:project' 'podcast' %}">Clothes</a>
                   </div>
                   <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
-                    <div class="projects-category"><i class="mr-2 far fa-fw fa-toolbox"></i>Extractive industries</div>
-                    <a href="{% url 'core:project' 'data' %}">Fishing</a>
-                    <a href="{% url 'core:project' 'stafdbs' %}">Mining</a>
-                    <a href="{% url 'core:project' 'staf' %}">Agriculture</a>
-                  </div>
-                  <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
-                    <div class="projects-category"><i class="mr-2 far fa-fw fa-user-graduate"></i>Other industries</div>
+                    <div class="projects-category"><i class="mr-2 far fa-fw fa-user-graduate"></i>Tertiary industries</div>
                     <a href="{% url 'core:project' 'mooc' %}">Water and sanitation</a>
                     <a href="{% url 'core:project' 'urban-metabolism-minorities' %}">Retail and wholesale</a>
                     <a href="{% url 'core:project' 'masterclass-designing-with-flows' %}">Transportation</a>
