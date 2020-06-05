@@ -1,0 +1,1080 @@
+{% extends "_base.html" %}
+{% load static %}
+{% block page_name %}dataset editor{% endblock %}
+{% block title %}Dataset editor for Cape Town fish catch in 2013{% endblock %}
+
+{% block css %}
+  <link href="{% static 'css/datatables.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+  <h1 class="mb-0">Dataset editor</h1>
+  <a href="#" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to datasets
+  </a>
+
+  <section>
+    <form id="dataset">
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <div class="form-group chart-types">
+            <label class="category">Enabled chart types</label>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="column" checked>
+              <label class="custom-control-label" for="column">Column</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="bar" checked>
+              <label class="custom-control-label" for="bar">Bar</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="line">
+              <label class="custom-control-label" for="line">Line</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="pie" checked>
+              <label class="custom-control-label" for="pie">Pie</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="area">
+              <label class="custom-control-label" for="area">Area</label>
+            </div>
+            <!-- these don't work with this dataset, switching to them makes the whole thing stop working and requires a page refresh
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="streamgraph">
+              <label class="custom-control-label" for="streamgraph">Stream</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="columnrange">
+              <label class="custom-control-label" for="columnrange">Column range</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="datetime">
+              <label class="custom-control-label" for="datetime">Time series</label>
+            </div>
+             -->
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="category">Initial chart type</label>
+            <select class="custom-select" id="initial-chart-type">
+              <option value="column" selected>Column</option>
+              <option value="bar">Bar</option>
+              <option hidden value="line">Line</option>
+              <option value="pie">Pie</option>
+              <option hidden value="datetime">Time series</option>
+              <option hidden value="area">Area</option>
+              <option hidden value="streamgraph">Stream</option>
+              <option hidden value="columnrange">Column range</option>
+              <option hidden value="drilldown">Drilldown</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="category">Tooltip label</label>
+            <input type="text" class="form-control" id="tooltip-label" value="Catch in 2013: <b>{point.y} tonnes</b>">
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="category">X-axis</label>
+
+            <div class="form-group">
+              <label>Type</label>
+              <select class="custom-select" id="xaxis-type">
+                <option value="linear">Linear</option>
+                <option value="logarithmic">Logarithmic</option>
+                <option value="datetime">Date / time</option>
+                <option selected value="category">Category</option>
+              </select>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="xaxis-label">
+              <label class="custom-control-label" for="xaxis-label">Label</label>
+            </div>
+            <div class="form-group xaxis-label-text" hidden>
+              <input type="text" class="form-control" value="" placeholder="Label text">
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="xaxis-range">
+              <label class="custom-control-label" for="xaxis-range">Custom range</label>
+            </div>
+            <div class="row xaxis-range-form" hidden>
+              <div class="col">
+                <input type="number" class="form-control" placeholder="Min" id="xaxis-min">
+              </div>
+              <div class="col">
+                <input type="number" class="form-control" placeholder="Max" id="xaxis-max">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="category">Y-axis</label>
+
+            <div class="form-group">
+              <label>Type</label>
+              <select class="custom-select" id="yaxis-type">
+                <option selected value="linear">Linear</option>
+                <option value="logarithmic">Logarithmic</option>
+                <option value="datetime">Date / time</option>
+                <option value="category">Category</option>
+              </select>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="yaxis-label" checked>
+              <label class="custom-control-label" for="yaxis-label">Label</label>
+            </div>
+            <div class="form-group yaxis-label-text">
+              <input type="text" class="form-control" placeholder="Label text" value="Catch (in tonnes)">
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="yaxis-range">
+              <label class="custom-control-label" for="yaxis-range">Custom range</label>
+            </div>
+            <div class="row yaxis-range-form" hidden>
+              <div class="col">
+                <input type="number" class="form-control" placeholder="Min" id="yaxis-min">
+              </div>
+              <div class="col">
+                <input type="number" class="form-control" placeholder="Max" id="yaxis-max">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="category">Color scheme</label>
+        <div id="color-schemes" class="row">
+          <div class="col-md-6 mb-3">
+            <div class="single-scheme active" data-scheme="moc">
+              <div class='row no-gutters'>
+                <div class="col single-color" style="background-color: #144d58">&nbsp;</div>
+                <div class="col single-color" style="background-color: #a6cee3">&nbsp;</div>
+                <div class="col single-color" style="background-color: #33a02c">&nbsp;</div>
+                <div class="col single-color" style="background-color: #b2df8a">&nbsp;</div>
+                <div class="col single-color" style="background-color: #e31a1c">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fb9a99">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ff7f00">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fdbf6f">&nbsp;</div>
+                <div class="col single-color" style="background-color: #6a3d9a">&nbsp;</div>
+                <div class="col single-color" style="background-color: #cab2d6">&nbsp;</div>
+                <div class="col single-color" style="background-color: #b15928">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ffff99">&nbsp;</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="single-scheme" data-scheme="dozen">
+              <div class='row no-gutters'>
+                <div class="col single-color" style="background-color: #8dd3c7">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ffffb3">&nbsp;</div>
+                <div class="col single-color" style="background-color: #bebada">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fb8072">&nbsp;</div>
+                <div class="col single-color" style="background-color: #80b1d3">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fdb462">&nbsp;</div>
+                <div class="col single-color" style="background-color: #b3de69">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fccde5">&nbsp;</div>
+                <div class="col single-color" style="background-color: #d9d9d9">&nbsp;</div>
+                <div class="col single-color" style="background-color: #bc80bd">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ccebc5">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ffed6f">&nbsp;</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="single-scheme" data-scheme="pastel">
+              <div class='row no-gutters'>
+                <div class="col single-color" style="background-color: #fbb4ae">&nbsp;</div>
+                <div class="col single-color" style="background-color: #b3cde3">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ccebc5">&nbsp;</div>
+                <div class="col single-color" style="background-color: #decbe4">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fed9a6">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ffffcc">&nbsp;</div>
+                <div class="col single-color" style="background-color: #e5d8bd">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fddaec">&nbsp;</div>
+                <div class="col single-color" style="background-color: #f2f2f2">&nbsp;</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="single-scheme" data-scheme="set">
+              <div class='row no-gutters'>
+                <div class="col single-color" style="background-color: #e41a1c">&nbsp;</div>
+                <div class="col single-color" style="background-color: #377eb8">&nbsp;</div>
+                <div class="col single-color" style="background-color: #4daf4a">&nbsp;</div>
+                <div class="col single-color" style="background-color: #984ea3">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ff7f00">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ffff33">&nbsp;</div>
+                <div class="col single-color" style="background-color: #a65628">&nbsp;</div>
+                <div class="col single-color" style="background-color: #f781bf">&nbsp;</div>
+                <div class="col single-color" style="background-color: #999999">&nbsp;</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="single-scheme" data-scheme="accent">
+              <div class='row no-gutters'>
+                <div class="col single-color" style="background-color: #7fc97f">&nbsp;</div>
+                <div class="col single-color" style="background-color: #beaed4">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fdc086">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ffff99">&nbsp;</div>
+                <div class="col single-color" style="background-color: #386cb0">&nbsp;</div>
+                <div class="col single-color" style="background-color: #f0027f">&nbsp;</div>
+                <div class="col single-color" style="background-color: #bf5b17">&nbsp;</div>
+                <div class="col single-color" style="background-color: #666666">&nbsp;</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="single-scheme" data-scheme="dark">
+              <div class='row no-gutters'>
+                <div class="col single-color" style="background-color: #1b9e77">&nbsp;</div>
+                <div class="col single-color" style="background-color: #d95f02">&nbsp;</div>
+                <div class="col single-color" style="background-color: #7570b3">&nbsp;</div>
+                <div class="col single-color" style="background-color: #e7298a">&nbsp;</div>
+                <div class="col single-color" style="background-color: #66a61e">&nbsp;</div>
+                <div class="col single-color" style="background-color: #e6ab02">&nbsp;</div>
+                <div class="col single-color" style="background-color: #a6761d">&nbsp;</div>
+                <div class="col single-color" style="background-color: #666666">&nbsp;</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="category">Other settings</label>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="data-labels">
+          <label class="custom-control-label" for="data-labels">Data labels</label>
+        </div>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="legend">
+          <label class="custom-control-label" for="legend">Legend</label>
+        </div>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="individual-colors">
+          <label class="custom-control-label" for="individual-colors">Different color for each data point</label>
+        </div>
+      </div>
+    </form>
+
+    <button type="submit" class="btn btn-success" form="dataset">
+      <i class="fas fa-fw fa-save"></i>
+      Save dataset
+    </button>
+
+    <button class="btn btn-primary-basic btn-generate-preview">
+      <i class="fal fa-fw fa-eye"></i>
+      Generate preview
+    </button>
+  </section>
+
+  <section id="preview">
+    <h2>Preview</h2>
+    <p>
+      Below is what users will see when opening the dataset or when it's embedded in an article. Click on the generate preview button after you alter any settings to see your changes.
+    </p>
+
+    <div class="preview-wrap">
+      <h3 class="preview-title">Cape Town fish catch in 2013</h3>
+      <div class="preview-subtitle description mb-4">
+        Aquatic agriculture catch from Cape Town in 2013, measured in tonnes
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="nav nav-pills nav-fill">
+            <a class="nav-item nav-link active" data-toggle="tab" href="#tab-chart">
+              <i class="fal fa-fw fa-analytics mr-2"></i>
+              Chart
+            </a>
+            <a class="nav-item nav-link tab-map" data-toggle="tab" href="#tab-map">
+              <i class="fal fa-fw fa-map-marked mr-2"></i>
+              Map
+            </a>
+            <a class="nav-item nav-link" data-toggle="tab" href="#tab-quality">
+              <i class="fal fa-fw fa-star mr-2"></i>
+              Data quality
+            </a>
+            <a class="nav-item nav-link" data-toggle="tab" href="#tab-metadata">
+              <i class="fal fa-fw fa-info-circle mr-2"></i>
+              Metadata
+            </a>
+            <a class="nav-item nav-link load-data" data-toggle="tab" href="#tab-data">
+              <i class="fal fa-fw fa-table mr-2"></i>
+              Data
+            </a>
+            <a class="nav-item nav-link" data-toggle="tab" href="#tab-share">
+              <i class="fal fa-fw fa-share-alt mr-2"></i>
+              Share
+            </a>
+          </div>
+
+          <hr class="tab-divider">
+
+          <div class="tab-content">
+            <!-- chart -->
+            <div class="tab-pane show active" id="tab-chart">
+              <div class="row">
+                <div class="col-lg-5 mb-2 mb-lg-0">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Chart type</span>
+                    </div>
+                    <select class="custom-select change-chart-type">
+                      <option value="column" selected>Column</option>
+                      <option value="bar">Bar</option>
+                      <option value="pie">Pie</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-7">
+                  <button class="btn btn-primary float-lg-right export-svg">
+                    <i class="fas fa-fw fa-save"></i>
+                    Save as SVG
+                  </button>
+                  <button class="btn btn-primary float-lg-right mr-2 export-png">
+                    <i class="fas fa-fw fa-save"></i>
+                    Save as PNG
+                  </button>
+                  <button class="btn btn-primary-basic float-lg-right mr-2 fullscreen-chart">
+                    <i class="fal fa-fw fa-compress"></i>
+                    Fullscreen
+                  </button>
+                </div>
+              </div>
+
+              <hr class="tab-divider">
+
+              <div id="chart"></div>
+            </div>
+
+            <!-- map -->
+            <div class="tab-pane" id="tab-map">
+              <div class="alert alert-light">
+                <h3 class="mb-0">
+                  <i class="fal fa-info-circle mr-3"></i>
+                  The map will be configured in the next step
+                </h3>
+              </div>
+            </div>
+
+            <!-- data quality -->
+            <div class="tab-pane" id="tab-quality">
+              <div class="row">
+                <div class="col-lg-6">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item table-item">
+                      <div><i class="far fa-fw fa-star mr-1"></i> Reliability</div>
+                      <div class="rating" data-rating="1">
+                        <div class="number">1</div>
+                        <div class="graph">
+                          <span class="full"></span>
+                          <span class="full"></span>
+                          <span class="full"></span>
+                          <span class="full"></span>
+                          <span class="full"></span>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="list-group-item table-item">
+                      <div><i class="far fa-fw fa-box-full mr-1"></i> Completeness</div>
+                      <div class="rating" data-rating="2">
+                        <div class="number">2</div>
+                        <div class="graph">
+                          <span class=""></span>
+                          <span class="full"></span>
+                          <span class="full"></span>
+                          <span class="full"></span>
+                          <span class="full"></span>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="list-group-item table-item">
+                      <div><i class="far fa-fw fa-universal-access mr-1"></i> Access</div>
+                      <div class="rating" data-rating="3">
+                        <div class="number">3</div>
+                        <div class="graph">
+                          <span class=""></span>
+                          <span class=""></span>
+                          <span class="full"></span>
+                          <span class="full"></span>
+                          <span class="full"></span>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="list-group-item table-item">
+                      <div><i class="far fa-fw fa-map-marked-alt mr-1"></i> Geographical correlation</div>
+                      <div class="rating" data-rating="4">
+                        <div class="number">4</div>
+                        <div class="graph">
+                          <span class=""></span>
+                          <span class=""></span>
+                          <span class=""></span>
+                          <span class="full"></span>
+                          <span class="full"></span>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-md-6">
+                  <div class="alert alert-light">
+                    <strong>Reliability</strong>
+                    <p>
+                      Fuga officiis illum eveniet. Voluptatem qui laudantium in iure amet. Nesciunt ut omnis atque iste voluptas natus. Inventore qui officiis consequatur culpa adipisci ea adipisci quaerat.
+                    </p>
+
+                    <strong>Completeness</strong>
+                    <p>
+                      Nisi inventore suscipit illo iure similique assumenda. Hic beatae nihil ullam. Quis et aut iure laudantium
+                    </p>
+
+                    <strong>Access</strong>
+                    <p>
+                      Quia sed ea eius voluptatem. Libero cum cum assumenda quia. Quas iste eius reprehenderit libero quam fugiat beatae.
+                    </p>
+
+                    <strong>Geographical correlation</strong>
+                    <p>
+                      Est vel officia enim facere fuga occaecati. Exercitationem voluptate facilis ut reprehenderit quia similique. Voluptatibus nihil quia quaerat ipsam dicta et.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- metadata -->
+            <div class="tab-pane" id="tab-metadata">
+              <div class="row">
+                <div class="col-lg-6">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                      <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> Brussels, Belgium
+                    </li>
+                    <li class="list-group-item">
+                      <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 01 January 2012 - 31 December 2017
+                    </li>
+                    <li class="list-group-item">
+                      <i class="far fa-fw fa-flask mb-1 mr-1" aria-hidden="true"></i> Materials
+                      <br>
+                      <a class="btn btn-sm btn-primary-outline mt-1" href="">Agricultural products</a>
+                    </li>
+                    <li class="list-group-item table-item">
+                      <div><i class="far fa-fw fa-dot-circle mr-1"></i> Data points</div>
+                      <div>13</div>
+                    </li>
+                    <li class="list-group-item table-item">
+                      <div><i class="far fa-fw fa-database mr-1"></i> Source(s)</div>
+                      <div><a href="https://metabolismofcities.org/resources/publications/851">Freight Transport</a></div>
+                    </li>
+                    <li class="list-group-item table-item">
+                      <div><i class="far fa-fw fa-user mr-1"></i> Uploaded by</div>
+                      <div><a href="">Fulano de Tal</a></div>
+                    </li>
+                    <li class="list-group-item table-item">
+                      <div><i class="far fa-fw fa-calendar-day mr-1"></i> Upload date</div>
+                      <div>12 March 2018</div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-lg-6">
+                  <div class="alert alert-light">
+                    <strong>Replication</strong>
+                    <ol>
+                      <li>Enter the IBSA website http://ibsa.brussels</li>
+                      <li>Go in Themes page</li>
+                      <li>Go in Mobility and Transport page</li>
+                      <li>Download the Freight Transport .xls file (available just in French)</li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- data -->
+            <div class="tab-pane" id="tab-data">
+              <a class="btn btn-primary mb-4" href=""><i class="fas fa-download"></i> Download data</a>
+              <a class="btn btn-primary-basic mb-4" href="">Report an error</a>
+
+              <div class="table-wrapper">
+                <div class="alert alert-light">
+                  <h3 class="mb-0">
+                    <i class="fal fa-spinner-third fa-spin mr-4"></i>
+                    Loading table
+                  </h3>
+                </div>
+              </div>
+            </div>
+
+            <!-- share -->
+            <div class="tab-pane" id="tab-share">
+              <div class="form-group">
+                <input id="share-url" class="form-control" value="https://metabolismofcities.org/cities/the-hague/datasets/52/" readonly>
+              </div>
+
+              <button class="btn btn-primary copy-url">
+                <i class="fas fa-copy"></i> Copy URL
+              </button>
+              <a class="btn btn-primary" href="">
+                <i class="fab fa-linkedin"></i> LinkedIn
+              </a>
+              <a class="btn btn-primary" href="">
+                <i class="fab fa-twitter"></i> Twitter
+              </a>
+              <a class="btn btn-primary" href="">
+                <i class="fab fa-facebook-square"></i> Facebook
+              </a>
+              <a class="btn btn-primary" href="">
+                <i class="fas fa-envelope"></i> E-mail
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-success mt-4" form="dataset">
+      <i class="fas fa-fw fa-save"></i>
+      Save dataset
+    </button>
+  </section>
+{% endblock %}
+
+{% block footer %}
+  <!-- load datatables -->
+  <script src="{% static 'js/datatables.min.js' %}"></script>
+  <script>
+    // enable datatables
+    $("table").DataTable();
+
+    // copy url
+    const copyUrlButton = $(".copy-url");
+
+    copyUrlButton.click(function() {
+      $("#share-url").select();
+      document.execCommand("copy");
+
+      copyUrlButton.html("<i class='fas fa-check'></i> Copied to clipboard");
+
+      window.setTimeout(function() {
+        copyUrlButton.html("<i class='fas fa-copy'></i> Copy URL");
+      }, 3000);
+    });
+  </script>
+
+  <!-- load highcharts -->
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/drilldown.js"></script>
+  <script>
+    // color scheme definitions from colorbrewer2.org combined with default MoC colours
+    var moc = ["#144d58","#a6cee3","#33a02c","#b2df8a","#e31a1c","#fb9a99","#ff7f00","#fdbf6f","#6a3d9a","#cab2d6","#b15928","#ffff99"];
+    var accent = ["#7fc97f","#beaed4","#fdc086","#ffff99","#386cb0","#f0027f","#bf5b17","#666666"];
+    var dark = ["#1b9e77","#d95f02","#7570b3","#e7298a","#66a61e","#e6ab02","#a6761d","#666666"];
+    var pastel = ["#fbb4ae","#b3cde3","#ccebc5","#decbe4","#fed9a6","#ffffcc","#e5d8bd","#fddaec","#f2f2f2"];
+    var set = ["#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00","#ffff33","#a65628","#f781bf","#999999"];
+    var dozen = ["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"];
+
+    // user settings
+    // titles
+    let title = "Cape Town fish catch in 2013";
+    let subtitle = "Aquatic agriculture catch from Cape Town in 2013, measured in tonnes";
+
+    // color scheme
+    let colorScheme = moc;
+
+    // chart types
+    let chartTypes = ["column", "bar", "pie"]
+    let startingChart = "column";
+
+    // tooltip label
+    let tooltipLabel = "Catch in 2013: <b>{point.y} tonnes</b>";
+
+    // x-axis
+    let xAxisType = "category";
+    let xAxisLabelText = " ";
+    let xAxisMin = null;
+    let xAxisMax = null;
+
+    // y-axis
+    let yAxisType = "linear";
+    let yAxisLabelText = "Catch (in tonnes)";
+    let yAxisMin = null;
+    let yAxisMax = null;
+
+    // other settings
+    let showDataLabels = false;
+    let showLegend = false;
+    let showMap = true;
+    let showIndividualColors = false;
+
+    // function to gather user settings and generate dataset preview
+    function generatePreview() {
+      // set button icon to load
+      $(".btn-generate-preview i").toggleClass("fa-cog fa-spin fa-eye");
+
+      $("#preview").removeAttr("hidden")
+
+      // gather user settings
+      // titles
+      title = $("#title").val()
+      subtitle = $("#subtitle").val()
+
+      // chart types
+      chartTypes = []
+      $(".chart-types input").each(function() {
+        let input = $(this)
+        if (input.is(":checked")) {
+          chartTypes.push(input.attr("id"));
+        }
+      })
+
+      // initial chart type
+      startingChart = $("#initial-chart-type").val()
+
+      // tooltip label
+      tooltipLabel = $("#tooltip-label").val();
+
+      // x-axis
+      xAxisType = $("#xaxis-type").val();
+      xAxisMin = $("#xaxis-range").is(":checked") ? $("#xaxis-min").val() : null;
+      xAxisMax = $("#xaxis-range").is(":checked") ? $("#xaxis-max").val() : null;
+      xAxisLabelText = $("#xaxis-label").is(":checked") ? $(".xaxis-label-text input").val() : " ";
+
+      // y-axis
+      yAxisType = $("#yaxis-type").val();
+      yAxisMin = $("#yaxis-range").is(":checked") ? $("#yaxis-min").val() : null;
+      yAxisMax = $("#yaxis-range").is(":checked") ? $("#yaxis-max").val() : null;
+      yAxisLabelText = $("#yaxis-label").is(":checked") ? $(".yaxis-label-text input").val() : " ";
+
+      // data labels
+      showDataLabels = $("#data-labels").is(":checked") ? true : false;
+
+      // legend
+      showLegend = $("#legend").is(":checked") ? true : false;
+
+      // map
+      showMap = $("#map").is(":checked") ? true : false;
+
+      // individual-colors
+      showIndividualColors = $("#individual-colors").is(":checked") ? true : false;
+
+      // take variables and apply them to the preview
+      // titles
+      $(".preview-title").text(title)
+      $(".preview-subtitle").text(subtitle)
+
+      // chart types
+      $("select.change-chart-type").html("");
+      $(chartTypes).each(function() {
+        chartValue = this
+        chartName = this.charAt(0).toUpperCase() + this.slice(1);
+
+        $("select.change-chart-type").append("<option value='" + chartValue + "'>"+ chartName + "</option>");
+      })
+
+      // initial chart type
+      $("select.change-chart-type").val(startingChart);
+
+      // map
+      if (showMap) {
+        $("a.tab-map").show();
+      } else {
+        $("a.tab-map").hide();
+      }
+
+      // update chart
+      chart.update({
+        chart: {
+          type: startingChart,
+        },
+        colors: colorScheme,
+        xAxis: {
+          type: xAxisType,
+          min: xAxisMin,
+          max: xAxisMax,
+          title: {
+            text: xAxisLabelText
+          }
+        },
+        yAxis: {
+          type: yAxisType,
+          min: yAxisMin,
+          max: yAxisMax,
+          title: {
+            text: yAxisLabelText
+          }
+        },
+        legend: {
+          enabled: showLegend
+        },
+        tooltip: {
+          pointFormat: tooltipLabel
+        },
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: showDataLabels,
+            },
+            colorByPoint: showIndividualColors,
+          }
+        },
+      });
+
+      if (startingChart == "pie") {
+        chart.update({
+          xAxis: {
+            lineColor: "transparent",
+            title: {
+              text: null,
+            },
+          },
+          yAxis: {
+            title: {
+              text: null,
+            }
+          },
+          plotOptions: {
+            series: {
+              colorByPoint: true,
+              dataLabels: {
+                enabled: true,
+              },
+            }
+          },
+        });
+      }
+
+      // revert button icon
+      $(".btn-generate-preview i").toggleClass("fa-cog fa-spin fa-eye");
+      scrollToID("preview")
+    }
+
+    $(".btn-generate-preview").click(function() {
+      generatePreview();
+    })
+
+    // pick color scheme
+    $(".single-scheme").click(function() {
+      $(".single-scheme").removeClass("active")
+      $(this).addClass("active");
+
+      let scheme = $(this).data("scheme");
+      colorScheme = window[scheme]
+    })
+
+    // update initial chart type select when changing available chart types
+    $(".chart-types input").change(function() {
+      let type = $(this).attr("id");
+
+      if ( $(this).is(":checked") ) {
+        $("#initial-chart-type option[value='" + type + "']").removeAttr("hidden")
+      } else {
+        $("#initial-chart-type option[value='" + type + "']").attr("hidden", "hidden")
+      }
+    });
+
+    // toggle relevant inputs for axes
+    // x-axis label
+    $("#xaxis-label").change(function() {
+      if ( $(this).is(":checked") ) {
+        $(".xaxis-label-text").removeAttr("hidden")
+      } else {
+        $(".xaxis-label-text").attr("hidden", "hidden")
+      }
+    })
+
+    // y-axis label
+    $("#yaxis-label").change(function() {
+      if ( $(this).is(":checked") ) {
+        $(".yaxis-label-text").removeAttr("hidden")
+      } else {
+        $(".yaxis-label-text").attr("hidden", "hidden")
+      }
+    })
+
+    // x-axis data range
+    $("#xaxis-range").change(function() {
+      if ( $(this).is(":checked") ) {
+        $(".xaxis-range-form").removeAttr("hidden")
+      } else {
+        $(".xaxis-range-form").attr("hidden", "hidden")
+      }
+    })
+
+    // y-axis data range
+    $("#yaxis-range").change(function() {
+      if ( $(this).is(":checked") ) {
+        $(".yaxis-range-form").removeAttr("hidden")
+      } else {
+        $(".yaxis-range-form").attr("hidden", "hidden")
+      }
+    })
+
+    // highchart defaults
+    const defaultFont = "Lato, Helvetica Neue, Arial, Helvetica, sans-serif";
+
+    Highcharts.setOptions({
+      lang: {
+        drillUpText: "Back to {series.name}"
+      }
+    });
+
+    var chart = Highcharts.chart("chart", {
+      chart: {
+        type: startingChart,
+        animation: false,
+        style: {
+          fontFamily: defaultFont
+        },
+      },
+
+      colors: colorScheme,
+      title: {
+        text: title,
+      },
+
+      subtitle: {
+        text: subtitle
+      },
+
+      xAxis: {
+        type: xAxisType,
+        lineColor: "#808080",
+        title: {
+          text: xAxisLabelText,
+          margin: 15,
+          style: {
+            fontSize: "14px",
+          }
+        },
+        labels: {
+          style: {
+            fontSize: "14px",
+          }
+        }
+      },
+
+      yAxis: {
+        type: yAxisType,
+        gridLineColor: "#efefef",
+        lineColor: "#808080",
+        title: {
+          text: yAxisLabelText,
+          margin: 30,
+          style: {
+            fontSize: "14px",
+          }
+        },
+        labels: {
+          style: {
+            fontSize: "14px",
+          }
+        }
+      },
+
+      legend: {
+        enabled: showLegend
+      },
+
+      tooltip: {
+        pointFormat: tooltipLabel
+      },
+
+      exporting: {
+        enabled: false,
+        scale: 4,
+      },
+
+      plotOptions: {
+        series: {
+          animation: false,
+          states: {
+            inactive: {
+              enabled: false
+            }
+          },
+          dataLabels: {
+            enabled: showDataLabels,
+          },
+          colorByPoint: showIndividualColors,
+        }
+      },
+
+      credits: {
+        text: "Generated by Metabolism of Cities",
+        href: null,
+        style: {
+          fontSize: "12px",
+          cursor: "default",
+          height: "50px",
+        },
+      },
+
+      series: [{
+        name: "Sea catch",
+        data: [
+          {
+            name: "Wild fish",
+            y: 35271,
+            drilldown: "Wild fish"
+          },
+          {
+            name: "Non-fish",
+            y: 14000,
+            drilldown: "Non-fish"
+          },
+          {
+            name: "Aquatic plant",
+            y: 37400,
+            drilldown: "Aquatic plant"
+          },
+        ]
+      }],
+
+      drilldown: {
+        drillUpButton: {
+          theme: {
+            fill: "#144d58",
+            color: "#fff",
+            stroke: "#144d58",
+            r: 4,
+            states: {
+              hover: {
+                fill: "#0f3b43",
+              },
+            },
+          }
+        },
+
+        activeAxisLabelStyle: {
+          "color": "#144d58",
+          "fontWeight": "normal",
+        },
+
+        activeDataLabelStyle: {
+          "color": "#144d58",
+          "fontWeight": "normal",
+        },
+
+        series: [
+          {
+            name: "Wild fish",
+            id: "Wild fish",
+            data: [
+              ["Abalone", 10],
+              ["Small pelagics", 14490],
+              ["Hake longline", 8188],
+              ["Patagonian toothfish", 120],
+              ["West Coast Rock Lobster", 1205],
+              ["Commercial line fishers", 3378],
+              ["Sharks", 24],
+              ["Tuna & swordfish longline/pelagic shark", 3256],
+              ["Tuna pole", 4600],
+            ]
+          },
+          {
+            name: "Non-fish",
+            id: "Non-fish",
+            data: [
+              ["Squid", 11000],
+              ["Octopus", 3000],
+            ]
+          },
+          {
+            name: "Aquatic plant",
+            id: "Aquatic plant",
+            data: [
+              ["Kelp", 37400],
+            ]
+          },
+        ]
+      }
+    });
+
+    // export chart buttons
+    $(".export-png").click(function() {
+      chart.exportChart();
+    });
+
+    $(".export-svg").click(function() {
+      chart.exportChart({type:"image/svg+xml"});
+    });
+
+    // fullscreen chart button
+    $(".fullscreen-chart").click(function() {
+      chart.fullscreen.toggle();
+    })
+
+    // set type on default
+    $(".change-chart-type").val("column");
+
+    // change chart type
+    $(".change-chart-type").change(function() {
+      let chartType = $(this).val()
+
+      chart.update({
+        chart: {
+          type: chartType,
+        },
+        xAxis: {
+          lineColor: "#808080",
+          title: {
+            text: xAxisLabelText,
+          },
+        },
+        yAxis: {
+          title: {
+            text: yAxisLabelText,
+          }
+        }
+      });
+
+      if (chartType == "pie") {
+        chart.update({
+          xAxis: {
+            lineColor: "transparent",
+            title: {
+              text: null,
+            },
+          },
+          yAxis: {
+            title: {
+              text: null,
+            }
+          },
+          plotOptions: {
+            series: {
+              colorByPoint: true,
+              dataLabels: {
+                enabled: true,
+              },
+            }
+          },
+        });
+      }
+    });
+
+    // when opening data tab, load table with ajax
+    let dataLoaded = false;
+
+    $(".nav-link.load-data").click(function() {
+      console.log("hi!");
+      if (!dataLoaded) {
+        $.get("the/url").done(function(data) {
+          $(".table-wrapper").html(data);
+          dataLoaded = true;
+        });
+      }
+    });
+  </script>
+{% endblock %}
