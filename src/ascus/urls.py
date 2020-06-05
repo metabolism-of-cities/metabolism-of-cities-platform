@@ -35,6 +35,7 @@ urlpatterns = [
     # Account section
     path("account/", views.ascus_account, name="account"),
     path("account/presentation/", views.ascus_account_presentation, name="account_presentation"),
+    path("account/vote/", views.account_vote, name="account_vote"),
     path("account/introvideo/", views.ascus_account_presentation, {"introvideo": True}, name="account_introvideo"),
     path("account/edit/", views.ascus_account_edit, name="account_edit"),
     path("account/discussion/", views.ascus_account_discussion, name="account_discussion"),

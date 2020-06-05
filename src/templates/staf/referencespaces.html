@@ -76,7 +76,7 @@
             <tbody class="list">
               {% for each in geocodes %}
               <tr><td>
-                <a class="data-name" href="{% url 'stafcp_referencespaces_list' each.id %}">{{ each }}</a>
+                <a class="data-name" href="{% url "staf:referencespaces" each.id %}">{{ each }}</a>
                 <span hidden class="data-tags">scheme-{{ each.scheme.id }}</span>
               </td></tr>
               {% endfor %}

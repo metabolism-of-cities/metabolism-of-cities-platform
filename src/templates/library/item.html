@@ -27,6 +27,33 @@
 
 {% block content %}
 
+{% if request.user.is_authenticated and not vote %}
+
+  <div class="container">
+    <div class="row">
+        <div class="col-12 text-center">
+
+          <form method="post" class="form form-horizontal" action="{% url "ascus:account_vote" %}">
+            {% csrf_token %}
+            <div class="alert alert-warning">
+              <h3>Best presentation</h3>
+              <p>
+              {% if best_vote %}
+                  You already cast your vote
+              {% else %}
+                <button type="submit" class="btn btn-success" name="presentation" value="{{ info.id }}"><i class="fa fa-vote-yea"></i> Vote for this presentation.</button>
+              {% endif %}
+              </p>
+            </div>
+          </form>
+        </div>
+
+    </div>
+  </div>
+
+{% endif %}
+
+
   <div class="container">
     <div class="row">
       <div class="col-lg-4 text-center">
