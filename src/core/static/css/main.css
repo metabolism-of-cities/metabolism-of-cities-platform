@@ -1688,3 +1688,18 @@ body.material-stocks.landing footer {
 body.material-stocks.map #map {
   height: 600px;
   max-height: 90vh; }
+
+body.material-stocks.map .legend {
+  line-height: 18px;
+  color: #212529;
+  background-color: #fbfbfb;
+  padding: .5rem;
+  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
+  border-radius: .25rem; }
+
+body.material-stocks.map .legend i {
+  width: 16px;
+  height: 16px;
+  float: left;
+  margin-right: 8px;
+  opacity: 0.7; }

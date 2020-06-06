@@ -2606,4 +2606,21 @@ body.material-stocks.map {
     height: 600px;
     max-height: 90vh;
   }
+
+  .legend {
+    line-height: 18px;
+    color: $dark;
+    background-color: $very-light;
+    padding: .5rem;
+    box-shadow: $basic-shadow;
+    border-radius: .25rem;
+  }
+
+  .legend i {
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+  }
 }

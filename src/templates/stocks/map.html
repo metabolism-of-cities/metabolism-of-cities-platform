@@ -15,10 +15,10 @@
     <div class="row">
       <div class="col-4">
         <select class="custom-select" id="switch-layers">
-          <option selected value="choropleth">Choropleth - density</option>
-          <option selected value="altchoropleth">Choropleth - other value</option>
-          <option value="bubbles">Bubble</option>
-          <option value="marker">Marker</option>
+          <option selected value="choroplethDensity">Choropleth - density</option>
+          <option selected value="choroplethInverse">Choropleth - other value</option>
+          <option value="circlesRandom">Bubble</option>
+          <option value="markersRandom">Marker</option>
         </select>
 
         <div class="input-group mt-4">
@@ -31,10 +31,22 @@
           </div>
         </div>
 
+        <!-- gotta figure out how to make this work without canvas -->
+        <!--
         <button class="btn btn-primary mt-4 download-map">
           <i class="fas fa-fw fa-save"></i>
           Save map as image
         </button>
+        -->
+
+        <div id="feature-details">
+          <div>
+            Name: <span class="name"></span>
+          </div>
+          <div>
+            Density: <span class="density"></span>
+          </div>
+        </div>
       </div>
       <div class="col-8">
         <div id="map" class="leaflet-map"></div>
@@ -58,9 +70,11 @@
   <script src="https://leafletjs.com/examples/choropleth/us-states.js"></script>
 
   <script>
-    var map = L.map("map").setView([37.8, -96], 4);
+    // initialise map
+    let map = L.map("map").setView([37.8, -96], 4);
 
-    L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+    // add baselayer
+    let basemap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
       maxZoom: 18,
       attribution: "Map data &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, " +
         "<a href='https://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, " +
@@ -69,10 +83,29 @@
       tileSize: 512,
       zoomOffset: -1,
       preferCanvas: true,
-    }).addTo(map);
+    })
 
-    // get color depending on population density value
-    function getColor(d) {
+    basemap.addTo(map);
+
+    // COMMON FUNCTIONS
+    // removing all layers except the basemap
+    function clearMap() {
+      map.eachLayer(function(layer) {
+        if (layer !== basemap) {
+          map.removeLayer(layer);
+        }
+      });
+    }
+
+    // DEFINE DATA LAYERS
+    // each data layer has multiple parts - the data itself, as well as a few optional ones depending on the type
+
+    // Population density: `density`
+    // The first example is a choropleth map of population density by US state
+
+    // we start by building up the layer, starting with styling
+    // a function to get fill color depending on population density value
+    function colorsDensity(d) {
       return d > 1000 ? "#800026" :
              d > 500  ? "#BD0026" :
              d > 200  ? "#E31A1C" :
@@ -83,18 +116,81 @@
                         "#FFEDA0";
     }
 
-    function style(feature) {
+    // style the density layer with the fill colour based on the density value using the function above
+    function styleDensity(feature) {
       return {
         weight: 1,
         opacity: 1,
-        color: "white",
+        color: "#ffffff",
         fillOpacity: 0.7,
-        fillColor: getColor(feature.properties.density)
+        fillColor: colorsDensity(feature.properties.density)
       };
     }
 
-    // get color depending on population density value
-    function altgetColor(d) {
+    // create variable for the legend
+    var legendDensity = L.control({
+      position: "bottomright"
+    });
+
+    // when the legend is added to the map, build up the contents
+    legendDensity.onAdd = function(map) {
+      var div = L.DomUtil.create("div", "legend"),
+          grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+          labels = [];
+
+      // loop through our density intervals and generate a label with a colored square for each interval
+      for (var i = 0; i < grades.length; i++) {
+          div.innerHTML +=
+              "<i style='background:" + colorsDensity(grades[i] + 1) + "'></i> " +
+              grades[i] + (grades[i + 1] ? " – " + grades[i + 1] + "<br>" : "+");
+      }
+
+      return div;
+    };
+
+    // USER INTERACTION
+    // variable for choropleth element last clicked on by user
+    let selectedChoropleth;
+
+    // selecting a feature on a chloropleth map
+    function selectChoropleth(e) {
+      if (selectedChoropleth) {
+        selectedChoropleth.setStyle({
+          "color": "white",
+          "weight": 1,
+        })
+      }
+
+      selectedChoropleth = e.target
+      selectedChoropleth.setStyle({
+        "color": "black",
+        "weight": 2,
+      })
+
+      $("#feature-details .name").text(e.target.feature.properties.name)
+      $("#feature-details .density").text(e.target.feature.properties.density)
+
+      selectedChoropleth.bringToFront()
+    }
+
+    // function to give to each feature of the choropleth layer
+    function onEachFeature(feature, layer) {
+      layer.on({
+        click: selectChoropleth
+      });
+    };
+
+    // create layer with data, style, and click function
+    var choroplethDensity = L.geoJson(statesData, {
+      style: styleDensity,
+      onEachFeature: onEachFeature,
+    });
+
+    // Inverse of density: `inverse`
+    // A second example using the same data but a different colour scheme
+
+    // using different colours, but otherwise the same as before
+    function colorsInverse(d) {
       return d > 1000 ? "#f7fbff" :
              d > 500  ? "#deebf7" :
              d > 200  ? "#c6dbef" :
@@ -105,27 +201,102 @@
                         "#084594";
     }
 
-
-    function altstyle(feature) {
+    // the same as before except for the fill colour
+    function styleInverse(feature) {
       return {
         weight: 1,
         opacity: 1,
         color: "white",
         fillOpacity: 0.7,
-        fillColor: altgetColor(feature.properties.density)
+        fillColor: colorsInverse(feature.properties.density)
       };
     }
 
-    var choropleth = L.geoJson(statesData, {
-      style: style,
-      renderer: L.canvas(),
+    // we've already made the relevant functions so we can add the layer straight away
+    var choroplethInverse = L.geoJson(statesData, {
+      style: styleInverse,
+      onEachFeature: onEachFeature,
     });
 
-    var altchoropleth = L.geoJson(statesData, {
-      style: altstyle,
-      renderer: L.canvas(),
-    });
+    // A third layer, this one is a collections of L.circles which shows circles in a specific spot of a specific real life size
+    // https://leafletjs.com/reference-1.6.0.html#circle
+    // IMPORTANT: L.circle measures its radius in metres so it covers real life areas, not pixels
+    // this can be useful to measure the distance outward from a certain point
+    var circlesRandom = L.featureGroup([
+      L.circle([40,-100], {
+        color: "red",
+        fillColor: "#f03",
+        fillOpacity: 0.5,
+        radius: 500000,
+        properties: {
+          "name": "Red circle",
+          "density": 500000,
+        }
+      }),
+      L.circle([30,-90], {
+        color: "green",
+        fillColor: "green",
+        fillOpacity: 0.5,
+        radius: 200000,
+        properties: {
+          "name": "Green circle",
+          "density": 200000,
+        }
+      }),
+      L.circle([50,-110], {
+        color: "orange",
+        fillColor: "orange",
+        fillOpacity: 0.5,
+        radius: 300000,
+        properties: {
+          "name": "Orange circle",
+          "density": 300000,
+        }
+      })
+    ]).on("click", selectCircle)
 
+    // function to select a circle and show its information
+    function selectCircle(e) {
+      $("#feature-details .name").text(e.layer.options.properties.name)
+      $("#feature-details .density").text(e.layer.options.properties.density)
+    }
+
+    // the last example is a group of plain markers
+    // these cannot be styled, they are the plain leaflet markers
+    var markersRandom = L.featureGroup([
+      L.marker([40,-100], {
+        properties: {
+          "name": "Marker 1",
+          "density": 500000,
+        }
+      }),
+      L.marker([30,-90], {
+        properties: {
+          "name": "Marker 2",
+          "density": 200000,
+        }
+      }),
+      L.marker([50,-110], {
+        properties: {
+          "name": "Marker 3",
+          "density": 300000,
+        }
+      })
+    ]).on("click", selectMarker)
+
+    // function to select a marker and show its information
+    function selectMarker(e) {
+      $("#feature-details .name").text(e.layer.options.properties.name)
+      $("#feature-details .density").text(e.layer.options.properties.density)
+    }
+
+    // FILTERS
+    // this is a hardcoded filter for the density layer
+    // it needs to be turned into a generic filter that can be used on all layers
+    // to do:
+    // - much of it can only be done when using more real data
+    // - persisent layer; keep filter applied when switching layers
+    // - should this be a new layer or just existing layers be limited?
     var filteredLayer;
 
     function filterChoropleth(value) {
@@ -137,7 +308,7 @@
         filter: function(feature, layer) {
           return feature.properties.density > valueValue;
         },
-        style: style,
+        style: styleDensity,
       });
 
       map.addLayer(filteredLayer);
@@ -149,20 +320,15 @@
       filterChoropleth(value);
     })
 
+    // layer and corresponding legend that should be loaded first
+    let visibleLayer = "choroplethDensity";
+    let visibleLegend = "legendDensity"
 
-    var bubbles = L.circle([40,-100], {
-        color: "red",
-        fillColor: "#f03",
-        fillOpacity: 0.5,
-        radius: 500000,
-        renderer: L.canvas(),
-    })
-
-    var marker = L.marker([30,-90]);
-
-    let visibleLayer = "choropleth";
+    // add these to the map
     map.addLayer(window[visibleLayer]);
+    map.addControl(window[visibleLegend]);
 
+    // function when switching layers
     $("#switch-layers").change(function() {
       let newLayer = $("#switch-layers").val();
 
@@ -170,20 +336,6 @@
       map.addLayer(window[newLayer]);
 
       visibleLayer = newLayer;
-    })
-
-
-    // download map as image
-    function downloadImage(err, canvas) {
-      var downloadLink = document.createElement("a");
-      downloadLink.href = canvas.toDataURL("image/png");
-      downloadLink.download = "download";
-
-      downloadLink.click();
-    }
-
-    $(".download-map").click(function() {
-      leafletImage(map, downloadImage);
     })
   </script>
 {% endblock %}
