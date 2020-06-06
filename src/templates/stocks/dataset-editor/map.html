@@ -3,8 +3,11 @@
 {% block page_name %}dataset editor{% endblock %}
 {% block title %}Dataset editor for Cape Town fish catch in 2013{% endblock %}
 
-{% block css %}
-  <link href="{% static 'css/datatables.min.css' %}" rel="stylesheet" />
+{% block head %}
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
 {% endblock %}
 
 {% block content %}
@@ -16,7 +19,254 @@
 
   <section>
     <form id="dataset">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group chart-types">
+            <label class="category">Enabled chart types</label>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="column" checked>
+              <label class="custom-control-label" for="column">Column</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="bar" checked>
+              <label class="custom-control-label" for="bar">Bar</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="line">
+              <label class="custom-control-label" for="line">Line</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="pie" checked>
+              <label class="custom-control-label" for="pie">Pie</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="area">
+              <label class="custom-control-label" for="area">Area</label>
+            </div>
+            <!-- these don't work with this dataset, switching to them makes the whole thing stop working and requires a page refresh
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="streamgraph">
+              <label class="custom-control-label" for="streamgraph">Stream</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="columnrange">
+              <label class="custom-control-label" for="columnrange">Column range</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="datetime">
+              <label class="custom-control-label" for="datetime">Time series</label>
+            </div>
+             -->
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="category">Initial chart type</label>
+            <select class="custom-select" id="initial-chart-type">
+              <option value="column" selected>Column</option>
+              <option value="bar">Bar</option>
+              <option hidden value="line">Line</option>
+              <option value="pie">Pie</option>
+              <option hidden value="datetime">Time series</option>
+              <option hidden value="area">Area</option>
+              <option hidden value="streamgraph">Stream</option>
+              <option hidden value="columnrange">Column range</option>
+              <option hidden value="drilldown">Drilldown</option>
+            </select>
+          </div>
 
+          <div class="form-group">
+            <label class="category">Tooltip label</label>
+            <input type="text" class="form-control" id="tooltip-label" value="Catch in 2013: <b>{point.y} tonnes</b>">
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="category">X-axis</label>
+
+            <div class="form-group">
+              <label>Type</label>
+              <select class="custom-select" id="xaxis-type">
+                <option value="linear">Linear</option>
+                <option value="logarithmic">Logarithmic</option>
+                <option value="datetime">Date / time</option>
+                <option selected value="category">Category</option>
+              </select>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="xaxis-label">
+              <label class="custom-control-label" for="xaxis-label">Label</label>
+            </div>
+            <div class="form-group xaxis-label-text" hidden>
+              <input type="text" class="form-control" value="" placeholder="Label text">
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="xaxis-range">
+              <label class="custom-control-label" for="xaxis-range">Custom range</label>
+            </div>
+            <div class="row xaxis-range-form" hidden>
+              <div class="col">
+                <input type="number" class="form-control" placeholder="Min" id="xaxis-min">
+              </div>
+              <div class="col">
+                <input type="number" class="form-control" placeholder="Max" id="xaxis-max">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="category">Y-axis</label>
+
+            <div class="form-group">
+              <label>Type</label>
+              <select class="custom-select" id="yaxis-type">
+                <option selected value="linear">Linear</option>
+                <option value="logarithmic">Logarithmic</option>
+                <option value="datetime">Date / time</option>
+                <option value="category">Category</option>
+              </select>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="yaxis-label" checked>
+              <label class="custom-control-label" for="yaxis-label">Label</label>
+            </div>
+            <div class="form-group yaxis-label-text">
+              <input type="text" class="form-control" placeholder="Label text" value="Catch (in tonnes)">
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="yaxis-range">
+              <label class="custom-control-label" for="yaxis-range">Custom range</label>
+            </div>
+            <div class="row yaxis-range-form" hidden>
+              <div class="col">
+                <input type="number" class="form-control" placeholder="Min" id="yaxis-min">
+              </div>
+              <div class="col">
+                <input type="number" class="form-control" placeholder="Max" id="yaxis-max">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="category">Color scheme</label>
+        <div id="color-schemes" class="row">
+          <div class="col-md-6 mb-3">
+            <div class="single-scheme active" data-scheme="moc">
+              <div class='row no-gutters'>
+                <div class="col single-color" style="background-color: #144d58">&nbsp;</div>
+                <div class="col single-color" style="background-color: #a6cee3">&nbsp;</div>
+                <div class="col single-color" style="background-color: #33a02c">&nbsp;</div>
+                <div class="col single-color" style="background-color: #b2df8a">&nbsp;</div>
+                <div class="col single-color" style="background-color: #e31a1c">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fb9a99">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ff7f00">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fdbf6f">&nbsp;</div>
+                <div class="col single-color" style="background-color: #6a3d9a">&nbsp;</div>
+                <div class="col single-color" style="background-color: #cab2d6">&nbsp;</div>
+                <div class="col single-color" style="background-color: #b15928">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ffff99">&nbsp;</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="single-scheme" data-scheme="dozen">
+              <div class='row no-gutters'>
+                <div class="col single-color" style="background-color: #8dd3c7">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ffffb3">&nbsp;</div>
+                <div class="col single-color" style="background-color: #bebada">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fb8072">&nbsp;</div>
+                <div class="col single-color" style="background-color: #80b1d3">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fdb462">&nbsp;</div>
+                <div class="col single-color" style="background-color: #b3de69">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fccde5">&nbsp;</div>
+                <div class="col single-color" style="background-color: #d9d9d9">&nbsp;</div>
+                <div class="col single-color" style="background-color: #bc80bd">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ccebc5">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ffed6f">&nbsp;</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="single-scheme" data-scheme="pastel">
+              <div class='row no-gutters'>
+                <div class="col single-color" style="background-color: #fbb4ae">&nbsp;</div>
+                <div class="col single-color" style="background-color: #b3cde3">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ccebc5">&nbsp;</div>
+                <div class="col single-color" style="background-color: #decbe4">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fed9a6">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ffffcc">&nbsp;</div>
+                <div class="col single-color" style="background-color: #e5d8bd">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fddaec">&nbsp;</div>
+                <div class="col single-color" style="background-color: #f2f2f2">&nbsp;</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="single-scheme" data-scheme="set">
+              <div class='row no-gutters'>
+                <div class="col single-color" style="background-color: #e41a1c">&nbsp;</div>
+                <div class="col single-color" style="background-color: #377eb8">&nbsp;</div>
+                <div class="col single-color" style="background-color: #4daf4a">&nbsp;</div>
+                <div class="col single-color" style="background-color: #984ea3">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ff7f00">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ffff33">&nbsp;</div>
+                <div class="col single-color" style="background-color: #a65628">&nbsp;</div>
+                <div class="col single-color" style="background-color: #f781bf">&nbsp;</div>
+                <div class="col single-color" style="background-color: #999999">&nbsp;</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="single-scheme" data-scheme="accent">
+              <div class='row no-gutters'>
+                <div class="col single-color" style="background-color: #7fc97f">&nbsp;</div>
+                <div class="col single-color" style="background-color: #beaed4">&nbsp;</div>
+                <div class="col single-color" style="background-color: #fdc086">&nbsp;</div>
+                <div class="col single-color" style="background-color: #ffff99">&nbsp;</div>
+                <div class="col single-color" style="background-color: #386cb0">&nbsp;</div>
+                <div class="col single-color" style="background-color: #f0027f">&nbsp;</div>
+                <div class="col single-color" style="background-color: #bf5b17">&nbsp;</div>
+                <div class="col single-color" style="background-color: #666666">&nbsp;</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="single-scheme" data-scheme="dark">
+              <div class='row no-gutters'>
+                <div class="col single-color" style="background-color: #1b9e77">&nbsp;</div>
+                <div class="col single-color" style="background-color: #d95f02">&nbsp;</div>
+                <div class="col single-color" style="background-color: #7570b3">&nbsp;</div>
+                <div class="col single-color" style="background-color: #e7298a">&nbsp;</div>
+                <div class="col single-color" style="background-color: #66a61e">&nbsp;</div>
+                <div class="col single-color" style="background-color: #e6ab02">&nbsp;</div>
+                <div class="col single-color" style="background-color: #a6761d">&nbsp;</div>
+                <div class="col single-color" style="background-color: #666666">&nbsp;</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="category">Other settings</label>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="data-labels">
+          <label class="custom-control-label" for="data-labels">Data labels</label>
+        </div>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="legend">
+          <label class="custom-control-label" for="legend">Legend</label>
+        </div>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="individual-colors">
+          <label class="custom-control-label" for="individual-colors">Different color for each data point</label>
+        </div>
+      </div>
     </form>
 
     <button type="submit" class="btn btn-success" form="dataset">
@@ -38,7 +288,7 @@
 
     <div class="alert alert-primary">
       <i class="fal fa-info-circle mr-2"></i>
-      For your convenience, the map tab is opened by default while in edit mode. When opened online it will open on the [INSERT TAB]
+      For your convenience, the f tab is opened by default while in edit mode. When opened online it will open on the [INSERT TAB]
     </div>
 
     <div class="preview-wrap">
@@ -81,43 +331,15 @@
           <div class="tab-content">
             <!-- chart -->
             <div class="tab-pane" id="tab-chart">
-              <div class="row">
-                <div class="col-lg-5 mb-2 mb-lg-0">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">Chart type</span>
-                    </div>
-                    <select class="custom-select change-chart-type">
-                      <option value="column" selected>Column</option>
-                      <option value="bar">Bar</option>
-                      <option value="pie">Pie</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-lg-7">
-                  <button class="btn btn-primary float-lg-right export-svg">
-                    <i class="fas fa-fw fa-save"></i>
-                    Save as SVG
-                  </button>
-                  <button class="btn btn-primary float-lg-right mr-2 export-png">
-                    <i class="fas fa-fw fa-save"></i>
-                    Save as PNG
-                  </button>
-                  <button class="btn btn-primary-basic float-lg-right mr-2 fullscreen-chart">
-                    <i class="fal fa-fw fa-compress"></i>
-                    Fullscreen
-                  </button>
-                </div>
+              <div class="alert alert-light">
+                <i class="fal fa-info-circle mr-3"></i>
+                The chart was configured in the previous step. It will be visible in the preview after completing the map configuration
               </div>
-
-              <hr class="tab-divider">
-
-              <div id="chart"></div>
             </div>
 
             <!-- map -->
             <div class="tab-pane active" id="tab-map">
-              <img class="rounded" src="https://i.imgur.com/3MFXHD0.png">
+              <div id="map"></div>
             </div>
 
             <!-- data quality -->
@@ -324,510 +546,101 @@
     });
   </script>
 
-  <!-- load highcharts -->
-  <script src="https://code.highcharts.com/highcharts.js"></script>
-  <script src="https://code.highcharts.com/modules/exporting.js"></script>
-  <script src="https://code.highcharts.com/modules/drilldown.js"></script>
+  <!-- load leaflet -->
+  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+          integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+          crossorigin="">
+  </script>
+
+  <!-- sample data -->
+  <script src="https://leafletjs.com/examples/choropleth/us-states.js"></script>
+
   <script>
-    // color scheme definitions from colorbrewer2.org combined with default MoC colours
-    var moc = ["#144d58","#a6cee3","#33a02c","#b2df8a","#e31a1c","#fb9a99","#ff7f00","#fdbf6f","#6a3d9a","#cab2d6","#b15928","#ffff99"];
-    var accent = ["#7fc97f","#beaed4","#fdc086","#ffff99","#386cb0","#f0027f","#bf5b17","#666666"];
-    var dark = ["#1b9e77","#d95f02","#7570b3","#e7298a","#66a61e","#e6ab02","#a6761d","#666666"];
-    var pastel = ["#fbb4ae","#b3cde3","#ccebc5","#decbe4","#fed9a6","#ffffcc","#e5d8bd","#fddaec","#f2f2f2"];
-    var set = ["#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00","#ffff33","#a65628","#f781bf","#999999"];
-    var dozen = ["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"];
+    var map = L.map("map").setView([37.8, -96], 4);
 
-    // user settings
-    // titles
-    let title = "Cape Town fish catch in 2013";
-    let subtitle = "Aquatic agriculture catch from Cape Town in 2013, measured in tonnes";
+    L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+      maxZoom: 18,
+      attribution: "Map data &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, " +
+        "<a href='https://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, " +
+        "Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>",
+      id: "mapbox/light-v10",
+      tileSize: 512,
+      zoomOffset: -1,
+    }).addTo(map);
 
-    // color scheme
-    let colorScheme = moc;
-
-    // chart types
-    let chartTypes = ["column", "bar", "pie"]
-    let startingChart = "column";
-
-    // tooltip label
-    let tooltipLabel = "Catch in 2013: <b>{point.y} tonnes</b>";
-
-    // x-axis
-    let xAxisType = "category";
-    let xAxisLabelText = " ";
-    let xAxisMin = null;
-    let xAxisMax = null;
-
-    // y-axis
-    let yAxisType = "linear";
-    let yAxisLabelText = "Catch (in tonnes)";
-    let yAxisMin = null;
-    let yAxisMax = null;
-
-    // other settings
-    let showDataLabels = false;
-    let showLegend = false;
-    let showMap = true;
-    let showIndividualColors = false;
-
-    // function to gather user settings and generate dataset preview
-    function generatePreview() {
-      // set button icon to load
-      $(".btn-generate-preview i").toggleClass("fa-cog fa-spin fa-eye");
-
-      $("#preview").removeAttr("hidden")
-
-      // gather user settings
-      // titles
-      title = $("#title").val()
-      subtitle = $("#subtitle").val()
-
-      // chart types
-      chartTypes = []
-      $(".chart-types input").each(function() {
-        let input = $(this)
-        if (input.is(":checked")) {
-          chartTypes.push(input.attr("id"));
-        }
-      })
-
-      // initial chart type
-      startingChart = $("#initial-chart-type").val()
-
-      // tooltip label
-      tooltipLabel = $("#tooltip-label").val();
-
-      // x-axis
-      xAxisType = $("#xaxis-type").val();
-      xAxisMin = $("#xaxis-range").is(":checked") ? $("#xaxis-min").val() : null;
-      xAxisMax = $("#xaxis-range").is(":checked") ? $("#xaxis-max").val() : null;
-      xAxisLabelText = $("#xaxis-label").is(":checked") ? $(".xaxis-label-text input").val() : " ";
-
-      // y-axis
-      yAxisType = $("#yaxis-type").val();
-      yAxisMin = $("#yaxis-range").is(":checked") ? $("#yaxis-min").val() : null;
-      yAxisMax = $("#yaxis-range").is(":checked") ? $("#yaxis-max").val() : null;
-      yAxisLabelText = $("#yaxis-label").is(":checked") ? $(".yaxis-label-text input").val() : " ";
-
-      // data labels
-      showDataLabels = $("#data-labels").is(":checked") ? true : false;
-
-      // legend
-      showLegend = $("#legend").is(":checked") ? true : false;
-
-      // map
-      showMap = $("#map").is(":checked") ? true : false;
-
-      // individual-colors
-      showIndividualColors = $("#individual-colors").is(":checked") ? true : false;
-
-      // take variables and apply them to the preview
-      // titles
-      $(".preview-title").text(title)
-      $(".preview-subtitle").text(subtitle)
-
-      // chart types
-      $("select.change-chart-type").html("");
-      $(chartTypes).each(function() {
-        chartValue = this
-        chartName = this.charAt(0).toUpperCase() + this.slice(1);
-
-        $("select.change-chart-type").append("<option value='" + chartValue + "'>"+ chartName + "</option>");
-      })
-
-      // initial chart type
-      $("select.change-chart-type").val(startingChart);
-
-      // map
-      if (showMap) {
-        $("a.tab-map").show();
-      } else {
-        $("a.tab-map").hide();
-      }
-
-      // update chart
-      chart.update({
-        chart: {
-          type: startingChart,
-        },
-        colors: colorScheme,
-        xAxis: {
-          type: xAxisType,
-          min: xAxisMin,
-          max: xAxisMax,
-          title: {
-            text: xAxisLabelText
-          }
-        },
-        yAxis: {
-          type: yAxisType,
-          min: yAxisMin,
-          max: yAxisMax,
-          title: {
-            text: yAxisLabelText
-          }
-        },
-        legend: {
-          enabled: showLegend
-        },
-        tooltip: {
-          pointFormat: tooltipLabel
-        },
-        plotOptions: {
-          series: {
-            dataLabels: {
-              enabled: showDataLabels,
-            },
-            colorByPoint: showIndividualColors,
-          }
-        },
-      });
-
-      if (startingChart == "pie") {
-        chart.update({
-          xAxis: {
-            lineColor: "transparent",
-            title: {
-              text: null,
-            },
-          },
-          yAxis: {
-            title: {
-              text: null,
-            }
-          },
-          plotOptions: {
-            series: {
-              colorByPoint: true,
-              dataLabels: {
-                enabled: true,
-              },
-            }
-          },
-        });
-      }
-
-      // revert button icon
-      $(".btn-generate-preview i").toggleClass("fa-cog fa-spin fa-eye");
-      scrollToID("preview")
+    // get color depending on population density value
+    function getColor(d) {
+      return d > 1000 ? "#800026" :
+             d > 500  ? "#BD0026" :
+             d > 200  ? "#E31A1C" :
+             d > 100  ? "#FC4E2A" :
+             d > 50   ? "#FD8D3C" :
+             d > 20   ? "#FEB24C" :
+             d > 10   ? "#FED976" :
+                        "#FFEDA0";
     }
 
-    $(".btn-generate-preview").click(function() {
-      generatePreview();
-    })
+    function style(feature) {
+      return {
+        weight: 1,
+        opacity: 1,
+        color: "white",
+        fillOpacity: 0.7,
+        fillColor: getColor(feature.properties.density)
+      };
+    }
 
-    // pick color scheme
-    $(".single-scheme").click(function() {
-      $(".single-scheme").removeClass("active")
-      $(this).addClass("active");
-
-      let scheme = $(this).data("scheme");
-      colorScheme = window[scheme]
-    })
-
-    // update initial chart type select when changing available chart types
-    $(".chart-types input").change(function() {
-      let type = $(this).attr("id");
-
-      if ( $(this).is(":checked") ) {
-        $("#initial-chart-type option[value='" + type + "']").removeAttr("hidden")
-      } else {
-        $("#initial-chart-type option[value='" + type + "']").attr("hidden", "hidden")
-      }
+    var choropleth = L.geoJson(statesData, {
+      style: style,
     });
 
-    // toggle relevant inputs for axes
-    // x-axis label
-    $("#xaxis-label").change(function() {
-      if ( $(this).is(":checked") ) {
-        $(".xaxis-label-text").removeAttr("hidden")
-      } else {
-        $(".xaxis-label-text").attr("hidden", "hidden")
-      }
-    })
+    var filteredLayer;
 
-    // y-axis label
-    $("#yaxis-label").change(function() {
-      if ( $(this).is(":checked") ) {
-        $(".yaxis-label-text").removeAttr("hidden")
-      } else {
-        $(".yaxis-label-text").attr("hidden", "hidden")
-      }
-    })
+    function filterChoropleth(value) {
+      map.removeLayer(window[visibleLayer]);
 
-    // x-axis data range
-    $("#xaxis-range").change(function() {
-      if ( $(this).is(":checked") ) {
-        $(".xaxis-range-form").removeAttr("hidden")
-      } else {
-        $(".xaxis-range-form").attr("hidden", "hidden")
-      }
-    })
+      let valueValue = value;
 
-    // y-axis data range
-    $("#yaxis-range").change(function() {
-      if ( $(this).is(":checked") ) {
-        $(".yaxis-range-form").removeAttr("hidden")
-      } else {
-        $(".yaxis-range-form").attr("hidden", "hidden")
-      }
-    })
-
-    // highchart defaults
-    const defaultFont = "Lato, Helvetica Neue, Arial, Helvetica, sans-serif";
-
-    Highcharts.setOptions({
-      lang: {
-        drillUpText: "Back to {series.name}"
-      }
-    });
-
-    var chart = Highcharts.chart("chart", {
-      chart: {
-        type: startingChart,
-        animation: false,
-        style: {
-          fontFamily: defaultFont
+      filteredLayer = L.geoJson(statesData, {
+        filter: function(feature, layer) {
+          return feature.properties.density > valueValue;
         },
-      },
-
-      colors: colorScheme,
-      title: {
-        text: title,
-      },
-
-      subtitle: {
-        text: subtitle
-      },
-
-      xAxis: {
-        type: xAxisType,
-        lineColor: "#808080",
-        title: {
-          text: xAxisLabelText,
-          margin: 15,
-          style: {
-            fontSize: "14px",
-          }
-        },
-        labels: {
-          style: {
-            fontSize: "14px",
-          }
-        }
-      },
-
-      yAxis: {
-        type: yAxisType,
-        gridLineColor: "#efefef",
-        lineColor: "#808080",
-        title: {
-          text: yAxisLabelText,
-          margin: 30,
-          style: {
-            fontSize: "14px",
-          }
-        },
-        labels: {
-          style: {
-            fontSize: "14px",
-          }
-        }
-      },
-
-      legend: {
-        enabled: showLegend
-      },
-
-      tooltip: {
-        pointFormat: tooltipLabel
-      },
-
-      exporting: {
-        enabled: false,
-        scale: 4,
-      },
-
-      plotOptions: {
-        series: {
-          animation: false,
-          states: {
-            inactive: {
-              enabled: false
-            }
-          },
-          dataLabels: {
-            enabled: showDataLabels,
-          },
-          colorByPoint: showIndividualColors,
-        }
-      },
-
-      credits: {
-        text: "Generated by Metabolism of Cities",
-        href: null,
-        style: {
-          fontSize: "12px",
-          cursor: "default",
-          height: "50px",
-        },
-      },
-
-      series: [{
-        name: "Sea catch",
-        data: [
-          {
-            name: "Wild fish",
-            y: 35271,
-            drilldown: "Wild fish"
-          },
-          {
-            name: "Non-fish",
-            y: 14000,
-            drilldown: "Non-fish"
-          },
-          {
-            name: "Aquatic plant",
-            y: 37400,
-            drilldown: "Aquatic plant"
-          },
-        ]
-      }],
-
-      drilldown: {
-        drillUpButton: {
-          theme: {
-            fill: "#144d58",
-            color: "#fff",
-            stroke: "#144d58",
-            r: 4,
-            states: {
-              hover: {
-                fill: "#0f3b43",
-              },
-            },
-          }
-        },
-
-        activeAxisLabelStyle: {
-          "color": "#144d58",
-          "fontWeight": "normal",
-        },
-
-        activeDataLabelStyle: {
-          "color": "#144d58",
-          "fontWeight": "normal",
-        },
-
-        series: [
-          {
-            name: "Wild fish",
-            id: "Wild fish",
-            data: [
-              ["Abalone", 10],
-              ["Small pelagics", 14490],
-              ["Hake longline", 8188],
-              ["Patagonian toothfish", 120],
-              ["West Coast Rock Lobster", 1205],
-              ["Commercial line fishers", 3378],
-              ["Sharks", 24],
-              ["Tuna & swordfish longline/pelagic shark", 3256],
-              ["Tuna pole", 4600],
-            ]
-          },
-          {
-            name: "Non-fish",
-            id: "Non-fish",
-            data: [
-              ["Squid", 11000],
-              ["Octopus", 3000],
-            ]
-          },
-          {
-            name: "Aquatic plant",
-            id: "Aquatic plant",
-            data: [
-              ["Kelp", 37400],
-            ]
-          },
-        ]
-      }
-    });
-
-    // export chart buttons
-    $(".export-png").click(function() {
-      chart.exportChart();
-    });
-
-    $(".export-svg").click(function() {
-      chart.exportChart({type:"image/svg+xml"});
-    });
-
-    // fullscreen chart button
-    $(".fullscreen-chart").click(function() {
-      chart.fullscreen.toggle();
-    })
-
-    // set type on default
-    $(".change-chart-type").val("column");
-
-    // change chart type
-    $(".change-chart-type").change(function() {
-      let chartType = $(this).val()
-
-      chart.update({
-        chart: {
-          type: chartType,
-        },
-        xAxis: {
-          lineColor: "#808080",
-          title: {
-            text: xAxisLabelText,
-          },
-        },
-        yAxis: {
-          title: {
-            text: yAxisLabelText,
-          }
-        }
+        style: style,
       });
 
-      if (chartType == "pie") {
-        chart.update({
-          xAxis: {
-            lineColor: "transparent",
-            title: {
-              text: null,
-            },
-          },
-          yAxis: {
-            title: {
-              text: null,
-            }
-          },
-          plotOptions: {
-            series: {
-              colorByPoint: true,
-              dataLabels: {
-                enabled: true,
-              },
-            }
-          },
-        });
-      }
-    });
+      map.addLayer(filteredLayer);
+      visibleLayer = "filteredLayer";
+    }
 
-    // when opening data tab, load table with ajax
-    let dataLoaded = false;
+    $("#filter-choropleth").click(function() {
+      let value = $("input.choropleth-value").val()
+      filterChoropleth(value);
+    })
 
-    $(".nav-link.load-data").click(function() {
-      console.log("hi!");
-      if (!dataLoaded) {
-        $.get("the/url").done(function(data) {
-          $(".table-wrapper").html(data);
-          dataLoaded = true;
-        });
-      }
-    });
+
+    var bubbles = L.circle([40,-100], {
+        color: "red",
+        fillColor: "#f03",
+        fillOpacity: 0.5,
+        radius: 500000,
+    })
+
+    var marker = L.marker([30,-90]);
+
+    let visibleLayer = "choropleth";
+    map.addLayer(window[visibleLayer]);
+
+    $("#switch-layers").change(function() {
+      let newLayer = $("#switch-layers").val();
+
+      map.removeLayer(window[visibleLayer]);
+      map.addLayer(window[newLayer]);
+
+      visibleLayer = newLayer;
+    })
+
+    $(".download-map").click(function() {
+      // leafletImage(map, downloadImage);
+    })
   </script>
 {% endblock %}

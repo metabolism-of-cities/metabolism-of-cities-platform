@@ -15,7 +15,8 @@
     <div class="row">
       <div class="col-4">
         <select class="custom-select" id="switch-layers">
-          <option selected value="choropleth">Choropleth</option>
+          <option selected value="choropleth">Choropleth - density</option>
+          <option selected value="altchoropleth">Choropleth - other value</option>
           <option value="bubbles">Bubble</option>
           <option value="marker">Marker</option>
         </select>
@@ -92,8 +93,36 @@
       };
     }
 
+    // get color depending on population density value
+    function altgetColor(d) {
+      return d > 1000 ? "#f7fbff" :
+             d > 500  ? "#deebf7" :
+             d > 200  ? "#c6dbef" :
+             d > 100  ? "#9ecae1" :
+             d > 50   ? "#6baed6" :
+             d > 20   ? "#4292c6" :
+             d > 10   ? "#2171b5" :
+                        "#084594";
+    }
+
+
+    function altstyle(feature) {
+      return {
+        weight: 1,
+        opacity: 1,
+        color: "white",
+        fillOpacity: 0.7,
+        fillColor: altgetColor(feature.properties.density)
+      };
+    }
+
     var choropleth = L.geoJson(statesData, {
       style: style,
+      renderer: L.canvas(),
+    });
+
+    var altchoropleth = L.geoJson(statesData, {
+      style: altstyle,
       renderer: L.canvas(),
     });
 
