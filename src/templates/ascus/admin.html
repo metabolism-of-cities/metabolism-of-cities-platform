@@ -75,6 +75,8 @@ body.homepage section.what .card{height:auto}
   </div>
 </section>
 
+{% if voting %}
+
 <div class="">
   <h1>Voting</h1>
 
@@ -99,5 +101,7 @@ body.homepage section.what .card{height:auto}
 
   {% endfor %}
 </div>
+
+{% endif %}
 
 {% endblock %}

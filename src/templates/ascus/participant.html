@@ -18,48 +18,6 @@ iframe{
 
   <div class="row">
 
-    <div class="col-12">
-
-        {% if request.user.is_authenticated and not video_vote %}
-
-        <form method="post" class="form form-horizontal" action="{% url "ascus:account_vote" %}">
-          {% csrf_token %}
-          <div class="alert alert-warning">
-            <h3>Best introduction video</h3>
-            <p>
-            {% if creative_vote %}
-                You already cast your vote
-            {% else %}
-              <button type="submit" class="btn btn-success" name="introvideo" value="{{ info.id }}"><i class="fa fa-vote-yea"></i> Vote for this participant's video.</button>
-            {% endif %}
-            </p>
-          </div>
-        </form>
-
-        {% endif %}
-
-        {% if request.user.is_authenticated and not active_vote %}
-
-        <form method="post" class="form form-horizontal" action="{% url "ascus:account_vote" %}">
-          {% csrf_token %}
-          <div class="alert alert-warning">
-            <h3>Most active participant</h3>
-            <p>
-            {% if best_vote %}
-                You already cast your vote
-            {% else %}
-              <button type="submit" class="btn btn-success" name="active_participant" value="{{ info.id }}"><i class="fa fa-vote-yea"></i> Vote for this participant.</button>
-            {% endif %}
-            </p>
-          </div>
-        </form>
-
-        {% endif %}
-
-    </div>
-
-
-
     <div class="col-9">
 
       <p><strong>Profile/bio</strong></p>

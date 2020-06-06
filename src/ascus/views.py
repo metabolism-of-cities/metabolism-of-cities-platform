@@ -98,7 +98,6 @@ def overview(request, preconf=False):
         "discussions": discussions,
         "my_topic_registrations": my_topic_registrations,
         "preconf": preconf,
-        "creative_vote": RecordRelationship.objects.filter(relationship_id=23, record_parent=request.user.people) if request.user.is_authenticated else None,
         "best_vote": RecordRelationship.objects.filter(relationship_id=22, record_parent=request.user.people) if request.user.is_authenticated else None,
     }
     return render(request, "ascus/program.html", context)
@@ -168,8 +167,6 @@ def participant(request, id):
         "presentations": presentations,
         "discussions": discussions,
         "attendance": attendance,
-        "video_vote": RecordRelationship.objects.filter(relationship_id=25, record_parent=request.user.people) if request.user.is_authenticated else None,
-        "active_vote": RecordRelationship.objects.filter(relationship_id=26, record_parent=request.user.people) if request.user.is_authenticated else None,
     }
     return render(request, "ascus/participant.html", context)
 
@@ -271,58 +268,6 @@ def account_vote(request):
         else:
             messages.error(request, "You have already cast a vote.")
         return redirect("ascus:overview")
-
-    best_vote = RecordRelationship.objects.filter(relationship_id=22, record_parent=request.user.people)
-    if "best_session" in request.POST:
-        if not best_vote:
-            RecordRelationship.objects.create(
-                record_parent = request.user.people,
-                record_child_id = request.POST["best_session"],
-                relationship_id = 22,
-            )
-            messages.success(request, "Thanks for your vote!")
-        else:
-            messages.error(request, "You have already cast a vote.")
-        return redirect("ascus:overview")
-
-    intro_vote = RecordRelationship.objects.filter(relationship_id=25, record_parent=request.user.people)
-    if "introvideo" in request.POST:
-        if not intro_vote:
-            RecordRelationship.objects.create(
-                record_parent = request.user.people,
-                record_child_id = request.POST["introvideo"],
-                relationship_id = 25,
-            )
-            messages.success(request, "Thanks for your vote!")
-        else:
-            messages.error(request, "You have already cast a vote.")
-        return redirect("ascus:participant", request.POST["introvideo"])
-
-    check = RecordRelationship.objects.filter(relationship_id=26, record_parent=request.user.people)
-    if "active_participant" in request.POST:
-        if not check:
-            RecordRelationship.objects.create(
-                record_parent = request.user.people,
-                record_child_id = request.POST["active_participant"],
-                relationship_id = 26,
-            )
-            messages.success(request, "Thanks for your vote!")
-        else:
-            messages.error(request, "You have already cast a vote.")
-        return redirect("ascus:participant", request.POST["active_participant"])
-
-    check = RecordRelationship.objects.filter(relationship_id=24, record_parent=request.user.people)
-    if "presentation" in request.POST:
-        if not check:
-            RecordRelationship.objects.create(
-                record_parent = request.user.people,
-                record_child_id = request.POST["presentation"],
-                relationship_id = 24,
-            )
-            messages.success(request, "Thanks for your vote!")
-        else:
-            messages.error(request, "You have already cast a vote.")
-        return redirect("ascus:presentation", request.POST["presentation"])
 
 @check_ascus_access
 def forum(request):
@@ -690,11 +635,14 @@ def presentations(request):
 # AScUS admin section
 @check_ascus_admin_access
 def ascus_admin(request):
-    list = [22,23,24,25,26]
-    voting = {}
-    relationships = Relationship.objects.filter(id__in=list)
-    for each in relationships:
-        voting[each.name] = RecordRelationship.objects.filter(relationship=each).values("record_child__name").annotate(total=Count("record_child__name")).order_by("total")
+    voting = None
+    if activate_voting:
+    # List all the voting IDs
+        list = [22,23,24,25,26]
+        voting = {}
+        relationships = Relationship.objects.filter(id__in=list)
+        for each in relationships:
+            voting[each.name] = RecordRelationship.objects.filter(relationship=each).values("record_child__name").annotate(total=Count("record_child__name")).order_by("total")
     context = {
         "header_title": "AScUS Admin",
         "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
