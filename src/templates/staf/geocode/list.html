@@ -5,7 +5,7 @@
 {% block content %}
   <h1>Geocode schemes</h1>
 
-  <a href="{% url 'stafcp_geocode_form' %}" class="btn btn-primary">
+  <a href="{% url 'staf:geocode_form' %}" class="btn btn-primary">
     <i class="fas fa-plus"></i>
     Add new geocode scheme
   </a>
@@ -29,11 +29,11 @@
               <i class="fas fa-fw fa-eye"></i>
               Quick view
             </button>
-            <a class="btn btn-sm btn-primary-basic" href="{% url 'stafcp_geocode' each.id %}">
+            <a class="btn btn-sm btn-primary-basic" href="{% url 'staf:geocode' each.id %}">
               <i class="fal fa-fw fa-info-circle"></i>
               Details
             </a>
-            <a class="btn btn-sm btn-primary-basic" href="{% url 'stafcp_geocode_form' each.id %}">
+            <a class="btn btn-sm btn-primary-basic" href="{% url 'staf:geocode_form' each.id %}">
               <i class="fal fa-fw fa-pencil"></i>
               Edit
             </a>

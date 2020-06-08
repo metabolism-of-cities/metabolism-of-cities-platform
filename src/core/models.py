@@ -912,11 +912,15 @@ class GeocodeScheme(Record):
     is_comprehensive = models.BooleanField(default=True, db_index=True)
     icon = models.CharField(max_length=50, null=True, blank=True) # Web field
 
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
+
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("stafcp_geocode", args=[self.id])
+        return reverse("staf:geocode", args=[self.id])
 
     class Meta:
         db_table = "stafdb_geocode_scheme"
@@ -927,6 +931,10 @@ class GeocodeScheme(Record):
 class Geocode(Record):
     scheme = models.ForeignKey(GeocodeScheme, on_delete=models.CASCADE, related_name="geocodes")
     depth = models.PositiveSmallIntegerField()
+
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
 
     def __str__(self):
         return self.name
@@ -1022,7 +1030,7 @@ class Activity(Record):
 class FlowDiagram(Record):
 
     def get_absolute_url(self):
-        return reverse("stafcp_flowdiagram", args=[self.id])
+        return reverse("staf:flowdiagram", args=[self.id])
 
     def __str__(self):
         return self.name
