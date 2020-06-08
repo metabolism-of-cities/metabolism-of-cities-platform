@@ -17,7 +17,7 @@
         <select class="custom-select" id="switch-layers">
           <option selected value="choroplethDensity">Choropleth - density</option>
           <option selected value="choroplethInverse">Choropleth - other value</option>
-          <option value="circlesRandom">Bubble</option>
+          <option value="circlesRandom">Circles</option>
           <option value="markersRandom">Marker</option>
         </select>
 
@@ -130,12 +130,12 @@
     }
 
     // create variable for the legend
-    var legendDensity = L.control({
+    var choroplethDensityLegend = L.control({
       position: "bottomright"
     });
 
     // when the legend is added to the map, build up the contents
-    legendDensity.onAdd = function(map) {
+    choroplethDensityLegend.onAdd = function(map) {
       var div = L.DomUtil.create("div", "legend"),
           grades = [0, 10, 20, 50, 100, 200, 500, 1000],
           labels = [];
@@ -214,6 +214,27 @@
       };
     }
 
+    // the legend for this layer
+    var choroplethInverseLegend = L.control({
+      position: "bottomright"
+    });
+
+    // when the legend is added to the map, build up the contents
+    choroplethInverseLegend.onAdd = function(map) {
+      var div = L.DomUtil.create("div", "legend"),
+          grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+          labels = [];
+
+      // loop through our density intervals and generate a label with a colored square for each interval
+      for (var i = 0; i < grades.length; i++) {
+          div.innerHTML +=
+              "<i style='background:" + colorsInverse(grades[i] + 1) + "'></i> " +
+              grades[i] + (grades[i + 1] ? " – " + grades[i + 1] + "<br>" : "+");
+      }
+
+      return div;
+    };
+
     // we've already made the relevant functions so we can add the layer straight away
     var choroplethInverse = L.geoJson(statesData, {
       style: styleInverse,
@@ -226,36 +247,49 @@
     // this can be useful to measure the distance outward from a certain point
     var circlesRandom = L.featureGroup([
       L.circle([40,-100], {
-        color: "red",
-        fillColor: "#f03",
+        color: "#144d58",
+        fillColor: "#144d58",
         fillOpacity: 0.5,
         radius: 500000,
         properties: {
-          "name": "Red circle",
+          "name": "Big circle",
           "density": 500000,
         }
       }),
       L.circle([30,-90], {
-        color: "green",
-        fillColor: "green",
+        color: "#144d58",
+        fillColor: "#144d58",
         fillOpacity: 0.5,
         radius: 200000,
         properties: {
-          "name": "Green circle",
+          "name": "Small circle",
           "density": 200000,
         }
       }),
       L.circle([50,-110], {
-        color: "orange",
-        fillColor: "orange",
+        color: "#144d58",
+        fillColor: "#144d58",
         fillOpacity: 0.5,
         radius: 300000,
         properties: {
-          "name": "Orange circle",
+          "name": "Medium circle",
           "density": 300000,
         }
       })
     ]).on("click", selectCircle)
+
+    // a different kind of legend, simply explaining the size of the circles
+    var circlesRandomLegend = L.control({
+      position: "bottomright"
+    });
+
+    // when the legend is added to the map, build up the contents
+    circlesRandomLegend.onAdd = function(map) {
+      var div = L.DomUtil.create("div", "legend");
+          div.innerHTML += "The size of the circle correspondents with the amount of electricity produced by each power plant.";
+
+      return div;
+    };
 
     // function to select a circle and show its information
     function selectCircle(e) {
@@ -285,6 +319,9 @@
         }
       })
     ]).on("click", selectMarker)
+
+    // set variable for the legend to false to disabled legend
+    var markersRandomLegend = false
 
     // function to select a marker and show its information
     function selectMarker(e) {
@@ -325,7 +362,7 @@
 
     // layer and corresponding legend that should be loaded first
     let visibleLayer = "choroplethDensity";
-    let visibleLegend = "legendDensity"
+    let visibleLegend = "choroplethDensity" + "Legend"
 
     // add these to the map
     map.addLayer(window[visibleLayer]);
@@ -334,11 +371,21 @@
     // function when switching layers
     $("#switch-layers").change(function() {
       let newLayer = $("#switch-layers").val();
+      let newLegend = $("#switch-layers").val() + "Legend";
 
       map.removeLayer(window[visibleLayer]);
       map.addLayer(window[newLayer]);
 
+      if (window[visibleLegend]) {
+        map.removeControl(window[visibleLegend]);
+      }
+
+      if (window[newLegend]) {
+        map.addControl(window[newLegend]);
+      }
+
       visibleLayer = newLayer;
+      visibleLegend = newLegend;
     })
   </script>
 {% endblock %}

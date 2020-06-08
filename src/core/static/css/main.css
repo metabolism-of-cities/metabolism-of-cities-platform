@@ -1695,7 +1695,8 @@ body.material-stocks.map .legend {
   background-color: #fbfbfb;
   padding: .5rem;
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
-  border-radius: .25rem; }
+  border-radius: .25rem;
+  max-width: 250px; }
 
 body.material-stocks.map .legend i {
   width: 16px;
