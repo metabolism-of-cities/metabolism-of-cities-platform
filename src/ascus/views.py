@@ -636,7 +636,7 @@ def presentations(request):
 @check_ascus_admin_access
 def ascus_admin(request):
     voting = None
-    if activate_voting:
+    if voting:
     # List all the voting IDs
         list = [22,23,24,25,26]
         voting = {}

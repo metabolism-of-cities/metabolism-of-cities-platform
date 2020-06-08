@@ -5,7 +5,7 @@
 
 {% block content %}
   <h1 class="mb-0">{{ info }}</h1>
-  <a href="{% url 'stafcp_geocodes' %}" class="btn btn-primary-basic mb-4">
+  <a href="{% url 'staf:geocodes' %}" class="btn btn-primary-basic mb-4">
     <i class="fal fa-angle-left"></i>
     Back to schema list
   </a>
@@ -34,7 +34,7 @@
     </div>
   </div>
 
-  <a href="{% url 'stafcp_geocode_form' info.id %}" class="btn btn-primary mt-4">
+  <a href="{% url 'staf:geocode_form' info.id %}" class="btn btn-primary mt-4">
     <i class="fas fa-pencil"></i>
     Edit
   </a>

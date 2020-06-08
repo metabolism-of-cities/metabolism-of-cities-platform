@@ -5,7 +5,7 @@
 
 {% block content %}
   <h1 class="mb-0">Geocode scheme</h1>
-  <a href="{% url 'stafcp_geocodes' %}" class="btn btn-primary-basic">
+  <a href="{% url 'staf:geocodes' %}" class="btn btn-primary-basic">
     <i class="fal fa-angle-left"></i>
     Back to schema list
   </a>
@@ -17,42 +17,48 @@
         {% bootstrap_form form %}
       </section>
 
-      <section>
-        <h2>What levels are present in this schema?</h2>
-        <p class="text-muted">For example: 1 = country, 2 = province, 3 = municipality</p>
+      {% if info %}
 
-        <div class="row">
-          <div class="col-lg-6">
-            <div class="levels">
-              {% for each in geocodes %}
+        <section>
+          <h2>What levels are present in this schema?</h2>
+          <p class="text-muted">For example: 1 = country, 2 = province, 3 = municipality</p>
+
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="levels">
+                {% for each in geocodes %}
+                  <div class="form-group">
+                    <select class="custom-select" name="geocode_level_existing">
+                      <option value=""></option>
+                      {% for depth in depths %}
+                        <option value="{{ depth }}" {% if each.depth == depth %}selected{% endif %}>{{ depth }}</option>
+                      {% endfor %}
+                    </select>
+                    <input class="form-control" type="text" name="geocode_name_existing" value="{{ each }}"/>
+                    <input type="hidden" name="geocode_id_existing" value="{{ each.id }}" />
+                  </div>
+                {% endfor %}
                 <div class="form-group">
-                  <select class="custom-select" name="geocode-level">
+                  <select class="custom-select" name="geocode_level">
                     <option value=""></option>
                     {% for depth in depths %}
-                      <option value="{{ depth }}" {% if each.depth == depth %}selected{% endif %}>{{ depth }}</option>
+                      <option value="{{ depth }}">{{ depth }}</option>
                     {% endfor %}
                   </select>
-                  <input class="form-control" type="text" name="geocode-name" value="{{ each }}"/>
+                  <input class="form-control" type="text" name="geocode_name" />
                 </div>
-              {% endfor %}
-              <div class="form-group">
-                <select class="custom-select" name="geocode-level">
-                  <option value=""></option>
-                  {% for depth in depths %}
-                    <option value="{{ depth }}">{{ depth }}</option>
-                  {% endfor %}
-                </select>
-                <input class="form-control" type="text" name="geocode-name" />
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="graph">
+
               </div>
             </div>
           </div>
-          <div class="col-lg-6">
-            <div class="graph">
+        </section>
 
-            </div>
-          </div>
-        </div>
-      </section>
+      {% endif %}
+
     </div>
   </form>
 
@@ -66,7 +72,7 @@
 
 {% block footer %}
   <script>
-    $("select[name=geocode-level]").change(function(){
+    $("select[name=geocode_level]").change(function(){
       emptySelects = $(".levels option:selected[value='']").length;
       if (!emptySelects) {
         $(this).closest(".form-group").clone(true).appendTo(".levels");

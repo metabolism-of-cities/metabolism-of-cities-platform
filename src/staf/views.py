@@ -14,6 +14,11 @@ from functools import wraps
 
 import json
 
+# Record additions or changes
+from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
+from django.contrib.admin.utils import construct_change_message
+from django.contrib.contenttypes.models import ContentType
+
 PROJECT_ID = settings.PROJECT_ID_LIST
 
 def is_member(param, para):
@@ -380,16 +385,34 @@ def geocode_form(request, id=None):
                 action_flag=CHANGE if not add else ADDITION,
                 change_message=change_message,
             )
+
+            # First we update all the existing ones
+            geocodes = zip(
+                request.POST.getlist("geocode_level_existing"),
+                request.POST.getlist("geocode_name_existing"),
+                request.POST.getlist("geocode_id_existing"),
+            )
+            for level, name, id in geocodes:
+                geocode = Geocode.objects.get(pk=id)
+                if level and name:
+                    geocode.name = name
+                    geocode.depth = level
+                else:
+                    geocode.is_deleted = True
+                geocode.save()
+
+            # And then we add the new ones
             geocodes = zip(
                 request.POST.getlist("geocode_level"),
                 request.POST.getlist("geocode_name"),
             )
             for level, name in geocodes:
-                Geocode.objects.create(
-                    scheme = info,
-                    name = name,
-                    depth = level,
-                )
+                if level and name:
+                    Geocode.objects.create(
+                        scheme = info,
+                        name = name,
+                        depth = level,
+                    )
             messages.success(request, "The information was saved.")
             return redirect(info.get_absolute_url())
         else:
