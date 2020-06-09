@@ -193,9 +193,7 @@ def user_register(request, project=None):
             else:
                 user = User.objects.create_user(email, email, password)
                 user.first_name = name
-                if subsite == "platformu":
-                    user.is_superuser = False
-                    user.is_staff = False
+                if project == "platformu":
                     group = Group.objects.get(name="PlatformU Admin")
                     user.groups.add(group)
                     organization = Organization.objects.create(name=request.POST["organization"], type="other")
@@ -204,6 +202,7 @@ def user_register(request, project=None):
                     user_relationship.user = user
                     user_relationship.relationship = Relationship.objects.get(pk=USER_RELATIONSHIPS["member"])
                     user_relationship.save()
+
                     redirect_page = "platformu_admin"
                 else:
                     redirect_page = "index"
@@ -435,204 +434,6 @@ def article_list(request, id):
 # Cities
 
 # Metabolism Manager
-
-def metabolism_manager(request):
-    info = get_object_or_404(Project, pk=PROJECT_ID["platformu"])
-    context = {
-        "show_project_design": True,
-    }
-    return render(request, "metabolism_manager/index.html", context)
-
-def metabolism_manager_admin(request):
-    organizations = UserRelationship.objects.filter(relationship__id=USER_RELATIONSHIPS["member"], user=request.user)
-    if organizations.count() == 1:
-        id = organizations[0].record.id
-        return redirect(reverse("platformu_admin_clusters", args=[id]))
-    context = {
-        "organizations": organizations,
-    }
-    return render(request, "metabolism_manager/admin/index.html", context)
-
-def metabolism_manager_clusters(request, organization):
-    my_organization = Organization.objects.get(pk=organization)
-    if request.method == "POST":
-        Tag.objects.create(
-            name = request.POST["name"],
-            parent_tag = Tag.objects.get(pk=TAG_ID["platformu_segments"]),
-            belongs_to = my_organization,
-        )
-    context = {
-        "info": my_organization,
-        "tags": Tag.objects.filter(belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"]).order_by("id"),
-        "my_organization": my_organization,
-    }
-    return render(request, "metabolism_manager/admin/clusters.html", context)
-
-def metabolism_manager_admin_map(request, organization):
-    my_organization = Organization.objects.get(pk=organization)
-    context = {
-        "page": "map",
-        "my_organization": my_organization,
-    }
-    return render(request, "metabolism_manager/admin/map.html", context)
-
-def metabolism_manager_admin_entity(request, organization, id):
-    my_organization = Organization.objects.get(pk=organization)
-    context = {
-        "page": "entity",
-        "my_organization": my_organization,
-        "info": Organization.objects.get(pk=id),
-    }
-    return render(request, "metabolism_manager/admin/entity.html", context)
-
-def metabolism_manager_admin_entity_form(request, organization, id=None):
-    my_organization = Organization.objects.get(pk=organization)
-    edit = False
-    if id:
-        info = Organization.objects.get(pk=id)
-        edit = True
-    else:
-        info = None
-    if request.method == "POST":
-        if not edit:
-            info = Organization()
-        info.name = request.POST["name"]
-        info.description = request.POST["description"]
-        info.url = request.POST["url"]
-        info.email = request.POST["email"]
-        if "status" in request.POST:
-            info.is_deleted = False
-        else:
-            info.is_deleted = True
-        if "image" in request.FILES:
-            info.image = request.FILES["image"]
-        info.save()
-        if "tag" in request.GET:
-            tag = Tag.objects.get(pk=request.GET["tag"])
-            info.tags.add(tag)
-        messages.success(request, "The information was saved.")
-        if edit:
-            return redirect(reverse("platformu_admin_entity", args=[my_organization.id, info.id]))
-        else:
-            return redirect(reverse("platformu_admin_clusters", args=[my_organization.id]))
-    context = {
-        "page": "entity_form",
-        "my_organization": my_organization,
-        "info": info,
-        "sectors": Sector.objects.all(),
-    }
-    return render(request, "metabolism_manager/admin/entity.form.html", context)
-
-def metabolism_manager_admin_entity_users(request, organization, id=None):
-    my_organization = Organization.objects.get(pk=organization)
-    info = Organization.objects.get(pk=id)
-    context = {
-        "page": "entity_users",
-        "my_organization": my_organization,
-        "info": info,
-    }
-    return render(request, "metabolism_manager/admin/entity.users.html", context)
-
-def metabolism_manager_admin_entity_materials(request, organization, id):
-    my_organization = Organization.objects.get(pk=organization)
-    info = Organization.objects.get(pk=id)
-    context = {
-        "page": "entity_materials",
-        "my_organization": my_organization,
-        "info": info,
-    }
-    return render(request, "metabolism_manager/admin/entity.materials.html", context)
-
-def metabolism_manager_admin_entity_material(request, organization, id):
-    my_organization = Organization.objects.get(pk=organization)
-    info = Organization.objects.get(pk=id)
-    context = {
-        "page": "entity_materials",
-        "my_organization": my_organization,
-        "info": info,
-    }
-    return render(request, "metabolism_manager/admin/entity.material.html", context)
-
-def metabolism_manager_admin_entity_data(request, organization, id):
-    my_organization = Organization.objects.get(pk=organization)
-    info = Organization.objects.get(pk=id)
-    context = {
-        "page": "entity_data",
-        "my_organization": my_organization,
-        "info": info,
-    }
-    return render(request, "metabolism_manager/admin/entity.data.html", context)
-
-def metabolism_manager_admin_entity_log(request, organization, id):
-    my_organization = Organization.objects.get(pk=organization)
-    info = Organization.objects.get(pk=id)
-    context = {
-        "page": "entity_log",
-        "my_organization": my_organization,
-        "info": info,
-    }
-    return render(request, "metabolism_manager/admin/entity.log.html", context)
-
-def metabolism_manager_admin_entity_user(request, organization, id, user=None):
-    my_organization = Organization.objects.get(pk=organization)
-    info = Organization.objects.get(pk=id)
-    context = {
-        "page": "entity_form",
-        "my_organization": my_organization,
-        "info": info,
-    }
-    return render(request, "metabolism_manager/admin/entity.user.html", context)
-
-def metabolism_manager_dashboard(request):
-    my_organization = Organization.objects.get(pk=organization)
-    info = Organization.objects.get(pk=id)
-    context = {
-        "page": "dashboard",
-        "my_organization": my_organization,
-        "info": info,
-    }
-    return render(request, "metabolism_manager/dashboard.html", context)
-
-def metabolism_manager_material(request):
-    my_organization = Organization.objects.get(pk=organization)
-    context = {
-        "page": "material",
-        "my_organization": my_organization,
-        "info": info,
-    }
-    return render(request, "metabolism_manager/material.html", context)
-
-def metabolism_manager_material_form(request):
-    my_organization = Organization.objects.get(pk=organization)
-    context = {
-        "page": "material",
-        "my_organization": my_organization,
-        "info": info,
-    }
-    return render(request, "metabolism_manager/material.form.html", context)
-
-def metabolism_manager_report(request):
-    my_organization = Organization.objects.get(pk=organization)
-    context = {
-        "page": "report",
-        "my_organization": my_organization,
-        "info": info,
-    }
-    return render(request, "metabolism_manager/report.html", context)
-
-def metabolism_manager_marketplace(request):
-    context = {
-        "page": "marketplace",
-    }
-    return render(request, "metabolism_manager/marketplace.html", context)
-
-def metabolism_manager_forum(request):
-    article = get_object_or_404(Webpage, pk=17)
-    list = ForumMessage.objects.filter(parent__isnull=True)
-    context = {
-        "list": list,
-    }
-    return render(request, "forum.list.html", context)
 
 # STAFCP
 
@@ -881,7 +682,8 @@ def work_sprint(request, project_name, id=None):
     updates = Message.objects.filter(
         parent__date_created__gte=info.start_date, 
         parent__date_created__lte=info.end_date,
-    )
+        parent__work__part_of_project_id=project,
+    ).order_by("-date_created")
     context = {
         "info": info,
         "edit_link": "/admin/core/worksprint/" + str(info.id) + "/change/",

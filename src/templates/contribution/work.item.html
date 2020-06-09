@@ -21,86 +21,90 @@
 
   <hr>
 
-  <h2>Action buttons</h2>
+  {% if request.user.is_authenticated %}
 
-  {% if info.assigned_to != request.user.people %}
+    <h2>Action buttons</h2>
 
-    <form method="post">
-      <input type="hidden" name="assign_to_me" value="true" />
-      <button type="submit">Assign to me</button>
-      {% csrf_token %}
-    </form>
-
-    <p>
-      <a href="edit/?return={{ request.get_full_path }}" class="btn btn-primary">Edit task</a>
-    </p>
-
-  {% else %}
-
-    {% if info.status == 1 or info.status == 4 %}
+    {% if info.assigned_to != request.user.people %}
 
       <form method="post">
-        <input type="hidden" name="status_change" value="5" />
-        <button type="submit">Start work</button>
+        <input type="hidden" name="assign_to_me" value="true" />
+        <button type="submit">Assign to me</button>
         {% csrf_token %}
       </form>
 
+      <p>
+        <a href="edit/?return={{ request.get_full_path }}" class="btn btn-primary">Edit task</a>
+      </p>
+
+    {% else %}
+
+      {% if info.status == 1 or info.status == 4 %}
+
+        <form method="post">
+          <input type="hidden" name="status_change" value="5" />
+          <button type="submit">Start work</button>
+          {% csrf_token %}
+        </form>
+
+      {% endif %}
+
+      {% if info.status == 1 or info.status == 4 or info.status == 5 %}
+
+        <form method="post">
+          <input type="hidden" name="status_change" value="2" />
+          <button type="submit">Mark as completed</button>
+          {% csrf_token %}
+        </form>
+
+      {% endif %}
+
+      {% if info.status == 1 or info.status == 5 %}
+
+        <form method="post">
+          <input type="hidden" name="status_change" value="4" />
+          <button type="submit">Put on hold</button>
+          {% csrf_token %}
+        </form>
+
+      {% endif %}
+
+      {% if info.status == 3 or info.status == 2 %}
+
+        <form method="post">
+          <input type="hidden" name="status_change" value="1" />
+          <button type="submit">Re-open task</button>
+          {% csrf_token %}
+        </form>
+
+      {% endif %}
+
+      {% if info.status == 1 or info.status == 4 or info.status == 5 %}
+
+        <form method="post">
+          <input type="hidden" name="status_change" value="3" />
+          <button type="submit">Discard task</button>
+          {% csrf_token %}
+        </form>
+
+      {% endif %}
+
+      {% if info.status == 1 or info.status == 4 or info.status == 5 %}
+
+        <form method="post">
+          <input type="hidden" name="status_change" value="1" />
+          <button type="submit">Unassign (stop work on this task)</button>
+          <input type="hidden" name="unassign" value="true" />
+          {% csrf_token %}
+        </form>
+
+      {% endif %}
+
+      <p>
+        <a href="edit/?return={{ request.get_full_path }}" class="btn btn-primary">Edit task</a>
+      </p>
+
     {% endif %}
-
-    {% if info.status == 1 or info.status == 4 or info.status == 5 %}
-
-      <form method="post">
-        <input type="hidden" name="status_change" value="2" />
-        <button type="submit">Mark as completed</button>
-        {% csrf_token %}
-      </form>
-
-    {% endif %}
-
-    {% if info.status == 1 or info.status == 5 %}
-
-      <form method="post">
-        <input type="hidden" name="status_change" value="4" />
-        <button type="submit">Put on hold</button>
-        {% csrf_token %}
-      </form>
-
-    {% endif %}
-
-    {% if info.status == 3 or info.status == 2 %}
-
-      <form method="post">
-        <input type="hidden" name="status_change" value="1" />
-        <button type="submit">Re-open task</button>
-        {% csrf_token %}
-      </form>
-
-    {% endif %}
-
-    {% if info.status == 1 or info.status == 4 or info.status == 5 %}
-
-      <form method="post">
-        <input type="hidden" name="status_change" value="3" />
-        <button type="submit">Discard task</button>
-        {% csrf_token %}
-      </form>
-
-    {% endif %}
-
-    {% if info.status == 1 or info.status == 4 or info.status == 5 %}
-
-      <form method="post">
-        <input type="hidden" name="status_change" value="1" />
-        <button type="submit">Unassign (stop work on this task)</button>
-        <input type="hidden" name="unassign" value="true" />
-        {% csrf_token %}
-      </form>
-
-    {% endif %}
-
-    <p>
-      <a href="edit/?return={{ request.get_full_path }}" class="btn btn-primary">Edit task</a>
-    </p>
 
   {% endif %}
 
