@@ -766,10 +766,20 @@ def work_form(request, project_name, id=None):
         if form.is_valid():
             info = form.save(commit=False)
             info.description = request.POST["description"]
+
             if not id:
                 info.status = Work.WorkStatus.OPEN
                 info.part_of_project_id = project
+
             info.save()
+
+            if not id:
+                message = Message.objects.create(
+                    name = "Task created",
+                    description = "New task was created",
+                    parent = info,
+                )
+                set_autor(request.user.people.id, message.id)
 
             messages.success(request, "Information was saved.")
             return redirect(request.GET["return"])

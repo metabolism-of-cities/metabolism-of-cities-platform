@@ -29,6 +29,8 @@
                     <i class="fa fa-exchange float-right"></i>
                   {% elif each.name == "Task unassigned" %}
                     <i class="fa fa-empty-set float-right"></i>
+                  {% elif each.name == "Task created" %}
+                    <i class="fa fa-pencil float-right"></i>
                   {% endif %}
 
                   {{ each.get_markdown_description|safe }}
