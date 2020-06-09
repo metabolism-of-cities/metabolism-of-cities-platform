@@ -1,0 +1,67 @@
+{% extends "_base.html" %}
+
+{% block page_name %}fullwidth{% endblock %}
+
+{% block css %}
+  <style type="text/css">
+  section{padding-top:0}
+  section h1{font-size:2rem}
+  .main-content.container{padding-top:0}
+  body.fullwidth .container.main-content .fullwidth-wrapper{padding:2rem 0}
+  </style>
+{% endblock %}
+
+{% block content %}
+
+<div class="fullwidth-wrapper text-center mb-3">
+  <h1>Weekend sprint</h1>
+</div>
+
+<div class="container">
+
+  <div class="row">
+
+    <!-- Area de trabajo Fer --> 
+    <section class="col-6">
+      <h1>Chat</h1>
+
+      <div class="message">
+        <p>
+        <code>4 minutes ago</code><br> 
+        <strong>Fulano wrote:</strong><br>
+        Here is a message</p>
+      </div>
+
+      <div class="message">
+        <p>
+        <code>3 minutes ago</code><br> 
+        <strong>Fulana wrote:</strong><br>
+        Here is a second message</p>
+      </div>
+
+      <div class="message">
+        <p>
+        <code>2 minutes ago</code><br> 
+        <strong>Fuloni wrote:</strong><br>
+        Here is yet another message</p>
+      </div>
+
+      <form method="post">
+        <textarea name="description" class="form-control" rows="2" placeholder="Enter a message"></textarea>
+        <button type="submit" class="btn btn-success mt-2">Submit</button>
+        {% csrf_token %}
+      </form>
+
+    </section>
+    <!-- Fin de area de trabajo Fer -->
+
+    <!-- Fer, favor no tocar esto --> 
+    <section class="col-6">
+      <h1>Work updates</h1>
+    </section>
+
+  </div>
+
+</div>
+
+{% endblock %}

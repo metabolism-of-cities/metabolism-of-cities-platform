@@ -766,6 +766,13 @@ def work_item(request, project_name, id):
     }
     return render(request, "contribution/work.item.html", context)
 
+def chat(request, project_name):
+    project = PROJECT_ID[project_name]
+    list = Work.objects.filter(part_of_project_id=project)
+    context = {
+    }
+    return render(request, "contribution/chat.html", context)
+
 # People
 
 def contributor(request, project_name):

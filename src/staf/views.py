@@ -354,6 +354,7 @@ def geocodes(request):
 def geocode(request, id):
     info = GeocodeScheme.objects.get(pk=id)
     geocodes = info.geocodes.all()
+    geocodes = geocodes.filter(is_deleted=False)
     context = {
         "info": info,
         "geocodes": geocodes,
@@ -368,6 +369,7 @@ def geocode_form(request, id=None):
         form = ModelForm(request.POST or None, instance=info)
         add = False
         geocodes = info.geocodes.all()
+        geocodes = geocodes.filter(is_deleted=False)
     else:
         info = None
         form = ModelForm(request.POST or None)
