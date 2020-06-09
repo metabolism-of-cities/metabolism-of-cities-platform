@@ -101,6 +101,11 @@ class OrgAdmin(SearchCompleteAdmin):
     list_filter = ["type"]
     exclude = ["old_id", "meta_data", "slug"]
 
+class SprintAdmin(SearchAdmin):
+    list_display = ["name", "start_date", "end_date"]
+    list_filter = ["projects"]
+    exclude = ["old_id", "meta_data", "tags", "spaces", "sectors", "is_deleted", "image", "is_public"]
+
 class NewsAdmin(SearchCompleteAdmin):
     list_display = ["name", "date", "is_public"]
     list_filter = ["is_public", "is_deleted", "projects"]
@@ -293,6 +298,8 @@ admin_site.register(Sector, SearchNameAdmin)
 admin_site.register(DataArticle, SearchNameAdmin)
 admin_site.register(UploadSession)
 admin_site.register(UploadFile)
+
+admin_site.register(WorkSprint, SprintAdmin)
 
 admin_site.register(Work, WorkAdmin)
 admin_site.register(WorkActivity, WorkActivityAdmin)

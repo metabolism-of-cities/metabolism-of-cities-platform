@@ -876,6 +876,16 @@ class Work(Record):
     class Meta:
         verbose_name_plural = "work items"
 
+class WorkSprint(Record):
+
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField(null=True, blank=True)
+    projects = models.ManyToManyField(Project, blank=True)
+
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
+
 class Badge(models.Model):
 
     class BadgeType(models.IntegerChoices):

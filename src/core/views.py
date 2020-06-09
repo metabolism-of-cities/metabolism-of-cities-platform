@@ -766,12 +766,25 @@ def work_item(request, project_name, id):
     }
     return render(request, "contribution/work.item.html", context)
 
-def chat(request, project_name):
+def work_sprints(request, project_name):
     project = PROJECT_ID[project_name]
-    list = Work.objects.filter(part_of_project_id=project)
+    list = WorkSprint.objects.filter(projects__id=project)
     context = {
+        "add_link": "/admin/core/worksprint/add/",
+        "list": list,
+        "title": "Work sprints",
     }
-    return render(request, "contribution/chat.html", context)
+    return render(request, "contribution/work.sprints.html", context)
+
+def work_sprint(request, project_name, id=None):
+    project = PROJECT_ID[project_name]
+    info = WorkSprint.objects.get(pk=id)
+    context = {
+        "info": info,
+        "edit_link": "/admin/core/worksprint/" + str(info.id) + "/change/",
+        "title": info,
+    }
+    return render(request, "contribution/work.sprint.html", context)
 
 # People
 

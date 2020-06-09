@@ -81,6 +81,19 @@ urlpatterns = [
     # Interaction links
     path("contributor/", views.contributor, { "project_name": app_name }, name="contributor"),
 
+
+    # Baseline 
+    path("work/", views.work_grid, { "project_name": app_name }, name="work_grid"),
+    path("work/sprints/", views.work_sprints, { "project_name": app_name }, name="work_sprints"),
+    path("work/sprints/<int:id>/", views.work_sprint, { "project_name": app_name }, name="work_sprint"),
+    path("work/<int:id>/", views.work_item, { "project_name": app_name }, name="work_item"),
+
+    # Control panel URLS from baseline
+    path("controlpanel/", views.controlpanel, { "project_name": app_name }, name="controlpanel"),
+    path("controlpanel/users/", views.controlpanel_users, { "project_name": app_name }, name="controlpanel_users"),
+    path("controlpanel/design/", views.controlpanel_design, { "project_name": app_name }, name="controlpanel_design"),
+    path("controlpanel/content/", views.controlpanel_content, { "project_name": app_name }, name="controlpanel_content"),
+
     # Password reset forms
     path(
         "accounts/passwordreset/",

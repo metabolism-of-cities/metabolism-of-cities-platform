@@ -1,0 +1,26 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1>Work sprints</h1>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Start</th>
+        <th>End</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in list %}
+      <tr>
+        <td><a href="{{ each.id }}/">{{ each.name }}</a></td>
+        <td>{{ each.start_date|date:"l M d, Y H:i" }}</td>
+        <td>{{ each.end_date|date:"l M d, Y H:i" }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

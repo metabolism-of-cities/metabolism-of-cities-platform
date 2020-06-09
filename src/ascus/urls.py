@@ -66,8 +66,9 @@ urlpatterns = [
 
     # Work URLs from baseline
     path("work/", core.work_grid, { "project_name": app_name }, name="work_grid"),
+    path("work/sprints/", core.work_sprints, { "project_name": app_name }, name="work_sprints"),
+    path("work/sprints/<int:id>/", core.work_sprint, { "project_name": app_name }, name="work_sprint"),
     path("work/<int:id>/", core.work_item, { "project_name": app_name }, name="work_item"),
-    path("chat/", core.chat, { "project_name": app_name }, name="chat"),
 
     # Forum and messaging from baseline
     path("forum/", views.forum, name="forum"),
