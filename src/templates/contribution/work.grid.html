@@ -41,10 +41,10 @@
         <select name="type" class="custom-select">
           <option value=""></option>
           {% for each in types %}
-            <option value="{{ each }}" {% if request.GET.type == label %}selected{% endif %}>{{ each }}</option>
+            <option value="{{ each.id }}" {% if each.id == request.GET.type %}selected{% endif %}>
+              {{ each }} 
+            </option>
           {% endfor %}
-          <option value="">Flubber</option>
-          <option value="">Flabber</option>
         </select>
       </div>
     </div>
@@ -56,7 +56,9 @@
         <select name="status" class="custom-select">
           <option value=""></option>
           {% for label,name in statuses %}
-            <option value="{{ label }}" {% if request.GET.status == label %}selected{% endif %}>{{ name }}</option>
+            <option value="{{ label }}" {% if label == request.GET.status %}selected{% endif %}>
+              {{ name }} 
+            </option>
           {% endfor %}
         </select>
       </div>
@@ -66,7 +68,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text">Priority</span>
         </div>
-        <select name="status" class="custom-select">
+        <select name="priority" class="custom-select">
           <option value=""></option>
           {% for label,name in priorities %}
             <option value="{{ label }}" {% if request.GET.priority == label %}selected{% endif %}>{{ name }}</option>
@@ -94,8 +96,11 @@
       <tr>
         <td>
           <a href="{{ each.id }}/">
-            {{ each }}<br>
+            {{ each }}
+            {% if each.related_to %}
+            <br>
             {{ each.related_to }}
+            {% endif %}
           </a>
         </td>
         <td>{{ each.workactivity }}</td>

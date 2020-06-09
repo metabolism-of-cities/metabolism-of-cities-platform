@@ -301,7 +301,7 @@ admin_site.register(UploadFile)
 
 admin_site.register(WorkSprint, SprintAdmin)
 
-admin_site.register(Work, WorkAdmin)
+#admin_site.register(Work, WorkAdmin)
 admin_site.register(WorkActivity, WorkActivityAdmin)
 admin_site.register(Badge, BadgeAdmin)
 admin_site.register(ActivityCatalog)

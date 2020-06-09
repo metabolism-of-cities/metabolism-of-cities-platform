@@ -797,6 +797,7 @@ def work_grid(request, project_name):
         "statuses": Work.WorkStatus.choices,
         "priorities": Work.WorkPriority.choices,
         "title": "Work grid",
+        "types": WorkActivity.objects.filter(Q(default_project_id=project)|Q(default_project__isnull=True)),
     }
     return render(request, "contribution/work.grid.html", context)
 
