@@ -5,7 +5,9 @@
   <h1>Task # {{ info.id }}</h1>
 
   <p>Task: {{ info }}</p>
-  <p>Description: {{ info.description }}{% lorem %}</p>
+  <p>Description:</p>
+  {{ info.get_markdown_description|safe }}
+
   <p>Status: {{ info.get_status_display }} <a href="">[see all]</a></p>
   <p>Priority: {{ info.get_priority_display }}</p>
   <p>Type: {{ info.workactivity }} <a href="">[see all]</a></p>
@@ -16,49 +18,89 @@
   <hr>
 
   <h2>Action buttons</h2>
-  <p>If not assigned to me:</p>
-  <p>
-    <a href="http://" class="btn btn-primary">Assign to me</a>
-    <a href="http://" class="btn btn-primary">Edit task</a>
-  </p>
-  
-  <p>If assigned to me:</p>
-  <p>
-    <a href="http://" class="btn btn-primary">Start work</a>
-    <a href="http://" class="btn btn-primary">Mark as completed</a>
-    <a href="http://" class="btn btn-primary">Unassign (stop work on this task)</a>
-    <a href="http://" class="btn btn-primary">Edit task</a>
-  </p>
 
-  <h2>History and discussion</h2>
+  {% if info.assigned_to != request.user.people %}
 
-  <h4>4 days ago by Fulano | comment 1</h4>
-  <p> Do you have a suggestion about how translated choices labels should be defined?</p>
+    <form method="post">
+      <input type="hidden" name="assign_to_me" value="true" />
+      <button type="submit">Assign to me</button>
+      {% csrf_token %}
+    </form>
 
-  <h4>4 days ago by Fulano2 | comment 2</h4>
-  <p>
- To be honest, I haven't though about this, because I don't translate them. Hmm.. Good question. Implicit translation?! :/ Decorator? That are not so good ideas.<br> 
-Or you could swap the positions, e.g. FR = _("Freshman") , because you'll never translate the key which is stored in the DB, right?!
-  </p>
+    <p>
+      <a href="edit/?return={{ request.get_full_path }}" class="btn btn-primary">Edit task</a>
+    </p>
 
-  <h4>3 days ago by Flubber | comment 3</h4>
+  {% else %}
 
-  <p><em>Person change</em>. Flubber is now assigned to this task.</p>
+    {% if info.status == 1 or info.status == 4 %}
 
-  <h4>3 days ago by Flubber | comment 4</h4>
+      <form method="post">
+        <input type="hidden" name="status_change" value="5" />
+        <button type="submit">Start work</button>
+        {% csrf_token %}
+      </form>
 
-  <p><em>Status update</em>. Marked as in progress</p>
+    {% endif %}
 
-  <h4>2 days ago by Flubber | comment 5</h4>
+    {% if info.status == 1 or info.status == 4 or info.status == 5 %}
 
-  <p><em>Status update</em>. Marked as completed</p>
+      <form method="post">
+        <input type="hidden" name="status_change" value="2" />
+        <button type="submit">Mark as completed</button>
+        {% csrf_token %}
+      </form>
 
-  <form method="post">
+    {% endif %}
 
-    <textarea></textarea>
-    <button type="submit">Add comment</button>
-  
-  </form>
+    {% if info.status == 1 or info.status == 5 %}
+
+      <form method="post">
+        <input type="hidden" name="status_change" value="4" />
+        <button type="submit">Put on hold</button>
+        {% csrf_token %}
+      </form>
+
+    {% endif %}
+
+    {% if info.status == 3 or info.status == 2 %}
+
+      <form method="post">
+        <input type="hidden" name="status_change" value="1" />
+        <button type="submit">Re-open task</button>
+        {% csrf_token %}
+      </form>
+
+    {% endif %}
+
+    {% if info.status == 1 or info.status == 4 or info.status == 5 %}
+
+      <form method="post">
+        <input type="hidden" name="status_change" value="3" />
+        <button type="submit">Discard task</button>
+        {% csrf_token %}
+      </form>
+
+    {% endif %}
+
+    {% if info.status == 1 or info.status == 4 or info.status == 5 %}
+
+      <form method="post">
+        <input type="hidden" name="status_change" value="1" />
+        <button type="submit">Unassign (stop work on this task)</button>
+        <input type="hidden" name="unassign" value="true" />
+        {% csrf_token %}
+      </form>
+
+    {% endif %}
+
+    <p>
+      <a href="edit/?return={{ request.get_full_path }}" class="btn btn-primary">Edit task</a>
+    </p>
+
+  {% endif %}
+
+  {% include "_messages.html" %}
 
   <p><a href="../" class="btn btn-primary">Back to work list</a></p>
 

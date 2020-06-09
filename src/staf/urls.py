@@ -42,11 +42,20 @@ urlpatterns = [
     path("curation/processed/", views.review_processed, name="review_processed"),
     path("curation/<int:id>/", views.review_session, name="review_session"),
 
+    # Baseline 
+    path("work/", core.work_grid, { "project_name": app_name }, name="work_grid"),
+    path("work/sprints/", core.work_sprints, { "project_name": app_name }, name="work_sprints"),
+    path("work/sprints/<int:id>/", core.work_sprint, { "project_name": app_name }, name="work_sprint"),
+    path("work/create/", core.work_form, { "project_name": app_name }, name="work_form"),
+    path("work/<int:id>/", core.work_item, { "project_name": app_name }, name="work_item"),
+    path("work/<int:id>/edit/", core.work_form, { "project_name": app_name }, name="work_form"),
+
     # Control panel URLS from baseline
     path("controlpanel/", core.controlpanel, { "project_name": app_name }, name="controlpanel"),
     path("controlpanel/users/", core.controlpanel_users, { "project_name": app_name }, name="controlpanel_users"),
     path("controlpanel/design/", core.controlpanel_design, { "project_name": app_name }, name="controlpanel_design"),
     path("controlpanel/content/", core.controlpanel_content, { "project_name": app_name }, name="controlpanel_content"),
+
 
     # Work URLs from baseline
     path("work/", core.work_grid, { "project_name": app_name }, name="work_grid"),

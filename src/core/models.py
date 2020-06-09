@@ -34,6 +34,9 @@ import os
 # For youtube url parsing
 from urllib.parse import urlparse, parse_qs
 
+from django.utils import timezone
+import pytz
+
 # By default we really only want to see those records that are both public and not deleted
 class PublicActiveRecordManager(models.Manager):
     def get_queryset(self):
@@ -885,6 +888,15 @@ class WorkSprint(Record):
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
+
+    def get_status(self):
+        today = timezone.now()
+        if self.end_date < today:
+            return "finished"
+        elif self.start_date <= today and self.end_date >= today:
+            return "active"
+        else:
+            return "upcoming"
 
 class Badge(models.Model):
 

@@ -18,6 +18,7 @@ PROJECT_ID = settings.PROJECT_ID_LIST
 RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
 
 # Quick function to make someone the author of something
+# Version 1.0
 def set_autor(author, item):
     RecordRelationship.objects.create(
         relationship_id = RELATIONSHIP_ID["author"],

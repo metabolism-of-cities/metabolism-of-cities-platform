@@ -70,6 +70,15 @@ RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
 # (which we want in the community section but not here), as well as MoI news
 MOC_PROJECTS = [1,2,3,4,7,8,11,14,15,16,18,3458]
 
+# Quick function to make someone the author of something
+# Version 1.0
+def set_autor(author, item):
+    RecordRelationship.objects.create(
+        relationship_id = RELATIONSHIP_ID["author"],
+        record_parent_id = author,
+        record_child_id = item,
+    )
+
 def get_site_tag(request):
     if request.site.id == 1:
         # For MoC, the urban tag should be used to filter items
@@ -743,6 +752,38 @@ def controlpanel_data_article(request, project_name, space, id=None):
     }
     return render(request, "controlpanel/data-article.html", context)
 
+@login_required
+def work_form(request, project_name, id=None):
+    project = PROJECT_ID[project_name]
+    info = None
+    ModelForm = modelform_factory(Work, fields=("name", "priority", "workactivity"))
+    if id:
+        info = Work.objects.get(part_of_project_id=project, pk=id)
+        form = ModelForm(request.POST or None, instance=info)
+    else:
+        form = ModelForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save(commit=False)
+            info.description = request.POST["description"]
+            if not id:
+                info.status = Work.WorkStatus.OPEN
+                info.part_of_project_id = project
+            info.save()
+
+            messages.success(request, "Information was saved.")
+            return redirect(request.GET["return"])
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    context = {
+        "title": "Create new task" if not id else info.name,
+        "form": form,
+        "load_markdown": True,
+        "info": info,
+    }
+    return render(request, "contribution/work.form.html", context)
+
 def work_grid(request, project_name):
     project = PROJECT_ID[project_name]
     list = Work.objects.filter(part_of_project_id=project)
@@ -755,14 +796,61 @@ def work_grid(request, project_name):
         "load_datatables": True,
         "statuses": Work.WorkStatus.choices,
         "priorities": Work.WorkPriority.choices,
+        "title": "Work grid",
     }
     return render(request, "contribution/work.grid.html", context)
 
 def work_item(request, project_name, id):
     # To do: validate user has access to this ticket
     # if at all needed?
+    info = Work.objects.get(pk=id)
+
+    if request.method == "POST":
+
+        message_title = message_description = None
+
+        if "assign_to_me" in request.POST:
+            if info.assigned_to:
+                messages.warning(request, "Sorry, this task was assigned to someone else just now!")
+            else:
+                message_title = "Task assigned"
+                message_description = "Task was assigned to " + str(request.user.people)
+                message_success = "This task is now assigned to you"
+                info.assigned_to = request.user.people
+                info.save()
+
+        if "status_change" in request.POST and info.assigned_to == request.user.people and info.status != request.POST["status_change"]:
+            message_description = "Status change: " + info.get_status_display() + " → "
+            info.status = request.POST.get("status_change")
+            info.save()
+            info.refresh_from_db()
+            new_status = str(info.get_status_display())
+            message_description += new_status
+            message_title = "Status change"
+            message_success = "Task status change was recorded"
+
+        if "unassign" in request.POST:
+            info.assigned_to = None
+            info.save()
+            message_description = str(request.user.people) + " is no longer responsible for this task"
+            message_title = "Task unassigned"
+            message_success = "You are no longer responsible for this task"
+
+        if message_title and message_description:
+            message = Message.objects.create(
+                name = message_title,
+                description = message_description,
+                parent = info,
+            )
+            set_autor(request.user.people.id, message.id)
+            messages.success(request, message_success)
+
     context = {
-        "info": Work.objects.get(pk=id),
+        "info": info, 
+        "load_messaging": True,
+        "list_messages": Message.objects.filter(parent=info),
+        "forum_title": "History and discussion",
+        "title": info.name,
     }
     return render(request, "contribution/work.item.html", context)
 
@@ -772,17 +860,22 @@ def work_sprints(request, project_name):
     context = {
         "add_link": "/admin/core/worksprint/add/",
         "list": list,
-        "title": "Work sprints",
+        "article": get_object_or_404(Webpage, pk=18965)
     }
     return render(request, "contribution/work.sprints.html", context)
 
 def work_sprint(request, project_name, id=None):
     project = PROJECT_ID[project_name]
     info = WorkSprint.objects.get(pk=id)
+    updates = Message.objects.filter(
+        parent__date_created__gte=info.start_date, 
+        parent__date_created__lte=info.end_date,
+    )
     context = {
         "info": info,
         "edit_link": "/admin/core/worksprint/" + str(info.id) + "/change/",
         "title": info,
+        "updates": updates,
     }
     return render(request, "contribution/work.sprint.html", context)
 

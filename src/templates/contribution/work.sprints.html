@@ -2,7 +2,8 @@
 
 {% block content %}
 
-  <h1>Work sprints</h1>
+  <h1>{{ article }}</h1>
+  {{ article.description|safe }}
 
   <table class="table table-striped">
     <thead>
@@ -15,7 +16,16 @@
     <tbody>
     {% for each in list %}
       <tr>
-        <td><a href="{{ each.id }}/">{{ each.name }}</a></td>
+        <td>
+          <a href="{{ each.id }}/">{{ each.name }}</a>
+          {% if each.get_status == "active" %}
+            <br>
+            <span class="badge badge-success">Active sprint!</span>
+          {% elif each.get_status == "upcoming" %}
+            <br>
+            <span class="badge badge-warning">Upcoming</span>
+          {% endif %}
+        </td>
         <td>{{ each.start_date|date:"l M d, Y H:i" }}</td>
         <td>{{ each.end_date|date:"l M d, Y H:i" }}</td>
       </tr>

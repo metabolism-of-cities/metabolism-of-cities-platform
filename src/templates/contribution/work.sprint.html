@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% load humanize %}
 
 {% block page_name %}fullwidth{% endblock %}
 
@@ -62,6 +63,16 @@
     <!-- Fer, favor no tocar esto --> 
     <section class="col-6">
       <h1>Work updates</h1>
+      {% for each in updates %}
+        <p>
+          <strong>{{ each.author }}</strong>
+          <code>{{ each.date_created|naturaltime }}</code>
+          <br>
+          <a href="../../{{ each.parent.id }}/">{{ each.parent }}</a>
+        </p>
+        {{ each.get_markdown_description|safe|truncatewords_html:30 }}
+        <hr>
+      {% endfor %}
     </section>
 
   </div>
