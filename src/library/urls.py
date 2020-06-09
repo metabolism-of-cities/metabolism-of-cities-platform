@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from core import views as core
+from community import views as community
 
 app_name = "library"
 
@@ -40,6 +41,7 @@ urlpatterns = [
     path("work/create/", core.work_form, { "project_name": app_name }, name="work_form"),
     path("work/<int:id>/", core.work_item, { "project_name": app_name }, name="work_item"),
     path("work/<int:id>/edit/", core.work_form, { "project_name": app_name }, name="work_form"),
+    path("forum/<int:id>/", community.forum, { "project_name": app_name }, name="forum"),
 
     # Control panel URLS from baseline
     path("controlpanel/", core.controlpanel, { "project_name": app_name }, name="controlpanel"),
