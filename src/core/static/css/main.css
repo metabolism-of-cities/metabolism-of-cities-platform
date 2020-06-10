@@ -28,6 +28,10 @@ section {
 pre {
   white-space: pre-line; }
 
+form label.category {
+  font-weight: bold;
+  font-size: 1.25rem; }
+
 .main-content.container {
   padding-top: 36px;
   padding-bottom: 36px; }
@@ -693,6 +697,20 @@ a.badge-secondary:focus {
       background-color: #f4f4f4; }
     .leaflet-map .show-world.button::before {
       content: "\f7a2"; }
+  .leaflet-map .legend {
+    line-height: 18px;
+    color: #212529;
+    background-color: #fbfbfb;
+    padding: .5rem;
+    box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
+    border-radius: .25rem;
+    max-width: 250px; }
+  .leaflet-map .legend i {
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7; }
 
 div.fancytree-grid-container > table.fancytree-ext-grid {
   width: 100%; }
@@ -1006,7 +1024,7 @@ body.dataset {
   body.dataset #tab-chart .highcharts-title,
   body.dataset #tab-chart .highcharts-subtitle {
     display: none; }
-  body.dataset #tab-map #map {
+  body.dataset #map {
     height: 500px;
     width: 100%;
     border-radius: .25rem; }
@@ -1066,10 +1084,6 @@ body.dataset.editor .preview-wrap {
   border: 1px solid #808080;
   border-radius: .25rem; }
 
-body.dataset.editor form label.category {
-  font-weight: bold;
-  font-size: 1.25rem; }
-
 body.dataset.editor #color-schemes .single-scheme {
   padding: .5rem;
   cursor: pointer;
@@ -1090,6 +1104,9 @@ body.dataset.editor #color-schemes .single-color {
 
 body.dataset.editor input#tooltip-label {
   font-family: "Ubuntu Mono", "Fira Mono", "Liberation Mono", "Courier New", monospace; }
+
+body.dataset.editor.map .single-bucket {
+  margin-bottom: .5rem; }
 
 .highcharts-container .highcharts-drillup-button {
   cursor: pointer; }
@@ -1688,19 +1705,3 @@ body.material-stocks.landing footer {
 body.material-stocks.map #map {
   height: 600px;
   max-height: 90vh; }
-
-body.material-stocks.map .legend {
-  line-height: 18px;
-  color: #212529;
-  background-color: #fbfbfb;
-  padding: .5rem;
-  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
-  border-radius: .25rem;
-  max-width: 250px; }
-
-body.material-stocks.map .legend i {
-  width: 16px;
-  height: 16px;
-  float: left;
-  margin-right: 8px;
-  opacity: 0.7; }
