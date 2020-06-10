@@ -29,45 +29,35 @@ def index(request):
     # Temp import stuff
     if "import" in request.GET:
         import csv
-        file = settings.MEDIA_ROOT + "/import/materialcatalogs.csv"
-        MaterialCatalog.objects.all().delete()
-        with open(file, "r") as csvfile:
-            contents = csv.DictReader(csvfile)
-            for row in contents:
-                id = row["id"]
-                MaterialCatalog.objects.create(
-                    old_id = id,
-                    name = row["name"],
-                    description = row["description"],
-                    url = row["url"],
-                )
-        messages.success(request, "Material catalogs data was imported")
-
         # Let's import the individual materials...
         file = settings.MEDIA_ROOT + "/import/materials.csv"
-        Material.objects.all().delete()
+        latest = Material.objects.all().order_by("-old_id")[0]
+        latest = latest.old_id
+        print(latest)
+
         with open(file, "r") as csvfile:
             contents = csv.DictReader(csvfile)
             catalogs = {}
             for row in contents:
                 id = row["id"]
-                catalog = row["catalog_id"]
-                name = row["name"]
-                if len(name) > 255:
-                    name = name[0:255]
-                    description = "Full name: " + row["name"]
-                else:
-                    description = row["description"]
-                if catalog not in catalogs:
-                    check = MaterialCatalog.objects.get(old_id=row["catalog_id"])
-                    catalogs[catalog] = check
-                Material.objects.create(
-                    old_id = id,
-                    name = name,
-                    code = row["code"],
-                    catalog = catalogs[catalog],
-                    description = description,
-                )
+                if int(id) > int(latest):
+                    catalog = row["catalog_id"]
+                    name = row["name"]
+                    if len(name) > 255:
+                        name = name[0:255]
+                        description = "Full name: " + row["name"]
+                    else:
+                        description = row["description"]
+                    if catalog not in catalogs:
+                        check = MaterialCatalog.objects.get(old_id=row["catalog_id"])
+                        catalogs[catalog] = check
+                    Material.objects.create(
+                        old_id = id,
+                        name = name,
+                        code = row["code"],
+                        catalog = catalogs[catalog],
+                        description = description,
+                    )
 
     elif "update_parents" in request.GET:
         # And once they are imported, we can set the parents
