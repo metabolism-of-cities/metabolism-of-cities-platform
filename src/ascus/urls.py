@@ -26,7 +26,6 @@ urlpatterns = [
     path("participants/", views.participants, name="participants"),
     path("introvideos/", views.introvideos, name="introvideos"),
     path("participants/<int:id>/", views.participant, name="participant"),
-    path("chat/", views.chat, name="chat"),
 
 
     # Participant-only stuff
