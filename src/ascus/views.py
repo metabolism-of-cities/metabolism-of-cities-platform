@@ -171,6 +171,11 @@ def participant(request, id):
     return render(request, "ascus/participant.html", context)
 
 @check_ascus_access
+def chat(request):
+    context = {}
+    return render(request,  "contribution/chat.html", context)
+
+@check_ascus_access
 def ascus_account(request):
     my_discussions = Event.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
