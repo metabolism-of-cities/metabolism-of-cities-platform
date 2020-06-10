@@ -689,6 +689,7 @@ def work_sprint(request, project_name, id=None):
         "edit_link": "/admin/core/worksprint/" + str(info.id) + "/change/",
         "title": info,
         "updates": updates,
+        "room_id": info.id,
     }
     
     return render(request, "contribution/work.sprint.html", context)

@@ -15,7 +15,7 @@
 {% block content %}
 
 <div class="fullwidth-wrapper text-center mb-3">
-  <h1>{{ info }}</h1>
+  <h1>{{ info }} {{ room_id }}</h1>
   <p>
     {{ info.start_date|date:"l M d, Y - H:i" }} -- 
     {{ info.end_date|date:"l M d, Y - H:i" }} (<a href="https://www.timeanddate.com/worldclock/timezone/utc" target="_blank">UTC</a>)
@@ -29,33 +29,48 @@
     <!-- Area de trabajo Fer --> 
     <section class="col-6">
       <h1>Chat</h1>
+      
+      <hr>
+      <textarea id="chat-log" cols="50" rows="10"></textarea><br>
+      <input id="chat-message-input" type="text" size="50"><br>
+      <input id="chat-message-submit" type="button" value="Send">
+      {{ room_id|json_script:"room-name" }}
+      <script>
+          const roomName = JSON.parse(document.getElementById('room-name').textContent);
 
-      <div class="message">
-        <p>
-        <code>4 minutes ago</code><br> 
-        <strong>Fulano wrote:</strong><br>
-        Here is a message</p>
-      </div>
+          const chatSocket = new WebSocket(
+              'ws://'
+              + window.location.host
+              + '/ws/chat/'
+              + roomName
+              + '/'
+          );
 
-      <div class="message">
-        <p>
-        <code>3 minutes ago</code><br> 
-        <strong>Fulana wrote:</strong><br>
-        Here is a second message</p>
-      </div>
+          chatSocket.onmessage = function(e) {
+              const data = JSON.parse(e.data);
+              document.querySelector('#chat-log').value += (data.message + '\n');
+          };
 
-      <div class="message">
-        <p>
-        <code>2 minutes ago</code><br> 
-        <strong>Fuloni wrote:</strong><br>
-        Here is yet another message</p>
-      </div>
+          chatSocket.onclose = function(e) {
+              console.error('Chat socket closed unexpectedly');
+          };
 
-      <form method="post">
-        <textarea name="description" class="form-control" rows="2" placeholder="Enter a message"></textarea>
-        <button type="submit" class="btn btn-success mt-2">Submit</button>
-        {% csrf_token %}
-      </form>
+          document.querySelector('#chat-message-input').focus();
+          document.querySelector('#chat-message-input').onkeyup = function(e) {
+              if (e.keyCode === 13) {  // enter, return
+                  document.querySelector('#chat-message-submit').click();
+              }
+          };
+
+          document.querySelector('#chat-message-submit').onclick = function(e) {
+              const messageInputDom = document.querySelector('#chat-message-input');
+              const message = messageInputDom.value;
+              chatSocket.send(JSON.stringify({
+                  'message': message
+              }));
+              messageInputDom.value = '';
+          };
+      </script>
 
     </section>
     <!-- Fin de area de trabajo Fer -->
