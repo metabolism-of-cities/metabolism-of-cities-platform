@@ -228,11 +228,24 @@ def user_register(request, project=None):
 
             if "organization" in request.POST and request.POST["organization"]:
                 organization = Organization.objects.create(name=request.POST["organization"])
+
+                # Make this person a PlatformU admin, or otherwise a team member of this organization 
+                relationship = 1 if project_name == "platformu" else 6
                 RecordRelationship.objects.create(
                     record_parent = people,
                     record_child = organization,
-                    relationship_id = 6, # Make this person a team member of this organization
+                    relationship_id = relationship,
                 )
+
+                # And if this is a PlatformU registration, then the organization should be signed
+                # up for PlatformU
+                if project_name == "platformu":
+                    RecordRelationship.objects.create(
+                        record_parent = organization,
+                        record_child = project,
+                        relationship_id = 27,
+                    )
+
             Work.objects.create(
                 name = "Welcome new user",
                 description = "A new user has signed up for the website! Have a look at their profile, and consider welcoming them. The user has entered the following background information:\n\n" + request.POST.get("background"),
@@ -406,6 +419,12 @@ def template(request, slug):
     if slug == "address-search":
         from django.conf import settings
         context["google_api"] = settings.GOOGLE_API
+
+    if slug == "form":
+        ModelForm = modelform_factory(Project, fields=("name", "description"))
+        form = ModelForm(request.POST or None, request.FILES or None)
+        context["title"] = "Form sample"
+        context["form"] = form
 
     return render (request, page, context)
 

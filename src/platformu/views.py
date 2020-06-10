@@ -19,11 +19,11 @@ RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
 def my_organizations(request, id=None):
     if id:
         try:
-            return Organization.objects.get(pk=id, child_list__relationship__id=RELATIONSHIP_ID["member"], child_list__record_parent=request.user.people)
+            return Organization.objects.get(pk=id, child_list__relationship__id=RELATIONSHIP_ID["platformu_admin"], child_list__record_parent=request.user.people)
         except:
             unauthorized_access(request)
     else:
-        list = Organization.objects.filter(child_list__relationship__id=RELATIONSHIP_ID["member"], child_list__record_parent=request.user.people)
+        list = Organization.objects.filter(child_list__relationship__id=RELATIONSHIP_ID["platformu_admin"], child_list__record_parent=request.user.people)
         if list:
             return list
         else:
@@ -53,7 +53,9 @@ def index(request):
 @login_required
 def admin(request):
     organizations = my_organizations(request)
-    if organizations.count() == 1:
+    if not organizations:
+        return redirect("platformu:create_my_organization")
+    elif organizations.count() == 1:
         id = organizations[0].id
         return redirect(reverse("platformu:admin_clusters", args=[id]))
     context = {
@@ -61,6 +63,33 @@ def admin(request):
         "show_project_design": True,
     }
     return render(request, "metabolism_manager/admin/index.html", context)
+
+@login_required
+def create_my_organization(request):
+    organizations = my_organizations(request)
+
+    if request.method == "POST":
+        organization = Organization.objects.create(name=request.POST["name"])
+        RecordRelationship.objects.create(
+            record_parent = request.user.people,
+            record_child = organization,
+            relationship_id = 1, # Make this person a PlatformU admin for this organization
+        )
+        RecordRelationship.objects.create(
+            record_parent = organization,
+            record_child_id = PROJECT_ID["platformu"],
+            relationship_id = 27, # Make this organization be signed up for PlatformU
+        )
+
+        messages.success(request, "Your organisation was created.")
+        return redirect("platformu:admin")
+
+    context = {
+        "organizations": organizations,
+        "show_project_design": True,
+        "title": "Create new organisation",
+    }
+    return render(request, "metabolism_manager/admin/my_organization.html", context)
 
 @login_required
 def clusters(request, organization):

@@ -10,6 +10,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("admin/", views.admin, name="admin"),
     path("admin/<int:organization>/clusters/", views.clusters, name="admin_clusters"),
+    path("admin/organizations/create/", views.create_my_organization, name="create_my_organization"),
     path("admin/<int:organization>/map/", views.admin_map, name="admin_map"),
     path("admin/<int:organization>/entities/<int:id>/", views.admin_entity, name="admin_entity"),
     path("admin/<int:organization>/entities/<int:id>/edit/", views.admin_entity_form, name="admin_entity_form"),

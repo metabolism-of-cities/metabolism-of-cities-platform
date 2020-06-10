@@ -1112,6 +1112,26 @@ class Material(Record):
     class Meta:
         db_table = "stafdb_material"
 
+class Unit(models.Model):
+    name = models.CharField(max_length=255)
+    symbol = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+
+    class Type(models.IntegerChoices):
+        MASS = 1, "Mass"
+        VOLUME = 2, "Volume"
+        COUNT = 3, "Count"
+        AREA = 4, "Area"
+        ENERGY = 5, "Energy"
+        LENGTH = 6, "Length"
+        FRACTION = 7, "Fraction"
+        OTHER = 99, "Other"
+
+    type = models.IntegerField(choices=Type.choices, db_index=True, default=99)
+
+    def __str__(self):
+        return self.name
+
 class Sector(Record):
     icon = models.CharField(max_length=255, null=True, blank=True)
     photo = models.ForeignKey(Photo, on_delete=models.SET_NULL, null=True, blank=True)

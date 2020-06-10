@@ -7,6 +7,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.forms import modelform_factory
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 
 from django.utils import timezone
 import pytz
@@ -368,6 +369,54 @@ def material_form(request, catalog=None, id=None, parent=None, project_name=None
         "title": info if info else "Create material",
     }
     return render(request, "staf/material.form.html", context)
+
+def units(request):
+
+    # Quick copy import script
+    if "import" in request.GET:
+        import csv
+        file = settings.MEDIA_ROOT + "/import/units.csv"
+        with open(file, "r") as csvfile:
+            contents = csv.DictReader(csvfile)
+            for row in contents:
+                Unit.objects.create(
+                    id = row["id"],
+                    symbol = row["symbol"],
+                    name = row["name"],
+                    description = row["notes"],
+                )
+
+    list = Unit.objects.all()
+    context = {
+        "list": list,
+        "load_datatables": True,
+        "edit_mode": True if request.user.is_staff else False,
+        "title": "Units",
+    }
+    return render(request, "staf/units.html", context)
+
+@staff_member_required
+def unit(request, id=None):
+    ModelForm = modelform_factory(Unit, fields=("name", "symbol", "type", "description"))
+    info = None
+    if id:
+        info = get_object_or_404(Unit, pk=id)
+        form = ModelForm(request.POST or None, instance=info)
+    else:
+        form = ModelForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Information was saved.")
+            return redirect("staf:units")
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    context = {
+        "form": form,
+        "title": info if info else "Create unit",
+    }
+    return render(request, "staf/unit.html", context)
 
 def flowdiagrams(request):
     list = FlowDiagram.objects.all()
