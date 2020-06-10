@@ -371,21 +371,6 @@ def material_form(request, catalog=None, id=None, parent=None, project_name=None
     return render(request, "staf/material.form.html", context)
 
 def units(request):
-
-    # Quick copy import script
-    if "import" in request.GET:
-        import csv
-        file = settings.MEDIA_ROOT + "/import/units.csv"
-        with open(file, "r") as csvfile:
-            contents = csv.DictReader(csvfile)
-            for row in contents:
-                Unit.objects.create(
-                    id = row["id"],
-                    symbol = row["symbol"],
-                    name = row["name"],
-                    description = row["notes"],
-                )
-
     list = Unit.objects.all()
     context = {
         "list": list,
