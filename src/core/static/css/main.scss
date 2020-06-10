@@ -59,6 +59,11 @@ pre {
   white-space: pre-line;
 }
 
+form label.category {
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+
 .main-content.container {
   padding-top: 36px;
   padding-bottom: 36px;
@@ -1048,6 +1053,24 @@ a.badge-secondary:focus {
       content: "\f7a2";
     }
   }
+
+  .legend {
+    line-height: 18px;
+    color: $dark;
+    background-color: $very-light;
+    padding: .5rem;
+    box-shadow: $basic-shadow;
+    border-radius: .25rem;
+    max-width: 250px;
+  }
+
+  .legend i {
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+  }
 }
 
 // FANCYTREE
@@ -1545,12 +1568,10 @@ body.dataset {
     }
   }
 
-  #tab-map {
-    #map {
-      height: 500px;
-      width: 100%;
-      border-radius: .25rem;
-    }
+  #map {
+    height: 500px;
+    width: 100%;
+    border-radius: .25rem;
   }
 
   #tab-data {
@@ -1660,11 +1681,6 @@ body.dataset.editor {
     border-radius: .25rem;
   }
 
-  form label.category {
-    font-weight: bold;
-    font-size: 1.25rem;
-  }
-
   #color-schemes {
     .single-scheme {
       padding: .5rem;
@@ -1695,6 +1711,12 @@ body.dataset.editor {
 
   input#tooltip-label {
     font-family: "Ubuntu Mono", "Fira Mono", "Liberation Mono", "Courier New", monospace;
+  }
+}
+
+body.dataset.editor.map {
+  .single-bucket {
+    margin-bottom: .5rem;
   }
 }
 
@@ -2605,23 +2627,5 @@ body.material-stocks.map {
   #map {
     height: 600px;
     max-height: 90vh;
-  }
-
-  .legend {
-    line-height: 18px;
-    color: $dark;
-    background-color: $very-light;
-    padding: .5rem;
-    box-shadow: $basic-shadow;
-    border-radius: .25rem;
-    max-width: 250px;
-  }
-
-  .legend i {
-    width: 16px;
-    height: 16px;
-    float: left;
-    margin-right: 8px;
-    opacity: 0.7;
   }
 }
