@@ -690,6 +690,7 @@ def work_sprint(request, project_name, id=None):
         "title": info,
         "updates": updates,
     }
+    
     return render(request, "contribution/work.sprint.html", context)
 
 # People
