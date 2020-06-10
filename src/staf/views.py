@@ -19,71 +19,15 @@ from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
 from django.contrib.admin.utils import construct_change_message
 from django.contrib.contenttypes.models import ContentType
 
+import logging
+logger = logging.getLogger(__name__)
+
 PROJECT_ID = settings.PROJECT_ID_LIST
 
 def is_member(param, para):
     return True
 
 def index(request):
-    
-    # Temp import stuff
-    if "import" in request.GET:
-        import csv
-        # Let's import the individual materials...
-        file = settings.MEDIA_ROOT + "/import/materials.csv"
-        latest = Material.objects.all().order_by("-old_id")[0]
-        latest = latest.old_id
-        print(latest)
-
-        with open(file, "r") as csvfile:
-            contents = csv.DictReader(csvfile)
-            catalogs = {}
-            for row in contents:
-                id = row["id"]
-                if int(id) > int(latest):
-                    catalog = row["catalog_id"]
-                    name = row["name"]
-                    if len(name) > 255:
-                        name = name[0:255]
-                        description = "Full name: " + row["name"]
-                    else:
-                        description = row["description"]
-                    if catalog not in catalogs:
-                        check = MaterialCatalog.objects.get(old_id=row["catalog_id"])
-                        catalogs[catalog] = check
-                    Material.objects.create(
-                        old_id = id,
-                        name = name,
-                        code = row["code"],
-                        catalog = catalogs[catalog],
-                        description = description,
-                    )
-
-    elif "update_parents" in request.GET:
-        # And once they are imported, we can set the parents
-        import csv
-        latest = Material.objects.filter(parent__isnull=False).order_by("-old_id")[0]
-        latest = latest.old_id
-        print(latest)
-        file = settings.MEDIA_ROOT + "/import/materials.csv"
-        with open(file, "r") as csvfile:
-            contents = csv.DictReader(csvfile)
-            parents = {}
-            for row in contents:
-                if row["parent_id"]:
-                    parent = row["parent_id"]
-                    id = row["id"]
-                    if int(id) > int(latest):
-                        if parent not in parents:
-                            check = Material.objects.get(old_id=row["parent_id"])
-                            parents[row["parent_id"]] = check
-                        info = Material.objects.get(old_id=row["id"])
-                        info.parent = parents[row["parent_id"]]
-                        info.save()
-
-        messages.success(request, "Materials data was imported")
-
-
     context = {
         "show_project_design": True,
         "show_relationship": PROJECT_ID["staf"],
@@ -344,7 +288,7 @@ def materials_catalogs(request):
 
 def materials(request, catalog, id=None):
     catalog = MaterialCatalog.objects.get(pk=catalog)
-    list = Material.objects.filter(catalog=catalog)
+    list = Material.objects.filter(catalog=catalog).order_by("code", "name")
     if id:
         list = list.filter(parent_id=id)
     else:

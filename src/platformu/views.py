@@ -5,6 +5,9 @@ from core.models import *
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+import logging
+logger = logging.getLogger(__name__)
+
 # This array defines all the IDs in the database of the articles that are loaded for the
 # various pages in the menu. Here we can differentiate between the different sites.
 

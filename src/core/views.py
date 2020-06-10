@@ -1571,6 +1571,40 @@ def dataimport(request):
             FlowBlocks.objects.create(origin_id=activity(398935), origin_label="Wastewater treatment", destination_id=activity(67), destination_label="Rain, rivers, and other natural water processes", diagram=water)
             FlowBlocks.objects.create(origin_id=activity(398935), origin_label="Wastewater treatment", destination_id=activity(399468), destination_label="Water consumption", diagram=water)
 
+    
+        # Temp import stuff
+        if "import" in request.GET:
+            import csv
+            # Let's import the individual materials...
+            file = settings.MEDIA_ROOT + "/import/materials.csv"
+            latest = Material.objects.all().order_by("-old_id")[0]
+            latest = latest.old_id
+            print(latest)
+
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                catalogs = {}
+                for row in contents:
+                    id = row["id"]
+                    if int(id) > int(latest):
+                        catalog = row["catalog_id"]
+                        name = row["name"]
+                        if len(name) > 255:
+                            name = name[0:255]
+                            description = "Full name: " + row["name"]
+                        else:
+                            description = row["description"]
+                        if catalog not in catalogs:
+                            check = MaterialCatalog.objects.get(old_id=row["catalog_id"])
+                            catalogs[catalog] = check
+                        Material.objects.create(
+                            old_id = id,
+                            name = name,
+                            code = row["code"],
+                            catalog = catalogs[catalog],
+                            description = description,
+                        )
+
         # Quick copy import script
         if "import" in request.GET:
             import csv
