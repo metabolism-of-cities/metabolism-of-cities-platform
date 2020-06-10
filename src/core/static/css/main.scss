@@ -2589,6 +2589,24 @@ body.staf-review.uploaded {
   }
 }
 
+body.address.search .single-autocomplete-result {
+  cursor: pointer;
+  padding: .5rem;
+  margin-bottom: .5rem;
+  border-radius: .25rem;
+  background-color: $very-light;
+  border: 1px solid $light;
+
+  &:hover {
+    border-color: $gray;
+  }
+
+  &.selected {
+    background-color: $light;
+    border-color: $gray;
+  }
+}
+
 // MATERIAL STOCKS PAGES
 body.material-stocks {
 
