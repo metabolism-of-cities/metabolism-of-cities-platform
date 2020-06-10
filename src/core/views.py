@@ -167,6 +167,7 @@ def has_permission(request, record_id, allowed_permissions):
 
 # If users ARE logged in, but they try to access pages that they don't have
 # access to, then we log this request for further debugging/review
+# Version 1.0
 def unauthorized_access(request):
     from django.core.exceptions import PermissionDenied
     logger.error("No access to this UploadSession")
@@ -180,53 +181,85 @@ def unauthorized_access(request):
 # Authentication of users
 
 def user_register(request, project=None):
+    people = user = is_logged_in = None
+    if request.GET.get("next"):
+        redirect_url = request.GET.get("next")  
+    elif project:
+        project = get_object_or_404(Project, pk=PROJECT_ID[project])
+        redirect_url = project.get_website()
+    else:
+        redirect_url = "core:index"
+
+    if request.user.is_authenticated:
+        is_logged_in = True
+        return redirect(redirect_url)
+
     if request.method == "POST":
+        error = None
         password = request.POST.get("password")
         email = request.POST.get("email")
         name = request.POST.get("name")
         if not password:
             messages.error(request, "You did not enter a password.")
-        else:
-            check = User.objects.filter(email=email)
+            error = True
+        check = User.objects.filter(email=email)
+        if check:
+            messages.error(request, "A Metabolism of Cities account already exists with this e-mail address. Please <a href='/accounts/login/'>log in first</a>.")
+            error = True
+        if not error:
+            user = User.objects.create_user(email, email, password)
+            user.first_name = name
+            user.is_superuser = False
+            user.is_staff = False
+            user.save()
+            login(request, user)
+
+            # This user must be associated with a "people" record. So we check if a record
+            # with this name already exists. If not, we create a new record.
+            check = People.objects.filter(name=name, user__isnull=True)
             if check:
-                messages.error(request, "A user already exists with this e-mail address. Please log in or reset your password instead.")
-            else:
-                user = User.objects.create_user(email, email, password)
-                user.first_name = name
-                if project == "platformu":
-                    group = Group.objects.get(name="PlatformU Admin")
-                    user.groups.add(group)
-                    organization = Organization.objects.create(name=request.POST["organization"], type="other")
-                    user_relationship = UserRelationship()
-                    user_relationship.record = organization
-                    user_relationship.user = user
-                    user_relationship.relationship = Relationship.objects.get(pk=USER_RELATIONSHIPS["member"])
-                    user_relationship.save()
+                people = check[0]
+            if not people:
+                people = People.objects.create(name=name, email=user.email)
 
-                    redirect_page = "platformu_admin"
-                else:
-                    redirect_page = "index"
-                user.save()
-                messages.success(request, "User was created.")
-                login(request, user)
+            people.user = user
+            people.save()
 
-                mailcontext = {
-                    "name": name,
-                }
-                msg_html = render_to_string("mailbody/welcome.html", mailcontext)
-                msg_plain = render_to_string("mailbody/welcome.txt", mailcontext)
-                sender = '"' + request.site.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
-                recipient = '"' + name + '" <' + email + '>'
-
-                send_mail(
-                    "Welcome to Metabolism of Cities",
-                    msg_plain,
-                    sender,
-                    [recipient],
-                    html_message=msg_html,
+            if "organization" in request.POST and request.POST["organization"]:
+                organization = Organization.objects.create(name=request.POST["organization"])
+                RecordRelationship.objects.create(
+                    record_parent = people,
+                    record_child = organization,
+                    relationship_id = 6, # Make this person a team member of this organization
                 )
+            Work.objects.create(
+                name = "Welcome new user",
+                description = "A new user has signed up for the website! Have a look at their profile, and consider welcoming them. The user has entered the following background information:\n\n" + request.POST.get("background"),
+                part_of_project = project,
+                related_to = people,
+                workactivity_id = 18,
+                is_public = False,
+            )
+            messages.success(request, "You are successfully registered.")
 
-                return redirect(redirect_page)
+            mailcontext = {
+                "name": name,
+            }
+
+            msg_html = render_to_string("mailbody/welcome.html", mailcontext)
+            msg_plain = render_to_string("mailbody/welcome.txt", mailcontext)
+            sender = '"' + request.site.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
+            recipient = '"' + name + '" <' + email + '>'
+
+            send_mail(
+                "Welcome to Metabolism of Cities",
+                msg_plain,
+                sender,
+                [recipient],
+                html_message=msg_html,
+            )
+
+            return redirect(redirect_url)
 
     context = {}
     return render(request, "auth/register.html", context)
@@ -237,7 +270,7 @@ def user_login(request, project=None):
         redirect_url = request.GET.get("next")  
     elif project:
         project = get_object_or_404(Project, pk=PROJECT_ID[project])
-        redirect_url = "/" + project.slug + "/"
+        redirect_url = project.get_website()
     else:
         redirect_url = "core:index"
 
@@ -557,9 +590,12 @@ def controlpanel_data_article(request, project_name, space, id=None):
 def work_form(request, project_name, id=None):
     project = PROJECT_ID[project_name]
     info = None
-    ModelForm = modelform_factory(Work, fields=("name", "priority", "workactivity"))
-    if id:
-        info = Work.objects.get(part_of_project_id=project, pk=id)
+    fields = ["name", "priority", "workactivity"]
+    if request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
+        fields.append("is_public")
+    ModelForm = modelform_factory(Work, fields=fields)
+    if id and request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
+        info = Work.objects_include_private.get(part_of_project_id=project, pk=id)
         form = ModelForm(request.POST or None, instance=info)
     else:
         form = ModelForm(request.POST or None)
@@ -597,11 +633,19 @@ def work_form(request, project_name, id=None):
 
 def work_grid(request, project_name):
     project = PROJECT_ID[project_name]
-    list = Work.objects.filter(part_of_project_id=project)
-    if request.GET.get("status"):
-        list = list.filter(status=request.GET["status"])
-    if request.GET.get("priority"):
-        list = list.filter(priority=request.GET["priority"])
+    status = request.GET.get("status")
+    type = request.GET.get("type")
+    priority = request.GET.get("priority")
+    if request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
+        list = Work.objects_include_private.filter(part_of_project_id=project)
+    else:
+        list = Work.objects.filter(part_of_project_id=project)
+    if status:
+        list = list.filter(status=status)
+    if priority:
+        list = list.filter(priority=priority)
+    if type:
+        list = list.filter(workactivity_id=type)
     context = {
         "list": list,
         "load_datatables": True,
@@ -609,13 +653,19 @@ def work_grid(request, project_name):
         "priorities": Work.WorkPriority.choices,
         "title": "Work grid",
         "types": WorkActivity.objects.filter(Q(default_project_id=project)|Q(default_project__isnull=True)),
+        "status": int(status) if status else None,
+        "type": int(type) if type else None,
+        "priority": int(priority) if priority else None,
     }
     return render(request, "contribution/work.grid.html", context)
 
 def work_item(request, project_name, id):
     # To do: validate user has access to this ticket
     # if at all needed?
-    info = Work.objects.get(pk=id)
+    if request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
+        info = Work.objects_include_private.get(pk=id)
+    else:
+        info = Work.objects.get(pk=id)
 
     if request.method == "POST":
 

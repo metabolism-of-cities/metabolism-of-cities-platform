@@ -65,6 +65,14 @@ ssh -t industrialecology 'csvdump "SELECT * FROM core_reference_authors ORDER BY
 ssh -t industrialecology 'csvdump "SELECT * FROM core_event" events.csv'
 
 ssh -t industrialecology 'csvdump "SELECT * FROM core_video_collections" videocollections.csv'
+
+ssh -t industrialecology 'csvdump "SELECT * FROM staf_materialcatalog ORDER BY id" materialcatalogs.csv'
+ssh -t industrialecology 'csvdump "SELECT * FROM staf_material ORDER BY id" materials.csv'
+ssh -t industrialecology 'csvdump "SELECT * FROM staf_dataset ORDER BY id" datasets.csv'
+ssh -t industrialecology 'csvdump "SELECT * FROM staf_dataset_references ORDER BY id" datasetreferences.csv'
+ssh -t industrialecology 'csvdump "SELECT * FROM staf_unit ORDER BY id" units.csv'
+ssh -t industrialecology 'csvdump "SELECT * FROM staf_timeperiod ORDER BY id" timeperiods.csv'
+ssh -t industrialecology 'csvdump "SELECT * FROM staf_csv ORDER BY id" stafcsv.csv'
   </pre>
 
 {% endblock %}

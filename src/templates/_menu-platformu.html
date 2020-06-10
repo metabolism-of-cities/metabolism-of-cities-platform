@@ -1,7 +1,7 @@
 <li class="nav-item"><a class="nav-link" href="/platformu/">Home</a></li>
 {% if my_organization %}
-  <li class="nav-item"><a class="nav-link" href="{% url "platformu_admin_clusters" my_organization.id %}">Organisations</a></li>
-  <li class="nav-item"><a class="nav-link" href="{% url "platformu_admin_map" my_organization.id %}">Map</a></li>
+  <li class="nav-item"><a class="nav-link" href="{% url "platformu:admin_clusters" my_organization.id %}">Organisations</a></li>
+  <li class="nav-item"><a class="nav-link" href="{% url "platformu:admin_map" my_organization.id %}">Map</a></li>
 {% else %}
   <li class="nav-item"><a class="nav-link" href="/platformu/dashboard/">User section</a></li>
   <li class="nav-item"><a class="nav-link" href="/platformu/admin/">Admin section</a></li>

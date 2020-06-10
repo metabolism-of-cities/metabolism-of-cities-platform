@@ -25,6 +25,71 @@ def is_member(param, para):
     return True
 
 def index(request):
+    
+    # Temp import stuff
+    if "import" in request.GET:
+        import csv
+        file = settings.MEDIA_ROOT + "/import/materialcatalogs.csv"
+        MaterialCatalog.objects.all().delete()
+        with open(file, "r") as csvfile:
+            contents = csv.DictReader(csvfile)
+            for row in contents:
+                id = row["id"]
+                MaterialCatalog.objects.create(
+                    old_id = id,
+                    name = row["name"],
+                    description = row["description"],
+                    url = row["url"],
+                )
+        messages.success(request, "Material catalogs data was imported")
+
+        # Let's import the individual materials...
+        file = settings.MEDIA_ROOT + "/import/materials.csv"
+        Material.objects.all().delete()
+        with open(file, "r") as csvfile:
+            contents = csv.DictReader(csvfile)
+            catalogs = {}
+            for row in contents:
+                id = row["id"]
+                catalog = row["catalog_id"]
+                name = row["name"]
+                if len(name) > 255:
+                    name = name[0:255]
+                    description = "Full name: " + row["name"]
+                else:
+                    description = row["description"]
+                if catalog not in catalogs:
+                    check = MaterialCatalog.objects.get(old_id=row["catalog_id"])
+                    catalogs[catalog] = check
+                Material.objects.create(
+                    old_id = id,
+                    name = name,
+                    code = row["code"],
+                    catalog = catalogs[catalog],
+                    description = description,
+                )
+
+    elif "update_parents" in request.GET:
+        # And once they are imported, we can set the parents
+        import csv
+        file = settings.MEDIA_ROOT + "/import/materials.csv"
+        with open(file, "r") as csvfile:
+            contents = csv.DictReader(csvfile)
+            parents = {}
+            for row in contents:
+                if row["parent_id"]:
+                    parent = row["parent_id"]
+                    id = row["id"]
+                    if parent not in parents:
+                        check = Material.objects.get(old_id=row["parent_id"])
+                        parents[row["parent_id"]] = check
+                    info = Material.objects.get(old_id=row["id"])
+                    info.parent = parents[row["parent_id"]]
+                    info.save()
+
+        messages.success(request, "Materials data was imported")
+
+
     context = {
         "show_project_design": True,
         "show_relationship": PROJECT_ID["staf"],
@@ -276,6 +341,31 @@ def activity(request, catalog, id):
         "list": list,
     }
     return render(request, "staf/activities.html", context)
+
+def materials_catalogs(request):
+    context = {
+        "list": MaterialCatalog.objects.all(),
+    }
+    return render(request, "staf/materials.catalogs.html", context)
+
+def materials(request, catalog, id=None):
+    catalog = MaterialCatalog.objects.get(pk=catalog)
+    list = Material.objects.filter(catalog=catalog)
+    if id:
+        list = list.filter(parent_id=id)
+    else:
+        list = list.filter(parent__isnull=True)
+    context = {
+        "list": list,
+    }
+    return render(request, "staf/materials.html", context)
+
+def material(request, catalog, id):
+    list = Material.objects.all()
+    context = {
+        "list": list,
+    }
+    return render(request, "staf/materials.html", context)
 
 def flowdiagrams(request):
     list = FlowDiagram.objects.all()

@@ -208,6 +208,8 @@ class WorkAdmin(admin.ModelAdmin):
     
 class WorkActivityAdmin(admin.ModelAdmin):
     search_fields = ["name"]
+    list_display = ["name", "type", "points"]
+    list_filter = ["default_project", "type"]
 
 class LogEntryAdmin(admin.ModelAdmin):
     # to have a date-based drilldown navigation in the admin page
@@ -306,3 +308,5 @@ admin_site.register(WorkActivity, WorkActivityAdmin)
 admin_site.register(Badge, BadgeAdmin)
 admin_site.register(ActivityCatalog)
 admin_site.register(Activity, ActivityAdmin)
+admin_site.register(MaterialCatalog)
+admin_site.register(Material, ActivityAdmin)

@@ -50,7 +50,7 @@ class PrivateRecordManager(models.Manager):
 
 class Tag(models.Model):
     name = models.CharField(max_length=255)
-    description = HTMLField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     parent_tag = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True,
         limit_choices_to={"hidden": False}, related_name="children"
     )
@@ -82,7 +82,7 @@ class Tag(models.Model):
 
 class Record(models.Model):
     name = models.CharField(max_length=255)
-    description = HTMLField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     image = StdImageField(upload_to="records", variations={"thumbnail": (480, 480), "large": (1280, 1024)}, blank=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -838,6 +838,7 @@ class WorkActivity(models.Model):
         ADMIN = 8, "Administering"
         PROGRAM = 9, "Programming"
         DESIGN = 10, "Designing"
+        COMMS = 11, "Communicating"
 
     type = models.IntegerField(choices=WorkType.choices, db_index=True)
     name = models.CharField(max_length=255)
