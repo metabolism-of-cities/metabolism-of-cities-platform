@@ -14,7 +14,7 @@
       <tr>
         <td>{{ each.name }}</td>
         <td>
-          <a class="btn btn-info" href="{% url "staf:materials" each.id %}"><i class="fa fa-eye"></i> View</a>
+          <a class="btn btn-info" href="{% url "staf:materials" %}?catalog={{ each.id }}"><i class="fa fa-eye"></i> View</a>
         </td>
       </tr>
     {% endfor %}

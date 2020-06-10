@@ -1,26 +1,55 @@
 {% extends "_base.html" %}
 
 {% block content %}
-  <h1>Materials</h1>
-  <table class="table table-striped datatable">
-    <thead>
-      <tr>
-        <th>Code</th>
-        <th>Name</th>
-        <th>Options</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for each in list %}
-      <tr>
-        <td>{{ each.code }}</td>
-        <td><a href="{% url "staf:materials" each.catalog.id each.id %}">{{ each.name }}</td>
-        <td>
-          <a class="btn btn-info" href="{% url "staf:material" each.catalog.id each.id %}"><i class="fa fa-eye"></i> View</a>
-        </td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
+
+  <h1 class="mb-0">{% if info %}{{ info }}{% else %}Materials{% endif %}</h1>
+
+  {% if info.parent %}
+    <a href="../{{ info.parent.id }}/" class="btn btn-primary-basic mt-2">
+      <i class="fal fa-arrow-up"></i>
+      Back to {{ info.parent }}
+    </a>
+  {% elif info %}
+    <a href="../?catalog={{ info.catalog.id }}" class="btn btn-primary-basic mt-2">
+      <i class="fal fa-arrow-up"></i>
+      Back to the index of {{ info.catalog }}
+    </a>
+  {% endif %}
+
+  {% if list %}
+    <table class="table table-striped datatable mt-4">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Options</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in list %}
+        <tr>
+          <td>
+            {% if each.icon %}<i class="fa fa-fw fa-{{ each.icon }}"></i>{% endif %}
+            {% if each.code %}{{ each.code }}{% endif %}
+          </td>
+          <td><a href="{% if not catalog %}../{% endif %}{{ each.id }}/">{{ each.name }}</td>
+          <td>
+            {% if edit_mode %}
+              <a class="btn btn-info" href="{% if not catalog %}../{% endif %}{{ each.id }}/edit/?next={{ request.get_full_path }}"><i class="fa fa-pencil"></i> Edit</a>
+            {% else %}
+              <a class="btn btn-info" href="{% url "staf:material" each.id %}"><i class="fa fa-eye"></i> View</a>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert-warning">No materials found in this category.</div>
+  {% endif %}
+
+  {% if edit_mode %}
+    <a class="btn btn-default-basic" href="create/?next={{ request.get_full_path }}"><i class="fal fa-plus"></i> Add material</a>
+  {% endif %}
 
 {% endblock %}

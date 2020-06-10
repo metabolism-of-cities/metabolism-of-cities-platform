@@ -1104,7 +1104,10 @@ class Material(Record):
     icon = models.CharField(max_length=50, null=True, blank=True, help_text="Only include the icon name, not fa- classes --- see https://fontawesome.com/icons?d=gallery")
 
     def __str__(self):
-        return self.code + " - " + self.name
+        if self.code:
+            return self.code + " - " + self.name
+        else:
+            return self.name
 
     class Meta:
         db_table = "stafdb_material"

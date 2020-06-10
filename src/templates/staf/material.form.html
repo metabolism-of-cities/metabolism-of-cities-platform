@@ -3,21 +3,26 @@
 
 {% block content %}
 
-  <h1 class="mb-0">Materials</h1>
+  <h1 class="mb-4">{{ title }}</h1>
 
-  <form method="post" class="form form-horizontal" enctype="multipart/form-data">
+  <form method="post">
     {% bootstrap_form form layout="horizontal" %}
     {% buttons %}
-      <div class="col-md-offset-3 col-md-9">
-        <button type="submit" class="btn btn-success">Save</button>
+      <div class="row">
+        <div class="offset-md-3 col-md-9">
+          <button type="submit" class="btn btn-success">
+            <i class="fa fa-fw fa-save"></i>
+            Save
+         </button>
+        </div>
       </div>
     {% endbuttons %}
     {% csrf_token %}
   </form>
 
-  <a href="../" class="btn btn-primary-basic mt-4">
+  <a href="javascript:history.back()" class="btn btn-primary-basic mt-4">
     <i class="fal fa-angle-left"></i>
-    Back to list
+    Back
   </a>
 
 {% endblock %}

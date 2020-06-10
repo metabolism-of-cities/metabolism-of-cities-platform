@@ -306,32 +306,68 @@ def materials_catalogs(request):
     }
     return render(request, "staf/materials.catalogs.html", context)
 
-def materials(request, catalog, id=None, project_name=None):
-    catalog = MaterialCatalog.objects_include_private.get(pk=catalog)
-    list = Material.objects.filter(catalog=catalog).order_by("code", "name")
-    if id:
-        list = list.filter(parent_id=id)
-    else:
-        list = list.filter(parent__isnull=True)
+def materials(request, id=None, catalog=None, project_name=None, edit_mode=False):
 
-    # Find all materials in the PlatformU catalog
-    if project_name == "platformu":
+    # If the user enters into edit_mode, we must make sure they have access:
+    if project_name and edit_mode:
         if not has_permission(request, PROJECT_ID[project_name], ["curator", "admin", "publisher"]):
             unauthorized_access(request)
-        list = list.filter(catalog__id=31595)
+
+    info = None
+    if id:
+        info = Material.objects.get(pk=id)
+        list = Material.objects.filter(parent=info)
+    else:
+        if not catalog:
+            catalog = request.GET.get("catalog")
+        list = Material.objects.filter(parent__isnull=True, catalog_id=catalog)
+
+    list = list.order_by("code", "name")
 
     context = {
         "list": list,
         "title": "Materials",
+        "edit_mode": edit_mode,
+        "info": info,
+        "catalog": catalog,
     }
+
     return render(request, "staf/materials.html", context)
 
 def material(request, catalog, id):
-    list = Material.objects.all()
+    list = Material.objects.filter(id=1)
     context = {
         "list": list,
     }
     return render(request, "staf/materials.html", context)
+
+@login_required
+def material_form(request, catalog=None, id=None, parent=None, project_name=None):
+    ModelForm = modelform_factory(Material, fields=("name", "code", "description", "icon"))
+    info = None
+    if id:
+        info = get_object_or_404(Material, pk=id)
+        form = ModelForm(request.POST or None, instance=info)
+    else:
+        form = ModelForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save(commit=False)
+            if not id:
+                info.catalog_id = catalog
+                if parent:
+                    info.parent_id = parent
+            info.save()
+            messages.success(request, "Information was saved.")
+            return redirect(request.GET["next"])
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    context = {
+        "form": form,
+        "title": info if info else "Create material",
+    }
+    return render(request, "staf/material.form.html", context)
 
 def flowdiagrams(request):
     list = FlowDiagram.objects.all()
