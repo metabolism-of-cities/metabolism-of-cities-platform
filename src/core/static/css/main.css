@@ -1681,6 +1681,19 @@ body.staf-review.uploaded .statistic {
   font-size: 1.25rem;
   font-weight: bold; }
 
+body.address.search .single-autocomplete-result {
+  cursor: pointer;
+  padding: .5rem;
+  margin-bottom: .5rem;
+  border-radius: .25rem;
+  background-color: #fbfbfb;
+  border: 1px solid #efefef; }
+  body.address.search .single-autocomplete-result:hover {
+    border-color: #808080; }
+  body.address.search .single-autocomplete-result.selected {
+    background-color: #efefef;
+    border-color: #808080; }
+
 body.material-stocks.landing .container.main-content {
   padding: 0 !important; }
 
