@@ -62,6 +62,9 @@ def index(request):
     elif "update_parents" in request.GET:
         # And once they are imported, we can set the parents
         import csv
+        latest = Material.objects.filter(parent__isnull=False).order_by("-old_id")[0]
+        latest = latest.old_id
+        print(latest)
         file = settings.MEDIA_ROOT + "/import/materials.csv"
         with open(file, "r") as csvfile:
             contents = csv.DictReader(csvfile)
@@ -70,12 +73,13 @@ def index(request):
                 if row["parent_id"]:
                     parent = row["parent_id"]
                     id = row["id"]
-                    if parent not in parents:
-                        check = Material.objects.get(old_id=row["parent_id"])
-                        parents[row["parent_id"]] = check
-                    info = Material.objects.get(old_id=row["id"])
-                    info.parent = parents[row["parent_id"]]
-                    info.save()
+                    if int(id) > int(latest):
+                        if parent not in parents:
+                            check = Material.objects.get(old_id=row["parent_id"])
+                            parents[row["parent_id"]] = check
+                        info = Material.objects.get(old_id=row["id"])
+                        info.parent = parents[row["parent_id"]]
+                        info.save()
 
         messages.success(request, "Materials data was imported")
 
