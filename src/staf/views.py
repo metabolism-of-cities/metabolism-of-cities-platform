@@ -24,6 +24,26 @@ logger = logging.getLogger(__name__)
 
 PROJECT_ID = settings.PROJECT_ID_LIST
 
+# General script to check if a user has a certain permission
+# This is used for validating access to certain pages only, so superusers
+# will always have access
+# Version 1.0
+def has_permission(request, record_id, allowed_permissions):
+    if request.user.is_authenticated and request.user.is_superuser:
+        return True
+    elif request.user.is_authenticated and request.user.is_staff:
+        return True
+    try:
+        people = request.user.people
+        check = RecordRelationship.objects.filter(
+            relationship__slug__in = permissions,
+            record_parent = request.user.people,
+            record_child_id = record_id,
+        )
+    except:
+        return False
+    return True if check.exists() else False
+
 def is_member(param, para):
     return True
 
@@ -286,15 +306,23 @@ def materials_catalogs(request):
     }
     return render(request, "staf/materials.catalogs.html", context)
 
-def materials(request, catalog, id=None):
-    catalog = MaterialCatalog.objects.get(pk=catalog)
+def materials(request, catalog, id=None, project_name=None):
+    catalog = MaterialCatalog.objects_include_private.get(pk=catalog)
     list = Material.objects.filter(catalog=catalog).order_by("code", "name")
     if id:
         list = list.filter(parent_id=id)
     else:
         list = list.filter(parent__isnull=True)
+
+    # Find all materials in the PlatformU catalog
+    if project_name == "platformu":
+        if not has_permission(request, PROJECT_ID[project_name], ["curator", "admin", "publisher"]):
+            unauthorized_access(request)
+        list = list.filter(catalog__id=31595)
+
     context = {
         "list": list,
+        "title": "Materials",
     }
     return render(request, "staf/materials.html", context)
 

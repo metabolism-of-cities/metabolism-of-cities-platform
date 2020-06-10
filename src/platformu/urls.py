@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from core import views as core
 from community import views as community
+from staf import views as staf
 
 app_name = "platformu"
 
@@ -51,5 +52,6 @@ urlpatterns = [
     path("controlpanel/users/", core.controlpanel_users, { "project_name": app_name }, name="controlpanel_users"),
     path("controlpanel/design/", core.controlpanel_design, { "project_name": app_name }, name="controlpanel_design"),
     path("controlpanel/content/", core.controlpanel_content, { "project_name": app_name }, name="controlpanel_content"),
+    path("controlpanel/materials/", staf.materials, { "project_name": app_name, "catalog": 31595 }, name="controlpanel_materials"),
 
 ]

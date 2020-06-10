@@ -1,0 +1,28 @@
+{% extends "_base.html" %}
+
+{% block title %}Address search{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+
+  <div class="alert alert-warning">
+    Google API: {{ google_api }}
+  </div>
+
+  <form method="get">
+
+    Address:
+    <input name="address" type="text">
+
+    <input type="hidden" name="lat" value="" />
+    <input type="hidden" name="lng" value="" />
+
+    <button type="submit">Submit</button>
+  
+  </form>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

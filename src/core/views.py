@@ -149,6 +149,7 @@ def is_member(user, group):
 # General script to check if a user has a certain permission
 # This is used for validating access to certain pages only, so superusers
 # will always have access
+# Version 1.0
 def has_permission(request, record_id, allowed_permissions):
     if request.user.is_authenticated and request.user.is_superuser:
         return True
@@ -401,6 +402,10 @@ def template(request, slug):
     context = {}
     if slug == "lightbox":
         context["load_lightbox"] = True
+
+    if slug == "address-search":
+        from django.conf import settings
+        context["google_api"] = settings.GOOGLE_API
 
     return render (request, page, context)
 
