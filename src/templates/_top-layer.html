@@ -97,6 +97,8 @@
   {% include "_submenu-data.html" %}
 {% elif PROJECT.id == 8 and request.user.is_authenticated %}
   {% include "_submenu-ascus.html" %}
+{% elif PROJECT.id == 16 and request.user.is_authenticated %}
+  {% include "_submenu-platformu.html" %}
 {% endif %}
 
 {% if PROJECT.id == 4 and space %}

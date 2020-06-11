@@ -12,6 +12,7 @@ urlpatterns = [
     path("admin/<int:organization>/clusters/", views.clusters, name="admin_clusters"),
     path("admin/organizations/create/", views.create_my_organization, name="create_my_organization"),
     path("admin/<int:organization>/map/", views.admin_map, name="admin_map"),
+    path("admin/map/", views.admin_map, name="admin_map"),
     path("admin/<int:organization>/entities/<int:id>/", views.admin_entity, name="admin_entity"),
     path("admin/<int:organization>/entities/<int:id>/edit/", views.admin_entity_form, name="admin_entity_form"),
     path("admin/<int:organization>/entities/<int:id>/materials/", views.admin_entity_materials, name="admin_entity_materials"),
@@ -23,6 +24,9 @@ urlpatterns = [
     path("admin/<int:organization>/entities/<int:id>/users/create/", views.admin_entity_user, name="admin_entity_user"),
     path("admin/<int:organization>/entities/<int:id>/users/<int:user>/", views.admin_entity_user, name="admin_entity_user"),
     path("admin/<int:organization>/entities/create/", views.admin_entity_form, name="admin_entity_form"),
+    path("admin/<int:organization>/entities/<int:id>/<slug:slug>/", views.admin_entity_materials, name="admin_entity_materials"),
+    path("admin/<int:organization>/entities/<int:id>/<slug:slug>/<slug:type>/<int:material>/", views.admin_entity_material, name="admin_entity_material"),
+    path("admin/<int:organization>/entities/<int:id>/<slug:slug>/edit/<int:edit>/", views.admin_entity_material, name="admin_entity_material"),
 
     path("dashboard/", views.dashboard),
     path("materials/electricity/", views.material),
@@ -61,4 +65,5 @@ urlpatterns = [
     path("controlpanel/materials/<int:parent>/create/", staf.material_form, { "project_name": app_name }),
     path("controlpanel/materials/create/", staf.material_form, { "project_name": app_name, "catalog": 31594, }),
 
+    path("<slug:slug>/", core.article, { "project_name": app_name}, name="article"),
 ]

@@ -1139,6 +1139,20 @@ class Unit(models.Model):
     def __str__(self):
         return self.name
 
+class MaterialDemand(Record):
+    material_type = models.ForeignKey(Material, on_delete=models.CASCADE)
+    quantity = models.FloatField()
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    owner = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="demand")
+
+    def __str__(self):
+        return self.material_type.name
+
+    class Meta:
+        ordering = ["start_date"]
+
 class Sector(Record):
     icon = models.CharField(max_length=255, null=True, blank=True)
     photo = models.ForeignKey(Photo, on_delete=models.SET_NULL, null=True, blank=True)

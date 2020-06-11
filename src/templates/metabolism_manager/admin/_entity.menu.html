@@ -13,12 +13,18 @@
     <a class="nav-link{% if page == 'entity_users' %} active{% endif %}" href="{% url "platformu:admin_entity_users" my_organization.id info.id %}">Users</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link{% if page == 'entity_materials' %} active{% endif %}" href="{% url "platformu:admin_entity_materials" my_organization.id info.id %}">Materials and products</a>
+    <a class="nav-link{% if page == 'entity_resources' %} active{% endif %}" href="{% url "platformu:admin_entity_materials" my_organization.id info.id "resources" %}">Resources</a>
   </li>
   <li class="nav-item">
+    <a class="nav-link{% if page == 'entity_space' %} active{% endif %}" href="{% url "platformu:admin_entity_materials" my_organization.id info.id "space" %}">Space</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link{% if page == 'entity_technology' %} active{% endif %}" href="{% url "platformu:admin_entity_materials" my_organization.id info.id "technology" %}">Technology</a>
+  </li>
+  <li class="nav-item" style="display:none">
     <a class="nav-link{% if page == 'entity_data' %} active{% endif %}" href="{% url "platformu:admin_entity_data" my_organization.id info.id %}">Data</a>
   </li>
-  <li class="nav-item">
+  <li class="nav-item" style="display:none">
     <a class="nav-link{% if page == 'entity_log' %} active{% endif %}" href="{% url "platformu:admin_entity_log" my_organization.id info.id %}">Log</a>
   </li>
 </ul>

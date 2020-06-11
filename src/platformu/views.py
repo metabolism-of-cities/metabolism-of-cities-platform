@@ -8,6 +8,8 @@ from django.contrib import messages
 import logging
 logger = logging.getLogger(__name__)
 
+from django.forms import modelform_factory
+
 # This array defines all the IDs in the database of the articles that are loaded for the
 # various pages in the menu. Here we can differentiate between the different sites.
 
@@ -47,6 +49,7 @@ def unauthorized_access(request):
 def index(request):
     context = {
         "show_project_design": True,
+        "webpage": Webpage.objects.get(pk=31595),
     }
     return render(request, "metabolism_manager/index.html", context)
 
@@ -108,8 +111,11 @@ def clusters(request, organization):
     return render(request, "metabolism_manager/admin/clusters.html", context)
 
 @login_required
-def admin_map(request, organization):
-    my_organization = my_organizations(request, organization)
+def admin_map(request, organization=None):
+    if organization:
+        my_organization = my_organizations(request, organization)
+    else:
+        my_organization = my_organizations(request)[0]
     context = {
         "page": "map",
         "my_organization": my_organization,
@@ -165,6 +171,7 @@ def admin_entity_form(request, organization, id=None):
     }
     return render(request, "metabolism_manager/admin/entity.form.html", context)
 
+@login_required
 def admin_entity_users(request, organization, id=None):
     my_organization = my_organizations(request, organization)
     info = Organization.objects.get(pk=id)
@@ -175,26 +182,77 @@ def admin_entity_users(request, organization, id=None):
     }
     return render(request, "metabolism_manager/admin/entity.users.html", context)
 
-def admin_entity_materials(request, organization, id):
+@login_required
+def admin_entity_materials(request, organization, id, slug=None):
     my_organization = my_organizations(request, organization)
     info = Organization.objects.get(pk=id)
+    main_groups = materials = None
+
+    if slug == "resources":
+        main_groups = Material.objects.filter(parent__isnull=True, catalog_id=31594).exclude(pk__in=[31621,31620])
+        materials = Material.objects.filter(parent__in=main_groups)
+    elif slug == "technology":
+        main_groups = None
+        materials = Material.objects.filter(parent_id=31620)
+    elif slug == "space":
+        main_groups = None
+        materials = Material.objects.filter(parent_id=31621)
     context = {
-        "page": "entity_materials",
         "my_organization": my_organization,
         "info": info,
+        "main_groups": main_groups,
+        "materials": materials,
+        "slug": slug,
+        "page": "entity_" + slug,
+        "data": MaterialDemand.objects.filter(owner=my_organization, material_type__in=materials),
     }
     return render(request, "metabolism_manager/admin/entity.materials.html", context)
 
-def admin_entity_material(request, organization, id):
+@login_required
+def admin_entity_material(request, organization, id, slug, material=None, edit=None, type=None):
     my_organization = my_organizations(request, organization)
     info = Organization.objects.get(pk=id)
+
+    units = Unit.objects.all()
+
+    if material:
+        material = Material.objects.get(pk=material)
+        if material.measurement_type:
+            units = units.filter(type=material.measurement_type)
+
+    ModelForm = modelform_factory(MaterialDemand, fields=("start_date", "end_date", "description", "image"))
+    if edit:
+        info = get_object_or_404(MaterialDemand, pk=id, owner=my_organization)
+        form = ModelForm(request.POST or None, instance=info)
+    else:
+        form = ModelForm(request.POST or None)
+
+    
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save(commit=False)
+            info.quantity = request.POST.get("quantity")
+            info.unit_id = request.POST.get("unit")
+            info.material_type = material
+            info.owner = my_organization
+            info.save()
+
+            messages.success(request, "Information was saved.")
+            return redirect(request.GET.get("prev"))
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
     context = {
-        "page": "entity_materials",
+        "page": "entity_" + slug,
         "my_organization": my_organization,
         "info": info,
+        "form": form,
+        "material": material,
+        "units": units,
     }
     return render(request, "metabolism_manager/admin/entity.material.html", context)
 
+@login_required
 def admin_entity_data(request, organization, id):
     my_organization = my_organizations(request, organization)
     info = Organization.objects.get(pk=id)
@@ -205,6 +263,7 @@ def admin_entity_data(request, organization, id):
     }
     return render(request, "metabolism_manager/admin/entity.data.html", context)
 
+@login_required
 def admin_entity_log(request, organization, id):
     my_organization = my_organizations(request, organization)
     info = Organization.objects.get(pk=id)
@@ -215,6 +274,7 @@ def admin_entity_log(request, organization, id):
     }
     return render(request, "metabolism_manager/admin/entity.log.html", context)
 
+@login_required
 def admin_entity_user(request, organization, id, user=None):
     my_organization = my_organizations(request, organization)
     info = Organization.objects.get(pk=id)
@@ -225,6 +285,7 @@ def admin_entity_user(request, organization, id, user=None):
     }
     return render(request, "metabolism_manager/admin/entity.user.html", context)
 
+@login_required
 def dashboard(request):
     my_organization = my_organizations(request, organization)
     info = Organization.objects.get(pk=id)

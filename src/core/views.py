@@ -457,7 +457,11 @@ def project(request, slug):
 # Webpage is used for general web pages, and they can be opened in
 # various ways (using ID, using slug). They can have different presentational formats
 
-def article(request, id=None, slug=None, prefix=None, project=None, subtitle=None):
+def article(request, id=None, slug=None, prefix=None, project=None, subtitle=None, project_name=None):
+
+    if project_name:
+        project = PROJECT_ID[project_name]
+
     if id:
         info = get_object_or_404(Webpage, pk=id)
         if info.is_deleted and not request.user.is_staff:
@@ -467,7 +471,10 @@ def article(request, id=None, slug=None, prefix=None, project=None, subtitle=Non
             slug = prefix + slug
         slug = slug + "/"
         if project:
-            info = get_object_or_404(Webpage, slug=slug, part_of_project_id=project)
+            info = Webpage.objects.filter(slug=slug, part_of_project_id=project)
+            if not info:
+                info = Webpage.objects.filter(slug="/" + slug, part_of_project_id=project)
+            info = info[0]
         else:
             info = get_object_or_404(Webpage, slug=slug)
 
