@@ -59,6 +59,6 @@ urlpatterns = [
     path("controlpanel/materials/<int:id>/", staf.materials, { "project_name": app_name, "edit_mode": True}, name="materials"),
     path("controlpanel/materials/<int:id>/edit/", staf.material_form),
     path("controlpanel/materials/<int:parent>/create/", staf.material_form, { "project_name": app_name }),
-    path("controlpanel/materials/create/", staf.material_form, { "project_name": app_name, "catalog": 31595, }),
+    path("controlpanel/materials/create/", staf.material_form, { "project_name": app_name, "catalog": 31594, }),
 
 ]
