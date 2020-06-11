@@ -1,115 +1,174 @@
 {% extends "_base.html" %}
+{% block page_name %}work item{% endblock %}
 
 {% block head %}
-<meta name="robots" content="nofollow" /> 
+  <meta name="robots" content="nofollow" />
 {% endblock %}
 
 {% block content %}
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to work list
+  </a>
+  <h2 class="mb-4">{{ info }}</h2>
 
-  <h1>Task # {{ info.id }}</h1>
+  <div class="row">
+    <div class="col-md-6 pr-md-4">
+      <div class="sticky-top">
+        <div class="description">
+          {{ info.get_markdown_description|safe }}
+          <small class="text-muted">Created on {{ info.date_created|date:"l j F Y, H:i" }}</small>
+        </div>
 
-  <p>Task: {{ info }}</p>
-  <p>Description:</p>
-  {{ info.get_markdown_description|safe }}
+        <div class="card my-4">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <i class="far fa-fw fa-play mr-1" aria-hidden="true"></i> {{ info.get_status_display }}
+            </li>
+            <li class="list-group-item">
+              <i class="far fa-fw fa-thermometer-half mr-1" aria-hidden="true"></i> {{ info.get_priority_display }} priority
+            </li>
+            <li class="list-group-item">
+              <i class="far fa-fw fa-box mr-1" aria-hidden="true"></i> {{ info.workactivity }}
+            </li>
+            {% if info.related_to %}
+              <li class="list-group-item table-item">
+                <div><i class="far fa-fw fa-user mr-1"></i> Related to</div>
+                <div><a href="">{{ info.related_to }}</a></div>
+              </li>
+            {% endif %}
+            <li class="list-group-item table-item">
+              <div><i class="far fa-fw fa-user mr-1"></i> Assigned to</div>
+              <div><a href="">{{ info.assigned_to }}</a></div>
+            </li>
+          </ul>
+        </div>
 
-  <p>Status: {{ info.get_status_display }} <a href="">[see all]</a></p>
-  <p>Priority: {{ info.get_priority_display }}</p>
-  <p>Type: {{ info.workactivity }} <a href="">[see all]</a></p>
-  <p>Related to: {{ info.related_to }}</p>
-  <p>Assigned to: {{ info.assigned_to }}</p>
-  <p>Creation date: {{ info.date_created|date:"r" }}</p>
+        {% if request.user.is_authenticated %}
+          {% if info.assigned_to != request.user.people %}
 
-  <hr>
+            <form method="post" id="assign-me">
+              <input type="hidden" name="assign_to_me" value="true" />
+              {% csrf_token %}
+            </form>
 
-  {% if request.user.is_authenticated %}
+            <button class="btn btn-primary" type="submit" form="assign-me">
+              <i class="fas fa-user-check"></i>
+              Assign to me
+            </button>
 
-    <h2>Action buttons</h2>
+            <a class="btn btn-primary-basic" href="edit/?return={{ request.get_full_path }}">
+              <i class="fal fa-edit"></i>
+              Edit task
+            </a>
 
-    {% if info.assigned_to != request.user.people %}
+          {% else %}
 
-      <form method="post">
-        <input type="hidden" name="assign_to_me" value="true" />
-        <button type="submit">Assign to me</button>
-        {% csrf_token %}
-      </form>
+            <!-- putting all the forms here so that the buttons can be next to each other -->
 
-      <p>
-        <a href="edit/?return={{ request.get_full_path }}" class="btn btn-primary">Edit task</a>
-      </p>
+            <form method="post" id="start-work">
+              <input type="hidden" name="status_change" value="5" />
+              {% csrf_token %}
+            </form>
 
-    {% else %}
+            <form method="post" id="mark-completed">
+              <input type="hidden" name="status_change" value="2" />
+              {% csrf_token %}
+            </form>
 
-      {% if info.status == 1 or info.status == 4 %}
+            <form method="post" id="on-hold">
+              <input type="hidden" name="status_change" value="4" />
+              {% csrf_token %}
+            </form>
 
-        <form method="post">
-          <input type="hidden" name="status_change" value="5" />
-          <button type="submit">Start work</button>
-          {% csrf_token %}
-        </form>
+            <form method="post" id="re-open">
+              <input type="hidden" name="status_change" value="1" />
+              {% csrf_token %}
+            </form>
 
-      {% endif %}
+            <form method="post" id="discard">
+              <input type="hidden" name="status_change" value="3" />
+              {% csrf_token %}
+            </form>
 
-      {% if info.status == 1 or info.status == 4 or info.status == 5 %}
+            <form method="post" id="unassign">
+              <input type="hidden" name="status_change" value="1" />
+              <input type="hidden" name="unassign" value="true" />
+              {% csrf_token %}
+            </form>
 
-        <form method="post">
-          <input type="hidden" name="status_change" value="2" />
-          <button type="submit">Mark as completed</button>
-          {% csrf_token %}
-        </form>
+            {% if info.status == 1 or info.status == 4 %}
 
-      {% endif %}
+              <button class="btn btn-primary mb-2 mr-1" type="submit" form="start-work">
+                <i class="fas fa-play"></i>
+                Start work
+              </button>
 
-      {% if info.status == 1 or info.status == 5 %}
+            {% endif %}
 
-        <form method="post">
-          <input type="hidden" name="status_change" value="4" />
-          <button type="submit">Put on hold</button>
-          {% csrf_token %}
-        </form>
+            {% if info.status == 1 or info.status == 4 or info.status == 5 %}
 
-      {% endif %}
+              <button class="btn btn-primary mb-2 mr-1" type="submit" form="mark-completed">
+                <i class="fas fa-check"></i>
+                Mark as completed
+              </button>
 
-      {% if info.status == 3 or info.status == 2 %}
+            {% endif %}
 
-        <form method="post">
-          <input type="hidden" name="status_change" value="1" />
-          <button type="submit">Re-open task</button>
-          {% csrf_token %}
-        </form>
+            {% if info.status == 1 or info.status == 5 %}
 
-      {% endif %}
+              <button class="btn btn-primary mb-2 mr-1" type="submit" form="on-hold">
+                <i class="fas fa-pause"></i>
+                Put on hold
+              </button>
 
-      {% if info.status == 1 or info.status == 4 or info.status == 5 %}
+            {% endif %}
 
-        <form method="post">
-          <input type="hidden" name="status_change" value="3" />
-          <button type="submit">Discard task</button>
-          {% csrf_token %}
-        </form>
+            {% if info.status == 3 or info.status == 2 %}
 
-      {% endif %}
+              <button class="btn btn-primary mb-2 mr-1" type="submit" form="re-open">
+                <i class="fas fa-redo"></i>
+                Re-open
+              </button>
 
-      {% if info.status == 1 or info.status == 4 or info.status == 5 %}
+            {% endif %}
 
-        <form method="post">
-          <input type="hidden" name="status_change" value="1" />
-          <button type="submit">Unassign (stop work on this task)</button>
-          <input type="hidden" name="unassign" value="true" />
-          {% csrf_token %}
-        </form>
+            {% if info.status == 1 or info.status == 4 or info.status == 5 %}
 
-      {% endif %}
+              <button class="btn btn-primary mb-2 mr-1" type="submit" form="unassign">
+                <i class="fas fa-user-times"></i>
+                Unassign
+              </button>
 
-      <p>
-        <a href="edit/?return={{ request.get_full_path }}" class="btn btn-primary">Edit task</a>
-      </p>
+            {% endif %}
 
-    {% endif %}
+            <div class="mt-4">
+              {% if info.status == 1 or info.status == 4 or info.status == 5 %}
+                <button class="btn btn-danger mb-2 mr-1" type="submit" form="discard">
+                  <i class="fas fa-trash-alt"></i>
+                  Discard
+                </button>
+              {% endif %}
 
-  {% endif %}
+              <a class="btn btn-primary-basic mb-2 mr-1" href="edit/?return={{ request.get_full_path }}">
+                <i class="fal fa-edit"></i>
+                Edit task
+              </a>
+            </div>
 
-  {% include "_messages.html" %}
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-md-6 pl-md-4">
+      {% include "_messages.html" %}
+    </div>
+  </div>
 
-  <p><a href="../" class="btn btn-primary">Back to work list</a></p>
+{% endblock %}
 
+{% block footer %}
+  <script>
+    $(".forum").scrollTop($(".forum")[0].scrollHeight);
+  </script>
 {% endblock %}

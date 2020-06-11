@@ -1,7 +1,7 @@
 {% extends "_base.html" %}
 {% load humanize %}
 
-{% block page_name %}fullwidth{% endblock %}
+{% block page_name %}work sprint fullwidth{% endblock %}
 
 {% block css %}
   <style type="text/css">
@@ -17,66 +17,100 @@
 <div class="fullwidth-wrapper text-center mb-3">
   <h1>{{ info }}</h1>
   <p>
-    {{ info.start_date|date:"l M d, Y - H:i" }} -- 
-    {{ info.end_date|date:"l M d, Y - H:i" }} (<a href="https://www.timeanddate.com/worldclock/timezone/utc" target="_blank">UTC</a>)
+    {{ info.start_date|date:"l d F Y, H:i" }} -
+    {{ info.end_date|date:"l d F Y, H:i" }} (<a href="https://www.timeanddate.com/worldclock/timezone/utc" target="_blank">UTC</a>)
   </p>
 </div>
 
-<div class="container">
+<div class="container pt-4">
 
   <div class="row">
 
-    <!-- Area de trabajo Fer --> 
+    <!-- Area de trabajo Fer -->
     <section class="col-6">
-      <h1>Chat</h1>
-
       <div class="message">
         <p>
-        <code>4 minutes ago</code><br> 
+        <code>4 minutes ago</code><br>
         <strong>Fulano wrote:</strong><br>
         Here is a message</p>
       </div>
 
       <div class="message">
         <p>
-        <code>3 minutes ago</code><br> 
+        <code>3 minutes ago</code><br>
         <strong>Fulana wrote:</strong><br>
         Here is a second message</p>
       </div>
 
       <div class="message">
         <p>
-        <code>2 minutes ago</code><br> 
+        <code>2 minutes ago</code><br>
         <strong>Fuloni wrote:</strong><br>
         Here is yet another message</p>
       </div>
 
       <form method="post">
         <textarea name="description" class="form-control" rows="2" placeholder="Enter a message"></textarea>
-        <button type="submit" class="btn btn-success mt-2">Submit</button>
+        <button type="submit" class="btn btn-success mt-2">
+          <i class="fas fa-paper-plane"></i>
+          Submit
+        </button>
         {% csrf_token %}
       </form>
 
     </section>
     <!-- Fin de area de trabajo Fer -->
 
-    <!-- Fer, favor no tocar esto --> 
+    <!-- Fer, favor no tocar esto -->
     <section class="col-6">
-      <h1>Work updates</h1>
-      {% for each in updates %}
-        <p>
-          <strong>{{ each.author }}</strong>
-          <code>{{ each.date_created|naturaltime }}</code>
-          <br>
-          <a href="../../{{ each.parent.id }}/">{{ each.parent }}</a>
-        </p>
-        {{ each.get_markdown_description|safe|truncatewords_html:30 }}
-        <hr>
-      {% endfor %}
+      <h4>Work updates</h4>
+      <div class="forum mb-4">
+        {% for each in updates %}
+          <div class="single-message card mb-3">
+            <div class="card-body">
+              <div class="row metadata">
+                <div class="col-6">
+                  <img src="{{ each.author.image.thumbnail.url }}" alt="" class="avatar plus" />
+                  {{ each.author }}
+                </div>
+                <div class="col-6 text-muted text-right avatar-line-height" title="{{ each.date_created|date:'l j F Y, H:i e' }}">
+                  {{ each.date_created|naturaltime }}
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="text">
+                <a class="d-block mb-2" href="../../{{ each.parent.id }}/">{{ each.parent }}</a>
+
+                {% if each.name == "Task assigned" %}
+                  <i class="far fa-fw fa-user-check mr-1"></i>
+                {% elif each.name == "Status change" %}
+                  <i class="far fa-fw fa-retweet mr-1"></i>
+                {% elif each.name == "Task unassigned" %}
+                  <i class="far fa-fw fa-user-times mr-1"></i>
+                {% elif each.name == "Task created" %}
+                  <i class="far fa-fw fa-play mr-1"></i>
+                {% endif %}
+
+                {{ each.get_markdown_description|safe|truncatewords_html:30 }}
+              </div>
+
+              {% if each.getForumMessageFiles %}
+                <div class="attachment mt-3">
+                  {% for subeach in each.getForumMessageFiles %}
+                    <a class="btn btn-sm btn-primary-outline mb-1" href="{{ MEDIA_URL }}{{ subeach.file.url }}" target="_blank"><i class="far fa-paperclip"></i> {{ subdetails.getFileName }}
+                    </a>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+            </div>
+          </div>
+        {% endfor %}
+      </div>
     </section>
-
   </div>
-
 </div>
 
 {% endblock %}

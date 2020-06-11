@@ -2607,6 +2607,52 @@ body.address.search .single-autocomplete-result {
   }
 }
 
+body.work.item {
+  .description p:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .forum {
+    max-height: 50vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+body.work.item,
+body.work.sprint {
+  .forum {
+    .single-message {
+      margin: 2px;
+
+      .avatar-line-height {
+        line-height: unset;
+      }
+
+      .card-body {
+        padding: .75rem .75rem 0rem;
+      }
+
+      hr {
+        width: calc(100% + 2rem - 8px);
+        margin: .5rem 0 .75rem calc(-1rem + 4px);
+      }
+
+      .text p {
+        margin-bottom: .75rem;
+
+        &:first-of-type {
+          display: inline-block;
+        }
+      }
+
+      &:last-of-type {
+        margin-bottom: .25rem !important;
+      }
+    }
+  }
+}
+
 // MATERIAL STOCKS PAGES
 body.material-stocks {
 

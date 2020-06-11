@@ -1,79 +1,68 @@
-<div class="forum">
-
-  <div class="row mt-4">
-
-    {% if list_messages %}
-      <h3 class="mt-3">{% if forum_title %}{{ forum_title }}{% else %}Comments{% endif %}</h3>
-        <div class="col-lg-12">
-          {% for each in list_messages %}
-            <div class="single-message card">
-              <div class="card-body">
-                <div class="row metadata">
-                  <div class="col-8">
-                    <img src="{{ each.author.image.thumbnail.url }}" alt="" class="avatar plus" />
-                    {{ each.author }}
-                  </div>
-                  <div class="col-4 text-muted text-right avatar-line-height" title="{{ each.date_created|date:'l j F Y, H:i e' }}">
-                    {% if each.author == request.user.people %}
-                      <a href="edit/{{ each.id }}/"><i class="fa fa-pencil"></i></a>
-                    {% endif %}
-                    {{ each.date_created|timesince }} ago
-                  </div>
-                </div>
-                <hr>
-                <div class="text">
-
-                  {% if each.name == "Task assigned" %}
-                    <i class="fa fa-user-check float-right"></i>
-                  {% elif each.name == "Status change" %}
-                    <i class="fa fa-exchange float-right"></i>
-                  {% elif each.name == "Task unassigned" %}
-                    <i class="fa fa-empty-set float-right"></i>
-                  {% elif each.name == "Task created" %}
-                    <i class="fa fa-pencil float-right"></i>
-                  {% endif %}
-
-                  {{ each.get_markdown_description|safe }}
-                </div>
-                {% if each.getForumMessageFiles %}
-                  <div class="attachment mt-3">
-                    {% for subeach in each.getForumMessageFiles %}
-                      <a class="btn btn-sm btn-primary-outline mb-1" href="{{ MEDIA_URL }}{{ subeach.file.url }}" target="_blank"><i class="far fa-paperclip"></i> {{ subdetails.getFileName }}
-                      </a>
-                    {% endfor %}
-                  </div>
-                {% endif %}
-              </div>
+<div class="forum mb-4">
+  {% if list_messages %}
+    {% for each in list_messages %}
+      <div class="single-message card mb-3">
+        <div class="card-body">
+          <div class="row metadata">
+            <div class="col-6">
+              <img src="{{ each.author.image.thumbnail.url }}" alt="" class="avatar plus" />
+              {{ each.author }}
             </div>
-          {% endfor %}
-        </div>
-
-      {% endif %}
-
-    {% if request.user.is_authenticated %}
-
-    <div class="col-lg-12">
-
-      <h3 class="mt-4">{% if list_messages %}Reply{% elif message %}Edit message{% else %}Leave a comment{% endif %}</h3>
-      <form method="post" enctype="multipart/form-data" {% if not message %}action="/forum/{% if forum_id %}{{ forum_id }}{% else %}{{ info.id }}{% endif %}/"{% endif %}>
-        {% csrf_token %}
-        <div class="form-group markdown-textarea">
-          {% include "_markdown.html" %}
-          <textarea class="form-control" id="text" name="text" rows="7">{{ message.description }}</textarea>
-        </div>
-        <div class="form-group" style="display:none">
-          <label for="files"><i class="far fa-fw fa-paperclip"></i> File(s)</label>
-          <div class="custom-file">
-            <input type="file" class="custom-file-input" name="files" id="files" multiple="multiple">
-            <label class="custom-file-label" for="files">Choose file</label>
+            <div class="col-6 text-muted text-right avatar-line-height" title="{{ each.date_created|date:'l j F Y, H:i e' }}">
+              <!-- {% if each.author == request.user.people %} -->
+                <!-- <a href="edit/{{ each.id }}/"><i class="fa fa-pencil"></i></a> -->
+              <!-- {% endif %} -->
+              {{ each.date_created|timesince }} ago
+            </div>
           </div>
+
+          <hr>
+
+          <div class="text">
+            {% if each.name == "Task assigned" %}
+              <i class="far fa-fw fa-user-check mx-1"></i>
+            {% elif each.name == "Status change" %}
+              <i class="far fa-fw fa-retweet mx-1"></i>
+            {% elif each.name == "Task unassigned" %}
+              <i class="far fa-fw fa-user-times mx-1"></i>
+            {% elif each.name == "Task created" %}
+              <i class="far fa-fw fa-play mx-1"></i>
+            {% endif %}
+
+            {{ each.get_markdown_description|safe }}
+          </div>
+
+          {% if each.getForumMessageFiles %}
+            <div class="attachment mt-3">
+              {% for subeach in each.getForumMessageFiles %}
+                <a class="btn btn-sm btn-primary-outline mb-1" href="{{ MEDIA_URL }}{{ subeach.file.url }}" target="_blank"><i class="far fa-paperclip"></i> {{ subdetails.getFileName }}
+                </a>
+              {% endfor %}
+            </div>
+          {% endif %}
+
         </div>
-        <button type="submit" class="btn btn-success"><i class="fas fa-fw fa-comment-alt-plus"></i> Submit</button>
-        <input type="hidden" name="return" value="{{ request.get_full_path }}" />
-      </form>
-
-    </div>
-    {% endif %}
-
-  </div>
+      </div>
+    {% endfor %}
+  {% endif %}
 </div>
+
+{% if request.user.is_authenticated %}
+  <h3>{% if list_messages %}Reply{% elif message %}Edit message{% else %}Leave a comment{% endif %}</h3>
+  <form method="post" enctype="multipart/form-data" {% if not message %}action="/forum/{% if forum_id %}{{ forum_id }}{% else %}{{ info.id }}{% endif %}/"{% endif %}>
+    {% csrf_token %}
+    <div class="form-group markdown-textarea">
+      {% include "_markdown.html" %}
+      <textarea class="form-control" id="text" name="text" rows="7">{{ message.description }}</textarea>
+    </div>
+    <div class="form-group" style="display:none">
+      <label for="files"><i class="far fa-fw fa-paperclip"></i> File(s)</label>
+      <div class="custom-file">
+        <input type="file" class="custom-file-input" name="files" id="files" multiple="multiple">
+        <label class="custom-file-label" for="files">Choose file</label>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-success"><i class="fas fa-fw fa-comment-alt-plus"></i> Submit</button>
+    <input type="hidden" name="return" value="{{ request.get_full_path }}" />
+  </form>
+{% endif %}
