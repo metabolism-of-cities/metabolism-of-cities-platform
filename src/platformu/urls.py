@@ -55,7 +55,7 @@ urlpatterns = [
     path("controlpanel/content/", core.controlpanel_content, { "project_name": app_name }, name="controlpanel_content"),
     path("controlpanel/content/create/", core.controlpanel_content_form, { "project_name": app_name }, name="controlpanel_content_form"),
     path("controlpanel/content/<int:id>/", core.controlpanel_content_form, { "project_name": app_name }, name="controlpanel_content_form"),
-    path("controlpanel/materials/", staf.materials, { "project_name": app_name, "catalog": 31595, "edit_mode": True }, name="controlpanel_materials"),
+    path("controlpanel/materials/", staf.materials, { "project_name": app_name, "catalog": 31594, "edit_mode": True }, name="controlpanel_materials"),
     path("controlpanel/materials/<int:id>/", staf.materials, { "project_name": app_name, "edit_mode": True}, name="materials"),
     path("controlpanel/materials/<int:id>/edit/", staf.material_form),
     path("controlpanel/materials/<int:parent>/create/", staf.material_form, { "project_name": app_name }),
