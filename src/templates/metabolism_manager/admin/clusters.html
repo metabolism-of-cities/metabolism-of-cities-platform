@@ -3,41 +3,47 @@
 {% block title %}Metabolism Manager{% endblock %}
 
 {% block content %}
-  <h2>Organisations</h2>
   {% if not tags %}
-    <div class="alert alert-warning">You don't have any clusters yet. Please set up a cluster to get started.</div>
+    <h2>Organisations</h2>
+    <div class="alert alert-warning">
+      You don't have any clusters yet. Please set up a cluster to get started. 
+      A cluster is a way to group the organisations that you manage. You could do this by area (e.g. New York cluster), 
+      by type (e.g. Plumbing cluster), or by any other criteria as you see fit.
+   </div>
   {% endif %}
   {% for each in tags %}
     <section>
       <h3>Cluster {{ forloop.counter }}: {{ each.name }}</h3>
-      <div class="card mb-4 table-responsive">
-        <table class="table mb-0">
-          <thead>
-            <tr>
-              <th class="border-0">Name</th>
-              <th class="border-0 medium-cell">Members</th>
-              <th class="border-0 medium-cell">Reporting</th>
-              <th class="border-0 narrow-cell">Active</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for details in each.record_set.all %}
+      {% if each.record_set.all %}
+        <div class="card mb-4 table-responsive">
+          <table class="table mb-0">
+            <thead>
               <tr>
-                <td><a href="/platformu/admin/{{ info.id }}/entities/{{ details.id }}/">{{ details.title }}</a></td>
-                <td>0</td>
-                <td>Monthly</td>
-                <td>
-                  {% if details.is_deleted %}
-                    <i class="far fa-times-circle text-danger"></i>
-                  {% else %}
-                    <i class="far fa-check-circle text-success"></i>
-                  {% endif %}
-                </td>
+                <th class="border-0">Name</th>
+                <th class="border-0 medium-cell">Members</th>
+                <th class="border-0 medium-cell">Reporting</th>
+                <th class="border-0 narrow-cell">Active</th>
               </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {% for details in each.record_set.all %}
+                <tr>
+                  <td><a href="/platformu/admin/{{ info.id }}/entities/{{ details.id }}/">{{ details }}</a></td>
+                  <td>0</td>
+                  <td>Monthly</td>
+                  <td>
+                    {% if details.is_deleted %}
+                      <i class="far fa-times-circle text-danger"></i>
+                    {% else %}
+                      <i class="far fa-check-circle text-success"></i>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
       <a class="btn btn-primary" href="/platformu/admin/{{ info.id }}/entities/create/?tag={{ each.id }}"><i class="fas fa-plus"></i> Add new organisation</a>
       <a class="btn btn-primary-basic" href="/platformu/admin/cluster/4/configure/"><i class="far fa-cog"></i> Cluster configuration</a>
     </section>

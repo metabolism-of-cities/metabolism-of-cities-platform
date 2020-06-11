@@ -1,24 +1,24 @@
 <h1 class="mb-0">{{ info.title }}</h1>
 
-<a class="btn btn-sm btn-primary-basic" href="{% url "platformu_admin_clusters" my_organization.id %}"><i class="fas fa-angle-left"></i> Back to overview</a>
+<a class="btn btn-sm btn-primary-basic" href="{% url "platformu:admin_clusters" my_organization.id %}"><i class="fas fa-angle-left"></i> Back to overview</a>
 
 <ul class="nav nav-tabs my-4">
   <li class="nav-item">
-    <a class="nav-link{% if page == 'entity' %} active{% endif %}" href="{% url "platformu_admin_entity" my_organization.id info.id %}">Details</a>
+    <a class="nav-link{% if page == 'entity' %} active{% endif %}" href="{% url "platformu:admin_entity" my_organization.id info.id %}">Details</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link{% if page == 'entity_form' %} active{% endif %}" href="{% url "platformu_admin_entity_form" my_organization.id info.id %}">Edit</a>
+    <a class="nav-link{% if page == 'entity_form' %} active{% endif %}" href="{% url "platformu:admin_entity_form" my_organization.id info.id %}">Edit</a>
+  </li>
+  <li class="nav-item" style="display:none">
+    <a class="nav-link{% if page == 'entity_users' %} active{% endif %}" href="{% url "platformu:admin_entity_users" my_organization.id info.id %}">Users</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link{% if page == 'entity_users' %} active{% endif %}" href="{% url "platformu_admin_entity_users" my_organization.id info.id %}">Users</a>
+    <a class="nav-link{% if page == 'entity_materials' %} active{% endif %}" href="{% url "platformu:admin_entity_materials" my_organization.id info.id %}">Materials and products</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link{% if page == 'entity_materials' %} active{% endif %}" href="{% url "platformu_admin_entity_materials" my_organization.id info.id %}">Materials and products</a>
+    <a class="nav-link{% if page == 'entity_data' %} active{% endif %}" href="{% url "platformu:admin_entity_data" my_organization.id info.id %}">Data</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link{% if page == 'entity_data' %} active{% endif %}" href="{% url "platformu_admin_entity_data" my_organization.id info.id %}">Data</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link{% if page == 'entity_log' %} active{% endif %}" href="{% url "platformu_admin_entity_log" my_organization.id info.id %}">Log</a>
+    <a class="nav-link{% if page == 'entity_log' %} active{% endif %}" href="{% url "platformu:admin_entity_log" my_organization.id info.id %}">Log</a>
   </li>
 </ul>

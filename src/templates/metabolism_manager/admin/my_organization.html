@@ -1,0 +1,32 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  
+  <h1>{{ title }}</h1>
+  <p>
+    Please enter an organisation name below to start using PlatformU. Note: this 
+    should be the name of <strong>your</strong> organisation - this may be different
+    from the organisations you manage, if you are an area manager.
+  </p>
+
+  <form method="post">
+
+    <div class="form-group">
+      <label>Organisation name</label>
+      <input type="text" name="name" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-success">
+        <i class="fa fa-fw fa-save"></i>
+        Save
+     </button>
+      {% csrf_token %}
+    </div>
+
+  </form>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

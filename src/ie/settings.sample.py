@@ -59,12 +59,12 @@ PROJECT_ID_LIST = {
 }
 
 RELATIONSHIP_ID_LIST = { 
-    "author": 4, 
-    "uploader": 11, 
-    "participant": 12, 
-    "participant": 12, 
-    "member": 6, 
-    "publisher": 2, 
+    "author": 4,
+    "uploader": 11,
+    "participant": 12,
+    "member": 6,
+    "publisher": 2,
+    "platformu_admin": 1,
 }
 
 PROJECT_LIST = {

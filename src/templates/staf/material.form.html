@@ -1,0 +1,28 @@
+{% extends "_base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+  <h1 class="mb-4">{{ title }}</h1>
+
+  <form method="post">
+    {% bootstrap_form form layout="horizontal" %}
+    {% buttons %}
+      <div class="row">
+        <div class="offset-md-3 col-md-9">
+          <button type="submit" class="btn btn-success">
+            <i class="fa fa-fw fa-save"></i>
+            Save
+         </button>
+        </div>
+      </div>
+    {% endbuttons %}
+    {% csrf_token %}
+  </form>
+
+  <a href="javascript:history.back()" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    Back
+  </a>
+
+{% endblock %}

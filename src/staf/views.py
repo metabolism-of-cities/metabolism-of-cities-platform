@@ -7,6 +7,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.forms import modelform_factory
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 
 from django.utils import timezone
 import pytz
@@ -19,7 +20,30 @@ from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
 from django.contrib.admin.utils import construct_change_message
 from django.contrib.contenttypes.models import ContentType
 
+import logging
+logger = logging.getLogger(__name__)
+
 PROJECT_ID = settings.PROJECT_ID_LIST
+
+# General script to check if a user has a certain permission
+# This is used for validating access to certain pages only, so superusers
+# will always have access
+# Version 1.0
+def has_permission(request, record_id, allowed_permissions):
+    if request.user.is_authenticated and request.user.is_superuser:
+        return True
+    elif request.user.is_authenticated and request.user.is_staff:
+        return True
+    try:
+        people = request.user.people
+        check = RecordRelationship.objects.filter(
+            relationship__slug__in = permissions,
+            record_parent = request.user.people,
+            record_child_id = record_id,
+        )
+    except:
+        return False
+    return True if check.exists() else False
 
 def is_member(param, para):
     return True
@@ -276,6 +300,108 @@ def activity(request, catalog, id):
         "list": list,
     }
     return render(request, "staf/activities.html", context)
+
+def materials_catalogs(request):
+    context = {
+        "list": MaterialCatalog.objects.all(),
+    }
+    return render(request, "staf/materials.catalogs.html", context)
+
+def materials(request, id=None, catalog=None, project_name=None, edit_mode=False):
+
+    # If the user enters into edit_mode, we must make sure they have access:
+    if project_name and edit_mode:
+        if not has_permission(request, PROJECT_ID[project_name], ["curator", "admin", "publisher"]):
+            unauthorized_access(request)
+
+    info = None
+    if id:
+        info = Material.objects.get(pk=id)
+        list = Material.objects.filter(parent=info)
+    else:
+        if not catalog:
+            catalog = request.GET.get("catalog")
+        list = Material.objects.filter(parent__isnull=True, catalog_id=catalog)
+
+    list = list.order_by("code", "name")
+
+    context = {
+        "list": list,
+        "title": "Materials",
+        "edit_mode": edit_mode,
+        "info": info,
+        "catalog": catalog,
+    }
+
+    return render(request, "staf/materials.html", context)
+
+def material(request, catalog, id):
+    list = Material.objects.filter(id=1)
+    context = {
+        "list": list,
+    }
+    return render(request, "staf/materials.html", context)
+
+@login_required
+def material_form(request, catalog=None, id=None, parent=None, project_name=None):
+    ModelForm = modelform_factory(Material, fields=("name", "code", "description", "icon"))
+    info = None
+    if id:
+        info = get_object_or_404(Material, pk=id)
+        form = ModelForm(request.POST or None, instance=info)
+    else:
+        form = ModelForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save(commit=False)
+            if not id:
+                info.catalog_id = catalog
+                if parent:
+                    info.parent_id = parent
+            info.save()
+            messages.success(request, "Information was saved.")
+            return redirect(request.GET["next"])
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    context = {
+        "form": form,
+        "title": info if info else "Create material",
+    }
+    return render(request, "staf/material.form.html", context)
+
+def units(request):
+    list = Unit.objects.all()
+    context = {
+        "list": list,
+        "load_datatables": True,
+        "edit_mode": True if request.user.is_staff else False,
+        "title": "Units",
+    }
+    return render(request, "staf/units.html", context)
+
+@staff_member_required
+def unit(request, id=None):
+    ModelForm = modelform_factory(Unit, fields=("name", "symbol", "type", "description"))
+    info = None
+    if id:
+        info = get_object_or_404(Unit, pk=id)
+        form = ModelForm(request.POST or None, instance=info)
+    else:
+        form = ModelForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Information was saved.")
+            return redirect("staf:units")
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    context = {
+        "form": form,
+        "title": info if info else "Create unit",
+    }
+    return render(request, "staf/unit.html", context)
 
 def flowdiagrams(request):
     list = FlowDiagram.objects.all()

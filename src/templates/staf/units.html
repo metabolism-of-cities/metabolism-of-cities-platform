@@ -1,0 +1,39 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1 class="mb-0">Units</h1>
+
+    <table class="table table-striped datatable mt-4">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Symbol</th>
+          <th>Type</th>
+          {% if edit_mode %}
+            <th>Options</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in list %}
+        <tr>
+          <td>{{ each }}</td>
+          <td>{{ each.symbol }}</td>
+          <td>{{ each.get_type_display }}</td>
+          {% if edit_mode %}
+            <td>
+              <a href="{% url "staf:unit" each.id %}" class="btn btn-primary">
+                <i class="fa fa-pencil"></i>
+                Edit
+              </a>
+            </td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+  <a class="btn btn-default-basic" href="{% url "staf:unit" %}"><i class="fal fa-plus"></i> Add unit</a>
+
+{% endblock %}

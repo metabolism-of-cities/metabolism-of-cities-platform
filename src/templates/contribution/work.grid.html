@@ -41,7 +41,7 @@
         <select name="type" class="custom-select">
           <option value=""></option>
           {% for each in types %}
-            <option value="{{ each.id }}" {% if each.id == request.GET.type %}selected{% endif %}>
+            <option value="{{ each.id }}" {% if each.id == type %}selected{% endif %}>
               {{ each }} 
             </option>
           {% endfor %}
@@ -56,8 +56,8 @@
         <select name="status" class="custom-select">
           <option value=""></option>
           {% for label,name in statuses %}
-            <option value="{{ label }}" {% if label == request.GET.status %}selected{% endif %}>
-              {{ name }} 
+            <option value="{{ label }}" {% if label == status %}selected{% endif %}>
+              {{ name }}
             </option>
           {% endfor %}
         </select>
@@ -71,7 +71,7 @@
         <select name="priority" class="custom-select">
           <option value=""></option>
           {% for label,name in priorities %}
-            <option value="{{ label }}" {% if request.GET.priority == label %}selected{% endif %}>{{ name }}</option>
+            <option value="{{ label }}" {% if priority == label %}selected{% endif %}>{{ name }}</option>
           {% endfor %}
         </select>
       </div>

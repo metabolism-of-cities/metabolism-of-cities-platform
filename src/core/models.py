@@ -50,7 +50,7 @@ class PrivateRecordManager(models.Manager):
 
 class Tag(models.Model):
     name = models.CharField(max_length=255)
-    description = HTMLField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     parent_tag = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True,
         limit_choices_to={"hidden": False}, related_name="children"
     )
@@ -82,7 +82,7 @@ class Tag(models.Model):
 
 class Record(models.Model):
     name = models.CharField(max_length=255)
-    description = HTMLField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     image = StdImageField(upload_to="records", variations={"thumbnail": (480, 480), "large": (1280, 1024)}, blank=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -838,6 +838,7 @@ class WorkActivity(models.Model):
         ADMIN = 8, "Administering"
         PROGRAM = 9, "Programming"
         DESIGN = 10, "Designing"
+        COMMS = 11, "Communicating"
 
     type = models.IntegerField(choices=WorkType.choices, db_index=True)
     name = models.CharField(max_length=255)
@@ -1100,12 +1101,36 @@ class Material(Record):
     parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="children")
     catalog = models.ForeignKey(MaterialCatalog, on_delete=models.CASCADE, blank=True, null=True)
     #is_separator = models.BooleanField()
+    icon = models.CharField(max_length=50, null=True, blank=True, help_text="Only include the icon name, not fa- classes --- see https://fontawesome.com/icons?d=gallery")
 
     def __str__(self):
-        return self.code + " - " + self.name
+        if self.code:
+            return self.code + " - " + self.name
+        else:
+            return self.name
 
     class Meta:
         db_table = "stafdb_material"
+
+class Unit(models.Model):
+    name = models.CharField(max_length=255)
+    symbol = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+
+    class Type(models.IntegerChoices):
+        MASS = 1, "Mass"
+        VOLUME = 2, "Volume"
+        COUNT = 3, "Count"
+        AREA = 4, "Area"
+        ENERGY = 5, "Energy"
+        LENGTH = 6, "Length"
+        FRACTION = 7, "Fraction"
+        OTHER = 99, "Other"
+
+    type = models.IntegerField(choices=Type.choices, db_index=True, default=99)
+
+    def __str__(self):
+        return self.name
 
 class Sector(Record):
     icon = models.CharField(max_length=255, null=True, blank=True)
