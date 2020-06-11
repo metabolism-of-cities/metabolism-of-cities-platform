@@ -423,9 +423,13 @@ class RecordHistory(models.Model):
         ordering = ["-id"]
 
 class Webpage(Record):
-    site = models.ForeignKey(Site, on_delete=models.CASCADE)
+    TYPE = [
+        ("html", "HTML"),
+        ("markdown", "Markdown"),
+    ]
+    type = models.CharField(max_length=10, choices=TYPE, default="markdown")
     slug = models.CharField(db_index=True, max_length=100)
-    belongs_to = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, related_name="webpages")
+    part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, related_name="webpages")
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
@@ -434,9 +438,12 @@ class Webpage(Record):
     def get_absolute_url(self):
         return self.slug
 
+    def get_content(self):
+        return markdown(self.description) if type == "markdown" else self.description
+
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=["site", "slug"], name="site_slug")
+            models.UniqueConstraint(fields=["part_of_project", "slug"], name="project_slug")
         ]
         ordering = ["name"]
 

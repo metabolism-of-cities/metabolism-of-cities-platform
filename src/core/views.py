@@ -459,17 +459,20 @@ def project(request, slug):
 
 def article(request, id=None, slug=None, prefix=None, project=None, subtitle=None):
     if id:
-        info = get_object_or_404(Webpage, pk=id, site=request.site)
+        info = get_object_or_404(Webpage, pk=id)
         if info.is_deleted and not request.user.is_staff:
             raise Http404("Webpage not found")
     elif slug:
         if prefix:
             slug = prefix + slug
         slug = slug + "/"
-        info = get_object_or_404(Webpage, slug=slug, site=request.site)
+        if project:
+            info = get_object_or_404(Webpage, slug=slug, part_of_project_id=project)
+        else:
+            info = get_object_or_404(Webpage, slug=slug)
 
     if not project:
-        project = info.belongs_to.id
+        project = info.part_of_project.id
 
     context = {
         "info": info,
@@ -553,10 +556,45 @@ def controlpanel_content(request, project_name):
         unauthorized_access(request)
 
     context = {
-        "pages": Webpage.objects.filter(belongs_to_id=project),
+        "pages": Webpage.objects.filter(part_of_project_id=project),
         "load_datatables": True,
     }
     return render(request, "controlpanel/content.html", context)
+
+@login_required
+def controlpanel_content_form(request, project_name, id=None):
+
+    project = PROJECT_ID[project_name]
+    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    info = None
+    ModelForm = modelform_factory(Webpage, fields=("name", "description", "type", "slug", "is_deleted"))
+    if id:
+        info = get_object_or_404(Webpage, pk=id)
+        form = ModelForm(request.POST or None, instance=info)
+    else:
+        form = ModelForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save(commit=False)
+            info.part_of_project_id = project
+            info.save()
+            # TO DO
+            # There is a contraint, for slug + project combined, and we should
+            # check for that and properly return an error
+            messages.success(request, "Information was saved.")
+            return redirect(request.GET.get("next"))
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    context = {
+        "pages": Webpage.objects.filter(part_of_project_id=project),
+        "load_datatables": True,
+        "form": form,
+        "title": info.name if info else "Create webpage",
+    }
+    return render(request, "controlpanel/content.form.html", context)
 
 @login_required
 def controlpanel_data_articles(request, project_name, space):
@@ -769,6 +807,24 @@ def work_sprint(request, project_name, id=None):
 # People
 
 def contributor(request, project_name):
+    project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+    if request.method == "POST":
+        Work.objects.create(
+            name = "Process collaborator signup form: " + request.POST.get("name"),
+            status = Work.WorkStatus.OPEN,
+            priority = Work.WorkPriority.HIGH,
+            part_of_project = project,
+            workactivity_id = 16,
+            meta_data = request.POST,
+        )
+        messages.success(request, "Thanks! Our team will be in touch with you soon.")
+    context = {
+        "info": project,
+        "title": "Contributor page",
+    }
+    return render(request, "contribution/contributor.page.html", context)
+
+def support(request, project_name):
     project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
     if request.method == "POST":
         Work.objects.create(

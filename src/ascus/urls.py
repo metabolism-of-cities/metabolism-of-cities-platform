@@ -16,6 +16,43 @@ from django.conf.urls.static import static
 app_name = "ascus"
 
 urlpatterns = [
+    #
+    # Baseline links shared between all projects
+    # Last change June 11, 2020
+    # Version 001
+    #
+
+    # Authentication and contributor functions
+    #path("accounts/register/", core.user_register, { "project": app_name }, name="register"),
+    #path("accounts/login/", core.user_login, { "project": app_name }, name="login"),
+    #path("accounts/passwordreset/", core.user_reset, { "project": app_name }, name="passwordreset"),
+    #path("accounts/logout/", core.user_logout, { "project": app_name }, name="logout"),
+    #path("accounts/profile/", core.user_profile, { "project": app_name }, name="user_profile"),
+
+    # Work-related links
+    path("work/", core.work_grid, { "project_name": app_name }, name="work_grid"),
+    path("work/sprints/", core.work_sprints, { "project_name": app_name }, name="work_sprints"),
+    path("work/sprints/<int:id>/", core.work_sprint, { "project_name": app_name }, name="work_sprint"),
+    path("work/create/", core.work_form, { "project_name": app_name }, name="work_form"),
+    path("work/<int:id>/", core.work_item, { "project_name": app_name }, name="work_item"),
+    path("work/<int:id>/edit/", core.work_form, { "project_name": app_name }, name="work_form"),
+    
+    # Forum and contributor pages
+    # path("forum/<int:id>/", community.forum, { "project_name": app_name }, name="forum"),
+    path("contributor/", core.contributor, { "project_name": app_name }, name="contributor"),
+    path("support/", core.support, { "project_name": app_name }, name="support"),
+
+    # Control panel URLS
+    path("controlpanel/", core.controlpanel, { "project_name": app_name }, name="controlpanel"),
+    path("controlpanel/users/", core.controlpanel_users, { "project_name": app_name }, name="controlpanel_users"),
+    path("controlpanel/design/", core.controlpanel_design, { "project_name": app_name }, name="controlpanel_design"),
+    path("controlpanel/content/", core.controlpanel_content, { "project_name": app_name }, name="controlpanel_content"),
+    path("controlpanel/content/create/", core.controlpanel_content_form, { "project_name": app_name }, name="controlpanel_content_form"),
+    path("controlpanel/content/<int:id>/", core.controlpanel_content_form, { "project_name": app_name }, name="controlpanel_content_form"),
+
+    #
+    # End of baseline links
+    #
 
     path("", views.ascus, name="index"),
 
@@ -57,21 +94,6 @@ urlpatterns = [
     # We had some old URLs, can be removed after June 10th 2020
     path("ascus/", RedirectView.as_view(pattern_name="ascus:index", permanent=True)),
     path("ascus/<slug:slug>/", RedirectView.as_view(pattern_name="ascus:article")),
-
-    # Baseline 
-    path("work/", core.work_grid, { "project_name": app_name }, name="work_grid"),
-    path("work/sprints/", core.work_sprints, { "project_name": app_name }, name="work_sprints"),
-    path("work/sprints/<int:id>/", core.work_sprint, { "project_name": app_name }, name="work_sprint"),
-    path("work/create/", core.work_form, { "project_name": app_name }, name="work_form"),
-    path("work/<int:id>/", core.work_item, { "project_name": app_name }, name="work_item"),
-    path("work/<int:id>/edit/", core.work_form, { "project_name": app_name }, name="work_form"),
-
-    # Control panel URLS from baseline
-    path("controlpanel/", core.controlpanel, { "project_name": app_name }, name="controlpanel"),
-    path("controlpanel/users/", core.controlpanel_users, { "project_name": app_name }, name="controlpanel_users"),
-    path("controlpanel/design/", core.controlpanel_design, { "project_name": app_name }, name="controlpanel_design"),
-    path("controlpanel/content/", core.controlpanel_content, { "project_name": app_name }, name="controlpanel_content"),
-
 
     # Forum and messaging from baseline
     path("forum/", views.forum, name="forum"),
