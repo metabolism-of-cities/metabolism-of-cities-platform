@@ -1103,11 +1103,22 @@ class MaterialCatalog(Record):
     class Meta:
         db_table = "stafdb_materialcatalog"
 
+class MaterialType(models.IntegerChoices):
+    MASS = 1, "Mass"
+    VOLUME = 2, "Volume"
+    COUNT = 3, "Count"
+    AREA = 4, "Area"
+    ENERGY = 5, "Energy"
+    LENGTH = 6, "Length"
+    FRACTION = 7, "Fraction"
+    OTHER = 99, "Other"
+
 class Material(Record):
     code = models.CharField(max_length=255, null=True, blank=True, db_index=True)
     parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="children")
     catalog = models.ForeignKey(MaterialCatalog, on_delete=models.CASCADE, blank=True, null=True)
     #is_separator = models.BooleanField()
+    measurement_type = models.IntegerField(choices=MaterialType.choices, db_index=True, blank=True, null=True, default=1)
     icon = models.CharField(max_length=50, null=True, blank=True, help_text="Only include the icon name, not fa- classes --- see https://fontawesome.com/icons?d=gallery")
 
     def __str__(self):
@@ -1123,18 +1134,7 @@ class Unit(models.Model):
     name = models.CharField(max_length=255)
     symbol = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
-
-    class Type(models.IntegerChoices):
-        MASS = 1, "Mass"
-        VOLUME = 2, "Volume"
-        COUNT = 3, "Count"
-        AREA = 4, "Area"
-        ENERGY = 5, "Energy"
-        LENGTH = 6, "Length"
-        FRACTION = 7, "Fraction"
-        OTHER = 99, "Other"
-
-    type = models.IntegerField(choices=Type.choices, db_index=True, default=99)
+    type = models.IntegerField(choices=MaterialType.choices, db_index=True, default=99)
 
     def __str__(self):
         return self.name
