@@ -59,26 +59,24 @@
     <div class="row">
       {% if slug == "resources" %}
         <div class="col-md-6 col-lg-4 py-3 col-filter">
-          <div class="sticky-top">
-            <div class="form-group">
-              <input type="text" class="form-control search" placeholder="Search...">
-            </div>
-            <ul class="nav nav-pills flex-column tag-filter">
-              <li class="nav-item">
-                <div class="nav-link" data-tag="all"><i class="fal fa-fw fa-circle mr-2"></i> All materials</div>
-              </li>
-              {% for each in main_groups %}
-              <li class="nav-item">
-                <div class="nav-link" data-tag="item-{{ each.id }}"><i class="fal fa-fw fa-{{ each.icon }} mr-2"></i> {{ each }}</div>
-              </li>
-              {% endfor %}
-            </ul>
+          <div class="form-group">
+            <input type="text" class="form-control search" placeholder="Search...">
           </div>
+          <ul class="nav nav-pills flex-column tag-filter">
+            <li class="nav-item">
+              <div class="nav-link" data-tag="all"><i class="fal fa-fw fa-circle mr-2"></i> All materials</div>
+            </li>
+            {% for each in main_groups %}
+            <li class="nav-item">
+              <div class="nav-link" data-tag="item-{{ each.id }}"><i class="fal fa-fw fa-{{ each.icon }} mr-2"></i> {{ each }}</div>
+            </li>
+            {% endfor %}
+          </ul>
         </div>
       {% endif %}
       <div class="col-md-6 col-lg-8 p-0 col-results">
         <table class="table table-sm mb-0">
-          <tbody class="list">
+          <tbody class="list" hidden>
             {% for each in materials %}
             <tr>
               <td><span class="material-name">{{ each }}</span><span hidden class="material-tags">item-{{ each.parent.id }} </span></td>
@@ -90,8 +88,11 @@
             {% endfor %}
           </tbody>
         </table>
+        <div class="first-load text-center pt-4">
+          <h2 class="my-4"><i class="fad fa-arrow-left mr-2"></i> Please select a category</h2>
+        </div>
         <div class="no-results text-center pt-4">
-          <h2 class="my-4"><i class="fad fa-search"></i> No materials found</h2>
+          <h2 class="my-4"><i class="fad fa-search mr-2"></i> No materials found</h2>
           <button class="btn btn-lg btn-primary clear-filter my-4">Show all materials</button>
         </div>
       </div>
@@ -145,7 +146,9 @@
         }
       });
 
-      checkCount()
+      $("tbody.list").removeAttr("hidden");
+      $(".first-load").remove();
+      checkCount();
     }
 
     // function to check the number of matches
