@@ -45,6 +45,7 @@ def my_organizations(request, id=None):
             return list
         else:
             # Redirect to page where user can register new organization.
+            return None
             return redirect("platformu:create_my_organization")
 
 # this makes sure that if I open a record of an organization, that 
@@ -72,7 +73,7 @@ def admin(request):
     organizations = my_organizations(request)
     if not organizations:
         return redirect("platformu:create_my_organization")
-    elif organizations.count() == 1:
+    else:
         id = organizations[0].id
         return redirect(reverse("platformu:admin_clusters", args=[id]))
     context = {
@@ -131,7 +132,11 @@ def admin_map(request, organization=None):
     if organization:
         my_organization = my_organizations(request, organization)
     else:
-        my_organization = my_organizations(request)[0]
+        my_organization = my_organizations(request)
+        if my_organization:
+            my_organization = my_organization[0]
+        else:
+            return redirect("platformu:create_my_organization")
 
     organization_list = Organization.objects_include_private.filter(
             tags__parent_tag_id = TAG_ID["platformu_segments"],
@@ -179,7 +184,11 @@ def admin_data(request, organization=None):
     if organization:
         my_organization = my_organizations(request, organization)
     else:
-        my_organization = my_organizations(request)[0]
+        my_organization = my_organizations(request)
+        if my_organization:
+            my_organization = my_organization[0]
+        else:
+            return redirect("platformu:create_my_organization")
 
     organization_list = Organization.objects_include_private.filter(
             tags__parent_tag_id = TAG_ID["platformu_segments"],
