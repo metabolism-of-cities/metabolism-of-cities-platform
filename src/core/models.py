@@ -481,6 +481,9 @@ class ForumTopic(Record):
     last_update = models.DateTimeField(db_index=True)
     part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
 
+    class Meta:
+        ordering = ["-last_update"]
+
 class Message(Record):
     attachments = models.ManyToManyField(Document)
     parent = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="messages")
@@ -498,7 +501,7 @@ class Message(Record):
         return markdown(self.description)
 
     def get_absolute_url(self):
-        return reverse("community:forum_topic", args=[self.id])
+        return reverse("community:forum", args=[self.id])
 
     class Meta:
         ordering = ["date_created"]
@@ -1152,7 +1155,7 @@ class MaterialDemand(Record):
         return self.material_type.name
 
     def type(self):
-        return "supply" if quantity < 0 else "demand"
+        return "supply" if self.quantity < 0 else "demand"
 
     def absolute_quantity(self):
         return self.quantity*-1 if self.quantity < 0 else self.quantity

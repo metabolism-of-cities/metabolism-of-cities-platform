@@ -19,29 +19,43 @@
     <div class="card">
       <table class="table mb-0">
         <tbody>
-          <tr>
-            <th>Employees</th>
-              <td> 44</td>
+          {% if info.meta_data.employees %}
+            <tr>
+              <th>Employees</th>
+              <td> {{ info.meta_data.employees }}</td>
             </tr>
-          <tr>
-            <th>Industry</th>
-            <td>Paper</td>
-          </tr>
+          {% endif %}
+          {% if info.sectors.all %}
+            <tr>
+              <th>Sector</th>
+              <td> {% for each in info.sectors.all %}{{ each }}{% endfor %}</td>
+            </tr>
+          {% endif %}
+          {% if info.meta_data.address %}
+            <tr>
+              <th>Address</th>
+              <td> {{ info.meta_data.address }}</td>
+            </tr>
+          {% endif %}
+          {% if info.description %}
+            <tr>
+              <th>Description</th>
+              <td> {{ info.description|linebreaksbr }}</td>
+            </tr>
+          {% endif %}
           <tr>
             <th>Email</th>
-            <td><a href="">{{ info.email }}</a></td>
+            <td><a href="mailto:{{ info.email }}">{{ info.email }}</a></td>
           </tr>
+          {% if info.url %}
           <tr>
             <th>Website</th>
-            <td><a href="">{{ info.url }}</a></td>
+            <td><a href="{{ info.url }}">{{ info.url }}</a></td>
           </tr>
+          {% endif %}
           <tr>
             <th>Status</th>
             <td>{% if info.is_deleted %} Inactive {% else %} Active {% endif %}</td>
-          </tr>
-          <tr>
-            <th>Reporting</th>
-            <td>monthly</td>
           </tr>
         </tbody>
       </table>

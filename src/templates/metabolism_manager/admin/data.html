@@ -1,0 +1,44 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1>Data overview</h1>
+
+  {% for key,data in types.items %}
+
+    <h2 class="mt-5">{{ key }}</h2>
+    <table class="table table-striped datatable">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Type</th>
+          {% if key == "Resources" %}
+            <th>Name</th>
+          {% endif %}
+          <th>Quantity</th>
+          <th>Organisation</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in data %}
+        <tr>
+          <td><a href="{% url "platformu:admin_datapoint" each.id %}">{{ each.start_date }} - {{ each.end_date }}</a></td>
+          {% if key == "Resources" %}
+            <td>{{ each.material_type.parent }}</td>
+          {% endif %}
+          <td>
+          {% if each.name %}
+            {{ each.name }}<br>
+          {% endif %}
+          {{ each.material_type }}</td>
+          <td>{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
+          <td>{{ each.owner }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+  {% endfor %}
+
+
+{% endblock %}

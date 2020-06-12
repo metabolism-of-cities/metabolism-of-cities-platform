@@ -11,10 +11,19 @@
 
           <li class="nav-item"><a class="nav-link" href="{% url "platformu:admin" %}"><i class="fa fa-lock"></i></a></li>
           <li class="nav-item"><a class="nav-link" href="{% url "platformu:admin" %}">My Organisations</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url "platformu:admin_map" %}">Map</a></li>
-          <li class="nav-item"><a class="nav-link" href="/accounts/logout/">Log Out</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url "platformu:admin_map" %}">Demand and Supply Map</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url "platformu:admin_data" %}">Full Overview</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url "platformu:forum" %}">Forum</a></li>
 
         </ul>
+
+    <form class="form-inline my-2 my-lg-0">
+      <a href="/accounts/logout/" class="btn btn-default-basic">
+        <i class="fa fa-sign-out"></i> 
+        Log Out
+      </a>
+    </form>
+
       </div>
 
     </div>

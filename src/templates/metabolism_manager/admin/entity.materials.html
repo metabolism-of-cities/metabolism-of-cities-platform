@@ -13,9 +13,11 @@
     <table class="table">
       <thead>
         <tr>
-          <th class="border-0">Material Type</th>
-          <th class="border-0">Material</th>
-          <th class="border-0">Quantity</th>
+          <th class="border-0">Type</th>
+          <th class="border-0">Name</th>
+          {% if slug != "technology" %}
+            <th class="border-0">Quantity</th>
+          {% endif %}
           <th class="border-0">Type</th>
           <th class="border-0">Date</th>
         </tr>
@@ -26,9 +28,17 @@
             <td>
             <i class="fa fa-{{ each.material_type.parent.icon }}"></i>
             {{ each.material_type.parent }}</td>
-            <td>{{ each.material_type }}</td>
-            <td>{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
-            <td>{% if each.quantity > 0 %}
+            <td>
+              {% if each.name %}
+                {{ each.name }}<br>
+              {% endif %}
+              {{ each.material_type }}
+            </td>
+            {% if slug != "technology" %}
+              <td>{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
+            {% endif %}
+            <td>
+            {% if each.quantity > 0 %}
             <i class="fa fa-sign-in-alt"></i>
             Demand
             {% else %}
@@ -76,7 +86,7 @@
       {% endif %}
       <div class="col-md-6 col-lg-8 p-0 col-results">
         <table class="table table-sm mb-0">
-          <tbody class="list" hidden>
+          <tbody class="list" {% if slug == "resources" %}hidden{% endif %}>
             {% for each in materials %}
             <tr>
               <td><span class="material-name">{{ each }}</span><span hidden class="material-tags">item-{{ each.parent.id }} </span></td>
@@ -88,13 +98,18 @@
             {% endfor %}
           </tbody>
         </table>
-        <div class="first-load text-center pt-4">
-          <h2 class="my-4"><i class="fad fa-arrow-left mr-2"></i> Please select a category</h2>
-        </div>
+
+        {% if slug == "resources" %}
+          <div class="first-load text-center pt-4">
+            <h2 class="my-4"><i class="fad fa-arrow-left mr-2"></i> Please select a category</h2>
+          </div>
+        {% endif %}
+
         <div class="no-results text-center pt-4">
           <h2 class="my-4"><i class="fad fa-search mr-2"></i> No materials found</h2>
           <button class="btn btn-lg btn-primary clear-filter my-4">Show all materials</button>
         </div>
+
       </div>
     </div>
   </div>

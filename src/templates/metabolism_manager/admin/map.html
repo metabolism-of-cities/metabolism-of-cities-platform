@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% load moc_extras %}
 
 {% block page_name %}platformu admin map{% endblock %}
 {% block title %}Metabolism Manager{% endblock %}
@@ -19,48 +20,39 @@
 
   <div id="listings"></div>
   <form class="row filters mb-2">
-    <div class="col-md-6 col-lg-3 mb-2">
-      <label class="sr-only" for="status">Status</label>
+    <div class="col-md-6 col-lg-6 mb-2">
+      <label class="sr-only" for="material">Layer</label>
       <div class="input-group mb-2">
         <div class="input-group-prepend">
-          <div class="input-group-text">Status</div>
+          <div class="input-group-text">Layer</div>
+        </div>
+        <select class="custom-select material filter">
+          {% for each in material_list %}
+            <option value="{{ each.material_type__name }}">{{ each.material_type__parent__name }} - {{ each.material_type__name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-2">
+      <label class="sr-only" for="status">Type</label>
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text">Type</div>
         </div>
         <select class="custom-select status filter">
           <option value="all" selected>Any</option>
-          <option value="Offered">Offered</option>
-          <option value="Requested">Requested</option>
+          <option value="Supply">Supply</option>
+          <option value="Demand">Demand</option>
         </select>
       </div>
     </div>
     <div class="col-md-6 col-lg-3 mb-2">
-      <label class="sr-only" for="material">Material</label>
+      <label class="sr-only" for="from">Date</label>
       <div class="input-group mb-2">
         <div class="input-group-prepend">
-          <div class="input-group-text">Material</div>
-        </div>
-        <select class="custom-select material filter">
-          <option value="Glass" selected="selected">Glass</option>
-          <option value="Wood">Wood</option>
-          <option value="Steel">Steel</option>
-        </select>
-      </div>
-    </div>
-    <div class="col-md-6 col-lg-3 mb-2">
-      <label class="sr-only" for="from">From</label>
-      <div class="input-group mb-2">
-        <div class="input-group-prepend">
-          <div class="input-group-text">From</div>
+          <div class="input-group-text">Date</div>
         </div>
         <input type="date" class="form-control from filter" id="from">
-      </div>
-    </div>
-    <div class="col-md-6 col-lg-3 mb-2">
-      <label class="sr-only" for="until">Until</label>
-      <div class="input-group mb-2">
-        <div class="input-group-prepend">
-          <div class="input-group-text">Until</div>
-        </div>
-        <input type="date" class="form-control until filter" id="until">
       </div>
     </div>
   </form>
@@ -83,7 +75,7 @@
   <script>
     // create leaflet map - https://leafletjs.com/reference-1.6.0.html
     var map = L.map("map", {
-      center: [-33.9815, 18.5319],
+      center: [{{ gps.lat }}, {{ gps.lng }}],
       zoom: 11,
       minZoom: 2,
       maxZoom: 18,
@@ -95,7 +87,7 @@
     var tileLayer = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
       attribution: "Map data &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='https://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>",
       id: "mapbox/streets-v11",
-      accessToken: "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q",
+      accessToken: "{{ MAPBOX_API_KEY }}",
       tileSize: 512,
       zoomOffset: -1,
     })
@@ -104,7 +96,14 @@
 
     // enable popups so na user can click on an object on the map and see extra information
     function onEachFeature(feature, layer) {
-      var popupContent = "<div class='popup-title'>" + feature.properties.name + "</div><div class='popup-content'><p>" + feature.properties.address + "</p><table class='table'><tbody><tr><td>Material</td><td>" + feature.properties.material + "</td><tr><td>Quantity</td><td>" + feature.properties.quantity + "</td><tr><td>Status</td><td>" + feature.properties.status + "</td></tr><tr><td>Date</td><td>" + feature.properties.date + "</td></tr></table></div>"
+        const dateOptions = {year: 'numeric', month: 'long', day: 'numeric'};
+        var uglyFrom = new Date(feature.properties.start_date * 1000);
+        var prettyFrom = uglyFrom.toLocaleDateString('en-GB', dateOptions);
+
+        var uglyTo = new Date(feature.properties.end_date * 1000);
+        var prettyTo = uglyTo.toLocaleDateString('en-GB', dateOptions);
+
+      var popupContent = "<div class='popup-title'>" + feature.properties.name + "</div><div class='popup-content'><p>" + feature.properties.address + "</p><table class='table'><tbody><tr><td>Material</td><td>" + feature.properties.material + "</td><tr><td>Quantity</td><td>" + feature.properties.quantity + "</td><tr><td>Status</td><td>" + feature.properties.status + "</td></tr><tr><td>Date</td><td>" + prettyFrom + " - " + prettyTo + "</td></tr><tr class='text-center'><td colspan='2'><a href='../data/" + feature.properties.id + "/'>View more details</a></td></tr></table></div>"
 
       layer.bindPopup(popupContent);
     }
@@ -113,160 +112,26 @@
     const allListings = {
       "type": "FeatureCollection",
       "features": [
+        {% for each in data %}
         {
           "geometry": {
             "type": "Point",
-            "coordinates": [18.46804, -33.93987]
+            "coordinates": [{{ each.owner.meta_data.lng }}, {{ each.owner.meta_data.lat }}]
           },
           "type": "Feature",
           "properties": {
-            "name": "Some company",
-            "address": "26 Oxford Road, Observatory",
-            "material": "Steel",
-            "quantity": "1092 kg",
-            "status": "Offered",
-            "from": 1583020800,
-            "to": 1585958400,
-            "size": 10,
+            "name": "{{ each.owner }}",
+            "id": "{{ each.id }}",
+            "address": "{{ each.owner.meta_data.address }}",
+            "material": "{{ each.material_type }}",
+            "quantity": "{{ each.absolute_quantity }} {{ each.unit }}",
+            "status": "{% if each.type == "supply" %}Supply{% else %}Demand{% endif %}",
+            "start_date": {{ each.start_date|date:"U" }},
+            "end_date": {{ each.end_date|date:"U" }},
+            "size": {% if each.unit.multiplication_factor %}Math.min(10*(({{ each.unit.multiplication_factor }}*{{ each.absolute_quantity }})/{{ min_values|get_item:each.material_type.name }}),100){% else %}10{% endif %},
           },
         },
-        {
-          "geometry": {
-            "type": "Point",
-            "coordinates": [18.47456, -33.95374]
-          },
-          "type": "Feature",
-          "properties": {
-            "name": "Some company",
-            "address": "Arundel Court, Rosebank",
-            "material": "Wood",
-            "quantity": "20 kg",
-            "status": "Requested",
-            "from": 1583020800,
-            "to": 1585958400,
-            "size": 60,
-          },
-        },
-        {
-          "geometry": {
-            "type": "Point",
-            "coordinates": [18.4254, -33.9217]
-          },
-          "type": "Feature",
-          "properties": {
-            "name": "Some company",
-            "address": "Another address",
-            "material": "Glass",
-            "quantity": "some amount",
-            "status": "Requested",
-            "from": 1583020800,
-            "to": 1586217600,
-            "size": 10,
-          },
-        },
-        {
-          "geometry": {
-            "type": "Point",
-            "coordinates": [18.4137, -33.9232]
-          },
-          "type": "Feature",
-          "properties": {
-            "name": "Some company",
-            "address": "Another address",
-            "material": "Wood",
-            "quantity": "some amount",
-            "status": "Offered",
-            "from": 1584316800,
-            "to": 1585958400,
-            "size": 10,
-          },
-        },
-        {
-          "geometry": {
-            "type": "Point",
-            "coordinates": [18.3912, -33.9155]
-          },
-          "type": "Feature",
-          "properties": {
-            "name": "Some company",
-            "address": "Another address",
-            "material": "Glass",
-            "quantity": "some amount",
-            "status": "Offered",
-            "from": 1584316800,
-            "to": 1586649600,
-            "size": 30,
-          },
-        },
-        {
-          "geometry": {
-            "type": "Point",
-            "coordinates": [18.5297, -33.9441]
-          },
-          "type": "Feature",
-          "properties": {
-            "name": "Some company",
-            "address": "Another address",
-            "material": "Steel",
-            "quantity": "some amount",
-            "status": "Requested",
-            "from": 1584316800,
-            "to": 1586649600,
-            "size": 35,
-          },
-        },
-        {
-          "geometry": {
-            "type": "Point",
-            "coordinates": [18.5341, -33.9330]
-          },
-          "type": "Feature",
-          "properties": {
-            "name": "Some company",
-            "address": "Another address",
-            "material": "Steel",
-            "quantity": "some amount",
-            "status": "Requested",
-            "from": 1585267200,
-            "to": 1585958400,
-            "size": 14,
-          },
-        },
-        {
-          "geometry": {
-            "type": "Point",
-            "coordinates": [18.6084, -34.0444]
-          },
-          "type": "Feature",
-          "properties": {
-            "name": "Some company",
-            "address": "Another address",
-            "material": "Wood",
-            "quantity": "some amount",
-            "status": "Offered",
-            "from": 1585267200,
-            "to": 1586217600,
-            "size": 7,
-          },
-        },
-        {
-          "geometry": {
-            "type": "Point",
-            "coordinates": [18.5904, -34.0154]
-          },
-          "type": "Feature",
-          "properties": {
-            "name": "Some company",
-            "address": "Another address",
-            "material": "Wood",
-            "quantity": "some amount",
-            "status": "Offered",
-            "from": 1585267200,
-            "to": 1586217600,
-            "size": 12,
-          },
-        },
-
+        {% endfor %}
       ]
     };
 
@@ -275,7 +140,7 @@
 
     // function to show filtered items on the map
     function filterListings() {
-      // if it exists, remove the layer currentl on the map
+      // if it exists, remove the layer currently on the map
       if (filteredLayer != false) {
         filteredLayer.removeFrom(map)
       }
@@ -284,15 +149,10 @@
       var status = $("form select.status").val()
       var material = $("form select.material").val()
 
-      var from = $("form #from").val()
-          if (from != "") {
-            from = new Date(from).getTime();
-            from = from / 1000;
-          }
-      var to = $("form #to").val()
-          if (to != "") {
-            to = new Date(to).getTime();
-            to = to / 1000;
+      var get_date = $("form #from").val()
+          if (get_date != "") {
+            get_date = new Date(get_date).getTime();
+            get_date = get_date / 1000;
           }
 
       // add all listings to the filter array
@@ -319,17 +179,8 @@
 
       // filter start date
       for (var i = filteredListings.features.length - 1; i >= 0; i--) {
-        if (from != "") {
-          if (filteredListings.features[i].properties.from < from) {
-            filteredListings.features.splice(i, 1);
-          }
-        }
-      }
-
-      // filter end date
-      for (var i = filteredListings.features.length - 1; i >= 0; i--) {
-        if (to != "") {
-          if (filteredListings.features[i].properties.to > to) {
+        if (get_date != "") {
+          if (filteredListings.features[i].properties.start_date > get_date || filteredListings.features[i].properties.end_date < get_date) {
             filteredListings.features.splice(i, 1);
           }
         }
@@ -350,11 +201,11 @@
 
         style: function(feature) {
           switch (feature.properties.status) {
-            case "Offered": return {
+            case "Supply": return {
               color: "#144d58",
               fillColor: "#144d58",
             };
-            case "Requested": return {
+            case "Demand": return {
               color: "#dc3545",
               fillColor: "#dc3545",
             };
@@ -371,13 +222,13 @@
       const dateOptions = {year: 'numeric', month: 'long', day: 'numeric'};
 
       $(filteredListings.features).each(function() {
-        var uglyFrom = new Date(this.properties.from * 1000);
+        var uglyFrom = new Date(this.properties.start_date * 1000);
         var prettyFrom = uglyFrom.toLocaleDateString('en-GB', dateOptions);
 
-        var uglyTo = new Date(this.properties.to * 1000);
+        var uglyTo = new Date(this.properties.end_date * 1000);
         var prettyTo = uglyTo.toLocaleDateString('en-GB', dateOptions);
 
-        $("section#listings").append("<div class='col-md-6 col-lg-4 mb-4'><div class='card'><div class='card-header'>" + this.properties.name + "</div><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + this.properties.address + "</li><li class='list-group-item'><i class='far fa-fw fa-flask mr-2'></i>" + this.properties.material + "</li><li class='list-group-item'><i class='far fa-fw fa-box mr-2'></i>" + this.properties.quantity + "</li><li class='list-group-item'><i class='far fa-fw fa-recycle mr-2'></i>" + this.properties.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item'><i class='far fa-fw fa-phone mr-2'></i><a href='tel:123 456 789'>123 456 789</a></li><li class='list-group-item'><i class='far fa-fw fa-at mr-2'></i><a href='mailto:email@example.com'>email@example.com</a></li></ul></div></div>")
+        $("section#listings").append("<div class='col-md-6 col-lg-4 mb-4'><div class='card'><div class='card-header'>" + this.properties.name + "</div><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + this.properties.address + "</li><li class='list-group-item'><i class='far fa-fw fa-flask mr-2'></i>" + this.properties.material + "</li><li class='list-group-item'><i class='far fa-fw fa-box mr-2'></i>" + this.properties.quantity + "</li><li class='list-group-item'><i class='far fa-fw fa-recycle mr-2'></i>" + this.properties.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item'><i class='far fa-fw fa-arrow-right mr-2'></i><a href='../data/" + this.properties.id + "/'>View more details</a></li></ul></div></div>")
       })
     }
 

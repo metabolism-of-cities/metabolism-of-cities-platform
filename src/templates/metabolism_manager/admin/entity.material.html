@@ -7,21 +7,23 @@
   {% include "metabolism_manager/admin/_entity.menu.html" %}
 
   <h2>{{ material }}</h2>
-  <form method="post">
+  <form method="post" enctype="multipart/form-data">
 
-    <div class="form-group row">
-      <label class="col-md-3 col-form-label" for="id_quantity">Quantity</label>
-      <div class="col-md-5">
-        <input type="number" name="quantity" step="any" class="form-control" placeholder="Quantity"  required id="id_quantity">
+    {% if slug != "technology" %}
+      <div class="form-group row">
+        <label class="col-md-3 col-form-label" for="id_quantity">Quantity</label>
+        <div class="col-md-5">
+          <input type="number" name="quantity" step="any" class="form-control" placeholder="Quantity"  required id="id_quantity">
+        </div>
+        <div class="col-md-4">
+          <select class="form-control" name="unit">
+            {% for unit in units %}
+              <option value="{{ unit.id }}">{{ unit.name }} ({{ unit.symbol }})</option>
+            {% endfor %}
+          </select>
+        </div>
       </div>
-      <div class="col-md-4">
-        <select class="form-control" name="unit">
-          {% for unit in units %}
-            <option value="{{ unit.id }}">{{ unit.name }} ({{ unit.symbol }})</option>
-          {% endfor %}
-        </select>
-      </div>
-    </div>
+    {% endif %}
 
     {% bootstrap_form form layout="horizontal" %}
     {% buttons %}

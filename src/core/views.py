@@ -418,7 +418,7 @@ def template(request, slug):
 
     if slug == "address-search":
         from django.conf import settings
-        context["google_api"] = settings.GOOGLE_API
+        context["geoapify_api"] = settings.GEOAPIFY_API
 
     if slug == "form":
         ModelForm = modelform_factory(Project, fields=("name", "description"))
