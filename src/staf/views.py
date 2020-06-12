@@ -380,9 +380,26 @@ def units(request):
     }
     return render(request, "staf/units.html", context)
 
+def units_conversion(request):
+
+    units = {}
+    default_units = {}
+    for key,value in MaterialType.choices:
+        units[key] = Unit.objects.filter(type=key, multiplication_factor__isnull=False).order_by("multiplication_factor")
+        default_unit = Unit.objects.filter(type=key, multiplication_factor=1)
+        default_units[key] = default_unit[0] if default_unit else None
+
+    context = {
+        "title": "Conversion tables",
+        "types": MaterialType.choices,
+        "units": units,
+        "default_units": default_units,
+    }
+    return render(request, "staf/units.conversion.html", context)
+
 @staff_member_required
 def unit(request, id=None):
-    ModelForm = modelform_factory(Unit, fields=("name", "symbol", "type", "description"))
+    ModelForm = modelform_factory(Unit, fields=("name", "symbol", "type", "multiplication_factor", "description"))
     info = None
     if id:
         info = get_object_or_404(Unit, pk=id)

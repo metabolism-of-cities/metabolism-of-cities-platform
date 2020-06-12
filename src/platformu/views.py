@@ -220,18 +220,22 @@ def admin_entity_material(request, organization, id, slug, material=None, edit=N
         if material.measurement_type:
             units = units.filter(type=material.measurement_type)
 
-    ModelForm = modelform_factory(MaterialDemand, fields=("start_date", "end_date", "description", "image"))
+    fields = ["start_date", "end_date", "description", "image"]
+    if slug == "technology":
+        fields = ["name"] + fields
+    ModelForm = modelform_factory(MaterialDemand, fields=fields)
+
     if edit:
         info = get_object_or_404(MaterialDemand, pk=id, owner=my_organization)
-        form = ModelForm(request.POST or None, instance=info)
+        form = ModelForm(request.POST or None, request.FILES or None)
     else:
-        form = ModelForm(request.POST or None)
-
+        form = ModelForm(request.POST or None, request.FILES or None)
     
     if request.method == "POST":
+        quantity = float(request.POST.get("quantity"))
         if form.is_valid():
             info = form.save(commit=False)
-            info.quantity = request.POST.get("quantity")
+            info.quantity = quantity*-1 if type == "supply" else quantity
             info.unit_id = request.POST.get("unit")
             info.material_type = material
             info.owner = my_organization

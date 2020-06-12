@@ -20,6 +20,14 @@
     {{ info.start_date|date:"l d F Y, H:i" }} -
     {{ info.end_date|date:"l d F Y, H:i" }} (<a href="https://www.timeanddate.com/worldclock/timezone/utc" target="_blank">UTC</a>)
   </p>
+  <p><a href="../../?status=1">View task list</a> | <a href="http://">Sign up for this sprint</a>
+  </p>
+
+  <p style="display:none">
+    {% for each in info.projects.all %}
+      {{ each }} | 
+    {% endfor %}
+  </p>
 </div>
 
 <div class="container pt-4">

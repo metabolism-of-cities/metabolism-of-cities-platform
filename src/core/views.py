@@ -230,7 +230,7 @@ def user_register(request, project=None):
                 organization = Organization.objects.create(name=request.POST["organization"])
 
                 # Make this person a PlatformU admin, or otherwise a team member of this organization 
-                relationship = 1 if project_name == "platformu" else 6
+                relationship = 1 if project.id == 16 else 6
                 RecordRelationship.objects.create(
                     record_parent = people,
                     record_child = organization,
@@ -239,7 +239,7 @@ def user_register(request, project=None):
 
                 # And if this is a PlatformU registration, then the organization should be signed
                 # up for PlatformU
-                if project_name == "platformu":
+                if project.id == 16:
                     RecordRelationship.objects.create(
                         record_parent = organization,
                         record_child = project,

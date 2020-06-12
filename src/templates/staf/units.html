@@ -10,6 +10,7 @@
           <th>Name</th>
           <th>Symbol</th>
           <th>Type</th>
+          <th>Factor</th>
           {% if edit_mode %}
             <th>Options</th>
           {% endif %}
@@ -18,9 +19,15 @@
       <tbody>
       {% for each in list %}
         <tr>
-          <td>{{ each }}</td>
+          <td>
+            {{ each }}
+            {% if each.multiplication_factor == 1 %}
+              <span class="badge badge-info">Primary unit</span>
+            {% endif %}
+          </td>
           <td>{{ each.symbol }}</td>
           <td>{{ each.get_type_display }}</td>
+          <td>{{ each.multiplication_factor }}</td>
           {% if edit_mode %}
             <td>
               <a href="{% url "staf:unit" each.id %}" class="btn btn-primary">

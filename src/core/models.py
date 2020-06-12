@@ -1135,6 +1135,7 @@ class Unit(models.Model):
     symbol = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     type = models.IntegerField(choices=MaterialType.choices, db_index=True, default=99)
+    multiplication_factor = models.FloatField(null=True, blank=True, help_text="By which factor should we multiply this to get a quantity in the default unit for this type of measurement?")
 
     def __str__(self):
         return self.name
@@ -1149,6 +1150,12 @@ class MaterialDemand(Record):
 
     def __str__(self):
         return self.material_type.name
+
+    def type(self):
+        return "supply" if quantity < 0 else "demand"
+
+    def absolute_quantity(self):
+        return self.quantity*-1 if self.quantity < 0 else self.quantity
 
     class Meta:
         ordering = ["start_date"]

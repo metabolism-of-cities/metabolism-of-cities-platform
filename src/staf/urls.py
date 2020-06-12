@@ -64,6 +64,7 @@ urlpatterns = [
     path("materials/<int:id>/edit/", views.material_form, name="material_form"),
     path("materials/<int:parent>/create/", views.material_form, name="material_form"),
     path("units/", views.units, name="units"),
+    path("units/conversion/", views.units_conversion, name="units_conversion"),
     path("units/<int:id>/", views.unit, name="unit"),
     path("units/create/", views.unit, name="unit"),
     path("flowdiagrams/", views.flowdiagrams, name="flowdiagrams"),
