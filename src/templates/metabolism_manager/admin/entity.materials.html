@@ -60,7 +60,7 @@
       {% if slug == "resources" %}
         <div class="col-md-6 col-lg-4 py-3 col-filter">
           <div class="form-group">
-            <input type="text" class="form-control search" placeholder="Search...">
+            <input type="text" class="form-control search" placeholder="Search..." disabled>
           </div>
           <ul class="nav nav-pills flex-column tag-filter">
             <li class="nav-item">
@@ -147,6 +147,7 @@
       });
 
       $("tbody.list").removeAttr("hidden");
+      $("input.search").removeAttr("disabled");
       $(".first-load").remove();
       checkCount();
     }
