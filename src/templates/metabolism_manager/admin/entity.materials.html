@@ -6,230 +6,110 @@
 {% block content %}
   {% include "metabolism_manager/admin/_entity.menu.html" %}
 
-  <h3>Materials</h3>
-  <table class="table users mt-2">
-    <tbody>
-      <tr>
-        <td>
-          <a class="align-middle" href="/platformu/admin/entities/1/materials/create/"><i class="fal fa-fw fa-tint"></i> Water</a>
-          <a class="btn btn-sm btn-danger float-right ml-2" href="/platformu/admin/entities/1/materials/create/"><i class="far fa-fw fa-trash-alt"></i></a>
-          <a class="btn btn-sm btn-primary float-right" href="/platformu/admin/entities/1/materials/create/"><i class="far fa-fw fa-pencil"></i></a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a class="align-middle" href="/platformu/admin/entities/1/materials/create/"><i class="fal fa-fw fa-horizontal-rule"></i> Cast iron beams</a>
-          <a class="btn btn-sm btn-danger float-right ml-2" href="/platformu/admin/entities/1/materials/create/"><i class="far fa-fw fa-trash-alt"></i></a>
-          <a class="btn btn-sm btn-primary float-right" href="/platformu/admin/entities/1/materials/create/"><i class="far fa-fw fa-pencil"></i></a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a class="align-middle" href="/platformu/admin/entities/1/materials/create/"><i class="fal fa-fw fa-box"></i> Wooden crates</a>
-          <a class="btn btn-sm btn-danger float-right ml-2" href="/platformu/admin/entities/1/materials/create/"><i class="far fa-fw fa-trash-alt"></i></a>
-          <a class="btn btn-sm btn-primary float-right" href="/platformu/admin/entities/1/materials/create/"><i class="far fa-fw fa-pencil"></i></a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a class="align-middle" href="/platformu/admin/entities/1/materials/create/"><i class="fal fa-fw fa-tape"></i> Packaging materials (plastics)</a>
-          <a class="btn btn-sm btn-danger float-right ml-2" href="/platformu/admin/entities/1/materials/create/"><i class="far fa-fw fa-trash-alt"></i></a>
-          <a class="btn btn-sm btn-primary float-right" href="/platformu/admin/entities/1/materials/create/"><i class="far fa-fw fa-pencil"></i></a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a class="align-middle" href="/platformu/admin/entities/1/materials/create/"><i class="fal fa-fw fa-bolt"></i> Energy</a>
-          <a class="btn btn-sm btn-danger float-right ml-2" href="/platformu/admin/entities/1/materials/create/"><i class="far fa-fw fa-trash-alt"></i></a>
-          <a class="btn btn-sm btn-primary float-right" href="/platformu/admin/entities/1/materials/create/"><i class="far fa-fw fa-pencil"></i></a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a class="align-middle" href="/platformu/admin/entities/1/materials/create/"><i class="fal fa-fw fa-newspaper"></i> Production output (paper)</a>
-          <a class="btn btn-sm btn-danger float-right ml-2" href="/platformu/admin/entities/1/materials/create/"><i class="far fa-fw fa-trash-alt"></i></a>
-          <a class="btn btn-sm btn-primary float-right" href="/platformu/admin/entities/1/materials/create/"><i class="far fa-fw fa-pencil"></i></a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <h3>{{ slug|title }}</h3>
 
-  <button class="btn btn-primary add-existing mr-2"><i class="fas fa-plus"></i> Add existing material</button>
-  <a class="btn btn-primary-basic" href="/platformu/admin/entities/1/materials/create/"><i class="fas fa-plus"></i> Add new material</a>
+  {% if data %}
+  <div class="card table-responsive mb-4">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="border-0">Type</th>
+          <th class="border-0">Name</th>
+          {% if slug != "technology" %}
+            <th class="border-0">Quantity</th>
+          {% endif %}
+          <th class="border-0">Type</th>
+          <th class="border-0">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for each in data %}
+          <tr>
+            <td>
+            <i class="fa fa-{{ each.material_type.parent.icon }}"></i>
+            {{ each.material_type.parent }}</td>
+            <td>
+              {% if each.name %}
+                {{ each.name }}<br>
+              {% endif %}
+              {{ each.material_type }}
+            </td>
+            {% if slug != "technology" %}
+              <td>{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
+            {% endif %}
+            <td>
+            {% if each.quantity > 0 %}
+            <i class="fa fa-sign-in-alt"></i>
+            Demand
+            {% else %}
+            <span class="text-success">
+            <i class="fa fa-sign-out-alt"></i>
+            Supply
+            </span>
+            {% endif %}
+            </td>
+            <td>
+              {{ each.start_date }} - {{ each.end_date }}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% else %}
+    <div class="alert alert-warning">
+      You have no data in this category yet. Use the option below to add data.
+    </div>
+  {% endif %}
+
+  <button class="btn btn-primary add-existing mr-2"><i class="fas fa-plus"></i> Add new entry</button>
 
   <div class="card container mt-4 filter-table" id="add-material">
     <div class="row">
-      <div class="col-md-6 col-lg-4 py-3 col-filter">
-        <div class="sticky-top">
+      {% if slug == "resources" %}
+        <div class="col-md-6 col-lg-4 py-3 col-filter">
           <div class="form-group">
-            <input type="text" class="form-control search" placeholder="Search...">
+            <input type="text" class="form-control search" placeholder="Search..." disabled>
           </div>
           <ul class="nav nav-pills flex-column tag-filter">
             <li class="nav-item">
-              <div class="nav-link active" data-tag="all"><i class="fal fa-fw fa-circle mr-2"></i> All materials</div>
+              <div class="nav-link" data-tag="all"><i class="fal fa-fw fa-circle mr-2"></i> All materials</div>
             </li>
+            {% for each in main_groups %}
             <li class="nav-item">
-              <div class="nav-link" data-tag="electricity"><i class="fal fa-fw fa-bolt mr-2"></i> Energy</div>
+              <div class="nav-link" data-tag="item-{{ each.id }}"><i class="fal fa-fw fa-{{ each.icon }} mr-2"></i> {{ each }}</div>
             </li>
-            <li class="nav-item">
-              <div class="nav-link" data-tag="paper"><i class="fal fa-fw fa-newspaper mr-2"></i> Paper and office supplies</div>
-            </li>
-            <li class="nav-item">
-              <div class="nav-link" data-tag="waste"><i class="fal fa-fw fa-recycle mr-2"></i> Waste</div>
-            </li>
-            <li class="nav-item">
-              <div class="nav-link" data-tag="water"><i class="fal fa-fw fa-tint mr-2"></i> Water</div>
-            </li>
+            {% endfor %}
           </ul>
-
-          <button class="btn btn-primary-basic btn-to-top"><i class="fal fa-fw fa-arrow-to-top m-0"></i></button>
         </div>
-      </div>
+      {% endif %}
       <div class="col-md-6 col-lg-8 p-0 col-results">
         <table class="table table-sm mb-0">
-          <tbody class="list">
+          <tbody class="list" {% if slug == "resources" %}hidden{% endif %}>
+            {% for each in materials %}
             <tr>
-              <td><span class="material-name">veil</span><span hidden class="material-tags">waste </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
+              <td><span class="material-name">{{ each }}</span><span hidden class="material-tags">item-{{ each.parent.id }} </span></td>
+              <td class="text-right">
+                <a class="btn btn-sm btn-primary-basic float-right" href="demand/{{ each.id }}/?prev={{ request.get_full_path }}"><i class="fas mr-1 fa-plus"></i> Log demand</a>
+                <a class="btn btn-sm btn-primary-basic float-right" href="supply/{{ each.id }}/?prev={{ request.get_full_path }}"><i class="fas mr-1 fa-plus"></i> Log supply</a>
+              </td>
             </tr>
-            <tr>
-              <td><span class="material-name">coil</span><span hidden class="material-tags">water</span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">silk</span><span hidden class="material-tags">electricity water</span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">donkey</span><span hidden class="material-tags">electricity water</span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">van</span><span hidden class="material-tags">electricity water</span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">branch</span><span hidden class="material-tags">water</span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">mask</span><span hidden class="material-tags">paper </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">drawer</span><span hidden class="material-tags">electricity paper </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">needle</span><span hidden class="material-tags">water</span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">wax</span><span hidden class="material-tags">electricity </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">snake</span><span hidden class="material-tags">paper </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">oven</span><span hidden class="material-tags">electricity waste </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">discussion</span><span hidden class="material-tags">electricity </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">division</span><span hidden class="material-tags">electricity </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">thunder</span><span hidden class="material-tags">electricity paper </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">eggs</span><span hidden class="material-tags">electricity </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">cable</span><span hidden class="material-tags">electricity </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">fact</span><span hidden class="material-tags">paper water</span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">lock</span><span hidden class="material-tags">water</span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">slip</span><span hidden class="material-tags">electricity waste </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">fold</span><span hidden class="material-tags">waste </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">sofa</span><span hidden class="material-tags">electricity waste </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">ladybug</span><span hidden class="material-tags">paper waste </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">design</span><span hidden class="material-tags">waste </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">attraction</span><span hidden class="material-tags">waste </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">gun</span><span hidden class="material-tags">electricity waste </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">songs</span><span hidden class="material-tags">electricity paper waste </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">rhythm</span><span hidden class="material-tags">paper </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">edge</span><span hidden class="material-tags">paper </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">soda</span><span hidden class="material-tags">electricity paper </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">vacation</span><span hidden class="material-tags">paper </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">toothbrush</span><span hidden class="material-tags">electricity paper </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">month</span><span hidden class="material-tags">paper </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
-            <tr>
-              <td><span class="material-name">tiger</span><span hidden class="material-tags">paper </span></td>
-              <td class="text-right"><a class="btn btn-sm btn-primary-basic float-right" href=""><i class="fas mr-1 fa-plus"></i> Add material</a></td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
+
+        {% if slug == "resources" %}
+          <div class="first-load text-center pt-4">
+            <h2 class="my-4"><i class="fad fa-arrow-left mr-2"></i> Please select a category</h2>
+          </div>
+        {% endif %}
+
         <div class="no-results text-center pt-4">
-          <h2 class="my-4"><i class="fad fa-search"></i> No materials found</h2>
+          <h2 class="my-4"><i class="fad fa-search mr-2"></i> No materials found</h2>
           <button class="btn btn-lg btn-primary clear-filter my-4">Show all materials</button>
         </div>
+
       </div>
     </div>
   </div>
@@ -281,7 +161,10 @@
         }
       });
 
-      checkCount()
+      $("tbody.list").removeAttr("hidden");
+      $("input.search").removeAttr("disabled");
+      $(".first-load").remove();
+      checkCount();
     }
 
     // function to check the number of matches

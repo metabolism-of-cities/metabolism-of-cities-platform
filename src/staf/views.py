@@ -344,7 +344,7 @@ def material(request, catalog, id):
 
 @login_required
 def material_form(request, catalog=None, id=None, parent=None, project_name=None):
-    ModelForm = modelform_factory(Material, fields=("name", "code", "description", "icon"))
+    ModelForm = modelform_factory(Material, fields=("name", "code", "measurement_type", "description", "icon"))
     info = None
     if id:
         info = get_object_or_404(Material, pk=id)
@@ -380,9 +380,26 @@ def units(request):
     }
     return render(request, "staf/units.html", context)
 
+def units_conversion(request):
+
+    units = {}
+    default_units = {}
+    for key,value in MaterialType.choices:
+        units[key] = Unit.objects.filter(type=key, multiplication_factor__isnull=False).order_by("multiplication_factor")
+        default_unit = Unit.objects.filter(type=key, multiplication_factor=1)
+        default_units[key] = default_unit[0] if default_unit else None
+
+    context = {
+        "title": "Conversion tables",
+        "types": MaterialType.choices,
+        "units": units,
+        "default_units": default_units,
+    }
+    return render(request, "staf/units.conversion.html", context)
+
 @staff_member_required
 def unit(request, id=None):
-    ModelForm = modelform_factory(Unit, fields=("name", "symbol", "type", "description"))
+    ModelForm = modelform_factory(Unit, fields=("name", "symbol", "type", "multiplication_factor", "description"))
     info = None
     if id:
         info = get_object_or_404(Unit, pk=id)
@@ -407,19 +424,11 @@ def flowdiagrams(request):
     list = FlowDiagram.objects.all()
     context = {
         "list": list,
+        "title": "Flow diagrams",
     }
     return render(request, "staf/flowdiagrams.html", context)
 
-def flowdiagram(request, id):
-    activities = Activity.objects.all()
-    context = {
-        "activities": activities,
-        "load_select2": True,
-        "load_mermaid": True,
-    }
-    return render(request, "staf/flowdiagram.html", context)
-
-def flowdiagram_form(request, id):
+def flowdiagram(request, id, form=False):
     info = get_object_or_404(FlowDiagram, pk=id)
     if request.method == "POST":
         if "delete" in request.POST:
@@ -445,8 +454,10 @@ def flowdiagram_form(request, id):
         "load_mermaid": True,
         "info": info,
         "blocks": blocks,
+        "form": form,
+        "title": info.name if info else "Create new flow diagram",
     }
-    return render(request, "staf/flowdiagram.form.html", context)
+    return render(request, "staf/flowdiagram.html", context)
 
 def flowdiagram_meta(request, id=None):
     ModelForm = modelform_factory(FlowDiagram, fields=("name", "description"))

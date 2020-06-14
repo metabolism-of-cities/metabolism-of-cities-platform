@@ -10,7 +10,7 @@
   {% endif %}
 
   <section>
-    <form method="post" enctype="multipart/form-data" autocomplete=off>
+    <form method="post" enctype="multipart/form-data" class="address-search">
       {% csrf_token %}
       <div class="card mb-4">
         <div class="card-header">
@@ -30,38 +30,50 @@
           </div>
           <div class="form-group">
             <label for="description">Description</label>
-            <textarea id="description" class="form-control" name="description"
+            <textarea id="description" class="form-control" rows="5" name="description"
              >{% if info.description %}{{ info.description }}{% endif %}</textarea>
           </div>
           <div class="form-group">
             <label for="employees">Employees</label>
-            <input min="0" type="number" class="form-control" id="employees">
+            <input min="0" type="number" class="form-control" id="employees" name="employees" value="{{ info.meta_data.employees }}">
           </div>
           <div class="form-group">
             <label for="location">Address</label>
-            <input type="text" class="form-control" id="location" name="location">
-            <input type="hidden" name="lat" value="" />
-            <input type="hidden" name="lng" value="" />
+            <input type="text" class="form-control" id="location" name="search" value="{{ info.meta_data.address }}">
+          </div>
+
+          <div id="autocomplete-results" class="mt-3"></div>
+
+          <input id="formatted" type="hidden" name="address" value="{{ info.meta_data.address }}">
+
+          <div class="form-group">
+            <label for="lat">Latitude</label>
+            <input type="text" class="form-control" id="lat" name="lat" value="{{ info.meta_data.lat }}">
           </div>
           <div class="form-group">
+            <label for="lng">Longitude</label>
+            <input type="text" class="form-control" id="lng" name="lng" value="{{ info.meta_data.lng }}">
+          </div>
+
+          <div class="form-group">
             <label>Sector</label>
-            <select class="custom-select" class="form-control" name="industry">
+            <select class="custom-select" class="form-control" name="sector">
               <option hidden disabled selected value>Select an option</option>
               {% for each in sectors %}
-                <option value="{{ each.id }}">{{ each }}</option>
+                <option {% if each in info.sectors.all %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
               {% endfor %}
             </select>
           </div>
           <div class="form-group">
-            <label for="">Email</label>
-            <input type="" id="" class="form-control" name="email" value="{% if info.email %}{{ info.email }}{% endif %}">
+            <label for="email">Email</label>
+            <input type="email" id="email" class="form-control" name="email" value="{% if info.email %}{{ info.email }}{% endif %}">
           </div>
           <div class="form-group">
-            <label for="">Website</label>
-            <input type="" id="" class="form-control" name="url" value="{% if info.url %}{{ info.url }}{% endif %}">
+            <label for="url">Website</label>
+            <input type="url" id="url" class="form-control" name="url" value="{% if info.url %}{{ info.url }}{% endif %}">
           </div>
           <div class="form-group">
-            <label for="">Active</label>
+            <label for="active">Active</label>
             <div class="custom-control custom-switch">
               <input type="checkbox" class="custom-control-input" id="active" name="status" {% if not info.is_deleted %} checked {% endif %}>
               <label class="custom-control-label" for="active"></label>
@@ -158,5 +170,53 @@
     $(document).ready(function () {
       bsCustomFileInput.init()
     })
+
+    // these coordinates indicate where the search should prioritise, making the search more relevant
+    const priorityLat = "50.8435";
+    const priorityLon = "4.3688";
+
+    function autoComplete(term) {
+      $.get("https://api.geoapify.com/v1/geocode/autocomplete?text="+ term + "&lat=" + priorityLat + "&lon=" + priorityLon + "&apiKey={{ geoapify_api }}")
+      .done(function(response) {
+        showAutocompleteResults(response)
+      })
+      .fail(function() {
+        $("#autocomplete-results").html("<p>Address lookup failed, please reload the page and try again.")
+      })
+    };
+
+    $("#location").keyup(function() {
+      let searchTerm = $("#location").val()
+      searchTerm = searchTerm.trim().replace(/\s/g,"+")
+
+      if (searchTerm.length > 4) {
+        autoComplete(searchTerm);
+      };
+
+      $("#submit-coordinates").attr("hidden", "hidden");
+      $(".single-autocomplete-result").removeClass("selected")
+    })
+
+    function showAutocompleteResults(results) {
+      $("#autocomplete-results").html("");
+      $(results.features).each(function() {
+        $("#autocomplete-results").append("<div class='single-autocomplete-result' data-lon='" + this.properties.lon + "' data-lat='" + this.properties.lat + "' data-formatted='" + this.properties.formatted + "' data-country='" + this.properties.country + "' data-state='" + this.properties.state + "' data-city='" + this.properties.city + "' data-street='" + this.properties.street + "' data-housenumber='" + this.properties.housenumber + "' data-postcode='" + this.properties.postcode + "'>" + this.properties.formatted + "</div>")
+      });
+      enableResultFunction()
+    };
+
+    function enableResultFunction() {
+
+      $(".single-autocomplete-result").click(function() {
+        $(".single-autocomplete-result").removeClass("selected")
+        $(this).addClass("selected");
+
+        $("input#lat").val( $(this).data("lat") );
+        $("input#lng").val( $(this).data("lon") );
+        $("input#formatted").val( $(this).data("formatted") );
+
+        $("#submit-coordinates").removeAttr("hidden");
+      })
+    }
   </script>
 {% endblock %}

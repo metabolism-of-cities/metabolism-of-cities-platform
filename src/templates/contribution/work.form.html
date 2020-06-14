@@ -7,7 +7,7 @@
 
   <div class="form-group markdown-textarea">
     {% include "_markdown.html" %}
-    <textarea class="form-control mb-4" id="text" rows="10" name="description" required>{{ info.description }}</textarea>
+    <textarea class="form-control mb-4" id="text" rows="10" name="description" required>{{ info.description|default_if_none:"" }}</textarea>
   </div>
 
   {% buttons %}

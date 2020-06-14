@@ -117,7 +117,7 @@ class Record(models.Model):
         self.tags.filter(parent_tag__id=318)
 
     def get_markdown_description(self):
-        return markdown(self.description)
+        return markdown(self.description) if self.description else None
 
     def authors(self):
         return People.objects_unfiltered.filter(parent_list__record_child=self, parent_list__relationship__id=4)
@@ -423,9 +423,13 @@ class RecordHistory(models.Model):
         ordering = ["-id"]
 
 class Webpage(Record):
-    site = models.ForeignKey(Site, on_delete=models.CASCADE)
+    TYPE = [
+        ("html", "HTML"),
+        ("markdown", "Markdown"),
+    ]
+    type = models.CharField(max_length=10, choices=TYPE, default="markdown")
     slug = models.CharField(db_index=True, max_length=100)
-    belongs_to = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, related_name="webpages")
+    part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, related_name="webpages")
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
@@ -434,9 +438,12 @@ class Webpage(Record):
     def get_absolute_url(self):
         return self.slug
 
+    def get_content(self):
+        return markdown(self.description) if type == "markdown" else self.description
+
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=["site", "slug"], name="site_slug")
+            models.UniqueConstraint(fields=["part_of_project", "slug"], name="project_slug")
         ]
         ordering = ["name"]
 
@@ -474,6 +481,9 @@ class ForumTopic(Record):
     last_update = models.DateTimeField(db_index=True)
     part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
 
+    class Meta:
+        ordering = ["-last_update"]
+
 class Message(Record):
     attachments = models.ManyToManyField(Document)
     parent = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="messages")
@@ -491,7 +501,7 @@ class Message(Record):
         return markdown(self.description)
 
     def get_absolute_url(self):
-        return reverse("community:forum_topic", args=[self.id])
+        return reverse("community:forum", args=[self.id])
 
     class Meta:
         ordering = ["date_created"]
@@ -1096,11 +1106,22 @@ class MaterialCatalog(Record):
     class Meta:
         db_table = "stafdb_materialcatalog"
 
+class MaterialType(models.IntegerChoices):
+    MASS = 1, "Mass"
+    VOLUME = 2, "Volume"
+    COUNT = 3, "Count"
+    AREA = 4, "Area"
+    ENERGY = 5, "Energy"
+    LENGTH = 6, "Length"
+    FRACTION = 7, "Fraction"
+    OTHER = 99, "Other"
+
 class Material(Record):
     code = models.CharField(max_length=255, null=True, blank=True, db_index=True)
     parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="children")
     catalog = models.ForeignKey(MaterialCatalog, on_delete=models.CASCADE, blank=True, null=True)
     #is_separator = models.BooleanField()
+    measurement_type = models.IntegerField(choices=MaterialType.choices, db_index=True, blank=True, null=True, default=1)
     icon = models.CharField(max_length=50, null=True, blank=True, help_text="Only include the icon name, not fa- classes --- see https://fontawesome.com/icons?d=gallery")
 
     def __str__(self):
@@ -1116,21 +1137,31 @@ class Unit(models.Model):
     name = models.CharField(max_length=255)
     symbol = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
-
-    class Type(models.IntegerChoices):
-        MASS = 1, "Mass"
-        VOLUME = 2, "Volume"
-        COUNT = 3, "Count"
-        AREA = 4, "Area"
-        ENERGY = 5, "Energy"
-        LENGTH = 6, "Length"
-        FRACTION = 7, "Fraction"
-        OTHER = 99, "Other"
-
-    type = models.IntegerField(choices=Type.choices, db_index=True, default=99)
+    type = models.IntegerField(choices=MaterialType.choices, db_index=True, default=99)
+    multiplication_factor = models.FloatField(null=True, blank=True, help_text="By which factor should we multiply this to get a quantity in the default unit for this type of measurement?")
 
     def __str__(self):
         return self.name
+
+class MaterialDemand(Record):
+    material_type = models.ForeignKey(Material, on_delete=models.CASCADE)
+    quantity = models.FloatField()
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    owner = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="demand")
+
+    def __str__(self):
+        return self.material_type.name
+
+    def type(self):
+        return "supply" if self.quantity < 0 else "demand"
+
+    def absolute_quantity(self):
+        return self.quantity*-1 if self.quantity < 0 else self.quantity
+
+    class Meta:
+        ordering = ["start_date"]
 
 class Sector(Record):
     icon = models.CharField(max_length=255, null=True, blank=True)

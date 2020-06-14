@@ -23,6 +23,11 @@
             {% if request.user.is_superuser %}
               <span class="badge badge-light">Super user</span>
             {% endif %}
+            <a class="badge badge-{% if OPEN_TASKS > 0 %}danger{% else %}secondary{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/work/?status=1">
+              {{ OPEN_TASKS }}
+              <i class="fa fa-circle mr-1 ml-1 {% if OPEN_TASKS > 0 %}text-success{% endif %}"></i>
+              Open tasks
+            </a>
             <a class="badge badge-primary" href="{{ PROJECT.get_website }}controlpanel">
               <i class="fa fa-lock mr-1"></i>
               Control Panel
@@ -35,7 +40,7 @@
 
   <nav class="navbar navbar-expand-lg navbar-dark main-nav-project-{{ PROJECT.id }}">
     <div class="container">
-      <a class="navbar-brand" href="{{ PROJECT.get_website }}">
+      <a class="navbar-brand" href="{% if DEBUG %}/{% if PROJECT.id != 1 %}{{ PROJECT.slug }}{% endif %}{% else %}{{ PROJECT.get_website }}{% endif %}">
         <img alt="{{ PROJECT }}" src="{{ LOGO }}">
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#project-navbar" aria-controls="project-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,6 +102,8 @@
   {% include "_submenu-data.html" %}
 {% elif PROJECT.id == 8 and request.user.is_authenticated %}
   {% include "_submenu-ascus.html" %}
+{% elif PROJECT.id == 16 and request.user.is_authenticated %}
+  {% include "_submenu-platformu.html" %}
 {% endif %}
 
 {% if PROJECT.id == 4 and space %}

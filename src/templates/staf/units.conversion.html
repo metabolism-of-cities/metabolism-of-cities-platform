@@ -1,0 +1,24 @@
+{% extends "_base.html" %}
+{% load moc_extras %}
+
+{% block content %}
+
+  <h1 class="mb-0">Conversion tables</h1>
+
+  {% for key,value in types %}
+
+    {% if units|get_item:key %}
+
+      <h2 class="mt-5">{{ value }}</h2>
+
+      <ul>
+        {% for each in units|get_item:key %}
+          <li>1 {{ each }} = {{ each.multiplication_factor }} {{ default_units|get_item:key }}</li>
+        {% endfor %}
+      </ul>
+
+    {% endif %}
+
+  {% endfor %}
+
+{% endblock %}

@@ -27,9 +27,9 @@ class MyAdminSite(AdminSite):
 admin_site = MyAdminSite()
 
 class WebpageAdmin(admin.ModelAdmin):
-    list_display = ["name", "belongs_to", "is_deleted"]
-    list_filter = ["belongs_to"]
-    search_fields = ["name", "belongs_to__name"]
+    list_display = ["name", "part_of_project", "is_deleted"]
+    list_filter = ["part_of_project"]
+    search_fields = ["name", "part_of_project__name"]
 
     def response_change(self, request, obj):
         if "_addanother" not in request.POST and "_continue" not in request.POST:
@@ -49,7 +49,7 @@ class WebpageAdmin(admin.ModelAdmin):
          if "short" in request.GET:
             self.fields = ["name", "description"]
          else:
-            self.fields = ["name", "description", "belongs_to", "image", "tags","site", "slug", "is_deleted"]
+            self.fields = ["name", "description", "part_of_project", "image", "tags", "slug", "type", "is_deleted"]
          return super().change_view(request, object_id)
 
 class WebpageDesignAdmin(admin.ModelAdmin):

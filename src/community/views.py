@@ -165,8 +165,11 @@ def organization(request, slug, id):
 
 # FORUM
 
-def forum_list(request):
-    list = Message.objects.filter(parent__isnull=True)
+def forum_list(request, project_name=None):
+    list = ForumTopic.objects.all()
+    if project_name:
+        project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+        list = list.filter(part_of_project=project)
     context = {
         "list": list,
     }
@@ -211,7 +214,7 @@ def forum(request, id, project_name=None):
                 "text": text,
                 "project": project,
                 "info": info,
-                "url": "https://ascus.metabolismofcities.org" + request.POST["return"] if "return" in request.POST else info.get_absolute_url(),
+                "url": "https://ascus.metabolismofcities.org" + request.POST["return"] if "return" in request.POST else reverse(project_name + ":forum", info.id),
             }
 
             msg_html = render_to_string("mailbody/message.notification.html", mailcontext)
@@ -295,7 +298,7 @@ def forum_form(request, id=False, project_name=None):
                 message.attachments.add(info_document)
         messages.success(request, "Your message has been posted.")
 
-        if project_name == "ascus":
+        if project_name:
             return redirect(project_name + ":forum", info.id)
 
         return redirect(message.get_absolute_url())

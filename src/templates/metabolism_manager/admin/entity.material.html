@@ -1,101 +1,49 @@
 {% extends "_base.html" %}
+{% load bootstrap4 %}
 
 {% block title %}Metabolism Manager{% endblock %}
 
 {% block content %}
   {% include "metabolism_manager/admin/_entity.menu.html" %}
-  <form>
-    <div class="card">
-      <div class="card-body">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" class="form-control" id="name" value="Water consumption">
-        </div>
-        <div class="form-group">
-          <label>Material classification</label>
-          <select class="custom-select" class="form-control">
-            <option hidden disabled value></option>
-            <option value="">MF 4.00.493 Weazels</option>
-            <option value="" selected>MF 4.00.494 Water</option>
-            <option value="">MF 4.00.495 Watery balls</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Sector</label>
-          <select class="custom-select" class="form-control">
-            <option hidden disabled value></option>
-            <option value="" selected>2.31 Water and sanitation</option>
-            <option value="">2.32 Welding</option>
-            <option value="">2.33 Working from home</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Process</label>
-          <select class="custom-select" class="form-control">
-            <option hidden disabled value></option>
-            <option value="">Pre-consumption</option>
-            <option value="" selected>Consumption</option>
-            <option value="">Post-consumption</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="logo">Photo</label>
-          <div class="custom-file">
-            <input type="file" class="custom-file-input" id="photo">
-            <label class="custom-file-label" for="photo">photo.png</label>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="instructions">Instructions</label>
-          <textarea id="instructions" class="form-control"></textarea>
-        </div>
 
-        <hr class="my-4">
+  <h2>{{ material }}</h2>
+  <form method="post" enctype="multipart/form-data">
 
-        <h4 class="mt-4">Unit(s)</h4>
-        <div class="form-group">
-          <label for="name">Volume</label>
-          <div class="custom-control custom-radio">
-            <input type="radio" id="m3" name="volume" class="custom-control-input">
-            <label class="custom-control-label" for="m3">m<sup>3</sup></label>
-          </div>
-          <div class="custom-control custom-radio">
-            <input type="radio" id="litre" name="volume" class="custom-control-input">
-            <label class="custom-control-label" for="litre">litre</label>
-          </div>
-          <div class="custom-control custom-radio">
-            <input type="radio" id="gallon" name="volume" checked class="custom-control-input">
-            <label class="custom-control-label" for="gallon">gallon</label>
-          </div>
+    {% if slug != "technology" %}
+      <div class="form-group row">
+        <label class="col-md-3 col-form-label" for="id_quantity">Quantity</label>
+        <div class="col-md-5">
+          <input type="number" name="quantity" step="any" class="form-control" placeholder="Quantity"  required id="id_quantity">
         </div>
-
-        <div class="form-group">
-          <label for="name">Weight</label>
-          <div class="custom-control custom-radio">
-            <input type="radio" id="kg" name="weight" class="custom-control-input">
-            <label class="custom-control-label" for="kg">kg</label>
-          </div>
-          <div class="custom-control custom-radio">
-            <input type="radio" id="mt" name="weight" class="custom-control-input">
-            <label class="custom-control-label" for="mt">metric tonne</label>
-          </div>
-          <div class="custom-control custom-radio">
-            <input type="radio" id="kt" name="weight" class="custom-control-input">
-            <label class="custom-control-label" for="kt">kilo tonne</label>
-          </div>
+        <div class="col-md-4">
+          <select class="form-control" name="unit">
+            {% for unit in units %}
+              <option value="{{ unit.id }}">{{ unit.name }} ({{ unit.symbol }})</option>
+            {% endfor %}
+          </select>
         </div>
       </div>
-    </div>
-    <button class="btn btn-lg btn-primary my-4" type="submit"><i class="fas fa-save"></i> Save</button>
+    {% endif %}
+
+    {% bootstrap_form form layout="horizontal" %}
+    {% buttons %}
+      <div class="row">
+        <div class="offset-md-3 col-md-9">
+          <button type="submit" class="btn btn-success">
+            <i class="fa fa-fw fa-save"></i>
+            Save
+         </button>
+        </div>
+      </div>
+    {% endbuttons %}
+    {% csrf_token %}
   </form>
+
 {% endblock %}
 
 {% block footer %}
-  <!-- making the browse for file input look good and work well - https://www.npmjs.com/package/bs-custom-file-input -->
-  <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
   <script>
-    $(document).ready(function () {
-      bsCustomFileInput.init()
-    })
+    $("#id_start_date").attr("type", "date");
+    $("#id_end_date").attr("type", "date");
   </script>
 {% endblock %}

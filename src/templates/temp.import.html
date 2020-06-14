@@ -32,6 +32,7 @@ SELECT setval('stafdb_activity_id_seq', (SELECT MAX(id) FROM stafdb_activity)+1)
 SELECT setval('stafdb_sector_id_seq', (SELECT MAX(id) FROM stafdb_sector)+1);
 SELECT setval('auth_user_id_seq', (SELECT MAX(id) FROM auth_user)+1);
 SELECT setval('core_dataviz_id_seq', (SELECT MAX(id) FROM core_dataviz)+1);
+SELECT setval('core_unit_id_seq', (SELECT MAX(id) FROM core_unit)+1);
     </pre>
   </div>
 

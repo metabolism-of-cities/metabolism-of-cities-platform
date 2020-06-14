@@ -19,49 +19,43 @@
     <div class="card">
       <table class="table mb-0">
         <tbody>
-          <tr>
-            <th>Employees</th>
-              <td> 44</td>
+          {% if info.meta_data.employees %}
+            <tr>
+              <th>Employees</th>
+              <td> {{ info.meta_data.employees }}</td>
             </tr>
-          <tr>
-            <th>Location</th>
-            <td>Scranton, PA</td>
-          </tr>
-          <tr>
-            <th>Industry</th>
-            <td>Paper</td>
-          </tr>
-          <tr>
-            <th>Registration date</th>
-            <td>22 January 2020</td>
-          </tr>
+          {% endif %}
+          {% if info.sectors.all %}
+            <tr>
+              <th>Sector</th>
+              <td> {% for each in info.sectors.all %}{{ each }}{% endfor %}</td>
+            </tr>
+          {% endif %}
+          {% if info.meta_data.address %}
+            <tr>
+              <th>Address</th>
+              <td> {{ info.meta_data.address }}</td>
+            </tr>
+          {% endif %}
+          {% if info.description %}
+            <tr>
+              <th>Description</th>
+              <td> {{ info.description|linebreaksbr }}</td>
+            </tr>
+          {% endif %}
           <tr>
             <th>Email</th>
-            <td><a href="">{{ info.email }}</a></td>
+            <td><a href="mailto:{{ info.email }}">{{ info.email }}</a></td>
           </tr>
+          {% if info.url %}
           <tr>
             <th>Website</th>
-            <td><a href="">{{ info.url }}</a></td>
+            <td><a href="{{ info.url }}">{{ info.url }}</a></td>
           </tr>
-          <tr>
-            <th>Last login</th>
-            <td>20 February 2020</td>
-          </tr>
-          <tr>
-            <th>Users</th>
-            <td>Michael Scott, Pam Halpert, Angela Martins</td>
-          </tr>
+          {% endif %}
           <tr>
             <th>Status</th>
             <td>{% if info.is_deleted %} Inactive {% else %} Active {% endif %}</td>
-          </tr>
-          <tr>
-            <th>Data sharing</th>
-            <td>public</td>
-          </tr>
-          <tr>
-            <th>Reporting</th>
-            <td>monthly</td>
           </tr>
         </tbody>
       </table>

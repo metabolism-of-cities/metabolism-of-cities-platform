@@ -1,0 +1,31 @@
+<div id="subnav-platformu">
+  <nav class="navbar navbar-expand-md">
+    <div class="container">
+
+      <button class="navbar-toggler ml-3" type="button" data-toggle="collapse" data-target="#ascus-navbar" aria-controls="ascus-navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="ascus-navbar">
+        <ul class="navbar-nav mr-auto ml-3 ml-md-0">
+
+          <li class="nav-item"><a class="nav-link" href="{% url "platformu:admin" %}"><i class="fa fa-lock"></i></a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url "platformu:admin" %}">My Organisations</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url "platformu:admin_map" %}">Demand and Supply Map</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url "platformu:admin_data" %}">Full Overview</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url "platformu:forum" %}">Forum</a></li>
+
+        </ul>
+
+    <form class="form-inline my-2 my-lg-0">
+      <a href="/accounts/logout/" class="btn btn-default-basic">
+        <i class="fa fa-sign-out"></i> 
+        Log Out
+      </a>
+    </form>
+
+      </div>
+
+    </div>
+  </nav>
+</div>

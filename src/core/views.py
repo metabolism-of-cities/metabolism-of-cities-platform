@@ -230,7 +230,7 @@ def user_register(request, project=None):
                 organization = Organization.objects.create(name=request.POST["organization"])
 
                 # Make this person a PlatformU admin, or otherwise a team member of this organization 
-                relationship = 1 if project_name == "platformu" else 6
+                relationship = 1 if project.id == 16 else 6
                 RecordRelationship.objects.create(
                     record_parent = people,
                     record_child = organization,
@@ -239,7 +239,7 @@ def user_register(request, project=None):
 
                 # And if this is a PlatformU registration, then the organization should be signed
                 # up for PlatformU
-                if project_name == "platformu":
+                if project.id == 16:
                     RecordRelationship.objects.create(
                         record_parent = organization,
                         record_child = project,
@@ -418,7 +418,7 @@ def template(request, slug):
 
     if slug == "address-search":
         from django.conf import settings
-        context["google_api"] = settings.GOOGLE_API
+        context["geoapify_api"] = settings.GEOAPIFY_API
 
     if slug == "form":
         ModelForm = modelform_factory(Project, fields=("name", "description"))
@@ -457,19 +457,29 @@ def project(request, slug):
 # Webpage is used for general web pages, and they can be opened in
 # various ways (using ID, using slug). They can have different presentational formats
 
-def article(request, id=None, slug=None, prefix=None, project=None, subtitle=None):
+def article(request, id=None, slug=None, prefix=None, project=None, subtitle=None, project_name=None):
+
+    if project_name:
+        project = PROJECT_ID[project_name]
+
     if id:
-        info = get_object_or_404(Webpage, pk=id, site=request.site)
+        info = get_object_or_404(Webpage, pk=id)
         if info.is_deleted and not request.user.is_staff:
             raise Http404("Webpage not found")
     elif slug:
         if prefix:
             slug = prefix + slug
         slug = slug + "/"
-        info = get_object_or_404(Webpage, slug=slug, site=request.site)
+        if project:
+            info = Webpage.objects.filter(slug=slug, part_of_project_id=project)
+            if not info:
+                info = Webpage.objects.filter(slug="/" + slug, part_of_project_id=project)
+            info = info[0]
+        else:
+            info = get_object_or_404(Webpage, slug=slug)
 
     if not project:
-        project = info.belongs_to.id
+        project = info.part_of_project.id
 
     context = {
         "info": info,
@@ -553,10 +563,45 @@ def controlpanel_content(request, project_name):
         unauthorized_access(request)
 
     context = {
-        "pages": Webpage.objects.filter(belongs_to_id=project),
+        "pages": Webpage.objects.filter(part_of_project_id=project),
         "load_datatables": True,
     }
     return render(request, "controlpanel/content.html", context)
+
+@login_required
+def controlpanel_content_form(request, project_name, id=None):
+
+    project = PROJECT_ID[project_name]
+    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    info = None
+    ModelForm = modelform_factory(Webpage, fields=("name", "description", "type", "slug", "is_deleted"))
+    if id:
+        info = get_object_or_404(Webpage, pk=id)
+        form = ModelForm(request.POST or None, instance=info)
+    else:
+        form = ModelForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save(commit=False)
+            info.part_of_project_id = project
+            info.save()
+            # TO DO
+            # There is a contraint, for slug + project combined, and we should
+            # check for that and properly return an error
+            messages.success(request, "Information was saved.")
+            return redirect(request.GET.get("next"))
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    context = {
+        "pages": Webpage.objects.filter(part_of_project_id=project),
+        "load_datatables": True,
+        "form": form,
+        "title": info.name if info else "Create webpage",
+    }
+    return render(request, "controlpanel/content.form.html", context)
 
 @login_required
 def controlpanel_data_articles(request, project_name, space):
@@ -771,6 +816,24 @@ def work_sprint(request, project_name, id=None):
 # People
 
 def contributor(request, project_name):
+    project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+    if request.method == "POST":
+        Work.objects.create(
+            name = "Process collaborator signup form: " + request.POST.get("name"),
+            status = Work.WorkStatus.OPEN,
+            priority = Work.WorkPriority.HIGH,
+            part_of_project = project,
+            workactivity_id = 16,
+            meta_data = request.POST,
+        )
+        messages.success(request, "Thanks! Our team will be in touch with you soon.")
+    context = {
+        "info": project,
+        "title": "Contributor page",
+    }
+    return render(request, "contribution/contributor.page.html", context)
+
+def support(request, project_name):
     project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
     if request.method == "POST":
         Work.objects.create(

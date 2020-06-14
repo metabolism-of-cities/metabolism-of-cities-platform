@@ -1,10 +1,50 @@
 from django.urls import path
 from . import views
 from core import views as core
+from community import views as community
 
 app_name = "staf"
 
 urlpatterns = [
+
+    #
+    # Baseline links shared between all projects
+    # Last change June 11, 2020
+    # Version 001
+    #
+
+    # Authentication and contributor functions
+    path("accounts/register/", core.user_register, { "project": app_name }, name="register"),
+    path("accounts/login/", core.user_login, { "project": app_name }, name="login"),
+    path("accounts/passwordreset/", core.user_reset, { "project": app_name }, name="passwordreset"),
+    path("accounts/logout/", core.user_logout, { "project": app_name }, name="logout"),
+    path("accounts/profile/", core.user_profile, { "project": app_name }, name="user_profile"),
+
+    # Work-related links
+    path("work/", core.work_grid, { "project_name": app_name }, name="work_grid"),
+    path("work/sprints/", core.work_sprints, { "project_name": app_name }, name="work_sprints"),
+    path("work/sprints/<int:id>/", core.work_sprint, { "project_name": app_name }, name="work_sprint"),
+    path("work/create/", core.work_form, { "project_name": app_name }, name="work_form"),
+    path("work/<int:id>/", core.work_item, { "project_name": app_name }, name="work_item"),
+    path("work/<int:id>/edit/", core.work_form, { "project_name": app_name }, name="work_form"),
+    
+    # Forum and contributor pages
+    path("forum/<int:id>/", community.forum, { "project_name": app_name }, name="forum"),
+    path("contributor/", core.contributor, { "project_name": app_name }, name="contributor"),
+    path("support/", core.support, { "project_name": app_name }, name="support"),
+
+    # Control panel URLS
+    path("controlpanel/", core.controlpanel, { "project_name": app_name }, name="controlpanel"),
+    path("controlpanel/users/", core.controlpanel_users, { "project_name": app_name }, name="controlpanel_users"),
+    path("controlpanel/design/", core.controlpanel_design, { "project_name": app_name }, name="controlpanel_design"),
+    path("controlpanel/content/", core.controlpanel_content, { "project_name": app_name }, name="controlpanel_content"),
+    path("controlpanel/content/create/", core.controlpanel_content_form, { "project_name": app_name }, name="controlpanel_content_form"),
+    path("controlpanel/content/<int:id>/", core.controlpanel_content_form, { "project_name": app_name }, name="controlpanel_content_form"),
+
+    #
+    # End of baseline links
+    #
+
     path("", views.index, name="index"),
     path("upload/", views.upload, name="upload"),
     path("upload/gis/", views.upload_gis, name="upload_gis"),
@@ -24,14 +64,15 @@ urlpatterns = [
     path("materials/<int:id>/edit/", views.material_form, name="material_form"),
     path("materials/<int:parent>/create/", views.material_form, name="material_form"),
     path("units/", views.units, name="units"),
+    path("units/conversion/", views.units_conversion, name="units_conversion"),
     path("units/<int:id>/", views.unit, name="unit"),
     path("units/create/", views.unit, name="unit"),
     path("flowdiagrams/", views.flowdiagrams, name="flowdiagrams"),
     path("flowdiagrams/<int:id>/", views.flowdiagram, name="flowdiagram"),
-    path("flowdiagrams/create/", views.flowdiagram_form, name="flowdiagram_form"),
+    path("flowdiagrams/create/", views.flowdiagram, { "form": True }, name="flowdiagram"),
     path("flowdiagrams/meta/", views.flowdiagram_meta, name="flowdiagram_meta"),
     path("flowdiagrams/<int:id>/meta/", views.flowdiagram_meta, name="flowdiagram_meta"),
-    path("flowdiagrams/<int:id>/edit/", views.flowdiagram_form, name="flowdiagram_form"),
+    path("flowdiagrams/<int:id>/edit/", views.flowdiagram, {"form": True}, name="flowdiagram_form"),
     path("geocode/", views.geocodes, name="geocodes"),
     path("geocode/create/", views.geocode_form, name="geocode_form"),
     path("geocode/<int:id>/edit/", views.geocode_form, name="geocode_form"),
@@ -52,22 +93,4 @@ urlpatterns = [
     path("curation/processed/", views.review_processed, name="review_processed"),
     path("curation/<int:id>/", views.review_session, name="review_session"),
 
-    # Baseline 
-    path("work/", core.work_grid, { "project_name": app_name }, name="work_grid"),
-    path("work/sprints/", core.work_sprints, { "project_name": app_name }, name="work_sprints"),
-    path("work/sprints/<int:id>/", core.work_sprint, { "project_name": app_name }, name="work_sprint"),
-    path("work/create/", core.work_form, { "project_name": app_name }, name="work_form"),
-    path("work/<int:id>/", core.work_item, { "project_name": app_name }, name="work_item"),
-    path("work/<int:id>/edit/", core.work_form, { "project_name": app_name }, name="work_form"),
-
-    # Control panel URLS from baseline
-    path("controlpanel/", core.controlpanel, { "project_name": app_name }, name="controlpanel"),
-    path("controlpanel/users/", core.controlpanel_users, { "project_name": app_name }, name="controlpanel_users"),
-    path("controlpanel/design/", core.controlpanel_design, { "project_name": app_name }, name="controlpanel_design"),
-    path("controlpanel/content/", core.controlpanel_content, { "project_name": app_name }, name="controlpanel_content"),
-
-
-    # Work URLs from baseline
-    path("work/", core.work_grid, { "project_name": app_name }, name="work_grid"),
-    path("work/<int:id>/", core.work_item, { "project_name": app_name }, name="work_item"),
 ]

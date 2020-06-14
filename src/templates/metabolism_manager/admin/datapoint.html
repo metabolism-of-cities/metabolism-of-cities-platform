@@ -1,0 +1,75 @@
+{% extends "_base.html" %}
+
+{% block css %}
+<style type="text/css">
+  .card img {
+    border-bottom: 1px solid #333;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <h1>Data entry</h1>
+
+  <div class="card-deck">
+
+    <div class="card">
+      <div class="card-header">
+        Details
+      </div>
+      {% if data.image %}
+        <img src="{{ data.image.large.url }}" class="card-img-top">
+      {% endif %}
+      <ul class="list-group list-group-flush">
+
+        <li class="list-group-item">
+        Type: 
+        {% if data.quantity > 0 %}
+          <i class="fa fa-sign-in-alt"></i>
+          Demand
+        {% else %}
+          <span class="text-success">
+            <i class="fa fa-sign-out-alt"></i>
+            Supply
+          </span>
+        {% endif %}
+        </li>
+
+        <li class="list-group-item">
+          <i class="fa fa-fw fa-{{ data.material_type.parent.icon }}"></i>
+          {{ data.material_type.parent }}: {{ data.material_type }}
+        </li>
+
+        {% if data.name %}
+          <li class="list-group-item">{{ data }}</li>
+        {% endif %}
+
+        <li class="list-group-item">Quantity: {{ data.absolute_quantity }} {{ data.unit }}</li>
+        <li class="list-group-item">From: {{ data.start_date }}</li>
+        <li class="list-group-item">Until: {{ data.end_date }}</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        Contact information
+      </div>
+      {% if data.owner.image %}
+        <img src="{{ data.owner.image.large.url }}" class="card-img-top">
+      {% endif %}
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">{{ data.owner }}</li>
+        {% if data.owner.organization.url %}
+          <li class="list-group-item">{{ data.owner.organization.url }}</li>
+        {% endif %}
+        {% if data.owner.organization.email %}
+          <li class="list-group-item">{{ data.owner.organization.email }}</li>
+        {% endif %}
+        <li class="list-group-item">{{ data.owner.meta_data.address }}</li>
+      </ul>
+    </div>
+  
+  </div>
+
+{% endblock %}

@@ -20,17 +20,21 @@
             <thead>
               <tr>
                 <th class="border-0">Name</th>
-                <th class="border-0 medium-cell">Members</th>
-                <th class="border-0 medium-cell">Reporting</th>
+                <th class="border-0 medium-cell">Sector</th>
+                <th class="border-0 medium-cell">Employees</th>
                 <th class="border-0 narrow-cell">Active</th>
               </tr>
             </thead>
             <tbody>
               {% for details in each.record_set.all %}
                 <tr>
-                  <td><a href="/platformu/admin/{{ info.id }}/entities/{{ details.id }}/">{{ details }}</a></td>
-                  <td>0</td>
-                  <td>Monthly</td>
+                  <td><a href="../entities/{{ details.id }}/">{{ details }}</a></td>
+                  <td>
+                    {% for sector in details.sectors.all %}
+                      {{ sector }}
+                    {% endfor %}
+                  </td>
+                  <td>{{ details.meta_data.employees }}</td>
                   <td>
                     {% if details.is_deleted %}
                       <i class="far fa-times-circle text-danger"></i>
@@ -44,8 +48,8 @@
           </table>
         </div>
       {% endif %}
-      <a class="btn btn-primary" href="/platformu/admin/{{ info.id }}/entities/create/?tag={{ each.id }}"><i class="fas fa-plus"></i> Add new organisation</a>
-      <a class="btn btn-primary-basic" href="/platformu/admin/cluster/4/configure/"><i class="far fa-cog"></i> Cluster configuration</a>
+      <a class="btn btn-primary" href="../entities/create/?tag={{ each.id }}"><i class="fas fa-plus"></i> Add new organisation</a>
+      <a style="display:none" class="btn btn-primary-basic" href="configure/"><i class="far fa-cog"></i> Cluster configuration</a>
     </section>
   {% endfor %}
   <section>

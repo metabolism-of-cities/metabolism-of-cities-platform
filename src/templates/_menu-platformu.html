@@ -1,8 +1,9 @@
-<li class="nav-item"><a class="nav-link" href="/platformu/">Home</a></li>
-{% if my_organization %}
-  <li class="nav-item"><a class="nav-link" href="{% url "platformu:admin_clusters" my_organization.id %}">Organisations</a></li>
-  <li class="nav-item"><a class="nav-link" href="{% url "platformu:admin_map" my_organization.id %}">Map</a></li>
-{% else %}
-  <li class="nav-item"><a class="nav-link" href="/platformu/dashboard/">User section</a></li>
-  <li class="nav-item"><a class="nav-link" href="/platformu/admin/">Admin section</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url "platformu:index" %}">Home</a></li>
+
+  <li class="nav-item"><a class="nav-link" href="{% url "platformu:article" "about" %}">About</a></li>
+  <li class="nav-item"><a class="nav-link" href="{% url "platformu:article" "features" %}">Features</a></li>
+
+{% if not request.user.is_authenticated %}
+  <li class="nav-item"><a class="nav-link" href="/accounts/register/">Register</a></li>
+  <li class="nav-item"><a class="nav-link" href="/accounts/login/?next={{ request.get_full_path }}">Sign in</a>
 {% endif %}

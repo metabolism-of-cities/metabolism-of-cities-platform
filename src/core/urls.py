@@ -70,6 +70,8 @@ urlpatterns = [
     path("controlpanel/users/", views.controlpanel_users, { "project_name": app_name }, name="controlpanel_users"),
     path("controlpanel/design/", views.controlpanel_design, { "project_name": app_name }, name="controlpanel_design"),
     path("controlpanel/content/", views.controlpanel_content, { "project_name": app_name }, name="controlpanel_content"),
+    path("controlpanel/content/create/", views.controlpanel_content_form, { "project_name": app_name }, name="controlpanel_content_form"),
+    path("controlpanel/content/<int:id>/", views.controlpanel_content_form, { "project_name": app_name }, name="controlpanel_content_form"),
 
     # Password reset forms
     path(
