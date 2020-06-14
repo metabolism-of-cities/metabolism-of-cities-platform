@@ -117,7 +117,7 @@ class Record(models.Model):
         self.tags.filter(parent_tag__id=318)
 
     def get_markdown_description(self):
-        return markdown(self.description)
+        return markdown(self.description) if self.description else None
 
     def authors(self):
         return People.objects_unfiltered.filter(parent_list__record_child=self, parent_list__relationship__id=4)

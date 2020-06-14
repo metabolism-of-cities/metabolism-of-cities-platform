@@ -1,16 +1,16 @@
 from django.contrib.sites.models import Site
 
-from core.models import RecordRelationship, Project, ProjectDesign
+from core.models import RecordRelationship, Project, ProjectDesign, Work
 from django.conf import settings
 
 def site(request):
     site = Site.objects.get_current()
-    permissions = project = None
+    permissions = open = None
 
     if hasattr(request, "project"):
         project = Project.objects.get(pk=request.project)
     else:
-        project = 1
+        project = Project.objects.get(pk=1)
 
     if request.user.is_authenticated and request.user.people:
         people = request.user.people
@@ -19,6 +19,7 @@ def site(request):
             record_child = project, 
             relationship__is_permission = True
         )
+        open = Work.objects.filter(part_of_project=project, status=1, assigned_to__isnull=True).count()
 
     design = ProjectDesign.objects.select_related("project").get(pk=project)
 
@@ -35,4 +36,5 @@ def site(request):
         "BACK_LINK": design.back_link,
         "CUSTOM_CSS": design.custom_css,
         "LOGO": design.logo.url if design.logo else None,
+        "OPEN_TASKS": open,
     }

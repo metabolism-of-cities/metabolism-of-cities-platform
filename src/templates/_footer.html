@@ -29,15 +29,15 @@
     <div class="container pt-4 pb-4">
       <h2>This is an open source, community effort</h2>
       <h3>Join us now!</h3>
-      <a class="btn btn-inverse mt-2 mr-3" href="/contributor/">
+      <a class="btn btn-inverse mt-2 mr-3" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/contributor/">
         <i class="fas fa-fw fa-user-plus"></i>
         Become a contributor
       </a>
-      <a class="btn btn-inverse mt-2 mr-3" href="/login/">
+      <a class="btn btn-inverse mt-2 mr-3" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/support/">
         <i class="fas fa-fw fa-fist-raised"></i>
         Support this project
       </a>
-      <a class="btn btn-inverse-basic mt-2 mr-3" href="/work/?status=1">
+      <a class="btn btn-inverse-basic mt-2 mr-3" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/work/?status=1">
         <i class="fal fa-fw fa-tasks"></i>
         View open tasks
       </a>

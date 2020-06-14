@@ -424,19 +424,11 @@ def flowdiagrams(request):
     list = FlowDiagram.objects.all()
     context = {
         "list": list,
+        "title": "Flow diagrams",
     }
     return render(request, "staf/flowdiagrams.html", context)
 
-def flowdiagram(request, id):
-    activities = Activity.objects.all()
-    context = {
-        "activities": activities,
-        "load_select2": True,
-        "load_mermaid": True,
-    }
-    return render(request, "staf/flowdiagram.html", context)
-
-def flowdiagram_form(request, id):
+def flowdiagram(request, id, form=False):
     info = get_object_or_404(FlowDiagram, pk=id)
     if request.method == "POST":
         if "delete" in request.POST:
@@ -462,8 +454,10 @@ def flowdiagram_form(request, id):
         "load_mermaid": True,
         "info": info,
         "blocks": blocks,
+        "form": form,
+        "title": info.name if info else "Create new flow diagram",
     }
-    return render(request, "staf/flowdiagram.form.html", context)
+    return render(request, "staf/flowdiagram.html", context)
 
 def flowdiagram_meta(request, id=None):
     ModelForm = modelform_factory(FlowDiagram, fields=("name", "description"))

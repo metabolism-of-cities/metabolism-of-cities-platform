@@ -10,9 +10,16 @@
     {% bootstrap_form form %}
 
     {% buttons %}
-      <button type="submit" class="btn btn-success">Save</button>
+      <button type="submit" class="btn btn-success">
+        <i class="fas fa-save"></i> 
+        Save
+      </button>
     {% endbuttons %}
   </form>
 
-  <p><a href="{% url 'stafcp_flowdiagrams' %}" class="btn btn-primary">Back to flow diagram list</a></p>
+  <a href="{% url "staf:flowdiagrams" %}" class="btn btn-primary-basic">
+    <i class="fal fa-angle-left"></i>
+    Back to list
+  </a>
+
 {% endblock %}
