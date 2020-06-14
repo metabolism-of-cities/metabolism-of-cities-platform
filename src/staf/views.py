@@ -119,6 +119,23 @@ def review_session(request, id):
     }
     return render(request, "staf/review/session.html", context)
 
+
+def upload_staf(request, id=None):
+    list = FlowDiagram.objects.all()
+    context = {
+        "list": list,
+        "sublist": FlowBlocks.objects.filter(diagram__in=list),
+    }
+    return render(request, "staf/upload/staf.html", context)
+
+def upload_staf_data(request, id=None):
+    list = FlowDiagram.objects.all()
+    context = {
+        "list": list,
+        "sublist": FlowBlocks.objects.filter(diagram__in=list),
+    }
+    return render(request, "staf/upload/staf.data.html", context)
+
 def upload_gis(request, id=None):
     context = {
         "list": GeocodeScheme.objects.filter(is_deleted=False),
@@ -460,7 +477,7 @@ def flowdiagram(request, id, form=False):
     return render(request, "staf/flowdiagram.html", context)
 
 def flowdiagram_meta(request, id=None):
-    ModelForm = modelform_factory(FlowDiagram, fields=("name", "description"))
+    ModelForm = modelform_factory(FlowDiagram, fields=("name", "description", "icon", "is_public"))
     if id:
         info = FlowDiagram.objects.get(pk=id)
         form = ModelForm(request.POST or None, instance=info)

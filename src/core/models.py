@@ -1061,6 +1061,7 @@ class Activity(Record):
 # The Flow Diagram describes a system (e.g. the Water sector) and describes the life-cycle based on 
 # the processes that take place within it (e.g. Water collection > Water treatment > Use > Wastewater treatment)
 class FlowDiagram(Record):
+    icon = models.CharField(max_length=50, null=True, blank=True, help_text="Only include the icon name, not fa- classes --- see https://fontawesome.com/icons?d=gallery")
 
     def get_absolute_url(self):
         return reverse("staf:flowdiagram", args=[self.id])
@@ -1071,6 +1072,10 @@ class FlowDiagram(Record):
     class Meta:
         db_table = "stafdb_flowdiagram"
 
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
+
 class FlowBlocks(models.Model):
     diagram = models.ForeignKey(FlowDiagram, on_delete=models.CASCADE, related_name="blocks")
     origin = models.ForeignKey(Activity, on_delete=models.CASCADE, related_name="blocks_from")
@@ -1080,7 +1085,7 @@ class FlowBlocks(models.Model):
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return self.origin.name + " - " + self.destination.name
+        return self.description if self.description else self.origin.name + " - " + self.destination.name
 
     def get_destination(self):
         return self.destination_label if self.destination_label else self.destination.name

@@ -1,0 +1,144 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <h1>Browse list</h1>
+
+  <p>Select an option on the left hand side</p>
+
+  <div class="card container filter-table mt-4" id="browse-list">
+    <div class="row">
+      <div class="col-md-6 col-lg-4 py-3 col-filter">
+        <div class="sticky-top">
+          <div class="form-group">
+            <input type="text" class="form-control search" placeholder="Search..." disabled>
+          </div>
+          <ul class="nav nav-pills flex-column tag-filter">
+            <li class="nav-item">
+              <div class="nav-link" data-tag="all"><i class="fal fa-fw fa-circle mr-2"></i> All types</div>
+            </li>
+            <li class="nav-item">
+              {% for each in list %}
+                <div class="nav-link" data-tag="diagram-{{ each.id }}"><i class="fa fa-{{ each.icon }} mr-2"></i> {{ each }}</div>
+              {% endfor %}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-8 p-0 col-results">
+        <table class="table mb-0">
+          <tbody class="list" hidden>
+            {% for each in sublist %}
+              <tr>
+                <td>
+                  <a class="search-name" href="block/{{ each.id }}/">{{ each }}</a>
+                  <span hidden class="search-tags">diagram-{{ each.diagram.id }}</span>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <div class="first-load text-center pt-4">
+          <h2 class="my-4"><i class="fad fa-arrow-left mr-2"></i> Please select a category</h2>
+        </div>
+
+        <div class="no-results text-center pt-4">
+          <h2 class="my-4"><i class="fad fa-search"></i> No results found</h2>
+          <button class="btn btn-lg btn-primary clear-filter my-4">Show all options</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block footer %}
+  <!-- add listjs to search and filter - -https://listjs.com/api/ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+
+  <script>
+    $(".tag-filter .nav-link").click(function() {
+      var tag = $(this).data("tag");
+
+      filterList(tag);
+
+      $(".tag-filter .nav-link").removeClass("active");
+      $(this).addClass("active");
+
+      // if user has scrolled below list, scroll back up so user doesn't get lost
+      var listPosition = $("#browse-list").offset().top;
+      if ( window.scrollY > listPosition ) {
+        scrollToID("browse-list");
+      }
+    })
+
+    var listOptions = {
+      valueNames: ["search-name", "search-tags"]
+    };
+
+    var searchList = new List("browse-list", listOptions);
+
+    function filterList(tag) {
+      searchList.filter(function(item) {
+        if (tag == "all") {
+          return true;
+        } else {
+          if (item.values()["search-tags"].includes(tag)) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      });
+
+      $("tbody.list").removeAttr("hidden");
+      $("input.search").removeAttr("disabled");
+      $(".first-load").remove();
+      checkCount();
+    }
+
+    // function to check the number of matches
+    function checkCount() {
+      var count = $("#browse-list tbody.list tr:visible").length;
+      if (count == 0) {
+        $(".no-results").addClass("visible");
+      } else {
+        $(".no-results").removeClass("visible");
+      }
+    }
+
+    // update contact count when searching by name
+    searchList.on("searchComplete", function(){
+      checkCount();
+    });
+
+    // make dropdowns work as filters
+    $(".filters select").change(function() {
+      runAllFilters()
+    });
+
+    // clear search and filters
+    function resetSearchFilters() {
+      searchList.search();
+
+      $("#browse-list input.search").val("");
+    }
+
+    $(".clear-filter").click(function() {
+      resetSearchFilters();
+      checkCount();
+      $(".nav-link[data-tag=all]").click();
+    })
+
+    // reset all filters on page load
+    resetSearchFilters();
+
+    // make no results box invisible on load
+    $(".no-results").removeClass("visible");
+
+    // button to scroll back to top
+    $(".btn-to-top").click(function() {
+      scrollToID("browse-list");
+    })
+  </script>
+{% endblock %}
