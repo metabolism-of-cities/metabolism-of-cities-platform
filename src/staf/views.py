@@ -23,6 +23,9 @@ from django.contrib.contenttypes.models import ContentType
 import logging
 logger = logging.getLogger(__name__)
 
+import csv
+import codecs
+
 PROJECT_ID = settings.PROJECT_ID_LIST
 
 # General script to check if a user has a certain permission
@@ -128,13 +131,150 @@ def upload_staf(request, id=None):
     }
     return render(request, "staf/upload/staf.html", context)
 
-def upload_staf_data(request, id=None):
-    list = FlowDiagram.objects.all()
+@login_required
+def upload_staf_data(request, id=None, block=None, project_name="staf"):
+    session = None
+    project = PROJECT_ID[project_name]
+    if id:
+        # Add validation code here
+        session = get_object_or_404(UploadSession, pk=id)
+    if request.method == "POST":
+        import os
+        if not session:
+            session = UploadSession.objects.create(
+                uploader=request.user.people,
+                name=request.POST.get("name"), 
+                type="flowdata",
+                part_of_project_id = project,
+            )
+            Work.objects.create(
+                status = Work.WorkStatus.PROGRESS,
+                part_of_project_id = project,
+                workactivity_id = 1,
+                related_to = session,
+                assigned_to = request.user.people,
+            )
+        elif "name" in request.POST:
+            session.name = request.POST.get("name")
+            session.save()
+
+        if "remove-files" in request.POST:
+            files = UploadFile.objects.filter(session=session)
+            folder = settings.MEDIA_ROOT + "/uploads/"
+            if session.part_of_project:
+                folder += "project-" + str(session.part_of_project.id) + "/"
+            folder += session.type + "/" + str(session.uuid)
+            import shutil
+            shutil.rmtree(folder)
+            files.delete()
+            messages.success(request, "The files were removed - you can upload new files instead.")
+            return redirect("staf:upload_gis_file", id=session.id)
+        elif "file" in request.FILES and request.FILES["file"]:
+            file = request.FILES["file"]
+            filename, file_extension = os.path.splitext(str(file))
+            allowed_files = [".csv", ".tsv"]
+            file_extension = file_extension.lower()
+            if file_extension in allowed_files:
+                UploadFile.objects.create(
+                    session = session,
+                    file = file,
+                )
+            else:
+                messages.error(request, "Sorry, that file type is not allowed, please upload csv or tsv files only")
+        elif "data" in request.POST:
+            try:
+                input = request.POST["data"]
+                filename = str(uuid.uuid4())
+                file = "Data entry on " + timezone.now().strftime("%Y-%m-%d %H:%M")
+                path = "/uploads/"
+                if session.part_of_project:
+                    path += "project-" + str(session.part_of_project.id) + "/"
+                path += session.type + "/" + str(session.uuid) + "/"
+                path += file + ".csv"
+                in_txt = csv.reader(input.split("\n"), delimiter = "\t")
+                out_csv = csv.writer(open(settings.MEDIA_ROOT + path, "w", newline=""))
+                out_csv.writerows(in_txt)
+                UploadFile.objects.create(
+                    session = session,
+                    file = path,
+                )
+            except Exception as e:
+                messages.error(request, "Sorry, we could not record your data. <br><strong>Error code: " + str(e) + "</strong>")
+        elif not session: 
+            messages.error(request, "Please upload a file or enter your data!")
+        return redirect("staf:upload_staf_verify", id=session.id)
     context = {
-        "list": list,
-        "sublist": FlowBlocks.objects.filter(diagram__in=list),
+        "flowblock": FlowBlocks.objects.get(pk=block) if block else None,
+        "session": session,
     }
     return render(request, "staf/upload/staf.data.html", context)
+
+@login_required
+def upload_staf_verify(request, id):
+    session = get_object_or_404(UploadSession, pk=id)
+    if session.uploader is not request.user.people and not is_member(request.user, "Data administrators"):
+        unauthorized_access(request)
+
+    rows = None
+    header = None
+    files = UploadFile.objects.filter(session=session).order_by("-id")
+    error = False
+    unidentified_columns = [
+        "Start date", 
+        "End date",
+        "Material name",
+        "Material code",
+        "Quantity",
+        "Unit",
+        "Location",
+        "Comments",
+    ]
+
+    alias_columns = {
+        "Start": "Start date",
+        "End": "End date",
+        "Date": "Start date",
+        "Material": "Material name",
+        "Qty": "Quantity",
+        "Comment": "Comments",
+    }
+
+    labels = {}
+
+    try:
+        filename = settings.MEDIA_ROOT + "/" + files[0].file.name
+        f = codecs.open(filename, encoding="utf-8")
+        rows = csv.reader(f)
+
+        # We will review each column to see if we can auto-detect what value this contains
+        header = next(rows)
+        for each in header:
+            for column in unidentified_columns:
+                if each.lower().strip() == column.lower():
+                    labels[each] = column
+                    unidentified_columns.remove(column)
+                    break
+            for key,column in alias_columns.items():
+                if each.lower().strip() == key.lower():
+                    labels[each] = column
+                    unidentified_columns.remove(column)
+                    break
+
+    except Exception as e:
+        messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
+        error = True
+        
+    context = {
+        "session": session,
+        "error": error,
+        "rows": rows,
+        "title": session.name,
+        "labels": labels,
+        "unidentified_columns": unidentified_columns,
+        "header": header,
+    }
+    return render(request, "staf/upload/staf.verify.html", context)
+
 
 def upload_gis(request, id=None):
     context = {

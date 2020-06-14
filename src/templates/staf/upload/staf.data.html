@@ -1,5 +1,14 @@
 {% extends "_base.html" %}
 
+{% block css %}
+<style type="text/css">
+.radios label{opacity:0.5}
+.radios label.active{opacity:1}
+.radios label:hover{cursor:pointer;opacity:1}
+.filesbox{display:none}
+</style>
+{% endblock %}
+
 {% block content %}
   <h1>Upload stocks/flows data</h1>
 
@@ -9,14 +18,14 @@
     </li>
     <li class="nav-item">
       {% if session and session.files.count %}
-        <a class="nav-link" href="{% url "staf:upload_gis_verify" session.id %}">2. Verify data</a>
+        <a class="nav-link" href="{% url "staf:upload_staf_verify" session.id %}">2. Verify data</a>
       {% else %}
         <a class="nav-link disabled" href="#">2. Verify data</a>
       {% endif %}
     </li>
     <li class="nav-item">
       {% if session and session.files.count %}
-        <a class="nav-link" href="{% url "staf:upload_gis_meta" session.id %}">3. Enter metadata</a>
+        <a class="nav-link" href="{% url "staf:upload_staf_meta" session.id %}">3. Enter metadata</a>
       {% else %}
         <a class="nav-link disabled" href="#">3. Enter metadata</a>
       {% endif %}
@@ -26,14 +35,31 @@
   <div class="row">
     <div class="col-md-6 mb-4">
       <form method="post" enctype="multipart/form-data">
+        <p>
+          Flow: 
+          <strong>{{ flowblock }}</strong>
+        </p>
         <div class="form-group">
-          <label for="what">What is in this shapefile?</label>
+          <label for="what">Dataset title</label>
           <input type="text" name="name" class="form-control" id="what" required value="{{ session.name }}">
         </div>
+        <div class="form-group radios">
+          <p class="mb-0">How do you want to upload the data?</p>
+          <label class="active datalabel">
+            <input name="type" type="radio" value="databox" checked> Copy and paste data
+          </label>
+          <label class="ml-4 fileslabel">
+            <input name="type" type="radio" value="filesbox"> Upload file
+          </label>
+        </div>
+        <div class="form-group databox">
+          <label>Data (see <em>instructions</em>)</label>
+          <textarea class="form-control" rows="10" name="data"></textarea>
+        </div>
         {% if not session.files.count %}
-          <div class="form-group">
+          <div class="form-group filesbox">
             <div class="custom-file">
-              <input type="file" class="custom-file-input" name="file" id="file" multiple required>
+              <input type="file" class="custom-file-input" name="file" id="file">
               <label class="custom-file-label" for="file">Choose file</label>
             </div>
           </div>
@@ -85,6 +111,21 @@
     $("button.upload-file").click(function() {
       $(this).html("<i class='fad fa-fw fa-spinner-third fa-spin'></i> Uploading file...")
     })
+
+    $("input[name='type']").click(function(){
+      val = $("input[name='type']:checked").val();
+      if (val == "filesbox") {
+        $(".filesbox").show("fast");
+        $(".databox").hide("fast");
+        $(".fileslabel").addClass("active");
+        $(".datalabel").removeClass("active");
+      } else {
+        $(".databox").show("fast");
+        $(".filesbox").hide("fast");
+        $(".datalabel").addClass("active");
+        $(".fileslabel").removeClass("active");
+      }
+    });
   </script>
 
   <!-- making the browse for file input look good and work well - https://www.npmjs.com/package/bs-custom-file-input -->

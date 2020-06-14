@@ -58,11 +58,11 @@ urlpatterns = [
     # Upload STAF data
     path("upload/", views.upload, name="upload"),
     path("upload/staf/", views.upload_staf, name="upload_staf"),
-    path("upload/staf/block/<int:id>/", views.upload_staf_data, name="upload_staf_data"),
-    path("upload/gis/file/", views.upload_gis_file, name="upload_gis_file"),
-    path("upload/gis/<slug:id>/file/", views.upload_gis_file, name="upload_gis_file"),
-    path("upload/gis/<int:id>/verify/", views.upload_gis_verify, name="upload_gis_verify"),
-    path("upload/gis/<int:id>/meta/", views.upload_gis_meta, name="upload_gis_meta"),
+    path("upload/staf/block/<int:block>/", views.upload_staf_data, name="upload_staf_data"),
+    path("upload/staf/file/", views.upload_staf_data, name="upload_staf_file"),
+    path("upload/staf/<slug:id>/file/", views.upload_staf_data, name="upload_staf_file"),
+    path("upload/staf/<int:id>/verify/", views.upload_staf_verify, name="upload_staf_verify"),
+    path("upload/staf/<int:id>/meta/", views.upload_gis_meta, name="upload_staf_meta"),
 
 
     path("activities/", views.activities_catalogs, name="activities_catalogs"),

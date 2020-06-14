@@ -1085,7 +1085,7 @@ class FlowBlocks(models.Model):
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return self.description if self.description else self.origin.name + " - " + self.destination.name
+        return self.description if self.description else self.origin.name + " → " + self.destination.name
 
     def get_destination(self):
         return self.destination_label if self.destination_label else self.destination.name
@@ -1212,7 +1212,7 @@ def upload_directory(instance, filename):
 
 class UploadFile(models.Model):
     session = models.ForeignKey(UploadSession, on_delete=models.CASCADE, related_name="files")
-    file = models.FileField(upload_to=upload_directory)
+    file = models.FileField(upload_to=upload_directory, max_length=255)
 
     def __str__(self):
         return self.file.name
