@@ -1690,9 +1690,6 @@ body.staf-review.uploaded .statistic {
   border: 1px solid #efefef; }
   .address-search .single-autocomplete-result:hover {
     border-color: #808080; }
-  .address-search .single-autocomplete-result.selected {
-    background-color: #efefef;
-    border-color: #808080; }
 
 body.work.item .description p:last-of-type {
   margin-bottom: 0; }

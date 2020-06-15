@@ -2600,11 +2600,6 @@ body.staf-review.uploaded {
   &:hover {
     border-color: $gray;
   }
-
-  &.selected {
-    background-color: $light;
-    border-color: $gray;
-  }
 }
 
 body.work.item {
