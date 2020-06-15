@@ -1742,9 +1742,6 @@ body.work.sprint .forum .single-message {
     body.work.item .forum .single-message .text p:first-of-type,
     body.work.sprint .forum .single-message .text p:first-of-type {
       display: inline-block; }
-  body.work.item .forum .single-message:last-of-type,
-  body.work.sprint .forum .single-message:last-of-type {
-    margin-bottom: .25rem !important; }
 
 body.material-stocks.landing .container.main-content {
   padding: 0 !important; }
