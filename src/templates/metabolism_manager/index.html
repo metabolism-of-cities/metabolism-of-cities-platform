@@ -1,7 +1,40 @@
 {% extends "_base.html" %}
 
+{% block page_name %}fullwidth{% endblock %}
+
+{% block css %}
+  <style type="text/css">
+  body.fullwidth .container.main-content .fullwidth-wrapper {
+    color: #fff;
+    padding: 20vh 0;
+    text-align:center;
+    background-size: cover;
+    background-image:url("/media/header_image/home.huge.jpg");
+  }
+  .fullwidth-wrapper h1, .fullwidth-wrapper p {
+    text-shadow: 1px 1px 5px #000; 
+  }
+  .main-content.container {
+    padding-top: 0;
+  }
+  </style>
+{% endblock %}
+
 {% block content %}
 
-  {{ webpage.get_content|safe }}
+  <div class="fullwidth-wrapper">
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-4">PlatformU</h1>
+        <p class="lead">
+          The essential digital tool for area managers. 
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    {{ webpage.get_content|safe }}
+  </div>
 
 {% endblock %}
