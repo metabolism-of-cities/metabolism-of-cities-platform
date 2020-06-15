@@ -34,10 +34,12 @@
             Save
          </button>
 
+        {% if demand %}
         <button name="delete" value="true" type="submit" class="btn btn-danger" onclick="javascript:return confirm('Are you sure you want to delete this record?')">
           <i class="fas fa-trash-alt"></i> 
           Delete
         </button>
+        {% endif %}
 
         </div>
       </div>
