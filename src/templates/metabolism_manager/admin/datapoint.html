@@ -12,6 +12,7 @@
 
   <h1>Data entry</h1>
   <a class="btn btn-sm btn-primary-basic" href="javascript:history.back()"><i class="fas fa-angle-left"></i> Back</a>
+  <a class="btn btn-sm btn-primary-basic float-right" href="{% url "platformu:admin_entity_material" my_organization.id info.id "data" data.id %}"><i class="fas fa-pencil"></i> Edit</a>
 
   {% if data.description %}
     <div class="mb-4 mt-3">
@@ -31,30 +32,28 @@
       <ul class="list-group list-group-flush">
 
         <li class="list-group-item">
-        Type: 
         {% if data.quantity > 0 %}
-          <i class="fa fa-sign-in-alt"></i>
+          <i class="far fa-sign-in"></i>
           Demand
         {% else %}
           <span class="text-success">
-            <i class="fa fa-sign-out-alt"></i>
+            <i class="far fa-sign-out"></i>
             Supply
           </span>
         {% endif %}
         </li>
 
         <li class="list-group-item">
-          <i class="fa fa-fw fa-{{ data.material_type.parent.icon }}"></i>
+          <i class="far fa-fw mr-2 fa-{{ data.material_type.parent.icon }}"></i>
           {{ data.material_type.parent }}: {{ data.material_type }}
         </li>
 
         {% if data.name %}
-          <li class="list-group-item">{{ data }}</li>
+          <li class="list-group-item">{{ data.name }}</li>
         {% endif %}
 
-        <li class="list-group-item">Quantity: {{ data.absolute_quantity }} {{ data.unit }}</li>
-        <li class="list-group-item">From: {{ data.start_date }}</li>
-        <li class="list-group-item">Until: {{ data.end_date }}</li>
+        <li class="list-group-item"><i class="far fa-fw fa-balance-scale mr-2" aria-hidden="true"></i> {{ data.absolute_quantity }} {{ data.unit }}</li>
+        <li class="list-group-item"><i class="far fa-fw fa-calendar mr-2"></i>{{ data.start_date }} - {{ data.end_date }}</li>
       </ul>
     </div>
 
@@ -66,14 +65,22 @@
         <img src="{{ data.owner.image.large.url }}" class="card-img-top">
       {% endif %}
       <ul class="list-group list-group-flush">
-        <li class="list-group-item">{{ data.owner }}</li>
+        <li class="list-group-item"><strong>{{ data.owner }}</strong></li>
         {% if data.owner.organization.url %}
-          <li class="list-group-item">{{ data.owner.organization.url }}</li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-link mr-2" aria-hidden="true"></i>
+            {{ data.owner.organization.url }}
+          </li>
         {% endif %}
         {% if data.owner.organization.email %}
-          <li class="list-group-item">{{ data.owner.organization.email }}</li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-envelope mr-2" aria-hidden="true"></i>
+            {{ data.owner.organization.email }}
+          </li>
         {% endif %}
-        <li class="list-group-item">{{ data.owner.meta_data.address }}</li>
+        <li class="list-group-item">
+        <i class="far fa-fw fa-map-marker-alt mr-2" aria-hidden="true"></i>
+        {{ data.owner.meta_data.address }}</li>
       </ul>
     </div>
   

@@ -18,6 +18,11 @@
 
   <h3>Map</h3>
 
+  {% if not gps.lat or not gps.lng %}
+    <div class="alert alert-danger">
+      Sorry, the GPS coordinates for <a href="{% url "platformu:admin" %}">your organisations</a> are not set properly. Please check the values so that we can generate the map for you.
+    </div>
+  {% endif %}
   <div id="listings"></div>
   <form class="row filters mb-2">
     <div class="col-md-6 col-lg-6 mb-2">
@@ -27,6 +32,7 @@
           <div class="input-group-text">Layer</div>
         </div>
         <select class="custom-select material filter">
+          <option value="all">All layers</option>
           {% for each in material_list %}
             <option value="{{ each.material_type__name }}">{{ each.material_type__parent__name }} - {{ each.material_type__name }}</option>
           {% endfor %}
@@ -103,7 +109,8 @@
         var uglyTo = new Date(feature.properties.end_date * 1000);
         var prettyTo = uglyTo.toLocaleDateString('en-GB', dateOptions);
 
-      var popupContent = "<div class='popup-title'>" + feature.properties.name + "</div><div class='popup-content'><p>" + feature.properties.address + "</p><table class='table'><tbody><tr><td>Material</td><td>" + feature.properties.material + "</td><tr><td>Quantity</td><td>" + feature.properties.quantity + "</td><tr><td>Status</td><td>" + feature.properties.status + "</td></tr><tr><td>Date</td><td>" + prettyFrom + " - " + prettyTo + "</td></tr><tr class='text-center'><td colspan='2'><a href='../data/" + feature.properties.id + "/'>View more details</a></td></tr></table></div>"
+      var popupContent = "<div class='popup-title'>" + feature.properties.name + "</div><div class='popup-content'><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + feature.properties.address + "</li><li class='list-group-item'><i class='far fa-fw fa-" + feature.properties.icon + " mr-2'></i>" + feature.properties.material + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + feature.properties.quantity + "</li><li class='list-group-item text-" + feature.properties.status_color + "'><i class='far fa-fw fa-" + feature.properties.status_icon + " mr-2'></i>" + feature.properties.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a href='../data/" + feature.properties.id + "/'>View more details</a></li></ul></div>"
+
 
       layer.bindPopup(popupContent);
     }
@@ -124,8 +131,11 @@
             "id": "{{ each.id }}",
             "address": "{{ each.owner.meta_data.address }}",
             "material": "{{ each.material_type }}",
+            "icon": "{{ each.material_type.parent.icon }}",
             "quantity": "{{ each.absolute_quantity }} {{ each.unit }}",
             "status": "{% if each.type == "supply" %}Supply{% else %}Demand{% endif %}",
+            "status_icon": "{% if each.type == "supply" %}sign-out{% else %}sign-in{% endif %}",
+            "status_color": "{% if each.type == "supply" %}success{% else %}dark{% endif %}",
             "start_date": {{ each.start_date|date:"U" }},
             "end_date": {{ each.end_date|date:"U" }},
             "size": {% if each.unit.multiplication_factor %}Math.min(10*(({{ each.unit.multiplication_factor }}*{{ each.absolute_quantity }})/{{ min_values|get_item:each.material_type.name }}),100){% else %}10{% endif %},
@@ -228,7 +238,7 @@
         var uglyTo = new Date(this.properties.end_date * 1000);
         var prettyTo = uglyTo.toLocaleDateString('en-GB', dateOptions);
 
-        $("section#listings").append("<div class='col-md-6 col-lg-4 mb-4'><div class='card'><div class='card-header'>" + this.properties.name + "</div><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + this.properties.address + "</li><li class='list-group-item'><i class='far fa-fw fa-flask mr-2'></i>" + this.properties.material + "</li><li class='list-group-item'><i class='far fa-fw fa-box mr-2'></i>" + this.properties.quantity + "</li><li class='list-group-item'><i class='far fa-fw fa-recycle mr-2'></i>" + this.properties.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item'><i class='far fa-fw fa-arrow-right mr-2'></i><a href='../data/" + this.properties.id + "/'>View more details</a></li></ul></div></div>")
+        $("section#listings").append("<div class='col-md-6 col-lg-4 mb-4'><div class='card'><div class='card-header'>" + this.properties.name + "</div><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + this.properties.address + "</li><li class='list-group-item'><i class='far fa-fw fa-" + this.properties.icon + " mr-2'></i>" + this.properties.material + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + this.properties.quantity + "</li><li class='list-group-item text-" + this.properties.status_color + "'><i class='far fa-fw fa-" + this.properties.status_icon + " mr-2'></i>" + this.properties.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a href='../data/" + this.properties.id + "/'>View more details</a></li></ul></div></div>")
       })
     }
 

@@ -129,6 +129,8 @@ def clusters(request, organization):
 def admin_map(request, organization=None):
 
     data = gps = material_list = None
+    min_values = {}
+
     if organization:
         my_organization = my_organizations(request, organization)
     else:
@@ -151,7 +153,6 @@ def admin_map(request, organization=None):
             messages.error(request, "Please ensure that you enter the address/GPS details first.")
         data = MaterialDemand.objects.filter(owner__in=organization_list)
         material_list = MaterialDemand.objects.filter(owner__in=organization_list).values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
-        min_values = {}
 
         # We need to make each bubble relative to the smallest value in that group
         # We can improve efficiency... starting with a single query to obtain only largest values

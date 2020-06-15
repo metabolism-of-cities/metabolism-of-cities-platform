@@ -2,7 +2,7 @@
 <div class="top-layer">
 
   {% if DESIGN.back_link or PERMISSIONS or request.user.is_staff %}
-    <div class="return-bar">
+    <div class="return-bar" style="display:none">
       <div class="container">
         {% if DESIGN.back_link %}
           {% if DEBUG %}
