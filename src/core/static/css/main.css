@@ -775,6 +775,12 @@ table.fancytree-container mark {
     border-color: #0f3b43 !important;
     background-color: #0f3b43 !important; }
 
+.datatable.datatable-card {
+  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
+  border-radius: .25rem;
+  margin-bottom: 1rem !important;
+  margin-top: 1rem !important; }
+
 #timeline {
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
   width: 100%;

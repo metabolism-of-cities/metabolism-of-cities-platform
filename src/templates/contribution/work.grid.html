@@ -9,7 +9,7 @@
     Back to control panel
   </a>
 
-  <div class="alert alert-primary alert-dismissible">
+  <div class="alert alert-primary alert-dismissible mb-4">
     <p>
       At Metabolism of Cities, we work <strong>together</strong>. We invite you to join
       us in this project. We try to be open to anyone. Data miners, academics, students,
@@ -42,7 +42,7 @@
           <option value=""></option>
           {% for each in types %}
             <option value="{{ each.id }}" {% if each.id == type %}selected{% endif %}>
-              {{ each }} 
+              {{ each }}
             </option>
           {% endfor %}
         </select>
@@ -82,7 +82,7 @@
     </button>
   </form>
 
-  <table class="table table-striped datatable">
+  <table class="table datatable datatable-card">
     <thead>
       <tr>
         <th>Task</th>
