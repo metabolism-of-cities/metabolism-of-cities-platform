@@ -1,14 +1,5 @@
 {% extends "_base.html" %}
 
-{% block css %}
-<style type="text/css">
-.radios label{opacity:0.5}
-.radios label.active{opacity:1}
-.radios label:hover{cursor:pointer;opacity:1}
-.filesbox{display:none}
-</style>
-{% endblock %}
-
 {% block content %}
   <h1>Upload stocks/flows data</h1>
 
@@ -18,65 +9,74 @@
     </li>
     <li class="nav-item">
       {% if session and session.files.count %}
-        <a class="nav-link" href="{% url "staf:upload_staf_verify" session.id %}">2. Verify data</a>
+        <a class="nav-link" href="{% url 'staf:upload_staf_verify' session.id %}">2. Verify data</a>
       {% else %}
         <a class="nav-link disabled" href="#">2. Verify data</a>
       {% endif %}
     </li>
     <li class="nav-item">
       {% if session and session.files.count %}
-        <a class="nav-link" href="{% url "staf:upload_staf_meta" session.id %}">3. Enter metadata</a>
+        <a class="nav-link" href="{% url 'staf:upload_staf_meta' session.id %}">3. Enter metadata</a>
       {% else %}
         <a class="nav-link disabled" href="#">3. Enter metadata</a>
       {% endif %}
     </li>
   </ul>
 
+  <div class="alert alert-light">
+    <i class="fal fa-wind mr-2"></i> <strong>Flow</strong>: {{ flowblock }}
+  </div>
+
   <div class="row">
     <div class="col-md-6 mb-4">
       <form method="post" enctype="multipart/form-data">
-        <p>
-          Flow: 
-          <strong>{{ flowblock }}</strong>
-        </p>
         <div class="form-group">
-          <label for="what">Dataset title</label>
+          <label for="what" class="category">Dataset title</label>
           <input type="text" name="name" class="form-control" id="what" required value="{{ session.name }}">
         </div>
-        <div class="form-group radios">
-          <p class="mb-0">How do you want to upload the data?</p>
-          <label class="active datalabel">
-            <input name="type" type="radio" value="databox" checked> Copy and paste data
-          </label>
-          <label class="ml-4 fileslabel">
-            <input name="type" type="radio" value="filesbox"> Upload file
-          </label>
+
+        <label class="category">How do you want to upload the data?</label>
+        <div class="custom-control custom-radio">
+          <input type="radio" id="databox" name="type" value="databox" class="custom-control-input">
+          <label class="custom-control-label" for="databox">Copy and paste data</label>
         </div>
-        <div class="form-group databox">
-          <label>Data (see <em>instructions</em>)</label>
+        <div class="custom-control custom-radio mb-4">
+          <input type="radio" id="filesbox" name="type" value="filesbox" class="custom-control-input">
+          <label class="custom-control-label" for="filesbox">Upload file</label>
+        </div>
+
+        <div class="form-group databox" hidden>
+          <label class="category">Data</label>
           <textarea class="form-control" rows="10" name="data"></textarea>
         </div>
+        {% if session and session.files.count %}
+          <div>
+            <label class="category">Files</label>
+            <ul>
+              {% for each in session.files.all %}
+                <li>{{ each.filename }}</li>
+              {% endfor %}
+            </ul>
+            <button name="remove-files" value="true" class="btn btn-primary-basic mb-4" type="submit">
+              <i class="fal fa-fw fa-trash-alt"></i> Remove files and try again
+            </button>
+          </div>
+        {% endif %}
         {% if not session.files.count %}
-          <div class="form-group filesbox">
+          <div class="form-group filesbox" hidden>
             <div class="custom-file">
               <input type="file" class="custom-file-input" name="file" id="file">
               <label class="custom-file-label" for="file">Choose file</label>
             </div>
           </div>
-          <button class="btn btn-success upload-file" type="submit"><i class="fas fa-fw fa-upload"></i> Submit</button>
+          <button class="btn btn-success upload-file" type="submit" hidden>
+            <i class="fas fa-fw fa-upload"></i>
+            Submit
+          </button>
         {% else %}
           <button class="btn btn-success" type="submit"><i class="fas fa-fw fa-save"></i> Save and next</button>
         {% endif %}
         {% csrf_token %}
-        {% if session and session.files.count %}
-          <h3 class="mt-3">Files:</h3>
-          <ul>
-            {% for each in session.files.all %}
-              <li>{{ each.filename }}</li>
-            {% endfor %}
-          </ul>
-          <button name="remove-files" value="true" class="btn btn-warning" type="submit"><i class="fas fa-fw fa-trash-alt"></i> Remove files and try again</button>
-          {% endif %}
       </form>
     </div>
     <div class="col-md-6">
@@ -115,16 +115,18 @@
     $("input[name='type']").click(function(){
       val = $("input[name='type']:checked").val();
       if (val == "filesbox") {
-        $(".filesbox").show("fast");
-        $(".databox").hide("fast");
+        $(".filesbox").removeAttr("hidden");
+        $(".databox").attr("hidden", "hidden");
         $(".fileslabel").addClass("active");
         $(".datalabel").removeClass("active");
       } else {
-        $(".databox").show("fast");
-        $(".filesbox").hide("fast");
+        $(".databox").removeAttr("hidden");
+        $(".filesbox").attr("hidden", "hidden");
         $(".datalabel").addClass("active");
         $(".fileslabel").removeClass("active");
       }
+
+      $(".btn.upload-file").removeAttr("hidden");
     });
   </script>
 

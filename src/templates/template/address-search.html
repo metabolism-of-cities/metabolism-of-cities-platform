@@ -9,16 +9,17 @@
   <form method="submit" class="address-search">
     <input type="text" class="form-control" placeholder="Type in your address" id="autocomplete-search" name="address">
     <div id="autocomplete-results" class="mt-3"></div>
-    <input id="lat" type="text" name="lat" placeholder="Latitude">
-    <input id="lon" type="text" name="lng" placeholder="Longitude">
-    <input id="formatted" type="text" name="formatted" placeholder="Formatted address">
-    <input id="country" type="text" name="country" placeholder="Country">
-    <input id="state" type="text" name="state" placeholder="State">
-    <input id="city" type="text" name="city" placeholder="City">
-    <input id="street" type="text" name="street" placeholder="Street">
-    <input id="housenumber" type="text" name="housenumber" placeholder="House number">
-    <input id="postcode" type="text" name="postcode" placeholder="Postal code">
-    <button class="btn btn-primary" type="submit" id="submit-coordinates" hidden>
+    <input hidden id="lat" type="text" name="lat" placeholder="Latitude">
+    <input hidden id="lon" type="text" name="lng" placeholder="Longitude">
+    <input hidden id="formatted" type="text" name="formatted" placeholder="Formatted address">
+    <input hidden id="country" type="text" name="country" placeholder="Country">
+    <input hidden id="state" type="text" name="state" placeholder="State">
+    <input hidden id="city" type="text" name="city" placeholder="City">
+    <input hidden id="street" type="text" name="street" placeholder="Street">
+    <input hidden id="housenumber" type="text" name="housenumber" placeholder="House number">
+    <input hidden id="postcode" type="text" name="postcode" placeholder="Postal code">
+
+    <button class="btn btn-primary mt-3" type="submit" id="submit-coordinates" hidden>
       <i class="fas fa-paper-plane"></i>
       Submit
     </button>
@@ -50,7 +51,6 @@
       };
 
       $("#submit-coordinates").attr("hidden", "hidden");
-      $(".single-autocomplete-result").removeClass("selected")
     })
 
     function showAutocompleteResults(results) {
@@ -58,24 +58,23 @@
       $(results.features).each(function() {
         $("#autocomplete-results").append("<div class='single-autocomplete-result' data-lon='" + this.properties.lon + "' data-lat='" + this.properties.lat + "' data-formatted='" + this.properties.formatted + "' data-country='" + this.properties.country + "' data-state='" + this.properties.state + "' data-city='" + this.properties.city + "' data-street='" + this.properties.street + "' data-housenumber='" + this.properties.housenumber + "' data-postcode='" + this.properties.postcode + "'>" + this.properties.formatted + "</div>")
       });
+      $("#autocomplete-results").show();
       enableResultFunction()
     };
 
     function enableResultFunction() {
-
       $(".single-autocomplete-result").click(function() {
-        $(".single-autocomplete-result").removeClass("selected")
-        $(this).addClass("selected");
-
         $("input#lat").val( $(this).data("lat") );
         $("input#lon").val( $(this).data("lon") );
-        $("input#formatted").val( $(this).data("formatted") );
+        $("input#formatted, input#autocomplete-search").val( $(this).data("formatted") );
         $("input#country").val( $(this).data("country") );
         $("input#state").val( $(this).data("state") );
         $("input#city").val( $(this).data("city") );
         $("input#street").val( $(this).data("street") );
         $("input#housenumber").val( $(this).data("housenumber") );
         $("input#postcode").val( $(this).data("postcode") );
+
+        $("#autocomplete-results").hide();
 
         $("#submit-coordinates").removeAttr("hidden");
       })
