@@ -564,6 +564,16 @@ blockquote {
     .card.icon-card .card-header {
       text-align: center; }
 
+.card-table table {
+  margin-bottom: 0;
+  border-radius: .25rem; }
+  .card-table table th {
+    border-top: none; }
+    .card-table table th:first-of-type {
+      border-top-left-radius: .25rem; }
+    .card-table table th:last-of-type {
+      border-top-right-radius: .25rem; }
+
 .contribute.card {
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
   color: #fbfbfb;
@@ -1622,6 +1632,14 @@ body.upload-portal.index section {
 body.upload-portal.index #data,
 body.upload-portal.index #geospatial {
   background-color: #efefef; }
+
+body.staf.verify table#data {
+  table-layout: fixed; }
+  body.staf.verify table#data td {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; }
 
 body.staf-review .avatar {
   width: 3rem;

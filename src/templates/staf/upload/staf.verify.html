@@ -1,98 +1,102 @@
 {% extends "_base.html" %}
 {% load moc_extras %}
+{% block page_name %}staf verify{% endblock %}
 
 {% block content %}
   <h1>Upload stock/flow data</h1>
   <ul class="nav nav-tabs mb-4">
     <li class="nav-item">
-      <a class="nav-link" href="{% url "staf:upload_staf_file" session.id %}">1. Upload data</a>
+      <a class="nav-link" href="{% url 'staf:upload_staf_file' session.id %}">1. Upload data</a>
     </li>
     <li class="nav-item">
       <a class="nav-link disabled active" href="#">2. Verify data</a>
     </li>
     <li class="nav-item">
-        {% if not error %}
-          <a class="nav-link" href="{% url "staf:upload_staf_meta" session.id %}">3. Enter metadata</a>
-        {% else %}
-          <a class="nav-link disabled" href="#">3. Enter metadata</a>
-        {% endif %}
+      {% if not error %}
+        <a class="nav-link" href="{% url 'staf:upload_staf_meta' session.id %}">3. Enter metadata</a>
+      {% else %}
+        <a class="nav-link disabled" href="#">3. Enter metadata</a>
+      {% endif %}
     </li>
   </ul>
-      <table class="table table-striped mb-4">
-        <thead>
-          <tr>
-            {% for each in header %}
-              <th>{{ each }}</th>
-            {% endfor %}
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            {% for each in header %}
-              <td>
-                {% if labels|get_item:each %}
-                  <span class="text-success" title="This column was auto-detected based on the label">
-                  <i class="fa fa-check"></i>
-                    {% if labels|get_item:each == each %}
-                    {% else %}
-                      {{ labels|get_item:each }}
-                    {% endif %}
-                  </span>
-                {% else %}
-                  <span class="text-danger">
-                    <i class="fa fa-question-circle"></i>
-                    Unidentified
-                  </span>
-                  <br>
-                  <select name="column" required class="form-control">
-                    <option value=""></option>
-                    {% for each in unidentified_columns %}
-                      <option value="{{ each }}">{{ each }}</option>
-                    {% endfor %}
-                  </select>
-                {% endif %}
-              </td>
-            {% endfor %}
-          </tr>
-        {% for row in rows %}
-          <tr>
-            {% for col in row %}
-              <td>{{ col }}</td>
-            {% endfor %}
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
 
-      <div class="mt-4 mb-5">
-        <a href="{% url "staf:upload_staf_file" session.id %}" class="btn btn-danger">
-          <i class="fas fa-fw fa-arrow-left mr-1"></i> It looks bad, try again
-        </a>
-        {% if not error %}
-        <a href="{% url "staf:upload_staf_meta" session.id %}" class="btn btn-success">
-          It looks good <i class="fas fa-fw fa-arrow-right mr-0 ml-1"></i>
-        </a>
-        {% endif %}
-      </div>
+  <div class="alert alert-danger">
+      <i class="fal fa-exclamation-triangle mr-1"></i>
+      You have <strong id="unidentified-columns-count"></strong> columns left to identify
+  </div>
 
-      <div class="card">
-        <div class="card-header">
-          <i class="fas fa-fw fa-question-circle"></i> Instructions
-        </div>
-        <div class="card-body">
-          <p>If your map looks good, go to the next step.</p>
-          <p>If not, you can try debugging this:</p>
-            <ul>
-              <li>Check the CRS used</li>
-              <li>Try opening your map in QGIS</li>
-              <li>Verify this is a shapefile</li>
-              <li>If all else fails, <a href="/contact">ask MoC for help</a> using shapefile ID <code>#{{ session.id }}</code></li>
-            </ul>
-          </li>
-          <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="btn btn-primary"><i class="fas fa-fw fa-play"></i> View instruction video</a>
+  <div class="card card-table">
+    <table class="table" id="data">
+      <thead>
+        <tr>
+          {% for each in header %}
+            <th>{{ each }}</th>
+          {% endfor %}
+        </tr>
+        <tr>
+          {% for each in header %}
+            <th>
+              {% if labels|get_item:each %}
+                <select name="column" class="form-control is-valid custom-select" disabled>
+                  {% if labels|get_item:each == each %}
+                    <option value="{{ labels|get_item:each }}" selected>{{ each }}</option>
+                  {% else %}
+                    <option value="{{ labels|get_item:each }}" selected>{{ labels|get_item:each }}</option>
+                  {% endif %}
+                </select>
+              {% else %}
+                <select name="column" required class="form-control custom-select is-invalid unidentified-column">
+                  <option value="none" selected disabled>Select an option</option>
+                  {% for each in unidentified_columns %}
+                    <option value="{{ each }}">{{ each }}</option>
+                  {% endfor %}
+                </select>
+              {% endif %}
+            </th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+      {% for row in rows %}
+        <tr>
+          {% for col in row %}
+            <td>{{ col }}</td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
-        </div>
-      </div>
+  <div class="mt-4 mb-5">
+    <a href="{% url 'staf:upload_staf_file' session.id %}" class="btn btn-danger">
+      <i class="fas fa-fw fa-arrow-left mr-1"></i> It looks bad, try again
+    </a>
+    {% if not error %}
+    <a href="{% url 'staf:upload_staf_meta' session.id %}" class="btn btn-success disabled looks-good">
+      It looks good <i class="fas fa-fw fa-arrow-right mr-0 ml-1"></i>
+    </a>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <i class="fas fa-fw fa-question-circle"></i> Instructions
+    </div>
+    <div class="card-body">
+      <p>If your map looks good, go to the next step.</p>
+      <p>If not, you can try debugging this:</p>
+        <ul>
+          <li>Check the CRS used</li>
+          <li>Try opening your map in QGIS</li>
+          <li>Verify this is a shapefile</li>
+          <li>If all else fails, <a href="/contact">ask MoC for help</a> using shapefile ID <code>#{{ session.id }}</code></li>
+        </ul>
+      </li>
+      <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="btn btn-primary"><i class="fas fa-fw fa-play"></i> View instruction video</a>
+
+    </div>
+  </div>
 {% endblock %}
 
 {% block footer %}
@@ -102,22 +106,63 @@
   </script>
 
   <script>
-    // https://leafletjs.com/reference-1.6.0.html
-    var map = L.map("map");
-    L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
-      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-      id: "mapbox/streets-v11",
-      tileSize: 512,
-      zoomOffset: -1,
-    }).addTo(map);
+    // checking how many columns need a type
+    function checkColumns() {
+      let unidentifiedCount = $("#data .is-invalid").length;
 
-    geojsonlayer = L.geoJSON({{ geojson|safe }}, {
-      style: {
-        color: "#144d58",
-        weight: 2,
+      $("#unidentified-columns-count").text(unidentifiedCount)
+
+      if (unidentifiedCount == 0) {
+        let alert = $(".alert-danger");
+
+        alert
+          .addClass("alert-success")
+          .removeClass("alert-danger")
+          .html("<i class='fal fa-check-circle mr-1'></i> All columns are identified, you can continue to the next step")
+
+        $(".btn.looks-good").removeClass("disabled");
       }
-    }).addTo(map);
+    }
 
-    map.fitBounds(geojsonlayer.getBounds());
+    // what happens when a column is identified
+    $("select.unidentified-column").change(function() {
+      $(this).removeClass("is-invalid");
+      $(this).addClass("is-valid");
+
+      checkColumns()
+
+      // check all select values to prevent duplicates
+      $("select[name='column'] option").removeAttr("disabled")
+      $("select[name='column'] option[value='none']").attr("disabled", "disabled")
+
+      $("select[name='column']").each(function() {
+        let columnValue = $(this).val();
+
+        if (columnValue) {
+          $("select[name='column'] option[value='" + columnValue + "']").attr("disabled", "disabled")
+        }
+      })
+    })
+
+    // check unidentified columns on page load
+    checkColumns();
+
+    // https://leafletjs.com/reference-1.6.0.html
+    // var map = L.map("map");
+    // L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+    //   attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    //   id: "mapbox/streets-v11",
+    //   tileSize: 512,
+    //   zoomOffset: -1,
+    // }).addTo(map);
+
+    // geojsonlayer = L.geoJSON({{ geojson|safe }}, {
+    //   style: {
+    //     color: "#144d58",
+    //     weight: 2,
+    //   }
+    // }).addTo(map);
+
+    // map.fitBounds(geojsonlayer.getBounds());
   </script>
 {% endblock %}

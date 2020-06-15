@@ -861,8 +861,26 @@ blockquote {
       text-align: center;
     }
   }
+
 }
 
+// CARD WITH TABLE IN IT
+.card-table table {
+  margin-bottom: 0;
+  border-radius: .25rem;
+
+  th {
+    border-top: none;
+
+    &:first-of-type {
+      border-top-left-radius: .25rem;
+    }
+
+    &:last-of-type {
+      border-top-right-radius: .25rem;
+    }
+  }
+}
 
 // CONTRIBUTE BOX
 .contribute.card {
@@ -2495,6 +2513,18 @@ body.upload-portal.index {
   #data,
   #geospatial {
     background-color: $light;
+  }
+}
+
+// STAF REVIEW PAGE
+body.staf.verify table#data {
+  table-layout: fixed;
+
+  td {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
