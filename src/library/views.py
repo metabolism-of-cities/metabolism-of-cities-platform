@@ -241,7 +241,7 @@ def form(request, id=None):
     if type == "dataset":
         ModelForm = modelform_factory(
             LibraryDataset, 
-            fields=("name", "author_list", "description", "url", "tags", "spaces", "year", "language", "license", "data_year_start", "data_year_end", "update_frequency", "data_interval", "data_formats", "has_api"),
+            fields=("name", "author_list", "description", "url", "size", "tags", "spaces", "year", "language", "license", "data_year_start", "data_year_end", "update_frequency", "data_interval", "data_formats", "has_api"),
             labels = {
                 "year": "Year created (required)",
                 "author_list": "Authors (people)",

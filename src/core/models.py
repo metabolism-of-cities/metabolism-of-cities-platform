@@ -439,7 +439,7 @@ class Webpage(Record):
         return self.slug
 
     def get_content(self):
-        return markdown(self.description) if type == "markdown" else self.description
+        return markdown(self.description) if self.type == "markdown" else self.description
 
     class Meta:
         constraints = [
@@ -741,6 +741,7 @@ class LibraryDataset(LibraryItem):
     data_interval = models.CharField(max_length=50, null=True, blank=True)
     update_frequency = models.CharField(max_length=50, null=True, blank=True)
     has_api = models.BooleanField(default=True, db_index=True)
+    size = models.IntegerField(null=True, blank=True, help_text="Size in MB")
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()

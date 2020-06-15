@@ -576,7 +576,7 @@ def controlpanel_content_form(request, project_name, id=None):
         unauthorized_access(request)
 
     info = None
-    ModelForm = modelform_factory(Webpage, fields=("name", "description", "type", "slug", "is_deleted"))
+    ModelForm = modelform_factory(Webpage, fields=("name", "type", "slug", "is_deleted"))
     if id:
         info = get_object_or_404(Webpage, pk=id)
         form = ModelForm(request.POST or None, instance=info)
@@ -585,7 +585,9 @@ def controlpanel_content_form(request, project_name, id=None):
     if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)
-            info.part_of_project_id = project
+            if not id:
+                info.part_of_project_id = project
+            info.description = request.POST.get("description")
             info.save()
             # TO DO
             # There is a contraint, for slug + project combined, and we should
@@ -599,7 +601,9 @@ def controlpanel_content_form(request, project_name, id=None):
         "pages": Webpage.objects.filter(part_of_project_id=project),
         "load_datatables": True,
         "form": form,
+        "info": info,
         "title": info.name if info else "Create webpage",
+        "load_markdown": True,
     }
     return render(request, "controlpanel/content.form.html", context)
 
