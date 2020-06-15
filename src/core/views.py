@@ -540,7 +540,7 @@ def controlpanel_design(request, project_name):
     info = ProjectDesign.objects.get(pk=project)
     ModelForm = modelform_factory(
         ProjectDesign,
-        fields = ("header", "logo", "custom_css", "back_link"),
+        fields = ("header", "logo", "header_color", "custom_css", "back_link"),
     )
     form = ModelForm(request.POST or None, request.FILES or None, instance=info)
     if request.method == "POST":

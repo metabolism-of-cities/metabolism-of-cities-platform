@@ -33,8 +33,7 @@ def site(request):
         "PERMISSIONS": permissions,
         "PROJECT": project,
         "HEADER_STYLE": design.header,
-        "BACK_LINK": design.back_link,
-        "CUSTOM_CSS": design.custom_css,
+        "DESIGN": design,
         "LOGO": design.logo.url if design.logo else None,
         "OPEN_TASKS": open,
     }

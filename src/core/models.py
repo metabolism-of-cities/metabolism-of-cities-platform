@@ -471,6 +471,11 @@ class ProjectDesign(models.Model):
         ("image", "Image underneath menu"),
     ]
     header = models.CharField(max_length=6, choices=HEADER, default="full")
+    HEADER_COLOR = [
+        ("dark", "Dark background, light text"),
+        ("light", "Light background, dark text"),
+    ]
+    header_color = models.CharField(max_length=6, choices=HEADER_COLOR, default="dark")
     logo = models.FileField(null=True, blank=True, upload_to="logos")
     custom_css = models.TextField(null=True, blank=True)
     back_link = models.BooleanField(default=True)

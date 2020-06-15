@@ -55,9 +55,9 @@
   {% block css %}{% endblock %}
   {% block head %}{% endblock %}
 
-  {% if CUSTOM_CSS %}
+  {% if DESIGN.custom_css %}
     <style type="text/css">
-      {{ CUSTOM_CSS|safe }}
+      {{ DESIGN.custom_css|safe }}
     </style>
   {% endif %}
 
