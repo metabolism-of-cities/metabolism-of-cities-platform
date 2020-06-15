@@ -20,6 +20,7 @@
           {% endif %}
           <th class="border-0">Type</th>
           <th class="border-0">Date</th>
+          <th class="border-0">Edit</th>
         </tr>
       </thead>
       <tbody>
@@ -29,10 +30,13 @@
             <i class="fa fa-{{ each.material_type.parent.icon }}"></i>
             {{ each.material_type.parent }}</td>
             <td>
+              <a href="{% url "platformu:admin_datapoint" each.id %}">
               {% if each.name %}
-                {{ each.name }}<br>
+                {{ each.name }}
+              {% else %}
+                {{ each.material_type }}
               {% endif %}
-              {{ each.material_type }}
+              </a>
             </td>
             {% if slug != "technology" %}
               <td>{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
@@ -51,6 +55,7 @@
             <td>
               {{ each.start_date }} - {{ each.end_date }}
             </td>
+            <td><a href="edit/{{ each.id }}/?prev={{ request.get_full_path }}"><i class="fa fa-pencil"></i></a></td>
           </tr>
         {% endfor %}
       </tbody>

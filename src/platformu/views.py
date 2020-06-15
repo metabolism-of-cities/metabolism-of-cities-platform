@@ -330,30 +330,45 @@ def admin_entity_material(request, organization, id, slug, material=None, edit=N
     info = get_entity_record(request, my_organization, id)
 
     units = Unit.objects.all()
+    add_name_field = False
+    demand = None
+
+    if edit:
+        demand = get_object_or_404(MaterialDemand, pk=edit, owner=info)
+        material = demand.material_type.id
+        type = demand.type()
 
     if material:
         material = Material.objects.get(pk=material)
         if material.measurement_type:
             units = units.filter(type=material.measurement_type)
+        material_name = material.name
+        if material_name.lower() == "other":
+            add_name_field = True
 
     fields = ["start_date", "end_date", "description", "image"]
-    if slug == "technology":
+    if slug == "technology" or add_name_field:
         fields = ["name"] + fields
     ModelForm = modelform_factory(MaterialDemand, fields=fields)
 
     if edit:
-        demand = get_object_or_404(MaterialDemand, pk=id, owner=info)
         form = ModelForm(request.POST or None, request.FILES or None, instance=demand)
     else:
         form = ModelForm(request.POST or None, request.FILES or None)
     
     if request.method == "POST":
+        if "delete" in request.POST:
+            demand.delete()
+            messages.success(request, "Record was deleted")
+            return redirect(request.GET.get("prev"))
+
         if slug == "technology":
             quantity = 1
             unit_id = 15
         else:
             quantity = float(request.POST.get("quantity"))
             unit_id = request.POST.get("unit")
+
         if form.is_valid():
             demand = form.save(commit=False)
             demand.unit_id = unit_id
@@ -361,7 +376,6 @@ def admin_entity_material(request, organization, id, slug, material=None, edit=N
             demand.material_type = material
             demand.owner = info
             demand.save()
-
             messages.success(request, "Information was saved.")
             return redirect(request.GET.get("prev"))
         else:
@@ -375,6 +389,7 @@ def admin_entity_material(request, organization, id, slug, material=None, edit=N
         "material": material,
         "units": units,
         "slug": slug,
+        "demand": demand,
     }
     return render(request, "metabolism_manager/admin/entity.material.html", context)
 

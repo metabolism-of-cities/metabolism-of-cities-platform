@@ -11,6 +11,13 @@
 {% block content %}
 
   <h1>Data entry</h1>
+  <a class="btn btn-sm btn-primary-basic" href="javascript:history.back()"><i class="fas fa-angle-left"></i> Back</a>
+
+  {% if data.description %}
+    <div class="mb-4 mt-3">
+      {{ data.description|linebreaksbr }}
+    </div>
+  {% endif %}
 
   <div class="card-deck">
 
