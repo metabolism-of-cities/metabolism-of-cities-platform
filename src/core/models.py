@@ -1261,16 +1261,14 @@ class DataArticle(Record):
 def shapefile_directory():
     pass
 
-
-#chat Model
 class Chat(models.Model):
-    channel = models.IntegerField(db_index=True)
-    user = models.ForeignKey(User, related_name="chat_user", on_delete=models.CASCADE)
-    message = models.TextField(null=True, blank=True)
+    channel = models.OneToOneField(Record, on_delete=models.CASCADE, related_name="chat_channel")
+    people = models.ForeignKey(People, on_delete=models.CASCADE, related_name="chat")
+    message = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.username
+        return "Chat from " + str(self.people)
 
     def last_messages(self):
         return Chat.objects.order_by("-timestamp").all()[:50]

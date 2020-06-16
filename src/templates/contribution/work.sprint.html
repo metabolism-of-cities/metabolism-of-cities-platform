@@ -68,7 +68,7 @@
         {% for message in messages %}
         <div>
           <div class="alert {% if message.user.id == user_id %} alert-success float-right {% else %} alert-info float-left {% endif %}">
-            <strong>{{ message.user.username }}</strong>
+            <strong>{{ message.people }}</strong>
             <p>{{ message.message }}</p>
             <span>{{ message.timestamp }}</span>
           </div>

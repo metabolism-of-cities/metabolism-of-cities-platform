@@ -4,7 +4,7 @@ import core.chat_routing
 
 application = ProtocolTypeRouter({
     # (http->django views is added by default)
-    'websocket': AuthMiddlewareStack(
+    "websocket": AuthMiddlewareStack(
         URLRouter(
             core.chat_routing.websocket_urlpatterns
         )
