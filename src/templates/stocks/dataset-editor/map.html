@@ -61,17 +61,34 @@
               </ul>
 
               <div data-colourtype="gradient" class="colour-options">
-                <div class="input-group mb-2">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Number of colours</span>
+                <div class="form-row">
+                  <div class="col-md-6 col-lg-3 mb-2">
+                    <div class="form-group">
+                      <label class="mb-0">Lowest value</label>
+                      <input id="lowest" type="number" class="form-control" aria-label="Lowest value">
+                    </div>
                   </div>
-                  <input id="color-count" type="number" class="form-control" aria-label="Number of colours" placeholder="Between 2 and 12" min="2" max="12" value="5">
-                  <div class="input-group-append">
-                    <button id="generate-colors" class="btn btn-primary" type="button">Generate colours</button>
+                  <div class="col-md-6 col-lg-3 mb-2">
+                    <div class="form-group">
+                      <label class="mb-0">Highest value</label>
+                      <input id="highest" type="number" class="form-control" aria-label="Highest value">
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-lg-3 mb-2">
+                    <div class="form-group">
+                      <label class="mb-0">Number of colours</label>
+                      <input id="color-count" type="number" class="form-control" aria-label="Number of colours" placeholder="Between 2 and 12" min="2" max="12" value="5">
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-lg-3 mb-2">
+                    <button id="generate-colors" class="btn btn-primary-basic mt-4" type="button">
+                      <i class="fal fa-cogs"></i>
+                      Generate
+                    </button>
                   </div>
                 </div>
 
-                <div id="buckets">
+                <div id="buckets" class="mt-3">
                   <div class="form-row single-bucket">
                     <div class="col-4">
                       <input class="form-control" type="number" name="from" placeholder="From" value="0">
@@ -257,19 +274,31 @@
                        "#d5dfe3";
     }
 
-    function generateColorRamps(colorCount) {
+    function generateColorRamps(min, max, colorCount) {
       let scheme = (window["colors" + colorCount]);
+
+      let totalRange = max - min;
+      let singleRange = totalRange / colorCount;
 
       $("#buckets").html("");
 
-      $(scheme).each(function() {
-        $("#buckets").append("<div class='form-row single-bucket'><div class='col-4'><input class='form-control' type='number' name='from' placeholder='From' value=''></div><div class='col-4'><input class='form-control' type='number' name='to' placeholder='To' value=''></div><div class='col-4'><input class='form-control' type='color' name='color' value='" + this + "'></div></div>")
+      $(scheme).each(function(i) {
+        let from = parseInt(min) + (singleRange * i);
+        let to = parseInt(min) + (singleRange * (i + 1));
+
+        from = Math.round(from)
+        to = Math.round(to)
+
+        $("#buckets").append("<div class='form-row single-bucket'><div class='col-4'><input class='form-control' type='number' name='from' placeholder='From' value='" + from + "'></div><div class='col-4'><input class='form-control' type='number' name='to' placeholder='To' value='" + to + "'></div><div class='col-4'><input class='form-control' type='color' name='color' value='" + this + "'></div></div>")
       })
     }
 
     $("#generate-colors").click(function() {
       let colorCount = $("#color-count").val();
-      generateColorRamps(colorCount);
+      let min = $("#lowest").val();
+      let max = $("#highest").val();
+
+      generateColorRamps(min, max, colorCount);
     })
 
     // create variable for the legend
