@@ -65,67 +65,69 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">Number of colours</span>
                   </div>
-                  <input type="number" class="form-control" aria-label="Number of colours" placeholder="Between 2 and 12" min="2" max="12">
+                  <input id="color-count" type="number" class="form-control" aria-label="Number of colours" placeholder="Between 2 and 12" min="2" max="12" value="5">
                   <div class="input-group-append">
-                    <button class="btn btn-primary" type="button">Generate colours</button>
-                  </div>
-                </div>
-                <div class="form-row single-bucket">
-                  <div class="col-4">
-                    <input class="form-control" type="number" name="from" placeholder="From" value="0">
-                  </div>
-                  <div class="col-4">
-                    <input class="form-control" type="number" name="to" placeholder="To" value="10">
-                  </div>
-                  <div class="col-4">
-                    <input class="form-control" type="color" name="color" value="#d5dfe3">
-                  </div>
-                </div>
-                <div class="form-row single-bucket">
-                  <div class="col-4">
-                    <input class="form-control" type="number" name="from" placeholder="From" value="10">
-                  </div>
-                  <div class="col-4">
-                    <input class="form-control" type="number" name="to" placeholder="To" value="50">
-                  </div>
-                  <div class="col-4">
-                    <input class="form-control" type="color" name="color" value="#a5bbc0">
-                  </div>
-                </div>
-                <div class="form-row single-bucket">
-                  <div class="col-4">
-                    <input class="form-control" type="number" name="from" placeholder="From" value="50">
-                  </div>
-                  <div class="col-4">
-                    <input class="form-control" type="number" name="to" placeholder="To" value="100">
-                  </div>
-                  <div class="col-4">
-                    <input class="form-control" type="color" name="color" value="#74969e">
-                  </div>
-                </div>
-                <div class="form-row single-bucket">
-                  <div class="col-4">
-                    <input class="form-control" type="number" name="from" placeholder="From" value="100">
-                  </div>
-                  <div class="col-4">
-                    <input class="form-control" type="number" name="to" placeholder="To" value="200">
-                  </div>
-                  <div class="col-4">
-                    <input class="form-control" type="color" name="color" value="#44727b">
-                  </div>
-                </div>
-                <div class="form-row single-bucket">
-                  <div class="col-4">
-                    <input class="form-control" type="number" name="from" placeholder="From" value="200">
-                  </div>
-                  <div class="col-4">
-                    <input class="form-control" type="number" name="to" placeholder="To" value="2000">
-                  </div>
-                  <div class="col-4">
-                    <input class="form-control" type="color" name="color" value="#144d58">
+                    <button id="generate-colors" class="btn btn-primary" type="button">Generate colours</button>
                   </div>
                 </div>
 
+                <div id="buckets">
+                  <div class="form-row single-bucket">
+                    <div class="col-4">
+                      <input class="form-control" type="number" name="from" placeholder="From" value="0">
+                    </div>
+                    <div class="col-4">
+                      <input class="form-control" type="number" name="to" placeholder="To" value="10">
+                    </div>
+                    <div class="col-4">
+                      <input class="form-control" type="color" name="color" value="#d5dfe3">
+                    </div>
+                  </div>
+                  <div class="form-row single-bucket">
+                    <div class="col-4">
+                      <input class="form-control" type="number" name="from" placeholder="From" value="10">
+                    </div>
+                    <div class="col-4">
+                      <input class="form-control" type="number" name="to" placeholder="To" value="50">
+                    </div>
+                    <div class="col-4">
+                      <input class="form-control" type="color" name="color" value="#a5bbc0">
+                    </div>
+                  </div>
+                  <div class="form-row single-bucket">
+                    <div class="col-4">
+                      <input class="form-control" type="number" name="from" placeholder="From" value="50">
+                    </div>
+                    <div class="col-4">
+                      <input class="form-control" type="number" name="to" placeholder="To" value="100">
+                    </div>
+                    <div class="col-4">
+                      <input class="form-control" type="color" name="color" value="#74969e">
+                    </div>
+                  </div>
+                  <div class="form-row single-bucket">
+                    <div class="col-4">
+                      <input class="form-control" type="number" name="from" placeholder="From" value="100">
+                    </div>
+                    <div class="col-4">
+                      <input class="form-control" type="number" name="to" placeholder="To" value="200">
+                    </div>
+                    <div class="col-4">
+                      <input class="form-control" type="color" name="color" value="#44727b">
+                    </div>
+                  </div>
+                  <div class="form-row single-bucket">
+                    <div class="col-4">
+                      <input class="form-control" type="number" name="from" placeholder="From" value="200">
+                    </div>
+                    <div class="col-4">
+                      <input class="form-control" type="number" name="to" placeholder="To" value="2000">
+                    </div>
+                    <div class="col-4">
+                      <input class="form-control" type="color" name="color" value="#144d58">
+                    </div>
+                  </div>
+                </div>
               </div>
               <div data-colourtype="category" class="colour-options">
 
@@ -213,7 +215,17 @@
 
     // form data
     // colours
-    const default5 = ["#d5dfe3", "#a5bbc0", "#74969e", "#44727b", "#144d58"]
+    var colors2  = ["#D5DFE3", "#144D58"];
+    var colors3  = ["#D5DFE3", "#74969D", "#144D58"];
+    var colors4  = ["#D5DFE3", "#94AEB4", "#547D86", "#144D58"];
+    var colors5  = ["#D5DFE3", "#A4BAC0", "#74969D", "#44717A", "#144D58"];
+    var colors6  = ["#D5DFE3", "#AEC1C7", "#87A4AB", "#61878F", "#3A6A73", "#144D58"];
+    var colors7  = ["#D5DFE3", "#B4C6CB", "#94AEB4", "#74969D", "#547D86", "#34656F", "#144D58"];
+    var colors8  = ["#D5DFE3", "#B9CACF", "#9DB5BB", "#82A0A7", "#668B93", "#4B767F", "#2F616B", "#144D58"];
+    var colors9  = ["#D5DFE3", "#BCCCD1", "#A4BAC0", "#8CA8AE", "#74969D", "#5C838C", "#44717A", "#2C5F69", "#144D58"];
+    var colors10 = ["#D5DFE3", "#BFCED3", "#AABEC4", "#94AEB4", "#7F9EA5", "#698D95", "#547D86", "#3E6D76", "#295D67", "#144D58"];
+    var colors11 = ["#D5DFE3", "#C1D0D5", "#AEC1C7", "#9BB3B9", "#87A4AB", "#74969D", "#61878F", "#4D7881", "#3A6A73", "#275B65", "#144D58"];
+    var colors12 = ["#D5DFE3", "#C3D1D6", "#B1C4C9", "#A0B7BD", "#8EA9B0", "#7D9CA3", "#6B8F97", "#5A828A", "#48747D", "#376771", "#255A64", "#144D58"];
 
     var map = L.map("map").setView([37.8, -96], 4);
 
@@ -235,6 +247,21 @@
              d > 10  ? "#a5bbc0" :
                        "#d5dfe3";
     }
+
+    function generateColorRamps(colorCount) {
+      let scheme = (window["colors" + colorCount]);
+
+      $("#buckets").html("");
+
+      $(scheme).each(function() {
+        $("#buckets").append("<div class='form-row single-bucket'><div class='col-4'><input class='form-control' type='number' name='from' placeholder='From' value=''></div><div class='col-4'><input class='form-control' type='number' name='to' placeholder='To' value=''></div><div class='col-4'><input class='form-control' type='color' name='color' value='" + this + "'></div></div>")
+      })
+    }
+
+    $("#generate-colors").click(function() {
+      let colorCount = $("#color-count").val();
+      generateColorRamps(colorCount);
+    })
 
     // create variable for the legend
     var choroplethDensityLegend = L.control({
