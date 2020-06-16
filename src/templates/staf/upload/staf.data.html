@@ -1,0 +1,140 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <h1>Upload stocks/flows data</h1>
+
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+      <a class="nav-link disabled active" href="#">1. Upload data</a>
+    </li>
+    <li class="nav-item">
+      {% if session and session.files.count %}
+        <a class="nav-link" href="{% url 'staf:upload_staf_verify' session.id %}">2. Verify data</a>
+      {% else %}
+        <a class="nav-link disabled" href="#">2. Verify data</a>
+      {% endif %}
+    </li>
+    <li class="nav-item">
+      {% if session and session.files.count %}
+        <a class="nav-link" href="{% url 'staf:upload_staf_meta' session.id %}">3. Enter metadata</a>
+      {% else %}
+        <a class="nav-link disabled" href="#">3. Enter metadata</a>
+      {% endif %}
+    </li>
+  </ul>
+
+  <div class="alert alert-light">
+    <i class="fal fa-wind mr-2"></i> <strong>Flow</strong>: {{ flowblock }}
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <form method="post" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="what" class="category">Dataset title</label>
+          <input type="text" name="name" class="form-control" id="what" required value="{{ session.name }}">
+        </div>
+
+        <label class="category">How do you want to upload the data?</label>
+        <div class="custom-control custom-radio">
+          <input type="radio" id="databox" name="type" value="databox" class="custom-control-input">
+          <label class="custom-control-label" for="databox">Copy and paste data</label>
+        </div>
+        <div class="custom-control custom-radio mb-4">
+          <input type="radio" id="filesbox" name="type" value="filesbox" class="custom-control-input">
+          <label class="custom-control-label" for="filesbox">Upload file</label>
+        </div>
+
+        <div class="form-group databox" hidden>
+          <label class="category">Data</label>
+          <textarea class="form-control" rows="10" name="data"></textarea>
+        </div>
+        {% if session and session.files.count %}
+          <div>
+            <label class="category">Files</label>
+            <ul>
+              {% for each in session.files.all %}
+                <li>{{ each.filename }}</li>
+              {% endfor %}
+            </ul>
+            <button name="remove-files" value="true" class="btn btn-primary-basic mb-4" type="submit">
+              <i class="fal fa-fw fa-trash-alt"></i> Remove files and try again
+            </button>
+          </div>
+        {% endif %}
+        {% if not session.files.count %}
+          <div class="form-group filesbox" hidden>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" name="file" id="file">
+              <label class="custom-file-label" for="file">Choose file</label>
+            </div>
+          </div>
+          <button class="btn btn-success upload-file" type="submit" hidden>
+            <i class="fas fa-fw fa-upload"></i>
+            Submit
+          </button>
+        {% else %}
+          <button class="btn btn-success" type="submit"><i class="fas fa-fw fa-save"></i> Save and next</button>
+        {% endif %}
+        {% csrf_token %}
+      </form>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-fw fa-question-circle"></i> Instructions
+        </div>
+        <div class="card-body">
+          <ul>
+            <li>Include all the relevant files, at least:
+            <ul>
+              <li><code>.shp</code> - shape format</li>
+              <li><code>.shx</code> - shape index format</li>
+              <li><code>.dbf</code> - attribute format</li>
+              <li><code>.prj</code> - projection description</li>
+            </ul>
+            </li>
+            <li>Learn more about shapefiles <a target="_blank" href="https://en.wikipedia.org/wiki/Shapefile">at Wikipedia</a></li>
+            <li>Ensure this is recorded with WS84 referencing system</li>
+            <li>Maximum 100MB (contact us if your file is larger)</li>
+          </ul>
+          <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="btn btn-primary"><i class="fas fa-fw fa-play"></i> View instruction video</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block footer %}
+  <!-- show spinner when starting file upload -->
+  <script>
+    $("button.upload-file").click(function() {
+      $(this).html("<i class='fad fa-fw fa-spinner-third fa-spin'></i> Uploading file...")
+    })
+
+    $("input[name='type']").click(function(){
+      val = $("input[name='type']:checked").val();
+      if (val == "filesbox") {
+        $(".filesbox").removeAttr("hidden");
+        $(".databox").attr("hidden", "hidden");
+        $(".fileslabel").addClass("active");
+        $(".datalabel").removeClass("active");
+      } else {
+        $(".databox").removeAttr("hidden");
+        $(".filesbox").attr("hidden", "hidden");
+        $(".datalabel").addClass("active");
+        $(".fileslabel").removeClass("active");
+      }
+
+      $(".btn.upload-file").removeAttr("hidden");
+    });
+  </script>
+
+  <!-- making the browse for file input look good and work well - https://www.npmjs.com/package/bs-custom-file-input -->
+  <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      bsCustomFileInput.init()
+    })
+  </script>
+{% endblock %}

@@ -439,7 +439,7 @@ class Webpage(Record):
         return self.slug
 
     def get_content(self):
-        return markdown(self.description) if type == "markdown" else self.description
+        return markdown(self.description) if self.type == "markdown" else self.description
 
     class Meta:
         constraints = [
@@ -471,6 +471,11 @@ class ProjectDesign(models.Model):
         ("image", "Image underneath menu"),
     ]
     header = models.CharField(max_length=6, choices=HEADER, default="full")
+    HEADER_COLOR = [
+        ("dark", "Dark background, light text"),
+        ("light", "Light background, dark text"),
+    ]
+    header_color = models.CharField(max_length=6, choices=HEADER_COLOR, default="dark")
     logo = models.FileField(null=True, blank=True, upload_to="logos")
     custom_css = models.TextField(null=True, blank=True)
     back_link = models.BooleanField(default=True)
@@ -736,6 +741,7 @@ class LibraryDataset(LibraryItem):
     data_interval = models.CharField(max_length=50, null=True, blank=True)
     update_frequency = models.CharField(max_length=50, null=True, blank=True)
     has_api = models.BooleanField(default=True, db_index=True)
+    size = models.IntegerField(null=True, blank=True, help_text="Size in MB")
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
@@ -1061,6 +1067,7 @@ class Activity(Record):
 # The Flow Diagram describes a system (e.g. the Water sector) and describes the life-cycle based on 
 # the processes that take place within it (e.g. Water collection > Water treatment > Use > Wastewater treatment)
 class FlowDiagram(Record):
+    icon = models.CharField(max_length=50, null=True, blank=True, help_text="Only include the icon name, not fa- classes --- see https://fontawesome.com/icons?d=gallery")
 
     def get_absolute_url(self):
         return reverse("staf:flowdiagram", args=[self.id])
@@ -1071,6 +1078,10 @@ class FlowDiagram(Record):
     class Meta:
         db_table = "stafdb_flowdiagram"
 
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
+
 class FlowBlocks(models.Model):
     diagram = models.ForeignKey(FlowDiagram, on_delete=models.CASCADE, related_name="blocks")
     origin = models.ForeignKey(Activity, on_delete=models.CASCADE, related_name="blocks_from")
@@ -1080,7 +1091,7 @@ class FlowBlocks(models.Model):
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return self.origin.name + " - " + self.destination.name
+        return self.description if self.description else self.origin.name + " → " + self.destination.name
 
     def get_destination(self):
         return self.destination_label if self.destination_label else self.destination.name
@@ -1207,7 +1218,7 @@ def upload_directory(instance, filename):
 
 class UploadFile(models.Model):
     session = models.ForeignKey(UploadSession, on_delete=models.CASCADE, related_name="files")
-    file = models.FileField(upload_to=upload_directory)
+    file = models.FileField(upload_to=upload_directory, max_length=255)
 
     def __str__(self):
         return self.file.name

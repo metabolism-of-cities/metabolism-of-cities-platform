@@ -564,6 +564,16 @@ blockquote {
     .card.icon-card .card-header {
       text-align: center; }
 
+.card-table table {
+  margin-bottom: 0;
+  border-radius: .25rem; }
+  .card-table table th {
+    border-top: none; }
+    .card-table table th:first-of-type {
+      border-top-left-radius: .25rem; }
+    .card-table table th:last-of-type {
+      border-top-right-radius: .25rem; }
+
 .contribute.card {
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
   color: #fbfbfb;
@@ -764,6 +774,12 @@ table.fancytree-container mark {
   .dataTables_wrapper .paginate_button.page-item.active .page-link:active, .dataTables_wrapper .paginate_button.page-item.active .page-link:focus {
     border-color: #0f3b43 !important;
     background-color: #0f3b43 !important; }
+
+.datatable.datatable-card {
+  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
+  border-radius: .25rem;
+  margin-bottom: 1rem !important;
+  margin-top: 1rem !important; }
 
 #timeline {
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
@@ -1623,6 +1639,14 @@ body.upload-portal.index #data,
 body.upload-portal.index #geospatial {
   background-color: #efefef; }
 
+body.staf.verify table#data {
+  table-layout: fixed; }
+  body.staf.verify table#data td {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; }
+
 body.staf-review .avatar {
   width: 3rem;
   height: 3rem;
@@ -1690,9 +1714,6 @@ body.staf-review.uploaded .statistic {
   border: 1px solid #efefef; }
   .address-search .single-autocomplete-result:hover {
     border-color: #808080; }
-  .address-search .single-autocomplete-result.selected {
-    background-color: #efefef;
-    border-color: #808080; }
 
 body.work.item .description p:last-of-type {
   margin-bottom: 0; }
@@ -1721,9 +1742,6 @@ body.work.sprint .forum .single-message {
     body.work.item .forum .single-message .text p:first-of-type,
     body.work.sprint .forum .single-message .text p:first-of-type {
       display: inline-block; }
-  body.work.item .forum .single-message:last-of-type,
-  body.work.sprint .forum .single-message:last-of-type {
-    margin-bottom: .25rem !important; }
 
 body.material-stocks.landing .container.main-content {
   padding: 0 !important; }

@@ -7,6 +7,10 @@
 
   <form method="post">
     {% bootstrap_form form layout="horizontal" %}
+    <div class="form-group markdown-textarea">
+      {% include "_markdown.html" %}
+      <textarea class="form-control mb-4" id="text" rows="30" name="description" required>{{ info.description }}</textarea>
+    </div>
     {% buttons %}
       <div class="row">
         <div class="offset-md-3 col-md-9">

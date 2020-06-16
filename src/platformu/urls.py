@@ -27,8 +27,8 @@ urlpatterns = [
 #    path("manager/<int:organization>/entities/<int:id>/users/<int:user>/", views.admin_entity_user, name="admin_entity_user"),
     path("manager/<int:organization>/entities/create/", views.admin_entity_form, name="admin_entity_form"),
     path("manager/<int:organization>/entities/<int:id>/<slug:slug>/", views.admin_entity_materials, name="admin_entity_materials"),
-    path("manager/<int:organization>/entities/<int:id>/<slug:slug>/<slug:type>/<int:material>/", views.admin_entity_material, name="admin_entity_material"),
     path("manager/<int:organization>/entities/<int:id>/<slug:slug>/edit/<int:edit>/", views.admin_entity_material, name="admin_entity_material"),
+    path("manager/<int:organization>/entities/<int:id>/<slug:slug>/<slug:type>/<int:material>/", views.admin_entity_material, name="admin_entity_material"),
 
 #    path("dashboard/", views.dashboard),
 #    path("materials/electricity/", views.material),

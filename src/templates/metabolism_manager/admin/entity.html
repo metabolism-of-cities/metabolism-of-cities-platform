@@ -37,6 +37,10 @@
               <td> {{ info.meta_data.address }}</td>
             </tr>
           {% endif %}
+            <tr>
+              <th>GPS coordinates</th>
+              <td> {{ info.meta_data.lat }}, {{ info.meta_data.lng }}</td>
+            </tr>
           {% if info.description %}
             <tr>
               <th>Description</th>

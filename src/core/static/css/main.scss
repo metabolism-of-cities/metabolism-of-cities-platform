@@ -861,8 +861,26 @@ blockquote {
       text-align: center;
     }
   }
+
 }
 
+// CARD WITH TABLE IN IT
+.card-table table {
+  margin-bottom: 0;
+  border-radius: .25rem;
+
+  th {
+    border-top: none;
+
+    &:first-of-type {
+      border-top-left-radius: .25rem;
+    }
+
+    &:last-of-type {
+      border-top-right-radius: .25rem;
+    }
+  }
+}
 
 // CONTRIBUTE BOX
 .contribute.card {
@@ -1144,6 +1162,13 @@ table.fancytree-container mark {
     border-color: darken($primary, 5%) !important;
     background-color: darken($primary, 5%) !important;
   }
+}
+
+.datatable.datatable-card {
+  box-shadow: $basic-shadow;
+  border-radius: .25rem;
+  margin-bottom: 1rem !important;
+  margin-top: 1rem !important;
 }
 
 // TIMELINE
@@ -2498,6 +2523,18 @@ body.upload-portal.index {
   }
 }
 
+// STAF REVIEW PAGE
+body.staf.verify table#data {
+  table-layout: fixed;
+
+  td {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
 // ALL STAF REVIEW PAGES
 body.staf-review {
   .avatar {
@@ -2600,11 +2637,6 @@ body.staf-review.uploaded {
   &:hover {
     border-color: $gray;
   }
-
-  &.selected {
-    background-color: $light;
-    border-color: $gray;
-  }
 }
 
 body.work.item {
@@ -2644,10 +2676,6 @@ body.work.sprint {
         &:first-of-type {
           display: inline-block;
         }
-      }
-
-      &:last-of-type {
-        margin-bottom: .25rem !important;
       }
     }
   }

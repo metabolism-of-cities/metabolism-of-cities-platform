@@ -39,7 +39,7 @@
           </div>
           <div class="form-group">
             <label for="location">Address</label>
-            <input type="text" class="form-control" id="location" name="search" value="{{ info.meta_data.address }}">
+            <input type="text" class="form-control" id="autocomplete-search" name="autocomplete-search" value="{{ info.meta_data.address }}">
           </div>
 
           <div id="autocomplete-results" class="mt-3"></div>
@@ -185,8 +185,8 @@
       })
     };
 
-    $("#location").keyup(function() {
-      let searchTerm = $("#location").val()
+    $("#autocomplete-search").keyup(function() {
+      let searchTerm = $("#autocomplete-search").val()
       searchTerm = searchTerm.trim().replace(/\s/g,"+")
 
       if (searchTerm.length > 4) {
@@ -194,7 +194,6 @@
       };
 
       $("#submit-coordinates").attr("hidden", "hidden");
-      $(".single-autocomplete-result").removeClass("selected")
     })
 
     function showAutocompleteResults(results) {
@@ -202,21 +201,21 @@
       $(results.features).each(function() {
         $("#autocomplete-results").append("<div class='single-autocomplete-result' data-lon='" + this.properties.lon + "' data-lat='" + this.properties.lat + "' data-formatted='" + this.properties.formatted + "' data-country='" + this.properties.country + "' data-state='" + this.properties.state + "' data-city='" + this.properties.city + "' data-street='" + this.properties.street + "' data-housenumber='" + this.properties.housenumber + "' data-postcode='" + this.properties.postcode + "'>" + this.properties.formatted + "</div>")
       });
+      $("#autocomplete-results").show();
       enableResultFunction()
     };
 
     function enableResultFunction() {
-
       $(".single-autocomplete-result").click(function() {
-        $(".single-autocomplete-result").removeClass("selected")
-        $(this).addClass("selected");
-
         $("input#lat").val( $(this).data("lat") );
         $("input#lng").val( $(this).data("lon") );
-        $("input#formatted").val( $(this).data("formatted") );
+        $("input#formatted, input#autocomplete-search").val( $(this).data("formatted") );
+
+        $("#autocomplete-results").hide();
 
         $("#submit-coordinates").removeAttr("hidden");
       })
     }
   </script>
+
 {% endblock %}

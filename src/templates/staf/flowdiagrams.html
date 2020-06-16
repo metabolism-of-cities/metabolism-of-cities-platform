@@ -14,10 +14,13 @@
     <tbody>
     {% for each in list %}
       <tr>
-        <td><a href="{% url "staf:flowdiagram" each.id %}">{{ each.name }}</a></td>
+        <td>
+        <i class="fal fa-{{ each.icon }} fa-fw"></i>
+        <a href="{% url "staf:flowdiagram" each.id %}">{{ each.name }}</a></td>
         <td>{{ each.description|truncatechars_html:100 }}</td>
         <td>
-          <a class="btn btn-default-basic" href="{% url "staf:flowdiagram_form" each.id %}"><i class="fal fa-edit"></i> Edit</a>
+          <a class="btn btn-default-basic" href="{% url "staf:flowdiagram_meta" each.id %}"><i class="fal fa-edit"></i> Edit</a>
+          <a class="btn btn-default-basic" href="{% url "staf:flowdiagram_form" each.id %}"><i class="fal fa-th"></i> Manage blocks</a>
         </td>
       </tr>
     {% endfor %}
