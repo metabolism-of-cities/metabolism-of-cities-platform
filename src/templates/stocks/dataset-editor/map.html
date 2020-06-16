@@ -139,7 +139,16 @@
           <div class="map-options" data-maptype="circles" hidden>
             <div class="alert alert-light">
               <i class="fal fa-info-circle"></i>
+              The size of each circle depends on the value of the corresponding data. In order to make sure the circles have an appropriate size for the map, the average value of all data points is used to transform the data values into pixels.
+            </div>
 
+            <div class="form-group">
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Average data value</span>
+                </div>
+                <input id="average-value" type="number" class="form-control" aria-label="Average value">
+              </div>
             </div>
           </div>
 
