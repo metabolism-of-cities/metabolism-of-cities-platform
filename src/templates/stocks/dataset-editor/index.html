@@ -21,6 +21,69 @@
         <input type="text" class="form-control" id="subtitle" value="Aquatic agriculture catch from Cape Town in 2013, measured in tonnes">
       </div>
 
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <div class="form-group chart-types">
+            <label class="category">Enabled chart types</label>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="column" checked>
+              <label class="custom-control-label" for="column">Column</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="bar" checked>
+              <label class="custom-control-label" for="bar">Bar</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="line">
+              <label class="custom-control-label" for="line">Line</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="pie" checked>
+              <label class="custom-control-label" for="pie">Pie</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="area">
+              <label class="custom-control-label" for="area">Area</label>
+            </div>
+            <!-- these don't work with this dataset, switching to them makes the whole thing stop working and requires a page refresh
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="streamgraph">
+              <label class="custom-control-label" for="streamgraph">Stream</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="columnrange">
+              <label class="custom-control-label" for="columnrange">Column range</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="datetime">
+              <label class="custom-control-label" for="datetime">Time series</label>
+            </div>
+             -->
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="category">Initial chart type</label>
+            <select class="custom-select" id="initial-chart-type">
+              <option value="column" selected>Column</option>
+              <option value="bar">Bar</option>
+              <option hidden value="line">Line</option>
+              <option value="pie">Pie</option>
+              <option hidden value="datetime">Time series</option>
+              <option hidden value="area">Area</option>
+              <option hidden value="streamgraph">Stream</option>
+              <option hidden value="columnrange">Column range</option>
+              <option hidden value="drilldown">Drilldown</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="category">Tooltip label</label>
+            <input type="text" class="form-control" id="tooltip-label" value="Catch in 2013: <b>{point.y} tonnes</b>">
+          </div>
+        </div>
+      </div>
+
       <h3>Todo</h3>
       <ul>
         <li>Fill out metadata</li>
