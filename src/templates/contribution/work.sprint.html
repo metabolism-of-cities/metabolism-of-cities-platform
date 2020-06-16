@@ -139,6 +139,13 @@
 <script>
   const roomName = JSON.parse(document.getElementById('room-name').textContent);
   const userId = {{ user_id }}
+  const favIcon = document.querySelector('link[rel="shortcut icon"]');
+  const currentFavicon = "{% static 'img/favicon/favicon.ico' %}";
+  const replaceFavicon = "https://backoffice.metabolismofcities.org/static/img/favicon-backoffice.png";
+
+  var focused = true;
+
+
 
   const chatSocket = new ReconnectingWebSocket(
       'ws://'
@@ -168,9 +175,18 @@
       if (userId === user_id) {
         wrapperMessage.className = "alert-success";
         wrapperMessage.classList.add("float-right");
+
+        favIcon.setAttribute('type', 'image/png');
+        favIcon.setAttribute('href', currentFavicon);
+
       } else {
         wrapperMessage.className = "alert-info";
         wrapperMessage.classList.add("float-left");
+
+        if (document.hidden) {
+          favIcon.setAttribute('type', 'image/png');
+          favIcon.setAttribute('href', replaceFavicon);
+        }
       }
 
       wrapperMessage.classList.add("alert");
