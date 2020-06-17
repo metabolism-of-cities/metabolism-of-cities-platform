@@ -805,11 +805,13 @@ def work_sprint(request, project_name, id=None):
     user_id = request.user.id
     project = PROJECT_ID[project_name]
     info = WorkSprint.objects.get(pk=id)
-    updates = Message.objects.filter(
-        parent__date_created__gte=info.start_date, 
-        parent__date_created__lte=info.end_date,
-        parent__work__part_of_project_id=project,
-    ).order_by("-date_created")
+    updates = None
+    if info.end_date:
+        updates = Message.objects.filter(
+            parent__date_created__gte=info.start_date, 
+            parent__date_created__lte=info.end_date,
+            parent__work__part_of_project_id=project,
+        ).order_by("-date_created")
 
     messages = Chat.objects.filter(channel=id).order_by("timestamp")
 
