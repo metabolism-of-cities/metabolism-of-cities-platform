@@ -27,7 +27,7 @@ class MyAdminSite(AdminSite):
 admin_site = MyAdminSite()
 
 class WebpageAdmin(admin.ModelAdmin):
-    list_display = ["name", "part_of_project", "is_deleted"]
+    list_display = ["name", "part_of_project", "is_deleted", "is_public"]
     list_filter = ["part_of_project"]
     search_fields = ["name", "part_of_project__name"]
 
@@ -49,7 +49,7 @@ class WebpageAdmin(admin.ModelAdmin):
          if "short" in request.GET:
             self.fields = ["name", "description"]
          else:
-            self.fields = ["name", "description", "part_of_project", "image", "tags", "slug", "type", "is_deleted"]
+            self.fields = ["name", "description", "part_of_project", "image", "tags", "slug", "type", "is_deleted", "is_public"]
          return super().change_view(request, object_id)
 
 class WebpageDesignAdmin(admin.ModelAdmin):

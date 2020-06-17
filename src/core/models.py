@@ -178,6 +178,9 @@ class Project(Record):
         else:
             return reverse("core:project", args=[self.slug])
 
+    def get_content(self):
+        return markdown(self.description) if self.type == "markdown" else self.description
+
     def get_image(self):
         if self.image:
             return self.image
