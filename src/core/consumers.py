@@ -18,8 +18,8 @@ class ChatConsumer(WebsocketConsumer):
             result.append({
                 "channel": message.channel,
                 "message": message.message,
-                "user": message.user.username,
-                "user_id": message.user.id,
+                "user": message.people.name,
+                "user_id": message.people.id,
                 "timestamp": str(message.timestamp)
             })
 
@@ -33,18 +33,18 @@ class ChatConsumer(WebsocketConsumer):
         userId = data['user_id']
         user = User.objects.get(pk=userId)
         message = Chat.objects.create(
-            channel=data["channel"],
-            user=user,
+            channel_id=data["channel"],
+            people=user.people,
             message=data["message"]
         )
 
         content = {
             "command": "new_message",
             "message": {
-                "channel": message.channel,
+                "channel": message.channel.id,
                 "message": message.message,
-                "user": message.user.username,
-                "user_id": message.user.id,
+                "user": message.people.name,
+                "user_id": message.people.id,
                 "timestamp": str(message.timestamp)
             }
         }

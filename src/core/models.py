@@ -1262,7 +1262,7 @@ def shapefile_directory():
     pass
 
 class Chat(models.Model):
-    channel = models.OneToOneField(Record, on_delete=models.CASCADE, related_name="chat_channel")
+    channel = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="chat_channel")
     people = models.ForeignKey(People, on_delete=models.CASCADE, related_name="chat")
     message = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
