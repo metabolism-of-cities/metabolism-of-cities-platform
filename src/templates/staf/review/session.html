@@ -1,5 +1,17 @@
 {% extends "_base.html" %}
 {% load moc_extras %}
+{% load humanize %}
+
+{% block css %}
+<style type="text/css">
+#raw{display:none}
+#contentsection table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+{% endblock %}
 
 {% block content %}
 
@@ -7,7 +19,9 @@
 
   <div class="col-9">
 
-    <ul class="nav nav-tabs mb-3">
+    <h2>{{ session }}</h2>
+
+    <ul class="nav nav-tabs mt-3">
       <li class="nav-item">
         <a class="nav-link active" href="#">Overview</a>
       </li>
@@ -19,56 +33,110 @@
       </li>
     </ul>
 
-      <h2>{{ layer.name }}</h2>
-      <h3>{{ layer.geom_type.name }}</h3>
-      <h3>Fields: {{ layer.num_fields }}</h3>
-      <h3>Features: {{ layer.num_feat }}</h3>
-      <ul>
-        {% for field in layer.fields %}
-          <li>{{ field }}</li>
-        {% endfor %}
-      </ul>
+    <table class="table table-striped">
+      <tr>
+        <th>Feature</th>
+        <th>Property</th>
+      </tr>
+      <tr>
+        <td>Layer name</td>
+        <td>{{ layer.name }}</td>
+      </tr>
+      <tr>
+        <td>File size</td>
+        <td>{{ file|floatformat }} Mb</td>
+      </tr>
+      <tr>
+        <td>Coordinate reference system</td>
+        <td>{{ layer.srs.DATUM }}</td>
+      </tr>
+      <tr>
+        <td>PROJCS</td>
+        <td>{{ layer.srs.PROJCS }}</td>
+      </tr>
+      <tr>
+        <td>AUTHORITY</td>
+        <td>{{ layer.srs.AUTHORITY }}</td>
+      </tr>
+      <tr>
+        <td>SPHEROID</td>
+        <td>{{ layer.srs.SPHEROID }}</td>
+      </tr>
+      <tr>
+        <td>UNIT</td>
+        <td>{{ layer.srs.UNIT }}</td>
+      </tr>
+      <tr>
+        <td>Geocode</td>
+        <td>{{ geocode.scheme }} &raquo; {{ geocode }}</td>
+      </tr>
+    </table>
 
-      <pre>
+      <p><a href="#" id="viewraw">View raw data</a></p>
+
+      <pre class="alert alert-dark" id="raw">
       {{ layer.srs }}
       </pre>
 
-      <table class="table table-striped">
-        <tr>
-          <th>Feature</th>
-          <th>Property</th>
-        </tr>
-        <tr>
-          <td>Coordinate reference system</td>
-          <td>{{ layer.srs.DATUM }}</td>
-        </tr>
-        <tr>
-          <td>PROJCS</td>
-          <td>{{ layer.srs.PROJCS }}</td>
-        </tr>
-        <tr>
-          <td>AUTHORITY</td>
-          <td>{{ layer.srs.AUTHORITY }}</td>
-        </tr>
-        <tr>
-          <td>SPHEROID</td>
-          <td>{{ layer.srs.SPHEROID }}</td>
-        </tr>
-        <tr>
-          <td>UNIT</td>
-          <td>{{ layer.srs.UNIT }}</td>
-        </tr>
-        <tr>
-          <td>PARAM</td>
-          <td>{{ layer.srs.PARAMETER }}</td>
-        </tr>
-      </table>
+  </div>
 
+  <div class="col-3">
+
+    <div class="card icon-card">
+      <div class="icon">
+        <i class="far fa-fw fa-info-circle" aria-hidden="true"></i>
+      </div>
+      <div class="card-body text-center">
+        <p><strong>{{ session }}</strong><br>
+        <code>{{ session.id }}</code></p>
+        <p><strong>Uploader</strong><br> {{ session.uploader }}</p>
+        <form method="post">
+          {% if not work.assigned_to %}
+            <button type="submit" name="start_work" value="true" class="btn btn-success">Start working on this</button>
+          {% else %}
+            <p>
+              <strong>Assigned to</strong><br>
+              {{ work.assigned_to }}
+            </p>
+            {% if work.assigned_to == request.user.people %}
+              <button type="submit" name="stop_work" value="true" class="btn btn-warning"><i class="fa fa-stop"></i> Stop working on this</button>
+            {% endif %}
+          {% endif %}
+          {% csrf_token %}
+        </form>
+
+        <p class="mt-3"><strong>Type</strong> <br>{{ layer.geom_type.name }}</p>
+        <p><strong>Properties</strong><br> {{ layer.num_fields }}</p>
+        <p><strong>Items</strong><br> {{ layer.num_feat }}</p>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="row mt-4">
+
+  <div class="col-12">
+
+    <section id="contentsection">
+      <h3 class="mt-4">Shapefile content</h3>
+      {% if layer.num_feat > 100 %}
+        <div class="alert alert-warning">
+          <i class="fa fa-exclamation-triangle"></i> Note: we are only showing the first 100 items. 
+          In total, there are <strong>{{ layer.num_feat }}</strong> items in your shapefile.
+        </div>
+      {% endif %}
       <table class="table table-striped datatable">
         <thead>
           <tr>
             {% for field in layer.fields %}
-              <th>{{ field }}</th>
+              <th>
+                {{ field }} <br>
+                <input type="radio" name="name" /> Name<br>
+                <input type="radio" name="identifier" /> Identifier
+              </th>
             {% endfor %}
           </tr>
           </thead>
@@ -85,29 +153,12 @@
           </tbodY>
       </table>
 
+    </section>
 
-    <div id="map" style="height:500px"></div>
-
-
-  </div>
-
-  <div class="col-3">
-
-    <div class="card icon-card">
-      <div class="icon">
-        <i class="far fa-fw fa-info-circle" aria-hidden="true"></i>
-      </div>
-      <div class="card-body text-center">
-        <p><strong>{{ session }}</strong><br>
-        <code>{{ session.id }}</code></p>
-        <p><strong>Uploader</strong><br> {{ session.uploader }}</p>
-        <form method="post">
-          <button type="submit" name="start_work" value="true" class="btn btn-success">Start working on this</button>
-          {% csrf_token %}
-        </form>
-
-      </div>
-    </div>
+    <section id="mapsection">
+      <h3 class="mt-4">Map</h3>
+      <div id="map" style="height:500px"></div>
+    </section>
 
   </div>
 
@@ -134,5 +185,11 @@
     }).addTo(map);
 
     map.fitBounds(geojsonlayer.getBounds());
+
+    $("#viewraw").click(function(e){
+      e.preventDefault();
+      $("#raw").toggle();
+    });
+
   </script>
 {% endblock %}

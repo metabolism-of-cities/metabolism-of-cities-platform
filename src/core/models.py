@@ -1195,6 +1195,7 @@ class Sector(Record):
     #    return DatasetType.objects.filter(Q(origin_process__in=self.processes.all()) | Q(destination_process__in=self.processes.all()))
 
 class UploadSession(Record):
+    identifier = models.AutoField(primary_key=True)
     uploader = models.ForeignKey(People, on_delete=models.CASCADE)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     part_of_project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)

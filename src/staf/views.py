@@ -109,9 +109,13 @@ def review_session(request, id):
     if session.uploader is not request.user.people and not is_member(request.user, "Data administrators"):
         unauthorized_access(request)
 
+    try:
+        work = Work.objects.get(status=Work.WorkStatus.OPEN, part_of_project_id=PROJECT_ID["staf"], workactivity_id=2, related_to=session)
+    except:
+        work = None
+
     if "start_work" in request.POST:
         try:
-            work = Work.objects.get(status=Work.WorkStatus.OPEN, part_of_project_id=PROJECT_ID["staf"], workactivity_id=2, assigned_to__isnull=True),
             work.status = Work.WorkStatus.PROGRESS
             work.assigned_to = request.user.people
             work.save()
@@ -123,6 +127,8 @@ def review_session(request, id):
     error = False
     datasource = None
     layer = None
+    size = None
+    geocode = None
     try:
         file = UploadFile.objects.filter(session=session, file__iendswith=".shp")[0]
         filename = settings.MEDIA_ROOT + "/" + file.file.name
@@ -142,12 +148,15 @@ def review_session(request, id):
         from django.contrib.gis.gdal import DataSource
         datasource = DataSource(filename)
         layer = datasource[0]
+        size = file.file.size/1024/1024
+        geocode = Geocode.objects.get(pk=session.meta_data.get("geocode"))
     except Exception as e:
         messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
         error = True
 
     context = {
         "session": session,
+        "file": size,
         "geojson": geojson,
         "load_map": True,
         "load_datatables": True,
@@ -155,6 +164,8 @@ def review_session(request, id):
         "title": "Review session #" + str(session.id),
         "datasource": datasource,
         "layer": layer,
+        "work": work,
+        "geocode": geocode,
     }
     return render(request, "staf/review/session.html", context)
 
@@ -334,6 +345,7 @@ def upload_gis_file(request, id=None):
                 name=request.POST.get("name"), 
                 type="shapefile",
                 part_of_project_id = project,
+                meta_data = { "geocode": request.GET.get("type") },
             )
             Work.objects.create(
                 status = Work.WorkStatus.PROGRESS,
@@ -368,6 +380,7 @@ def upload_gis_file(request, id=None):
         return redirect("staf:upload_gis_verify", id=session.id)
     context = {
         "session": session,
+        "title": "Upload GIS data",
     }
     return render(request, "staf/upload/gis.file.html", context)
 
@@ -404,11 +417,16 @@ def upload_gis_verify(request, id):
 
 def upload_gis_meta(request, id):
     session = get_object_or_404(UploadSession, pk=id)
+
     if session.uploader is not request.user.people and not is_member(request.user, "Data administrators"):
         unauthorized_access(request)
+
     if request.method == "POST":
         session.is_uploaded = True
-        session.meta_data = request.POST
+        session.meta_data = { 
+            "geocode": session.meta_data["geocode"],
+            "meta": request.POST,
+        }
         session.save()
         messages.success(request, "Thanks, the information has been uploaded! Our review team will review and process your information.")
 
