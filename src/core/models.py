@@ -1230,6 +1230,11 @@ class UploadFile(models.Model):
     def filename(self):
         return os.path.basename(self.file.name)
 
+    @property
+    def extension(self):
+        filename, file_extension = os.path.splitext(str(self.file.name))
+        return file_extension.lower()
+
     class Meta:
         db_table = "stafdb_uploadfile"
 

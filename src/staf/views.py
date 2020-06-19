@@ -26,6 +26,8 @@ logger = logging.getLogger(__name__)
 import csv
 import codecs
 
+import shapefile
+
 PROJECT_ID = settings.PROJECT_ID_LIST
 
 # General script to check if a user has a certain permission
@@ -117,8 +119,42 @@ def review_session(request, id):
         except Exception as e:
             messages.error(request, "Sorry, we could not assign you -- perhaps someone else grabbed this work in the meantime? Otherwise please report this error. <br><strong>Error code: " + str(e) + "</strong>")
 
+    geojson = None
+    error = False
+    datasource = None
+    layer = None
+    try:
+        file = UploadFile.objects.filter(session=session, file__iendswith=".shp")[0]
+        filename = settings.MEDIA_ROOT + "/" + file.file.name
+        sf = shapefile.Reader(filename)
+        shapes = sf.shapes()
+        geojson = shapes.__geo_interface__
+        geojson = json.dumps(geojson)
+
+        #feature = shape.shape(1)
+        #feature = shape.shapeRecords()[0]
+        #print(feature)
+        #geojson = feature.shape.__geo_interface__  
+        #geojson = feature.__geo_interface__ 
+        #print(geojson)
+        #geojson = json.dumps(geojson) 
+
+        from django.contrib.gis.gdal import DataSource
+        datasource = DataSource(filename)
+        layer = datasource[0]
+    except Exception as e:
+        messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
+        error = True
+
     context = {
         "session": session,
+        "geojson": geojson,
+        "load_map": True,
+        "load_datatables": True,
+        "error": error,
+        "title": "Review session #" + str(session.id),
+        "datasource": datasource,
+        "layer": layer,
     }
     return render(request, "staf/review/session.html", context)
 
@@ -343,7 +379,6 @@ def upload(request):
 
 @login_required
 def upload_gis_verify(request, id):
-    import shapefile
     session = get_object_or_404(UploadSession, pk=id)
     if session.uploader is not request.user.people and not is_member(request.user, "Data administrators"):
         unauthorized_access(request)
@@ -363,6 +398,7 @@ def upload_gis_verify(request, id):
         "geojson": geojson,
         "session": session,
         "error": error,
+        "load_map": True,
     }
     return render(request, "staf/upload/gis.verify.html", context)
 
