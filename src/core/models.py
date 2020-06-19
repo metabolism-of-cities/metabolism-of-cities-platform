@@ -892,6 +892,7 @@ class Work(Record):
     workactivity = models.ForeignKey(WorkActivity, on_delete=models.CASCADE, null=True, blank=True)
     related_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="my_work")
     assigned_to = models.ForeignKey(People, on_delete=models.CASCADE, null=True, blank=True)
+    url = models.URLField(null=True, blank=True)
 
     def __str__(self):
         return self.name if self.name else self.workactivity.name
@@ -1195,7 +1196,6 @@ class Sector(Record):
     #    return DatasetType.objects.filter(Q(origin_process__in=self.processes.all()) | Q(destination_process__in=self.processes.all()))
 
 class UploadSession(Record):
-    identifier = models.AutoField(primary_key=True)
     uploader = models.ForeignKey(People, on_delete=models.CASCADE)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     part_of_project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)

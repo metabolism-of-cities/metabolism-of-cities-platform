@@ -4,7 +4,7 @@
 {% block head %}
   <meta name="robots" content="nofollow" />
   <style type="text/css">
-  .card .list-group-item.table-item > div:last-of-type {
+  .card .list-group-item.table-item > div:first-of-type {
     opacity:0.5;
   }
   </style>
@@ -13,10 +13,19 @@
 {% block content %}
 
   <h1>{{ info }}</h1>
+  <p><small class="text-muted">Created on {{ info.date_created|date:"l j F Y, H:i" }}</small></p>
   <a href="../" class="btn btn-primary-basic mb-4">
     <i class="fal fa-angle-left"></i>
     Back to work list
   </a>
+
+  {% if not info.is_public %}
+    <div class="alert alert-warning">
+      <i class="fa fa-exclamation-triangle fa-fw"></i>
+      <strong>Visibility setting</strong>: this task is <strong>not</strong> visible to the public, 
+      only to logged-in users.
+    </div>
+  {% endif %}
 
   <div class="row">
     <div class="col-md-6 pr-md-4">
@@ -25,53 +34,79 @@
           {% if info.description %}
             {{ info.get_markdown_description|safe }}
           {% endif %}
-          <small class="text-muted">Created on {{ info.date_created|date:"l j F Y, H:i" }}</small>
         </div>
 
         <div class="card my-4">
           <ul class="list-group list-group-flush">
             <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-play mr-1" aria-hidden="true"></i> {{ info.get_status_display }}</div>
-              <div>Status</div>
+              <div><i class="far fa-fw fa-info-circle mr-1" aria-hidden="true"></i>ID</div>
+              <div> {{ info.id }}</div>
             </li>
             <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-thermometer-half mr-1" aria-hidden="true"></i> {{ info.get_priority_display }}</div>
-              <div>Priority</div>
+              <div><i class="far fa-fw fa-play mr-1" aria-hidden="true"></i>Status</div>
+              <div> {{ info.get_status_display }}</div>
             </li>
             <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-box mr-1" aria-hidden="true"></i> {{ info.workactivity }}</div>
-              <div>Type</div>
+              <div><i class="far fa-fw fa-thermometer-half mr-1" aria-hidden="true"></i>Priority</div>
+              <div> {{ info.get_priority_display }}</div>
+            </li>
+            <li class="list-group-item table-item">
+              <div><i class="far fa-fw fa-box mr-1" aria-hidden="true"></i>Type</div>
+              <div> {{ info.workactivity }}</div>
             </li>
             {% if info.related_to %}
               <li class="list-group-item table-item">
-                <div><i class="far fa-fw fa-link mr-1"></i> {{ info.related_to }}</div>
-                <div>Related to</div>
+                <div><i class="far fa-fw fa-link mr-1"></i>Related to</div>
+                <div> 
+                  {% if info.url %}
+                    <a href="{{ info.url }}">
+                      {{ info.related_to }}
+                    </a>
+                  {% else %}
+                    {{ info.related_to }}
+                  {% endif %}
+                </div>
               </li>
             {% endif %}
             <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-user mr-1"></i> {{ info.assigned_to }}</div>
-              <div>Assigned to</div>
+              <div><i class="far fa-fw fa-user mr-1"></i>Assigned to</div>
+              <div> {{ info.assigned_to }}</div>
             </li>
           </ul>
         </div>
 
-        {% if request.user.is_authenticated %}
+      </div>
+    </div>
+    <div class="col-md-6 pl-md-4">
+
+      <h3>Action buttons</h3>
+
+        {% if not request.user.is_authenticated %}
+          <div class="text-center pt-4 pb-4 alert alert-dark">
+            <h2 class="my-4"><i class="fad fa-user-alt-slash" aria-hidden="true"></i> You are not logged in</h2>
+            <a class="btn btn-lg btn-primary clear-filter my-4" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/login/?next={{ request.get_full_path }}"><i class="fa fa-sign-in" aria-hidden="true"></i> Log In</a>
+            <a class="btn btn-lg btn-primary clear-filter my-4" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/register/?next={{ request.get_full_path }}"><i class="fa fa-user-plus" aria-hidden="true"></i> Register</a>
+            <p><small class="text-muted">Please join us and let's build things, together!</small></p>
+          </div>
+        {% else %}
+          <div class="text-center pt-4 alert alert-dark pb-5">
+            <h2 class="my-4"><i class="fad fa-digging" aria-hidden="true"></i> Let's get cracking!</h2>
+
           {% if info.assigned_to != request.user.people %}
 
             <form method="post" id="assign-me">
               <input type="hidden" name="assign_to_me" value="true" />
               {% csrf_token %}
+              <button class="btn btn-primary" type="submit" form="assign-me">
+                <i class="fas fa-user-check"></i>
+                Assign to me
+              </button>
+              <a class="btn btn-primary-basic" href="edit/?return={{ request.get_full_path }}">
+                <i class="fal fa-edit"></i>
+                Edit task
+              </a>
             </form>
 
-            <button class="btn btn-primary" type="submit" form="assign-me">
-              <i class="fas fa-user-check"></i>
-              Assign to me
-            </button>
-
-            <a class="btn btn-primary-basic" href="edit/?return={{ request.get_full_path }}">
-              <i class="fal fa-edit"></i>
-              Edit task
-            </a>
 
           {% else %}
 
@@ -144,16 +179,21 @@
 
             {% endif %}
 
-            {% if info.status == 1 or info.status == 4 or info.status == 5 %}
-
-              <button class="btn btn-primary mb-2 mr-1" type="submit" form="unassign">
-                <i class="fas fa-user-times"></i>
-                Unassign
-              </button>
-
-            {% endif %}
-
             <div class="mt-4">
+              {% if info.status == 1 or info.status == 4 or info.status == 5 %}
+
+                <button class="btn btn-primary-basic mb-2 mr-1" type="submit" form="unassign">
+                  <i class="fas fa-user-times"></i>
+                  Unassign
+                </button>
+
+              {% endif %}
+
+              <a class="btn btn-primary-basic mb-2 mr-1" href="edit/?return={{ request.get_full_path }}">
+                <i class="fal fa-edit"></i>
+                Edit task
+              </a>
+
               {% if info.status == 1 or info.status == 4 or info.status == 5 %}
                 <button class="btn btn-danger mb-2 mr-1" type="submit" form="discard">
                   <i class="fas fa-trash-alt"></i>
@@ -161,17 +201,19 @@
                 </button>
               {% endif %}
 
-              <a class="btn btn-primary-basic mb-2 mr-1" href="edit/?return={{ request.get_full_path }}">
-                <i class="fal fa-edit"></i>
-                Edit task
-              </a>
             </div>
 
           {% endif %}
+          </div>
         {% endif %}
-      </div>
+
+
     </div>
-    <div class="col-md-6 pl-md-4">
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <h2 class="mt-4 mb-4">Discussion and updates</h2>
       {% include "_messages.html" %}
     </div>
   </div>

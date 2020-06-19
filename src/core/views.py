@@ -311,11 +311,14 @@ def user_login(request, project=None):
 def user_logout(request, project=None):
     logout(request)
     messages.warning(request, "You are now logged out")
-    if project:
+
+    if "next" in request.GET:
+        return redirect(request.GET.get("next"))
+    elif project:
         info = Project.objects.get(pk=PROJECT_ID[project])
         return redirect(info.get_website())
     else:
-        return redirect("core:login")
+        return redirect("core:index")
 
 def user_reset(request):
     return render(request, "auth/reset.html")
@@ -663,7 +666,7 @@ def controlpanel_data_article(request, project_name, space, id=None):
 def work_form(request, project_name, id=None):
     project = PROJECT_ID[project_name]
     info = None
-    fields = ["name", "priority", "workactivity"]
+    fields = ["name", "priority", "workactivity", "url"]
     if request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
         fields.append("is_public")
     ModelForm = modelform_factory(Work, fields=fields)
@@ -779,6 +782,9 @@ def work_item(request, project_name, id):
             )
             set_autor(request.user.people.id, message.id)
             messages.success(request, message_success)
+
+            if info.get_status_display() == "In Progress" and info.url:
+                return redirect(info.url)
 
     context = {
         "info": info, 
