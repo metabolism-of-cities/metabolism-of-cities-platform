@@ -20,3 +20,5 @@ django-debug-toolbar
 pyshp
 python-twitter
 facebook-sdk
+channels
+channels_redis

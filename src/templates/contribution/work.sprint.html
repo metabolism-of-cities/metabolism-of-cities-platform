@@ -1,5 +1,6 @@
 {% extends "_base.html" %}
 {% load humanize %}
+{% load static %}
 
 {% block page_name %}work sprint fullwidth{% endblock %}
 
@@ -8,14 +9,38 @@
   section{padding-top:0}
   section h1{font-size:2rem}
   .main-content.container{padding-top:0}
+  
   body.fullwidth .container.main-content .fullwidth-wrapper{padding:2rem 0}
+  .alert {
+    display: inline-block;
+    width: auto;
+  }
+
+  .alert-success {
+    text-align: right;
+  }
+
+  .alert strong,
+  .alert span {
+    font-size: 13px;
+    font-style: italic;
+  }
+
+  .alert p {
+    margin: 0;
+  }
+
+  #chat > div {
+    float: left;
+    width: 100%;
+  }
   </style>
 {% endblock %}
 
 {% block content %}
 
 <div class="fullwidth-wrapper text-center mb-3">
-  <h1>{{ info }}</h1>
+  <h1>{{ info }} {{ room_id }}</h1>
   <p>
     {{ info.start_date|date:"l d F Y, H:i" }} -
     {{ info.end_date|date:"l d F Y, H:i" }} (<a href="https://www.timeanddate.com/worldclock/timezone/utc" target="_blank">UTC</a>)
@@ -25,7 +50,7 @@
 
   <p style="display:none">
     {% for each in info.projects.all %}
-      {{ each }} | 
+      {{ each }} |
     {% endfor %}
   </p>
 </div>
@@ -36,35 +61,24 @@
 
     <!-- Area de trabajo Fer -->
     <section class="col-6">
-      <div class="message">
-        <p>
-        <code>4 minutes ago</code><br>
-        <strong>Fulano wrote:</strong><br>
-        Here is a message</p>
+      <h1>Chat</h1>
+
+      <hr>
+      <div id="chat">
+        {% for message in messages %}
+        <div>
+          <div class="alert {% if message.user.id == user_id %} alert-success float-right {% else %} alert-info float-left {% endif %}">
+            <strong>{{ message.people }}</strong>
+            <p>{{ message.message }}</p>
+            <span>{{ message.timestamp }}</span>
+          </div>
+        </div>    
+        {% endfor %}
       </div>
 
-      <div class="message">
-        <p>
-        <code>3 minutes ago</code><br>
-        <strong>Fulana wrote:</strong><br>
-        Here is a second message</p>
-      </div>
-
-      <div class="message">
-        <p>
-        <code>2 minutes ago</code><br>
-        <strong>Fuloni wrote:</strong><br>
-        Here is yet another message</p>
-      </div>
-
-      <form method="post">
-        <textarea name="description" class="form-control" rows="2" placeholder="Enter a message"></textarea>
-        <button type="submit" class="btn btn-success mt-2">
-          <i class="fas fa-paper-plane"></i>
-          Submit
-        </button>
-        {% csrf_token %}
-      </form>
+      <input id="chat-message-input" type="text" size="50"><br>
+      <input id="chat-message-submit" type="button" value="Send">
+      {{ room_id|json_script:"room-name" }}
 
     </section>
     <!-- Fin de area de trabajo Fer -->
@@ -120,5 +134,95 @@
     </section>
   </div>
 </div>
+
+<script src="{% static 'js/reconnecting-websockets.js' %}"></script>
+<script>
+  const roomName = JSON.parse(document.getElementById('room-name').textContent);
+  const userId = {{ user_id }}
+  const favIcon = document.querySelector('link[rel="shortcut icon"]');
+  const currentFavicon = "{% static 'img/favicon/favicon.ico' %}";
+  const replaceFavicon = "https://backoffice.metabolismofcities.org/static/img/favicon-backoffice.png";
+
+  var focused = true;
+
+
+
+  const chatSocket = new ReconnectingWebSocket(
+      'ws://'
+      + window.location.host
+      + '/ws/chat/'
+      + roomName
+      + '/'
+  );
+
+  chatSocket.onmessage = function(e) {
+      const data = JSON.parse(e.data);
+      const message = data["message"]
+      const username = message.user;
+      const user_id = message.user_id;
+
+      let mainWrapperMessage = document.createElement("div");
+      let wrapperMessage = document.createElement("div");
+      let tagName = document.createElement("strong");
+      tagName.textContent = username;
+
+      let contentMessage = document.createElement("p");
+      contentMessage.textContent = message.message;
+
+      let timeMessage = document.createElement("span");
+      timeMessage.textContent = message.timestamp;
+
+      if (userId === user_id) {
+        wrapperMessage.className = "alert-success";
+        wrapperMessage.classList.add("float-right");
+
+        favIcon.setAttribute('type', 'image/png');
+        favIcon.setAttribute('href', currentFavicon);
+
+      } else {
+        wrapperMessage.className = "alert-info";
+        wrapperMessage.classList.add("float-left");
+
+        if (document.hidden) {
+          favIcon.setAttribute('type', 'image/png');
+          favIcon.setAttribute('href', replaceFavicon);
+        }
+      }
+
+      wrapperMessage.classList.add("alert");
+      wrapperMessage.appendChild(tagName);
+      wrapperMessage.appendChild(contentMessage);
+      wrapperMessage.appendChild(timeMessage);
+      mainWrapperMessage.appendChild(wrapperMessage)
+
+      document.querySelector('#chat').appendChild(mainWrapperMessage);
+      
+      //document.querySelector('#chat-log').value += (data.message + '\n');
+  };
+
+  chatSocket.onclose = function(e) {
+      console.error('Chat socket closed unexpectedly');
+  };
+
+  document.querySelector('#chat-message-input').focus();
+  document.querySelector('#chat-message-input').onkeyup = function(e) {
+      if (e.keyCode === 13) {  // enter, return
+          document.querySelector('#chat-message-submit').click();
+      }
+  };
+
+  document.querySelector('#chat-message-submit').onclick = function(e) {
+      const messageInputDom = document.querySelector('#chat-message-input');
+      const message = messageInputDom.value;
+      chatSocket.send(JSON.stringify({
+          "message": message,
+          "command": 'new_message',
+          "channel": roomName,
+          "user_id": userId,
+          
+      }));
+      messageInputDom.value = '';
+  };
+</script>
 
 {% endblock %}

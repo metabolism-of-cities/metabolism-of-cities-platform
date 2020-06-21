@@ -1269,3 +1269,15 @@ class DataArticle(Record):
 # Need to remove this (and from stafdb models) when resetting migrations
 def shapefile_directory():
     pass
+
+class Chat(models.Model):
+    channel = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="chat_channel")
+    people = models.ForeignKey(People, on_delete=models.CASCADE, related_name="chat")
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "Chat from " + str(self.people)
+
+    def last_messages(self):
+        return Chat.objects.order_by("-timestamp").all()[:50]

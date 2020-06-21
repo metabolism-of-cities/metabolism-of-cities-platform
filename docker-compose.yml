@@ -10,17 +10,22 @@ services:
        POSTGRES_USER: postgres
        POSTGRES_DB: moc
   adminer:
-    image: adminer:4.7.6
+    image: adminer:4.7.7
     ports:
       - 8080:8080
     container_name: moc_adminer
+  redis:
+    image: redis:6.0.5
+    ports:
+      - 6379:6379
+    container_name: moc_redis
   web:
     build: .
     command: python3 manage.py runserver 0.0.0.0:8000
     volumes:
       - ./src:/src
     ports:
-      - "8000:8000"
+      - 8000:8000
     depends_on:
       - db
     container_name: moc_web

@@ -103,6 +103,7 @@ INSTALLED_APPS = [
     'anymail',
     'django.contrib.humanize',
 #    'debug_toolbar',
+    'channels',
 ]
 
 # When importing data please deactivate the DebugToolbar, otherwise
@@ -147,6 +148,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'ie.wsgi.application'
+ASGI_APPLICATION = 'core.routing.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('172.26.0.5', 6379)],
+        },
+    },
+}
 
 
 # Database

@@ -805,20 +805,32 @@ def work_sprints(request, project_name):
     }
     return render(request, "contribution/work.sprints.html", context)
 
+@login_required
 def work_sprint(request, project_name, id=None):
+
+    user_id = request.user.id
     project = PROJECT_ID[project_name]
     info = WorkSprint.objects.get(pk=id)
-    updates = Message.objects.filter(
-        parent__date_created__gte=info.start_date, 
-        parent__date_created__lte=info.end_date,
-        parent__work__part_of_project_id=project,
-    ).order_by("-date_created")
+    updates = None
+    if info.end_date:
+        updates = Message.objects.filter(
+            parent__date_created__gte=info.start_date, 
+            parent__date_created__lte=info.end_date,
+            parent__work__part_of_project_id=project,
+        ).order_by("-date_created")
+
+    messages = Chat.objects.filter(channel=id).order_by("timestamp")
+
     context = {
         "info": info,
         "edit_link": "/admin/core/worksprint/" + str(info.id) + "/change/",
         "title": info,
         "updates": updates,
+        "messages": messages,
+        "room_id": info.id,
+        "user_id": user_id
     }
+    
     return render(request, "contribution/work.sprint.html", context)
 
 # People
