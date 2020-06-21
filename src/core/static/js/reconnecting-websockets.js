@@ -112,7 +112,7 @@
         var settings = {
 
             /** Whether this instance should log debug messages. */
-            debug: false,
+            debug: true,
 
             /** Whether or not the websocket should attempt to connect immediately upon instantiation. */
             automaticOpen: true,
