@@ -236,3 +236,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = '/src/logs/mail.log'
 DEFAULT_FROM_EMAIL = "info@metabolismofcities.org"
 SERVER_EMAIL = "info@metabolismofcities.org"
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/src/logs/django_cache',
+    }
+}

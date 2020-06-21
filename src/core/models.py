@@ -1004,13 +1004,13 @@ class ReferenceSpace(Record):
     @property
     def is_city(self):
         #check = self.geocodes.filter(id=123)
-        check = self.geocodes.filter(name="Urban")
+        check = self.geocodes.filter(name="Urban").exists()
         return True if check else False
 
     @property
     def is_island(self):
         #check = self.geocodes.filter(id=123)
-        check = self.geocodes.filter(name="Island")
+        check = self.geocodes.filter(name="Island").exists()
         return True if check else False
 
     def photo(self):

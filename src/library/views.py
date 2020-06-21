@@ -9,6 +9,7 @@ from django.forms import modelform_factory
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse
+from django.views.decorators.cache import cache_page
 
 from django.utils import timezone
 import pytz
@@ -160,7 +161,7 @@ def download(request):
     return render(request, "article.html", context)
 
 def casestudies(request, slug=None):
-    list = LibraryItem.objects.filter(status="active", tags__id=TAG_ID["case_study"])
+    list = LibraryItem.objects.prefetch_related("spaces").prefetch_related("tags").prefetch_related("spaces__geocodes").prefetch_related("tags__parent_tag").filter(status="active", tags__id=TAG_ID["case_study"])
     totals = None
     page = "casestudies.html"
     if slug == "calendar":

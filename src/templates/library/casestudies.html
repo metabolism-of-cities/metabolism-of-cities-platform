@@ -1,9 +1,12 @@
 {% extends "_base.html" %}
+{% load cache %}
 
 {% block title %}Case studies{% endblock %}
 
 {% block content %}
   <h1>Case studies</h1>
+
+{% cache 600 library_casestudies_table %}
   <table class="table table-striped datatable">
     <thead>
       <tr>
@@ -38,4 +41,6 @@
     {% endfor %}
     </tbody>
   </table>
+{% endcache %}
+
 {% endblock %}
