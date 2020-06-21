@@ -667,6 +667,8 @@ def work_form(request, project_name, id=None, sprint=None):
     project = PROJECT_ID[project_name]
     info = None
     fields = ["name", "priority", "workactivity", "url"]
+    if sprint:
+        fields.append("part_of_project")
     if request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
         fields.append("is_public")
     ModelForm = modelform_factory(Work, fields=fields)
@@ -677,7 +679,7 @@ def work_form(request, project_name, id=None, sprint=None):
         # Needs improvement
         info = Work.objects_include_private.get(pk=id)
     else:
-        form = ModelForm(request.POST or None)
+        form = ModelForm(request.POST or None, initial={"part_of_project": project})
     if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)

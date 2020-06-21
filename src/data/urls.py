@@ -28,6 +28,7 @@ urlpatterns = [
     path("work/sprints/", core.work_sprints, { "project_name": app_name }, name="work_sprints"),
     path("work/sprints/<int:id>/", core.work_sprint, { "project_name": app_name }, name="work_sprint"),
     path("work/sprints/<int:sprint>/tasks/", core.work_grid, { "project_name": app_name }, name="work_sprint_tasks"),
+    path("work/sprints/<int:sprint>/tasks/create/", core.work_form, { "project_name": app_name }),
     path("work/sprints/<int:sprint>/tasks/<int:id>/", core.work_item, { "project_name": app_name }),
     path("work/sprints/<int:sprint>/tasks/<int:id>/edit/", core.work_form, { "project_name": app_name }),
     path("work/create/", core.work_form, { "project_name": app_name }, name="work_form"),

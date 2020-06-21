@@ -62,6 +62,7 @@ urlpatterns = [
     path("work/sprints/", views.work_sprints, { "project_name": app_name }, name="work_sprints"),
     path("work/sprints/<int:id>/", views.work_sprint, { "project_name": app_name }, name="work_sprint"),
     path("work/sprints/<int:sprint>/tasks/", views.work_grid, { "project_name": app_name }, name="work_sprint_tasks"),
+    path("work/sprints/<int:sprint>/tasks/create/", views.work_form, { "project_name": app_name }),
     path("work/sprints/<int:sprint>/tasks/<int:id>/", views.work_item, { "project_name": app_name }),
     path("work/sprints/<int:sprint>/tasks/<int:id>/edit/", views.work_form, { "project_name": app_name }),
     path("work/create/", views.work_form, { "project_name": app_name }, name="work_form"),
