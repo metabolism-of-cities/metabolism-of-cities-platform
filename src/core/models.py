@@ -111,7 +111,8 @@ class Record(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("project", args=[self.id])
+        # We got to fix this!
+        return reverse("core:project", args=[self.id])
 
     def get_methodologies(self):
         self.tags.filter(parent_tag__id=318)
@@ -495,6 +496,7 @@ class ForumTopic(Record):
 class Message(Record):
     attachments = models.ManyToManyField(Document)
     parent = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="messages")
+    posted_by = models.ForeignKey(People, on_delete=models.CASCADE, null=True, blank=True, related_name="message_list")
 
     def getReply(self):
         return Message.objects.filter(parent=self)

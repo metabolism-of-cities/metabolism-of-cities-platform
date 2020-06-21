@@ -1268,7 +1268,7 @@ table thead th {
 }
 
 // RETURN BAR WHEN IN A SUBSITE
-.return-bar {
+.return-bar, .sprint-bar {
   background-color: $light;
   padding: 4px 0;
   min-height: 32px;
@@ -1280,6 +1280,10 @@ table thead th {
   .badge i {
     font-size: 10px;
   }
+}
+
+.sprint-bar {
+  background-color: #96bac8;
 }
 
 // PAGES
@@ -2656,6 +2660,7 @@ body.work.sprint {
   .forum {
     .single-message {
       margin: 2px;
+      width: 98%;
 
       .avatar-line-height {
         line-height: unset;

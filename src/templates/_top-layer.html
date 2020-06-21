@@ -1,6 +1,25 @@
 {% load static %}
 <div class="top-layer">
 
+  {% if SPRINTS %}
+    {% for each in SPRINTS %}
+      <div class="sprint-bar">
+        <div class="container">
+          <i class="fa fa-heart-rate"></i> Active work sprint!
+          <a href="/work/sprints/{{ each.id }}/">{{ each }}</a>
+          <div class="float-right">
+            <a class="badge badge-light" href="/work/sprints/{{ each.id }}/">
+              Sprint overview
+            </a>
+            <a class="badge badge-light" href="/work/sprints/{{ each.id }}/tasks/">
+              Task list
+            </a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+
   {% if DESIGN.back_link or PERMISSIONS or request.user.is_staff %}
     <div class="return-bar">
       <div class="container">
@@ -23,12 +42,12 @@
             {% if request.user.is_superuser %}
               <span class="badge badge-light">Super user</span>
             {% endif %}
-            <a class="badge badge-{% if OPEN_TASKS > 0 %}danger{% else %}secondary{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/work/?status=1">
+            <a style="display:none" class="badge badge-{% if OPEN_TASKS > 0 %}danger{% else %}secondary{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/work/?status=1">
               {{ OPEN_TASKS }}
               <i class="fa fa-circle mr-1 ml-1 {% if OPEN_TASKS > 0 %}text-success{% endif %}"></i>
               Open tasks
             </a>
-            <a class="badge badge-primary" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}/{% else %}{{ PROJECT.get_website }}{% endif %}controlpanel">
+            <a class="badge badge-primary" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}/{% elif PROJECT.id == 1 %}/{% else %}{{ PROJECT.get_website }}{% endif %}controlpanel/">
               <i class="fa fa-lock mr-1"></i>
               Control Panel
             </a>

@@ -663,7 +663,7 @@ def controlpanel_data_article(request, project_name, space, id=None):
     return render(request, "controlpanel/data-article.html", context)
 
 @login_required
-def work_form(request, project_name, id=None):
+def work_form(request, project_name, id=None, sprint=None):
     project = PROJECT_ID[project_name]
     info = None
     fields = ["name", "priority", "workactivity", "url"]
@@ -671,8 +671,11 @@ def work_form(request, project_name, id=None):
         fields.append("is_public")
     ModelForm = modelform_factory(Work, fields=fields)
     if id and request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
-        info = Work.objects_include_private.get(part_of_project_id=project, pk=id)
+        info = Work.objects_include_private.get(pk=id)
         form = ModelForm(request.POST or None, instance=info)
+    elif id:
+        # Needs improvement
+        info = Work.objects_include_private.get(pk=id)
     else:
         form = ModelForm(request.POST or None)
     if request.method == "POST":
@@ -691,6 +694,7 @@ def work_form(request, project_name, id=None):
                     name = "Task created",
                     description = "New task was created",
                     parent = info,
+                    posted_by = request.user.people,
                 )
                 set_autor(request.user.people.id, message.id)
 
@@ -707,41 +711,55 @@ def work_form(request, project_name, id=None):
     }
     return render(request, "contribution/work.form.html", context)
 
-def work_grid(request, project_name):
+def work_grid(request, project_name, sprint=None):
     project = PROJECT_ID[project_name]
     status = request.GET.get("status")
     type = request.GET.get("type")
     priority = request.GET.get("priority")
     if request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
-        list = Work.objects_include_private.filter(part_of_project_id=project)
+        list = Work.objects_include_private.all()
     else:
-        list = Work.objects.filter(part_of_project_id=project)
+        list = Work.objects.all()
+
+    if sprint:
+        sprint = WorkSprint.objects.get(pk=sprint)
+        list = list.filter(part_of_project__in=sprint.projects.all())
+    else:
+        list = list.filter(part_of_project_id=project)
     if status:
-        list = list.filter(status=status)
+        if status == "open_unassigned":
+            list = list.filter(status=1, assigned_to__isnull=True)
+        else:
+            list = list.filter(status=status)
+            status = int(status)
     if priority:
         list = list.filter(priority=priority)
     if type:
-        list = list.filter(workactivity_id=type)
+        list = list.filter(workactivity__type=type)
     context = {
         "list": list,
         "load_datatables": True,
         "statuses": Work.WorkStatus.choices,
         "priorities": Work.WorkPriority.choices,
         "title": "Work grid",
-        "types": WorkActivity.objects.filter(Q(default_project_id=project)|Q(default_project__isnull=True)),
-        "status": int(status) if status else None,
+        "types": WorkActivity.WorkType,
+        "status": status,
         "type": int(type) if type else None,
         "priority": int(priority) if priority else None,
+        "sprint": sprint,
     }
     return render(request, "contribution/work.grid.html", context)
 
-def work_item(request, project_name, id):
+def work_item(request, project_name, id, sprint=None):
     # To do: validate user has access to this ticket
     # if at all needed?
     if request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
         info = Work.objects_include_private.get(pk=id)
     else:
         info = Work.objects.get(pk=id)
+
+    if sprint:
+        sprint = WorkSprint.objects.get(pk=sprint)
 
     if request.method == "POST":
 
@@ -757,7 +775,7 @@ def work_item(request, project_name, id):
                 info.assigned_to = request.user.people
                 info.save()
 
-        if "status_change" in request.POST and info.assigned_to == request.user.people and info.status != request.POST["status_change"]:
+        if "status_change" in request.POST and info.status != request.POST["status_change"]:
             message_description = "Status change: " + info.get_status_display() + " → "
             info.status = request.POST.get("status_change")
             info.save()
@@ -779,6 +797,7 @@ def work_item(request, project_name, id):
                 name = message_title,
                 description = message_description,
                 parent = info,
+                posted_by = request.user.people,
             )
             set_autor(request.user.people.id, message.id)
             messages.success(request, message_success)
@@ -792,6 +811,7 @@ def work_item(request, project_name, id):
         "list_messages": Message.objects.filter(parent=info),
         "forum_title": "History and discussion",
         "title": info.name,
+        "sprint": sprint,
     }
     return render(request, "contribution/work.item.html", context)
 
@@ -808,27 +828,40 @@ def work_sprints(request, project_name):
 @login_required
 def work_sprint(request, project_name, id=None):
 
-    user_id = request.user.id
     project = PROJECT_ID[project_name]
     info = WorkSprint.objects.get(pk=id)
     updates = None
+    last_update = 0
+    if request.method == "POST":
+        if "sign_me_up" in request.POST:
+            RecordRelationship.objects.create(
+                record_parent = request.user.people,
+                record_child = info,
+                relationship_id = 27,
+            )
+            messages.success(request, "Great! You are now signed up for this sprint.")
     if info.end_date:
         updates = Message.objects.filter(
-            parent__date_created__gte=info.start_date, 
-            parent__date_created__lte=info.end_date,
-            parent__work__part_of_project_id=project,
-        ).order_by("-date_created")
+            date_created__gte=info.start_date, 
+            date_created__lte=info.end_date,
+            parent__work__part_of_project__in=info.projects.all(),
+        ).order_by("date_created")
+        if updates:
+            last_update = updates[len(updates)-1].id
+        if "updates_since" in request.GET:
+            updates = updates.filter(id__gt=request.GET["updates_since"]).exclude(posted_by=request.user.people)
+            return JsonResponse({"updates":updates.count()})
 
-    messages = Chat.objects.filter(channel=id).order_by("timestamp")
+    message_list = Chat.objects.filter(channel=id).order_by("timestamp")
 
     context = {
         "info": info,
         "edit_link": "/admin/core/worksprint/" + str(info.id) + "/change/",
         "title": info,
         "updates": updates,
-        "messages": messages,
-        "room_id": info.id,
-        "user_id": user_id
+        "last_update": last_update,
+        "message_list": message_list,
+        "participants": People.objects_unfiltered.filter(parent_list__record_child=info, parent_list__relationship__id=27),
     }
     
     return render(request, "contribution/work.sprint.html", context)

@@ -19,7 +19,7 @@ RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
 
 # Quick function to make someone the author of something
 # Version 1.0
-def set_autor(author, item):
+def set_author(author, item):
     RecordRelationship.objects.create(
         relationship_id = RELATIONSHIP_ID["author"],
         record_parent_id = author,
@@ -191,9 +191,10 @@ def forum(request, id, project_name=None):
             name = "Reply to: " + info.name,
             description = text,
             parent = info,
+            posted_by = request.user.people,
         )
 
-        set_autor(request.user.people.id, message.id)
+        set_author(request.user.people.id, message.id)
         authors_of_underlying_object = info.authors().distinct()
         recipients = []
         for each in authors_of_underlying_object:
@@ -281,13 +282,14 @@ def forum_form(request, id=False, project_name=None):
             name = request.POST.get("title"),
             last_update = timezone.now(),
         )
-        set_autor(request.user.people.id, info.id)
+        set_author(request.user.people.id, info.id)
         message = Message.objects.create(
             name = request.POST.get("title"),
             description = request.POST.get("text"),
             parent = info,
+            posted_by = request.user.people,
         )
-        set_autor(request.user.people.id, message.id)
+        set_author(request.user.people.id, message.id)
 
         if request.FILES:
             files = request.FILES.getlist("file")

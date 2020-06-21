@@ -62,8 +62,12 @@
                     <a href="{{ info.url }}">
                       {{ info.related_to }}
                     </a>
+                  {% elif info %}
+                      {{ info.related_to }}
                   {% else %}
-                    {{ info.related_to }}
+                    <a href="{{ info.get_absolute_url }}">
+                      {{ info.related_to }}
+                    </a>
                   {% endif %}
                 </div>
               </li>
@@ -92,7 +96,7 @@
           <div class="text-center pt-4 alert alert-dark pb-5">
             <h2 class="my-4"><i class="fad fa-digging" aria-hidden="true"></i> Let's get cracking!</h2>
 
-          {% if info.assigned_to != request.user.people %}
+          {% if not info.assigned_to %}
 
             <form method="post" id="assign-me">
               <input type="hidden" name="assign_to_me" value="true" />

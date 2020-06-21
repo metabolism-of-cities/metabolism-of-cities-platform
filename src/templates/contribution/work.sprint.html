@@ -30,9 +30,28 @@
     margin: 0;
   }
 
+  #chat, #updates {
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 1px solid #333;
+    border-width: 1px 0;
+  }
+  #chat {
+    border-bottom: 0;
+  }
   #chat > div {
-    float: left;
     width: 100%;
+    overflow: hidden;
+  }
+  .alert {
+    padding: .25rem 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  section h1 {
+    font-size:1.5rem;
+  }
+  #new_updates {
+    display: none;
   }
   </style>
 {% endblock %}
@@ -40,13 +59,28 @@
 {% block content %}
 
 <div class="fullwidth-wrapper text-center mb-3">
-  <h1>{{ info }} {{ room_id }}</h1>
+  <h1>{{ info }}</h1>
   <p>
     {{ info.start_date|date:"l d F Y, H:i" }} -
     {{ info.end_date|date:"l d F Y, H:i" }} (<a href="https://www.timeanddate.com/worldclock/timezone/utc" target="_blank">UTC</a>)
   </p>
-  <p><a href="../../?status=1">View task list</a> | <a href="http://">Sign up for this sprint</a>
+  {% if participants %}
+  <p>Participants: 
+    {% for each in participants %}{{ each }}, {% endfor %}
   </p>
+  {% endif %}
+
+  <p><a href="tasks/">View task list</a></p>
+
+  {% if request.user.people not in participants %}
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-default-outline" name="sign_me_up" value="true">
+        <i class="fa fa-check"></i>
+        Sign up for this sprint
+      </button>  
+    </form>
+  {% endif %}
 
   <p style="display:none">
     {% for each in info.projects.all %}
@@ -60,33 +94,36 @@
   <div class="row">
 
     <!-- Area de trabajo Fer -->
-    <section class="col-6">
+    <section class="col-md-6">
       <h1>Chat</h1>
 
-      <hr>
       <div id="chat">
-        {% for message in messages %}
+        {% for message in message_list %}
         <div>
-          <div class="alert {% if message.user.id == user_id %} alert-success float-right {% else %} alert-info float-left {% endif %}">
-            <strong>{{ message.people }}</strong>
-            <p>{{ message.message }}</p>
-            <span>{{ message.timestamp }}</span>
+          <div class="alert {% if message.people == request.user.people %} alert-success float-right {% else %} alert-info float-left {% endif %}">
+            {{ message.message }} --
+            <span>{{ message.people }}, {{ message.timestamp }}</span>
+            </p>
           </div>
         </div>    
         {% endfor %}
       </div>
 
-      <input id="chat-message-input" type="text" size="50"><br>
-      <input id="chat-message-submit" type="button" value="Send">
-      {{ room_id|json_script:"room-name" }}
+      <input class="form-control" id="chat-message-input" type="text" size="50" placeholder="Enter your message here"><br>
+      <button id="chat-message-submit" type="submit" class="btn btn-success" value="Send">
+      <i class="fa fa-send"></i>
+      Send
+      </button>
+
+      {{ info.id|json_script:"room-name" }}
 
     </section>
     <!-- Fin de area de trabajo Fer -->
 
     <!-- Fer, favor no tocar esto -->
-    <section class="col-6">
-      <h4>Work updates</h4>
-      <div class="forum mb-4">
+    <section class="col-md-6">
+      <h1>Work updates</h1>
+      <div class="forum mb-4" id="updates">
         {% for each in updates %}
           <div class="single-message card mb-3">
             <div class="card-body">
@@ -118,34 +155,65 @@
                 {{ each.get_markdown_description|safe|truncatewords_html:30 }}
               </div>
 
-              {% if each.getForumMessageFiles %}
-                <div class="attachment mt-3">
-                  {% for subeach in each.getForumMessageFiles %}
-                    <a class="btn btn-sm btn-primary-outline mb-1" href="{{ MEDIA_URL }}{{ subeach.file.url }}" target="_blank"><i class="far fa-paperclip"></i> {{ subdetails.getFileName }}
-                    </a>
-                  {% endfor %}
-                </div>
-              {% endif %}
-
             </div>
           </div>
         {% endfor %}
+        <div class="alert alert-warning" id="new_updates">
+          There are <strong id="updates_number"></strong> new updates. <a href="{{ request.get_full_path }}">Refresh now</a>.
+        </div>
       </div>
     </section>
   </div>
 </div>
 
+{% if request.user.is_authenticated %}
 <script src="{% static 'js/reconnecting-websockets.js' %}"></script>
 <script>
   const roomName = JSON.parse(document.getElementById('room-name').textContent);
-  const userId = {{ user_id }}
+  const userId = {{ request.user.people.id }};
   const favIcon = document.querySelector('link[rel="shortcut icon"]');
-  const currentFavicon = "{% static 'img/favicon/favicon.ico' %}";
-  const replaceFavicon = "https://backoffice.metabolismofcities.org/static/img/favicon-backoffice.png";
+  const currentFavicon = "{% static 'img/favicon/favicon.png' %}";
+  const replaceFavicon = "{% static 'img/favicon/favicon.red.png' %}";
+
+  last_update = {{ last_update }};
+  console.log(last_update)
+  
+  // Every three minutes we check to see if there are any new updates
+  setInterval(function()
+  { 
+      $.ajax({
+        type: "get",
+        url: "?updates_since={{ last_update }}",
+        datatype: "json",
+        success:function(data)
+        {
+            console.log("New updates: " + data.updates)
+            if (data.updates > 0) {
+              $("#new_updates").show();
+              $("#updates_number").html(data.updates);
+              var objDiv = document.getElementById("updates");
+              objDiv.scrollTop = objDiv.scrollHeight;
+              if (document.hidden) {
+                favIcon.setAttribute("href", replaceFavicon);
+              }
+            }
+        }
+      });
+  }, 1000*60*3); // check every 3 min (time is in milliseconds)
+
+
+  var objDiv = document.getElementById("chat");
+  objDiv.scrollTop = objDiv.scrollHeight;
+
+  var objDiv = document.getElementById("updates");
+  objDiv.scrollTop = objDiv.scrollHeight;
+
+  window.addEventListener("focus", function(event) 
+  { 
+      favIcon.setAttribute('href', currentFavicon);
+  }, false);
 
   var focused = true;
-
-
 
   const chatSocket = new ReconnectingWebSocket(
       'ws://'
@@ -164,19 +232,18 @@
       let mainWrapperMessage = document.createElement("div");
       let wrapperMessage = document.createElement("div");
       let tagName = document.createElement("strong");
-      tagName.textContent = username;
 
       let contentMessage = document.createElement("p");
       contentMessage.textContent = message.message;
 
       let timeMessage = document.createElement("span");
       timeMessage.textContent = message.timestamp;
+      timeMessage.textContent = username;
 
       if (userId === user_id) {
         wrapperMessage.className = "alert-success";
         wrapperMessage.classList.add("float-right");
 
-        favIcon.setAttribute('type', 'image/png');
         favIcon.setAttribute('href', currentFavicon);
 
       } else {
@@ -184,7 +251,6 @@
         wrapperMessage.classList.add("float-left");
 
         if (document.hidden) {
-          favIcon.setAttribute('type', 'image/png');
           favIcon.setAttribute('href', replaceFavicon);
         }
       }
@@ -196,6 +262,9 @@
       mainWrapperMessage.appendChild(wrapperMessage)
 
       document.querySelector('#chat').appendChild(mainWrapperMessage);
+
+      var objDiv = document.getElementById("chat");
+      objDiv.scrollTop = objDiv.scrollHeight;
       
       //document.querySelector('#chat-log').value += (data.message + '\n');
   };
@@ -204,7 +273,6 @@
       console.error('Chat socket closed unexpectedly');
   };
 
-  document.querySelector('#chat-message-input').focus();
   document.querySelector('#chat-message-input').onkeyup = function(e) {
       if (e.keyCode === 13) {  // enter, return
           document.querySelector('#chat-message-submit').click();
@@ -224,5 +292,6 @@
       messageInputDom.value = '';
   };
 </script>
+{% endif %}
 
 {% endblock %}

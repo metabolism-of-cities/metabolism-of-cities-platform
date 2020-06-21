@@ -2,37 +2,51 @@
 {% block page_name %}stafcp workgrid{% endblock %}
 
 {% block content %}
-  <h1 class="mb-0">Community work grid</h1>
 
-  {% if PERMISSIONS %}
-    <a href="../controlpanel" class="btn btn-primary-basic mb-4">
-      <i class="fal fa-angle-left"></i>
-      Back to control panel
-    </a>
-  {% endif %}
+  <h1 class="mb-0">Task list</h1>
 
-  <div class="alert alert-primary alert-dismissible mb-4">
-    <p>
-      At Metabolism of Cities, we work <strong>together</strong>. We invite you to join
-      us in this project. We try to be open to anyone. Data miners, academics, students,
-      concerned citizens, retirees, designers, programmers, and others. Have a look at
-      what we are doing, and if you are keen to help then sign up today!
-    </p>
-    {% if not request.user.is_authenticated %}
-    <a href="/accounts/register/" class="btn btn-primary">
-      <i class="fas fa-user-plus"></i>
-      Sign up now
-    </a>
-    {% else %}
-    <a href="create/?return={{ request.get_full_path }}" class="btn btn-primary">
-      <i class="fas fa-plus"></i>
-      Add new work item
-    </a>
+  {% if sprint %}
+
+      <a href="../" class="btn btn-primary-basic mb-4">
+        <i class="fal fa-angle-left"></i>
+        Back to sprint: {{ sprint }}
+      </a>
+
+  {% else %}
+
+    <h1 class="mb-0">Task list</h1>
+
+    {% if PERMISSIONS %}
+      <a href="../controlpanel" class="btn btn-primary-basic mb-4">
+        <i class="fal fa-angle-left"></i>
+        Back to control panel
+      </a>
     {% endif %}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <i class="far fa-times"></i>
-    </button>
-  </div>
+
+    <div class="alert alert-primary alert-dismissible mb-4">
+      <p>
+        At Metabolism of Cities, we work <strong>together</strong>. We invite you to join
+        us in this project. We try to be open to anyone. Data miners, academics, students,
+        concerned citizens, retirees, designers, programmers, and others. Have a look at
+        what we are doing, and if you are keen to help then sign up today!
+      </p>
+      {% if not request.user.is_authenticated %}
+      <a href="/accounts/register/" class="btn btn-primary">
+        <i class="fas fa-user-plus"></i>
+        Sign up now
+      </a>
+      {% else %}
+      <a href="create/?return={{ request.get_full_path }}" class="btn btn-primary">
+        <i class="fas fa-plus"></i>
+        Add new work item
+      </a>
+      {% endif %}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <i class="far fa-times"></i>
+      </button>
+    </div>
+  
+  {% endif %}
 
   <form class="row mb-4">
     <div class="col-lg mb-2">
@@ -43,8 +57,8 @@
         <select name="type" class="custom-select">
           <option value=""></option>
           {% for each in types %}
-            <option value="{{ each.id }}" {% if each.id == type %}selected{% endif %}>
-              {{ each }}
+            <option value="{{ each }}" {% if each == type %}selected{% endif %}>
+              {{ each.label }}
             </option>
           {% endfor %}
         </select>
@@ -57,6 +71,7 @@
         </div>
         <select name="status" class="custom-select">
           <option value=""></option>
+          <option value="open_unassigned" {% if request.GET.status == "open_unassigned" %}selected{% endif %}>Open and Unassigned</option>
           {% for label,name in statuses %}
             <option value="{{ label }}" {% if label == status %}selected{% endif %}>
               {{ name }}
@@ -100,10 +115,16 @@
           <a href="{{ each.id }}/">
             {{ each }}
             {% if each.related_to %}
-            <br>
-            {{ each.related_to }}
+              <br>
+              {{ each.related_to }}
             {% endif %}
           </a>
+          {% if sprint %}
+            <br>
+            <em>
+              {{ each.part_of_project }}
+            </em>
+          {% endif %}
         </td>
         <td>{{ each.workactivity }}</td>
         <td>{{ each.get_status_display }}</td>
