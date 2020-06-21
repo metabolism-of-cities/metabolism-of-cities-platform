@@ -44,7 +44,7 @@
             </li>
             <li class="list-group-item table-item">
               <div><i class="far fa-fw fa-play mr-1" aria-hidden="true"></i>Status</div>
-              <div> {{ info.get_status_display }}</div>
+              <div class="text-{% if info.get_status_display == "In Progress" %}info{% elif info.get_status_display == "Completed" %}success{% elif info.get_status_display == "Discarded"%}danger{% else %}dark{% endif %}"> {{ info.get_status_display }}</div>
             </li>
             <li class="list-group-item table-item">
               <div><i class="far fa-fw fa-thermometer-half mr-1" aria-hidden="true"></i>Priority</div>
