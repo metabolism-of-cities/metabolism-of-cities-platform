@@ -183,7 +183,7 @@
   { 
       $.ajax({
         type: "get",
-        url: "?updates_since={{ last_update }}",
+        url: "{{ request.get_full_path }}?updates_since={{ last_update }}",
         datatype: "json",
         success:function(data)
         {
