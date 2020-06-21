@@ -1,0 +1,31 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+
+  <h1>Tags</h1>
+
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Tag</th>
+        <th>Parent</th>
+        <th>Status</th>
+        <th># pub.</th>
+        <th>Options</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in list %}
+      <tr>
+        <td>{{ each.name }}</td>
+        <td>{{ each.parent_tag|default_if_none:"" }}</td>
+        <td>{% if each.is_deleted %}deleted{% elif each.hidden %}hidden{% elif each.is_public %}active{% endif %}</td>
+        <td>{{ each.record_set.count }}</td>
+        <td><a href="/admin/core/tag/{{ each.id }}/change/">Edit</a> | <a href="https://library.metabolismofcities.org/?search={{ each.id }}&find=true&urban_only=&before=&after=">View</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

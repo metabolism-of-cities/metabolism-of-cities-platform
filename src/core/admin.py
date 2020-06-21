@@ -93,6 +93,7 @@ class ActivityAdmin(admin.ModelAdmin):
     autocomplete_fields = ["parent"]
 
 class TagAdmin(admin.ModelAdmin):
+    autocomplete_fields = ["belongs_to", "parent_tag"]
     search_fields = ["name", "parent_tag__name"]
     list_display = ["name", "parent_tag", "include_in_glossary", "hidden"]
 

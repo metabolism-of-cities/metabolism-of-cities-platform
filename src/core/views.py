@@ -1080,6 +1080,18 @@ def mooc_module(request, id, module):
 
     return render(request, "mooc/module.html", context)
 
+# Temp stuff
+
+@login_required
+def tags(request):
+    list = Tag.objects_unfiltered.all()
+    context = {
+        "list": list,
+        "load_datatables": True,
+    }
+    return render(request, "temp.tags.html", context)
+
+
 def load_baseline(request):
 
     return redirect("/")

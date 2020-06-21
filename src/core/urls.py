@@ -112,6 +112,7 @@ urlpatterns = [
     # Temporary
     path("baseline/", views.load_baseline),
     path("pdf/", views.pdf),
+    path("tags/", views.tags),
     path("dataimport/", views.dataimport),
     path("massmail/", views.massmail),
 

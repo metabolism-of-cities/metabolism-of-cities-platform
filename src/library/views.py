@@ -29,7 +29,7 @@ def index(request):
         if urban_only:
             list = list.filter(tags__id=11)
     if "search" in request.GET:
-        tag = Tag.objects.get(id=request.GET.get("search"))
+        tag = Tag.objects_unfiltered.get(id=request.GET.get("search"))
         list = list.filter(tags=tag)
     if "after" in request.GET and request.GET["after"]:
         list = list.filter(year__gte=request.GET["after"])
@@ -38,7 +38,7 @@ def index(request):
     context = {
         "show_project_design": True,
         "tag": tag,
-        "tags": Tag.objects.filter(parent_tag__id__in=tags),
+        "tags": Tag.objects_unfiltered.filter(parent_tag__id__in=tags),
         "items": list,
         "show_results": show_results,
         "load_datatables": True if show_results else False,
