@@ -140,48 +140,26 @@
       <h2>News</h2>
 
       <div class="row">
-        <div class="col-md-6 col-lg-4 mb-4">
-          <a class="card btn-card" href="/community/events/1">
-            <img src="https://imgur.com/EjSgFEw.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">
-                New library website launched
-                <small class="d-inline-block text-muted">12 April 2020</small>
-              </h5>
-              <p class="card-text">
-                Illo et ab in omnis ipsum nulla. Excepturi eaque nemo voluptas laborum iure. Ipsum incidunt molestiae dignissimos id voluptas modi et illum.
-              </p>
-            </div>
-          </a>
-        </div>
-        <div class="col-md-6 col-lg-4 mb-4">
-          <a class="card btn-card" href="/community/events/1">
-            <img src="https://imgur.com/gNylltZ.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">
-                New publication: Evaluating urban water management using a water metabolism framework...
-                <small class="d-inline-block text-muted">9 April 2020</small>
-              </h5>
-              <p class="card-text">
-                Fugit sint sint quia vitae in at corporis. At repellendus autem voluptatibus magnam explicabo ea. Nihil repellat ea asperiores. In recusandae id molestiae perspiciatis.
-              </p>
-            </div>
-          </a>
-        </div>
-        <div class="col-md-6 col-lg-4 mb-4">
-          <a class="card btn-card" href="/community/events/1">
-            <img src="https://imgur.com/XN8gxJI.jpg" class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">
-                New publication: A systematic review of factors influencing spatiotemporal variability in urban...
-                <small class="d-inline-block text-muted">7 April 2020</small>
-              </h5>
-              <p class="card-text">
-                Nihil dolorem sed ea qui ut. Est sit aliquid impedit earum. Omnis numquam quas sed unde. Tenetur expedita vitae veritatis omnis quae ut nobis.
-              </p>
-            </div>
-          </a>
-        </div>
+
+        {% for each in news %}
+          <div class="col-lg-4 mb-sm-4 mb-lg-0">
+            <a class="card btn-card" href="{% url "library:news" each.slug %}">
+              {% if each.image %}
+                <img src="{{ each.image.url }}" class="card-img-top" alt="">
+              {% endif %}
+              <div class="card-body">
+                <h5 class="card-title">
+                  {{ each }}
+                  <small class="d-inline-block text-muted">{{ each.date }}</small>
+                </h5>
+                <p class="card-text">
+                  {{ each.introduction }}
+                </p>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+
       </div>
     </section>
 

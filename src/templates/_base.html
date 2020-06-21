@@ -18,6 +18,10 @@
     <meta name="theme-color" content="#ffffff">
   {% endif %}
 
+  {% if PROJECT.id != 8 %}
+    <meta name="robots" content="noindex,nofollow" />
+  {% endif %}
+
   <title>
   {% if title %}
     {{ title }}

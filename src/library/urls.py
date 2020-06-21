@@ -44,6 +44,10 @@ urlpatterns = [
     path("controlpanel/content/create/", core.controlpanel_content_form, { "project_name": app_name }, name="controlpanel_content_form"),
     path("controlpanel/content/<int:id>/", core.controlpanel_content_form, { "project_name": app_name }, name="controlpanel_content_form"),
 
+    # News links
+    path("news/", core.news_list, { "project_name": app_name, "header_subtitle": "News and updates around urban metabolism literature." }, name="news"),
+    path("news/<slug:slug>/", core.news, { "project_name": app_name }, name="news"),
+
     #
     # End of baseline links
     #

@@ -21,7 +21,8 @@
   </div>
 </li>
 
-<li class="nav-item"><a class="nav-link {% if menu == "journals" %}active{% endif %}"" href="{% url "library:journals" %}">Journals</a></li>
-<li class="nav-item"><a class="nav-link {% if menu == "authors" %}active{% endif %}"" href="{% url "library:authors" %}">Authors</a></li>
+<li class="nav-item"><a class="nav-link {% if menu == "journals" %}active{% endif %}" href="{% url "library:journals" %}">Journals</a></li>
+<li class="nav-item"><a class="nav-link {% if menu == "authors" %}active{% endif %}" href="{% url "library:authors" %}">Authors</a></li>
+<li class="nav-item"><a class="nav-link {% if menu == "news" %}active{% endif %}" href="{% url "library:news" %}">News</a></li>
 
 {% include "_menu-account.html" %}

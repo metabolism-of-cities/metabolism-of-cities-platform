@@ -15,6 +15,8 @@ import pytz
 
 TAG_ID = settings.TAG_ID_LIST
 PAGE_ID = settings.PAGE_ID_LIST
+PROJECT_ID = settings.PROJECT_ID_LIST
+THIS_PROJECT = PROJECT_ID["library"]
 
 def index(request):
     tags = [324, 322, 664, 318, 739]
@@ -35,6 +37,7 @@ def index(request):
         list = list.filter(year__gte=request.GET["after"])
     if "before" in request.GET and request.GET["before"]:
         list = list.filter(year__lte=request.GET["before"])
+
     context = {
         "show_project_design": True,
         "tag": tag,
@@ -45,6 +48,8 @@ def index(request):
         "urban_only": urban_only,
         "menu": "library",
         "starterskit": LibraryItem.objects.filter(tags__id=791).count(),
+        "title": "Homepage" if not tag else tag.name,
+        "news": News.objects.filter(projects=THIS_PROJECT).distinct()[:3],
     }
     return render(request, "library/index.html", context)
 

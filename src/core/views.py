@@ -64,6 +64,7 @@ TAG_ID = settings.TAG_ID_LIST
 PAGE_ID = settings.PAGE_ID_LIST
 PROJECT_ID = settings.PROJECT_ID_LIST
 RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
+THIS_PROJECT = PROJECT_ID["core"]
 
 # If we add any new project, we should add it to this list. 
 # We must make sure to filter like this to exclude non-project news
@@ -345,13 +346,18 @@ def index(request):
 # News and events
 
 def news_list(request, header_subtitle=None, project_name=None):
-    list = News.objects.filter(projects__in=MOC_PROJECTS).distinct()
+    if project_name and project_name != "core":
+        project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+        list = News.objects.filter(projects=project).distinct()
+    else:
+        list = News.objects.filter(projects__in=MOC_PROJECTS).distinct()
     context = {
         "list": list[3:],
         "shortlist": list[:3],
         "add_link": "/admin/core/news/add/",
         "header_title": "News",
         "header_subtitle": header_subtitle,
+        "menu": "news",
     }
     return render(request, "news.list.html", context)
 
