@@ -418,7 +418,12 @@ def upload_gis_verify(request, id):
 def upload_gis_meta(request, id):
     session = get_object_or_404(UploadSession, pk=id)
 
-    if session.uploader is not request.user.people and not is_member(request.user, "Data administrators"):
+    if is_member(request.user, "Data administrators"):
+        data_admin = True
+    else:
+        data_admin = False
+
+    if session.uploader is not request.user.people and not data_admin:
         unauthorized_access(request)
 
     if request.method == "POST":
@@ -436,16 +441,20 @@ def upload_gis_meta(request, id):
         work.save()
 
         # And we create a new task to process the shapefile
-        Work.objects.create(
+        process_work = Work.objects.create(
             status = Work.WorkStatus.OPEN,
             part_of_project = work.part_of_project,
             workactivity_id = 2,
             related_to = session,
         )
 
+        if "start_processing" in request.POST:
+            return redirect("staf:review_session", session.id)
+
         return redirect("staf:upload")
     context = {
         "session": session,
+        "data_admin": data_admin,
     }
     return render(request, "staf/upload/gis.meta.html", context)
 

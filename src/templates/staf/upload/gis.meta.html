@@ -62,6 +62,9 @@
 
         {% csrf_token %}
         <button class="btn btn-success" type="submit"><i class="fas fa-fw fa-upload"></i> Submit</button>
+        {% if data_admin %}
+          <button class="btn btn-success" name="start_processing" value="true" type="submit"><i class="fas fa-fw fa-sort-alpha-up"></i> Start data processing</button>
+        {% endif %}
 
         <a class="btn btn-primary-basic" href="{% url "staf:upload_gis_verify" session.id %}"><i class="fas fa-fw fa-arrow-left"></i> Back to previous step</a>
 
