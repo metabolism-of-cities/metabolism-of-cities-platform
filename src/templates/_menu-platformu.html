@@ -2,6 +2,7 @@
 
   <li class="nav-item"><a class="nav-link" href="{% url "platformu:article" "about" %}">About</a></li>
   <li class="nav-item"><a class="nav-link" href="{% url "platformu:article" "features" %}">Features</a></li>
+  <li class="nav-item"><a class="nav-link" href="{% url "platformu:article" "tour" %}">Tour</a></li>
 
 {% if not request.user.is_authenticated %}
   <li class="nav-item"><a class="nav-link" href="/accounts/register/">Register</a></li>
