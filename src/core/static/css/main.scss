@@ -2797,6 +2797,20 @@ body.work.sprint {
     }
   }
 
+  #new-updates {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    border-color: transparent;
+    border-top-color: $light;
+  }
+
+  #load-latest {
+    color: $primary;
+    cursor: pointer;
+  }
+}
+
+.work-updates {
   .single-update {
     display: block;
     padding: .75rem;
@@ -2810,16 +2824,24 @@ body.work.sprint {
       margin-bottom: .5rem;
     }
   }
+}
 
-  #new-updates {
-    border-top-right-radius: 0;
-    border-top-left-radius: 0;
-    border-color: transparent;
-    border-top-color: $light;
+body.volunteer.portal {
+  .join-cta {
+    background-color: transparentize($primary, .85);
+    padding: 2rem;
   }
 
-  #load-latest {
-    color: $primary;
-    cursor: pointer;
+  .avatar {
+    height: 3rem;
+    width: 3rem;
+    border-radius: 100%;
+    object-fit: cover;
+  }
+
+  .single-update {
+    box-shadow: $basic-shadow;
+    border: none;
+    margin-bottom: 1rem;
   }
 }

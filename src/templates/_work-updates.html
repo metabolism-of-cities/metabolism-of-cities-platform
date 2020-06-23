@@ -1,0 +1,24 @@
+<div class="work-updates">
+  {% for each in updates %}
+    <div class="single-update">
+      <div>
+        <a class="d-block mb-2" href="tasks/{{ each.parent.id }}/">{{ each.parent }}</a>
+
+        {% if each.name == "Task assigned" %}
+          <i class="far fa-fw fa-user-check mr-1"></i>
+        {% elif each.name == "Status change" %}
+          <i class="far fa-fw fa-retweet mr-1"></i>
+        {% elif each.name == "Task unassigned" %}
+          <i class="far fa-fw fa-user-times mr-1"></i>
+        {% elif each.name == "Task created" %}
+          <i class="far fa-fw fa-play mr-1"></i>
+        {% endif %}
+
+        {{ each.get_markdown_description|safe|truncatewords_html:30 }}
+      </div>
+      <small class="text-muted">
+        {{ each.author }} | <span title="{{ each.date_created|date:'l d F Y, H:i' }}">{{ each.date_created|date:'l d F, H:i' }}</span>
+      </small>
+    </div>
+  {% endfor %}
+</div>

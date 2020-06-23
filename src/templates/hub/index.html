@@ -1,82 +1,124 @@
 {% extends "_base.html" %}
 {% load humanize %}
+{% block title %}Volunteer Portal{% endblock %}
+{% block page_name %}volunteer portal home{% endblock %}
 
 {% block content %}
   <h1>Volunteer Portal</h1>
+
   {% include "hub/_nav.html" %}
 
-  <h2>Who has been active recently</h2>
-  <p>[ say up to 10 small pics of people ]</p>
+  {% if not request.user.is_authenticated %}
+    <div class="join-cta card mb-4">
+      <div class="card-body text-center">
+        <h2>Metabolism of Cities is made possible by volunteers</h2>
+        <div class="my-4">
+          <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+          <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+          <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+          <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+          <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+          <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+          <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+          <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+          <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+          <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+        </div>
 
-  <h2>Latest activity</h2>
+        <div>
+          <a class="btn btn-lg btn-primary my-4" href="">
+            <i class="fas fa-fist-raised"></i>
+            Join us!
+          </a>
+        </div>
 
-  <!-- Guus: please create an _include file for this loop and then include that both in work.sprint and in this file -->
-
-  {% for each in updates %}
-      <div class="mb-4" id="updates">
-        {% for each in updates %}
-          <div class="single-message card mb-3">
-            <div class="card-body">
-              <div class="row metadata">
-                <div class="col-6">
-                  <img src="{{ each.author.image.thumbnail.url }}" alt="" class="avatar plus" />
-                  {{ each.author }}
-                </div>
-                <div class="col-6 text-muted text-right avatar-line-height" title="{{ each.date_created|date:'l j F Y, H:i e' }}">
-                  {{ each.date_created|naturaltime }}
-                </div>
-              </div>
-
-              <hr>
-
-              <div class="text">
-                <a class="d-block mb-2" href="tasks/{{ each.parent.id }}/">{{ each.parent }}</a>
-
-                {% if each.name == "Task assigned" %}
-                  <i class="far fa-fw fa-user-check mr-1"></i>
-                {% elif each.name == "Status change" %}
-                  <i class="far fa-fw fa-retweet mr-1"></i>
-                {% elif each.name == "Task unassigned" %}
-                  <i class="far fa-fw fa-user-times mr-1"></i>
-                {% elif each.name == "Task created" %}
-                  <i class="far fa-fw fa-play mr-1"></i>
-                {% endif %}
-
-                {{ each.get_markdown_description|safe|truncatewords_html:30 }}
-              </div>
-
-            </div>
-          </div>
-        {% endfor %}
+        <a class="btn btn-primary-basic" href="">
+          <i class="fal fa-video"></i>
+          Introduction video
+        </a>
+        <a class="btn btn-primary-basic" href="">
+          <i class="fal fa-tasks"></i>
+          Entry tasks
+        </a>
       </div>
-  {% endfor %}
+    </div>
+  {% endif %}
 
-  <p><a href="/hub/latest/">VIEW ALL ACTIVITY &raquo;</a></p>
+  <div class="row">
+    <div class="col-lg-4">
+      <h3>Latest tasks</h3>
+      <div class="tasks">
+        <a class="card btn-card mb-3" href="#">
+          <div class="card-body">
+            <h5 class="card-title">{% lorem 3 w random %}</h5>
+            <p>{% lorem 20 w random %}</p>
+            <h6 class="card-subtitle mb-2 text-muted">Opened by {% lorem 1 w random %} yesterday</h6>
+          </div>
+        </a>
 
-  <h2>New?? Start here!</h2>
+        <a class="card btn-card mb-3" href="#">
+          <div class="card-body">
+            <h5 class="card-title">{% lorem 3 w random %}</h5>
+            <p>{% lorem 20 w random %}</p>
+            <h6 class="card-subtitle mb-2 text-muted">Opened by {% lorem 1 w random %} two days ago</h6>
+          </div>
+        </a>
 
-  <a href="http://">Instruction video</a>
-  <a href="http://">View entry tasks</a>
+        <a class="card btn-card mb-3" href="#">
+          <div class="card-body">
+            <h5 class="card-title">{% lorem 3 w random %}</h5>
+            <p>{% lorem 20 w random %}</p>
+            <h6 class="card-subtitle mb-2 text-muted">Opened by {% lorem 1 w random %} two days ago</h6>
+          </div>
+        </a>
 
-  <h2>Tasks</h2>
-  <a href="http://">[ 104 ] open tasks</a><br>
-  <a href="http://">[ 104 ] completed tasks</a><br>
-  <a href="http://">[ 392 ] tasks in total</a>
+        <a class="btn btn-lg btn-primary" href="">
+          <i class="fas fa-tasks"></i>
+          All tasks
+        </a>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <h3>Latest forum posts</h3>
+      <div class="forum-posts">
+        <a class="card btn-card mb-3" href="#">
+          <div class="card-body">
+            <h5 class="card-title">{% lorem 3 w random %}</h5>
+            <p>{% lorem 20 w random %}</p>
+            <h6 class="card-subtitle mb-2 text-muted">Posted by {% lorem 1 w random %} yesterday</h6>
+          </div>
+        </a>
 
-  <p><a href="http://">GO TO TASKS &raquo;</a></p>
+        <a class="card btn-card mb-3" href="#">
+          <div class="card-body">
+            <h5 class="card-title">{% lorem 3 w random %}</h5>
+            <p>{% lorem 20 w random %}</p>
+            <h6 class="card-subtitle mb-2 text-muted">Posted by {% lorem 1 w random %} two days ago</h6>
+          </div>
+        </a>
 
-  <h2>Forum</h2>
-  <p><em>Latest activity:</em></p>
-  <ul>
-    <li><a href="http://">How can I upload a dataset?</a> by Paul 3 days ago</li>
-    <li><a href="http://">How can I upload a dataset?</a> by Paul 3 days ago</li>
-    <li><a href="http://">How can I upload a dataset?</a> by Paul 3 days ago</li>
-  </ul>
+        <a class="card btn-card mb-3" href="#">
+          <div class="card-body">
+            <h5 class="card-title">{% lorem 3 w random %}</h5>
+            <p>{% lorem 20 w random %}</p>
+            <h6 class="card-subtitle mb-2 text-muted">Opened by {% lorem 1 w random %} two days ago</h6>
+          </div>
+        </a>
+      </div>
 
-  <p><a href="http://">Go to FORUM &raquo;</a></p>
+      <a class="btn btn-lg btn-primary" href="">
+        <i class="fas fa-comments-alt"></i>
+        Forum
+      </a>
+    </div>
+    <div class="col-lg-4">
+      <h3>Latest activity</h3>
+      {% include "_work-updates.html" %}
 
-  <h2>Keen to join us??</h2>
-  <a href="http://">Sign up now</a>
-
-
+      <a class="btn btn-lg btn-primary" href="">
+        <i class="fas fa-heart-rate"></i>
+        All activity
+      </a>
+    </div>
+  </div>
 {% endblock %}

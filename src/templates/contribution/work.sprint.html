@@ -40,8 +40,8 @@
 <div class="container pt-4">
 
   <div class="row">
-    <div class="col-md-6">
-      <h1>Chat</h1>
+    <div class="col-lg-6">
+      <h3>Chat</h3>
 
       <div id="chat-wrap">
         <div id="chat">
@@ -70,33 +70,12 @@
       {{ info.id|json_script:"room-name" }}
     </div>
 
-    <div class="col-md-6">
-      <h1>Work updates</h1>
+    <div class="col-lg-6">
+      <h3>Work updates</h3>
 
       <div id="updates-wrap">
         <div id="updates">
-          {% for each in updates %}
-            <div class="single-update">
-              <div>
-                <a class="d-block mb-2" href="tasks/{{ each.parent.id }}/">{{ each.parent }}</a>
-
-                {% if each.name == "Task assigned" %}
-                  <i class="far fa-fw fa-user-check mr-1"></i>
-                {% elif each.name == "Status change" %}
-                  <i class="far fa-fw fa-retweet mr-1"></i>
-                {% elif each.name == "Task unassigned" %}
-                  <i class="far fa-fw fa-user-times mr-1"></i>
-                {% elif each.name == "Task created" %}
-                  <i class="far fa-fw fa-play mr-1"></i>
-                {% endif %}
-
-                {{ each.get_markdown_description|safe|truncatewords_html:30 }}
-              </div>
-              <small class="text-muted">
-                {{ each.author }} | <span title="{{ each.date_created|date:'l d F Y, H:i' }}">{{ each.date_created|date:'l d F, H:i' }}</span>
-              </small>
-            </div>
-          {% endfor %}
+          {% include "_work-updates.html" %}
         </div>
         <div class="alert alert-light" id="new-updates">
           There are <span id="updates_number">no</span> new updates
@@ -156,7 +135,7 @@
       })
 
       $("#chat").scrollTop = objDiv.scrollHeight;
-      $("#updates").scrollTop = objDiv.scrollHeight;
+      $(".work-updates").scrollTop = objDiv.scrollHeight;
 
       window.addEventListener("focus", function(event) {
         favIcon.setAttribute("href", currentFavicon)
