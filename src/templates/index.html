@@ -1,16 +1,20 @@
 {% extends "_base.html" %}
 {% load static %}
-{% load sass_tags %}
+
+{% block css %}
+<style type="text/css">
+.projects img {
+  border-bottom: 1px solid #333;
+}
+</style>
+{% endblock %}
 
 {% block page_name %}homepage{% endblock %}
 
-{% block title %}Homepage{% endblock %}
-
-{% block subtitle %}Hello{% endblock %}
 
 {% block content %}
 
-<section class="extra">
+<section class="projects">
 
 <h3>Our Projects</h3>
 
@@ -24,6 +28,10 @@
         <div class="card-body">
           <h5 class="card-title">{{ each }}</h5>
           <p class="card-text">{{ each.summary_sentence }}</p>
+        </div>
+        <div class="card-footer">
+            <a href="/projects/{{ each.slug }}/">Read more</a>
+            <a class="float-right" href="{{ each.get_website }}">Visit website</a>
         </div>
       </div>
     </div>
