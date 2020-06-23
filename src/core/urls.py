@@ -77,6 +77,10 @@ urlpatterns = [
     path("controlpanel/content/create/", views.controlpanel_content_form, { "project_name": app_name }, name="controlpanel_content_form"),
     path("controlpanel/content/<int:id>/", views.controlpanel_content_form, { "project_name": app_name }, name="controlpanel_content_form"),
 
+    # Volunteer hub
+    path("hub/", views.hub, { "project_name": app_name }, name="hub"),
+    path("hub/latest/", views.hub_latest, { "project_name": app_name }, name="hub_latest"),
+
     # Password reset forms
     path(
         "accounts/passwordreset/",

@@ -1,0 +1,82 @@
+{% extends "_base.html" %}
+{% load humanize %}
+
+{% block content %}
+  <h1>Volunteer Portal</h1>
+  {% include "hub/_nav.html" %}
+
+  <h2>Who has been active recently</h2>
+  <p>[ say up to 10 small pics of people ]</p>
+
+  <h2>Latest activity</h2>
+
+  <!-- Guus: please create an _include file for this loop and then include that both in work.sprint and in this file -->
+
+  {% for each in updates %}
+      <div class="mb-4" id="updates">
+        {% for each in updates %}
+          <div class="single-message card mb-3">
+            <div class="card-body">
+              <div class="row metadata">
+                <div class="col-6">
+                  <img src="{{ each.author.image.thumbnail.url }}" alt="" class="avatar plus" />
+                  {{ each.author }}
+                </div>
+                <div class="col-6 text-muted text-right avatar-line-height" title="{{ each.date_created|date:'l j F Y, H:i e' }}">
+                  {{ each.date_created|naturaltime }}
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="text">
+                <a class="d-block mb-2" href="tasks/{{ each.parent.id }}/">{{ each.parent }}</a>
+
+                {% if each.name == "Task assigned" %}
+                  <i class="far fa-fw fa-user-check mr-1"></i>
+                {% elif each.name == "Status change" %}
+                  <i class="far fa-fw fa-retweet mr-1"></i>
+                {% elif each.name == "Task unassigned" %}
+                  <i class="far fa-fw fa-user-times mr-1"></i>
+                {% elif each.name == "Task created" %}
+                  <i class="far fa-fw fa-play mr-1"></i>
+                {% endif %}
+
+                {{ each.get_markdown_description|safe|truncatewords_html:30 }}
+              </div>
+
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+  {% endfor %}
+
+  <p><a href="/hub/latest/">VIEW ALL ACTIVITY &raquo;</a></p>
+
+  <h2>New?? Start here!</h2>
+
+  <a href="http://">Instruction video</a>
+  <a href="http://">View entry tasks</a>
+
+  <h2>Tasks</h2>
+  <a href="http://">[ 104 ] open tasks</a><br>
+  <a href="http://">[ 104 ] completed tasks</a><br>
+  <a href="http://">[ 392 ] tasks in total</a>
+
+  <p><a href="http://">GO TO TASKS &raquo;</a></p>
+
+  <h2>Forum</h2>
+  <p><em>Latest activity:</em></p>
+  <ul>
+    <li><a href="http://">How can I upload a dataset?</a> by Paul 3 days ago</li>
+    <li><a href="http://">How can I upload a dataset?</a> by Paul 3 days ago</li>
+    <li><a href="http://">How can I upload a dataset?</a> by Paul 3 days ago</li>
+  </ul>
+
+  <p><a href="http://">Go to FORUM &raquo;</a></p>
+
+  <h2>Keen to join us??</h2>
+  <a href="http://">Sign up now</a>
+
+
+{% endblock %}

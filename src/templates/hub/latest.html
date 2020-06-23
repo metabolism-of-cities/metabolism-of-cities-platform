@@ -1,0 +1,37 @@
+{% extends "_base.html" %}
+{% load humanize %}
+
+{% block content %}
+  <h1>Volunteer Portal</h1>
+  {% include "hub/_nav.html" %}
+
+  <p>
+    You are viewing activity from the last 7 days. 
+    <a href="http://">View last 14 days</a> | <a href="http://">View last 30 days</a>
+  </p>
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Item</th>
+        <th>Date</th>
+        <th>Blurb</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in updates %}
+      <tr>
+        <td>{{ each.author }}</td>
+        <td>
+          <a class="d-block mb-2" href="tasks/{{ each.parent.id }}/">{{ each.parent }}</a>
+        </td>
+        <td>{{ each.date_created|naturaltime }}</td>
+        <td>
+          {{ each.get_markdown_description|safe|truncatewords_html:30 }}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

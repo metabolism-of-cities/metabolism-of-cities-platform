@@ -511,7 +511,22 @@ def article_list(request, id):
 
 # Metabolism Manager
 
-# STAFCP
+# Volunteer hub
+
+def hub(request, project_name):
+    project = PROJECT_ID[project_name]
+    context = {
+        "updates": Message.objects.all().order_by("-date_created")[:7],
+    }
+    return render(request, "hub/index.html", context)
+
+def hub_latest(request, project_name):
+    project = PROJECT_ID[project_name]
+    context = {
+        "updates": Message.objects.all().order_by("-date_created")[:40],
+        "load_datatables": True,
+    }
+    return render(request, "hub/latest.html", context)
 
 
 # Control panel and general contribution components
