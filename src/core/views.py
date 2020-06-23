@@ -1921,6 +1921,9 @@ def eurostat(request):
         full_list = full_list.filter(is_reviewed=False).exclude(type="folder")
         page = "pending"
 
+    if "q" in request.GET and request.GET.get("q"):
+        full_list = full_list.filter(title__icontains=request.GET.get("q"))
+
     paginator = Paginator(full_list, hits)
     page_number = request.GET.get("page")
     list = paginator.get_page(page_number)

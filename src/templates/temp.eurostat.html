@@ -42,6 +42,12 @@ td.mini {
   </ul>
   </div>
 
+  <form method="get" class="form form-horizontal p-4">
+     <input class="form-control" type="text" name="q" value="{{ request.GET.q }}" />
+     <button class="btn btn-primary" type="submit">Search</button>
+     <input type="hidden" name="show" value="{{ page }}" />
+  </form>
+
   <div class="text-center alert alert-warning">
     <span class="step-links">
       {% if list.has_previous %}
@@ -62,7 +68,7 @@ td.mini {
   </div>
 
   <div class="progress">
-    <div class="progress-bar" role="progressbar" style="width: {{ percentage }}%;" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="{{ full_list.count }}">{{ percentage|intcomma }}%</div>
+    <div class="progress-bar" role="progressbar" style="width: {{ percentage }}%;" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="{{ full_list.count }}">{{ percentage|floatformat }}%</div>
   </div>
 
   <table class="table table-striped datatable">
@@ -104,6 +110,8 @@ td.mini {
 
 {% block footer %}
   <script type="text/javascript">
+
+  $(function(){
 
     $(".deadlink").click(function(e){
       e.preventDefault();
@@ -151,6 +159,9 @@ td.mini {
       },'json');
       e.preventDefault();
     });
+
+      
+  });
 
   </script>
 {% endblock %}
