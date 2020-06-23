@@ -2726,3 +2726,72 @@ body.material-stocks.map {
     max-height: 90vh;
   }
 }
+
+body.work.sprint {
+  .jumbotron {
+    display: none;
+  }
+
+  .participants .avatar {
+    height: 3rem;
+    width: 3rem;
+    border-radius: 100%;
+    object-fit: cover;
+  }
+
+  .container.main-content {
+    padding-top: 0;
+  }
+
+  #chat-wrap {
+    border-radius: .25rem;
+    box-shadow: $basic-shadow;
+  }
+
+  #chat {
+    padding: 1rem;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+
+  #chat-message-input {
+    border: none;
+    border-top: 1px solid $light;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    padding-right: 42px;
+    height: 50px;
+    min-height: 50px;
+  }
+
+  #chat-message-submit {
+    border-top-right-radius: 0;
+    position: absolute;
+    right: 0;
+    bottom: 15px;
+    color: $primary;
+    padding: 0 1rem 0;
+
+    &:hover {
+      color: $secondary;
+    }
+  }
+
+  .single-chat {
+    display: block;
+    padding: .75rem;
+    margin-bottom: .5rem;
+    border-radius: .25rem;
+    background-color: $light;
+    max-width: 400px;
+  }
+
+  .from-self {
+    text-align: right;
+
+    .single-chat {
+      background-color: transparentize($primary, .9);
+    }
+  }
+}

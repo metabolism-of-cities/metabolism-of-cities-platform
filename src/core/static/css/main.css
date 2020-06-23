@@ -1771,3 +1771,56 @@ body.material-stocks.landing footer {
 body.material-stocks.map #map {
   height: 600px;
   max-height: 90vh; }
+
+body.work.sprint .jumbotron {
+  display: none; }
+
+body.work.sprint .participants .avatar {
+  height: 3rem;
+  width: 3rem;
+  border-radius: 100%;
+  object-fit: cover; }
+
+body.work.sprint .container.main-content {
+  padding-top: 0; }
+
+body.work.sprint #chat-wrap {
+  border-radius: .25rem;
+  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2); }
+
+body.work.sprint #chat {
+  padding: 1rem;
+  max-height: 80vh;
+  overflow-y: auto; }
+
+body.work.sprint #chat-message-input {
+  border: none;
+  border-top: 1px solid #efefef;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  padding-right: 42px;
+  height: 50px;
+  min-height: 50px; }
+
+body.work.sprint #chat-message-submit {
+  border-top-right-radius: 0;
+  position: absolute;
+  right: 0;
+  bottom: 15px;
+  color: #144d58;
+  padding: 0 1rem 0; }
+  body.work.sprint #chat-message-submit:hover {
+    color: #ff8a4e; }
+
+body.work.sprint .single-chat {
+  display: block;
+  padding: .75rem;
+  margin-bottom: .5rem;
+  border-radius: .25rem;
+  background-color: #efefef;
+  max-width: 400px; }
+
+body.work.sprint .from-self {
+  text-align: right; }
+  body.work.sprint .from-self .single-chat {
+    background-color: rgba(20, 77, 88, 0.1); }

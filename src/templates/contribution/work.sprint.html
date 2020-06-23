@@ -4,73 +4,27 @@
 
 {% block page_name %}work sprint fullwidth{% endblock %}
 
-{% block css %}
-  <style type="text/css">
-  section{padding-top:0}
-  section h1{font-size:2rem}
-  .main-content.container{padding-top:0}
-  
-  body.fullwidth .container.main-content .fullwidth-wrapper{padding:2rem 0}
-  .alert {
-    display: inline-block;
-    width: auto;
-  }
-
-  .alert-success {
-    text-align: right;
-  }
-
-  .alert strong,
-  .alert span {
-    font-size: 13px;
-    font-style: italic;
-  }
-
-  .alert p {
-    margin: 0;
-  }
-
-  #chat, #updates {
-    max-height: 80vh;
-    overflow-y: auto;
-    border: 1px solid #333;
-    border-width: 1px 0;
-  }
-  #chat {
-    border-bottom: 0;
-  }
-  #chat > div {
-    width: 100%;
-    overflow: hidden;
-  }
-  .alert {
-    padding: .25rem 1.25rem;
-    margin-bottom: 0.5rem;
-  }
-  section h1 {
-    font-size:1.5rem;
-  }
-  #new_updates {
-    display: none;
-  }
-  </style>
-{% endblock %}
-
 {% block content %}
 
 <div class="fullwidth-wrapper text-center mb-3">
-  <h1>{{ info }}</h1>
-  <p>
+  <h1 class="mb-0">{{ info }}</h1>
+  <div class="date text-muted mb-3">
     {{ info.start_date|date:"l d F Y, H:i" }} -
     {{ info.end_date|date:"l d F Y, H:i" }} (<a href="https://www.timeanddate.com/worldclock/timezone/utc" target="_blank">UTC</a>)
-  </p>
+  </div>
+
   {% if participants %}
-  <p>Participants: 
-    {% for each in participants %}{{ each }}, {% endfor %}
-  </p>
+    <div class="participants mb-3">
+      {% for each in participants %}
+        <img src="{{ each.image.thumbnail.url }}" alt="{{ each }}" class="avatar"/>
+      {% endfor %}
+    </div>
   {% endif %}
 
-  <p><a href="tasks/">View task list</a></p>
+  <a class="btn btn-primary-basic" href="tasks/">
+    <i class="fal fa-clipboard-list"></i>
+    View task list
+  </a>
 
   {% if request.user.people not in participants %}
     <form method="post">
@@ -78,62 +32,47 @@
       <button type="submit" class="btn btn-default-outline" name="sign_me_up" value="true">
         <i class="fa fa-check"></i>
         Sign up for this sprint
-      </button>  
+      </button>
     </form>
   {% endif %}
-
-  <p style="display:none">
-    {% for each in info.projects.all %}
-      {{ each }} |
-    {% endfor %}
-  </p>
 </div>
 
 <div class="container pt-4">
 
   <div class="row">
-
-    <!-- Area de trabajo Fer -->
-    <section class="col-md-6">
+    <div class="col-md-6">
       <h1>Chat</h1>
 
-      <div id="chat">
-        <div class="alert alert-warning">
-          Hi all,<br>
-          So it turns out that getting the chat up and running server-side is a
-          MAJOR pain in the ***. I will continue working on this, but we won't have
-          this today. For now, let's chat inside each task if there are any issues. 
-          <a href="tasks/31771/">Here is a task for general feedback and questions</a>.<br>
-          Quick links: <a href="tasks/31769/">design task</a>
-          for Carlos | Ramiro could you continue uploading the 
-          data visualizations? <a href="tasks/31776/">Here is a link to discuss any questions</a>.
+      <div id="chat-wrap">
+        <div id="chat">
+          {% for message in message_list %}
+            <div class="{% if message.people == request.user.people %}from-self d-flex align-items-end flex-column{% else %}from-other d-flex align-items-start flex-column{% endif %}">
+              <div class="single-chat">
+                <div class="text-left">{{ message.message }}</div>
+                <small class="text-muted">
+                  {% if not message.people == request.user.people %}{{ message.people }}, {% endif %}
+                  <span title="{{ message.timestamp|date:'l d F Y, H:i' }}">{{ message.timestamp|date:'H:i' }}</span>
+                </small>
+              </div>
+            </div>
+          {% endfor %}
         </div>
-        {% for message in message_list %}
-        <div>
-          <div class="alert {% if message.people == request.user.people %} alert-success float-right {% else %} alert-info float-left {% endif %}">
-            {{ message.message }} --
-            <span>{{ message.people }}, {{ message.timestamp }}</span>
-            </p>
-          </div>
-        </div>    
-        {% endfor %}
+
+        <div class="position-relative">
+          <textarea class="form-control" id="chat-message-input" placeholder="Send with CTRL + Enter"></textarea>
+
+          <button id="chat-message-submit" type="submit" class="btn" value="Send">
+            <i class="fa fa-send mr-0"></i>
+          </button>
+        </div>
       </div>
 
-      <input class="form-control" id="chat-message-input" type="text" size="50" placeholder="Enter your message here"><br>
-      <button id="chat-message-submit" type="submit" class="btn btn-success" value="Send">
-      <i class="fa fa-send"></i>
-      Send
-      </button>
-
       {{ info.id|json_script:"room-name" }}
+    </div>
 
-    </section>
-    <!-- Fin de area de trabajo Fer -->
-
-    <!-- Fer, favor no tocar esto -->
-    <section class="col-md-6">
+    <div class="col-md-6">
       <h1>Work updates</h1>
-      <div class="forum mb-4" id="updates">
+      <div class="mb-4" id="updates">
         {% for each in updates %}
           <div class="single-message card mb-3">
             <div class="card-body">
@@ -172,7 +111,7 @@
           There are <strong id="updates_number"></strong> new updates. <a href="{{ request.get_full_path }}">Refresh now</a>.
         </div>
       </div>
-    </section>
+    </div>
   </div>
 </div>
 
@@ -187,10 +126,10 @@
 
   last_update = {{ last_update }};
   console.log(last_update)
-  
+
   // Every three minutes we check to see if there are any new updates
   setInterval(function()
-  { 
+  {
       $.ajax({
         type: "get",
         url: "{{ request.get_full_path }}?updates_since={{ last_update }}",
@@ -218,15 +157,15 @@
   var objDiv = document.getElementById("updates");
   objDiv.scrollTop = objDiv.scrollHeight;
 
-  window.addEventListener("focus", function(event) 
-  { 
+  window.addEventListener("focus", function(event)
+  {
       favIcon.setAttribute('href', currentFavicon);
   }, false);
 
   var focused = true;
 
   const chatSocket = new ReconnectingWebSocket(
-      'wss://'
+      'ws://'
       + window.location.host
       + '/ws/chat/'
       + roomName
@@ -275,18 +214,18 @@
 
       var objDiv = document.getElementById("chat");
       objDiv.scrollTop = objDiv.scrollHeight;
-      
+
       //document.querySelector('#chat-log').value += (data.message + '\n');
   };
 
   chatSocket.onclose = function(e) {
-      console.error('Chat socket closed unexpectedly');
+    console.error("Chat socket closed unexpectedly");
   };
 
   document.querySelector('#chat-message-input').onkeyup = function(e) {
-      if (e.keyCode === 13) {  // enter, return
-          document.querySelector('#chat-message-submit').click();
-      }
+    if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
+      document.querySelector('#chat-message-submit').click();
+    }
   };
 
   document.querySelector('#chat-message-submit').onclick = function(e) {
@@ -297,7 +236,7 @@
           "command": 'new_message',
           "channel": roomName,
           "user_id": userId,
-          
+
       }));
       messageInputDom.value = '';
   };
