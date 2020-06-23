@@ -10,6 +10,32 @@
 
 {% block content %}
 
+<section class="extra">
+
+<h3>Our Projects</h3>
+
+<div class="row row-cols-1 row-cols-md-3">
+  {% for each in projects %}
+    <div class="col mb-4">
+      <div class="card h-100">
+        <a href="/projects/{{ each.slug }}/">
+          <img src="{{ each.screenshot.medium.url }}" class="card-img-top" alt="">
+        </a>
+        <div class="card-body">
+          <h5 class="card-title">{{ each }}</h5>
+          <p class="card-text">{{ each.summary_sentence }}</p>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+  <a class="btn btn-primary btn-lg" href="">
+    <i class="fas fa-project-diagram"></i> All projects
+  </a>
+</section>
+
+
 <section class="what">
   <h3>What we do</h3>
   <div class="row">
@@ -69,39 +95,6 @@
 </section>
 
 
-<section class="extra">
-  <h2>Our projects</h2>
-  <div class="row projects">
-    <div class="col-lg-6 mb-4">
-      <a class="card btn-card" href="/projects/2/">
-        <img src="https://i.imgur.com/gLambfD.png" class="card-img-top" alt="...">
-        <h5 class="card-title">UM Library</h5>
-      </a>
-    </div>
-    <div class="col-lg-6 mb-4">
-      <a class="card btn-card" href="/projects/4/">
-        <img src="https://i.imgur.com/s7ePoYd.png" class="card-img-top" alt="...">
-        <h5 class="card-title">MultipliCity Data Hub</h5>
-      </a>
-    </div>
-    <div class="col-lg-6 mb-4">
-      <a class="card btn-card" href="/projects/2/">
-        <img src="https://i.imgur.com/tRwcUEV.png" class="card-img-top" alt="...">
-        <h5 class="card-title">Mulimedia Library</h5>
-      </a>
-    </div>
-    <div class="col-lg-6 mb-4">
-      <a class="card btn-card" href="/projects/4/">
-        <img src="https://i.imgur.com/6rYGArv.png" class="card-img-top" alt="...">
-        <h5 class="card-title">AScUS Unconference</h5>
-      </a>
-    </div>
-  </div>
-
-  <a class="btn btn-primary btn-lg" href="">
-    <i class="fas fa-project-diagram"></i> All projects
-  </a>
-</section>
 
 <section class="extra">
   <h3>Latest news</h3>

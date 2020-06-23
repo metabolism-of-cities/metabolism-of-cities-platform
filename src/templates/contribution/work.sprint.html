@@ -126,6 +126,7 @@
 
       // check every 3 min (time is in milliseconds)
       setInterval(getUpdates(), 1000 * 60 * 3);
+        var objDiv = document.getElementById("chat");
 
       $("#load-latest").click(function() {
         $.get("some_url").done(function(data) {
@@ -191,7 +192,6 @@
 
         document.querySelector("#chat").appendChild(mainWrapperMessage);
 
-        var objDiv = document.getElementById("chat");
         objDiv.scrollTop = objDiv.scrollHeight;
 
         //document.querySelector('#chat-log').value += (data.message + '\n');

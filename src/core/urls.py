@@ -71,6 +71,7 @@ urlpatterns = [
 
     # Control panel URLS from baseline
     path("controlpanel/", views.controlpanel, { "project_name": app_name }, name="controlpanel"),
+    path("controlpanel/project/", views.controlpanel_project, { "project_name": app_name }, name="controlpanel_project"),
     path("controlpanel/users/", views.controlpanel_users, { "project_name": app_name }, name="controlpanel_users"),
     path("controlpanel/design/", views.controlpanel_design, { "project_name": app_name }, name="controlpanel_design"),
     path("controlpanel/content/", views.controlpanel_content, { "project_name": app_name }, name="controlpanel_content"),

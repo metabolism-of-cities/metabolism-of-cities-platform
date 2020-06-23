@@ -48,6 +48,7 @@ urlpatterns = [
 
     # Control panel URLS
     path("controlpanel/", core.controlpanel, { "project_name": app_name }, name="controlpanel"),
+    path("controlpanel/project/", core.controlpanel_project, { "project_name": app_name }, name="controlpanel_project"),
     path("controlpanel/users/", core.controlpanel_users, { "project_name": app_name }, name="controlpanel_users"),
     path("controlpanel/design/", core.controlpanel_design, { "project_name": app_name }, name="controlpanel_design"),
     path("controlpanel/content/", core.controlpanel_content, { "project_name": app_name }, name="controlpanel_content"),

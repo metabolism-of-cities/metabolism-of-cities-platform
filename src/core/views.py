@@ -340,6 +340,7 @@ def index(request):
         "header_title": "Metabolism of Cities",
         "header_subtitle": "Your hub for anyting around urban metabolism",
         "show_project_design": True,
+        "projects": Project.objects.filter(pk__in=[2,3,4,8,16,3458]),
     }
     return render(request, "index.html", context)
 
@@ -541,6 +542,7 @@ def controlpanel(request, project_name, space=None):
 
     context = {
         "space": space,
+        "title": "Control panel",
     }
     return render(request, "controlpanel/index.html", context)
 
@@ -578,6 +580,56 @@ def controlpanel_design(request, project_name):
         "header_subtitle": "Use this section to manage the design of this site",
     }
     return render(request, "controlpanel/design.html", context)
+
+@login_required
+def controlpanel_design(request, project_name):
+
+    project = PROJECT_ID[project_name]
+    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    info = ProjectDesign.objects.get(pk=project)
+    ModelForm = modelform_factory(
+        ProjectDesign,
+        fields = ("header", "logo", "header_color", "custom_css", "back_link"),
+    )
+    form = ModelForm(request.POST or None, request.FILES or None, instance=info)
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save()
+            messages.success(request, "The new design was saved")
+
+    context = {
+        "form": form,
+        "header_title": "Design",
+        "header_subtitle": "Use this section to manage the design of this site",
+    }
+    return render(request, "controlpanel/design.html", context)
+
+@login_required
+def controlpanel_project(request, project_name):
+
+    project = PROJECT_ID[project_name]
+    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    info = Project.objects.get(pk=project)
+    ModelForm = modelform_factory(
+        Project,
+        fields = ("name", "description", "type", "start_date", "end_date", "screenshot", "summary_sentence"),
+    )
+    form = ModelForm(request.POST or None, request.FILES or None, instance=info)
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save()
+            messages.success(request, "Project details were saved")
+
+    context = {
+        "form": form,
+        "header_title": "Project settings",
+        "header_subtitle": "Use this section to manage the general project details",
+    }
+    return render(request, "controlpanel/project.html", context)
 
 @login_required
 def controlpanel_content(request, project_name):
@@ -1866,7 +1918,7 @@ def eurostat(request):
     full_list = EurostatDB.objects.all().order_by("id")
 
     if "pending" in request.GET or request.GET.get("show") == "pending":
-        full_list = full_list.filter(is_reviewed=False)
+        full_list = full_list.filter(is_reviewed=False).exclude(type="folder")
         page = "pending"
 
     paginator = Paginator(full_list, hits)

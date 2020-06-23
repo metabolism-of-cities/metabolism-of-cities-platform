@@ -84,45 +84,6 @@
 
   <div id="admin-controls" class="btn-group-vertical">
 
-    {% if request.user.is_authenticated and request.user.is_staff and show_project_design %}
-      <a class="btn btn-secondary" href="/admin/core/projectdesign/{{ PROJECT.id }}/change/"><i class="fas fa-palette fa-fw"></i> Project design</a>
-    {% endif %}
-
-    {% if webpage_design_id and request.user.is_authenticated and request.user.is_staff %}
-      <a class="btn btn-secondary" href="/admin/core/webpagedesign/{{ webpage_design_id }}/change/"><i class="fas fa-object-group fa-fw"></i> Page design</a>
-    {% elif webpage and request.user.is_authenticated and request.user.is_staff %}
-      <a class="btn btn-secondary" href="/admin/core/webpagedesign/add/?webpage={{ webpage.id }}"><i class="fas fa-object-group fa-fw"></i> Page design</a>
-    {% endif %}
-
-    {% if edit_link and request.user.is_authenticated and request.user.is_staff %}
-      <a class="btn btn-secondary" href="{{ edit_link }}"><i class="fas fa-edit fa-fw"></i> Edit</a>
-    {% endif %}
-
-    {% if webpage and not edit_link and request.user.is_authenticated and request.user.is_staff %}
-      <a class="btn btn-secondary" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/controlpanel/content/{{ webpage.id }}/?next={{ request.get_full_path }}"><i class="fas fa-edit fa-fw"></i> Edit</a>
-    {% endif %}
-
-    {% if article and request.user.is_authenticated and request.user.is_staff %}
-      <a class="btn btn-secondary" href="/admin/core/article/{{ article.id }}/change/"><i class="fas fa-edit fa-fw"></i> Edit</a>
-    {% endif %}
-
-    {% if add_link and request.user.is_authenticated and request.user.is_staff %}
-      <a class="btn btn-secondary" href="{{ add_link }}"><i class="fas fa-plus fa-fw"></i> Add</a>
-    {% endif %}
-
-    {% if request.user.is_authenticated and request.user.is_staff and show_relationship %}
-      <a class="btn btn-secondary" href="/admin/core/recordrelationship/?record_child_id__exact={{ show_relationship }}"><i class="fas fa-project-diagram fa-fw"></i> Relationships</a>
-      <a class="btn btn-secondary" href="/admin/core/recordrelationship/add/?record_child={{ show_relationship }}"><i class="fas fa-project-diagram fa-fw"></i> Add relationship</a>
-      <a class="btn btn-secondary" href="/admin/core/recordrelationship/add/?record_child={{ show_relationship }}&amp;relationship=4"><i class="fas fa-project-diagram fa-fw"></i> Add author</a>
-    {% endif %}
-
-    {% if request.user.is_authenticated and request.user.is_staff %}
-      <a class="btn btn-secondary" href="/admin/"><i class="fas fa-user-lock fa-fw"></i> Admin</a>
-    {% endif %}
-
-    {% if request.user.is_authenticated and request.user.is_ascus_organizer %}
-      <a class="btn btn-info" href="{% url "ascus:admin" %}"><i class="fas fa-user-lock fa-fw"></i> AScUS Admin</a>
-    {% endif %}
   </div>
 
   <!-- page content -->
@@ -153,8 +114,15 @@
   {% endif %}
 
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+  {% if PERMISSIONS or request.user.is_staff or request.user.is_superuser %}
+    <!-- The dropdown in the top nav bar [see top-layer] for admins requires popper -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+  {% endif %}
+
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
   <script src="https://kit.fontawesome.com/7815588c96.js" crossorigin="anonymous"></script>
+
   <script src="{% static 'js/site.js' %}"></script>
 
   {% if load_select2 %}
