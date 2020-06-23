@@ -842,13 +842,16 @@ table thead th {
     .slick-wrapper .arrows .next:hover {
       color: #000; }
 
-.return-bar, .sprint-bar {
+.return-bar,
+.sprint-bar {
   background-color: #efefef;
   padding: 4px 0;
   min-height: 32px; }
-  .return-bar .badge-light, .sprint-bar .badge-light {
+  .return-bar .badge-light,
+  .sprint-bar .badge-light {
     background-color: #efefef; }
-  .return-bar .badge i, .sprint-bar .badge i {
+  .return-bar .badge i,
+  .sprint-bar .badge i {
     font-size: 10px; }
 
 .sprint-bar {
@@ -1726,25 +1729,19 @@ body.work.item .forum {
   overflow-y: auto;
   overflow-x: hidden; }
 
-body.work.item .forum .single-message,
-body.work.sprint .forum .single-message {
+body.work.item .forum .single-message {
   margin: 2px;
   width: 98%; }
-  body.work.item .forum .single-message .avatar-line-height,
-  body.work.sprint .forum .single-message .avatar-line-height {
+  body.work.item .forum .single-message .avatar-line-height {
     line-height: unset; }
-  body.work.item .forum .single-message .card-body,
-  body.work.sprint .forum .single-message .card-body {
+  body.work.item .forum .single-message .card-body {
     padding: .75rem .75rem 0rem; }
-  body.work.item .forum .single-message hr,
-  body.work.sprint .forum .single-message hr {
+  body.work.item .forum .single-message hr {
     width: calc(100% + 2rem - 8px);
     margin: 0.5rem 0 0.75rem calc(-1rem + 4px); }
-  body.work.item .forum .single-message .text p,
-  body.work.sprint .forum .single-message .text p {
+  body.work.item .forum .single-message .text p {
     margin-bottom: .75rem; }
-    body.work.item .forum .single-message .text p:first-of-type,
-    body.work.sprint .forum .single-message .text p:first-of-type {
+    body.work.item .forum .single-message .text p:first-of-type {
       display: inline-block; }
 
 body.material-stocks.landing .container.main-content {
@@ -1784,11 +1781,14 @@ body.work.sprint .participants .avatar {
 body.work.sprint .container.main-content {
   padding-top: 0; }
 
-body.work.sprint #chat-wrap {
+body.work.sprint #chat-wrap,
+body.work.sprint #updates-wrap {
   border-radius: .25rem;
+  margin-bottom: 2rem;
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2); }
 
-body.work.sprint #chat {
+body.work.sprint #chat,
+body.work.sprint #updates {
   padding: 1rem;
   max-height: 80vh;
   overflow-y: auto; }
@@ -1824,3 +1824,24 @@ body.work.sprint .from-self {
   text-align: right; }
   body.work.sprint .from-self .single-chat {
     background-color: rgba(20, 77, 88, 0.1); }
+
+body.work.sprint .single-update {
+  display: block;
+  padding: .75rem;
+  margin-bottom: .5rem;
+  border-radius: .25rem;
+  background-color: #fff;
+  border: 1px solid #efefef; }
+  body.work.sprint .single-update p {
+    display: inline-block;
+    margin-bottom: .5rem; }
+
+body.work.sprint #new-updates {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  border-color: transparent;
+  border-top-color: #efefef; }
+
+body.work.sprint #load-latest {
+  color: #144d58;
+  cursor: pointer; }

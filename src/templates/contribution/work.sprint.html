@@ -72,23 +72,12 @@
 
     <div class="col-md-6">
       <h1>Work updates</h1>
-      <div class="mb-4" id="updates">
-        {% for each in updates %}
-          <div class="single-message card mb-3">
-            <div class="card-body">
-              <div class="row metadata">
-                <div class="col-6">
-                  <img src="{{ each.author.image.thumbnail.url }}" alt="" class="avatar plus" />
-                  {{ each.author }}
-                </div>
-                <div class="col-6 text-muted text-right avatar-line-height" title="{{ each.date_created|date:'l j F Y, H:i e' }}">
-                  {{ each.date_created|naturaltime }}
-                </div>
-              </div>
 
-              <hr>
-
-              <div class="text">
+      <div id="updates-wrap">
+        <div id="updates">
+          {% for each in updates %}
+            <div class="single-update">
+              <div>
                 <a class="d-block mb-2" href="tasks/{{ each.parent.id }}/">{{ each.parent }}</a>
 
                 {% if each.name == "Task assigned" %}
@@ -103,144 +92,154 @@
 
                 {{ each.get_markdown_description|safe|truncatewords_html:30 }}
               </div>
-
+              <small class="text-muted">
+                {{ each.author }} | <span title="{{ each.date_created|date:'l d F Y, H:i' }}">{{ each.date_created|date:'l d F, H:i' }}</span>
+              </small>
             </div>
+          {% endfor %}
+        </div>
+        <div class="alert alert-light" id="new-updates">
+          There are <span id="updates_number">no</span> new updates
+          <div id="load-latest" class="float-right" hidden>
+            <i class="fal fa-redo mr-1"></i>
+            Load updates
           </div>
-        {% endfor %}
-        <div class="alert alert-warning" id="new_updates">
-          There are <strong id="updates_number"></strong> new updates. <a href="{{ request.get_full_path }}">Refresh now</a>.
         </div>
       </div>
     </div>
   </div>
 </div>
+{% endblock %}
 
-{% if request.user.is_authenticated %}
-<script src="{% static 'js/reconnecting-websockets.js' %}"></script>
-<script>
-  const roomName = JSON.parse(document.getElementById('room-name').textContent);
-  const userId = {{ request.user.people.id }};
-  const favIcon = document.querySelector('link[rel="shortcut icon"]');
-  const currentFavicon = "{% static 'img/favicon/favicon.png' %}";
-  const replaceFavicon = "{% static 'img/favicon/favicon.red.png' %}";
+{% block footer %}
+  {% if request.user.is_authenticated %}
+    <script src="{% static 'js/reconnecting-websockets.js' %}"></script>
+    <script>
+      const roomName = JSON.parse(document.getElementById("room-name").textContent);
+      const userId = {{ request.user.people.id }};
+      const favIcon = document.querySelector("link[rel='shortcut icon']");
+      const currentFavicon = "{% static 'img/favicon/favicon.png' %}";
+      const replaceFavicon = "{% static 'img/favicon/favicon.red.png' %}";
 
-  last_update = {{ last_update }};
-  console.log(last_update)
+      last_update = {{ last_update }};
 
-  // Every three minutes we check to see if there are any new updates
-  setInterval(function()
-  {
-      $.ajax({
-        type: "get",
-        url: "{{ request.get_full_path }}?updates_since={{ last_update }}",
-        datatype: "json",
-        success:function(data)
-        {
-            console.log("New updates: " + data.updates)
-            if (data.updates > 0) {
-              $("#new_updates").show();
-              $("#updates_number").html(data.updates);
-              var objDiv = document.getElementById("updates");
-              objDiv.scrollTop = objDiv.scrollHeight;
-              if (document.hidden) {
-                favIcon.setAttribute("href", replaceFavicon);
-              }
+      // function to check for updaters
+      function getUpdates() {
+        $.get("{{ request.get_full_path }}?updates_since={{ last_update }}", {
+          datatype: "json"
+        }).done(function(data) {
+          if (data.updates > 0) {
+            $("#new-updates").addClass("alert-warning").removeClass("alert-light")
+            $("#updates_number").text(data.updates);
+            $("#load-latest").removeAttr("hidden");
+
+            if (document.hidden) {
+              favIcon.setAttribute("href", replaceFavicon);
             }
-        }
-      });
-  }, 1000*60*3); // check every 3 min (time is in milliseconds)
+          } else {
+            $("#new-updates").removeClass("alert-warning").addClass("alert-light")
+            $("#updates_number").text("no");
+            $("#load-latest").attr("hidden", "hidden");
+          }
 
-
-  var objDiv = document.getElementById("chat");
-  objDiv.scrollTop = objDiv.scrollHeight;
-
-  var objDiv = document.getElementById("updates");
-  objDiv.scrollTop = objDiv.scrollHeight;
-
-  window.addEventListener("focus", function(event)
-  {
-      favIcon.setAttribute('href', currentFavicon);
-  }, false);
-
-  var focused = true;
-
-  const chatSocket = new ReconnectingWebSocket(
-      'ws://'
-      + window.location.host
-      + '/ws/chat/'
-      + roomName
-      + '/'
-  );
-
-  chatSocket.onmessage = function(e) {
-      const data = JSON.parse(e.data);
-      const message = data["message"]
-      const username = message.user;
-      const user_id = message.user_id;
-
-      let mainWrapperMessage = document.createElement("div");
-      let wrapperMessage = document.createElement("div");
-      let tagName = document.createElement("strong");
-
-      let contentMessage = document.createElement("p");
-      contentMessage.textContent = message.message;
-
-      let timeMessage = document.createElement("span");
-      timeMessage.textContent = message.timestamp;
-      timeMessage.textContent = username;
-
-      if (userId === user_id) {
-        wrapperMessage.className = "alert-success";
-        wrapperMessage.classList.add("float-right");
-
-        favIcon.setAttribute('href', currentFavicon);
-
-      } else {
-        wrapperMessage.className = "alert-info";
-        wrapperMessage.classList.add("float-left");
-
-        if (document.hidden) {
-          favIcon.setAttribute('href', replaceFavicon);
-        }
+        });
       }
 
-      wrapperMessage.classList.add("alert");
-      wrapperMessage.appendChild(tagName);
-      wrapperMessage.appendChild(contentMessage);
-      wrapperMessage.appendChild(timeMessage);
-      mainWrapperMessage.appendChild(wrapperMessage)
+      // check every 3 min (time is in milliseconds)
+      setInterval(getUpdates(), 1000 * 60 * 3);
 
-      document.querySelector('#chat').appendChild(mainWrapperMessage);
+      $("#load-latest").click(function() {
+        $.get("some_url").done(function(data) {
+          $("updates").html(data);
+          $("updates").scrollTop = objDiv.scrollHeight;
+        });
+      })
 
-      var objDiv = document.getElementById("chat");
-      objDiv.scrollTop = objDiv.scrollHeight;
+      $("#chat").scrollTop = objDiv.scrollHeight;
+      $("#updates").scrollTop = objDiv.scrollHeight;
 
-      //document.querySelector('#chat-log').value += (data.message + '\n');
-  };
+      window.addEventListener("focus", function(event) {
+        favIcon.setAttribute("href", currentFavicon)
+      }, false);
 
-  chatSocket.onclose = function(e) {
-    console.error("Chat socket closed unexpectedly");
-  };
+      var focused = true;
 
-  document.querySelector('#chat-message-input').onkeyup = function(e) {
-    if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
-      document.querySelector('#chat-message-submit').click();
-    }
-  };
+      const chatSocket = new ReconnectingWebSocket(
+        "ws://"
+        + window.location.host
+        + "/ws/chat/"
+        + roomName
+        + "/"
+      );
 
-  document.querySelector('#chat-message-submit').onclick = function(e) {
-      const messageInputDom = document.querySelector('#chat-message-input');
-      const message = messageInputDom.value;
-      chatSocket.send(JSON.stringify({
+      chatSocket.onmessage = function(e) {
+          const data = JSON.parse(e.data);
+        const message = data["message"]
+        const username = message.user;
+        const user_id = message.user_id;
+
+        let mainWrapperMessage = document.createElement("div");
+        let wrapperMessage = document.createElement("div");
+        let tagName = document.createElement("strong");
+
+        let contentMessage = document.createElement("p");
+        contentMessage.textContent = message.message;
+
+        let timeMessage = document.createElement("span");
+        timeMessage.textContent = message.timestamp;
+        timeMessage.textContent = username;
+
+        if (userId === user_id) {
+          wrapperMessage.className = "alert-success";
+          wrapperMessage.classList.add("float-right");
+
+          favIcon.setAttribute("href", currentFavicon);
+
+        } else {
+          wrapperMessage.className = "alert-info";
+          wrapperMessage.classList.add("float-left");
+
+          if (document.hidden) {
+            favIcon.setAttribute("href", replaceFavicon);
+          }
+        }
+
+        wrapperMessage.classList.add("alert");
+        wrapperMessage.appendChild(tagName);
+        wrapperMessage.appendChild(contentMessage);
+        wrapperMessage.appendChild(timeMessage);
+        mainWrapperMessage.appendChild(wrapperMessage)
+
+        document.querySelector("#chat").appendChild(mainWrapperMessage);
+
+        var objDiv = document.getElementById("chat");
+        objDiv.scrollTop = objDiv.scrollHeight;
+
+        //document.querySelector('#chat-log').value += (data.message + '\n');
+      };
+
+      chatSocket.onclose = function(e) {
+        console.error("Chat socket closed unexpectedly");
+      };
+
+      document.querySelector("#chat-message-input").onkeyup = function(e) {
+        if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
+          document.querySelector("#chat-message-submit").click();
+        }
+      };
+
+      document.querySelector("#chat-message-submit").onclick = function(e) {
+        const messageInputDom = document.querySelector("#chat-message-input");
+        const message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
           "message": message,
-          "command": 'new_message',
+          "command": "new_message",
           "channel": roomName,
           "user_id": userId,
 
-      }));
-      messageInputDom.value = '';
-  };
-</script>
-{% endif %}
-
+        }));
+        messageInputDom.value = "";
+      };
+    </script>
+  {% endif %}
 {% endblock %}
