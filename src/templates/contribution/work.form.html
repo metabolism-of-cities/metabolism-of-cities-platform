@@ -17,3 +17,11 @@
 </form>
 
 {% endblock %}
+
+{% block footer %}
+  <script>
+    $("#id_tags").select2({
+      theme: "bootstrap4",
+    });
+  </script>
+{% endblock %}

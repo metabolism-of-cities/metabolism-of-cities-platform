@@ -674,9 +674,9 @@ def work_form(request, project_name, id=None, sprint=None):
     info = None
     fields = ["name", "priority", "workactivity", "url"]
     if sprint:
-        fields.append("part_of_project")
+        fields += ["part_of_project"]
     if request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
-        fields.append("is_public")
+        fields += ["is_public", "tags"]
     ModelForm = modelform_factory(Work, fields=fields)
     if id and request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
         info = Work.objects_include_private.get(pk=id)
@@ -686,6 +686,7 @@ def work_form(request, project_name, id=None, sprint=None):
         info = Work.objects_include_private.get(pk=id)
     else:
         form = ModelForm(request.POST or None, initial={"part_of_project": project})
+    form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id=809)
     if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)
@@ -696,6 +697,7 @@ def work_form(request, project_name, id=None, sprint=None):
                 info.part_of_project_id = project
 
             info.save()
+            form.save_m2m()
 
             if not id:
                 message = Message.objects.create(
@@ -715,6 +717,7 @@ def work_form(request, project_name, id=None, sprint=None):
         "title": "Create new task" if not id else info.name,
         "form": form,
         "load_markdown": True,
+        "load_select2": True,
         "info": info,
     }
     return render(request, "contribution/work.form.html", context)
