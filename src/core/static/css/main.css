@@ -1825,17 +1825,6 @@ body.work.sprint .from-self {
   body.work.sprint .from-self .single-chat {
     background-color: rgba(20, 77, 88, 0.1); }
 
-body.work.sprint .single-update {
-  display: block;
-  padding: .75rem;
-  margin-bottom: .5rem;
-  border-radius: .25rem;
-  background-color: #fff;
-  border: 1px solid #efefef; }
-  body.work.sprint .single-update p {
-    display: inline-block;
-    margin-bottom: .5rem; }
-
 body.work.sprint #new-updates {
   border-top-right-radius: 0;
   border-top-left-radius: 0;
@@ -1845,3 +1834,29 @@ body.work.sprint #new-updates {
 body.work.sprint #load-latest {
   color: #144d58;
   cursor: pointer; }
+
+.work-updates .single-update {
+  display: block;
+  padding: .75rem;
+  margin-bottom: .5rem;
+  border-radius: .25rem;
+  background-color: #fff;
+  border: 1px solid #efefef; }
+  .work-updates .single-update p {
+    display: inline-block;
+    margin-bottom: .5rem; }
+
+body.volunteer.portal .join-cta {
+  background-color: rgba(20, 77, 88, 0.15);
+  padding: 2rem; }
+
+body.volunteer.portal .avatar {
+  height: 3rem;
+  width: 3rem;
+  border-radius: 100%;
+  object-fit: cover; }
+
+body.volunteer.portal .single-update {
+  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
+  border: none;
+  margin-bottom: 1rem; }
