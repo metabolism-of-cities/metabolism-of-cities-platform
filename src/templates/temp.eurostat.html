@@ -1,4 +1,6 @@
 {% extends "_base.html" %}
+{% load humanize %}
+
 {% block page_name %}fullwidth{% endblock %}
 
 {% block css %}
@@ -16,6 +18,9 @@ td {
 td.mini {
   width:120px;
 }
+.dead {
+  opacity: 0.1;
+}
 </style>
 {% endblock %}
 
@@ -23,29 +28,44 @@ td.mini {
 
   <h1 class="text-center">Eurostat databases</h1>
 
+  <div class="ml-5">
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+      <a class="nav-link {% if page == "regular" %}active{% endif %}" href="/eurostat/">Regular</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {% if page == "full" %}active{% endif %}" href="/eurostat/?full=true">Full list with search</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {% if page == "pending" %}active{% endif %}" href="/eurostat/?pending=true">Pending items only</a>
+    </li>
+  </ul>
+  </div>
+
   <div class="text-center alert alert-warning">
     <span class="step-links">
       {% if list.has_previous %}
-        <a href="?page=1">&laquo; first</a>
-        <a href="?page={{ list.previous_page_number }}">previous</a>
+        <a href="?show={{ page }}&amp;page=1">&laquo; first</a>
+        <a href="?show={{ page }}&amp;page={{ list.previous_page_number }}">previous</a>
       {% endif %}
 
       <span class="current">
+        {{ full_list.count }} records.
         Page {{ list.number }} of {{ list.paginator.num_pages }}.
       </span>
 
       {% if list.has_next %}
-        <a href="?page={{ list.next_page_number }}">next</a>
-        <a href="?page={{ list.paginator.num_pages }}">last &raquo;</a>
+        <a href="?show={{ page }}&amp;page={{ list.next_page_number }}">next</a>
+        <a href="?show={{ page }}&amp;page={{ list.paginator.num_pages }}">last &raquo;</a>
       {% endif %}
     </span>
   </div>
 
   <div class="progress">
-    <div class="progress-bar" role="progressbar" style="width: {{ percentage }}%;" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="{{ full_list.count }}">{{ percentage }}%</div>
+    <div class="progress-bar" role="progressbar" style="width: {{ percentage }}%;" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="{{ full_list.count }}">{{ percentage|intcomma }}%</div>
   </div>
 
-  <table class="table table-striped">
+  <table class="table table-striped datatable">
     <thead>
       <tr>
         <th>Options</th>
@@ -55,17 +75,26 @@ td.mini {
     <tbody>
     {% for each in list %}
       <tr>
-        <td class="mini">
-          {% if each.type == "dataset" %}
+        <td class="mini" data-sort="{{ each.id }}">
+          <a title="Edit record" href="/admin/core/eurostatdb/{{ each.id }}/change/" target="_blank" class="btn btn-default-outline"><i class="fal fa-pencil"></i></a>
+          {% if each.type != "folder" %}
             <span class="classify">
               <a data-id="{{ each.id }}" data-action="approve" href="#" class="btn {% if each.is_approved %}btn-success{% else %}btn-default-outline{% endif %}"><i class="fa fa-fw fa-check"></i></a>
               <a data-id="{{ each.id }}" data-action="deny" href="#" class="btn {% if each.is_denied %}btn-danger{% else %}btn-default-outline{% endif %}"><i class="fa fa-fw fa-times"></i></a>
             </span>
-            <a href="https://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?file=data/{{ each.code }}.tsv.gz" class="btn btn-default-outline"><i class="fa fa-file-archive"></i></a>
-            <a href="https://ec.europa.eu/eurostat/cache/metadata/en/{{ each.code }}_esms.htm" target="_blank" class="btn btn-default-outline"><i class="fal fa-file"></i></a>
+            <a title="Download file" href="https://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?file=data/{{ each.code }}.tsv.gz" class="btn btn-default-outline"><i class="fa fa-file-archive"></i></a>
+          {% endif %}
+            <a title="Meta data" href="https://ec.europa.eu/eurostat/cache/metadata/en/{{ each.code }}_esms.htm" target="_blank" class="{% if each.has_no_meta_data %}dead{% endif %} meta btn btn-default-outline"><i class="fal fa-file"></i></a>
+            {% if not each.has_no_meta_data %}
+              <a title="No meta data" href="#" class="btn btn-default-outline deadlink" data-id="{{ each.id }}"><i class="fas fa-unlink"></i></a>
+            {% endif %}
+        </td>
+        <td data-sort="{{ each.id }}">
+          <pre><a target="_blank" href="https://appsso.eurostat.ec.europa.eu/nui/show.do?dataset={{ each.code }}&lang=en">{{ each.title }}</a></pre>
+          {% if each.notes %}<br>
+            {{ each.notes|linebreaksbr }}
           {% endif %}
         </td>
-        <td data-sort="{{ each.id }}"><pre><a target="_blank" href="https://appsso.eurostat.ec.europa.eu/nui/show.do?dataset={{ each.code }}&lang=en">{{ each.title }}</a></pre></td>
       </tr>
     {% endfor %}
     </tbody>
@@ -75,6 +104,25 @@ td.mini {
 
 {% block footer %}
   <script type="text/javascript">
+
+    $(".deadlink").click(function(e){
+      e.preventDefault();
+      button = $(this);
+      var id = $(this).data("id");
+      var action = $(this).data("action");
+      $.get("{% url "core:eurostat" %}",{
+        deadlink: id,
+      }, function(data) {
+        if (data.status == "OK") {
+          button.hide();
+          $(button).closest("td").find(".meta").addClass("dead");
+        } else {
+          alert("Response failed!");
+        }
+      });
+      e.preventDefault();
+    });
+
 
     $(".classify a").click(function(e){
       e.preventDefault();
@@ -100,14 +148,9 @@ td.mini {
         } else {
           alert("Response failed!");
         }
-      },'json')
-      .error(function(){
-        alert("Could not send data");
-      });
+      },'json');
       e.preventDefault();
     });
-
-    
 
   </script>
 {% endblock %}

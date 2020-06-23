@@ -1856,9 +1856,20 @@ def dataimport(request):
 def eurostat(request):
 
     from django.core.paginator import Paginator
+    page = "regular"
+
+    hits = 1000
+    if "full" in request.GET or request.GET.get("show") == "full":
+        hits = 10000
+        page = "full"
 
     full_list = EurostatDB.objects.all().order_by("id")
-    paginator = Paginator(full_list, 1000)
+
+    if "pending" in request.GET or request.GET.get("show") == "pending":
+        full_list = full_list.filter(is_reviewed=False)
+        page = "pending"
+
+    paginator = Paginator(full_list, hits)
     page_number = request.GET.get("page")
     list = paginator.get_page(page_number)
 
@@ -1877,14 +1888,25 @@ def eurostat(request):
         except:
             return JsonResponse({"status":"Fail"})
 
+    if "deadlink" in request.GET:
+        info = EurostatDB.objects.get(pk=request.GET["deadlink"])
+        info.has_no_meta_data = True
+        info.save()
+        return JsonResponse({"status":"OK"})
+
     progress = full_list.filter(is_reviewed=True).count()
     percentage = progress/full_list.count()
+
     context = {
-        "load_datatables": True,
         "list": list,
         "title": "Eurostat database manager",
         "progress": progress,
         "percentage": percentage*100,
         "full_list": full_list,
+        "page": page,
     }
+
+    if "full" in request.GET or request.GET.get("show") == "full":
+        context["load_datatables"] = True
+
     return render(request, "temp.eurostat.html", context)

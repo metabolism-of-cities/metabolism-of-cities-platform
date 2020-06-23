@@ -324,3 +324,8 @@ admin_site.register(ActivityCatalog)
 admin_site.register(Activity, ActivityAdmin)
 admin_site.register(MaterialCatalog)
 admin_site.register(Material, ActivityAdmin)
+
+class EurostatAdmin(admin.ModelAdmin):
+    form = EurostatForm
+
+admin_site.register(EurostatDB, EurostatAdmin)
