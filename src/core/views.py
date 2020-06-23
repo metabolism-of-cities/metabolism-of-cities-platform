@@ -1855,23 +1855,7 @@ def dataimport(request):
 
 def eurostat(request):
 
-    # Quick copy import script
     from django.core.paginator import Paginator
-
-    if "import" in request.GET:
-        import csv
-        file = settings.MEDIA_ROOT + "/import/toc.txt"
-        with open(file, "r") as csvfile:
-            contents = csv.DictReader(csvfile, delimiter="\t")
-            for row in contents:
-                EurostatDB.objects.create(
-                    title = row["title"],
-                    code = row["code"],
-                    type = row["type"],
-                    last_update = row["last update of data"],
-                    data_start = row["data start"],
-                    data_end = row["data end"],
-                )
 
     full_list = EurostatDB.objects.all().order_by("id")
     paginator = Paginator(full_list, 1000)
