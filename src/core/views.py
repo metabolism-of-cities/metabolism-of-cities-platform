@@ -1851,3 +1851,56 @@ def dataimport(request):
     return render(request, "temp.import.html", context)
 
 
+# temporary eurostat processing stuff
+
+def eurostat(request):
+
+    # Quick copy import script
+    from django.core.paginator import Paginator
+
+    if "import" in request.GET:
+        import csv
+        file = settings.MEDIA_ROOT + "/import/toc.txt"
+        with open(file, "r") as csvfile:
+            contents = csv.DictReader(csvfile, delimiter="\t")
+            for row in contents:
+                EurostatDB.objects.create(
+                    title = row["title"],
+                    code = row["code"],
+                    type = row["type"],
+                    last_update = row["last update of data"],
+                    data_start = row["data start"],
+                    data_end = row["data end"],
+                )
+
+    full_list = EurostatDB.objects.all().order_by("id")
+    paginator = Paginator(full_list, 1000)
+    page_number = request.GET.get("page")
+    list = paginator.get_page(page_number)
+
+    if "action" in request.GET:
+        try:
+            info = EurostatDB.objects.get(pk=request.GET["id"])
+            info.is_reviewed = True
+            if request.GET["action"] == "deny":
+                info.is_denied = True
+                info.is_approved = False
+            else:
+                info.is_denied = False
+                info.is_approved = True
+            info.save()
+            return JsonResponse({"status":"OK"})
+        except:
+            return JsonResponse({"status":"Fail"})
+
+    progress = full_list.filter(is_reviewed=True).count()
+    percentage = progress/full_list.count()
+    context = {
+        "load_datatables": True,
+        "list": list,
+        "title": "Eurostat database manager",
+        "progress": progress,
+        "percentage": percentage*100,
+        "full_list": full_list,
+    }
+    return render(request, "temp.eurostat.html", context)

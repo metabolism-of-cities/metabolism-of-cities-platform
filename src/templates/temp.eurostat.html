@@ -1,0 +1,113 @@
+{% extends "_base.html" %}
+{% block page_name %}fullwidth{% endblock %}
+
+{% block css %}
+<style type="text/css">
+pre{
+  white-space: pre;
+  overflow: hidden;
+}
+td {
+    max-width: 60vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+td.mini {
+  width:120px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <h1 class="text-center">Eurostat databases</h1>
+
+  <div class="text-center alert alert-warning">
+    <span class="step-links">
+      {% if list.has_previous %}
+        <a href="?page=1">&laquo; first</a>
+        <a href="?page={{ list.previous_page_number }}">previous</a>
+      {% endif %}
+
+      <span class="current">
+        Page {{ list.number }} of {{ list.paginator.num_pages }}.
+      </span>
+
+      {% if list.has_next %}
+        <a href="?page={{ list.next_page_number }}">next</a>
+        <a href="?page={{ list.paginator.num_pages }}">last &raquo;</a>
+      {% endif %}
+    </span>
+  </div>
+
+  <div class="progress">
+    <div class="progress-bar" role="progressbar" style="width: {{ percentage }}%;" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="{{ full_list.count }}">{{ percentage }}%</div>
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Options</th>
+        <th>Title</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in list %}
+      <tr>
+        <td class="mini">
+          {% if each.type == "dataset" %}
+            <span class="classify">
+              <a data-id="{{ each.id }}" data-action="approve" href="#" class="btn {% if each.is_approved %}btn-success{% else %}btn-default-outline{% endif %}"><i class="fa fa-fw fa-check"></i></a>
+              <a data-id="{{ each.id }}" data-action="deny" href="#" class="btn {% if each.is_denied %}btn-danger{% else %}btn-default-outline{% endif %}"><i class="fa fa-fw fa-times"></i></a>
+            </span>
+            <a href="https://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?file=data/{{ each.code }}.tsv.gz" class="btn btn-default-outline"><i class="fa fa-file-archive"></i></a>
+            <a href="https://ec.europa.eu/eurostat/cache/metadata/en/{{ each.code }}_esms.htm" target="_blank" class="btn btn-default-outline"><i class="fal fa-file"></i></a>
+          {% endif %}
+        </td>
+        <td data-sort="{{ each.id }}"><pre><a target="_blank" href="https://appsso.eurostat.ec.europa.eu/nui/show.do?dataset={{ each.code }}&lang=en">{{ each.title }}</a></pre></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}
+
+{% block footer %}
+  <script type="text/javascript">
+
+    $(".classify a").click(function(e){
+      e.preventDefault();
+      button = $(this);
+      var id = $(this).data("id");
+      var action = $(this).data("action");
+      console.log("ID: "+id);
+      console.log("action: "+action);
+      $.get("{% url "core:eurostat" %}",{
+        id: id,
+        action: action,
+      }, function(data) {
+        if (data.status == "OK") {
+          if (action == "deny") {
+            button.addClass("btn-danger");
+          } else {
+            button.addClass("btn-success");
+          }
+          button.removeClass("btn-default-outline");
+          button.siblings().removeClass("btn-success");
+          button.siblings().removeClass("btn-danger");
+          button.siblings().addClass("btn-default-outline");
+        } else {
+          alert("Response failed!");
+        }
+      },'json')
+      .error(function(){
+        alert("Could not send data");
+      });
+      e.preventDefault();
+    });
+
+    
+
+  </script>
+{% endblock %}

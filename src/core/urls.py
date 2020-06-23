@@ -123,5 +123,6 @@ urlpatterns = [
     path("socialmedia/<slug:type>/callback", views.socialmediaCallback),
     path("socialmedia/<slug:type>/", views.socialmedia),
 
+    path("eurostat/", views.eurostat, name="eurostat"),
     path("forum/<int:id>/", community.forum, { "project_name": app_name }, name="forum"),
 ]
