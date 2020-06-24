@@ -1,31 +1,38 @@
 {% extends "_base.html" %}
 {% load humanize %}
+{% block title %}Volunteer Portal | Latest activity{% endblock %}
+{% block page_name %}volunteer portal latest{% endblock %}
 
 {% block content %}
   <h1>Volunteer Portal</h1>
   {% include "hub/_nav.html" %}
 
-  <p>
-    You are viewing activity from the last 7 days. 
-    <a href="http://">View last 14 days</a> | <a href="http://">View last 30 days</a>
-  </p>
-  <table class="table table-striped datatable">
+  <div class="btn-group mb-4" role="group" aria-label="History">
+    <a href="#" class="btn btn-secondary disabled"><i class="fal fa-history mr-0"></i></a>
+    <a href="#" class="btn btn-primary">Last 7 days</a>
+    <a href="#" class="btn btn-primary-outline">14 days</a>
+    <a href="#" class="btn btn-primary-outline">30 days</a>
+  </div>
+
+  <table class="table table-responsive datatable-card datatable">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Item</th>
-        <th>Date</th>
-        <th>Blurb</th>
+        <th class="user">User</th>
+        <th class="item">Date and item</th>
+        <th class="blurb">Details</th>
       </tr>
     </thead>
     <tbody>
     {% for each in updates %}
       <tr>
-        <td>{{ each.author }}</td>
         <td>
-          <a class="d-block mb-2" href="tasks/{{ each.parent.id }}/">{{ each.parent }}</a>
+          <img src="{{ each.author.image.thumbnail.url }}" title="{{ each.author}}" alt="{{ each.author}}" class="avatar">
+          {{ each.author }}
         </td>
-        <td>{{ each.date_created|naturaltime }}</td>
+        <td>
+          {{ each.date_created|naturaltime }}<br>
+          <a href="tasks/{{ each.parent.id }}/">{{ each.parent }}</a>
+        </td>
         <td>
           {{ each.get_markdown_description|safe|truncatewords_html:30 }}
         </td>

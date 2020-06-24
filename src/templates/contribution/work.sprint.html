@@ -126,17 +126,16 @@
 
       // check every 3 min (time is in milliseconds)
       setInterval(getUpdates(), 1000 * 60 * 3);
-        var objDiv = document.getElementById("chat");
 
       $("#load-latest").click(function() {
         $.get("some_url").done(function(data) {
-          $("updates").html(data);
-          $("updates").scrollTop = objDiv.scrollHeight;
+          $("#updates").html(data);
+          $("#updates").scrollTop($("#updates")[0].scrollHeight);
         });
       })
 
-      $("#chat").scrollTop = objDiv.scrollHeight;
-      $(".work-updates").scrollTop = objDiv.scrollHeight;
+      $("#chat").scrollTop($("#chat")[0].scrollHeight);
+      $("#updates").scrollTop($("#updates")[0].scrollHeight);
 
       window.addEventListener("focus", function(event) {
         favIcon.setAttribute("href", currentFavicon)
@@ -152,49 +151,37 @@
         + "/"
       );
 
+      let timeTest;
+
       chatSocket.onmessage = function(e) {
-          const data = JSON.parse(e.data);
+        const data = JSON.parse(e.data);
         const message = data["message"]
         const username = message.user;
         const user_id = message.user_id;
 
-        let mainWrapperMessage = document.createElement("div");
-        let wrapperMessage = document.createElement("div");
-        let tagName = document.createElement("strong");
+        let messageClass = "from-other d-flex align-items-start flex-column";
+        let userLabel = username + ", "
 
-        let contentMessage = document.createElement("p");
-        contentMessage.textContent = message.message;
+        let formattedTime = new Date(message.timestamp)
+        let timeLabel = formattedTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        let dateTitle = formattedTime.toLocaleString("en-IE", { weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" });
 
-        let timeMessage = document.createElement("span");
-        timeMessage.textContent = message.timestamp;
-        timeMessage.textContent = username;
+        // <span title="Wednesday 24 June 2020, 10:32">10:32</span>
 
         if (userId === user_id) {
-          wrapperMessage.className = "alert-success";
-          wrapperMessage.classList.add("float-right");
-
           favIcon.setAttribute("href", currentFavicon);
 
-        } else {
-          wrapperMessage.className = "alert-info";
-          wrapperMessage.classList.add("float-left");
+          messageClass = "from-self d-flex align-items-end flex-column"
+          userLabel = ""
 
+        } else {
           if (document.hidden) {
             favIcon.setAttribute("href", replaceFavicon);
           }
         }
+        $("#chat").append("<div class='" + messageClass + "'><div class='single-chat'><div class='text-left'>" + message.message + "</div><small class='text-muted'>" + userLabel + "<span title='" + dateTitle + "'>" + timeLabel + "</span></small></div></div>")
 
-        wrapperMessage.classList.add("alert");
-        wrapperMessage.appendChild(tagName);
-        wrapperMessage.appendChild(contentMessage);
-        wrapperMessage.appendChild(timeMessage);
-        mainWrapperMessage.appendChild(wrapperMessage)
-
-        document.querySelector("#chat").appendChild(mainWrapperMessage);
-
-        objDiv.scrollTop = objDiv.scrollHeight;
-
-        //document.querySelector('#chat-log').value += (data.message + '\n');
+        $("#chat").scrollTop($("#chat")[0].scrollHeight);
       };
 
       chatSocket.onclose = function(e) {

@@ -2826,7 +2826,7 @@ body.work.sprint {
   }
 }
 
-body.volunteer.portal {
+body.volunteer.portal.home {
   .join-cta {
     background-color: transparentize($primary, .85);
     padding: 2rem;
@@ -2843,5 +2843,21 @@ body.volunteer.portal {
     box-shadow: $basic-shadow;
     border: none;
     margin-bottom: 1rem;
+  }
+}
+
+body.volunteer.portal.latest {
+  .avatar {
+    height: 2.5rem;
+    width: 2.5rem;
+    border-radius: 100%;
+    object-fit: cover;
+    margin-right: .5rem;
+  }
+
+  th.user,
+  th.item,
+  th.date {
+    width: 250px;
   }
 }
