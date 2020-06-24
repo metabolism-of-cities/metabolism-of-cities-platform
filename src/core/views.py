@@ -740,7 +740,7 @@ def work_form(request, project_name, id=None, sprint=None):
     project = PROJECT_ID[project_name]
     info = None
     fields = ["name", "priority", "workactivity", "url"]
-    if sprint:
+    if request.user.is_staff:
         fields += ["part_of_project"]
     if request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
         fields += ["is_public", "tags"]
