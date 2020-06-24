@@ -120,6 +120,8 @@ MIDDLEWARE = [
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
 ]
 
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 CRON_CLASSES = [
     'core.crons.CreateMapJS',
 ]
