@@ -52,14 +52,14 @@
 
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle{% if menu == 'resource_use' %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Resource use
+              Households
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Overview</a>
-              <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Water</a>
-              <a class="dropdown-item" href="{% url 'data:reports' space.slug %}">Electricity</a>
-              <a class="dropdown-item" href="{% url 'data:theses' space.slug %}">Construction materials</a>
-              <a class="dropdown-item" href="{% url 'data:photos' space.slug %}">Food</a>
+              <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Demographics</a>
+              <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Water consumption</a>
+              <a class="dropdown-item" href="{% url 'data:reports' space.slug %}">Electricity consumption</a>
+              <a class="dropdown-item" href="{% url 'data:photos' space.slug %}">Food consumption</a>
             </div>
           </li>
           <li class="nav-item dropdown">
@@ -86,10 +86,9 @@
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle{% if menu == 'library' %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Information library
+              Library
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Datasets</a>
               <a class="dropdown-item" href="{% url 'data:maps' space.slug %}">Maps</a>
               <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Journal articles</a>
               <a class="dropdown-item" href="{% url 'data:reports' space.slug %}">Reports</a>
@@ -103,6 +102,7 @@
               Data
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">All datasets</a>
               <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Upload data</a>
               <a class="dropdown-item" href="{% url 'data:maps' space.slug %}">Download</a>
               <a class="dropdown-item" href="{% url 'data:maps' space.slug %}">Data curation platform</a>
