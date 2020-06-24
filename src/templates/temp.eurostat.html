@@ -26,9 +26,10 @@ td.mini {
 
 {% block content %}
 
+  <div class="p-4">
+
   <h1 class="text-center">Eurostat databases</h1>
 
-  <div class="ml-5">
   <ul class="nav nav-tabs mb-4">
     <li class="nav-item">
       <a class="nav-link {% if page == "regular" %}active{% endif %}" href="/eurostat/">Regular</a>
@@ -40,13 +41,17 @@ td.mini {
       <a class="nav-link {% if page == "pending" %}active{% endif %}" href="/eurostat/?pending=true">Pending items only</a>
     </li>
   </ul>
-  </div>
 
-  <form method="get" class="form form-horizontal p-4">
+  <form method="get" class="form form-horizontal mb-3">
      <input class="form-control" type="text" name="q" value="{{ request.GET.q }}" />
      <button class="btn btn-primary" type="submit">Search</button>
      <input type="hidden" name="show" value="{{ page }}" />
   </form>
+
+  <div class="mb-3">
+   {{ webpage.get_markdown_description|safe }} 
+    <a href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/controlpanel/content/{{ webpage.id }}/?next={{ request.get_full_path }}"><i class="fas fa-edit fa-fw"></i> Edit</a>
+  </div>
 
   <div class="text-center alert alert-warning">
     <span class="step-links">
@@ -56,7 +61,7 @@ td.mini {
       {% endif %}
 
       <span class="current">
-        {{ full_list.count }} records.
+        {{ full_list.count }} records | {{ no_folders.count }} datasets.
         Page {{ list.number }} of {{ list.paginator.num_pages }}.
       </span>
 
@@ -68,7 +73,7 @@ td.mini {
   </div>
 
   <div class="progress">
-    <div class="progress-bar" role="progressbar" style="width: {{ percentage }}%;" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="{{ full_list.count }}">{{ percentage|floatformat }}%</div>
+    <div class="progress-bar" role="progressbar" style="width: {{ percentage }}%;" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="{{ no_folders.count }}">{{ percentage|floatformat }}%</div>
   </div>
 
   <table class="table table-striped datatable">
@@ -105,6 +110,8 @@ td.mini {
     {% endfor %}
     </tbody>
   </table>
+
+</div>
 
 {% endblock %}
 

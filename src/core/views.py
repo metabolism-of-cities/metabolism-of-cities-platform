@@ -1905,6 +1905,7 @@ def dataimport(request):
 
 # temporary eurostat processing stuff
 
+@login_required
 def eurostat(request):
 
     from django.core.paginator import Paginator
@@ -1950,7 +1951,8 @@ def eurostat(request):
         return JsonResponse({"status":"OK"})
 
     progress = full_list.filter(is_reviewed=True).count()
-    percentage = progress/full_list.count()
+    no_folders = full_list.exclude(type="folder")
+    percentage = progress/no_folders.count()
 
     context = {
         "list": list,
@@ -1958,7 +1960,9 @@ def eurostat(request):
         "progress": progress,
         "percentage": percentage*100,
         "full_list": full_list,
+        "no_folders": no_folders,
         "page": page,
+        "webpage": Webpage.objects.get(slug="/eurostat/"),
     }
 
     if "full" in request.GET or request.GET.get("show") == "full":

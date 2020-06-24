@@ -74,7 +74,7 @@
                 {% endif %}
 
                 {% if webpage and not edit_link and request.user.is_authenticated and request.user.is_staff %}
-                  <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/controlpanel/content/{{ webpage.id }}/?next={{ request.get_full_path }}"><i class="fas fa-edit fa-fw"></i> Edit</a>
+                  <a class="dropdown-item" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/controlpanel/content/{{ webpage.id }}/?next={{ request.get_full_path }}"><i class="fas fa-edit fa-fw"></i> Edit</a>
                 {% endif %}
 
                 {% if article and request.user.is_authenticated and request.user.is_staff %}
