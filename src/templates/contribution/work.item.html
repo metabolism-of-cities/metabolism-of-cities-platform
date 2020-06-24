@@ -57,12 +57,12 @@
                     <a href="{{ info.url }}">
                       {{ info.related_to }}
                     </a>
-                  {% elif info %}
-                      {{ info.related_to }}
-                  {% else %}
-                    <a href="{{ info.get_absolute_url }}">
+                  {% elif info.related_to.get_absolute_url %}
+                    <a href="{{ info.related_to.get_absolute_url }}">
                       {{ info.related_to }}
                     </a>
+                  {% else %}
+                      {{ info.related_to }}
                   {% endif %}
                 </div>
               </li>

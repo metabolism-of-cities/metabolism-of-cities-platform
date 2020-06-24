@@ -28,7 +28,11 @@ import codecs
 
 import shapefile
 
+TAG_ID = settings.TAG_ID_LIST
+PAGE_ID = settings.PAGE_ID_LIST
 PROJECT_ID = settings.PROJECT_ID_LIST
+RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
+THIS_PROJECT = PROJECT_ID["staf"]
 
 # General script to check if a user has a certain permission
 # This is used for validating access to certain pages only, so superusers
@@ -56,7 +60,7 @@ def is_member(param, para):
 def index(request):
     context = {
         "show_project_design": True,
-        "show_relationship": PROJECT_ID["staf"],
+        "show_relationship": THIS_PROJECT,
     }
     return render(request, "staf/index.html", context)
 
@@ -94,7 +98,7 @@ def review_pending(request):
 def review_uploaded(request):
 
     context = {
-        "list": Work.objects.filter(status=Work.WorkStatus.OPEN, part_of_project_id=PROJECT_ID["staf"], workactivity_id=2),
+        "list": Work.objects.filter(status=Work.WorkStatus.OPEN, part_of_project_id=THIS_PROJECT, workactivity_id=2),
         "load_datatables": True,
     }
     return render(request, "staf/review/files.uploaded.html", context)
@@ -110,7 +114,7 @@ def review_session(request, id):
         unauthorized_access(request)
 
     try:
-        work = Work.objects.get(status=Work.WorkStatus.OPEN, part_of_project_id=PROJECT_ID["staf"], workactivity_id=2, related_to=session)
+        work = Work.objects.get(status=Work.WorkStatus.OPEN, part_of_project_id=THIS_PROJECT, workactivity_id=2, related_to=session)
     except:
         work = None
 
@@ -333,7 +337,7 @@ def upload_gis(request, id=None):
 @login_required
 def upload_gis_file(request, id=None):
     session = None
-    project = PROJECT_ID["staf"]
+    project = THIS_PROJECT
     if id:
         # Add validation code here
         session = get_object_or_404(UploadSession, pk=id)

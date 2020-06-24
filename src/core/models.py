@@ -112,7 +112,10 @@ class Record(models.Model):
 
     def get_absolute_url(self):
         # We got to fix this!
-        return reverse("core:project", args=[self.id])
+        if hasattr(self, "libraryitem"):
+            return reverse("library:item", args=[self.id])
+        else:
+            return None
 
     def get_methodologies(self):
         self.tags.filter(parent_tag__id=318)

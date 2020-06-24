@@ -17,6 +17,7 @@ import pytz
 TAG_ID = settings.TAG_ID_LIST
 PAGE_ID = settings.PAGE_ID_LIST
 PROJECT_ID = settings.PROJECT_ID_LIST
+RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
 THIS_PROJECT = PROJECT_ID["library"]
 
 def index(request):
@@ -250,7 +251,9 @@ def upload(request):
     return render(request, "library/upload.html", context)
 
 @login_required
-def form(request, id=None):
+def form(request, id=None, project_name="library"):
+
+    project = Project.objects.get(slug=project_name)
     type = request.GET.get("type")
     if request.method == "POST":
         type = request.POST.get("type")
@@ -305,23 +308,49 @@ def form(request, id=None):
     if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)
-            if not id:
-                if type == "dataset":
-                    info.type_id = 10
-                else:
-                    info.type_id = 39
+            info.type = type
+            info.is_active = False
             info.save()
             form.save_m2m()
+
+            if request.POST.get("publisher"):
+                RecordRelationship.objects.create(
+                    record_parent = Organization.objects.get(pk=request.POST.get("publisher")),
+                    record_child = info,
+                    relationship_id = RELATIONSHIP_ID["publisher"],
+                )
+
+            if request.POST.get("journal"):
+                RecordRelationship.objects.create(
+                    record_parent = Organization.objects.get(pk=request.POST.get("journal")),
+                    record_child = info,
+                    relationship_id = RELATIONSHIP_ID["publisher"],
+                )
 
             if not id:
                 RecordRelationship.objects.create(
                     record_parent = request.user.people,
                     record_child = info,
-                    relationship_id = 11,
+                    relationship_id = RELATIONSHIP_ID["uploader"],
+                )
+
+                Work.objects.create(
+                    status = Work.WorkStatus.COMPLETED,
+                    part_of_project = project,
+                    workactivity_id = 4,
+                    related_to = info,
+                    assigned_to = request.user.people,
+                )
+
+                Work.objects.create(
+                    status = Work.WorkStatus.OPEN,
+                    part_of_project = project,
+                    workactivity_id = 14,
+                    related_to = info,
                 )
 
             if "return" in request.GET:
-                messages.success(request, "The changes were saved")
+                messages.success(request, "Your item was added to the library.")
                 return redirect(request.GET["return"])
             else:
                 messages.success(request, "The item was added to the library. <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=2&amp;record_child=" + str(info.id) + "'>Link to publisher</a> |  <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=4&amp;record_child=" + str(info.id) + "'>Link to author</a> ||| <a href='/admin/core/organization/add/' target='_blank'>Add a new organization</a>")
