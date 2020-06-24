@@ -67,6 +67,7 @@ def library(request, space, type):
     if type == "articles":
         title = "Journal articles"
         list = list.filter(type__group="academic")
+        print(list.query)
     elif type == "reports":
         list = list.filter(type__group="reports")
         title = "Reports"

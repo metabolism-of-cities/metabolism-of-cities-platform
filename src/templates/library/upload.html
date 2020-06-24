@@ -1,0 +1,21 @@
+{% extends "_base.html" %}
+
+{% block title %}{{ webpage }}{% endblock %}
+
+{% block content %}
+
+  <h1>{{ webpage }}</h1>
+  {{ webpage.get_content|safe }}
+
+  <h2>Select type</h2>
+
+  <div class="list-group">
+  {% for each in types %}
+    <a href="{% url "library:form" %}?type={{ each.id }}" class="list-group-item list-group-item-action">
+      <i class="fa fa-fw fa-{{ each.icon }}"></i>
+      {{ each }}
+    </a>
+  {% endfor %}
+  </div>
+
+{% endblock %}

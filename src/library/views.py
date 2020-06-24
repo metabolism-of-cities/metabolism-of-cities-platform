@@ -235,22 +235,19 @@ def map(request, article, tag=None):
     return render(request, "library/map.html", context)
 
 def authors(request):
-    info = get_object_or_404(Webpage, pk=PAGE_ID["library"])
     context = {
-        "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
-        "info": info,
-        "menu": Webpage.objects.filter(parent=info),
     }
-    return render(request, "article.html", context)
+    return render(request, "library/authors.html", context)
 
-def contribute(request):
-    info = get_object_or_404(Webpage, pk=PAGE_ID["library"])
+def upload(request):
+    info = get_object_or_404(Webpage, part_of_project_id=THIS_PROJECT, slug="/upload/")
+    types = [5,6,9,16,37,25,27,29,32]
     context = {
-        "design_link": "/admin/core/articledesign/" + str(info.id) + "/change/",
+        "webpage": info,
         "info": info,
-        "menu": Webpage.objects.filter(parent=info),
+        "types": LibraryItemType.objects.filter(id__in=types),
     }
-    return render(request, "article.html", context)
+    return render(request, "library/upload.html", context)
 
 @login_required
 def form(request, id=None):

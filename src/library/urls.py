@@ -70,8 +70,8 @@ urlpatterns = [
     path("journals/<slug:slug>/", views.journal, name="journal"),
     path("items/<int:id>/", views.item, name="item"),
     path("authors/", views.authors, name="authors"),
-    path("contribute/", views.contribute, name="contribute"),
-    path("create/", views.form, name="form"),
+    path("upload/form/", views.form, name="form"),
+    path("upload/", views.upload, name="upload"),
     path("item/<int:id>/", views.form, name="form"),
 
 ]

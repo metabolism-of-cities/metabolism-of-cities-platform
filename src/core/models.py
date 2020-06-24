@@ -434,8 +434,9 @@ class Webpage(Record):
     TYPE = [
         ("html", "HTML"),
         ("markdown", "Markdown"),
+        ("markdown_html", "Markdown and HTML"),
     ]
-    type = models.CharField(max_length=10, choices=TYPE, default="markdown")
+    type = models.CharField(max_length=13, choices=TYPE, default="markdown")
     slug = models.CharField(db_index=True, max_length=100)
     part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, related_name="webpages")
 
