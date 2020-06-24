@@ -6,6 +6,7 @@ from community import views as community
 app_name = "library"
 
 urlpatterns = [
+
     #
     # Baseline links shared between all projects
     # Last change June 11, 2020
