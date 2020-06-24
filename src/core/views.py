@@ -346,6 +346,20 @@ def index(request):
 
 # News and events
 
+def news_events_list(request, header_subtitle=None, project_name=None):
+    project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+    news = News.objects.filter(projects=project).distinct()
+    events = Event.objects.filter(projects=project).distinct()
+    context = {
+        "news": news,
+        "events": events,
+        "add_link": "/admin/core/news/add/",
+        "header_title": "News and events",
+        "header_subtitle": header_subtitle,
+        "menu": "news",
+    }
+    return render(request, "news.events.list.html", context)
+
 def news_list(request, header_subtitle=None, project_name=None):
     if project_name and project_name != "core":
         project = get_object_or_404(Project, pk=PROJECT_ID[project_name])

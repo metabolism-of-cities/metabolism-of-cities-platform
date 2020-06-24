@@ -63,9 +63,12 @@ def people_list(request):
     return render(request, "people.list.html", context)
 
 
-def projects(request):
+def projects(request, project_name="core"):
 
-    if "import" in request.GET:
+    project = PROJECT_ID[project_name]
+    project = Project.objects.get(pk=project)
+
+    if "import" in request.GET and False:
         import csv
         print("importing")
         file = settings.MEDIA_ROOT + "/import/projects.csv"
@@ -122,7 +125,7 @@ def projects(request):
 
 
 
-    list = PublicProject.objects.all()
+    list = PublicProject.objects.filter(part_of_project=project)
     context = {
         "list": list,
         "header_title": "Projects",

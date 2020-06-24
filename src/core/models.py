@@ -211,6 +211,8 @@ class PublicProject(Record):
         ("cancelled", "Cancelled"),
     )
     status = models.CharField(max_length=20, choices=STATUS, default="ongoing")
+    part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
+
     def get_absolute_url(self):
         return reverse("community:project", args=[self.id])
 

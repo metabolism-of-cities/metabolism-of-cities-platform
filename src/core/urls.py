@@ -25,6 +25,7 @@ urlpatterns = [
     path("news/<slug:slug>/", views.news, name="news"),
     path("events/", views.event_list, name="events"),
     path("events/<slug:slug>/", views.event, name="event"),
+    path("news_events/", views.news_events_list, { "project_name": app_name }, name="news_events"),
 
     # Projects
     path("projects/<slug:slug>/", views.project, name="project"),

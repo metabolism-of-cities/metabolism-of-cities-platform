@@ -1,0 +1,88 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block css %}
+<style type="text/css">
+.card img {
+  width: 100px;
+  height: 50px;
+  object-fit: cover;
+}
+.card small {
+  display: block;
+}
+</style>
+{% endblock %}
+
+{% block title %}News List{% endblock %}
+{% block page_name %}event list{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col-md-6 mb-2">
+    <input type="text" class="form-control" placeholder="Search...">
+  </div>
+  <div class="col-md-6 mb-2">
+    <select class="custom-select">
+      <option selected>Filter by years</option>
+      <option value="1">2020</option>
+      <option value="2">2019</option>
+      <option value="3">2018</option>
+    </select>
+  </div>
+</div>
+
+<div class="row">
+
+  <div class="col-md-6">
+    
+    <h2>News</h2>
+
+    {% for each in news %}
+        <a href="../news/{{ each.slug }}/" class="card">
+          <div class="card-body media">
+            {% if each.image %}
+              <img class="rounded" src="{{ each.image.url }}" alt="">
+            {% endif %}
+            <div class="media-body pl-3 align-self-center">
+              <h5 class="mb-0">
+                <span class="mr-1">{{ each }}</span>
+                <small class="text-muted">{{ each.date }}</small>
+              </h5>
+            </div>
+          </div>
+        </a>
+    {% endfor %}
+
+  </div>
+
+  <div class="col-md-6">
+
+  <h2>Events</h2>
+
+    {% for each in events %}
+        <a href="../events/{{ each.slug }}/" class="card">
+          <div class="card-body media">
+            {% if each.image %}
+              <img class="rounded" src="{{ each.image.url }}" alt="">
+            {% endif %}
+            <div class="media-body pl-3 align-self-center">
+              <h5 class="mb-0">
+                <span class="mr-1">{{ each }}</span>
+                <small class="text-muted">{{ each.start_date|date:"M d, Y" }} - {{ each.end_date|date:"M d, Y" }}</small>
+                <small>{{ each.location }}</small>
+              </h5>
+            </div>
+          </div>
+        </a>
+    {% endfor %}
+
+
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

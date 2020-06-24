@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from core import views as core
 from community import views as community
+from library import views as library
 
 app_name = "islands"
 
@@ -54,4 +55,14 @@ urlpatterns = [
     #
 
     path("", views.index, name="index"),
+    path("news_events/", core.news_events_list, { "project_name": app_name }, name="news_events"),
+    path("about/<slug:slug>/", core.article, { "prefix": "/about/", "project_name": app_name }, name="about"),
+    path("community/research/projects/", community.projects, { "project_name": app_name }, name="projects"),
+    path("community/research/theses/", library.list, { "type": "island_theses" }),
+    path("community/research/projects/<int:id>/", community.projects, { "project_name": app_name }, name="projects"),
+    path("community/<slug:slug>/", core.article, { "prefix": "/community/", "project_name": app_name }, name="community"),
+    path("resources/publications/", library.list, { "type": "islands" }, name="library"),
+    path("resources/map/", library.map, { "article": 59, "tag": 219 }, name="map"),
+    path("resources/publications/<int:id>/", library.item, name="library_item"),
+    path("resources/<slug:slug>/", core.article, { "prefix": "/resources/", "project_name": app_name }, name="resources"),
 ]

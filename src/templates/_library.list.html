@@ -12,14 +12,19 @@
     {% for each in items %}
       <tr>
         <td>
-            <a href="{{ each.get_absolute_url }}">{{ each }}</a>
+            <a href="{% if PROJECT.id == 17 %}{% url 'islands:library_item' each.id %}{% else %}{{ each.get_absolute_url }}{% endif %}">
+              {{ each }}
+            </a>
           <br>
           <em>{{ each.type }}</em>
           {% if each.publisher %} 
             | {{ each.publisher }}
           {% endif %}
         </td>
-        <td>{{ each.get_author_citation|safe }}</td>
+        <td>
+          {{ each.get_author_citation|safe }}
+          <span hidden>{{ each.author_list }}</span>
+        </td>
         <td>{{ each.year }}</td>
       </tr>
     {% endfor %}

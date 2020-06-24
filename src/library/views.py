@@ -86,6 +86,14 @@ def list(request, type):
     elif type == "reviews":
         list = LibraryItem.objects.filter(tags__id=3)
         title = "Review papers"
+    elif type == "islands":
+        list = LibraryItem.objects.filter(tags__id=219)
+        webpage = Webpage.objects.get(pk=31887)
+        title = webpage.name
+    elif type == "island_theses":
+        list = LibraryItem.objects.filter(tags__id=219, type_id=29)
+        webpage = Webpage.objects.get(pk=31886)
+        title = webpage.name
     elif type == "starterskit":
         list = LibraryItem.objects.filter(tags__id=791)
         title = "Starter's Kit"
@@ -213,9 +221,12 @@ def item(request, id, show_export=True):
     }
     return render(request, "library/item.html", context)
 
-def map(request, article):
+def map(request, article, tag=None):
     info = get_object_or_404(Webpage, pk=article)
-    items = LibraryItem.objects.filter(status="active", tags__id=TAG_ID["case_study"])
+    if tag:
+        items = LibraryItem.objects.filter(status="active", tags__id=tag)
+    else:
+        items = LibraryItem.objects.filter(status="active", tags__id=TAG_ID["case_study"])
     context = {
         "article": info,
         "items": items,

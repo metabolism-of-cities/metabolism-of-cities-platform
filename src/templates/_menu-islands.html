@@ -3,12 +3,12 @@
     About
   </a>
   <div class="dropdown-menu" aria-labelledby="about-dropdown">
-    <a class="dropdown-item" href="/about/purpose/">Purpose</a>
-    <a class="dropdown-item" href="/about/what-is-island-metabolism">What is Island Metabolism?</a>
-    <a class="dropdown-item" href="/about/moi-team/">Team</a>
-    <a class="dropdown-item" href="/about/join/">Join Us</a>
-    <a class="dropdown-item" href="/about/subscribe/">Subscribe</a>
-    <a class="dropdown-item" href="/about/contact/">Contact Us</a>
+    <a class="dropdown-item" href="{% if DEBUG %}/islands{% endif %}/about/purpose/">Purpose</a>
+    <a class="dropdown-item" href="{% if DEBUG %}/islands{% endif %}/about/what-is-island-metabolism/">What is Island Metabolism?</a>
+    <a class="dropdown-item" href="{% if DEBUG %}/islands{% endif %}/about/moi-team/">Team</a>
+    <a class="dropdown-item" href="{% if DEBUG %}/islands{% endif %}/about/join/">Join Us</a>
+    <a class="dropdown-item" href="{% if DEBUG %}/islands{% endif %}/about/subscribe/">Subscribe</a>
+    <a class="dropdown-item" href="{% if DEBUG %}/islands{% endif %}/about/contact/">Contact Us</a>
   </div>
 </li>
 
@@ -17,19 +17,20 @@
     Research
   </a>
   <div class="dropdown-menu" aria-labelledby="research-dropdown">
-    <a class="dropdown-item" href="/community/research/projects/">Research Projects</a>
-    <a class="dropdown-item" href="/community/research/theses/">Theses</a>
+    <a class="dropdown-item" href="{% if DEBUG %}/islands{% endif %}/community/research/projects/">Research Projects</a>
+    <a class="dropdown-item" href="{% if DEBUG %}/islands{% endif %}/community/research/theses/">Theses</a>
   </div>
 </li>
 
 <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="resources-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Research
+    Resources
   </a>
   <div class="dropdown-menu" aria-labelledby="resources-dropdown">
-    <a class="dropdown-item" href="/resources/publications/">Library</a>
-    <a class="dropdown-item" href="/community/links/">Links</a>
-    <a class="dropdown-item" href="/community/tools/">Tools</a>
+    <a class="dropdown-item" href="{% if DEBUG %}/islands{% endif %}/resources/publications/">Library</a>
+    <a class="dropdown-item" href="{% if DEBUG %}/islands{% endif %}/resources/map/">Case Study Map</a>
+    <a class="dropdown-item" href="{% if DEBUG %}/islands{% endif %}/community/links/">Links</a>
+    <a class="dropdown-item" href="{% if DEBUG %}/islands{% endif %}/community/tools/">Tools</a>
   </div>
 </li>
 
@@ -38,7 +39,7 @@
 </li>
 
 <li class="nav-item">
-  <a class="nav-link" href="/news_events/">News &amp; Events</a>
+  <a class="nav-link" href="{% if DEBUG %}/islands{% endif %}/news_events/">News &amp; Events</a>
 </li>
 
 {% include "_menu-account.html" %}
