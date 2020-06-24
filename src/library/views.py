@@ -252,6 +252,10 @@ def upload(request):
 @login_required
 def form(request, id=None):
     type = request.GET.get("type")
+    if request.method == "POST":
+        type = request.POST.get("type")
+    journals = publishers = None
+
     if type == "dataset":
         ModelForm = modelform_factory(
             LibraryDataset, 
@@ -270,18 +274,34 @@ def form(request, id=None):
             }
         )
     else:
-        ModelForm = modelform_factory(
-            LibraryItem, 
-            fields=("name", "description", "url", "image", "author_list", "file"),
-            labels = {
-                "image": "Screenshot",
-            }
-        )
+        type = LibraryItemType.objects.get(pk=type)
+        labels = {
+            "author_list": "Author(s)",
+            "comments": "Internal comments/notes",
+            "name": "Title",
+            "url": "URL",
+            "doi": "DOI",
+            "spaces": "Related city (optional)",
+        }
+        fields = ["name", "language", "title_original_language", "abstract_original_language", "description", "year", "author_list", "url", "license", "spaces"]
+        if type.name == "Journal Article" or type.name == "Thesis" or type.name == "Conference Paper":
+            labels["description"] = "Abstract"
+            if type.name == "Journal Article":
+                fields.append("doi")
+                journals = Organization.objects.filter(type="journal")
+
+        if type.name == "Book" or type.name == "Book Section":
+            publishers = Organization.objects.filter(type="publisher")
+
+        fields.append("comments")
+        ModelForm = modelform_factory(LibraryItem, fields=fields, labels = labels)
+
     if id:
         info = get_object_or_404(LibraryItem, pk=id)
         form = ModelForm(request.POST or None, request.FILES or None, instance=info)
     else:
         form = ModelForm(request.POST or None)
+
     if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)
@@ -313,5 +333,9 @@ def form(request, id=None):
     context = {
         "form": form,
         "load_select2": True,
+        "type": type,
+        "title": "Adding: " + str(type),
+        "publishers": publishers,
+        "journals": journals,
     }
     return render(request, "library/form.html", context)

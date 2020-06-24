@@ -11,7 +11,7 @@
 
   <div class="list-group">
   {% for each in types %}
-    <a href="{% url "library:form" %}?type={{ each.id }}" class="list-group-item list-group-item-action">
+    <a href="{% url "library:form" %}?type={{ each.id }}&amp;return={{ request.get_full_path }}" class="list-group-item list-group-item-action">
       <i class="fa fa-fw fa-{{ each.icon }}"></i>
       {{ each }}
     </a>

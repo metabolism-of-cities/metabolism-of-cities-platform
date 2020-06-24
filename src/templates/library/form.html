@@ -1,9 +1,15 @@
 {% extends "_base.html" %}
 {% load bootstrap4 %}
 
+{% block css %}
+<style type="text/css">
+textarea#id_author_list{height:100px}
+</style>
+{% endblock %}
+
 {% block content %}
 
-  <h1>Adding: {{ request.GET.type }}</h1>
+  <h1>Adding: {{ type }}</h1>
   {% if info %}
 
   {% endif %}
@@ -11,6 +17,30 @@
     
     {% csrf_token %}
     {% bootstrap_form form %}
+
+    {% if publishers %}
+      <div class="form-group">
+        <label>Publisher</label>
+        <select name="publisher" class="form-control">
+          <option value=""></option>
+          {% for each in publishers %}
+            <option value="{{ each.id }}">{{ each }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    {% endif %}
+    {% if journals %}
+      <div class="form-group">
+        <label>Journal</label>
+        <select name="journal" class="form-control" id="journals">
+          <option value=""></option>
+          {% for each in journals %}
+            <option value="{{ each.id }}">{{ each }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    {% endif %}
+
     {% buttons %}
       <button type="submit" class="btn btn-success">
         <i class="fa fa-save"></i>
@@ -18,17 +48,33 @@
       </button>
     {% endbuttons %}
 
+    <input type="hidden" name="type" value="{{ type.id }}" />
+
   </form>
 
 {% endblock %}
 
 {% block footer %}
   <script>
+    $("#id_title_original_language").closest(".form-group").hide();
+    $("#id_abstract_original_language").closest(".form-group").hide();
     $("#id_tags").select2({
       theme: "bootstrap4",
     });
     $("#id_spaces").select2({
       theme: "bootstrap4",
+    });
+    $("#journals").select2({
+      theme: "bootstrap4",
+    });
+    $("#id_language").change(function(){
+      if ($(this).val() != "EN") {
+        $("#id_title_original_language").closest(".form-group").show("fast");
+        $("#id_abstract_original_language").closest(".form-group").show("fast");
+      } else {
+        $("#id_title_original_language").closest(".form-group").hide();
+        $("#id_abstract_original_language").closest(".form-group").hide();
+      }
     });
   </script>
 {% endblock %}

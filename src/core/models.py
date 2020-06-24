@@ -300,6 +300,9 @@ class Organization(Record):
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
 
+    class Meta:
+        ordering = ["name"]
+
 # This defines the relationships that may exist between users and records, or between records
 # For instance authors, admins, employee, funder
 class Relationship(models.Model):
@@ -559,8 +562,8 @@ class LibraryItem(Record):
         ("FR", "French"),
         ("GE", "German"),
         ("NL", "Dutch"),
-        ("OT", "Other"),
         ("PT", "Portuguese"),
+        ("OT", "Other"),
     )
     language = models.CharField(max_length=2, choices=LANGUAGES, default="EN")
     title_original_language = models.CharField(max_length=255, blank=True, null=True)
