@@ -862,6 +862,8 @@ body.homepage .jumbotron {
 
 body.homepage section.projects {
   margin-top: -275px; }
+  body.homepage section.projects .single-project img {
+    object-position: top; }
 
 body.projects .card .card-img-top,
 body.single-project .card .card-img-top {
@@ -1613,6 +1615,9 @@ body.stafcp.design textarea#id_custom_css {
 body.stafcp.workgrid .btn-filter {
   white-space: nowrap;
   height: 38px; }
+
+body.stafcp.workgrid #filters {
+  display: none; }
 
 body.staf.review.session #contentsection table {
   overflow-x: auto;

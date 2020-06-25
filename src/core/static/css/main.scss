@@ -1297,6 +1297,10 @@ body.homepage {
   section.projects {
     margin-top: -275px;
 
+    .single-project img {
+      object-position: top;
+    }
+
     // .single-project:not(:nth-of-type(-n+3)) {
     //   display: none;
     // }
@@ -2492,6 +2496,10 @@ body.stafcp.workgrid {
   .btn-filter {
     white-space: nowrap;
     height: 38px;
+  }
+
+  #filters {
+    display: none;
   }
 }
 
