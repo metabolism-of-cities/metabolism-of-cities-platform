@@ -33,6 +33,10 @@
               <i class="fas fa-fist-raised"></i>
               Join us!
             </a>
+            <a class="btn btn-lg btn-primary my-4" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/login/?next={{ request.get_full_path }}">
+              <i class="fas fa-sign-in"></i>
+                Log in
+            </a>
           </div>
         {% else %}
         <h4 class="mb-4"><em>Thanks for being part of our community</em></h4>

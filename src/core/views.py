@@ -380,7 +380,7 @@ def index(request):
         "header_title": "Metabolism of Cities",
         "header_subtitle": "Your hub for everything around urban metabolism",
         "show_project_design": True,
-        "projects": Project.objects.filter(pk__in=[2,3,4,8,16,18]),
+        "projects": Project.objects.filter(pk__in=[2,3,4,32018,16,18]),
     }
     return render(request, "index.html", context)
 
