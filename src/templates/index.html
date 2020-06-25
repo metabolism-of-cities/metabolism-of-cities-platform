@@ -1,48 +1,39 @@
 {% extends "_base.html" %}
 {% load static %}
 
-{% block css %}
-<style type="text/css">
-.projects img {
-  border-bottom: 1px solid #333;
-}
-</style>
-{% endblock %}
-
 {% block page_name %}homepage{% endblock %}
-
 
 {% block content %}
 
 <section class="projects">
-
-<h3>Our Projects</h3>
-
-<div class="row row-cols-1 row-cols-md-3">
-  {% for each in projects %}
-    <div class="col mb-4">
-      <div class="card h-100">
-        <a href="/projects/{{ each.slug }}/">
-          <img src="{{ each.screenshot.medium.url }}" class="card-img-top" alt="">
-        </a>
-        <div class="card-body">
-          <h5 class="card-title">{{ each }}</h5>
-          <p class="card-text">{{ each.summary_sentence }}</p>
-        </div>
-        <div class="card-footer">
-            <a href="/projects/{{ each.slug }}/">Read more</a>
-            <a class="float-right" href="{{ each.get_website }}">Visit website</a>
+  <div class="row">
+    {% for each in projects %}
+      <div class="col-xl-4 col-lg-6 mb-4 single-project">
+        <div class="card btn-card">
+          <a href="{{ each.get_website }}"><img src="{{ each.screenshot.medium.url }}" class="card-img-top" alt="{{ each }}"></a>
+          <div class="card-body">
+            <h5 class="card-title">{{ each }}</h5>
+            <p class="card-text">{{ each.summary_sentence }}</p>
+          </div>
+          <div class="card-footer">
+            <a class="btn btn-primary-basic" href="/projects/{{ each.slug }}/">
+              <i class="fal fa-info-circle"></i>
+              Read more
+            </a>
+            <a class="btn btn-primary float-right" href="{{ each.get_website }}">
+              <i class="fas fa-glasses"></i>
+              Visit website
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-  {% endfor %}
-</div>
+    {% endfor %}
+  </div>
 
-  <a class="btn btn-primary btn-lg" href="">
-    <i class="fas fa-project-diagram"></i> All projects
+  <a class="btn btn-primary btn-lg" href="/projects">
+    <i class="fas fa-toolbox"></i> All projects
   </a>
 </section>
-
 
 <section class="what">
   <h3>What we do</h3>
@@ -101,8 +92,6 @@
     </div>
   </div>
 </section>
-
-
 
 <section class="extra">
   <h3>Latest news</h3>

@@ -857,29 +857,18 @@ table thead th {
 .sprint-bar {
   background-color: #96bac8; }
 
-body.homepage .projects .btn-card {
-  padding: .5rem; }
-  body.homepage .projects .btn-card img {
-    height: 300px;
-    max-height: 80vh; }
-  body.homepage .projects .btn-card .card-title {
-    margin-bottom: 0;
-    position: absolute;
-    bottom: 0;
-    padding: 1rem 0;
-    color: #fbfbfb;
-    background-color: rgba(20, 77, 88, 0.75);
-    width: 100%;
-    margin-left: -.5rem;
-    text-align: center;
-    font-weight: bold;
-    border-bottom-left-radius: .25rem;
-    border-bottom-right-radius: .25rem; }
+body.homepage .jumbotron {
+  padding-bottom: 275px; }
 
-body.projects .card .card-img-top, body.single-project .card .card-img-top {
+body.homepage section.projects {
+  margin-top: -275px; }
+
+body.projects .card .card-img-top,
+body.single-project .card .card-img-top {
   padding: 1.25rem; }
 
-body.projects .card i, body.single-project .card i {
+body.projects .card i,
+body.single-project .card i {
   margin-right: .25rem; }
 
 body.projects .single-project.hidden {

@@ -1290,35 +1290,29 @@ table thead th {
 // PAGES
 // HOMEPAGE
 body.homepage {
-  .projects {
-    .btn-card {
-      padding: .5rem;
+  .jumbotron {
+    padding-bottom: 275px;
+  }
 
-      img  {
-        height: 300px;
-        max-height: 80vh;
-      }
+  section.projects {
+    margin-top: -275px;
 
-      .card-title {
-        margin-bottom: 0;
-        position: absolute;
-        bottom: 0;
-        padding: 1rem 0;
-        color: $very-light;
-        background-color: rgba($primary, .75);
-        width: 100%;
-        margin-left: -.5rem;
-        text-align: center;
-        font-weight: bold;
-        border-bottom-left-radius: .25rem;
-        border-bottom-right-radius: .25rem;
-      }
-    }
+    // .single-project:not(:nth-of-type(-n+3)) {
+    //   display: none;
+    // }
+
+    // @media (max-width: 1199px) {
+    //   .single-project:not(:nth-of-type(-n+2)) {
+    //     display: none;
+    //   }
+    // }
+
   }
 }
 
 // PROJECT PAGES
-body.projects, body.single-project {
+body.projects,
+body.single-project {
   .card .card-img-top {
     padding: 1.25rem;
   }
