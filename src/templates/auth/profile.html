@@ -6,12 +6,83 @@
 
   {% include "hub/_nav.html" %}
 
-  <p>User name: {{ request.user }}</p>
+  <div class="row">
+
+    <div class="col-9">
+
+  <p>Name: {{ request.user.people }}</p>
   <p>E-mail: {{ request.user.email }}</p>
   <p>Date joined: {{ request.user.date_joined }}</p>
   <p>Last login: {{ request.user.last_login }}</p>
 
-  {% if request.user.is_superuser %}
+
+      <p><strong>Profile/bio</strong></p>
+
+      <p>{{ info.description|linebreaksbr }}</p>
+
+      {% if info.research_interests %}
+
+      <p><strong>Research interests</strong></p>
+      <p>{{ info.research_interests|linebreaksbr }}</p>
+
+      {% endif %}
+
+    </div>
+
+    <div class="col-3">
+
+      <div class="card" style="width: 18rem;">
+
+        {% if info.image %}
+          <img src="{{ info.image.thumbnail.url }}" class="card-img-top">
+        {% else %}
+          <em>You have no profile photo</em>
+        {% endif %}
+
+        <div class="card-body">
+
+          <h5 class="card-title">{{ info }}</h5>
+
+          {% if info.affiliation %}
+          <p class="card-text">{{ info.affiliation }}</p>
+          {% endif %}
+
+          {% if info.twitter %}
+            <p class="card-text">
+              <i class="fa fa-twitter fa-fw"></i>
+            {{ info.twitter }}</p>
+          {% endif %}
+
+          <p><a href="edit/?return={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit profile</a></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <h2>My tasks</h2>
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Task</th>
+        <th>Project</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in tasks %}
+      <tr>
+        <td><a href="../work/{{ each.id }}/">{{ each }}</a></td>
+        <td>{{ each.part_of_project }}</td>
+        <td>{{ each.get_status_display }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+
+  {% if request.user.is_superuser and False %}
+    <!-- Guus please ignore this part --> 
     <h2>Relationships</h2>
     <p>This user has the following record</p>
     <table class="table table-striped">
@@ -37,6 +108,7 @@
       <p>Super user? {{ request.user.is_superuser }}</p>
       <p>Active? {{ request.user.is_active }}</p>
     </section>
+  <!-- End ignore Guus -->
   {% endif %}
 
 {% endblock %}

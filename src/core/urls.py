@@ -84,6 +84,7 @@ urlpatterns = [
     path("hub/help/", views.hub_help, { "project_name": app_name }, name="hub_help"),
     path("hub/join/", views.user_register, { "project_name": app_name, "section": "volunteer_hub", }, name="hub_join"),
     path("hub/profile/", views.user_profile, { "project_name": app_name }, name="hub_profile"),
+    path("hub/profile/edit/", views.user_profile_form, { "project_name": app_name }, name="hub_profile_form"),
     path("hub/forum/", community.forum_list, { "project_name": app_name, "parent": 31993, "section": "volunteer_hub", }, name="volunteer_forum"),
     path("hub/forum/create/", community.forum_form, { "project_name": app_name, "parent": 31993, "section": "volunteer_hub" }),
     path("hub/forum/<int:id>/", community.forum, { "project_name": app_name, "section": "volunteer_hub" }, name="volunteer_forum"),

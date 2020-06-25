@@ -339,8 +339,32 @@ def user_profile(request, project=None, project_name=None):
     context = {
         "relationships": relationships,
         "menu": "profile",
+        "info": request.user.people,
+        "tasks": Work.objects_include_private.filter(assigned_to=request.user.people),
+        "load_datatables": True,
     }
     return render(request, "auth/profile.html", context)
+
+@login_required
+def user_profile_form(request, project_name=None):
+    ModelForm = modelform_factory(
+        People, 
+        fields = ("name", "description", "research_interests", "image", "website", "email", "twitter", "google_scholar", "orcid", "researchgate", "linkedin"),
+        labels = { "description": "Profile/bio", "image": "Photo" }
+    )
+    form = ModelForm(request.POST or None, request.FILES or None, instance=request.user.people)
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save()
+            messages.success(request, "Your profile information was saved.")
+            return redirect(request.GET["return"])
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+    context = {
+        "menu": "profile",
+        "form": form,
+    }
+    return render(request, "auth/profile.form.html", context)
 
 # Homepage
 

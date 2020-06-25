@@ -1,0 +1,18 @@
+{% extends "_base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+  {% include "hub/_nav.html" %}
+
+  <form method="post" class="form form-horizontal" enctype="multipart/form-data">
+    {% bootstrap_form form layout="horizontal" %}
+    {% buttons %}
+      <div class="col-md-offset-3 col-md-9">
+        <button type="submit" class="btn btn-success">Save</button>
+      </div>
+    {% endbuttons %}
+    {% csrf_token %}
+  </form>
+
+{% endblock %}

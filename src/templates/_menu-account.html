@@ -5,7 +5,7 @@
   </a>
   <div class="dropdown-menu" aria-labelledby="account-dropdown">
     {% if request.user.is_authenticated %}
-      <a class="dropdown-item" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/profile/">My profile</a>
+      <a class="dropdown-item" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/profile/">My profile</a>
       <a class="dropdown-item" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/logout/?next={{ request.get_full_path }}">Sign out</a>
     {% else %}
       <a class="dropdown-item" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/register/?next={{ request.get_full_path }}">Register</a>
