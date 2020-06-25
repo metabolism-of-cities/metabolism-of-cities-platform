@@ -259,7 +259,7 @@ def form(request, id=None, project_name="library"):
         type = request.POST.get("type")
     journals = publishers = None
 
-    if type == "dataset":
+    if type == "dataset" or type.name == "Dataset":
         ModelForm = modelform_factory(
             LibraryDataset, 
             fields=("name", "author_list", "description", "url", "size", "tags", "spaces", "year", "language", "license", "data_year_start", "data_year_end", "update_frequency", "data_interval", "data_formats", "has_api"),
@@ -292,6 +292,9 @@ def form(request, id=None, project_name="library"):
             if type.name == "Journal Article":
                 fields.append("doi")
                 journals = Organization.objects.filter(type="journal")
+
+        if type.name == "Data visualisation":
+            fields.append("image")
 
         if type.name == "Book" or type.name == "Book Section":
             publishers = Organization.objects.filter(type="publisher")
@@ -350,7 +353,7 @@ def form(request, id=None, project_name="library"):
                 )
 
             if "return" in request.GET:
-                messages.success(request, "Your item was added to the library.")
+                messages.success(request, "The item was saved. It will be reviewed and then added to our library. Thanks for your contribution!")
                 return redirect(request.GET["return"])
             else:
                 messages.success(request, "The item was added to the library. <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=2&amp;record_child=" + str(info.id) + "'>Link to publisher</a> |  <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=4&amp;record_child=" + str(info.id) + "'>Link to author</a> ||| <a href='/admin/core/organization/add/' target='_blank'>Add a new organization</a>")

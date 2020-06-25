@@ -3,6 +3,7 @@ from . import views
 from library import views as library
 from core import views as core
 from community import views as community
+from library import views as library
 
 app_name = "multimedia"
 
@@ -14,6 +15,8 @@ urlpatterns = [
     path("podcasts/<int:id>/", library.item, name="podcast"),
     path("datavisualizations/", views.datavisualizations, name="datavisualizations"),
     path("datavisualizations/<int:id>/", views.dataviz, name="dataviz"),
+    path("upload/", views.upload, name="upload"),
+    path("upload/form/", library.form, name="form"),
 
     #
     # Baseline links shared between all projects

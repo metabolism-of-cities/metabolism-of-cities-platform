@@ -3,10 +3,13 @@ from . import views
 from core import views as core
 from staf import views as staf
 from community import views as community
+from library import views as library
 
 app_name = "data"
 
 urlpatterns = [
+
+    path("upload/form/", library.form, name="form"),
 
     path("", views.index, name="index"),
 

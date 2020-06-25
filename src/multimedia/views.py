@@ -2,7 +2,11 @@ from django.shortcuts import render
 from core.models import *
 from django.shortcuts import render, get_object_or_404, redirect
 
+TAG_ID = settings.TAG_ID_LIST
 PAGE_ID = settings.PAGE_ID_LIST
+PROJECT_ID = settings.PROJECT_ID_LIST
+RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
+THIS_PROJECT = PROJECT_ID["multimedia"]
 
 # Get all the parent relationships, but making sure we only show is_deleted=False and is_public=True
 def get_parents(record):
@@ -84,3 +88,14 @@ def dataviz(request, id):
         "title": info.name,
     }
     return render(request, "multimedia/dataviz.html", context)
+
+def upload(request):
+    info = get_object_or_404(Webpage, part_of_project_id=PROJECT_ID["library"], slug="/upload/")
+    types = [31, 24, 33]
+    context = {
+        "webpage": info,
+        "info": info,
+        "types": LibraryItemType.objects.filter(id__in=types),
+    }
+    return render(request, "library/upload.html", context)
+
