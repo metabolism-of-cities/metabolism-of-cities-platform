@@ -16,13 +16,13 @@
             <p class="card-text">{{ each.summary_sentence }}</p>
           </div>
           <div class="card-footer">
-            <a class="btn btn-primary-basic" href="/projects/{{ each.slug }}/">
-              <i class="fal fa-info-circle"></i>
-              Read more
+            <a class="btn btn-primary-basic" href="{{ each.get_website }}hub">
+              <i class="fal fa-users"></i>
+              Volunteers
             </a>
             <a class="btn btn-primary float-right" href="{{ each.get_website }}">
-              <i class="fas fa-glasses"></i>
-              Visit website
+              <i class="fal fa-info-circle"></i>
+              Prototypoe site
             </a>
           </div>
         </div>
@@ -30,11 +30,13 @@
     {% endfor %}
   </div>
 
-  <a class="btn btn-primary btn-lg" href="/projects">
+  <a class="btn btn-primary btn-lg" href="/projects" style="display:none">
     <i class="fas fa-toolbox"></i> All projects
   </a>
+
 </section>
 
+{% if False %}
 <section class="what">
   <h3>What we do</h3>
   <div class="row">
@@ -141,4 +143,5 @@
     <i class="fas fa-newspaper"></i> All news
   </a>
 </section>
+{% endif %}
 {% endblock %}
