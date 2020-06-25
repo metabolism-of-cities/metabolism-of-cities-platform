@@ -9,8 +9,8 @@ urlpatterns = [
 
     #
     # Baseline links shared between all projects
-    # Last change June 11, 2020
-    # Version 001
+    # Last change June 25, 2020
+    # Version 002
     #
 
     # Authentication and contributor functions
@@ -20,17 +20,17 @@ urlpatterns = [
     path("accounts/logout/", core.user_logout, { "project": app_name }, name="logout"),
     path("accounts/profile/", core.user_profile, { "project": app_name }, name="user_profile"),
 
-    # Work-related links
-    path("work/", core.work_grid, { "project_name": app_name }, name="work_grid"),
-    path("work/sprints/", core.work_sprints, { "project_name": app_name }, name="work_sprints"),
-    path("work/sprints/<int:id>/", core.work_sprint, { "project_name": app_name }, name="work_sprint"),
-    path("work/sprints/<int:sprint>/tasks/", core.work_grid, { "project_name": app_name }, name="work_sprint_tasks"),
-    path("work/sprints/<int:sprint>/tasks/create/", core.work_form, { "project_name": app_name }),
-    path("work/sprints/<int:sprint>/tasks/<int:id>/", core.work_item, { "project_name": app_name }),
-    path("work/sprints/<int:sprint>/tasks/<int:id>/edit/", core.work_form, { "project_name": app_name }),
-    path("work/create/", core.work_form, { "project_name": app_name }, name="work_form"),
-    path("work/<int:id>/", core.work_item, { "project_name": app_name }, name="work_item"),
-    path("work/<int:id>/edit/", core.work_form, { "project_name": app_name }, name="work_form"),
+    # Work-related items
+    path("hub/work/", core.work_grid, { "project_name": app_name }, name="work_grid"),
+    path("hub/work/sprints/", core.work_sprints, { "project_name": app_name }, name="work_sprints"),
+    path("hub/work/sprints/<int:id>/", core.work_sprint, { "project_name": app_name }, name="work_sprint"),
+    path("hub/work/sprints/<int:sprint>/tasks/", core.work_grid, { "project_name": app_name }, name="work_sprint_tasks"),
+    path("hub/work/sprints/<int:sprint>/tasks/create/", core.work_form, { "project_name": app_name }),
+    path("hub/work/sprints/<int:sprint>/tasks/<int:id>/", core.work_item, { "project_name": app_name }),
+    path("hub/work/sprints/<int:sprint>/tasks/<int:id>/edit/", core.work_form, { "project_name": app_name }),
+    path("hub/work/create/", core.work_form, { "project_name": app_name }, name="work_form"),
+    path("hub/work/<int:id>/", core.work_item, { "project_name": app_name }, name="work_item"),
+    path("hub/work/<int:id>/edit/", core.work_form, { "project_name": app_name }, name="work_form"),
     
     # Forum and contributor pages
     path("forum/<int:id>/", community.forum, { "project_name": app_name }, name="forum"),
@@ -49,6 +49,17 @@ urlpatterns = [
     # News links
     path("news/", core.news_list, { "project_name": app_name, "header_subtitle": "News and updates around urban metabolism literature." }, name="news"),
     path("news/<slug:slug>/", core.news, { "project_name": app_name }, name="news"),
+
+    # Volunteer hub
+    path("hub/", core.hub, { "project_name": app_name }, name="hub"),
+    path("hub/latest/", core.hub_latest, { "project_name": app_name }, name="hub_latest"),
+    path("hub/help/", core.hub_help, { "project_name": app_name }, name="hub_help"),
+    path("hub/join/", core.user_register, { "project_name": app_name, "section": "volunteer_hub", }, name="hub_join"),
+    path("hub/profile/", core.user_profile, { "project_name": app_name }, name="hub_profile"),
+    path("hub/forum/", community.forum_list, { "project_name": app_name, "parent": 31993, "section": "volunteer_hub", }, name="volunteer_forum"),
+    path("hub/forum/create/", community.forum_form, { "project_name": app_name, "parent": 31993, "section": "volunteer_hub" }),
+    path("hub/forum/<int:id>/", community.forum, { "project_name": app_name, "section": "volunteer_hub" }, name="volunteer_forum"),
+    path("hub/forum/<int:id>/edit/<int:edit>/", community.forum_edit, { "project_name": app_name, "section": "volunteer_hub" }, name="volunteer_forum_edit"),
 
     #
     # End of baseline links

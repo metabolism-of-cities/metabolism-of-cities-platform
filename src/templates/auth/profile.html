@@ -4,13 +4,14 @@
 
 {% block content %}
 
-  <h1>User profile</h1>
+  {% include "hub/_nav.html" %}
+
   <p>User name: {{ request.user }}</p>
   <p>E-mail: {{ request.user.email }}</p>
   <p>Date joined: {{ request.user.date_joined }}</p>
   <p>Last login: {{ request.user.last_login }}</p>
 
-  {% if relationships %}
+  {% if request.user.is_superuser %}
     <h2>Relationships</h2>
     <p>This user has the following record</p>
     <table class="table table-striped">
@@ -29,9 +30,7 @@
       {% endfor %}
       </tbody>
     </table>
-  {% endif %}
 
-  {% if request.user.is_superuser %}
     <section class="alert alert-warning">
       <h2>Admin info</h2>
       <p>Is staff? {{ request.user.is_staff }}</p>

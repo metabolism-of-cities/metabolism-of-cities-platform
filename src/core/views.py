@@ -182,8 +182,10 @@ def unauthorized_access(request):
 
 # Authentication of users
 
-def user_register(request, project=None):
+def user_register(request, project=None, project_name=None, section=None):
     people = user = is_logged_in = None
+    if project_name:
+        project = project_name
     if request.GET.get("next"):
         redirect_url = request.GET.get("next")  
     elif project:
@@ -276,7 +278,10 @@ def user_register(request, project=None):
 
             return redirect(redirect_url)
 
-    context = {}
+    context = {
+        "section": section,
+        "menu": "join",
+    }
     return render(request, "auth/register.html", context)
 
 def user_login(request, project=None):
@@ -324,12 +329,16 @@ def user_logout(request, project=None):
 def user_reset(request):
     return render(request, "auth/reset.html")
 
-def user_profile(request, project=None):
+@login_required
+def user_profile(request, project=None, project_name=None):
     user = request.user
+    if project_name:
+        project = project_name
     if user.people:
         relationships = RecordRelationship.objects.filter(record_parent=user.people)
     context = {
         "relationships": relationships,
+        "menu": "profile",
     }
     return render(request, "auth/profile.html", context)
 
@@ -530,19 +539,61 @@ def article_list(request, id):
 
 def hub(request, project_name):
     project = PROJECT_ID[project_name]
+
+    updates = Message.objects.filter(
+        parent__work__isnull=False,
+    ).order_by("-date_created")
+
+    forum = Message.objects.filter(
+        parent__forumtopic__isnull=False,
+        parent__forumtopic__parent_id=31993,
+    ).order_by("-date_created")
+
+    master_list = False
+    if not master_list:
+        updates = updates.filter(parent__work__part_of_project_id=project)
+        forum = forum.filter(parent__forumtopic__part_of_project_id=project)
+
     context = {
-        "updates": Message.objects.all().order_by("-date_created")[:7],
+        "updates": updates[:7] if updates else None,
+        "menu": "home",
+        "forum": forum[:7] if forum else None,
     }
     return render(request, "hub/index.html", context)
 
 def hub_latest(request, project_name):
     project = PROJECT_ID[project_name]
+    days = 7
+    from datetime import datetime, timedelta
+    generate_date = datetime.now() - timedelta(days=days)
+
+    if request.GET.get("days"):
+        days = request.GET.get("days")
+
+    updates = Message.objects.filter(
+        date_created__gte=generate_date,
+        parent__work__isnull=False,
+    ).order_by("-date_created")
+
+    master_list = False
+    if not master_list:
+        updates = updates.filter(parent__work__part_of_project_id=project)
+
     context = {
-        "updates": Message.objects.all().order_by("-date_created")[:40],
+        "updates": updates,
         "load_datatables": True,
+        "menu": "log",
+        "days": int(days),
     }
     return render(request, "hub/latest.html", context)
 
+def hub_help(request, project_name):
+    project = PROJECT_ID[project_name]
+    context = {
+        "menu": "help",
+        "webpage": Webpage.objects.get(pk=31997),
+    }
+    return render(request, "hub/help.html", context)
 
 # Control panel and general contribution components
 
@@ -800,6 +851,7 @@ def work_form(request, project_name, id=None, sprint=None):
         "load_markdown": True,
         "load_select2": True,
         "info": info,
+        "menu": "work",
     }
     return render(request, "contribution/work.form.html", context)
 
@@ -813,6 +865,8 @@ def work_grid(request, project_name, sprint=None):
     else:
         list = Work.objects.all()
 
+    if "entry" in request.GET:
+        list = list.filter(tags=810)
     if sprint:
         sprint = WorkSprint.objects.get(pk=sprint)
         list = list.filter(part_of_project__in=sprint.projects.all())
@@ -839,6 +893,7 @@ def work_grid(request, project_name, sprint=None):
         "type": int(type) if type else None,
         "priority": int(priority) if priority else None,
         "sprint": sprint,
+        "menu": "work",
     }
     return render(request, "contribution/work.grid.html", context)
 
@@ -904,6 +959,7 @@ def work_item(request, project_name, id, sprint=None):
         "forum_title": "History and discussion",
         "title": info.name,
         "sprint": sprint,
+        "menu": "work",
     }
     return render(request, "contribution/work.item.html", context)
 

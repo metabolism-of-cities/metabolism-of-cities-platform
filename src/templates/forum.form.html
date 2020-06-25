@@ -11,6 +11,11 @@
 {% endblock %}
 
 {% block content %}
+
+  {% if section == "volunteer_hub" %}
+    {% include "hub/_nav.html" %}
+  {% endif %}
+
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
   <div class="form-group">

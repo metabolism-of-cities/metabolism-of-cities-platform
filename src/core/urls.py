@@ -57,18 +57,17 @@ urlpatterns = [
     # Interaction links
     path("contributor/", views.contributor, { "project_name": app_name }, name="contributor"),
 
-
     # Baseline 
-    path("work/", views.work_grid, { "project_name": app_name }, name="work_grid"),
-    path("work/sprints/", views.work_sprints, { "project_name": app_name }, name="work_sprints"),
-    path("work/sprints/<int:id>/", views.work_sprint, { "project_name": app_name }, name="work_sprint"),
-    path("work/sprints/<int:sprint>/tasks/", views.work_grid, { "project_name": app_name }, name="work_sprint_tasks"),
-    path("work/sprints/<int:sprint>/tasks/create/", views.work_form, { "project_name": app_name }),
-    path("work/sprints/<int:sprint>/tasks/<int:id>/", views.work_item, { "project_name": app_name }),
-    path("work/sprints/<int:sprint>/tasks/<int:id>/edit/", views.work_form, { "project_name": app_name }),
-    path("work/create/", views.work_form, { "project_name": app_name }, name="work_form"),
-    path("work/<int:id>/", views.work_item, { "project_name": app_name }, name="work_item"),
-    path("work/<int:id>/edit/", views.work_form, { "project_name": app_name }, name="work_form"),
+    path("hub/work/", views.work_grid, { "project_name": app_name }, name="work_grid"),
+    path("hub/work/sprints/", views.work_sprints, { "project_name": app_name }, name="work_sprints"),
+    path("hub/work/sprints/<int:id>/", views.work_sprint, { "project_name": app_name }, name="work_sprint"),
+    path("hub/work/sprints/<int:sprint>/tasks/", views.work_grid, { "project_name": app_name }, name="work_sprint_tasks"),
+    path("hub/work/sprints/<int:sprint>/tasks/create/", views.work_form, { "project_name": app_name }),
+    path("hub/work/sprints/<int:sprint>/tasks/<int:id>/", views.work_item, { "project_name": app_name }),
+    path("hub/work/sprints/<int:sprint>/tasks/<int:id>/edit/", views.work_form, { "project_name": app_name }),
+    path("hub/work/create/", views.work_form, { "project_name": app_name }, name="work_form"),
+    path("hub/work/<int:id>/", views.work_item, { "project_name": app_name }, name="work_item"),
+    path("hub/work/<int:id>/edit/", views.work_form, { "project_name": app_name }, name="work_form"),
 
     # Control panel URLS from baseline
     path("controlpanel/", views.controlpanel, { "project_name": app_name }, name="controlpanel"),
@@ -82,6 +81,14 @@ urlpatterns = [
     # Volunteer hub
     path("hub/", views.hub, { "project_name": app_name }, name="hub"),
     path("hub/latest/", views.hub_latest, { "project_name": app_name }, name="hub_latest"),
+    path("hub/help/", views.hub_help, { "project_name": app_name }, name="hub_help"),
+    path("hub/join/", views.user_register, { "project_name": app_name, "section": "volunteer_hub", }, name="hub_join"),
+    path("hub/profile/", views.user_profile, { "project_name": app_name }, name="hub_profile"),
+    path("hub/forum/", community.forum_list, { "project_name": app_name, "parent": 31993, "section": "volunteer_hub", }, name="volunteer_forum"),
+    path("hub/forum/create/", community.forum_form, { "project_name": app_name, "parent": 31993, "section": "volunteer_hub" }),
+    path("hub/forum/<int:id>/", community.forum, { "project_name": app_name, "section": "volunteer_hub" }, name="volunteer_forum"),
+    path("hub/forum/<int:id>/edit/<int:edit>/", community.forum_edit, { "project_name": app_name, "section": "volunteer_hub" }, name="volunteer_forum_edit"),
+
 
     # Password reset forms
     path(
@@ -127,4 +134,6 @@ urlpatterns = [
 
     path("eurostat/", views.eurostat, name="eurostat"),
     path("forum/<int:id>/", community.forum, { "project_name": app_name }, name="forum"),
+
+
 ]

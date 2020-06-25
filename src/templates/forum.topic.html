@@ -7,7 +7,12 @@
 
 {% block content %}
 
-<h1 class="mb-0">{{ info.title }}</h1>
+  {% if section == "volunteer_hub" %}
+    {% include "hub/_nav.html" %}
+  {% endif %}
+
+<h2 class="mb-0">{{ info }}</h2>
+
 <div class="tags" style="display:none">
   <a href="#" class="badge badge-primary">Nesciunt</a>
   <a href="#" class="badge badge-primary">Tenetur</a>

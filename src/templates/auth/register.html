@@ -4,6 +4,11 @@
 {% block title %}Register Form{% endblock %}
 
 {% block content %}
+
+  {% if section == "volunteer_hub" %}
+    {% include "hub/_nav.html" %}
+  {% endif %}
+
   <div class="card register">
     <div class="card-body">
       <h3>Register</h3>

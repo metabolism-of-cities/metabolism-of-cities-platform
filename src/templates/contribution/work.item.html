@@ -12,7 +12,9 @@
 
 {% block content %}
 
-  <h1>{{ info }}</h1>
+  {% include "hub/_nav.html" %}
+
+  <h2>{{ info }}</h2>
   <p><small class="text-muted">Created on {{ info.date_created|date:"l j F Y, H:i" }}</small></p>
   <a href="../" class="btn btn-primary-basic mb-4">
     <i class="fal fa-angle-left"></i>

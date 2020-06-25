@@ -1,8 +1,9 @@
+{% load humanize %}
 <div class="work-updates">
   {% for each in updates %}
     <div class="single-update">
       <div>
-        <a class="d-block mb-2" href="tasks/{{ each.parent.id }}/">{{ each.parent }}</a>
+        <a class="d-block mb-2" href="work/{{ each.parent.id }}/">{{ each.parent }}</a>
 
         {% if each.name == "Task assigned" %}
           <i class="far fa-fw fa-user-check mr-1"></i>
@@ -17,7 +18,7 @@
         {{ each.get_markdown_description|safe|truncatewords_html:30 }}
       </div>
       <small class="text-muted">
-        {{ each.author }} | <span title="{{ each.date_created|date:'l d F Y, H:i' }}">{{ each.date_created|date:'l d F, H:i' }}</span>
+        {{ each.author }} | <span title="{{ each.date_created|date:'l d F Y, H:i' }}">{{ each.date_created|naturaltime }}</span>
       </small>
     </div>
   {% endfor %}

@@ -1,14 +1,13 @@
 {% extends "_base.html" %}
 {% load humanize %}
+
 {% block title %}Volunteer Portal{% endblock %}
 {% block page_name %}volunteer portal home{% endblock %}
 
 {% block content %}
-  <h1>Volunteer Portal</h1>
 
   {% include "hub/_nav.html" %}
 
-  {% if not request.user.is_authenticated %}
     <div class="join-cta card mb-4">
       <div class="card-body text-center">
         <h2>Metabolism of Cities is made possible by volunteers</h2>
@@ -26,7 +25,7 @@
         </div>
 
         <div>
-          <a class="btn btn-lg btn-primary my-4" href="">
+          <a class="btn btn-lg btn-primary my-4" href="/hub/join/?next={{ request.get_full_path }}">
             <i class="fas fa-fist-raised"></i>
             Join us!
           </a>
@@ -36,86 +35,40 @@
           <i class="fal fa-video"></i>
           Introduction video
         </a>
-        <a class="btn btn-primary-basic" href="">
+        <a class="btn btn-primary-basic" href="work/?entry=true&amp;status=open_unassigned">
           <i class="fal fa-tasks"></i>
           Entry tasks
         </a>
       </div>
     </div>
-  {% endif %}
 
   <div class="row">
-    <div class="col-lg-4">
-      <h3>Latest tasks</h3>
-      <div class="tasks">
-        <a class="card btn-card mb-3" href="#">
-          <div class="card-body">
-            <h5 class="card-title">{% lorem 3 w random %}</h5>
-            <p>{% lorem 20 w random %}</p>
-            <h6 class="card-subtitle mb-2 text-muted">Opened by {% lorem 1 w random %} yesterday</h6>
-          </div>
-        </a>
-
-        <a class="card btn-card mb-3" href="#">
-          <div class="card-body">
-            <h5 class="card-title">{% lorem 3 w random %}</h5>
-            <p>{% lorem 20 w random %}</p>
-            <h6 class="card-subtitle mb-2 text-muted">Opened by {% lorem 1 w random %} two days ago</h6>
-          </div>
-        </a>
-
-        <a class="card btn-card mb-3" href="#">
-          <div class="card-body">
-            <h5 class="card-title">{% lorem 3 w random %}</h5>
-            <p>{% lorem 20 w random %}</p>
-            <h6 class="card-subtitle mb-2 text-muted">Opened by {% lorem 1 w random %} two days ago</h6>
-          </div>
-        </a>
-
-        <a class="btn btn-lg btn-primary" href="">
-          <i class="fas fa-tasks"></i>
-          All tasks
-        </a>
-      </div>
-    </div>
-    <div class="col-lg-4">
+    <div class="col-lg-6">
       <h3>Latest forum posts</h3>
       <div class="forum-posts">
-        <a class="card btn-card mb-3" href="#">
-          <div class="card-body">
-            <h5 class="card-title">{% lorem 3 w random %}</h5>
-            <p>{% lorem 20 w random %}</p>
-            <h6 class="card-subtitle mb-2 text-muted">Posted by {% lorem 1 w random %} yesterday</h6>
-          </div>
-        </a>
 
-        <a class="card btn-card mb-3" href="#">
+        {% for each in forum %}
+        <a class="card btn-card mb-3" href="forum/{{ each.parent.id }}/">
           <div class="card-body">
-            <h5 class="card-title">{% lorem 3 w random %}</h5>
-            <p>{% lorem 20 w random %}</p>
-            <h6 class="card-subtitle mb-2 text-muted">Posted by {% lorem 1 w random %} two days ago</h6>
+            <h5 class="card-title">{{ each }}</h5>
+            {{ each.get_markdown_description|safe|truncatewords_html:30 }}
+            <h6 class="card-subtitle mb-2 text-muted">Posted by {{ each.posted_by }} {{ each.date_created|naturaltime }}</h6>
           </div>
         </a>
+        {% endfor %}
 
-        <a class="card btn-card mb-3" href="#">
-          <div class="card-body">
-            <h5 class="card-title">{% lorem 3 w random %}</h5>
-            <p>{% lorem 20 w random %}</p>
-            <h6 class="card-subtitle mb-2 text-muted">Opened by {% lorem 1 w random %} two days ago</h6>
-          </div>
-        </a>
       </div>
 
-      <a class="btn btn-lg btn-primary" href="">
+      <a class="btn btn-lg btn-primary" href="forum/">
         <i class="fas fa-comments-alt"></i>
         Forum
       </a>
     </div>
-    <div class="col-lg-4">
+    <div class="col-lg-6">
       <h3>Latest activity</h3>
       {% include "_work-updates.html" %}
 
-      <a class="btn btn-lg btn-primary" href="">
+      <a class="btn btn-lg btn-primary" href="latest/">
         <i class="fas fa-heart-rate"></i>
         All activity
       </a>

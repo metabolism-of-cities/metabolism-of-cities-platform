@@ -500,6 +500,7 @@ class ProjectDesign(models.Model):
 class ForumTopic(Record):
     last_update = models.DateTimeField(db_index=True)
     part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
+    parent = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="forum_topics")
 
     class Meta:
         ordering = ["-last_update"]

@@ -1,0 +1,9 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  {% include "hub/_nav.html" %}
+
+  {{ webpage.get_content|safe }}
+
+{% endblock %}

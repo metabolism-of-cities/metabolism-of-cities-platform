@@ -168,17 +168,22 @@ def organization(request, slug, id):
 
 # FORUM
 
-def forum_list(request, project_name=None):
+def forum_list(request, project_name=None, parent=None, section=None):
     list = ForumTopic.objects.all()
     if project_name:
         project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
         list = list.filter(part_of_project=project)
+    if parent:
+        list = list.filter(parent_id=parent)
     context = {
         "list": list,
+        "title": "Forum",
+        "section": section,
+        "menu": "forum",
     }
     return render(request, "forum.list.html", context)
 
-def forum(request, id, project_name=None):
+def forum(request, id, project_name=None, section=None):
     info = get_object_or_404(Record, pk=id)
     list = Message.objects.filter(parent=id)
     context = {
@@ -186,6 +191,8 @@ def forum(request, id, project_name=None):
         "list_messages": list,
         "load_messaging": True,
         "forum_title": info.name,
+        "section": section,
+        "menu": "forum",
     }
     if request.method == "POST":
 
@@ -256,7 +263,7 @@ def forum(request, id, project_name=None):
             return redirect(request.POST["return"])
     return render(request, "forum.topic.html", context)
 
-def forum_edit(request, id, edit, project_name=None):
+def forum_edit(request, id, edit, project_name=None, section=None):
     info = get_object_or_404(Record, pk=id)
     message = get_object_or_404(Message, pk=edit)
     if message.author() != request.user.people:
@@ -265,15 +272,18 @@ def forum_edit(request, id, edit, project_name=None):
         message.description = request.POST.get("text")
         message.save()
         messages.success(request, "Changes were saved")
-        return redirect(project_name + ":forum", id)
+        page = "volunteer_forum" if section == "volunteer_hub" else "forum"
+        return redirect(project_name + ":"+page, id)
     context = {
         "message": message,
         "info": info,
         "load_messaging": True,
+        "menu": "forum",
+        "section": section,
     }
     return render(request, "forum.topic.html", context)
 
-def forum_form(request, id=False, project_name=None):
+def forum_form(request, id=False, project_name=None, parent=None, section=None):
 
     project = None
     if project_name:
@@ -284,6 +294,7 @@ def forum_form(request, id=False, project_name=None):
             part_of_project = project,
             name = request.POST.get("title"),
             last_update = timezone.now(),
+            parent_id = parent,
         )
         set_author(request.user.people.id, info.id)
         message = Message.objects.create(
@@ -304,12 +315,15 @@ def forum_form(request, id=False, project_name=None):
         messages.success(request, "Your message has been posted.")
 
         if project_name:
-            return redirect(project_name + ":forum", info.id)
+            page = "volunteer_forum" if section == "volunteer_hub" else "forum"
+            return redirect(project_name + ":"+page, info.id)
 
         return redirect(message.get_absolute_url())
 
     context = {
         "load_messaging": True,
+        "menu": "forum",
+        "section": section,
     }
     return render(request, "forum.form.html", context)
 
