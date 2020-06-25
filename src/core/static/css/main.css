@@ -450,7 +450,7 @@ blockquote {
 .alert.alert-primary {
   color: #212529;
   background-color: rgba(20, 77, 88, 0.2);
-  border-color: #144d58; }
+  border-color: rgba(20, 77, 88, 0.2); }
 
 .alert.alert-light {
   color: #212529;
@@ -1613,6 +1613,17 @@ body.stafcp.design textarea#id_custom_css {
 body.stafcp.workgrid .btn-filter {
   white-space: nowrap;
   height: 38px; }
+
+body.staf.review.session #contentsection table {
+  overflow-x: auto;
+  white-space: nowrap; }
+
+body.staf.review.session #raw,
+body.staf.review.session #map {
+  display: none; }
+
+body.staf.review.session #map {
+  height: 400px; }
 
 body.upload-portal.index .container.main-content {
   margin: 0 !important;

@@ -689,7 +689,7 @@ blockquote {
   &.alert-primary {
     color: $dark;
     background-color: rgba($primary, .2);
-    border-color: $primary;
+    border-color: rgba($primary, .2);
   }
 
   &.alert-light {
@@ -2492,6 +2492,23 @@ body.stafcp.workgrid {
   .btn-filter {
     white-space: nowrap;
     height: 38px;
+  }
+}
+
+// STAF REVIEW SESSION PAGE
+body.staf.review.session {
+  #contentsection table {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  #raw,
+  #map {
+    display: none;
+  }
+
+  #map {
+    height: 400px;
   }
 }
 
