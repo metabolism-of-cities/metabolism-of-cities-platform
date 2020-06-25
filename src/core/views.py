@@ -1966,7 +1966,7 @@ def eurostat(request):
 
     progress = full_list.filter(is_reviewed=True).count()
     no_folders = full_list.exclude(type="folder")
-    percentage = progress/no_folders.count()
+    percentage = progress/no_folders.count() if no_folders else 0
 
     context = {
         "list": list,
