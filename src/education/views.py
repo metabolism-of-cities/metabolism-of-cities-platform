@@ -6,5 +6,5 @@ def index(request):
     context = {
         "show_project_design": True,
     }
-    return render(request, "template/blank.html", context)
+    return render(request, "education/index.html", context)
 
