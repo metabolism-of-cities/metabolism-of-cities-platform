@@ -849,7 +849,8 @@ def work_form(request, project_name, id=None, sprint=None):
         info = Work.objects_include_private.get(pk=id)
     else:
         form = ModelForm(request.POST or None, initial={"part_of_project": project})
-    form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id=809)
+    if "tags" in fields:
+        form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id=809)
     if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)
