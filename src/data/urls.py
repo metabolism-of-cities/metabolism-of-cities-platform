@@ -9,7 +9,7 @@ app_name = "data"
 
 urlpatterns = [
 
-    path("upload/form/", library.form, name="form"),
+    path("upload/form/", library.form, { "type": 10 }, name="upload"),
 
     path("", views.index, name="index"),
 

@@ -251,20 +251,24 @@ def upload(request):
     return render(request, "library/upload.html", context)
 
 @login_required
-def form(request, id=None, project_name="library"):
+def form(request, id=None, project_name="library", type=None):
 
     project = Project.objects.get(slug=project_name)
-    type = request.GET.get("type")
-    if request.method == "POST":
-        type = request.POST.get("type")
+    if not type:
+        type = request.GET.get("type")
+        if request.method == "POST":
+            type = request.POST.get("type")
     journals = publishers = None
+    type = LibraryItemType.objects.get(pk=type)
 
-    if type == "dataset" or type.name == "Dataset":
+    #fields=("name", "author_list", "description", "url", "size", "spaces", "tags", "year", "language", "license", "data_year_start", "data_year_end", "update_frequency", "data_interval", "data_formats", "has_api"),
+    if type.name == "Dataset":
         ModelForm = modelform_factory(
             LibraryDataset, 
-            fields=("name", "author_list", "description", "url", "size", "tags", "spaces", "year", "language", "license", "data_year_start", "data_year_end", "update_frequency", "data_interval", "data_formats", "has_api"),
+            fields=("name", "author_list", "description", "url", "size", "spaces", "year", "language", "license", "update_frequency"),
             labels = {
                 "year": "Year created (required)",
+                "spaces": "City/cities",
                 "author_list": "Authors (people)",
             }
         )
@@ -277,7 +281,6 @@ def form(request, id=None, project_name="library"):
             }
         )
     else:
-        type = LibraryItemType.objects.get(pk=type)
         labels = {
             "author_list": "Author(s)",
             "comments": "Internal comments/notes",
@@ -353,8 +356,11 @@ def form(request, id=None, project_name="library"):
                 )
 
             if "return" in request.GET:
-                messages.success(request, "The item was saved. It will be reviewed and then added to our library. Thanks for your contribution!")
+                messages.success(request, "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution!")
                 return redirect(request.GET["return"])
+            elif type.name == "Dataset":
+                messages.success(request, "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution!")
+                return redirect("data:upload")
             else:
                 messages.success(request, "The item was added to the library. <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=2&amp;record_child=" + str(info.id) + "'>Link to publisher</a> |  <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=4&amp;record_child=" + str(info.id) + "'>Link to author</a> ||| <a href='/admin/core/organization/add/' target='_blank'>Add a new organization</a>")
                 return redirect("library:form")
