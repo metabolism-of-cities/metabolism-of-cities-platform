@@ -7,6 +7,8 @@ from django.db.models import Q
 from django.utils import timezone
 import pytz
 
+from django.contrib.auth.decorators import login_required
+
 # These are used so that we can send mail
 from django.core.mail import send_mail
 from django.template.loader import render_to_string, get_template
@@ -263,6 +265,7 @@ def forum(request, id, project_name=None, section=None):
             return redirect(request.POST["return"])
     return render(request, "forum.topic.html", context)
 
+@login_required
 def forum_edit(request, id, edit, project_name=None, section=None):
     info = get_object_or_404(Record, pk=id)
     message = get_object_or_404(Message, pk=edit)
@@ -283,6 +286,7 @@ def forum_edit(request, id, edit, project_name=None, section=None):
     }
     return render(request, "forum.topic.html", context)
 
+@login_required
 def forum_form(request, id=False, project_name=None, parent=None, section=None):
 
     project = None
