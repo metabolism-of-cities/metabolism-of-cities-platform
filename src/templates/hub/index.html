@@ -27,14 +27,19 @@
           </div>
         {% endif %}
 
-        <div>
-          <a class="btn btn-lg btn-primary my-4" href="/hub/join/?next={{ request.get_full_path }}">
-            <i class="fas fa-fist-raised"></i>
-            Join us!
-          </a>
-        </div>
+        {% if not request.user.is_authenticated %}
+          <div>
+            <a class="btn btn-lg btn-primary my-4" href="/hub/join/?next={{ request.get_full_path }}">
+              <i class="fas fa-fist-raised"></i>
+              Join us!
+            </a>
+          </div>
+        {% else %}
+        <h4 class="mb-4"><em>Thanks for being part of our community</em></h4>
+        {% endif %}
 
-        <a class="btn btn-primary-basic" href="">
+
+        <a class="btn btn-primary-basic" href="help/">
           <i class="fal fa-video"></i>
           Introduction video
         </a>

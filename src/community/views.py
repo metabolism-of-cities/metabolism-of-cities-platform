@@ -219,32 +219,32 @@ def forum(request, id, project_name=None, section=None):
         # In that case we should write a separate cron that runs every 5-10 min to send
         # out these notifications instead. But to get us started, this should do.
 
-        try:
-            mailcontext = {
-                "message": markdown(text),
-                "text": text,
-                "project": project,
-                "info": info,
-                "url": "https://ascus.metabolismofcities.org" + request.POST["return"] if "return" in request.POST else reverse(project_name + ":forum", info.id),
-            }
+        if False:
+            try:
+                mailcontext = {
+                    "message": markdown(text),
+                    "text": text,
+                    "project": project,
+                    "info": info,
+                    "url": "https://ascus.metabolismofcities.org" + request.POST["return"] if "return" in request.POST else reverse(project_name + ":forum", info.id),
+                }
 
-            msg_html = render_to_string("mailbody/message.notification.html", mailcontext)
-            msg_plain = render_to_string("mailbody/message.notification.txt", mailcontext)
-            sender = '"AScUS Unconference" <ascus@metabolismofcities.org>'
-            for each in recipients:
-                # Let check if the person has an email address before we send the mail
-                if each.email:
-                    recipient = '"' + each.name + '" <' + each.email + '>'
-                    send_mail(
-                        "New message notification",
-                        msg_plain,
-                        sender,
-                        [recipient],
-                        html_message=msg_html,
-                    )
-
-        except Exception as e:
-            pass
+                msg_html = render_to_string("mailbody/message.notification.html", mailcontext)
+                msg_plain = render_to_string("mailbody/message.notification.txt", mailcontext)
+                sender = '"AScUS Unconference" <ascus@metabolismofcities.org>'
+                for each in recipients:
+                    # Let check if the person has an email address before we send the mail
+                    if each.email:
+                        recipient = '"' + each.name + '" <' + each.email + '>'
+                        send_mail(
+                            "New message notification",
+                            msg_plain,
+                            sender,
+                            [recipient],
+                            html_message=msg_html,
+                        )
+            except Exception as e:
+                pass
 
         if hasattr(info, "forumtopic"):
             info.forumtopic.last_update = timezone.now()

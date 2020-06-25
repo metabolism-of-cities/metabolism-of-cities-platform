@@ -182,14 +182,15 @@ def unauthorized_access(request):
 
 # Authentication of users
 
-def user_register(request, project=None, project_name=None, section=None):
+def user_register(request, project="core", project_name=None, section=None):
     people = user = is_logged_in = None
     if project_name:
         project = project_name
+    project = get_object_or_404(Project, pk=PROJECT_ID[project])
+
     if request.GET.get("next"):
         redirect_url = request.GET.get("next")  
     elif project:
-        project = get_object_or_404(Project, pk=PROJECT_ID[project])
         redirect_url = project.get_website()
     else:
         redirect_url = "core:index"
@@ -220,11 +221,15 @@ def user_register(request, project=None, project_name=None, section=None):
 
             # This user must be associated with a "people" record. So we check if a record
             # with this name already exists. If not, we create a new record.
+
             check = People.objects.filter(name=name, user__isnull=True)
             if check:
                 people = check[0]
             if not people:
                 people = People.objects.create(name=name, email=user.email)
+
+            if "photo" in request.FILES and request.FILES["photo"]:
+                people.image = request.FILES["photo"]
 
             people.user = user
             people.save()
@@ -249,14 +254,15 @@ def user_register(request, project=None, project_name=None, section=None):
                         relationship_id = 27,
                     )
 
-            Work.objects.create(
-                name = "Welcome new user",
-                description = "A new user has signed up for the website! Have a look at their profile, and consider welcoming them. The user has entered the following background information:\n\n" + request.POST.get("background"),
-                part_of_project = project,
-                related_to = people,
-                workactivity_id = 18,
-                is_public = False,
-            )
+            #Work.objects.create(
+            #    name = "Welcome new user",
+            #    description = "A new user has signed up for the website! Have a look at their profile, and consider welcoming them. The user has entered the following background information:\n\n" + request.POST.get("background"),
+            #    part_of_project = project,
+            #    related_to = people,
+            #    workactivity_id = 18,
+            #    is_public = False,
+            #)
+
             messages.success(request, "You are successfully registered.")
 
             mailcontext = {
@@ -268,13 +274,14 @@ def user_register(request, project=None, project_name=None, section=None):
             sender = '"' + request.site.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
             recipient = '"' + name + '" <' + email + '>'
 
-            send_mail(
-                "Welcome to Metabolism of Cities",
-                msg_plain,
-                sender,
-                [recipient],
-                html_message=msg_html,
-            )
+            if False:
+                send_mail(
+                    "Welcome to Metabolism of Cities",
+                    msg_plain,
+                    sender,
+                    [recipient],
+                    html_message=msg_html,
+                )
 
             return redirect(redirect_url)
 

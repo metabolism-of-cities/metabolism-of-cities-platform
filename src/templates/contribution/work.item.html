@@ -86,7 +86,7 @@
           <div class="text-center pt-4 pb-4 alert alert-dark">
             <h2 class="my-4"><i class="fad fa-user-alt-slash" aria-hidden="true"></i> You are not logged in</h2>
             <a class="btn btn-lg btn-primary clear-filter my-4" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/login/?next={{ request.get_full_path }}"><i class="fa fa-sign-in" aria-hidden="true"></i> Log In</a>
-            <a class="btn btn-lg btn-primary clear-filter my-4" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/register/?next={{ request.get_full_path }}"><i class="fa fa-user-plus" aria-hidden="true"></i> Register</a>
+            <a class="btn btn-lg btn-primary clear-filter my-4" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/join/?next={{ request.get_full_path }}"><i class="fa fa-user-plus" aria-hidden="true"></i> Register</a>
             <p><small class="text-muted">Please join us and let's build things, together!</small></p>
           </div>
         {% else %}
