@@ -1,195 +1,291 @@
 {% extends "_base.html" %}
 {% load moc_extras %}
 {% load humanize %}
-
-{% block css %}
-<style type="text/css">
-#raw{display:none}
-#contentsection table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-}
-</style>
-{% endblock %}
+{% block page_name %}staf review session{% endblock %}
 
 {% block content %}
 
-<div class="row">
+  <h1>{{ session }}</h1>
 
-  <div class="col-9">
+  <ul class="nav nav-tabs my-4">
+    <li class="nav-item">
+      <a class="nav-link active" href="#">Overview</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Data Classification</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Meta information</a>
+    </li>
+  </ul>
 
-    <h2>{{ session }}</h2>
+  <section class="row">
+    <div class="col-lg-8 mb-4 mb-lg-0">
+      <div class="card card-table mb-4">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Property</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Layer name</td>
+              <td>{{ layer.name }}</td>
+            </tr>
+            <tr>
+              <td>File size</td>
+              <td>{{ file|floatformat }} Mb</td>
+            </tr>
+            <tr>
+              <td>Coordinate reference system</td>
+              <td>{{ layer.srs.DATUM }}</td>
+            </tr>
+            <tr>
+              <td>PROJCS</td>
+              <td>{{ layer.srs.PROJCS }}</td>
+            </tr>
+            <tr>
+              <td>AUTHORITY</td>
+              <td>{{ layer.srs.AUTHORITY }}</td>
+            </tr>
+            <tr>
+              <td>SPHEROID</td>
+              <td>{{ layer.srs.SPHEROID }}</td>
+            </tr>
+            <tr>
+              <td>UNIT</td>
+              <td>{{ layer.srs.UNIT }}</td>
+            </tr>
+            <tr>
+              <td>Geocode</td>
+              <td>{{ geocode.scheme }} <i class="fal fa-angle-right mx-2"></i> {{ geocode }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-    <ul class="nav nav-tabs mt-3">
-      <li class="nav-item">
-        <a class="nav-link active" href="#">Overview</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Data Classification</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Meta information</a>
-      </li>
-    </ul>
+      <div id="viewraw" class="btn btn-primary-basic">
+        <i class="fal fa-angle-down"></i>
+        View raw data
+      </div>
 
-    <table class="table table-striped">
-      <tr>
-        <th>Feature</th>
-        <th>Property</th>
-      </tr>
-      <tr>
-        <td>Layer name</td>
-        <td>{{ layer.name }}</td>
-      </tr>
-      <tr>
-        <td>File size</td>
-        <td>{{ file|floatformat }} Mb</td>
-      </tr>
-      <tr>
-        <td>Coordinate reference system</td>
-        <td>{{ layer.srs.DATUM }}</td>
-      </tr>
-      <tr>
-        <td>PROJCS</td>
-        <td>{{ layer.srs.PROJCS }}</td>
-      </tr>
-      <tr>
-        <td>AUTHORITY</td>
-        <td>{{ layer.srs.AUTHORITY }}</td>
-      </tr>
-      <tr>
-        <td>SPHEROID</td>
-        <td>{{ layer.srs.SPHEROID }}</td>
-      </tr>
-      <tr>
-        <td>UNIT</td>
-        <td>{{ layer.srs.UNIT }}</td>
-      </tr>
-      <tr>
-        <td>Geocode</td>
-        <td>{{ geocode.scheme }} &raquo; {{ geocode }}</td>
-      </tr>
-    </table>
+      <div id="viewmap" class="btn btn-primary-basic">
+        <i class="fal fa-angle-down"></i>
+        View map
+      </div>
 
-      <p><a href="#" id="viewraw">View raw data</a></p>
-
-      <pre class="alert alert-dark" id="raw">
-      {{ layer.srs }}
+      <pre class="alert alert-light mt-2 mb-0" id="raw">
+        {{ layer.srs }}
       </pre>
 
-  </div>
-
-  <div class="col-3">
-
-    <div class="card icon-card">
-      <div class="icon">
-        <i class="far fa-fw fa-info-circle" aria-hidden="true"></i>
-      </div>
-      <div class="card-body text-center">
-        <p><strong>{{ session }}</strong><br>
-        <code>{{ session.id }}</code></p>
-        <p><strong>Uploader</strong><br> {{ session.uploader }}</p>
-        <form method="post">
-          {% if not work.assigned_to %}
-            <button type="submit" name="start_work" value="true" class="btn btn-success">Start working on this</button>
-          {% else %}
-            <p>
-              <strong>Assigned to</strong><br>
-              {{ work.assigned_to }}
-            </p>
-            {% if work.assigned_to == request.user.people %}
-              <button type="submit" name="stop_work" value="true" class="btn btn-warning"><i class="fa fa-stop"></i> Stop working on this</button>
-            {% endif %}
-          {% endif %}
-          {% csrf_token %}
-        </form>
-
-        <p class="mt-3"><strong>Type</strong> <br>{{ layer.geom_type.name }}</p>
-        <p><strong>Properties</strong><br> {{ layer.num_fields }}</p>
-        <p><strong>Items</strong><br> {{ layer.num_feat }}</p>
+      <div id="map" class="leaflet-map mt-2">
 
       </div>
     </div>
 
-  </div>
+    <div class="col-lg-4">
+      <div class="card mb-4">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item table-item">
+            <div><i class="fal fa-fw fa-fingerprint mr-1"></i> ID</div>
+            <div>{{ session.id }}</div>
+          </li>
+          <li class="list-group-item table-item">
+            <div><i class="fal fa-fw fa-user mr-1"></i> Uploaded by</div>
+            <div>{{ session.uploader }}</div>
+          </li>
+          <li class="list-group-item table-item">
+            <div><i class="fal fa-fw fa-box mr-1"></i> Type</div>
+            <div>{{ layer.geom_type.name }}</div>
+          </li>
+          <li class="list-group-item table-item">
+            <div><i class="fal fa-fw fa-layer-group mr-1"></i> Properties</div>
+            <div>{{ layer.num_fields }}</div>
+          </li>
+          <li class="list-group-item table-item">
+            <div><i class="far fa-fw fa-dot-circle mr-1"></i> Items</div>
+            <div>{{ layer.num_feat }}</div>
+          </li>
+          {% if work.assigned_to %}
+            <li class="list-group-item table-item">
+              <div><i class="far fa-fw fa-user-check mr-1"></i> Assigned to</div>
+              <div>{{ work.assigned_to }}</div>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
 
-</div>
+      <form method="post">
+        {% if not work.assigned_to %}
+          <button type="submit" name="start_work" value="true" class="btn btn-primary">
+            <i class="fas fa-user-plus"></i>
+            Start working on this
+          </button>
+        {% elif work.assigned_to == request.user.people %}
+          <button type="submit" name="stop_work" value="true" class="btn btn-warning">
+            <i class="fas fa-user-times"></i>
+            Stop working on this
+          </button>
+        {% endif %}
+        {% csrf_token %}
+      </form>
+    </div>
+  </section>
 
-<div class="row mt-4">
+  <section id="contentsection">
+    <h3 class="mt-4">Shapefile content</h3>
+    {% if layer.num_feat > 100 %}
+      <div class="alert alert-primary">
+        <i class="fal fa-info-circle mr-1"></i>
+        Only the first 100 items are shown. In total, there are <strong>{{ layer.num_feat }}</strong> items in your shapefile
+      </div>
+    {% endif %}
+    <table class="table table-responsive datatable datatable-card">
+      <thead>
+        <tr>
+          {% for field in layer.fields %}
+            <th>{{ field }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for each in layer %}
+          {% if forloop.counter <= 100 %}
+            <tr>
+              {% for field in layer.fields %}
+                <td>{{ each|get_item:field }}</td>
+              {% endfor %}
+            </tr>
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
 
-  <div class="col-12">
+    <h3 class="mt-4">Identify columns</h3>
+    <div class="alert alert-danger alert-identify">
+      <i class="fas fa-exclamation-triangle mr-2"></i>
+      <span id="unidentified-columns-count"></span> identifier(s) left to assign
+    </div>
 
-    <section id="contentsection">
-      <h3 class="mt-4">Shapefile content</h3>
-      {% if layer.num_feat > 100 %}
-        <div class="alert alert-warning">
-          <i class="fa fa-exclamation-triangle"></i> Note: we are only showing the first 100 items. 
-          In total, there are <strong>{{ layer.num_feat }}</strong> items in your shapefile.
-        </div>
-      {% endif %}
-      <table class="table table-striped datatable">
-        <thead>
-          <tr>
+    <form id="identify-columns" method="submit">
+      <div class="form-row">
+        <div class="col-md-4 col-lg-3 mb-4">
+          <label class="category mb-0">Name</label>
+          <select class="custom-select unidentified" name="name">
+            <option value="none" selected disabled>Name</option>
             {% for field in layer.fields %}
-              <th>
-                {{ field }} <br>
-                <input type="radio" name="name" /> Name<br>
-                <input type="radio" name="identifier" /> Identifier
-              </th>
+              <option value="{{ field }}">{{ field }}</option>
             {% endfor %}
-          </tr>
-          </thead>
-          <tbody>
-            {% for each in layer %}
-              {% if forloop.counter <= 100 %}
-                <tr>
-                  {% for field in layer.fields %}
-                    <td>{{ each|get_item:field }}</td>
-                  {% endfor %}
-                </tr>
-              {% endif %}
+          </select>
+        </div>
+        <div class="col-md-4 col-lg-3">
+          <label class="category mb-0">Identifier</label>
+          <select class="custom-select unidentified" name="identifier">
+            <option value="none" selected disabled>Identifier</option>
+            {% for field in layer.fields %}
+              <option value="{{ field }}">{{ field }}</option>
             {% endfor %}
-          </tbodY>
-      </table>
+          </select>
+        </div>
+      </div>
+    </form>
 
-    </section>
-
-    <section id="mapsection">
-      <h3 class="mt-4">Map</h3>
-      <div id="map" style="height:500px"></div>
-    </section>
-
-  </div>
-
-</div>
+    <button class="btn disabled save btn-primary" form="identify-columns">
+      <i class="fas fa-save"></i>
+      Save
+    </button>
+  </section>
 
 {% endblock %}
 
 {% block footer %}
   <script>
-    // https://leafletjs.com/reference-1.6.0.html
-    var map = L.map("map");
-    L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={{ MAPBOX_API_KEY }}", {
-      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-      id: "mapbox/streets-v11",
-      tileSize: 512,
-      zoomOffset: -1,
-    }).addTo(map);
-
-    geojsonlayer = L.geoJSON({{ geojson|safe }}, {
-      style: {
-        color: "#144d58",
-        weight: 2,
-      }
-    }).addTo(map);
-
-    map.fitBounds(geojsonlayer.getBounds());
-
-    $("#viewraw").click(function(e){
-      e.preventDefault();
+    // toggle visibility of raw data
+    $("#viewraw").click(function(){
+      $("i", this).toggleClass("fa-angle-down, fa-angle-up")
       $("#raw").toggle();
     });
 
+    let mapOpen = false;
+
+    // toggle visibility and initiate map
+    $("#viewmap").click(function(){
+      $("i", this).toggleClass("fa-angle-down, fa-angle-up")
+      $("#map").toggle();
+
+      // https://leafletjs.com/reference-1.6.0.html
+      if (mapOpen == false) {
+        var map = L.map("map");
+        L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={{ MAPBOX_API_KEY }}", {
+          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+          id: "mapbox/streets-v11",
+          tileSize: 512,
+          zoomOffset: -1,
+        }).addTo(map);
+
+        geojsonlayer = L.geoJSON({{ geojson|safe }}, {
+          style: {
+            color: "#144d58",
+            weight: 2,
+          }
+        }).addTo(map);
+
+        map.fitBounds(geojsonlayer.getBounds());
+
+        mapOpen = true;
+      }
+    });
+
+    // checking how many columns need a type
+    function checkColumns() {
+      let unidentifiedCount = $("#identify-columns select.unidentified").length;
+
+      $("#unidentified-columns-count").text(unidentifiedCount)
+
+      if (unidentifiedCount != 0 && $("select[name='name']").hasClass("is-valid")) {
+        let alert = $(".alert-identify");
+
+        alert
+          .addClass("alert-primary")
+          .removeClass("alert-danger")
+          .html("<i class='fal fa-info-circle mr-1'></i> You have selected a name and can continue to the next step. However, there are still unselected identifiers")
+
+        $(".btn.save").removeClass("disabled");
+      } else if (unidentifiedCount == 0) {
+        let alert = $(".alert-identify");
+
+        alert
+          .addClass("alert-success")
+          .removeClass("alert-danger alert-info")
+          .html("<i class='fal fa-check-circle mr-1'></i> All identifiers are selected, please save and continue to the next step")
+
+        $(".btn.save").removeClass("disabled");
+      }
+    }
+
+    // what happens when a column is identified
+    $("select.unidentified").change(function() {
+      $(this).removeClass("is-invalid unidentified");
+      $(this).addClass("is-valid");
+
+      checkColumns()
+
+      // check all select values to prevent duplicates
+      $("#identify-columns select option").removeAttr("disabled")
+      $("#identify-columns select option[value='none']").attr("disabled", "disabled")
+
+      $("#identify-columns select").each(function() {
+        let columnValue = $(this).val();
+
+        if (columnValue) {
+          $("#identify-columns select option[value='" + columnValue + "']").attr("disabled", "disabled")
+        }
+      })
+    })
+
+    // check unidentified columns on page load
+    checkColumns();
   </script>
 {% endblock %}
