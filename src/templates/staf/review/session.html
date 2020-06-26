@@ -225,7 +225,7 @@
           zoomOffset: -1,
         }).addTo(map);
 
-        $.get("geojson_url")
+        $.get("?geojson=true")
         .done(function(results) {
           geojsonlayer = L.geoJSON(results, {
             style: {

@@ -14,6 +14,7 @@ import pytz
 from functools import wraps
 
 import json
+from django.http import JsonResponse, HttpResponse
 
 # Record additions or changes
 from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
@@ -154,6 +155,9 @@ def review_session(request, id):
         layer = datasource[0]
         size = file.file.size/1024/1024
         geocode = Geocode.objects.get(pk=session.meta_data.get("geocode"))
+        
+        if "geojson" in request.GET:
+            return HttpResponse(geojson, content_type="application/json")
     except Exception as e:
         messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
         error = True
@@ -161,7 +165,6 @@ def review_session(request, id):
     context = {
         "session": session,
         "file": size,
-        "geojson": geojson,
         "load_map": True,
         "load_datatables": True,
         "error": error,
