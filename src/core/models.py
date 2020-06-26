@@ -379,17 +379,15 @@ class Event(Record):
             start_time = self.start_date.strftime("%H:%M")
             start_month = self.start_date.strftime("%m")
             start_day = self.start_date.strftime("%d")
-            start = self.start_date.strftime("%m-%d-%Y")
 
             end_date_full = self.end_date.strftime("%b %d, %Y %H:%M")
             end_date = self.end_date.strftime("%b %d, %Y")
             end_time = self.end_date.strftime("%H:%M")
             end_month = self.end_date.strftime("%m")
             end_day = self.end_date.strftime("%d")
-            end = self.end_date.strftime("%m-%d-%Y")
 
-            if (start == "00-00-000" and end == "00-00-000"):
-                return ""
+            if (self.start_date.strftime("%m-%d-%Y") == "00-00-000" and self.end_date.strftime("%m-%d-%Y") == "00-00-000"):
+                return
             elif (start_date == end_date):
                 if (start_time != '00:00' and end_time != '00:00'):
                     if (start_time == end_time):
@@ -398,7 +396,7 @@ class Event(Record):
                         return start_date + " " + start_time + " - " + end_time
                 else:
                     return start_date
-                    
+
             elif (start_date != end_date):
                 if (start_month == end_month):
                     return self.start_date.strftime("%b") + " " + start_day + " - " + end_day + ", " + self.start_date.strftime("%Y")
