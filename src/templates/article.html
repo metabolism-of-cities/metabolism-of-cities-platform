@@ -34,7 +34,7 @@
       </aside>
     {% endif %}
 
-    <article class="order-0">
+    <article class="order-0" id="article-{{ info.id }}">
       {% if info.description %}
         {{ info.get_content|safe }}
       {% else %}
