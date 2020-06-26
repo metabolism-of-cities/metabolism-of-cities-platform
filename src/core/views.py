@@ -356,7 +356,7 @@ def user_profile(request, project=None, project_name=None):
 def user_profile_form(request, project_name=None):
     ModelForm = modelform_factory(
         People, 
-        fields = ("name", "firstname", "lastname", "description", "research_interests", "image", "website", "email", "twitter", "google_scholar", "orcid", "researchgate", "linkedin"),
+        fields = ("name", "description", "research_interests", "image", "website", "email", "twitter", "google_scholar", "orcid", "researchgate", "linkedin"),
         labels = { "description": "Profile/bio", "image": "Photo" }
     )
     form = ModelForm(request.POST or None, request.FILES or None, instance=request.user.people)
@@ -364,12 +364,10 @@ def user_profile_form(request, project_name=None):
         if form.is_valid():
             people = form.save()
 
-            user = get_object_or_404(User, pk=people.user.id)
-            
-            user.first_name = people.firstname if people.firstname else user.first_name
-            user.last_name = people.lastname if people.lastname else user.last_name
-            user.username = people.email if people.email else user.username
-            user.email = people.email if people.email else user.email
+            user = people.user
+            user.first_name = people.name
+            user.username = people.email
+            user.email = people.email
             user.save();
 
             messages.success(request, "Your profile information was saved.")

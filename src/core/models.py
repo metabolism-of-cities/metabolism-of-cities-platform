@@ -372,40 +372,32 @@ class Event(Record):
     def get_absolute_url(self):
         return reverse("community:event", args=[self.id])
 
-    def formatted_date_range(self):
-        if (self.start_date and self.end_date):
-            start_date_full = self.start_date.strftime("%b %d, %Y %H:%M")
-            start_date = self.start_date.strftime("%b %d, %Y")
-            start_time = self.start_date.strftime("%H:%M")
-            start_month = self.start_date.strftime("%m")
-            start_day = self.start_date.strftime("%d")
+    def get_dates(self):
 
-            end_date_full = self.end_date.strftime("%b %d, %Y %H:%M")
-            end_date = self.end_date.strftime("%b %d, %Y")
-            end_time = self.end_date.strftime("%H:%M")
-            end_month = self.end_date.strftime("%m")
-            end_day = self.end_date.strftime("%d")
+        if not self.start_date or not self.end_date:
+            return None
 
-            if (self.start_date.strftime("%m-%d-%Y") == "00-00-000" and self.end_date.strftime("%m-%d-%Y") == "00-00-000"):
-                return
-            elif (start_date == end_date):
-                if (start_time != '00:00' and end_time != '00:00'):
-                    if (start_time == end_time):
-                        return self.start_date.strftime("%b %d, %Y %H:%M")
-                    else:
-                        return start_date + " " + start_time + " - " + end_time
-                else:
-                    return start_date
+        start_date = self.start_date.strftime("%b %d, %Y")
+        start_time = self.start_date.strftime("%H:%M")
+        end_date = self.end_date.strftime("%b %d, %Y")
+        end_time = self.end_date.strftime("%H:%M")
 
-            elif (start_date != end_date):
-                if (start_month == end_month):
-                    return self.start_date.strftime("%b") + " " + start_day + " - " + end_day + ", " + self.start_date.strftime("%Y")
-                elif (start_time != '00:00' and end_time != '00:00'):
-                    return start_date_full + " " + end_date_full
-                else:
-                    return start_date + " - " + end_date
-        
-        return
+        if start_date == end_date:
+            if start_time == "00:00" and end_time == "00:00":
+                return start_date
+            elif start_time == end_time:
+                return self.start_date.strftime("%b %d, %Y %H:%M")
+            else:
+                return start_date + " " + start_time + " - " + end_time
+        else:
+            if self.start_date.strftime("%Y%m") == self.end_date.strftime("%Y%m"):
+                return self.start_date.strftime("%b") + " " + self.start_date.strftime("%d") + " - " + self.end_date.strftime("%d") + ", " + self.start_date.strftime("%Y")
+            elif start_time != "00:00" and end_time != "00:00":
+                return self.start_date.strftime("%b %d, %Y %H:%M") + " " + self.end_date.strftime("%b %d, %Y %H:%M")
+            elif self.start_date.strftime("%Y") == self.end_date.strftime("%Y"):
+                return self.start_date.strftime("%b %d") + " - " + end_date
+            else:
+                return start_date + " - " + end_date
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -419,7 +411,7 @@ class People(Record):
     firstname = models.CharField(max_length=255, null=True, blank=True)
     lastname = models.CharField(max_length=255, null=True, blank=True)
     affiliation = models.CharField(max_length=255,null=True, blank=True)
-    email = models.CharField(max_length=255, null=True, blank=True)
+    email = models.EmailField(max_length=255, null=True, blank=True)
     email_public = models.BooleanField(default=False)
     website = models.CharField(max_length=255, null=True, blank=True)
     twitter = models.CharField(max_length=255, null=True, blank=True)
