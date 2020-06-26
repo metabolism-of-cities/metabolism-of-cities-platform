@@ -89,7 +89,7 @@ class Record(models.Model):
 
     spaces = models.ManyToManyField("ReferenceSpace", blank=True)
     sectors = models.ManyToManyField("Sector", blank=True)
-    subscribers = models.ManyToManyField("People", blank=True)
+    subscribers = models.ManyToManyField("People", blank=True, through="Subscribers")
 
     # We use soft deleted
     is_deleted = models.BooleanField(default=False, db_index=True)
@@ -1328,6 +1328,14 @@ class Chat(models.Model):
 
     def last_messages(self):
         return Chat.objects.order_by("-timestamp").all()[:50]
+
+class Subscribers(models.Model):
+    record = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="subscriber_list")
+    subscriber = models.ForeignKey(People, on_delete=models.CASCADE, related_name="subscription_list")
+    is_read = models.BooleanField(db_index=True, default=False)
+
+    def __str__(self):
+        return subscriber.name
 
 class EurostatDB(models.Model):
     title = models.CharField(max_length=2000)
