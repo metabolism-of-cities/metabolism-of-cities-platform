@@ -27,7 +27,7 @@
           </li>
           <li class="list-group-item">
             <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 
-            {{ each.start_date|date:"M d, Y" }}{% if each.start_date != each.end_date %} - {{ each.end_date|date:"M d, Y" }}{% endif %}
+            {{ each.get_dates }}
           </li>
           <li class="list-group-item">
             <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> 
@@ -88,7 +88,7 @@
           </li>
           <li class="list-group-item">
             <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i><span class="event-year" hidden>{{ each.start_date|date:"Y" }}</span> 
-            {{ each.start_date|date:"M d, Y" }}{% if each.start_date != each.end_date %} - {{ each.end_date|date:"M d, Y" }}{% endif %}
+            {{ each.get_dates }}
           </li>
           <li class="list-group-item">
             <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> <span class="event-category">{{ each.get_type_display }}</span>
