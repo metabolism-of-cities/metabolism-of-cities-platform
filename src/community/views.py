@@ -188,6 +188,7 @@ def forum_list(request, project_name=None, parent=None, section=None):
 def forum(request, id, project_name=None, section=None):
     info = get_object_or_404(Record, pk=id)
     list = Message.objects.filter(parent=id)
+
     context = {
         "info": info,
         "list_messages": list,
@@ -196,73 +197,89 @@ def forum(request, id, project_name=None, section=None):
         "section": section,
         "menu": "forum",
     }
+
+    if request.user.is_authenticated and request.user.people not in info.subscribers.all():
+        # If this user is not yet subscribed, then we show a checkbox to subscribe
+        context["show_subscribe"] = True
+
     if request.method == "POST":
 
-        text = request.POST.get("text")
-        message = Message.objects.create(
-            name = "Reply to: " + info.name,
-            description = text,
-            parent = info,
-            posted_by = request.user.people,
-        )
+        if request.POST.get("unsubscribe"):
+            info.subscribers.remove(request.user.people)
+            messages.success(request, "Your have now been unsubscribed.")
+            context["show_subscribe"] = True
 
-        set_author(request.user.people.id, message.id)
-        authors_of_underlying_object = info.authors().distinct()
-        recipients = []
-        for each in authors_of_underlying_object:
-            if each not in recipients:
-                recipients.append(each)
+        elif "text" in request.POST and request.POST["text"]:
+            text = request.POST.get("text")
+            message = Message.objects.create(
+                name = "Reply to: " + info.name,
+                description = text,
+                parent = info,
+                posted_by = request.user.people,
+            )
 
-        project = None
-        if project_name:
-            project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+            set_author(request.user.people.id, message.id)
+            authors_of_underlying_object = info.authors().distinct()
+            recipients = []
+            for each in authors_of_underlying_object:
+                if each not in recipients:
+                    recipients.append(each)
 
-        # If the forum function becomes more popular, this will get out of hand quickly
-        # In that case we should write a separate cron that runs every 5-10 min to send
-        # out these notifications instead. But to get us started, this should do.
+            project = None
+            if project_name:
+                project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
 
-        if False:
-            try:
-                mailcontext = {
-                    "message": markdown(text),
-                    "text": text,
-                    "project": project,
-                    "info": info,
-                    "url": "https://ascus.metabolismofcities.org" + request.POST["return"] if "return" in request.POST else reverse(project_name + ":forum", info.id),
-                }
+            # If the forum function becomes more popular, this will get out of hand quickly
+            # In that case we should write a separate cron that runs every 5-10 min to send
+            # out these notifications instead. But to get us started, this should do.
 
-                msg_html = render_to_string("mailbody/message.notification.html", mailcontext)
-                msg_plain = render_to_string("mailbody/message.notification.txt", mailcontext)
-                sender = '"AScUS Unconference" <ascus@metabolismofcities.org>'
-                for each in recipients:
-                    # Let check if the person has an email address before we send the mail
-                    if each.email:
-                        recipient = '"' + each.name + '" <' + each.email + '>'
-                        send_mail(
-                            "New message notification",
-                            msg_plain,
-                            sender,
-                            [recipient],
-                            html_message=msg_html,
-                        )
-            except Exception as e:
-                pass
+            if False:
+                try:
+                    mailcontext = {
+                        "message": markdown(text),
+                        "text": text,
+                        "project": project,
+                        "info": info,
+                        "url": "https://ascus.metabolismofcities.org" + request.POST["return"] if "return" in request.POST else reverse(project_name + ":forum", info.id),
+                    }
 
-        if hasattr(info, "forumtopic"):
-            info.forumtopic.last_update = timezone.now()
-            info.forumtopic.save()
+                    msg_html = render_to_string("mailbody/message.notification.html", mailcontext)
+                    msg_plain = render_to_string("mailbody/message.notification.txt", mailcontext)
+                    sender = '"AScUS Unconference" <ascus@metabolismofcities.org>'
+                    for each in recipients:
+                        # Let check if the person has an email address before we send the mail
+                        if each.email:
+                            recipient = '"' + each.name + '" <' + each.email + '>'
+                            send_mail(
+                                "New message notification",
+                                msg_plain,
+                                sender,
+                                [recipient],
+                                html_message=msg_html,
+                            )
+                except Exception as e:
+                    pass
 
-        if request.FILES:
-            files = request.FILES.getlist("file")
-            for file in files:
-                info_document = Document()
-                info_document.file = file
-                info_document.save()
-                new.attachments.add(info_document)
-        messages.success(request, "Your message has been posted.")
+            if hasattr(info, "forumtopic"):
+                info.forumtopic.last_update = timezone.now()
+                info.forumtopic.save()
+
+            if request.FILES:
+                files = request.FILES.getlist("file")
+                for file in files:
+                    info_document = Document()
+                    info_document.file = file
+                    info_document.save()
+                    new.attachments.add(info_document)
+
+            if "subscribe" in request.POST:
+                info.subscribers.add(request.user.people)
+
+            messages.success(request, "Your message has been posted.")
 
         if "return" in request.POST:
             return redirect(request.POST["return"])
+
     return render(request, "forum.topic.html", context)
 
 @login_required

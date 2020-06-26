@@ -969,6 +969,7 @@ def work_item(request, project_name, id, sprint=None):
                 message_description = "Task was assigned to " + str(request.user.people)
                 message_success = "This task is now assigned to you"
                 info.assigned_to = request.user.people
+                info.subscribers.add(request.user.people)
                 info.save()
 
         if "status_change" in request.POST and info.status != request.POST["status_change"]:
@@ -1018,6 +1019,10 @@ def work_item(request, project_name, id, sprint=None):
         "sprint": sprint,
         "menu": "work",
     }
+
+    if request.user.is_authenticated and not request.user.people in info.subscribers.all():
+        context["show_subscribe"] = True
+
     return render(request, "contribution/work.item.html", context)
 
 def work_sprints(request, project_name):

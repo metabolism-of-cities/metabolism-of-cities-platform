@@ -1329,6 +1329,15 @@ class Chat(models.Model):
     def last_messages(self):
         return Chat.objects.order_by("-timestamp").all()[:50]
 
+class Notification(models.Model):
+    record = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="notified_people")
+    people = models.ForeignKey(People, on_delete=models.CASCADE, related_name="notifications")
+    is_read = models.BooleanField(db_index=True, default=False)
+
+    def __str__(self):
+        return str(self.people) + " is notified about " + str(self.record)
+
+
 class EurostatDB(models.Model):
     title = models.CharField(max_length=2000)
     code = models.CharField(max_length=255)

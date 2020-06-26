@@ -48,12 +48,25 @@
 </div>
 
 {% if request.user.is_authenticated %}
+
+  {% if request.user.people in info.subscribers.all %}
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="unsubscribe" value="true" />
+      <p class="text-right"><i class="fa fa-check"></i> 
+      You are subscribed to this thread.
+      <button class="btn btn-primary-basic pt-0 pb-0" type="submit"> Unsubscribe</button>
+      </p>
+    </form>
+
+  {% endif %}
+
   <h3>{% if list_messages %}Reply{% elif message %}Edit message{% else %}Leave a comment{% endif %}</h3>
   <form method="post" enctype="multipart/form-data" {% if not message %}action="/forum/{% if forum_id %}{{ forum_id }}{% else %}{{ info.id }}{% endif %}/"{% endif %}>
     {% csrf_token %}
     <div class="form-group markdown-textarea">
       {% include "_markdown.html" %}
-      <textarea class="form-control" id="text" name="text" rows="7">{{ message.description }}</textarea>
+      <textarea class="form-control" id="text" name="text" rows="7" required>{{ message.description }}</textarea>
     </div>
     <div class="form-group" style="display:none">
       <label for="files"><i class="far fa-fw fa-paperclip"></i> File(s)</label>
@@ -62,6 +75,16 @@
         <label class="custom-file-label" for="files">Choose file</label>
       </div>
     </div>
+
+    {% if show_subscribe %}
+    <div class="form-check mb-4">
+      <input class="form-check-input" type="checkbox" value="true" id="notify_me" name="subscribe" checked>
+      <label class="form-check-label" for="notify_me">
+        Notify me of updates
+      </label>
+    </div>
+    {% endif %}
+
     <button type="submit" class="btn btn-success"><i class="fas fa-fw fa-comment-alt-plus"></i> Submit</button>
     <input type="hidden" name="return" value="{{ request.get_full_path }}" />
   </form>

@@ -83,9 +83,6 @@ class SearchCompleteAdmin(admin.ModelAdmin):
 class SearchAdmin(admin.ModelAdmin):
     search_fields = ["name"]
 
-class SearchNameAdmin(admin.ModelAdmin):
-    search_fields = ["name"]
-
 class ActivityAdmin(admin.ModelAdmin):
     search_fields = ["name", "code"]
     list_filter = ["catalog"]
@@ -311,8 +308,9 @@ admin_site.register(Geocode, GeocodeAdmin)
 admin_site.register(ReferenceSpace, ReferenceSpaceAdmin)
 admin_site.register(ReferenceSpaceLocation, LocationAdmin)
 admin_site.register(ReferenceSpaceGeocode)
-admin_site.register(Sector, SearchNameAdmin)
-admin_site.register(DataArticle, SearchNameAdmin)
+admin_site.register(Sector, SearchAdmin)
+admin_site.register(DataArticle, SearchAdmin)
+admin_site.register(Notification, SearchAdmin)
 admin_site.register(UploadSession)
 admin_site.register(UploadFile)
 
