@@ -539,7 +539,7 @@ class ForumTopic(Record):
         ordering = ["-last_update"]
 
 class Message(Record):
-    attachments = models.ManyToManyField(Document)
+    attachments = models.ManyToManyField(Document, blank=True)
     parent = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="messages")
     posted_by = models.ForeignKey(People, on_delete=models.CASCADE, null=True, blank=True, related_name="message_list")
 
