@@ -225,14 +225,20 @@
           zoomOffset: -1,
         }).addTo(map);
 
-        geojsonlayer = L.geoJSON({{ geojson|safe }}, {
-          style: {
-            color: "#144d58",
-            weight: 2,
-          }
-        }).addTo(map);
+        $.get("geojson_url")
+        .done(function(results) {
+          geojsonlayer = L.geoJSON(results, {
+            style: {
+              color: "#144d58",
+              weight: 2,
+            }
+          }).addTo(map);
 
-        map.fitBounds(geojsonlayer.getBounds());
+          map.fitBounds(geojsonlayer.getBounds());
+        })
+        .fail(function() {
+          window.alert("Unable to load map");
+        })
 
         mapOpen = true;
       }
