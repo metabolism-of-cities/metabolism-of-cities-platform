@@ -372,6 +372,43 @@ class Event(Record):
     def get_absolute_url(self):
         return reverse("community:event", args=[self.id])
 
+    def formatted_date_range(self):
+        if (self.start_date and self.end_date):
+            start_date_full = self.start_date.strftime("%b %d, %Y %H:%M")
+            start_date = self.start_date.strftime("%b %d, %Y")
+            start_time = self.start_date.strftime("%H:%M")
+            start_month = self.start_date.strftime("%m")
+            start_day = self.start_date.strftime("%d")
+            start = self.start_date.strftime("%m-%d-%Y")
+
+            end_date_full = self.end_date.strftime("%b %d, %Y %H:%M")
+            end_date = self.end_date.strftime("%b %d, %Y")
+            end_time = self.end_date.strftime("%H:%M")
+            end_month = self.end_date.strftime("%m")
+            end_day = self.end_date.strftime("%d")
+            end = self.end_date.strftime("%m-%d-%Y")
+
+            if (start == "00-00-000" and end == "00-00-000"):
+                return ""
+            elif (start_date == end_date):
+                if (start_time != '00:00' and end_time != '00:00'):
+                    if (start_time == end_time):
+                        return self.start_date.strftime("%b %d, %Y %H:%M")
+                    else:
+                        return start_date + " " + start_time + " - " + end_time
+                else:
+                    return start_date
+                    
+            elif (start_date != end_date):
+                if (start_month == end_month):
+                    return self.start_date.strftime("%b") + " " + start_day + " - " + end_day + ", " + self.start_date.strftime("%Y")
+                elif (start_time != '00:00' and end_time != '00:00'):
+                    return start_date_full + " " + end_date_full
+                else:
+                    return start_date + " - " + end_date
+        
+        return
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
