@@ -364,8 +364,7 @@ def user_profile_form(request, project_name=None):
         if form.is_valid():
             people = form.save()
 
-            user_id = people.user.id;
-            user = get_object_or_404(User, pk=user_id)
+            user = get_object_or_404(User, pk=people.user.id)
             
             user.first_name = people.firstname if people.firstname else user.first_name
             user.last_name = people.lastname if people.lastname else user.last_name

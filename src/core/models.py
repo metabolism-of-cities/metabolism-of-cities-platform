@@ -411,6 +411,11 @@ class People(Record):
         verbose_name_plural = "people"
         ordering = ["name"]
 
+    def save(self, *args, **kwargs):
+        if self.email:
+            self.email=self.email.lower()
+        super(People, self).save(*args, **kwargs)
+
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
