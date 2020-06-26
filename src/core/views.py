@@ -1007,6 +1007,10 @@ def work_item(request, project_name, id, sprint=None):
             set_autor(request.user.people.id, message.id)
             messages.success(request, message_success)
 
+            for each in info.subscribers.all():
+                if each.people != request.user.people:
+                    Notification.objects.create(record=message, people=each.people)
+
             if info.get_status_display() == "In Progress" and info.url:
                 return redirect(info.url)
 

@@ -275,6 +275,10 @@ def forum(request, id, project_name=None, section=None):
             if "subscribe" in request.POST:
                 info.subscribers.add(request.user.people)
 
+            for each in info.subscribers.all():
+                if each.people != request.user.people:
+                    Notification.objects.create(record=message, people=each.people)
+
             messages.success(request, "Your message has been posted.")
 
         if "return" in request.POST:
@@ -318,6 +322,7 @@ def forum_form(request, id=False, project_name=None, parent=None, section=None):
             parent_id = parent,
         )
         set_author(request.user.people.id, info.id)
+        info.subscribers.add(request.user.people)
         message = Message.objects.create(
             name = request.POST.get("title"),
             description = request.POST.get("text"),

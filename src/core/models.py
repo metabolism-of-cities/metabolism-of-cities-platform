@@ -1337,7 +1337,6 @@ class Notification(models.Model):
     def __str__(self):
         return str(self.people) + " is notified about " + str(self.record)
 
-
 class EurostatDB(models.Model):
     title = models.CharField(max_length=2000)
     code = models.CharField(max_length=255)
