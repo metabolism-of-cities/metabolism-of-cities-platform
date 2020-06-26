@@ -71,16 +71,22 @@
             {% endif %}
             <li class="list-group-item table-item">
               <div><i class="far fa-fw fa-user mr-1"></i>Assigned to</div>
-              <div> {{ info.assigned_to }}</div>
+              <div> {{ info.assigned_to|default_if_none:"<em>No one yet</em>" }}</div>
             </li>
+            {% if info.subscribers.all %}
+              <li class="list-group-item table-item">
+                <div title="These people are notified about updates to this task"><i class="far fa-fw fa-users mr-1"></i>Subscribers</div>
+                {% for each in info.subscribers.all %}
+                  <div>{{ each }}</div>
+                {% endfor %}
+              </li>
+            {% endif %}
           </ul>
         </div>
 
       </div>
     </div>
     <div class="col-md-6 pl-md-4">
-
-      <h3>Action buttons</h3>
 
         {% if not request.user.is_authenticated %}
           <div class="text-center pt-4 pb-4 alert alert-dark">
@@ -114,7 +120,6 @@
                 Edit task
               </a>
             </form>
-
 
           {% elif info.assigned_to == request.user.people %}
 
@@ -212,9 +217,28 @@
             </div>
 
           {% endif %}
+
+          {% if not request.user.people in info.subscribers.all %}
+            <form method="post">
+              <button class="btn btn-primary-basic mt-2" type="submit"><i class="fa fa-envelope"></i> Subscribe to receive updates</button>
+              {% csrf_token %}
+              <input type="hidden" name="subscribe" value="true" />
+            </form>
+          {% endif %}
+
           </div>
         {% endif %}
 
+        {% if request.user.people in info.subscribers.all %}
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="unsubscribe" value="true" />
+              <p class="text-center"><i class="fa fa-check"></i> 
+              You are subscribed to receive updates.<br> 
+              <button class="btn btn-primary-basic" type="submit"> Unsubscribe</button>
+              </p>
+            </form>
+        {% endif %}
 
     </div>
   </div>

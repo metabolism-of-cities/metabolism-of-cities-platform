@@ -89,6 +89,7 @@ class Record(models.Model):
 
     spaces = models.ManyToManyField("ReferenceSpace", blank=True)
     sectors = models.ManyToManyField("Sector", blank=True)
+    subscribers = models.ManyToManyField("People", blank=True)
 
     # We use soft deleted
     is_deleted = models.BooleanField(default=False, db_index=True)

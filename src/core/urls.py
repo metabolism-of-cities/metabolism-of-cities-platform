@@ -90,6 +90,8 @@ urlpatterns = [
     path("hub/forum/<int:id>/", community.forum, { "project_name": app_name, "section": "volunteer_hub" }, name="volunteer_forum"),
     path("hub/forum/<int:id>/edit/<int:edit>/", community.forum_edit, { "project_name": app_name, "section": "volunteer_hub" }, name="volunteer_forum_edit"),
 
+    # Only for core we have a network-wide list:
+    path("hub/network/", views.hub_latest, { "project_name": app_name, "network_wide": True }, name="network_activity"),
 
     # Password reset forms
     path(

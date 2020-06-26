@@ -599,7 +599,7 @@ def hub(request, project_name):
     }
     return render(request, "hub/index.html", context)
 
-def hub_latest(request, project_name):
+def hub_latest(request, project_name, network_wide=False):
     project = PROJECT_ID[project_name]
     days = 7
     from datetime import datetime, timedelta
@@ -608,19 +608,27 @@ def hub_latest(request, project_name):
     if request.GET.get("days"):
         days = request.GET.get("days")
 
-    updates = Message.objects.filter(
-        date_created__gte=generate_date,
-        parent__work__isnull=False,
-    ).order_by("-date_created")
 
-    master_list = False
-    if not master_list:
-        updates = updates.filter(parent__work__part_of_project_id=project)
+    if network_wide:
+        # The network-wide update page shows updates from ALL the projects,
+        # plus it shows both task updates (work) and forum updates (forumtopic)
+        updates = Message.objects.filter(
+            date_created__gte=generate_date,
+        )
+        updates = updates.filter(Q(parent__work__isnull=False)|Q(parent__forumtopic__isnull=False)).order_by("-date_created")
+        menu = "network_log"
+    else:
+        updates = Message.objects.filter(
+            date_created__gte=generate_date,
+            parent__work__isnull=False,
+            parent__work__part_of_project_id=project
+        ).order_by("-date_created")
+        menu = "log"
 
     context = {
         "updates": updates,
         "load_datatables": True,
-        "menu": "log",
+        "menu": menu,
         "days": int(days),
     }
     return render(request, "hub/latest.html", context)
@@ -979,6 +987,14 @@ def work_item(request, project_name, id, sprint=None):
             message_description = str(request.user.people) + " is no longer responsible for this task"
             message_title = "Task unassigned"
             message_success = "You are no longer responsible for this task"
+
+        if "subscribe" in request.POST:
+            info.subscribers.add(request.user.people)
+            messages.success(request, "You will now receive notifications!")
+
+        if "unsubscribe" in request.POST:
+            info.subscribers.remove(request.user.people)
+            messages.success(request, "You will no longer receive notifications!")
 
         if message_title and message_description:
             message = Message.objects.create(

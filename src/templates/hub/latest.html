@@ -31,7 +31,7 @@
         </td>
         <td>
           {{ each.date_created|naturaltime }}<br>
-          <a href="../work/{{ each.parent.id }}/">{{ each.parent }}</a>
+          <a href="../{% if each.parent.work %}work{% else %}forum{% endif %}/{{ each.parent.id }}/">{{ each.parent }}</a>
         </td>
         <td>
           {{ each.get_markdown_description|safe|truncatewords_html:30 }}

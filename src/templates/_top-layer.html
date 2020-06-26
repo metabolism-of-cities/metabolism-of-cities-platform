@@ -52,6 +52,13 @@
               Control Panel
             </a>
 
+            {% if request.user.is_staff %}
+              <a class="badge badge-primary" href="{% url "core:network_activity" %}">
+                <i class="fa fa-heart-rate mr-1"></i>
+                Network activity
+              </a>
+            {% endif %}
+
             <div class="dropdown" style="display:inline">
               <button class="badge badge-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa fa-lock"></i>
