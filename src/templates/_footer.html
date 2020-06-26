@@ -31,7 +31,7 @@
         <div class="col-md-{% if PROJECT.id == 16 %}8{% else %}12{% endif %}">
           <h2>This is an open source, community effort</h2>
           <h3>Join us now!</h3>
-          <a class="btn btn-inverse mt-2 mr-3" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/contributor/">
+          <a style='display:none' class="btn btn-inverse mt-2 mr-3" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/contributor/">
             <i class="fas fa-fw fa-user-plus"></i>
             Become a contributor
           </a>
