@@ -356,13 +356,23 @@ def user_profile(request, project=None, project_name=None):
 def user_profile_form(request, project_name=None):
     ModelForm = modelform_factory(
         People, 
-        fields = ("name", "description", "research_interests", "image", "website", "email", "twitter", "google_scholar", "orcid", "researchgate", "linkedin"),
+        fields = ("name", "firstname", "lastname", "description", "research_interests", "image", "website", "email", "twitter", "google_scholar", "orcid", "researchgate", "linkedin"),
         labels = { "description": "Profile/bio", "image": "Photo" }
     )
     form = ModelForm(request.POST or None, request.FILES or None, instance=request.user.people)
     if request.method == "POST":
         if form.is_valid():
-            info = form.save()
+            people = form.save()
+
+            user_id = people.user.id;
+            user = get_object_or_404(User, pk=user_id)
+            
+            user.first_name = people.firstname if people.firstname else user.first_name
+            user.last_name = people.lastname if people.lastname else user.last_name
+            user.username = people.email if people.email else user.username
+            user.email = people.email if people.email else user.email
+            user.save();
+
             messages.success(request, "Your profile information was saved.")
             return redirect(request.GET["return"])
         else:
@@ -654,6 +664,8 @@ def controlpanel_users(request, project_name):
 
 @login_required
 def controlpanel_design(request, project_name):
+
+    print("------")
 
     project = PROJECT_ID[project_name]
     if not has_permission(request, project, ["curator", "admin", "publisher"]):
