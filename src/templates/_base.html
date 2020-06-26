@@ -73,6 +73,12 @@
     </style>
   {% endif %}
 
+  {% if webpage.webpagedesign.custom_css %}
+    <style type="text/css">
+      {{ webpage.webpagedesign.custom_css|safe }}
+    </style>
+  {% endif %}
+
 </head>
 <!-- each page has a class defined with page_name - useful for assigning css rules -->
 <body class="project-{{ PROJECT.id }} {% block page_name %}{% endblock %}{% if space and PROJECT.id == 4 %} city-subsite{% endif %}">
