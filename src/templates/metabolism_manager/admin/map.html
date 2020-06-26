@@ -138,7 +138,7 @@
             "status_color": "{% if each.type == "supply" %}success{% else %}dark{% endif %}",
             "start_date": {{ each.start_date|date:"U" }},
             "end_date": {{ each.end_date|date:"U" }},
-            "size": {% if each.unit.multiplication_factor %}Math.min(10*(({{ each.unit.multiplication_factor }}*{{ each.absolute_quantity }})/{{ min_values|get_item:each.material_type.name }}),100){% else %}10{% endif %},
+            "size": {% if each.unit.multiplication_factor %}Math.min(10*(({{ each.unit.multiplication_factor }}*{{ each.absolute_quantity }})/{{ min_values|get_item:each.material_type.name }}),30){% else %}10{% endif %},
           },
         },
         {% endfor %}
