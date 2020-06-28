@@ -535,6 +535,10 @@ class ForumTopic(Record):
     part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     parent = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="forum_topics")
 
+    def posters(self):
+        list = People.objects_unfiltered.filter(message_list__parent=self).distinct()
+        return list
+
     class Meta:
         ordering = ["-last_update"]
 

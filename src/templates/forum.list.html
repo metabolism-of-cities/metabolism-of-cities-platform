@@ -37,9 +37,7 @@
         <thead>
           <tr class="d-none d-sm-table-row">
             <th class="topic">Topic</th>
-            {% if False %}
-              <th class="d-none d-lg-table-cell"></th>
-            {% endif %}
+            <th class="d-none d-lg-table-cell"></th>
             <th class="d-none d-sm-table-cell narrow-cell">Messages</th>
             <th class="d-none d-md-table-cell medium-cell">Activity</th>
           </tr>
@@ -62,26 +60,22 @@
                 </span>
                 </div>
               </td>
-              {% if False %}
               <td class="d-none d-lg-table-cell">
-                {% if each.getReply.count > 5 %}
-                  {% for subdetails in each.getReply|slice:"5" %}
-                    <span class="avatar plus" title="{{ subdetails.user.first_name }} {{ subdetails.user.last_name }}">
-                      {{ subdetails.user.first_name|slice:"1" }}
-                    </span>
+                  {% for poster in each.posters|slice:"5" %}
+                    {% if poster.image %}
+                      <img src="{{ poster.image.thumbnail.url }}" alt="" title="{{ poster }}" class="avatar plus" />
+                    {% else %}
+                      <span class="avatar plus" title="{{ poster }}">
+                        {{ poster|slice:"1" }}
+                      </span>
+                    {% endif %}
                   {% endfor %}
-                  {% with count_reply=each.getReply.count|add:"-5" %}
-                    <span class="avatar plus">+{{ count_reply }}</span>
-                  {% endwith %}
-                {% else %}
-                  {% for subdetails in each.getReply %}
-                    <span class="avatar plus" title="{{ subdetails.user.first_name }} {{ subdetails.user.last_name }}">
-                      {{ subdetails.user.first_name|slice:"1" }}
-                    </span>
-                  {% endfor %}
-                {% endif %}
+                  {% if each.posters.count > 5 %}
+                    {% with count_reply=each.posters.count|add:"-5" %}
+                        <span class="avatar plus">+{{ count_reply }}</span>
+                    {% endwith %}
+                  {% endif %}
               </td>
-              {% endif %}
               <td class="d-none d-sm-table-cell narrow-cell">
                 {{ each.messages.count }}
               </td>
