@@ -101,6 +101,11 @@
       </div>
     </div>
   </div>
+
+  {% if not request.user.is_authenticated %}
+    {% include "_notauthenticated.html" %}
+  {% endif %}
+
 {% endblock %}
 
 {% block footer %}
