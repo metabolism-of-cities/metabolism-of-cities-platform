@@ -409,6 +409,7 @@ def notifications(request):
         
         info_user[notification.people.id] = notification.people.user
         messages_by_people.setdefault(notification.people.id, []).append(notification)
+        #notification.update(is_read=True)
 
 
     for index in messages_by_people:
