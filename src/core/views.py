@@ -393,54 +393,56 @@ def index(request):
 
 
 def notifications(request):
-    list = Notification.objects.filter(is_read=False)
+    list = Notification.objects.filter(is_read=False).order_by("people_id")
     project = get_object_or_404(Project, pk=1)
     url_project = project.get_website()
 
-    notification_by_user = []
-    people_list = []
+
+    counter = 0
+    last_people = 0
+    messages_by_user = []
+    url = url_project+"hub/forum/"
     for notification in list:
-        people_id = int(notification.people.id)
-        if people_id not in people_list:
-            people_list.append(people_id)
+        print(notification.people.id)
+        counter = counter + 1
+        skip = False
+        if counter == 1:
+            skip = True
 
-        notification_by_user.append(notification)
+        messages_by_user.append(notification)
 
-    for people_id in people_list:
-        messages = []
-        for notification in notification_by_user:
+        if last_people != notification.people.id:
             user = notification.people.user
-            if (people_id == notification.people.id):
-                messages.append(notification)
-                
-                #notifications.update(is_read=False)
-        print("----")       
-        print(messages)
-        url = url_project+"hub/forum/"
-        
-        context = {
-            "list": messages,
-            "firstname": user.first_name,
-            "url": url,
-            "organization_name": "Metabolism of Cities",
-        }
+            context = {
+                "list": messages_by_user,
+                "firstname": user.first_name,
+                "url": url,
+                "organization_name": "Metabolism of Cities",
+            }
 
-        msg_html = render_to_string("mailbody/notifications.html", context)
-        msg_plain = render_to_string("mailbody/notifications.txt", context)
+            context = {
+                "list": messages_by_user,
+                "firstname": user.first_name,
+                "url": url,
+                "organization_name": "Metabolism of Cities",
+            }
 
-        sender = "Metabolismofcities" + '<info@penguinprotocols.com>'
-        recipient = '"' + user.first_name + '" <' + user.email + '>'
-        send_mail(
-            "Your latest notifications from The Backoffice",
-            msg_plain,
-            sender,
-            [user.email],
-            html_message=msg_html,
-        )
+            msg_html = render_to_string("mailbody/notifications.html", context)
+            msg_plain = render_to_string("mailbody/notifications.txt", context)
 
-        messages = []
+            sender = "Metabolismofcities" + '<info@penguinprotocols.com>'
+            recipient = '"' + user.first_name + '" <' + user.email + '>'
+            send_mail(
+                "Your latest notifications from The Backoffice",
+                msg_plain,
+                sender,
+                [user.email],
+                html_message=msg_html,
+            )
 
+            messages_by_user = []
 
+        last_people = notification.people.id
     context = {}
 
     return render(request, "index.html", context)
