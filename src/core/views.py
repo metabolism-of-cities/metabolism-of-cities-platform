@@ -391,6 +391,56 @@ def index(request):
     }
     return render(request, "index.html", context)
 
+
+def notifications(request):
+    list = Notification.objects.filter(is_read=False)
+    project = get_object_or_404(Project, pk=1)
+    url_project = project.get_website()
+    print(list)
+
+    notification_by_user = []
+    people_list = []
+    for notification in list:
+        people_id = int(notification.people.id)
+        if people_id not in people_list:
+            people_list.append(people_id)
+        notification_by_user.append(notification)
+
+    for notification in people_list:
+        messages = []
+        for notification in notification_by_user:
+            if (notification == messages.people.id):
+                messages.append(notification)
+                user = messages.people.user
+                notifications.update(is_read=False)
+                
+
+        url = url_project+"hub/forum/"
+        
+        context = {
+            "list": messages,
+            "firstname": user.first_name,
+            "url": url,
+        }
+
+        msg_html = render_to_string("mailbody/notifications.html", context)
+        msg_plain = render_to_string("mailbody/notifications.txt", context)
+
+        sender = "Metabolismofcities" + '<' + sender.value + '>'
+        recipient = '"' + user.first_name + '" <' + user.email + '>'
+        send_mail(
+            "Your latest notifications from The Backoffice",
+            msg_plain,
+            sender,
+            [user.email],
+            html_message=msg_html,
+        )
+
+
+    context = {}
+
+    return render(request, "index.html", context)
+
 # News and events
 
 def news_events_list(request, header_subtitle=None, project_name=None):

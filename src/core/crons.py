@@ -30,3 +30,12 @@ class CreateMapJS(CronJobBase):
         file.write(all_cities)
         file.close()
 
+class Notifications(CronJobBase):
+    RUN_EVERY_MINS = 60
+
+    def do(self):
+        list = Notification.objects.filter(is_read=False)
+
+        notification_by_user = []
+        for notification in list:
+            notification_by_user[notification.people.id].append(notification)

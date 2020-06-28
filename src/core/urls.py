@@ -57,6 +57,8 @@ urlpatterns = [
     # Interaction links
     path("contributor/", views.contributor, { "project_name": app_name }, name="contributor"),
 
+    path("notifications/", views.notifications, name="notifications"),
+
     # Baseline 
     path("hub/work/", views.work_grid, { "project_name": app_name }, name="work_grid"),
     path("hub/work/sprints/", views.work_sprints, { "project_name": app_name }, name="work_sprints"),
