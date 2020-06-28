@@ -1,0 +1,52 @@
+{% extends "_base.html" %}
+{% load moc_extras %}
+{% load humanize %}
+{% block page_name %}staf review session{% endblock %}
+
+{% block content %}
+
+  <h1>{{ session }}</h1>
+
+  {% include "staf/review/_nav.html" %}
+
+  <section id="contentsection">
+    <h3 class="mt-4">Shapefile content</h3>
+    {% if layer.num_feat > 100 %}
+      <div class="alert alert-primary">
+        <i class="fal fa-info-circle mr-1"></i>
+        In total, there are <strong>{{ layer.num_feat }}</strong> items in your shapefile.<br>
+        We have been able to match <strong>{{ hits.count }}</strong> items with existing reference spaces.
+      </div>
+    {% endif %}
+    <table class="table table-responsive datatable datatable-card">
+      <thead>
+        <tr>
+          <th>Place</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for each in names %}
+          <tr>
+            <td>{{ each }}</td>
+            <td>
+              {% if not each in hit %}
+                <em>New space</em>
+              {% else %}
+                <em><a href="{% url "staf:referencespace" hit|get_item:each %}">Match found</a></em><br>
+                <label><input type="radio" name="match_{{ hit|get_item:each }}" value="1" checked /> Use match</label><br>
+                <label><input type="radio" name="match_{{ hit|get_item:each }}" value="0" /> Create new space</label>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <button class="btn disabled save btn-success" disabled form="identify-columns">
+      <i class="fas fa-save"></i>
+      Save
+    </button>
+  </section>
+
+{% endblock %}

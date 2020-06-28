@@ -126,5 +126,6 @@ urlpatterns = [
     path("curation/uploaded/", views.review_uploaded, name="review_uploaded"),
     path("curation/processed/", views.review_processed, name="review_processed"),
     path("curation/<int:id>/", views.review_session, name="review_session"),
+    path("curation/<int:id>/classify/", views.review_session, { "classify": True, }, name="review_session_classify"),
 
 ]
