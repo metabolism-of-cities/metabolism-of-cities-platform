@@ -400,48 +400,40 @@ def notifications(request):
 
     counter = 0
     last_people = 0
-    messages_by_user = []
+    info_user = {}
     last_user = 0
     url = url_project+"hub/forum/"
+
+    messages_by_people = {}
     for notification in list:
-        messages_by_user.append(notification)
+        
+        info_user[notification.people.id] = notification.people.user
+        messages_by_people.setdefault(notification.people.id, []).append(notification)
 
+
+    for index in messages_by_people:
         counter = counter + 1;
+        print(counter)
+        user = info_user[index]
+        context = {
+            "list": messages_by_people[index],
+            "firstname": user.first_name,
+            "url": url,
+            "organization_name": "Metabolism of Cities",
+        }
 
-        user = notification.people.user
-        if counter != 1 and last_people != notification.people.id:
-            print(counter)
-            context = {
-                "list": messages_by_user,
-                "firstname": last_user.first_name,
-                "url": url,
-                "organization_name": "Metabolism of Cities",
-            }
+        msg_html = render_to_string("mailbody/notifications.html", context)
+        msg_plain = render_to_string("mailbody/notifications.txt", context)
 
-            context = {
-                "list": messages_by_user,
-                "firstname": last_user.first_name,
-                "url": url,
-                "organization_name": "Metabolism of Cities",
-            }
-
-            msg_html = render_to_string("mailbody/notifications.html", context)
-            msg_plain = render_to_string("mailbody/notifications.txt", context)
-
-            sender = "Metabolismofcities" + '<info@penguinprotocols.com>'
-            recipient = '"' + last_user.first_name + '" <' + last_user.email + '>'
-            send_mail(
-                "Your latest notifications from The Backoffice",
-                msg_plain,
-                sender,
-                [user.email],
-                html_message=msg_html,
-            )
-
-            messages_by_user = []
-
-        last_people = notification.people.id
-        last_user = notification.people.user
+        sender = "Metabolismofcities" + '<info@penguinprotocols.com>'
+        recipient = '"' + user.first_name + '" <' + user.email + '>'
+        send_mail(
+            "Your latest notifications from The Backoffice",
+            msg_plain,
+            sender,
+            [user.email],
+            html_message=msg_html,
+        )
         
     context = {}
 
