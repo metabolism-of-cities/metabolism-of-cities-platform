@@ -1,4 +1,7 @@
 from django_cron import CronJobBase, Schedule
+from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
 from .models import *
 
 TAG_ID = settings.TAG_ID_LIST
@@ -83,4 +86,4 @@ class Notifications(CronJobBase):
 
                 messages_by_user = []
 
-            last_people = Notificationication.people.id
+            last_people = notification.people.id
