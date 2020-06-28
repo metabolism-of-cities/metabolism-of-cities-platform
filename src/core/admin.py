@@ -83,6 +83,11 @@ class SearchCompleteAdmin(admin.ModelAdmin):
 class SearchAdmin(admin.ModelAdmin):
     search_fields = ["name"]
 
+class PeopleAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
+    list_filter = ["is_deleted", "is_public"]
+    list_display = ["name", "email", "user", "is_deleted"]
+
 class ActivityAdmin(admin.ModelAdmin):
     search_fields = ["name", "code"]
     list_filter = ["catalog"]
@@ -274,7 +279,7 @@ admin_site.register(Webpage, WebpageAdmin)
 admin_site.register(WebpageDesign, WebpageDesignAdmin)
 admin_site.register(ProjectDesign)
 admin_site.register(ProjectType)
-admin_site.register(People, SearchCompleteAdmin)
+admin_site.register(People, PeopleAdmin)
 admin_site.register(Video, VideoAdmin)
 admin_site.register(Project, ProjectAdmin)
 admin_site.register(PublicProject, PublicProjectAdmin)

@@ -536,8 +536,7 @@ class ForumTopic(Record):
     parent = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="forum_topics")
 
     def posters(self):
-        list = People.objects_unfiltered.filter(message_list__parent=self).distinct()
-        return list
+        return People.objects_unfiltered.filter(message_list__parent=self).distinct()
 
     class Meta:
         ordering = ["-last_update"]

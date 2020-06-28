@@ -383,6 +383,10 @@ def user_profile_form(request, project_name=None):
 # Homepage
 
 def index(request):
+    if "update" in request.GET:
+        list = People.objects_unfiltered.filter(is_public=False)
+        list.update(is_public=True)
+
     context = {
         "header_title": "Metabolism of Cities",
         "header_subtitle": "Your hub for everything around urban metabolism",
