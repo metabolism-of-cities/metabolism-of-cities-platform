@@ -1,0 +1,41 @@
+{% extends "mailbody/_mailbase.html" %}
+
+{% block content %}
+
+<h2>Hi {{ firstname }},</h2>
+
+<p>
+    Here are your latest notifications from the <a href="{{ url }}" target="_blank">{{ organization_name }} Back Office</a>.
+</p>
+
+{% for messages in list %}
+
+<div style="border-left: 2px solid #b5b5b5; padding-left: 10px; margin-bottom: 50px; margin-top: 25px;">
+    <h3 style="margin-bottom: 10px;"><a href="{{ url }}">{{ messages.record.name }}</a></h3>
+
+    <div style="background-color: #f2f2f2; border-radius: 3px; padding: 10px; padding-bottom: 1px; margin-bottom: 10px;">
+        <p>
+            {{ messages.record.description }}
+        </p>
+    </div>
+</div>
+
+{% endfor %}
+
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+    <tbody>
+      <tr>
+        <td align="left">
+          <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+              <tr>
+                <td><a href="{{ url }}" target="_blank">Go to The Back Office</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+{% endblock %}

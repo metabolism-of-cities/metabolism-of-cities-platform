@@ -396,7 +396,6 @@ def notifications(request):
     list = Notification.objects.filter(is_read=False)
     project = get_object_or_404(Project, pk=1)
     url_project = project.get_website()
-    print(list)
 
     notification_by_user = []
     people_list = []
@@ -404,29 +403,32 @@ def notifications(request):
         people_id = int(notification.people.id)
         if people_id not in people_list:
             people_list.append(people_id)
+
         notification_by_user.append(notification)
 
-    for notification in people_list:
+    for people_id in people_list:
         messages = []
         for notification in notification_by_user:
-            if (notification == messages.people.id):
+            user = notification.people.user
+            if (people_id == notification.people.id):
                 messages.append(notification)
-                user = messages.people.user
-                notifications.update(is_read=False)
                 
-
+                #notifications.update(is_read=False)
+        print("----")       
+        print(messages)
         url = url_project+"hub/forum/"
         
         context = {
             "list": messages,
             "firstname": user.first_name,
             "url": url,
+            "organization_name": "Metabolism of Cities",
         }
 
         msg_html = render_to_string("mailbody/notifications.html", context)
         msg_plain = render_to_string("mailbody/notifications.txt", context)
 
-        sender = "Metabolismofcities" + '<' + sender.value + '>'
+        sender = "Metabolismofcities" + '<info@penguinprotocols.com>'
         recipient = '"' + user.first_name + '" <' + user.email + '>'
         send_mail(
             "Your latest notifications from The Backoffice",
@@ -435,6 +437,8 @@ def notifications(request):
             [user.email],
             html_message=msg_html,
         )
+
+        messages = []
 
 
     context = {}
