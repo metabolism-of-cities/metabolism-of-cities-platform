@@ -171,13 +171,11 @@ def organization(request, slug, id):
 
 def forum_list(request, project_name=None, parent=None, section=None):
     if "update" in request.GET:
-        list = Message.objects.filter(parent__forumtopic__part_of_project__name="AScUS (un)Conference")
-        print(list)
+        list = Message.objects.filter(Q(parent__work__isnull=False)|Q(parent__forumtopic__isnull=False))
         for each in list:
-            each.posted_by = each.author()
             each.save()
 
-    list = ForumTopic.objects_unfiltered.all()
+    list = ForumTopic.objects.all()
     if project_name:
         project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
         list = list.filter(part_of_project_id__in=[project.id, 1])
@@ -274,10 +272,6 @@ def forum(request, id, project_name=None, section=None):
                 except Exception as e:
                     pass
 
-            if hasattr(info, "forumtopic"):
-                info.forumtopic.last_update = timezone.now()
-                info.forumtopic.save()
-
             if request.FILES:
                 files = request.FILES.getlist("file")
                 for file in files:
@@ -334,7 +328,6 @@ def forum_form(request, id=False, project_name=None, parent=None, section=None):
         info = ForumTopic.objects.create(
             part_of_project_id = request.POST["project"] if "project" in request.POST else project,
             name = request.POST.get("title"),
-            last_update = timezone.now(),
             parent_id = parent,
         )
         set_author(request.user.people.id, info.id)

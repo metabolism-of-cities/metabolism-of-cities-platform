@@ -86,7 +86,7 @@
                 {{ each.messages.count }}
               </td>
               <td class="d-none d-md-table-cell medium-cell">
-                  {{ each.last_update|timesince }} ago
+                  {{ each.last_update.date_created|timesince }} ago
               </td>
             </tr>
           {% endfor %}

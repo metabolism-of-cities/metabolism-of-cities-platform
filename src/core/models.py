@@ -531,7 +531,7 @@ class ProjectDesign(models.Model):
         return self.project.name
 
 class ForumTopic(Record):
-    last_update = models.DateTimeField(db_index=True)
+    last_update = models.ForeignKey("Message", on_delete=models.CASCADE, null=True, blank=True)
     part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     parent = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="forum_topics")
     is_starred = models.NullBooleanField(default=False)
@@ -543,12 +543,29 @@ class ForumTopic(Record):
         return reverse("community:forum", args=[self.id])
 
     class Meta:
-        ordering = ["-is_starred", "-last_update"]
+        ordering = ["-is_starred", "-last_update__date_created"]
 
 class Message(Record):
     attachments = models.ManyToManyField(Document, blank=True)
     parent = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="messages")
     posted_by = models.ForeignKey(People, on_delete=models.CASCADE, null=True, blank=True, related_name="message_list")
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # If this is a forum or work-related message (most of them are) then we need to record
+        # in the parent what the latest mesage is (this is for sorting, filtering etc)
+        try:
+            if self.parent.forumtopic:
+                parent = self.parent.forumtopic
+            elif self.parent.work:
+                parent = self.parent.work
+            if parent:
+                check_last_update = Message.objects.filter(parent=self.parent).order_by("-date_created")
+                if check_last_update:
+                    parent.last_update = check_last_update[0]
+                    parent.save()
+        except:
+            pass
 
     def getReply(self):
         return Message.objects.filter(parent=self)
@@ -947,6 +964,7 @@ class Work(Record):
     related_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="my_work")
     assigned_to = models.ForeignKey(People, on_delete=models.CASCADE, null=True, blank=True)
     url = models.URLField(null=True, blank=True)
+    last_update = models.ForeignKey(Message, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name if self.name else self.workactivity.name

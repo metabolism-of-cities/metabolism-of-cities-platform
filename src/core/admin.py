@@ -93,7 +93,7 @@ class PeopleAdmin(admin.ModelAdmin):
 class ForumTopicAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     list_filter = ["part_of_project", "is_deleted", "is_starred"]
-    list_display = ["name", "part_of_project", "last_update", "is_starred", "is_deleted"]
+    list_display = ["name", "part_of_project", "is_starred", "is_deleted"]
     exclude = ["old_id", "meta_data", "is_public", "sectors"]
     autocomplete_fields = ["tags", "spaces", "subscribers", "parent"]
 
