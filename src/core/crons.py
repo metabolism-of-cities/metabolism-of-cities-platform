@@ -44,46 +44,37 @@ class Notifications(CronJobBase):
 
         counter = 0
         last_people = 0
-        messages_by_user = []
+        info_user = {}
+        last_user = 0
         url = url_project+"hub/forum/"
+
+        messages_by_people = {}
         for notification in list:
-            print(notification.people.id)
-            counter = counter + 1
-            skip = False
-            if counter == 1:
-                skip = True
+            
+            info_user[notification.people.id] = notification.people.user
+            messages_by_people.setdefault(notification.people.id, []).append(notification)
 
-            messages_by_user.append(notification)
 
-            if not skip and last_people != notification.people.id:
-                user = notification.people.user
-                context = {
-                    "list": messages_by_user,
-                    "firstname": user.first_name,
-                    "url": url,
-                    "organization_name": "Metabolism of Cities",
-                }
+        for index in messages_by_people:
+            counter = counter + 1;
+            print(counter)
+            user = info_user[index]
+            context = {
+                "list": messages_by_people[index],
+                "firstname": user.first_name,
+                "url": url,
+                "organization_name": "Metabolism of Cities",
+            }
 
-                context = {
-                    "list": messages_by_user,
-                    "firstname": user.first_name,
-                    "url": url,
-                    "organization_name": "Metabolism of Cities",
-                }
+            msg_html = render_to_string("mailbody/notifications.html", context)
+            msg_plain = render_to_string("mailbody/notifications.txt", context)
 
-                msg_html = render_to_string("mailbody/notifications.html", context)
-                msg_plain = render_to_string("mailbody/notifications.txt", context)
-
-                sender = "Metabolismofcities" + '<info@penguinprotocols.com>'
-                recipient = '"' + user.first_name + '" <' + user.email + '>'
-                send_mail(
-                    "Your latest notifications from The Backoffice",
-                    msg_plain,
-                    sender,
-                    [user.email],
-                    html_message=msg_html,
-                )
-
-                messages_by_user = []
-
-            last_people = notification.people.id
+            sender = "Metabolismofcities" + '<info@penguinprotocols.com>'
+            recipient = '"' + user.first_name + '" <' + user.email + '>'
+            send_mail(
+                "Your latest notifications from The Backoffice",
+                msg_plain,
+                sender,
+                [user.email],
+                html_message=msg_html,
+            )
