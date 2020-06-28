@@ -411,7 +411,7 @@ def notifications(request):
 
         messages_by_user.append(notification)
 
-        if last_people != notification.people.id:
+        if not skip and last_people != notification.people.id:
             user = notification.people.user
             context = {
                 "list": messages_by_user,
