@@ -38,14 +38,6 @@ def unauthorized_access(request):
     )
     raise PermissionDenied
 
-def index(request):
-
-    context = {
-        "show_project_design": True,
-    }
-
-    return render(request, "template/blank.html", context)
-
 def person(request, id):
     article = get_object_or_404(Webpage, pk=PAGE_ID["people"])
     info = get_object_or_404(People, pk=id)
@@ -54,6 +46,9 @@ def person(request, id):
         "info": info,
     }
     return render(request, "person.html", context)
+
+def index(request):
+    return redirect("community:forum_list")
 
 def people_list(request):
     info = get_object_or_404(Webpage, pk=PAGE_ID["people"])
@@ -171,18 +166,33 @@ def organization(request, slug, id):
 # FORUM
 
 def forum_list(request, project_name=None, parent=None, section=None):
-    list = ForumTopic.objects.all()
+    if "update" in request.GET:
+        list = Message.objects.filter(parent__forumtopic__part_of_project__name="AScUS (un)Conference")
+        print(list)
+        for each in list:
+            each.posted_by = each.author()
+            each.save()
+
+    list = ForumTopic.objects_unfiltered.all()
     if project_name:
         project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
-        list = list.filter(part_of_project=project)
+        list = list.filter(part_of_project_id__in=[project.id, 1])
+    else:
+        project = None
+
     if parent:
         list = list.filter(parent_id=parent)
+
+    projects = Project.objects.filter(id__in=[1,2,3,4,32018,16,18,8]).order_by("name")
     context = {
         "list": list,
         "title": "Forum",
         "section": section,
         "menu": "forum",
+        "projects": projects,
+        "project": project,
     }
+    print(context)
     return render(request, "forum.list.html", context)
 
 def forum(request, id, project_name=None, section=None):

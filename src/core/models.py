@@ -125,11 +125,11 @@ class Record(models.Model):
         return markdown(self.description) if self.description else None
 
     def authors(self):
-        return People.objects_unfiltered.filter(parent_list__record_child=self, parent_list__relationship__id=4)
+        return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)
 
     def author(self):
         try:
-            return People.objects_unfiltered.filter(parent_list__record_child=self, parent_list__relationship__id=4)[0]
+            return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)[0]
         except:
             return None
 
@@ -534,12 +534,13 @@ class ForumTopic(Record):
     last_update = models.DateTimeField(db_index=True)
     part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     parent = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="forum_topics")
+    is_starred = models.NullBooleanField(default=False)
 
     def posters(self):
-        return People.objects_unfiltered.filter(message_list__parent=self).distinct()
+        return People.objects.filter(message_list__parent=self).distinct()
 
     class Meta:
-        ordering = ["-last_update"]
+        ordering = ["-is_starred", "-last_update"]
 
 class Message(Record):
     attachments = models.ManyToManyField(Document, blank=True)

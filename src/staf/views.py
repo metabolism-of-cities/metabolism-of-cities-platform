@@ -186,7 +186,7 @@ def review_session(request, id, classify=False):
                         feature_collection['features'].append(
                             {
                                 'type': 'Feature',
-                                'geometry': feature.json,
+                                'geometry': json.loads(feature.json),
                                 'properties': {
                                     'name': f'feature_{feature_i}'
                                 }

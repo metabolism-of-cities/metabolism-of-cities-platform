@@ -1,3 +1,6 @@
+<li class="nav-item"><a class="nav-link" href="{% url "community:index" %}">Forum</a></li>
+<li hidden class="nav-item"><a class="nav-link" href="{% url "community:index" %}">Tasks</a></li>
+
 <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="community-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Organisations
@@ -13,6 +16,5 @@
 <li class="nav-item"><a class="nav-link" href="{% url "community:projects" %}">Projects</a></li>
 <li class="nav-item"><a class="nav-link" href="{% url "community:events" %}">Events</a></li>
 <li class="nav-item"><a class="nav-link" href="{% url "community:news" %}">News</a></li>
-<li class="nav-item"><a class="nav-link" href="/community/forum/">Forum</a></li>
 
 {% include "_menu-account.html" %}

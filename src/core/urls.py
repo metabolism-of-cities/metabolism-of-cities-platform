@@ -45,9 +45,6 @@ urlpatterns = [
     # STAFCP
     # Podcast
 
-    # Community
-    path("community/", views.community),
-
     # Authentication
     path("accounts/register/", views.user_register, name="register"),
     path("accounts/login/", views.user_login, name="login"),
