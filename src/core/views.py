@@ -401,17 +401,17 @@ def notifications(request):
     counter = 0
     last_people = 0
     messages_by_user = []
+    last_user = 0
     url = url_project+"hub/forum/"
     for notification in list:
         print(notification.people.id)
-        counter = counter + 1
-        skip = False
-        if counter == 1:
-            skip = True
 
         messages_by_user.append(notification)
 
-        if not skip and last_people != notification.people.id:
+        counter = counter + 1;
+
+        last_user = notification.people.user
+        if counter != 1 and last_people != notification.people.id:
             user = notification.people.user
             context = {
                 "list": messages_by_user,
