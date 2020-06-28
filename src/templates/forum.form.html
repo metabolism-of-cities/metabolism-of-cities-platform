@@ -27,12 +27,13 @@
     {% include "_markdown.html" %}
     <textarea class="form-control" id="text" rows="6" name="text" required></textarea>
   </div>
-  <div class="form-group" style="display:none">
-    <label for="tags">Tag(s)</label>
-    <select id="tags" class="tags custom-select" multiple>
-      <option value="conferences">Conferences</option>
-      <option value="data">Data</option>
-      <option value="logistics">Logistics</option>
+  <div class="form-group">
+    <label for="tags">Category</label>
+    <select id="tags" class="tags custom-select" name="project">
+      {% for each in projects %}
+        <option value="{{ each.id }}">{{ each }}</option>
+      {% endfor %}
+      <option value="1">General</option>
     </select>
   </div>
   <div class="form-group" style="display:none">

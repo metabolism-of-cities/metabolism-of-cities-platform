@@ -539,6 +539,9 @@ class ForumTopic(Record):
     def posters(self):
         return People.objects.filter(message_list__parent=self).distinct()
 
+    def get_absolute_url(self):
+        return reverse("community:forum", args=[self.id])
+
     class Meta:
         ordering = ["-is_starred", "-last_update"]
 

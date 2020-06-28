@@ -19,6 +19,10 @@ logger = logging.getLogger(__name__)
 PROJECT_ID = settings.PROJECT_ID_LIST
 RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
 
+# This is the list with projects that have an active forum
+# It will show in the dropdown boxes to filter by this category
+FORUM_PROJECTS = [1,2,3,4,32018,16,18,8]
+
 # Quick function to make someone the author of something
 # Version 1.0
 def set_author(author, item):
@@ -183,7 +187,7 @@ def forum_list(request, project_name=None, parent=None, section=None):
     if parent:
         list = list.filter(parent_id=parent)
 
-    projects = Project.objects.filter(id__in=[1,2,3,4,32018,16,18,8]).order_by("name")
+    projects = Project.objects.filter(id__in=FORUM_PROJECTS).order_by("name")
     context = {
         "list": list,
         "title": "Forum",
@@ -321,12 +325,14 @@ def forum_edit(request, id, edit, project_name=None, section=None):
 def forum_form(request, id=False, project_name=None, parent=None, section=None):
 
     project = None
+    projects = Project.objects.filter(pk__in=FORUM_PROJECTS).exclude(pk=1)
     if project_name:
         project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+        projects = [project]
 
     if request.method == "POST":
         info = ForumTopic.objects.create(
-            part_of_project = project,
+            part_of_project_id = request.POST["project"] if "project" in request.POST else project,
             name = request.POST.get("title"),
             last_update = timezone.now(),
             parent_id = parent,
@@ -354,12 +360,13 @@ def forum_form(request, id=False, project_name=None, parent=None, section=None):
             page = "volunteer_forum" if section == "volunteer_hub" else "forum"
             return redirect(project_name + ":"+page, info.id)
 
-        return redirect(message.get_absolute_url())
+        return redirect(info.get_absolute_url())
 
     context = {
         "load_messaging": True,
         "menu": "forum",
         "section": section,
+        "projects": projects,
     }
     return render(request, "forum.form.html", context)
 
