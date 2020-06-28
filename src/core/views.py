@@ -409,10 +409,9 @@ def notifications(request):
     for people_id in people_list:
         messages = []
         for notification in notification_by_user:
-            
+            user = notification.people.user
             if (people_id == notification.people.id):
                 messages.append(notification)
-                user = notification.people.user
                 
                 #notifications.update(is_read=False)
         print("----")       
