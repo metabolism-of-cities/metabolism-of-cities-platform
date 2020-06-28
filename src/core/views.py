@@ -404,25 +404,23 @@ def notifications(request):
     last_user = 0
     url = url_project+"hub/forum/"
     for notification in list:
-        print(notification.people.id)
-
         messages_by_user.append(notification)
 
         counter = counter + 1;
 
-        last_user = notification.people.user
+        user = notification.people.user
         if counter != 1 and last_people != notification.people.id:
-            user = notification.people.user
+            print(counter)
             context = {
                 "list": messages_by_user,
-                "firstname": user.first_name,
+                "firstname": last_user.first_name,
                 "url": url,
                 "organization_name": "Metabolism of Cities",
             }
 
             context = {
                 "list": messages_by_user,
-                "firstname": user.first_name,
+                "firstname": last_user.first_name,
                 "url": url,
                 "organization_name": "Metabolism of Cities",
             }
@@ -431,7 +429,7 @@ def notifications(request):
             msg_plain = render_to_string("mailbody/notifications.txt", context)
 
             sender = "Metabolismofcities" + '<info@penguinprotocols.com>'
-            recipient = '"' + user.first_name + '" <' + user.email + '>'
+            recipient = '"' + last_user.first_name + '" <' + last_user.email + '>'
             send_mail(
                 "Your latest notifications from The Backoffice",
                 msg_plain,
@@ -443,6 +441,8 @@ def notifications(request):
             messages_by_user = []
 
         last_people = notification.people.id
+        last_user = notification.people.user
+        
     context = {}
 
     return render(request, "index.html", context)
