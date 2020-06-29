@@ -53,10 +53,13 @@
     <form method="post">
       {% csrf_token %}
       <input type="hidden" name="unsubscribe" value="true" />
-      <p class="text-right"><i class="fa fa-check"></i> 
-      You are subscribed to this thread.
-      <button class="btn btn-primary-basic pt-0 pb-0" type="submit"> Unsubscribe</button>
-      </p>
+      <div class="text-right">
+        You are subscribed to this thread
+        <button class="btn btn-sm btn-outline-danger ml-3" type="submit">
+          <i class="fal fa-ban"></i>
+          Unsubscribe
+        </button>
+      </div>
     </form>
 
   {% endif %}

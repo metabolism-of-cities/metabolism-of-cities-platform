@@ -981,13 +981,8 @@ body.article .card .card-body {
   height: 30px;
   line-height: 30px;
   width: 30px;
-  margin-right: .25rem; }
-  .forum .avatar.plus {
-    background-color: #808080;
-    font-weight: bold;
-    text-align: center;
-    color: #efefef;
-    display: inline-block; }
+  margin-right: .25rem;
+  object-fit: cover; }
 
 .forum .avatar-line-height {
   line-height: 30px; }
@@ -1734,9 +1729,11 @@ body.work.item .forum {
   overflow-y: auto;
   overflow-x: hidden; }
 
+body.work.item .subscribers > div:not(:last-of-type) {
+  margin-bottom: .125rem; }
+
 body.work.item .forum .single-message {
-  margin: 2px;
-  width: 98%; }
+  width: calc(100% - 2px); }
   body.work.item .forum .single-message .avatar-line-height {
     line-height: unset; }
   body.work.item .forum .single-message .card-body {
