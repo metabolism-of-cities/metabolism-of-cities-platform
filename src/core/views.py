@@ -320,6 +320,7 @@ def user_login(request, project=None):
 
     context = {
         "project": project,
+        "load_url_fixer": True,
     }
     return render(request, "auth/login.html", context)
 

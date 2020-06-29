@@ -54,6 +54,7 @@ urlpatterns = [
 # path("data/", include("data.urls"))
 # Except for the CURRENT website which will be loaded as:
 # path("", include("core.urls"))
+
 for key,value in settings.PROJECT_LIST.items():
 
     if key == current_site:
