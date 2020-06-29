@@ -170,11 +170,6 @@ def organization(request, slug, id):
 # FORUM
 
 def forum_list(request, project_name=None, parent=None, section=None):
-    if "update" in request.GET:
-        list = Message.objects.filter(Q(parent__work__isnull=False)|Q(parent__forumtopic__isnull=False))
-        for each in list:
-            each.save()
-
     list = ForumTopic.objects.all()
     if project_name:
         project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
@@ -185,6 +180,7 @@ def forum_list(request, project_name=None, parent=None, section=None):
     if parent:
         list = list.filter(parent_id=parent)
 
+    list = list.select_related("last_update")
     projects = Project.objects.filter(id__in=FORUM_PROJECTS).order_by("name")
     context = {
         "list": list,

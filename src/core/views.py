@@ -65,6 +65,7 @@ PAGE_ID = settings.PAGE_ID_LIST
 PROJECT_ID = settings.PROJECT_ID_LIST
 RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
 THIS_PROJECT = PROJECT_ID["core"]
+PROJECT_LIST = settings.PROJECT_LIST
 
 # If we add any new project, we should add it to this list. 
 # We must make sure to filter like this to exclude non-project news
@@ -209,7 +210,8 @@ def user_register(request, project="core", project_name=None, section=None):
             error = True
         check = User.objects.filter(email=email)
         if check:
-            messages.error(request, "A Metabolism of Cities account already exists with this e-mail address. Please <a href='/accounts/login/'>log in first</a>.")
+            current_site = PROJECT_LIST["core"]["url"]
+            messages.error(request, "A Metabolism of Cities account already exists with this e-mail address. Please <a href='/accounts/login/'>log in first</a> or <a href='" + current_site + "accounts/passwordreset/'>reset your password</a>.")
             error = True
         if not error:
             user = User.objects.create_user(email, email, password)
