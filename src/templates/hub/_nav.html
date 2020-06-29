@@ -1,33 +1,38 @@
-<h1>Volunteer Portal</h1>
 
-<ul class="nav nav-tabs mb-4">
-  <li class="nav-item">
-    <a class="nav-link {% if menu == "home" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/">Home</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link {% if menu == "work" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/work/">Tasks</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link {% if menu == "forum" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/forum/">Forum</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link {% if menu == "log" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/latest/">Activity log</a>
-  </li>
-  {% if request.user.is_staff and PROJECT.id == 1 %}
+{% if PROJECT.id != 18 %}
+
+  <h1>Volunteer Portal</h1>
+
+  <ul class="nav nav-tabs mb-4">
     <li class="nav-item">
-      <a class="nav-link {% if menu == "network_log" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/network/">Network-wide log</a>
+      <a class="nav-link {% if menu == "home" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/">Home</a>
     </li>
-  {% endif %}
-  {% if request.user.is_authenticated %}
     <li class="nav-item">
-      <a class="nav-link {% if menu == "profile" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/profile/">My profile</a>
+      <a class="nav-link {% if menu == "work" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/work/">Tasks</a>
     </li>
-  {% else %}
     <li class="nav-item">
-      <a class="nav-link {% if menu == "join" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/join/?next={{ request.get_full_path }}">Join</a>
+      <a class="nav-link {% if menu == "forum" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/forum/">Forum</a>
     </li>
-  {% endif %}
-  <li class="nav-item">
-    <a class="nav-link {% if menu == "help" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/help/">Help</a>
-  </li>
-</ul>
+    <li class="nav-item">
+      <a class="nav-link {% if menu == "log" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/latest/">Activity log</a>
+    </li>
+    {% if request.user.is_staff and PROJECT.id == 1 %}
+      <li class="nav-item">
+        <a class="nav-link {% if menu == "network_log" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/network/">Network-wide log</a>
+      </li>
+    {% endif %}
+    {% if request.user.is_authenticated %}
+      <li class="nav-item">
+        <a class="nav-link {% if menu == "profile" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/profile/">My profile</a>
+      </li>
+    {% else %}
+      <li class="nav-item">
+        <a class="nav-link {% if menu == "join" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/join/?next={{ request.get_full_path }}">Join</a>
+      </li>
+    {% endif %}
+    <li class="nav-item">
+      <a class="nav-link {% if menu == "help" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/help/">Help</a>
+    </li>
+  </ul>
+
+{% endif %}

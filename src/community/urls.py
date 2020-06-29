@@ -87,4 +87,17 @@ urlpatterns = [
     path("events/", core.event_list, { "project_name": app_name }, name="events"),
     path("events/<int:id>/", core.event, { "project_name": app_name }, name="event"),
 
+
+    # Work-related items
+    path("tasks/", core.work_grid, { "project_name": app_name }, name="tasks"),
+    path("tasks/sprints/", core.work_sprints, { "project_name": app_name }, name="work_sprints"),
+    path("tasks/sprints/<int:id>/", core.work_sprint, { "project_name": app_name }, name="work_sprint"),
+    path("tasks/sprints/<int:sprint>/tasks/", core.work_grid, { "project_name": app_name }, name="work_sprint_tasks"),
+    path("tasks/sprints/<int:sprint>/tasks/create/", core.work_form, { "project_name": app_name }),
+    path("tasks/sprints/<int:sprint>/tasks/<int:id>/", core.work_item, { "project_name": app_name }),
+    path("tasks/sprints/<int:sprint>/tasks/<int:id>/edit/", core.work_form, { "project_name": app_name }),
+    path("tasks/create/", core.work_form, { "project_name": app_name }, name="work_form"),
+    path("tasks/<int:id>/", core.work_item, { "project_name": app_name }, name="work_item"),
+    path("tasks/<int:id>/edit/", core.work_form, { "project_name": app_name }, name="work_form"),
+
 ]

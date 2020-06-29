@@ -72,6 +72,11 @@ PROJECT_LIST = settings.PROJECT_LIST
 # (which we want in the community section but not here), as well as MoI news
 MOC_PROJECTS = [1,2,3,4,7,8,11,14,15,16,18,3458]
 
+# This is the list with projects that have an active forum
+# It will show in the dropdown boxes to filter by this category
+# Also found in core
+OPEN_WORK_PROJECTS = [1,2,3,4,32018,16,18,8]
+
 # Quick function to make someone the author of something
 # Version 1.0
 def set_autor(author, item):
@@ -908,10 +913,15 @@ def work_form(request, project_name, id=None, sprint=None):
     return render(request, "contribution/work.form.html", context)
 
 def work_grid(request, project_name, sprint=None):
+    if "update" in request.GET:
+        list = Work.objects_unfiltered.filter(part_of_project_id=8)
+        list.update(is_deleted=True, is_public=False)
     project = PROJECT_ID[project_name]
     status = request.GET.get("status")
     type = request.GET.get("type")
     priority = request.GET.get("priority")
+    selected_project = None
+
     if request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
         list = Work.objects_include_private.all()
     else:
@@ -919,21 +929,32 @@ def work_grid(request, project_name, sprint=None):
 
     if "entry" in request.GET:
         list = list.filter(tags=810)
+
     if sprint:
         sprint = WorkSprint.objects.get(pk=sprint)
         list = list.filter(part_of_project__in=sprint.projects.all())
-    else:
+    elif "project" in request.GET and request.GET["project"]:
+        selected_project = request.GET.get("project")
+        list = list.filter(part_of_project_id=selected_project)
+    elif project_name != "community":
         list = list.filter(part_of_project_id=project)
+        selected_project = project
+
     if status:
         if status == "open_unassigned":
             list = list.filter(status=1, assigned_to__isnull=True)
         else:
             list = list.filter(status=status)
             status = int(status)
+
     if priority:
         list = list.filter(priority=priority)
+
     if type:
         list = list.filter(workactivity__type=type)
+
+    projects = Project.objects.filter(pk__in=OPEN_WORK_PROJECTS).order_by("name")
+
     context = {
         "list": list,
         "load_datatables": True,
@@ -946,6 +967,8 @@ def work_grid(request, project_name, sprint=None):
         "priority": int(priority) if priority else None,
         "sprint": sprint,
         "menu": "work",
+        "projects": projects,
+        "selected_project": int(selected_project) if selected_project else None,
     }
     return render(request, "contribution/work.grid.html", context)
 
@@ -1078,7 +1101,7 @@ def work_sprint(request, project_name, id=None):
         "updates": updates,
         "last_update": last_update,
         "message_list": message_list,
-        "participants": People.objects_unfiltered.filter(parent_list__record_child=info, parent_list__relationship__id=27),
+        "participants": People.objects.filter(parent_list__record_child=info, parent_list__relationship__id=27),
     }
     
     return render(request, "contribution/work.sprint.html", context)
@@ -1371,7 +1394,7 @@ def massmail(request,people=None):
         sender = '"' + request.site.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
         if "send_preview" in request.POST:
             # If a preview is being sent, then it must ONLY go to the logged-in user
-            list = People.objects_unfiltered.filter(user=request.user)
+            list = People.objects.filter(user=request.user)
         for each in list:
             # Let check if the person has an email address before we send the mail
             if each.email:

@@ -94,7 +94,15 @@
     </div>
 
     <div class="row align-items-center mb-4">
-      <div class="col-7">
+      <div class="col-4">
+        <select name="project" class="custom-select">
+          <option value="">All projects</option>
+          {% for each in projects %}
+            <option value="{{ each.id }}" {% if each.id == selected_project %}selected{% endif %}>{{ each }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-3">
         <div class="custom-control custom-switch">
           <input type="checkbox" class="custom-control-input" id="entry" name="entry" value="true" {% if request.GET.entry %}checked{% endif %}>
           <label class="custom-control-label" for="entry">Only entry tasks</label>
@@ -159,7 +167,7 @@
       $("i", this).toggleClass("fa-angle-down fa-angle-up")
     })
 
-    {% if type or priority or status or request.GET.entry %}
+    {% if type or priority or status or request.GET.entry or request.GET.project %}
       $(".toggle-filters").click();
     {% endif %}
   </script>

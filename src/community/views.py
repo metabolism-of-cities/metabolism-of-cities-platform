@@ -21,7 +21,8 @@ RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
 
 # This is the list with projects that have an active forum
 # It will show in the dropdown boxes to filter by this category
-FORUM_PROJECTS = [1,2,3,4,32018,16,18,8]
+# Also found in core
+OPEN_WORK_PROJECTS = [1,2,3,4,32018,16,18,8]
 
 # Quick function to make someone the author of something
 # Version 1.0
@@ -181,7 +182,7 @@ def forum_list(request, project_name=None, parent=None, section=None):
         list = list.filter(parent_id=parent)
 
     list = list.select_related("last_update")
-    projects = Project.objects.filter(id__in=FORUM_PROJECTS).order_by("name")
+    projects = Project.objects.filter(id__in=OPEN_WORK_PROJECTS).order_by("name")
     context = {
         "list": list,
         "title": "Forum",
@@ -315,7 +316,7 @@ def forum_edit(request, id, edit, project_name=None, section=None):
 def forum_form(request, id=False, project_name=None, parent=None, section=None):
 
     project = None
-    projects = Project.objects.filter(pk__in=FORUM_PROJECTS).exclude(pk=1)
+    projects = Project.objects.filter(pk__in=OPEN_WORK_PROJECTS).exclude(pk=1)
     if project_name:
         project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
         projects = [project]
