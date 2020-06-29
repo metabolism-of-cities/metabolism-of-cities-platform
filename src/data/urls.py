@@ -9,7 +9,10 @@ app_name = "data"
 
 urlpatterns = [
 
-    path("upload/form/", library.form, { "type": 10 }, name="upload"),
+    path("upload/dataset/", library.form, { "type": 10, "project_name": app_name }, name="upload_dataset"),
+    path("upload/dataportal/", library.form, { "type": 39, "project_name": app_name }, name="upload_dataportal"),
+    path("datasets/", library.list, { "type": "datasets" }, name="view_datasets"),
+    path("dataportals/", library.list, { "type": "dataportals" }, name="view_dataportals"),
 
     path("", views.index, name="index"),
 
