@@ -1,0 +1,68 @@
+{% extends "_base.html" %}
+{% block page_name %}event{% endblock %}
+{% block title %}{{ info }}{% endblock %}
+{% block content %}
+
+<div class="row mb-4">
+  <article class="col-lg-8 pr-lg-5">
+    {% if info.image %}
+    <img class="img-fluid mb-4" src="{{ info.image.url }}">
+    {% endif %}
+    
+    <h4>{{ info }}</h4>
+    {{ info.description|safe }}
+
+  </article>
+  <div class="col-lg-4">
+    <h5>Event information</h5>
+    <div class="card basic-info">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> 
+          {{ info.location }}
+        </li>
+        <li class="list-group-item">
+          <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 
+          {{ info.start_date|date:"M d, Y" }}{% if info.start_date != info.end_date %} - {{ info.end_date|date:"M d, Y" }}{% endif %}
+        </li>
+        {% if info.url %}
+        <li class="list-group-item">
+          <i class="far fa-fw fa-link mr-1" aria-hidden="true"></i> <a href="{{ info.url }}">Official website</a>
+        </li>
+        {% endif %}
+        <li class="list-group-item">
+          <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Type of event
+          <br>
+          <a class="btn btn-sm btn-primary-outline mt-1" href="">{{ info.get_type_display }}</a>
+        </li>
+        <li class="list-group-item">
+          <i class="far fa-fw fa-share-alt mb-1 mr-1" aria-hidden="true"></i> Share
+          <br>
+          <div class="btn-group share mt-1" role="group">
+            <a class="btn btn-sm btn-primary-outline"><i class="fab fa-fw fa-twitter"></i></a>
+            <a class="btn btn-sm btn-primary-outline"><i class="fab fa-fw fa-linkedin-in"></i></a>
+            <a class="btn btn-sm btn-primary-outline"><i class="fab fa-fw fa-facebook-f"></i></a>
+            <a class="btn btn-sm btn-primary-outline"><i class="fas fa-fw fa-envelope"></i></a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <h5>Upcoming events</h5>
+    <div class="card">
+      <div class="list-group list-group-flush">
+        {% for each in upcoming %}
+        <a href="{{ each.get_absolute_url }}" class="list-group-item">
+          <div>{{ each }}</div>
+          <div class="text-muted mb-0">{{ each.start_date }}</div>
+        </a>
+        {% endfor %}
+        <a href="../" class="list-group-item font-weight-bold">All events</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+{% block footer %}
+{% endblock %}

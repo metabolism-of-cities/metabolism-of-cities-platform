@@ -384,9 +384,17 @@ def user_profile_form(request, project_name=None):
 # Homepage
 
 def index(request):
+    count = Project.objects.all().count()
+    blurb = """
+      We are a global network of people, working together on (urban) sustainability.
+      This website explains our <a href="projects/">""" + str(count) + """ projects</a>
+      and it is the central place of our volunteers and partners to 
+      <a href="forum/">discuss</a>, <a href="events/">get together</a>, and
+      <a href="tasks/">get things done</a>!"""
+
     context = {
         "header_title": "Metabolism of Cities",
-        "header_subtitle": "Your hub for everything around urban metabolism",
+        "header_subtitle": blurb,
         "show_project_design": True,
         "projects": Project.objects.filter(pk__in=[2,3,4,32018,16,18]),
     }
@@ -458,7 +466,8 @@ def event_list(request, header_subtitle=None, project_name=None):
         "archive": list,
         "add_link": "/admin/core/event/add/",
         "header_title": "Events",
-        "header_subtitle": "Find out what is happening around you!",
+        "header_subtitle": "Get involved with the projects at Metabolism of Cities!",
+        "sprints": WorkSprint.objects.all(),
     }
     return render(request, "event.list.html", context)
 
@@ -510,6 +519,7 @@ def projects(request):
         "types": ProjectType.objects.all().order_by("name"),
         "header_title": "Projects",
         "header_subtitle": "Overview of projects undertaken by the Metabolism of Cities community",
+        "menu": "projects",
     }
     return render(request, "projects.html", context)
 
@@ -523,6 +533,7 @@ def project(request, slug):
         "header_title": str(info),
         "header_subtitle_link": "<a href='/projects/'>Projects</a>",
         "show_relationship": info.id,
+        "menu": "projects",
     }
     return render(request, "project.html", context)
 
@@ -926,7 +937,7 @@ def work_grid(request, project_name, sprint=None):
     elif "project" in request.GET and request.GET["project"]:
         selected_project = request.GET.get("project")
         list = list.filter(part_of_project_id=selected_project)
-    elif project_name != "community":
+    elif project_name != "core":
         list = list.filter(part_of_project_id=project)
         selected_project = project
 

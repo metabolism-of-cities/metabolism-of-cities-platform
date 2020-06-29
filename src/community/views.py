@@ -53,7 +53,7 @@ def person(request, id):
     return render(request, "person.html", context)
 
 def index(request):
-    return redirect("community:forum_list")
+    return render(request, "community/index.html")
 
 def people_list(request):
     info = get_object_or_404(Webpage, pk=PAGE_ID["people"])
@@ -362,4 +362,37 @@ def forum_form(request, id=False, project_name=None, parent=None, section=None):
         "projects": projects,
     }
     return render(request, "forum.form.html", context)
+
+def event_list(request, header_subtitle=None, project_name=None):
+
+    article = get_object_or_404(Webpage, pk=47)
+    today = timezone.now().date()
+    list = Event.objects.filter(end_date__lt=today).order_by("start_date")
+    upcoming = Event.objects.filter(end_date__gte=today).order_by("start_date")
+
+    if project_name:
+        project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+        # Just un-comment this once all events have been properly tagged
+        #list = list.filter(projects=project)
+        #upcoming = upcoming.filter(projects=project)
+
+    context = {
+        "upcoming": upcoming,
+        "archive": list,
+        "add_link": "/admin/core/event/add/",
+        "header_title": "Events",
+        "header_subtitle": "Find out what is happening around you!",
+    }
+    return render(request, "community/event.list.html", context)
+
+def event(request, id, project_name=None):
+    info = get_object_or_404(Event, pk=id)
+    today = timezone.now().date()
+    context = {
+        "info": info,
+        "upcoming": Event.objects.filter(end_date__gte=today).order_by("start_date")[:3],
+        "header_title": "Events",
+        "header_subtitle": info.name,
+    }
+    return render(request, "community/event.html", context)
 

@@ -175,7 +175,7 @@ class Project(Record):
     summary_sentence = models.CharField(max_length=255, null=True, blank=True, help_text="Describe the project in a single sentence")
 
     def get_absolute_url(self):
-        return reverse("core:project", args=[self.id])
+        return reverse("core:project", args=[self.slug])
 
     def get_website(self):
         if self.url:
@@ -361,6 +361,7 @@ class Event(Record):
         ("seminar", "Seminar"),
         ("summerschool", "Summer School"),
         ("other", "Other"),
+        ("training_outreach", "Training and Outreach"),
     ]
     type = models.CharField(max_length=20, blank=True, null=True, choices=EVENT_TYPE)
     url = models.URLField(max_length=255, null=True, blank=True)
@@ -985,12 +986,15 @@ class WorkSprint(Record):
     objects = PublicActiveRecordManager()
 
     def get_status(self):
-        today = timezone.now()
-        if self.end_date < today:
-            return "finished"
-        elif self.start_date <= today and self.end_date >= today:
-            return "active"
-        else:
+        try:
+            today = timezone.now()
+            if self.end_date < today:
+                return "finished"
+            elif self.start_date <= today and self.end_date >= today:
+                return "active"
+            else:
+                return "upcoming"
+        except:
             return "upcoming"
 
 class Badge(models.Model):

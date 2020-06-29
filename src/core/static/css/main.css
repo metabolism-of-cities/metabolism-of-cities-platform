@@ -1449,7 +1449,7 @@ body.gis.meta .quality-info {
 body.gis.meta .quality-info-explainer {
   display: none; }
 
-.main-nav-project-2 a.active, .main-nav-project-18 a.active {
+.main-nav-project-1 a.active, .main-nav-project-2 a.active, .main-nav-project-18 a.active {
   border-bottom: 2px solid #fff;
   opacity: 1 !important; }
 

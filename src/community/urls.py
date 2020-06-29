@@ -86,8 +86,8 @@ urlpatterns = [
     # News and events URLs from baseline
     path("news/", core.news_list, { "project_name": app_name, "header_subtitle": "The latest news from the urban metabolism community" }, name="news"),
     path("news/<slug:slug>/", core.news, { "project_name": app_name }, name="news"),
-    path("events/", core.event_list, { "project_name": app_name }, name="events"),
-    path("events/<int:id>/", core.event, { "project_name": app_name }, name="event"),
+    path("events/", community.event_list, { "project_name": app_name }, name="events"),
+    path("events/<int:id>/", community.event, { "project_name": app_name }, name="event"),
 
 
     # Work-related items

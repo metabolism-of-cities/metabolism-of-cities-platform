@@ -136,5 +136,20 @@ urlpatterns = [
     path("eurostat/", views.eurostat, name="eurostat"),
     path("forum/<int:id>/", community.forum, { "project_name": app_name }, name="forum"),
 
+    path("forum/", community.forum_list, name="forum_list"),
+    path("forum/<int:id>/", community.forum, name="forum"),
+    path("forum/create/", community.forum_form, name="forum_form"),
+
+    path("tasks/", views.work_grid, { "project_name": app_name }, name="tasks"),
+    path("tasks/sprints/", views.work_sprints, { "project_name": app_name }, name="work_sprints"),
+    path("tasks/sprints/<int:id>/", views.work_sprint, { "project_name": app_name }, name="work_sprint"),
+    path("tasks/sprints/<int:sprint>/tasks/", views.work_grid, { "project_name": app_name }, name="work_sprint_tasks"),
+    path("tasks/sprints/<int:sprint>/tasks/create/", views.work_form, { "project_name": app_name }),
+    path("tasks/sprints/<int:sprint>/tasks/<int:id>/", views.work_item, { "project_name": app_name }),
+    path("tasks/sprints/<int:sprint>/tasks/<int:id>/edit/", views.work_form, { "project_name": app_name }),
+    path("tasks/create/", views.work_form, { "project_name": app_name }, name="work_form"),
+    path("tasks/<int:id>/", views.work_item, { "project_name": app_name }, name="work_item"),
+    path("tasks/<int:id>/edit/", views.work_form, { "project_name": app_name }, name="work_form"),
+
 
 ]

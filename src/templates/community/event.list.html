@@ -1,0 +1,200 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load sass_tags %}
+{% block title %}Events List{% endblock %}
+{% block page_name %}event list{% endblock %}
+{% block css %}
+{% endblock %}
+{% block content %}
+
+<section>
+  <h2>Upcoming events</h2>
+  <div class="row">
+    {% for each in upcoming %}
+    <div class="col-md-6 col-lg-4 mb-4">
+      <a class="card btn-card" href="{{ each.id }}/">
+        {% if each.image %}
+          <img src="{{ each.image.url }}" class="card-img-top" alt="{{ each }}">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ each }}</h5>
+          <p class="card-text">{{ each.content|truncatewords_html:20|safe }}</p>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> 
+            {{ each.location }}
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 
+            {{ each.get_dates }}
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> 
+            {{ each.get_type_display }}
+          </li>
+        </ul>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section id="event-list">
+  <h2>Events archive</h2>
+  <input type="text" class="form-control search" placeholder="Search by event name...">
+
+  <div class="row my-2 filters">
+    <div class="col-md-4 mb-2">
+      <select class="custom-select" data-type="event-category">
+        <option value="all" selected>All categories</option>
+        <option value="Seminar">Seminars</option>
+        <option value="Conference">Conferences</option>
+        <option value="Something else">Something else</option>
+      </select>
+    </div>
+    <div class="col-md-4 mb-2">
+      <select class="custom-select" data-type="event-year">
+        <option value="all" selected>Anytime</option>
+        <option value="2020">2020</option>
+        <option value="2019">2019</option>
+        <option value="2018">2018</option>
+      </select>
+    </div>
+    <div class="col-md-4 mb-2">
+      <select class="custom-select" data-type="event-location">
+        <option value="all" selected>Any location</option>
+        <option value="Cape Town">Cape Town</option>
+        <option value="The Hague">The Hague</option>
+        <option value="Valencia">Valencia</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row list event-cards">
+    {% for each in archive %}
+    <div class="col-md-6 col-lg-4 mb-4 single-event">
+      <a class="card btn-card" href="{{ each.id }}/">
+        {% if each.image %}
+          <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title event-name mb-0">{{ each }}</h5>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> 
+            <span class="event-location">{{ each.location }}</span>
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i><span class="event-year" hidden>{{ each.start_date|date:"Y" }}</span> 
+            {{ each.get_dates }}
+          </li>
+          <li class="list-group-item">
+            <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> <span class="event-category">{{ each.get_type_display }}</span>
+          </li>
+        </ul>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="card no-results">
+    <div class="card-body text-center">
+      <h2 class="my-4"><i class="fad fa-search"></i> No events found</h2>
+      <button class="btn btn-lg btn-primary clear-filter my-4">Show all events</button>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+<script>
+  var listOptions = {
+      valueNames: ["event-name", "event-category", "event-year", "event-location"]
+  };
+
+  var eventList = new List("event-list", listOptions);
+
+  // filters
+  // basic function to check if item matches filter
+  function eventFilter(type, value) {
+    if (value != "all") {
+      eventList.filter(function(item) {
+        if (item.values()[type] != value) {
+          item.values({inFilter: false})
+        }
+      });
+    }
+  }
+
+  // showing all items that match filters
+  function applyFilters() {
+    eventList.filter(function(item) {
+      if (item.values().inFilter == true) {
+         return true;
+      } else {
+         return false;
+      }
+    });
+  };
+
+  // function to check the number of matches
+  function checkCount() {
+    var count = $("#event-list .single-event:visible").length;
+    if (count == 0) {
+      $(".no-results").addClass("visible");
+    } else {
+      $(".no-results").removeClass("visible");
+    }
+  }
+
+  // function to apply filters on every dropdown
+  function runAllFilters() {
+    // set every item as matching filter
+    $(eventList.items).each(function() {
+      this.values({
+        inFilter: true,
+      });
+    });
+
+    // remove items that don't match filter
+    $(".filters select").each(function() {
+      var type = $(this).data("type");
+      var value = $(this).val()
+      eventFilter(type, value)
+    });
+
+    // show items that remain in filter
+    applyFilters();
+    checkCount();
+  }
+
+  // update contact count when searching by name
+  eventList.on("searchComplete", function(){
+    checkCount();
+  });
+
+  // make dropdowns work as filters
+  $(".filters select").change(function() {
+    runAllFilters()
+  });
+
+  // clear search and filters
+  function resetSearchFilters() {
+    eventList.search();
+    eventList.filter();
+    $(".filters select").val("all");
+    $("input.search").val("");
+  }
+
+  $(".clear-filter").click(function() {
+    resetSearchFilters();
+    checkCount();
+  })
+
+  // reset all filters on page load
+  resetSearchFilters()
+</script>
+{% endblock %}
