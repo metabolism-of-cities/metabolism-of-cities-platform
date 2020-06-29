@@ -39,6 +39,21 @@
 
 <div class="container pt-4">
 
+  {% if info.get_status == "upcoming" %}
+
+    <div class="jumbotron jumbotron-fluid text-center" style="display:block">
+      <div class="container">
+        <h1 class="display-4">Sprint has not yet started</h1>
+        <div class="lead">
+          {{ info.get_markdown_description|safe }}
+        </div>
+        <p class="lead">
+          Sign up now to join this sprint!
+        </p>
+      </div>
+    </div>
+
+  {% else %}
   <div class="row">
     <div class="col-lg-6">
       <h3>Chat</h3>
@@ -87,7 +102,12 @@
       </div>
     </div>
   </div>
+
+{% endif %}
+
 </div>
+
+
 {% endblock %}
 
 {% block footer %}

@@ -56,12 +56,12 @@ urlpatterns = [
 
     # Baseline 
     path("hub/work/", views.work_grid, { "project_name": app_name }, name="work_grid"),
-    path("hub/work/sprints/", views.work_sprints, { "project_name": app_name }, name="work_sprints"),
-    path("hub/work/sprints/<int:id>/", views.work_sprint, { "project_name": app_name }, name="work_sprint"),
-    path("hub/work/sprints/<int:sprint>/tasks/", views.work_grid, { "project_name": app_name }, name="work_sprint_tasks"),
-    path("hub/work/sprints/<int:sprint>/tasks/create/", views.work_form, { "project_name": app_name }),
-    path("hub/work/sprints/<int:sprint>/tasks/<int:id>/", views.work_item, { "project_name": app_name }),
-    path("hub/work/sprints/<int:sprint>/tasks/<int:id>/edit/", views.work_form, { "project_name": app_name }),
+    path("sprints/", views.work_sprints, { "project_name": app_name }, name="work_sprints"),
+    path("sprints/<int:id>/", views.work_sprint, { "project_name": app_name }, name="work_sprint"),
+    path("sprints/<int:sprint>/tasks/", views.work_grid, { "project_name": app_name }, name="work_sprint_tasks"),
+    path("sprints/<int:sprint>/tasks/create/", views.work_form, { "project_name": app_name }),
+    path("sprints/<int:sprint>/tasks/<int:id>/", views.work_item, { "project_name": app_name }),
+    path("sprints/<int:sprint>/tasks/<int:id>/edit/", views.work_form, { "project_name": app_name }),
     path("hub/work/create/", views.work_form, { "project_name": app_name }, name="work_form"),
     path("hub/work/<int:id>/", views.work_item, { "project_name": app_name }, name="work_item"),
     path("hub/work/<int:id>/edit/", views.work_form, { "project_name": app_name }, name="work_form"),

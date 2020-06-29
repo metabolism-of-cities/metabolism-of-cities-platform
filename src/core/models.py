@@ -37,6 +37,33 @@ from urllib.parse import urlparse, parse_qs
 from django.utils import timezone
 import pytz
 
+def get_date_range(start, end):
+
+    if not start or not end:
+        return None
+
+    start_date = start.strftime("%b %d, %Y")
+    start_time = start.strftime("%H:%M")
+    end_date = end.strftime("%b %d, %Y")
+    end_time = end.strftime("%H:%M")
+
+    if start_date == end_date:
+        if start_time == "00:00" and end_time == "00:00":
+            return start_date
+        elif start_time == end_time:
+            return start.strftime("%b %d, %Y %H:%M")
+        else:
+            return start_date + " " + start_time + " - " + end_time
+    else:
+        if start.strftime("%Y%m") == end.strftime("%Y%m"):
+            return start.strftime("%b") + " " + start.strftime("%d") + " - " + end.strftime("%d") + ", " + start.strftime("%Y")
+        elif start_time != "00:00" and end_time != "00:00":
+            return start.strftime("%b %d, %Y %H:%M") + " " + end.strftime("%b %d, %Y %H:%M")
+        elif start.strftime("%Y") == end.strftime("%Y"):
+            return start.strftime("%b %d") + " - " + end_date
+        else:
+            return start_date + " - " + end_date
+
 # By default we really only want to see those records that are both public and not deleted
 class PublicActiveRecordManager(models.Manager):
     def get_queryset(self):
@@ -378,35 +405,23 @@ class Event(Record):
         return reverse("community:event", args=[self.id])
 
     def get_dates(self):
-
-        if not self.start_date or not self.end_date:
-            return None
-
-        start_date = self.start_date.strftime("%b %d, %Y")
-        start_time = self.start_date.strftime("%H:%M")
-        end_date = self.end_date.strftime("%b %d, %Y")
-        end_time = self.end_date.strftime("%H:%M")
-
-        if start_date == end_date:
-            if start_time == "00:00" and end_time == "00:00":
-                return start_date
-            elif start_time == end_time:
-                return self.start_date.strftime("%b %d, %Y %H:%M")
-            else:
-                return start_date + " " + start_time + " - " + end_time
-        else:
-            if self.start_date.strftime("%Y%m") == self.end_date.strftime("%Y%m"):
-                return self.start_date.strftime("%b") + " " + self.start_date.strftime("%d") + " - " + self.end_date.strftime("%d") + ", " + self.start_date.strftime("%Y")
-            elif start_time != "00:00" and end_time != "00:00":
-                return self.start_date.strftime("%b %d, %Y %H:%M") + " " + self.end_date.strftime("%b %d, %Y %H:%M")
-            elif self.start_date.strftime("%Y") == self.end_date.strftime("%Y"):
-                return self.start_date.strftime("%b %d") + " - " + end_date
-            else:
-                return start_date + " - " + end_date
+        return get_date_range(self.start_date, self.end_date)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    def get_status(self):
+        try:
+            today = timezone.now()
+            if self.end_date < today:
+                return "finished"
+            elif self.start_date <= today and self.end_date >= today:
+                return "active"
+            else:
+                return "upcoming"
+        except:
+            return "upcoming"
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
@@ -985,6 +1000,9 @@ class WorkSprint(Record):
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
 
+    def get_dates(self):
+        return get_date_range(self.start_date, self.end_date)
+
     def get_status(self):
         try:
             today = timezone.now()
@@ -996,6 +1014,9 @@ class WorkSprint(Record):
                 return "upcoming"
         except:
             return "upcoming"
+
+    class Meta:
+        ordering = ["-start_date"]
 
 class Badge(models.Model):
 

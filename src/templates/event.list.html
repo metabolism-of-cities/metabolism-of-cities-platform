@@ -5,24 +5,66 @@
   <div class="row">
 
     <div class="col-lg-6">
+
       <h3>Work sprints</h3>
+
+      <p>
+        A work sprint is a joint effort by a group of contributors to work on a
+        set of tasks together, over a certain period of time.
+        <a href="/sprints/">Read more</a>
+      </p>
 
       <div class="list-group">
         {% for each in sprints %}
-          <a href="#" class="list-group-item list-group-item-action">
+          {% ifchanged each.get_status %}
+            {% if each.get_status == "finished" %}
+              </div>
+              <h4 class="mt-4">Archive</h4>
+              <div class="list-group">
+            {% endif %}
+          {% endifchanged %}
+          <a href="../sprints/{{ each.id }}/" class="list-group-item list-group-item-action">
             <div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1">{{ each }}</h5>
               <small>{{ each.get_status }}</small>
             </div>
-            <p class="mb-1">{{ each.start_date|date:"M d, Y" }} - {{ each.end_date|date:"M d, Y" }}</p>
+            <p class="mb-1">{{ each.get_dates }}</p>
           </a>
         {% endfor %}
       </div>
 
+      <p><a href="/sprints/">View all sprints</a></p>
     </div>
 
     <div class="col-lg-6">
       <h3>Training and outreach</h3>
+
+      <p>
+        We host training sessions (onboarding sessions) for new volunteers who would
+        like to join our network, and other events to reach out to the community.
+      </p>
+
+      <div class="list-group">
+        {% for each in events %}
+
+          {% ifchanged each.get_status %}
+            {% if each.get_status == "finished" %}
+              </div>
+              <h4 class="mt-4">Archive</h4>
+              <div class="list-group">
+            {% endif %}
+          {% endifchanged %}
+
+          <a href="../events/{{ each.slug }}/" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">{{ each }}</h5>
+              <small>{{ each.get_status }}</small>
+            </div>
+            <p class="mb-1">{{ each.get_dates }}</p>
+          </a>
+        {% endfor %}
+      </div>
+
     </div>
 
   </div>
