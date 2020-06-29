@@ -913,9 +913,6 @@ def work_form(request, project_name, id=None, sprint=None):
     return render(request, "contribution/work.form.html", context)
 
 def work_grid(request, project_name, sprint=None):
-    all = Message.objects_unfiltered.all()
-    for each in all:
-        each.save()
     project = PROJECT_ID[project_name]
     status = request.GET.get("status")
     type = request.GET.get("type")
