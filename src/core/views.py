@@ -913,9 +913,9 @@ def work_form(request, project_name, id=None, sprint=None):
     return render(request, "contribution/work.form.html", context)
 
 def work_grid(request, project_name, sprint=None):
-    if "update" in request.GET:
-        list = Work.objects_unfiltered.filter(part_of_project_id=8)
-        list.update(is_deleted=True, is_public=False)
+    all = Message.objects_unfiltered.all()
+    for each in all:
+        each.save()
     project = PROJECT_ID[project_name]
     status = request.GET.get("status")
     type = request.GET.get("type")
@@ -953,6 +953,7 @@ def work_grid(request, project_name, sprint=None):
     if type:
         list = list.filter(workactivity__type=type)
 
+    list = list.order_by("last_update__date_created")
     projects = Project.objects.filter(pk__in=OPEN_WORK_PROJECTS).order_by("name")
 
     context = {

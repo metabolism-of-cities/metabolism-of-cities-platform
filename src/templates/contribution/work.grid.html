@@ -1,6 +1,12 @@
 {% extends "_base.html" %}
 {% block page_name %}stafcp workgrid{% endblock %}
 
+{% block css %}
+<style type="text/css">
+.faded{opacity:0.5}
+</style>
+{% endblock %}
+
 {% block content %}
 
   {% include "hub/_nav.html" %}
@@ -121,9 +127,8 @@
     <thead>
       <tr>
         <th>Task</th>
-        <th>Type</th>
         <th>Status</th>
-        <th>Priority</th>
+        <th>Last update</th>
       </tr>
     </thead>
     <tbody>
@@ -134,19 +139,25 @@
             {{ each }}
             {% if each.related_to %}
               <br>
-              {{ each.related_to }}
+              <em>{{ each.related_to }}</em>
             {% endif %}
           </a>
-          {% if sprint %}
             <br>
             <em>
               {{ each.part_of_project }}
             </em>
+        </td>
+        <td>
+          {{ each.workactivity }}<br>
+          <em>{{ each.get_status_display }} | {{ each.get_priority_display }} priority</em>
+        </td>
+        
+        <td data-sort="{{ each.last_update.date_created|date:"U" }}">
+          {% if each.last_update %}
+            {{ each.last_update.date_created|timesince }} ago 
+            <br><span class="faded">by {{ each.last_update.posted_by }}</span>
           {% endif %}
         </td>
-        <td>{{ each.workactivity }}</td>
-        <td>{{ each.get_status_display }}</td>
-        <td data-sort="{{ each.priority }}">{{ each.get_priority_display }}</td>
       </tr>
     {% endfor %}
     </tbody>

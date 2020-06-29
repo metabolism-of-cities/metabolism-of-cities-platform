@@ -1,8 +1,12 @@
 {% extends "_base.html" %}
-{% load static %}
-{% load sass_tags %}
 
 {% block page_name %}forum list{% endblock %}
+
+{% block css %}
+<style type="text/css">
+.faded{opacity:0.5}
+</style>
+{% endblock %}
 
 {% block content %}
 
@@ -86,7 +90,8 @@
                 {{ each.messages.count }}
               </td>
               <td class="d-none d-md-table-cell medium-cell">
-                  {{ each.last_update.date_created|timesince }} ago
+                {{ each.last_update.date_created|timesince }} ago 
+                <br><span class="faded">by {{ each.last_update.posted_by }}</span>
               </td>
             </tr>
           {% endfor %}

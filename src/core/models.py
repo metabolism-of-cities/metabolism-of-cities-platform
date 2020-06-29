@@ -195,6 +195,9 @@ class Project(Record):
             return self.design.logo
         else:
             return None
+
+    class Meta:
+        ordering = ["name"]
     
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
@@ -554,16 +557,16 @@ class Message(Record):
         # If this is a forum or work-related message (most of them are) then we need to record
         # in the parent what the latest mesage is (this is for sorting, filtering etc)
         try:
-            if self.parent.forumtopic:
+            if hasattr(self.parent, "forumtopic"):
                 parent = self.parent.forumtopic
-            elif self.parent.work:
+            elif hasattr(self.parent, "work"):
                 parent = self.parent.work
             if parent:
                 check_last_update = Message.objects.filter(parent=self.parent).order_by("-date_created")
                 if check_last_update:
                     parent.last_update = check_last_update[0]
                     parent.save()
-        except:
+        except Exception as e:
             pass
 
     def getReply(self):
