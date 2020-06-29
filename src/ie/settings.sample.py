@@ -245,3 +245,5 @@ CACHES = {
         'LOCATION': '/src/logs/django_cache',
     }
 }
+
+SESSION_COOKIE_DOMAIN=".metabolismofcities.org"

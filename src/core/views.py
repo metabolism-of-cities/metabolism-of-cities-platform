@@ -226,14 +226,7 @@ def user_register(request, project="core", project_name=None, section=None):
             user.save()
             login(request, user)
 
-            # This user must be associated with a "people" record. So we check if a record
-            # with this name already exists. If not, we create a new record.
-
-            check = People.objects.filter(name=name, user__isnull=True)
-            if check:
-                people = check[0]
-            if not people:
-                people = People.objects.create(name=name, email=user.email)
+            people = People.objects.create(name=name, email=user.email)
 
             if "photo" in request.FILES and request.FILES["photo"]:
                 people.image = request.FILES["photo"]
