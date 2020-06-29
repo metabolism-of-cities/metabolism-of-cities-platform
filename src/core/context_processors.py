@@ -3,12 +3,15 @@ from django.contrib.sites.models import Site
 from django.utils import timezone
 import pytz
 
-from core.models import RecordRelationship, Project, ProjectDesign, Work, WorkSprint
+from core.models import RecordRelationship, Project, ProjectDesign, Work, WorkSprint, Notification
 from django.conf import settings
 
 def site(request):
     site = Site.objects.get_current()
-    permissions = open = sprints = None
+    permissions = None
+    open = None
+    sprints = None
+    notifications = None
 
     if hasattr(request, "project"):
         project = Project.objects.get(pk=request.project)
@@ -24,6 +27,7 @@ def site(request):
         )
         open = Work.objects.filter(part_of_project=project, status=1, assigned_to__isnull=True).count()
         sprints = WorkSprint.objects.filter(projects=project, start_date__lte=timezone.now(), end_date__gte=timezone.now())
+        notifications = Notification.objects.filter(people=request.user.people, is_read=False)
 
     design = ProjectDesign.objects.select_related("project").get(pk=project)
 
@@ -41,4 +45,5 @@ def site(request):
         "LOGO": design.logo.url if design.logo else None,
         "OPEN_TASKS": open,
         "SPRINTS": sprints,
+        "NOTIFICATIONS": notifications,
     }

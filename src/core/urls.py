@@ -65,6 +65,7 @@ urlpatterns = [
     path("hub/work/create/", views.work_form, { "project_name": app_name }, name="work_form"),
     path("hub/work/<int:id>/", views.work_item, { "project_name": app_name }, name="work_item"),
     path("hub/work/<int:id>/edit/", views.work_form, { "project_name": app_name }, name="work_form"),
+    path("notifications/", views.notifications, { "project_name": app_name }, name="notifications"),
 
     # Control panel URLS from baseline
     path("controlpanel/", views.controlpanel, { "project_name": app_name }, name="controlpanel"),

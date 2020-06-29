@@ -207,9 +207,12 @@ def forum(request, id, project_name=None, section=None):
         "menu": "forum",
     }
 
-    if request.user.is_authenticated and request.user.people not in info.subscribers.all():
-        # If this user is not yet subscribed, then we show a checkbox to subscribe
-        context["show_subscribe"] = True
+    if request.user.is_authenticated:
+        if request.user.people not in info.subscribers.all():
+            # If this user is not yet subscribed, then we show a checkbox to subscribe
+            context["show_subscribe"] = True
+        notifications = Notification.objects.filter(people=request.user.people, record__in=list, is_read=False)
+        notifications.update(is_read=True)
 
     if request.method == "POST":
 

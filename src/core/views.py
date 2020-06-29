@@ -981,6 +981,11 @@ def work_item(request, project_name, id, sprint=None):
     if sprint:
         sprint = WorkSprint.objects.get(pk=sprint)
 
+    messages = Message.objects.filter(parent=info)
+    if request.user.is_authenticated:
+        notifications = Notification.objects.filter(people=request.user.people, record__in=messages, is_read=False)
+        notifications.update(is_read=True)
+
     if request.method == "POST":
 
         message_title = message_description = None
@@ -1041,7 +1046,7 @@ def work_item(request, project_name, id, sprint=None):
     context = {
         "info": info, 
         "load_messaging": True,
-        "list_messages": Message.objects.filter(parent=info),
+        "list_messages": messages,
         "forum_title": "History and discussion",
         "title": info.name,
         "sprint": sprint,
@@ -1103,6 +1108,34 @@ def work_sprint(request, project_name, id=None):
     }
     
     return render(request, "contribution/work.sprint.html", context)
+
+@login_required
+def notifications(request, project_name):
+    
+    if "read" in request.POST:
+        read = request.POST.get("read")
+        items = read.split(",")
+        # The last item is always empty as we create the string like 40, 302, 23,
+        del items[-1]
+        delete_list = Notification.objects.filter(people=request.user.people, pk__in=items)
+        delete_list.update(is_read=True)
+        messages.success(request, "Your notifications were marked as read!")
+
+    list = Notification.objects.filter(people=request.user.people, is_read=False)
+    unread = True
+
+    if not list:
+        old = Notification.objects.filter(people=request.user.people, is_read=True).order_by("-id")
+        if old:
+            list = old[:15]
+            unread = False
+        
+    context = {
+        "list": list,
+        "title": "Notifications",
+        "unread": unread,
+    }
+    return render(request, "contribution/notifications.html", context)
 
 # People
 
