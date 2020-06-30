@@ -401,34 +401,20 @@ def index(request):
     return render(request, "index.html", context)
 
 
-def notifications(request):
-    list = Notification.objects.filter(is_read=False).order_by("people_id")
+def notification_cron(request):
+
+    people_with_notifications = People.objects.filter(notifications__is_read=False).distinct()
     project = get_object_or_404(Project, pk=1)
     url_project = project.get_website()
 
+    for people in people_with_notifications:
+        user = people.user
+        messages = Notification.objects.filter(people=people, is_read=False).order_by("record", "-id")
 
-    counter = 0
-    last_people = 0
-    info_user = {}
-    last_user = 0
-    url = url_project+"hub/forum/"
-
-    messages_by_people = {}
-    for notification in list:
-        
-        info_user[notification.people.id] = notification.people.user
-        messages_by_people.setdefault(notification.people.id, []).append(notification)
-        #notification.update(is_read=True)
-
-
-    for index in messages_by_people:
-        counter = counter + 1;
-        print(counter)
-        user = info_user[index]
         context = {
-            "list": messages_by_people[index],
+            "list": messages,
             "firstname": user.first_name,
-            "url": url,
+            "url": url_project,
             "organization_name": "Metabolism of Cities",
         }
 
@@ -444,6 +430,8 @@ def notifications(request):
             [user.email],
             html_message=msg_html,
         )
+
+        messages.update(is_read=True)
         
     context = {}
 

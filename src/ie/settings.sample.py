@@ -124,6 +124,7 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 CRON_CLASSES = [
     'core.crons.CreateMapJS',
+    'core.crons.EmailNotifications',
 ]
 
 ROOT_URLCONF = 'ie.urls'

@@ -33,36 +33,24 @@ class CreateMapJS(CronJobBase):
         file.write(all_cities)
         file.close()
 
-class Notifications(CronJobBase):
+class EmailNotifications(CronJobBase):
     RUN_EVERY_MINS = 60
+    schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
+    code = "core.EmailNotifications"
 
     def do(self):
-        list = Notification.objects.filter(is_read=False).order_by("people_id")
+        people_with_notifications = People.objects.filter(notifications__is_read=False).distinct()
         project = get_object_or_404(Project, pk=1)
         url_project = project.get_website()
 
+        for people in people_with_notifications:
+            user = people.user
+            messages = Notification.objects.filter(people=people, is_read=False).order_by("record", "-id")
 
-        counter = 0
-        last_people = 0
-        info_user = {}
-        last_user = 0
-        url = url_project+"hub/forum/"
-
-        messages_by_people = {}
-        for notification in list:
-            
-            info_user[notification.people.id] = notification.people.user
-            messages_by_people.setdefault(notification.people.id, []).append(notification)
-
-
-        for index in messages_by_people:
-            counter = counter + 1;
-            print(counter)
-            user = info_user[index]
             context = {
-                "list": messages_by_people[index],
+                "list": messages,
                 "firstname": user.first_name,
-                "url": url,
+                "url": url_project,
                 "organization_name": "Metabolism of Cities",
             }
 
@@ -78,3 +66,5 @@ class Notifications(CronJobBase):
                 [user.email],
                 html_message=msg_html,
             )
+
+            messages.update(is_read=True)
