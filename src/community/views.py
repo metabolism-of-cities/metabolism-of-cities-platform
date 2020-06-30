@@ -19,6 +19,11 @@ logger = logging.getLogger(__name__)
 PROJECT_ID = settings.PROJECT_ID_LIST
 RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
 
+# This is the list with projects that have an active forum
+# It will show in the dropdown boxes to filter by this category
+# Also found in core
+OPEN_WORK_PROJECTS = [1,2,3,4,32018,16,18,8]
+
 # Quick function to make someone the author of something
 # Version 1.0
 def set_author(author, item):
@@ -38,14 +43,6 @@ def unauthorized_access(request):
     )
     raise PermissionDenied
 
-def index(request):
-
-    context = {
-        "show_project_design": True,
-    }
-
-    return render(request, "template/blank.html", context)
-
 def person(request, id):
     article = get_object_or_404(Webpage, pk=PAGE_ID["people"])
     info = get_object_or_404(People, pk=id)
@@ -54,6 +51,9 @@ def person(request, id):
         "info": info,
     }
     return render(request, "person.html", context)
+
+def index(request):
+    return render(request, "community/index.html")
 
 def people_list(request):
     info = get_object_or_404(Webpage, pk=PAGE_ID["people"])
@@ -174,15 +174,24 @@ def forum_list(request, project_name=None, parent=None, section=None):
     list = ForumTopic.objects.all()
     if project_name:
         project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
-        list = list.filter(part_of_project=project)
+        list = list.filter(part_of_project_id__in=[project.id, 1])
+    else:
+        project = None
+
     if parent:
         list = list.filter(parent_id=parent)
+
+    list = list.select_related("last_update")
+    projects = Project.objects.filter(id__in=OPEN_WORK_PROJECTS).order_by("name")
     context = {
         "list": list,
         "title": "Forum",
         "section": section,
         "menu": "forum",
+        "projects": projects,
+        "project": project,
     }
+    print(context)
     return render(request, "forum.list.html", context)
 
 def forum(request, id, project_name=None, section=None):
@@ -198,9 +207,12 @@ def forum(request, id, project_name=None, section=None):
         "menu": "forum",
     }
 
-    if request.user.is_authenticated and request.user.people not in info.subscribers.all():
-        # If this user is not yet subscribed, then we show a checkbox to subscribe
-        context["show_subscribe"] = True
+    if request.user.is_authenticated:
+        if request.user.people not in info.subscribers.all():
+            # If this user is not yet subscribed, then we show a checkbox to subscribe
+            context["show_subscribe"] = True
+        notifications = Notification.objects.filter(people=request.user.people, record__in=list, is_read=False)
+        notifications.update(is_read=True)
 
     if request.method == "POST":
 
@@ -260,10 +272,6 @@ def forum(request, id, project_name=None, section=None):
                 except Exception as e:
                     pass
 
-            if hasattr(info, "forumtopic"):
-                info.forumtopic.last_update = timezone.now()
-                info.forumtopic.save()
-
             if request.FILES:
                 files = request.FILES.getlist("file")
                 for file in files:
@@ -311,14 +319,15 @@ def forum_edit(request, id, edit, project_name=None, section=None):
 def forum_form(request, id=False, project_name=None, parent=None, section=None):
 
     project = None
+    projects = Project.objects.filter(pk__in=OPEN_WORK_PROJECTS).exclude(pk=1)
     if project_name:
         project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+        projects = [project]
 
     if request.method == "POST":
         info = ForumTopic.objects.create(
-            part_of_project = project,
+            part_of_project_id = request.POST["project"] if "project" in request.POST else project,
             name = request.POST.get("title"),
-            last_update = timezone.now(),
             parent_id = parent,
         )
         set_author(request.user.people.id, info.id)
@@ -344,12 +353,46 @@ def forum_form(request, id=False, project_name=None, parent=None, section=None):
             page = "volunteer_forum" if section == "volunteer_hub" else "forum"
             return redirect(project_name + ":"+page, info.id)
 
-        return redirect(message.get_absolute_url())
+        return redirect(info.get_absolute_url())
 
     context = {
         "load_messaging": True,
         "menu": "forum",
         "section": section,
+        "projects": projects,
     }
     return render(request, "forum.form.html", context)
+
+def event_list(request, header_subtitle=None, project_name=None):
+
+    article = get_object_or_404(Webpage, pk=47)
+    today = timezone.now().date()
+    list = Event.objects.filter(end_date__lt=today).order_by("start_date")
+    upcoming = Event.objects.filter(end_date__gte=today).order_by("start_date")
+
+    if project_name:
+        project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+        # Just un-comment this once all events have been properly tagged
+        #list = list.filter(projects=project)
+        #upcoming = upcoming.filter(projects=project)
+
+    context = {
+        "upcoming": upcoming,
+        "archive": list,
+        "add_link": "/admin/core/event/add/",
+        "header_title": "Events",
+        "header_subtitle": "Find out what is happening around you!",
+    }
+    return render(request, "community/event.list.html", context)
+
+def event(request, id, project_name=None):
+    info = get_object_or_404(Event, pk=id)
+    today = timezone.now().date()
+    context = {
+        "info": info,
+        "upcoming": Event.objects.filter(end_date__gte=today).order_by("start_date")[:3],
+        "header_title": "Events",
+        "header_subtitle": info.name,
+    }
+    return render(request, "community/event.html", context)
 

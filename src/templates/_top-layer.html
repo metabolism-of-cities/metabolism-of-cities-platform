@@ -20,7 +20,7 @@
     {% endfor %}
   {% endif %}
 
-  {% if DESIGN.back_link or PERMISSIONS or request.user.is_staff %}
+  {% if DESIGN.back_link or PERMISSIONS or request.user.is_staff or NOTIFICATIONS %}
     <div class="return-bar">
       <div class="container">
         {% if DESIGN.back_link %}
@@ -31,8 +31,18 @@
           {% endif %}
         {% endif %}
 
-        {% if PERMISSIONS or request.user.is_staff or request.user.is_superuser %}
+        {% if PERMISSIONS or request.user.is_staff or request.user.is_superuser or NOTIFICATIONS %}
           <div class="float-right">
+
+            <a href="/notifications/" class="badge badge-{% if NOTIFICATIONS %}dark{% else %}light{% endif %}">
+              {% if NOTIFICATIONS %}
+                <i class="fas fa-circle text-danger"></i>
+                {{ NOTIFICATIONS.count }} notification{% if NOTIFICATIONS.count > 1 %}s{% endif %}
+              {% else %}
+                No notifications
+              {% endif %}
+            </a>
+
             {% for each in PERMISSIONS %}
               <span class="badge badge-light">{{ each.relationship.name }}</span>
             {% endfor %}
@@ -42,73 +52,72 @@
             {% if request.user.is_superuser %}
               <span class="badge badge-light">Super user</span>
             {% endif %}
-            <a style="display:none" class="badge badge-{% if OPEN_TASKS > 0 %}danger{% else %}secondary{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/work/?status=1">
-              {{ OPEN_TASKS }}
-              <i class="fa fa-circle mr-1 ml-1 {% if OPEN_TASKS > 0 %}text-success{% endif %}"></i>
-              Open tasks
-            </a>
-            <a class="badge badge-primary" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}/{% elif PROJECT.id == 1 %}/{% else %}{{ PROJECT.get_website }}{% endif %}controlpanel/">
+
+            {% if PERMISSIONS or request.user.is_staff %}
+            <a title="Control panel" class="badge badge-primary" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}/{% elif PROJECT.id == 1 %}/{% else %}{{ PROJECT.get_website }}{% endif %}controlpanel/">
               <i class="fa fa-gear mr-1"></i>
-              Control Panel
             </a>
+            {% endif %}
 
             {% if request.user.is_staff %}
-              <a class="badge badge-primary" href="{% url "core:network_activity" %}">
+              <a title="Network activity" class="badge badge-primary" href="{% url "core:network_activity" %}">
                 <i class="fa fa-heart-rate mr-1"></i>
-                Network activity
               </a>
             {% endif %}
 
-            <div class="dropdown" style="display:inline">
-              <button class="badge badge-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-lock"></i>
-                Quick links
-              </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            {% if request.user.is_staff %}
 
-                {% if request.user.is_authenticated and request.user.is_staff and show_project_design %}
-                  <a class="dropdown-item" href="/admin/core/projectdesign/{{ PROJECT.id }}/change/"><i class="fas fa-palette fa-fw"></i> Project design</a>
-                {% endif %}
+              <div class="dropdown" style="display:inline">
+                <button class="badge badge-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-lock"></i>
+                  Quick links
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
-                {% if webpage_design_id and request.user.is_authenticated and request.user.is_staff %}
-                  <a class="dropdown-item" href="/admin/core/webpagedesign/{{ webpage_design_id }}/change/"><i class="fas fa-object-group fa-fw"></i> Page design</a>
-                {% elif webpage and request.user.is_authenticated and request.user.is_staff %}
-                  <a class="dropdown-item" href="/admin/core/webpagedesign/add/?webpage={{ webpage.id }}"><i class="fas fa-object-group fa-fw"></i> Page design</a>
-                {% endif %}
+                  {% if request.user.is_authenticated and request.user.is_staff and show_project_design %}
+                    <a class="dropdown-item" href="/admin/core/projectdesign/{{ PROJECT.id }}/change/"><i class="fas fa-palette fa-fw"></i> Project design</a>
+                  {% endif %}
 
-                {% if edit_link and request.user.is_authenticated and request.user.is_staff %}
-                  <a class="dropdown-item" href="{{ edit_link }}"><i class="fas fa-edit fa-fw"></i> Edit</a>
-                {% endif %}
+                  {% if webpage_design_id and request.user.is_authenticated and request.user.is_staff %}
+                    <a class="dropdown-item" href="/admin/core/webpagedesign/{{ webpage_design_id }}/change/"><i class="fas fa-object-group fa-fw"></i> Page design</a>
+                  {% elif webpage and request.user.is_authenticated and request.user.is_staff %}
+                    <a class="dropdown-item" href="/admin/core/webpagedesign/add/?webpage={{ webpage.id }}"><i class="fas fa-object-group fa-fw"></i> Page design</a>
+                  {% endif %}
 
-                {% if webpage and not edit_link and request.user.is_authenticated and request.user.is_staff %}
-                  <a class="dropdown-item" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/controlpanel/content/{{ webpage.id }}/?next={{ request.get_full_path }}"><i class="fas fa-edit fa-fw"></i> Edit</a>
-                {% endif %}
+                  {% if edit_link and request.user.is_authenticated and request.user.is_staff %}
+                    <a class="dropdown-item" href="{{ edit_link }}"><i class="fas fa-edit fa-fw"></i> Edit</a>
+                  {% endif %}
 
-                {% if article and request.user.is_authenticated and request.user.is_staff %}
-                  <a class="dropdown-item" href="/admin/core/article/{{ article.id }}/change/"><i class="fas fa-edit fa-fw"></i> Edit</a>
-                {% endif %}
+                  {% if webpage and not edit_link and request.user.is_authenticated and request.user.is_staff %}
+                    <a class="dropdown-item" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/controlpanel/content/{{ webpage.id }}/?next={{ request.get_full_path }}"><i class="fas fa-edit fa-fw"></i> Edit</a>
+                  {% endif %}
 
-                {% if add_link and request.user.is_authenticated and request.user.is_staff %}
-                  <a class="dropdown-item" href="{{ add_link }}"><i class="fas fa-plus fa-fw"></i> Add</a>
-                {% endif %}
+                  {% if article and request.user.is_authenticated and request.user.is_staff %}
+                    <a class="dropdown-item" href="/admin/core/article/{{ article.id }}/change/"><i class="fas fa-edit fa-fw"></i> Edit</a>
+                  {% endif %}
 
-                {% if request.user.is_authenticated and request.user.is_staff and show_relationship %}
-                  <a class="dropdown-item" href="/admin/core/recordrelationship/?record_child_id__exact={{ show_relationship }}"><i class="fas fa-project-diagram fa-fw"></i> Relationships</a>
-                  <a class="dropdown-item" href="/admin/core/recordrelationship/add/?record_child={{ show_relationship }}"><i class="fas fa-project-diagram fa-fw"></i> Add relationship</a>
-                  <a class="dropdown-item" href="/admin/core/recordrelationship/add/?record_child={{ show_relationship }}&amp;relationship=4"><i class="fas fa-project-diagram fa-fw"></i> Add author</a>
-                {% endif %}
+                  {% if add_link and request.user.is_authenticated and request.user.is_staff %}
+                    <a class="dropdown-item" href="{{ add_link }}"><i class="fas fa-plus fa-fw"></i> Add</a>
+                  {% endif %}
 
-                {% if request.user.is_authenticated and request.user.is_staff %}
-                  <a class="dropdown-item" href="/admin/"><i class="fas fa-user-lock fa-fw"></i> Admin</a>
-                {% endif %}
+                  {% if request.user.is_authenticated and request.user.is_staff and show_relationship %}
+                    <a class="dropdown-item" href="/admin/core/recordrelationship/?record_child_id__exact={{ show_relationship }}"><i class="fas fa-project-diagram fa-fw"></i> Relationships</a>
+                    <a class="dropdown-item" href="/admin/core/recordrelationship/add/?record_child={{ show_relationship }}"><i class="fas fa-project-diagram fa-fw"></i> Add relationship</a>
+                    <a class="dropdown-item" href="/admin/core/recordrelationship/add/?record_child={{ show_relationship }}&amp;relationship=4"><i class="fas fa-project-diagram fa-fw"></i> Add author</a>
+                  {% endif %}
 
-                {% if request.user.is_authenticated and request.user.is_ascus_organizer %}
-                  <a class="dropdown-item" href="{% url "ascus:admin" %}"><i class="fas fa-user-lock fa-fw"></i> AScUS Admin</a>
-                {% endif %}
+                  {% if request.user.is_authenticated and request.user.is_staff %}
+                    <a class="dropdown-item" href="/admin/"><i class="fas fa-user-lock fa-fw"></i> Admin</a>
+                  {% endif %}
 
+                  {% if request.user.is_authenticated and request.user.is_ascus_organizer %}
+                    <a class="dropdown-item" href="{% url "ascus:admin" %}"><i class="fas fa-user-lock fa-fw"></i> AScUS Admin</a>
+                  {% endif %}
 
+                </div>
               </div>
-            </div>
+
+            {% endif %}
 
           </div>
         {% endif %}
@@ -146,7 +155,7 @@
             {% include "_menu-stocks.html" %}
           {% elif PROJECT.id == 17 %}
             {% include "_menu-islands.html" %}
-          {% elif fulano %}
+          {% elif PROJECT.id == 1 %}
             {% include "_menu-moc.html" %}
           {% endif %}
 

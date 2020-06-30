@@ -18,20 +18,6 @@
 </li>
 {% endif %}
 
-<li class="nav-item dropdown projects-dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="projects-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Our Projects
-  </a>
-  <div class="dropdown-menu projects-dropdown-menu" aria-labelledby="projects-dropdown">
-
-    {% include "_project-menu.html" %}
-
-  </div>
-</li>
-
-<li class="nav-item">
-  <a class="nav-link" href="{% url "core:news" %}">News</a>
-</li>
 <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="about-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     About
@@ -43,6 +29,25 @@
     <a class="dropdown-item" href="/about/partners/">Our Partners</a>
     <a class="dropdown-item" href="/about/contact/">Contact Us</a>
   </div>
+</li>
+
+<li class="nav-item"><a class="nav-link {% if menu == "forum" %}active{% endif %}" href="{% url "core:forum_list" %}">Forum</a></li>
+<li class="nav-item"><a class="nav-link {% if menu == "work" %}active{% endif %}" href="{% url "core:tasks" %}">Tasks</a></li>
+
+
+<li class="nav-item dropdown projects-dropdown">
+  <a class="nav-link dropdown-toggle {% if menu == "projects" %}active{% endif %}" href="#" id="projects-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Our Projects
+  </a>
+  <div class="dropdown-menu projects-dropdown-menu" aria-labelledby="projects-dropdown">
+
+    {% include "_project-menu.html" %}
+
+  </div>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link" href="{% url "core:events" %}">Events</a>
 </li>
 
 {% include "_menu-account.html" %}

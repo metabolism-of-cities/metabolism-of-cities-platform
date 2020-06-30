@@ -3,6 +3,13 @@
 
 {% block page_name %}homepage{% endblock %}
 
+{% block css %}
+<style type="text/css">
+.jumbotron a {color:#fff;text-decoration:underline;opacity:0.8;font-weight:bold}
+.jumbotron a:hover{color:#fff;text-decoration:none;opacity:1}
+</style>
+{% endblock %}
+
 {% block content %}
 
 <section class="projects">
@@ -30,7 +37,7 @@
     {% endfor %}
   </div>
 
-  <a class="btn btn-primary btn-lg" href="/projects" style="display:none">
+  <a class="btn btn-primary btn-lg" href="/projects">
     <i class="fas fa-toolbox"></i> All projects
   </a>
 

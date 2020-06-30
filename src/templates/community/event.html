@@ -10,45 +10,7 @@
     {% endif %}
     
     <h4>{{ info }}</h4>
-    {{ info.get_markdown_description|safe }}
-
-    {% if info.type == "training_outreach" %}
-
-      {% if info.get_status == "upcoming" %}
-
-          <h3>Register for this event</h3>
-
-          {% if not request.user.is_authenticated %}
-            {% include "_notauthenticated.html" %}
-          {% else %}
-
-            {% if not request.user.people in info.subscribers.all %}
-              <form method="post">
-                <button class="btn btn-primary-basic mt-2" type="submit"><i class="fal fa-check"></i> Register now</button>
-                {% csrf_token %}
-                <input type="hidden" name="subscribe" value="true" />
-              </form>
-            {% endif %}
-
-          {% if request.user.people in info.subscribers.all %}
-            <form method="post">
-              {% csrf_token %}
-              <input type="hidden" name="unsubscribe" value="true" />
-              <div>
-                You are registered for this event.
-                <button class="btn btn-sm btn-outline-danger ml-3" type="submit">
-                  <i class="fal fa-ban"></i>
-                  De-register
-                </button>
-              </div>
-            </form>
-          {% endif %}
-
-        {% endif %}
-
-      {% endif %}
-
-    {% endif %}
+    {{ info.description|safe }}
 
   </article>
   <div class="col-lg-4">

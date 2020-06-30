@@ -45,9 +45,6 @@ urlpatterns = [
     # STAFCP
     # Podcast
 
-    # Community
-    path("community/", views.community),
-
     # Authentication
     path("accounts/register/", views.user_register, name="register"),
     path("accounts/login/", views.user_login, name="login"),
@@ -61,15 +58,16 @@ urlpatterns = [
 
     # Baseline 
     path("hub/work/", views.work_grid, { "project_name": app_name }, name="work_grid"),
-    path("hub/work/sprints/", views.work_sprints, { "project_name": app_name }, name="work_sprints"),
-    path("hub/work/sprints/<int:id>/", views.work_sprint, { "project_name": app_name }, name="work_sprint"),
-    path("hub/work/sprints/<int:sprint>/tasks/", views.work_grid, { "project_name": app_name }, name="work_sprint_tasks"),
-    path("hub/work/sprints/<int:sprint>/tasks/create/", views.work_form, { "project_name": app_name }),
-    path("hub/work/sprints/<int:sprint>/tasks/<int:id>/", views.work_item, { "project_name": app_name }),
-    path("hub/work/sprints/<int:sprint>/tasks/<int:id>/edit/", views.work_form, { "project_name": app_name }),
+    path("sprints/", views.work_sprints, { "project_name": app_name }, name="work_sprints"),
+    path("sprints/<int:id>/", views.work_sprint, { "project_name": app_name }, name="work_sprint"),
+    path("sprints/<int:sprint>/tasks/", views.work_grid, { "project_name": app_name }, name="work_sprint_tasks"),
+    path("sprints/<int:sprint>/tasks/create/", views.work_form, { "project_name": app_name }),
+    path("sprints/<int:sprint>/tasks/<int:id>/", views.work_item, { "project_name": app_name }),
+    path("sprints/<int:sprint>/tasks/<int:id>/edit/", views.work_form, { "project_name": app_name }),
     path("hub/work/create/", views.work_form, { "project_name": app_name }, name="work_form"),
     path("hub/work/<int:id>/", views.work_item, { "project_name": app_name }, name="work_item"),
     path("hub/work/<int:id>/edit/", views.work_form, { "project_name": app_name }, name="work_form"),
+    path("notifications/", views.notifications, { "project_name": app_name }, name="notifications"),
 
     # Control panel URLS from baseline
     path("controlpanel/", views.controlpanel, { "project_name": app_name }, name="controlpanel"),
@@ -104,7 +102,7 @@ urlpatterns = [
             html_email_template_name = "mailbody/password.reset.html", 
             subject_template_name = "mailbody/password.reset.subject.txt", 
             success_url = "/accounts/passwordreset/sent/",
-            extra_email_context = { "domain": "https://metabolismofcities.org" },
+            extra_email_context = { "domain": "https://new.metabolismofcities.org" },
         ), 
         name="password_reset", 
     ),
@@ -139,6 +137,21 @@ urlpatterns = [
 
     path("eurostat/", views.eurostat, name="eurostat"),
     path("forum/<int:id>/", community.forum, { "project_name": app_name }, name="forum"),
+
+    path("forum/", community.forum_list, name="forum_list"),
+    path("forum/<int:id>/", community.forum, name="forum"),
+    path("forum/create/", community.forum_form, name="forum_form"),
+
+    path("tasks/", views.work_grid, { "project_name": app_name }, name="tasks"),
+    path("tasks/sprints/", views.work_sprints, { "project_name": app_name }, name="work_sprints"),
+    path("tasks/sprints/<int:id>/", views.work_sprint, { "project_name": app_name }, name="work_sprint"),
+    path("tasks/sprints/<int:sprint>/tasks/", views.work_grid, { "project_name": app_name }, name="work_sprint_tasks"),
+    path("tasks/sprints/<int:sprint>/tasks/create/", views.work_form, { "project_name": app_name }),
+    path("tasks/sprints/<int:sprint>/tasks/<int:id>/", views.work_item, { "project_name": app_name }),
+    path("tasks/sprints/<int:sprint>/tasks/<int:id>/edit/", views.work_form, { "project_name": app_name }),
+    path("tasks/create/", views.work_form, { "project_name": app_name }, name="work_form"),
+    path("tasks/<int:id>/", views.work_item, { "project_name": app_name }, name="work_item"),
+    path("tasks/<int:id>/edit/", views.work_form, { "project_name": app_name }, name="work_form"),
 
 
 ]

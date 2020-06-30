@@ -39,6 +39,7 @@ urlpatterns = [
     path("work/create/", core.work_form, { "project_name": app_name }, name="work_form"),
     path("work/<int:id>/", core.work_item, { "project_name": app_name }, name="work_item"),
     path("work/<int:id>/edit/", core.work_form, { "project_name": app_name }, name="work_form"),
+    path("notifications/", core.notifications, { "project_name": app_name }, name="notifications"),
     
     # Forum and contributor pages
     path("forum/<int:id>/", community.forum, { "project_name": app_name }, name="forum"),

@@ -65,11 +65,17 @@ PAGE_ID = settings.PAGE_ID_LIST
 PROJECT_ID = settings.PROJECT_ID_LIST
 RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
 THIS_PROJECT = PROJECT_ID["core"]
+PROJECT_LIST = settings.PROJECT_LIST
 
 # If we add any new project, we should add it to this list. 
 # We must make sure to filter like this to exclude non-project news
 # (which we want in the community section but not here), as well as MoI news
 MOC_PROJECTS = [1,2,3,4,7,8,11,14,15,16,18,3458]
+
+# This is the list with projects that have an active forum
+# It will show in the dropdown boxes to filter by this category
+# Also found in core
+OPEN_WORK_PROJECTS = [1,2,3,4,32018,16,18,8]
 
 # Quick function to make someone the author of something
 # Version 1.0
@@ -209,7 +215,8 @@ def user_register(request, project="core", project_name=None, section=None):
             error = True
         check = User.objects.filter(email=email)
         if check:
-            messages.error(request, "A Metabolism of Cities account already exists with this e-mail address. Please <a href='/accounts/login/'>log in first</a>.")
+            current_site = PROJECT_LIST["core"]["url"]
+            messages.error(request, "A Metabolism of Cities account already exists with this e-mail address. Please <a href='/accounts/login/'>log in first</a> or <a href='" + current_site + "accounts/passwordreset/'>reset your password</a>.")
             error = True
         if not error:
             user = User.objects.create_user(email, email, password)
@@ -219,14 +226,7 @@ def user_register(request, project="core", project_name=None, section=None):
             user.save()
             login(request, user)
 
-            # This user must be associated with a "people" record. So we check if a record
-            # with this name already exists. If not, we create a new record.
-
-            check = People.objects.filter(name=name, user__isnull=True)
-            if check:
-                people = check[0]
-            if not people:
-                people = People.objects.create(name=name, email=user.email)
+            people = People.objects.create(name=name, email=user.email)
 
             if "photo" in request.FILES and request.FILES["photo"]:
                 people.image = request.FILES["photo"]
@@ -318,6 +318,7 @@ def user_login(request, project=None):
 
     context = {
         "project": project,
+        "load_url_fixer": True,
     }
     return render(request, "auth/login.html", context)
 
@@ -383,9 +384,17 @@ def user_profile_form(request, project_name=None):
 # Homepage
 
 def index(request):
+    count = Project.objects.all().count()
+    blurb = """
+      We are a global network of people, working together on (urban) sustainability.
+      This website explains our <a href="projects/">""" + str(count) + """ projects</a>
+      and it is the central place of our volunteers and partners to 
+      <a href="forum/">discuss</a>, <a href="events/">get together</a>, and
+      <a href="tasks/">get things done</a>!"""
+
     context = {
         "header_title": "Metabolism of Cities",
-        "header_subtitle": "Your hub for everything around urban metabolism",
+        "header_subtitle": blurb,
         "show_project_design": True,
         "projects": Project.objects.filter(pk__in=[2,3,4,32018,16,18]),
     }
@@ -506,13 +515,21 @@ def event_list(request, header_subtitle=None, project_name=None):
         "archive": list,
         "add_link": "/admin/core/event/add/",
         "header_title": "Events",
-        "header_subtitle": "Find out what is happening around you!",
+        "header_subtitle": "Get involved with the projects at Metabolism of Cities!",
+        "sprints": WorkSprint.objects.all(),
+        "events": Event.objects.filter(type="training_outreach"),
     }
     return render(request, "event.list.html", context)
 
-def event(request, id, project_name=None):
-    info = get_object_or_404(Event, pk=id)
+def event(request, slug, project_name=None):
+    info = get_object_or_404(Event, slug=slug)
     today = timezone.now().date()
+    if "subscribe" in request.POST:
+        info.subscribers.add(request.user.people)
+        messages.success(request, "You are now registered! You will receive more information by e-mail closer to the date.")
+    if "unsubscribe" in request.POST:
+        info.subscribers.remove(request.user.people)
+        messages.success(request, "You are no longer registered.")
     context = {
         "info": info,
         "upcoming": Event.objects.filter(end_date__gte=today).order_by("start_date")[:3],
@@ -520,7 +537,6 @@ def event(request, id, project_name=None):
         "header_subtitle": info.name,
     }
     return render(request, "event.html", context)
-
 
 
 # The template section allows contributors to see how some
@@ -558,6 +574,7 @@ def projects(request):
         "types": ProjectType.objects.all().order_by("name"),
         "header_title": "Projects",
         "header_subtitle": "Overview of projects undertaken by the Metabolism of Cities community",
+        "menu": "projects",
     }
     return render(request, "projects.html", context)
 
@@ -571,6 +588,7 @@ def project(request, slug):
         "header_title": str(info),
         "header_subtitle_link": "<a href='/projects/'>Projects</a>",
         "show_relationship": info.id,
+        "menu": "projects",
     }
     return render(request, "project.html", context)
 
@@ -958,6 +976,8 @@ def work_grid(request, project_name, sprint=None):
     status = request.GET.get("status")
     type = request.GET.get("type")
     priority = request.GET.get("priority")
+    selected_project = None
+
     if request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
         list = Work.objects_include_private.all()
     else:
@@ -965,21 +985,33 @@ def work_grid(request, project_name, sprint=None):
 
     if "entry" in request.GET:
         list = list.filter(tags=810)
+
     if sprint:
         sprint = WorkSprint.objects.get(pk=sprint)
         list = list.filter(part_of_project__in=sprint.projects.all())
-    else:
+    elif "project" in request.GET and request.GET["project"]:
+        selected_project = request.GET.get("project")
+        list = list.filter(part_of_project_id=selected_project)
+    elif project_name != "core":
         list = list.filter(part_of_project_id=project)
+        selected_project = project
+
     if status:
         if status == "open_unassigned":
             list = list.filter(status=1, assigned_to__isnull=True)
         else:
             list = list.filter(status=status)
             status = int(status)
+
     if priority:
         list = list.filter(priority=priority)
+
     if type:
         list = list.filter(workactivity__type=type)
+
+    list = list.order_by("last_update__date_created")
+    projects = Project.objects.filter(pk__in=OPEN_WORK_PROJECTS).order_by("name")
+
     context = {
         "list": list,
         "load_datatables": True,
@@ -992,6 +1024,8 @@ def work_grid(request, project_name, sprint=None):
         "priority": int(priority) if priority else None,
         "sprint": sprint,
         "menu": "work",
+        "projects": projects,
+        "selected_project": int(selected_project) if selected_project else None,
     }
     return render(request, "contribution/work.grid.html", context)
 
@@ -1005,6 +1039,11 @@ def work_item(request, project_name, id, sprint=None):
 
     if sprint:
         sprint = WorkSprint.objects.get(pk=sprint)
+
+    messages = Message.objects.filter(parent=info)
+    if request.user.is_authenticated:
+        notifications = Notification.objects.filter(people=request.user.people, record__in=messages, is_read=False)
+        notifications.update(is_read=True)
 
     if request.method == "POST":
 
@@ -1066,7 +1105,7 @@ def work_item(request, project_name, id, sprint=None):
     context = {
         "info": info, 
         "load_messaging": True,
-        "list_messages": Message.objects.filter(parent=info),
+        "list_messages": messages,
         "forum_title": "History and discussion",
         "title": info.name,
         "sprint": sprint,
@@ -1124,10 +1163,38 @@ def work_sprint(request, project_name, id=None):
         "updates": updates,
         "last_update": last_update,
         "message_list": message_list,
-        "participants": People.objects_unfiltered.filter(parent_list__record_child=info, parent_list__relationship__id=27),
+        "participants": People.objects.filter(parent_list__record_child=info, parent_list__relationship__id=27),
     }
     
     return render(request, "contribution/work.sprint.html", context)
+
+@login_required
+def notifications(request, project_name):
+    
+    if "read" in request.POST:
+        read = request.POST.get("read")
+        items = read.split(",")
+        # The last item is always empty as we create the string like 40, 302, 23,
+        del items[-1]
+        delete_list = Notification.objects.filter(people=request.user.people, pk__in=items)
+        delete_list.update(is_read=True)
+        messages.success(request, "Your notifications were marked as read!")
+
+    list = Notification.objects.filter(people=request.user.people, is_read=False)
+    unread = True
+
+    if not list:
+        old = Notification.objects.filter(people=request.user.people, is_read=True).order_by("-id")
+        if old:
+            list = old[:15]
+            unread = False
+        
+    context = {
+        "list": list,
+        "title": "Notifications",
+        "unread": unread,
+    }
+    return render(request, "contribution/notifications.html", context)
 
 # People
 
@@ -1417,7 +1484,7 @@ def massmail(request,people=None):
         sender = '"' + request.site.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
         if "send_preview" in request.POST:
             # If a preview is being sent, then it must ONLY go to the logged-in user
-            list = People.objects_unfiltered.filter(user=request.user)
+            list = People.objects.filter(user=request.user)
         for each in list:
             # Let check if the person has an email address before we send the mail
             if each.email:

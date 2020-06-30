@@ -7,10 +7,10 @@
 
   <ul class="nav nav-tabs mb-4">
     <li class="nav-item">
-      <a class="nav-link" href="{% url "staf:upload_gis_file" session.id %}">1. Upload shapefile</a>
+      <a class="nav-link" href="{% url 'staf:upload_gis_file' session.id %}">1. Upload shapefile</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{% url "staf:upload_gis_verify" session.id %}">2. Verify data</a>
+      <a class="nav-link" href="{% url 'staf:upload_gis_verify' session.id %}">2. Verify data</a>
     </li>
     <li class="nav-item">
       <a class="nav-link disabled active" href="#">3. Enter metadata</a>
@@ -20,7 +20,7 @@
   <div class="card">
     <div class="card-body">
       <form method="post">
-        
+
         <h2>Data source</h2>
         <div class="form-group">
           <label for="author">Who has produced this shapefile?</label>
@@ -29,7 +29,7 @@
 
         <div class="form-group">
           <label for="url">Download URL or relevant website</label>
-          <input type="text" class="form-control" id="url" name="url">
+          <input type="url" class="form-control" id="url" name="url">
         </div>
 
         <div class="form-group">

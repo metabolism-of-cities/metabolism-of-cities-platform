@@ -187,10 +187,17 @@
 
   {% block footer %}{% endblock %}
 
-  <script type="text/javascript">
-  $(function(){
-      $("form").attr("autocomplete", "off")
-  });
-  </script>
+  {% if load_url_fixer %}
+    <script type="text/javascript">
+    $(function(){
+      $(".urlfix").each(function() {
+        url = $(this).attr("href");
+        url = url.substr(1);
+        $(this).attr("href", url);
+      });
+    });
+    </script>
+  {% endif %}
+
 </body>
 </html>

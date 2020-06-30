@@ -1,8 +1,12 @@
 {% extends "_base.html" %}
-{% load static %}
-{% load sass_tags %}
 
 {% block page_name %}forum list{% endblock %}
+
+{% block css %}
+<style type="text/css">
+.faded{opacity:0.5}
+</style>
+{% endblock %}
 
 {% block content %}
 
@@ -19,13 +23,21 @@
       <div class="col-md-8 mb-2">
         <input class="search form-control" type="text" name="search" placeholder="Search by title">
       </div>
-      <div class="col-md-4 mb-2" style="display:none">
-        <select class="custom-select tag-filter">
-          <option value="all">Filter by tag</option>
-          <option value="Conferences">Conferences</option>
-          <option value="Data">Data</option>
-          <option value="Logistics">Logistics</option>
-        </select>
+      <div class="col-md-4 mb-2">
+        {% if project %}
+          Showing: general forum and project forum.<br>
+          <a href="https://community.metabolismofcities.org/forum/">View the entire forum here.</a>
+        {% else %}
+          <select class="custom-select tag-filter">
+            <option value="all">Filter by project</option>
+            <option value="Project-1-id">General</option>
+            {% for each in projects %}
+              {% if each.id != 1 %}
+                <option value="Project-{{ each.id }}-id">{{ each }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        {% endif %}
       </div>
       <div class="col-md-4 mb-2">
         <a class="btn btn-primary d-block" href="create/"><i class="fas fa-fw fa-comment-alt-plus"></i> Post new topic</a>
@@ -37,9 +49,7 @@
         <thead>
           <tr class="d-none d-sm-table-row">
             <th class="topic">Topic</th>
-            {% if False %}
-              <th class="d-none d-lg-table-cell"></th>
-            {% endif %}
+            <th class="d-none d-lg-table-cell"></th>
             <th class="d-none d-sm-table-cell narrow-cell">Messages</th>
             <th class="d-none d-md-table-cell medium-cell">Activity</th>
           </tr>
@@ -48,45 +58,40 @@
           {% for each in list %}
             <tr>
               <td>
+                {% if each.is_starred %}
+                  <i class="fa fa-star text-warning"></i>
+                {% endif %}
                 <a href="{{ each.id }}/" class="topic-title">{{ each }}</a>
-                <div style="display:none">
                 <br>
                 <!-- for tag in each.tags -->
-                <a href="#" class="badge badge-primary">Data</a>
-                <a href="#" class="badge badge-primary">Logistics</a>
+                <span class="badge badge-light">{% if each.part_of_project.id == 1 %}General{% else %}{{ each.part_of_project }}{% endif %}</span>
                 <!-- end for -->
                 <span class="topic-tags" hidden>
-                  <!-- for tag in each.tags -->
-                  Data Logistics
-                  <!-- end for -->
+                  Project-{{ each.part_of_project.id }}-id
                 </span>
-                </div>
               </td>
-              {% if False %}
               <td class="d-none d-lg-table-cell">
-                {% if each.getReply.count > 5 %}
-                  {% for subdetails in each.getReply|slice:"5" %}
-                    <span class="avatar plus" title="{{ subdetails.user.first_name }} {{ subdetails.user.last_name }}">
-                      {{ subdetails.user.first_name|slice:"1" }}
-                    </span>
+                  {% for poster in each.posters|slice:"4" %}
+                    {% if poster.image %}
+                      <img src="{{ poster.image.thumbnail.url }}" alt="" title="{{ poster }}" class="avatar plus" />
+                    {% else %}
+                      <span class="avatar plus" title="{{ poster }}">
+                        {{ poster.name|slice:"1" }}
+                      </span>
+                    {% endif %}
                   {% endfor %}
-                  {% with count_reply=each.getReply.count|add:"-5" %}
-                    <span class="avatar plus">+{{ count_reply }}</span>
-                  {% endwith %}
-                {% else %}
-                  {% for subdetails in each.getReply %}
-                    <span class="avatar plus" title="{{ subdetails.user.first_name }} {{ subdetails.user.last_name }}">
-                      {{ subdetails.user.first_name|slice:"1" }}
-                    </span>
-                  {% endfor %}
-                {% endif %}
+                  {% if each.posters.count > 5 %}
+                    {% with count_reply=each.posters.count|add:"-4" %}
+                        <span class="avatar plus">+{{ count_reply }}</span>
+                    {% endwith %}
+                  {% endif %}
               </td>
-              {% endif %}
               <td class="d-none d-sm-table-cell narrow-cell">
                 {{ each.messages.count }}
               </td>
               <td class="d-none d-md-table-cell medium-cell">
-                  {{ each.last_update|timesince }} ago
+                {{ each.last_update.date_created|timesince }} ago 
+                <br><span class="faded">by {{ each.last_update.posted_by }}</span>
               </td>
             </tr>
           {% endfor %}
@@ -101,6 +106,11 @@
       </div>
     </div>
   </div>
+
+  {% if not request.user.is_authenticated %}
+    {% include "_notauthenticated.html" %}
+  {% endif %}
+
 {% endblock %}
 
 {% block footer %}

@@ -109,7 +109,8 @@ def review_processed(request):
     }
     return render(request, "staf/review/files.processed.html", context)
 
-def review_session(request, id):
+def review_session(request, id, classify=False):
+
     session = get_object_or_404(UploadSession, pk=id)
     if session.uploader is not request.user.people and not is_member(request.user, "Data administrators"):
         unauthorized_access(request)
@@ -128,27 +129,28 @@ def review_session(request, id):
         except Exception as e:
             messages.error(request, "Sorry, we could not assign you -- perhaps someone else grabbed this work in the meantime? Otherwise please report this error. <br><strong>Error code: " + str(e) + "</strong>")
 
+    if "classify_name" in request.POST:
+        meta_data = session.meta_data
+        if not "columns" in meta_data:
+            meta_data["columns"] = {}
+        meta_data["columns"]["name"] = request.POST.get("classify_name")
+        meta_data["columns"]["identifier"] = request.POST.get("identifier")
+        print(meta_data)
+        session.meta_data = meta_data 
+        session.save()
+        messages.success(request, "Settings were saved.")
+        return redirect("staf:review_session_classify", id=session.id)
+
     geojson = None
     error = False
     datasource = None
     layer = None
     size = None
     geocode = None
+
     try:
         file = UploadFile.objects.filter(session=session, file__iendswith=".shp")[0]
         filename = settings.MEDIA_ROOT + "/" + file.file.name
-        sf = shapefile.Reader(filename)
-        shapes = sf.shapes()
-        geojson = shapes.__geo_interface__
-        geojson = json.dumps(geojson)
-
-        #feature = shape.shape(1)
-        #feature = shape.shapeRecords()[0]
-        #print(feature)
-        #geojson = feature.shape.__geo_interface__  
-        #geojson = feature.__geo_interface__ 
-        #print(geojson)
-        #geojson = json.dumps(geojson) 
 
         from django.contrib.gis.gdal import DataSource
         datasource = DataSource(filename)
@@ -157,10 +159,47 @@ def review_session(request, id):
         geocode = Geocode.objects.get(pk=session.meta_data.get("geocode"))
         
         if "geojson" in request.GET:
-            return HttpResponse(geojson, content_type="application/json")
+
+            if layer.srs["SPHEROID"] == "WGS 84":
+                sf = shapefile.Reader(filename)
+                shapes = sf.shapes()
+                geojson = shapes.__geo_interface__
+                geojson = json.dumps(geojson)
+                return HttpResponse(geojson, content_type="application/json")
+
+            else:
+                # If it's not WGS 84 then we need to convert it
+                feature_collection = {
+                    "type": "FeatureCollection",
+                    "crs": {
+                        "type": "name",
+                        "properties": {"name": "EPSG:4326"}
+                    },
+                    "features": []
+                }
+
+                for n in range(datasource.layer_count):
+                    layer = datasource[n]
+                    # Transform the coordinates to epsg:4326
+                    features = map(lambda geom: geom.transform(4326, clone=True), layer.get_geoms())
+                    for feature_i, feature in enumerate(features):
+                        feature_collection['features'].append(
+                            {
+                                'type': 'Feature',
+                                'geometry': json.loads(feature.json),
+                                'properties': {
+                                    'name': f'feature_{feature_i}'
+                                }
+                            }
+                        )
+                return HttpResponse(json.dumps(feature_collection), content_type="application/json")
+
     except Exception as e:
         messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
         error = True
+
+    page = "session.html"
+    list = None
 
     context = {
         "session": session,
@@ -173,8 +212,24 @@ def review_session(request, id):
         "layer": layer,
         "work": work,
         "geocode": geocode,
+        "classify": classify,
     }
-    return render(request, "staf/review/session.html", context)
+
+    if classify:
+        page = "session.classify.html"
+        try:
+            names = layer.get_fields(session.meta_data["columns"]["name"])
+            hits = ReferenceSpace.objects.filter(name__in=names)
+            hit = {}
+            for each in hits:
+                hit[each.name] = each.id
+            context["hit"] = hit
+            context["names"] = names
+        except Exception as e:
+            messages.error(request, "Your file could not be processed. Please review the error below.<br><strong>" + str(e) + "</strong>")
+            error = True
+
+    return render(request, "staf/review/" + page, context)
 
 
 def upload_staf(request, id=None):

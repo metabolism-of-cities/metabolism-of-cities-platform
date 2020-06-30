@@ -37,6 +37,33 @@ from urllib.parse import urlparse, parse_qs
 from django.utils import timezone
 import pytz
 
+def get_date_range(start, end):
+
+    if not start or not end:
+        return None
+
+    start_date = start.strftime("%b %d, %Y")
+    start_time = start.strftime("%H:%M")
+    end_date = end.strftime("%b %d, %Y")
+    end_time = end.strftime("%H:%M")
+
+    if start_date == end_date:
+        if start_time == "00:00" and end_time == "00:00":
+            return start_date
+        elif start_time == end_time:
+            return start.strftime("%b %d, %Y %H:%M")
+        else:
+            return start_date + " " + start_time + " - " + end_time
+    else:
+        if start.strftime("%Y%m") == end.strftime("%Y%m"):
+            return start.strftime("%b") + " " + start.strftime("%d") + " - " + end.strftime("%d") + ", " + start.strftime("%Y")
+        elif start_time != "00:00" and end_time != "00:00":
+            return start.strftime("%b %d, %Y %H:%M") + " " + end.strftime("%b %d, %Y %H:%M")
+        elif start.strftime("%Y") == end.strftime("%Y"):
+            return start.strftime("%b %d") + " - " + end_date
+        else:
+            return start_date + " - " + end_date
+
 # By default we really only want to see those records that are both public and not deleted
 class PublicActiveRecordManager(models.Manager):
     def get_queryset(self):
@@ -125,11 +152,11 @@ class Record(models.Model):
         return markdown(self.description) if self.description else None
 
     def authors(self):
-        return People.objects_unfiltered.filter(parent_list__record_child=self, parent_list__relationship__id=4)
+        return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)
 
     def author(self):
         try:
-            return People.objects_unfiltered.filter(parent_list__record_child=self, parent_list__relationship__id=4)[0]
+            return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)[0]
         except:
             return None
 
@@ -175,7 +202,7 @@ class Project(Record):
     summary_sentence = models.CharField(max_length=255, null=True, blank=True, help_text="Describe the project in a single sentence")
 
     def get_absolute_url(self):
-        return reverse("core:project", args=[self.id])
+        return reverse("core:project", args=[self.slug])
 
     def get_website(self):
         if self.url:
@@ -195,6 +222,9 @@ class Project(Record):
             return self.design.logo
         else:
             return None
+
+    class Meta:
+        ordering = ["name"]
     
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
@@ -358,6 +388,7 @@ class Event(Record):
         ("seminar", "Seminar"),
         ("summerschool", "Summer School"),
         ("other", "Other"),
+        ("training_outreach", "Training and Outreach"),
     ]
     type = models.CharField(max_length=20, blank=True, null=True, choices=EVENT_TYPE)
     url = models.URLField(max_length=255, null=True, blank=True)
@@ -374,35 +405,23 @@ class Event(Record):
         return reverse("community:event", args=[self.id])
 
     def get_dates(self):
-
-        if not self.start_date or not self.end_date:
-            return None
-
-        start_date = self.start_date.strftime("%b %d, %Y")
-        start_time = self.start_date.strftime("%H:%M")
-        end_date = self.end_date.strftime("%b %d, %Y")
-        end_time = self.end_date.strftime("%H:%M")
-
-        if start_date == end_date:
-            if start_time == "00:00" and end_time == "00:00":
-                return start_date
-            elif start_time == end_time:
-                return self.start_date.strftime("%b %d, %Y %H:%M")
-            else:
-                return start_date + " " + start_time + " - " + end_time
-        else:
-            if self.start_date.strftime("%Y%m") == self.end_date.strftime("%Y%m"):
-                return self.start_date.strftime("%b") + " " + self.start_date.strftime("%d") + " - " + self.end_date.strftime("%d") + ", " + self.start_date.strftime("%Y")
-            elif start_time != "00:00" and end_time != "00:00":
-                return self.start_date.strftime("%b %d, %Y %H:%M") + " " + self.end_date.strftime("%b %d, %Y %H:%M")
-            elif self.start_date.strftime("%Y") == self.end_date.strftime("%Y"):
-                return self.start_date.strftime("%b %d") + " - " + end_date
-            else:
-                return start_date + " - " + end_date
+        return get_date_range(self.start_date, self.end_date)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    def get_status(self):
+        try:
+            today = timezone.now()
+            if self.end_date < today:
+                return "finished"
+            elif self.start_date <= today and self.end_date >= today:
+                return "active"
+            else:
+                return "upcoming"
+        except:
+            return "upcoming"
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
@@ -429,7 +448,6 @@ class People(Record):
         ("pending", "Pending Review"),
     )
     status = models.CharField(max_length=8, choices=PEOPLE_STATUS, default="active")
-    site = models.ManyToManyField(Site)
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
@@ -531,17 +549,41 @@ class ProjectDesign(models.Model):
         return self.project.name
 
 class ForumTopic(Record):
-    last_update = models.DateTimeField(db_index=True)
+    last_update = models.ForeignKey("Message", on_delete=models.CASCADE, null=True, blank=True)
     part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     parent = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="forum_topics")
+    is_starred = models.NullBooleanField(default=False)
+
+    def posters(self):
+        return People.objects.filter(message_list__parent=self).distinct()
+
+    def get_absolute_url(self):
+        return reverse("community:forum", args=[self.id])
 
     class Meta:
-        ordering = ["-last_update"]
+        ordering = ["-is_starred", "-last_update__date_created"]
 
 class Message(Record):
     attachments = models.ManyToManyField(Document, blank=True)
     parent = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="messages")
     posted_by = models.ForeignKey(People, on_delete=models.CASCADE, null=True, blank=True, related_name="message_list")
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # If this is a forum or work-related message (most of them are) then we need to record
+        # in the parent what the latest mesage is (this is for sorting, filtering etc)
+        try:
+            if hasattr(self.parent, "forumtopic"):
+                parent = self.parent.forumtopic
+            elif hasattr(self.parent, "work"):
+                parent = self.parent.work
+            if parent:
+                check_last_update = Message.objects.filter(parent=self.parent).order_by("-date_created")
+                if check_last_update:
+                    parent.last_update = check_last_update[0]
+                    parent.save()
+        except Exception as e:
+            pass
 
     def getReply(self):
         return Message.objects.filter(parent=self)
@@ -940,6 +982,7 @@ class Work(Record):
     related_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="my_work")
     assigned_to = models.ForeignKey(People, on_delete=models.CASCADE, null=True, blank=True)
     url = models.URLField(null=True, blank=True)
+    last_update = models.ForeignKey(Message, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name if self.name else self.workactivity.name
@@ -957,14 +1000,23 @@ class WorkSprint(Record):
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
 
+    def get_dates(self):
+        return get_date_range(self.start_date, self.end_date)
+
     def get_status(self):
-        today = timezone.now()
-        if self.end_date < today:
-            return "finished"
-        elif self.start_date <= today and self.end_date >= today:
-            return "active"
-        else:
+        try:
+            today = timezone.now()
+            if self.end_date < today:
+                return "finished"
+            elif self.start_date <= today and self.end_date >= today:
+                return "active"
+            else:
+                return "upcoming"
+        except:
             return "upcoming"
+
+    class Meta:
+        ordering = ["-start_date"]
 
 class Badge(models.Model):
 

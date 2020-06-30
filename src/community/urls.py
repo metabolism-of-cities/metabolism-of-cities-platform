@@ -30,6 +30,7 @@ urlpatterns = [
     path("hub/work/create/", core.work_form, { "project_name": app_name }, name="work_form"),
     path("hub/work/<int:id>/", core.work_item, { "project_name": app_name }, name="work_item"),
     path("hub/work/<int:id>/edit/", core.work_form, { "project_name": app_name }, name="work_form"),
+    path("notifications/", core.notifications, { "project_name": app_name }, name="notifications"),
     
     # Forum and contributor pages
     path("forum/<int:id>/", community.forum, { "project_name": app_name }, name="forum"),
@@ -55,6 +56,7 @@ urlpatterns = [
     path("hub/help/", core.hub_help, { "project_name": app_name }, name="hub_help"),
     path("hub/join/", core.user_register, { "project_name": app_name, "section": "volunteer_hub", }, name="hub_join"),
     path("hub/profile/", core.user_profile, { "project_name": app_name }, name="hub_profile"),
+    path("hub/profile/edit/", core.user_profile_form, { "project_name": app_name }, name="hub_profile_form"),
     path("hub/forum/", community.forum_list, { "project_name": app_name, "parent": 31993, "section": "volunteer_hub", }, name="volunteer_forum"),
     path("hub/forum/create/", community.forum_form, { "project_name": app_name, "parent": 31993, "section": "volunteer_hub" }),
     path("hub/forum/<int:id>/", community.forum, { "project_name": app_name, "section": "volunteer_hub" }, name="volunteer_forum"),
@@ -84,7 +86,20 @@ urlpatterns = [
     # News and events URLs from baseline
     path("news/", core.news_list, { "project_name": app_name, "header_subtitle": "The latest news from the urban metabolism community" }, name="news"),
     path("news/<slug:slug>/", core.news, { "project_name": app_name }, name="news"),
-    path("events/", core.event_list, { "project_name": app_name }, name="events"),
-    path("events/<int:id>/", core.event, { "project_name": app_name }, name="event"),
+    path("events/", community.event_list, { "project_name": app_name }, name="events"),
+    path("events/<int:id>/", community.event, { "project_name": app_name }, name="event"),
+
+
+    # Work-related items
+    path("tasks/", core.work_grid, { "project_name": app_name }, name="tasks"),
+    path("tasks/sprints/", core.work_sprints, { "project_name": app_name }, name="work_sprints"),
+    path("tasks/sprints/<int:id>/", core.work_sprint, { "project_name": app_name }, name="work_sprint"),
+    path("tasks/sprints/<int:sprint>/tasks/", core.work_grid, { "project_name": app_name }, name="work_sprint_tasks"),
+    path("tasks/sprints/<int:sprint>/tasks/create/", core.work_form, { "project_name": app_name }),
+    path("tasks/sprints/<int:sprint>/tasks/<int:id>/", core.work_item, { "project_name": app_name }),
+    path("tasks/sprints/<int:sprint>/tasks/<int:id>/edit/", core.work_form, { "project_name": app_name }),
+    path("tasks/create/", core.work_form, { "project_name": app_name }, name="work_form"),
+    path("tasks/<int:id>/", core.work_item, { "project_name": app_name }, name="work_item"),
+    path("tasks/<int:id>/edit/", core.work_form, { "project_name": app_name }, name="work_form"),
 
 ]

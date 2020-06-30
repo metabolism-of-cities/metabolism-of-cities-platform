@@ -3,11 +3,6 @@
 
 {% block head %}
   <meta name="robots" content="nofollow" />
-  <style type="text/css">
-  .card .list-group-item.table-item > div:first-of-type {
-    opacity:0.5;
-  }
-  </style>
 {% endblock %}
 
 {% block content %}
@@ -24,7 +19,7 @@
   {% if not info.is_public %}
     <div class="alert alert-warning">
       <i class="fa fa-exclamation-triangle fa-fw"></i>
-      <strong>Visibility setting</strong>: this task is <strong>not</strong> visible to the public, 
+      <strong>Visibility setting</strong>: this task is <strong>not</strong> visible to the public,
       only to logged-in users.
     </div>
   {% endif %}
@@ -33,28 +28,28 @@
     <div class="col-md-6 pr-md-4">
       <div class="sticky-top">
 
-        <div class="card my-4">
+        <div class="card mb-4">
           <ul class="list-group list-group-flush">
             <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-info-circle mr-1" aria-hidden="true"></i>ID</div>
+              <div><i class="fal fa-fw fa-fingerprint mr-1" aria-hidden="true"></i>ID</div>
               <div> {{ info.id }}</div>
             </li>
             <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-play mr-1" aria-hidden="true"></i>Status</div>
-              <div class="text-{% if info.get_status_display == "In Progress" %}info{% elif info.get_status_display == "Completed" %}success{% elif info.get_status_display == "Discarded"%}danger{% else %}dark{% endif %}"> {{ info.get_status_display }}</div>
+              <div><i class="fal fa-fw fa-play mr-1" aria-hidden="true"></i>Status</div>
+              <div class="text-{% if info.get_status_display == 'In Progress' %}info{% elif info.get_status_display == 'Completed' %}success{% elif info.get_status_display == 'Discarded' %}danger{% else %}dark{% endif %}"> {{ info.get_status_display }}</div>
             </li>
             <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-thermometer-half mr-1" aria-hidden="true"></i>Priority</div>
+              <div><i class="fal fa-fw fa-thermometer-half mr-1" aria-hidden="true"></i>Priority</div>
               <div> {{ info.get_priority_display }}</div>
             </li>
             <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-box mr-1" aria-hidden="true"></i>Type</div>
+              <div><i class="fal fa-fw fa-box mr-1" aria-hidden="true"></i>Type</div>
               <div> {{ info.workactivity }}</div>
             </li>
             {% if info.related_to %}
               <li class="list-group-item table-item">
-                <div><i class="far fa-fw fa-link mr-1"></i>Related to</div>
-                <div> 
+                <div><i class="fal fa-fw fa-link mr-1"></i>Related to</div>
+                <div>
                   {% if info.url %}
                     <a href="{{ info.url }}">
                       {{ info.related_to }}
@@ -70,15 +65,19 @@
               </li>
             {% endif %}
             <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-user mr-1"></i>Assigned to</div>
+              <div><i class="fal fa-fw fa-user mr-1"></i>Assigned to</div>
               <div> {{ info.assigned_to|default_if_none:"<em>No one yet</em>" }}</div>
             </li>
             {% if info.subscribers.all %}
               <li class="list-group-item table-item">
-                <div title="These people are notified about updates to this task"><i class="far fa-fw fa-users mr-1"></i>Subscribers</div>
-                {% for each in info.subscribers.all %}
-                  <div>{{ each }}</div>
-                {% endfor %}
+                <div class="align-top" title="These people are notified about updates to this task">
+                  <i class="far fa-fw fa-users mr-1"></i>Subscribers
+                </div>
+                <div class="subscribers">
+                  {% for each in info.subscribers.all %}
+                    <div>{{ each }}</div>
+                  {% endfor %}
+                </div>
               </li>
             {% endif %}
           </ul>
@@ -98,7 +97,7 @@
         {% else %}
           <div class="text-center pt-4 alert alert-dark pb-5">
             <h2 class="my-4">
-              <i class="fad fa-digging" aria-hidden="true"></i> 
+              <i class="fad fa-digging" aria-hidden="true"></i>
               {% if info.assigned_to and info.assigned_to != request.user.people %}
                 {{ info.assigned_to }} is on it!
               {% else %}
@@ -196,7 +195,7 @@
               {% if info.status == 1 or info.status == 4 or info.status == 5 %}
 
                 <button class="btn btn-primary-basic mb-2 mr-1" type="submit" form="unassign">
-                  <i class="fas fa-user-times"></i>
+                  <i class="fal fa-user-times"></i>
                   Unassign
                 </button>
 
@@ -220,7 +219,7 @@
 
           {% if not request.user.people in info.subscribers.all %}
             <form method="post">
-              <button class="btn btn-primary-basic mt-2" type="submit"><i class="fa fa-envelope"></i> Subscribe to receive updates</button>
+              <button class="btn btn-primary-basic mt-2" type="submit"><i class="fal fa-envelope"></i> Subscribe to receive updates</button>
               {% csrf_token %}
               <input type="hidden" name="subscribe" value="true" />
             </form>
@@ -230,14 +229,17 @@
         {% endif %}
 
         {% if request.user.people in info.subscribers.all %}
-            <form method="post">
-              {% csrf_token %}
-              <input type="hidden" name="unsubscribe" value="true" />
-              <p class="text-center"><i class="fa fa-check"></i> 
-              You are subscribed to receive updates.<br> 
-              <button class="btn btn-primary-basic" type="submit"> Unsubscribe</button>
-              </p>
-            </form>
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="unsubscribe" value="true" />
+            <div>
+              You are subscribed to receive updates
+              <button class="btn btn-sm btn-outline-danger ml-3" type="submit">
+                <i class="fal fa-ban"></i>
+                Unsubscribe
+              </button>
+            </div>
+          </form>
         {% endif %}
 
     </div>

@@ -13,13 +13,18 @@
 
 <h2 class="mb-0">{{ info }}</h2>
 
-<div class="tags" style="display:none">
-  <a href="#" class="badge badge-primary">Nesciunt</a>
-  <a href="#" class="badge badge-primary">Tenetur</a>
-</div>
+{% if info.forumtopic.part_of_project %}
+  <div class="tags">
+    <span class="badge badge-primary">{{ info.forumtopic.part_of_project }}</a>
+  </div>
+{% endif %}
 
 <a class="btn btn-sm btn-primary-basic mt-2" href="../"><i class="fas fa-angle-left"></i> Back to topic list</a>
 
 {% include "_messages.html" %}
+
+{% if not request.user.is_authenticated %}
+  {% include "_notauthenticated.html" %}
+{% endif %}
 
 {% endblock %}

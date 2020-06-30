@@ -261,11 +261,15 @@ def form(request, id=None, project_name="library", type=None):
     journals = publishers = None
     type = LibraryItemType.objects.get(pk=type)
 
-    #fields=("name", "author_list", "description", "url", "size", "spaces", "tags", "year", "language", "license", "data_year_start", "data_year_end", "update_frequency", "data_interval", "data_formats", "has_api"),
     if type.name == "Dataset":
+        if request.user.is_staff:
+            fields=["name", "author_list", "description", "url", "size", "spaces", "tags", "year", "language", "license", "data_year_start", "data_year_end", "update_frequency", "data_interval", "data_formats", "has_api"]
+        else:
+            fields=["name", "author_list", "description", "url", "size", "spaces", "year", "language", "license", "update_frequency"]
+
         ModelForm = modelform_factory(
             LibraryDataset, 
-            fields=("name", "author_list", "description", "url", "size", "spaces", "year", "language", "license", "update_frequency"),
+            fields = fields,
             labels = {
                 "year": "Year created (required)",
                 "spaces": "City/cities",
@@ -360,7 +364,10 @@ def form(request, id=None, project_name="library", type=None):
                 return redirect(request.GET["return"])
             elif type.name == "Dataset":
                 messages.success(request, "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution!")
-                return redirect("data:upload")
+                return redirect("data:upload_dataset")
+            elif type.name == "Data portal":
+                messages.success(request, "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution!")
+                return redirect("data:upload_dataportal")
             else:
                 messages.success(request, "The item was added to the library. <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=2&amp;record_child=" + str(info.id) + "'>Link to publisher</a> |  <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=4&amp;record_child=" + str(info.id) + "'>Link to author</a> ||| <a href='/admin/core/organization/add/' target='_blank'>Add a new organization</a>")
                 return redirect("library:form")

@@ -271,7 +271,7 @@ def account_vote(request):
 
 @check_ascus_access
 def forum(request):
-    list = ForumTopic.objects.filter(part_of_project_id=8).order_by("-last_update")
+    list = ForumTopic.objects_include_private.filter(part_of_project_id=8).order_by("-last_update")
     context = {
         "list": list,
         "header_title": "Forum",

@@ -42,6 +42,7 @@ urlpatterns = [
     path("hub/work/create/", core.work_form, { "project_name": app_name }, name="work_form"),
     path("hub/work/<int:id>/", core.work_item, { "project_name": app_name }, name="work_item"),
     path("hub/work/<int:id>/edit/", core.work_form, { "project_name": app_name }, name="work_form"),
+    path("notifications/", core.notifications, { "project_name": app_name }, name="notifications"),
     
     # Forum and contributor pages
     path("forum/<int:id>/", community.forum, { "project_name": app_name }, name="forum"),
@@ -67,6 +68,7 @@ urlpatterns = [
     path("hub/help/", core.hub_help, { "project_name": app_name }, name="hub_help"),
     path("hub/join/", core.user_register, { "project_name": app_name, "section": "volunteer_hub", }, name="hub_join"),
     path("hub/profile/", core.user_profile, { "project_name": app_name }, name="hub_profile"),
+    path("hub/profile/edit/", core.user_profile_form, { "project_name": app_name }, name="hub_profile_form"),
     path("hub/forum/", community.forum_list, { "project_name": app_name, "parent": 31993, "section": "volunteer_hub", }, name="volunteer_forum"),
     path("hub/forum/create/", community.forum_form, { "project_name": app_name, "parent": 31993, "section": "volunteer_hub" }),
     path("hub/forum/<int:id>/", community.forum, { "project_name": app_name, "section": "volunteer_hub" }, name="volunteer_forum"),

@@ -1,0 +1,52 @@
+{% extends "_base.html" %}
+{% load humanize %}
+{% block page_name %}volunteer portal latest{% endblock %}
+
+{% block content %}
+
+  <h1>Notifications</h1>
+
+  {% if not unread %}
+    <div class="alert alert-warning">
+      <i class="fa fa-check"></i>
+      You don't have any unread notifications. Below are the most recent
+      {{ list.count }} notifications.
+    </div>
+  {% endif %}
+
+  <table class="table datatable-card datatable">
+    <thead>
+      <tr>
+        <th class="user">User</th>
+        <th class="item">Date and item</th>
+        <th class="blurb">Details</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in list %}
+      <tr>
+        <td data-sort="-{{ each.record.message.date_created|date:"U" }}">
+          <img src="{{ each.record.message.posted_by.image.thumbnail.url }}" title="{{ each.record.message.posted_by}}" alt="" class="avatar">
+          {{ each.record.message.posted_by }}
+        </td>
+        <td>
+          {{ each.record.message.date_created|naturaltime }}<br>
+          <a href="../{% if PROJECT.id != 18 %}hub/{% endif %}{% if each.record.message.parent.work %}work{% else %}forum{% endif %}/{{ each.record.message.parent.id }}/">{{ each.record.message.parent }}</a>
+        </td>
+        <td>
+          {{ each.record.get_markdown_description|safe|truncatewords_html:30 }}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  {% if unread %}
+    <form method="post">
+      <button type="submit" class="btn btn-lg btn-primary"><i class="fa fa-check"></i> Mark all as read</button>  
+      <input type="hidden" name="read" value="{% for each in list %}{{ each.id }},{% endfor %}" />
+      {% csrf_token %}
+    </form>
+  {% endif %}
+
+{% endblock %}

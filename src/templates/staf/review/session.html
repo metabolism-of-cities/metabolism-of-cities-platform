@@ -7,17 +7,7 @@
 
   <h1>{{ session }}</h1>
 
-  <ul class="nav nav-tabs my-4">
-    <li class="nav-item">
-      <a class="nav-link active" href="#">Overview</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Data Classification</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Meta information</a>
-    </li>
-  </ul>
+  {% include "staf/review/_nav.html" %}
 
   <section class="row">
     <div class="col-lg-8 mb-4 mb-lg-0">
@@ -81,11 +71,14 @@
       </pre>
 
       <div id="map" class="leaflet-map mt-2">
-
+        <div class="display-4 loading-map text-center pt-4">
+          <i class="fad fa-spinner-third fa-spin"></i> Loading map
+        </div>
       </div>
     </div>
 
     <div class="col-lg-4">
+
       <div class="card mb-4">
         <ul class="list-group list-group-flush">
           <li class="list-group-item table-item">
@@ -169,14 +162,14 @@
       <span id="unidentified-columns-count"></span> identifier(s) left to assign
     </div>
 
-    <form id="identify-columns" method="submit">
+    <form id="identify-columns" method="post" action="?classify=true">
       <div class="form-row">
         <div class="col-md-4 col-lg-3 mb-4">
           <label class="category mb-0">Name</label>
-          <select class="custom-select unidentified" name="name">
+          <select class="custom-select unidentified" name="classify_name">
             <option value="none" selected disabled>Name</option>
             {% for field in layer.fields %}
-              <option value="{{ field }}">{{ field }}</option>
+              <option value="{{ field }}" {% if session.meta_data.columns.name == field %}selected{% endif %}>{{ field }}</option>
             {% endfor %}
           </select>
         </div>
@@ -185,14 +178,15 @@
           <select class="custom-select unidentified" name="identifier">
             <option value="none" selected disabled>Identifier</option>
             {% for field in layer.fields %}
-              <option value="{{ field }}">{{ field }}</option>
+              <option value="{{ field }}" {% if session.meta_data.columns.identifier == field %}selected{% endif %}>{{ field }}</option>
             {% endfor %}
           </select>
         </div>
       </div>
+      {% csrf_token %}
     </form>
 
-    <button class="btn disabled save btn-primary" form="identify-columns">
+    <button class="btn disabled save btn-success" disabled form="identify-columns">
       <i class="fas fa-save"></i>
       Save
     </button>
@@ -217,6 +211,8 @@
 
       // https://leafletjs.com/reference-1.6.0.html
       if (mapOpen == false) {
+
+
         var map = L.map("map");
         L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={{ MAPBOX_API_KEY }}", {
           attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -227,6 +223,7 @@
 
         $.get("?geojson=true")
         .done(function(results) {
+          $(".loading-map").remove();
           geojsonlayer = L.geoJSON(results, {
             style: {
               color: "#144d58",
@@ -259,6 +256,7 @@
           .html("<i class='fal fa-info-circle mr-1'></i> You have selected a name and can continue to the next step. However, there are still unselected identifiers")
 
         $(".btn.save").removeClass("disabled");
+        $(".btn.save").removeAttr("disabled");
       } else if (unidentifiedCount == 0) {
         let alert = $(".alert-identify");
 
@@ -268,6 +266,7 @@
           .html("<i class='fal fa-check-circle mr-1'></i> All identifiers are selected, please save and continue to the next step")
 
         $(".btn.save").removeClass("disabled");
+        $(".btn.save").removeAttr("disabled");
       }
     }
 
@@ -286,7 +285,9 @@
         let columnValue = $(this).val();
 
         if (columnValue) {
-          $("#identify-columns select option[value='" + columnValue + "']").attr("disabled", "disabled")
+          // Paul disabled this to make the value actually be sent!
+          // To be fixed somehow by Guus...
+          //$("#identify-columns select option[value='" + columnValue + "']").attr("disabled", "disabled")
         }
       })
     })

@@ -83,6 +83,20 @@ class SearchCompleteAdmin(admin.ModelAdmin):
 class SearchAdmin(admin.ModelAdmin):
     search_fields = ["name"]
 
+class PeopleAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
+    list_filter = ["is_deleted"]
+    list_display = ["name", "email", "user", "is_deleted"]
+    exclude = ["old_id", "meta_data", "is_public", "sectors", "subscribers", "status", "site", "firstname", "lastname"]
+    autocomplete_fields = ["tags", "spaces"]
+
+class ForumTopicAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
+    list_filter = ["part_of_project", "is_deleted", "is_starred"]
+    list_display = ["name", "part_of_project", "is_starred", "is_deleted"]
+    exclude = ["old_id", "meta_data", "is_public", "sectors"]
+    autocomplete_fields = ["tags", "spaces", "subscribers", "parent"]
+
 class ActivityAdmin(admin.ModelAdmin):
     search_fields = ["name", "code"]
     list_filter = ["catalog"]
@@ -264,7 +278,7 @@ class BadgeAdmin(admin.ModelAdmin):
 admin_site.register(Tag, TagAdmin)
 admin_site.register(Record, SearchCompleteAdmin)
 admin_site.register(Message, SearchCompleteAdmin)
-admin_site.register(ForumTopic, SearchCompleteAdmin)
+admin_site.register(ForumTopic, ForumTopicAdmin)
 admin_site.register(Work, SearchCompleteAdmin)
 admin_site.register(Event, EventAdmin)
 admin_site.register(News, NewsAdmin)
@@ -274,7 +288,7 @@ admin_site.register(Webpage, WebpageAdmin)
 admin_site.register(WebpageDesign, WebpageDesignAdmin)
 admin_site.register(ProjectDesign)
 admin_site.register(ProjectType)
-admin_site.register(People, SearchCompleteAdmin)
+admin_site.register(People, PeopleAdmin)
 admin_site.register(Video, VideoAdmin)
 admin_site.register(Project, ProjectAdmin)
 admin_site.register(PublicProject, PublicProjectAdmin)

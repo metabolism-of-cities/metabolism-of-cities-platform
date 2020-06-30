@@ -1,0 +1,12 @@
+
+  <ul class="nav nav-tabs my-4">
+    <li class="nav-item">
+      <a class="nav-link {% if not classify %}active{% endif %}" href="{% url "staf:review_session" session.id %}">Overview</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {% if classify %}active{% endif %}" href="{% url "staf:review_session_classify" session.id %}">Data Classification</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Meta information</a>
+    </li>
+  </ul>
