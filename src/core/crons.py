@@ -52,6 +52,7 @@ class EmailNotifications(CronJobBase):
                 "firstname": people.name,
                 "url": url_project,
                 "organization_name": "Metabolism of Cities",
+                "email": people.email,
             }
 
             msg_html = render_to_string("mailbody/notifications.html", context)
