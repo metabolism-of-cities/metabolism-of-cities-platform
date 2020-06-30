@@ -22,7 +22,7 @@
             {% include "_notauthenticated.html" %}
           {% else %}
 
-            {% if not request.user.people in info.subscribers.all %}
+            {% if not subscription %}
               <form method="post">
                 <button class="btn btn-primary-basic mt-2" type="submit"><i class="fal fa-check"></i> Register now</button>
                 {% csrf_token %}
@@ -30,7 +30,7 @@
               </form>
             {% endif %}
 
-          {% if request.user.people in info.subscribers.all %}
+          {% if subscription %}
             <form method="post">
               {% csrf_token %}
               <input type="hidden" name="unsubscribe" value="true" />

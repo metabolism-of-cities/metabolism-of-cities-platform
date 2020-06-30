@@ -484,20 +484,33 @@ def event_list(request, header_subtitle=None, project_name=None):
 def event(request, slug, project_name=None):
     info = get_object_or_404(Event, slug=slug)
     today = timezone.now().date()
+    subscription = None
+    if request.user.is_authenticated:
+        subscription = RecordRelationship.objects.filter(
+            record_parent = request.user.people,
+            record_child = info,
+            relationship_id = 27,
+        )
+
     if "subscribe" in request.POST:
-        info.subscribers.add(request.user.people)
+        RecordRelationship.objects.create(
+            record_parent = request.user.people,
+            record_child = info,
+            relationship_id = 27,
+        )
         messages.success(request, "You are now registered! You will receive more information by e-mail closer to the date.")
-    if "unsubscribe" in request.POST:
-        info.subscribers.remove(request.user.people)
+    if "unsubscribe" in request.POST and subscription:
+        subscription.delete()
         messages.success(request, "You are no longer registered.")
     context = {
         "info": info,
         "upcoming": Event.objects.filter(end_date__gte=today).order_by("start_date")[:3],
         "header_title": "Events",
         "header_subtitle": info.name,
+        "subscription": subscription,
+
     }
     return render(request, "event.html", context)
-
 
 # The template section allows contributors to see how some
 # commonly used elements are coded, and allows them to copy/paste
