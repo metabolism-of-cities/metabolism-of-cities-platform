@@ -409,42 +409,6 @@ def index(request):
     return render(request, "index.html", context)
 
 
-def notification_cron(request):
-
-    people_with_notifications = People.objects.filter(notifications__is_read=False).distinct()
-    project = get_object_or_404(Project, pk=1)
-    url_project = project.get_website()
-
-    for people in people_with_notifications:
-        user = people.user
-        messages = Notification.objects.filter(people=people, is_read=False).order_by("record", "-id")
-
-        context = {
-            "list": messages,
-            "firstname": user.first_name,
-            "url": url_project,
-            "organization_name": "Metabolism of Cities",
-        }
-
-        msg_html = render_to_string("mailbody/notifications.html", context)
-        msg_plain = render_to_string("mailbody/notifications.txt", context)
-
-        sender = "Metabolismofcities" + '<info@penguinprotocols.com>'
-        recipient = '"' + user.first_name + '" <' + user.email + '>'
-        send_mail(
-            "Your latest notifications from The Backoffice",
-            msg_plain,
-            sender,
-            [user.email],
-            html_message=msg_html,
-        )
-
-        #messages.update(is_read=True)
-        
-    context = {}
-
-    return render(request, "index.html", context)
-
 # News and events
 
 def news_events_list(request, header_subtitle=None, project_name=None):
