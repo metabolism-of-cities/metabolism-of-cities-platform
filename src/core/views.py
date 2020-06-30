@@ -431,7 +431,7 @@ def notification_cron(request):
             html_message=msg_html,
         )
 
-        messages.update(is_read=True)
+        #messages.update(is_read=True)
         
     context = {}
 

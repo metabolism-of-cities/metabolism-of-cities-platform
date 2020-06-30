@@ -5,7 +5,7 @@ Here are your latest notifications from the {{ organization_name }} Back Office 
 {% for messages in list %}
     {{ messages.record.name }}
 
-    {{ messages.record.description }}
+    {{ messages.record.description|slice:"0:50" }}...
 
 {% endfor %}
 
