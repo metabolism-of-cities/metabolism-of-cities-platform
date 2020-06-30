@@ -800,12 +800,23 @@ def controlpanel_content(request, project_name):
 @login_required
 def controlpanel_content_form(request, project_name, id=None):
 
+    if "update" in request.GET:
+        all = Record.objects_unfiltered.filter(description__isnull=False).exclude(description_html__isnull=False).exclude(description="")
+        messages.success(request, all.count())
+        count = 0
+        for each in all:
+            count += 1
+            each.save()
+            print(each.id)
+            if count == 600:
+                break
+
     project = PROJECT_ID[project_name]
     if not has_permission(request, project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
     info = None
-    ModelForm = modelform_factory(Webpage, fields=("name", "type", "slug", "is_deleted"))
+    ModelForm = modelform_factory(Webpage, fields=("name", "slug", "is_deleted"))
     if id:
         info = get_object_or_404(Webpage, pk=id)
         form = ModelForm(request.POST or None, instance=info)
@@ -817,6 +828,9 @@ def controlpanel_content_form(request, project_name, id=None):
             if not id:
                 info.part_of_project_id = project
             info.description = request.POST.get("description")
+            meta_data = info.meta_data if info.meta_data else {}
+            meta_data["format"] = request.POST.get("format")
+            info.meta_data = meta_data
             info.save()
             # TO DO
             # There is a contraint, for slug + project combined, and we should
@@ -897,7 +911,7 @@ def work_form(request, project_name, id=None, sprint=None):
         fields += ["part_of_project"]
     if request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
         fields += ["is_public", "tags"]
-    ModelForm = modelform_factory(Work, fields=fields)
+    ModelForm = modelform_factory(Work, fields=fields, labels={"url": "URL", "workactivity": "Type of activity"})
     if id and request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
         info = Work.objects_include_private.get(pk=id)
         form = ModelForm(request.POST or None, instance=info)
@@ -1013,9 +1027,9 @@ def work_item(request, project_name, id, sprint=None):
     if sprint:
         sprint = WorkSprint.objects.get(pk=sprint)
 
-    messages = Message.objects.filter(parent=info)
+    message_list = Message.objects.filter(parent=info)
     if request.user.is_authenticated:
-        notifications = Notification.objects.filter(people=request.user.people, record__in=messages, is_read=False)
+        notifications = Notification.objects.filter(people=request.user.people, record__in=message_list, is_read=False)
         notifications.update(is_read=True)
 
     if request.method == "POST":
@@ -1078,7 +1092,7 @@ def work_item(request, project_name, id, sprint=None):
     context = {
         "info": info, 
         "load_messaging": True,
-        "list_messages": messages,
+        "list_messages": message_list,
         "forum_title": "History and discussion",
         "title": info.name,
         "sprint": sprint,

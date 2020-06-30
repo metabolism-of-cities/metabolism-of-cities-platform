@@ -250,12 +250,23 @@
 
       <div class="description">
         {% if info.description %}
-          <h2>Description</h2>
-          {{ info.get_markdown_description|safe }}
+          <h2 class="h3 mt-3">Description</h2>
+          {{ info.get_description }}
+        {% endif %}
+
+        {% if info.workactivity.instructions %}
+          <h2 class="h3 mt-3">General instructions</h2>
+          <div class="mb-3">
+            {{ info.workactivity.instructions|linebreaksbr }}
+          </div>
+        {% endif %}
+
+        {% if info.url %}
+          <p><a href="{{ info.url }}" class="btn btn-primary">Go to action page <i class="fw ml-2 fa fa-arrow-circle-right"></i></a></p>
         {% endif %}
       </div>
 
-      <h2 class="mt-4 mb-4">Discussion and updates</h2>
+      <h2 class="mt-4 mb-4 h3">Discussion and updates</h2>
       {% include "_messages.html" %}
     </div>
   </div>

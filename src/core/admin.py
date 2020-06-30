@@ -11,6 +11,8 @@ from django.contrib.gis import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.html import format_html
 
+DEFAULT_EXCLUDE = ["description_html", "date_created", "tags", "spaces", "sectors", "subscribers", "old_id", "meta_data"]
+
 class GeoModelAdmin(admin.ModelAdmin):
      map_width = 100
 
@@ -78,10 +80,18 @@ class VideoAdmin(admin.ModelAdmin):
 class SearchCompleteAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     autocomplete_fields = ["spaces", "tags"]
-    exclude = ["old_id", "meta_data"]
+    exclude = DEFAULT_EXCLUDE
+
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ["date_created", "name", "posted_by"]
+    search_fields = ["name", "posted_by__name"]
+    list_filter = ["date_created"]
+    autocomplete_fields = ["parent", "posted_by"]
+    exclude = DEFAULT_EXCLUDE + ["image"]
 
 class SearchAdmin(admin.ModelAdmin):
     search_fields = ["name"]
+    exclude = DEFAULT_EXCLUDE
 
 class NotificationAdmin(admin.ModelAdmin):
     search_fields = ["name"]
@@ -283,7 +293,7 @@ class BadgeAdmin(admin.ModelAdmin):
 
 admin_site.register(Tag, TagAdmin)
 admin_site.register(Record, SearchCompleteAdmin)
-admin_site.register(Message, SearchCompleteAdmin)
+admin_site.register(Message, MessageAdmin)
 admin_site.register(ForumTopic, ForumTopicAdmin)
 admin_site.register(Work, SearchCompleteAdmin)
 admin_site.register(Event, EventAdmin)
