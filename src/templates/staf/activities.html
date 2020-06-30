@@ -1,8 +1,28 @@
 {% extends "_base.html" %}
 
 {% block content %}
-  <h1>Activities</h1>
-  <table class="table table-striped datatable">
+  <h1>{{ catalog }}</h1>
+
+  {% if catalog.description %}
+    <div class="mt-3 mb-3 alert-warning p-4">
+      {{ catalog.get_markdown_description|safe }}
+    </div>
+  {% endif %}
+
+  {% if catalog.url %}
+    <p><a class="btn btn-default-outline" href="{{ catalog.url }}"><i class="fa fa-external-link-alt"></i> Website</a></p>
+  {% endif %}
+
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link {% if not request.GET.entire %}active{% endif %}" href="./">Browse by level</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {% if request.GET.entire %}active{% endif %}" href="?entire=true">View entire list</a>
+    </li>
+  </ul>
+
+  <table class="table table-striped datatable pt-2">
     <thead>
       <tr>
         <th>Code</th>
@@ -16,7 +36,7 @@
         <td>{{ each.code }}</td>
         <td><a href="{% url "staf:activities" each.catalog.id each.id %}">{{ each.name }}</td>
         <td>
-          <a class="btn btn-info" href="{% url "staf:activity" each.catalog.id each.id %}"><i class="fa fa-eye"></i> View</a>
+          <a disabled class="btn btn-info" href="{% url "staf:activity" each.catalog.id each.id %}"><i class="fa fa-eye"></i> View</a>
         </td>
       </tr>
     {% endfor %}

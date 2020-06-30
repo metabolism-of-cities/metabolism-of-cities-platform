@@ -565,14 +565,50 @@ def activities_catalogs(request):
     return render(request, "staf/activities.catalogs.html", context)
 
 def activities(request, catalog, id=None):
+
+    if "import" in request.GET:
+        import csv
+        file = settings.MEDIA_ROOT + "/import/nace.csv"
+        a = []
+        list = Activity.objects.filter(catalog_id=3655).order_by("id")
+        for each in list:
+            a.append(each)
+        count = 0
+        with open(file, "r") as csvfile:
+            contents = csv.DictReader(csvfile)
+            for row in contents:
+                order = row["Order"]
+                level = row["Level"]
+                code = row["Code"]
+                parent = row["Parent"]
+                desc = row["Description"]
+                ref = row["Reference to ISIC Rev. 4"]
+                check = a[count]
+                if desc != check.name:
+                    print("-------__")
+                    print(check.name)
+                    print(desc)
+                else:
+                    check.code = code
+                    check.meta_data = {
+                        "order": order,
+                        "Reference to ISIC Rev. 4": ref,
+                    }
+                    check.save()
+                count += 1
+
     catalog = ActivityCatalog.objects.get(pk=catalog)
     list = Activity.objects.filter(catalog=catalog)
-    if id:
-        list = list.filter(parent_id=id)
-    else:
-        list = list.filter(parent__isnull=True)
+    if not "entire" in request.GET:
+        if id:
+            list = list.filter(parent_id=id)
+        else:
+            list = list.filter(parent__isnull=True)
     context = {
         "list": list,
+        "catalog": catalog,
+        "load_datatables": True,
+        "title": catalog.name,
     }
     return render(request, "staf/activities.html", context)
 
