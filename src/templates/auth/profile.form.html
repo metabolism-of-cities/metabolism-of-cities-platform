@@ -7,6 +7,20 @@
 
   <form method="post" class="form form-horizontal" enctype="multipart/form-data">
     {% bootstrap_form form layout="horizontal" %}
+
+<div class="form-group row"><label class="col-md-3 col-form-label" for="id_researchgate">Researchgate</label><div class="col-md-9"><input type="text" name="researchgate" maxlength="255" class="form-control" placeholder="Researchgate" title="" id="id_researchgate"></div></div>
+
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label">
+        Notifications
+      </label>
+      <div class="col-md-9">
+        <input type="checkbox" name="notifications" value="true" {% if request.user.people.meta_data.mute_notifications %}{% else %}checked{% endif %} />
+        Send notifications by e-mail
+      </div>
+    </div>
+
+
     {% buttons %}
       <div class="col-md-offset-3 col-md-9">
         <button type="submit" class="btn btn-success">Save</button>

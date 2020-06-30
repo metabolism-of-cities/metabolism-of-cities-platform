@@ -371,6 +371,14 @@ def user_profile_form(request, project_name=None):
             user.email = people.email
             user.save();
 
+            meta_data = people.meta_data if people.meta_data else {}
+            if "notifications" in request.POST and request.POST["notifications"]:
+                meta_data["mute_notifications"] = False
+            else:
+                meta_data["mute_notifications"] = True
+            people.meta_data = meta_data
+            people.save()
+
             messages.success(request, "Your profile information was saved.")
             return redirect(request.GET["return"])
         else:

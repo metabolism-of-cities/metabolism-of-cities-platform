@@ -34,22 +34,22 @@ class CreateMapJS(CronJobBase):
         file.close()
 
 class EmailNotifications(CronJobBase):
-    RUN_EVERY_MINS = 60
+    RUN_EVERY_MINS = 60*12
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = "core.EmailNotifications"
 
     def do(self):
-        people_with_notifications = People.objects.filter(notifications__is_read=False).distinct()
+        people_with_notifications = People.objects.filter(notifications__is_read=False).exclude(meta_data__mute_notifications=True).distinct()
         project = get_object_or_404(Project, pk=1)
         url_project = project.get_website()
 
         for people in people_with_notifications:
-            user = people.user
             messages = Notification.objects.filter(people=people, is_read=False).order_by("record", "-id")
+            print("Sending " + str(messages.count()) + " notifications to " + str(people))
 
             context = {
                 "list": messages,
-                "firstname": user.first_name,
+                "firstname": people.name,
                 "url": url_project,
                 "organization_name": "Metabolism of Cities",
             }
@@ -57,13 +57,13 @@ class EmailNotifications(CronJobBase):
             msg_html = render_to_string("mailbody/notifications.html", context)
             msg_plain = render_to_string("mailbody/notifications.txt", context)
 
-            sender = "Metabolismofcities" + '<info@penguinprotocols.com>'
-            recipient = '"' + user.first_name + '" <' + user.email + '>'
+            sender = "Metabolism of Cities" + '<info@metabolismofcities.org>'
+            recipient = '"' + people.name + '" <' + people.email + '>'
             send_mail(
-                "Your latest notifications from The Backoffice",
+                "Your latest notifications from Metabolism of Cities",
                 msg_plain,
                 sender,
-                [user.email],
+                [people.email],
                 html_message=msg_html,
             )
 

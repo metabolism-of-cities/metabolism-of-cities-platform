@@ -83,6 +83,12 @@ class SearchCompleteAdmin(admin.ModelAdmin):
 class SearchAdmin(admin.ModelAdmin):
     search_fields = ["name"]
 
+class NotificationAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
+    list_display = ["people", "record", "is_read"]
+    list_filter = ["is_read"]
+    autocomplete_fields = ["people", "record"]
+
 class PeopleAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     list_filter = ["is_deleted"]
@@ -324,7 +330,7 @@ admin_site.register(ReferenceSpaceLocation, LocationAdmin)
 admin_site.register(ReferenceSpaceGeocode)
 admin_site.register(Sector, SearchAdmin)
 admin_site.register(DataArticle, SearchAdmin)
-admin_site.register(Notification, SearchAdmin)
+admin_site.register(Notification, NotificationAdmin)
 admin_site.register(UploadSession)
 admin_site.register(UploadFile)
 

@@ -5,19 +5,23 @@
 <h2>Hi {{ firstname }},</h2>
 
 <p>
-    Here are your latest notifications from the <a href="{{ url }}" target="_blank">{{ organization_name }} Back Office</a>.
+    Here are your latest notifications from <a href="{{ url }}" target="_blank">{{ organization_name }}</a>.
 </p>
 
-{% for messages in list %}
+{% for each in list %}
 
 <div style="border-left: 2px solid #b5b5b5; padding-left: 10px; margin-bottom: 50px; margin-top: 25px;">
-    <h3 style="margin-bottom: 10px;"><a href="{{ url }}">{{ messages.record.name }}</a></h3>
 
-    <div style="background-color: #f2f2f2; border-radius: 3px; padding: 10px; padding-bottom: 1px; margin-bottom: 10px;">
-        <p>
-            {{ messages.record.description|slice:"0:50" }}...
-        </p>
-    </div>
+  {% ifchanged each.record.message.parent %}
+    <h3 style="margin-bottom: 10px;"><a href="{{ url }}{% if each.record.message.get_absolute_url %}{{ each.record.message.get_absolute_url|slice:"1:" }}{% endif %}">{{ each.record.message.parent }}</a></h3>
+  {% endifchanged %}
+
+  <p><em>Message posted {{ each.record.date_created|timesince }} by {{ each.record.message.posted_by }}</em></p>
+  <div style="background-color: #f2f2f2; border-radius: 3px; padding: 10px; padding-bottom: 1px; margin-bottom: 10px;">
+    <p>
+      {{ each.record.description|truncatewords:"30" }}
+    </p>
+  </div>
 </div>
 
 {% endfor %}
@@ -29,7 +33,14 @@
           <table role="presentation" border="0" cellpadding="0" cellspacing="0">
             <tbody>
               <tr>
-                <td><a href="{{ url }}" target="_blank">Go to The Back Office</a></td>
+                <td><a href="{{ url }}notifications/" target="_blank">Go to {{ organization_name }}</a></td>
+              </tr>
+            </tbody>
+          </table>
+          <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin-top:20px">
+            <tbody>
+              <tr>
+                <td><a href="{{ url }}hub/profile/edit/?return=/hub/profile/" target="_blank">Manage your notification settings in your profile</a></td>
               </tr>
             </tbody>
           </table>

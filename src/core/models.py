@@ -598,7 +598,15 @@ class Message(Record):
         return markdown(self.description)
 
     def get_absolute_url(self):
-        return reverse("community:forum", args=[self.id])
+        try:
+            if hasattr(self.parent, "forumtopic"):
+                return reverse("core:forum", args=[self.parent.id])
+            elif hasattr(self.parent, "work"):
+                return reverse("core:work_item", args=[self.parent.id])
+            else:
+                return None
+        except:
+            return None
 
     class Meta:
         ordering = ["date_created"]

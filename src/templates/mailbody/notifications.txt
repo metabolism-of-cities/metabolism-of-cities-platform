@@ -1,12 +1,13 @@
 Hi {{ firstname }},
 
-Here are your latest notifications from the {{ organization_name }} Back Office {{ url }}
+Here are your latest notifications from {{ organization_name }}.
 
 {% for messages in list %}
-    {{ messages.record.name }}
 
-    {{ messages.record.description|slice:"0:50" }}...
+{{ messages.record.name }}
+
+{{ messages.record.description|slice:"0:50" }}...
 
 {% endfor %}
 
-Go to The Back Office {{ url }}
+Find all your notifications at {{ url }}
