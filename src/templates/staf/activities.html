@@ -3,15 +3,24 @@
 {% block content %}
   <h1>{{ catalog }}</h1>
 
-  {% if catalog.description %}
-    <div class="mt-3 mb-3 alert-warning p-4">
-      {{ catalog.get_markdown_description|safe }}
-    </div>
+  {% if not id %}
+    {% if catalog.description %}
+      <div class="mt-3 mb-3 alert-warning p-4">
+        {{ catalog.get_markdown_description|safe }}
+      </div>
+    {% endif %}
+
+    {% if catalog.url %}
+      <a class="mb-3 btn btn-default-outline" href="{{ catalog.url }}"><i class="fa fa-external-link-alt"></i> Website</a>
+    {% endif %}
+    {% if catalog.original_file %}
+      <a class="mb-3 btn btn-default-outline" href="{{ catalog.original_file.url }}"><i class="fa fa-download"></i> Download source file</a>
+    {% endif %}
+
+  {% else %}
+    <p><a href="{% url "staf:activities" catalog.id %}">Back to top level</a></p>
   {% endif %}
 
-  {% if catalog.url %}
-    <p><a class="btn btn-default-outline" href="{{ catalog.url }}"><i class="fa fa-external-link-alt"></i> Website</a></p>
-  {% endif %}
 
   <ul class="nav nav-tabs">
     <li class="nav-item">

@@ -1152,6 +1152,7 @@ class ReferenceSpaceGeocode(models.Model):
 
 class ActivityCatalog(Record):
     url = models.URLField(null=True, blank=True)
+    original_file = models.FileField(null=True, blank=True, upload_to="activity_catalogs")
 
     def __str__(self):
         return self.name
