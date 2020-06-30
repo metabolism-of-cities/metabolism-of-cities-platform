@@ -800,17 +800,6 @@ def controlpanel_content(request, project_name):
 @login_required
 def controlpanel_content_form(request, project_name, id=None):
 
-    if "update" in request.GET:
-        all = Record.objects_unfiltered.filter(description__isnull=False).exclude(description_html__isnull=False).exclude(description="")
-        messages.success(request, all.count())
-        count = 0
-        for each in all:
-            count += 1
-            each.save()
-            print(each.id)
-            if count == 600:
-                break
-
     project = PROJECT_ID[project_name]
     if not has_permission(request, project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
