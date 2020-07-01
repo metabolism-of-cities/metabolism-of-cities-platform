@@ -42,6 +42,20 @@ a {
     color: #144d58;
     text-decoration: none; }
 
+.avatar {
+  border-radius: 100%;
+  object-fit: cover;
+  width: 3rem;
+  height: 3rem;
+  vertical-align: middle; }
+  .avatar.letter {
+    display: inline-block;
+    text-align: center;
+    background-color: #144d58;
+    color: #fbfbfb;
+    line-height: 3rem;
+    font-size: 1.5rem; }
+
 p a {
   text-decoration: underline;
   text-decoration-thickness: 1px; }
@@ -977,12 +991,10 @@ body.article .card .card-body {
   min-width: 50%; }
 
 .forum .avatar {
-  border-radius: 500px;
   height: 30px;
   line-height: 30px;
   width: 30px;
-  margin-right: .25rem;
-  object-fit: cover; }
+  margin-right: .25rem; }
 
 .forum .avatar-line-height {
   line-height: 30px; }
@@ -1654,13 +1666,8 @@ body.staf.verify table#data {
     white-space: nowrap; }
 
 body.staf-review .avatar {
-  width: 3rem;
-  height: 3rem;
-  object-fit: contain;
   margin-right: .5rem;
-  border-radius: 5rem;
-  display: inline-block;
-  vertical-align: middle; }
+  display: inline-block; }
 
 body.staf-review .sidebar .details {
   display: inline-block;
@@ -1774,12 +1781,6 @@ body.material-stocks.map #map {
 body.work.sprint .jumbotron {
   display: none; }
 
-body.work.sprint .participants .avatar {
-  height: 3rem;
-  width: 3rem;
-  border-radius: 100%;
-  object-fit: cover; }
-
 body.work.sprint .container.main-content {
   padding-top: 0; }
 
@@ -1852,12 +1853,6 @@ body.volunteer.portal.home .join-cta {
   background-color: rgba(20, 77, 88, 0.15);
   padding: 2rem; }
 
-body.volunteer.portal.home .avatar {
-  height: 3rem;
-  width: 3rem;
-  border-radius: 100%;
-  object-fit: cover; }
-
 body.volunteer.portal.home .single-update {
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
   border: none;
@@ -1866,8 +1861,6 @@ body.volunteer.portal.home .single-update {
 body.volunteer.portal.latest .avatar {
   height: 2.5rem;
   width: 2.5rem;
-  border-radius: 100%;
-  object-fit: cover;
   margin-right: .5rem; }
 
 body.volunteer.portal.latest th.user,

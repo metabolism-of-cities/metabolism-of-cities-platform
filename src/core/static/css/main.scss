@@ -78,6 +78,23 @@ a {
   }
 }
 
+.avatar {
+  border-radius: 100%;
+  object-fit: cover;
+  width: 3rem;
+  height: 3rem;
+  vertical-align: middle;
+
+  &.letter {
+    display: inline-block;
+    text-align: center;
+    background-color: $primary;
+    color: $very-light;
+    line-height: 3rem;
+    font-size: 1.5rem;
+  }
+}
+
 // adding underline to links within text blocks
 // https://backoffice.metabolismofcities.org/projects/1582/?tab=tasks&task=1911
 p a {
@@ -1494,12 +1511,10 @@ body.article {
   }
 
   .avatar {
-    border-radius: 500px;
     height: 30px;
     line-height: 30px;
     width: 30px;
     margin-right: .25rem;
-    object-fit: cover;
   }
 
   .avatar-line-height {
@@ -2555,13 +2570,8 @@ body.staf.verify table#data {
 // ALL STAF REVIEW PAGES
 body.staf-review {
   .avatar {
-    width: 3rem;
-    height: 3rem;
-    object-fit: contain;
     margin-right: .5rem;
-    border-radius: 5rem;
     display: inline-block;
-    vertical-align: middle;
   }
 
   .sidebar {
@@ -2747,13 +2757,6 @@ body.work.sprint {
     display: none;
   }
 
-  .participants .avatar {
-    height: 3rem;
-    width: 3rem;
-    border-radius: 100%;
-    object-fit: cover;
-  }
-
   .container.main-content {
     padding-top: 0;
   }
@@ -2847,13 +2850,6 @@ body.volunteer.portal.home {
     padding: 2rem;
   }
 
-  .avatar {
-    height: 3rem;
-    width: 3rem;
-    border-radius: 100%;
-    object-fit: cover;
-  }
-
   .single-update {
     box-shadow: $basic-shadow;
     border: none;
@@ -2865,8 +2861,6 @@ body.volunteer.portal.latest {
   .avatar {
     height: 2.5rem;
     width: 2.5rem;
-    border-radius: 100%;
-    object-fit: cover;
     margin-right: .5rem;
   }
 

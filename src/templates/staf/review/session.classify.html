@@ -18,7 +18,7 @@
         We have been able to match <strong>{{ hits.count }}</strong> items with existing reference spaces.
       </div>
     {% endif %}
-    <table class="table table-responsive datatable datatable-card">
+    <table class="table datatable datatable-card">
       <thead>
         <tr>
           <th>Place</th>
@@ -33,7 +33,7 @@
               {% if not each in hit %}
                 <em>New space</em>
               {% else %}
-                <em><a href="{% url "staf:referencespace" hit|get_item:each %}">Match found</a></em><br>
+                <em><a href="{% url 'staf:referencespace' hit|get_item:each %}">Match found</a></em><br>
                 <label><input type="radio" name="match_{{ hit|get_item:each }}" value="1" checked /> Use match</label><br>
                 <label><input type="radio" name="match_{{ hit|get_item:each }}" value="0" /> Create new space</label>
               {% endif %}
