@@ -907,6 +907,7 @@ def work_form(request, project_name, id=None, sprint=None):
     elif id:
         # Needs improvement
         info = Work.objects_include_private.get(pk=id)
+        form = ModelForm(request.POST or None, instance=info)
     else:
         form = ModelForm(request.POST or None, initial={"part_of_project": project})
     if "tags" in fields:
@@ -1103,7 +1104,6 @@ def work_sprints(request, project_name):
     }
     return render(request, "contribution/work.sprints.html", context)
 
-@login_required
 def work_sprint(request, project_name, id=None):
 
     project = PROJECT_ID[project_name]

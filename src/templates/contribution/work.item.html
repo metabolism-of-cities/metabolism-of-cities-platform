@@ -114,10 +114,12 @@
                 <i class="fas fa-user-check"></i>
                 Assign to me
               </button>
+              {% if request.user.is_staff %}
               <a class="btn btn-primary-basic" href="edit/?return={{ request.get_full_path }}">
                 <i class="fal fa-edit"></i>
                 Edit task
               </a>
+              {% endif %}
             </form>
 
           {% elif info.assigned_to == request.user.people %}
@@ -263,6 +265,8 @@
 
         {% if info.url %}
           <p><a href="{{ info.url }}" class="btn btn-primary">Go to action page <i class="fw ml-2 fa fa-arrow-circle-right"></i></a></p>
+        {% elif info.workactivity.url %}
+          <p><a href="{{ info.workactivity.url }}" class="btn btn-primary">Go to action page <i class="fw ml-2 fa fa-arrow-circle-right"></i></a></p>
         {% endif %}
       </div>
 

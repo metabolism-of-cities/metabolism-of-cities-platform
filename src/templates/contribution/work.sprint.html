@@ -16,7 +16,13 @@
   {% if participants %}
     <div class="participants mb-3">
       {% for each in participants %}
-        <img src="{{ each.image.thumbnail.url }}" alt="{{ each }}" class="avatar"/>
+        {% if each.image %}
+          <img src="{{ each.image.thumbnail.url }}" title="{{ each }}" class="avatar"/>
+        {% else %}
+          <span class="avatar plus" title="{{ each }}">
+            {{ each.name }}
+          </span>
+        {% endif %}
       {% endfor %}
     </div>
   {% endif %}
@@ -26,7 +32,7 @@
     View task list
   </a>
 
-  {% if request.user.people not in participants %}
+  {% if request.user.is_authenticated and request.user.people not in participants %}
     <form method="post">
       {% csrf_token %}
       <button type="submit" class="btn btn-default-outline" name="sign_me_up" value="true">
@@ -56,33 +62,39 @@
   {% else %}
   <div class="row">
     <div class="col-lg-6">
-      <h3>Chat</h3>
 
-      <div id="chat-wrap">
-        <div id="chat">
-          {% for message in message_list %}
-            <div class="{% if message.people == request.user.people %}from-self d-flex align-items-end flex-column{% else %}from-other d-flex align-items-start flex-column{% endif %}">
-              <div class="single-chat">
-                <div class="text-left">{{ message.message }}</div>
-                <small class="text-muted">
-                  {% if not message.people == request.user.people %}{{ message.people }}, {% endif %}
-                  <span title="{{ message.timestamp|date:'l d F Y, H:i' }}">{{ message.timestamp|date:'H:i' }}</span>
-                </small>
+      {% if request.user.is_authenticated %}
+
+        <h3>Chat</h3>
+
+        <div id="chat-wrap">
+          <div id="chat">
+            {% for message in message_list %}
+              <div class="{% if message.people == request.user.people %}from-self d-flex align-items-end flex-column{% else %}from-other d-flex align-items-start flex-column{% endif %}">
+                <div class="single-chat">
+                  <div class="text-left">{{ message.message }}</div>
+                  <small class="text-muted">
+                    {% if not message.people == request.user.people %}{{ message.people }}, {% endif %}
+                    <span title="{{ message.timestamp|date:'l d F Y, H:i' }}">{{ message.timestamp|date:'H:i' }}</span>
+                  </small>
+                </div>
               </div>
-            </div>
-          {% endfor %}
+            {% endfor %}
+          </div>
+
+          <div class="position-relative">
+            <textarea class="form-control" id="chat-message-input" placeholder="Send with CTRL + Enter"></textarea>
+
+            <button id="chat-message-submit" type="submit" class="btn" value="Send">
+              <i class="fa fa-send mr-0"></i>
+            </button>
+          </div>
         </div>
 
-        <div class="position-relative">
-          <textarea class="form-control" id="chat-message-input" placeholder="Send with CTRL + Enter"></textarea>
+        {{ info.id|json_script:"room-name" }}
 
-          <button id="chat-message-submit" type="submit" class="btn" value="Send">
-            <i class="fa fa-send mr-0"></i>
-          </button>
-        </div>
-      </div>
+      {% endif %}
 
-      {{ info.id|json_script:"room-name" }}
     </div>
 
     <div class="col-lg-6">
@@ -103,6 +115,12 @@
     </div>
   </div>
 
+{% endif %}
+
+{% if not request.user.is_authenticated %}
+  <section class="text-center">
+    {% include "_notauthenticated.html" %}
+  </section>
 {% endif %}
 
 </div>
