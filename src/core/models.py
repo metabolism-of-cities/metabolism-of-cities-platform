@@ -993,6 +993,7 @@ class WorkActivity(models.Model):
     instructions = models.TextField(null=True, blank=True)
     default_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     points = models.PositiveSmallIntegerField(null=True, blank=True)
+    url = models.URLField(null=True, blank=True, help_text="Is there a specific link a user could go to in order to work on this task? If so, put it here")
 
     def __str__(self):
         return self.name
