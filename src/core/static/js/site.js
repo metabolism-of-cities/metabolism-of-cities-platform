@@ -17,7 +17,7 @@ $("input[type='url']").attr("placeholder", "Must start with http:// or https://"
 
   value.trim();
 
-  if (!(value.match("^http"))) {
+  if (value != "" && !(value.match("^http"))) {
     value = "http://" + value;
   }
 
