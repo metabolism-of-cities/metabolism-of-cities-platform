@@ -41,6 +41,9 @@ from urllib.parse import urlparse, parse_qs
 from django.utils import timezone
 import pytz
 
+# To get the total number of points
+from django.db.models import Sum
+
 def get_date_range(start, end):
 
     if not start or not end:
@@ -476,10 +479,17 @@ class People(Record):
     )
     status = models.CharField(max_length=8, choices=PEOPLE_STATUS, default="active")
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
+
     def __str__(self):
         return self.name
+
     def get_absolute_url(self):
         return reverse("community:person", args=[self.id])
+
+    def points(self):
+        points = Work.objects_unfiltered.filter(assigned_to=self, status=Work.WorkStatus.COMPLETED).aggregate(total=Sum("workactivity__points"))
+        return points["total"]
+
     class Meta:
         verbose_name_plural = "people"
         ordering = ["name"]
@@ -488,6 +498,7 @@ class People(Record):
         if self.email:
             self.email=self.email.lower()
         super(People, self).save(*args, **kwargs)
+
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()

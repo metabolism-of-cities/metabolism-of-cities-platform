@@ -42,6 +42,10 @@ urlpatterns = [
     path("about/", views.article_list, { "id": 31 }, name="about"),
     path("about/<slug:slug>/", views.article, { "prefix": "/about/" }, name="about"),
 
+    # Users
+    path("users/", views.users, { "project_name": app_name }, name="users"),
+    path("users/<int:id>/", views.user_profile, { "project_name": app_name }, name="user"),
+
     # PlatformU
     # STAFCP
     # Podcast

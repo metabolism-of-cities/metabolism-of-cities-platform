@@ -1,0 +1,45 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+{{ webpage.get_description }}
+
+<p>
+  This is the entire community from all of the Metabolism of Cities <a href="/projects/">projects</a>.
+  Use the filter below to view individual communities.
+</p>
+
+<form class="mb-3">
+
+  <select name="project" required class="form-control">
+    <option value=""></option>
+    {% for each in projects %}
+      <option {% if project == each.id %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
+    {% endfor %}
+  </select>
+  <button class="btn btn-primary" type="submit">View</button>
+
+</form>
+
+<div class="row mb-4">
+  {% for each in list %}
+    <div class="col-lg-4 col-md-6 col-sm-8 mb-3">
+      <a class="card btn-card" href="{{ each.id }}/">
+        {% if each.image %}
+          <img src="{{ each.image.url }}" class="card-img-top" alt="">
+        {% else %}
+          <img src="" class="card-img-top" alt="">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ each }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ each.user.date_joined|date:"M d, Y" }}</h6>
+          {% if each.points %}
+            <h6 class="card-subtitle mb-2 text-muted">{{ each.points }} points</h6>
+          {% endif %}
+        </div>
+      </a>
+    </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

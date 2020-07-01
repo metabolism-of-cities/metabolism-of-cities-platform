@@ -57,9 +57,6 @@ logger = logging.getLogger(__name__)
 import twitter
 import facebook
 
-# To get the total number of points
-from django.db.models import Sum
-
 # This array defines all the IDs in the database of the articles that are loaded for the
 # various pages in the menu. Here we can differentiate between the different sites.
 
@@ -342,16 +339,17 @@ def user_reset(request):
     return render(request, "auth/reset.html")
 
 @login_required
-def user_profile(request, project=None, project_name=None):
+def user_profile(request, id=None, project=None, project_name=None):
     info = request.user.people
+
+    if id:
+        info = People.objects.get(pk=id)
+
     if project_name:
         project = project_name
 
     completed = Work.objects.filter(assigned_to=info, status=Work.WorkStatus.COMPLETED)
     open = Work.objects.filter(assigned_to=info).filter(Q(status=Work.WorkStatus.OPEN)|Q(status=Work.WorkStatus.PROGRESS))
-
-    points = Work.objects_unfiltered.filter(assigned_to=info, status=Work.WorkStatus.COMPLETED).aggregate(total=Sum("workactivity__points"))
-    print(points)
 
     context = {
         "menu": "profile",
@@ -359,7 +357,6 @@ def user_profile(request, project=None, project_name=None):
         "completed": completed,
         "open": open,
         "load_datatables": True,
-        "points": points["total"],
     }
     return render(request, "auth/profile.html", context)
 
@@ -621,7 +618,30 @@ def article_list(request, id):
 
 # Cities
 
-# Metabolism Manager
+# Users
+
+def users(request, project_name="core"):
+    webpage = get_object_or_404(Webpage, pk=54)
+
+    project = None
+    if project_name:
+        project = PROJECT_ID[project_name]
+    if "project" in request.GET:
+        project = request.GET.get("project")
+
+    list = People.objects.filter(message_list__isnull=False, user__isnull=False).distinct().order_by("-user__date_joined")
+    if project:
+        list = list.filter(Q(message_list__parent__forumtopic__part_of_project_id=project)|Q(message_list__parent__work__part_of_project_id=project))
+
+    context = {
+        "webpage": webpage,
+        "list": list,
+        "header_title": webpage.name,
+        "projects": Project.objects.filter(pk__in=OPEN_WORK_PROJECTS),
+        "project": int(project) if project else None,
+    }
+    print(context)
+    return render(request, "users.html", context)
 
 # Volunteer hub
 
