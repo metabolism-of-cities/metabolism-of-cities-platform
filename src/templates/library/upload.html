@@ -5,9 +5,7 @@
 {% block content %}
 
   <h1>{{ webpage }}</h1>
-  {{ webpage.get_content|safe }}
-
-  <h2>Select type</h2>
+  {{ webpage.get_description }}
 
   <div class="list-group">
   {% for each in types %}

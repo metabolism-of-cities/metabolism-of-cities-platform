@@ -19,6 +19,7 @@ PAGE_ID = settings.PAGE_ID_LIST
 PROJECT_ID = settings.PROJECT_ID_LIST
 RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
 THIS_PROJECT = PROJECT_ID["library"]
+AUTO_BOT = 32070
 
 def index(request):
     tags = [324, 322, 664, 318, 739]
@@ -240,7 +241,7 @@ def authors(request):
     }
     return render(request, "library/authors.html", context)
 
-def upload(request):
+def upload(request, project_name="library"):
     info = get_object_or_404(Webpage, part_of_project_id=THIS_PROJECT, slug="/upload/")
     types = [5,6,9,16,37,25,27,29,32]
     context = {
@@ -338,26 +339,47 @@ def form(request, id=None, project_name="library", type=None):
                 )
 
             if not id:
+                type_name = info.type.name
                 RecordRelationship.objects.create(
                     record_parent = request.user.people,
                     record_child = info,
                     relationship_id = RELATIONSHIP_ID["uploader"],
                 )
 
-                Work.objects.create(
+                if type_name == "Dataset":
+                    name = type_name + " added to the data inventory"
+                    activity_id = 28
+                else:
+                    name = type_name + " uploaded to the library"
+                    if type_name == "Video recording":
+                        activity_id = 6
+                    elif type_name == "Data visualisation":
+                        activity_id = 20
+                    else:
+                        activity_id = 4
+
+                work = Work.objects.create(
                     status = Work.WorkStatus.COMPLETED,
                     part_of_project = project,
-                    workactivity_id = 4,
+                    workactivity_id = activity_id,
                     related_to = info,
                     assigned_to = request.user.people,
+                    name = name,
                 )
+                message = Message.objects.create(posted_by=request.user.people, parent=work, name="Status change", description="Task was completed")
 
-                Work.objects.create(
+                if type_name == "Dataset":
+                    name = "Review and process " + type_name.lower()
+                else:
+                    name = "Review, tag and publish " + type_name.lower()
+                work = Work.objects.create(
                     status = Work.WorkStatus.OPEN,
                     part_of_project = project,
                     workactivity_id = 14,
                     related_to = info,
+                    name = name,
                 )
+                message = Message.objects.create(posted_by_id=AUTO_BOT, parent=work, name="Task created", description="This task was created by the system")
 
             if "return" in request.GET:
                 messages.success(request, "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution!")
@@ -369,8 +391,8 @@ def form(request, id=None, project_name="library", type=None):
                 messages.success(request, "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution!")
                 return redirect("data:upload_dataportal")
             else:
-                messages.success(request, "The item was added to the library. <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=2&amp;record_child=" + str(info.id) + "'>Link to publisher</a> |  <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=4&amp;record_child=" + str(info.id) + "'>Link to author</a> ||| <a href='/admin/core/organization/add/' target='_blank'>Add a new organization</a>")
-                return redirect("library:form")
+                messages.success(request, "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution!")
+                return redirect("library:upload")
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
 

@@ -952,13 +952,6 @@ def work_form(request, project_name, id=None, sprint=None):
     return render(request, "contribution/work.form.html", context)
 
 def work_grid(request, project_name, sprint=None):
-    if "update" in request.GET:
-        list = Work.objects_unfiltered.filter(last_update__isnull=True)
-        for each in list:
-            message = Message.objects.create(posted_by_id=AUTO_BOT, parent=each, name="Task created", description="This task was created by the system", date_created=each.date_created)
-            set_autor(AUTO_BOT, message.id)
-            message.date_created = each.date_created
-            message.save()
 
     project = PROJECT_ID[project_name]
     status = request.GET.get("status")

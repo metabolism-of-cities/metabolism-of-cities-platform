@@ -32,6 +32,10 @@
         <td>
           {{ each.date_created|naturaltime }}<br>
           <a href="../{% if each.parent.work %}work{% else %}forum{% endif %}/{{ each.parent.id }}/">{{ each.parent }}</a>
+          {% if each.parent.work and each.parent.work.related_to %}
+            <br>
+            <em>{{ each.parent.work.related_to }}</em>
+          {% endif %}
         </td>
         <td>
           {{ each.get_markdown_description|safe|truncatewords_html:30 }}

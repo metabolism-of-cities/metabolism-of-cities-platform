@@ -16,7 +16,7 @@ urlpatterns = [
     path("datavisualizations/", views.datavisualizations, name="datavisualizations"),
     path("datavisualizations/<int:id>/", views.dataviz, name="dataviz"),
     path("upload/", views.upload, name="upload"),
-    path("upload/form/", library.form, name="form"),
+    path("upload/form/", library.form, { "project_name": app_name }, name="form"),
 
     #
     # Baseline links shared between all projects

@@ -134,7 +134,7 @@
     <tbody>
     {% for each in list %}
       <tr>
-        <td>
+        <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
           <a href="{{ each.id }}/">
             {{ each }}
             {% if each.related_to %}
@@ -152,7 +152,7 @@
           <em>{{ each.get_status_display }} | {{ each.get_priority_display }} priority</em>
         </td>
         
-        <td data-sort="{{ each.last_update.date_created|date:"U" }}">
+        <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
           {% if each.last_update %}
             {{ each.last_update.date_created|timesince }} ago 
             <br><span class="faded">by {{ each.last_update.posted_by }}</span>

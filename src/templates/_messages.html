@@ -5,8 +5,8 @@
         <div class="card-body">
           <div class="row metadata">
             <div class="col-6">
-              <img src="{{ each.author.image.thumbnail.url }}" alt="" class="avatar plus" />
-              {{ each.author }}
+              <img src="{{ each.posted_by.image.thumbnail.url }}" alt="" class="avatar plus" />
+              {{ each.posted_by }}
             </div>
             <div class="col-6 text-muted text-right avatar-line-height" title="{{ each.date_created|date:'l j F Y, H:i e' }}">
               <!-- {% if each.author == request.user.people %} -->
