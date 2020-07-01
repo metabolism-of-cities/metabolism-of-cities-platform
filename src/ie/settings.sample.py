@@ -57,6 +57,8 @@ PROJECT_ID_LIST = {
     "community": 18,
     "podcast": 3458,
     "stocks": 18683,
+    "cityloops": 6,
+    "untraceable": 32542,
 }
 
 RELATIONSHIP_ID_LIST = { 
@@ -82,6 +84,8 @@ PROJECT_LIST = {
     "community": { "id": 18, "url": "community/" },
     "podcast": { "id": 3458, "url": "podcast/" },
     "stocks": { "id": 18683, "url": "stocks/" },
+    "cityloops": { "id": 6, "url": "cityloops/" },
+    "untraceable": { "id": 32542, "url": "untraceable/" },
 }
 
 # Application definition
