@@ -620,9 +620,13 @@ def article_list(request, id):
 
 # Users
 
-def users(request, project_name="core"):
+def users(request, project_name=None, scoreboard=False):
     webpage = get_object_or_404(Webpage, pk=54)
 
+    if scoreboard:
+        page = "scoreboard"
+    else:
+        page = "users"
     project = None
     if project_name:
         project = PROJECT_ID[project_name]
@@ -636,12 +640,26 @@ def users(request, project_name="core"):
     context = {
         "webpage": webpage,
         "list": list,
-        "header_title": webpage.name,
+        "header_title": "Our community",
         "projects": Project.objects.filter(pk__in=OPEN_WORK_PROJECTS),
         "project": int(project) if project else None,
+        "load_datatables": True,
+        "menu": page,
     }
-    print(context)
-    return render(request, "users.html", context)
+    return render(request, "contribution/" + page + ".html", context)
+
+def rules(request, project_name=None):
+
+    context = {
+        "webpage": get_object_or_404(Webpage, pk=32478),
+        "webpage_badges": get_object_or_404(Webpage, pk=32501),
+        "menu": "rules",
+        "activities": WorkActivity.objects.all(),
+        "badges": Badge.objects.all().order_by("code", "type"),
+        "header_title": "Our community",
+        "header_subtitle": "Points and badges",
+    }
+    return render(request, "contribution/rules.html", context)
 
 # Volunteer hub
 

@@ -1,0 +1,52 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+{% include "contribution/_nav.users.html" %}
+
+  <h2>Points</h2>
+
+  {{ webpage.get_description }}
+
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Type of activity</th>
+        <th>Category</th>
+        <th>Points</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in activities %}
+      <tr>
+        <td>{{ each }}</td>
+        <td>{{ each.get_type_display }}</td>
+        <td>{{ each.points }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Badges</h2>
+
+  {{ webpage_badges.get_description }}
+
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Badge</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in badges %}
+      <tr>
+        <td>{{ each }}</td>
+        <td>{{ each.get_type_display }}</td>
+        <td>{{ each.description }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

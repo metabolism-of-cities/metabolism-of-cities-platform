@@ -1,0 +1,38 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+{% include "contribution/_nav.users.html" %}
+
+  <p class="pt-3 pb-3">
+    This list shows the number of points accumulated by each user, 
+    which is directly linked to the number of <a href="/tasks/">tasks</a> completed.
+    You can learn more about our <a href="/hub/rules/">points and badges</a> 
+    here.
+  </p>
+
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Date joined</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in list %}
+      {% if each.points %}
+        <tr>
+          <td data-sort="-{{ each.points }}">
+            <a href="{{ each.id }}/">{{ each }}</a>
+          </td>
+          <td>{{ each.user.date_joined|date:"M d, Y" }}</td>
+          <td data-sort="-{{each.points }}">{{ each.points }}</td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

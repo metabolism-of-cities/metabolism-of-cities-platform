@@ -2,6 +2,8 @@
 
 {% block content %}
 
+{% include "contribution/_nav.users.html" %}
+
 {{ webpage.get_description }}
 
 <p>
@@ -11,15 +13,21 @@
 
 <form class="mb-3">
 
-  <select name="project" required class="form-control">
-    <option value=""></option>
-    {% for each in projects %}
-      <option {% if project == each.id %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
-    {% endfor %}
-  </select>
-  <button class="btn btn-primary" type="submit">View</button>
+  <div class="col-auto">
+    <select name="project" class="form-control custom-select">
+      <option value=""></option>
+      {% for each in projects %}
+        <option {% if project == each.id %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="col-auto">
+    <button type="submit" class="btn btn-primary mb-2 mt-2">Submit</button>
+  </div>
 
 </form>
+
 
 <div class="row mb-4">
   {% for each in list %}
@@ -41,5 +49,7 @@
     </div>
   {% endfor %}
 </div>
+
+
 
 {% endblock %}

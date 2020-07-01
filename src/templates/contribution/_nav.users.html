@@ -1,0 +1,13 @@
+
+<ul class="nav nav-tabs mb-3">
+  <li class="nav-item">
+    <a class="nav-link {% if menu == "users" %}active{% endif %}" href="{% url "core:users" %}">Full list</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if menu == "scoreboard" %}active{% endif %}" href="{% url "core:scoreboard" %}">Scoreboard</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if menu == "rules" %}active{% endif %}" href="{% url "core:rules" %}">Points and badges</a>
+  </li>
+</ul>
+

@@ -43,8 +43,10 @@ urlpatterns = [
     path("about/<slug:slug>/", views.article, { "prefix": "/about/" }, name="about"),
 
     # Users
-    path("users/", views.users, { "project_name": app_name }, name="users"),
-    path("users/<int:id>/", views.user_profile, { "project_name": app_name }, name="user"),
+    path("hub/users/", views.users, name="users"),
+    path("hub/users/<int:id>/", views.user_profile, { "project_name": app_name }, name="user"),
+    path("hub/scoreboard/", views.users, {"scoreboard": True}, name="scoreboard"),
+    path("hub/rules/", views.rules, name="rules"),
 
     # PlatformU
     # STAFCP

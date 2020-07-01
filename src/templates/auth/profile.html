@@ -42,10 +42,12 @@
             </li>
           </ul>
         </div>
+        {% if request.user.people == info %}
         <a href="edit/?return={{ request.get_full_path }}" class="btn btn-primary">
           <i class="fa fa-pencil"></i>
           Edit profile
         </a>
+        {% endif %}
       </div>
 
       <div class="col-lg-8 col-md-7">
@@ -59,56 +61,60 @@
     </div>
   </section>
 
-  <section>
-    <h3>Completed tasks</h3>
-    <table class="table datatable datatable-card">
-      <thead>
-        <tr>
-          <th>Task</th>
-          <th>Project</th>
-          <th>Points</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for each in completed %}
-        <tr>
-          <td><a href="../work/{{ each.id }}/">{{ each }}</a></td>
-          <td>{{ each.part_of_project }}</td>
-          <td>{{ each.workactivity.points }}</td>
-        </tr>
-      {% endfor %}
-      </tbody>
-      <tfoot>
-        <tr>
-          <th>Total</th>
-          <th></th>
-          <th>{{ info.points }}</th>
-        </tr>
-      </tfoot>
-    </table>
-  </section>
+  {% if completed %}
+    <section>
+      <h3>Completed tasks</h3>
+      <table class="table datatable datatable-card">
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Project</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for each in completed %}
+          <tr>
+            <td><a href="../work/{{ each.id }}/">{{ each }}</a></td>
+            <td>{{ each.part_of_project }}</td>
+            <td>{{ each.workactivity.points }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Total</th>
+            <th></th>
+            <th>{{ info.points }}</th>
+          </tr>
+        </tfoot>
+      </table>
+    </section>
+  {% endif %}
 
-  <section>
-    <h3>Ongoing work</h3>
-    <table class="table datatable datatable-card">
-      <thead>
-        <tr>
-          <th>Task</th>
-          <th>Project</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for each in open %}
-        <tr>
-          <td><a href="../work/{{ each.id }}/">{{ each }}</a></td>
-          <td>{{ each.part_of_project }}</td>
-          <td>{{ each.get_status_display }}</td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-  </section>
+  {% if open %}
+    <section>
+      <h3>Ongoing work</h3>
+      <table class="table datatable datatable-card">
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Project</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for each in open %}
+          <tr>
+            <td><a href="../work/{{ each.id }}/">{{ each }}</a></td>
+            <td>{{ each.part_of_project }}</td>
+            <td>{{ each.get_status_display }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  {% endif %}
 
   {% if request.user.is_superuser and False %}
     <!-- Guus please ignore this part -->
@@ -139,5 +145,10 @@
     </section>
   <!-- End ignore Guus -->
   {% endif %}
+
+  <a href="javascript:history.back()" class="btn btn-primary-basic mt-3">
+    <i class="fal fa-angle-left"></i>
+    Back
+  </a>
 
 {% endblock %}
