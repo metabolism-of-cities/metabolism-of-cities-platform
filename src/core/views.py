@@ -66,6 +66,7 @@ PROJECT_ID = settings.PROJECT_ID_LIST
 RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
 THIS_PROJECT = PROJECT_ID["core"]
 PROJECT_LIST = settings.PROJECT_LIST
+AUTO_BOT = 32070
 
 # If we add any new project, we should add it to this list. 
 # We must make sure to filter like this to exclude non-project news
@@ -945,10 +946,20 @@ def work_form(request, project_name, id=None, sprint=None):
         "load_select2": True,
         "info": info,
         "menu": "work",
+        "header_title": "Tasks",
+        "header_subtitle": "Let's build things together, one item at a time!",
     }
     return render(request, "contribution/work.form.html", context)
 
 def work_grid(request, project_name, sprint=None):
+    if "update" in request.GET:
+        list = Work.objects_unfiltered.filter(last_update__isnull=True)
+        for each in list:
+            message = Message.objects.create(posted_by_id=AUTO_BOT, parent=each, name="Task created", description="This task was created by the system", date_created=each.date_created)
+            set_autor(AUTO_BOT, message.id)
+            message.date_created = each.date_created
+            message.save()
+
     project = PROJECT_ID[project_name]
     status = request.GET.get("status")
     type = request.GET.get("type")
@@ -1003,6 +1014,8 @@ def work_grid(request, project_name, sprint=None):
         "menu": "work",
         "projects": projects,
         "selected_project": int(selected_project) if selected_project else None,
+        "header_title": "Tasks",
+        "header_subtitle": "Let's build things together, one item at a time!",
     }
     return render(request, "contribution/work.grid.html", context)
 
@@ -1087,6 +1100,8 @@ def work_item(request, project_name, id, sprint=None):
         "title": info.name,
         "sprint": sprint,
         "menu": "work",
+        "header_title": "Tasks",
+        "header_subtitle": "Let's build things together, one item at a time!",
     }
 
     if request.user.is_authenticated and not request.user.people in info.subscribers.all():

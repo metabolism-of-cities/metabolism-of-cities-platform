@@ -581,7 +581,7 @@ class ProjectDesign(models.Model):
         return self.project.name
 
 class ForumTopic(Record):
-    last_update = models.ForeignKey("Message", on_delete=models.CASCADE, null=True, blank=True)
+    last_update = models.ForeignKey("Message", on_delete=models.SET_NULL, null=True, blank=True)
     part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     parent = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="forum_topics")
     is_starred = models.NullBooleanField(default=False)
@@ -1023,7 +1023,7 @@ class Work(Record):
     related_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="my_work")
     assigned_to = models.ForeignKey(People, on_delete=models.CASCADE, null=True, blank=True)
     url = models.URLField(null=True, blank=True, help_text="Is there a specific link a user could go to in order to work on this task? If so, put it here")
-    last_update = models.ForeignKey(Message, on_delete=models.CASCADE, null=True, blank=True)
+    last_update = models.ForeignKey(Message, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.name if self.name else self.workactivity.name
