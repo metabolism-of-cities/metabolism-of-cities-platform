@@ -9,6 +9,10 @@
 
 <section>
   <h2>Upcoming events</h2>
+  <p>
+    Do we miss an event? 
+    <a href="{% url "community:event_form" %}">Add it now!</a>
+  </p>
   <div class="row">
     {% for each in upcoming %}
     <div class="col-md-6 col-lg-4 mb-4">
@@ -21,18 +25,22 @@
           <p class="card-text">{{ each.content|truncatewords_html:20|safe }}</p>
         </div>
         <ul class="list-group list-group-flush">
+          {% if each.location %}
           <li class="list-group-item">
             <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> 
             {{ each.location }}
           </li>
+          {% endif %}
           <li class="list-group-item">
             <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 
             {{ each.get_dates }}
           </li>
+          {% if each.type %}
           <li class="list-group-item">
             <i class="far fa-fw fa-folder-open mr-1" aria-hidden="true"></i> 
             {{ each.get_type_display }}
           </li>
+          {% endif %}
         </ul>
       </a>
     </div>

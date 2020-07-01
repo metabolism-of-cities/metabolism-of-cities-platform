@@ -10,20 +10,22 @@
     {% endif %}
     
     <h4>{{ info }}</h4>
-    {{ info.description|safe }}
+    {{ info.get_description }}
 
   </article>
   <div class="col-lg-4">
     <h5>Event information</h5>
     <div class="card basic-info">
       <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-          <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> 
-          {{ info.location }}
-        </li>
+        {% if info.location %}
+          <li class="list-group-item">
+            <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> 
+            {{ info.location }}
+          </li>
+        {% endif %}
         <li class="list-group-item">
           <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 
-          {{ info.start_date|date:"M d, Y" }}{% if info.start_date != info.end_date %} - {{ info.end_date|date:"M d, Y" }}{% endif %}
+          {{ info.get_dates }}
         </li>
         {% if info.url %}
         <li class="list-group-item">

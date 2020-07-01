@@ -479,6 +479,7 @@ class People(Record):
     )
     status = models.CharField(max_length=8, choices=PEOPLE_STATUS, default="active")
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
+    badges = models.ManyToManyField("Badge", blank=True)
 
     def __str__(self):
         return self.name
@@ -1078,7 +1079,7 @@ class Badge(models.Model):
         GOLD = 3, "Gold"
 
     type = models.IntegerField(choices=BadgeType.choices, db_index=True)
-    code = models.CharField(max_length=20, null=True, blank=True, db_index=True)
+    code = models.CharField(max_length=20, null=True, blank=True, db_index=True, help_text="Do not change, this is used in the code to verify if people have the right permission level")
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     projects = models.ManyToManyField(Project, blank=True)

@@ -10,7 +10,7 @@
     {% endif %}
     
     <h4>{{ info }}</h4>
-    {{ info.get_markdown_description|safe }}
+    {{ info.get_description }}
 
     {% if info.type == "training_outreach" %}
 

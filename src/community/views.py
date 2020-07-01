@@ -13,11 +13,14 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.template.loader import render_to_string, get_template
 
+from django.forms import modelform_factory
+
 import logging
 logger = logging.getLogger(__name__)
 
 PROJECT_ID = settings.PROJECT_ID_LIST
 RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
+AUTO_BOT = 32070
 
 # This is the list with projects that have an active forum
 # It will show in the dropdown boxes to filter by this category
@@ -32,6 +35,26 @@ def set_author(author, item):
         record_parent_id = author,
         record_child_id = item,
     )
+
+# General script to check if a user has a certain permission
+# This is used for validating access to certain pages only, so superusers
+# will always have access
+# Version 1.0
+def has_permission(request, record_id, allowed_permissions):
+    if request.user.is_authenticated and request.user.is_superuser:
+        return True
+    elif request.user.is_authenticated and request.user.is_staff:
+        return True
+    try:
+        people = request.user.people
+        check = RecordRelationship.objects.filter(
+            relationship__slug__in = permissions,
+            record_parent = request.user.people,
+            record_child_id = record_id,
+        )
+    except:
+        return False
+    return True if check.exists() else False
 
 def unauthorized_access(request):
     from django.core.exceptions import PermissionDenied
@@ -395,4 +418,76 @@ def event(request, id, project_name=None):
         "header_subtitle": info.name,
     }
     return render(request, "community/event.html", context)
+
+@login_required
+def event_form(request, id=None, project_name="community"):
+
+    curator = False
+    if has_permission(request, PROJECT_ID[project_name], ["curator"]):
+        curator = True
+    
+    project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+
+    ModelForm = modelform_factory(Event, fields=["name", "image", "type", "url", "location", "start_date", "end_date"])
+    if id:
+        info = get_object_or_404(Event, pk=id)
+        form = ModelForm(request.POST or None, request.FILES or None)
+    else:
+        form = ModelForm(request.POST or None)
+
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save(commit=False)
+            info.description = request.POST.get("description")
+            if curator:
+                info.is_public = True
+                message = "The event was added."
+            else:
+                info.is_public = False
+                message = "The event was saved. Our curation team will review and activate this. Thanks!"
+            info.save()
+            messages.success(request, message)
+
+            RecordRelationship.objects.create(
+                record_parent = request.user.people,
+                record_child = info,
+                relationship_id = RELATIONSHIP_ID["uploader"],
+            )
+
+            work = Work.objects.create(
+                status = Work.WorkStatus.COMPLETED,
+                part_of_project = project,
+                workactivity_id = 29,
+                related_to = info,
+                assigned_to = request.user.people,
+                name = "Adding new event",
+            )
+            message = Message.objects.create(posted_by=request.user.people, parent=work, name="Status change", description="Task was completed")
+
+            if not curator:
+                work = Work.objects.create(
+                    status = Work.WorkStatus.OPEN,
+                    part_of_project = project,
+                    workactivity_id = 14,
+                    related_to = info,
+                    name = "Review and publish event",
+                )
+                message = Message.objects.create(posted_by_id=AUTO_BOT, parent=work, name="Task created", description="This task was created by the system")
+            else:
+                return redirect("community:event", id=info.id)
+
+            if "next" in request.GET:
+                return redirect(request.GET.get("next"))
+            else:
+                return redirect("community:events")
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    context = {
+        "form": form,
+        "title": "Add event",
+        "load_markdown": True,
+        "curator": curator,
+    }
+    return render(request, "community/event.form.html", context)
 

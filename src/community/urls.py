@@ -88,6 +88,7 @@ urlpatterns = [
     path("news/<slug:slug>/", core.news, { "project_name": app_name }, name="news"),
     path("events/", community.event_list, { "project_name": app_name }, name="events"),
     path("events/<int:id>/", community.event, { "project_name": app_name }, name="event"),
+    path("events/create/", community.event_form, { "project_name": app_name }, name="event_form"),
 
 
     # Work-related items
