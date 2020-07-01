@@ -38,7 +38,7 @@
         showAutocompleteResults(response)
       })
       .fail(function() {
-        $("#autocomplete-results").html("<p>Address lookup failed, please reload the page and try again.")
+        $("#autocomplete-results").html("<p>We could not locate the GPS coordinates automatically. Please <a href='https://www.gps-coordinates.net/' target='_blank' rel='noreferrer noopener'>get your coordinates manually</a></p>")
       })
     };
 

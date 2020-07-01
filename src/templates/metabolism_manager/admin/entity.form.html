@@ -176,12 +176,17 @@
     const priorityLon = "4.3688";
 
     function autoComplete(term) {
-      $.get("https://api.geoapify.com/v1/geocode/autocomplete?text="+ term + "&lat=" + priorityLat + "&lon=" + priorityLon + "&apiKey={{ geoapify_api }}")
+      $("#autocomplete-results").html("<i class='fad fa-spinner-third fa-spin'></i>")
+      $.get("https://api.geoapify.com/v1/geocode/autocomplete?text=" + term + "&lat=" + priorityLat + "&lon=" + priorityLon + "&apiKey={{ geoapify_api }}")
       .done(function(response) {
-        showAutocompleteResults(response)
+        if (response.features.length > 0) {
+          showAutocompleteResults(response)
+        } else {
+          $("#autocomplete-results").html("<p>Unable to find address. Are you sure it's spelled correctly? If so, please <a href='https://www.gps-coordinates.net/' target='_blank' rel='noreferrer noopener'>get your coordinates manually</a>.</p>")
+        }
       })
       .fail(function() {
-        $("#autocomplete-results").html("<p>Address lookup failed, please reload the page and try again.")
+        $("#autocomplete-results").html("<p>We could not locate the GPS coordinates automatically. Please <a href='https://www.gps-coordinates.net/' target='_blank' rel='noreferrer noopener'>get your coordinates manually</a>.</p>")
       })
     };
 
@@ -191,7 +196,9 @@
 
       if (searchTerm.length > 4) {
         autoComplete(searchTerm);
-      };
+      } else {
+        $("#autocomplete-results").html("");
+      }
 
       $("#submit-coordinates").attr("hidden", "hidden");
     })
