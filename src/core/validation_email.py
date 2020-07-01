@@ -8,6 +8,6 @@ class EmailValidationOnForgotPassword(PasswordResetForm):
     def clean_email(self):
         email = self.cleaned_data['email']
         if not User.objects.filter(email__iexact=email, is_active=True).exists():
-            raise forms.ValidationError("This user is not exists")
+            raise forms.ValidationError("We could not find a user with this e-mail address.")
 
         return email
