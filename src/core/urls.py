@@ -8,6 +8,7 @@ from . import views
 from community import views as community
 
 from django.contrib.auth import views as auth_views
+from core.validation_email import EmailValidationOnForgotPassword
 
 app_name = "core"
 
@@ -95,6 +96,7 @@ urlpatterns = [
     path(
         "accounts/passwordreset/",
         auth_views.PasswordResetView.as_view(
+            form_class = EmailValidationOnForgotPassword,
             template_name = "auth/reset.html", 
             email_template_name = "mailbody/password.reset.txt", 
             html_email_template_name = "mailbody/password.reset.html", 
