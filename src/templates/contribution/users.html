@@ -28,11 +28,10 @@
 
 </form>
 
-
 <div class="row mb-4">
   {% for each in list %}
     <div class="col-lg-4 col-md-6 col-sm-8 mb-3">
-      <a class="card btn-card" href="{{ each.id }}/">
+      <a class="card btn-card" href="{% url "core:user" each.id %}">
         {% if each.image %}
           <img src="{{ each.image.url }}" class="card-img-top" alt="">
         {% else %}
@@ -49,7 +48,5 @@
     </div>
   {% endfor %}
 </div>
-
-
 
 {% endblock %}

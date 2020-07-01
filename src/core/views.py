@@ -338,12 +338,12 @@ def user_logout(request, project=None):
 def user_reset(request):
     return render(request, "auth/reset.html")
 
-@login_required
 def user_profile(request, id=None, project=None, project_name=None):
-    info = request.user.people
 
     if id:
         info = People.objects.get(pk=id)
+    else:
+        info = request.user.people
 
     if project_name:
         project = project_name
@@ -658,6 +658,7 @@ def rules(request, project_name=None):
         "badges": Badge.objects.all().order_by("code", "type"),
         "header_title": "Our community",
         "header_subtitle": "Points and badges",
+        "load_datatables": True,
     }
     return render(request, "contribution/rules.html", context)
 

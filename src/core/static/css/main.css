@@ -1867,3 +1867,12 @@ body.volunteer.portal.latest th.user,
 body.volunteer.portal.latest th.item,
 body.volunteer.portal.latest th.date {
   width: 250px; }
+
+.badge-level-1 {
+  color: #D1A684; }
+
+.badge-level-2 {
+  color: #B4B8BC; }
+
+.badge-level-3 {
+  color: #FFCC01; }

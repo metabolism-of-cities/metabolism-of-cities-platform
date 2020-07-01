@@ -27,26 +27,21 @@
     </tbody>
   </table>
 
-  <h2>Badges</h2>
+  <h2 class="mt-4">Badges</h2>
 
   {{ webpage_badges.get_description }}
 
-  <table class="table table-striped datatable">
-    <thead>
-      <tr>
-        <th>Badge</th>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
     {% for each in badges %}
-      <tr>
-        <td>{{ each }}</td>
-        <td>{{ each.get_type_display }}</td>
-        <td>{{ each.description }}</td>
-      </tr>
+      <div class="row mt-{% ifchanged each.code %}4{% else %}1{% endifchanged %}">
+        <div class="col-3">
+          <span class="btn btn-dark">
+            <i class="fa fa-circle badge-level-{{ each.type }}"></i>
+            {{ each }}
+          </span>
+        </div>
+        <div class="col-9">
+          {{ each.description }}
+        </div>
+      </div>
     {% endfor %}
-    </tbody>
-  </table>
 {% endblock %}

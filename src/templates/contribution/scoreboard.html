@@ -24,7 +24,7 @@
       {% if each.points %}
         <tr>
           <td data-sort="-{{ each.points }}">
-            <a href="{{ each.id }}/">{{ each }}</a>
+            <a href="{% url "core:user" each.id %}">{{ each }}</a>
           </td>
           <td>{{ each.user.date_joined|date:"M d, Y" }}</td>
           <td data-sort="-{{each.points }}">{{ each.points }}</td>
