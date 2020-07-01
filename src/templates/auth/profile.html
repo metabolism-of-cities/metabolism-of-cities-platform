@@ -18,9 +18,12 @@
             <h5 class="card-title mb-0">{{ info }}</h5>
           </div>
           <ul class="list-group list-group-flush">
+            {% if request.user.people == info %}
             <li class="list-group-item">
-              <i class="far fa-fw fa-at mr-1" aria-hidden="true"></i> <a href="mailto:{{ request.user.email }}">{{ request.user.email }}</a>
+              <i class="far fa-fw fa-at mr-1" aria-hidden="true"></i> <a href="mailto:{{ info.email }}">{{ info.email }}</a>
+              <span class="badge badge-warning">Only visible to you</span>
             </li>
+            {% endif %}
             {% if info.twitter %}
               <li class="list-group-item">
                 <i class="fab fa-fw fa-twitter mr-1" aria-hidden="true"></i> <a href="https://twitter.com/{{ info.twitter }}">{{ info.twitter }}</a>
@@ -32,10 +35,10 @@
               </li>
             {% endif %}
             <li class="list-group-item">
-              <i class="far fa-fw fa-user-plus mr-1" aria-hidden="true"></i> Signed up {{ request.user.date_joined|naturaltime }}
+              <i class="far fa-fw fa-user-plus mr-1" aria-hidden="true"></i> Signed up {{ info.user.date_joined|naturaltime }}
             </li>
             <li class="list-group-item">
-              <i class="far fa-fw fa-history mr-1" aria-hidden="true"></i> Last seen {{ request.user.last_login|naturaltime }}
+              <i class="far fa-fw fa-history mr-1" aria-hidden="true"></i> Last seen {{ info.user.last_login|naturaltime }}
             </li>
           </ul>
         </div>
@@ -57,7 +60,36 @@
   </section>
 
   <section>
-    <h3>My tasks</h3>
+    <h3>Completed tasks</h3>
+    <table class="table datatable datatable-card">
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Project</th>
+          <th>Points</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in completed %}
+        <tr>
+          <td><a href="../work/{{ each.id }}/">{{ each }}</a></td>
+          <td>{{ each.part_of_project }}</td>
+          <td>{{ each.workactivity.points }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>Total</th>
+          <th></th>
+          <th>{{ points }}</th>
+        </tr>
+      </tfoot>
+    </table>
+  </section>
+
+  <section>
+    <h3>Ongoing work</h3>
     <table class="table datatable datatable-card">
       <thead>
         <tr>
@@ -67,7 +99,7 @@
         </tr>
       </thead>
       <tbody>
-      {% for each in tasks %}
+      {% for each in open %}
         <tr>
           <td><a href="../work/{{ each.id }}/">{{ each }}</a></td>
           <td>{{ each.part_of_project }}</td>

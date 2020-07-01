@@ -57,6 +57,9 @@ logger = logging.getLogger(__name__)
 import twitter
 import facebook
 
+# To get the total number of points
+from django.db.models import Sum
+
 # This array defines all the IDs in the database of the articles that are loaded for the
 # various pages in the menu. Here we can differentiate between the different sites.
 
@@ -340,17 +343,23 @@ def user_reset(request):
 
 @login_required
 def user_profile(request, project=None, project_name=None):
-    user = request.user
+    info = request.user.people
     if project_name:
         project = project_name
-    if user.people:
-        relationships = RecordRelationship.objects.filter(record_parent=user.people)
+
+    completed = Work.objects.filter(assigned_to=info, status=Work.WorkStatus.COMPLETED)
+    open = Work.objects.filter(assigned_to=info).filter(Q(status=Work.WorkStatus.OPEN)|Q(status=Work.WorkStatus.PROGRESS))
+
+    points = Work.objects_unfiltered.filter(assigned_to=info, status=Work.WorkStatus.COMPLETED).aggregate(total=Sum("workactivity__points"))
+    print(points)
+
     context = {
-        "relationships": relationships,
         "menu": "profile",
-        "info": request.user.people,
-        "tasks": Work.objects_include_private.filter(assigned_to=request.user.people),
+        "info": info,
+        "completed": completed,
+        "open": open,
         "load_datatables": True,
+        "points": points["total"],
     }
     return render(request, "auth/profile.html", context)
 
@@ -990,7 +999,7 @@ def work_grid(request, project_name, sprint=None):
     if type:
         list = list.filter(workactivity__type=type)
 
-    list = list.order_by("last_update__date_created")
+    list = list.order_by("-last_update__date_created")
     projects = Project.objects.filter(pk__in=OPEN_WORK_PROJECTS).order_by("name")
 
     context = {

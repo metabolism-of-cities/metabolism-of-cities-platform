@@ -128,6 +128,7 @@
       <tr>
         <th>Task</th>
         <th>Details</th>
+        <th>Points</th>
         <th>Last update</th>
       </tr>
     </thead>
@@ -152,6 +153,9 @@
           <em>{{ each.get_status_display }} | {{ each.get_priority_display }} priority</em>
         </td>
         
+        <td>
+          {{ each.workactivity.points }}
+        </td>
         <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
           {% if each.last_update %}
             {{ each.last_update.date_created|timesince }} ago 
