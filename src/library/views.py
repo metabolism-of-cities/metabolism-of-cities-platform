@@ -56,9 +56,38 @@ def index(request):
     return render(request, "library/index.html", context)
 
 def tags(request):
+    id = request.GET.get("id")
     context = {
+        "info": Tag.objects_unfiltered.get(pk=id) if id else None,
     }
     return render(request, "library/tags.html", context)
+
+def tag_form(request, id=None):
+    ModelForm = modelform_factory(Tag, fields=["name", "description", "parent_tag", "include_in_glossary", "is_public", "is_deleted", "icon"])
+    if id:
+        info = get_object_or_404(Tag, pk=id)
+        form = ModelForm(request.POST or None, request.FILES or None)
+    else:
+        initial = None
+        if "parent" in request.GET:
+            initial = {"parent_tag": request.GET.get("parent")}
+        form = ModelForm(request.POST or None, initial=initial)
+
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save()
+            if "next" in request.GET:
+                return redirect(request.GET.get("next"))
+            else:
+                return redirect("library:tags")
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    context = {
+        "form": form,
+        "title": "Tag",
+    } 
+    return render(request, "modelform.html", context)
 
 def tags_json(request):
     id = request.GET.get("id")
@@ -328,7 +357,7 @@ def form(request, id=None, project_name="library", type=None):
 
     if type.name == "Dataset" and curator:
         form.fields["activities"].queryset = Activity.objects.filter(catalog_id=3655)
-        form.fields["materials"].queryset = Material.objects.filter(Q(catalog_id=19001)|Q(catalog_id=18998))
+        form.fields["materials"].queryset = Material.objects.filter(Q(catalog_id=19001)|Q(catalog_id=18998)|Q(catalog_id=32553))
 
     if request.method == "POST":
         if form.is_valid():

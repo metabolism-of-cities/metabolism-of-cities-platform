@@ -85,9 +85,7 @@ class PrivateRecordManager(models.Manager):
 class Tag(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
-    parent_tag = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True,
-        limit_choices_to={"hidden": False}, related_name="children"
-    )
+    parent_tag = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="children")
     hidden = models.BooleanField(db_index=True, default=False, help_text="Mark if tag is superseded/not yet approved/deactivated")
     include_in_glossary = models.BooleanField(db_index=True, default=False)
     belongs_to = models.ForeignKey("Record", on_delete=models.CASCADE, null=True, blank=True)
@@ -1290,7 +1288,7 @@ class MaterialType(models.IntegerChoices):
 class Material(Record):
     code = models.CharField(max_length=255, null=True, blank=True, db_index=True)
     parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="children")
-    catalog = models.ForeignKey(MaterialCatalog, on_delete=models.CASCADE, blank=True, null=True)
+    catalog = models.ForeignKey(MaterialCatalog, on_delete=models.CASCADE, blank=True, null=True, related_name="content")
     #is_separator = models.BooleanField()
     measurement_type = models.IntegerField(choices=MaterialType.choices, db_index=True, blank=True, null=True, default=1)
     icon = models.CharField(max_length=50, null=True, blank=True, help_text="Only include the icon name, not fa- classes --- see https://fontawesome.com/icons?d=gallery")

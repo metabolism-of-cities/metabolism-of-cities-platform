@@ -21,42 +21,13 @@ from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
 from django.contrib.admin.utils import construct_change_message
 from django.contrib.contenttypes.models import ContentType
 
-import logging
-logger = logging.getLogger(__name__)
-
 import csv
 import codecs
 
 import shapefile
+from core.mocfunctions import *
 
-TAG_ID = settings.TAG_ID_LIST
-PAGE_ID = settings.PAGE_ID_LIST
-PROJECT_ID = settings.PROJECT_ID_LIST
-RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
 THIS_PROJECT = PROJECT_ID["staf"]
-
-# General script to check if a user has a certain permission
-# This is used for validating access to certain pages only, so superusers
-# will always have access
-# Version 1.0
-def has_permission(request, record_id, allowed_permissions):
-    if request.user.is_authenticated and request.user.is_superuser:
-        return True
-    elif request.user.is_authenticated and request.user.is_staff:
-        return True
-    try:
-        people = request.user.people
-        check = RecordRelationship.objects.filter(
-            relationship__slug__in = permissions,
-            record_parent = request.user.people,
-            record_child_id = record_id,
-        )
-    except:
-        return False
-    return True if check.exists() else False
-
-def is_member(param, para):
-    return True
 
 def index(request):
     context = {
@@ -589,6 +560,48 @@ def activity(request, catalog, id):
     return render(request, "staf/activities.html", context)
 
 def materials_catalogs(request):
+    if "load" in request.GET:
+        info = MaterialCatalog.objects.get(pk=request.GET["load"])
+        if not info.content.all():
+            parents = {}
+            error = None
+            file = info.original_file.path
+            abbreviation = "NST2007."
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    try:
+                        code = abbreviation + row["Code"]
+                        name = row["Description"]
+                        get_parent = abbreviation + row["Parent"] if row["Parent"] else None
+                        parent = None
+                        if get_parent:
+                            if get_parent in parents:
+                                parent = parents[get_parent]
+                            else:
+                                error = True
+                                messages.error(request, "We could not find this code as a parent! We stopped loading the file. Parent code:<br>" + get_parent)
+                                break
+                        new = Material.objects.create(
+                            name = name,
+                            code = code,
+                            parent = parent,
+                            catalog = info,
+                            meta_data = {
+                                "Order": row["Order"],
+                                "Reference to CPA 2008": row["Reference to CPA 2008"],
+                            }
+                        )
+                        parents[code] = new
+                    except Exception as e:
+                        error = True
+                        messages.error(request, "An issue was encountered: <br>" + str(e.__doc__) + "<br>" + str(e.message))
+            if error:
+                list = Material.objects.filter(catalog=info)
+                list.delete()
+            else:
+                messages.success(request, "Import completed")
+
     context = {
         "list": MaterialCatalog.objects.all(),
     }

@@ -15,6 +15,9 @@
         <td>{{ each.name }}</td>
         <td>
           <a class="btn btn-info" href="{% url "staf:materials" %}?catalog={{ each.id }}"><i class="fa fa-eye"></i> View</a>
+          {% if each.original_file and not each.content.all %}
+            <a class="btn btn-info" href="?load={{ each.id }}"><i class="fa fa-server"></i> Load content</a>
+          {% endif %}
         </td>
       </tr>
     {% endfor %}

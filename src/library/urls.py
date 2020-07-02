@@ -70,6 +70,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("casestudies/", views.casestudies, name="casestudies"),
     path("tags/", views.tags, name="tags"),
+    path("tags/create/", views.tag_form, name="tag_form"),
     path("tags/json/", views.tags_json, name="tags_json"),
     path("list/", views.list, name="list"),
     path("methods/", views.methodologies, name="methods"),
