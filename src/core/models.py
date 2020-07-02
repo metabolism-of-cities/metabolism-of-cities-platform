@@ -1269,7 +1269,7 @@ class FlowBlocks(models.Model):
 
 class MaterialCatalog(Record):
     url = models.CharField(max_length=255, null=True, blank=True)
-    original_file = models.FileField(null=True, blank=True, upload_to="activity_catalogs")
+    original_file = models.FileField(null=True, blank=True, upload_to="material_catalogs")
 
     def __str__(self):
         return self.name
