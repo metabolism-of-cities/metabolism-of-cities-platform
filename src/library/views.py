@@ -279,6 +279,17 @@ def upload(request, project_name="library"):
     }
     return render(request, "library/upload.html", context)
 
+def search_ajax(request):
+    query = request.GET.get("q")
+    r = { 
+        "results": []
+    }
+    if query:
+        list = LibraryItem.objects.filter(name__contains=query)
+        for each in list:
+            r["results"].append({"id": each.id, "text": each.name + " - " + str(each.year)})
+    return JsonResponse(r, safe=False)
+
 @login_required
 def form(request, id=None, project_name="library", type=None):
 

@@ -14,6 +14,19 @@ textarea#id_author_list{height:100px}
 
   {% endif %}
   <form method="post" enctype="multipart/form-data">
+
+    {% if not info %}
+      <div class="alert alert-warning">
+        <p>
+          <i class="fa fa-exclamation-triangle"></i>
+          Before adding a new entry, please use the search below to make sure the publication does not yet exist.
+        </p>
+        <p>
+          <select id="existing" class="select2 custom-select">
+          </select>
+        </p>
+      </div>
+    {% endif %}
     
     {% csrf_token %}
     {% bootstrap_form form %}
@@ -85,5 +98,20 @@ textarea#id_author_list{height:100px}
         $("#id_abstract_original_language").closest(".form-group").hide();
       }
     });
+
+    $("#existing").select2({
+      theme: "bootstrap4",
+      ajax: {
+        url: "{% url "library:search_ajax" %}",
+        dataType: "json"
+        // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+      }
+    });
+
+    $("#existing").on("select2:select", function (e) {
+        var data = e.params.data;
+        window.location = "https://library.metabolismofcities.org/items/"+ data.id;
+    });
+
   </script>
 {% endblock %}

@@ -88,4 +88,7 @@ urlpatterns = [
     path("upload/", views.upload, name="upload"),
     path("item/<int:id>/", views.form, name="form"),
 
+    path("search/ajax/", views.search_ajax, name="search_ajax"),
+
+    
 ]
