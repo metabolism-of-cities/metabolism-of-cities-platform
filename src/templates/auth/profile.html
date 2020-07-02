@@ -51,7 +51,7 @@
       </div>
 
       <div class="col-lg-8 col-md-7">
-        <p>{{ info.description|linebreaksbr }}</p>
+        {{ info.get_description }}
 
         {% if info.research_interests %}
         <h4>Research interests</h4>
@@ -75,7 +75,7 @@
         <tbody>
         {% for each in completed %}
           <tr>
-            <td><a href="../work/{{ each.id }}/">{{ each }}</a></td>
+            <td><a href="/tasks/{{ each.id }}/">{{ each }}</a></td>
             <td>{{ each.part_of_project }}</td>
             <td>{{ each.workactivity.points }}</td>
           </tr>
@@ -106,7 +106,7 @@
         <tbody>
         {% for each in open %}
           <tr>
-            <td><a href="../work/{{ each.id }}/">{{ each }}</a></td>
+            <td><a href="/tasks/{{ each.id }}/">{{ each }}</a></td>
             <td>{{ each.part_of_project }}</td>
             <td>{{ each.get_status_display }}</td>
           </tr>

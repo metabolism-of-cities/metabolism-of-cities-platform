@@ -499,6 +499,15 @@ class People(Record):
     def save(self, *args, **kwargs):
         if self.email:
             self.email=self.email.lower()
+        if self.twitter:
+            try:
+                url = self.twitter
+                if url[:4] == "http":
+                    self.twitter = url.rsplit("/", 1)[-1]
+                elif url[:1] == "@":
+                    self.twitter = url[1:]
+            except:
+                pass
         super(People, self).save(*args, **kwargs)
 
 

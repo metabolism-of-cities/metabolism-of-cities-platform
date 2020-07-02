@@ -491,6 +491,13 @@ def article_list(request, id):
 # Users
 
 def users(request, project_name=None, scoreboard=False):
+    if "update" in request.GET:
+        all = People.objects.filter(twitter__isnull=False).exclude(twitter="")
+        for each in all:
+            print(each.twitter)
+            each.save()
+            print(each.twitter)
+
     webpage = get_object_or_404(Webpage, pk=54)
 
     if scoreboard:
