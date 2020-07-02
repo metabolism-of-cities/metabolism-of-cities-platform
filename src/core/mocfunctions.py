@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
+from core.models import *
 
 import logging
 logger = logging.getLogger(__name__)
