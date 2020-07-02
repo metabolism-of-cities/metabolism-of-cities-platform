@@ -3,7 +3,7 @@
   {% for each in updates %}
     <div class="single-update">
       <div>
-        <a class="d-block mb-2" href="../../tasks/{{ each.parent.id }}/">{{ each.parent }}</a>
+        <a class="d-block mb-2" href="{% url "core:work_item" each.parent.id %}">{{ each.parent }}</a>
 
         {% if each.name == "Task assigned" %}
           <i class="far fa-fw fa-user-check mr-1"></i>
