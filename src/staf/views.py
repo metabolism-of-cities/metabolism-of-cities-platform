@@ -83,7 +83,7 @@ def review_processed(request):
 def review_session(request, id, classify=False):
 
     session = get_object_or_404(UploadSession, pk=id)
-    if session.uploader is not request.user.people and not is_member(request.user, "Data administrators"):
+    if session.uploader is not request.user.people and not has_permission(request, THIS_PROJECT, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
     try:
@@ -292,7 +292,7 @@ def upload_staf_data(request, id=None, block=None, project_name="staf"):
 @login_required
 def upload_staf_verify(request, id):
     session = get_object_or_404(UploadSession, pk=id)
-    if session.uploader is not request.user.people and not is_member(request.user, "Data administrators"):
+    if session.uploader is not request.user.people and not has_permission(request, THIS_PROJECT, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
     rows = None
@@ -426,7 +426,7 @@ def upload(request):
 @login_required
 def upload_gis_verify(request, id):
     session = get_object_or_404(UploadSession, pk=id)
-    if session.uploader is not request.user.people and not is_member(request.user, "Data administrators"):
+    if session.uploader is not request.user.people and not has_permission(request, THIS_PROJECT, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
     files = UploadFile.objects.filter(session=session)
     geojson = None
@@ -451,7 +451,7 @@ def upload_gis_verify(request, id):
 def upload_gis_meta(request, id):
     session = get_object_or_404(UploadSession, pk=id)
 
-    if is_member(request.user, "Data administrators"):
+    if has_permission(request, THIS_PROJECT, ["curator", "admin", "publisher"]):
         data_admin = True
     else:
         data_admin = False

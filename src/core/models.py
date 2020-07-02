@@ -201,7 +201,7 @@ class Document(Record):
     objects = PublicActiveRecordManager()
 
     def get_kb(self):
-        return self.file.size / 1024 if self.file else 0
+        return self.file.size / 1024 if self.file else self.image.size / 1024
 
     def get_url(self):
         return self.file.url if self.file else self.image.url
