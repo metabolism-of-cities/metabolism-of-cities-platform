@@ -853,6 +853,21 @@ def work_form(request, project_name, id=None, sprint=None):
                 )
                 set_autor(request.user.people.id, message.id)
 
+
+            if request.FILES:
+                files = request.FILES.getlist("files")
+                for file in files:
+                    attachment = Document()
+                    filename = str(file)
+                    if filename.lower().endswith((".png", ".jpg", ".jpeg", ".bmp", ".gif")):
+                        attachment.image = file
+                    else:
+                        attachment.file = file
+                    attachment.name = file
+                    attachment.save()
+                    message.attachments.add(attachment)
+
+
             messages.success(request, "Information was saved.")
             return redirect(request.GET["return"])
         else:

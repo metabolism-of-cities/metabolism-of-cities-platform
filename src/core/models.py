@@ -200,9 +200,11 @@ class Document(Record):
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
 
-    def getFileName(self):
-      filename = str(self.file).split("/")[1]
-      return filename
+    def get_kb(self):
+        return self.file.size / 1024 if self.file else 0
+
+    def get_url(self):
+        return self.file.url if self.file else self.image.url
 
 class ProjectType(models.Model):
     name = models.CharField(max_length=255)
@@ -627,18 +629,6 @@ class Message(Record):
                     parent.save()
         except Exception as e:
             pass
-
-    def getReply(self):
-        return Message.objects.filter(parent=self)
-
-    def getLastActivity(self):
-        return Message.objects.filter(parent=self).last()
-
-    def getForumMessageFiles(self):
-        return self.attachments.all()
-
-    def getContent(self):
-        return markdown(self.description)
 
     def get_absolute_url(self):
         try:

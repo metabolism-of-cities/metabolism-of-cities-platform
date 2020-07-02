@@ -296,12 +296,17 @@ def forum(request, id, project_name=None, section=None):
                     pass
 
             if request.FILES:
-                files = request.FILES.getlist("file")
+                files = request.FILES.getlist("files")
                 for file in files:
-                    info_document = Document()
-                    info_document.file = file
-                    info_document.save()
-                    new.attachments.add(info_document)
+                    attachment = Document()
+                    filename = str(file)
+                    if filename.lower().endswith((".png", ".jpg", ".jpeg", ".bmp", ".gif")):
+                        attachment.image = file
+                    else:
+                        attachment.file = file
+                    attachment.name = file
+                    attachment.save()
+                    message.attachments.add(attachment)
 
             if "subscribe" in request.POST:
                 info.subscribers.add(request.user.people)
@@ -364,12 +369,18 @@ def forum_form(request, id=False, project_name=None, parent=None, section=None):
         set_author(request.user.people.id, message.id)
 
         if request.FILES:
-            files = request.FILES.getlist("file")
+            files = request.FILES.getlist("files")
             for file in files:
-                info_document = Document()
-                info_document.file = file
-                info_document.save()
-                message.attachments.add(info_document)
+                attachment = Document()
+                filename = str(file)
+                if filename.lower().endswith((".png", ".jpg", ".jpeg", ".bmp", ".gif")):
+                    attachment.image = file
+                else:
+                    attachment.file = file
+                attachment.name = file
+                attachment.save()
+                message.attachments.add(attachment)
+
         messages.success(request, "Your message has been posted.")
 
         if project_name:

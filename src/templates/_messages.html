@@ -32,11 +32,21 @@
             {{ each.get_description }}
           </div>
 
-          {% if each.getForumMessageFiles %}
+          {% if each.attachments.all %}
             <div class="attachment mt-3">
-              {% for subeach in each.getForumMessageFiles %}
-                <a class="btn btn-sm btn-primary-outline mb-1" href="{{ MEDIA_URL }}{{ subeach.file.url }}" target="_blank"><i class="far fa-paperclip"></i> {{ subdetails.getFileName }}
+              {% for attachment in each.attachments.all %}
+              <div>
+                {% if attachment.image %}
+                  <a href="{{ MEDIA_URL }}{{ attachment.get_url }}" target="_blank">
+                    <img src="{{ attachment.image.thumbnail.url }}" alt="" class="img-thumbnail" />
+                  </a>
+                  <br>
+                {% endif %}
+                <a class="btn btn-sm btn-primary-outline mb-1" href="{{ MEDIA_URL }}{{ attachment.get_url }}" target="_blank"><i class="far fa-paperclip"></i> 
+                  {{ attachment }}
+                  ({{ attachment.get_kb|floatformat:"0" }} Kb)
                 </a>
+              </div>
               {% endfor %}
             </div>
           {% endif %}
@@ -71,8 +81,8 @@
       {% include "_markdown.html" %}
       <textarea class="form-control" id="text" name="text" rows="7" required>{{ message.description }}</textarea>
     </div>
-    <div class="form-group" style="display:none">
-      <label for="files"><i class="far fa-fw fa-paperclip"></i> File(s)</label>
+    <div class="form-group">
+      <label for="files"><i class="far fa-fw fa-paperclip"></i> Attachment(s)</label>
       <div class="custom-file">
         <input type="file" class="custom-file-input" name="files" id="files" multiple="multiple">
         <label class="custom-file-label" for="files">Choose file</label>
