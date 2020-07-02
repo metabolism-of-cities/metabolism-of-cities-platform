@@ -401,7 +401,9 @@ def user_profile_form(request, project_name=None):
 def index(request):
     count = Project.objects.all().count()
     blurb = """
-      We are a global network of people, working together on (urban) sustainability.
+      We are a global network of people, working together on 
+      systemically reduce net environmental impacts of cities in socially just manner
+      and context-specific way.
       This website explains our <a href="projects/">""" + str(count) + """ projects</a>
       and it is the central place of our volunteers and partners to 
       <a href="forum/">discuss</a>, <a href="events/">get together</a>, and
