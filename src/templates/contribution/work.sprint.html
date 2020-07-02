@@ -27,7 +27,7 @@
     </div>
   {% endif %}
 
-  <a class="btn btn-primary-basic" href="tasks/">
+  <a class="btn btn-primary-basic" href="/tasks/">
     <i class="fal fa-clipboard-list"></i>
     View task list
   </a>
@@ -66,6 +66,12 @@
       {% if request.user.is_authenticated %}
 
         <h3>Chat</h3>
+
+        <div class="alert alert-warning">
+          Yeah so this would be really cool to have but it's a 
+          <a href="/tasks/31765/">work in progress</a>. For now, 
+          use the WORK UPDATES bar on the right to stay posted!
+        </div>
 
         <div id="chat-wrap">
           <div id="chat">

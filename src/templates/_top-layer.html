@@ -6,12 +6,12 @@
       <div class="sprint-bar">
         <div class="container">
           <i class="fa fa-heart-rate"></i> Active work sprint!
-          <a href="/work/sprints/{{ each.id }}/">{{ each }}</a>
+          <a href="{% url "core:work_sprint" each.id %}">{{ each }}</a>
           <div class="float-right">
-            <a class="badge badge-light" href="/work/sprints/{{ each.id }}/">
+            <a class="badge badge-light" href="{% url "core:work_sprint" each.id %}">
               Sprint overview
             </a>
-            <a class="badge badge-light" href="/work/sprints/{{ each.id }}/tasks/">
+            <a class="badge badge-light" href="{% url "core:tasks" %}">
               Task list
             </a>
           </div>
