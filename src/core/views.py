@@ -270,16 +270,15 @@ def user_profile_form(request, project_name=None):
 def index(request):
     count = Project.objects.all().count()
     blurb = """
-      We are a global network of people, working together on 
-      systemically reduce net environmental impacts of cities in socially just manner
-      and context-specific way.
+      We are a global network of people, working together on systemically
+      reducing net environmental impacts of cities and other territories in a
+      socially just manner and context-specific way.<br><br>
       This website explains our <a href="projects/">""" + str(count) + """ projects</a>
-      and it is the central place of our volunteers and partners to 
+      and it is the central place of our community to 
       <a href="forum/">discuss</a>, <a href="events/">get together</a>, and
       <a href="tasks/">get things done</a>!"""
 
     context = {
-        "header_title": "Metabolism of Cities",
         "header_subtitle": blurb,
         "show_project_design": True,
         "projects": Project.objects.filter(pk__in=[2,3,4,32018,16,18]),
@@ -629,8 +628,6 @@ def controlpanel_users(request, project_name):
 
 @login_required
 def controlpanel_design(request, project_name):
-
-    print("------")
 
     project = PROJECT_ID[project_name]
     if not has_permission(request, project, ["curator", "admin", "publisher"]):

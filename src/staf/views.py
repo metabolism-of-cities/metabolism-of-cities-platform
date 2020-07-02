@@ -106,7 +106,6 @@ def review_session(request, id, classify=False):
             meta_data["columns"] = {}
         meta_data["columns"]["name"] = request.POST.get("classify_name")
         meta_data["columns"]["identifier"] = request.POST.get("identifier")
-        print(meta_data)
         session.meta_data = meta_data 
         session.save()
         messages.success(request, "Settings were saved.")
