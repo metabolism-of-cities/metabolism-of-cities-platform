@@ -13,19 +13,23 @@
     </tr>
   </thead>
   <tbody>
-    {% for details in items %}
+    {% for each in items %}
       <tr>
         <td>
-            <a href="{{ details.url }}"><i class="fa fa-link fa-fw"></i></a>
-            <a href="{% url "library:form" details.id %}">{{ details }}</a>
+            <a href="{{ each.url }}"><i class="fa fa-link fa-fw"></i></a>
+            {% if request.user.is_staff %}
+              <a href="{% url "library:form" each.id %}">{{ each }}</a>
+            {% else %}
+              {{ each }}
+            {% endif %}
         </td>
         <td>
-          {% for each in details.spaces.all %}
+          {% for each in each.spaces.all %}
             <span class="badge badge-info">{{ each }}</span>
           {% endfor %}
         </td>
         <td>
-          {% for each in details.tags.all %}
+          {% for each in each.tags.all %}
             <span class="badge badge-info">{{ each }}</span>
           {% endfor %}
         </td>

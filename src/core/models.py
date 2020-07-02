@@ -125,6 +125,7 @@ class Record(models.Model):
     spaces = models.ManyToManyField("ReferenceSpace", blank=True)
     sectors = models.ManyToManyField("Sector", blank=True)
     subscribers = models.ManyToManyField("People", blank=True)
+    materials = models.ManyToManyField("Material", blank=True)
 
     # We use soft deleted
     is_deleted = models.BooleanField(default=False, db_index=True)
@@ -886,6 +887,7 @@ class LibraryDataset(LibraryItem):
     update_frequency = models.CharField(max_length=50, null=True, blank=True)
     has_api = models.BooleanField(default=True, db_index=True)
     size = models.IntegerField(null=True, blank=True, help_text="Size in MB")
+    activities = models.ManyToManyField("Activity", blank=True)
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
@@ -1267,6 +1269,7 @@ class FlowBlocks(models.Model):
 
 class MaterialCatalog(Record):
     url = models.CharField(max_length=255, null=True, blank=True)
+    original_file = models.FileField(null=True, blank=True, upload_to="activity_catalogs")
 
     def __str__(self):
         return self.name

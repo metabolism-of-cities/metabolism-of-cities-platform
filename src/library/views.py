@@ -14,12 +14,11 @@ from django.views.decorators.cache import cache_page
 from django.utils import timezone
 import pytz
 
-TAG_ID = settings.TAG_ID_LIST
-PAGE_ID = settings.PAGE_ID_LIST
-PROJECT_ID = settings.PROJECT_ID_LIST
-RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
+from django.db.models import Q
+
+from core.mocfunctions import *
+
 THIS_PROJECT = PROJECT_ID["library"]
-AUTO_BOT = 32070
 
 def index(request):
     tags = [324, 322, 664, 318, 739]
@@ -255,16 +254,28 @@ def upload(request, project_name="library"):
 def form(request, id=None, project_name="library", type=None):
 
     project = Project.objects.get(slug=project_name)
+    journals = None
+    publishers = None
+    info = None
+
+    curator = False
+    if has_permission(request, PROJECT_ID[project_name], ["curator"]):
+        curator = True
+
     if not type:
         type = request.GET.get("type")
         if request.method == "POST":
             type = request.POST.get("type")
-    journals = publishers = None
-    type = LibraryItemType.objects.get(pk=type)
+
+    if id and curator:
+        info = get_object_or_404(LibraryItem, pk=id)
+        type = info.type
+    else:
+        type = LibraryItemType.objects.get(pk=type)
 
     if type.name == "Dataset":
-        if request.user.is_staff:
-            fields=["name", "author_list", "description", "url", "size", "spaces", "tags", "year", "language", "license", "data_year_start", "data_year_end", "update_frequency", "data_interval", "data_formats", "has_api"]
+        if curator:
+            fields=["name", "author_list", "description", "url", "size", "spaces", "sectors", "activities", "materials", "tags", "year", "language", "license", "data_year_start", "data_year_end", "update_frequency", "data_interval", "data_formats", "has_api"]
         else:
             fields=["name", "author_list", "description", "url", "size", "spaces", "year", "language", "license", "update_frequency"]
 
@@ -310,17 +321,23 @@ def form(request, id=None, project_name="library", type=None):
         fields.append("comments")
         ModelForm = modelform_factory(LibraryItem, fields=fields, labels = labels)
 
-    if id:
-        info = get_object_or_404(LibraryItem, pk=id)
+    if info:
         form = ModelForm(request.POST or None, request.FILES or None, instance=info)
     else:
         form = ModelForm(request.POST or None)
+
+    if type.name == "Dataset" and curator:
+        form.fields["activities"].queryset = Activity.objects.filter(catalog_id=3655)
+        form.fields["materials"].queryset = Material.objects.filter(Q(catalog_id=19001)|Q(catalog_id=18998))
 
     if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)
             info.type = type
-            info.is_active = False
+            if request.user.is_staff:
+                info.is_active = True
+            else:
+                info.is_active = False
             info.save()
             form.save_m2m()
 
@@ -381,17 +398,20 @@ def form(request, id=None, project_name="library", type=None):
                 )
                 message = Message.objects.create(posted_by_id=AUTO_BOT, parent=work, name="Task created", description="This task was created by the system")
 
+
+            if request.user.is_staff:
+                msg = "The item was added to the library. <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=2&amp;record_child=" + str(info.id) + "'>Link to publisher</a> |  <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=4&amp;record_child=" + str(info.id) + "'>Link to author</a> ||| <a href='/admin/core/organization/add/' target='_blank'>Add a new organization</a>"
+            else:
+                msg = "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution!"
+            messages.success(request, msg)
+
             if "return" in request.GET:
-                messages.success(request, "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution!")
                 return redirect(request.GET["return"])
             elif type.name == "Dataset":
-                messages.success(request, "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution!")
                 return redirect("data:upload_dataset")
             elif type.name == "Data portal":
-                messages.success(request, "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution!")
                 return redirect("data:upload_dataportal")
             else:
-                messages.success(request, "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution!")
                 return redirect("library:upload")
         else:
             messages.error(request, "We could not save your form, please fill out all fields")

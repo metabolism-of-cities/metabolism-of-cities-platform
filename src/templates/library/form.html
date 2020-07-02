@@ -67,6 +67,15 @@ textarea#id_author_list{height:100px}
     $("#journals").select2({
       theme: "bootstrap4",
     });
+    $("#id_activities").select2({
+      theme: "bootstrap4",
+    });
+    $("#id_sectors").select2({
+      theme: "bootstrap4",
+    });
+    $("#id_materials").select2({
+      theme: "bootstrap4",
+    });
     $("#id_language").change(function(){
       if ($(this).val() != "EN") {
         $("#id_title_original_language").closest(".form-group").show("fast");

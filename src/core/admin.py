@@ -11,7 +11,7 @@ from django.contrib.gis import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.html import format_html
 
-DEFAULT_EXCLUDE = ["description_html", "date_created", "tags", "spaces", "sectors", "subscribers", "old_id", "meta_data"]
+DEFAULT_EXCLUDE = ["description_html", "date_created", "tags", "spaces", "sectors", "subscribers", "old_id", "meta_data", "materials"]
 
 class GeoModelAdmin(admin.ModelAdmin):
      map_width = 100
@@ -351,7 +351,7 @@ admin_site.register(WorkActivity, WorkActivityAdmin)
 admin_site.register(Badge, BadgeAdmin)
 admin_site.register(ActivityCatalog)
 admin_site.register(Activity, ActivityAdmin)
-admin_site.register(MaterialCatalog)
+admin_site.register(MaterialCatalog, SearchAdmin)
 admin_site.register(Material, ActivityAdmin)
 
 class EurostatAdmin(admin.ModelAdmin):
