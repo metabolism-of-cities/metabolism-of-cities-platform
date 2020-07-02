@@ -18,7 +18,7 @@
         {{ each.get_markdown_description|safe|truncatewords_html:30 }}
       </div>
       <small class="text-muted">
-        {{ each.author }} | <span title="{{ each.date_created|date:'l d F Y, H:i' }}">{{ each.date_created|naturaltime }}</span>
+        {{ each.posted_by }} | <span title="{{ each.date_created|date:'l d F Y, H:i' }}">{{ each.date_created|naturaltime }}</span>
       </small>
     </div>
   {% endfor %}
