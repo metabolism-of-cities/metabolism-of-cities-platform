@@ -510,7 +510,6 @@ class People(Record):
                 pass
         super(People, self).save(*args, **kwargs)
 
-
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
@@ -809,6 +808,16 @@ class LibraryItem(Record):
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
+
+    def save(self, *args, **kwargs):
+        if self.doi:
+            try:
+                url = self.doi
+                if url[:4] == "http":
+                    self.doi = url.rsplit("/", 1)[-1]
+            except:
+                pass
+        super(LibraryItem, self).save(*args, **kwargs)
 
 class Video(LibraryItem):
     embed_code = models.CharField(max_length=20, null=True, blank=True)
