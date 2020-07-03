@@ -32,6 +32,13 @@
     View task list
   </a>
 
+  {% if request.user.is_staff %}
+    <a class="btn btn-primary-basic" href="{% url "core:massmail" %}?people={% for each in participants %}{{ each.id }},{% endfor %}">
+      <i class="fal fa-envelope"></i>
+      Mail participants
+    </a>
+  {% endif %}
+
   {% if request.user.is_authenticated and request.user.people not in participants %}
     <form method="post">
       {% csrf_token %}

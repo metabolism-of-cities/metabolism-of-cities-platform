@@ -1397,28 +1397,33 @@ def massmail(request,people=None):
         messages.error(request, "You did not select any people to send this mail to! <br><strong>Error: " + str(e) + "</strong>")
         list = None
     if request.method == "POST":
-        message = request.POST["content"]
-        mailcontext = {
-            "message": markdown(message),
-        }
-        msg_html = render_to_string("mailbody/mail.template.html", mailcontext)
-        msg_plain = message
-        sender = '"' + request.site.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
-        if "send_preview" in request.POST:
-            # If a preview is being sent, then it must ONLY go to the logged-in user
-            list = People.objects.filter(user=request.user)
-        for each in list:
-            # Let check if the person has an email address before we send the mail
-            if each.email:
-                recipient = '"' + each.name + '" <' + each.email + '>'
-                send_mail(
-                    request.POST["subject"],
-                    msg_plain,
-                    sender,
-                    [recipient],
-                    html_message=msg_html,
-                )
-        messages.success(request, "The message was sent.")
+        try:
+            message = request.POST["content"]
+            mailcontext = {
+                "message": markdown(message),
+            }
+            msg_html = render_to_string("mailbody/mail.template.html", mailcontext)
+            msg_plain = message
+            sender = '"' + request.site.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
+            if "send_preview" in request.POST:
+                # If a preview is being sent, then it must ONLY go to the logged-in user
+                recipients = People.objects.filter(user=request.user)
+            else:
+                recipients = list
+            for each in recipients:
+                # Let check if the person has an email address before we send the mail
+                if each.email:
+                    recipient = '"' + each.name + '" <' + each.email + '>'
+                    send_mail(
+                        request.POST["subject"],
+                        msg_plain,
+                        sender,
+                        [recipient],
+                        html_message=msg_html,
+                    )
+            messages.success(request, "The message was sent.")
+        except Exception as e:
+            messages.error(request, "We could not send your mail, please review the error.<br><strong>" + str(e) + "</strong>")
 
     context = {
         "list": list,
