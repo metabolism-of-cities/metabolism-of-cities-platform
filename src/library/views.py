@@ -324,7 +324,7 @@ def form(request, id=None, project_name="library", type=None):
             fields = fields,
             labels = {
                 "year": "Year created (required)",
-                "spaces": "City/cities",
+                "spaces": "Physical location(s)",
                 "author_list": "Authors (people)",
             }
         )
