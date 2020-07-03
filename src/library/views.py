@@ -345,7 +345,7 @@ def form(request, id=None, project_name="library", type=None):
             "name": "Title",
             "url": "URL",
             "doi": "DOI",
-            "spaces": "Related city (optional)",
+            "spaces": "Physical location(s)",
         }
         fields = ["name", "language", "title_original_language", "abstract_original_language", "description", "year", "author_list", "url", "license", "spaces"]
         if type.name == "Journal Article" or type.name == "Thesis" or type.name == "Conference Paper":
