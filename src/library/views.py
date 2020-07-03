@@ -315,9 +315,9 @@ def form(request, id=None, project_name="library", type=None):
 
     if type.name == "Dataset":
         if curator:
-            fields=["name", "author_list", "description", "url", "size", "spaces", "sectors", "activities", "materials", "tags", "year", "language", "license", "data_year_start", "data_year_end", "update_frequency", "data_interval", "data_formats", "has_api"]
+            fields=["name", "author_list", "description", "url", "size", "spaces", "sectors", "activities", "materials", "tags", "year", "language", "license", "data_year_start", "data_year_end", "update_frequency", "data_interval", "data_formats", "has_api", "comments"]
         else:
-            fields=["name", "author_list", "description", "url", "size", "spaces", "year", "language", "license", "update_frequency"]
+            fields=["name", "author_list", "description", "url", "size", "spaces", "year", "language", "license", "update_frequency", "comments"]
 
         ModelForm = modelform_factory(
             LibraryDataset, 
@@ -326,14 +326,16 @@ def form(request, id=None, project_name="library", type=None):
                 "year": "Year created (required)",
                 "spaces": "Physical location(s)",
                 "author_list": "Authors (people)",
+                "comments": "Internal comments/notes",
             }
         )
     elif type == "dataportal":
         ModelForm = modelform_factory(
             LibraryDataPortal, 
-            fields=("name", "description", "url", "tags", "spaces", "year", "language", "license", "software", "has_api"),
+            fields=("name", "description", "url", "tags", "spaces", "year", "language", "license", "software", "has_api", "comments"),
             labels = {
                 "year": "Year created (required)",
+                "comments": "Internal comments/notes",
             }
         )
     else:

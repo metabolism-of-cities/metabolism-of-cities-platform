@@ -216,11 +216,14 @@
     });
     </script>
   {% endif %}
-  <script type="text/javascript">
-  $(function(){
+
+  {% if DEMO_MODE %}
+    <script type="text/javascript">
+    $(function(){
       $("form").attr("autocomplete", "off");
-  });
-  </script>
+    });
+    </script>
+  {% endif %}
 
 </body>
 </html>
