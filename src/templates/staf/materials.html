@@ -37,7 +37,7 @@
             {% if edit_mode %}
               <a class="btn btn-info" href="{% if not catalog %}../{% endif %}{{ each.id }}/edit/?next={{ request.get_full_path }}"><i class="fa fa-pencil"></i> Edit</a>
             {% else %}
-              <a class="btn btn-info" href="{% url "staf:material" each.id %}"><i class="fa fa-eye"></i> View</a>
+              <a hidden class="btn btn-info" href="{% url "staf:material" each.id %}"><i class="fa fa-eye"></i> View</a>
             {% endif %}
           </td>
         </tr>
