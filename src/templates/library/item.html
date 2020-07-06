@@ -273,6 +273,13 @@
       <div class="col-lg-8 mb-4">
         {{ info.description|safe|linebreaks }}
 
+        {% if PROJECT.slug == "untraceable" %}
+        <div class="alert alert-warning">
+          Uploaded by {{ info.uploader }}
+        </div>
+        <h3 class="mt-5">Uploader notes</h3>
+        {{ info.comments|linebreaks }}
+        {% endif %}
         <div class="mt-5">
           {% include "_messages.html" %}
         </div>

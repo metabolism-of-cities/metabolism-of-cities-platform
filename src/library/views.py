@@ -291,15 +291,18 @@ def search_ajax(request):
     return JsonResponse(r, safe=False)
 
 @login_required
-def form(request, id=None, project_name="library", type=None):
+def form(request, id=None, project_name="library", type=None, slug=None):
 
-    project = Project.objects.get(slug=project_name)
+    # Slug is only there because one of the subsites has it in the URL; it does not do anything
+
+    project = Project.objects.get(pk=request.project)
     journals = None
     publishers = None
     info = None
+    initial = None
 
     curator = False
-    if has_permission(request, PROJECT_ID[project_name], ["curator"]):
+    if has_permission(request, project.id, ["curator"]):
         curator = True
 
     if not type:
@@ -360,17 +363,24 @@ def form(request, id=None, project_name="library", type=None):
         if type.name == "Book" or type.name == "Book Section":
             publishers = Organization.objects.filter(type="publisher")
 
+        if project.slug == "untraceable":
+            fields.append("tags")
+            initial = {"tags": request.GET.get("tag")}
+
         fields.append("comments")
         ModelForm = modelform_factory(LibraryItem, fields=fields, labels = labels)
 
     if info:
         form = ModelForm(request.POST or None, request.FILES or None, instance=info)
     else:
-        form = ModelForm(request.POST or None)
+        form = ModelForm(request.POST or None, initial=initial)
 
     if type.name == "Dataset" and curator:
         form.fields["activities"].queryset = Activity.objects.filter(catalog_id=3655)
         form.fields["materials"].queryset = Material.objects.filter(Q(catalog_id=19001)|Q(catalog_id=18998)|Q(catalog_id=32553))
+
+    if project.slug == "untraceable":
+        form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id=828)
 
     if request.method == "POST":
         if form.is_valid():
@@ -447,7 +457,10 @@ def form(request, id=None, project_name="library", type=None):
                 msg = "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution!"
             messages.success(request, msg)
 
+            if "next" in request.GET:
+                return redirect(request.GET["next"])
             if "return" in request.GET:
+                # Let's try to phase this one out
                 return redirect(request.GET["return"])
             elif type.name == "Dataset":
                 return redirect("data:upload_dataset")

@@ -12,8 +12,11 @@
   <p>
     We are looking for ideas and resources in the field of 
     <em>{{ webpage }}</em> that may enable a city to adhere
-    to the <a href="/triple-95/">Triple 95</a> rule. Any thoughts?
-    Add them now!
+    to the <a href="/triple-95/">Triple 95</a> rule. 
+    Please help out!
+  </p>
+  <p>
+    <a href="upload/?next={{ request.get_full_path }}&amp;tag={{ tag.id }}" class="btn btn-primary"><i class="fa fa-plus"></i> Upload item</a>
   </p>
 
   <table class="table table-striped datatable">
@@ -25,10 +28,10 @@
       </tr>
     </thead>
     <tbody>
-      {% for each in items %}
+      {% for each in list %}
         <tr>
           <td>
-              <a href="{% if PROJECT.id == 17 %}{% url 'islands:library_item' each.id %}{% else %}{{ each.get_absolute_url }}{% endif %}">
+              <a href="{% url "untraceable:item" each.id %}">
                 {{ each }}
               </a>
             <br>

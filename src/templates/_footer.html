@@ -31,6 +31,29 @@
         <div class="col-md-{% if PROJECT.id == 16 %}8{% else %}12{% endif %}">
           <h2>This is an open source, community effort</h2>
           <h3>Join us now!</h3>
+
+          {% if PROJECT.slug == "untraceable" %}
+            {% if request.user.is_authenticated %}
+            <a class="btn btn-inverse mt-2 mr-3" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/profile/">
+              <i class="fas fa-fw fa-user"></i>
+              My profile
+            </a>
+            <a class="btn btn-inverse mt-2 mr-3" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/logout/?next={{ request.get_full_path }}">
+              <i class="fas fa-fw fa-sign-out"></i>
+              Log out
+            </a>
+            {% else %}
+              <a class="btn btn-inverse mt-2 mr-3" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/register/?next={{ request.get_full_path }}">
+              <i class="fas fa-fw fa-user"></i>
+                Register
+              </a>
+              <a class="btn btn-inverse mt-2 mr-3" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/login/?next={{ request.get_full_path }}">
+              <i class="fas fa-fw fa-sign-in"></i>
+                Sign in
+              </a>
+            {% endif %}
+
+          {% else %}
           <a style='display:none' class="btn btn-inverse mt-2 mr-3" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/contributor/">
             <i class="fas fa-fw fa-user-plus"></i>
             Become a contributor
@@ -47,6 +70,8 @@
             <i class="fal fa-fw fa-tasks"></i>
             View open tasks
           </a>
+          {% endif %}
+
         </div>
         {% if PROJECT.id == 16 %}
         <div class="col-md-4 text-right">
@@ -63,7 +88,7 @@
     </div>
   </footer>
 
-  {% if PROJECT.id != 16 %}
+  {% if PROJECT.id != 16 and PROJECT.slug != "untraceable" %}
     <footer id="sitemap">
       <div class="container">
         <h3 class="mb-3 text-center mb-4">
@@ -74,6 +99,7 @@
     </footer>
   {% endif %}
 
+  {% if PROJECT.slug != "untraceable" %}
   <footer id="info">
     <div class="container">
       <div class="row">
@@ -106,5 +132,6 @@
      </div>
     </div>
   </footer>
+  {% endif %}
 
 {% endif %}

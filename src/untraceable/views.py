@@ -30,9 +30,8 @@ def index(request):
     }
     return render(request, "untraceable/index.html", context)
 
-
 def topic(request, slug):
-    info = get_object_or_404(Webpage, part_of_project_id=request.project, slug=slug)
+    info = get_object_or_404(Webpage, part_of_project_id=request.project, slug="/topics/" + slug + "/")
     tag = info.tags.get(parent_tag_id=828)
     context = {
         "webpage": info,
@@ -42,6 +41,16 @@ def topic(request, slug):
         "info": info,
         "load_datatables": True,
         "show_subscribe": True,
+        "list": LibraryItem.objects.filter(tags=tag),
     }
     return render(request, "untraceable/topic.html", context)
+
+def upload(request, slug):
+    info = get_object_or_404(Webpage, part_of_project_id=PROJECT_ID["library"], slug="/upload/")
+    context = {
+        "webpage": info,
+        "info": info,
+        "types": LibraryItemType.objects.filter(icon__isnull=False).exclude(icon=""),
+    }
+    return render(request, "untraceable/upload.html", context)
 
