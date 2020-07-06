@@ -3,10 +3,8 @@
     About
   </a>
   <div class="dropdown-menu" aria-labelledby="cities-dropdown">
-    <a class="dropdown-item" href="{% url "data:overview" %}">Overview</a>
-    <a class="dropdown-item" href="{% url "data:overview" %}">Triple 95 Rule</a>
-    <a class="dropdown-item" href="{% url "data:overview" %}">Location(s)</a>
-    <a class="dropdown-item" href="{% url "data:overview" %}">Economy</a>
+    <a class="dropdown-item" href="{% url "untraceable:article" "about" %}">Overview</a>
+    <a class="dropdown-item" href="{% url "untraceable:article" "triple-95" %}">Triple 95 Rule</a>
   </div>
 </li>
 <li class="nav-item dropdown">
@@ -14,16 +12,9 @@
   Topics
   </a>
   <div class="dropdown-menu" aria-labelledby="view-dropdown">
-    <a class="dropdown-item" href="{% url "data:view_datasets" %}">Energy</a>
-    <a class="dropdown-item" href="{% url "data:view_datasets" %}">Food</a>
-    <a class="dropdown-item" href="{% url "data:view_datasets" %}">Built environment</a>
-    <a class="dropdown-item" href="{% url "data:view_datasets" %}">Transport</a>
-    <a class="dropdown-item" href="{% url "data:view_datasets" %}">Wellbeing</a>
-    <a class="dropdown-item" href="{% url "data:view_datasets" %}">Environment</a>
-    <a class="dropdown-item" href="{% url "data:view_datasets" %}">Health</a>
-    <a class="dropdown-item" href="{% url "data:view_datasets" %}">Water and Sanitation</a>
-    <a class="dropdown-item" href="{% url "data:view_datasets" %}">Technology</a>
-    <a class="dropdown-item" href="{% url "data:view_datasets" %}">Communications</a>
+    {% for each in topics %}
+      <a class="dropdown-item" href="{% url "untraceable:topic" each.id %}">{{ each }}</a>
+    {% endfor %}
   </div>
 </li>
 <li class="nav-item dropdown">

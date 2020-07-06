@@ -2,6 +2,20 @@
 
 {% block content %}
 
-  {{ info.get_description }}
+  {{ webpage.get_description }}
+
+  <h2>Topics</h2>
+  <section class="row btn-cards">
+    {% for each in topics %}
+    <div class="col-md-3 mb-3">
+      <a class="card icon-card btn-card" href="">
+        <div class="icon">
+          <i class="fal fa-fw fa-{{ each.icon }}" aria-hidden="true"></i>
+        </div>
+        <div class="card-header">{{ each }}</div>
+      </a>
+    </div>
+    {% endfor %}
+  </section>
 
 {% endblock %}
