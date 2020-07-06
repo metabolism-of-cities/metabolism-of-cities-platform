@@ -1,0 +1,9 @@
+Hello {{ name }}, thanks for signing up to {{ project_name}}! 
+
+PlatformU is a tool designed specifically for area managers.  This platform is a work in progress, we will be learning and adapting the functionality of the platform based on your needs.  Check out the help section of the site to learn how to use the basic features.  If you have any questions don’t hesitate to throw your comments into the forum. If you have any suggestions to improve the functionality of the site, add a new work item to the list.
+
+The platform has been developed and is hosted by the Metabolism of Cities team. Our goal is to make cities more resource efficient places to live and work by improving data and knowledge of how cities work.  For more information the non-for-profit organisation, head to www.metabolismofcities.org. 
+
+We wish you good luck!
+
+PlatformU production team

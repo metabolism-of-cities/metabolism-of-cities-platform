@@ -1,0 +1,59 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1>
+  <i class="float-right fal fa-{{ tag.icon }}"></i>
+  {{ webpage }}</h1>
+
+  {{ webpage.get_description }}
+
+  <h2 class="mt-4">Ideas and resources</h2>
+  <p>
+    We are looking for ideas and resources in the field of 
+    <em>{{ webpage }}</em> that may enable a city to adhere
+    to the <a href="/triple-95/">Triple 95</a> rule. Any thoughts?
+    Add them now!
+  </p>
+
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author(s)</th>
+        <th>Relevance</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for each in items %}
+        <tr>
+          <td>
+              <a href="{% if PROJECT.id == 17 %}{% url 'islands:library_item' each.id %}{% else %}{{ each.get_absolute_url }}{% endif %}">
+                {{ each }}
+              </a>
+            <br>
+            <em>{{ each.type }}</em>
+            {% if each.publisher %} 
+              | {{ each.publisher }}
+            {% endif %}
+          </td>
+          <td>
+            {{ each.get_author_citation|safe }}
+            <span hidden>{{ each.author_list }}</span>
+          </td>
+          <td>{{ each.comments }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2 class="mt-4">Discussion</h2>
+  <p>Questions or comments around <em>{{ webpage }}</em>? Let's chat!</p>
+
+  {% include "_messages.html" %}
+
+  {% if not request.user.is_authenticated %}
+    {% include "_notauthenticated.html" %}
+  {% endif %}
+
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<div class="card register">
+  <div class="card-body">
+
+    <h1>Newsletter</h1>   
+
+    {% if is_subscribed %}
+      <p><em>You are part of our newsletter.</em></p>
+      {% if not request.POST %}
+        <form method="post">
+          <button type="submit" class="btn btn-danger"><i class="fas fa-fw fa-times"></i> Unsubscribe</button>
+          <input type="hidden" name="unsubscribe" value="true" />
+          {% csrf_token %} 
+        </form>
+      {% endif %}
+    {% else %}
+    <p>Sign up for our newsletter below:</p>
+    <form method="post">
+
+      <div class="form-group">
+        <label for="name">Your name</label>
+        {% if request.user.is_authenticated %}
+          <strong class="pl-2">{{ request.user.people }}</strong>
+        {% else %}
+          <input type="name" class="form-control" id="name" name="name" required>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        {% if request.user.is_authenticated %}
+          <strong class="pl-2">{{ request.user.email }}</strong>
+        {% else %}
+          <input type="email" class="form-control" id="email" name="email" required>
+        {% endif %}
+      </div>
+      <button type="submit" class="btn btn-primary"><i class="fas fa-fw fa-envelope"></i> Sign up</button>
+      {% csrf_token %} 
+    
+    </form>
+
+    {% endif %}
+
+  </div>
+</div>
+
+{% endblock %}

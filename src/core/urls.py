@@ -9,10 +9,11 @@ from community import views as community
 
 from django.contrib.auth import views as auth_views
 from core.validation_email import EmailValidationOnForgotPassword
+from ie.urls_baseline import baseline_urlpatterns
 
 app_name = "core"
 
-urlpatterns = [
+urlpatterns = baseline_urlpatterns + [
 
     # Homepage
     path("", views.index, name="index"),
@@ -26,7 +27,7 @@ urlpatterns = [
     path("news/<slug:slug>/", views.news, name="news"),
     path("events/", views.event_list, name="events"),
     path("events/<slug:slug>/", views.event, name="event"),
-    path("news_events/", views.news_events_list, { "project_name": app_name }, name="news_events"),
+    path("news_events/", views.news_events_list, name="news_events"),
 
     # Projects
     path("projects/<slug:slug>/", views.project, name="project"),
@@ -44,7 +45,7 @@ urlpatterns = [
 
     # Users
     path("hub/users/", views.users, name="users"),
-    path("hub/users/<int:id>/", views.user_profile, { "project_name": app_name }, name="user"),
+    path("hub/users/<int:id>/", views.user_profile, name="user"),
     path("hub/scoreboard/", views.users, {"scoreboard": True}, name="scoreboard"),
     path("hub/rules/", views.rules, name="rules"),
 
@@ -59,44 +60,10 @@ urlpatterns = [
     path("accounts/profile/", views.user_profile, name="user_profile"),
 
     # Interaction links
-    path("contributor/", views.contributor, { "project_name": app_name }, name="contributor"),
-
-    # Baseline 
-    path("hub/work/", views.work_grid, { "project_name": app_name }, name="work_grid"),
-    path("sprints/", views.work_sprints, { "project_name": app_name }, name="work_sprints"),
-    path("sprints/<int:id>/", views.work_sprint, { "project_name": app_name }, name="work_sprint"),
-    path("sprints/<int:sprint>/tasks/", views.work_grid, { "project_name": app_name }, name="work_sprint_tasks"),
-    path("sprints/<int:sprint>/tasks/create/", views.work_form, { "project_name": app_name }),
-    path("sprints/<int:sprint>/tasks/<int:id>/", views.work_item, { "project_name": app_name }),
-    path("sprints/<int:sprint>/tasks/<int:id>/edit/", views.work_form, { "project_name": app_name }),
-    path("hub/work/create/", views.work_form, { "project_name": app_name }, name="work_form"),
-    path("hub/work/<int:id>/", views.work_item, { "project_name": app_name }, name="work_item"),
-    path("hub/work/<int:id>/edit/", views.work_form, { "project_name": app_name }, name="work_form"),
-    path("notifications/", views.notifications, { "project_name": app_name }, name="notifications"),
-
-    # Control panel URLS from baseline
-    path("controlpanel/", views.controlpanel, { "project_name": app_name }, name="controlpanel"),
-    path("controlpanel/project/", views.controlpanel_project, { "project_name": app_name }, name="controlpanel_project"),
-    path("controlpanel/users/", views.controlpanel_users, { "project_name": app_name }, name="controlpanel_users"),
-    path("controlpanel/design/", views.controlpanel_design, { "project_name": app_name }, name="controlpanel_design"),
-    path("controlpanel/content/", views.controlpanel_content, { "project_name": app_name }, name="controlpanel_content"),
-    path("controlpanel/content/create/", views.controlpanel_content_form, { "project_name": app_name }, name="controlpanel_content_form"),
-    path("controlpanel/content/<int:id>/", views.controlpanel_content_form, { "project_name": app_name }, name="controlpanel_content_form"),
-
-    # Volunteer hub
-    path("hub/", views.hub, { "project_name": app_name }, name="hub"),
-    path("hub/latest/", views.hub_latest, { "project_name": app_name }, name="hub_latest"),
-    path("hub/help/", views.hub_help, { "project_name": app_name }, name="hub_help"),
-    path("hub/join/", views.user_register, { "project_name": app_name, "section": "volunteer_hub", }, name="hub_join"),
-    path("hub/profile/", views.user_profile, { "project_name": app_name }, name="hub_profile"),
-    path("hub/profile/edit/", views.user_profile_form, { "project_name": app_name }, name="hub_profile_form"),
-    path("hub/forum/", community.forum_list, { "project_name": app_name, "parent": 31993, "section": "volunteer_hub", }, name="volunteer_forum"),
-    path("hub/forum/create/", community.forum_form, { "project_name": app_name, "parent": 31993, "section": "volunteer_hub" }),
-    path("hub/forum/<int:id>/", community.forum, { "project_name": app_name, "section": "volunteer_hub" }, name="volunteer_forum"),
-    path("hub/forum/<int:id>/edit/<int:edit>/", community.forum_edit, { "project_name": app_name, "section": "volunteer_hub" }, name="volunteer_forum_edit"),
+    path("contributor/", views.contributor, name="contributor"),
 
     # Only for core we have a network-wide list:
-    path("hub/network/", views.hub_latest, { "project_name": app_name, "network_wide": True }, name="network_activity"),
+    path("hub/network/", views.hub_latest, { "network_wide": True }, name="network_activity"),
 
     # Password reset forms
     path(
@@ -142,22 +109,16 @@ urlpatterns = [
     path("socialmedia/<slug:type>/", views.socialmedia),
 
     path("eurostat/", views.eurostat, name="eurostat"),
-    path("forum/<int:id>/", community.forum, { "project_name": app_name }, name="forum"),
-
     path("forum/", community.forum_list, name="forum_list"),
-    path("forum/<int:id>/", community.forum, name="forum"),
-    path("forum/create/", community.forum_form, name="forum_form"),
-
-    path("tasks/", views.work_grid, { "project_name": app_name }, name="tasks"),
-    path("tasks/sprints/", views.work_sprints, { "project_name": app_name }, name="work_sprints"),
-    path("tasks/sprints/<int:id>/", views.work_sprint, { "project_name": app_name }, name="work_sprint"),
-    path("tasks/sprints/<int:sprint>/tasks/", views.work_grid, { "project_name": app_name }, name="work_sprint_tasks"),
-    path("tasks/sprints/<int:sprint>/tasks/create/", views.work_form, { "project_name": app_name }),
-    path("tasks/sprints/<int:sprint>/tasks/<int:id>/", views.work_item, { "project_name": app_name }),
-    path("tasks/sprints/<int:sprint>/tasks/<int:id>/edit/", views.work_form, { "project_name": app_name }),
-    path("tasks/create/", views.work_form, { "project_name": app_name }, name="work_form"),
-    path("tasks/<int:id>/", views.work_item, { "project_name": app_name }, name="work_item"),
-    path("tasks/<int:id>/edit/", views.work_form, { "project_name": app_name }, name="work_form"),
-
+    path("tasks/", views.work_grid, name="tasks"),
+    path("tasks/sprints/", views.work_sprints, name="work_sprints"),
+    path("tasks/sprints/<int:id>/", views.work_sprint, name="work_sprint"),
+    path("tasks/sprints/<int:sprint>/tasks/", views.work_grid, name="work_sprint_tasks"),
+    path("tasks/sprints/<int:sprint>/tasks/create/", views.work_form),
+    path("tasks/sprints/<int:sprint>/tasks/<int:id>/", views.work_item),
+    path("tasks/sprints/<int:sprint>/tasks/<int:id>/edit/", views.work_form),
+    path("tasks/create/", views.work_form, name="work_form"),
+    path("tasks/<int:id>/", views.work_item, name="work_item"),
+    path("tasks/<int:id>/edit/", views.work_form, name="work_form"),
 
 ]

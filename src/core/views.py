@@ -58,11 +58,9 @@ from .mocfunctions import *
 
 THIS_PROJECT = PROJECT_ID["core"]
 
-def user_register(request, project="core", project_name=None, section=None):
+def user_register(request, project="core", section=None):
     people = user = is_logged_in = None
-    if project_name:
-        project = project_name
-    project = get_object_or_404(Project, pk=PROJECT_ID[project])
+    project = get_object_or_404(Project, pk=request.project)
 
     if request.GET.get("next"):
         redirect_url = request.GET.get("next")  
@@ -137,16 +135,24 @@ def user_register(request, project="core", project_name=None, section=None):
 
             mailcontext = {
                 "name": name,
+                "project_name": project.name,
             }
 
-            msg_html = render_to_string("mailbody/welcome.html", mailcontext)
-            msg_plain = render_to_string("mailbody/welcome.txt", mailcontext)
+            if request.project == PROJECT_ID["platformu"]:
+                subject = "Welcome to PlatformU"
+                msg_html = render_to_string("mailbody/welcome.platformu.html", mailcontext)
+                msg_plain = render_to_string("mailbody/welcome.platformu.txt", mailcontext)
+            else:
+                subject = "Welcome to Metabolism of Cities"
+                msg_html = render_to_string("mailbody/welcome.html", mailcontext)
+                msg_plain = render_to_string("mailbody/welcome.txt", mailcontext)
+
             sender = '"' + request.site.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
             recipient = '"' + name + '" <' + email + '>'
 
-            if False:
+            if request.project == PROJECT_ID["platformu"]:
                 send_mail(
-                    "Welcome to Metabolism of Cities",
+                    subject,
                     msg_plain,
                     sender,
                     [recipient],
@@ -207,15 +213,12 @@ def user_logout(request, project=None):
 def user_reset(request):
     return render(request, "auth/reset.html")
 
-def user_profile(request, id=None, project=None, project_name=None):
+def user_profile(request, id=None, project=None):
 
     if id:
         info = People.objects.get(pk=id)
     else:
         info = request.user.people
-
-    if project_name:
-        project = project_name
 
     completed = Work.objects.filter(assigned_to=info, status=Work.WorkStatus.COMPLETED)
     open = Work.objects.filter(assigned_to=info).filter(Q(status=Work.WorkStatus.OPEN)|Q(status=Work.WorkStatus.PROGRESS))
@@ -230,7 +233,7 @@ def user_profile(request, id=None, project=None, project_name=None):
     return render(request, "auth/profile.html", context)
 
 @login_required
-def user_profile_form(request, project_name=None):
+def user_profile_form(request):
     ModelForm = modelform_factory(
         People, 
         fields = ("name", "description", "research_interests", "image", "website", "email", "twitter", "google_scholar", "orcid", "researchgate", "linkedin"),
@@ -288,8 +291,8 @@ def index(request):
 
 # News and events
 
-def news_events_list(request, header_subtitle=None, project_name=None):
-    project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+def news_events_list(request, header_subtitle=None):
+    project = get_object_or_404(Project, pk=request.project)
     news = News.objects.filter(projects=project).distinct()
     events = Event.objects.filter(projects=project).distinct()
     context = {
@@ -302,9 +305,9 @@ def news_events_list(request, header_subtitle=None, project_name=None):
     }
     return render(request, "news.events.list.html", context)
 
-def news_list(request, header_subtitle=None, project_name=None):
-    if project_name and project_name != "core":
-        project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+def news_list(request, header_subtitle=None):
+    if request.project != 1:
+        project = get_object_or_404(Project, pk=request.project)
         list = News.objects.filter(projects=project).distinct()
     else:
         list = News.objects.filter(projects__in=MOC_PROJECTS).distinct()
@@ -318,9 +321,9 @@ def news_list(request, header_subtitle=None, project_name=None):
     }
     return render(request, "news.list.html", context)
 
-def news(request, slug, project_name=None):
-    if project_name:
-        project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+def news(request, slug):
+    if request.project != 1:
+        project = get_object_or_404(Project, pk=request.project)
         list = News.objects.filter(projects=project)
     else:
         list = News.objects.filter(projects__in=MOC_PROJECTS).distinct()
@@ -334,15 +337,15 @@ def news(request, slug, project_name=None):
     }
     return render(request, "news.html", context)
 
-def event_list(request, header_subtitle=None, project_name=None):
+def event_list(request, header_subtitle=None):
 
     article = get_object_or_404(Webpage, pk=47)
     today = timezone.now().date()
     list = Event.objects.filter(end_date__lt=today).order_by("start_date")
     upcoming = Event.objects.filter(end_date__gte=today).order_by("start_date")
 
-    if project_name:
-        project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+    if request.project != 1:
+        project = get_object_or_404(Project, pk=request.project)
         # Just un-comment this once all events have been properly tagged
         #list = list.filter(projects=project)
         #upcoming = upcoming.filter(projects=project)
@@ -358,7 +361,7 @@ def event_list(request, header_subtitle=None, project_name=None):
     }
     return render(request, "event.list.html", context)
 
-def event(request, slug, project_name=None):
+def event(request, slug):
     info = get_object_or_404(Event, slug=slug)
     today = timezone.now().date()
     subscription = None
@@ -445,10 +448,9 @@ def project(request, slug):
 # Webpage is used for general web pages, and they can be opened in
 # various ways (using ID, using slug). They can have different presentational formats
 
-def article(request, id=None, slug=None, prefix=None, project=None, subtitle=None, project_name=None):
+def article(request, id=None, slug=None, prefix=None, project=None, subtitle=None):
 
-    if project_name:
-        project = PROJECT_ID[project_name]
+    project = request.project
 
     if id:
         info = get_object_or_404(Webpage, pk=id)
@@ -490,7 +492,7 @@ def article_list(request, id):
 
 # Users
 
-def users(request, project_name=None, scoreboard=False):
+def users(request, scoreboard=False):
     if "update" in request.GET:
         all = People.objects.filter(twitter__isnull=False).exclude(twitter="")
         for each in all:
@@ -505,8 +507,8 @@ def users(request, project_name=None, scoreboard=False):
     else:
         page = "users"
     project = None
-    if project_name:
-        project = PROJECT_ID[project_name]
+    if request.project != 1:
+        project = request.project
     if "project" in request.GET:
         project = request.GET.get("project")
 
@@ -525,7 +527,7 @@ def users(request, project_name=None, scoreboard=False):
     }
     return render(request, "contribution/" + page + ".html", context)
 
-def rules(request, project_name=None):
+def rules(request):
 
     context = {
         "webpage": get_object_or_404(Webpage, pk=32478),
@@ -541,8 +543,8 @@ def rules(request, project_name=None):
 
 # Volunteer hub
 
-def hub(request, project_name):
-    project = PROJECT_ID[project_name]
+def hub(request):
+    project = request.project
 
     updates = Message.objects.filter(
         parent__work__isnull=False,
@@ -565,8 +567,8 @@ def hub(request, project_name):
     }
     return render(request, "hub/index.html", context)
 
-def hub_latest(request, project_name, network_wide=False):
-    project = PROJECT_ID[project_name]
+def hub_latest(request, network_wide=False):
+    project = request.project
     days = 7
     from datetime import datetime, timedelta
     generate_date = datetime.now() - timedelta(days=days)
@@ -599,8 +601,8 @@ def hub_latest(request, project_name, network_wide=False):
     }
     return render(request, "hub/latest.html", context)
 
-def hub_help(request, project_name):
-    project = PROJECT_ID[project_name]
+def hub_help(request):
+    project = request.project
     context = {
         "menu": "help",
         "webpage": Webpage.objects.get(pk=31997),
@@ -610,8 +612,8 @@ def hub_help(request, project_name):
 # Control panel and general contribution components
 
 @login_required
-def controlpanel(request, project_name, space=None):
-    if not has_permission(request, PROJECT_ID[project_name], ["curator", "admin", "publisher"]):
+def controlpanel(request, space=None):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
     
     if space:
@@ -624,19 +626,19 @@ def controlpanel(request, project_name, space=None):
     return render(request, "controlpanel/index.html", context)
 
 @login_required
-def controlpanel_users(request, project_name):
-    if not has_permission(request, PROJECT_ID[project_name], ["curator", "admin", "publisher"]):
+def controlpanel_users(request):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
     context = {
-        "users": RecordRelationship.objects.filter(record_child_id=PROJECT_ID[project_name], relationship__is_permission=True),
+        "users": RecordRelationship.objects.filter(record_child_id=request.project, relationship__is_permission=True),
         "load_datatables": True,
     }
     return render(request, "controlpanel/users.html", context)
 
 @login_required
-def controlpanel_design(request, project_name):
+def controlpanel_design(request):
 
-    project = PROJECT_ID[project_name]
+    project = request.project
     if not has_permission(request, project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
@@ -659,9 +661,9 @@ def controlpanel_design(request, project_name):
     return render(request, "controlpanel/design.html", context)
 
 @login_required
-def controlpanel_design(request, project_name):
+def controlpanel_design(request):
 
-    project = PROJECT_ID[project_name]
+    project = request.project
     if not has_permission(request, project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
@@ -684,9 +686,9 @@ def controlpanel_design(request, project_name):
     return render(request, "controlpanel/design.html", context)
 
 @login_required
-def controlpanel_project(request, project_name):
+def controlpanel_project(request):
 
-    project = PROJECT_ID[project_name]
+    project = request.project
     if not has_permission(request, project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
@@ -709,22 +711,23 @@ def controlpanel_project(request, project_name):
     return render(request, "controlpanel/project.html", context)
 
 @login_required
-def controlpanel_content(request, project_name):
+def controlpanel_content(request):
 
-    project = PROJECT_ID[project_name]
+    project = request.project
     if not has_permission(request, project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
     context = {
         "pages": Webpage.objects.filter(part_of_project_id=project),
         "load_datatables": True,
+        "title": "Web page content",
     }
     return render(request, "controlpanel/content.html", context)
 
 @login_required
-def controlpanel_content_form(request, project_name, id=None):
+def controlpanel_content_form(request, id=None):
 
-    project = PROJECT_ID[project_name]
+    project = request.project
     if not has_permission(request, project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
@@ -764,9 +767,9 @@ def controlpanel_content_form(request, project_name, id=None):
     return render(request, "controlpanel/content.form.html", context)
 
 @login_required
-def controlpanel_data_articles(request, project_name, space):
+def controlpanel_data_articles(request, space):
 
-    project = PROJECT_ID[project_name]
+    project = request.project
     if not has_permission(request, project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
@@ -779,9 +782,9 @@ def controlpanel_data_articles(request, project_name, space):
     return render(request, "controlpanel/data-articles.html", context)
 
 @login_required
-def controlpanel_data_article(request, project_name, space, id=None):
+def controlpanel_data_article(request, space, id=None):
 
-    project = PROJECT_ID[project_name]
+    project = request.project
     if not has_permission(request, project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
@@ -816,16 +819,16 @@ def controlpanel_data_article(request, project_name, space, id=None):
     return render(request, "controlpanel/data-article.html", context)
 
 @login_required
-def work_form(request, project_name, id=None, sprint=None):
-    project = PROJECT_ID[project_name]
+def work_form(request, id=None, sprint=None):
+    project = request.project
     info = None
     fields = ["name", "priority", "workactivity", "url"]
     if request.user.is_staff:
         fields += ["part_of_project"]
-    if request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
+    if request.user.is_authenticated and has_permission(request, request.project, ["admin", "team_member"]):
         fields += ["is_public", "tags"]
     ModelForm = modelform_factory(Work, fields=fields, labels={"url": "URL", "workactivity": "Type of activity"})
-    if id and request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
+    if id and request.user.is_authenticated and has_permission(request, request.project, ["admin", "team_member"]):
         info = Work.objects_include_private.get(pk=id)
         form = ModelForm(request.POST or None, instance=info)
     elif id:
@@ -889,15 +892,15 @@ def work_form(request, project_name, id=None, sprint=None):
     }
     return render(request, "contribution/work.form.html", context)
 
-def work_grid(request, project_name, sprint=None):
+def work_grid(request, sprint=None):
 
-    project = PROJECT_ID[project_name]
+    project = request.project
     status = request.GET.get("status")
     type = request.GET.get("type")
     priority = request.GET.get("priority")
     selected_project = None
 
-    if request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
+    if request.user.is_authenticated and has_permission(request, request.project, ["admin", "team_member"]):
         list = Work.objects_include_private.all()
     else:
         list = Work.objects.all()
@@ -911,7 +914,7 @@ def work_grid(request, project_name, sprint=None):
     elif "project" in request.GET and request.GET["project"]:
         selected_project = request.GET.get("project")
         list = list.filter(part_of_project_id=selected_project)
-    elif project_name != "core":
+    elif project != 1:
         list = list.filter(part_of_project_id=project)
         selected_project = project
 
@@ -950,10 +953,10 @@ def work_grid(request, project_name, sprint=None):
     }
     return render(request, "contribution/work.grid.html", context)
 
-def work_item(request, project_name, id, sprint=None):
+def work_item(request, id, sprint=None):
     # To do: validate user has access to this ticket
     # if at all needed?
-    if request.user.is_authenticated and has_permission(request, PROJECT_ID[project_name], ["admin", "team_member"]):
+    if request.user.is_authenticated and has_permission(request, request.project, ["admin", "team_member"]):
         info = Work.objects_include_private.get(pk=id)
     else:
         info = Work.objects.get(pk=id)
@@ -1040,8 +1043,8 @@ def work_item(request, project_name, id, sprint=None):
 
     return render(request, "contribution/work.item.html", context)
 
-def work_sprints(request, project_name):
-    project = PROJECT_ID[project_name]
+def work_sprints(request):
+    project = request.project
     list = WorkSprint.objects.filter(projects__id=project)
     context = {
         "add_link": "/admin/core/worksprint/add/",
@@ -1050,9 +1053,9 @@ def work_sprints(request, project_name):
     }
     return render(request, "contribution/work.sprints.html", context)
 
-def work_sprint(request, project_name, id=None):
+def work_sprint(request, id=None):
 
-    project = PROJECT_ID[project_name]
+    project = request.project
     info = WorkSprint.objects.get(pk=id)
     updates = None
     last_update = 0
@@ -1091,7 +1094,7 @@ def work_sprint(request, project_name, id=None):
     return render(request, "contribution/work.sprint.html", context)
 
 @login_required
-def notifications(request, project_name):
+def notifications(request):
     
     if "read" in request.POST:
         read = request.POST.get("read")
@@ -1120,8 +1123,8 @@ def notifications(request, project_name):
 
 # People
 
-def contributor(request, project_name):
-    project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+def contributor(request):
+    project = get_object_or_404(Project, pk=request.project)
     if request.method == "POST":
         Work.objects.create(
             name = "Process collaborator signup form: " + request.POST.get("name"),
@@ -1138,8 +1141,8 @@ def contributor(request, project_name):
     }
     return render(request, "contribution/contributor.page.html", context)
 
-def support(request, project_name):
-    project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+def support(request):
+    project = get_object_or_404(Project, pk=request.project)
     if request.method == "POST":
         Work.objects.create(
             name = "Process collaborator signup form: " + request.POST.get("name"),
@@ -1156,33 +1159,37 @@ def support(request, project_name):
     }
     return render(request, "contribution/contributor.page.html", context)
 
-# Podcast series
+def newsletter(request):
+    is_subscribed = None
+    if request.user.is_authenticated:
+        is_subscribed = RecordRelationship.objects.filter(relationship_id=28, record_parent=request.user.people, record_child_id=request.project)
 
-def podcast_series(request):
-    webpage = get_object_or_404(Project, pk=PROJECT_ID["podcast"])
-    list = LibraryItem.objects.filter(type__name="Podcast").order_by("-date_created")
+    if request.method == "POST":
+
+        if "unsubscribe" in request.POST and is_subscribed:
+            is_subscribed.delete()
+            messages.success(request, "You have successfully unsubscribed.")
+        elif not is_subscribed:
+            if request.user.is_authenticated:
+                people = request.user.people
+            else:
+                people = People.objects.create(
+                    name = request.POST.get("name"),
+                    email = request.POST.get("email"),
+                )
+            RecordRelationship.objects.create(
+                relationship_id = 28,
+                record_parent = people,
+                record_child_id = request.project,
+            )
+            is_subscribed = True
+            messages.success(request, "You have successfully subscribed to our newsletter")
+        
     context = {
-        "show_project_design": True,
-        "webpage": webpage,
-        "header_title": "Podcast Series",
-        "header_subtitle": "Agressive questions. Violent answers.",
-        "list": list,
+        "title": "Newsletter signup",
+        "is_subscribed": is_subscribed,
     }
-    return render(request, "podcast/index.html", context)
-
-# Community hub
-
-def community(request):
-    webpage = get_object_or_404(Project, pk=PROJECT_ID["community"])
-    context = {
-        "show_project_design": True,
-        "webpage": webpage,
-        "header_title": "Welcome!",
-        "header_subtitle": "Join for the money. Stay for the food.",
-        "list": list,
-    }
-    return render(request, "community/index.html", context)
-
+    return render(request, "newsletter.html", context)
 
 
 # TEMPORARY PAGES DURING DEVELOPMENT

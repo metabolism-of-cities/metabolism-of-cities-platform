@@ -1,10 +1,9 @@
 from django.urls import path
 from . import views
 from core import views as core
-from community import views as community
+from ie.urls_baseline import baseline_urlpatterns
 
 app_name = "stocks"
-
 urlpatterns = [
 
     #
@@ -66,7 +65,7 @@ urlpatterns = [
     #
     # End of baseline links
     #
-
+urlpatterns = baseline_urlpatterns + [
     path("", views.index, name="index"),
 
     # Map page to show Aris

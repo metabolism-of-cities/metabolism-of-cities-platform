@@ -12,58 +12,16 @@ from library import views as library
 
 from django.conf import settings
 from django.conf.urls.static import static
+from ie.urls_baseline import baseline_urlpatterns
 
 app_name = "ascus"
 
-urlpatterns = [
-    #
-    # Baseline links shared between all projects
-    # Last change June 11, 2020
-    # Version 001
-    #
-
-    # Authentication and contributor functions
-    #path("accounts/register/", core.user_register, { "project": app_name }, name="register"),
-    #path("accounts/login/", core.user_login, { "project": app_name }, name="login"),
-    #path("accounts/passwordreset/", core.user_reset, { "project": app_name }, name="passwordreset"),
-    #path("accounts/logout/", core.user_logout, { "project": app_name }, name="logout"),
-    #path("accounts/profile/", core.user_profile, { "project": app_name }, name="user_profile"),
-
-    # Work-related links
-    path("work/", core.work_grid, { "project_name": app_name }, name="work_grid"),
-    path("work/sprints/", core.work_sprints, { "project_name": app_name }, name="work_sprints"),
-    path("work/sprints/<int:id>/", core.work_sprint, { "project_name": app_name }, name="work_sprint"),
-    path("work/sprints/<int:sprint>/tasks/", core.work_grid, { "project_name": app_name }, name="work_sprint_tasks"),
-    path("work/sprints/<int:sprint>/tasks/create/", core.work_form, { "project_name": app_name }),
-    path("work/sprints/<int:sprint>/tasks/<int:id>/", core.work_item, { "project_name": app_name }),
-    path("work/sprints/<int:sprint>/tasks/<int:id>/edit/", core.work_form, { "project_name": app_name }),
-    path("work/create/", core.work_form, { "project_name": app_name }, name="work_form"),
-    path("work/<int:id>/", core.work_item, { "project_name": app_name }, name="work_item"),
-    path("work/<int:id>/edit/", core.work_form, { "project_name": app_name }, name="work_form"),
-    path("notifications/", core.notifications, { "project_name": app_name }, name="notifications"),
-    
-    # Forum and contributor pages
-    # path("forum/<int:id>/", community.forum, { "project_name": app_name }, name="forum"),
-    path("contributor/", core.contributor, { "project_name": app_name }, name="contributor"),
-    path("support/", core.support, { "project_name": app_name }, name="support"),
-
-    # Control panel URLS
-    path("controlpanel/", core.controlpanel, { "project_name": app_name }, name="controlpanel"),
-    path("controlpanel/project/", core.controlpanel_project, { "project_name": app_name }, name="controlpanel_project"),
-    path("controlpanel/users/", core.controlpanel_users, { "project_name": app_name }, name="controlpanel_users"),
-    path("controlpanel/design/", core.controlpanel_design, { "project_name": app_name }, name="controlpanel_design"),
-    path("controlpanel/content/", core.controlpanel_content, { "project_name": app_name }, name="controlpanel_content"),
-    path("controlpanel/content/create/", core.controlpanel_content_form, { "project_name": app_name }, name="controlpanel_content_form"),
-    path("controlpanel/content/<int:id>/", core.controlpanel_content_form, { "project_name": app_name }, name="controlpanel_content_form"),
-
-    #
-    # End of baseline links
-    #
+urlpatterns = baseline_urlpatterns + [
 
     path("", views.ascus, name="index"),
 
-    path("login/", core.user_login, {"project": app_name}, name="login"),
-    path("logout/", core.user_logout, {"project": app_name}, name="logout"),
+    path("login/", core.user_login, name="login"),
+    path("logout/", core.user_logout, name="logout"),
     path("overview/", views.overview, name="overview"),
     path("preconference/", views.overview, { "preconf": True}, name="preconference"),
     path("participants/", views.participants, name="participants"),
@@ -104,9 +62,9 @@ urlpatterns = [
 
     # Forum and messaging from baseline
     path("forum/", views.forum, name="forum"),
-    path("forum/create/", community.forum_form, { "project_name": app_name }),
-    path("forum/<int:id>/", community.forum, { "project_name": app_name }, name="forum"),
-    path("forum/<int:id>/edit/<int:edit>/", community.forum_edit, { "project_name": app_name }, name="forum_edit"),
+    path("forum/create/", community.forum_form),
+    path("forum/<int:id>/", community.forum, name="forum"),
+    path("forum/<int:id>/edit/<int:edit>/", community.forum_edit, name="forum_edit"),
 
     # Password reset forms
     path(

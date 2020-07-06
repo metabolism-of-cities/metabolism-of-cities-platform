@@ -6,23 +6,11 @@ from core.models import *
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.contrib.sites.models import Site
-from django.contrib.auth.models import User, Group, Permission
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.sites.shortcuts import get_current_site
-
-from django.db.models import Count
-from django.db.models import Q
 
 from django.http import JsonResponse, HttpResponse
 from django.http import Http404, HttpResponseRedirect
 
 from django.conf import settings
-
-import json
-
-import logging
-logger = logging.getLogger(__name__)
 
 # This array defines all the IDs in the database of the articles that are loaded for the
 # various pages in the menu. Here we can differentiate between the different sites.
@@ -35,19 +23,25 @@ THIS_PROJECT = PROJECT_ID["untraceable"]
 PROJECT_LIST = settings.PROJECT_LIST
 AUTO_BOT = 32070
 
-# If we add any new project, we should add it to this list. 
-# We must make sure to filter like this to exclude non-project news
-# (which we want in the community section but not here), as well as MoI news
-MOC_PROJECTS = [1,2,3,4,7,8,11,14,15,16,18,3458]
-
-# This is the list with projects that have an active forum
-# It will show in the dropdown boxes to filter by this category
-# Also found in core
-OPEN_WORK_PROJECTS = [1,2,3,4,32018,16,18,8]
-
 def index(request):
     context = {
-        "info": get_object_or_404(Project, pk=THIS_PROJECT),       
+        "webpage": get_object_or_404(Webpage, pk=32918),
+        "topics": Webpage.objects.filter(part_of_project_id=request.project, tags__parent_tag_id=828).prefetch_related("tags"),
     }
     return render(request, "untraceable/index.html", context)
+
+
+def topic(request, slug):
+    info = get_object_or_404(Webpage, part_of_project_id=request.project, slug=slug)
+    tag = info.tags.get(parent_tag_id=828)
+    context = {
+        "webpage": info,
+        "tag": tag,
+        "load_messaging": True,
+        "list_messages": Message.objects.filter(parent=info),
+        "info": info,
+        "load_datatables": True,
+        "show_subscribe": True,
+    }
+    return render(request, "untraceable/topic.html", context)
 
