@@ -1020,6 +1020,7 @@ a.badge-secondary:focus {
   height: 100%;
   min-height: 300px;
   width: 100%;
+  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
 
   .leaflet-popup {
     a.leaflet-popup-close-button {
@@ -1094,7 +1095,7 @@ a.badge-secondary:focus {
     color: $dark;
     background-color: $very-light;
     padding: .5rem;
-    box-shadow: $basic-shadow;
+    border: 2px solid rgba(0,0,0,0.2);
     border-radius: .25rem;
     max-width: 250px;
   }
@@ -1105,6 +1106,41 @@ a.badge-secondary:focus {
     float: left;
     margin-right: 8px;
     opacity: 0.7;
+  }
+}
+
+// SLIDER
+.slider {
+  width: calc(100% - 10px) !important;
+  margin-left: 5px !important;
+  height: 38px !important;
+
+  * {
+    box-shadow: none !important;
+    background-image: none !important;
+  }
+
+  .slider-handle {
+    background-color: $primary !important;
+    width: 10px !important;
+    height: 28px;
+    border-radius: .25rem !important;
+    margin-left: -5px !important;
+    top: 5px;
+  }
+
+  .slider-track {
+    height: 14px !important;
+    margin-top: -7px !important;
+  }
+
+  .slider-selection {
+    background-color: transparentize($primary, .8) !important;
+  }
+
+  .slider-track-low,
+  .slider-track-high {
+    background-color: $light !important;
   }
 }
 
@@ -2745,13 +2781,84 @@ body.material-stocks.landing {
   }
 }
 
+// MATERIAL STOCKS MAP
 body.material-stocks.map {
+  #map-wrapper {
+    position: relative;
+
+    .leaflet-left .leaflet-control {
+      transition: margin-left .3s;
+    }
+
+    &.feature-open {
+      .leaflet-left .leaflet-control {
+        margin-left: 310px;
+      }
+
+      #feature-details {
+        left: 0;
+        opacity: 1;
+      }
+    }
+  }
+
   #map {
-    height: 600px;
+    height: 500px;
     max-height: 90vh;
+  }
+
+  #feature-details {
+    position: absolute;
+    z-index: 100000;
+    left: -300px;
+    width: 300px;
+    height: 100%;
+    max-width: 80vw;
+    background-color: $white;
+    border-top-left-radius: .25rem;
+    border-bottom-left-radius: .25rem;
+    border-right: 1px solid $light;
+    opacity: 0;
+    transition: all .3s;
+
+  }
+
+  .view-buttons {
+    border: 2px solid rgba(0,0,0,0.2);
+    background-clip: padding-box;
+    border-radius: .25rem;
+
+    .view-button {
+      background-color: $white;
+      border-bottom: 1px solid #ccc;
+      cursor: pointer;
+      line-height: 30px;
+      height: 30px;
+      padding: 0 0.5rem;
+
+      &:first-of-type {
+        border-top-right-radius: .25rem;
+        border-top-left-radius: .25rem;
+      }
+
+      &:last-of-type {
+        border-bottom: none;
+        border-bottom-right-radius: .25rem;
+        border-bottom-left-radius: .25rem;
+      }
+
+      &:hover {
+        background-color: #f4f4f4;
+      }
+
+      i {
+        margin-right: .5rem;
+      }
+    }
   }
 }
 
+// WORK SPRINT PAGE
 body.work.sprint {
   .jumbotron {
     display: none;
@@ -2844,6 +2951,7 @@ body.work.sprint {
   }
 }
 
+// VOLUNTEER PORTAL
 body.volunteer.portal.home {
   .join-cta {
     background-color: transparentize($primary, .85);
