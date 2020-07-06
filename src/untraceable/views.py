@@ -27,6 +27,17 @@ def index(request):
     context = {
         "webpage": get_object_or_404(Webpage, pk=32918),
         "topics": Webpage.objects.filter(part_of_project_id=request.project, tags__parent_tag_id=828).prefetch_related("tags"),
+        "header_overwrite": "full",
+        "header_subtitle": """
+  <p class="h5 mb-3" style="text-shadow: black 0 0 18px;">Are cities and nature compatible? Can humans
+  thrive in an urban setting, while nature is being restored, rather than
+  destroyed, through human activities? For centuries, if not millennia,
+  we have been unable to reconcile the two. However, given the
+  environmental impact and global importance of cities, this most change
+  - and urgently.<br><br> The Untraceable City Project aims to
+  investigate, through collaboration and involvement from a diverse group
+  of partners and people, the feasibility of <em>ecologically restorative
+  cities</em>.</p>""",
     }
     return render(request, "untraceable/index.html", context)
 

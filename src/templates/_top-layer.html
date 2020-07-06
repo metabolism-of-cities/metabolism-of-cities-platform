@@ -167,8 +167,7 @@
     </div>
   </nav>
 
-
-  {% if HEADER_STYLE == "full" %}
+  {% if HEADER_STYLE == "full" or header_overwrite == "full" %}
     <div class="jumbotron jumbotron-fluid text-light">
       <div class="container">
         {% if header_title %}
