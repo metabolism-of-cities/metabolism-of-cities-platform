@@ -720,6 +720,7 @@ def controlpanel_content(request):
     context = {
         "pages": Webpage.objects.filter(part_of_project_id=project),
         "load_datatables": True,
+        "title": "Web page content",
     }
     return render(request, "controlpanel/content.html", context)
 

@@ -75,7 +75,9 @@
   {% endif %}
 
   <h3>{% if list_messages %}Reply{% elif message %}Edit message{% else %}Leave a comment{% endif %}</h3>
-  <form method="post" enctype="multipart/form-data" {% if not message %}action="/forum/{% if forum_id %}{{ forum_id }}{% else %}{{ info.id }}{% endif %}/"{% endif %}>
+  <form method="post" enctype="multipart/form-data" 
+  {% if not message %}action="/forum/{% if forum_id %}{{ forum_id }}{% else %}{{ info.id }}{% endif %}/"{% endif %}
+  >
     {% csrf_token %}
     <div class="form-group markdown-textarea">
       {% include "_markdown.html" %}

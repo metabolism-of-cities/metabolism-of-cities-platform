@@ -12,9 +12,18 @@
   Topics
   </a>
   <div class="dropdown-menu" aria-labelledby="view-dropdown">
-    {% for each in topics %}
-      <a class="dropdown-item" href="{% url "untraceable:topic" each.id %}">{{ each }}</a>
-    {% endfor %}
+      <a class="dropdown-item" href="{% url "untraceable:topic" "built-environment" %}">Built environment</a>
+      <a class="dropdown-item" href="{% url "untraceable:topic" "economy" %}">Economy</a>
+      <a class="dropdown-item" href="{% url "untraceable:topic" "energy" %}">Energy</a>
+      <a class="dropdown-item" href="{% url "untraceable:topic" "fauna-and-flora" %}">Fauna and flora</a>
+      <a class="dropdown-item" href="{% url "untraceable:topic" "food" %}">Food</a>
+      <a class="dropdown-item" href="{% url "untraceable:topic" "health" %}">Health</a>
+      <a class="dropdown-item" href="{% url "untraceable:topic" "location" %}">Location</a>
+      <a class="dropdown-item" href="{% url "untraceable:topic" "technology" %}">Technology</a>
+      <a class="dropdown-item" href="{% url "untraceable:topic" "telecommunication" %}">Telecommunication</a>
+      <a class="dropdown-item" href="{% url "untraceable:topic" "transport" %}">Transport</a>
+      <a class="dropdown-item" href="{% url "untraceable:topic" "water-and-sanitation" %}">Water and sanitation</a>
+      <a class="dropdown-item" href="{% url "untraceable:topic" "wellbeing" %}">Wellbeing</a>
   </div>
 </li>
 <li class="nav-item dropdown">

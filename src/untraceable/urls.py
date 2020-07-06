@@ -8,7 +8,7 @@ app_name = "untraceable"
 urlpatterns = baseline_urlpatterns + [
 
     path("", views.index),
-    path("topic/<int:id>/", views.topic, name="topic"),
+    path("topic/<slug:slug>/", views.topic, name="topic"),
     path("<slug:slug>/", core.article, name="article"),
 
 ]

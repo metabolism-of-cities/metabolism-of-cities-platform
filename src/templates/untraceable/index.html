@@ -8,9 +8,11 @@
   <section class="row btn-cards">
     {% for each in topics %}
     <div class="col-md-3 mb-3">
-      <a class="card icon-card btn-card" href="">
+      <a class="card icon-card btn-card" href="{% url "untraceable:topic" each.slug %}">
         <div class="icon">
-          <i class="fal fa-fw fa-{{ each.icon }}" aria-hidden="true"></i>
+          {% for tag in each.tags.all %}
+            <i class="fal fa-fw fa-{{ tag.icon }}" aria-hidden="true"></i>
+          {% endfor %}
         </div>
         <div class="card-header">{{ each }}</div>
       </a>

@@ -24,27 +24,24 @@ PROJECT_LIST = settings.PROJECT_LIST
 AUTO_BOT = 32070
 
 def index(request):
-    if "import" in request.GET:
-        topics = Tag.objects.filter(parent_tag_id=828)
-        for each in topics:
-            info = Webpage.objects.create(
-                name = each.name,
-                part_of_project_id = request.project,
-                slug = "/topics/" + slugify(each.name) + "/",
-            )
-            info.tags.add(each)
-
     context = {
         "webpage": get_object_or_404(Webpage, pk=32918),
-        "topics": Tag.objects.filter(parent_tag_id=828),
+        "topics": Webpage.objects.filter(part_of_project_id=request.project, tags__parent_tag_id=828).prefetch_related("tags"),
     }
     return render(request, "untraceable/index.html", context)
 
 
-def topic(request, id):
+def topic(request, slug):
+    info = get_object_or_404(Webpage, part_of_project_id=request.project, slug=slug)
+    tag = info.tags.get(parent_tag_id=828)
     context = {
-        "webpage": get_object_or_404(Webpage, pk=32918),
-        "info": Tag.objects.get(parent_tag_id=828, pk=id),
+        "webpage": info,
+        "tag": tag,
+        "load_messaging": True,
+        "list_messages": Message.objects.filter(parent=info),
+        "info": info,
+        "load_datatables": True,
+        "show_subscribe": True,
     }
     return render(request, "untraceable/topic.html", context)
 

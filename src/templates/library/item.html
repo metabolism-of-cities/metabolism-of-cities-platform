@@ -273,7 +273,9 @@
       <div class="col-lg-8 mb-4">
         {{ info.description|safe|linebreaks }}
 
-        {% include "_messages.html" %}
+        <div class="mt-5">
+          {% include "_messages.html" %}
+        </div>
         
         <div class="mt-4"><a href="javascript:history.back()" class="btn btn-default-outline">&laquo; Back</a></div>
       </div>
