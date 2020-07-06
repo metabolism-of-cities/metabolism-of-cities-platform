@@ -33,7 +33,7 @@ def index(request):
   thrive in an urban setting, while nature is being restored, rather than
   destroyed, through human activities? For centuries, if not millennia,
   we have been unable to reconcile the two. However, given the
-  environmental impact and global importance of cities, this most change
+  environmental impact and global importance of cities, this must change
   - and urgently.<br><br> The Untraceable City Project aims to
   investigate, through collaboration and involvement from a diverse group
   of partners and people, the feasibility of <em>ecologically restorative
