@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% load static %}
 
 {% block title %}Material Stocks{% endblock %}
 {% block page_name %}material-stocks map fullwidth{% endblock %}
@@ -8,52 +9,62 @@
         href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
         integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
         crossorigin=""/>
+
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css">
 {% endblock %}
 
 {% block content %}
   <div class="p-4">
     <div class="row">
-      <div class="col-4">
-        <select class="custom-select" id="switch-layers">
-          <option selected value="choroplethDensity">Choropleth - density</option>
-          <option selected value="choroplethInverse">Choropleth - other value</option>
-          <option value="circlesRandom">Circles</option>
-          <option value="markersRandom">Marker</option>
-        </select>
-
-        <div class="input-group mt-4">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Density ></span>
+      <div class="col-lg-3 col-xl-2">
+        <form>
+          <div class="form-group">
+            <label for="archetype">Archetype</label>
+            <select class="custom-select" id="archetype">
+              <option selected value="all">All</option>
+              <option value="apartment">Apartment building</option>
+              <option value="office">Office</option>
+              <option value="house">House</option>
+            </select>
           </div>
-          <input type="number" class="form-control choropleth-value" placeholder="Value between 0 and 1500">
-          <div class="input-group-append">
-            <button class="btn btn-primary" type="button" id="filter-choropleth">Filter</button>
+          <div class="form-group">
+            <label for="age">Completion year</label>
+            <input class="slider" id="age">
           </div>
-        </div>
-
-        <!-- gotta figure out how to make this work without canvas -->
-        <!--
-        <button class="btn btn-primary mt-4 download-map">
-          <i class="fas fa-fw fa-save"></i>
-          Save map as image
-        </button>
-        -->
-
-        <table id="feature-details" class="table mt-4">
-          <tr>
-            <th scope="row">Name</th>
-            <td class="name"></td>
-          </tr>
-          <tr>
-            <th scope="row">Density</th>
-            <td class="density"></td>
-          </tr>
-        </table>
+          <div class="input-group">
+            <label for="surface">Surface area (m<sup>2</sup>)</label>
+            <input class="slider" id="surface">
+          </div>
+        </form>
       </div>
-      <div class="col-8">
-        <div id="map" class="leaflet-map"></div>
+      <div class="col-lg-9 col-xl-10">
+        <div id="map-wrapper">
+          <div id="feature-details">
+            <table class="table">
+              <tr>
+                <th scope="row">Name</th>
+                <td class="muni"></td>
+              </tr>
+              <tr>
+                <th scope="row">Schauff</th>
+                <td class="schauff"></td>
+              </tr>
+            </table>
+          </div>
+          <div id="map" class="leaflet-map mt-4"></div>
+        </div>
       </div>
     </div>
+
+    <!-- gotta figure out how to make this work without canvas -->
+    <!--
+    <button class="btn btn-primary mt-4 download-map">
+      <i class="fas fa-fw fa-save"></i>
+      Save map as image
+    </button>
+    -->
+
+
   </div>
 {% endblock %}
 
@@ -67,13 +78,17 @@
   <!-- download map as image javascript -->
   <script src="https://unpkg.com/leaflet-image@0.4.0/leaflet-image.js"></script>
 
+  <!-- rangeslider -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js"></script>
 
   <!-- sample data -->
-  <script src="https://leafletjs.com/examples/choropleth/us-states.js"></script>
+  <script src="/media/files/anderlecht.js"></script>
 
   <script>
     // initialise map
-    let map = L.map("map").setView([37.8, -96], 4);
+    let map = L.map("map", {
+      renderer: L.canvas(),
+    }).setView([50.83, 4.29], 14);
 
     // add baselayer
     let basemap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
@@ -89,6 +104,51 @@
 
     basemap.addTo(map);
 
+    // add view switcher
+    L.Control.Views = L.Control.extend({
+      onAdd: function(map) {
+
+        var viewButtons = L.DomUtil.create("div", "view-buttons");
+
+        var archetype = L.DomUtil.create("div", "view-button");
+        archetype.dataset.view = "archetype"
+        archetype.innerHTML = "<i class='fal fa-fw fa-building'></i> Archetype";
+
+        viewButtons.appendChild(archetype);
+
+        var glass = L.DomUtil.create("div", "view-button");
+        glass.dataset.view = "glass"
+        glass.innerHTML = "<i class='fal fa-fw fa-window-frame'></i> Glass";
+
+        viewButtons.appendChild(glass);
+
+        var wood = L.DomUtil.create("div", "view-button");
+        wood.dataset.view = "wood"
+        wood.innerHTML = "<i class='fal fa-fw fa-tree'></i> Wood";
+
+        viewButtons.appendChild(wood);
+
+        var age = L.DomUtil.create("div", "view-button");
+        age.dataset.view = "age"
+        age.innerHTML = "<i class='fal fa-fw fa-history'></i> Age";
+
+        viewButtons.appendChild(age);
+
+        return viewButtons;
+      },
+    });
+
+    L.control.Views = function(opts) {
+      return new L.Control.Views(opts);
+    }
+
+    L.control.Views({ position: "topright" }).addTo(map);
+
+    $(".view-button").click(function() {
+      let view = $(this).data("view");
+      console.log(view);
+    })
+
     // COMMON FUNCTIONS
     // removing all layers except the basemap
     function clearMap() {
@@ -100,50 +160,43 @@
     }
 
     // DEFINE DATA LAYERS
-    // each data layer has multiple parts - the data itself, as well as a few optional ones depending on the type
-
-    // Population density: `density`
-    // The first example is a choropleth map of population density by US state
-
-    // we start by building up the layer, starting with styling
-    // a function to get fill color depending on population density value
-    function colorsDensity(d) {
-      return d > 1000 ? "#800026" :
-             d > 500  ? "#BD0026" :
-             d > 200  ? "#E31A1C" :
-             d > 100  ? "#FC4E2A" :
-             d > 50   ? "#FD8D3C" :
-             d > 20   ? "#FEB24C" :
-             d > 10   ? "#FED976" :
+    function colorsSchauff(d) {
+      return d > 1500 ? "#800026" :
+             d > 1000 ? "#BD0026" :
+             d > 500  ? "#E31A1C" :
+             d > 300  ? "#FC4E2A" :
+             d > 200  ? "#FD8D3C" :
+             d > 100  ? "#FEB24C" :
+             d > 50   ? "#FED976" :
                         "#FFEDA0";
     }
 
-    // style the density layer with the fill colour based on the density value using the function above
-    function styleDensity(feature) {
+    // style the schauff layer with the fill colour based on the schauff value using the function above
+    function styleSchauff(feature) {
       return {
-        weight: 1,
+        weight: 0,
         opacity: 1,
         color: "#ffffff",
         fillOpacity: 0.7,
-        fillColor: colorsDensity(feature.properties.density)
+        fillColor: colorsSchauff(feature.properties.schauff)
       };
-    }
+    };
 
     // create variable for the legend
-    var choroplethDensityLegend = L.control({
+    var choroplethSchauffLegend = L.control({
       position: "bottomright"
     });
 
     // when the legend is added to the map, build up the contents
-    choroplethDensityLegend.onAdd = function(map) {
+    choroplethSchauffLegend.onAdd = function(map) {
       var div = L.DomUtil.create("div", "legend"),
-          grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+          grades = [0, 50, 100, 200, 300, 400, 1000, 1500],
           labels = [];
 
-      // loop through our density intervals and generate a label with a colored square for each interval
+      // loop through our schauff intervals and generate a label with a colored square for each interval
       for (var i = 0; i < grades.length; i++) {
           div.innerHTML +=
-              "<i style='background:" + colorsDensity(grades[i] + 1) + "'></i> " +
+              "<i style='background:" + colorsSchauff(grades[i] + 1) + "'></i> " +
               grades[i] + (grades[i + 1] ? " – " + grades[i + 1] + "<br>" : "+");
       }
 
@@ -158,19 +211,20 @@
     function selectChoropleth(e) {
       if (selectedChoropleth) {
         selectedChoropleth.setStyle({
-          "color": "white",
-          "weight": 1,
+          "color": "#ffffff",
+          "weight": 0,
         })
       }
 
       selectedChoropleth = e.target
       selectedChoropleth.setStyle({
-        "color": "black",
-        "weight": 2,
+        "color": "#000000",
+        "weight": 1,
       })
 
-      $("#feature-details .name").text(e.target.feature.properties.name)
-      $("#feature-details .density").text(e.target.feature.properties.density)
+      $("#map-wrapper").addClass("feature-open");
+      $("#feature-details .muni").text(e.target.feature.properties.muni)
+      $("#feature-details .schauff").text(e.target.feature.properties.schauff)
 
       selectedChoropleth.bringToFront()
     }
@@ -183,195 +237,22 @@
     };
 
     // create layer with data, style, and click function
-    var choroplethDensity = L.geoJson(statesData, {
-      style: styleDensity,
+    var choroplethSchauff = L.geoJson(anderlecht, {
+      style: styleSchauff,
       onEachFeature: onEachFeature,
     });
-
-    // Inverse of density: `inverse`
-    // A second example using the same data but a different colour scheme
-
-    // using different colours, but otherwise the same as before
-    function colorsInverse(d) {
-      return d > 1000 ? "#f7fbff" :
-             d > 500  ? "#deebf7" :
-             d > 200  ? "#c6dbef" :
-             d > 100  ? "#9ecae1" :
-             d > 50   ? "#6baed6" :
-             d > 20   ? "#4292c6" :
-             d > 10   ? "#2171b5" :
-                        "#084594";
-    }
-
-    // the same as before except for the fill colour
-    function styleInverse(feature) {
-      return {
-        weight: 1,
-        opacity: 1,
-        color: "white",
-        fillOpacity: 0.7,
-        fillColor: colorsInverse(feature.properties.density)
-      };
-    }
-
-    // the legend for this layer
-    var choroplethInverseLegend = L.control({
-      position: "bottomright"
-    });
-
-    // when the legend is added to the map, build up the contents
-    choroplethInverseLegend.onAdd = function(map) {
-      var div = L.DomUtil.create("div", "legend"),
-          grades = [0, 10, 20, 50, 100, 200, 500, 1000],
-          labels = [];
-
-      // loop through our density intervals and generate a label with a colored square for each interval
-      for (var i = 0; i < grades.length; i++) {
-          div.innerHTML +=
-              "<i style='background:" + colorsInverse(grades[i] + 1) + "'></i> " +
-              grades[i] + (grades[i + 1] ? " – " + grades[i + 1] + "<br>" : "+");
-      }
-
-      return div;
-    };
-
-    // we've already made the relevant functions so we can add the layer straight away
-    var choroplethInverse = L.geoJson(statesData, {
-      style: styleInverse,
-      onEachFeature: onEachFeature,
-    });
-
-    // A third layer, this one is a collections of L.circles which shows circles in a specific spot of a specific real life size
-    // https://leafletjs.com/reference-1.6.0.html#circle
-    // IMPORTANT: L.circle measures its radius in metres so it covers real life areas, not pixels
-    // this can be useful to measure the distance outward from a certain point
-    var circlesRandom = L.featureGroup([
-      L.circle([40,-100], {
-        color: "#144d58",
-        fillColor: "#144d58",
-        fillOpacity: 0.5,
-        radius: 500000,
-        properties: {
-          "name": "Big circle",
-          "density": 500000,
-        }
-      }),
-      L.circle([30,-90], {
-        color: "#144d58",
-        fillColor: "#144d58",
-        fillOpacity: 0.5,
-        radius: 200000,
-        properties: {
-          "name": "Small circle",
-          "density": 200000,
-        }
-      }),
-      L.circle([50,-110], {
-        color: "#144d58",
-        fillColor: "#144d58",
-        fillOpacity: 0.5,
-        radius: 300000,
-        properties: {
-          "name": "Medium circle",
-          "density": 300000,
-        }
-      })
-    ]).on("click", selectCircle)
-
-    // a different kind of legend, simply explaining the size of the circles
-    var circlesRandomLegend = L.control({
-      position: "bottomright"
-    });
-
-    // when the legend is added to the map, build up the contents
-    circlesRandomLegend.onAdd = function(map) {
-      var div = L.DomUtil.create("div", "legend");
-          div.innerHTML += "The size of the circle correspondents with the amount of electricity produced by each power plant.";
-
-      return div;
-    };
-
-    // function to select a circle and show its information
-    function selectCircle(e) {
-      $("#feature-details .name").text(e.layer.options.properties.name)
-      $("#feature-details .density").text(e.layer.options.properties.density)
-    }
-
-    // the last example is a group of plain markers
-    // these cannot be styled, they are the plain leaflet markers
-    var markersRandom = L.featureGroup([
-      L.marker([40,-100], {
-        properties: {
-          "name": "Marker 1",
-          "density": 500000,
-        }
-      }),
-      L.marker([30,-90], {
-        properties: {
-          "name": "Marker 2",
-          "density": 200000,
-        }
-      }),
-      L.marker([50,-110], {
-        properties: {
-          "name": "Marker 3",
-          "density": 300000,
-        }
-      })
-    ]).on("click", selectMarker)
-
-    // set variable for the legend to false to disabled legend
-    var markersRandomLegend = false
-
-    // function to select a marker and show its information
-    function selectMarker(e) {
-      $("#feature-details .name").text(e.layer.options.properties.name)
-      $("#feature-details .density").text(e.layer.options.properties.density)
-    }
-
-    // FILTERS
-    // this is a hardcoded filter for the density layer
-    // it needs to be turned into a generic filter that can be used on all layers
-    // to do:
-    // - much of it can only be done when using more real data
-    // - persisent layer; keep filter applied when switching layers
-    // - should this be a new layer or just existing layers be limited?
-    var filteredLayer;
-
-    function filterChoropleth(value) {
-      map.removeLayer(window[visibleLayer]);
-
-      let valueValue = value;
-
-      filteredLayer = L.geoJson(statesData, {
-        filter: function(feature, layer) {
-          return feature.properties.density > valueValue;
-        },
-        style: styleDensity,
-        onEachFeature: onEachFeature,
-      });
-
-      map.addLayer(filteredLayer);
-      visibleLayer = "filteredLayer";
-    }
-
-    $("#filter-choropleth").click(function() {
-      let value = $("input.choropleth-value").val()
-      filterChoropleth(value);
-    })
 
     // layer and corresponding legend that should be loaded first
-    let visibleLayer = "choroplethDensity";
-    let visibleLegend = "choroplethDensity" + "Legend"
+    let visibleLayer = "choroplethSchauff";
+    let visibleLegend = "choroplethSchauff" + "Legend"
 
     // add these to the map
     map.addLayer(window[visibleLayer]);
     map.addControl(window[visibleLegend]);
 
-    // function when switching layers
-    $("#switch-layers").change(function() {
-      let newLayer = $("#switch-layers").val();
-      let newLegend = $("#switch-layers").val() + "Legend";
+    // function to switching layers
+    function switchLayer(layer) {
+      let legend = layer + "Legend";
 
       map.removeLayer(window[visibleLayer]);
       map.addLayer(window[newLayer]);
@@ -384,8 +265,12 @@
         map.addControl(window[newLegend]);
       }
 
-      visibleLayer = newLayer;
-      visibleLegend = newLegend;
-    })
+      visibleLayer = layer;
+      visibleLegend = legend;
+    }
+
+    // range slider
+    $("#age").slider({ min: 1500, max: 2020, value: [1500, 2020]});
+    $("#surface").slider({ min: 0, max: 5000, value: [0, 5000]});
   </script>
 {% endblock %}

@@ -4,9 +4,7 @@ from core import views as core
 from ie.urls_baseline import baseline_urlpatterns
 
 app_name = "stocks"
-
 urlpatterns = baseline_urlpatterns + [
-
     path("", views.index, name="index"),
 
     # Map page to show Aris
