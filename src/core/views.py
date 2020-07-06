@@ -135,16 +135,24 @@ def user_register(request, project="core", section=None):
 
             mailcontext = {
                 "name": name,
+                "project_name": project.name,
             }
 
-            msg_html = render_to_string("mailbody/welcome.html", mailcontext)
-            msg_plain = render_to_string("mailbody/welcome.txt", mailcontext)
+            if request.project == PROJECT_ID["platformu"]:
+                subject = "Welcome to PlatformU"
+                msg_html = render_to_string("mailbody/welcome.platformu.html", mailcontext)
+                msg_plain = render_to_string("mailbody/welcome.platformu.txt", mailcontext)
+            else:
+                subject = "Welcome to Metabolism of Cities"
+                msg_html = render_to_string("mailbody/welcome.html", mailcontext)
+                msg_plain = render_to_string("mailbody/welcome.txt", mailcontext)
+
             sender = '"' + request.site.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
             recipient = '"' + name + '" <' + email + '>'
 
-            if False:
+            if request.project == PROJECT_ID["platformu"]:
                 send_mail(
-                    "Welcome to Metabolism of Cities",
+                    subject,
                     msg_plain,
                     sender,
                     [recipient],
