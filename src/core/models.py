@@ -805,6 +805,16 @@ class LibraryItem(Record):
         else:
             return ""
 
+    def embed(self):
+        if "ted" in self.url:
+            try:
+                url = self.url
+                url = url.split("/")
+                url = url[-1]
+                return f'<iframe class="video-embed video-ted" src="https://embed.ted.com/talks/{url}" frameborder="0" scrolling="no" allowfullscreen></iframe>'
+            except:
+                return "<div class='alert alert-warning'>Embedded video unavailable. <a href='" + self.url + "'>Click here to view the video</a></div>"
+
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
@@ -825,6 +835,7 @@ class Video(LibraryItem):
     VIDEO_SITES = [
         ("youtube", "Youtube"),
         ("vimeo", "Vimeo"),
+        ("ted", "TED"),
         ("other", "Other"),
     ]
     video_site = models.CharField(max_length=14, choices=VIDEO_SITES)
@@ -854,6 +865,14 @@ class Video(LibraryItem):
     def embed(self):
         if self.video_site == "youtube":
             return f'<iframe class="video-embed youtube-video" src="https://www.youtube.com/embed/{self.embed_code}?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+        elif "ted" in self.url:
+            try:
+                url = self.url
+                url = url.split("/")
+                url = url[-1]
+                return f'<iframe class="video-embed ted-video" title="ted-player" src="https://embed.ted.com/talks/{url}" frameborder="0" allowfullscreen></iframe>'
+            except:
+                return "<div class='alert alert-warning'>Embedded video unavailable. <a href='" + self.url + "'>Click here to view the video</a></div>"
         elif self.video_site == "vimeo":
             return f'<iframe class="video-embed vimeo-video" title="vimeo-player" src="https://player.vimeo.com/video/{self.embed_code}" frameborder="0" allowfullscreen></iframe>'
 

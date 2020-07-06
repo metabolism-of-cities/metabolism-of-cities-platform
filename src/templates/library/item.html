@@ -65,7 +65,11 @@
   {% if info.type.name == "Video Recording" %}
 
     <div class="videoblock">
+      {% if info.video %}
         {{ info.video.embed|safe }}
+      {% else %}
+        {{ info.embed|safe }}
+      {% endif %}
     </div>
 
   {% elif info.type.name == "Podcast" %}

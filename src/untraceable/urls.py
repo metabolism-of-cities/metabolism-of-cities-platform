@@ -9,9 +9,9 @@ app_name = "untraceable"
 urlpatterns = baseline_urlpatterns + [
 
     path("", views.index),
-    path("topic/<slug:slug>/", views.topic, name="topic"),
-    path("topic/<slug:slug>/upload/", views.upload),
-    path("topic/<slug:slug>/upload/form/", library.form),
+    path("topics/<slug:slug>/", views.topic, name="topic"),
+    path("topics/<slug:slug>/upload/", views.upload),
+    path("topics/<slug:slug>/upload/form/", library.form),
     path("items/<int:id>/", library.item, { "show_export": False }, name="item"),
     path("<slug:slug>/", core.article, name="article"),
 
