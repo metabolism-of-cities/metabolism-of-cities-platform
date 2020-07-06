@@ -70,8 +70,6 @@ baseline_urlpatterns = [
     path("hub/forum/<int:id>/", community.forum, { "section": "volunteer_hub" }, name="volunteer_forum"),
     path("hub/forum/<int:id>/edit/<int:edit>/", community.forum_edit, { "section": "volunteer_hub" }, name="volunteer_forum_edit"),
 
-    #
-    # End of baseline links
-    #
+    path("newsletter/", core.newsletter, name="newsletter"),
 
 ]

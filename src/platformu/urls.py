@@ -38,10 +38,5 @@ urlpatterns = baseline_urlpatterns + [
 #    path("report/", views.report),
 #    path("marketplace/", views.marketplace),
 
-    path("forum/", community.forum_list, name="forum"),
-    path("forum/create/", community.forum_form),
-    path("forum/<int:id>/", community.forum, name="forum"),
-    path("forum/<int:id>/edit/<int:edit>/", community.forum_edit, name="forum_edit"),
-
     path("<slug:slug>/", core.article, name="article"),
 ]

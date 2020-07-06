@@ -193,10 +193,10 @@ def organization(request, slug, id):
 
 # FORUM
 
-def forum_list(request, project_name=None, parent=None, section=None):
+def forum_list(request, parent=None, section=None):
     list = ForumTopic.objects.all()
-    if project_name:
-        project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+    if request.project != 1:
+        project = get_object_or_404(Project, pk=request.project)
         list = list.filter(part_of_project_id__in=[project.id, 1])
     else:
         project = None
@@ -217,7 +217,7 @@ def forum_list(request, project_name=None, parent=None, section=None):
     print(context)
     return render(request, "forum.list.html", context)
 
-def forum(request, id, project_name=None, section=None):
+def forum(request, id, section=None):
     info = get_object_or_404(Record, pk=id)
     list = Message.objects.filter(parent=id)
 
@@ -260,9 +260,8 @@ def forum(request, id, project_name=None, section=None):
                 if each not in recipients:
                     recipients.append(each)
 
-            project = None
-            if project_name:
-                project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+            if request.project != 1:
+                project = get_object_or_404(Project, pk=request.project)
 
             # If the forum function becomes more popular, this will get out of hand quickly
             # In that case we should write a separate cron that runs every 5-10 min to send
@@ -344,12 +343,12 @@ def forum_edit(request, id, edit, project_name=None, section=None):
     return render(request, "forum.topic.html", context)
 
 @login_required
-def forum_form(request, id=False, project_name=None, parent=None, section=None):
+def forum_form(request, id=False, parent=None, section=None):
 
     project = None
     projects = Project.objects.filter(pk__in=OPEN_WORK_PROJECTS).exclude(pk=1)
-    if project_name:
-        project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+    if request.project != 1:
+        project = get_object_or_404(Project, pk=request.project)
         projects = [project]
 
     if request.method == "POST":
@@ -383,9 +382,10 @@ def forum_form(request, id=False, project_name=None, parent=None, section=None):
 
         messages.success(request, "Your message has been posted.")
 
-        if project_name:
+        if request.project != 1:
+            p = get_object_or_404(Project, pk=request.project)
             page = "volunteer_forum" if section == "volunteer_hub" else "forum"
-            return redirect(project_name + ":"+page, info.id)
+            return redirect(p.slug + ":"+page, info.id)
 
         return redirect(info.get_absolute_url())
 

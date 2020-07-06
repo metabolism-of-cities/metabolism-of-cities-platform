@@ -1150,33 +1150,37 @@ def support(request):
     }
     return render(request, "contribution/contributor.page.html", context)
 
-# Podcast series
+def newsletter(request):
+    is_subscribed = None
+    if request.user.is_authenticated:
+        is_subscribed = RecordRelationship.objects.filter(relationship_id=28, record_parent=request.user.people, record_child_id=request.project)
 
-def podcast_series(request):
-    webpage = get_object_or_404(Project, pk=PROJECT_ID["podcast"])
-    list = LibraryItem.objects.filter(type__name="Podcast").order_by("-date_created")
+    if request.method == "POST":
+
+        if "unsubscribe" in request.POST and is_subscribed:
+            is_subscribed.delete()
+            messages.success(request, "You have successfully unsubscribed.")
+        elif not is_subscribed:
+            if request.user.is_authenticated:
+                people = request.user.people
+            else:
+                people = People.objects.create(
+                    name = request.POST.get("name"),
+                    email = request.POST.get("email"),
+                )
+            RecordRelationship.objects.create(
+                relationship_id = 28,
+                record_parent = people,
+                record_child_id = request.project,
+            )
+            is_subscribed = True
+            messages.success(request, "You have successfully subscribed to our newsletter")
+        
     context = {
-        "show_project_design": True,
-        "webpage": webpage,
-        "header_title": "Podcast Series",
-        "header_subtitle": "Agressive questions. Violent answers.",
-        "list": list,
+        "title": "Newsletter signup",
+        "is_subscribed": is_subscribed,
     }
-    return render(request, "podcast/index.html", context)
-
-# Community hub
-
-def community(request):
-    webpage = get_object_or_404(Project, pk=PROJECT_ID["community"])
-    context = {
-        "show_project_design": True,
-        "webpage": webpage,
-        "header_title": "Welcome!",
-        "header_subtitle": "Join for the money. Stay for the food.",
-        "list": list,
-    }
-    return render(request, "community/index.html", context)
-
+    return render(request, "newsletter.html", context)
 
 
 # TEMPORARY PAGES DURING DEVELOPMENT
