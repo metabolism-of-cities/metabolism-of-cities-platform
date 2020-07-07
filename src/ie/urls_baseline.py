@@ -35,6 +35,9 @@ baseline_urlpatterns = [
     path("hub/work/<int:id>/edit/", core.work_form, name="work_form"),
     path("notifications/", core.notifications, name="notifications"),
 
+    # Portals
+    path("hub/portals/<slug:slug>/", core.work_portal, name="work_portal"),
+
     # Users
     path("hub/users/", core.users, name="users"),
     path("hub/users/<int:id>/", core.user_profile, name="user"),

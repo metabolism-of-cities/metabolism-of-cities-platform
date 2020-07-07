@@ -12,6 +12,8 @@ from django.contrib.auth.admin import UserAdmin
 from django.utils.html import format_html
 
 DEFAULT_EXCLUDE = ["description_html", "date_created", "tags", "spaces", "sectors", "subscribers", "old_id", "meta_data", "materials"]
+DEFAULT_EXCLUDE_WITH_META = DEFAULT_EXCLUDE
+DEFAULT_EXCLUDE_WITH_META.remove("meta_data")
 
 class GeoModelAdmin(admin.ModelAdmin):
      map_width = 100
@@ -165,6 +167,7 @@ class SocialMediaAdmin(admin.ModelAdmin):
 class ProjectAdmin(SearchCompleteAdmin):
     list_display = ["name", "type", "start_date", "slug", "has_subsite", "status"]
     list_filter = ["has_subsite", "status", "type"]
+    exclude = DEFAULT_EXCLUDE_WITH_META
 
 class PublicProjectAdmin(SearchCompleteAdmin):
     list_display = ["name", "start_date", "status"]

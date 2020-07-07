@@ -365,9 +365,17 @@ def event(request, slug):
     info = get_object_or_404(Event, slug=slug)
     today = timezone.now().date()
     subscription = None
+    participants = None
+
     if request.user.is_authenticated:
         subscription = RecordRelationship.objects.filter(
             record_parent = request.user.people,
+            record_child = info,
+            relationship_id = 27,
+        )
+
+    if request.user.is_staff:
+        participants = RecordRelationship.objects.filter(
             record_child = info,
             relationship_id = 27,
         )
@@ -382,11 +390,14 @@ def event(request, slug):
     if "unsubscribe" in request.POST and subscription:
         subscription.delete()
         messages.success(request, "You are no longer registered.")
+
+
     context = {
         "info": info,
         "upcoming": Event.objects.filter(end_date__gte=today).order_by("start_date")[:3],
         "header_title": "Events",
         "header_subtitle": info.name,
+        "participants": participants,
         "subscription": subscription,
 
     }
@@ -1092,6 +1103,13 @@ def work_sprint(request, id=None):
     }
     
     return render(request, "contribution/work.sprint.html", context)
+
+def work_portal(request, slug):
+    context = {
+        "webpage": get_object_or_404(Webpage, pk=32969)
+    }
+    return render(request, "contribution/portal.html", context)
+
 
 @login_required
 def notifications(request):

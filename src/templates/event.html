@@ -48,6 +48,31 @@
 
       {% endif %}
 
+      {% if request.user.is_staff %}
+        <div class="alert alert-warning mt-4">
+          <h2> Registered participants</h2>
+          <p>
+            <i class="fa fa-lock"></i>
+            Only visible to staff.
+          </p>
+          {% if participants %}
+          <ul>
+            {% for each in participants %}
+              <li>{{ each.record_parent }}</li>
+            {% endfor %}
+          </ul>
+          <p>
+            <a class="btn btn-primary-basic" href="{% url "core:massmail" %}?people={% for each in participants %}{{ each.record_parent.id }},{% endfor %}">
+              <i class="fal fa-envelope"></i>
+              Mail participants
+            </a>
+          </p>
+          {% else %}
+          <em>No one yet</em>
+          {% endif %}
+        </div>
+      {% endif %}
+
     {% endif %}
 
   </article>
@@ -55,13 +80,15 @@
     <h5>Event information</h5>
     <div class="card basic-info">
       <ul class="list-group list-group-flush">
+        {% if info.location %}
         <li class="list-group-item">
           <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> 
           {{ info.location }}
         </li>
+        {% endif %}
         <li class="list-group-item">
           <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 
-          {{ info.start_date|date:"M d, Y" }}{% if info.start_date != info.end_date %} - {{ info.end_date|date:"M d, Y" }}{% endif %}
+          {{ info.get_dates }}
         </li>
         {% if info.url %}
         <li class="list-group-item">
