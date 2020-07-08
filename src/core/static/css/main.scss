@@ -1110,10 +1110,15 @@ a.badge-secondary:focus {
 }
 
 // SLIDER
+.slider-wrapper {
+  border-radius: .25rem;
+  padding: .375rem .75rem;
+  border: 1px solid #ced4da;
+  width: 100%;
+}
+
 .slider {
-  width: calc(100% - 10px) !important;
-  margin-left: 5px !important;
-  height: 38px !important;
+  width: 100% !important;
 
   * {
     box-shadow: none !important;
@@ -1123,15 +1128,17 @@ a.badge-secondary:focus {
   .slider-handle {
     background-color: $primary !important;
     width: 10px !important;
-    height: 28px;
-    border-radius: .25rem !important;
-    margin-left: -5px !important;
-    top: 5px;
+    height: 10px !important;
+    border-radius: 100px !important;
+    top: 5px !important;
   }
 
-  .slider-track {
-    height: 14px !important;
-    margin-top: -7px !important;
+  .min-slider-handle {
+    margin-left: 0 !important;
+  }
+
+  .max-slider-handle {
+    margin-left: -8px !important;
   }
 
   .slider-selection {
@@ -1149,12 +1156,6 @@ div.fancytree-grid-container > table.fancytree-ext-grid {
   width: 100%;
 }
 
-table.fancytree-container .fancytree-active > td {
-  background-color: $primary !important;
-  color: $very-light !important;
-}
-
-
 table.fancytree-container thead th {
   background-color: $light !important;
 }
@@ -1165,7 +1166,7 @@ table.fancytree-container th {
 }
 
 span.fancytree-node span.fancytree-expander:hover {
-  color: $secondary !important;
+  color: $primary !important;
 }
 
 table.fancytree-ext-table {
@@ -1181,6 +1182,20 @@ table.fancytree-ext-table {
 table.fancytree-container mark {
   padding: 0;
   background-color: $secondary;
+}
+
+table.fancytree-container a {
+  color: $primary;
+}
+
+table.fancytree-container .fancytree-active > td {
+  background-color: $primary !important;
+  color: $very-light !important;
+
+  span.fancytree-node span.fancytree-expander,
+  a {
+    color: $very-light !important;
+  }
 }
 
 // DATATABLE | the DataTables CSS file is loaded after this file, so this section requires some !important tags
@@ -2789,38 +2804,11 @@ body.material-stocks.map {
     .leaflet-left .leaflet-control {
       transition: margin-left .3s;
     }
-
-    &.feature-open {
-      .leaflet-left .leaflet-control {
-        margin-left: 310px;
-      }
-
-      #feature-details {
-        left: 0;
-        opacity: 1;
-      }
-    }
   }
 
   #map {
     height: 500px;
     max-height: 90vh;
-  }
-
-  #feature-details {
-    position: absolute;
-    z-index: 100000;
-    left: -300px;
-    width: 300px;
-    height: 100%;
-    max-width: 80vw;
-    background-color: $white;
-    border-top-left-radius: .25rem;
-    border-bottom-left-radius: .25rem;
-    border-right: 1px solid $light;
-    opacity: 0;
-    transition: all .3s;
-
   }
 
   .view-buttons {

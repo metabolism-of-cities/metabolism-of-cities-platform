@@ -29,29 +29,31 @@
           </div>
           <div class="form-group">
             <label for="age">Completion year</label>
-            <input class="slider" id="age">
+            <div class="slider-wrapper">
+              <input class="slider" id="age">
+            </div>
           </div>
           <div class="input-group">
             <label for="surface">Surface area (m<sup>2</sup>)</label>
-            <input class="slider" id="surface">
+            <div class="slider-wrapper">
+              <input class="slider" id="surface">
+            </div>
           </div>
         </form>
       </div>
       <div class="col-lg-9 col-xl-10">
-        <div id="map-wrapper">
-          <div id="feature-details">
-            <table class="table">
-              <tr>
-                <th scope="row">Name</th>
-                <td class="muni"></td>
-              </tr>
-              <tr>
-                <th scope="row">Schauff</th>
-                <td class="schauff"></td>
-              </tr>
-            </table>
-          </div>
-          <div id="map" class="leaflet-map mt-4"></div>
+        <div id="map" class="leaflet-map mt-4"></div>
+        <div id="feature-details">
+          <table class="table">
+            <tr>
+              <th scope="row">Name</th>
+              <td class="muni"></td>
+            </tr>
+            <tr>
+              <th scope="row">Schauff</th>
+              <td class="schauff"></td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>
