@@ -86,7 +86,7 @@ def tag_form(request, id=None):
     context = {
         "form": form,
         "title": "Tag",
-    } 
+    }
     return render(request, "modelform.html", context)
 
 def tags_json(request):
@@ -100,7 +100,7 @@ def tags_json(request):
         this_tag = {
             "title": each.name,
             "key": each.id,
-            "children": {}
+            "lazy": True,
         }
         tag_list.append(this_tag)
     response = JsonResponse(tag_list, safe=False)
@@ -281,7 +281,7 @@ def upload(request, project_name="library"):
 
 def search_ajax(request):
     query = request.GET.get("q")
-    r = { 
+    r = {
         "results": []
     }
     if query:
@@ -323,7 +323,7 @@ def form(request, id=None, project_name="library", type=None, slug=None):
             fields=["name", "author_list", "description", "url", "size", "spaces", "year", "language", "license", "update_frequency", "comments"]
 
         ModelForm = modelform_factory(
-            LibraryDataset, 
+            LibraryDataset,
             fields = fields,
             labels = {
                 "year": "Year created (required)",
@@ -334,7 +334,7 @@ def form(request, id=None, project_name="library", type=None, slug=None):
         )
     elif type == "dataportal":
         ModelForm = modelform_factory(
-            LibraryDataPortal, 
+            LibraryDataPortal,
             fields=("name", "description", "url", "tags", "spaces", "year", "language", "license", "software", "has_api", "comments"),
             labels = {
                 "year": "Year created (required)",
@@ -471,7 +471,7 @@ def form(request, id=None, project_name="library", type=None, slug=None):
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
 
-    
+
     context = {
         "form": form,
         "load_select2": True,
