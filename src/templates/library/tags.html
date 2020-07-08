@@ -85,7 +85,7 @@
     </div>
   </div>
 
-  <a href="{% url "library:tag_form" %}?parent={{ request.GET.id }}&amp;next={{ request.get_full_path }}">Add tag in this section</a>
+  <a href="{% url 'library:tag_form' %}?parent={{ request.GET.id }}&amp;next={{ request.get_full_path }}">Add tag in this section</a>
 
 {% endblock %}
 
@@ -104,7 +104,7 @@
     }).val( window.sessionStorage.getItem( "cellFocus" ) || "allow" );
 
     var modelCount = 0;
-    var sourceUrl = "{% url "library:tags_json" %}?id={{ request.GET.id }}";
+    var sourceUrl = "{% url 'library:tags_json' %}?id={{ request.GET.id }}";
 
     $("#treetable").fancytree({
       extensions: ["filter", "grid", "ariagrid", "glyph"],
@@ -136,6 +136,21 @@
       source: {
         url: sourceUrl,
         cache: true,
+      },
+      lazyLoad: function(event, data){
+        var node = data.node;
+        data.result = $.ajax({
+          url: "{% url 'library:tags_json' %}?id=" + data.node.key,
+          dataType: "json",
+          data: {mode: "children", parent: node.key},
+        });
+      },
+      activate: function(event, data) {
+        var node = data.node;
+        console.log("hi")
+        console.log(node)
+        // var settext = node.title+'<br> <br><a class="btn btn-warning" href="/data/processes/'+node.key+'/edit"><i class="fa fa-pencil-alt"></i> Edit</a> <a class="btn btn-info" href="/data/processes/'+node.key+'/child"><i class="fa fa-plus"></i> Add child</a>';
+        // $("#details").html(settext);
       },
       preInit: function(event, data) {
         var tree = data.tree;
@@ -187,11 +202,6 @@
           total: tree.visibleNodeList.length,
           visible: tree.viewport.count,
         }, true);  // do not trigger `onSet`
-      },
-      activate: function(event, data){
-        // A node was activated: display its title:
-        url = "{% url "library:tags" %}?id=" + data.node.key;
-        window.location = url;
       },
     });
 
