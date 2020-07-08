@@ -6,4 +6,52 @@
 
   {{ webpage.get_description }}
 
+  {% if slug == "data" %}
+
+    <h2 class="mt-4">Layers</h2>
+
+    <div class="row">
+      <div class="col-4">
+        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+
+          {% for each in layers %}
+
+            <a class="nav-link {% if each.id == 846 %}active{% endif %}" id="v-pills-{{ each.id }}-tab" data-toggle="pill" href="#v-pills-{{ each.id }}" role="tab" aria-controls="v-pills-{{ each.id }}" aria-selected="true">
+              <i class="fa fa-{{ each.icon }} fa-fw"></i> {{ each }}
+            </a>
+
+          {% endfor %}
+
+      </div>
+    </div>
+    <div class="col-8">
+      <div class="tab-content" id="v-pills-tabContent">
+        {% for each in layers %}
+        <div class="tab-pane fade {% if each.id == 846 %}show active{% endif %}" id="v-pills-{{ each.id }}" role="tabpanel" aria-labelledby="v-pills-{{ each.id }}-tab">
+          <strong><em>
+          {{ each.get_description }}
+          </em></strong>
+          <p class="h4">Data and information to obtain:</p>
+          <ul class="list-group mb-4">
+            {% for tag in each.children.all %}
+              <li class="list-group-item">{{ tag }}</li>
+            {% endfor %}
+          </ul>
+          <a href="{% url 'staf:data_layers_worksheet' %}">View entire worksheet &raquo;</a></p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {% endif %}
+
+
+  <h2 class="mt-5">Discussion and questions</h2>
+  {% include "_messages.html" %}
+
+  {% if not request.user.is_authenticated %}
+    {% include "_notauthenticated.html" %}
+  {% endif %}
+
 {% endblock %}

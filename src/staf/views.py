@@ -874,3 +874,15 @@ def dataset_editor(request):
     context = {
     }
     return render(request, "staf/publish/dataset.html", context)
+
+def layers_worksheet(request):
+
+    if "import" in request.GET:
+        all = Tag.objects.filter(description__isnull=False).exclude(description="")
+        for each in all:
+            each.save()
+
+    context = {
+        "layers": Tag.objects.filter(parent_tag_id=845),
+    }
+    return render(request, "staf/layers.worksheet.html", context)

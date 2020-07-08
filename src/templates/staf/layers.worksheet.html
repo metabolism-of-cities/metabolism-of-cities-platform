@@ -1,0 +1,23 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  {% for each in layers %}
+
+    <h2>
+      <i class="fa fa-{{ each.icon }} fa-fw"></i>
+      {{ each }}
+    </h2>
+
+    {{ each.get_description }}
+
+    {% for tag in each.children.all %}
+
+      <h3 class="h5">{{ tag }}</h3>
+      {{ tag.get_description }}
+
+    {% endfor %}
+
+  {% endfor %}
+
+{% endblock %}

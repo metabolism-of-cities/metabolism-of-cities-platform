@@ -1105,9 +1105,25 @@ def work_sprint(request, id=None):
     return render(request, "contribution/work.sprint.html", context)
 
 def work_portal(request, slug):
-    context = {
-        "webpage": get_object_or_404(Webpage, pk=32969)
+
+    pages = {
+        "data": 32985,
+        "design": 32969
     }
+
+    info = get_object_or_404(Webpage, pk=pages[slug])
+    context = {
+        "webpage": info,
+        "slug": slug,
+        "load_messaging": True,
+        "show_subscribe": True,
+        "info": info,
+        "list_messages": Message.objects.filter(parent=info),
+    }
+
+    if slug == "data":
+        context["layers"] = Tag.objects.filter(parent_tag_id=845)
+
     return render(request, "contribution/portal.html", context)
 
 
