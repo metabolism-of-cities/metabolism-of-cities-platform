@@ -1,0 +1,56 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <div class="breadcrumbs alert alert-secondary">
+    <a href="../../../">{{ info }}</a> &raquo;
+    <a href="../../">Control panel</a> &raquo;
+    <a href="../">Data harvesting</a> &raquo;
+    <strong>{{ tag }}</strong>
+  </div>
+
+  <h1>
+    <i class="fa fa-fw fa-{{ tag.parent_tag.icon }}"></i>
+    {{ tag.parent_tag }}
+  </h1>
+
+  <h2>{{ tag }}</h2>
+
+  {{ tag.get_description }}
+
+  <section class="mt-5">
+    <h2 class="h3">Inventory</h2>
+    {% if items %}
+      {% include "_library.list.html" %}
+    {% else %}
+      <div class="alert alert-warning">
+        <i class="fa fa-exclamation-triangle"></i> No items uploaded yet.
+      </div>
+    {% endif %}
+  </section>
+
+  <h2 class="h3 mt-5">Upload new item</h2>
+  <div class="list-group">
+  {% for each in types %}
+    <a href="form/?type={{ each.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" class="list-group-item list-group-item-action">
+      <i class="fa fa-fw fa-{{ each.icon }}"></i>
+      {{ each }}
+    </a>
+  {% endfor %}
+  </div>
+
+  <h2 class="h3 mt-5">Discussion and questions</h2>
+  {% include "_messages.html" %}
+
+  {% if not request.user.is_authenticated %}
+    {% include "_notauthenticated.html" %}
+  {% endif %}
+
+  <p class="mb-4">
+  <a href="../" class="btn btn-primary-basic float-right">
+    <i class="fal fa-angle-left"></i>
+    Back
+  </a>
+  </p>
+
+{% endblock %}

@@ -3,22 +3,56 @@
 {% block page_name %}stafcp controlpanel{% endblock %}
 {% block content %}
   <section class="row">
-    <div class="col-md-3 mb-3">
-      <a class="card icon-card btn-card" href="project/">
-        <div class="icon">
-          <i class="fal fa-fw fa-sliders-v-square"></i>
-        </div>
-        <div class="card-header">Project settings</div>
-      </a>
-    </div>
-    <div class="col-md-3 mb-3">
-      <a class="card icon-card btn-card" href="users/">
-        <div class="icon">
-          <i class="fal fa-fw fa-users-medical"></i>
-        </div>
-        <div class="card-header">Our contributors</div>
-      </a>
-    </div>
+    {% if space %}
+      <div class="col-md-3 mb-3">
+        <a class="card icon-card btn-card" href="worksheet/">
+          <div class="icon">
+            <i class="fal fa-fw fa-database"></i>
+          </div>
+          <div class="card-header">Data harvesting</div>
+        </a>
+      </div>
+      <div class="col-md-3 mb-3">
+        <a class="card icon-card btn-card" href="#" onclick="javascript:return alert('This section becomes available once enough data is harvested')">
+          <div class="icon">
+            <i class="fas fa-fw fa-cubes"></i>
+          </div>
+          <div class="card-header">Data processing</div>
+        </a>
+      </div>
+      <div class="col-md-3 mb-3">
+        <a class="card icon-card btn-card" href="#" onclick="javascript:return alert('This section becomes available once enough data is harvested')">
+          <div class="icon">
+            <i class="fal fa-fw fa-check"></i>
+          </div>
+          <div class="card-header">Data publication</div>
+        </a>
+      </div>
+      <div class="col-md-3 mb-3">
+        <a class="card icon-card btn-card" href="#" onclick="javascript:return confirm('This section becomes available once enough data is harvested')">
+          <div class="icon">
+            <i class="fal fa-fw fa-pencil-alt"></i>
+          </div>
+          <div class="card-header">Data articles</div>
+        </a>
+      </div>
+    {% else %}
+      <div class="col-md-3 mb-3">
+        <a class="card icon-card btn-card" href="project/">
+          <div class="icon">
+            <i class="fal fa-fw fa-sliders-v-square"></i>
+          </div>
+          <div class="card-header">Project settings</div>
+        </a>
+      </div>
+      <div class="col-md-3 mb-3">
+        <a class="card icon-card btn-card" href="users/">
+          <div class="icon">
+            <i class="fal fa-fw fa-users-medical"></i>
+          </div>
+          <div class="card-header">Our contributors</div>
+        </a>
+      </div>
       <div class="col-md-3 mb-3">
         <a class="card icon-card btn-card" href="design/">
           <div class="icon">
@@ -27,16 +61,6 @@
           <div class="card-header">Website design</div>
         </a>
       </div>
-    {% if space %}
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="data-articles/">
-          <div class="icon">
-            <i class="fal fa-fw fa-file-alt"></i>
-          </div>
-          <div class="card-header">Data articles</div>
-        </a>
-      </div>
-    {% else %}
       <div class="col-md-3 mb-3">
         <a class="card icon-card btn-card" href="content/">
           <div class="icon">
@@ -58,33 +82,36 @@
     {% endif %}
   </section>
 
-  <section>
-    <h2>Contributor tools</h2>
-    <div class="row">
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="../work/">
-          <div class="icon">
-            <i class="fal fa-fw fa-th"></i>
-          </div>
-          <div class="card-header">Community work grid</div>
-        </a>
+  {% if not space %}
+    <section>
+      <h2>Contributor tools</h2>
+      <div class="row">
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="../work/">
+            <div class="icon">
+              <i class="fal fa-fw fa-th"></i>
+            </div>
+            <div class="card-header">Community work grid</div>
+          </a>
+        </div>
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="../work/sprints/">
+            <div class="icon">
+              <i class="fal fa-fw fa-construction"></i>
+            </div>
+            <div class="card-header">Work sprints</div>
+          </a>
+        </div>
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="../curation/">
+            <div class="icon">
+              <i class="fal fa-fw fa-database"></i>
+            </div>
+            <div class="card-header">Data curation platform</div>
+          </a>
+        </div>
       </div>
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="../work/sprints/">
-          <div class="icon">
-            <i class="fal fa-fw fa-construction"></i>
-          </div>
-          <div class="card-header">Work sprints</div>
-        </a>
-      </div>
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="../curation/">
-          <div class="icon">
-            <i class="fal fa-fw fa-database"></i>
-          </div>
-          <div class="card-header">Data curation platform</div>
-        </a>
-      </div>
-    </div>
-  </section>
+    </section>
+  {% endif %}
+
 {% endblock %}

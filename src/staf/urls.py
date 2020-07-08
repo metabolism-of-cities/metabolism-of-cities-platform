@@ -27,7 +27,6 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("upload/staf/<int:id>/verify/", views.upload_staf_verify, name="upload_staf_verify"),
     path("upload/staf/<int:id>/meta/", views.upload_gis_meta, name="upload_staf_meta"),
 
-
     path("activities/", views.activities_catalogs, name="activities_catalogs"),
     path("activities/<int:catalog>/", views.activities, name="activities"),
     path("activities/<int:catalog>/<int:id>/", views.activities, name="activities"),

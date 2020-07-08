@@ -291,7 +291,7 @@ def search_ajax(request):
     return JsonResponse(r, safe=False)
 
 @login_required
-def form(request, id=None, project_name="library", type=None, slug=None):
+def form(request, id=None, project_name="library", type=None, slug=None, tag=None, space=None):
 
     # Slug is only there because one of the subsites has it in the URL; it does not do anything
 
@@ -300,6 +300,11 @@ def form(request, id=None, project_name="library", type=None, slug=None):
     publishers = None
     info = None
     initial = None
+
+    if space:
+        # We use this from any STAF site where the form is used to add
+        # publications that need to be linked to a reference space
+        space = get_space(request, space)
 
     curator = False
     if has_permission(request, project.id, ["curator"]):
@@ -367,6 +372,9 @@ def form(request, id=None, project_name="library", type=None, slug=None):
             fields.append("tags")
             initial = {"tags": request.GET.get("tag")}
 
+        if space:
+            initial = {"spaces": space}
+
         fields.append("comments")
         ModelForm = modelform_factory(LibraryItem, fields=fields, labels = labels)
 
@@ -392,6 +400,9 @@ def form(request, id=None, project_name="library", type=None, slug=None):
                 info.is_active = False
             info.save()
             form.save_m2m()
+
+            if tag:
+                info.tags.add(Tag.objects.get(pk=tag))
 
             if request.POST.get("publisher"):
                 RecordRelationship.objects.create(

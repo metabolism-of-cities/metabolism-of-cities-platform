@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
+from django.shortcuts import get_object_or_404
 from core.models import *
 
 import logging
@@ -38,7 +39,7 @@ def set_autor(author, item):
 
 def get_space(request, slug):
     # Here we can build an expansion if we want particular people to see dashboards that are under construction
-    check = get_object_or_404(ActivatedSpace, slug=slug, site=request.site)
+    check = get_object_or_404(ActivatedSpace, slug=slug, part_of_project_id=request.project)
     return check.space
 
 # Get all the child relationships, but making sure we only show is_deleted=False and is_public=True

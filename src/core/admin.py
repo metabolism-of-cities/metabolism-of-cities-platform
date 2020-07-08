@@ -194,7 +194,7 @@ class LibraryItemTypeAdmin(SearchAdmin):
     list_display = ["name", "icon"]
 
 class SpaceAdmin(admin.ModelAdmin):
-    list_display = ["space", "slug", "site"]
+    list_display = ["space", "slug", "part_of_project"]
     search_fields = ["space__name"]
     autocomplete_fields = ["space"]
     exclude = ["slug"]

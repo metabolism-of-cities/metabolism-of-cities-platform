@@ -528,6 +528,46 @@ def referencespace(request, id):
     }
     return render(request, "staf/referencespace.html", context)
 
+def referencespace_worksheet(request, slug):
+    info = get_space(request, slug)
+    layers = Tag.objects.filter(parent_tag_id=845)
+    counter = {}
+    items = LibraryItem.objects.filter(spaces=info, tags__parent_tag__in=layers)
+    for each in items:
+        for tag in each.tags.all():
+            if tag.parent_tag in layers:
+                counter[tag.id] = True
+
+    total_tags = Tag.objects.filter(parent_tag__in=layers).count()
+    uploaded = len(counter)
+    percentage = (uploaded/total_tags)*100
+    context = {
+        "info": info,
+        "layers": layers,
+        "items": items,
+        "counter": counter,
+        "title": "Inventory",
+        "percentage": percentage,
+        "total_tags": total_tags,
+        "uploaded": uploaded,
+        "load_datatables": True,
+    }
+    return render(request, "staf/referencespace.worksheet.html", context)
+
+def referencespace_worksheet_tag(request, slug, tag):
+    info = get_space(request, slug)
+    tag = get_object_or_404(Tag, pk=tag)
+    types = [5,6,9,16,37,25,27,29,32,10,33,38,20,31,40]
+    list = LibraryItem.objects.filter(spaces=info, tags=tag)
+    context = {
+        "info": info,
+        "tag": tag,
+        "types": LibraryItemType.objects.filter(pk__in=types),
+        "title": tag.name,
+        "items": list,
+    }
+    return render(request, "staf/referencespace.worksheet.tag.html", context)
+
 def activities_catalogs(request):
     context = {
         "list": ActivityCatalog.objects.all(),

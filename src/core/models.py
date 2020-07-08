@@ -902,7 +902,7 @@ class Photo(LibraryItem):
 
 class ActivatedSpace(models.Model):
     space = models.ForeignKey("ReferenceSpace", on_delete=models.CASCADE)
-    site = models.ForeignKey(Site, on_delete=models.CASCADE)
+    part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE)
     slug = models.CharField(max_length=255, db_index=True)
 
     def __str__(self):
@@ -916,7 +916,7 @@ class ActivatedSpace(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
-        unique_together = ["slug", "site"]
+        unique_together = ["slug", "part_of_project"]
 
 class LibraryDataset(LibraryItem):
     data_formats = models.ManyToManyField(Tag, blank=True, related_name="library_datasets", limit_choices_to={"parent_tag_id": 786})

@@ -15,11 +15,11 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 
 def get_space(request, slug):
     # Here we can build an expansion if we want particular people to see dashboards that are under construction
-    check = get_object_or_404(ActivatedSpace, slug=slug, site=request.site)
+    check = get_object_or_404(ActivatedSpace, slug=slug, part_of_project_id=request.project)
     return check.space
 
 def index(request):
-    list = ActivatedSpace.objects.filter(site=request.site)
+    list = ActivatedSpace.objects.filter(part_of_project_id=request.project)
     context = {
         "show_project_design": True,
         "list": list,
@@ -27,7 +27,7 @@ def index(request):
     return render(request, "data/index.html", context)
 
 def overview(request):
-    list = ActivatedSpace.objects.filter(site=request.site)
+    list = ActivatedSpace.objects.filter(part_of_project_id=request.project)
     context = {
         "list": list,
     }

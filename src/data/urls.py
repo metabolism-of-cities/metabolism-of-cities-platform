@@ -5,10 +5,11 @@ from staf import views as staf
 from community import views as community
 from library import views as library
 from ie.urls_baseline import baseline_urlpatterns
+from ie.urls_staf_baseline import baseline_staf_urlpatterns
 
 app_name = "data"
 
-urlpatterns = baseline_urlpatterns + [
+urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
 
     path("upload/dataset/", library.form, { "type": 10, "project_name": app_name }, name="upload_dataset"),
     path("upload/dataportal/", library.form, { "type": 39, "project_name": app_name }, name="upload_dataportal"),
@@ -39,10 +40,10 @@ urlpatterns = baseline_urlpatterns + [
     path("<slug:space>/maps/", views.maps, name="maps"),
 
     # City data portal
-    path("<slug:space>/controlpanel/", core.controlpanel, { "project_name": app_name }, name="controlpanel"),
-    path("<slug:space>/controlpanel/data-articles/", core.controlpanel_data_articles, { "project_name": app_name }, name="controlpanel_data_articles"),
-    path("<slug:space>/controlpanel/data-articles/create/", core.controlpanel_data_article, { "project_name": app_name }, name="controlpanel_data_article"),
-    path("<slug:space>/controlpanel/data-articles/<int:id>/", core.controlpanel_data_article, { "project_name": app_name }, name="controlpanel_data_article"),
+    path("<slug:space>/controlpanel/", core.controlpanel, name="controlpanel"),
+    path("<slug:space>/controlpanel/data-articles/", core.controlpanel_data_articles, name="controlpanel_data_articles"),
+    path("<slug:space>/controlpanel/data-articles/create/", core.controlpanel_data_article, name="controlpanel_data_article"),
+    path("<slug:space>/controlpanel/data-articles/<int:id>/", core.controlpanel_data_article, name="controlpanel_data_article"),
 
     path("<slug:space>/", views.dashboard, name="dashboard"),
 

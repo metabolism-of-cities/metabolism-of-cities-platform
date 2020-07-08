@@ -7,6 +7,7 @@ to change anything, we can do it in one place
 
 from django.urls import include, path
 from staf import views as staf
+from library import views as library
 
 #
 # Baseline links shared between all projects
@@ -16,5 +17,8 @@ from staf import views as staf
 baseline_staf_urlpatterns = [
 
     path("layers/worksheet/", staf.layers_worksheet, name="data_layers_worksheet"),
+    path("<slug:slug>/controlpanel/worksheet/", staf.referencespace_worksheet),
+    path("<slug:slug>/controlpanel/worksheet/<int:tag>/", staf.referencespace_worksheet_tag),
+    path("<slug:space>/controlpanel/worksheet/<int:tag>/form/", library.form),
 
 ]
