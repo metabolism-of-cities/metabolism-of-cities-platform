@@ -75,7 +75,8 @@
               <th></th>
               <th>#</th>
               <th class="parent-path"></th>
-              <th>Edit</th>
+              <th></th>
+              <th></th>
               <th>ID</th>
             </tr>
           </thead>
@@ -147,10 +148,7 @@
       },
       activate: function(event, data) {
         var node = data.node;
-        console.log("hi")
         console.log(node)
-        // var settext = node.title+'<br> <br><a class="btn btn-warning" href="/data/processes/'+node.key+'/edit"><i class="fa fa-pencil-alt"></i> Edit</a> <a class="btn btn-info" href="/data/processes/'+node.key+'/child"><i class="fa fa-plus"></i> Add child</a>';
-        // $("#details").html(settext);
       },
       preInit: function(event, data) {
         var tree = data.tree;
@@ -174,8 +172,9 @@
         // (index #0 is rendered by fancytree by adding the checkbox)
         $tdList.eq(1).text(node.getIndexHier());  //.addClass("alignRight");
         // (index #2 is rendered by fancytree)
-        $tdList.eq(3).text("Edit");
-        $tdList.eq(4).text(node.key);
+        $tdList.eq(3).html("<a href='/tags/" + node.key + "/edit'><i class='far fa-edit'></i></a>");
+        $tdList.eq(4).html("<a href='/tags/" + node.key + "/edit'><i class='far fa-plus'></i></a>");
+        $tdList.eq(5).text(node.key);
       },
       updateViewport: function(event, data) {
         var tree = data.tree,
