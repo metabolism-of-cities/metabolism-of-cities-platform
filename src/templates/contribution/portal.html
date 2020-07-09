@@ -46,6 +46,9 @@
 
   {% endif %}
 
+  {% if task_list %}
+    {% include "contribution/_tasks.html" %}
+  {% endif %}
 
   <h2 class="mt-5">Discussion and questions</h2>
   {% include "_messages.html" %}

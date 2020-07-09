@@ -867,6 +867,7 @@ def work_form(request, id=None, sprint=None):
                     posted_by = request.user.people,
                 )
                 set_autor(request.user.people.id, message.id)
+                info.subscribers.add(request.user.people)
 
 
             if request.FILES:
@@ -943,7 +944,7 @@ def work_grid(request, sprint=None):
     projects = Project.objects.filter(pk__in=OPEN_WORK_PROJECTS).order_by("name")
 
     context = {
-        "list": list,
+        "task_list": list,
         "load_datatables": True,
         "statuses": Work.WorkStatus.choices,
         "priorities": Work.WorkPriority.choices,
@@ -1108,6 +1109,17 @@ def work_portal(request, slug):
         "design": 32969
     }
 
+    tasks = None
+
+    if slug == "design":
+
+        if request.user.is_authenticated and has_permission(request, request.project, ["admin", "team_member"]):
+            tasks = Work.objects_include_private.all()
+        else:
+            tasks = Work.objects.all()
+
+        tasks = tasks.filter(workactivity__type=WorkActivity.WorkType.DESIGN)
+
     info = get_object_or_404(Webpage, pk=pages[slug])
     context = {
         "webpage": info,
@@ -1116,6 +1128,7 @@ def work_portal(request, slug):
         "show_subscribe": True,
         "info": info,
         "list_messages": Message.objects.filter(parent=info),
+        "task_list": tasks.order_by("-last_update") if tasks else None,
     }
 
     if slug == "data":

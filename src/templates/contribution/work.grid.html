@@ -133,7 +133,7 @@
       </tr>
     </thead>
     <tbody>
-    {% for each in list %}
+    {% for each in task_list %}
       <tr>
         <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
           <a href="{{ each.id }}/">
