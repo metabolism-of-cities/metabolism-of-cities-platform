@@ -1,0 +1,27 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block title %}Material Stocks{% endblock %}
+{% block page_name %}material-stocks cities{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+  <h1>Cities</h1>
+
+  <div class="row">
+    <div class="col-md-6 col-lg-4">
+      <a class="card btn-card" href="{% url 'stocks:city' 1 %}">
+        <img src="https://metabolismofcities.org/media/photos/Brussels.large.jpg" class="card-img-top" alt="Brussels">
+        <div class="card-body">
+          <h5 class="card-title">Brussels</h5>
+          <h6 class="card-subtitle mb-2 text-muted">Belgium</h6>
+        </div>
+      </a>
+    </div>
+  </div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

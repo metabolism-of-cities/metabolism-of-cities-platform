@@ -6,10 +6,50 @@ def index(request):
     }
     return render(request, "stocks/index.html", context)
 
-def stocks_map(request):
+def contribute(request):
     context = {
     }
+    return render(request, "stocks/contribute.html", context)
+
+def publications(request):
+    context = {
+    }
+    return render(request, "stocks/publications.html", context)
+
+def cities(request):
+    context = {
+    }
+    return render(request, "stocks/cities.html", context)
+
+def city(request, id):
+    context = {
+        "city": True,
+    }
+    return render(request, "stocks/city.html", context)
+
+def data(request, id):
+    context = {
+        "data": True,
+    }
+    return render(request, "stocks/data.html", context)
+
+def map(request, id):
+    context = {
+        "map": True,
+    }
     return render(request, "stocks/map.html", context)
+
+def compare(request, id):
+    context = {
+        "compare": True,
+    }
+    return render(request, "stocks/compare.html", context)
+
+def modeller(request, id):
+    context = {
+        "modeller": True,
+    }
+    return render(request, "stocks/modeller.html", context)
 
 def dataset_editor(request):
     context = {
