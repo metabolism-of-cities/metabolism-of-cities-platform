@@ -301,6 +301,9 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     info = None
     initial = None
 
+    if tag:
+        tag = Tag.objects.get(pk=tag)
+
     if space:
         # We use this from any STAF site where the form is used to add
         # publications that need to be linked to a reference space
@@ -322,27 +325,30 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         type = LibraryItemType.objects.get(pk=type)
 
     if type.name == "Dataset":
-        if curator:
+        if curator and False:
             fields=["name", "author_list", "description", "url", "size", "spaces", "sectors", "activities", "materials", "tags", "year", "language", "license", "data_year_start", "data_year_end", "update_frequency", "data_interval", "data_formats", "has_api", "comments"]
         else:
             fields=["name", "author_list", "description", "url", "size", "spaces", "year", "language", "license", "update_frequency", "comments"]
+
+        if space:
+            initial = {"spaces": space.id}
 
         ModelForm = modelform_factory(
             LibraryDataset,
             fields = fields,
             labels = {
-                "year": "Year created (required)",
+                "year": "Year created",
                 "spaces": "Physical location(s)",
                 "author_list": "Authors (people)",
                 "comments": "Internal comments/notes",
-            }
+            },
         )
     elif type == "dataportal":
         ModelForm = modelform_factory(
             LibraryDataPortal,
             fields=("name", "description", "url", "tags", "spaces", "year", "language", "license", "software", "has_api", "comments"),
             labels = {
-                "year": "Year created (required)",
+                "year": "Year created",
                 "comments": "Internal comments/notes",
             }
         )
@@ -355,15 +361,21 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             "doi": "DOI",
             "spaces": "Physical location(s)",
         }
+
         fields = ["name", "language", "title_original_language", "abstract_original_language", "description", "year", "author_list", "url", "license", "spaces"]
+
         if type.name == "Journal Article" or type.name == "Thesis" or type.name == "Conference Paper":
             labels["description"] = "Abstract"
             if type.name == "Journal Article":
                 fields.append("doi")
                 journals = Organization.objects.filter(type="journal")
 
-        if type.name == "Data visualisation":
+        if type.name == "Data visualisation" or type.name == "Image":
             fields.append("image")
+
+        if type.name == "Webpage":
+            fields.remove("license")
+            fields.remove("year")
 
         if type.name == "Book" or type.name == "Book Section":
             publishers = Organization.objects.filter(type="publisher")
@@ -373,7 +385,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             initial = {"tags": request.GET.get("tag")}
 
         if space:
-            initial = {"spaces": space}
+            initial = {"spaces": space.id}
 
         fields.append("comments")
         ModelForm = modelform_factory(LibraryItem, fields=fields, labels = labels)
@@ -383,7 +395,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     else:
         form = ModelForm(request.POST or None, initial=initial)
 
-    if type.name == "Dataset" and curator:
+    if type.name == "Dataset" and curator and False:
         form.fields["activities"].queryset = Activity.objects.filter(catalog_id=3655)
         form.fields["materials"].queryset = Material.objects.filter(Q(catalog_id=19001)|Q(catalog_id=18998)|Q(catalog_id=32553))
 
@@ -402,7 +414,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             form.save_m2m()
 
             if tag:
-                info.tags.add(Tag.objects.get(pk=tag))
+                info.tags.add(tag)
 
             if request.POST.get("publisher"):
                 RecordRelationship.objects.create(
@@ -462,7 +474,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 message = Message.objects.create(posted_by_id=AUTO_BOT, parent=work, name="Task created", description="This task was created by the system")
 
 
-            if request.user.is_staff:
+            if request.user.is_staff and False:
                 msg = "The item was added to the library. <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=2&amp;record_child=" + str(info.id) + "'>Link to publisher</a> |  <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=4&amp;record_child=" + str(info.id) + "'>Link to author</a> ||| <a href='/admin/core/organization/add/' target='_blank'>Add a new organization</a>"
             else:
                 msg = "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution!"
@@ -490,5 +502,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         "title": "Adding: " + str(type),
         "publishers": publishers,
         "journals": journals,
+        "tag": tag,
+        "space_name": space,
     }
     return render(request, "library/form.html", context)

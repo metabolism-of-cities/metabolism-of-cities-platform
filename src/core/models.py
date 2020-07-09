@@ -714,7 +714,7 @@ class LibraryItem(Record):
     bibtex_citation = models.TextField(null=True, blank=True)
     type = models.ForeignKey(LibraryItemType, on_delete=models.CASCADE)
     is_part_of = models.ForeignKey("self", on_delete=models.SET_NULL, null=True, blank=True)
-    year = models.PositiveSmallIntegerField()
+    year = models.PositiveSmallIntegerField(null=True, blank=True)
     abstract_original_language = models.TextField(null=True, blank=True)
     date_added = models.DateTimeField(null=True, blank=True, auto_now_add=True)
     file = models.FileField(null=True, blank=True, upload_to="library")

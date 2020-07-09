@@ -235,8 +235,8 @@
                 <div>{{ info.get_language_display }}</div>
               </li>
               <li class="list-group-item table-item">
-                <div><i class="far fa-fw fa-universal-access mr-1"></i> Open access</div>
-                <div><i class="fas fa-fw text-success fa-check-circle"></i></div>
+                <div><i class="far fa-fw fa-universal-access mr-1"></i> License</div>
+                <div>{{ info.license }}</div>
               </li>
               {% if info.url %}
                 <a class="list-group-item" href="{{ info.url }}">
@@ -284,9 +284,12 @@
         <h3 class="mt-5">Uploader notes</h3>
         {{ info.comments|linebreaks }}
         {% endif %}
+
+        {% if PROJECT.slug == "ascus" %}
         <div class="mt-5">
           {% include "_messages.html" %}
         </div>
+        {% endif %}
         
         <div class="mt-4"><a href="javascript:history.back()" class="btn btn-default-outline">&laquo; Back</a></div>
       </div>

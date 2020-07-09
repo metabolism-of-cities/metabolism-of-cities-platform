@@ -556,6 +556,10 @@ def rules(request):
 
 def hub(request):
     project = request.project
+    if project == 4:
+        return work_portal(request, slug="data")
+    if project == 17:
+        return work_portal(request, slug="data")
 
     updates = Message.objects.filter(
         parent__work__isnull=False,
@@ -869,7 +873,6 @@ def work_form(request, id=None, sprint=None):
                 set_autor(request.user.people.id, message.id)
                 info.subscribers.add(request.user.people)
 
-
             if request.FILES:
                 files = request.FILES.getlist("files")
                 for file in files:
@@ -1104,8 +1107,10 @@ def work_sprint(request, id=None):
 
 def work_portal(request, slug):
 
+    project = get_object_or_404(Project, pk=request.project)
     pages = {
         "data": 32985,
+        "islands": 32985,
         "design": 32969
     }
 
@@ -1129,10 +1134,13 @@ def work_portal(request, slug):
         "info": info,
         "list_messages": Message.objects.filter(parent=info),
         "task_list": tasks.order_by("-last_update") if tasks else None,
+        "menu": "home",
     }
 
     if slug == "data":
         context["layers"] = Tag.objects.filter(parent_tag_id=845)
+        context["spaces"] = ActivatedSpace.objects.filter(part_of_project_id=request.project)
+        context["datalink"] = project.slug + ":controlpanel_space"
 
     return render(request, "contribution/portal.html", context)
 

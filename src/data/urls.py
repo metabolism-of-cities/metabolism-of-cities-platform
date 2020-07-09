@@ -40,10 +40,6 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("<slug:space>/maps/", views.maps, name="maps"),
 
     # City data portal
-    path("<slug:space>/controlpanel/", core.controlpanel, name="controlpanel"),
-    path("<slug:space>/controlpanel/data-articles/", core.controlpanel_data_articles, name="controlpanel_data_articles"),
-    path("<slug:space>/controlpanel/data-articles/create/", core.controlpanel_data_article, name="controlpanel_data_article"),
-    path("<slug:space>/controlpanel/data-articles/<int:id>/", core.controlpanel_data_article, name="controlpanel_data_article"),
 
     path("<slug:space>/", views.dashboard, name="dashboard"),
 

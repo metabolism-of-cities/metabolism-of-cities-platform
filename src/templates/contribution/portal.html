@@ -1,8 +1,57 @@
 {% extends "_base.html" %}
+{% block page_name %}volunteer portal home{% endblock %}
 
 {% block content %}
 
-  <h1>Portal</h1>
+  {% include "hub/_nav.html" %}
+
+    <div class="join-cta card mb-4">
+      <div class="card-body text-center">
+        <h2>{{ PROJECT }} is made possible by our contributors</h2>
+
+        {% if False %}
+          <div class="my-4">
+            <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+            <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+            <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+            <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+            <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+            <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+            <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+            <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+            <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+            <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
+          </div>
+        {% endif %}
+
+        {% if not request.user.is_authenticated %}
+          <div>
+            <a class="btn btn-lg btn-primary my-4" href="/hub/join/?next={{ request.get_full_path }}">
+              <i class="fas fa-fist-raised"></i>
+              Join us!
+            </a>
+            <a class="btn btn-lg btn-primary my-4" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/login/?next={{ request.get_full_path }}">
+              <i class="fas fa-sign-in"></i>
+                Log in
+            </a>
+          </div>
+        {% else %}
+        <h4 class="mb-4"><em>Thanks for being part of our community</em></h4>
+        {% endif %}
+
+
+        <a class="btn btn-primary-basic" href="help/">
+          <i class="fal fa-video"></i>
+          Introduction video
+        </a>
+        <a class="btn btn-primary-basic" href="work/?entry=true&amp;status=open_unassigned" hidden>
+          <i class="fal fa-tasks"></i>
+          Entry tasks
+        </a>
+      </div>
+    </div>
+
+
 
   {{ webpage.get_description }}
 
@@ -32,9 +81,9 @@
           {{ each.get_description }}
           </em></strong>
           <p class="h4">Data and information to obtain:</p>
-          <ul class="list-group mb-4">
+          <ul class="list-unstyled mb-4">
             {% for tag in each.children.all %}
-              <li class="list-group-item">{{ tag }}</li>
+              <li>{{ tag }}</li>
             {% endfor %}
           </ul>
           <a href="{% url 'staf:data_layers_worksheet' %}">View entire worksheet &raquo;</a></p>
@@ -44,13 +93,36 @@
     </div>
   </div>
 
+  {% if spaces %}
+
+    <h2>Active {{ SYSTEM_NAME_PLURAL }} to work on</h2>
+
+    <p>
+      For each activated {{ SYSTEM_NAME_SINGULAR }}, there is a data management platform available. 
+      This allows all interested contributors to upload and work with data and information for this {{ SYSTEM_NAME_SINGULAR }}.
+      Click the links below to go to the relevant data management platform.
+    </p>
+
+    <ul>
+      {% for each in spaces %}
+        <li><a href="{% url datalink each.slug %}">{{ each }}</a></li>
+      {% endfor %}
+    </ul>
+
+    <p>
+      Would you like to work on another {{ SYSTEM_NAME_SINGULAR }} that is not in the list? Please leave a message
+      <a href="#reply">in the chat</a> and let us know which {{ SYSTEM_NAME_SINGULAR }} you would like to work on.
+    </p>
+
+  {% endif %}
+
   {% endif %}
 
   {% if task_list %}
     {% include "contribution/_tasks.html" %}
   {% endif %}
 
-  <h2 class="mt-5">Discussion and questions</h2>
+  <h2 class="mt-5" id="chat">Discussion and questions</h2>
   {% include "_messages.html" %}
 
   {% if not request.user.is_authenticated %}

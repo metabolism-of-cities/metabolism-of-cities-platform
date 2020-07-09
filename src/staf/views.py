@@ -559,6 +559,41 @@ def referencespace_worksheet_tag(request, slug, tag):
     tag = get_object_or_404(Tag, pk=tag)
     types = [5,6,9,16,37,25,27,29,32,10,33,38,20,31,40]
     list = LibraryItem.objects.filter(spaces=info, tags=tag)
+
+    shapefile = [40]
+    written = [5,16,25,27,29,32]
+    dataset = [10]
+    visual = [33,38,20,31]
+
+    if tag.parent_tag.id == 847:
+        # Layer two
+        types = shapefile + written + dataset + visual
+
+    if tag.parent_tag.id == 850:
+        # Layer 5
+        types = written
+
+    if tag.parent_tag.id == 849:
+        # Layer 4
+        types = written + dataset
+
+    if tag.parent_tag.id == 848:
+        # Layer 3
+        types = shapefile + written + dataset + visual
+
+    if tag.id == 852 or tag.id == 851:
+        types = shapefile
+
+    if tag.id == 853:
+        types = written
+
+    if tag.id == 854:
+        types = written + dataset
+
+    if tag.id == 916:
+        # Visuals
+        types = visual
+
     context = {
         "info": info,
         "tag": tag,

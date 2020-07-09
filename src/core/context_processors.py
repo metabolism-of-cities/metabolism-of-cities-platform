@@ -12,11 +12,20 @@ def site(request):
     open = None
     sprints = None
     notifications = None
+    system_name_singular = None
+    system_name_plural = None
 
     if hasattr(request, "project"):
         project = Project.objects.get(pk=request.project)
     else:
         project = Project.objects.get(pk=1)
+
+    if project.slug == "data":
+        system_name_singular = "city"
+        system_name_plural = "cities"
+    elif project.slug == "islands":
+        system_name_singular = "island"
+        system_name_plural = "islands"
 
     if request.user.is_authenticated and request.user.people:
         people = request.user.people
@@ -46,4 +55,6 @@ def site(request):
         "OPEN_TASKS": open,
         "SPRINTS": sprints,
         "NOTIFICATIONS": notifications,
+        "SYSTEM_NAME_SINGULAR": system_name_singular,
+        "SYSTEM_NAME_PLURAL": system_name_plural,
     }

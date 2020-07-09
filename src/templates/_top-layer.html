@@ -190,7 +190,9 @@
 
 </div>
 
-{% if PROJECT.id == 4 and space %}
+{% if PROJECT.id == 17 and space %}
+  {% include "_submenu-data.html" %}
+{% elif PROJECT.id == 4 and space %}
   {% include "_submenu-data.html" %}
 {% elif PROJECT.id == 8 and request.user.is_authenticated %}
   {% include "_submenu-ascus.html" %}

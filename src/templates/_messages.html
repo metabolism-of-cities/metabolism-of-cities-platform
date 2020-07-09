@@ -74,7 +74,7 @@
 
   {% endif %}
 
-  <h3>{% if list_messages %}Reply{% elif message %}Edit message{% else %}Leave a comment{% endif %}</h3>
+  <h3 id="reply">{% if list_messages %}Reply{% elif message %}Edit message{% else %}Leave a comment{% endif %}</h3>
   <form method="post" enctype="multipart/form-data" 
   {% if not message %}action="/forum/{% if forum_id %}{{ forum_id }}{% else %}{{ info.id }}{% endif %}/"{% endif %}
   >

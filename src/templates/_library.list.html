@@ -12,7 +12,7 @@
     {% for each in items %}
       <tr>
         <td>
-            <a href="{% if PROJECT.id == 17 %}{% url 'islands:library_item' each.id %}{% else %}{{ each.get_absolute_url }}{% endif %}">
+            <a href="{% if PROJECT.id == 17 %}{% url 'islands:library_item' each.id %}{% elif PROJECT.slug == "data" %}{% url "data:library_item" each.id %}{% else %}{{ each.get_absolute_url }}{% endif %}">
               {{ each }}
             </a>
           <br>
