@@ -1,0 +1,44 @@
+
+  <table class="table datatable datatable-card">
+    <thead>
+      <tr>
+        <th>Task</th>
+        <th>Details</th>
+        <th>Points</th>
+        <th>Last update</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in task_list %}
+      <tr>
+        <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
+          <a href="/tasks/{{ each.id }}/">
+            {{ each }}
+            {% if each.related_to %}
+              <br>
+              <em>{{ each.related_to }}</em>
+            {% endif %}
+          </a>
+            <br>
+            <em>
+              {{ each.part_of_project }}
+            </em>
+        </td>
+        <td>
+          {{ each.workactivity }}<br>
+          <em>{{ each.get_status_display }} | {{ each.get_priority_display }} priority</em>
+        </td>
+        
+        <td>
+          {{ each.workactivity.points }}
+        </td>
+        <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
+          {% if each.last_update %}
+            {{ each.last_update.date_created|timesince }} ago 
+            <br><span class="faded">by {{ each.last_update.posted_by }}</span>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
