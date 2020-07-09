@@ -66,7 +66,7 @@ def tag_form(request, id=None):
     ModelForm = modelform_factory(Tag, fields=["name", "description", "parent_tag", "include_in_glossary", "is_public", "is_deleted", "icon"])
     if id:
         info = get_object_or_404(Tag, pk=id)
-        form = ModelForm(request.POST or None, request.FILES or None)
+        form = ModelForm(request.POST or None, request.FILES or None, instance=info)
     else:
         initial = None
         if "parent" in request.GET:

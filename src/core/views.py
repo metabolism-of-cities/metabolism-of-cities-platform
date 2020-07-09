@@ -622,10 +622,7 @@ def hub_help(request):
 
 # Control panel and general contribution components
 
-@login_required
 def controlpanel(request, space=None):
-    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
-        unauthorized_access(request)
     
     if space:
         space = get_space(request, space)
