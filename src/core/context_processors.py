@@ -20,7 +20,7 @@ def site(request):
     else:
         project = Project.objects.get(pk=1)
 
-    if project.slug == "data":
+    if project.slug == "data" or project.slug == "cityloops":
         system_name_singular = "city"
         system_name_plural = "cities"
     elif project.slug == "islands":

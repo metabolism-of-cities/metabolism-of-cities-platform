@@ -29,18 +29,4 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
 
     path("overview/", views.overview, name="overview"),
 
-    path("<slug:space>/sectors/", views.sectors, name="sectors"),
-    path("<slug:space>/sectors/<slug:sector>/", views.sector, name="sector"),
-    path("<slug:space>/sectors/<slug:sector>/<slug:article>/", views.article, name="article"),
-    path("<slug:space>/datasets/<slug:dataset>/", views.dataset, name="dataset"),
-    path("<slug:space>/resources/photos/", views.photos, name="photos"),
-    path("<slug:space>/resources/reports/", views.library, {"type": "reports"}, name="reports"),
-    path("<slug:space>/resources/theses/", views.library, {"type": "theses"}, name="theses"),
-    path("<slug:space>/resources/journal-articles/", views.library, {"type": "articles"}, name="journal_articles"),
-    path("<slug:space>/maps/", views.maps, name="maps"),
-
-    # City data portal
-
-    path("<slug:space>/", views.dashboard, name="dashboard"),
-
 ]

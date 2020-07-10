@@ -6,7 +6,7 @@
 <div class="row">
   {% for each in list %}
     <div class="col-lg-4 col-md-6 col-sm-8 mb-4">
-      <a class="card btn-card" href="../{{ each.slug }}/">
+      <a class="card btn-card" href="../dashboards/{{ each.slug }}/">
         {% if each.space.photo %}
           <img src="{{ each.space.photo.image.url }}" class="card-img-top" alt="">
         {% endif %}

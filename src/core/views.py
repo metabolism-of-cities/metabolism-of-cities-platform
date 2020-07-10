@@ -560,6 +560,8 @@ def hub(request):
         return work_portal(request, slug="data")
     if project == 17:
         return work_portal(request, slug="data")
+    if project == 6:
+        return work_portal(request, slug="data")
 
     updates = Message.objects.filter(
         parent__work__isnull=False,
