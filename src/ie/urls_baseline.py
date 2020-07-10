@@ -43,9 +43,11 @@ baseline_urlpatterns = [
     path("hub/users/<int:id>/", core.user_profile, name="user"),
     path("hub/scoreboard/", core.users, {"scoreboard": True}, name="scoreboard"),
     path("hub/rules/", core.rules, name="rules"),
+    path("hub/selector/", core.hub_selector, name="hub_selector"),
     
     # Forum and contributor pages
     path("forum/<int:id>/", community.forum, name="forum"),
+    path("forum/create/", community.forum_form),
     path("contributor/", core.contributor, name="contributor"),
     path("support/", core.support, name="support"),
 

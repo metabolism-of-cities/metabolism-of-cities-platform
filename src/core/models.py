@@ -12,6 +12,7 @@ from django.conf import settings
 from markdown import markdown
 from tinymce import HTMLField
 import re
+from unidecode import unidecode
 from django.utils.text import slugify
 
 from django.contrib.auth.models import User
@@ -310,7 +311,7 @@ class News(Record):
         return reverse("community:news", args=[self.slug])
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        self.slug = slugify(unidecode(self.name))
         super().save(*args, **kwargs)
 
     class Meta:
@@ -332,7 +333,7 @@ class Blog(Record):
     def get_absolute_url(self):
         return reverse("blog", args=[self.id])
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        self.slug = slugify(unidecode(self.name))
         super().save(*args, **kwargs)
 
     objects_unfiltered = models.Manager()
@@ -364,7 +365,7 @@ class Organization(Record):
     type = models.CharField(max_length=20, choices=ORG_TYPE)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        self.slug = slugify(unidecode(self.name))
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -453,7 +454,7 @@ class Event(Record):
         return get_date_range(self.start_date, self.end_date)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        self.slug = slugify(unidecode(self.name))
         super().save(*args, **kwargs)
 
     def get_status(self):
@@ -620,12 +621,33 @@ class ForumTopic(Record):
     part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     parent = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="forum_topics")
     is_starred = models.NullBooleanField(default=False)
+    parent_url = models.URLField(null=True, blank=True, db_index=True)
 
     def posters(self):
         return People.objects.filter(message_list__parent=self).distinct()
 
     def get_absolute_url(self):
-        return reverse("community:forum", args=[self.id])
+        if self.parent_url:
+            return self.parent_url
+        else:
+            return reverse("core:forum", args=[self.id])
+
+    def get_full_url(self):
+        # Sometimes we want to create a full URL, combining the 
+        # project website with a path that /starts/with/a/slash
+        # so in that case we want to ensure the https://project.com/ 
+        # website doesn't end with a slash
+        if self.parent_url:
+            if not self.part_of_project:
+                return self.parent_url
+            else:
+                project_site = self.part_of_project.get_website()
+                last_char = project_site[-1]
+                if last_char == "/":
+                    project_site = project_site[:-1]
+                return project_site + self.parent_url
+        else:
+            return reverse("core:forum", args=[self.id])
 
     class Meta:
         ordering = ["-is_starred", "-last_update__date_created"]
@@ -829,6 +851,12 @@ class LibraryItem(Record):
             except:
                 return "<div class='alert alert-warning'>Embedded video unavailable. <a href='" + self.url + "'>Click here to view the video</a></div>"
 
+    def get_kb(self):
+        return self.file.size / 1024 if self.file else None
+
+    def get_mb(self):
+        return self.file.size / 1024 / 1024 if self.file else None
+
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
@@ -912,7 +940,7 @@ class ActivatedSpace(models.Model):
         return reverse("data:dashboard", args=[self.slug])
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.space.name)
+        self.slug = slugify(unidecode(self.space.name))
         super().save(*args, **kwargs)
 
     class Meta:
@@ -1189,7 +1217,7 @@ class ReferenceSpace(Record):
         return self.name
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        self.slug = slugify(unidecode(self.name))
         super().save(*args, **kwargs)
 
     @property

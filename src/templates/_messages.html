@@ -76,9 +76,18 @@
 
   <h3 id="reply">{% if list_messages %}Reply{% elif message %}Edit message{% else %}Leave a comment{% endif %}</h3>
   <form method="post" enctype="multipart/form-data" 
-  {% if not message %}action="/forum/{% if forum_id %}{{ forum_id }}{% else %}{{ info.id }}{% endif %}/"{% endif %}
+  {% if not message %}action="/data/forum/{% if forum_id %}{{ forum_id }}{% else %}{{ info.id }}{% endif %}/"{% endif %}
   >
     {% csrf_token %}
+
+    {% if forum_topic_title %}
+      <input type="hidden" name="title" value="{{ forum_topic_title }}" />
+      <input type="hidden" name="parent_url" value="{{ request.get_full_path }}" />
+      <input type="hidden" name="project" value="{{ request.project }}" />
+      <!-- We need to put this parent ID in so that this topic will appear in the volunteer hub as well -->
+      <input type="hidden" name="parent" value="31993" />
+    {% endif %}
+
     <div class="form-group markdown-textarea">
       {% include "_markdown.html" %}
       <textarea class="form-control" id="text" name="text" rows="7" required>{{ message.description }}</textarea>
@@ -102,5 +111,6 @@
 
     <button type="submit" class="btn btn-success"><i class="fas fa-fw fa-comment-alt-plus"></i> Submit</button>
     <input type="hidden" name="return" value="{{ request.get_full_path }}" />
+    <input type="hidden" name="next" value="{{ request.get_full_path }}" />
   </form>
 {% endif %}

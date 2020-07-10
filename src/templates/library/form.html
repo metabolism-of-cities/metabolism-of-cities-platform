@@ -125,5 +125,9 @@ textarea#id_author_list{height:100px}
         window.location = "https://library.metabolismofcities.org/items/"+ data.id;
     });
 
+    {% if request.GET.mfa %}
+      $("#id_file").attr("accept", ".csv");
+    {% endif %}
+
   </script>
 {% endblock %}

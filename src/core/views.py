@@ -626,6 +626,13 @@ def hub_help(request):
     }
     return render(request, "hub/help.html", context)
 
+def hub_selector(request):
+    project = request.project
+    context = {
+        "menu": "help",
+    }
+    return render(request, "hub/selector.html", context)
+
 # Control panel and general contribution components
 
 def controlpanel(request, space=None):

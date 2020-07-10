@@ -294,12 +294,16 @@ def search_ajax(request):
 def form(request, id=None, project_name="library", type=None, slug=None, tag=None, space=None):
 
     # Slug is only there because one of the subsites has it in the URL; it does not do anything
+    # This form is used in MANY different places as it is the key form to add new library items
+    # Some things to take into account:
+    # - When users in a data hub use this form to fill up the data objects, ?inventory=true will be set
+    # - When the same users decide to upload an MFA record, ?mfa=true will also be set
 
     project = Project.objects.get(pk=request.project)
     journals = None
     publishers = None
     info = None
-    initial = None
+    initial = {}
 
     if tag:
         tag = Tag.objects.get(pk=tag)
@@ -325,23 +329,40 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         type = LibraryItemType.objects.get(pk=type)
 
     if type.name == "Dataset":
+
+        labels = {
+            "year": "Year created",
+            "spaces": "Physical location(s)",
+            "author_list": "Author(s)",
+            "comments": "Internal comments/notes",
+        }
+
         if curator and False:
             fields=["name", "author_list", "description", "url", "size", "spaces", "sectors", "activities", "materials", "tags", "year", "language", "license", "data_year_start", "data_year_end", "update_frequency", "data_interval", "data_formats", "has_api", "comments"]
         else:
             fields=["name", "author_list", "description", "url", "size", "spaces", "year", "language", "license", "update_frequency", "comments"]
 
         if space:
-            initial = {"spaces": space.id}
+            initial["spaces"] = space.id
 
+        if "inventory" in request.GET:
+            fields.remove("size")
+            fields.remove("update_frequency")
+            fields.append("tags")
+            if tag:
+                initial["tags"] = tag
+
+        if "mfa" in request.GET:
+            # We expect the file itself and we will activate all regular flows
+            fields.remove("url")
+            fields.append("file")
+            initial["tags"] = [896,897,898,899,907,908,909,910,911,912,913]
+            labels["file"] = "File (CSV format)"
+            
         ModelForm = modelform_factory(
             LibraryDataset,
             fields = fields,
-            labels = {
-                "year": "Year created",
-                "spaces": "Physical location(s)",
-                "author_list": "Authors (people)",
-                "comments": "Internal comments/notes",
-            },
+            labels = labels,
         )
     elif type == "dataportal":
         ModelForm = modelform_factory(
@@ -349,6 +370,24 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             fields=("name", "description", "url", "tags", "spaces", "year", "language", "license", "software", "has_api", "comments"),
             labels = {
                 "year": "Year created",
+                "comments": "Internal comments/notes",
+            }
+        )
+    elif type.name == "Video Recording":
+        fields = ["name", "description", "url", "video_site", "author_list", "spaces", "year", "language", "license", "comments"] 
+
+        if curator:
+            fields.append("tags")
+            fields.append("file")
+            fields.append("image")
+
+        ModelForm = modelform_factory(
+            Video,
+            fields=fields,
+            labels = {
+                "year": "Year created",
+                "author_list": "Author(s)",
+                "image": "Thumbnail",
                 "comments": "Internal comments/notes",
             }
         )
@@ -393,7 +432,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     if info:
         form = ModelForm(request.POST or None, request.FILES or None, instance=info)
     else:
-        form = ModelForm(request.POST or None, initial=initial)
+        form = ModelForm(request.POST or None, request.FILES or None, initial=initial)
 
     if type.name == "Dataset" and curator and False:
         form.fields["activities"].queryset = Activity.objects.filter(catalog_id=3655)
@@ -401,6 +440,12 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
     if project.slug == "untraceable":
         form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id=828)
+    elif "mfa" in request.GET:
+        if "tags" in form.fields:
+            form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id=849)
+    elif "inventory" in request.GET:
+        if "tags" in form.fields:
+            form.fields["tags"].queryset = Tag.objects.filter(parent_tag__parent_tag_id=845)
 
     if request.method == "POST":
         if form.is_valid():
@@ -474,8 +519,9 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 message = Message.objects.create(posted_by_id=AUTO_BOT, parent=work, name="Task created", description="This task was created by the system")
 
 
-            if request.user.is_staff and False:
+            if curator:
                 msg = "The item was added to the library. <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=2&amp;record_child=" + str(info.id) + "'>Link to publisher</a> |  <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=4&amp;record_child=" + str(info.id) + "'>Link to author</a> ||| <a href='/admin/core/organization/add/' target='_blank'>Add a new organization</a>"
+                msg = "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution! <a href='"+info.get_absolute_url()+"'>View item</a>"
             else:
                 msg = "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution!"
             messages.success(request, msg)
