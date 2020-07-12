@@ -110,9 +110,9 @@ def list(request, type):
     title = type
     webpage = None
     if type == "dataportals":
-        list = LibraryDataPortal.objects_unfiltered.all()
+        list = DataPortal.objects_unfiltered.all()
     elif type == "datasets":
-        list = LibraryDataset.objects_unfiltered.all()
+        list = Dataset.objects_unfiltered.all()
     elif type == "reviews":
         list = LibraryItem.objects.filter(tags__id=3)
         title = "Review papers"
@@ -360,13 +360,13 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             labels["file"] = "File (CSV format)"
             
         ModelForm = modelform_factory(
-            LibraryDataset,
+            Dataset,
             fields = fields,
             labels = labels,
         )
     elif type == "dataportal":
         ModelForm = modelform_factory(
-            LibraryDataPortal,
+            DataPortal,
             fields=("name", "description", "url", "tags", "spaces", "year", "language", "license", "software", "has_api", "comments"),
             labels = {
                 "year": "Year created",

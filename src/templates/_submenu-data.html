@@ -102,7 +102,7 @@
               Data
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">All datasets</a>
+              <a class="dropdown-item" href="{% url 'data:datasets' space.slug %}">All datasets</a>
               <a class="dropdown-item" href="{% url 'data:journal_articles' space.slug %}">Upload data</a>
               <a class="dropdown-item" href="{% url 'data:maps' space.slug %}">Download</a>
               <a class="dropdown-item" href="{% url 'data:maps' space.slug %}">Data curation platform</a>
@@ -112,7 +112,7 @@
       </div>
 
       <div class="float-right">
-        <a class="badge badge-primary" href="/dashboards/{{ space.slug }}/controlpanel/">
+        <a class="badge badge-primary" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/dashboards/{{ space.slug }}/controlpanel/">
           <i class="fa fa-lock mr-1" aria-hidden="true"></i>
           Data management
         </a>

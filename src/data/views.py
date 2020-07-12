@@ -19,6 +19,35 @@ def get_space(request, slug):
     return check.space
 
 def index(request):
+
+    if "import" in request.GET:
+        import csv
+        file = settings.MEDIA_ROOT + "/import/stafdataset.csv"
+        if settings.DEBUG:
+            t = Dataset.objects.filter(old_id__isnull=False)
+            t.delete()
+        with open(file, "r") as csvfile:
+            contents = csv.DictReader(csvfile)
+            for row in contents:
+                info = Dataset.objects.create(
+                    name = row["name"],
+                    old_id = row["id"],
+                    description = row["notes"],
+                    type_id = 10,
+                    meta_data = {
+                        "completeness": row["completeness_id"],
+                        "geographical_correlation": row["geographical_correlation_id"],
+                        "reliability": row["reliability_id"],
+                        "access": row["access_id"],
+                        "completeness": row["completeness_id"],
+                        "replicatoin": row["replication"],
+                        "type": row["type_id"],
+                        "graph": row["graph_id"],
+                        "process": row["process_id"],
+                    }
+                )
+                info.spaces.add(ReferenceSpace.objects.get(old_id=row["primary_space_id"]))
+
     list = ActivatedSpace.objects.filter(part_of_project_id=request.project)
     context = {
         "show_project_design": True,
@@ -112,6 +141,16 @@ def sectors(request, space):
         "menu": "industries",
     }
     return render(request, "data/sector.html", context)
+
+def datasets(request, space):
+    space = get_space(request, space)
+    context = {
+        "space": space,
+        "header_image": space.photo,
+        "menu": "data",
+        "items": Dataset.objects.filter(spaces=space),
+    }
+    return render(request, "data/datasets.html", context)
 
 @xframe_options_exempt
 def dataset(request, space, dataset):

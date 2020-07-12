@@ -946,7 +946,7 @@ class ActivatedSpace(models.Model):
     class Meta:
         unique_together = ["slug", "part_of_project"]
 
-class LibraryDataset(LibraryItem):
+class Dataset(LibraryItem):
     data_formats = models.ManyToManyField(Tag, blank=True, related_name="library_datasets", limit_choices_to={"parent_tag_id": 786})
     data_year_start = models.IntegerField(null=True, blank=True)
     data_year_end = models.IntegerField(null=True, blank=True)
@@ -960,7 +960,7 @@ class LibraryDataset(LibraryItem):
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
 
-class LibraryDataPortal(LibraryItem):
+class DataPortal(LibraryItem):
 
     class Software(models.IntegerChoices):
         CKAN = 1, "CKAN"
