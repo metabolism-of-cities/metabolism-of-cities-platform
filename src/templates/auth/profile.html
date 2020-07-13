@@ -67,6 +67,7 @@
       <table class="table datatable datatable-card">
         <thead>
           <tr>
+            <th>Date</th>
             <th>Task</th>
             <th>Project</th>
             <th>Points</th>
@@ -75,6 +76,7 @@
         <tbody>
         {% for each in completed %}
           <tr>
+            <td data-sort="-{{ each.date_created|date:"U" }}">{{ each.date_created|date:"M d, Y" }}</td>
             <td><a href="/tasks/{{ each.id }}/">{{ each }}</a></td>
             <td>{{ each.part_of_project }}</td>
             <td>{{ each.workactivity.points }}</td>
@@ -84,6 +86,7 @@
         <tfoot>
           <tr>
             <th>Total</th>
+            <th></th>
             <th></th>
             <th>{{ info.points }}</th>
           </tr>

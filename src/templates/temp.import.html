@@ -74,6 +74,9 @@ ssh -t industrialecology 'csvdump "SELECT * FROM staf_dataset_references ORDER B
 ssh -t industrialecology 'csvdump "SELECT * FROM staf_unit ORDER BY id" units.csv'
 ssh -t industrialecology 'csvdump "SELECT * FROM staf_timeperiod ORDER BY id" timeperiods.csv'
 ssh -t industrialecology 'csvdump "SELECT * FROM staf_csv ORDER BY id" stafcsv.csv'
+
+ssh -t industrialecology 'csvdump "SELECT * FROM staf_dataset WHERE deleted = False ORDER BY id" stafdataset.csv'
+
   </pre>
 
 {% endblock %}

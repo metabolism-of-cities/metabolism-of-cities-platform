@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from core.models import *
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+
+from core.mocfunctions import *
 
 TAG_ID = settings.TAG_ID_LIST
 PAGE_ID = settings.PAGE_ID_LIST
@@ -98,4 +101,34 @@ def upload(request):
         "types": LibraryItemType.objects.filter(id__in=types),
     }
     return render(request, "library/upload.html", context)
+
+@login_required
+def video_uploader(request):
+
+    if not has_permission(request, request.project, ["curator"]):
+        unauthorized_access(request)
+
+    if request.method == "POST":
+        info = get_object_or_404(Video, pk=request.POST["upload"])
+        filename = info.file.path
+        description = info.description
+        title = info.name
+        try:
+            print("-----")
+            print(filename)
+            print(title)
+            print(description)
+            print("Let's upload this to Youtube")
+            print("-----")
+            info.url = "return-url-from-youtube"
+            info.save()
+        except Exception as e:
+            messages.error(request, "Sorry, there was a problem uploading your file: <br><strong>Error code: " + str(e) + "</strong>")
+            
+
+    list = Video.objects.filter(file__isnull=False).exclude(file="")
+    context = {
+        "list": list,
+    }
+    return render(request, "controlpanel/video.upload.html", context)
 

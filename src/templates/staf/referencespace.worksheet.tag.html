@@ -32,7 +32,7 @@
   <h2 class="h3 mt-5">Upload new item</h2>
   <div class="list-group">
   {% for each in types %}
-    <a href="form/?type={{ each.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" class="list-group-item list-group-item-action">
+    <a href="form/?inventory=true&amp;type={{ each.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" class="list-group-item list-group-item-action">
       <i class="fa fa-fw fa-{{ each.icon }}"></i>
       {{ each }}
     </a>

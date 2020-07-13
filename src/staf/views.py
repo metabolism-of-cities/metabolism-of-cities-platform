@@ -532,7 +532,9 @@ def referencespace_worksheet(request, slug):
     info = get_space(request, slug)
     layers = Tag.objects.filter(parent_tag_id=845)
     counter = {}
-    items = LibraryItem.objects.filter(spaces=info, tags__parent_tag__in=layers)
+    list_messages = None
+
+    items = LibraryItem.objects.filter(spaces=info, tags__parent_tag__in=layers).distinct()
     for each in items:
         for tag in each.tags.all():
             if tag.parent_tag in layers:
@@ -541,6 +543,11 @@ def referencespace_worksheet(request, slug):
     total_tags = Tag.objects.filter(parent_tag__in=layers).count()
     uploaded = len(counter)
     percentage = (uploaded/total_tags)*100
+
+    forum_topic = ForumTopic.objects.filter(part_of_project_id=request.project, parent_url=request.get_full_path())
+    if forum_topic:
+        list_messages = Message.objects.filter(parent=forum_topic[0])
+
     context = {
         "info": info,
         "layers": layers,
@@ -551,6 +558,10 @@ def referencespace_worksheet(request, slug):
         "total_tags": total_tags,
         "uploaded": uploaded,
         "load_datatables": True,
+        "load_messaging": True,
+        "forum_id": forum_topic[0].id if forum_topic else "create",
+        "forum_topic_title": "Data harvesting - " + info.name,
+        "list_messages": list_messages,
     }
     return render(request, "staf/referencespace.worksheet.html", context)
 
@@ -559,6 +570,7 @@ def referencespace_worksheet_tag(request, slug, tag):
     tag = get_object_or_404(Tag, pk=tag)
     types = [5,6,9,16,37,25,27,29,32,10,33,38,20,31,40]
     list = LibraryItem.objects.filter(spaces=info, tags=tag)
+    list_messages = None
 
     shapefile = [40]
     written = [5,16,25,27,29,32]
@@ -594,12 +606,20 @@ def referencespace_worksheet_tag(request, slug, tag):
         # Visuals
         types = visual
 
+    forum_topic = ForumTopic.objects.filter(part_of_project_id=request.project, parent_url=request.get_full_path())
+    if forum_topic:
+        list_messages = Message.objects.filter(parent=forum_topic[0])
+
     context = {
         "info": info,
         "tag": tag,
         "types": LibraryItemType.objects.filter(pk__in=types),
         "title": tag.name,
         "items": list,
+        "forum_id": forum_topic[0].id if forum_topic else "create",
+        "forum_topic_title": tag.name + " - " + info.name,
+        "list_messages": list_messages,
+        "load_messaging": True,
     }
     return render(request, "staf/referencespace.worksheet.tag.html", context)
 

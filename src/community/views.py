@@ -214,7 +214,6 @@ def forum_list(request, parent=None, section=None):
         "projects": projects,
         "project": project,
     }
-    print(context)
     return render(request, "forum.list.html", context)
 
 def forum(request, id, section=None):
@@ -316,6 +315,9 @@ def forum(request, id, section=None):
 
             messages.success(request, "Your message has been posted.")
 
+        if "next" in request.POST:
+            return redirect(request.POST["next"])
+
         if "return" in request.POST:
             return redirect(request.POST["return"])
 
@@ -353,9 +355,10 @@ def forum_form(request, id=False, parent=None, section=None):
 
     if request.method == "POST":
         info = ForumTopic.objects.create(
-            part_of_project_id = request.POST["project"] if "project" in request.POST else project,
+            part_of_project_id = request.POST["project"] if "project" in request.POST else request.project,
             name = request.POST.get("title"),
-            parent_id = parent,
+            parent_id = request.POST["parent"] if "parent" in request.POST else parent,
+            parent_url = request.POST.get("parent_url"),
         )
         set_author(request.user.people.id, info.id)
         info.subscribers.add(request.user.people)
@@ -382,7 +385,10 @@ def forum_form(request, id=False, parent=None, section=None):
 
         messages.success(request, "Your message has been posted.")
 
-        if request.project != 1:
+        if "next" in request.POST:
+            return redirect(request.POST["next"])
+
+        elif request.project != 1:
             p = get_object_or_404(Project, pk=request.project)
             page = "volunteer_forum" if section == "volunteer_hub" else "forum"
             return redirect(p.slug + ":"+page, info.id)

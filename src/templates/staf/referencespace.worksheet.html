@@ -55,6 +55,11 @@
               <li class="list-group-item {% if tag.id in counter %}list-group-item-success{% endif %}"><a href="{{ tag.id }}/">{{ tag }}</a></li>
             {% endfor %}
           </ul>
+
+          {% if each.id == 849 %}
+            <p>Is a complete Material Flow Analysis dataset available? <a href="896/form/?inventory=true&amp;type=10&amp;mfa=true&amp;next={{ request.get_full_path }}">Upload it here.</a></p>
+          {% endif %}
+
           <a href="{% url 'staf:data_layers_worksheet' %}">View entire worksheet &raquo;</a></p>
         </div>
         {% endfor %}

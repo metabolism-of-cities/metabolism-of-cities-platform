@@ -18,4 +18,5 @@ urlpatterns = baseline_urlpatterns + [
     path("datavisualizations/<int:id>/", views.dataviz, name="dataviz"),
     path("upload/", views.upload, name="upload"),
     path("upload/form/", library.form, { "project_name": app_name }, name="form"),
+    path("controlpanel/video-uploader/", views.video_uploader, name="controlpanel_video_uploader"),
 ]

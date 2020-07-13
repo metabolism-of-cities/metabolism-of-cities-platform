@@ -504,12 +504,6 @@ def article_list(request, id):
 # Users
 
 def users(request, scoreboard=False):
-    if "update" in request.GET:
-        all = People.objects.filter(twitter__isnull=False).exclude(twitter="")
-        for each in all:
-            print(each.twitter)
-            each.save()
-            print(each.twitter)
 
     webpage = get_object_or_404(Webpage, pk=54)
 
@@ -625,6 +619,13 @@ def hub_help(request):
         "webpage": Webpage.objects.get(pk=31997),
     }
     return render(request, "hub/help.html", context)
+
+def hub_selector(request):
+    project = request.project
+    context = {
+        "menu": "help",
+    }
+    return render(request, "hub/selector.html", context)
 
 # Control panel and general contribution components
 

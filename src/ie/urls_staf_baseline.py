@@ -36,6 +36,7 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/sectors/", data.sectors, name="sectors"),
     path("dashboards/<slug:space>/sectors/<slug:sector>/", data.sector, name="sector"),
     path("dashboards/<slug:space>/sectors/<slug:sector>/<slug:article>/", data.article, name="article"),
+    path("dashboards/<slug:space>/datasets/", data.datasets, name="datasets"),
     path("dashboards/<slug:space>/datasets/<slug:dataset>/", data.dataset, name="dataset"),
     path("dashboards/<slug:space>/resources/photos/", data.photos, name="photos"),
     path("dashboards/<slug:space>/resources/reports/", data.library, {"type": "reports"}, name="reports"),

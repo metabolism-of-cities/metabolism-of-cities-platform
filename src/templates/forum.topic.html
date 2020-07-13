@@ -11,6 +11,10 @@
     {% include "hub/_nav.html" %}
   {% endif %}
 
+{% if info.forumtopic.parent_url %}
+  <a class="float-right btn btn-primary-basic" href="{{ info.forumtopic.get_full_url }}">Go to associated page <i class="fas fa-angle-right"></i></a>
+{% endif %}
+
 <h2 class="mb-0">{{ info }}</h2>
 
 {% if info.forumtopic.part_of_project %}

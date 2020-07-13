@@ -1,0 +1,54 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1 class="mb-0">Video uploader</h1>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+  <a class="btn btn-default-basic float-right mt-4" href="{% url "multimedia:form" %}?type=31&amp;next={{ request.get_full_path }}"><i class="fal fa-plus"></i> Add video</a>
+
+  <p>You can use this page to upload videos to Youtube. The benefit of doing this is that:</p>
+
+  <ul>
+    <li>Youtube will compress the videos</li>
+    <li>There will be an easy way to embed the video on any page</li>
+    <li>There is additional exposure through our channel</li>
+  </ul>
+
+  <table class="table table-striped datatable table-card">
+    <thead>
+      <tr>
+        <th>Video</th>
+        <th>Date</th>
+        <th>Size</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in list %}
+      <tr>
+        <td><a href="{{ each.get_absolute_url }}">{{ each }}</a></td>
+        <td>{{ each.date_created|date:"M d, Y" }}</td>
+        <td>{% if each.file %}{{ each.get_mb|floatformat:1 }} Mb{% endif %}</td>
+        <td>
+          <form method="post">
+            <button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i> Upload to Youtube</button>          
+            <input type="hidden" name="upload" value="{{ each.id }}" />
+            {% csrf_token %}
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <a class="btn btn-default-basic float-right mt-4" href="{% url "multimedia:form" %}?type=31&amp;next={{ request.get_full_path }}"><i class="fal fa-plus"></i> Add video</a>
+  <a href="../" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+{% endblock %}
