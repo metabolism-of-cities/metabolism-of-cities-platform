@@ -20,7 +20,7 @@ def get_space(request, slug):
 
 def index(request):
 
-    if "import" in request.GET:
+    if "import" in request.GET and request.user.id == 1:
         import csv
         file = settings.MEDIA_ROOT + "/import/stafdataset.csv"
         if settings.DEBUG:
@@ -47,6 +47,35 @@ def index(request):
                     }
                 )
                 info.spaces.add(ReferenceSpace.objects.get(old_id=row["primary_space_id"]))
+
+        file = settings.MEDIA_ROOT + "/import/stafcsv.csv"
+        with open(file, "r") as csvfile:
+            contents = csv.DictReader(csvfile)
+            for row in contents:
+
+                if row["dataset_id"] != "" and row["dataset_id"]:
+                    check = Dataset.objects.filter(old_id=row["dataset_id"])
+                    if check:
+                        check = check[0]
+                        name = "Dataset added to the data inventory"
+                        activity_id = 28
+                        work = Work.objects.create(
+                            date_created = row["created_at"],
+                            status = Work.WorkStatus.COMPLETED,
+                            part_of_project_id = request.project,
+                            workactivity_id = activity_id,
+                            related_to = check,
+                            assigned_to = People.objects.get(user_id=row["user_id"]),
+                            name = name,
+                        )
+                        work.date_created = row["created_at"]
+                        work.save()
+                        message = Message.objects.create(date_created=row["created_at"], posted_by=People.objects.get(user_id=row["user_id"]), parent=work, name="Status change", description="Task was completed")
+                        message.date_created = row["created_at"]
+                        message.save()
+                    else:
+                        print("not FOUND!")
+                        print(row)
 
     list = ActivatedSpace.objects.filter(part_of_project_id=request.project)
     context = {
