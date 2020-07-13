@@ -758,7 +758,7 @@ class LibraryItem(Record):
     #materials = models.ManyToManyField("staf.Material", blank=True)
 
     def __str__(self):
-        return self.name
+        return self.name if self.name else "Untitled " + self.type.name
 
     class Meta:
         ordering = ["-year", "name"]

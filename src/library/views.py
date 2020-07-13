@@ -236,14 +236,16 @@ def journal(request, slug):
     return render(request, "library/journal.html", context)
 
 def item(request, id, show_export=True):
-    if "update" in request.GET:
-        list =LibraryItem.objects.filter(type__name="Image")
-        list.update(language=None)
 
     info = get_object_or_404(LibraryItem, pk=id)
     section = "library"
+
     if info.type.group == "multimedia":
         section = "multimedia_library"
+
+    if "edit" in request.GET and has_permission(request, request.project, ["curator"]):
+        return form(request, info.id)
+
     context = {
         "info": info,
         "edit_link": info.get_edit_link(),
@@ -349,7 +351,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         if space:
             initial["spaces"] = space.id
 
-        if "inventory" in request.GET:
+        if "inventory" in request.GET or project.slug == "data" or project.slug == "islands":
             fields.remove("size")
             fields.remove("update_frequency")
             fields.append("tags")
@@ -413,14 +415,16 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 fields.append("doi")
                 journals = Organization.objects.filter(type="journal")
 
-        if type.name == "Data visualisation" or type.name == "Image":
+        elif type.name == "Data visualisation" or type.name == "Image":
             fields.append("image")
+            if type.name == "Image":
+                fields.remove("language")
 
-        if type.name == "Webpage":
+        elif type.name == "Webpage":
             fields.remove("license")
             fields.remove("year")
 
-        if type.name == "Book" or type.name == "Book Section":
+        elif type.name == "Book" or type.name == "Book Section":
             publishers = Organization.objects.filter(type="publisher")
 
         if project.slug == "untraceable":
@@ -447,7 +451,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     elif "mfa" in request.GET:
         if "tags" in form.fields:
             form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id=849)
-    elif "inventory" in request.GET:
+    elif "inventory" in request.GET or project.slug == "data" or project.slug == "islands":
         if "tags" in form.fields:
             form.fields["tags"].queryset = Tag.objects.filter(parent_tag__parent_tag_id=845)
 
@@ -522,8 +526,9 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 )
                 message = Message.objects.create(posted_by_id=AUTO_BOT, parent=work, name="Task created", description="This task was created by the system")
 
-
-            if curator:
+            if info:
+                msg = "The information was saved."
+            elif curator:
                 msg = "The item was added to the library. <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=2&amp;record_child=" + str(info.id) + "'>Link to publisher</a> |  <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=4&amp;record_child=" + str(info.id) + "'>Link to author</a> ||| <a href='/admin/core/organization/add/' target='_blank'>Add a new organization</a>"
                 msg = "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution! <a href='"+info.get_absolute_url()+"'>View item</a>"
             else:
@@ -546,6 +551,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
 
     context = {
+        "info": info,
         "form": form,
         "load_select2": True,
         "type": type,
