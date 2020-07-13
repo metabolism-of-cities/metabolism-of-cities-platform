@@ -24,7 +24,7 @@ MOC_PROJECTS = [1,2,3,4,7,8,11,14,15,16,18,3458]
 # This is the list with projects that have an active forum
 # It will show in the dropdown boxes to filter by this category
 # Also found in core
-OPEN_WORK_PROJECTS = [1,2,3,4,32018,16,18,8]
+OPEN_WORK_PROJECTS = [1,2,3,4,32018,16,18]
 
 # Authentication of users
 

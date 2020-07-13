@@ -17,15 +17,11 @@ from django.forms import modelform_factory
 
 import logging
 logger = logging.getLogger(__name__)
+from core.mocfunctions import *
 
 PROJECT_ID = settings.PROJECT_ID_LIST
 RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
 AUTO_BOT = 32070
-
-# This is the list with projects that have an active forum
-# It will show in the dropdown boxes to filter by this category
-# Also found in core
-OPEN_WORK_PROJECTS = [1,2,3,4,32018,16,18,8]
 
 # Quick function to make someone the author of something
 # Version 1.0
@@ -200,6 +196,7 @@ def forum_list(request, parent=None, section=None):
         list = list.filter(part_of_project_id__in=[project.id, 1])
     else:
         project = None
+        list = list.filter(part_of_project_id__in=OPEN_WORK_PROJECTS)
 
     if parent:
         list = list.filter(parent_id=parent)

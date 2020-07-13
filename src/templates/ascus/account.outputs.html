@@ -1,0 +1,23 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  {{ webpage.get_description }}
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author(s)</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in outputs %}
+      <tr>
+        <td><a href="{{ each.id }}/">{{ each }}</a></td>
+        <td>{{ each.author_list }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

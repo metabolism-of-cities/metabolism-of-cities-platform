@@ -28,15 +28,17 @@ urlpatterns = baseline_urlpatterns + [
     path("introvideos/", views.introvideos, name="introvideos"),
     path("participants/<int:id>/", views.participant, name="participant"),
 
-
     # Participant-only stuff
     path("presentations/", views.presentations, name="presentations"),
     path("presentations/<int:id>/", library.item, { "show_export": False }, name="presentation"),
+    path("account/outputs/<int:id>/", library.item, { "show_export": False }, name="output_item"),
     path("presentations/<int:id>/edit/", library.form, name="edit_presentation"),
 
     # Account section
     path("account/", views.ascus_account, name="account"),
     path("account/presentation/", views.ascus_account_presentation, name="account_presentation"),
+    path("account/output/", views.account_output, name="account_output"),
+    path("account/outputs/", views.account_outputs, name="account_outputs"),
     path("account/vote/", views.account_vote, name="account_vote"),
     path("account/introvideo/", views.ascus_account_presentation, {"introvideo": True}, name="account_introvideo"),
     path("account/edit/", views.ascus_account_edit, name="account_edit"),

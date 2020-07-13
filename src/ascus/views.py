@@ -177,6 +177,10 @@ def ascus_account(request):
         .filter(child_list__record_parent=request.user.people, child_list__relationship__id=14) \
         .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
         .filter(tags__id=770)
+    my_outputs = LibraryItem.objects_include_private \
+        .filter(child_list__record_parent=request.user.people) \
+        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(tags__id=919)
     my_presentations = LibraryItem.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
         .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
@@ -245,6 +249,7 @@ def ascus_account(request):
         "edit_link": "/admin/core/project/" + str(PAGE_ID["ascus"]) + "/change/",
         "info": get_object_or_404(Project, pk=PAGE_ID["ascus"]),
         "my_discussions": my_discussions,
+        "my_outputs": my_outputs,
         "my_presentations": my_presentations,
         "my_intro": my_intro,
         "show_discussion": show_discussion, 
@@ -406,6 +411,21 @@ def ascus_account_edit(request):
     return render(request, "ascus/account.edit.html", context)
 
 @check_ascus_access
+def account_outputs(request):
+    webpage = get_object_or_404(Webpage, slug="/ascus/outputs/")
+    outputs = LibraryItem.objects_include_private \
+        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(tags__id=919)
+    context = {
+        "header_title": "Path-to-action documents",
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "webpage": webpage,
+        "outputs": outputs,
+        "menu": "outputs",
+    }
+    return render(request, "ascus/account.outputs.html", context)
+
+@check_ascus_access
 def account_discussion_attendance(request, id):
     info = Event.objects_include_private \
         .filter(pk=id) \
@@ -514,6 +534,59 @@ def ascus_account_discussion(request, id=None):
         "event": event,
     }
     return render(request, "ascus/account.discussion.html", context)
+
+@check_ascus_access
+def account_output(request):
+    form = None
+    info = get_object_or_404(Webpage, slug="/ascus/account/presentation/")
+    my_output = None
+    if "id" in request.GET:
+        my_output = LibraryItem.objects_include_private \
+            .filter(pk=request.GET["id"]) \
+            .filter(child_list__record_parent=request.user.people) \
+            .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+            .filter(tags__id=919)
+        if my_output:
+            my_output = my_output[0]
+    html_page = "ascus/account.presentation.html"
+
+    ModelForm = modelform_factory(
+        LibraryItem, 
+        fields = ("name", "type", "file", "url", "description", "author_list", "is_public"), 
+        labels = { "description": "Abstract", "name": "Title", "author_list": "Author(s)", "is_public": "Make my path to action publicly available." }
+    )
+    form = ModelForm(request.POST or None, request.FILES or None, instance=my_output)
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save(commit=False)
+            info.status = "active"
+            info.year = 2020
+            info.save()
+            # Adding the tag "Path to Action"
+            info.tags.add(Tag.objects.get(pk=919))
+            messages.success(request, "Thanks, your output document was uploaded!")
+            if not my_output:
+                RecordRelationship.objects.create(
+                    record_parent = request.user.people,
+                    record_child = info,
+                    relationship = Relationship.objects.get(name="Author"),
+                )
+                RecordRelationship.objects.create(
+                    record_parent = info,
+                    record_child_id = PAGE_ID["ascus"],
+                    relationship = Relationship.objects.get(name="Presentation"),
+                )
+            return redirect("ascus:account")
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+    context = {
+        "header_title": "My Path to Action",
+        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "edit_link": "/admin/core/webpage/" + str(info.id) + "/change/",
+        "info": info,
+        "form": form,
+    }
+    return render(request, html_page, context)
 
 @check_ascus_access
 def ascus_account_presentation(request, introvideo=False):
