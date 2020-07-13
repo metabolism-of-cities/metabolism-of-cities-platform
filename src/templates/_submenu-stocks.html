@@ -1,28 +1,28 @@
 <h1>Brussels</h1>
 
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs mb-4">
   <li class="nav-item">
-    <a class="nav-link{% if city %} active{% endif %}" href="{% url 'stocks:city' 1 %}">
+    <a class="nav-link{% if city %} active{% endif %}" href="{% url 'stocks:city' 'brussels' %}">
       Overview
     </a>
   </li>
   <li class="nav-item">
-    <a class="nav-link{% if data %} active{% endif %}" href="{% url 'stocks:data' 1 %}">
+    <a class="nav-link{% if data %} active{% endif %}" href="{% url 'stocks:data' 'brussels' %}">
       Data
     </a>
   </li>
   <li class="nav-item">
-    <a class="nav-link{% if map %} active{% endif %}" href="{% url 'stocks:map' 1 %}">
-      Map
+    <a class="nav-link{% if map %} active{% endif %}" href="{% url 'stocks:maps' 'brussels' %}">
+      Maps
     </a>
   </li>
   <li class="nav-item">
-    <a class="nav-link{% if compare %} active{% endif %}" href="{% url 'stocks:compare' 1 %}">
+    <a class="nav-link{% if compare %} active{% endif %}" href="{% url 'stocks:compare' 'brussels' %}">
       Compare areas
     </a>
   </li>
   <li class="nav-item">
-    <a class="nav-link{% if modeller %} active{% endif %}" href="{% url 'stocks:modeller' 1 %}">
+    <a class="nav-link{% if modeller %} active{% endif %}" href="{% url 'stocks:modeller' 'brussels' %}">
       Modeller
     </a>
   </li>

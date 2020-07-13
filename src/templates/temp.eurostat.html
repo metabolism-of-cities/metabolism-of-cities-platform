@@ -49,7 +49,7 @@ td.mini {
   </form>
 
   <div class="mb-3">
-   {{ webpage.get_markdown_description|safe }} 
+   {{ webpage.get_markdown_description|safe }}
     <a href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/controlpanel/content/{{ webpage.id }}/?next={{ request.get_full_path }}"><i class="fas fa-edit fa-fw"></i> Edit</a>
   </div>
 
@@ -116,7 +116,7 @@ td.mini {
 {% endblock %}
 
 {% block footer %}
-  <script type="text/javascript">
+  <script>
 
   $(function(){
 
@@ -167,7 +167,7 @@ td.mini {
       e.preventDefault();
     });
 
-      
+
   });
 
   </script>

@@ -2796,6 +2796,13 @@ body.material-stocks.landing {
   }
 }
 
+body.material-stocks.maps {
+  .card img {
+    height: 200px;
+    object-fit: cover;
+  }
+}
+
 // MATERIAL STOCKS MAP
 body.material-stocks.map {
   #map-wrapper {

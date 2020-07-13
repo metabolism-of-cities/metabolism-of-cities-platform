@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}Material Stocks{% endblock %}
-{% block page_name %}material-stocks map fullwidth{% endblock %}
+{% block page_name %}material-stocks map{% endblock %}
 
 {% block head %}
   <link rel="stylesheet"
@@ -10,65 +10,68 @@
         integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
         crossorigin=""/>
 
+  <!-- slider filter -->
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css">
+
+  <!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
+  <link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet" />
 {% endblock %}
 
 {% block content %}
-  <div class="px-4">
-    {% include "_submenu-stocks.html" %}
-    <div class="row">
-      <div class="col-lg-3 col-xl-2">
-        <form>
-          <div class="form-group">
-            <label for="archetype">Archetype</label>
-            <select class="custom-select" id="archetype">
-              <option selected value="all">All</option>
-              <option value="apartment">Apartment building</option>
-              <option value="office">Office</option>
-              <option value="house">House</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="age">Completion year</label>
-            <div class="slider-wrapper">
-              <input class="slider" id="age">
-            </div>
-          </div>
-          <div class="input-group">
-            <label for="surface">Surface area (m<sup>2</sup>)</label>
-            <div class="slider-wrapper">
-              <input class="slider" id="surface">
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="col-lg-9 col-xl-10">
-        <div id="map" class="leaflet-map mt-4"></div>
-        <div id="feature-details">
-          <table class="table">
-            <tr>
-              <th scope="row">Name</th>
-              <td class="muni"></td>
-            </tr>
-            <tr>
-              <th scope="row">Schauff</th>
-              <td class="schauff"></td>
-            </tr>
-          </table>
+  {% include "_submenu-stocks.html" %}
+
+    <form class="form-row">
+      <div class="col">
+        <div class="form-group">
+          <label for="archetype">Archetype</label>
+          <select class="custom-select" id="archetype">
+            <option selected value="all">All</option>
+            <option value="apartment">Apartment building</option>
+            <option value="office">Office</option>
+            <option value="house">House</option>
+          </select>
         </div>
       </div>
+      <div class="col">
+        <div class="form-group">
+          <label for="age">Completion year</label>
+          <div class="slider-wrapper">
+            <input class="slider" id="age">
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="input-group">
+          <label for="surface">Surface area (m<sup>2</sup>)</label>
+          <div class="slider-wrapper">
+            <input class="slider" id="surface">
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div id="map" class="leaflet-map"></div>
+
+    <div id="feature-details">
+      <table class="table">
+        <tr>
+          <th scope="row">Name</th>
+          <td class="muni"></td>
+        </tr>
+        <tr>
+          <th scope="row">Schauff</th>
+          <td class="schauff"></td>
+        </tr>
+      </table>
     </div>
 
-    <!-- gotta figure out how to make this work without canvas -->
-    <!--
-    <button class="btn btn-primary mt-4 download-map">
-      <i class="fas fa-fw fa-save"></i>
-      Save map as image
-    </button>
-    -->
-
-
-  </div>
+  <!-- gotta figure out how to make this work without canvas -->
+  <!--
+  <button class="btn btn-primary mt-4 download-map">
+    <i class="fas fa-fw fa-save"></i>
+    Save map as image
+  </button>
+  -->
 {% endblock %}
 
 {% block footer %}
@@ -77,6 +80,9 @@
           integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
           crossorigin="">
   </script>
+
+  <!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
+  <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
 
   <!-- download map as image javascript -->
   <script src="https://unpkg.com/leaflet-image@0.4.0/leaflet-image.js"></script>
@@ -91,6 +97,7 @@
     // initialise map
     let map = L.map("map", {
       renderer: L.canvas(),
+      fullscreenControl: true,
     }).setView([50.83, 4.29], 14);
 
     // add baselayer

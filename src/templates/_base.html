@@ -206,7 +206,7 @@
   {% block footer %}{% endblock %}
 
   {% if load_url_fixer %}
-    <script type="text/javascript">
+    <script>
     $(function(){
       $(".urlfix").each(function() {
         url = $(this).attr("href");
@@ -218,7 +218,7 @@
   {% endif %}
 
   {% if True %}
-    <script type="text/javascript">
+    <script>
     $(function(){
       $("form").attr("autocomplete", "off");
     });

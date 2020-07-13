@@ -1,8 +1,14 @@
 from django.shortcuts import render
 
-def index(request):
+# temporary landing until section is ready
+def landing(request):
     context = {
         "show_project_design": True,
+    }
+    return render(request, "stocks/landing.html", context)
+
+def index(request):
+    context = {
     }
     return render(request, "stocks/index.html", context)
 
@@ -21,31 +27,37 @@ def cities(request):
     }
     return render(request, "stocks/cities.html", context)
 
-def city(request, id):
+def city(request, slug):
     context = {
         "city": True,
     }
     return render(request, "stocks/city.html", context)
 
-def data(request, id):
+def data(request, slug):
     context = {
         "data": True,
     }
     return render(request, "stocks/data.html", context)
 
-def map(request, id):
+def maps(request, slug):
+    context = {
+        "map": True,
+    }
+    return render(request, "stocks/maps.html", context)
+
+def map(request, slug, id):
     context = {
         "map": True,
     }
     return render(request, "stocks/map.html", context)
 
-def compare(request, id):
+def compare(request, slug):
     context = {
         "compare": True,
     }
     return render(request, "stocks/compare.html", context)
 
-def modeller(request, id):
+def modeller(request, slug):
     context = {
         "modeller": True,
     }
