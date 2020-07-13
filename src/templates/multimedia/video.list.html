@@ -10,7 +10,7 @@
 
 {% block content %}
 
-  <h1>{{ webpage }}</h1>  
+  <h1>{{ webpage }}</h1>
   {{ webpage.content|safe }}
 
 <div class="row">
@@ -45,7 +45,7 @@
 {% endblock %}
 
 {% block footer %}
-<script type="text/javascript">
+<script>
   $("#video-menu a").click(function(e){
     var id = $(this).data("id");
     $(".video").hide();

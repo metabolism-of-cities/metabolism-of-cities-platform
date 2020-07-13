@@ -1,0 +1,73 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block title %}Material Stocks{% endblock %}
+{% block page_name %}material-stocks maps{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+  {% include "_submenu-stocks.html" %}
+
+  <div class="row">
+    <div class="col-md-6 col-lg-4">
+      <div class="card">
+        <img src="https://i.imgur.com/QIDWkO9.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Wood stock</h5>
+          <select class="custom-select mb-3" id="sector">
+            <option value="0" selected disabled>Municipality</option>
+            <option value="1">Anderlecht</option>
+            <option value="2">Oudergem</option>
+            <option value="3">Etterbeek</option>
+          </select>
+          <a class="btn btn-primary" href="{% url 'stocks:map' 'brussels' 1 %}">
+            <i class="fas fa-map"></i>
+            View map
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+      <div class="card">
+        <img src="https://i.imgur.com/p6AGVOW.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Glass stock</h5>
+          <select class="custom-select mb-3" id="sector">
+            <option value="0" selected disabled>Municipality</option>
+            <option value="1">Anderlecht</option>
+            <option value="2">Oudergem</option>
+            <option value="3">Etterbeek</option>
+          </select>
+          <a class="btn btn-primary" href="{% url 'stocks:map' 'brussels' 1 %}">
+            <i class="fas fa-map"></i>
+            View map
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+      <div class="card">
+        <img src="https://i.imgur.com/eIuG82N.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Building age</h5>
+          <select class="custom-select mb-3" id="sector">
+            <option value="0" selected disabled>Municipality</option>
+            <option value="1">Anderlecht</option>
+            <option value="2">Oudergem</option>
+            <option value="3">Etterbeek</option>
+          </select>
+          <a class="btn btn-primary" href="{% url 'stocks:map' 'brussels' 1 %}">
+            <i class="fas fa-map"></i>
+            View map
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+

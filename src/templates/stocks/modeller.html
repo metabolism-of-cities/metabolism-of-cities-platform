@@ -5,11 +5,283 @@
 {% block page_name %}material-stocks modeller{% endblock %}
 
 {% block head %}
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+
+  <!-- slider filter -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css">
+
+  <!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
+  <link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet" />
 {% endblock %}
 
 {% block content %}
   {% include "_submenu-stocks.html" %}
+
+  </div> <!-- this closes the container so we can have full width below -->
+  <div class="px-4"> <!-- we don't have to close this one here -->
+    <div class="row">
+      <div class="col-lg-3 col-xl-2">
+        <form>
+          <div class="form-group">
+            <label for="archetype">Archetype</label>
+            <select class="custom-select" id="archetype">
+              <option selected value="all">All</option>
+              <option value="apartment">Apartment building</option>
+              <option value="office">Office</option>
+              <option value="house">House</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="age">Completion year</label>
+            <div class="slider-wrapper">
+              <input class="slider" id="age">
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="surface">Surface area (m<sup>2</sup>)</label>
+            <div class="slider-wrapper">
+              <input class="slider" id="surface">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-lg-9 col-xl-10">
+        <div id="map" class="leaflet-map mt-4"></div>
+        <div id="feature-details">
+          <table class="table">
+            <tr>
+              <th scope="row">Name</th>
+              <td class="muni"></td>
+            </tr>
+            <tr>
+              <th scope="row">Schauff</th>
+              <td class="schauff"></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  <!-- the div isn't closed here on purpose, see comment above -->
+
+    <!-- gotta figure out how to make this work without canvas -->
+    <!--
+    <button class="btn btn-primary mt-4 download-map">
+      <i class="fas fa-fw fa-save"></i>
+      Save map as image
+    </button>
+    -->
 {% endblock %}
 
 {% block footer %}
+  <!-- load leaflet -->
+  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+          integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+          crossorigin="">
+  </script>
+
+  <!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
+  <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
+
+  <!-- download map as image javascript -->
+  <script src="https://unpkg.com/leaflet-image@0.4.0/leaflet-image.js"></script>
+
+  <!-- rangeslider -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js"></script>
+
+  <!-- sample data -->
+  <script src="/media/files/anderlecht.js"></script>
+
+  <script>
+    // initialise map
+    let map = L.map("map", {
+      renderer: L.canvas(),
+      fullscreenControl: true,
+    }).setView([50.83, 4.29], 14);
+
+    // add baselayer
+    let basemap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+      maxZoom: 18,
+      attribution: "Map data &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, " +
+        "<a href='https://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, " +
+        "Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>",
+      id: "mapbox/light-v10",
+      tileSize: 512,
+      zoomOffset: -1,
+      preferCanvas: true,
+    })
+
+    basemap.addTo(map);
+
+    // add view switcher
+    L.Control.Views = L.Control.extend({
+      onAdd: function(map) {
+
+        var viewButtons = L.DomUtil.create("div", "view-buttons");
+
+        var archetype = L.DomUtil.create("div", "view-button");
+        archetype.dataset.view = "archetype"
+        archetype.innerHTML = "<i class='fal fa-fw fa-building'></i> Archetype";
+
+        viewButtons.appendChild(archetype);
+
+        var glass = L.DomUtil.create("div", "view-button");
+        glass.dataset.view = "glass"
+        glass.innerHTML = "<i class='fal fa-fw fa-window-frame'></i> Glass";
+
+        viewButtons.appendChild(glass);
+
+        var wood = L.DomUtil.create("div", "view-button");
+        wood.dataset.view = "wood"
+        wood.innerHTML = "<i class='fal fa-fw fa-tree'></i> Wood";
+
+        viewButtons.appendChild(wood);
+
+        var age = L.DomUtil.create("div", "view-button");
+        age.dataset.view = "age"
+        age.innerHTML = "<i class='fal fa-fw fa-history'></i> Age";
+
+        viewButtons.appendChild(age);
+
+        return viewButtons;
+      },
+    });
+
+    L.control.Views = function(opts) {
+      return new L.Control.Views(opts);
+    }
+
+    L.control.Views({ position: "topright" }).addTo(map);
+
+    $(".view-button").click(function() {
+      let view = $(this).data("view");
+      console.log(view);
+    })
+
+    // COMMON FUNCTIONS
+    // removing all layers except the basemap
+    function clearMap() {
+      map.eachLayer(function(layer) {
+        if (layer !== basemap) {
+          map.removeLayer(layer);
+        }
+      });
+    }
+
+    // DEFINE DATA LAYERS
+    function colorsSchauff(d) {
+      return d > 1500 ? "#800026" :
+             d > 1000 ? "#BD0026" :
+             d > 500  ? "#E31A1C" :
+             d > 300  ? "#FC4E2A" :
+             d > 200  ? "#FD8D3C" :
+             d > 100  ? "#FEB24C" :
+             d > 50   ? "#FED976" :
+                        "#FFEDA0";
+    }
+
+    // style the schauff layer with the fill colour based on the schauff value using the function above
+    function styleSchauff(feature) {
+      return {
+        weight: 0,
+        opacity: 1,
+        color: "#ffffff",
+        fillOpacity: 0.7,
+        fillColor: colorsSchauff(feature.properties.schauff)
+      };
+    };
+
+    // create variable for the legend
+    var choroplethSchauffLegend = L.control({
+      position: "bottomright"
+    });
+
+    // when the legend is added to the map, build up the contents
+    choroplethSchauffLegend.onAdd = function(map) {
+      var div = L.DomUtil.create("div", "legend"),
+          grades = [0, 50, 100, 200, 300, 400, 1000, 1500],
+          labels = [];
+
+      // loop through our schauff intervals and generate a label with a colored square for each interval
+      for (var i = 0; i < grades.length; i++) {
+          div.innerHTML +=
+              "<i style='background:" + colorsSchauff(grades[i] + 1) + "'></i> " +
+              grades[i] + (grades[i + 1] ? " – " + grades[i + 1] + "<br>" : "+");
+      }
+
+      return div;
+    };
+
+    // USER INTERACTION
+    // variable for choropleth element last clicked on by user
+    let selectedChoropleth;
+
+    // selecting a feature on a chloropleth map
+    function selectChoropleth(e) {
+      if (selectedChoropleth) {
+        selectedChoropleth.setStyle({
+          "color": "#ffffff",
+          "weight": 0,
+        })
+      }
+
+      selectedChoropleth = e.target
+      selectedChoropleth.setStyle({
+        "color": "#000000",
+        "weight": 1,
+      })
+
+      $("#map-wrapper").addClass("feature-open");
+      $("#feature-details .muni").text(e.target.feature.properties.muni)
+      $("#feature-details .schauff").text(e.target.feature.properties.schauff)
+
+      selectedChoropleth.bringToFront()
+    }
+
+    // function to give to each feature of the choropleth layer
+    function onEachFeature(feature, layer) {
+      layer.on({
+        click: selectChoropleth
+      });
+    };
+
+    // create layer with data, style, and click function
+    var choroplethSchauff = L.geoJson(anderlecht, {
+      style: styleSchauff,
+      onEachFeature: onEachFeature,
+    });
+
+    // layer and corresponding legend that should be loaded first
+    let visibleLayer = "choroplethSchauff";
+    let visibleLegend = "choroplethSchauff" + "Legend"
+
+    // add these to the map
+    map.addLayer(window[visibleLayer]);
+    map.addControl(window[visibleLegend]);
+
+    // function to switching layers
+    function switchLayer(layer) {
+      let legend = layer + "Legend";
+
+      map.removeLayer(window[visibleLayer]);
+      map.addLayer(window[newLayer]);
+
+      if (window[visibleLegend]) {
+        map.removeControl(window[visibleLegend]);
+      }
+
+      if (window[newLegend]) {
+        map.addControl(window[newLegend]);
+      }
+
+      visibleLayer = layer;
+      visibleLegend = legend;
+    }
+
+    // range slider
+    $("#age").slider({ min: 1500, max: 2020, value: [1500, 2020]});
+    $("#surface").slider({ min: 0, max: 5000, value: [0, 5000]});
+  </script>
 {% endblock %}
