@@ -93,6 +93,8 @@ def overview(request):
 
 def dashboard(request, space):
     space = get_space(request, space)
+    if not settings.DEBUG:
+        return redirect("data:referencespace_worksheet", slug=space.slug)
     context = {
         "space": space,
         "header_image": space.photo,

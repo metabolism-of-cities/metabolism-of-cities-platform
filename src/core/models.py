@@ -729,7 +729,7 @@ class LibraryItem(Record):
         ("PT", "Portuguese"),
         ("OT", "Other"),
     )
-    language = models.CharField(max_length=2, choices=LANGUAGES, default="EN")
+    language = models.CharField(max_length=2, choices=LANGUAGES, default="EN", null=True, blank=True)
     title_original_language = models.CharField(max_length=255, blank=True, null=True)
     author_list = models.TextField(null=True, blank=True)
     author_citation = models.TextField(null=True, blank=True)
@@ -835,7 +835,7 @@ class LibraryItem(Record):
             elif len(author_array) == 2:
                 return author_array[0] + " and " + author_array[1]
             elif len(author_array) > 2:
-                return author_array[0] + " <em>et al.</em>"
+                return mark_safe(bleach.clean(author_array[0]) + " <em>et al.</em>")
             else:
                 return ""
         else:
@@ -945,6 +945,7 @@ class ActivatedSpace(models.Model):
 
     class Meta:
         unique_together = ["slug", "part_of_project"]
+        ordering = ["space__name"]
 
 class Dataset(LibraryItem):
     data_formats = models.ManyToManyField(Tag, blank=True, related_name="library_datasets", limit_choices_to={"parent_tag_id": 786})

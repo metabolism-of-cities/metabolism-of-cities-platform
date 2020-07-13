@@ -236,6 +236,10 @@ def journal(request, slug):
     return render(request, "library/journal.html", context)
 
 def item(request, id, show_export=True):
+    if "update" in request.GET:
+        list =LibraryItem.objects.filter(type__name="Image")
+        list.update(language=None)
+
     info = get_object_or_404(LibraryItem, pk=id)
     section = "library"
     if info.type.group == "multimedia":

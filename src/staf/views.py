@@ -540,6 +540,7 @@ def referencespace_worksheet(request, slug):
             if tag.parent_tag in layers:
                 counter[tag.id] = True
 
+    untagged_items = LibraryItem.objects.filter(spaces=info).exclude(tags__parent_tag__in=layers).distinct()
     total_tags = Tag.objects.filter(parent_tag__in=layers).count()
     uploaded = len(counter)
     percentage = (uploaded/total_tags)*100
@@ -562,6 +563,7 @@ def referencespace_worksheet(request, slug):
         "forum_id": forum_topic[0].id if forum_topic else "create",
         "forum_topic_title": "Data harvesting - " + info.name,
         "list_messages": list_messages,
+        "untagged_items": untagged_items,
     }
     return render(request, "staf/referencespace.worksheet.html", context)
 

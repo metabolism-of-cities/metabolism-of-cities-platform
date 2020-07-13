@@ -22,8 +22,10 @@
     Upload
   </a>
   <div class="dropdown-menu" aria-labelledby="upload-dropdown">
-    <a class="dropdown-item" href="{% url "data:upload_dataset" %}">Dataset</a>
-    <a class="dropdown-item" href="{% url "data:upload_dataportal" %}">Dataset portal</a>
+    <a hidden class="dropdown-item" href="{% url "data:upload_dataset" %}">Dataset</a>
+    <a hidden class="dropdown-item" href="{% url "data:upload_dataportal" %}">Dataset portal</a>
+    <a class="dropdown-item" href="{% url "data:hub" %}">Community hub</a>
+    <a class="dropdown-item" href="https://multimedia.metabolismofcities.org/media/library/screenrecording.mp4">Instruction video</a>
   </div>
 </li>
 <li class="nav-item"><a class="disabled nav-link" href="#">About</a></li>

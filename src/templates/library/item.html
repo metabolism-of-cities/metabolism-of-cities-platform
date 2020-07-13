@@ -42,22 +42,30 @@
 
         {% if info.file %}
           <div class="mt-3 mb-2"><a href="{{ info.file.url }}" class="btn btn-primary"><i class="fa fa-download"></i> Download</a></div>
+        {% elif info.image and info.type.name == "Image" %}
+          <div class="mt-3 mb-2"><a href="{{ info.image.url }}" class="btn btn-primary"><i class="fa fa-download"></i> Download</a></div>
         {% endif %}
 
         {% if request.user.is_superuser %}
-          <div class="mt-3 mb-2"><a href="edit/?return={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a></div>
+          <div class="mt-3 mb-2"><a href="?edit&amp;return={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a></div>
         {% endif %}
 
       </div>
       <div class="col-lg-8 mb-4">
         <div class="basic-details mb-4">
           <h1 class="item-title">{{ info }}</h1>
+
+          {% if info.image %}
+            <img src="{{ info.image.url }}" class="img-fluid img-thumbnail" alt="" />
+          {% endif %}
+
           <div><em>{{ info.type }}</em></div>
           {% if info.publisher %}
             <div><a href="{{ info.publisher.get_absolute_url }}">{{ info.publisher }}</a></div>
           {% endif %}
-          <div>{{ info.year }}</div>
-          <div>{{ info.authorlist }}</div>
+          {% if info.year %}
+            <div>{{ info.year }}</div>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -211,37 +219,43 @@
         <div class="col-lg-4">
           <div class="card">
             <ul class="list-group list-group-flush">
-              <li class="list-group-item">
-                <i class="far fa-fw fa-user-edit mb-1 mr-1" aria-hidden="true"></i> Author(s)
-                <br>
-                {% for each in info.authors %}
-                  <a class="btn btn-sm btn-primary-outline mt-1" href="">{{ each }}</a>
-                {% endfor %}
-              </li>
-              {% if info.publisher %}
-                <li class="list-group-item table-item">
-                  <div><i class="far fa-fw fa-book mr-1"></i> Publisher</div>
-                  <div>{{ info.publisher }}</div>
+              {% if info.author_list %}
+                <li class="list-group-item">
+                  <i class="far fa-fw fa-user-edit mb-1 mr-1" aria-hidden="true"></i> Author(s)
+                  <br>
+                  {% if info.authors.all %}
+                    {% for each in info.authors %}
+                      <a class="btn btn-sm btn-primary-outline mt-1" href="">{{ each }}</a>
+                    {% endfor %}
+                  {% else %}
+                    {{ info.get_author_citation }}
+                  {% endif %}
                 </li>
               {% endif %}
-              <li class="list-group-item">
-                <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Tags
-                <br>
-                {% for each in info.tags.all %}
-                  <a class="btn btn-sm btn-primary-outline mt-1" href="{% url "library:index" %}?find=true&amp;search={{ each.id }}">{{ each }}</a>
-                {% endfor %}
-              </li>
+              {% if info.tags.all %}
+                <li class="list-group-item">
+                  <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Tags
+                  <br>
+                  {% for each in info.tags.all %}
+                    <a class="btn btn-sm btn-primary-outline mt-1" href="{% url "library:index" %}?find=true&amp;search={{ each.id }}">{{ each }}</a>
+                  {% endfor %}
+                </li>
+              {% endif %}
+              {% if info.language %}
               <li class="list-group-item table-item">
                 <div><i class="far fa-fw fa-language mr-1"></i> Language</div>
                 <div>{{ info.get_language_display }}</div>
               </li>
+              {% endif %}
+              {% if info.license %}
               <li class="list-group-item table-item">
                 <div><i class="far fa-fw fa-universal-access mr-1"></i> License</div>
                 <div>{{ info.license }}</div>
               </li>
+              {% endif %}
               {% if info.url %}
                 <a class="list-group-item" href="{{ info.url }}">
-                  <i class="far fa-fw fa-link mb-1 mr-1" aria-hidden="true"></i> External site
+                  <i class="far fa-fw fa-link mb-1 mr-1" aria-hidden="true"></i> Website 
                 </a>
               {% endif %}
               {% if info.doi %}
@@ -260,7 +274,7 @@
                   <span class="badge badge-primary">{{ info.isbn }}</span>
                 </li>
               {% endif %}
-              {% if info.type.group != "multimedia" %}
+              {% if info.type.group == "academic" %}
               <li class="list-group-item">
                 <i class="far fa-fw fa-search mb-1 mr-1" aria-hidden="true"></i> Search
                 <br>
@@ -276,7 +290,9 @@
       {% endif %}
 
       <div class="col-lg-8 mb-4">
-        {{ info.description|safe|linebreaks }}
+        {% if info.description %}
+          {{ info.get_description }}
+        {% endif %}
 
         {% if PROJECT.slug == "untraceable" %}
         <div class="alert alert-warning">

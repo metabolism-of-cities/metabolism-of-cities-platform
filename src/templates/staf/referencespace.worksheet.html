@@ -24,6 +24,34 @@
         <i class="fa fa-exclamation-triangle"></i> No items uploaded yet.
       </div>
     {% endif %}
+
+    {% if untagged_items %}
+      <h2 class="h3">Untagged items</h2>
+      <p><em>These items were uploaded but not (yet) linked to a specific layer.</em></p>
+      <table class="table table-striped datatable">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Author(s)</th>
+            <th>Year</th>
+            <th>Tag(s)</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for each in untagged_items %}
+          <tr>
+            <td><a href="{% url "data:library_item" each.id %}">{{ each }}</a><br>
+              <i class="fa fa-fw fa-{{ each.type.icon }}"></i> <em>{{ each.type }}</em>
+            </td>
+            <td>{{ each.get_author_citation }}</td>
+            <td>{{ each.year }}</td>
+            <td>{% for tag in each.tags.all %}<span class="badge">{{ tag }}</span>{% endfor %}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+
   </section>
 
     <h2 class="mt-4 h3">Layers</h2>
