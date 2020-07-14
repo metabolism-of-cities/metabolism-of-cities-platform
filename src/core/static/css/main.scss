@@ -2804,50 +2804,122 @@ body.material-stocks.maps {
 
 // MATERIAL STOCKS MAP
 body.material-stocks.map {
+  #feature-details-wrapper {
+    position: absolute;
+    overflow: hidden;
+    pointer-events: none;
+    width: 300px;
+    height: 100%;
+    left: 0;
+    top: 0;
+    border-bottom-left-radius: .25rem;
+    border-top-left-radius: .25rem;
+  }
+
+  #feature-details {
+    top: 0;
+    left: -300px;
+    background-color: #fff;
+    height: 100%;
+    z-index: 1000;
+    position: absolute;
+    width: 300px;
+    max-width: 90vw;
+    transition: all .3s;
+    border-bottom-left-radius: .25rem;
+    border-top-left-radius: .25rem;
+
+    table tr:first-of-type th,
+    table tr:first-of-type td {
+      border-top: none;
+    }
+
+    .feature-content {
+      padding-left: .75rem;
+      padding-right: .75rem;
+    }
+
+    .header {
+     padding: .75rem;
+     background-color: $light;
+     font-weight: bold;
+    }
+  }
+
   #map-wrapper {
     position: relative;
 
     .leaflet-left .leaflet-control {
       transition: margin-left .3s;
     }
+
+    &.feature-open {
+      .leaflet-left .leaflet-control {
+        margin-left: 310px;
+      }
+
+      #feature-details-wrapper {
+        pointer-events: unset;
+      }
+
+      #feature-details {
+        left: 0;
+      }
+    }
   }
 
   #map {
-    height: 500px;
+    height: 700px;
     max-height: 90vh;
   }
 
-  .view-buttons {
+  .view-buttons,
+  .download-map-wrapper {
     border: 2px solid rgba(0,0,0,0.2);
     background-clip: padding-box;
     border-radius: .25rem;
+  }
 
-    .view-button {
-      background-color: $white;
-      border-bottom: 1px solid #ccc;
-      cursor: pointer;
-      line-height: 30px;
-      height: 30px;
-      padding: 0 0.5rem;
+  .download-map {
+    background-color: $white;
+    cursor: pointer;
+    line-height: 30px;
+    height: 30px;
+    width: 30px;
+    text-align: center;
+    font-size: 20px;
+    border-radius: .25rem;
 
-      &:first-of-type {
-        border-top-right-radius: .25rem;
-        border-top-left-radius: .25rem;
-      }
+    &:hover {
+      background-color: #f4f4f4;
+    }
+  }
 
-      &:last-of-type {
-        border-bottom: none;
-        border-bottom-right-radius: .25rem;
-        border-bottom-left-radius: .25rem;
-      }
+  .view-button {
+    background-color: $white;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+    line-height: 30px;
+    height: 30px;
+    padding: 0 0.5rem;
 
-      &:hover {
-        background-color: #f4f4f4;
-      }
+    &:first-of-type {
+      border-top-right-radius: .25rem;
+      border-top-left-radius: .25rem;
+    }
 
-      i {
-        margin-right: .5rem;
-      }
+    &:last-of-type {
+      border-bottom: none;
+      border-bottom-right-radius: .25rem;
+      border-bottom-left-radius: .25rem;
+    }
+
+    &:hover {
+      background-color: #f4f4f4;
+    }
+
+    i {
+      margin-right: .5rem;
     }
   }
 }
