@@ -1812,37 +1812,91 @@ body.material-stocks.maps .card img {
   height: 200px;
   object-fit: cover; }
 
+body.material-stocks.map #feature-details-wrapper {
+  position: absolute;
+  overflow: hidden;
+  pointer-events: none;
+  width: 300px;
+  height: 100%;
+  left: 0;
+  top: 0;
+  border-bottom-left-radius: .25rem;
+  border-top-left-radius: .25rem; }
+
+body.material-stocks.map #feature-details {
+  top: 0;
+  left: -300px;
+  background-color: #fff;
+  height: 100%;
+  z-index: 1000;
+  position: absolute;
+  width: 300px;
+  max-width: 90vw;
+  transition: all .3s;
+  border-bottom-left-radius: .25rem;
+  border-top-left-radius: .25rem; }
+  body.material-stocks.map #feature-details table tr:first-of-type th,
+  body.material-stocks.map #feature-details table tr:first-of-type td {
+    border-top: none; }
+  body.material-stocks.map #feature-details .feature-content {
+    padding-left: .75rem;
+    padding-right: .75rem; }
+  body.material-stocks.map #feature-details .header {
+    padding: .75rem;
+    background-color: #efefef;
+    font-weight: bold; }
+
 body.material-stocks.map #map-wrapper {
   position: relative; }
   body.material-stocks.map #map-wrapper .leaflet-left .leaflet-control {
     transition: margin-left .3s; }
+  body.material-stocks.map #map-wrapper.feature-open .leaflet-left .leaflet-control {
+    margin-left: 310px; }
+  body.material-stocks.map #map-wrapper.feature-open #feature-details-wrapper {
+    pointer-events: unset; }
+  body.material-stocks.map #map-wrapper.feature-open #feature-details {
+    left: 0; }
 
 body.material-stocks.map #map {
-  height: 500px;
+  height: 700px;
   max-height: 90vh; }
 
-body.material-stocks.map .view-buttons {
+body.material-stocks.map .view-buttons,
+body.material-stocks.map .download-map-wrapper {
   border: 2px solid rgba(0, 0, 0, 0.2);
   background-clip: padding-box;
   border-radius: .25rem; }
-  body.material-stocks.map .view-buttons .view-button {
-    background-color: #fff;
-    border-bottom: 1px solid #ccc;
-    cursor: pointer;
-    line-height: 30px;
-    height: 30px;
-    padding: 0 0.5rem; }
-    body.material-stocks.map .view-buttons .view-button:first-of-type {
-      border-top-right-radius: .25rem;
-      border-top-left-radius: .25rem; }
-    body.material-stocks.map .view-buttons .view-button:last-of-type {
-      border-bottom: none;
-      border-bottom-right-radius: .25rem;
-      border-bottom-left-radius: .25rem; }
-    body.material-stocks.map .view-buttons .view-button:hover {
-      background-color: #f4f4f4; }
-    body.material-stocks.map .view-buttons .view-button i {
-      margin-right: .5rem; }
+
+body.material-stocks.map .download-map {
+  background-color: #fff;
+  cursor: pointer;
+  line-height: 30px;
+  height: 30px;
+  width: 30px;
+  text-align: center;
+  font-size: 20px;
+  border-radius: .25rem; }
+  body.material-stocks.map .download-map:hover {
+    background-color: #f4f4f4; }
+
+body.material-stocks.map .view-button {
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+  line-height: 30px;
+  height: 30px;
+  padding: 0 0.5rem; }
+  body.material-stocks.map .view-button:first-of-type {
+    border-top-right-radius: .25rem;
+    border-top-left-radius: .25rem; }
+  body.material-stocks.map .view-button:last-of-type {
+    border-bottom: none;
+    border-bottom-right-radius: .25rem;
+    border-bottom-left-radius: .25rem; }
+  body.material-stocks.map .view-button:hover {
+    background-color: #f4f4f4; }
+  body.material-stocks.map .view-button i {
+    margin-right: .5rem; }
 
 body.work.sprint .jumbotron {
   display: none; }

@@ -50,28 +50,58 @@
       </div>
     </form>
 
-    <div id="map" class="leaflet-map"></div>
+    <div id="map-wrapper">
+      <div id="map" class="leaflet-map"></div>
+      <div id="feature-details-wrapper">
+        <div id="feature-details">
+          <div class="header">
+            <span class="muni"></span>
+            <button type="button" class="close close-feature" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <table class="table">
+            <tr>
+              <th scope="row">Most common archetype</th>
+              <td class="age">Apartment building</td>
+            </tr>
+            <tr>
+              <th scope="row">Glass</th>
+              <td class="glass">21 tonnes</td>
+            </tr>
+            <tr>
+              <th scope="row">Wood</th>
+              <td class="wood">812 tonnes</td>
+            </tr>
+            <tr>
+              <th scope="row">Steel</th>
+              <td class="steel">4124 tonnes</td>
+            </tr>
+            <tr>
+              <th scope="row">Schauff</th>
+              <td class="schauff"></td>
+            </tr>
+          </table>
 
-    <div id="feature-details">
-      <table class="table">
-        <tr>
-          <th scope="row">Name</th>
-          <td class="muni"></td>
-        </tr>
-        <tr>
-          <th scope="row">Schauff</th>
-          <td class="schauff"></td>
-        </tr>
-      </table>
+          <div class="feature-content">
+            <a class="btn btn-primary" href="">
+              <i class="fas fa-arrow-alt-circle-down"></i> Drill down
+            </a>
+
+            <a class="btn btn-primary-basic" href="">
+              <i class="fal fa-layer-group"></i>
+              Compare
+            </a>
+          </div>
+
+          <button class="btn btn-primary mt-4 download-map">
+            <i class="fas fa-fw fa-save"></i>
+            Save map as image
+          </button>
+
+        </div>
+      </div>
     </div>
-
-  <!-- gotta figure out how to make this work without canvas -->
-  <!--
-  <button class="btn btn-primary mt-4 download-map">
-    <i class="fas fa-fw fa-save"></i>
-    Save map as image
-  </button>
-  -->
 {% endblock %}
 
 {% block footer %}
@@ -89,6 +119,9 @@
 
   <!-- rangeslider -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js"></script>
+
+  <!-- download map as image -->
+  <script src="https://unpkg.com/leaflet-image@0.4.0/leaflet-image.js"></script>
 
   <!-- sample data -->
   <script src="/media/files/anderlecht.js"></script>
@@ -158,6 +191,45 @@
       let view = $(this).data("view");
       console.log(view);
     })
+
+    // ----
+
+    // download map as image
+    function downloadImage(err, canvas) {
+      var downloadLink = document.createElement("a");
+      downloadLink.href = canvas.toDataURL("image/png");
+      downloadLink.download = "map.png";
+
+      downloadLink.click();
+    }
+
+    // download map as image button
+    L.Control.Download = L.Control.extend({
+      onAdd: function(map) {
+
+        var downloadButtonWrapper = L.DomUtil.create("div", "download-map-wrapper");
+
+        var downloadButton = L.DomUtil.create("div", "download-map");
+        downloadButton.innerHTML = "<i class='fal fa-fw fa-save'></i>";
+
+        downloadButtonWrapper.appendChild(downloadButton);
+
+        return downloadButtonWrapper;
+      },
+    });
+
+    L.control.Download = function(opts) {
+      return new L.Control.Download(opts);
+    }
+
+    L.control.Download({ position: "topleft" }).addTo(map);
+
+    // click button to download
+    $(".download-map").click(function() {
+      leafletImage(map, downloadImage);
+    })
+
+    // ---
 
     // COMMON FUNCTIONS
     // removing all layers except the basemap
@@ -282,5 +354,10 @@
     // range slider
     $("#age").slider({ min: 1500, max: 2020, value: [1500, 2020]});
     $("#surface").slider({ min: 0, max: 5000, value: [0, 5000]});
+
+    // close feature
+    $(".close-feature").click(function() {
+      $("#map-wrapper").removeClass("feature-open");
+    })
   </script>
 {% endblock %}
