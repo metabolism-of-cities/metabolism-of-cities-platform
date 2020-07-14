@@ -64,7 +64,7 @@ textarea#id_author_list{height:100px}
         <select name="journal" class="form-control" id="journals">
           <option value=""></option>
           {% for each in journals %}
-            <option value="{{ each.id }}">{{ each }}</option>
+            <option value="{{ each.id }}" {% if info.publisher == each %}selected{% endif %}>{{ each }}</option>
           {% endfor %}
         </select>
       </div>

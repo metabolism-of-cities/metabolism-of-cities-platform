@@ -40,7 +40,10 @@
         <tbody>
         {% for each in untagged_items %}
           <tr>
-            <td><a href="{% url "data:library_item" each.id %}">{{ each }}</a><br>
+            <td>
+              <a href="{% url "data:library_item" each.id %}">{{ each }}</a>
+              <a href="{% url "data:library_item" each.id %}?edit=true&amp;next={{ request.get_full_path }}&amp;update_tags=true"><i class="fa fa-pencil-alt"></i></a>
+              <br>
               <i class="fa fa-fw fa-{{ each.type.icon }}"></i> <em>{{ each.type }}</em>
             </td>
             <td>{{ each.get_author_citation }}</td>

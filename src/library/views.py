@@ -364,6 +364,9 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             fields.append("file")
             initial["tags"] = [896,897,898,899,907,908,909,910,911,912,913]
             labels["file"] = "File (CSV format)"
+
+        if "update_tags" in request.GET:
+            fields = ["name", "tags", "description"]
             
         ModelForm = modelform_factory(
             Dataset,
@@ -386,6 +389,9 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             fields.append("tags")
             fields.append("file")
             fields.append("image")
+
+        if "update_tags" in request.GET:
+            fields = ["name", "tags", "description"]
 
         ModelForm = modelform_factory(
             Video,
@@ -435,6 +441,10 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             initial = {"spaces": space.id}
 
         fields.append("comments")
+
+        if "update_tags" in request.GET:
+            fields = ["name", "tags", "description"]
+
         ModelForm = modelform_factory(LibraryItem, fields=fields, labels = labels)
 
     if info:
@@ -453,7 +463,10 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id=849)
     elif "inventory" in request.GET or project.slug == "data" or project.slug == "islands":
         if "tags" in form.fields:
-            form.fields["tags"].queryset = Tag.objects.filter(parent_tag__parent_tag_id=845)
+            if info:
+                form.fields["tags"].queryset = Tag.objects.filter(Q(parent_tag__parent_tag_id=845)|Q(id__in=info.tags.all()))
+            else:
+                form.fields["tags"].queryset = Tag.objects.filter(parent_tag__parent_tag_id=845)
 
     if request.method == "POST":
         if form.is_valid():
@@ -469,19 +482,28 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             if tag:
                 info.tags.add(tag)
 
-            if request.POST.get("publisher"):
-                RecordRelationship.objects.create(
-                    record_parent = Organization.objects.get(pk=request.POST.get("publisher")),
-                    record_child = info,
-                    relationship_id = RELATIONSHIP_ID["publisher"],
-                )
 
-            if request.POST.get("journal"):
-                RecordRelationship.objects.create(
-                    record_parent = Organization.objects.get(pk=request.POST.get("journal")),
-                    record_child = info,
-                    relationship_id = RELATIONSHIP_ID["publisher"],
-                )
+            if request.POST.get("publisher") or request.POST.get("journal"):
+                record_new = True
+                if request.POST.get("journal"):
+                    publisher = request.POST.get("journal")
+                else:
+                    publisher = request.POST.get("publisher")
+                if info:
+                    check = RecordRelationship.objects.filter(record_child=info, relationship_id=RELATIONSHIP_ID["publisher"])
+                    if check:
+                        current = check[0]
+                        if current.record_parent_id == publisher:
+                            # No need to re-record if already exists
+                            record_new = False
+                        else:
+                            check.delete()
+                if record_new:
+                    RecordRelationship.objects.create(
+                        record_parent = Organization.objects.get(pk=publisher),
+                        record_child = info,
+                        relationship_id = RELATIONSHIP_ID["publisher"],
+                    )
 
             if not id:
                 type_name = info.type.name

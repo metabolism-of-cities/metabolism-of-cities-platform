@@ -985,11 +985,6 @@ def multimedia(request):
     for each in activated_spaces:
         spaces.append(each.space.id)
     list = LibraryItem.objects.filter(spaces__in=spaces, type__name="Image")
-
-    if "update" in request.GET and request.user.id == 1:
-        t = Tag.objects.get(pk=916)
-        for each in list:
-            each.tags.add(t)
     context = {
         "multimedia_list": list,
         "load_lightbox": True,
