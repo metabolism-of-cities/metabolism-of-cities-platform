@@ -32,6 +32,9 @@ baseline_staf_urlpatterns = [
     path("resources/publications/", library.list, { "type": "islands" }, name="library"),
     path("resources/publications/<int:id>/", library.item, { "show_export": False }, name="library_item"),
 
+    path("resources/multimedia/", staf.multimedia, name="multimedia"),
+    path("resources/<slug:slug>/", library.list, name="library"),
+
     # Data dashboards
     path("dashboards/<slug:space>/sectors/", data.sectors, name="sectors"),
     path("dashboards/<slug:space>/sectors/<slug:sector>/", data.sector, name="sector"),
