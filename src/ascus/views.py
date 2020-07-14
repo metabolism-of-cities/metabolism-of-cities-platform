@@ -417,7 +417,7 @@ def account_outputs(request):
         .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
         .filter(tags__id=919)
     context = {
-        "header_title": "Path-to-action documents",
+        "header_title": "Path-to-Action documents",
         "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
         "webpage": webpage,
         "outputs": outputs,
