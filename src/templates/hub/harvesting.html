@@ -1,0 +1,18 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  {% include "hub/_nav.html" %}
+
+  <div class="row">
+    {% for each in spaces %}
+      <div class="col-lg-3 col-sm-6 mb-4">
+        <a href="{% url "data:hub_harvesting_space" each.space.slug %}" class="btn-thumbnail" style="background-image: url('{{ each.space.photo.image.url }}');">
+          <span class="title">{{ each }}</span>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+  
+
+{% endblock %}

@@ -60,7 +60,6 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
 
     path("curation/publish/dataset/", views.dataset_editor, name="dataset_editor"),
 
-    path("curation/", views.review, name="review"),
     path("curation/pending/", views.review_pending, name="review_pending"),
     path("curation/scoreboard/", views.review_scoreboard, name="review_scoreboard"),
     path("curation/work/", views.review_work, name="review_work"),

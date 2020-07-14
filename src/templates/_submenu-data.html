@@ -105,14 +105,14 @@
               <a class="dropdown-item" href="{% url 'data:datasets' space.slug %}">All datasets</a>
               <a class="dropdown-item" href="{% url 'data:hub' %}">Upload data</a>
               <a hidden class="dropdown-item" href="{% url 'data:maps' space.slug %}">Download</a>
-              <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/dashboards/{{ space.slug }}/controlpanel/">Data management platform</a>
+              <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/dashboards/{{ space.slug }}/hub/">Data management platform</a>
             </div>
           </li>
         </ul>
       </div>
 
       <div class="float-right">
-        <a class="badge badge-primary" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/dashboards/{{ space.slug }}/controlpanel/">
+        <a class="badge badge-primary" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/dashboards/{{ space.slug }}/hub/">
           <i class="fa fa-lock mr-1" aria-hidden="true"></i>
           Data management
         </a>

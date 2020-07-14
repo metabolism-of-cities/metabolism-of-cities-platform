@@ -1,38 +1,83 @@
 
 {% if PROJECT.id != 1 and PROJECT.slug != "untraceable" %}
 
-  <h1>Community Portal</h1>
+  <h1 class="mb-0">Community Portal</h1>
 
-  <ul class="nav nav-tabs mb-4">
-    <li class="nav-item">
-      <a class="nav-link {% if menu == "home" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/">Home</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link {% if menu == "work" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/work/">Tasks</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link {% if menu == "forum" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/forum/">Forum</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link {% if menu == "log" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/latest/">Activity log</a>
-    </li>
-    {% if request.user.is_staff and PROJECT.id == 1 %}
+  {% if space %}
+    <a href="{{ space.get_absolute_url }}" class="badge badge-warning">{{ space }}</a>
+  {% endif %}
+
+  <ul class="nav nav-tabs mb-4 mt-3">
+    {% if PROJECT.slug == "data" or PROJECT.slug == "islands" or PROJECT.slug == "cityloops" %}
       <li class="nav-item">
-        <a class="nav-link {% if menu == "network_log" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/network/">Network-wide log</a>
+        <a class="nav-link {% if menu == "home" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}{% if space %}/dashboards/{{ space.slug }}{% endif %}/hub/">
+          <i class="fa fa-home fa-fw"></i>
+        </a>
       </li>
-    {% endif %}
-    {% if request.user.is_authenticated %}
       <li class="nav-item">
-        <a class="nav-link {% if menu == "profile" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/profile/">My profile</a>
+        <a class="nav-link {% if menu == "harvesting" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}{% if space %}/dashboards/{{ space.slug }}{% endif %}/hub/harvesting/">
+          Data harvesting
+        </a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link {% if menu == "processing" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}{% if space %}/dashboards/{{ space.slug }}{% endif %}/hub/processing/">
+          Processing
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if menu == "publication" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}{% if space %}/dashboards/{{ space.slug }}{% endif %}/hub/publication/">
+          Publication
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if menu == "articles" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}{% if space %}/dashboards/{{ space.slug }}{% endif %}/hub/articles/">
+          Data articles
+        </a>
+      </li>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle {% if menu == "forum" or menu == "profile" %}active{% endif %}" href="#" id="about-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-users"></i>
+          Community
+        </a>
+        <div class="dropdown-menu" aria-labelledby="about-dropdown">
+          <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}{% if space %}/dashboards/{{ space.slug }}{% endif %}/hub/forum/">Forum</a>
+          <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}{% if space %}/dashboards/{{ space.slug }}{% endif %}/hub/people/">People</a>
+          <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}{% if space %}/dashboards/{{ space.slug }}{% endif %}/hub/scoreboard/">Scoreboard</a>
+          <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}{% if space %}/dashboards/{{ space.slug }}{% endif %}/hub/profile/">My Profile</a>
+        </div>
+      </li>
+
     {% else %}
       <li class="nav-item">
-        <a class="nav-link {% if menu == "join" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/join/?next={{ request.get_full_path }}">Join</a>
+        <a class="nav-link {% if menu == "home" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if menu == "work" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/work/">Tasks</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if menu == "forum" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/forum/">Forum</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if menu == "log" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/latest/">Activity log</a>
+      </li>
+      {% if request.user.is_staff and PROJECT.id == 1 %}
+        <li class="nav-item">
+          <a class="nav-link {% if menu == "network_log" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/network/">Network-wide log</a>
+        </li>
+      {% endif %}
+      {% if request.user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link {% if menu == "profile" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/profile/">My profile</a>
+        </li>
+      {% else %}
+        <li class="nav-item">
+          <a class="nav-link {% if menu == "join" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/join/?next={{ request.get_full_path }}">Join</a>
+        </li>
+      {% endif %}
+      <li class="nav-item">
+        <a class="nav-link {% if menu == "help" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/help/">Help</a>
       </li>
     {% endif %}
-    <li class="nav-item">
-      <a class="nav-link {% if menu == "help" %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/help/">Help</a>
-    </li>
   </ul>
-
 {% endif %}

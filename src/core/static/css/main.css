@@ -1726,13 +1726,13 @@ body.staf-review .sidebar .badge {
 body.staf-review .instructions ol {
   padding-left: 1.25rem; }
 
-body.staf-review.index .data-types .card .col.icon {
+.dual-iconbox .card .col.icon {
   max-width: 60px; }
-  body.staf-review.index .data-types .card .col.icon i {
+  .dual-iconbox .card .col.icon i {
     font-size: 2rem;
     margin-top: .25rem; }
 
-body.staf-review.index .data-types .card .type-details {
+.dual-iconbox .card .type-details {
   display: inline-block;
   width: calc(100% - 50px); }
 

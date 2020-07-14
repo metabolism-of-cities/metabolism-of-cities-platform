@@ -13,15 +13,14 @@ from data import views as data
 
 #
 # Baseline links shared between all projects
-# Last change Jul 8, 2020
 #
 
 baseline_staf_urlpatterns = [
 
-    path("layers/worksheet/", staf.layers_worksheet, name="data_layers_worksheet"),
-    path("dashboards/<slug:slug>/controlpanel/worksheet/", staf.referencespace_worksheet, name="referencespace_worksheet"),
-    path("dashboards/<slug:slug>/controlpanel/worksheet/<int:tag>/", staf.referencespace_worksheet_tag),
-    path("dashboards/<slug:space>/controlpanel/worksheet/<int:tag>/form/", library.form),
+    #path("layers/worksheet/", staf.layers_worksheet, name="data_layers_worksheet"),
+    #path("dashboards/<slug:slug>/controlpanel/worksheet/", staf.referencespace_worksheet, name="referencespace_worksheet"),
+    #path("dashboards/<slug:slug>/controlpanel/worksheet/<int:tag>/", staf.referencespace_worksheet_tag),
+    #path("dashboards/<slug:space>/controlpanel/worksheet/<int:tag>/form/", library.form),
 
     # Controlpanel
     path("dashboards/<slug:space>/controlpanel/", core.controlpanel, name="controlpanel_space"),
@@ -46,5 +45,16 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/resources/theses/", data.library, {"type": "theses"}, name="theses"),
     path("dashboards/<slug:space>/resources/journal-articles/", data.library, {"type": "articles"}, name="journal_articles"),
     path("dashboards/<slug:space>/maps/", data.maps, name="maps"),
+
+    # Hub
+    path("hub/harvesting/", staf.hub_harvesting, name="hub_harvesting"),
+    path("hub/harvesting/worksheet/", staf.hub_harvesting_worksheet, name="hub_harvesting_worksheet"),
+    path("hub/processing/", staf.hub_processing, name="hub_processing"),
+
+    path("dashboards/<slug:space>/hub/", core.work_portal, {"slug": "data"}),
+    path("dashboards/<slug:space>/hub/harvesting/", staf.hub_harvesting_space, name="hub_harvesting_space"),
+    path("dashboards/<slug:space>/hub/harvesting/<int:tag>/", staf.hub_harvesting_tag, name="hub_harvesting_tag"),
+    path("dashboards/<slug:space>/hub/harvesting/worksheet/", staf.hub_harvesting_worksheet, name="hub_harvesting_worksheet"),
+
     path("dashboards/<slug:space>/", data.dashboard, name="dashboard"),
 ]

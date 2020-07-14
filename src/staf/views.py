@@ -36,11 +36,6 @@ def index(request):
     }
     return render(request, "staf/index.html", context)
 
-def review(request):
-    context = {
-    }
-    return render(request, "staf/review/index.html", context)
-
 def review_articles(request):
     context = {
     }
@@ -528,103 +523,6 @@ def referencespace(request, id):
     }
     return render(request, "staf/referencespace.html", context)
 
-def referencespace_worksheet(request, slug):
-    info = get_space(request, slug)
-    layers = Tag.objects.filter(parent_tag_id=845)
-    counter = {}
-    list_messages = None
-
-    items = LibraryItem.objects.filter(spaces=info, tags__parent_tag__in=layers).distinct()
-    for each in items:
-        for tag in each.tags.all():
-            if tag.parent_tag in layers:
-                counter[tag.id] = True
-
-    untagged_items = LibraryItem.objects.filter(spaces=info).exclude(tags__parent_tag__in=layers).distinct()
-    total_tags = Tag.objects.filter(parent_tag__in=layers).count()
-    uploaded = len(counter)
-    percentage = (uploaded/total_tags)*100
-
-    forum_topic = ForumTopic.objects.filter(part_of_project_id=request.project, parent_url=request.get_full_path())
-    if forum_topic:
-        list_messages = Message.objects.filter(parent=forum_topic[0])
-
-    context = {
-        "info": info,
-        "layers": layers,
-        "items": items,
-        "counter": counter,
-        "title": "Inventory",
-        "percentage": percentage,
-        "total_tags": total_tags,
-        "uploaded": uploaded,
-        "load_datatables": True,
-        "load_messaging": True,
-        "forum_id": forum_topic[0].id if forum_topic else "create",
-        "forum_topic_title": "Data harvesting - " + info.name,
-        "list_messages": list_messages,
-        "untagged_items": untagged_items,
-    }
-    return render(request, "staf/referencespace.worksheet.html", context)
-
-def referencespace_worksheet_tag(request, slug, tag):
-    info = get_space(request, slug)
-    tag = get_object_or_404(Tag, pk=tag)
-    types = [5,6,9,16,37,25,27,29,32,10,33,38,20,31,40]
-    list = LibraryItem.objects.filter(spaces=info, tags=tag)
-    list_messages = None
-
-    shapefile = [40]
-    written = [5,16,25,27,29,32]
-    dataset = [10]
-    visual = [33,38,20,31]
-
-    if tag.parent_tag.id == 847:
-        # Layer two
-        types = shapefile + written + dataset + visual
-
-    if tag.parent_tag.id == 850:
-        # Layer 5
-        types = written
-
-    if tag.parent_tag.id == 849:
-        # Layer 4
-        types = written + dataset
-
-    if tag.parent_tag.id == 848:
-        # Layer 3
-        types = shapefile + written + dataset + visual
-
-    if tag.id == 852 or tag.id == 851:
-        types = shapefile
-
-    if tag.id == 853:
-        types = written
-
-    if tag.id == 854:
-        types = written + dataset
-
-    if tag.id == 916:
-        # Visuals
-        types = visual
-
-    forum_topic = ForumTopic.objects.filter(part_of_project_id=request.project, parent_url=request.get_full_path())
-    if forum_topic:
-        list_messages = Message.objects.filter(parent=forum_topic[0])
-
-    context = {
-        "info": info,
-        "tag": tag,
-        "types": LibraryItemType.objects.filter(pk__in=types),
-        "title": tag.name,
-        "items": list,
-        "forum_id": forum_topic[0].id if forum_topic else "create",
-        "forum_topic_title": tag.name + " - " + info.name,
-        "list_messages": list_messages,
-        "load_messaging": True,
-    }
-    return render(request, "staf/referencespace.worksheet.tag.html", context)
-
 def activities_catalogs(request):
     context = {
         "list": ActivityCatalog.objects.all(),
@@ -972,13 +870,6 @@ def dataset_editor(request):
     }
     return render(request, "staf/publish/dataset.html", context)
 
-def layers_worksheet(request):
-
-    context = {
-        "layers": Tag.objects.filter(parent_tag_id=845),
-    }
-    return render(request, "staf/layers.worksheet.html", context)
-
 def multimedia(request):
     activated_spaces = ActivatedSpace.objects.filter(part_of_project_id=request.project)
     spaces = []
@@ -990,3 +881,141 @@ def multimedia(request):
         "load_lightbox": True,
     }
     return render(request, "staf/multimedia.html", context)
+
+def hub_harvesting(request):
+
+    context = {
+        "spaces": ActivatedSpace.objects.filter(part_of_project_id=request.project),
+        "menu": "harvesting",
+        "hide_space_menu": True,
+    }
+    return render(request, "hub/harvesting.html", context)
+
+def hub_harvesting_space(request, space):
+    info = get_space(request, space)
+    layers = Tag.objects.filter(parent_tag_id=845)
+    counter = {}
+    list_messages = None
+
+    items = LibraryItem.objects.filter(spaces=info, tags__parent_tag__in=layers).distinct()
+    for each in items:
+        for tag in each.tags.all():
+            if tag.parent_tag in layers:
+                counter[tag.id] = True
+
+    untagged_items = LibraryItem.objects.filter(spaces=info).exclude(tags__parent_tag__in=layers).distinct()
+    total_tags = Tag.objects.filter(parent_tag__in=layers).count()
+    uploaded = len(counter)
+    percentage = (uploaded/total_tags)*100
+
+    forum_topic = ForumTopic.objects.filter(part_of_project_id=request.project, parent_url=request.get_full_path())
+    if forum_topic:
+        list_messages = Message.objects.filter(parent=forum_topic[0])
+
+    context = {
+        "info": info,
+        "space": info,
+        "layers": layers,
+        "items": items,
+        "counter": counter,
+        "title": "Inventory",
+        "percentage": percentage,
+        "total_tags": total_tags,
+        "uploaded": uploaded,
+        "load_datatables": True,
+        "load_messaging": True,
+        "forum_id": forum_topic[0].id if forum_topic else "create",
+        "forum_topic_title": "Data harvesting - " + info.name,
+        "list_messages": list_messages,
+        "untagged_items": untagged_items,
+        "menu": "harvesting",
+        "hide_space_menu": True,
+    }
+    return render(request, "hub/harvesting.space.html", context)
+
+def hub_harvesting_tag(request, slug, tag):
+    info = get_space(request, slug)
+    tag = get_object_or_404(Tag, pk=tag)
+    types = [5,6,9,16,37,25,27,29,32,10,33,38,20,31,40]
+    list = LibraryItem.objects.filter(spaces=info, tags=tag)
+    list_messages = None
+
+    shapefile = [40]
+    written = [5,16,25,27,29,32]
+    dataset = [10]
+    visual = [33,38,20,31]
+
+    if tag.parent_tag.id == 847:
+        # Layer two
+        types = shapefile + written + dataset + visual
+
+    if tag.parent_tag.id == 850:
+        # Layer 5
+        types = written
+
+    if tag.parent_tag.id == 849:
+        # Layer 4
+        types = written + dataset
+
+    if tag.parent_tag.id == 848:
+        # Layer 3
+        types = shapefile + written + dataset + visual
+
+    if tag.id == 852 or tag.id == 851:
+        types = shapefile
+
+    if tag.id == 853:
+        types = written
+
+    if tag.id == 854:
+        types = written + dataset
+
+    if tag.id == 916:
+        # Visuals
+        types = visual
+
+    forum_topic = ForumTopic.objects.filter(part_of_project_id=request.project, parent_url=request.get_full_path())
+    if forum_topic:
+        list_messages = Message.objects.filter(parent=forum_topic[0])
+
+    context = {
+        "info": info,
+        "tag": tag,
+        "types": LibraryItemType.objects.filter(pk__in=types),
+        "title": tag.name,
+        "items": list,
+        "forum_id": forum_topic[0].id if forum_topic else "create",
+        "forum_topic_title": tag.name + " - " + info.name,
+        "list_messages": list_messages,
+        "load_messaging": True,
+        "menu": "harvesting",
+        "space": info,
+        "hide_space_menu": True,
+    }
+    return render(request, "hub/harvesting.tag.html", context)
+
+def hub_harvesting_worksheet(request, space=None):
+
+    context = {
+        "layers": Tag.objects.filter(parent_tag_id=845),
+    }
+    return render(request, "hub/harvesting.worksheet.html", context)
+
+def hub_processing(request, space=None):
+
+    gis = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=2)
+
+    if space:
+        space = get_space(request, slug)
+
+
+    context = {
+        "menu": "processing",
+        "space": space,
+        "hide_space_menu": True,
+        "gis": gis.count(),
+        "gis_open": gis.filter(status=1, assigned_to__isnull=True).count(),
+        "title": "Data processing",
+    }
+    return render(request, "hub/processing.html", context)
+

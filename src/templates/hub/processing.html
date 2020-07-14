@@ -1,0 +1,182 @@
+{% extends "_base.html" %}
+
+{% block page_name %}staf-review index{% endblock %}
+{% block content %}
+
+{% include "hub/_nav.html" %}
+
+<div class="row">
+  <div class="col-lg-8 dual-iconbox">
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <a href="" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-layer-group" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>GIS processing queue</strong>
+                <br>
+                <small>Convert shapefiles to reference spaces</small>
+                <br>
+                <span class="badge badge-light">
+                  {{ gis }} tasks
+                </span>
+                <span class="badge badge-primary">
+                  {{ gis_open }} unassigned
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <a href="" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-layer-group" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>GIS publication queue</strong>
+                <br>
+                <small>Review and publish shapefile information</small>
+                <br>
+                <span class="badge badge-light">
+                  104 tasks
+                </span>
+                <span class="badge badge-primary">
+                  34 unassigned
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <a href="" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-chart-bar" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>Stock and flow data queue</strong>
+                <br>
+                <small>Process material stock and flow datasets</small>
+                <br>
+                <span class="badge badge-light">
+                  104 tasks
+                </span>
+                <span class="badge badge-primary">
+                  34 unassigned
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <a href="" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-chart-bar" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>Stock and flow publication queue</strong>
+                <br>
+                <small>Review and publish material stock and flow datasets</small>
+                <br>
+                <span class="badge badge-light">
+                  104 tasks
+                </span>
+                <span class="badge badge-primary">
+                  34 unassigned
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <a href="" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-file-alt" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>Resources review and publication queue</strong>
+                <br>
+                <small>Review and publish journal articles, reports, and other resources</small>
+                <br>
+                <span class="badge badge-light">
+                  104 tasks
+                </span>
+                <span class="badge badge-primary">
+                  34 unassigned
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <a href="{% url 'data:review_articles' %}" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-clipboard-list-check" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>Data article publication queue</strong>
+                <br>
+                <small>Review data articles before publication.</small>
+                <br>
+                <span class="badge badge-light">
+                  104 tasks
+                </span>
+                <span class="badge badge-primary">
+                  34 unassigned
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div><div class="col-md-6 mb-4">
+        <a href="" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-file" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>Incomplete uploads</strong>
+                <br>
+                <small>Overview of information not completely uploaded</small>
+                <br>
+                <span class="badge badge-light">
+                  104 tasks
+                </span>
+                <span class="badge badge-primary">
+                  34 unassigned
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4 sidebar">
+    {% include "staf/review/_badge-progress.html" %}
+    <!-- or -->
+    <!-- {% include "staf/review/_introduction.html" %} -->
+  </div>
+</div>
+
+{% endblock %}
+

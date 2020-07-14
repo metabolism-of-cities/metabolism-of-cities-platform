@@ -1,14 +1,8 @@
 {% extends "_base.html" %}
 
-{% block page_name %}staf-review index{% endblock %}
 {% block content %}
-
-<h1>Data Curation Platform</h1>
-
-{% include "staf/review/_review-nav.html" %}
-
 <div class="row">
-  <div class="col-lg-8 data-types">
+  <div class="col-lg-8 dual-iconbox">
     <div class="row">
       <div class="col-md-6 mb-4">
         <a href="{% url 'staf:review_uploaded' %}" class="card btn-card">
@@ -172,13 +166,6 @@
       </div>
     </div>
   </div>
-
-  <div class="col-lg-4 sidebar">
-    {% include "staf/review/_badge-progress.html" %}
-    <!-- or -->
-    <!-- {% include "staf/review/_introduction.html" %} -->
-  </div>
 </div>
 
 {% endblock %}
-

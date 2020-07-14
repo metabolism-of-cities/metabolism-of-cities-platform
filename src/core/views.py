@@ -1108,7 +1108,10 @@ def work_sprint(request, id=None):
     
     return render(request, "contribution/work.sprint.html", context)
 
-def work_portal(request, slug):
+def work_portal(request, slug, space=None):
+
+    if space:
+        space = get_space(request, space)
 
     project = get_object_or_404(Project, pk=request.project)
     pages = {
@@ -1138,12 +1141,14 @@ def work_portal(request, slug):
         "list_messages": Message.objects.filter(parent=info),
         "task_list": tasks.order_by("-last_update") if tasks else None,
         "menu": "home",
+        "space": space,
+        "hide_space_menu": True,
     }
 
     if slug == "data":
         context["layers"] = Tag.objects.filter(parent_tag_id=845)
         context["spaces"] = ActivatedSpace.objects.filter(part_of_project_id=request.project)
-        context["datalink"] = project.slug + ":controlpanel_space"
+        context["datalink"] = project.slug + ":hub_harvesting_space"
 
     return render(request, "contribution/portal.html", context)
 

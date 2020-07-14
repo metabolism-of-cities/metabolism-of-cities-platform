@@ -2661,22 +2661,21 @@ body.staf-review {
   }
 }
 
-// STAF REVIEW INDEX
-body.staf-review.index {
-  .data-types .card {
-    .col.icon {
-      max-width: 60px;
+// DUAL ICONBOX USED IN VARIOUS PLACES
 
-      i {
-        font-size: 2rem;
-        margin-top: .25rem;
-      }
-    }
+.dual-iconbox .card {
+  .col.icon {
+    max-width: 60px;
 
-    .type-details {
-      display: inline-block;
-      width: calc(100% - 50px);
+    i {
+      font-size: 2rem;
+      margin-top: .25rem;
     }
+  }
+
+  .type-details {
+    display: inline-block;
+    width: calc(100% - 50px);
   }
 }
 

@@ -17,7 +17,7 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("dataportals/", library.list, { "type": "dataportals" }, name="view_dataportals"),
 
     path("", views.index, name="index"),
-    path("curation/", staf.review, name="review"),
+    #path("curation/", staf.review, name="review"),
     path("curation/pending/", staf.review_pending, name="review_pending"),
     path("curation/scoreboard/", staf.review_scoreboard, name="review_scoreboard"),
     path("curation/work/", staf.review_work, name="review_work"),

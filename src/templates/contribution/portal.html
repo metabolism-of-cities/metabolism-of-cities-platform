@@ -51,8 +51,6 @@
       </div>
     </div>
 
-
-
   {{ webpage.get_description }}
 
   {% if slug == "data" %}
@@ -86,7 +84,7 @@
               <li>{{ tag }}</li>
             {% endfor %}
           </ul>
-          <a href="{% url 'staf:data_layers_worksheet' %}">View entire worksheet &raquo;</a></p>
+          <a href="{% url 'data:hub_harvesting_worksheet' %}">View entire worksheet &raquo;</a></p>
         </div>
         {% endfor %}
       </div>

@@ -2,16 +2,11 @@
 
 {% block content %}
 
-  <div class="breadcrumbs alert alert-secondary">
-    <a href="../../">{{ info }}</a> &raquo;
-    <a href="../">Data management</a> &raquo;
-    <strong>Data harvesting</strong>
-  </div>
+  {% include "hub/_nav.html" %}
 
-  <h1>Data harvesting</h1>
-
-  <section class="mt-5">
-    <h2 class="h3">Inventory</h2>
+  <section>
+    <a class="btn btn-light float-right" href="{% url "data:hub_harvesting" %}"><i class="fa fa-th"></i> View all {{ SYSTEM_NAME_PLURAL }}</a>
+    <h2 class="h4 clearfix">Progress</h2>
 
     <div class="progress mb-3">
       <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{ percentage }}%;" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100" title="{{ uploaded }} topics out of {{ total_tags }} have at least one uploaded item.">{{ percentage|floatformat:0 }}%</div>
@@ -91,7 +86,7 @@
             <p>Is a complete Material Flow Analysis dataset available? <a href="896/form/?inventory=true&amp;type=10&amp;mfa=true&amp;next={{ request.get_full_path }}">Upload it here.</a></p>
           {% endif %}
 
-          <a href="{% url 'staf:data_layers_worksheet' %}">View entire worksheet &raquo;</a></p>
+          <a href="{% url 'data:hub_harvesting_worksheet' %}">View entire worksheet &raquo;</a></p>
         </div>
         {% endfor %}
       </div>
