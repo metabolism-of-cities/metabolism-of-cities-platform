@@ -933,8 +933,8 @@ def hub_harvesting_space(request, space):
     }
     return render(request, "hub/harvesting.space.html", context)
 
-def hub_harvesting_tag(request, slug, tag):
-    info = get_space(request, slug)
+def hub_harvesting_tag(request, space, tag):
+    info = get_space(request, space)
     tag = get_object_or_404(Tag, pk=tag)
     types = [5,6,9,16,37,25,27,29,32,10,33,38,20,31,40]
     list = LibraryItem.objects.filter(spaces=info, tags=tag)
@@ -1004,10 +1004,11 @@ def hub_harvesting_worksheet(request, space=None):
 def hub_processing(request, space=None):
 
     gis = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=2)
+    title = "Data processing"
 
     if space:
-        space = get_space(request, slug)
-
+        space = get_space(request, space)
+        title += " | " + space.name
 
     context = {
         "menu": "processing",
@@ -1015,7 +1016,7 @@ def hub_processing(request, space=None):
         "hide_space_menu": True,
         "gis": gis.count(),
         "gis_open": gis.filter(status=1, assigned_to__isnull=True).count(),
-        "title": "Data processing",
+        "title": title,
     }
     return render(request, "hub/processing.html", context)
 

@@ -582,5 +582,6 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         "journals": journals,
         "tag": tag,
         "space_name": space,
+        "menu": "library_item_form",
     }
     return render(request, "library/form.html", context)

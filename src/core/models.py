@@ -1235,9 +1235,10 @@ class ReferenceSpace(Record):
 
     def photo(self):
         from core.models import Photo
-        photo = Photo.objects.filter(spaces=self, is_deleted=False).order_by("position")
-        if photo:
-            return photo[0]
+        try:
+            return Photo.objects.filter(spaces=self, is_deleted=False).order_by("position")[0]
+        except:
+            return Photo.objects.get(pk=33476)
 
     class Meta:
         db_table = "stafdb_referencespace"

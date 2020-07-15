@@ -1,0 +1,37 @@
+{% extends "_base.html" %}
+
+{% block css %}
+<style type="text/css">
+::-webkit-scrollbar { 
+    display: none; 
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+body,html  {
+ overflow: hidden;
+ }
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="text-center row" style="height:1080px;background:#e2e2e2;width:1940px;position:absolute;left:0;top:0;z-index:1000000000000;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+    position:absolute;
+    border-top:none;
+
+">
+    <i class="fa fa-image" style="opacity:0.5;font-size:396px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+    "></i>
+</div>
+{% endblock %}

@@ -2,12 +2,12 @@
 
 {% block content %}
 
-  <div class="breadcrumbs alert alert-secondary">
-    <a href="../../../">{{ info }}</a> &raquo;
-    <a href="../../">Data management</a> &raquo;
-    <a href="../">Data harvesting</a> &raquo;
-    <strong>{{ tag }}</strong>
-  </div>
+  {% include "hub/_nav.html" %}
+
+  <a href="../" class="btn btn-primary-basic float-right">
+    <i class="fal fa-angle-left"></i>
+    Back
+  </a>
 
   <h1>
     <i class="fa fa-fw fa-{{ tag.parent_tag.icon }}"></i>

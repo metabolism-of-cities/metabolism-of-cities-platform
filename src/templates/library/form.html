@@ -10,22 +10,12 @@ textarea#id_author_list{height:100px}
 {% block content %}
 
   {% if PROJECT.slug == "data" or PROJECT.slug == "islands" %}
-
-    {% if not info %}
-
-      <div class="breadcrumbs alert alert-secondary">
-        <a href="../../../../">{{ space_name }}</a> &raquo;
-        <a href="../../../">Data management</a> &raquo;
-        <a href="../../">Data harvesting</a> &raquo;
-        <a href="../">{{ tag }}</a> &raquo;
-        <strong>Add {{ type }}</strong>
-      </div>
-
-    {% endif %}
-
+      {% include "hub/_nav.html" %}
+      <h1 class="h5">Adding: {{ type }}</h1>
+  {% else %}
+    <h1>Adding: {{ type }}</h1>
   {% endif %}
   
-  <h1>Adding: {{ type }}</h1>
   {% if info %}
 
   {% endif %}

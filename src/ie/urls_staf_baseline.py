@@ -54,7 +54,9 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/hub/", core.work_portal, {"slug": "data"}),
     path("dashboards/<slug:space>/hub/harvesting/", staf.hub_harvesting_space, name="hub_harvesting_space"),
     path("dashboards/<slug:space>/hub/harvesting/<int:tag>/", staf.hub_harvesting_tag, name="hub_harvesting_tag"),
+    path("dashboards/<slug:space>/hub/harvesting/<int:tag>/form/", library.form),
     path("dashboards/<slug:space>/hub/harvesting/worksheet/", staf.hub_harvesting_worksheet, name="hub_harvesting_worksheet"),
+    path("dashboards/<slug:space>/hub/processing/", staf.hub_processing, name="hub_processing"),
 
     path("dashboards/<slug:space>/", data.dashboard, name="dashboard"),
 ]
