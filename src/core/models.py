@@ -208,8 +208,24 @@ class Record(models.Model):
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
 
+def upload_directory(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/uuid/<filename>
+    directory = "uploads/"
+    parent = instance.attached_to if instance.attached_to else instance
+    object_type = parent.__class__.__name__
+    object_type = object_type.lower()
+    directory += object_type + "/"
+    if object_type == "libraryitem":
+        sub_directory = parent.type.name
+        sub_directory = sub_directory.lower()
+        directory += sub_directory + "/"
+    if parent.meta_data and "uuid" in parent.meta_data:
+        directory += parent.meta_data["uuid"] + "/"
+    return directory + filename
+
 class Document(Record):
-    file = models.FileField(null=True, blank=True, upload_to="files")
+    file = models.FileField(null=True, blank=True, upload_to=upload_directory)
+    attached_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="attachment_list")
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
@@ -1449,14 +1465,6 @@ class UploadSession(Record):
 
     class Meta:
         db_table = "stafdb_uploadsession"
-
-def upload_directory(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/uuid/<filename>
-    directory = "uploads/"
-    if instance.session.part_of_project:
-        directory += "project-" + str(instance.session.part_of_project.id) + "/"
-    directory += instance.session.type + "/" + str(instance.session.uuid) + "/" + filename
-    return directory
 
 class UploadFile(models.Model):
     session = models.ForeignKey(UploadSession, on_delete=models.CASCADE, related_name="files")

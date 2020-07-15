@@ -468,6 +468,10 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             else:
                 form.fields["tags"].queryset = Tag.objects.filter(parent_tag__parent_tag_id=845)
 
+    files = False
+    if type.name == "Shapefile":
+        files = True
+
     if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)
@@ -481,7 +485,6 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
             if tag:
                 info.tags.add(tag)
-
 
             if request.POST.get("publisher") or request.POST.get("journal"):
                 record_new = True
@@ -555,6 +558,21 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 )
                 message = Message.objects.create(posted_by_id=AUTO_BOT, parent=work, name="Task created", description="This task was created by the system")
 
+            if files:
+                if "files" in request.FILES:
+                    if info.type.name == "Shapefile":
+                        # Shapefiles should be placed in sub directories because of the way 
+                        # the files are read. If a record has a uuid in the meta_data, then 
+                        # this will be used for creating a sub director. So let's create one
+                        # if it doesn't exist yet.
+                        if not info.meta_data:
+                            info.meta_data = {}
+                        if "uuid" not in info.meta_data:
+                            info.meta_data["uuid"] = str(uuid.uuid4())
+                            info.save()
+                    for each in request.FILES.getlist("files"):
+                        document = Document.objects.create(name=str(each), file=each, attached_to=info)
+
             if info:
                 msg = "The information was saved."
             elif curator:
@@ -578,7 +596,6 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
 
-
     context = {
         "info": info,
         "form": form,
@@ -589,6 +606,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         "journals": journals,
         "tag": tag,
         "space_name": space,
+        "files": files,
         "menu": "library_item_form",
     }
     return render(request, "library/form.html", context)

@@ -60,6 +60,13 @@ textarea#id_author_list{height:100px}
       </div>
     {% endif %}
 
+    {% if files %}
+      <div class="form-group">
+        <label>File(s)</label>
+        <input type="file" name="files" multiple />
+      </div>
+    {% endif %}
+
     {% buttons %}
       <button type="submit" class="btn btn-success">
         <i class="fa fa-save"></i>
