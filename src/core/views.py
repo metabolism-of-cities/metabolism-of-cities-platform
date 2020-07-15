@@ -272,13 +272,6 @@ def user_profile_form(request):
 
 def index(request):
 
-    if "update" in request.GET and request.user.id == 1:
-        messages = Message.objects.filter(attachments__isnull=False)
-        for each in messages:
-            for a in each.attachments.all():
-                a.attached_to = each
-                a.save()
-
     count = Project.objects.all().count()
     blurb = """
       We are a global network of people, working together on systemically

@@ -225,7 +225,7 @@ def upload_directory(instance, filename):
 
 class Document(Record):
     file = models.FileField(null=True, blank=True, upload_to=upload_directory)
-    attached_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="attachment_list")
+    attached_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="attachments")
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
@@ -682,7 +682,6 @@ class ForumTopic(Record):
         ordering = ["-is_starred", "-last_update__date_created"]
 
 class Message(Record):
-    attachments = models.ManyToManyField(Document, blank=True)
     parent = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="messages")
     posted_by = models.ForeignKey(People, on_delete=models.CASCADE, null=True, blank=True, related_name="message_list")
 
