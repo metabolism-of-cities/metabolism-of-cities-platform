@@ -1554,3 +1554,19 @@ class EurostatForm(forms.ModelForm):
     class Meta:
         model = EurostatDB
         fields = "__all__"
+
+# This is the format to use from now on
+# Note that there is a uid primary key, separate from the record_id
+# This is must easier to have individual primary key sequences
+#
+# We should migrate the old stuff at some points
+# See https://new.metabolismofcities.org/tasks/33488/
+#
+#class Dummy(Record):
+#    uid = models.AutoField(primary_key=True)
+#    record_id = models.OneToOneField(
+#        Record, on_delete=models.CASCADE,
+#        parent_link=True,
+#        primary_key=False,
+#    )
+#    info = models.CharField(max_length=100)

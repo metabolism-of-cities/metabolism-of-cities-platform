@@ -271,6 +271,17 @@ def user_profile_form(request):
 # Homepage
 
 def index(request):
+
+    if "update" in request.GET and request.user.id == 1:
+        check = LibraryItem.objects_unfiltered.all().order_by("uid")[0]
+        uid = check.uid if check.uid else 0
+        pending = LibraryItem.objects_unfiltered.all()
+        for each in pending:
+            each.record_id = each.id
+            uid += 1
+            each.uid = uid
+            each.save()
+
     count = Project.objects.all().count()
     blurb = """
       We are a global network of people, working together on systemically

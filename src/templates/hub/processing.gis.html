@@ -7,7 +7,7 @@
 
   <h1>{{ session }}</h1>
 
-  {% include "staf/review/_nav.html" %}
+  {% include "hub/_nav.html" %}
 
   <section class="row">
     <div class="col-lg-8 mb-4 mb-lg-0">
@@ -121,6 +121,7 @@
             <i class="fas fa-user-times"></i>
             Stop working on this
           </button>
+          <a href="edit/?next={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
         {% endif %}
         {% csrf_token %}
       </form>

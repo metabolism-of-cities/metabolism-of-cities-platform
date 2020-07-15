@@ -59,7 +59,7 @@ def review_work(request):
 def review_uploaded(request):
 
     context = {
-        "list": Work.objects.filter(status=Work.WorkStatus.OPEN, part_of_project_id=THIS_PROJECT, workactivity_id=2),
+        "list": Work.objects.filter(status=Work.WorkStatus.OPEN, part_of_project_id=request.project, workactivity_id=2),
         "load_datatables": True,
     }
     return render(request, "staf/review/files.uploaded.html", context)
@@ -158,7 +158,7 @@ def upload_staf_data(request, id=None, block=None, project_name="staf"):
 @login_required
 def upload_staf_verify(request, id):
     session = get_object_or_404(UploadSession, pk=id)
-    if session.uploader is not request.user.people and not has_permission(request, THIS_PROJECT, ["curator", "admin", "publisher"]):
+    if session.uploader is not request.user.people and not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
     rows = None
@@ -232,7 +232,7 @@ def upload_gis(request, id=None):
 @login_required
 def upload_gis_file(request, id=None):
     session = None
-    project = THIS_PROJECT
+    project = request.project
     if id:
         # Add validation code here
         session = get_object_or_404(UploadSession, pk=id)
@@ -292,7 +292,7 @@ def upload(request):
 @login_required
 def upload_gis_verify(request, id):
     session = get_object_or_404(UploadSession, pk=id)
-    if session.uploader is not request.user.people and not has_permission(request, THIS_PROJECT, ["curator", "admin", "publisher"]):
+    if session.uploader is not request.user.people and not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
     files = UploadFile.objects.filter(session=session)
     geojson = None
@@ -317,7 +317,7 @@ def upload_gis_verify(request, id):
 def upload_gis_meta(request, id):
     session = get_object_or_404(UploadSession, pk=id)
 
-    if has_permission(request, THIS_PROJECT, ["curator", "admin", "publisher"]):
+    if has_permission(request, request.project, ["curator", "admin", "publisher"]):
         data_admin = True
     else:
         data_admin = False
@@ -918,14 +918,18 @@ def hub_processing_list(request, space=None, type=None):
 
 def hub_processing_gis(request, id, classify=False, space=None):
 
-    session = get_object_or_404(UploadSession, pk=id)
-    if session.uploader is not request.user.people and not has_permission(request, THIS_PROJECT, ["curator", "admin", "publisher"]):
+    shapefile = get_object_or_404(LibraryItem, pk=id)
+    if shapefile.uploader is not request.user.people and not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
     try:
-        work = Work.objects.get(status=Work.WorkStatus.OPEN, part_of_project_id=THIS_PROJECT, workactivity_id=2, related_to=session)
-    except:
+        work = Work.objects.filter(status__in=[1,4,5], part_of_project_id=request.project, workactivity_id=2, related_to=shapefile)
+        print(work)
+        print(work.query)
+        work = work[0]
+    except Exception as e:
         work = None
+        messages.error(request, "We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
 
     if "start_work" in request.POST:
         try:
@@ -937,15 +941,15 @@ def hub_processing_gis(request, id, classify=False, space=None):
             messages.error(request, "Sorry, we could not assign you -- perhaps someone else grabbed this work in the meantime? Otherwise please report this error. <br><strong>Error code: " + str(e) + "</strong>")
 
     if "classify_name" in request.POST:
-        meta_data = session.meta_data
+        meta_data = shapefile.meta_data
         if not "columns" in meta_data:
             meta_data["columns"] = {}
         meta_data["columns"]["name"] = request.POST.get("classify_name")
         meta_data["columns"]["identifier"] = request.POST.get("identifier")
-        session.meta_data = meta_data 
-        session.save()
+        shapefile.meta_data = meta_data 
+        shapefile.save()
         messages.success(request, "Settings were saved.")
-        return redirect("staf:review_session_classify", id=session.id)
+        return redirect("staf:hub_processing_gis_classify", id=shapefile.id)
 
     geojson = None
     error = False
@@ -1004,25 +1008,26 @@ def hub_processing_gis(request, id, classify=False, space=None):
         messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
         error = True
 
-    page = "session.html"
+    page = "processing.gis.html"
     list = None
 
     context = {
-        "session": session,
+        "shapefile": shapefile,
         "file": size,
         "load_map": True,
         "load_datatables": True,
         "error": error,
-        "title": "Review session #" + str(session.id),
+        "title": "Review shapefile #" + str(shapefile.id),
         "datasource": datasource,
         "layer": layer,
         "work": work,
         "geocode": geocode,
         "classify": classify,
+        "menu": "processing",
     }
 
     if classify:
-        page = "session.classify.html"
+        page = "processing.gis.classify.html"
         try:
             names = layer.get_fields(session.meta_data["columns"]["name"])
             hits = ReferenceSpace.objects.filter(name__in=names)
@@ -1035,6 +1040,6 @@ def hub_processing_gis(request, id, classify=False, space=None):
             messages.error(request, "Your file could not be processed. Please review the error below.<br><strong>" + str(e) + "</strong>")
             error = True
 
-    return render(request, "staf/review/" + page, context)
+    return render(request, "hub/" + page, context)
 
 
