@@ -63,8 +63,24 @@ textarea#id_author_list{height:100px}
     {% if files %}
       <div class="form-group">
         <label>File(s)</label>
-        <input type="file" name="files" multiple />
+        <input type="file" name="files" multiple class="form-control" />
       </div>
+      {% if info.attachments %}
+        <div>
+          <p>Existing files:</p>
+          <ul class="list-unstyled">
+          {% for each in info.attachments.all %}
+            <li>
+              <label class="mr-4">
+                <input type="checkbox" name="delete_file" value="{{ each.id }}">
+                Delete
+              </label>
+              {{ each }}
+            </li>
+          {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
     {% endif %}
 
     {% buttons %}

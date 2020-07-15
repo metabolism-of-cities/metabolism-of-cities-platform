@@ -560,6 +560,9 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
             if files:
                 if "files" in request.FILES:
+                    if "delete_file" in request.POST:
+                        # We should delete the selected files
+                        pass
                     if info.type.name == "Shapefile":
                         # Shapefiles should be placed in sub directories because of the way 
                         # the files are read. If a record has a uuid in the meta_data, then 
