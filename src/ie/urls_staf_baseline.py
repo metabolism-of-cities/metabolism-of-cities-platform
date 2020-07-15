@@ -50,6 +50,8 @@ baseline_staf_urlpatterns = [
     path("hub/harvesting/", staf.hub_harvesting, name="hub_harvesting"),
     path("hub/harvesting/worksheet/", staf.hub_harvesting_worksheet, name="hub_harvesting_worksheet"),
     path("hub/processing/", staf.hub_processing, name="hub_processing"),
+    path("hub/processing/<slug:type>/", staf.hub_processing_list, name="hub_processing_list"),
+    path("hub/processing/gis/<int:id>/", staf.hub_processing_gis, name="hub_processing_gis"),
 
     path("dashboards/<slug:space>/hub/", core.work_portal, {"slug": "data"}),
     path("dashboards/<slug:space>/hub/harvesting/", staf.hub_harvesting_space, name="hub_harvesting_space"),
@@ -57,6 +59,8 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/hub/harvesting/<int:tag>/form/", library.form),
     path("dashboards/<slug:space>/hub/harvesting/worksheet/", staf.hub_harvesting_worksheet, name="hub_harvesting_worksheet"),
     path("dashboards/<slug:space>/hub/processing/", staf.hub_processing, name="hub_processing"),
+    path("dashboards/<slug:space>/hub/processing/<slug:type>/", staf.hub_processing_list, name="hub_processing_list"),
+    path("dashboards/<slug:space>/hub/processing/gis/<int:id>/", staf.hub_processing_gis, name="hub_processing_gis"),
 
     path("dashboards/<slug:space>/", data.dashboard, name="dashboard"),
 

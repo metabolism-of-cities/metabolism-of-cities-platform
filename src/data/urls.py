@@ -18,14 +18,14 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
 
     path("", views.index, name="index"),
     #path("curation/", staf.review, name="review"),
-    path("curation/pending/", staf.review_pending, name="review_pending"),
-    path("curation/scoreboard/", staf.review_scoreboard, name="review_scoreboard"),
-    path("curation/work/", staf.review_work, name="review_work"),
-    path("curation/uploaded/", staf.review_uploaded, name="review_uploaded"),
-    path("curation/processed/", staf.review_processed, name="review_processed"),
-    path("curation/<int:id>/", staf.review_session, name="review_session"),
-    path("curation/articles/", staf.review_articles, name="review_articles"),
-    path("curation/articles/<int:id>/", staf.review_article, name="review_article"),
+    #path("curation/pending/", staf.review_pending, name="review_pending"),
+    #path("curation/scoreboard/", staf.review_scoreboard, name="review_scoreboard"),
+    #path("curation/work/", staf.review_work, name="review_work"),
+    #path("curation/uploaded/", staf.review_uploaded, name="review_uploaded"),
+    #path("curation/processed/", staf.review_processed, name="review_processed"),
+    #path("curation/<int:id>/", staf.review_session, name="review_session"),
+    #path("curation/articles/", staf.review_articles, name="review_articles"),
+    #path("curation/articles/<int:id>/", staf.review_article, name="review_article"),
 
     path("overview/", views.overview, name="overview"),
 

@@ -4,11 +4,7 @@
 
 {% block content %}
 
-<h1 class="mb-0">Uploaded files</h1>
-<a href="{% url 'staf:review' %}" class="btn btn-primary-basic mb-4">
-  <i class="fal fa-angle-left"></i>
-  Back to review portal
-</a>
+{% include "hub/_nav.html" %}
 
 <div class="row">
   <div class="col-lg-8">
@@ -29,7 +25,6 @@
         <tr>
           <th>ID</th>
           <th>Name</th>
-          <th>Uploader</th>
           <th>Date</th>
         </tr>
       </thead>
@@ -37,13 +32,17 @@
       {% for each in list %}
         <tr>
           <td><code>{{ each.related_to.id }}</code></td>
-          <td><a href="{% url "staf:review_session" each.related_to.id %}">{{ each.related_to }}</a></td>
-          <td>{{ each.related_to.uploader }}</td>
+          <td><a href="{{ each.id }}/">{{ each.related_to }}</a></td>
           <td data-sort="{{ each.date_created|date:"U" }}">{{ each.date_created|naturaltime }}</td>
         </tr>
       {% endfor %}
       </tbody>
     </table>
+
+    <a href="../" class="btn btn-primary-basic">
+      <i class="fal fa-angle-left"></i>
+      Back
+    </a>
 
   </div>
   <div class="col-lg-4 sidebar">

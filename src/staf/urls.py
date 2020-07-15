@@ -60,12 +60,4 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
 
     path("curation/publish/dataset/", views.dataset_editor, name="dataset_editor"),
 
-    path("curation/pending/", views.review_pending, name="review_pending"),
-    path("curation/scoreboard/", views.review_scoreboard, name="review_scoreboard"),
-    path("curation/work/", views.review_work, name="review_work"),
-    path("curation/uploaded/", views.review_uploaded, name="review_uploaded"),
-    path("curation/processed/", views.review_processed, name="review_processed"),
-    path("curation/<int:id>/", views.review_session, name="review_session"),
-    path("curation/<int:id>/classify/", views.review_session, { "classify": True, }, name="review_session_classify"),
-
 ]

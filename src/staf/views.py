@@ -56,12 +56,6 @@ def review_work(request):
     }
     return render(request, "staf/review/work.html", context)
 
-def review_pending(request):
-    context = {
-        "list": UploadSession.objects.filter(meta_data__isnull=True),
-    }
-    return render(request, "staf/review/files.pending.html", context)
-
 def review_uploaded(request):
 
     context = {
@@ -74,128 +68,6 @@ def review_processed(request):
     context = {
     }
     return render(request, "staf/review/files.processed.html", context)
-
-def review_session(request, id, classify=False):
-
-    session = get_object_or_404(UploadSession, pk=id)
-    if session.uploader is not request.user.people and not has_permission(request, THIS_PROJECT, ["curator", "admin", "publisher"]):
-        unauthorized_access(request)
-
-    try:
-        work = Work.objects.get(status=Work.WorkStatus.OPEN, part_of_project_id=THIS_PROJECT, workactivity_id=2, related_to=session)
-    except:
-        work = None
-
-    if "start_work" in request.POST:
-        try:
-            work.status = Work.WorkStatus.PROGRESS
-            work.assigned_to = request.user.people
-            work.save()
-            messages.success(request, "You are now in charge of this dataset - good luck!")
-        except Exception as e:
-            messages.error(request, "Sorry, we could not assign you -- perhaps someone else grabbed this work in the meantime? Otherwise please report this error. <br><strong>Error code: " + str(e) + "</strong>")
-
-    if "classify_name" in request.POST:
-        meta_data = session.meta_data
-        if not "columns" in meta_data:
-            meta_data["columns"] = {}
-        meta_data["columns"]["name"] = request.POST.get("classify_name")
-        meta_data["columns"]["identifier"] = request.POST.get("identifier")
-        session.meta_data = meta_data 
-        session.save()
-        messages.success(request, "Settings were saved.")
-        return redirect("staf:review_session_classify", id=session.id)
-
-    geojson = None
-    error = False
-    datasource = None
-    layer = None
-    size = None
-    geocode = None
-
-    try:
-        file = UploadFile.objects.filter(session=session, file__iendswith=".shp")[0]
-        filename = settings.MEDIA_ROOT + "/" + file.file.name
-
-        from django.contrib.gis.gdal import DataSource
-        datasource = DataSource(filename)
-        layer = datasource[0]
-        size = file.file.size/1024/1024
-        geocode = Geocode.objects.get(pk=session.meta_data.get("geocode"))
-        
-        if "geojson" in request.GET:
-
-            if layer.srs["SPHEROID"] == "WGS 84":
-                sf = shapefile.Reader(filename)
-                shapes = sf.shapes()
-                geojson = shapes.__geo_interface__
-                geojson = json.dumps(geojson)
-                return HttpResponse(geojson, content_type="application/json")
-
-            else:
-                # If it's not WGS 84 then we need to convert it
-                feature_collection = {
-                    "type": "FeatureCollection",
-                    "crs": {
-                        "type": "name",
-                        "properties": {"name": "EPSG:4326"}
-                    },
-                    "features": []
-                }
-
-                for n in range(datasource.layer_count):
-                    layer = datasource[n]
-                    # Transform the coordinates to epsg:4326
-                    features = map(lambda geom: geom.transform(4326, clone=True), layer.get_geoms())
-                    for feature_i, feature in enumerate(features):
-                        feature_collection['features'].append(
-                            {
-                                'type': 'Feature',
-                                'geometry': json.loads(feature.json),
-                                'properties': {
-                                    'name': f'feature_{feature_i}'
-                                }
-                            }
-                        )
-                return HttpResponse(json.dumps(feature_collection), content_type="application/json")
-
-    except Exception as e:
-        messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
-        error = True
-
-    page = "session.html"
-    list = None
-
-    context = {
-        "session": session,
-        "file": size,
-        "load_map": True,
-        "load_datatables": True,
-        "error": error,
-        "title": "Review session #" + str(session.id),
-        "datasource": datasource,
-        "layer": layer,
-        "work": work,
-        "geocode": geocode,
-        "classify": classify,
-    }
-
-    if classify:
-        page = "session.classify.html"
-        try:
-            names = layer.get_fields(session.meta_data["columns"]["name"])
-            hits = ReferenceSpace.objects.filter(name__in=names)
-            hit = {}
-            for each in hits:
-                hit[each.name] = each.id
-            context["hit"] = hit
-            context["names"] = names
-        except Exception as e:
-            messages.error(request, "Your file could not be processed. Please review the error below.<br><strong>" + str(e) + "</strong>")
-            error = True
-
-    return render(request, "staf/review/" + page, context)
-
 
 def upload_staf(request, id=None):
     list = FlowDiagram.objects.all()
@@ -1024,4 +896,145 @@ def hub_processing(request, space=None):
         "title": title,
     }
     return render(request, "hub/processing.html", context)
+
+def hub_processing_list(request, space=None, type=None):
+
+    gis = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=2)
+    title = "GIS data processing"
+
+    if space:
+        space = get_space(request, space)
+        title += " | " + space.name
+        gis = gis.filter(related_to__spaces=space)
+
+    context = {
+        "list": gis,
+        "menu": "processing",
+        "space": space,
+        "title": title,
+        "hide_space_menu": True,
+    }
+    return render(request, "hub/processing.list.html", context)
+
+def hub_processing_gis(request, id, classify=False, space=None):
+
+    session = get_object_or_404(UploadSession, pk=id)
+    if session.uploader is not request.user.people and not has_permission(request, THIS_PROJECT, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    try:
+        work = Work.objects.get(status=Work.WorkStatus.OPEN, part_of_project_id=THIS_PROJECT, workactivity_id=2, related_to=session)
+    except:
+        work = None
+
+    if "start_work" in request.POST:
+        try:
+            work.status = Work.WorkStatus.PROGRESS
+            work.assigned_to = request.user.people
+            work.save()
+            messages.success(request, "You are now in charge of this dataset - good luck!")
+        except Exception as e:
+            messages.error(request, "Sorry, we could not assign you -- perhaps someone else grabbed this work in the meantime? Otherwise please report this error. <br><strong>Error code: " + str(e) + "</strong>")
+
+    if "classify_name" in request.POST:
+        meta_data = session.meta_data
+        if not "columns" in meta_data:
+            meta_data["columns"] = {}
+        meta_data["columns"]["name"] = request.POST.get("classify_name")
+        meta_data["columns"]["identifier"] = request.POST.get("identifier")
+        session.meta_data = meta_data 
+        session.save()
+        messages.success(request, "Settings were saved.")
+        return redirect("staf:review_session_classify", id=session.id)
+
+    geojson = None
+    error = False
+    datasource = None
+    layer = None
+    size = None
+    geocode = None
+
+    try:
+        file = UploadFile.objects.filter(session=session, file__iendswith=".shp")[0]
+        filename = settings.MEDIA_ROOT + "/" + file.file.name
+
+        from django.contrib.gis.gdal import DataSource
+        datasource = DataSource(filename)
+        layer = datasource[0]
+        size = file.file.size/1024/1024
+        geocode = Geocode.objects.get(pk=session.meta_data.get("geocode"))
+        
+        if "geojson" in request.GET:
+
+            if layer.srs["SPHEROID"] == "WGS 84":
+                sf = shapefile.Reader(filename)
+                shapes = sf.shapes()
+                geojson = shapes.__geo_interface__
+                geojson = json.dumps(geojson)
+                return HttpResponse(geojson, content_type="application/json")
+
+            else:
+                # If it's not WGS 84 then we need to convert it
+                feature_collection = {
+                    "type": "FeatureCollection",
+                    "crs": {
+                        "type": "name",
+                        "properties": {"name": "EPSG:4326"}
+                    },
+                    "features": []
+                }
+
+                for n in range(datasource.layer_count):
+                    layer = datasource[n]
+                    # Transform the coordinates to epsg:4326
+                    features = map(lambda geom: geom.transform(4326, clone=True), layer.get_geoms())
+                    for feature_i, feature in enumerate(features):
+                        feature_collection['features'].append(
+                            {
+                                'type': 'Feature',
+                                'geometry': json.loads(feature.json),
+                                'properties': {
+                                    'name': f'feature_{feature_i}'
+                                }
+                            }
+                        )
+                return HttpResponse(json.dumps(feature_collection), content_type="application/json")
+
+    except Exception as e:
+        messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
+        error = True
+
+    page = "session.html"
+    list = None
+
+    context = {
+        "session": session,
+        "file": size,
+        "load_map": True,
+        "load_datatables": True,
+        "error": error,
+        "title": "Review session #" + str(session.id),
+        "datasource": datasource,
+        "layer": layer,
+        "work": work,
+        "geocode": geocode,
+        "classify": classify,
+    }
+
+    if classify:
+        page = "session.classify.html"
+        try:
+            names = layer.get_fields(session.meta_data["columns"]["name"])
+            hits = ReferenceSpace.objects.filter(name__in=names)
+            hit = {}
+            for each in hits:
+                hit[each.name] = each.id
+            context["hit"] = hit
+            context["names"] = names
+        except Exception as e:
+            messages.error(request, "Your file could not be processed. Please review the error below.<br><strong>" + str(e) + "</strong>")
+            error = True
+
+    return render(request, "staf/review/" + page, context)
+
 
