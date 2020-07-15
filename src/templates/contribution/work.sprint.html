@@ -16,13 +16,7 @@
   {% if participants %}
     <div class="participants mb-3">
       {% for each in participants %}
-        {% if each.image %}
-          <img src="{{ each.image.thumbnail.url }}" title="{{ each }}" class="avatar"/>
-        {% else %}
-          <span class="avatar plus" title="{{ each }}">
-            {{ each.name }}
-          </span>
-        {% endif %}
+        {{ each.avatar }}
       {% endfor %}
     </div>
   {% endif %}

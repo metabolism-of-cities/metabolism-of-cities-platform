@@ -507,6 +507,19 @@ class People(Record):
         points = Work.objects_unfiltered.filter(assigned_to=self, status=Work.WorkStatus.COMPLETED).aggregate(total=Sum("workactivity__points"))
         return points["total"]
 
+    def avatar(self):
+        if self.image:
+            return mark_safe('<img class="avatar" src="' + self.image.thumbnail.url + '" alt="' + self.name + '" title="' + self.name + '">')
+        else:
+            return mark_safe('<div title="' + self.name + '" class="avatar letter">' + self.name[:1] + '</div>')
+
+    def get_photo(self):
+        if self.image:
+            return self.image
+        else:
+            photo = Photo.objects.get(pk=33476)
+            return photo.image
+
     class Meta:
         verbose_name_plural = "people"
         ordering = ["name"]

@@ -1,9 +1,17 @@
   {% extends '_base.html' %}
-  {% load static %}
-  {% load sass_tags %}
   {% block title %}Avatars{% endblock %}
   {% block content %}
-    <img class="avatar" src="https://backoffice.metabolismofcities.org/media/contacts/paul.thumbnail.jpg">
 
-    <div class="avatar letter">L</div>
+    <div class="alert alert-info">
+      Simply get the <code>.avatar</code> property on a People object and 
+      you get the code for an avatar.<br>
+      Note that <code>get_photo</code> will return the main pic, with a placeholder
+      being shown if no pic is uploaded.
+    </div>
+
+    {% if request.user.is_authenticated %}
+      {{ request.user.people.avatar }}
+    {% else %}
+      <div class="alert alert-warning">Log in to see the avatar.</div>
+    {% endif %}
   {% endblock %}

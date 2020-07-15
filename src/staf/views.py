@@ -884,10 +884,12 @@ def multimedia(request):
 
 def hub_harvesting(request):
 
+    project = get_object_or_404(Project, pk=request.project)
     context = {
         "spaces": ActivatedSpace.objects.filter(part_of_project_id=request.project),
         "menu": "harvesting",
         "hide_space_menu": True,
+        "processing_link": project.slug + ":hub_harvesting_space",
     }
     return render(request, "hub/harvesting.html", context)
 
@@ -912,6 +914,7 @@ def hub_harvesting_space(request, space):
     if forum_topic:
         list_messages = Message.objects.filter(parent=forum_topic[0])
 
+    project = get_object_or_404(Project, pk=request.project)
     context = {
         "info": info,
         "space": info,
@@ -930,6 +933,7 @@ def hub_harvesting_space(request, space):
         "untagged_items": untagged_items,
         "menu": "harvesting",
         "hide_space_menu": True,
+        "all_link": project.slug + ":hub_harvesting",
     }
     return render(request, "hub/harvesting.space.html", context)
 
@@ -1009,6 +1013,7 @@ def hub_processing(request, space=None):
     if space:
         space = get_space(request, space)
         title += " | " + space.name
+        gis = gis.filter(related_to__spaces=space)
 
     context = {
         "menu": "processing",

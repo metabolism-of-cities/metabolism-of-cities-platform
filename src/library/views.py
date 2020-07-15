@@ -522,6 +522,8 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                         activity_id = 6
                     elif type_name == "Data visualisation":
                         activity_id = 20
+                    elif type_name == "Shapefile":
+                        activity_id = 1
                     else:
                         activity_id = 4
 
@@ -536,13 +538,18 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 message = Message.objects.create(posted_by=request.user.people, parent=work, name="Status change", description="Task was completed")
 
                 if type_name == "Dataset":
-                    name = "Review and process " + type_name.lower()
+                    name = "Process " + type_name.lower()
+                    activity_id = 30
+                elif type_name == "Shapefile":
+                    name = "Process " + type_name.lower()
+                    activity_id = 2
                 else:
                     name = "Review, tag and publish " + type_name.lower()
+                    activity_id = 14
                 work = Work.objects.create(
                     status = Work.WorkStatus.OPEN,
                     part_of_project = project,
-                    workactivity_id = 14,
+                    workactivity_id = activity_id,
                     related_to = info,
                     name = name,
                 )

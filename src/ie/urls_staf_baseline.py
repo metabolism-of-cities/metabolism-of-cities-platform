@@ -59,4 +59,5 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/hub/processing/", staf.hub_processing, name="hub_processing"),
 
     path("dashboards/<slug:space>/", data.dashboard, name="dashboard"),
+
 ]
