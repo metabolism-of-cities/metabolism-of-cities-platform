@@ -7,46 +7,76 @@
 
   <h1>{{ session }}</h1>
 
-  {% include "staf/review/_nav.html" %}
+  {% include "hub/_nav.html" %}
 
   <section id="contentsection">
-    <h3 class="mt-4">Shapefile content</h3>
-    {% if layer.num_feat > 100 %}
-      <div class="alert alert-primary">
-        <i class="fal fa-info-circle mr-1"></i>
-        In total, there are <strong>{{ layer.num_feat }}</strong> items in your shapefile.<br>
-        We have been able to match <strong>{{ hits.count }}</strong> items with existing reference spaces.
-      </div>
-    {% endif %}
-    <table class="table datatable datatable-card">
-      <thead>
-        <tr>
-          <th>Place</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for each in names %}
-          <tr>
-            <td>{{ each }}</td>
-            <td>
-              {% if not each in hit %}
-                <em>New space</em>
-              {% else %}
-                <em><a href="{% url 'staf:referencespace' hit|get_item:each %}">Match found</a></em><br>
-                <label><input type="radio" name="match_{{ hit|get_item:each }}" value="1" checked /> Use match</label><br>
-                <label><input type="radio" name="match_{{ hit|get_item:each }}" value="0" /> Create new space</label>
-              {% endif %}
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
 
-    <button class="btn disabled save btn-success" disabled form="identify-columns">
-      <i class="fas fa-save"></i>
-      Save
-    </button>
+    <a href="../" class="btn btn-primary-basic float-right">
+      <i class="fal fa-angle-left"></i>
+      Back
+    </a>
+
+    <h3 class="mt-4">Shapefile content</h3>
+    <div class="alert alert-primary">
+      <i class="fal fa-info-circle mr-1"></i>
+      In total, there are <strong>{{ layer.num_feat }}</strong> items in your shapefile.<br>
+      We have been able to match <strong>{{ hit_count }}</strong> items with existing reference spaces.<br>
+      Please review the list below in detail.
+    </div>
+
+    <form method="post">
+      <table class="table datatable datatable-card">
+        <thead>
+          <tr>
+            <th>Place</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for each in names %}
+            <tr>
+              <td>{{ each }}</td>
+              <td>
+                {% if not each %}
+                  <span class="text-danger">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    ERROR: name not set
+                  </span>
+                {% elif each in duplicates %}
+                  <span class="text-danger">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    ERROR: Duplicate entry
+                  </span>
+                {% elif not each in hit %}
+                  <span class="text-secondary">Not found</span><br>
+                  <em>New space will be created</em>
+                {% else %}
+                  <em>
+                  {% with link=PROJECT.slug|add:":referencespace" %}
+                    <a target="_blank" href="{% url link hit|get_item:each %}">Match found</a>
+                  {% endwith %}
+                  </em><br>
+                  <label><input type="radio" name="match_{{ hit|get_item:each }}" checked /> Use match</label><br>
+                  <label><input type="radio" name="match_{{ hit|get_item:each }}" value="0" /> Create new space</label>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="pt-4">
+        <a href="../" class="btn btn-primary-basic">
+          <i class="fal fa-angle-left"></i>
+          Back
+        </a>
+        {% csrf_token %}
+        <button class="btn {% if error %}disabled{% endif %} save btn-success" {% if error %}disabled{% endif %}>
+          <i class="fas fa-save"></i>
+          Save
+        </button>
+      </div>
+    </form>
   </section>
 
 {% endblock %}

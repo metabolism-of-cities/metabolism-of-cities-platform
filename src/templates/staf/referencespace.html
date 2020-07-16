@@ -20,6 +20,36 @@
 {% block content %}
 
   <h1>{{ info }}</h1>
+
+  {% if info.photo.id != 33476 %}
+    <img src="{{ info.photo.image.thumbnail.url }}" alt="" class="img-thumbnail" />
+  {% endif %}
+
+  <dl class="row">
+    <dt class="col-sm-3">ID</dt>
+    <dd class="col-sm-9">{{ info.id }}</dd>
+
+    <dt class="col-sm-3">Geocode(s)</dt>
+    <dd class="col-sm-9">
+      {% if info.geocodes.all %}
+        <ul class="list-unstyled">
+        {% for each in info.geocodes.all %}
+          <li>{{ each }}</li>
+        {% endfor %}
+        </ul>
+      {% else %}
+        <em>None</em>
+      {% endif %}
+
+    {% if info.description %}
+      <dt class="col-sm-3">Description</dt>
+      <dd class="col-sm-9">{{ info.get_description }}</dd>
+    {% endif %}
+    
+    </dd>
+
+  </dl>
+
   {% if location %}
   <h2>Location</h2>
     <div id="map" class="leaflet-map"></div>

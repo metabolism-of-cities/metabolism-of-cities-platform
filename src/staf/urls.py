@@ -53,10 +53,6 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("geocode/<int:id>/edit/", views.geocode_form, name="geocode_form"),
     path("geocode/<int:id>/", views.geocode, name="geocode"),
     path("catalogs/about/", views.article, { "id": 57, "project": 54, }, name="catalogs"),
-    path("referencespaces/", views.referencespaces, name="referencespaces"),
-    path("referencespaces/view/<int:id>/", views.referencespace, name="referencespace"),
-    path("referencespaces/<int:id>/", views.referencespaces_list, name="referencespaces_list"),
-    path("referencespaces/<slug:group>/", views.referencespaces, name="referencespaces"),
 
     path("curation/publish/dataset/", views.dataset_editor, name="dataset_editor"),
 

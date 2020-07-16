@@ -72,13 +72,7 @@
               </td>
               <td class="d-none d-lg-table-cell">
                   {% for poster in each.posters|slice:"4" %}
-                    {% if poster.image %}
-                      <img src="{{ poster.image.thumbnail.url }}" alt="" title="{{ poster }}" class="avatar plus" />
-                    {% else %}
-                      <span class="avatar plus" title="{{ poster }}">
-                        {{ poster.name|slice:"1" }}
-                      </span>
-                    {% endif %}
+                    {{ poster.avatar }}
                   {% endfor %}
                   {% if each.posters.count > 5 %}
                     {% with count_reply=each.posters.count|add:"-4" %}

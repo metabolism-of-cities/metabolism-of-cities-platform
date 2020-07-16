@@ -385,13 +385,17 @@ def referencespaces_list(request, id):
 
 def referencespace(request, id):
     info = ReferenceSpace.objects.get(pk=id)
-    this_location = info.location.geometry
-    inside_the_space = ReferenceSpace.objects.filter(location__geometry__contained=this_location).order_by("name").prefetch_related("geocodes").exclude(pk=id)
+    this_location = None
+    inside_the_space = None
+    if info.location:
+        this_location = info.location.geometry
+        inside_the_space = ReferenceSpace.objects.filter(location__geometry__contained=this_location).order_by("name").prefetch_related("geocodes").exclude(pk=id)
     context = {
         "info": info,
         "location": info.location,
-        "inside_the_space":inside_the_space,
+        "inside_the_space": inside_the_space,
         "load_datatables": True,
+        "title": info.name,
     }
     return render(request, "staf/referencespace.html", context)
 
@@ -918,14 +922,15 @@ def hub_processing_list(request, space=None, type=None):
 
 def hub_processing_gis(request, id, classify=False, space=None):
 
-    shapefile = get_object_or_404(LibraryItem, pk=id)
-    if shapefile.uploader is not request.user.people and not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+    document = get_object_or_404(LibraryItem, pk=id)
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
+    if space:
+        space = get_space(request, space)
+
     try:
-        work = Work.objects.filter(status__in=[1,4,5], part_of_project_id=request.project, workactivity_id=2, related_to=shapefile)
-        print(work)
-        print(work.query)
+        work = Work.objects.filter(status__in=[1,4,5], part_of_project_id=request.project, workactivity_id=2, related_to=document)
         work = work[0]
     except Exception as e:
         work = None
@@ -941,15 +946,19 @@ def hub_processing_gis(request, id, classify=False, space=None):
             messages.error(request, "Sorry, we could not assign you -- perhaps someone else grabbed this work in the meantime? Otherwise please report this error. <br><strong>Error code: " + str(e) + "</strong>")
 
     if "classify_name" in request.POST:
-        meta_data = shapefile.meta_data
+        meta_data = document.meta_data
         if not "columns" in meta_data:
             meta_data["columns"] = {}
         meta_data["columns"]["name"] = request.POST.get("classify_name")
         meta_data["columns"]["identifier"] = request.POST.get("identifier")
-        shapefile.meta_data = meta_data 
-        shapefile.save()
+        if not "geocodes" in meta_data:
+            meta_data["geocodes"] = []
+        meta_data["geocodes"] = request.POST.getlist("geocodes")
+        document.meta_data = meta_data 
+        document.save()
         messages.success(request, "Settings were saved.")
-        return redirect("staf:hub_processing_gis_classify", id=shapefile.id)
+        project = get_object_or_404(Project, pk=request.project)
+        return redirect(project.slug + ":hub_processing_gis_classify", id=document.id, space=space.slug)
 
     geojson = None
     error = False
@@ -958,88 +967,152 @@ def hub_processing_gis(request, id, classify=False, space=None):
     size = None
     geocode = None
 
-    try:
-        file = UploadFile.objects.filter(session=session, file__iendswith=".shp")[0]
-        filename = settings.MEDIA_ROOT + "/" + file.file.name
-
-        from django.contrib.gis.gdal import DataSource
-        datasource = DataSource(filename)
-        layer = datasource[0]
-        size = file.file.size/1024/1024
-        geocode = Geocode.objects.get(pk=session.meta_data.get("geocode"))
-        
-        if "geojson" in request.GET:
-
-            if layer.srs["SPHEROID"] == "WGS 84":
-                sf = shapefile.Reader(filename)
-                shapes = sf.shapes()
-                geojson = shapes.__geo_interface__
-                geojson = json.dumps(geojson)
-                return HttpResponse(geojson, content_type="application/json")
-
-            else:
-                # If it's not WGS 84 then we need to convert it
-                feature_collection = {
-                    "type": "FeatureCollection",
-                    "crs": {
-                        "type": "name",
-                        "properties": {"name": "EPSG:4326"}
-                    },
-                    "features": []
-                }
-
-                for n in range(datasource.layer_count):
-                    layer = datasource[n]
-                    # Transform the coordinates to epsg:4326
-                    features = map(lambda geom: geom.transform(4326, clone=True), layer.get_geoms())
-                    for feature_i, feature in enumerate(features):
-                        feature_collection['features'].append(
-                            {
-                                'type': 'Feature',
-                                'geometry': json.loads(feature.json),
-                                'properties': {
-                                    'name': f'feature_{feature_i}'
-                                }
-                            }
-                        )
-                return HttpResponse(json.dumps(feature_collection), content_type="application/json")
-
-    except Exception as e:
-        messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
+    file = document.attachments.filter(file__iendswith=".shp")
+    if not file:
         error = True
+        messages.error(request, "No shapefile was found. Make sure a .shp file is included in the uploaded files.")
+    else:
+        try:
+            file = file[0]
+            filename = settings.MEDIA_ROOT + "/" + file.file.name
+
+            from django.contrib.gis.gdal import DataSource
+            datasource = DataSource(filename)
+            layer = datasource[0]
+            size = file.file.size/1024/1024
+            #geocode = Geocode.objects.get(pk=shapefile.meta_data.get("geocode"))
+            
+            if "geojson" in request.GET:
+
+                if layer.srs["SPHEROID"] == "WGS 84":
+                    sf = shapefile.Reader(filename)
+                    shapes = sf.shapes()
+                    geojson = shapes.__geo_interface__
+                    geojson = json.dumps(geojson)
+                    return HttpResponse(geojson, content_type="application/json")
+
+                else:
+                    # If it's not WGS 84 then we need to convert it
+                    feature_collection = {
+                        "type": "FeatureCollection",
+                        "crs": {
+                            "type": "name",
+                            "properties": {"name": "EPSG:4326"}
+                        },
+                        "features": []
+                    }
+
+                    for n in range(datasource.layer_count):
+                        layer = datasource[n]
+                        # Transform the coordinates to epsg:4326
+                        features = map(lambda geom: geom.transform(4326, clone=True), layer.get_geoms())
+                        for feature_i, feature in enumerate(features):
+                            feature_collection['features'].append(
+                                {
+                                    'type': 'Feature',
+                                    'geometry': json.loads(feature.json),
+                                    'properties': {
+                                        'name': f'feature_{feature_i}'
+                                    }
+                                }
+                            )
+                    return HttpResponse(json.dumps(feature_collection), content_type="application/json")
+
+        except Exception as e:
+            messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
+            error = True
 
     page = "processing.gis.html"
     list = None
 
+    try:
+        active_geocodes = Geocode.objects.filter(pk__in=document.meta_data["geocodes"])
+    except:
+        active_geocodes = None
+
     context = {
-        "shapefile": shapefile,
+        "document": document,
         "file": size,
         "load_map": True,
         "load_datatables": True,
         "error": error,
-        "title": "Review shapefile #" + str(shapefile.id),
+        "title": "Review shapefile #" + str(document.id),
         "datasource": datasource,
         "layer": layer,
         "work": work,
         "geocode": geocode,
         "classify": classify,
         "menu": "processing",
+        "space": space,
+        "hide_space_menu": True,
+        "load_select2": True,
+        "geocodes": Geocode.objects.all(),
+        "active_geocodes": active_geocodes,
     }
 
     if classify:
         page = "processing.gis.classify.html"
         try:
-            names = layer.get_fields(session.meta_data["columns"]["name"])
+            names = layer.get_fields(document.meta_data["columns"]["name"])
             hits = ReferenceSpace.objects.filter(name__in=names)
+
+            # Let's check to see if there are duplicates
+            seen = {}
+            duplicates = []
+            empty_name = False
+
+            for name in names:
+                if not name:
+                    empty_name = True
+                else:
+                    if name not in seen:
+                        seen[name] = 1
+                    else:
+                        if seen[name] == 1:
+                            duplicates.append(name)
+                        seen[name] += 1
+
+            if duplicates:
+                error = True
+                duplicates_li = ""
+                for each in duplicates:
+                    duplicates_li += "<li>" + str(each) + "</li>"
+                messages.error(request, "You have duplicates in your list -- please review the source data or the name column selection. Duplicates:<ul>" + duplicates_li + "</ul>")
+
+            if empty_name:
+                error = True
+                messages.error(request, "You have items in the list that do not have a name -- please review the source data or the name column selection.")
+
+            if request.method == "POST" and not error and False:
+                from django.contrib.gis.geos import GEOSGeometry
+
+                name_field = document.meta_data["columns"]["name"]
+                for each in layer:
+                    name = each.get(name_field)
+                    geo = each.geom
+                    print(name)
+                    print("0-----:")
+                    space = ReferenceSpace.objects.create(
+                        name = name,
+                    )
+                    ReferenceSpaceLocation.objects.create(
+                        space = space,
+                        geometry = GEOSGeometry(geo),
+                    )
+
             hit = {}
             for each in hits:
                 hit[each.name] = each.id
             context["hit"] = hit
             context["names"] = names
+            context["hit_count"] = len(hit)
+            context["duplicates"] = duplicates
         except Exception as e:
             messages.error(request, "Your file could not be processed. Please review the error below.<br><strong>" + str(e) + "</strong>")
             error = True
 
+        context["error"] = error
+        
     return render(request, "hub/" + page, context)
 
 

@@ -224,7 +224,7 @@ def upload_directory(instance, filename):
     return directory + filename
 
 class Document(Record):
-    file = models.FileField(null=True, blank=True, upload_to=upload_directory)
+    file = models.FileField(null=True, blank=True, upload_to=upload_directory, max_length=255)
     attached_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="attachments")
 
     objects_unfiltered = models.Manager()

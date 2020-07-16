@@ -306,10 +306,14 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     # - When the same users decide to upload an MFA record, ?mfa=true will also be set
 
     project = Project.objects.get(pk=request.project)
-    journals = None
-    publishers = None
-    info = None
+
+    journals = None # Whether or not we show a JOURNAL field in the form
+    publishers = None # Whether or not we show a PUBLISHER field in the form
+    info = None # Existing LibraryItem to edit (if user is editing)
     initial = {}
+    files = False # Whether or not the user should have an input to attach files
+    view_processing = False
+    data_management = False # Whether or not we are managing data, not just a library entry
 
     if tag:
         tag = Tag.objects.get(pk=tag)
@@ -333,6 +337,17 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         type = info.type
     else:
         type = LibraryItemType.objects.get(pk=type)
+
+    if project.slug == "islands" or project.slug == "data" or project.slug == "cityloops":
+        data_management = True
+
+    processing_is_possible = ["Dataset", "Shapefile"]
+
+    if data_management and type.name in processing_is_possible and curator and not id:
+        # We only show the direct processing option if we are on a data-site, and the
+        # particular type of entry requires processing, and the user has curation permissions, 
+        # and only when we add, not when we edit items.
+        view_processing = True
 
     if type.name == "Dataset":
 
@@ -361,9 +376,8 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         if "mfa" in request.GET:
             # We expect the file itself and we will activate all regular flows
             fields.remove("url")
-            fields.append("file")
             initial["tags"] = [896,897,898,899,907,908,909,910,911,912,913]
-            labels["file"] = "File (CSV format)"
+            files = True
 
         if "update_tags" in request.GET:
             fields = ["name", "tags", "description"]
@@ -387,8 +401,8 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
         if curator:
             fields.append("tags")
-            fields.append("file")
             fields.append("image")
+            files = True
 
         if "update_tags" in request.GET:
             fields = ["name", "tags", "description"]
@@ -468,8 +482,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             else:
                 form.fields["tags"].queryset = Tag.objects.filter(parent_tag__parent_tag_id=845)
 
-    files = False
-    if type.name == "Shapefile":
+    if type.name == "Shapefile" or type.name == "Dataset":
         files = True
 
     if request.method == "POST":
@@ -558,11 +571,23 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 )
                 message = Message.objects.create(posted_by_id=AUTO_BOT, parent=work, name="Task created", description="This task was created by the system")
 
+                if view_processing and "process" in request.POST:
+                    work = Work.objects.get(pk=work.id)
+                    work.status = Work.WorkStatus.PROGRESS
+                    work.assigned_to = request.user.people
+                    work.save()
+                    message = Message.objects.create(posted_by=request.user.people, parent=work, name="Status change", description="Processing work was started")
+
             if files:
+                if "delete_file" in request.POST:
+                    for each in request.POST.getlist("delete_file"):
+                        try:
+                            document = Document.objects.get(pk=each, attached_to=info)
+                            os.remove(document.file.path)
+                            document.delete()
+                        except Exception as e:
+                            messages.error(request, "Sorry, we could not remove a file.<br><strong>Error code: " + str(e) + "</strong>")
                 if "files" in request.FILES:
-                    if "delete_file" in request.POST:
-                        # We should delete the selected files
-                        pass
                     if info.type.name == "Shapefile":
                         # Shapefiles should be placed in sub directories because of the way 
                         # the files are read. If a record has a uuid in the meta_data, then 
@@ -578,6 +603,8 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
             if info:
                 msg = "The information was saved."
+            elif view_processing and "process" in request.POST:
+                msg = "The item was saved - you can now process it."
             elif curator:
                 msg = "The item was added to the library. <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=2&amp;record_child=" + str(info.id) + "'>Link to publisher</a> |  <a target='_blank' href='/admin/core/recordrelationship/add/?relationship=4&amp;record_child=" + str(info.id) + "'>Link to author</a> ||| <a href='/admin/core/organization/add/' target='_blank'>Add a new organization</a>"
                 msg = "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution! <a href='"+info.get_absolute_url()+"'>View item</a>"
@@ -585,6 +612,12 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 msg = "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution!"
             messages.success(request, msg)
 
+            if view_processing and "process" in request.POST:
+                if type.name == "Shapefile":
+                    if space:
+                        return redirect(project.slug + ":hub_processing_gis", id=info.id, space=space.slug)
+                    else:
+                        return redirect(project.slug + ":hub_processing_gis", id=info.id)
             if "next" in request.GET:
                 return redirect(request.GET["next"])
             if "return" in request.GET:
@@ -611,5 +644,6 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         "space_name": space,
         "files": files,
         "menu": "library_item_form",
+        "view_processing": view_processing,
     }
     return render(request, "library/form.html", context)

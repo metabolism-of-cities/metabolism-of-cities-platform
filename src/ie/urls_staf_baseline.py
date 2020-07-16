@@ -68,4 +68,9 @@ baseline_staf_urlpatterns = [
 
     path("dashboards/<slug:space>/", data.dashboard, name="dashboard"),
 
+    path("referencespaces/", staf.referencespaces, name="referencespaces"),
+    path("referencespaces/view/<int:id>/", staf.referencespace, name="referencespace"),
+    path("referencespaces/<int:id>/", staf.referencespaces_list, name="referencespaces_list"),
+    path("referencespaces/<slug:group>/", staf.referencespaces, name="referencespaces"),
+
 ]

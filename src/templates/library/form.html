@@ -88,6 +88,12 @@ textarea#id_author_list{height:100px}
         <i class="fa fa-save"></i>
         Save
       </button>
+      {% if view_processing %}
+        <button type="submit" class="btn btn-success" name="process" value="true">
+          <i class="fa fa-fw fa-cubes"></i>
+          Save and start processing
+        </button>
+      {% endif %}
     {% endbuttons %}
 
     <input type="hidden" name="type" value="{{ type.id }}" />
