@@ -84,18 +84,33 @@
             </tbody>
           </table>
         {% endif %}
+
       </div>
 
+      {% if document.comments %}
+        <div class="card mb-2">
+          <div class="card-header">
+            Uploader comments
+          </div>
+          <div class="card-body">
+            {{ document.comments|linebreaks }}
+          </div>
+        </div>
+      {% endif %}
+
       {% if not error %}
+
+        <div id="viewmap" class="btn btn-warning">
+          <i class="fal fa-angle-down"></i>
+          View map
+          <i class="fa fa-globe-africa"></i>
+        </div>
+
         <div id="viewraw" class="btn btn-primary-basic">
           <i class="fal fa-angle-down"></i>
           View raw data
         </div>
 
-        <div id="viewmap" class="btn btn-primary-basic">
-          <i class="fal fa-angle-down"></i>
-          View map
-        </div>
 
         <pre class="alert alert-light mt-2 mb-0" id="raw">
           {{ layer.srs }}

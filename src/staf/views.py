@@ -157,68 +157,6 @@ def upload_staf_data(request, id=None, block=None, project_name="staf"):
 
 @login_required
 def upload_staf_verify(request, id):
-    session = get_object_or_404(UploadSession, pk=id)
-    if session.uploader is not request.user.people and not has_permission(request, request.project, ["curator", "admin", "publisher"]):
-        unauthorized_access(request)
-
-    rows = None
-    header = None
-    files = UploadFile.objects.filter(session=session).order_by("-id")
-    error = False
-    unidentified_columns = [
-        "Start date", 
-        "End date",
-        "Material name",
-        "Material code",
-        "Quantity",
-        "Unit",
-        "Location",
-        "Comments",
-    ]
-
-    alias_columns = {
-        "Start": "Start date",
-        "End": "End date",
-        "Date": "Start date",
-        "Material": "Material name",
-        "Qty": "Quantity",
-        "Comment": "Comments",
-    }
-
-    labels = {}
-
-    try:
-        filename = settings.MEDIA_ROOT + "/" + files[0].file.name
-        f = codecs.open(filename, encoding="utf-8")
-        rows = csv.reader(f)
-
-        # We will review each column to see if we can auto-detect what value this contains
-        header = next(rows)
-        for each in header:
-            for column in unidentified_columns:
-                if each.lower().strip() == column.lower():
-                    labels[each] = column
-                    unidentified_columns.remove(column)
-                    break
-            for key,column in alias_columns.items():
-                if each.lower().strip() == key.lower():
-                    labels[each] = column
-                    unidentified_columns.remove(column)
-                    break
-
-    except Exception as e:
-        messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
-        error = True
-        
-    context = {
-        "session": session,
-        "error": error,
-        "rows": rows,
-        "title": session.name,
-        "labels": labels,
-        "unidentified_columns": unidentified_columns,
-        "header": header,
-    }
     return render(request, "staf/upload/staf.verify.html", context)
 
 
@@ -884,6 +822,7 @@ def hub_harvesting_worksheet(request, space=None):
 def hub_processing(request, space=None):
 
     gis = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=2)
+    datasets = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=30)
     title = "Data processing"
 
     if space:
@@ -897,28 +836,138 @@ def hub_processing(request, space=None):
         "hide_space_menu": True,
         "gis": gis.count(),
         "gis_open": gis.filter(status=1, assigned_to__isnull=True).count(),
+        "datasets": datasets.count(),
+        "datasets_open": datasets.filter(status=1, assigned_to__isnull=True).count(),
         "title": title,
     }
     return render(request, "hub/processing.html", context)
 
 def hub_processing_list(request, space=None, type=None):
 
-    gis = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=2)
-    title = "GIS data processing"
+    if type == "gis":
+        list = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=2)
+        title = "GIS data processing"
+    elif type == "datasets":
+        list = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=30)
+        title = "Stocks and flows data processing"
 
     if space:
         space = get_space(request, space)
         title += " | " + space.name
-        gis = gis.filter(related_to__spaces=space)
+        list = list.filter(related_to__spaces=space)
 
     context = {
-        "list": gis,
+        "list": list,
         "menu": "processing",
         "space": space,
         "title": title,
         "hide_space_menu": True,
     }
     return render(request, "hub/processing.list.html", context)
+
+def hub_processing_dataset(request, id, classify=False, space=None):
+
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    if space:
+        space = get_space(request, space)
+
+    info = get_object_or_404(Dataset, pk=id)
+
+    try:
+        work = Work.objects.filter(status__in=[1,4,5], part_of_project_id=request.project, workactivity_id=30, related_to=info)
+        work = work[0]
+    except Exception as e:
+        work = None
+        messages.error(request, "We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
+
+    if "start_work" in request.POST:
+        try:
+            work.status = Work.WorkStatus.PROGRESS
+            work.assigned_to = request.user.people
+            work.save()
+            messages.success(request, "You are now in charge of this dataset - good luck!")
+        except Exception as e:
+            messages.error(request, "Sorry, we could not assign you -- perhaps someone else grabbed this work in the meantime? Otherwise please report this error. <br><strong>Error code: " + str(e) + "</strong>")
+
+    rows = None
+    header = None
+    files = info.attachments.filter(file__iendswith=".csv").order_by("-id")
+    error = False
+    unidentified_columns = [
+        "Start date", 
+        "End date",
+        "Material name",
+        "Material code",
+        "Quantity",
+        "Unit",
+        "Location",
+        "Comments",
+    ]
+
+    alias_columns = {
+        "Start": "Start date",
+        "End": "End date",
+        "Date": "Start date",
+        "Material": "Material name",
+        "Qty": "Quantity",
+        "Comment": "Comments",
+    }
+
+    labels = {}
+
+    show_name = None
+    try:
+        show_name = files[0].name
+        filename = settings.MEDIA_ROOT + "/" + files[0].file.name
+        f = codecs.open(filename, encoding="utf-8")
+        rows = csv.reader(f)
+
+        # We will review each column to see if we can auto-detect what value this contains
+        header = next(rows)
+        for each in header:
+            for column in unidentified_columns:
+                if each.lower().strip() == column.lower():
+                    labels[each] = column
+                    unidentified_columns.remove(column)
+                    break
+            for key,column in alias_columns.items():
+                if each.lower().strip() == key.lower():
+                    labels[each] = column
+                    unidentified_columns.remove(column)
+                    break
+
+    except Exception as e:
+        messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
+        error = True
+
+    list_messages = None
+    forum_topic = ForumTopic.objects.filter(part_of_project_id=request.project, parent_url=request.get_full_path())
+    if forum_topic:
+        list_messages = Message.objects.filter(parent=forum_topic[0])
+
+    context = {
+        "menu": "processing",
+        "space": space,
+        "hide_space_menu": True,
+        "title": info.name,
+        "info": info,
+        "error": error,
+        "first_row": next(rows),
+        "column_count": len(header),
+        "row_count": sum(1 for row in rows),
+        "labels": labels,
+        "unidentified_columns": unidentified_columns,
+        "header": header,
+        "show_name": show_name,
+        "work": work,
+        "forum_id": forum_topic[0].id if forum_topic else "create",
+        "forum_topic_title": info.name + " - Data processing",
+        "list_messages": list_messages,
+        "load_messaging": True,
+    }
+    return render(request, "hub/processing.dataset.html", context)
 
 def hub_processing_gis(request, id, classify=False, space=None):
 

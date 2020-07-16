@@ -3,22 +3,16 @@
 {% block page_name %}staf verify{% endblock %}
 
 {% block content %}
-  <h1>Upload stock/flow data</h1>
-  <ul class="nav nav-tabs mb-4">
-    <li class="nav-item">
-      <a class="nav-link" href="">1. Upload data</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link disabled active" href="#">2. Verify data</a>
-    </li>
-    <li class="nav-item">
-      {% if not error %}
-        <a class="nav-link" href="">3. Enter metadata</a>
-      {% else %}
-        <a class="nav-link disabled" href="#">3. Enter metadata</a>
-      {% endif %}
-    </li>
-  </ul>
+
+{% include "hub/_nav.html" %}
+
+  <div class="mb-3">
+    <div title="Check general info" class="avatar letter" style="background:#218838">1</div>
+    <div title="Classify columns" class="avatar letter">2</div>
+    <div title="Verify data" class="avatar letter">3</div>
+  </div>
+
+  <a href="edit/?next={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
 
   <div class="alert alert-danger">
       <i class="fal fa-exclamation-triangle mr-1"></i>

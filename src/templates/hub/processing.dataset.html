@@ -1,0 +1,228 @@
+{% extends "_base.html" %}
+{% load moc_extras %}
+{% block page_name %}staf verify{% endblock %}
+
+{% block content %}
+
+{% include "hub/_nav.html" %}
+
+  <section class="row">
+    <div class="col-lg-8 mb-4 mb-lg-0">
+
+      <div class="card mb-3">
+        <div class="card-header"><i class="fa fa-info-circle"></i> Meta data</div>
+        <div class="card-body">
+          <a href="edit/?next={{ request.get_full_path }}" class="btn btn-primary-outline float-right"><i class="fa fa-pencil"></i> Edit</a>
+          <dl class="row">
+            <dt class="col-sm-3">Title</dt>
+            <dd class="col-sm-9">
+              {% with link=PROJECT.slug|add:":library_item" %}
+                <a href="{% url link info.id %}">{{ info }}</a>
+              {% endwith %}
+            </dd>
+            <dt class="col-sm-3">Description</dt>
+            <dd class="col-sm-9">{{ info.get_description }}</dd>
+            <dt class="col-sm-3">Year published</dt>
+            <dd class="col-sm-9">{{ info.year }}</dd>
+            <dt class="col-sm-3">Author(s)</dt>
+            <dd class="col-sm-9">{{ info.get_author_citation }}</dd>
+            <dt class="col-sm-3">Tag(s)</dt>
+            <dd class="col-sm-9">
+              {% for each in info.tags.all %}
+                <span class="badge">{{ each }}</span>
+              {% endfor %}
+            </dd>
+            <dt class="col-sm-3">File(s)</dt>
+            <dd class="col-sm-9">
+              {% for each in info.attachments.all %}
+                <span class="badge">{{ each }}</span>
+              {% endfor %}
+            </dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="card card-table">
+        <div class="card-header"><i class="fa fa-table"></i> Table content - preview</div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-3">
+              <ul class="list-unstyled">
+                {% for each in header %}
+                  <li style="height:1.5em;overflow:hidden;font-weight:bold" class="text-right">
+                    {{ each }}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="col-9">
+              <ul class="list-unstyled">
+                {% for each in first_row %}
+                  <li style="height:1.5em;overflow:hidden;opacity:0.5">
+                    {{ each }}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% if document.comments %}
+        <div class="card mb-2">
+          <div class="card-header">
+            Uploader comments
+          </div>
+          <div class="card-body">
+            {{ document.comments|linebreaks }}
+          </div>
+        </div>
+      {% endif %}
+
+      <h2 class="h3 mt-5">Discussion and questions</h2>
+      {% include "_messages.html" %}
+
+      {% if not request.user.is_authenticated %}
+        {% include "_notauthenticated.html" %}
+      {% endif %}
+
+    </div>
+
+    <div class="col-lg-4">
+
+      <div class="mb-3">
+        <div title="Check general info" class="avatar letter" style="background:#218838">1</div>
+        <div title="Classify columns" class="avatar letter">2</div>
+        <div title="Verify data" class="avatar letter">3</div>
+      </div>
+
+      <div class="card mb-4">
+
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item table-item">
+            <div><i class="fal fa-fw fa-fingerprint mr-1"></i> ID</div>
+            <div>{{ info.id }}</div>
+          </li>
+          <li class="list-group-item table-item">
+            <div><i class="fal fa-fw fa-user mr-1"></i> Uploaded by</div>
+            <div>{{ info.uploader }}</div>
+          </li>
+          <li class="list-group-item table-item">
+            <div><i class="fal fa-fw fa-layer-group mr-1"></i> Columns</div>
+            <div>{{ column_count }}</div>
+          </li>
+          <li class="list-group-item table-item">
+            <div><i class="far fa-fw fa-table mr-1"></i> Rows</div>
+            <div>{{ row_count }}</div>
+          </li>
+          {% if work.assigned_to %}
+            <li class="list-group-item table-item">
+              <div><i class="far fa-fw fa-user-check mr-1"></i> Assigned to</div>
+              <div>{{ work.assigned_to }}</div>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <form method="post">
+        {% if not work.assigned_to %}
+          <button type="submit" name="start_work" value="true" class="btn btn-primary">
+            <i class="fas fa-user-plus"></i>
+            Assign this to me
+          </button>
+        {% elif work.assigned_to == request.user.people %}
+
+          <div class="mt-4 mb-5">
+            {% if not error %}
+            <a href="" class="btn btn-success disabled looks-good">
+              It looks good <i class="fas fa-fw fa-arrow-right mr-0 ml-1"></i>
+            </a>
+            {% endif %}
+          </div>
+
+          <button type="submit" name="stop_work" value="true" class="btn btn-primary-outline mt-5">
+            <i class="fas fa-user-times"></i>
+            Stop working on this
+          </button>
+        {% endif %}
+        {% csrf_token %}
+      </form>
+
+      <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="btn btn-primary"><i class="fas fa-fw fa-play"></i> View instruction video</a>
+      <a href="../" class="btn btn-primary-basic mt-4">
+        <i class="fal fa-angle-left"></i>
+        Back to overview
+      </a>
+    </div>
+
+  </section>
+
+{% endblock %}
+
+{% block footer %}
+  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+          integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+          crossorigin="">
+  </script>
+
+  <script>
+    // checking how many columns need a type
+    function checkColumns() {
+      let unidentifiedCount = $("#data .is-invalid").length;
+
+      $("#unidentified-columns-count").text(unidentifiedCount)
+
+      if (unidentifiedCount == 0) {
+        let alert = $(".alert-danger");
+
+        alert
+          .addClass("alert-success")
+          .removeClass("alert-danger")
+          .html("<i class='fal fa-check-circle mr-1'></i> All columns are identified, you can continue to the next step")
+
+        $(".btn.looks-good").removeClass("disabled");
+      }
+    }
+
+    // what happens when a column is identified
+    $("select.unidentified-column").change(function() {
+      $(this).removeClass("is-invalid");
+      $(this).addClass("is-valid");
+
+      checkColumns()
+
+      // check all select values to prevent duplicates
+      $("select[name='column'] option").removeAttr("disabled")
+      $("select[name='column'] option[value='none']").attr("disabled", "disabled")
+
+      $("select[name='column']").each(function() {
+        let columnValue = $(this).val();
+
+        if (columnValue) {
+          $("select[name='column'] option[value='" + columnValue + "']").attr("disabled", "disabled")
+        }
+      })
+    })
+
+    // check unidentified columns on page load
+    checkColumns();
+
+    // https://leafletjs.com/reference-1.6.0.html
+    // var map = L.map("map");
+    // L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+    //   attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    //   id: "mapbox/streets-v11",
+    //   tileSize: 512,
+    //   zoomOffset: -1,
+    // }).addTo(map);
+
+    // geojsonlayer = L.geoJSON({{ geojson|safe }}, {
+    //   style: {
+    //     color: "#144d58",
+    //     weight: 2,
+    //   }
+    // }).addTo(map);
+
+    // map.fitBounds(geojsonlayer.getBounds());
+  </script>
+{% endblock %}

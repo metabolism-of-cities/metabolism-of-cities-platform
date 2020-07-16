@@ -618,6 +618,11 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                         return redirect(project.slug + ":hub_processing_gis", id=info.id, space=space.slug)
                     else:
                         return redirect(project.slug + ":hub_processing_gis", id=info.id)
+                elif type.name == "Dataset":
+                    if space:
+                        return redirect(project.slug + ":hub_processing_dataset", id=info.id, space=space.slug)
+                    else:
+                        return redirect(project.slug + ":hub_processing_dataset", id=info.id)
             if "next" in request.GET:
                 return redirect(request.GET["next"])
             if "return" in request.GET:

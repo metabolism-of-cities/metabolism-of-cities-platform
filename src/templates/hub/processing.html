@@ -21,7 +21,7 @@
                 <small>Convert shapefiles to reference spaces</small>
                 <br>
                 <span class="badge badge-light">
-                  {{ gis }} tasks
+                  {{ gis }} task{% if datasets != 1 %}s{% endif %}
                 </span>
                 <span class="badge badge-primary">
                   {{ gis_open }} unassigned
@@ -54,8 +54,8 @@
           </div>
         </a>
       </div>
-      <div class="col-md-6 mb-4" hidden>
-        <a href="" class="card btn-card">
+      <div class="col-md-6 mb-4">
+        <a href="datasets/" class="card btn-card">
           <div class="card-body">
             <div class="row">
               <div class="col icon">
@@ -67,10 +67,10 @@
                 <small>Process material stock and flow datasets</small>
                 <br>
                 <span class="badge badge-light">
-                  104 tasks
+                  {{ datasets }} task{% if datasets != 1 %}s{% endif %}
                 </span>
                 <span class="badge badge-primary">
-                  34 unassigned
+                  {{ datasets_open }} unassigned
                 </span>
               </div>
             </div>
