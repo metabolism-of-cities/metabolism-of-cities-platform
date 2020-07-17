@@ -1,5 +1,11 @@
 {% extends "_base.html" %}
 
+{% block css %}
+  <style type="text/css">
+    #untagged-table,#publications-table{display:none}
+  </style>
+{% endblock %}
+
 {% block content %}
 
   {% include "hub/_nav.html" %}
@@ -13,7 +19,23 @@
     </div>
 
     {% if items %}
-      {% include "_library.list.html" %}
+      <div id="view-publications" class="btn btn-primary-basic">
+        <i class="fal fa-angle-down"></i>
+        View documents ({{ items.count }})
+      </div>
+    {% endif %}
+
+    {% if untagged_items %}
+      <div id="view-untagged" class="btn btn-primary-basic">
+        <i class="fal fa-angle-down"></i>
+        View untagged documents ({{ untagged_items.count }})
+      </div>
+    {% endif %}
+
+    {% if items %}
+      <div id="publications-table" class="mt-4">
+        {% include "_library.list.html" %}
+      </div>
     {% else %}
       <div class="alert alert-warning">
         <i class="fa fa-exclamation-triangle"></i> No items uploaded yet.
@@ -21,33 +43,35 @@
     {% endif %}
 
     {% if untagged_items %}
-      <h2 class="h3">Untagged items</h2>
-      <p><em>These items were uploaded but not (yet) linked to a specific layer.</em></p>
-      <table class="table table-striped datatable">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Author(s)</th>
-            <th>Year</th>
-            <th>Tag(s)</th>
-          </tr>
-        </thead>
-        <tbody>
-        {% for each in untagged_items %}
-          <tr>
-            <td>
-              <a href="{% url "data:library_item" each.id %}">{{ each }}</a>
-              <a href="{% url "data:library_item" each.id %}?edit=true&amp;next={{ request.get_full_path }}&amp;update_tags=true"><i class="fa fa-pencil-alt"></i></a>
-              <br>
-              <i class="fa fa-fw fa-{{ each.type.icon }}"></i> <em>{{ each.type }}</em>
-            </td>
-            <td>{{ each.get_author_citation }}</td>
-            <td>{{ each.year }}</td>
-            <td>{% for tag in each.tags.all %}<span class="badge">{{ tag }}</span>{% endfor %}</td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
+      <div id="untagged-table" class="mt-4">
+        <h2 class="h3">Untagged items</h2>
+        <p><em>These items were uploaded but not (yet) linked to a specific layer.</em></p>
+        <table class="table table-striped datatable">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Author(s)</th>
+              <th>Year</th>
+              <th>Tag(s)</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for each in untagged_items %}
+            <tr>
+              <td>
+                <a href="{% url "data:library_item" each.id %}">{{ each }}</a>
+                <a href="{% url "data:library_item" each.id %}?edit=true&amp;next={{ request.get_full_path }}&amp;update_tags=true"><i class="fa fa-pencil-alt"></i></a>
+                <br>
+                <i class="fa fa-fw fa-{{ each.type.icon }}"></i> <em>{{ each.type }}</em>
+              </td>
+              <td>{{ each.get_author_citation }}</td>
+              <td>{{ each.year }}</td>
+              <td>{% for tag in each.tags.all %}<span class="badge">{{ tag }}</span>{% endfor %}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
     {% endif %}
 
   </section>
@@ -100,4 +124,17 @@
     {% include "_notauthenticated.html" %}
   {% endif %}
 
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+  $("#view-untagged").click(function(){
+    $("i", this).toggleClass("fa-angle-down, fa-angle-up")
+    $("#untagged-table").toggle();
+  });
+  $("#view-publications").click(function(){
+    $("i", this).toggleClass("fa-angle-down, fa-angle-up")
+    $("#publications-table").toggle();
+  });
+</script>
 {% endblock %}
