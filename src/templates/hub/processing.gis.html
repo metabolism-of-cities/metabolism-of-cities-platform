@@ -100,10 +100,9 @@
 
       {% if not error %}
 
-        <div id="viewmap" class="btn btn-warning">
+        <div id="viewmap" class="btn btn-primary">
           <i class="fal fa-angle-down"></i>
           View map
-          <i class="fa fa-globe-africa"></i>
         </div>
 
         <div id="viewraw" class="btn btn-primary-basic">
@@ -219,7 +218,7 @@
         <div class="form-row">
           <div class="col-md-4 col-lg-3 mb-4">
             <label class="category mb-0">Name</label>
-            <select class="custom-select unidentified" name="classify_name">
+            <select class="custom-select{% if not document.meta_data.columns.name %} unidentified{% endif %}" name="classify_name">
               <option value="none" selected disabled>Name</option>
               {% for field in layer.fields %}
                 <option value="{{ field }}" {% if document.meta_data.columns.name == field %}selected{% endif %}>{{ field }}</option>
@@ -228,7 +227,7 @@
           </div>
           <div class="col-md-4 col-lg-3">
             <label class="category mb-0">Identifier</label>
-            <select class="custom-select" name="identifier">
+            <select class="custom-select{% if not document.meta_data.columns.identifier %} unidentified{% endif %}" name="identifier">
               <option value="none" selected disabled>Identifier</option>
               {% for field in layer.fields %}
                 <option value="{{ field }}" {% if document.meta_data.columns.identifier == field %}selected{% endif %}>{{ field }}</option>
@@ -308,11 +307,18 @@
 
     // checking how many columns need a type
     function checkColumns() {
+      $("#identify-columns select").each(function() {
+        if ($(this).val()) {
+          $(this).removeClass("unidentified").addClass("is-valid");
+        }
+      });
+
       let unidentifiedCount = $("#identify-columns select.unidentified").length;
+      console.log(unidentifiedCount);
 
       $("#unidentified-columns-count").text(unidentifiedCount)
 
-      if (unidentifiedCount != 0 && $("select[name='name']").hasClass("is-valid")) {
+      if (unidentifiedCount != 0 && $("select[name='classify_name']").hasClass("is-valid")) {
         let alert = $(".alert-identify");
 
         alert
@@ -327,8 +333,8 @@
 
         alert
           .addClass("alert-success")
-          .removeClass("alert-danger alert-info")
-          .html("<i class='fal fa-check-circle mr-1'></i> You may optionally save an identifier column or otherwise save and go to the next page.")
+          .removeClass("alert-danger alert-primary")
+          .html("<i class='fal fa-check-circle mr-1'></i> You have identified all columns. Please continue to the next step")
 
         $(".btn.save").removeClass("disabled");
         $(".btn.save").removeAttr("disabled");
@@ -336,23 +342,21 @@
     }
 
     // what happens when a column is identified
-    $("select.unidentified").change(function() {
+    $("#identify-columns select").change(function() {
       $(this).removeClass("is-invalid unidentified");
       $(this).addClass("is-valid");
 
       checkColumns()
 
       // check all select values to prevent duplicates
-      $("#identify-columns select option").removeAttr("disabled")
-      $("#identify-columns select option[value='none']").attr("disabled", "disabled")
+      $("#identify-columns select option").removeAttr("hidden")
+      $("#identify-columns select option[value='none']").attr("hidden", "hidden")
 
       $("#identify-columns select").each(function() {
         let columnValue = $(this).val();
 
         if (columnValue) {
-          // Paul disabled this to make the value actually be sent!
-          // To be fixed somehow by Guus...
-          //$("#identify-columns select option[value='" + columnValue + "']").attr("disabled", "disabled")
+          $("#identify-columns select option[value='" + columnValue + "']").attr("hidden", "hidden")
         }
       })
     })

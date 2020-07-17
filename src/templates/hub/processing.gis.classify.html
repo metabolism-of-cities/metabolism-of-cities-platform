@@ -19,64 +19,99 @@
     <h3 class="mt-4">Shapefile content</h3>
     <div class="alert alert-primary">
       <i class="fal fa-info-circle mr-1"></i>
-      In total, there are <strong>{{ layer.num_feat }}</strong> items in your shapefile.<br>
-      We have been able to match <strong>{{ hit_count }}</strong> items with existing reference spaces.<br>
+      In total, there are <strong>{{ layer.num_feat }}</strong> items in your shapefile. We have been able to match <strong>{{ hit_count }}</strong> items with existing reference spaces.<br>
       Please review the list below in detail.
     </div>
 
-    <form method="post">
-      <table class="table datatable datatable-card">
-        <thead>
+    <table class="table datatable datatable-card">
+      <thead>
+        <tr>
+          <th>Place</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for each in names %}
           <tr>
-            <th>Place</th>
-            <th>Action</th>
+            <td>{{ each }}</td>
+            <td>
+              {% if not each %}
+                <span class="text-danger">
+                  <i class="fa fa-exclamation-triangle"></i>
+                  ERROR: Name not set
+                </span>
+              {% elif each in duplicates %}
+                <span class="text-danger">
+                  <i class="fa fa-exclamation-triangle"></i>
+                  ERROR: Duplicate entry
+                </span>
+              {% elif not each in hit %}
+                No match found
+              {% else %}
+                {% with link=PROJECT.slug|add:":referencespace" %}
+                  <a target="_blank" href="{% url link hit|get_item:each %}">Match found <i class="fal fa-external-link ml-2"></i></a>
+                {% endwith %}
+              {% endif %}
+            </td>
+            <td>
+              {% if each and not each in duplicates and not each in hit %}
+                New space will be created
+              {% else %}
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="match_{{ hit|get_item:each }}" name="{{ hit|get_item:each }}" checked>
+                  <label class="custom-control-label" for="match_{{ hit|get_item:each }}">Use match</label>
+                </div>
+              {% endif %}
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {% for each in names %}
-            <tr>
-              <td>{{ each }}</td>
-              <td>
-                {% if not each %}
-                  <span class="text-danger">
-                    <i class="fa fa-exclamation-triangle"></i>
-                    ERROR: name not set
-                  </span>
-                {% elif each in duplicates %}
-                  <span class="text-danger">
-                    <i class="fa fa-exclamation-triangle"></i>
-                    ERROR: Duplicate entry
-                  </span>
-                {% elif not each in hit %}
-                  <span class="text-secondary">Not found</span><br>
-                  <em>New space will be created</em>
-                {% else %}
-                  <em>
-                  {% with link=PROJECT.slug|add:":referencespace" %}
-                    <a target="_blank" href="{% url link hit|get_item:each %}">Match found</a>
-                  {% endwith %}
-                  </em><br>
-                  <label><input type="radio" name="match_{{ hit|get_item:each }}" checked /> Use match</label><br>
-                  <label><input type="radio" name="match_{{ hit|get_item:each }}" value="0" /> Create new space</label>
-                {% endif %}
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+        {% endfor %}
+      </tbody>
+    </table>
 
-      <div class="pt-4">
-        <a href="../" class="btn btn-primary-basic">
-          <i class="fal fa-angle-left"></i>
-          Back
-        </a>
-        {% csrf_token %}
-        <button class="btn {% if error %}disabled{% endif %} save btn-success" {% if error %}disabled{% endif %}>
-          <i class="fas fa-save"></i>
-          Save
-        </button>
-      </div>
+    <form method="post" class="pt-4">
+      <input type="text" name="matches" hidden>
+      <a href="../" class="btn btn-primary-basic">
+        <i class="fal fa-angle-left"></i>
+        Back
+      </a>
+      {% csrf_token %}
+      <button class="btn {% if error %}disabled{% endif %} save btn-success" {% if error %}disabled{% endif %}>
+        <i class="fas fa-save"></i>
+        Save
+      </button>
     </form>
   </section>
 
+{% endblock %}
+
+{% block footer %}
+<script>
+  // sort by whether or not there is a match
+  $(".datatable").DataTable().order([2, "asc"]).draw();
+
+  // create array of new spaces
+  let newSpaces = [];
+
+  // when toggle is changed, add or remove id from array of new spaces
+  $("table input").change(function() {
+    let input = $(this);
+    let matchID = input.attr("name");
+
+    if (input.prop("checked")) {
+      input.next("label").text("Use match");
+      let matchIndex = newSpaces.indexOf(matchID);
+      if (matchIndex > -1) {
+        newSpaces.splice(matchIndex, 1);
+      }
+    } else {
+      input.next("label").text("New space will be created");
+      newSpaces.push(matchID);
+    };
+
+    // set array as value of input that is sent to server
+    $("input[name='matches']").val(newSpaces);
+  })
+
+</script>
 {% endblock %}
