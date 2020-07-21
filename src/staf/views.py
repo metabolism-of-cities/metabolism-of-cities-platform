@@ -1007,7 +1007,10 @@ def hub_processing_gis(request, id, classify=False, space=None):
         document.save()
         messages.success(request, "Settings were saved.")
         project = get_object_or_404(Project, pk=request.project)
-        return redirect(project.slug + ":hub_processing_gis_classify", id=document.id, space=space.slug)
+        if space:
+            return redirect(project.slug + ":hub_processing_gis_classify", id=document.id, space=space.slug)
+        else:
+            return redirect(project.slug + ":hub_processing_gis_classify", id=document.id)
 
     geojson = None
     error = False
@@ -1132,22 +1135,22 @@ def hub_processing_gis(request, id, classify=False, space=None):
                 error = True
                 messages.error(request, "You have items in the list that do not have a name -- please review the source data or the name column selection.")
 
-            if request.method == "POST" and not error and False:
+            if request.method == "POST" and not error:
                 from django.contrib.gis.geos import GEOSGeometry
 
                 name_field = document.meta_data["columns"]["name"]
                 for each in layer:
                     name = each.get(name_field)
-                    geo = each.geom
-                    print(name)
-                    print("0-----:")
+                    geo = each.geom.wkt
                     space = ReferenceSpace.objects.create(
                         name = name,
                     )
-                    ReferenceSpaceLocation.objects.create(
+                    location = ReferenceSpaceLocation.objects.create(
                         space = space,
-                        geometry = GEOSGeometry(geo),
+                        geometry = geo,
                     )
+                    space.location = location
+                    space.save()
 
             hit = {}
             for each in hits:
