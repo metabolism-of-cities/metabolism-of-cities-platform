@@ -168,11 +168,11 @@ def user_register(request, project="core", section=None):
     return render(request, "auth/register.html", context)
 
 def user_login(request, project=None):
-
+    project = request.project
     if request.GET.get("next"):
         redirect_url = request.GET.get("next")  
     elif project:
-        project = get_object_or_404(Project, pk=PROJECT_ID[project])
+        project = get_object_or_404(Project, pk=project)
         redirect_url = project.get_website()
     else:
         redirect_url = "core:index"
@@ -199,13 +199,14 @@ def user_login(request, project=None):
     return render(request, "auth/login.html", context)
 
 def user_logout(request, project=None):
+    project = request.project
     logout(request)
     messages.warning(request, "You are now logged out")
 
     if "next" in request.GET:
         return redirect(request.GET.get("next"))
     elif project:
-        info = Project.objects.get(pk=PROJECT_ID[project])
+        info = Project.objects.get(pk=project)
         return redirect(info.get_website())
     else:
         return redirect("core:index")
