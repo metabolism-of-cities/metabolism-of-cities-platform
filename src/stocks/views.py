@@ -54,6 +54,7 @@ def map(request, slug, id):
 def compare(request, slug):
     context = {
         "compare": True,
+        "load_select2": True,
     }
     return render(request, "stocks/compare.html", context)
 

@@ -5,22 +5,301 @@
 {% block page_name %}material-stocks compare{% endblock %}
 
 {% block head %}
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
 {% endblock %}
 
 {% block content %}
   {% include "_submenu-stocks.html" %}
-  </div> <!-- closes container so we have fullwidth below -->
-
-
   <div class="row">
     <div class="col-md-6">
+      <div id="map-a" class="leaflet-map"></div>
 
     </div>
     <div class="col-md-6">
+      <div id="map-b" class="leaflet-map"></div>
+
 
     </div>
+  </div>
+
+  <div class="text-center tables">
+    <div class="row selects sticky-top py-3">
+      <div class="col-md-6">
+        <select name="area" class="custom-select">Schaerbeek
+          <option>Schaerbeek</option>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <select name="area" class="custom-select">Etterbeek
+          <option>Etterbeek</option>
+        </select>
+      </div>
+    </div>
+    <section>
+      <h5 class="mt-4 text-center"><i class="fad fa-fw fa-info-circle mr-1"></i> General info</h5>
+      <table class="table">
+        <tbody>
+          <tbody>
+            <tr>
+              <td>141 km<sup>2</sup></td>
+              <th>Area</th>
+              <td>412 km<sup>2</sup></td>
+            </tr>
+            <tr>
+              <td>4124</td>
+              <th>Number of buildings</th>
+              <td>6132</td>
+            </tr>
+            <tr>
+              <td>{% lorem 1 w random %}</td>
+              <th>{% lorem 1 w random %}</th>
+              <td>{% lorem 1 w random %}</td>
+            </tr>
+            <tr>
+              <td>{% lorem 1 w random %}</td>
+              <th>{% lorem 1 w random %}</th>
+              <td>{% lorem 1 w random %}</td>
+            </tr>
+            <tr>
+              <td>{% lorem 1 w random %}</td>
+              <th>{% lorem 1 w random %}</th>
+              <td>{% lorem 1 w random %}</td>
+            </tr>
+          </tbody>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h5 class="mt-4"><i class="fad fa-fw fa-flask mr-1"></i> Materials</h5>
+      <table class="table">
+        <tbody>
+          <tbody>
+            <tr>
+              <td>142 tonnes</td>
+              <th>Wood</th>
+              <td>312 tonnes</td>
+            </tr>
+            <tr>
+              <td>{% lorem 1 w random %}</td>
+              <th>{% lorem 1 w random %}</th>
+              <td>{% lorem 1 w random %}</td>
+            </tr>
+            <tr>
+              <td>{% lorem 1 w random %}</td>
+              <th>{% lorem 1 w random %}</th>
+              <td>{% lorem 1 w random %}</td>
+            </tr>
+            <tr>
+              <td>{% lorem 1 w random %}</td>
+              <th>{% lorem 1 w random %}</th>
+              <td>{% lorem 1 w random %}</td>
+            </tr>
+            <tr>
+              <td>{% lorem 1 w random %}</td>
+              <th>{% lorem 1 w random %}</th>
+              <td>{% lorem 1 w random %}</td>
+            </tr>
+          </tbody>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h5 class="mt-4"><i class="fad fa-fw fa-building mr-1"></i> Materials per buildings</h5>
+      <table class="table">
+        <tbody>
+          <tbody>
+            <tr>
+              <td>142 tonnes</td>
+              <th>Wood</th>
+              <td>312 tonnes</td>
+            </tr>
+            <tr>
+              <td>{% lorem 1 w random %}</td>
+              <th>{% lorem 1 w random %}</th>
+              <td>{% lorem 1 w random %}</td>
+            </tr>
+            <tr>
+              <td>{% lorem 1 w random %}</td>
+              <th>{% lorem 1 w random %}</th>
+              <td>{% lorem 1 w random %}</td>
+            </tr>
+            <tr>
+              <td>{% lorem 1 w random %}</td>
+              <th>{% lorem 1 w random %}</th>
+              <td>{% lorem 1 w random %}</td>
+            </tr>
+            <tr>
+              <td>{% lorem 1 w random %}</td>
+              <th>{% lorem 1 w random %}</th>
+              <td>{% lorem 1 w random %}</td>
+            </tr>
+          </tbody>
+        </tbody>
+      </table>
+    </section>
+
+  </div>
   <!-- we can skip the closing tag here because we have an unused container closing tab -->
 {% endblock %}
 
 {% block footer %}
+  <!-- load leaflet -->
+  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+          integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+          crossorigin="">
+  </script>
+
+  <script>
+    // initialise map A
+    let mapA = L.map("map-a", {
+      scrollWheelZoom: false,
+      zoomControl: false,
+    });
+
+    // initialise map B
+    let mapB = L.map("map-b", {
+      scrollWheelZoom: false,
+      zoomControl: false,
+    });
+
+    // add baselayers A
+    let basemapA = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+      maxZoom: 18,
+      attribution: "Map data &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, " +
+        "<a href='https://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, " +
+        "Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>",
+      id: "mapbox/streets-v11",
+      tileSize: 512,
+      zoomOffset: -1,
+    })
+
+    // add baselayer B
+    let basemapB = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+      maxZoom: 18,
+      attribution: "Map data &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, " +
+        "<a href='https://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, " +
+        "Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>",
+      id: "mapbox/streets-v11",
+      tileSize: 512,
+      zoomOffset: -1,
+    })
+
+    // add basemaps
+    basemapA.addTo(mapA);
+    basemapB.addTo(mapB);
+
+    // temporary geojsons
+    const schaerbeek = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  4.374275207519531,
+                  50.87179060692906
+                ],
+                [
+                  4.367151260375976,
+                  50.870057322647085
+                ],
+                [
+                  4.3636322021484375,
+                  50.86566965874543
+                ],
+                [
+                  4.368867874145508,
+                  50.8622025705097
+                ],
+                [
+                  4.380884170532227,
+                  50.86111905256077
+                ],
+                [
+                  4.38380241394043,
+                  50.86626553857076
+                ],
+                [
+                  4.380626678466797,
+                  50.87081564245129
+                ],
+                [
+                  4.374275207519531,
+                  50.87179060692906
+                ]
+              ]
+            ]
+          }
+        }
+      ]
+    }
+
+    const etterbeek = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  4.385089874267578,
+                  50.84237020615854
+                ],
+                [
+                  4.377021789550781,
+                  50.83662483178993
+                ],
+                [
+                  4.383716583251952,
+                  50.83293874746873
+                ],
+                [
+                  4.4000244140625,
+                  50.83174612844614
+                ],
+                [
+                  4.400539398193359,
+                  50.83900979004339
+                ],
+                [
+                  4.392986297607421,
+                  50.84345415973269
+                ],
+                [
+                  4.385089874267578,
+                  50.84237020615854
+                ]
+              ]
+            ]
+          }
+        }
+      ]
+    }
+
+    // add geojsons
+    let schaerbeekLayer = L.geoJSON(schaerbeek, {style: {color: "#144d58"}}).addTo(mapA);
+    let etterbeekLayer = L.geoJSON(etterbeek, {style: {color: "#144d58"}}).addTo(mapB);
+
+    // make maps fit the bounds of the geojson layers
+    mapA.fitBounds(schaerbeekLayer.getBounds());
+    mapB.fitBounds(etterbeekLayer.getBounds());
+
+    // initialise select2
+    $("select[name='area']").select2({
+      theme: "bootstrap4",
+    });
+  </script>
 {% endblock %}
