@@ -1861,6 +1861,10 @@ body.material-stocks.map #map {
   height: 700px;
   max-height: 90vh; }
 
+body.material-stocks.map .legend hr {
+  width: calc(100% + 1rem);
+  margin-left: -.5rem; }
+
 body.material-stocks.map .view-buttons,
 body.material-stocks.map .download-map-wrapper {
   border: 2px solid rgba(0, 0, 0, 0.2);

@@ -2873,6 +2873,11 @@ body.material-stocks.map {
     max-height: 90vh;
   }
 
+  .legend hr {
+    width: calc(100% + 1rem);
+    margin-left: -.5rem;
+  }
+
   .view-buttons,
   .download-map-wrapper {
     border: 2px solid rgba(0,0,0,0.2);

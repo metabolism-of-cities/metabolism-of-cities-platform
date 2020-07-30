@@ -93,12 +93,6 @@
               Compare
             </a>
           </div>
-
-          <button class="btn btn-primary mt-4 download-map">
-            <i class="fas fa-fw fa-save"></i>
-            Save map as image
-          </button>
-
         </div>
       </div>
     </div>
@@ -147,53 +141,6 @@
 
     basemap.addTo(map);
 
-    // add view switcher
-    L.Control.Views = L.Control.extend({
-      onAdd: function(map) {
-
-        var viewButtons = L.DomUtil.create("div", "view-buttons");
-
-        var archetype = L.DomUtil.create("div", "view-button");
-        archetype.dataset.view = "archetype"
-        archetype.innerHTML = "<i class='fal fa-fw fa-building'></i> Archetype";
-
-        viewButtons.appendChild(archetype);
-
-        var glass = L.DomUtil.create("div", "view-button");
-        glass.dataset.view = "glass"
-        glass.innerHTML = "<i class='fal fa-fw fa-window-frame'></i> Glass";
-
-        viewButtons.appendChild(glass);
-
-        var wood = L.DomUtil.create("div", "view-button");
-        wood.dataset.view = "wood"
-        wood.innerHTML = "<i class='fal fa-fw fa-tree'></i> Wood";
-
-        viewButtons.appendChild(wood);
-
-        var age = L.DomUtil.create("div", "view-button");
-        age.dataset.view = "age"
-        age.innerHTML = "<i class='fal fa-fw fa-history'></i> Age";
-
-        viewButtons.appendChild(age);
-
-        return viewButtons;
-      },
-    });
-
-    L.control.Views = function(opts) {
-      return new L.Control.Views(opts);
-    }
-
-    L.control.Views({ position: "topright" }).addTo(map);
-
-    $(".view-button").click(function() {
-      let view = $(this).data("view");
-      console.log(view);
-    })
-
-    // ----
-
     // download map as image
     function downloadImage(err, canvas) {
       var downloadLink = document.createElement("a");
@@ -215,7 +162,7 @@
         downloadButtonWrapper.appendChild(downloadButton);
 
         return downloadButtonWrapper;
-      },
+      }
     });
 
     L.control.Download = function(opts) {
@@ -274,6 +221,8 @@
       var div = L.DomUtil.create("div", "legend"),
           grades = [0, 50, 100, 200, 300, 400, 1000, 1500],
           labels = [];
+
+      div.innerHTML = "<div>Wood stock per building<br>(in tonnes)</div><hr class='my-2'>"
 
       // loop through our schauff intervals and generate a label with a colored square for each interval
       for (var i = 0; i < grades.length; i++) {
@@ -349,6 +298,23 @@
 
       visibleLayer = layer;
       visibleLegend = legend;
+    }
+
+    let filteredLayer;
+
+    function filterLayer() {
+      clearMap()
+
+      filteredLayer = L.geoJson(anderlecht, {
+        style: styleSchauff,
+        onEachFeature: onEachFeature,
+        filter: function(feature, layer) {
+          return (feature.properties.type == "2b");
+        }
+      })
+
+      visibleLayer = "filteredLayer";
+      filteredLayer.addTo(map);
     }
 
     // range slider

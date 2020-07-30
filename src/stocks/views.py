@@ -42,6 +42,7 @@ def data(request, slug):
 def maps(request, slug):
     context = {
         "map": True,
+        "load_select2": True,
     }
     return render(request, "stocks/maps.html", context)
 
