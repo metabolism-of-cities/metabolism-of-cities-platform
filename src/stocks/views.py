@@ -36,6 +36,8 @@ def city(request, slug):
 def data(request, slug):
     context = {
         "data": True,
+        "load_datatables": True,
+        "load_select2": True,
     }
     return render(request, "stocks/data.html", context)
 
@@ -64,6 +66,18 @@ def modeller(request, slug):
         "modeller": True,
     }
     return render(request, "stocks/modeller.html", context)
+
+def stories(request, slug):
+    context = {
+        "stories": True,
+    }
+    return render(request, "stocks/stories.html", context)
+
+def story(request, slug):
+    context = {
+        "stories": True,
+    }
+    return render(request, "stocks/story.html", context)
 
 def dataset_editor(request):
     context = {

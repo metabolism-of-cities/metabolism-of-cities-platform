@@ -5,10 +5,72 @@
 {% block page_name %}material-stocks data{% endblock %}
 
 {% block head %}
+<style>
+</style>
 {% endblock %}
 
 {% block content %}
   {% include "_submenu-stocks.html" %}
+
+  <div class="row mb-4">
+    <div class="col-md">
+      <select class="select2 custom-select" name="area">
+        <option value="1">Brussels</option>
+        <option value="2">Anderlecht</option>
+        <option value="3">...</option>
+      </select>
+    </div>
+    <div class="col-md text-md-right">
+      <a class="btn btn-primary-basic" href="#">
+        <i class="fal fa-exclamation-circle"></i> Report an error
+      </a>
+      <a class="btn btn-primary download" href="#">
+        <i class="fa fa-download"></i> Download data
+      </a>
+    </div>
+  </div>
+
+  <table class="table datatable">
+    <thead>
+      <tr>
+        <th>Area</th>
+        <th>Number of buildings</th>
+        <th>Wood stock</th>
+        <th>Glass stock</th>
+        <th>...</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{% lorem 1 w random %}</td>
+        <td>{% lorem 1 w random %}</td>
+        <td>{% lorem 1 w random %}</td>
+        <td>{% lorem 1 w random %}</td>
+        <td>{% lorem 1 w random %}</td>
+      </tr>
+      <tr>
+        <td>{% lorem 1 w random %}</td>
+        <td>{% lorem 1 w random %}</td>
+        <td>{% lorem 1 w random %}</td>
+        <td>{% lorem 1 w random %}</td>
+        <td>{% lorem 1 w random %}</td>
+      </tr>
+      <tr>
+        <td>{% lorem 1 w random %}</td>
+        <td>{% lorem 1 w random %}</td>
+        <td>{% lorem 1 w random %}</td>
+        <td>{% lorem 1 w random %}</td>
+        <td>{% lorem 1 w random %}</td>
+      </tr>
+      <tr>
+        <td>{% lorem 1 w random %}</td>
+        <td>{% lorem 1 w random %}</td>
+        <td>{% lorem 1 w random %}</td>
+        <td>{% lorem 1 w random %}</td>
+        <td>{% lorem 1 w random %}</td>
+      </tr>
+    </tbody>
+  </table>
 {% endblock %}
 
 {% block footer %}

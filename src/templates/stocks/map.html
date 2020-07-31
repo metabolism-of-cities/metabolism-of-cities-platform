@@ -20,82 +20,85 @@
 {% block content %}
   {% include "_submenu-stocks.html" %}
 
-    <form class="form-row">
-      <div class="col">
-        <div class="form-group">
-          <label for="archetype">Archetype</label>
-          <select class="custom-select" id="archetype">
-            <option selected value="all">All</option>
-            <option value="apartment">Apartment building</option>
-            <option value="office">Office</option>
-            <option value="house">House</option>
-          </select>
-        </div>
+  <form class="form-row">
+    <div class="col">
+      <div class="form-group">
+        <label for="archetype">Archetype</label>
+        <select class="custom-select" id="archetype" name="archetype">
+          <option selected value="all">All</option>
+          <option value="7">Apartment building</option>
+          <option value="5b">Office</option>
+          <option value="5c">House</option>
+          <option value="5a">5a</option>
+          <option value="1a">1a</option>
+          <option value="4b">4b</option>
+        </select>
       </div>
-      <div class="col">
-        <div class="form-group">
-          <label for="age">Completion year</label>
-          <div class="slider-wrapper">
-            <input class="slider" id="age">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="input-group">
-          <label for="surface">Surface area (m<sup>2</sup>)</label>
-          <div class="slider-wrapper">
-            <input class="slider" id="surface">
-          </div>
-        </div>
-      </div>
-    </form>
-
-    <div id="map-wrapper">
-      <div id="map" class="leaflet-map"></div>
-      <div id="feature-details-wrapper">
-        <div id="feature-details">
-          <div class="header">
-            <span class="muni"></span>
-            <button type="button" class="close close-feature" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <table class="table">
-            <tr>
-              <th scope="row">Most common archetype</th>
-              <td class="age">Apartment building</td>
-            </tr>
-            <tr>
-              <th scope="row">Glass</th>
-              <td class="glass">21 tonnes</td>
-            </tr>
-            <tr>
-              <th scope="row">Wood</th>
-              <td class="wood">812 tonnes</td>
-            </tr>
-            <tr>
-              <th scope="row">Steel</th>
-              <td class="steel">4124 tonnes</td>
-            </tr>
-            <tr>
-              <th scope="row">Schauff</th>
-              <td class="schauff"></td>
-            </tr>
-          </table>
-
-          <div class="feature-content">
-            <a class="btn btn-primary" href="">
-              <i class="fas fa-arrow-alt-circle-down"></i> Drill down
-            </a>
-
-            <a class="btn btn-primary-basic" href="">
-              <i class="fal fa-layer-group"></i>
-              Compare
-            </a>
-          </div>
+    </div>
+    <div class="col">
+      <div class="form-group">
+        <label for="age">Completion year</label>
+        <div class="slider-wrapper">
+          <input class="slider" id="age" name="age">
         </div>
       </div>
     </div>
+    <div class="col">
+      <div class="input-group">
+        <label for="surface">Surface area (m<sup>2</sup>)</label>
+        <div class="slider-wrapper">
+          <input class="slider" id="surface" name="surface">
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div id="map-wrapper">
+    <div id="map" class="leaflet-map"></div>
+    <div id="feature-details-wrapper">
+      <div id="feature-details">
+        <div class="header">
+          <span class="muni"></span>
+          <button type="button" class="close close-feature" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <table class="table">
+          <tr>
+            <th scope="row">Most common archetype</th>
+            <td class="age">Apartment building</td>
+          </tr>
+          <tr>
+            <th scope="row">Glass</th>
+            <td class="glass">21 tonnes</td>
+          </tr>
+          <tr>
+            <th scope="row">Wood</th>
+            <td class="wood">812 tonnes</td>
+          </tr>
+          <tr>
+            <th scope="row">Steel</th>
+            <td class="steel">4124 tonnes</td>
+          </tr>
+          <tr>
+            <th scope="row">Schauff</th>
+            <td class="schauff"></td>
+          </tr>
+        </table>
+
+        <div class="feature-content">
+          <a class="btn btn-primary" href="">
+            <i class="fas fa-arrow-alt-circle-down"></i> Drill down
+          </a>
+
+          <a class="btn btn-primary-basic" href="{% url 'stocks:compare' 'brussels' %}">
+            <i class="fal fa-layer-group"></i>
+            Compare
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
 
 {% block footer %}
@@ -300,22 +303,34 @@
       visibleLegend = legend;
     }
 
+    // filter layer to only show certain buildings
     let filteredLayer;
 
     function filterLayer() {
+      let selectedArchetype = $("#archetype").val()
+
       clearMap()
 
-      filteredLayer = L.geoJson(anderlecht, {
-        style: styleSchauff,
-        onEachFeature: onEachFeature,
-        filter: function(feature, layer) {
-          return (feature.properties.type == "2b");
-        }
-      })
+      if (selectedArchetype == "all") {
+        choroplethSchauff.addTo(map)
+      } else {
+        filteredLayer = L.geoJson(anderlecht, {
+          style: styleSchauff,
+          onEachFeature: onEachFeature,
+          filter: function(feature, layer) {
+            return (feature.properties.type == selectedArchetype)
+          }
+        })
 
-      visibleLayer = "filteredLayer";
-      filteredLayer.addTo(map);
+        visibleLayer = "filteredLayer";
+        filteredLayer.addTo(map);
+      }
     }
+
+    // when changing inputs, run filter
+    $("#archetype").change(function() {
+      filterLayer();
+    })
 
     // range slider
     $("#age").slider({ min: 1500, max: 2020, value: [1500, 2020]});
