@@ -27,6 +27,11 @@
     </a>
   </li>
   <li class="nav-item">
+    <a class="nav-link{% if archetypes %} active{% endif %}" href="{% url 'stocks:archetypes' 'brussels' %}">
+      Archetypes
+    </a>
+  </li>
+  <li class="nav-item">
     <a class="nav-link{% if stories %} active{% endif %}" href="{% url 'stocks:stories' 'brussels' %}">
       Stories
     </a>

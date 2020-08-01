@@ -20,38 +20,41 @@
 {% block content %}
   {% include "_submenu-stocks.html" %}
 
-  <form class="form-row">
-    <div class="col">
-      <div class="form-group">
-        <label for="archetype">Archetype</label>
-        <select class="custom-select" id="archetype" name="archetype">
-          <option selected value="all">All</option>
-          <option value="7">Apartment building</option>
-          <option value="5b">Office</option>
-          <option value="5c">House</option>
-          <option value="5a">5a</option>
-          <option value="1a">1a</option>
-          <option value="4b">4b</option>
-        </select>
-      </div>
-    </div>
-    <div class="col">
-      <div class="form-group">
-        <label for="age">Completion year</label>
-        <div class="slider-wrapper">
-          <input class="slider" id="age" name="age">
+  <!-- TEMPORARY SIMPLE LAYER -->
+  {% if not request.GET.simple %}
+    <form class="form-row">
+      <div class="col">
+        <div class="form-group">
+          <label for="archetype">Archetype</label>
+          <select class="custom-select" id="archetype" name="archetype">
+            <option selected value="all">All</option>
+            <option value="7">Apartment building</option>
+            <option value="5b">Office</option>
+            <option value="5c">House</option>
+            <option value="5a">5a</option>
+            <option value="1a">1a</option>
+            <option value="4b">4b</option>
+          </select>
         </div>
       </div>
-    </div>
-    <div class="col">
-      <div class="input-group">
-        <label for="surface">Surface area (m<sup>2</sup>)</label>
-        <div class="slider-wrapper">
-          <input class="slider" id="surface" name="surface">
+      <div class="col">
+        <div class="form-group">
+          <label for="age">Completion year</label>
+          <div class="slider-wrapper">
+            <input class="slider" id="age" name="age">
+          </div>
         </div>
       </div>
-    </div>
-  </form>
+      <div class="col">
+        <div class="input-group">
+          <label for="surface">Surface area (m<sup>2</sup>)</label>
+          <div class="slider-wrapper">
+            <input class="slider" id="surface" name="surface">
+          </div>
+        </div>
+      </div>
+    </form>
+  {% endif %}
 
   <div id="map-wrapper">
     <div id="map" class="leaflet-map"></div>
@@ -87,7 +90,7 @@
         </table>
 
         <div class="feature-content">
-          <a class="btn btn-primary" href="">
+          <a class="btn btn-primary" href="{% url 'stocks:map' 'brussels' 1 %}">
             <i class="fas fa-arrow-alt-circle-down"></i> Drill down
           </a>
 
@@ -128,7 +131,7 @@
     let map = L.map("map", {
       renderer: L.canvas(),
       fullscreenControl: true,
-    }).setView([50.83, 4.29], 14);
+    });
 
     // add baselayer
     let basemap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
@@ -270,11 +273,22 @@
       });
     };
 
-    // create layer with data, style, and click function
-    var choroplethSchauff = L.geoJson(anderlecht, {
-      style: styleSchauff,
-      onEachFeature: onEachFeature,
-    });
+
+    // TEMPORARY SIMPLE LAYER
+    {% if request.GET.simple %}
+      var choroplethSchauff = L.geoJson(brussels, {
+        style: styleSchauff,
+        onEachFeature: onEachFeature,
+      });
+    {% else %}
+      // create layer with data, style, and click function
+      var choroplethSchauff = L.geoJson(anderlecht, {
+        style: styleSchauff,
+        onEachFeature: onEachFeature,
+      });
+    {% endif %}
+
+
 
     // layer and corresponding legend that should be loaded first
     let visibleLayer = "choroplethSchauff";
@@ -283,6 +297,9 @@
     // add these to the map
     map.addLayer(window[visibleLayer]);
     map.addControl(window[visibleLegend]);
+
+    // set zoom to bounds of layer
+    map.fitBounds(window[visibleLayer].getBounds());
 
     // function to switching layers
     function switchLayer(layer) {

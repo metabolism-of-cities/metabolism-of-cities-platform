@@ -41,6 +41,12 @@ def data(request, slug):
     }
     return render(request, "stocks/data.html", context)
 
+def archetypes(request, slug):
+    context = {
+        "archetypes": True,
+    }
+    return render(request, "stocks/archetypes.html", context)
+
 def maps(request, slug):
     context = {
         "map": True,
@@ -73,7 +79,7 @@ def stories(request, slug):
     }
     return render(request, "stocks/stories.html", context)
 
-def story(request, slug):
+def story(request, slug, title):
     context = {
         "stories": True,
     }
