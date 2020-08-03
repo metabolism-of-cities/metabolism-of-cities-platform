@@ -20,15 +20,20 @@
 {% block content %}
   {% include "_submenu-stocks.html" %}
 
+  <!-- TEMPORARY SIMPLE LAYER -->
+  {% if not request.GET.simple %}
     <form class="form-row">
       <div class="col">
         <div class="form-group">
           <label for="archetype">Archetype</label>
-          <select class="custom-select" id="archetype">
+          <select class="custom-select" id="archetype" name="archetype">
             <option selected value="all">All</option>
-            <option value="apartment">Apartment building</option>
-            <option value="office">Office</option>
-            <option value="house">House</option>
+            <option value="7">Apartment building</option>
+            <option value="5b">Office</option>
+            <option value="5c">House</option>
+            <option value="5a">5a</option>
+            <option value="1a">1a</option>
+            <option value="4b">4b</option>
           </select>
         </div>
       </div>
@@ -36,7 +41,7 @@
         <div class="form-group">
           <label for="age">Completion year</label>
           <div class="slider-wrapper">
-            <input class="slider" id="age">
+            <input class="slider" id="age" name="age">
           </div>
         </div>
       </div>
@@ -44,64 +49,59 @@
         <div class="input-group">
           <label for="surface">Surface area (m<sup>2</sup>)</label>
           <div class="slider-wrapper">
-            <input class="slider" id="surface">
+            <input class="slider" id="surface" name="surface">
           </div>
         </div>
       </div>
     </form>
+  {% endif %}
 
-    <div id="map-wrapper">
-      <div id="map" class="leaflet-map"></div>
-      <div id="feature-details-wrapper">
-        <div id="feature-details">
-          <div class="header">
-            <span class="muni"></span>
-            <button type="button" class="close close-feature" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <table class="table">
-            <tr>
-              <th scope="row">Most common archetype</th>
-              <td class="age">Apartment building</td>
-            </tr>
-            <tr>
-              <th scope="row">Glass</th>
-              <td class="glass">21 tonnes</td>
-            </tr>
-            <tr>
-              <th scope="row">Wood</th>
-              <td class="wood">812 tonnes</td>
-            </tr>
-            <tr>
-              <th scope="row">Steel</th>
-              <td class="steel">4124 tonnes</td>
-            </tr>
-            <tr>
-              <th scope="row">Schauff</th>
-              <td class="schauff"></td>
-            </tr>
-          </table>
-
-          <div class="feature-content">
-            <a class="btn btn-primary" href="">
-              <i class="fas fa-arrow-alt-circle-down"></i> Drill down
-            </a>
-
-            <a class="btn btn-primary-basic" href="">
-              <i class="fal fa-layer-group"></i>
-              Compare
-            </a>
-          </div>
-
-          <button class="btn btn-primary mt-4 download-map">
-            <i class="fas fa-fw fa-save"></i>
-            Save map as image
+  <div id="map-wrapper">
+    <div id="map" class="leaflet-map"></div>
+    <div id="feature-details-wrapper">
+      <div id="feature-details">
+        <div class="header">
+          <span class="muni"></span>
+          <button type="button" class="close close-feature" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
           </button>
+        </div>
+        <table class="table">
+          <tr>
+            <th scope="row">Most common archetype</th>
+            <td class="age">Apartment building</td>
+          </tr>
+          <tr>
+            <th scope="row">Glass</th>
+            <td class="glass">21 tonnes</td>
+          </tr>
+          <tr>
+            <th scope="row">Wood</th>
+            <td class="wood">812 tonnes</td>
+          </tr>
+          <tr>
+            <th scope="row">Steel</th>
+            <td class="steel">4124 tonnes</td>
+          </tr>
+          <tr>
+            <th scope="row">Schauff</th>
+            <td class="schauff"></td>
+          </tr>
+        </table>
 
+        <div class="feature-content">
+          <a class="btn btn-primary" href="{% url 'stocks:map' 'brussels' 1 %}">
+            <i class="fas fa-arrow-alt-circle-down"></i> Drill down
+          </a>
+
+          <a class="btn btn-primary-basic" href="{% url 'stocks:compare' 'brussels' %}">
+            <i class="fal fa-layer-group"></i>
+            Compare
+          </a>
         </div>
       </div>
     </div>
+  </div>
 {% endblock %}
 
 {% block footer %}
@@ -131,7 +131,7 @@
     let map = L.map("map", {
       renderer: L.canvas(),
       fullscreenControl: true,
-    }).setView([50.83, 4.29], 14);
+    });
 
     // add baselayer
     let basemap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
@@ -146,53 +146,6 @@
     })
 
     basemap.addTo(map);
-
-    // add view switcher
-    L.Control.Views = L.Control.extend({
-      onAdd: function(map) {
-
-        var viewButtons = L.DomUtil.create("div", "view-buttons");
-
-        var archetype = L.DomUtil.create("div", "view-button");
-        archetype.dataset.view = "archetype"
-        archetype.innerHTML = "<i class='fal fa-fw fa-building'></i> Archetype";
-
-        viewButtons.appendChild(archetype);
-
-        var glass = L.DomUtil.create("div", "view-button");
-        glass.dataset.view = "glass"
-        glass.innerHTML = "<i class='fal fa-fw fa-window-frame'></i> Glass";
-
-        viewButtons.appendChild(glass);
-
-        var wood = L.DomUtil.create("div", "view-button");
-        wood.dataset.view = "wood"
-        wood.innerHTML = "<i class='fal fa-fw fa-tree'></i> Wood";
-
-        viewButtons.appendChild(wood);
-
-        var age = L.DomUtil.create("div", "view-button");
-        age.dataset.view = "age"
-        age.innerHTML = "<i class='fal fa-fw fa-history'></i> Age";
-
-        viewButtons.appendChild(age);
-
-        return viewButtons;
-      },
-    });
-
-    L.control.Views = function(opts) {
-      return new L.Control.Views(opts);
-    }
-
-    L.control.Views({ position: "topright" }).addTo(map);
-
-    $(".view-button").click(function() {
-      let view = $(this).data("view");
-      console.log(view);
-    })
-
-    // ----
 
     // download map as image
     function downloadImage(err, canvas) {
@@ -215,7 +168,7 @@
         downloadButtonWrapper.appendChild(downloadButton);
 
         return downloadButtonWrapper;
-      },
+      }
     });
 
     L.control.Download = function(opts) {
@@ -275,6 +228,8 @@
           grades = [0, 50, 100, 200, 300, 400, 1000, 1500],
           labels = [];
 
+      div.innerHTML = "<div>Wood stock per building<br>(in tonnes)</div><hr class='my-2'>"
+
       // loop through our schauff intervals and generate a label with a colored square for each interval
       for (var i = 0; i < grades.length; i++) {
           div.innerHTML +=
@@ -318,11 +273,22 @@
       });
     };
 
-    // create layer with data, style, and click function
-    var choroplethSchauff = L.geoJson(anderlecht, {
-      style: styleSchauff,
-      onEachFeature: onEachFeature,
-    });
+
+    // TEMPORARY SIMPLE LAYER
+    {% if request.GET.simple %}
+      var choroplethSchauff = L.geoJson(brussels, {
+        style: styleSchauff,
+        onEachFeature: onEachFeature,
+      });
+    {% else %}
+      // create layer with data, style, and click function
+      var choroplethSchauff = L.geoJson(anderlecht, {
+        style: styleSchauff,
+        onEachFeature: onEachFeature,
+      });
+    {% endif %}
+
+
 
     // layer and corresponding legend that should be loaded first
     let visibleLayer = "choroplethSchauff";
@@ -331,6 +297,9 @@
     // add these to the map
     map.addLayer(window[visibleLayer]);
     map.addControl(window[visibleLegend]);
+
+    // set zoom to bounds of layer
+    map.fitBounds(window[visibleLayer].getBounds());
 
     // function to switching layers
     function switchLayer(layer) {
@@ -350,6 +319,35 @@
       visibleLayer = layer;
       visibleLegend = legend;
     }
+
+    // filter layer to only show certain buildings
+    let filteredLayer;
+
+    function filterLayer() {
+      let selectedArchetype = $("#archetype").val()
+
+      clearMap()
+
+      if (selectedArchetype == "all") {
+        choroplethSchauff.addTo(map)
+      } else {
+        filteredLayer = L.geoJson(anderlecht, {
+          style: styleSchauff,
+          onEachFeature: onEachFeature,
+          filter: function(feature, layer) {
+            return (feature.properties.type == selectedArchetype)
+          }
+        })
+
+        visibleLayer = "filteredLayer";
+        filteredLayer.addTo(map);
+      }
+    }
+
+    // when changing inputs, run filter
+    $("#archetype").change(function() {
+      filterLayer();
+    })
 
     // range slider
     $("#age").slider({ min: 1500, max: 2020, value: [1500, 2020]});

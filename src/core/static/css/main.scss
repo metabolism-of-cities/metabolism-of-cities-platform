@@ -2873,6 +2873,11 @@ body.material-stocks.map {
     max-height: 90vh;
   }
 
+  .legend hr {
+    width: calc(100% + 1rem);
+    margin-left: -.5rem;
+  }
+
   .view-buttons,
   .download-map-wrapper {
     border: 2px solid rgba(0,0,0,0.2);
@@ -2923,6 +2928,50 @@ body.material-stocks.map {
     }
   }
 }
+
+// MATERIAL STOCKS COMPARISON PAGE
+body.material-stocks.compare {
+  .leaflet-map {
+    height: 350px;
+  }
+
+  .selects {
+    background-color: #fcfcfc;
+    top: 0;
+  }
+
+  .tables {
+    th {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    td {
+      width: 40%;
+
+      &:first-of-type {
+        padding-right: 0;
+      }
+
+      &:last-of-type {
+        padding-left: 0;
+      }
+    }
+  }
+
+  section {
+    padding: 1rem 0;
+
+    &:first-of-type {
+      padding-top: 0;
+    }
+
+    &:last-of-type {
+      padding-bottom: 0;
+    }
+  }
+}
+
 
 // WORK SPRINT PAGE
 body.work.sprint {

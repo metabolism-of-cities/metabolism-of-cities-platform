@@ -1,0 +1,54 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block title %}Material Stocks{% endblock %}
+{% block page_name %}material-stocks stories{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+  {% include "_submenu-stocks.html" %}
+
+  <div class="row">
+    <div class="col-md-6 col-lg-4 mb-4">
+      <a class="card btn-card" href="{% url 'stocks:story' 'brussels' 'sample-story' %}">
+        <img src="https://i.imgur.com/AMoWmbI.png" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{% lorem 5 w random %}</h5>
+          <p class="card-text">{% lorem 15 w random %}</p>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-6 col-lg-4 mb-4">
+      <a class="card btn-card" href="{% url 'stocks:story' 'brussels' 'sample-story' %}">
+        <img src="https://i.imgur.com/JZoG9l4.png" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{% lorem 5 w random %}</h5>
+          <p class="card-text">{% lorem 15 w random %}</p>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-6 col-lg-4 mb-4">
+      <a class="card btn-card" href="{% url 'stocks:story' 'brussels' 'sample-story' %}">
+        <img src="https://i.imgur.com/AMoWmbI.png" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{% lorem 5 w random %}</h5>
+          <p class="card-text">{% lorem 15 w random %}</p>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-6 col-lg-4 mb-4">
+      <a class="card btn-card" href="{% url 'stocks:story' 'brussels' 'sample-story' %}">
+        <img src="https://i.imgur.com/JZoG9l4.png" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{% lorem 5 w random %}</h5>
+          <p class="card-text">{% lorem 15 w random %}</p>
+        </div>
+      </a>
+    </div>
+  </div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

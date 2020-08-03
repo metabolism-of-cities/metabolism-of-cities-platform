@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}Material Stocks{% endblock %}
-{% block page_name %}material-stocks compare{% endblock %}
+{% block page_name %}material-stocks story{% endblock %}
 
 {% block head %}
   <link rel="stylesheet"
@@ -13,7 +13,12 @@
 
 {% block content %}
   {% include "_submenu-stocks.html" %}
-  <div class="row">
+
+  <h3>{% lorem 5 w random %}</h3>
+
+  {% lorem 1 p %}
+
+  <div class="row mb-3">
     <div class="col-md-6">
       <div id="map-a" class="leaflet-map"></div>
     </div>
@@ -22,127 +27,11 @@
     </div>
   </div>
 
-  <div class="text-center tables">
-    <div class="row selects sticky-top py-3">
-      <div class="col-md-6">
-        <select name="area" class="custom-select">Schaerbeek
-          <option>Schaerbeek</option>
-        </select>
-      </div>
+  {% lorem 2 p %}
 
-      <div class="col-md-6">
-        <select name="area" class="custom-select">Etterbeek
-          <option>Etterbeek</option>
-        </select>
-      </div>
-    </div>
-    <section>
-      <h5 class="mt-4 text-center"><i class="fad fa-fw fa-info-circle mr-1"></i> General info</h5>
-      <table class="table">
-        <tbody>
-          <tbody>
-            <tr>
-              <td>141 km<sup>2</sup></td>
-              <th>Area</th>
-              <td>412 km<sup>2</sup></td>
-            </tr>
-            <tr>
-              <td>4124</td>
-              <th>Number of buildings</th>
-              <td>6132</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-          </tbody>
-        </tbody>
-      </table>
-    </section>
+  <!-- add stats box -->
 
-    <section>
-      <h5 class="mt-4"><i class="fad fa-fw fa-flask mr-1"></i> Materials</h5>
-      <table class="table">
-        <tbody>
-          <tbody>
-            <tr>
-              <td>142 tonnes</td>
-              <th>Wood</th>
-              <td>312 tonnes</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-          </tbody>
-        </tbody>
-      </table>
-    </section>
-
-    <section>
-      <h5 class="mt-4"><i class="fad fa-fw fa-building mr-1"></i> Materials per buildings</h5>
-      <table class="table">
-        <tbody>
-          <tbody>
-            <tr>
-              <td>142 tonnes</td>
-              <th>Wood</th>
-              <td>312 tonnes</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-          </tbody>
-        </tbody>
-      </table>
-    </section>
-
-  </div>
-  <!-- we can skip the closing tag here because we have an unused container closing tab -->
+  {% lorem 2 p %}
 {% endblock %}
 
 {% block footer %}
@@ -293,10 +182,5 @@
     // make maps fit the bounds of the geojson layers
     mapA.fitBounds(schaerbeekLayer.getBounds());
     mapB.fitBounds(etterbeekLayer.getBounds());
-
-    // initialise select2
-    $("select[name='area']").select2({
-      theme: "bootstrap4",
-    });
   </script>
 {% endblock %}
