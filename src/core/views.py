@@ -94,7 +94,7 @@ def user_register(request, project="core", section=None):
             user.save()
             login(request, user)
 
-            people = People.objects.create(name=name, email=user.email)
+            people = People.objects.create(name=name, email=user.email, description=request.POST.get("background"))
 
             if "photo" in request.FILES and request.FILES["photo"]:
                 people.image = request.FILES["photo"]

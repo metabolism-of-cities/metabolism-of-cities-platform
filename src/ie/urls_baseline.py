@@ -70,6 +70,7 @@ baseline_urlpatterns = [
     path("hub/help/", core.hub_help, name="hub_help"),
     path("hub/join/", core.user_register, { "section": "volunteer_hub", }, name="hub_join"),
     path("hub/profile/", core.user_profile, name="hub_profile"),
+    path("hub/profile/edit/", core.user_profile_form, name="hub_profile_form"),
     path("hub/forum/", community.forum_list, { "parent": 31993, "section": "volunteer_hub", }, name="volunteer_forum"),
     path("hub/forum/create/", community.forum_form, { "parent": 31993, "section": "volunteer_hub" }),
     path("hub/forum/<int:id>/", community.forum, { "section": "volunteer_hub" }, name="volunteer_forum"),

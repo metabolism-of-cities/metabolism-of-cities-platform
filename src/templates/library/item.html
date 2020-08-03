@@ -46,8 +46,10 @@
           <div class="mt-3 mb-2"><a href="{{ info.image.url }}" class="btn btn-primary"><i class="fa fa-download"></i> Download</a></div>
         {% endif %}
 
-        {% if request.user.is_superuser %}
-          <div class="mt-3 mb-2"><a href="?edit&amp;return={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a></div>
+        {% if request.user.is_authenticated %}
+          {% if request.user.is_superuser or request.user.people == info.uploader %}
+            <div class="mt-3 mb-2"><a href="?edit&amp;return={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a></div>
+          {% endif %}
         {% endif %}
 
       </div>
@@ -292,6 +294,21 @@
       <div class="col-lg-8 mb-4">
         {% if info.description %}
           {{ info.get_description }}
+        {% endif %}
+
+        {% if info.attachments.all %}
+          <h3 class="mt-4">Attachment(s)</h3>
+          <ul>
+          {% for each in info.attachments.all %}
+            <li><a href="{{ each.file.url }}">{{ each }}</a> ({{ each.get_kb }} Kb)</li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+        {% if request.user.is_authenticated %}
+          {% if info.comments %}
+            <h3 class="mt-5">Uploader notes</h3>
+            {{ info.comments|linebreaks }}
+          {% endif %}
         {% endif %}
 
         {% if PROJECT.slug == "untraceable" %}

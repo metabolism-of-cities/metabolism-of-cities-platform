@@ -243,8 +243,9 @@ def item(request, id, show_export=True):
     if info.type.group == "multimedia":
         section = "multimedia_library"
 
-    if "edit" in request.GET and has_permission(request, request.project, ["curator"]):
-        return form(request, info.id)
+    if "edit" in request.GET:
+        if has_permission(request, request.project, ["curator"]) or request.user.people == info.uploader():
+            return form(request, info.id)
 
     context = {
         "info": info,
@@ -324,7 +325,12 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         space = get_space(request, space)
 
     curator = False
+    if id:
+        get_item = get_object_or_404(LibraryItem, pk=id)
+
     if has_permission(request, project.id, ["curator"]):
+        curator = True
+    if request.user.people == get_item.uploader():
         curator = True
 
     if not type:
@@ -333,7 +339,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             type = request.POST.get("type")
 
     if id and curator:
-        info = get_object_or_404(LibraryItem, pk=id)
+        info = get_item
         type = info.type
     else:
         type = LibraryItemType.objects.get(pk=type)
