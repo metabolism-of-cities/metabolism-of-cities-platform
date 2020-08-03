@@ -327,10 +327,9 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     curator = False
     if id:
         get_item = get_object_or_404(LibraryItem, pk=id)
-
+        if request.user.people == get_item.uploader():
+            curator = True
     if has_permission(request, project.id, ["curator"]):
-        curator = True
-    if request.user.people == get_item.uploader():
         curator = True
 
     if not type:

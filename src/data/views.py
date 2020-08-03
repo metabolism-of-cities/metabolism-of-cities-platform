@@ -93,8 +93,9 @@ def overview(request):
 
 def dashboard(request, space):
     space = get_space(request, space)
+    project = get_object_or_404(Project, pk=request.project)
     if not settings.DEBUG:
-        return redirect("data:referencespace_worksheet", slug=space.slug)
+        return redirect(project.slug + ":hub_harvesting_space", space=space.slug)
     context = {
         "space": space,
         "header_image": space.photo,
