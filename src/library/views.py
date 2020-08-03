@@ -128,6 +128,9 @@ def list(request, type):
         list = LibraryItem.objects.filter(tags__id=791)
         title = "Starter's Kit"
         webpage = Webpage.objects.get(pk=34)
+    elif type == "stock":
+        list = LibraryItem.objects.filter(tags__id=135)
+        title = "Material stock publications"
     context = {
         "items": list,
         "type": type,

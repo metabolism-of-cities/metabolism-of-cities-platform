@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from core import views as core
+from library import views as library
 from ie.urls_baseline import baseline_urlpatterns
 
 app_name = "stocks"
@@ -8,7 +9,7 @@ urlpatterns = baseline_urlpatterns + [
     path("", views.landing, name="landing"),
     path("home/", views.index, name="index"),
     path("contribute/", views.contribute, name="contribute"),
-    path("publications/", views.publications, name="publications"),
+    path("publications/", library.list, {"type": "stock"}, name="publications"),
     path("cities/", views.cities, name="cities"),
     path("cities/<slug:slug>/", views.city, name="city"),
     path("cities/<slug:slug>/data/", views.data, name="data"),

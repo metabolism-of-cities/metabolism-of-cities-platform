@@ -17,11 +17,6 @@ def contribute(request):
     }
     return render(request, "stocks/contribute.html", context)
 
-def publications(request):
-    context = {
-    }
-    return render(request, "stocks/publications.html", context)
-
 def cities(request):
     context = {
     }
