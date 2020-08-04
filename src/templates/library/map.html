@@ -11,8 +11,11 @@
   <!-- leaflet marker cluster plugin - https://github.com/Leaflet/Leaflet.markercluster -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
-  <style type="text/css">
-  table.results{display:none}
+
+  <style>
+    table.results {
+      display:none
+    }
   </style>
 {% endblock %}
 
@@ -28,13 +31,14 @@
 
   <div id="article-list">
     <div id="list-anchor"></div>
-    <div class="row">
-    <table class="table table-striped results">
-      <tr>
-        <th>Title</th>
-        <th>Author(s)</th>
-        <th>Space(s)</th>
-      </tr>
+    <table class="table results">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author(s)</th>
+          <th>Space(s)</th>
+        </tr>
+      </thead>
       {% for each in items %}
         <tr class="single-article" data-cities="{% for space in each.spaces.all %}{{ space }}-{{ space.id }}{% if not forloop.last %} {% endif %}{% endfor %}">
         <td>
@@ -52,8 +56,7 @@
         </td>
       </tr>
       {% endfor %}
-      </table>
-    </div>
+    </table>
   </div>
 
 {% endblock %}
