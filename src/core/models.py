@@ -1011,31 +1011,30 @@ class DataPortal(LibraryItem):
     objects = PublicActiveRecordManager()
 
 
-#MOOC's
-#class MOOC(models.Model):
-#    name = models.CharField(max_length=255)
-#    description = models.TextField(null=True, blank=True)
-#    date_created = models.DateTimeField(auto_now_add=True)
-#
-#    def __str__(self):
-#        return self.name
-#
-#class MOOCQuestion(models.Model):
-#    question = models.CharField(max_length=255)
-#    date_created = models.DateTimeField(auto_now_add=True)
-#
-#    def __str__(self):
-#        return self.question
-#
-#class MOOCModule(models.Model):
-#    mooc = models.ForeignKey(MOOC, on_delete=models.CASCADE, related_name="modules")
-#    name = models.CharField(max_length=255)
-#    instructions = models.TextField(null=True, blank=True)
-#    date_created = models.DateTimeField(auto_now_add=True)
-#
-#    def __str__(self):
-#        return self.name
-#
+class Course(Record):
+    pass
+
+    def __str__(self):
+        return self.name
+
+class CourseQuestion(models.Model):
+    name = models.CharField(max_length=255)
+    def __str__(self):
+        return self.name
+
+class CourseQuestionAnswer(models.Model):
+    question = models.ForeignKey(CourseQuestion, on_delete=models.CASCADE, related_name="answers")
+    name = models.CharField(max_length=255)
+    is_correct = models.BooleanField(default=False)
+    def __str__(self):
+        return self.name
+
+class CourseModule(Record):
+    part_of_course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="modules")
+
+    def __str__(self):
+        return self.name
+
 #class MOOCModuleQuestion(models.Model):
 #    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE, related_name="questions")
 #    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE)
