@@ -1017,23 +1017,39 @@ class Course(Record):
     def __str__(self):
         return self.name
 
-class CourseQuestion(models.Model):
-    name = models.CharField(max_length=255)
-    def __str__(self):
-        return self.name
-
-class CourseQuestionAnswer(models.Model):
-    question = models.ForeignKey(CourseQuestion, on_delete=models.CASCADE, related_name="answers")
-    name = models.CharField(max_length=255)
-    is_correct = models.BooleanField(default=False)
-    def __str__(self):
-        return self.name
-
 class CourseModule(Record):
     part_of_course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="modules")
 
     def __str__(self):
         return self.name
+
+
+class CourseQuestion(models.Model):
+    question = models.CharField(max_length=255)
+    module = models.ForeignKey(CourseModule, on_delete=models.CASCADE, related_name="questions")
+    answer = models.ForeignKey("CourseQuestionAnswer", on_delete=models.CASCADE, null=True, blank=True)
+    position = models.PositiveSmallIntegerField(db_index=True, null=True, blank=True)
+
+    def __str__(self):
+        return self.question
+
+    class Meta:
+        ordering = ["position"]
+
+class CourseQuestionAnswer(models.Model):
+    question = models.ForeignKey(CourseQuestion, on_delete=models.CASCADE, related_name="answers")
+    answer = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.answer
+
+class CourseContent(Record):
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, null=True, blank=True)
+    module = models.ForeignKey(CourseModule, on_delete=models.CASCADE, related_name="content")
+    position = models.PositiveSmallIntegerField(db_index=True, null=True, blank=True)
+
+    class Meta:
+        ordering = ["position"]
 
 #class MOOCModuleQuestion(models.Model):
 #    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE, related_name="questions")
