@@ -18,4 +18,4 @@ Add it under PROJECT_LIST as well
 
 --------
 
-ie/urls_project.py -> create this file, copy from other
+ie/urls_PROJECTNAME.py -> create this file, copy from other
