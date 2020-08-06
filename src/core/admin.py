@@ -139,6 +139,9 @@ class TagAdmin(admin.ModelAdmin):
         return link
     view_link.short_description = "View"
 
+class CourseAdmin(SearchCompleteAdmin):
+    exclude = DEFAULT_EXCLUDE + ["slug"]
+
 class OrgAdmin(SearchCompleteAdmin):
     list_display = ["name", "type"]
     list_filter = ["type"]
@@ -322,6 +325,12 @@ admin_site.register(ActivatedSpace, SpaceAdmin)
 
 admin_site.register(License)
 admin_site.register(Site)
+
+admin_site.register(Course, CourseAdmin)
+admin_site.register(CourseModule, SearchCompleteAdmin)
+admin_site.register(CourseQuestion)
+admin_site.register(CourseQuestionAnswer)
+admin_site.register(CourseContent, SearchCompleteAdmin)
 
 #admin_site.register(MOOC)
 #admin_site.register(MOOCModule)

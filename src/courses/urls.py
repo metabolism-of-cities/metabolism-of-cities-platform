@@ -6,4 +6,5 @@ app_name = "courses"
 
 urlpatterns = baseline_urlpatterns + [
     path("", views.index, name="index"),
+    path("course/<slug:slug>/", views.course, name="course"),
 ]

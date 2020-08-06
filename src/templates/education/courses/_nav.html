@@ -1,0 +1,11 @@
+<ul class="nav flex-column" id="module_nav">
+  {% for each in course.modules.all %}
+    <li class="nav-item">
+      <a 
+        class="nav-link {% if not request.user.is_authenticated %}disabled{% elif info == each %}active{% endif %}" 
+        href="{% url "education:module" course.slug each.id %}">
+        {{ each }}
+      </a>
+    </li>
+  {% endfor %}
+</ul>

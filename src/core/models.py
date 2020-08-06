@@ -1012,7 +1012,14 @@ class DataPortal(LibraryItem):
 
 
 class Course(Record):
-    pass
+    slug = models.CharField(max_length=255, null=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(unidecode(self.name))
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("education:course", args=[self.slug])
 
     def __str__(self):
         return self.name
@@ -1023,6 +1030,8 @@ class CourseModule(Record):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ["name"]
 
 class CourseQuestion(models.Model):
     question = models.CharField(max_length=255)

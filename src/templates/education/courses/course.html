@@ -1,0 +1,27 @@
+{% extends "_base.html" %}
+
+{% block css %}
+<style type="text/css">
+img{max-width:100%}
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <div class="col-md-3">
+
+      {% include "education/courses/_nav.html" %}
+
+    </div>
+
+    <div class="col-md-9">
+
+      <h1>{{ course }}</h1>
+      {{ course.get_description }}
+
+    </div>
+
+  </div>
+
+{% endblock %}
