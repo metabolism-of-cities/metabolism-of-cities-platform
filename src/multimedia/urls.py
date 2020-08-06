@@ -19,4 +19,5 @@ urlpatterns = baseline_urlpatterns + [
     path("upload/", views.upload, name="upload"),
     path("upload/form/", library.form, { "project_name": app_name }, name="form"),
     path("controlpanel/video-uploader/", views.video_uploader, name="controlpanel_video_uploader"),
+    path("controlpanel/video-editor/", views.video_editor, name="controlpanel_video_editor"),
 ]

@@ -1,0 +1,134 @@
+{% extends "_base.html" %}
+
+
+
+{% block content %}
+
+  <h1 class="mb-0">{% block title %}Video uploader{% endblock %}</h1>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+  <a class="btn btn-default-basic float-right mt-4" href="{% url "multimedia:form" %}?type=31&amp;next={{ request.get_full_path }}"><i class="fal fa-plus"></i> Add video</a>
+
+  <p>You can use this page to add an intro, outro, and title page in the Metabolism of Cities house style.</p>
+  <p><strong>NOTE: </strong> we are assuming that you record a video in a resolution of 1920x1080!</p>
+
+  <table class="table table-striped datatable videos table-card">
+    <thead>
+      <tr>
+        <th>Video</th>
+        <th>Date</th>
+        <th>Original</th>
+        <th>Branded</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in list %}
+      <tr>
+        <td><a href="{{ each.get_absolute_url }}">{{ each }}</a></td>
+        <td>{{ each.date_created|date:"M d, Y" }}</td>
+        <td>
+          {% if each.attachments.all %}
+            <a href="{{ each.attachments.all.0.file.url }}">
+            {{ each.attachments.all.0 }}
+            </a>
+          {% endif %}
+        </td>
+        <td>
+          {% if each.meta_data.video_settings.compiled_video %}
+            <a href="{{ MEDIA_URL }}{{ each.meta_data.video_settings.compiled_video }}">View</a>
+          {% endif %}
+        </td>
+        <td>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#brand-video"
+            data-name="{{ each }}"
+            data-id="{{ each.id }}"
+          >
+            Brand this video
+          </button>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="modal fade" id="brand-video" tabindex="-1" role="dialog" aria-labelledby="brand-videoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div id="processing"></div>
+        <form method="post">
+          
+          <div class="modal-header">
+            <h5 class="modal-title" id="brand-videoLabel">Brand video</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Title</label>
+              <input type="text" name="name" value="" required id="video-name" class="form-control" />
+            </div>
+
+            <div class="form-group">
+              <label>Presenter</label>
+              <select class="form-control" name="presenter">
+                <option>No presenter</option>
+                <option value="paul.png">Presenter: Paul Hoekman</option>
+              </select>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="true" id="intro" name="intro">
+              <label class="form-check-label" for="intro">
+                Add intro
+              </label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="true" id="outro" name="outro">
+              <label class="form-check-label" for="outro">
+                Add outro
+              </label>
+            </div>
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button id="compiling" type="submit" class="btn btn-primary">Compile video</button>
+            <input type="hidden" id="video-id" name="id" required />
+            {% csrf_token %}
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <a class="btn btn-default-basic float-right mt-4" href="{% url "multimedia:form" %}?type=31&amp;next={{ request.get_full_path }}"><i class="fal fa-plus"></i> Add video</a>
+  <a href="../" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+{% endblock %}
+
+{% block footer %}
+  <script type="text/javascript">
+    $("table.videos button").click(function(){
+      var id = $(this).data("id");
+      var name = $(this).data("name");
+      $("#video-id").val(id);
+      $("#video-name").val(name);
+    });
+
+    $("form").submit(function(){
+      $("#compiling").closest("form").hide();
+      $("#processing").html("<div class='p-5 h4 text-center'>Compiling video, please stand by...<br><i class='mt-4 fa fa-spinner fa-spin'></i></div>");
+    });
+  </script>
+{% endblock %}

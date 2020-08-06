@@ -24,3 +24,4 @@ channels
 channels_redis
 bleach
 unidecode
+ffmpeg-python

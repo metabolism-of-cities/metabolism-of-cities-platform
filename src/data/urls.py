@@ -14,6 +14,7 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("upload/dataset/", library.form, { "type": 10, "project_name": app_name }, name="upload_dataset"),
     path("upload/dataportal/", library.form, { "type": 39, "project_name": app_name }, name="upload_dataportal"),
     path("datasets/", library.list, { "type": "datasets" }, name="view_datasets"),
+    path("<slug:space>/datasets/<int:dataset>/", views.dataset, name="dataset"),
     path("dataportals/", library.list, { "type": "dataportals" }, name="view_dataportals"),
 
     path("", views.index, name="index"),

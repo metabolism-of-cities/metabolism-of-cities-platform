@@ -4,7 +4,7 @@ FROM python:3.8.2
 # See https://docs.djangoproject.com/en/3.0/ref/contrib/gis/install/geolibs/#installing-geospatial-libraries
 RUN apt-get update -y && \
     apt-get install --auto-remove -y \
-      binutils libproj-dev gdal-bin
+      binutils libproj-dev gdal-bin ffmpeg
 
 ENV PYTHONUNBUFFERED 1
 RUN mkdir /src
