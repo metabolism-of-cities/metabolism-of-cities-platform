@@ -110,7 +110,7 @@ def list(request, type):
     title = type
     webpage = None
     if type == "dataportals":
-        list = DataPortal.objects_unfiltered.all()
+        list = LibraryItem.objects.filter(type__id=39)
     elif type == "datasets":
         list = Dataset.objects_unfiltered.all()
     elif type == "reviews":
