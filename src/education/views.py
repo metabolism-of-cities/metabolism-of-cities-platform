@@ -70,6 +70,22 @@ def module(request, slug, id):
     return render(request, "education/courses/module.html", context)
 
 @login_required
+def syllabus(request, slug):
+    info = get_object_or_404(Course, slug=slug)
+    check_register = RecordRelationship.objects.filter(record_parent=request.user.people, record_child=info, relationship_id=12)
+    my_completed_content = CourseContent.objects \
+        .filter(module__part_of_course=info) \
+        .filter(child_list__record_parent=request.user.people, child_list__relationship__id=29)
+    context = {
+        "title": info,
+        "course": info,
+        "check_register": check_register,
+        "my_completed_content": my_completed_content,
+        "syllabus": True,
+    }
+    return render(request, "education/courses/syllabus.html", context)
+
+@login_required
 @csrf_exempt
 def module_complete_segment(request, slug, id):
     try:
@@ -95,4 +111,22 @@ def controlpanel_students(request):
         "load_datatables": True,
     }
     return render(request, "controlpanel/users.html", context)
+
+@login_required
+def controlpanel_student(request, id):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    info = get_object_or_404(People, pk=id)
+    courses = Course.objects.all()
+    participation = RecordRelationship.objects.filter(record_child__in=courses, relationship_id=12, record_parent=info)
+    completed = RecordRelationship.objects.filter(relationship_id=29, record_parent=info)
+    context = {
+        "show_child": True,
+        "load_datatables": True,
+        "info": info,
+        "participation": participation,
+        "completed": completed,
+    }
+    return render(request, "controlpanel/student.html", context)
 

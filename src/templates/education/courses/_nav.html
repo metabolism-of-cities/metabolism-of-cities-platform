@@ -15,4 +15,11 @@
       </a>
     </li>
   {% endfor %}
+  <li class="nav-item">
+    <a 
+      class="nav-link {% if syllabus %}active{% endif %}" 
+      href="{% url "education:syllabus" course.slug %}">
+      {{ _("Syllabus") }}
+    </a>
+  </li>
 </ul>

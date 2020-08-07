@@ -1,0 +1,64 @@
+{% extends "_base.html" %}
+
+{% block css %}
+<style type="text/css">
+#module_nav .active {
+  background: #228496;
+  color: #fff;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <div class="col-md-3">
+
+      {% include "education/courses/_nav.html" %}
+
+    </div>
+
+    <div class="col-md-9">
+
+      <h1>{{ course }}</h1>
+
+      {% for each in course.modules.all %}
+
+        <h2 class="h4">{{ each }}</h2>
+
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>Type</th>
+            <th style="width:120px">Status</th>
+          </tr>
+          </thead>
+          <tbody>
+            {% for content in each.content.all %}
+              <tr>
+                <td>
+                  <a href="{% url "education:module" course.slug each.id %}?open={{ content.id }}">
+                  {{ forloop.counter }}: 
+                  {{ content.get_type_display }} - 
+                  {{ content }}
+                  </a>
+                </td>
+                <td>
+                  {% if content in my_completed_content %}
+                    <i class="fa fa-check"></i>
+                  {% else %}
+                    <em>Pending</em>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+      {% endfor %}
+
+    </div>
+
+  </div>
+
+{% endblock %}

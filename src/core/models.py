@@ -419,6 +419,7 @@ class RecordRelationship(models.Model):
     record_parent = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="parent_list")
     relationship = models.ForeignKey(Relationship, on_delete=models.CASCADE)
     record_child = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="child_list")
+    date_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
         return str(self.record_parent) + ' ' + str(self.relationship.label) + ' ' + str(self.record_child)

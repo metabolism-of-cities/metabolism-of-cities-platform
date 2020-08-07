@@ -34,7 +34,7 @@ video,iframe {
   <li class="nav-item" role="presentation">
     <a class="nav-link {% if forloop.counter == 1 %} active{% endif %}" id="tab-{{ each.id }}" data-toggle="tab" href="#tabcontent-{{ each.id }}" role="tab" aria-controls="tab-{{ each.id }}" aria-selected="true">
       {{ forloop.counter }}: 
-      {% if each.video or each.meta_data.url %}Video{% else %}Textbox{% endif %}
+      {{ each.get_type_display }}
     </a>
   </li>
   {% endfor %}
@@ -115,5 +115,8 @@ video,iframe {
       }
     },"json");
   });
+  {% if request.GET.open %}
+    $("#tab-{{ request.GET.open }}").click();
+  {% endif %}
 </script>
 {% endblock %}

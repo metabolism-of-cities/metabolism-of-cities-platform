@@ -1,0 +1,44 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1 class="mb-0">{% block title %}Student: {{ info }}{% endblock %}</h1>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+  <h2>Enrollment</h2>
+  <p>This person is enrolled in the following courses:</p>
+  <ul>
+  {% for each in participation %}
+    <li>{{ each.record_child }}</li>
+  {% endfor %}
+  </ul>
+
+  <h3>Content watched/completed</h3>
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Course</th>
+        <th>Module</th>
+        <th>Content</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in completed %}
+      <tr>
+        <td>{{ each.record_child.coursecontent.module.part_of_course }}</td>
+        <td>{{ each.record_child.coursecontent.module }}</td>
+        <td>{{ each.record_child }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <a href="../" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+{% endblock %}

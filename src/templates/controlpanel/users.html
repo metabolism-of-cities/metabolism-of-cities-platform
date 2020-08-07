@@ -21,7 +21,7 @@
     <tbody>
     {% for each in users %}
       <tr>
-        <td>{{ each.record_parent }}</td>
+        <td><a href="{{ each.record_parent.id }}/">{{ each.record_parent }}</a></td>
         <td>{{ each.relationship.name }}</td>
         {% if show_child %}
           <td>{{ each.record_child }}</td>
