@@ -2,7 +2,7 @@
 
 {% block content %}
 
-  <h1 class="mb-0">Our contributors</h1>
+  <h1 class="mb-0">{% block title %}Our contributors{% endblock %}</h1>
   <a href="../" class="btn btn-primary-basic mb-4">
     <i class="fal fa-angle-left"></i>
     Back to control panel
@@ -13,6 +13,9 @@
       <tr>
         <th>User</th>
         <th>Type</th>
+        {% if show_child %}
+          <th>Signed up to</th>
+        {% endif %}
       </tr>
     </thead>
     <tbody>
@@ -20,6 +23,9 @@
       <tr>
         <td>{{ each.record_parent }}</td>
         <td>{{ each.relationship.name }}</td>
+        {% if show_child %}
+          <td>{{ each.record_child }}</td>
+        {% endif %}
       </tr>
     {% endfor %}
     </tbody>

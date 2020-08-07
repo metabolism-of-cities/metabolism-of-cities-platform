@@ -38,6 +38,13 @@ iframe {
     </a>
   </li>
   {% endfor %}
+  {% if info.questions.all %}
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="tab-questions" data-toggle="tab" href="#tabcontent-questions" role="tab" aria-controls="tab-questions" aria-selected="true">
+        Questions
+      </a>
+    </li>
+  {% endif %}
 </ul>
 <div class="tab-content mt-4" id="coursecontent">
   {% for each in info.content.all %}
@@ -52,12 +59,59 @@ iframe {
       {% if each.description %}
         {{ each.get_description }}
       {% endif %}
+
+      {% if each in my_completed_content %}
+        <p><em>You completed this segment.</em></p>
+      {% else %}
+        <button type="submit" class="complete-segment btn btn-success" data-id="{{ each.id }}"><i class="fa fa-check"></i> I completed this segment</button>        
+      {% endif %}
+
     </div>
   {% endfor %}
+  {% if info.questions.all %}
+    <div class="tab-pane fade show" id="tabcontent-questions" role="tabpanel" aria-labelledby="tab-questions">
+      <h2>Questions</h2>
+      {% for each in info.questions.all %}
+
+        <div class="form-group">
+          <p><strong>{{ each }}</strong></p>
+
+          {% for answer in each.answers.all %}
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="question_{{ each.id }}" id="a_{{ answer.id }}" value="{{ answer.id }}">
+            <label class="form-check-label" for="a_{{ answer.id }}">
+              {{ answer }}
+            </label>
+          </div>
+          {% endfor %}
+
+        </div>
+
+      {% endfor %}
+    </div>
+  {% endif %}
 </div>
 
     </div>
 
   </div>
 
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+  $(".complete-segment").click(function(){
+    button = $(this);
+    var id = $(this).data("id");
+    $.post("{% url 'education:module_complete_segment' course.slug info.id %}",{
+      id: $(this).data("id"),
+    }, function(data) {
+      if (data.success) {
+        $(button).html("GREAT! You completed this segment").removeClass("complete-segment");
+      } else {
+        $(button).html("Sorry, we could not mark this as completed, please try again later").removeClass("btn-success").addClass("btn-danger");
+      }
+    },"json");
+  });
+</script>
 {% endblock %}

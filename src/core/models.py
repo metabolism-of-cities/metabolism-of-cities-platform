@@ -1027,6 +1027,9 @@ class Course(Record):
 class CourseModule(Record):
     part_of_course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="modules")
 
+    def get_absolute_url(self):
+        return reverse("education:module", args=[self.part_of_course.slug, self.id])
+
     def __str__(self):
         return self.name
 

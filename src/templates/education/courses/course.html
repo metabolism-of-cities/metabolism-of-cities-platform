@@ -18,6 +18,27 @@ img{max-width:100%}
     <div class="col-md-9">
 
       <h1>{{ course }}</h1>
+
+      <div class="mt-3 mb-3 alert-{% if check_register %}success{% else %}secondary{% endif %} p-4">
+      {% if not request.user.is_authenticated %}
+          <p class="h3 mb-4"><em>You are not logged in. Log in or register to sign up for this course.</em></p>
+          <a class="btn btn-primary mr-3 mb-2" href="/accounts/register/?next={{ request.get_full_path }}"><i class="fa fa-user-plus" aria-hidden="true"></i> Sign Up</a>
+          <a class="btn btn-primary mr-3 mb-2" href="/accounts/login/?next={{ request.get_full_path }}"><i class="fa fa-sign-in" aria-hidden="true"></i> Log In</a>
+        {% elif check_register %}
+          <p class="h3 mb-4"><em><i class="fa fa-check"></i> You are signed up for this course</em></p>
+          {% if first_module %}
+            <a class="btn btn-primary mr-3 mb-2" href="{% url "education:module" course.slug first_module.id %}"><i class="fa fa-sign-in" aria-hidden="true"></i> Start course</a>
+          {% endif %}
+        {% else %}
+          <p class="h3 mb-4"><em> Welcome, {{ request.user.people }}</em></p>
+          <form method="post">
+            <button type="submit" class="btn btn-primary mr-3 mb-2"><i class="fa fa-check" aria-hidden="true"></i> Enroll in this course</button>
+            <input type="hidden" name="register" value="true" />
+            {% csrf_token %}
+          </form>
+        {% endif %}
+      </div>
+
       {{ course.get_description }}
 
     </div>

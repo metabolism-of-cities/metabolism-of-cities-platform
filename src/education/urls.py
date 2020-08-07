@@ -13,4 +13,6 @@ urlpatterns = baseline_urlpatterns + [
     path("courses/", views.courses, name="courses"),
     path("courses/<slug:slug>/", views.course, name="course"),
     path("courses/<slug:slug>/<int:id>/", views.module, name="module"),
+    path("courses/<slug:slug>/<int:id>/completed/", views.module_complete_segment, name="module_complete_segment"),
+    path("controlpanel/students/", views.controlpanel_students, name="controlpanel_students"),
 ]
