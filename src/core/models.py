@@ -935,7 +935,7 @@ class Video(LibraryItem):
     def embed(self):
         if self.video_site == "youtube":
             return f'<iframe class="video-embed youtube-video" src="https://www.youtube.com/embed/{self.embed_code}?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
-        elif "ted" in self.url:
+        elif self.url and "ted.com" in self.url:
             try:
                 url = self.url
                 url = url.split("/")
@@ -945,6 +945,9 @@ class Video(LibraryItem):
                 return "<div class='alert alert-warning'>Embedded video unavailable. <a href='" + self.url + "'>Click here to view the video</a></div>"
         elif self.video_site == "vimeo":
             return f'<iframe class="video-embed vimeo-video" title="vimeo-player" src="https://player.vimeo.com/video/{self.embed_code}" frameborder="0" allowfullscreen></iframe>'
+        elif self.attachments.all():
+            file = self.attachments.all()[0]
+            return mark_safe(f'<video src="{file.file.url}" controls></video><br><a href="{file.file.url}">Download video</a>')
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
