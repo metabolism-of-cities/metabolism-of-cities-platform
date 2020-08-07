@@ -319,6 +319,23 @@
         {{ info.comments|linebreaks }}
         {% endif %}
 
+        {% if info.is_part_of %}
+          <h3 class="mt-5">Original source</h3>
+          <p>
+            This is part of the following item: 
+            <a href="../{{ info.is_part_of.id }}/">{{ info.is_part_of }}</a>
+          </p>
+        {% endif %}
+
+        {% if info.children.all %}
+          <h3 class="mt-5">Available within this {{ info.type }}</h3>
+          <ul>
+          {% for each in info.children.all %}
+            <li><a href="../{{ each.id }}/">{{ each }}</a></li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+
         {% if PROJECT.slug == "ascus" %}
         <div class="mt-5">
           {% include "_messages.html" %}

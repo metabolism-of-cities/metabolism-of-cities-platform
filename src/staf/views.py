@@ -809,6 +809,7 @@ def hub_harvesting_tag(request, space, tag):
         "menu": "harvesting",
         "space": info,
         "hide_space_menu": True,
+        "show_image_upload_link": True,
     }
     return render(request, "hub/harvesting.tag.html", context)
 

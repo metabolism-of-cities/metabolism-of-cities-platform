@@ -415,6 +415,11 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         if "update_tags" in request.GET:
             fields = ["name", "tags", "description"]
 
+        if "inventory" in request.GET or project.slug == "data" or project.slug == "islands":
+            fields.append("tags")
+            if tag:
+                initial["tags"] = tag
+
         ModelForm = modelform_factory(
             Video,
             fields=fields,
@@ -437,6 +442,11 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
         fields = ["name", "language", "title_original_language", "abstract_original_language", "description", "year", "author_list", "url", "license", "spaces"]
 
+        if "inventory" in request.GET or project.slug == "data" or project.slug == "islands":
+            fields.append("tags")
+            if tag:
+                initial["tags"] = tag
+
         if type.name == "Journal Article" or type.name == "Thesis" or type.name == "Conference Paper":
             labels["description"] = "Abstract"
             if type.name == "Journal Article":
@@ -457,15 +467,30 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
         if project.slug == "untraceable":
             fields.append("tags")
-            initial = {"tags": request.GET.get("tag")}
+            initial["tags"] = request.GET.get("tag")
 
         if space:
-            initial = {"spaces": space.id}
+            initial["spaces"] = space.id
 
         fields.append("comments")
 
         if "update_tags" in request.GET:
             fields = ["name", "tags", "description"]
+
+        if "parent" in request.GET:
+            # User is adding an item that is part of another item, so we don't need the meta data
+            fields.remove("year")
+            fields.remove("author_list")
+            if "url" in fields:
+                fields.remove("url")
+            if "license" in fields:
+                fields.remove("license")
+            if "tags" in fields:
+                fields.remove("tags")
+            if "spaces" in fields:
+                fields.remove("spaces")
+            if "comments" in fields:
+                fields.remove("comments")
 
         ModelForm = modelform_factory(LibraryItem, fields=fields, labels = labels)
 
@@ -501,6 +526,8 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 info.is_active = True
             else:
                 info.is_active = False
+            if "parent" in request.GET:
+                info.is_part_of_id = request.GET.get("parent")
             info.save()
             form.save_m2m()
 

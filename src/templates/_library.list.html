@@ -15,6 +15,11 @@
             <a href="{% if PROJECT.id == 17 %}{% url 'islands:library_item' each.id %}{% elif PROJECT.slug == "data" %}{% url "data:library_item" each.id %}{% else %}{{ each.get_absolute_url }}{% endif %}">
               {{ each }}
             </a>
+            {% if show_image_upload_link %}
+              <a href="form/?inventory=true&amp;type=38&amp;parent={{ each.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" title="Upload an image from this document" class="ml-2">
+                <i class="fa fa-image"></i>
+              </a>
+            {% endif %}
           <br>
           <em>{{ each.type }}</em>
           {% if each.publisher %}

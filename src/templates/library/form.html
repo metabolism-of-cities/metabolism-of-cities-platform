@@ -10,18 +10,20 @@ textarea#id_author_list{height:100px}
 {% block content %}
 
   {% if PROJECT.slug == "data" or PROJECT.slug == "islands" %}
-      {% include "hub/_nav.html" %}
+    {% include "hub/_nav.html" %}
+    {% if not request.GET.parent and not info %}
       <h1 class="h5">Adding: {{ type }}</h1>
+    {% endif %}
   {% else %}
     <h1>Adding: {{ type }}</h1>
   {% endif %}
-  
+
   {% if info %}
 
   {% endif %}
   <form method="post" enctype="multipart/form-data">
 
-    {% if not info %}
+    {% if not info and not request.GET.parent %}
       <div class="alert alert-warning">
         <p>
           <i class="fa fa-exclamation-triangle"></i>
@@ -31,6 +33,10 @@ textarea#id_author_list{height:100px}
           <select id="existing" class="select2 custom-select">
           </select>
         </p>
+      </div>
+    {% elif request.GET.parent %}
+      <div class="alert alert-warning">
+        {{ _("You are adding a screenshot or image to an existing document.") }}
       </div>
     {% endif %}
     

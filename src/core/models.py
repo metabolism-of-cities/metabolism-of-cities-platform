@@ -763,7 +763,7 @@ class LibraryItem(Record):
     author_citation = models.TextField(null=True, blank=True)
     bibtex_citation = models.TextField(null=True, blank=True)
     type = models.ForeignKey(LibraryItemType, on_delete=models.CASCADE)
-    is_part_of = models.ForeignKey("self", on_delete=models.SET_NULL, null=True, blank=True)
+    is_part_of = models.ForeignKey("self", on_delete=models.SET_NULL, null=True, blank=True, related_name="children")
     year = models.PositiveSmallIntegerField(null=True, blank=True)
     abstract_original_language = models.TextField(null=True, blank=True)
     date_added = models.DateTimeField(null=True, blank=True, auto_now_add=True)
@@ -1059,6 +1059,12 @@ class CourseQuestionAnswer(models.Model):
         return self.answer
 
 class CourseContent(Record):
+    class Type(models.IntegerChoices):
+        VIDEO = 1, "Video"
+        TEXT = 2, "Text"
+        EXERCISE = 3, "Exercise"
+
+    type = models.IntegerField(choices=Type.choices, db_index=True, default=1)
     video = models.ForeignKey(Video, on_delete=models.CASCADE, null=True, blank=True)
     module = models.ForeignKey(CourseModule, on_delete=models.CASCADE, related_name="content")
     position = models.PositiveSmallIntegerField(db_index=True, null=True, blank=True)
