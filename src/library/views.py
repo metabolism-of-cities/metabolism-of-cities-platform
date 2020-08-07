@@ -442,6 +442,9 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
         fields = ["name", "language", "title_original_language", "abstract_original_language", "description", "year", "author_list", "url", "license", "spaces"]
 
+        if curator:
+            fields.append("tags")
+
         if "inventory" in request.GET or project.slug == "data" or project.slug == "islands":
             fields.append("tags")
             if tag:
