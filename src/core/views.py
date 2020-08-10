@@ -2166,6 +2166,10 @@ def eurostat(request):
 
     full_list = EurostatDB.objects.filter(is_duplicate=False).order_by("id")
 
+    if "accepted" in request.GET or request.GET.get("show") == "accepted":
+        full_list = full_list.filter(is_approved=True).exclude(type="folder")
+        page = "accepted"
+
     if "pending" in request.GET or request.GET.get("show") == "pending":
         full_list = full_list.filter(is_reviewed=False).exclude(type="folder")
         page = "pending"
