@@ -1582,6 +1582,7 @@ class EurostatDB(models.Model):
     is_reviewed = models.BooleanField(db_index=True, default=False)
     is_approved = models.BooleanField(db_index=True, null=True, blank=True)
     is_denied = models.BooleanField(db_index=True, null=True, blank=True)
+    is_duplicate = models.BooleanField(db_index=True, null=True, blank=True, default=False)
     has_no_meta_data = models.BooleanField(db_index=True, null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
 

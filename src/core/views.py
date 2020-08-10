@@ -2159,6 +2159,19 @@ def eurostat(request):
     from django.core.paginator import Paginator
     page = "regular"
 
+    if "update" in request.GET:
+        file = settings.MEDIA_ROOT + "/import/duplicates.csv"
+        with open(file, "r") as csvfile:
+            contents = csv.DictReader(csvfile)
+            for row in contents:
+                code = row["code"]
+                quantity = int(row["quantity"])
+                q = quantity - 1
+                find = EurostatDB.objects.filter(code=code)[:q]
+                for each in find:
+                    each.is_duplicate=True
+                    each.save()
+
     hits = 1000
     if "full" in request.GET or request.GET.get("show") == "full":
         hits = 10000
