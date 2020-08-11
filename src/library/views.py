@@ -600,14 +600,20 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 else:
                     name = "Review, tag and publish " + type_name.lower()
                     activity_id = 14
-                work = Work.objects.create(
-                    status = Work.WorkStatus.OPEN,
-                    part_of_project = project,
-                    workactivity_id = activity_id,
-                    related_to = info,
-                    name = name,
-                )
-                message = Message.objects.create(posted_by_id=AUTO_BOT, parent=work, name="Task created", description="This task was created by the system")
+
+                if type_name != "Dataset" and type_name != "Shapefile" and curator:
+                    # We do NOT create a new task to process this file because we assume that 
+                    # curators that upload library items properly tag them when they upload it.
+                    pass
+                else:
+                    work = Work.objects.create(
+                        status = Work.WorkStatus.OPEN,
+                        part_of_project = project,
+                        workactivity_id = activity_id,
+                        related_to = info,
+                        name = name,
+                    )
+                    message = Message.objects.create(posted_by_id=AUTO_BOT, parent=work, name="Task created", description="This task was created by the system")
 
                 if view_processing and "process" in request.POST:
                     work = Work.objects.get(pk=work.id)
