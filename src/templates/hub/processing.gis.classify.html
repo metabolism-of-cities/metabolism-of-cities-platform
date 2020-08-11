@@ -34,7 +34,14 @@
       <tbody>
         {% for each in names %}
           <tr>
-            <td>{{ each }}</td>
+            <td>
+              {{ each }}
+              {% if each %}
+                <button class="rename badge badge-secondary" data-id="{{ forloop.counter }}">
+                  Rename
+                </button>
+              {% endif %}
+            </td>
             <td>
               {% if not each %}
                 <span class="text-danger">
@@ -76,6 +83,10 @@
         Back
       </a>
       {% csrf_token %}
+      <button class="btn {% if error %}disabled{% endif %} btn-warning" {% if error %}disabled{% endif %} name="reclassify" value="true">
+        <i class="fas fa-sync"></i>
+        Re-classify
+      </button>
       <button class="btn {% if error %}disabled{% endif %} save btn-success" {% if error %}disabled{% endif %}>
         <i class="fas fa-save"></i>
         Save
@@ -112,6 +123,12 @@
     // set array as value of input that is sent to server
     $("input[name='matches']").val(newSpaces);
   })
+
+  $(".rename").click(function(){
+    button = $(this)
+    var id = $(this).data("id");
+    button.closest("td").html("<input type='text' name='rename' /><input type='hidden' name='rename_id' value='" + id + "' />");
+  });
 
 </script>
 {% endblock %}

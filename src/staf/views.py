@@ -883,12 +883,54 @@ def hub_processing_dataset(request, id, classify=False, space=None):
         work = None
         messages.error(request, "We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
 
+    if "stop_work" in request.POST:
+        message_description = "Task was no longer assigned to " + str(request.user.people) + " and status was changed: " + work.get_status_display() + " → "
+        work.status = Work.WorkStatus.ONHOLD
+        work.assigned_to = None
+        work.save()
+        messages.success(request, "You are no longer in charge of this task")
+
+        work.refresh_from_db()
+        new_status = str(work.get_status_display())
+        message_description += new_status
+
+        message = Message.objects.create(
+            name = "Task unassigned and on hold",
+            description = message_description,
+            parent = work,
+            posted_by = request.user.people,
+        )
+        set_autor(request.user.people.id, message.id)
+
+        for each in work.subscribers.all():
+            if each.people != request.user.people:
+                Notification.objects.create(record=message, people=each.people)
+
     if "start_work" in request.POST:
         try:
+            message_description = "Task was assigned to " + str(request.user.people) + " and status was changed: " + work.get_status_display() + " → "
             work.status = Work.WorkStatus.PROGRESS
             work.assigned_to = request.user.people
+            work.subscribers.add(request.user.people)
             work.save()
             messages.success(request, "You are now in charge of this dataset - good luck!")
+
+            work.refresh_from_db()
+            new_status = str(work.get_status_display())
+            message_description += new_status
+
+            message = Message.objects.create(
+                name = "Task assigned and in progress",
+                description = message_description,
+                parent = work,
+                posted_by = request.user.people,
+            )
+            set_autor(request.user.people.id, message.id)
+
+            for each in work.subscribers.all():
+                if each.people != request.user.people:
+                    Notification.objects.create(record=message, people=each.people)
+
         except Exception as e:
             messages.error(request, "Sorry, we could not assign you -- perhaps someone else grabbed this work in the meantime? Otherwise please report this error. <br><strong>Error code: " + str(e) + "</strong>")
 
@@ -943,10 +985,7 @@ def hub_processing_dataset(request, id, classify=False, space=None):
         messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
         error = True
 
-    list_messages = None
-    forum_topic = ForumTopic.objects.filter(part_of_project_id=request.project, parent_url=request.get_full_path())
-    if forum_topic:
-        list_messages = Message.objects.filter(parent=forum_topic[0])
+    list_messages = work.messages.all()
 
     context = {
         "menu": "processing",
@@ -955,16 +994,14 @@ def hub_processing_dataset(request, id, classify=False, space=None):
         "title": info.name,
         "info": info,
         "error": error,
-        "first_row": next(rows),
-        "column_count": len(header),
-        "row_count": sum(1 for row in rows),
+        "first_row": next(rows) if rows else None,
+        "column_count": len(header) if header else None,
+        "row_count": sum(1 for row in rows) if rows else None,
         "labels": labels,
         "unidentified_columns": unidentified_columns,
         "header": header,
         "show_name": show_name,
         "work": work,
-        "forum_id": forum_topic[0].id if forum_topic else "create",
-        "forum_topic_title": info.name + " - Data processing",
         "list_messages": list_messages,
         "load_messaging": True,
     }
@@ -986,14 +1023,56 @@ def hub_processing_gis(request, id, classify=False, space=None):
         work = None
         messages.error(request, "We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
 
+    if "stop_work" in request.POST:
+        message_description = "Task was no longer assigned to " + str(request.user.people) + " and status was changed: " + work.get_status_display() + " → "
+        work.status = Work.WorkStatus.ONHOLD
+        work.assigned_to = None
+        work.save()
+        messages.success(request, "You are no longer in charge of this task")
+
+        work.refresh_from_db()
+        new_status = str(work.get_status_display())
+        message_description += new_status
+
+        message = Message.objects.create(
+            name = "Task unassigned and on hold",
+            description = message_description,
+            parent = work,
+            posted_by = request.user.people,
+        )
+        set_autor(request.user.people.id, message.id)
+
+        for each in work.subscribers.all():
+            if each.people != request.user.people:
+                Notification.objects.create(record=message, people=each.people)
+
     if "start_work" in request.POST:
         try:
+            message_description = "Task was assigned to " + str(request.user.people) + " and status was changed: " + work.get_status_display() + " → "
             work.status = Work.WorkStatus.PROGRESS
             work.assigned_to = request.user.people
+            work.subscribers.add(request.user.people)
             work.save()
-            messages.success(request, "You are now in charge of this dataset - good luck!")
+            messages.success(request, "You are now in charge of this shapefile - good luck!")
+
+            work.refresh_from_db()
+            new_status = str(work.get_status_display())
+            message_description += new_status
+
+            message = Message.objects.create(
+                name = "Task assigned and in progress",
+                description = message_description,
+                parent = work,
+                posted_by = request.user.people,
+            )
+            set_autor(request.user.people.id, message.id)
+
+            for each in work.subscribers.all():
+                if each.people != request.user.people:
+                    Notification.objects.create(record=message, people=each.people)
         except Exception as e:
             messages.error(request, "Sorry, we could not assign you -- perhaps someone else grabbed this work in the meantime? Otherwise please report this error. <br><strong>Error code: " + str(e) + "</strong>")
+
 
     if "classify_name" in request.POST:
         meta_data = document.meta_data
@@ -1101,6 +1180,9 @@ def hub_processing_gis(request, id, classify=False, space=None):
         "load_select2": True,
         "geocodes": Geocode.objects.all(),
         "active_geocodes": active_geocodes,
+        "list_messages": work.messages.all() if work else None,
+        "load_messaging": True,
+        "forum_id": work.id if Work else None,
     }
 
     if classify:
@@ -1108,6 +1190,11 @@ def hub_processing_gis(request, id, classify=False, space=None):
         try:
             names = layer.get_fields(document.meta_data["columns"]["name"])
             hits = ReferenceSpace.objects.filter(name__in=names)
+
+            if "reclassify" in request.POST:
+                print(hits)
+                print(request.POST.get("rename"))
+                print(request.POST)
 
             # Let's check to see if there are duplicates
             seen = {}
@@ -1136,12 +1223,13 @@ def hub_processing_gis(request, id, classify=False, space=None):
                 error = True
                 messages.error(request, "You have items in the list that do not have a name -- please review the source data or the name column selection.")
 
-            if request.method == "POST" and not error:
+            if request.method == "POST" and not error and not "reclassify" in request.POST:
                 from django.contrib.gis.geos import GEOSGeometry
 
                 name_field = document.meta_data["columns"]["name"]
                 for each in layer:
                     name = each.get(name_field)
+                    name = str(name)
                     geo = each.geom.wkt
                     space = ReferenceSpace.objects.create(
                         name = name,

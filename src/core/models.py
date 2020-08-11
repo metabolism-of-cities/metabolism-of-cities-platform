@@ -525,7 +525,7 @@ class People(Record):
         return points["total"]
 
     def avatar(self):
-        if self.image:
+        if self.image and self.image != "":
             return mark_safe('<img class="avatar" src="' + self.image.thumbnail.url + '" alt="' + self.name + '" title="' + self.name + '">')
         else:
             return mark_safe('<div title="' + self.name + '" class="avatar letter">' + self.name[:1] + '</div>')
