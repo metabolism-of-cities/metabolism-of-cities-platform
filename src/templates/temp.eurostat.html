@@ -84,6 +84,9 @@ td.mini {
       <tr>
         <th>Options</th>
         <th>Title</th>
+        {% if request.GET.accepted %}
+          <th>Tags</th>
+        {% endif %}
       </tr>
     </thead>
     <tbody>
@@ -109,6 +112,9 @@ td.mini {
             {{ each.notes|linebreaksbr }}
           {% endif %}
         </td>
+        {% if request.GET.accepted %}
+          <td>{% for tag in each.tags.all %}<span class="badge">{{ tag }}</span>{% endfor %}</td>
+        {% endif %}
       </tr>
     {% endfor %}
     </tbody>

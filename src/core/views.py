@@ -2217,7 +2217,7 @@ def eurostat(request):
         "webpage": Webpage.objects.get(slug="/eurostat/"),
     }
 
-    if "full" in request.GET or request.GET.get("show") == "full":
+    if "full" in request.GET or request.GET.get("show") == "full" or "accepted" in request.GET:
         context["load_datatables"] = True
 
     return render(request, "temp.eurostat.html", context)

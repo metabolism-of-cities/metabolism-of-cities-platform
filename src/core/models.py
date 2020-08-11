@@ -1580,6 +1580,7 @@ class EurostatDB(models.Model):
     last_update = models.CharField(max_length=255, null=True, blank=True)
     data_start = models.CharField(max_length=255, null=True, blank=True)
     data_end = models.CharField(max_length=255, null=True, blank=True)
+    url_overwrite = models.URLField(max_length=255, null=True, blank=True)
     is_reviewed = models.BooleanField(db_index=True, default=False)
     is_approved = models.BooleanField(db_index=True, null=True, blank=True)
     is_denied = models.BooleanField(db_index=True, null=True, blank=True)
