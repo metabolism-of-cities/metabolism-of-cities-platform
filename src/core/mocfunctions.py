@@ -77,10 +77,10 @@ def has_permission(request, record_id, allowed_permissions):
 # Version 1.0
 def unauthorized_access(request):
     logger.error("No access to this UploadSession")
-    Work.objects.create(
-        name = "Unauthorized access detected",
-        description = request.META,
-        priority = Work.WorkPriority.HIGH,
-    )
+    #Work.objects.create(
+    #    name = "Unauthorized access detected",
+    #    description = request.META,
+    #    priority = Work.WorkPriority.HIGH,
+    #)
     raise PermissionDenied
 

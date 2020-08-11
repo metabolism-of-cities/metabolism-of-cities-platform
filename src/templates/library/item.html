@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% load humanize %}
 
 {% block page_name %}library item fullwidth{% endblock %}
 {% block title %}{{ info }}{% endblock %}
@@ -300,7 +301,7 @@
           <h3 class="mt-4">Attachment(s)</h3>
           <ul>
           {% for each in info.attachments.all %}
-            <li><a href="{{ each.file.url }}">{{ each }}</a> ({{ each.get_kb }} Kb)</li>
+            <li><a href="{{ each.file.url }}">{{ each }}</a> ({{ each.get_kb|floatformat:0 }} Kb)</li>
           {% endfor %}
           </ul>
         {% endif %}
