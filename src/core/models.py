@@ -1017,6 +1017,7 @@ class DataPortal(LibraryItem):
 
 class Course(Record):
     slug = models.CharField(max_length=255, null=True)
+    faq = models.TextField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(unidecode(self.name))

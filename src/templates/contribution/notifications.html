@@ -26,7 +26,7 @@
     {% for each in list %}
       <tr>
         <td data-sort="-{{ each.record.message.date_created|date:"U" }}">
-          <img src="{{ each.record.message.posted_by.image.thumbnail.url }}" title="{{ each.record.message.posted_by}}" alt="" class="avatar">
+          {{ each.record.message.posted_by.avatar }}
           {{ each.record.message.posted_by }}
         </td>
         <td>
