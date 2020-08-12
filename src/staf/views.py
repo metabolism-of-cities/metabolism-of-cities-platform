@@ -591,8 +591,25 @@ def flowdiagram_meta(request, id=None):
     return render(request, "staf/flowdiagram.meta.html", context)
 
 def geocodes(request):
+    curator = False
+    if has_permission(request, request.project, ["curator", "admin"]):
+        curator = True
+        if "update" in request.GET:
+            a = GeocodeScheme.objects.filter(is_deleted=False, name__startswith="Areas")
+            a.update(type=GeocodeScheme.Type.SUBDIVISION)
+            a = GeocodeScheme.objects.filter(is_deleted=False, name__startswith="Subdivision")
+            a.update(type=GeocodeScheme.Type.SUBDIVISION)
+            b = GeocodeScheme.objects.filter(is_deleted=False, name__startswith="Sector")
+            b.update(type=GeocodeScheme.Type.SECTOR)
+    if "type" in request.GET:
+        type = request.GET.get("type")
+    else:
+        type = 1
     context = {
-        "list": GeocodeScheme.objects.all(),
+        "list": GeocodeScheme.objects.filter(type=type),
+        "curator": curator,
+        "types": GeocodeScheme.Type,
+        "type": int(type),
     }
     return render(request, "staf/geocode/list.html", context)
 
@@ -607,7 +624,10 @@ def geocode(request, id):
     }
     return render(request, "staf/geocode/view.html", context)
 
+@login_required
 def geocode_form(request, id=None):
+    if not has_permission(request, request.project, ["curator", "admin"]):
+        unauthorized_access(request)
     ModelForm = modelform_factory(GeocodeScheme, fields=("name", "description", "url"))
     if id:
         info = GeocodeScheme.objects.get(pk=id)
@@ -1189,6 +1209,7 @@ def hub_processing_gis(request, id, classify=False, space=None):
         page = "processing.gis.classify.html"
         try:
             names = layer.get_fields(document.meta_data["columns"]["name"])
+            print(names)
             hits = ReferenceSpace.objects.filter(name__in=names)
 
             if "reclassify" in request.POST:

@@ -1243,6 +1243,13 @@ class GeocodeScheme(Record):
     is_comprehensive = models.BooleanField(default=True, db_index=True)
     icon = models.CharField(max_length=50, null=True, blank=True) # Web field
 
+    class Type(models.IntegerChoices):
+        SUBDIVISION = 1, "National subdivisions"
+        SECTOR = 2, "Sectoral infrastructure"
+        AREAS = 3, "Administrative areas"
+
+    type = models.IntegerField(choices=Type.choices, db_index=True, default=3)
+
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
@@ -1255,6 +1262,7 @@ class GeocodeScheme(Record):
 
     class Meta:
         db_table = "stafdb_geocode_scheme"
+        ordering = ["name"]
 
 # Lists all the different levels within the system. Could be a single level (e.g. Postal Code), but it 
 # could also include various levels, e.g.: Country > Province > City
