@@ -78,6 +78,9 @@ p a {
 .text-secondary {
   color: #ff8a4e !important; }
 
+.cursor-pointer {
+  cursor: pointer; }
+
 textarea.form-control:focus, input.form-control:focus, select.custom-select:focus,
 .select2-container--bootstrap4.select2-container--focus .select2-selection {
   border-color: #144d58 !important;
@@ -1033,16 +1036,18 @@ body.article .card .card-body {
 .forum .avatar-line-height {
   line-height: 30px; }
 
-.forum.topic .single-message {
+.forum .single-message {
   margin-bottom: 1rem; }
-  .forum.topic .single-message hr {
+  .forum .single-message hr {
     margin-left: -1.25rem;
     width: calc(100% + 2.5rem); }
-  .forum.topic .single-message .text img {
+  .forum .single-message .text img {
     width: 100%;
     border-radius: .25rem;
     margin-bottom: 1rem; }
-  .forum.topic .single-message .text p:last-of-type {
+  .forum .single-message .text p:first-of-type {
+    display: inline-block; }
+  .forum .single-message .text p:last-of-type {
     margin-bottom: 0; }
 
 body.forum.list table {

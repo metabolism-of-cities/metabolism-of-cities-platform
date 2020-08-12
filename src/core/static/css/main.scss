@@ -126,6 +126,10 @@ p a {
   color: $secondary !important;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 // NORMAL AND SElECT2 INPUTS
 textarea.form-control:focus, input.form-control:focus, select.custom-select:focus,
 .select2-container--bootstrap4.select2-container--focus .select2-selection {
@@ -1572,25 +1576,27 @@ body.article {
     line-height: 30px;
   }
 
-  &.topic {
-    .single-message {
-      margin-bottom: 1rem;
+  .single-message {
+    margin-bottom: 1rem;
 
-      hr {
-        margin-left: -1.25rem;
-        width: calc(100% + 2.5rem);
-      }
-
-      .text img {
-        width: 100%;
-        border-radius: .25rem;
-        margin-bottom: 1rem;
-      }
-
-      .text p:last-of-type {
-        margin-bottom: 0;
-      }
+    hr {
+      margin-left: -1.25rem;
+      width: calc(100% + 2.5rem);
     }
+
+    .text img {
+      width: 100%;
+      border-radius: .25rem;
+      margin-bottom: 1rem;
+    }
+
+    .text p:first-of-type {
+      display: inline-block;
+    }
+    .text p:last-of-type {
+      margin-bottom: 0;
+    }
+
   }
 }
 

@@ -187,7 +187,7 @@
           Only the first 100 items are shown. In total, there are <strong>{{ layer.num_feat }}</strong> items in your shapefile
         </div>
       {% endif %}
-      <table class="table table-responsive datatable datatable-card">
+      <table class="table datatable datatable-card">
         <thead>
           <tr>
             {% for field in layer.fields %}
@@ -258,7 +258,7 @@
   {% endif %}
 
   <section>
-    
+
     <h2>History and comments</h2>
     {% include "_messages.html" %}
 
