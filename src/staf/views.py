@@ -1023,8 +1023,12 @@ def hub_processing_dataset(request, id, classify=False, space=None):
         "work": work,
         "list_messages": list_messages,
         "load_messaging": True,
+        "forum_id": work.id,
     }
-    return render(request, "hub/processing.dataset.html", context)
+    if classify:
+        return render(request, "hub/processing.dataset.classify.html", context)
+    else:
+        return render(request, "hub/processing.dataset.html", context)
 
 def hub_processing_gis(request, id, classify=False, space=None):
 

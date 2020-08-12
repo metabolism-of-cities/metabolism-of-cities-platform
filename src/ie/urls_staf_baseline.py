@@ -56,6 +56,7 @@ baseline_staf_urlpatterns = [
     path("hub/processing/gis/<int:id>/edit/", library.form),
     path("hub/processing/datasets/<int:id>/edit/", library.form),
     path("hub/processing/datasets/<int:id>/", staf.hub_processing_dataset, name="hub_processing_dataset"),
+    path("hub/processing/datasets/<int:id>/classify/", staf.hub_processing_dataset, {"classify": True}, name="hub_processing_dataset"),
 
     path("dashboards/<slug:space>/hub/", core.work_portal, {"slug": "data"}),
     path("dashboards/<slug:space>/hub/harvesting/", staf.hub_harvesting_space, name="hub_harvesting_space"),
@@ -69,6 +70,7 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/hub/processing/gis/<int:id>/edit/", library.form),
     path("dashboards/<slug:space>/hub/processing/datasets/<int:id>/edit/", library.form),
     path("dashboards/<slug:space>/hub/processing/datasets/<int:id>/", staf.hub_processing_dataset, name="hub_processing_dataset"),
+    path("dashboards/<slug:space>/hub/processing/datasets/<int:id>/classify/", staf.hub_processing_dataset, {"classify": True}, name="hub_processing_dataset"),
 
     path("dashboards/<slug:space>/", data.dashboard, name="dashboard"),
 
