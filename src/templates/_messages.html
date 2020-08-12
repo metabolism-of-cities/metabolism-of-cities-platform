@@ -93,19 +93,20 @@
       <textarea class="form-control" id="text" name="text" rows="7" required>{{ message.description }}</textarea>
     </div>
     <div class="form-group">
-      <label for="files"><i class="far fa-fw fa-paperclip"></i> Attachment(s)</label>
-      <div class="custom-file">
+      <label for="files" class="cursor-pointer"><i class="far fa-fw fa-paperclip"></i> Add attachment(s)</label>
+      <div class="custom-file" id="files-wrapper" hidden>
         <input type="file" class="custom-file-input" name="files" id="files" multiple="multiple">
         <label class="custom-file-label" for="files">Choose file</label>
+        <div class="btn btn-sm btn-default-basic text-danger mt-2" id="delete-attachment">
+          <i class="fal fa-trash"></i> Delete attachment(s)
+        </div>
       </div>
     </div>
 
     {% if show_subscribe %}
-    <div class="form-check mb-4">
-      <input class="form-check-input" type="checkbox" value="true" id="notify_me" name="subscribe" checked>
-      <label class="form-check-label" for="notify_me">
-        Notify me of updates
-      </label>
+    <div class="custom-control custom-switch my-4">
+      <input type="checkbox" class="custom-control-input" value="true" id="notify_me" name="subscribe" checked>
+      <label class="custom-control-label" for="notify_me">Notify me of updates</label>
     </div>
     {% endif %}
 
@@ -113,4 +114,18 @@
     <input type="hidden" name="return" value="{{ request.get_full_path }}" />
     <input type="hidden" name="next" value="{{ request.get_full_path }}" />
   </form>
+
+  <script>
+    const filesWrapper = document.getElementById("files-wrapper");
+    const filesInput = document.getElementById("files");
+
+    filesInput.addEventListener("change", function(e) {
+      filesWrapper.removeAttribute("hidden");
+    });
+
+    document.getElementById("delete-attachment").addEventListener("click", function(e) {
+      filesInput.value = "";
+      filesWrapper.setAttribute("hidden", "hidden");
+    });
+  </script>
 {% endif %}
