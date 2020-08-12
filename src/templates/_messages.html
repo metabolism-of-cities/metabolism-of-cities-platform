@@ -42,7 +42,7 @@
                   </a>
                   <br>
                 {% endif %}
-                <a class="btn btn-sm btn-primary-outline mb-1" href="{{ MEDIA_URL }}{{ attachment.get_url }}" target="_blank"><i class="far fa-paperclip"></i> 
+                <a class="btn btn-sm btn-primary-outline mb-1" href="{{ MEDIA_URL }}{{ attachment.get_url }}" target="_blank"><i class="far fa-paperclip"></i>
                   {{ attachment }}
                   ({{ attachment.get_kb|floatformat:"0" }} Kb)
                 </a>
@@ -75,7 +75,7 @@
   {% endif %}
 
   <h3 id="reply">{% if list_messages %}Reply{% elif message %}Edit message{% else %}Leave a comment{% endif %}</h3>
-  <form method="post" enctype="multipart/form-data" 
+  <form method="post" enctype="multipart/form-data"
   {% if not message %}action="/forum/{% if forum_id %}{{ forum_id }}{% else %}{{ info.id }}{% endif %}/"{% endif %}
   >
     {% csrf_token %}
@@ -109,7 +109,7 @@
     </div>
     {% endif %}
 
-    <button type="submit" class="btn btn-success"><i class="fas fa-fw fa-comment-alt-plus"></i> Submit</button>
+    <button type="submit" class="btn btn-success"><i class="fas fa-fw fa-comment-alt-plus"></i> Comment</button>
     <input type="hidden" name="return" value="{{ request.get_full_path }}" />
     <input type="hidden" name="next" value="{{ request.get_full_path }}" />
   </form>
