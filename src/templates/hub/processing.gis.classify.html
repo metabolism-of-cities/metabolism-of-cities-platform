@@ -75,9 +75,6 @@
     <form method="post" class="pt-4">
       <input type="text" name="matches" hidden>
       <div id="renames" hidden>
-        {% for each in names %}
-          <input type="text" value="{{ each }}" class="form-control rename-input" name="rename_{{ forloop.counter }}">
-        {% endfor %}
       </div>
       <a href="../" class="btn btn-primary-basic">
         <i class="fal fa-angle-left"></i>
@@ -149,9 +146,16 @@
 
   // update rename form when user changes it in table
   $("body").on("keyup", ".rename-input", function() {
-    let value = $(this).val()
-    let id = $(this).attr("name");
-    $("#renames input[name='" + id + "']").val(value);
+    let thisInput = $(this);
+    let value = thisInput.val()
+    let id = thisInput.attr("name");
+
+    if ( thisInput.hasClass("created") ) {
+      $("#renames input[name='" + id + "']").val(value);
+    } else {
+      $("#renames").append("<input type='text' name='" + id + "' value='" + value + "'>");
+      thisInput.addClass("created");
+    }
 
     $("button.reclassify").removeAttr("hidden");
     $("button.save").attr("hidden", "hidden");
