@@ -4,7 +4,7 @@
 {% block page_name %}geocode form{% endblock %}
 
 {% block content %}
-  <h1 class="mb-0">Geocode scheme</h1>
+  <h1 class="mb-0">{% block title %}Geocode scheme{% endblock %}</h1>
   <a href="{% url 'staf:geocodes' %}" class="btn btn-primary-basic">
     <i class="fal fa-angle-left"></i>
     Back to schema list

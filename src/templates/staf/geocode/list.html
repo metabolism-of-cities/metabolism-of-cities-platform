@@ -38,10 +38,12 @@
               <i class="fal fa-fw fa-info-circle"></i>
               Details
             </a>
-            <a class="btn btn-sm btn-primary-basic" href="{% url 'staf:geocode_form' each.id %}">
-              <i class="fal fa-fw fa-pencil"></i>
-              Edit
-            </a>
+            {% if curator %}
+              <a class="btn btn-sm btn-primary-basic" href="{% url 'staf:geocode_form' each.id %}">
+                <i class="fal fa-fw fa-pencil"></i>
+                Edit
+              </a>
+            {% endif %}
           </div>
         </div>
       </div>

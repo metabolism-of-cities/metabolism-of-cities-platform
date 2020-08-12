@@ -34,8 +34,11 @@
     </div>
   </div>
 
+  {% if curator %}
   <a href="{% url 'staf:geocode_form' info.id %}" class="btn btn-primary mt-4">
     <i class="fas fa-pencil"></i>
     Edit
   </a>
+  {% endif %}
+
 {% endblock %}

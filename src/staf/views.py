@@ -594,13 +594,6 @@ def geocodes(request):
     curator = False
     if has_permission(request, request.project, ["curator", "admin"]):
         curator = True
-        if "update" in request.GET:
-            a = GeocodeScheme.objects.filter(is_deleted=False, name__startswith="Areas")
-            a.update(type=GeocodeScheme.Type.SUBDIVISION)
-            a = GeocodeScheme.objects.filter(is_deleted=False, name__startswith="Subdivision")
-            a.update(type=GeocodeScheme.Type.SUBDIVISION)
-            b = GeocodeScheme.objects.filter(is_deleted=False, name__startswith="Sector")
-            b.update(type=GeocodeScheme.Type.SECTOR)
     if "type" in request.GET:
         type = request.GET.get("type")
     else:
@@ -617,10 +610,14 @@ def geocode(request, id):
     info = GeocodeScheme.objects.get(pk=id)
     geocodes = info.geocodes.all()
     geocodes = geocodes.filter(is_deleted=False)
+    curator = False
+    if has_permission(request, request.project, ["curator", "admin"]):
+        curator = True
     context = {
         "info": info,
         "geocodes": geocodes,
         "load_mermaid": True,
+        "curator": curator,
     }
     return render(request, "staf/geocode/view.html", context)
 
@@ -628,7 +625,7 @@ def geocode(request, id):
 def geocode_form(request, id=None):
     if not has_permission(request, request.project, ["curator", "admin"]):
         unauthorized_access(request)
-    ModelForm = modelform_factory(GeocodeScheme, fields=("name", "description", "url"))
+    ModelForm = modelform_factory(GeocodeScheme, fields=("name", "description", "type", "url"))
     if id:
         info = GeocodeScheme.objects.get(pk=id)
         form = ModelForm(request.POST or None, instance=info)
@@ -681,6 +678,8 @@ def geocode_form(request, id=None):
                         depth = level,
                     )
             messages.success(request, "The information was saved.")
+            if add:
+                messages.success(request, "Please click EDIT to enter the different levels in this geocode scheme.")
             return redirect(info.get_absolute_url())
         else:
             messages.error(request, "The form could not be saved, please review the errors below.")
