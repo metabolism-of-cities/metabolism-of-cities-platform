@@ -1676,6 +1676,16 @@ body.staf.review.session #map {
 body.staf.review.session #map {
   height: 400px; }
 
+body.staf.review.session table.places:not(.renaming) .rename-input {
+  display: none; }
+
+body.staf.review.session table.places.renaming .place-name {
+  display: none; }
+
+body.staf.review.session table.places.renaming tbody tr td:first-of-type {
+  padding-top: 5.5px;
+  padding-bottom: 0; }
+
 body.upload-portal.index .container.main-content {
   margin: 0 !important;
   width: 100% !important;

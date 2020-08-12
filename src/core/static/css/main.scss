@@ -2583,6 +2583,23 @@ body.staf.review.session {
   #map {
     height: 400px;
   }
+
+  table.places:not(.renaming) {
+    .rename-input {
+      display: none;
+    }
+  }
+
+  table.places.renaming {
+    .place-name {
+      display: none;
+    }
+
+    tbody tr td:first-of-type {
+      padding-top: 5.5px;
+      padding-bottom: 0;
+    }
+  }
 }
 
 // STAF UPLOAD PORTAL INDEX

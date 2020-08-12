@@ -23,7 +23,7 @@
       Please review the list below in detail.
     </div>
 
-    <table class="table datatable datatable-card">
+    <table class="table places datatable-card">
       <thead>
         <tr>
           <th>Place</th>
@@ -35,12 +35,8 @@
         {% for each in names %}
           <tr>
             <td>
-              {{ each }}
-              {% if each %}
-                <button class="rename badge badge-secondary" data-id="{{ forloop.counter }}">
-                  Rename
-                </button>
-              {% endif %}
+              <span class="place-name">{{ each }}</span>
+              <input type="text" value="{{ each }}" class="form-control rename-input" name="rename_{{ forloop.counter }}">
             </td>
             <td>
               {% if not each %}
@@ -78,16 +74,30 @@
 
     <form method="post" class="pt-4">
       <input type="text" name="matches" hidden>
+      <div id="renames" hidden>
+        {% for each in names %}
+          <input type="text" value="{{ each }}" class="form-control rename-input" name="rename_{{ forloop.counter }}">
+        {% endfor %}
+      </div>
       <a href="../" class="btn btn-primary-basic">
         <i class="fal fa-angle-left"></i>
         Back
       </a>
       {% csrf_token %}
-      <button class="btn {% if error %}disabled{% endif %} btn-warning" {% if error %}disabled{% endif %} name="reclassify" value="true">
+
+      <div class="btn btn-dark rename">
+        <i class="fas fa-pencil"></i>
+        Change place names
+      </div>
+      <div class="btn btn-dark cancel-rename" hidden>
+        <i class="fas fa-undo"></i>
+        Cancel renaming
+      </div>
+      <button class="btn {% if error %}disabled{% endif %} btn-warning reclassify" hidden {% if error %}disabled{% endif %} name="reclassify" value="true">
         <i class="fas fa-sync"></i>
-        Re-classify
+        Re-classify based on new names
       </button>
-      <button class="btn {% if error %}disabled{% endif %} save btn-success" {% if error %}disabled{% endif %}>
+      <button class="btn {% if error %}disabled{% endif %} btn-success save" {% if error %}disabled{% endif %}>
         <i class="fas fa-save"></i>
         Save
       </button>
@@ -99,7 +109,7 @@
 {% block footer %}
 <script>
   // sort by whether or not there is a match
-  $(".datatable").DataTable().order([2, "asc"]).draw();
+  $("table.places").DataTable().order([2, "asc"]).draw();
 
   // create array of new spaces
   let newSpaces = [];
@@ -124,11 +134,27 @@
     $("input[name='matches']").val(newSpaces);
   })
 
+  // show rename input boxes
   $(".rename").click(function(){
-    button = $(this)
-    var id = $(this).data("id");
-    button.closest("td").html("<input type='text' name='rename' /><input type='hidden' name='rename_id' value='" + id + "' />");
+    $("table.places").addClass("renaming")
+    $(".btn.rename").attr("hidden", "hidden");
+    $(".btn.cancel-rename").removeAttr("hidden");
   });
 
+  $(".cancel-rename").click(function() {
+    $("table.places").removeClass("renaming")
+    $(".btn.rename, button.save").removeAttr("hidden");
+    $(".btn.cancel-rename, button.reclassify").attr("hidden", "hidden");
+  })
+
+  // update rename form when user changes it in table
+  $("body").on("keyup", ".rename-input", function() {
+    let value = $(this).val()
+    let id = $(this).attr("name");
+    $("#renames input[name='" + id + "']").val(value);
+
+    $("button.reclassify").removeAttr("hidden");
+    $("button.save").attr("hidden", "hidden");
+  });
 </script>
 {% endblock %}
