@@ -1596,6 +1596,7 @@ class EurostatDB(models.Model):
     has_no_meta_data = models.BooleanField(db_index=True, null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
+    spaces = models.ManyToManyField(ReferenceSpace, blank=True)
 
     def __str__(self):
         return self.title

@@ -121,24 +121,6 @@ class ActivityAdmin(admin.ModelAdmin):
     list_display = ["code", "name", "catalog"]
     autocomplete_fields = ["parent"]
 
-class TagAdmin(admin.ModelAdmin):
-    autocomplete_fields = ["belongs_to", "parent_tag"]
-    search_fields = ["name", "parent_tag__name","parent_tag__id"]
-    list_display = ["name", "parent_tag", "include_in_glossary", "hidden", "view_link"]
-
-    def get_queryset(self, request):
-        if "parent_tag__id" in request.GET:
-            parent_id = request.GET["parent_tag__id"]
-            return Tag.objects.filter(parent_tag=parent_id)
-        else:
-            return Tag.objects.filter(parent_tag__isnull=True)
-
-    def view_link(self, obj):
-        url = reverse("admin:core_tag_changelist") + "?parent_tag__id=" + str(obj.id)
-        link = format_html("<a href='{}'>View</a>",url )
-        return link
-    view_link.short_description = "View"
-
 class CourseAdmin(SearchCompleteAdmin):
     exclude = DEFAULT_EXCLUDE + ["slug"]
 
@@ -298,6 +280,10 @@ class BadgeAdmin(admin.ModelAdmin):
     list_display = ["name", "code", "type", "description"]
     autocomplete_fields = ["projects"]
 
+class TagAdmin(admin.ModelAdmin):
+    list_display = ["name", "parent_tag"]
+    search_fields = ["name"]
+
 admin_site.register(Tag, TagAdmin)
 admin_site.register(Record, SearchCompleteAdmin)
 admin_site.register(Message, MessageAdmin)
@@ -369,5 +355,6 @@ admin_site.register(Material, ActivityAdmin)
 
 class EurostatAdmin(admin.ModelAdmin):
     form = EurostatForm
+    autocomplete_fields = ["spaces", "tags"]
 
 admin_site.register(EurostatDB, EurostatAdmin)
