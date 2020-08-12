@@ -60,12 +60,22 @@ def module(request, slug, id):
     my_completed_content = CourseContent.objects \
         .filter(module=info) \
         .filter(child_list__record_parent=request.user.people, child_list__relationship__id=29)
+
+    list_messages = None
+    forum_topic = ForumTopic.objects.filter(part_of_project_id=request.project, parent_url=request.get_full_path())
+    if forum_topic:
+        list_messages = Message.objects.filter(parent=forum_topic[0])
+
     context = {
         "title": info,
         "info": info,
         "course": course,
         "check_register": check_register,
         "my_completed_content": my_completed_content,
+        "forum_id": forum_topic[0].id if forum_topic else "create",
+        "forum_topic_title": "Module - " + str(info),
+        "list_messages": list_messages,
+        "load_messaging": True,
     }
     return render(request, "education/courses/module.html", context)
 
