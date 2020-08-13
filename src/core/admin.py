@@ -124,6 +124,14 @@ class ActivityAdmin(admin.ModelAdmin):
 class CourseAdmin(SearchCompleteAdmin):
     exclude = DEFAULT_EXCLUDE + ["slug"]
 
+class CourseModuleAdmin(SearchCompleteAdmin):
+    list_display = ["name", "part_of_course"]
+    list_filter = ["part_of_course"]
+
+class CourseContentAdmin(SearchCompleteAdmin):
+    list_display = ["name", "type", "module"]
+    list_filter = ["module"]
+
 class OrgAdmin(SearchCompleteAdmin):
     list_display = ["name", "type"]
     list_filter = ["type"]
@@ -313,19 +321,10 @@ admin_site.register(License)
 admin_site.register(Site)
 
 admin_site.register(Course, CourseAdmin)
-admin_site.register(CourseModule, SearchCompleteAdmin)
+admin_site.register(CourseModule, CourseModuleAdmin)
 admin_site.register(CourseQuestion)
 admin_site.register(CourseQuestionAnswer)
-admin_site.register(CourseContent, SearchCompleteAdmin)
-
-#admin_site.register(MOOC)
-#admin_site.register(MOOCModule)
-#admin_site.register(MOOCQuestion)
-#admin_site.register(MOOCModuleQuestion)
-#admin_site.register(MOOCVideo)
-#admin_site.register(MOOCAnswer)
-#admin_site.register(MOOCProgress)
-#admin_site.register(MOOCQuizAnswers)
+admin_site.register(CourseContent, CourseContentAdmin)
 
 admin_site.register(Group)
 admin_site.register(User, UserAdmin)
