@@ -81,6 +81,27 @@ def module(request, slug, id):
     }
     return render(request, "education/courses/module.html", context)
 
+@login_required
+def participants(request, slug):
+    info = get_object_or_404(Course, slug=slug)
+    check_register = RecordRelationship.objects.filter(record_parent=request.user.people, record_child=info, relationship_id=12)
+    if not check_register:
+        return redirect(info.get_absolute_url())
+
+    list = RecordRelationship.objects.filter(
+        record_child = info,
+        relationship_id = 12,
+    ).order_by("record_parent__name")
+
+    context = {
+        "info": info,
+        "course": info,
+        "check_register": check_register,
+        "participant_list": True,
+        "list": list,
+    }
+    return render(request, "education/courses/participants.html", context)
+
 def syllabus(request, slug):
     info = get_object_or_404(Course, slug=slug)
     my_completed_content = None

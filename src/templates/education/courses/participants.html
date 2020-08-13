@@ -1,0 +1,39 @@
+{% extends "_base.html" %}
+
+{% block css %}
+<style type="text/css">
+#module_nav .active {
+  background: #228496;
+  color: #fff;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <div class="col-md-3">
+
+      {% include "education/courses/_nav.html" %}
+
+    </div>
+
+    <div class="col-md-9">
+
+      <h1>{% block title %}Participant list{% endblock %}</h1>
+      
+      <div class="row">
+        {% for each in list %}
+          <div class="col-lg-3 col-sm-6 mb-4">
+            <a href="{% url "education:user" each.record_parent.id %}" class="btn-thumbnail" style="{% if each.record_parent.image %}background-image: url('{{ each.record_parent.image.thumbnail.url }}');{% else %}background:#f4f4f4{% endif %}">
+              <span class="title">{{ each.record_parent }}</span>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+
+    </div>
+
+  </div>
+
+{% endblock %}

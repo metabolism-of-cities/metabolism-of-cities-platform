@@ -17,6 +17,13 @@
   {% endfor %}
   <li class="nav-item">
     <a 
+      class="nav-link {% if not check_register %}disabled{% elif participant_list %}active{% endif %}" 
+      href="{% url "education:participants" course.slug %}">
+      Participant list
+    </a>
+  </li>
+  <li class="nav-item">
+    <a 
       class="nav-link {% if syllabus %}active{% endif %}" 
       href="{% url "education:syllabus" course.slug %}">
       Syllabus
