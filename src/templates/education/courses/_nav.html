@@ -19,7 +19,16 @@
     <a 
       class="nav-link {% if syllabus %}active{% endif %}" 
       href="{% url "education:syllabus" course.slug %}">
-      {{ _("Syllabus") }}
+      Syllabus
     </a>
   </li>
+  {% if course.faq %}
+  <li class="nav-item">
+    <a 
+      class="nav-link {% if faq %}active{% endif %}" 
+      href="{% url "education:faq" course.slug %}">
+      FAQ
+    </a>
+  </li>
+  {% endif %}
 </ul>

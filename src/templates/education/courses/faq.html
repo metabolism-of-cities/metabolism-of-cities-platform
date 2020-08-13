@@ -1,0 +1,31 @@
+{% extends "_base.html" %}
+
+{% block css %}
+<style type="text/css">
+#module_nav .active {
+  background: #228496;
+  color: #fff;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <div class="col-md-3">
+
+      {% include "education/courses/_nav.html" %}
+
+    </div>
+
+    <div class="col-md-9">
+
+      <h1>Frequently Asked Questions (FAQ)</h1>
+
+      {{ faq }}
+
+    </div>
+
+  </div>
+
+{% endblock %}

@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from core.mocfunctions import *
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from markdown import markdown
+from django.utils.safestring import mark_safe
 
 # Create your views here.
 
@@ -94,6 +96,18 @@ def syllabus(request, slug):
         "syllabus": True,
     }
     return render(request, "education/courses/syllabus.html", context)
+
+@login_required
+def faq(request, slug):
+    info = get_object_or_404(Course, slug=slug)
+    check_register = RecordRelationship.objects.filter(record_parent=request.user.people, record_child=info, relationship_id=12)
+    context = {
+        "title": info,
+        "course": info,
+        "check_register": check_register,
+        "faq": mark_safe(markdown(info.faq)),
+    }
+    return render(request, "education/courses/faq.html", context)
 
 @login_required
 @csrf_exempt
