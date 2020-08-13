@@ -81,13 +81,15 @@ def module(request, slug, id):
     }
     return render(request, "education/courses/module.html", context)
 
-@login_required
 def syllabus(request, slug):
     info = get_object_or_404(Course, slug=slug)
-    check_register = RecordRelationship.objects.filter(record_parent=request.user.people, record_child=info, relationship_id=12)
-    my_completed_content = CourseContent.objects \
-        .filter(module__part_of_course=info) \
-        .filter(child_list__record_parent=request.user.people, child_list__relationship__id=29)
+    my_completed_content = None
+    check_register = None
+    if request.user.is_authenticated:
+        check_register = RecordRelationship.objects.filter(record_parent=request.user.people, record_child=info, relationship_id=12)
+        my_completed_content = CourseContent.objects \
+            .filter(module__part_of_course=info) \
+            .filter(child_list__record_parent=request.user.people, child_list__relationship__id=29)
     context = {
         "title": info,
         "course": info,
@@ -97,10 +99,11 @@ def syllabus(request, slug):
     }
     return render(request, "education/courses/syllabus.html", context)
 
-@login_required
 def faq(request, slug):
     info = get_object_or_404(Course, slug=slug)
-    check_register = RecordRelationship.objects.filter(record_parent=request.user.people, record_child=info, relationship_id=12)
+    check_register = None
+    if request.user.is_authenticated:
+        check_register = RecordRelationship.objects.filter(record_parent=request.user.people, record_child=info, relationship_id=12)
     context = {
         "title": info,
         "course": info,

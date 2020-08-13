@@ -65,7 +65,7 @@ video,iframe {
             <h2>{{ each }}</h2>
             <div class="mt-2 mb-2">
             {% if each.video %}
-              {{ each.video.embed }}
+              {{ each.video.embed|safe }}
             {% elif each.meta_data.url %}
               <iframe class="video-embed youtube-video" src="https://www.youtube.com/embed/{{ each.meta_data.url }}?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             {% endif %}
