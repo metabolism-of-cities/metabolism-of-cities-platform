@@ -26,7 +26,7 @@ img{max-width:100%}
       <div class="mt-3 mb-3 alert-{% if check_register %}success{% else %}secondary{% endif %} p-4">
       {% if not request.user.is_authenticated %}
           <p class="h3 mb-4"><em>You are not logged in. Log in or register to sign up for this course.</em></p>
-          <a class="btn btn-primary mr-3 mb-2" href="/accounts/register/?next={{ request.get_full_path }}"><i class="fa fa-user-plus" aria-hidden="true"></i> Sign Up</a>
+          <a class="btn btn-primary mr-3 mb-2" href="/accounts/register/?course_signup={{ course.id }}&amp;next={{ request.get_full_path }}"><i class="fa fa-user-plus" aria-hidden="true"></i> Sign Up</a>
           <a class="btn btn-primary mr-3 mb-2" href="/accounts/login/?next={{ request.get_full_path }}"><i class="fa fa-sign-in" aria-hidden="true"></i> Log In</a>
         {% elif check_register %}
           <p class="h3 mb-4"><em><i class="fa fa-check"></i> You are signed up for this course</em></p>

@@ -948,7 +948,7 @@ class Video(LibraryItem):
             return f'<iframe class="video-embed vimeo-video" title="vimeo-player" src="https://player.vimeo.com/video/{self.embed_code}" frameborder="0" allowfullscreen></iframe>'
         elif self.attachments.all():
             file = self.attachments.all()[0]
-            return mark_safe(f'<video src="{file.file.url}" controls></video><br><a href="{file.file.url}">Download video</a>')
+            return mark_safe(f'<video src="{file.file.url}" controls preload="metadata"></video><br><a href="{file.file.url}">Download video</a>')
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()

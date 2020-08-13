@@ -100,6 +100,14 @@ def user_register(request, project="core", section=None):
                 people.image = request.FILES["photo"]
 
             people.user = user
+            meta_data = {}
+            if "previous_um_knowlege" in request.POST:
+                meta_data["previous_um_knowledge"] = request.POST.get("previous_um_knowlege")
+            if "english" in request.POST:
+                meta_data["english"] = request.POST.get("english")
+            if "homework_time" in request.POST:
+                meta_data["homework_time"] = request.POST.get("homework_time")
+            people.meta_data = meta_data
             people.save()
 
             if "organization" in request.POST and request.POST["organization"]:
@@ -137,6 +145,13 @@ def user_register(request, project="core", section=None):
                 "name": name,
                 "project_name": project.name,
             }
+
+            if "course_signup" in request.GET:
+                RecordRelationship.objects.create(
+                    record_parent = people,
+                    record_child = Course.objects.get(pk=request.GET["course_signup"]),
+                    relationship_id = 12,
+                )
 
             if request.project == PROJECT_ID["platformu"]:
                 subject = "Welcome to PlatformU"
