@@ -32,6 +32,13 @@ $("input[type='date']").attr({
   pattern: "\\d{4}-\\d{2}-\\d{2}",
 });
 
+// For the translation button
+$("#translate").change(function(){
+    url = encodeURI(window.location.href); 
+    language = $(this).val();
+    window.location = "https://translate.google.com/translate?hl=&sl=en&tl=" + language + "&u=" + url;
+});
+
 // TEMPORARY GEOJSON FOR STOCKS MAP
 const brussels = {
   "type": "FeatureCollection",
