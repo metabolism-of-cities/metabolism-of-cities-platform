@@ -107,6 +107,8 @@ def user_register(request, project="core", section=None):
                 meta_data["english"] = request.POST.get("english")
             if "homework_time" in request.POST:
                 meta_data["homework_time"] = request.POST.get("homework_time")
+            if "city" in request.POST:
+                meta_data["city"] = request.POST.get("city")
             people.meta_data = meta_data
             people.save()
 
@@ -2180,6 +2182,9 @@ def eurostat(request):
         page = "full"
 
     full_list = EurostatDB.objects.filter(is_duplicate=False).order_by("id")
+    full_list = full_list.exclude(code__startswith="med_")
+    full_list = full_list.exclude(code__startswith="cpc_")
+    full_list = full_list.exclude(code__startswith="enpr_")
 
     if "accepted" in request.GET or request.GET.get("show") == "accepted":
         full_list = full_list.filter(is_approved=True).exclude(type="folder")
