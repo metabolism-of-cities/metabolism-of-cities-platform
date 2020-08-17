@@ -23,7 +23,7 @@ textarea#id_author_list{height:100px}
   {% endif %}
   <form method="post" enctype="multipart/form-data">
 
-    {% if not info and not request.GET.parent and not hide_search_box %}
+    {% if not info and not request.GET.parent and not hide_search_box and not request.GET.inventory %}
       <div class="alert alert-warning">
         <p>
           <i class="fa fa-exclamation-triangle"></i>
@@ -71,7 +71,7 @@ textarea#id_author_list{height:100px}
         <label>File(s)</label>
         <input type="file" name="files" multiple class="form-control" />
       </div>
-      {% if info.attachments %}
+      {% if info.attachments.all %}
         <div>
           <p>Existing files:</p>
           <ul class="list-unstyled">
@@ -130,15 +130,18 @@ textarea#id_author_list{height:100px}
     $("#id_materials").select2({
       theme: "bootstrap4",
     });
-    $("#id_language").change(function(){
-      if ($(this).val() != "EN" && $(this).val() != "") {
-        $("#id_title_original_language").closest(".form-group").show("fast");
-        $("#id_abstract_original_language").closest(".form-group").show("fast");
-      } else {
-        $("#id_title_original_language").closest(".form-group").hide();
-        $("#id_abstract_original_language").closest(".form-group").hide();
-      }
-    });
+
+    {% if request.user.is_superuser %}
+      $("#id_language").change(function(){
+        if ($(this).val() != "EN" && $(this).val() != "") {
+          $("#id_title_original_language").closest(".form-group").show("fast");
+          $("#id_abstract_original_language").closest(".form-group").show("fast");
+        } else {
+          $("#id_title_original_language").closest(".form-group").hide();
+          $("#id_abstract_original_language").closest(".form-group").hide();
+        }
+      });
+    {% endif %}
 
     $("#existing").select2({
       theme: "bootstrap4",

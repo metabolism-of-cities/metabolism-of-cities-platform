@@ -485,6 +485,9 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         elif type.name == "Book" or type.name == "Book Section":
             publishers = Organization.objects.filter(type="publisher")
 
+        elif type.name == "Report":
+            files = True
+
         if project.slug == "untraceable":
             fields.append("tags")
             initial["tags"] = request.GET.get("tag")
