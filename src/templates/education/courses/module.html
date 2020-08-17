@@ -81,6 +81,10 @@ video,iframe {
               <button type="submit" class="complete-segment btn btn-success" data-id="{{ each.id }}"><i class="fa fa-check"></i> I completed this segment</button>        
             {% endif %}
 
+            {% if request.user.is_superuser %}
+              <a class="btn btn-warning float-right" href="{% url "library:form" each.video.id %}?next={{ request.get_full_path }}" ><i class="fa fa-lock"></i> Edit video</a>
+            {% endif %}
+
           </div>
         {% endfor %}
         {% if info.questions.all %}

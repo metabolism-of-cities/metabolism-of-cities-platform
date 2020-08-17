@@ -903,6 +903,7 @@ class LibraryItem(Record):
 class Video(LibraryItem):
     embed_code = models.CharField(max_length=20, null=True, blank=True)
     date = models.DateField(blank=True, null=True)
+    duration = models.PositiveSmallIntegerField(null=True, blank=True, help_text="Duration in minutes")
     VIDEO_SITES = [
         ("youtube", "Youtube"),
         ("vimeo", "Vimeo"),

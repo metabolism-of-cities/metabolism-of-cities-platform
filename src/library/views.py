@@ -391,12 +391,19 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         if "update_tags" in request.GET:
             fields = ["name", "tags", "description"]
             
+        if info:
+            info = info.dataset
+
         ModelForm = modelform_factory(
             Dataset,
             fields = fields,
             labels = labels,
         )
     elif type == "dataportal":
+
+        if info:
+            info = info.dataportal
+
         ModelForm = modelform_factory(
             DataPortal,
             fields=("name", "description", "url", "tags", "spaces", "year", "language", "license", "software", "has_api", "comments"),
@@ -406,7 +413,10 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             }
         )
     elif type.name == "Video Recording":
-        fields = ["name", "description", "url", "video_site", "author_list", "spaces", "year", "language", "license", "comments"] 
+        fields = ["name", "description", "url", "video_site", "author_list", "duration", "spaces", "year", "language", "license", "comments"] 
+
+        if info:
+            info = info.video
 
         if curator:
             fields.append("tags")
@@ -532,10 +542,6 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         if form.is_valid():
             info = form.save(commit=False)
             info.type = type
-            if request.user.is_staff:
-                info.is_active = True
-            else:
-                info.is_active = False
             if "parent" in request.GET:
                 info.is_part_of_id = request.GET.get("parent")
             info.save()

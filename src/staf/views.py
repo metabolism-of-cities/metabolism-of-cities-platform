@@ -781,6 +781,7 @@ def hub_harvesting_tag(request, space, tag):
     written = [5,16,25,27,29,32]
     dataset = [10]
     visual = [33,38,20,31]
+    document = [11]
 
     if tag.parent_tag.id == 847:
         # Layer two
@@ -798,6 +799,10 @@ def hub_harvesting_tag(request, space, tag):
         # Layer 3
         types = shapefile + written + dataset + visual
 
+    if tag.id == 914:
+        # Policy documents
+        types = document
+
     if tag.id == 852 or tag.id == 851:
         types = shapefile
 
@@ -806,6 +811,10 @@ def hub_harvesting_tag(request, space, tag):
 
     if tag.id == 854:
         types = written + dataset
+
+    if tag.id == 855:
+        # Population
+        types = dataset
 
     if tag.id == 916:
         # Visuals

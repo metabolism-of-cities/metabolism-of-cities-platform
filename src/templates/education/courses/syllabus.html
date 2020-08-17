@@ -30,6 +30,7 @@
           <thead>
           <tr>
             <th>Type</th>
+            <th style="width:120px">Duration</th>
             <th style="width:120px">Status</th>
           </tr>
           </thead>
@@ -42,6 +43,11 @@
                   {{ content.get_type_display }} - 
                   {{ content }}
                   </a>
+                </td>
+                <td>
+                  {% if content.video.duration %}
+                    {{ content.video.duration }} min
+                  {% endif %}
                 </td>
                 <td>
                   {% if content in my_completed_content %}
