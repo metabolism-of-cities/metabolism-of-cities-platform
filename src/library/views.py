@@ -317,6 +317,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     initial = {}
     files = False # Whether or not the user should have an input to attach files
     view_processing = False
+    hide_search_box = False
     data_management = False # Whether or not we are managing data, not just a library entry
 
     if tag:
@@ -441,6 +442,12 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         }
 
         fields = ["name", "language", "title_original_language", "abstract_original_language", "description", "year", "author_list", "url", "license", "spaces"]
+
+        if request.GET.get("next") == "https://education.metabolismofcities.org/courses/metabolismo-urbano-y-manejo-de-datos-recopilacion-de-datos/34487/":
+            fields = ["name", "author_list", "license", "spaces"]
+            files = True
+            initial["license"] = 11
+            hide_search_box = True
 
         if curator:
             fields.append("tags")
@@ -683,6 +690,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
     context = {
         "info": info,
+        "hide_search_box": hide_search_box,
         "form": form,
         "load_select2": True,
         "type": type,

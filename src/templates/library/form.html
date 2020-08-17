@@ -23,7 +23,7 @@ textarea#id_author_list{height:100px}
   {% endif %}
   <form method="post" enctype="multipart/form-data">
 
-    {% if not info and not request.GET.parent %}
+    {% if not info and not request.GET.parent and not hide_search_box %}
       <div class="alert alert-warning">
         <p>
           <i class="fa fa-exclamation-triangle"></i>
