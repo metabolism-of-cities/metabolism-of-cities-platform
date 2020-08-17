@@ -75,6 +75,15 @@
     <form method="post" class="pt-4">
       <input type="text" name="matches" hidden>
       <div id="renames" hidden>
+        {% for key,value in rename_list.items %}
+          <input type="text" name="rename_{{ key }}" value="{{ value }}" />
+        {% endfor %}
+        {% if matches %}
+          <input type="hidden" name="reclassify" value="true" />
+          {% for each in matches %}
+            <input type="text" name="matches" value="{{ each }}" />
+          {% endfor %}
+        {% endif %}
       </div>
       <a href="../" class="btn btn-primary-basic">
         <i class="fal fa-angle-left"></i>

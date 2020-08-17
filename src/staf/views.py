@@ -1042,6 +1042,7 @@ def hub_processing_dataset(request, id, classify=False, space=None):
 def hub_processing_gis(request, id, classify=False, space=None):
 
     document = get_object_or_404(LibraryItem, pk=id)
+    project = get_object_or_404(Project, pk=request.project)
     if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
@@ -1118,7 +1119,6 @@ def hub_processing_gis(request, id, classify=False, space=None):
         document.meta_data = meta_data 
         document.save()
         messages.success(request, "Settings were saved.")
-        project = get_object_or_404(Project, pk=request.project)
         if space:
             return redirect(project.slug + ":hub_processing_gis_classify", id=document.id, space=space.slug)
         else:
@@ -1220,14 +1220,40 @@ def hub_processing_gis(request, id, classify=False, space=None):
     if classify:
         page = "processing.gis.classify.html"
         try:
-            names = layer.get_fields(document.meta_data["columns"]["name"])
-            print(names)
-            hits = ReferenceSpace.objects.filter(name__in=names)
 
-            if "reclassify" in request.POST:
-                print(hits)
-                print(request.POST.get("rename"))
-                print(request.POST)
+            names = layer.get_fields(document.meta_data["columns"]["name"])
+            rename_list = {}
+            matches = None
+
+            # If the user reclassified any names, then we need to ALSO search for these names
+            # This seems banana code and I'd like to change it, but I'm not sure how
+            # TODO
+            # It works fine though
+
+            if "matches" in request.POST:
+                matches = request.POST.getlist("matches")
+                for each in matches:
+                    check = each.split("_")
+                    rename_id = int(check[1])
+                    new = request.POST.get(each)
+                    rename_list[rename_id] = new
+                    count = 0
+                    temp = names
+                    names = []
+                    for name in temp:
+                        count += 1
+                        if count == rename_id:
+                            names.append(new)
+                        else:
+                            names.append(name)
+
+            context["matches"] = matches
+            hits = ReferenceSpace.objects.filter(name__in=names)
+            hit = {}
+            hitlist = {}
+            for each in hits:
+                hit[each.name] = each.id
+                hitlist[each.name] = each
 
             # Let's check to see if there are duplicates
             seen = {}
@@ -1260,27 +1286,40 @@ def hub_processing_gis(request, id, classify=False, space=None):
                 from django.contrib.gis.geos import GEOSGeometry
 
                 name_field = document.meta_data["columns"]["name"]
+                count = 0
                 for each in layer:
-                    name = each.get(name_field)
+                    count += 1
+                    if count in rename_list:
+                        name = rename_list[count]
+                    else:
+                        name = each.get(name_field)
                     name = str(name)
                     geo = each.geom.wkt
-                    space = ReferenceSpace.objects.create(
-                        name = name,
-                    )
+                    if name in hitlist:
+                        space = hitlist[name]
+                    else:
+                        space = ReferenceSpace.objects.create(
+                            name = name,
+                        )
                     location = ReferenceSpaceLocation.objects.create(
                         space = space,
                         geometry = geo,
                     )
                     space.location = location
                     space.save()
+                    RecordRelationship.objects.create(
+                        record_parent = document,
+                        record_child = space,
+                        relationship_id = 30,
+                    )
+                messages.success(request, "Your shapefile has been imported!")
+                return redirect(project.slug + ":library_item", document.id)
 
-            hit = {}
-            for each in hits:
-                hit[each.name] = each.id
             context["hit"] = hit
             context["names"] = names
             context["hit_count"] = len(hit)
             context["duplicates"] = duplicates
+            context["rename_list"] = rename_list
         except Exception as e:
             messages.error(request, "Your file could not be processed. Please review the error below.<br><strong>" + str(e) + "</strong>")
             error = True

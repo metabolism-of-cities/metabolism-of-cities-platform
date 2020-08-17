@@ -250,8 +250,12 @@ def item(request, id, show_export=True):
         if has_permission(request, request.project, ["curator"]) or request.user.people == info.uploader():
             return form(request, info.id)
 
+    spaces = ReferenceSpace.objects.filter(child_list__record_parent=info, child_list__relationship_id=30)
+    print(spaces)
+
     context = {
         "info": info,
+        "spaces": spaces,
         "edit_link": info.get_edit_link(),
         "show_export": show_export,
         "show_relationship": info.id,

@@ -337,6 +337,15 @@
           </ul>
         {% endif %}
 
+        {% if spaces %}
+          <h3 class="mt-5">Reference spaces</h3>
+          <ul>
+          {% for each in spaces %}
+            <li><a href="{% url "staf:referencespace" each.id %}">{{ each }}</a></li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+
         {% if PROJECT.slug == "ascus" %}
         <div class="mt-5">
           {% include "_messages.html" %}
