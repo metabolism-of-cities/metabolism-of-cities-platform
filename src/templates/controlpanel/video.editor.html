@@ -67,32 +67,58 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
+
           <div class="modal-body">
+
             <div class="form-group">
               <label>Title</label>
               <input type="text" name="name" value="" required id="video-name" class="form-control" />
             </div>
 
             <div class="form-group">
-              <label>Presenter</label>
-              <select class="form-control" name="presenter">
-                <option>No presenter</option>
-                <option value="paul.png">Presenter: Paul Hoekman</option>
+              <label>Branding style</label>
+              <select class="form-control" name="branding">
+                <option value="education.">Education hub</option>
               </select>
             </div>
 
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="true" id="intro" name="intro">
-              <label class="form-check-label" for="intro">
-                Add intro
-              </label>
+            <h3 class="h5">Intro</h3>
+
+            <div class="form-group">
+              <label>Opening screen</label>
+              <select class="form-control" name="opening">
+                <option value="">None</option>
+                <option value="datacollectioncourse.png">Data collection course - English</option>
+                <option value="cursorecopilaciondatos.png">Data collection course - Spanish</option>
+              </select>
             </div>
 
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="true" id="outro" name="outro">
-              <label class="form-check-label" for="outro">
-                Add outro
-              </label>
+            <div class="form-group">
+              <label>Second screen</label>
+              <select class="form-control" name="welcome">
+                <option value="">None</option>
+                <option value="opensource.png">We love open source! CC BY 4.0 - English</option>
+                <option value="opensource.spanish.png">We love open source! CC BY 4.0 - Spanish</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Presenter</label>
+              <select class="form-control" name="presenter">
+                <option value="">No presenter</option>
+                <option value="paul.png">Paul Hoekman</option>
+              </select>
+            </div>
+
+            <h3 class="h5">Outro</h3>
+
+            <div class="form-group">
+              <label>Outro</label>
+              <select class="form-control" name="outro">
+                <option value="">No outro</option>
+                <option value="thankyou.png">Thank you + social media - English</option>
+                <option value="thankyou.spanish.png">Thank you + social media - Spanish</option>
+              </select>
             </div>
 
           </div>

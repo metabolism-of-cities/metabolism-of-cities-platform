@@ -108,27 +108,66 @@ def process_video(info):
     import ffmpeg
     intro = False
     outro = False
-    video_settings = info.meta_data["video_settings"]
-    if "intro" in video_settings and video_settings["intro"]:
-        intro = True
-    if "outro" in video_settings and video_settings["outro"]:
-        outro = True
-    # Okay so here is what we do. The user first selects if they want to add 
-    # an intro and/or outro, sets the title for the title page, and selects who
-    # presents this video. We use that information to a) build a title page image, 
-    # b) create a 2 second video of this title page image, c) merge this with the
-    # intro (where applicable), the main video, and then the outro (where applicable)
-    # we use PIL for image editing and ffmpeg for the video stuff. 
+    opening = None
+    welcome = None
+    presenter = None
+    concat_list = ""
 
-    # PART A - BUILDING OF THE TITLE PAGE IMAGE
+    video_settings = info.meta_data["video_settings"]
+    if "opening" in video_settings and video_settings["opening"]:
+        intro = True
+        opening = video_settings["opening"]
+    if "welcome" in video_settings and video_settings["welcome"]:
+        intro = True
+        welcome = video_settings["welcome"]
+    if "presenter" in video_settings and video_settings["presenter"]:
+        intro = True
+        presenter = video_settings["presenter"]
+    if "outro" in video_settings and video_settings["outro"]:
+        outro = video_settings["outro"]
+
+    branding = video_settings["branding"]
+    title_slide_duration = 9
+
+    # Tips for debugging:
+    # If at any point the merging of videos doesn't work well, make sure that every single
+    # video contains the exact same details. Look in particular at:
+    # - fps ---- we set it to 30 using framerate=30 when self-creating videos from images
+    # - hertz of audio ----- 44100
+    # - pixel format ----- turns out OBS videos use yuv420p so ensure that the self-created videos use the same
+    # Use ffprobe to check details of individual videos
+
+    # PART A - CREATING A 2 SECOND VIDEO WITH THE OPENING SCREEN
+    if opening:
+        print(opening)
+        opening_screen = settings.MEDIA_ROOT + "/video_processing/stock." + branding + opening
+        stream = ffmpeg.input(opening_screen, t=3, loop=1, framerate=30) # time = 2 seconds, loop = same image all over
+        video_output = settings.MEDIA_ROOT + "/video_processing/" + str(info.id) + ".opening.mp4"
+        stream = ffmpeg.output(stream, video_output, pix_fmt="yuv420p")
+        stream = ffmpeg.overwrite_output(stream)
+        ffmpeg.run(stream)
+        concat_list += "file '" + video_output + "'\n"
+        title_slide_duration -= 3
+
+    # PART B - CREATING A 2 SECOND VIDEO WITH THE WELCOME SCREEN
+    if welcome:
+        welcome_screen = settings.MEDIA_ROOT + "/video_processing/stock." + branding + welcome
+        stream = ffmpeg.input(welcome_screen, t=3, loop=1, framerate=30) # time = 2 seconds, loop = same image all over
+        video_output = settings.MEDIA_ROOT + "/video_processing/" + str(info.id) + ".welcome.mp4"
+        stream = ffmpeg.output(stream, video_output, pix_fmt="yuv420p")
+        stream = ffmpeg.overwrite_output(stream)
+        ffmpeg.run(stream)
+        concat_list += "file '" + video_output + "'\n"
+        title_slide_duration -= 3
+
+    # PART C - BUILDING OF THE TITLE PAGE IMAGE
     if "presenter" in video_settings:
-        image = settings.MEDIA_ROOT + "/video_processing/title.paul.png"
+        image = settings.MEDIA_ROOT + "/video_processing/stock." + branding + video_settings["presenter"]
     else:
-        # Here we should of course have a blank image instead, TODO
-        image = settings.MEDIA_ROOT + "/video_processing/title.paul.png"
+        image = settings.MEDIA_ROOT + "/video_processing/stock." + branding + ".title.png"
 
     font_path = settings.STATIC_ROOT + "fonts/Montserrat-Medium.ttf"
-    font = ImageFont.truetype(font_path, 60)
+    font = ImageFont.truetype(font_path, 90)
     img = Image.open(image)
     draw = ImageDraw.Draw(img)
     W, H = (1920, 1080) # Image size
@@ -137,39 +176,76 @@ def process_video(info):
     # This calculation is used so that we can place the title in the middle
     # of the screen (vertically), and near the bottom (900px down), which is 
     # where we have planned for the title to appear
-    draw.text(((W-w)/2,900), title, fill="black", font=font)
+    draw.text(((W-w)/2,900), title, fill="white", font=font)
     img.show()
     # We save this new title image in a dedicated folder with a specific name
     output = settings.MEDIA_ROOT + "/video_processing/" + str(info.id) + ".titlepage.png"
     img.save(output)
 
-    # PART B - CREATING A 2 SECOND VIDEO WITH THE TITLE PAGE
-    stream = ffmpeg.input(output, t=2, loop=1) # time = 2 seconds, loop = same image all over
+    # PART D - CREATING A 2 SECOND VIDEO WITH THE TITLE PAGE
+    stream = ffmpeg.input(output, t=title_slide_duration, loop=1, framerate=30) # time = 2 seconds, loop = same image all over
     video_output = settings.MEDIA_ROOT + "/video_processing/" + str(info.id) + ".titlepage.mp4"
-    stream = ffmpeg.output(stream, video_output)
+    stream = ffmpeg.output(stream, video_output, pix_fmt="yuv420p")
+    stream = ffmpeg.overwrite_output(stream)
+    ffmpeg.run(stream)
+    concat_list += "file '" + video_output + "'\n"
+
+    concat_file = settings.MEDIA_ROOT + "/video_processing/" + str(info.id) + ".concat.txt"
+    with open(concat_file, "w") as text_file:
+        text_file.write(concat_list)
+
+    # PART E - Let's create the intro now based on all these previous steps
+    stream = ffmpeg.input(concat_file, format="concat", safe=0)
+    video_output = "/video_processing/" + str(info.id) + ".intro.mp4"
+    full_intro = settings.MEDIA_ROOT + video_output
+    stream = ffmpeg.output(stream, full_intro, c="copy")
     stream = ffmpeg.overwrite_output(stream)
     ffmpeg.run(stream)
 
-    # PART C - MERGING THE INTRO, TITLE PAGE, VIDEO, AND OUTRO
-    if intro:
-        intro = ffmpeg.input(settings.MEDIA_ROOT + "/video_processing/master.intro.mp4")
-    title_video = ffmpeg.input(video_output)
+    # PART F
+    # OK so now we have the intro, but there is no sound! Let's add this
+    audio_input = settings.MEDIA_ROOT + "/video_processing/stock.intro.mp3"
+    final_intro = settings.MEDIA_ROOT + "/video_processing/" + str(info.id) + ".intro.with-audio.mp4"
+    video = ffmpeg.input(full_intro)
+    audio = ffmpeg.input(audio_input)
+    stream = ffmpeg.output(video.video, audio.audio, final_intro)
+    stream = ffmpeg.overwrite_output(stream)
+    stream.run()
+
+    # PART G - MERGING THE INTRO, TITLE PAGE, VIDEO, AND OUTRO
     file = info.attachments.all()[0]
-    main_video = ffmpeg.input(file.file.path)
+    concat_list = "file '" + final_intro + "'\n"
+    concat_list += "file '" + file.file.path + "'\n"
+
     if outro:
-        outro = ffmpeg.input(settings.MEDIA_ROOT + "/video_processing/master.outro.mp4")
-    # This seems hopelessly cumbersome, I would welcome a rewritten version without all this conditioning. But how?? TODO
-    if intro and outro:
-        stream = ffmpeg.concat(intro.video, intro.audio, title_video.video, intro.audio, main_video.video, main_video.audio, outro.video, outro.audio, v=1, a=1)
-    elif intro:
-        stream = ffmpeg.concat(intro.video, intro.audio, title_video.video, intro.audio, main_video.video, main_video.audio, v=1, a=1)
-    elif outro:
-        stream = ffmpeg.concat(intro.video, intro.audio, title_video.video, intro.audio, main_video.video, main_video.audio, v=1, a=1)
-    else:
-        stream = ffmpeg.concat(title_video.video, intro.audio, main_video.video, main_video.audio, v=1, a=1)
+        # We have an outro, so let's build that outro video
+        outro_screen = settings.MEDIA_ROOT + "/video_processing/stock." + branding + outro
+        stream = ffmpeg.input(outro_screen, t=8, loop=1, framerate=30) # time = 8 seconds, loop = same image all over
+        video_output = settings.MEDIA_ROOT + "/video_processing/" + str(info.id) + ".outro.mp4"
+        stream = ffmpeg.output(stream, video_output, pix_fmt="yuv420p")
+        stream = ffmpeg.overwrite_output(stream)
+        ffmpeg.run(stream)
+
+        audio_input = settings.MEDIA_ROOT + "/video_processing/stock.intro.mp3"
+        final_outro = settings.MEDIA_ROOT + "/video_processing/" + str(info.id) + ".outro.with-audio.mp4"
+        video = ffmpeg.input(video_output)
+        audio = ffmpeg.input(audio_input)
+        stream = ffmpeg.output(video.video, audio.audio, final_outro)
+        stream = ffmpeg.overwrite_output(stream)
+        stream.run()
+        concat_list += "file '" + final_outro + "'\n"
+
+    concat_file = settings.MEDIA_ROOT + "/video_processing/" + str(info.id) + ".concat.full.txt"
+    with open(concat_file, "w") as text_file:
+        text_file.write(concat_list)
+
+    # And let's now merge that baby into a single video, using the concat_list file
+    # as an input textfile, so that we can use concat 'demuxer' which is the fastest concat method
+    # because no re-encoding is needed
+    stream = ffmpeg.input(concat_file, format="concat", safe=0)
     final_name = "/video_processing/" + str(info.id) + ".final.mp4"
     final = settings.MEDIA_ROOT + final_name
-    stream = ffmpeg.output(stream, final)
+    stream = ffmpeg.output(stream, final, c="copy")
     stream = ffmpeg.overwrite_output(stream)
     ffmpeg.run(stream)
 
@@ -189,9 +265,11 @@ def video_editor(request):
             meta_data = {}
         meta_data["video_settings"] = {
             "title": request.POST.get("name"),
-            "intro": request.POST.get("intro"),
-            "outro": request.POST.get("outro"),
-            "presenter": request.POST.get("presenter"),
+            "branding": request.POST.get("branding", ""),
+            "opening": request.POST.get("opening", ""),
+            "welcome": request.POST.get("welcome", ""),
+            "presenter": request.POST.get("presenter", ""),
+            "outro": request.POST.get("outro", ""),
         }
         info.meta_data = meta_data
         info.save()
