@@ -7,10 +7,12 @@ to change anything, we can do it in one place
 from django.urls import include, path
 from core import views as core
 from community import views as community
+from django.contrib.auth import views as auth_views
+from core.validation_email import EmailValidationOnForgotPassword
 
 #
 # Baseline links shared between all projects
-# Last change Jul 6, 2020
+# Last change Aug 18, 2020
 #
 
 baseline_urlpatterns = [
@@ -18,9 +20,38 @@ baseline_urlpatterns = [
     # Authentication and contributor functions
     path("accounts/register/", core.user_register, name="register"),
     path("accounts/login/", core.user_login, name="login"),
-    path("accounts/passwordreset/", core.user_reset, name="passwordreset"),
     path("accounts/logout/", core.user_logout, name="logout"),
     path("accounts/profile/", core.user_profile, name="user_profile"),
+
+    # Password reset forms
+    path(
+        "accounts/passwordreset/",
+        auth_views.PasswordResetView.as_view(
+            form_class = EmailValidationOnForgotPassword,
+            template_name = "auth/reset.html", 
+            email_template_name = "mailbody/password.reset.txt", 
+            html_email_template_name = "mailbody/password.reset.html", 
+            subject_template_name = "mailbody/password.reset.subject.txt", 
+            success_url = "/accounts/passwordreset/sent/",
+            extra_email_context = { "domain": "https://new.metabolismofcities.org" },
+        ), 
+        name="password_reset", 
+    ),
+    path(  
+        "accounts/passwordreset/sent/",
+         auth_views.PasswordResetDoneView.as_view(template_name="auth/reset.sent.html"),
+         name="password_reset_done",
+    ),
+    path(  
+        "accounts/passwordreset/confirm/<uidb64>/<token>/",
+        auth_views.PasswordResetConfirmView.as_view(template_name="auth/reset.confirm.html", success_url="/accounts/passwordreset/complete/"),
+        name="password_reset_confirm",
+    ),
+    path(  
+        "accounts/passwordreset/complete/",
+        auth_views.PasswordResetCompleteView.as_view(template_name="auth/reset.success.html"),
+        name="password_reset_complete",
+    ),
 
     # Work-related items
     path("hub/work/", core.work_grid, name="work_grid"),

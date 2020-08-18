@@ -185,14 +185,11 @@ def user_register(request, project="core", section=None):
     return render(request, "auth/register.html", context)
 
 def user_login(request, project=None):
-    project = request.project
+    project = get_object_or_404(Project, pk=request.project)
+    slug = project.slug if project.slug else "core"
+    redirect_url = project.get_website()
     if request.GET.get("next"):
         redirect_url = request.GET.get("next")  
-    elif project:
-        project = get_object_or_404(Project, pk=project)
-        redirect_url = project.get_website()
-    else:
-        redirect_url = "core:index"
 
     if request.user.is_authenticated:
         return redirect(redirect_url)
@@ -212,6 +209,7 @@ def user_login(request, project=None):
     context = {
         "project": project,
         "load_url_fixer": True,
+        "reset_link": slug + ":password_reset",
     }
     return render(request, "auth/login.html", context)
 
@@ -235,8 +233,11 @@ def user_profile(request, id=None, project=None):
 
     if id:
         info = People.objects.get(pk=id)
-    else:
+    elif request.user.is_authenticated:
         info = request.user.people
+    else:
+        project = get_object_or_404(Project, pk=request.project)
+        return redirect(project.slug + ":login")
 
     completed = Work.objects.filter(assigned_to=info, status=Work.WorkStatus.COMPLETED)
     open = Work.objects.filter(assigned_to=info).filter(Q(status=Work.WorkStatus.OPEN)|Q(status=Work.WorkStatus.PROGRESS))
@@ -266,7 +267,13 @@ def user_profile_form(request):
             user.first_name = people.name
             user.username = people.email
             user.email = people.email
+            if "password" in request.POST and request.POST["password"]:
+                user.set_password(request.POST["password"])
             user.save();
+
+            if "password" in request.POST and request.POST["password"]:
+                # user will be logged out after changing password - let's log them back in
+                login(request, user)
 
             meta_data = people.meta_data if people.meta_data else {}
             if "notifications" in request.POST and request.POST["notifications"]:
@@ -283,6 +290,7 @@ def user_profile_form(request):
     context = {
         "menu": "profile",
         "form": form,
+        "title": "Edit profile",
     }
     return render(request, "auth/profile.form.html", context)
 

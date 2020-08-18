@@ -19,7 +19,7 @@
           <input type="password" class="form-control" id="password" name="password">
         </div>
         <button type="submit" class="btn btn-primary"><i class="fas fa-fw fa-sign-in"></i> Sign in</button>
-        <a class="btn btn-primary-basic {% if PROJECT.id != 1 %}urlfix{% endif %}" href="{% url "core:password_reset" %}">I forgot my password</a>
+        <a class="btn btn-primary-basic" href="{% url reset_link %}">I forgot my password</a>
       </form>
 
       {% if not project %}
