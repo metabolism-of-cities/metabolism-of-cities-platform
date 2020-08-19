@@ -102,7 +102,10 @@ class Tag(models.Model):
         # The description_html field is already sanitized, according to the settings (see the save() function below)
         # So when we retrieve the html description we can trust this is safe, and will mark it as such
         # We avoid using |safe in templates -- to centralize the effort to sanitize input
-        return mark_safe(self.description_html)
+        if self.description:
+            return mark_safe(self.description_html)
+        else:
+            return ""
 
     def save(self, *args, **kwargs):
         if not self.description:
@@ -186,7 +189,10 @@ class Record(models.Model):
         # The description_html field is already sanitized, according to the settings (see the save() function below)
         # So when we retrieve the html description we can trust this is safe, and will mark it as such
         # We avoid using |safe in templates -- to centralize the effort to sanitize input
-        return mark_safe(self.description_html)
+        if self.description:
+            return mark_safe(self.description_html)
+        else:
+            return ""
 
     def save(self, *args, **kwargs):
         if not self.description:
@@ -948,8 +954,13 @@ class Video(LibraryItem):
         elif self.video_site == "vimeo":
             return f'<iframe class="video-embed vimeo-video" title="vimeo-player" src="https://player.vimeo.com/video/{self.embed_code}" frameborder="0" allowfullscreen></iframe>'
         elif self.attachments.all():
-            file = self.attachments.all()[0]
-            return mark_safe(f'<video src="{file.file.url}" controls preload="metadata"></video><br><a href="{file.file.url}">Download video</a>')
+            try:
+                file = self.meta_data["video_settings"]["compiled_video"]
+                file = settings.MEDIA_URL + file
+            except:
+                file = self.attachments.all()[0]
+                file = file.file.url
+            return mark_safe(f'<video src="{file}" controls preload="metadata"></video><br><a href="{file}">Download video</a>')
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
