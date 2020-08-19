@@ -782,43 +782,41 @@ def hub_harvesting_tag(request, space, tag):
     dataset = [10]
     visual = [33,38,20,31]
     document = [11]
-
-    if tag.parent_tag.id == 847:
-        # Layer two
-        types = shapefile + written + dataset + visual
-
-    if tag.parent_tag.id == 850:
-        # Layer 5
-        types = written
-
-    if tag.parent_tag.id == 849:
-        # Layer 4
-        types = written + dataset
-
-    if tag.parent_tag.id == 848:
-        # Layer 3
-        types = shapefile + written + dataset + visual
+    
+    report = 27
+    website = 32
 
     if tag.id == 914:
         # Policy documents
         types = document
-
-    if tag.id == 852 or tag.id == 851:
+    elif tag.id == 852 or tag.id == 851:
         types = shapefile
-
-    if tag.id == 853:
-        types = written
-
-    if tag.id == 854:
-        types = written + dataset
-
-    if tag.id == 855:
+    elif tag.id == 853:
+        # Econ descriptions
+        types = [report,website]
+    elif tag.id == 854:
+        types = dataset
+    elif tag.id == 855:
         # Population
         types = dataset
-
-    if tag.id == 916:
+    elif tag.id == 855:
+        # Population
+        types = dataset
+    elif tag.id == 916:
         # Visuals
         types = visual
+    elif tag.parent_tag.id == 847:
+        # Layer two
+        types = shapefile + written + dataset + visual
+    elif tag.parent_tag.id == 850:
+        # Layer 5
+        types = written
+    elif tag.parent_tag.id == 849:
+        # Layer 4
+        types = written + dataset
+    elif tag.parent_tag.id == 848:
+        # Layer 3
+        types = shapefile + written + dataset + visual
 
     forum_topic = ForumTopic.objects.filter(part_of_project_id=request.project, parent_url=request.get_full_path())
     if forum_topic:
