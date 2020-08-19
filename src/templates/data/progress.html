@@ -1,0 +1,155 @@
+{% extends "_base.html" %}
+{% block title %}{{ SYSTEM_NAME_PLURAL }}{% endblock %}
+
+{% block head %}
+<style>
+  .single-datapoint {
+    display: inline-block;
+    background-color: #efefef;
+    margin-right: 1px;
+    height: 12px;
+  }
+
+  .single-datapoint.done {
+    background-color: #144d58;
+  }
+
+
+  th.city,
+  td.city {
+    max-width: 125px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  td .single-datapoint:last-of-type {
+    margin-right: 0;
+  }
+
+  td.context .single-datapoint {
+    width: calc(100% / 6 - 1px);
+  }
+
+  td.biophysical .single-datapoint {
+    width: calc(100% / 7 - 1px);
+  }
+
+  td.infrastructure .single-datapoint {
+    width: calc(100% / 31 - 1px);
+  }
+
+  td.stocks .single-datapoint {
+    width: calc(100% / 18 - 1px);
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="card card-table">
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="city">City</th>
+        <th><i class="fal mr-2 fa-map-marked-alt fa-fw"></i> Context</th>
+        <th><i class="fal mr-2 fa-trees fa-fw"></i> Biophysical</th>
+        <th><i class="fal mr-2 fa-industry-alt fa-fw"></i> Infrastructure</th>
+        <th><i class="fal mr-2 fa-random fa-fw"></i> Stocks and flows</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for each in list %}
+        <tr>
+          <td class="city"><a href="../dashboards/{{ each.slug }}">{{ each }}</a></td>
+          <td class="context">
+            {% spaceless %}
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+            {% endspaceless %}
+          </td>
+          <td class="biophysical">
+            {% spaceless %}
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+            {% endspaceless %}
+          </td>
+          <td class="infrastructure">
+            {% spaceless %}
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+            {% endspaceless %}
+          </td>
+          <td class="stocks">
+            {% spaceless %}
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+              <div class="single-datapoint {{ done|random }}"></div>
+            {% endspaceless %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

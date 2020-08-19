@@ -91,6 +91,14 @@ def overview(request):
     }
     return render(request, "data/overview.html", context)
 
+def progress(request):
+    list = ActivatedSpace.objects.filter(part_of_project_id=request.project)
+    context = {
+        "list": list,
+        "done": ["done", ""],
+    }
+    return render(request, "data/progress.html", context)
+
 def dashboard(request, space):
     space = get_space(request, space)
     project = get_object_or_404(Project, pk=request.project)
