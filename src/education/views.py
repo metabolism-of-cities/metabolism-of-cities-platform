@@ -147,6 +147,9 @@ def module_complete_segment(request, slug, id):
     except:
         return JsonResponse({"failure": True})
 
+# Control panel sections
+# The main control panel views are in the core/views file, but these are education-specific
+
 @login_required
 def controlpanel_students(request):
     if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
@@ -177,4 +180,60 @@ def controlpanel_student(request, id):
         "completed": completed,
     }
     return render(request, "controlpanel/student.html", context)
+
+@login_required
+def controlpanel_courses(request):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    context = {
+        "courses": Course.objects.all(),
+        "load_datatables": True,
+    }
+    return render(request, "controlpanel/courses.html", context)
+
+@login_required
+def controlpanel_course(request, id):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    info = get_object_or_404(Course, pk=id)
+    completed = RecordRelationship.objects.filter(relationship_id=29, record_child__coursecontent__module__part_of_course=info)
+    done_people = {}
+    done_content = {}
+    for each in completed:
+        content = each.record_child.coursecontent
+        people = each.record_parent.people
+        if people.id not in done_people:
+            done_people[people.id] = 1
+        else:
+            done_people[people.id] += 1
+        if content.id not in done_content:
+            done_content[content.id] = 1
+        else:
+            done_content[content.id] += 1
+    context = {
+        "load_datatables": True,
+        "info": info,
+        "completed": completed,
+        "done_people": done_people,
+        "done_content": done_content,
+    }
+    return render(request, "controlpanel/course.html", context)
+
+@login_required
+def controlpanel_course_content(request, id, content):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    info = get_object_or_404(Course, pk=id)
+    content = get_object_or_404(CourseContent, pk=content)
+    completed = RecordRelationship.objects.filter(relationship_id=29, record_child__coursecontent=content)
+    context = {
+        "load_datatables": True,
+        "info": info,
+        "content": content,
+        "completed": completed,
+    }
+    return render(request, "controlpanel/course.content.html", context)
 

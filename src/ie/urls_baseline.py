@@ -109,4 +109,6 @@ baseline_urlpatterns = [
 
     path("newsletter/", core.newsletter, name="newsletter"),
 
+    path("massmail/", core.massmail, name="massmail"),
+
 ]

@@ -1,0 +1,35 @@
+{% extends "_base.html" %}
+{% load moc_extras %}
+
+{% block content %}
+
+  <h1 class="mb-0">{% block title %}{{ content }}{% endblock %}</h1>
+  <h3>{{ info }}</h3>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back 
+  </a>
+
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Course</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in completed %}
+      <tr>
+        <td><a href="../../../students/{{ each.record_parent.people.id }}/?course={{ info.id }}">{{ each.record_parent }}</a></td>
+        <td data-sort="{{ each.date_created|date:"YmdHis" }}">{{ each.date_created }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <a href="../" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    Back 
+  </a>
+
+{% endblock %}

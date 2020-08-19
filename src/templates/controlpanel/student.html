@@ -23,6 +23,7 @@
         <th>Course</th>
         <th>Module</th>
         <th>Content</th>
+        <th>Date</th>
       </tr>
     </thead>
     <tbody>
@@ -31,6 +32,7 @@
         <td>{{ each.record_child.coursecontent.module.part_of_course }}</td>
         <td>{{ each.record_child.coursecontent.module }}</td>
         <td>{{ each.record_child }}</td>
+        <td data-sort="{{ each.date_created|date:"YmdHis" }}">{{ each.date_created|date:"M d, Y" }}</td>
       </tr>
     {% endfor %}
     </tbody>

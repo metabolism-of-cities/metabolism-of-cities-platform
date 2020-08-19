@@ -1,0 +1,69 @@
+{% extends "_base.html" %}
+{% load moc_extras %}
+
+{% block content %}
+
+  <h1 class="mb-0">{% block title %}{{ info }}{% endblock %}</h1>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back 
+  </a>
+
+  <h2>Student list</h2>
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>E-mail</th>
+        <th>Sign-up</th>
+        <th>Completed</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in info.students.all %}
+      <tr>
+        <td><a href="../../students/{{ each.record_parent.people.id }}/?course={{ info.id }}">{{ each.record_parent }}</a></td>
+        <td>{{ each.record_parent.people.email }}</td>
+        <td data-sort="{{ each.date_created|date:"YmdHis" }}">{{ each.date_created }}</td>
+        <td>{{ done_people|get_item:each.record_parent.id }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <p class="mt-5"><a href="{% url "education:massmail" %}?people={% for each in info.students.all %}{{ each.record_parent.people.id }},{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Send mass mail</a></p>
+
+  <h2 class="mt-5">Modules</h2>
+
+  {% for each in info.modules.all %}
+    
+    <h3 class="mt-5 h4">{{ each }}</h3>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Completed</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for content in each.content.all %}
+        <tr>
+          <td><a href="{{ content.id }}/">{{ content }}</a></td>
+          <td>{{ content.get_type_display }}</td>
+          <td>{{ done_content|get_item:content.id }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+  {% endfor %}
+
+
+  <a href="../" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    Back 
+  </a>
+
+{% endblock %}

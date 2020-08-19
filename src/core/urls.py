@@ -72,7 +72,6 @@ urlpatterns = baseline_urlpatterns + [
     path("pdf/", views.pdf),
     path("tags/", views.tags),
     path("dataimport/", views.dataimport),
-    path("massmail/", views.massmail, name="massmail"),
 
     path("socialmedia/<slug:type>/callback", views.socialmediaCallback),
     path("socialmedia/<slug:type>/", views.socialmedia),

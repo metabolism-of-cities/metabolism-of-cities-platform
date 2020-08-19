@@ -45,6 +45,9 @@ import pytz
 # To get the total number of points
 from django.db.models import Sum
 
+# To get recently registered students in the course
+import datetime
+
 def get_date_range(start, end):
 
     if not start or not end:
@@ -1040,6 +1043,14 @@ class Course(Record):
 
     def __str__(self):
         return self.name
+
+    def students(self):
+        return RecordRelationship.objects.filter(record_child=self, relationship_id=12)
+
+    def recent_students(self):
+        # Students who signed up in the last 90 days
+        next_week = datetime.datetime.now() - datetime.timedelta(days=90)
+        return RecordRelationship.objects.filter(record_child=self, relationship_id=12)
 
 class CourseModule(Record):
     part_of_course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="modules")
