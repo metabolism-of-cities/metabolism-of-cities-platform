@@ -77,7 +77,9 @@
         {% for each in completed %}
           <tr>
             <td data-sort="-{{ each.date_created|date:"U" }}">{{ each.date_created|date:"M d, Y" }}</td>
-            <td><a href="/tasks/{{ each.id }}/">{{ each }}</a></td>
+            <td><a href="/tasks/{{ each.id }}/">{{ each }}</a><br>
+              {{ each.related_to }}
+            </td>
             <td>{{ each.part_of_project }}</td>
             <td>{{ each.workactivity.points }}</td>
           </tr>

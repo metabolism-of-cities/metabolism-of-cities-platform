@@ -99,7 +99,12 @@
             <h2 class="my-4">
               <i class="fad fa-digging" aria-hidden="true"></i>
               {% if info.assigned_to and info.assigned_to != request.user.people %}
-                {{ info.assigned_to }} is on it!
+                {{ info.assigned_to }} 
+                {% if info.get_status_display == 'Completed' %}
+                  completed this!
+                {% else %}
+                  is on it!
+                {% endif %}
               {% else %}
                 Let's get cracking!
               {% endif %}
@@ -256,7 +261,7 @@
           {{ info.get_description }}
         {% endif %}
 
-        {% if info.workactivity.instructions %}
+        {% if info.workactivity.instructions and not info.get_status_display == "Completed" %}
           <h2 class="h3 mt-3">General instructions</h2>
           <div class="mb-3">
             {{ info.workactivity.instructions|linebreaksbr }}
