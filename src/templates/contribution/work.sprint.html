@@ -123,7 +123,7 @@
           </a>
 
           <div class="progress mb-3">
-            <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{ percentage }}%;" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100" title="{{ work_list.done }} tasks out of {{ work_list.all }} have been completed.">{{ percentage|floatformat:0 }}%</div>
+            <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{ work_list.percentage }}%;" aria-valuenow="{{ work_list.percentage }}" aria-valuemin="0" aria-valuemax="100" title="{{ work_list.done }} tasks out of {{ work_list.all }} have been completed.">{{ work_list.percentage|floatformat:0 }}%</div>
           </div>
 
           <h4 class="mt-5">My tasks</h4>
