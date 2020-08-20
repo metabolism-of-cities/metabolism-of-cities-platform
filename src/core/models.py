@@ -1205,6 +1205,17 @@ class Work(Record):
     def __str__(self):
         return self.name if self.name else self.workactivity.name
 
+    def get_status(self):
+        css = {
+            1: "font-weight-bold",
+            2: "text-success",
+            3: "text-muted",
+            4: "text-muted",
+            5: "text-warning",
+        }
+        c = css[self.status]
+        return mark_safe("<span class='" + c + "'>" + self.get_status_display() + "</span>")
+
     class Meta:
         verbose_name_plural = "work items"
 

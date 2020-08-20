@@ -127,6 +127,7 @@
           <i class="fas fa-filter"></i>
           Filter list
         </button>
+        <input type="hidden" name="tag" value="{{ request.GET.tag }}" />
       </div>
     </div>
   </form>
@@ -158,7 +159,7 @@
         </td>
         <td>
           {{ each.workactivity }}<br>
-          <em>{{ each.get_status_display }} | {{ each.get_priority_display }} priority</em>
+          <em>{{ each.get_status }} | {{ each.get_priority_display }} priority</em>
         </td>
         
         <td>

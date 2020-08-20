@@ -960,6 +960,9 @@ def work_grid(request, sprint=None):
         list = list.filter(part_of_project_id=project)
         selected_project = project
 
+    if "tag" in request.GET and request.GET["tag"]:
+        list = list.filter(tags=get_object_or_404(Tag, pk=request.GET["tag"]))
+
     if "bot_hide" in request.GET and request.GET["bot_hide"]:
         list = list.exclude(last_update__posted_by_id=32070)
 
@@ -1129,12 +1132,14 @@ def work_sprint(request, id=None):
     work_list = {}
     if info.work_tag:
         work_all = Work.objects.filter(tags=info.work_tag)
+        updates = updates.order_by("-date_created")
         work_list = {
             "all": work_all.count(),
             "unassigned": work_all.filter(assigned_to__isnull=True).count(),
             "done": work_all.filter(status=Work.WorkStatus.COMPLETED).count(),
             "progress": work_all.filter(status=Work.WorkStatus.PROGRESS).count(),
             "percentage": work_all.filter(status=Work.WorkStatus.COMPLETED).count()/work_all.count()*100 if work_all else 0,
+            "my_work": work_all.filter(assigned_to=request.user.people) if request.user.is_authenticated else None,
         }
         updates = updates.filter(parent__work__tags=info.work_tag)
 

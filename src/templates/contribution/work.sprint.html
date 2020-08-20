@@ -88,7 +88,7 @@
             </div>
           </a>
 
-          <a href="{% url task_url info.id %}?tag={{ info.work_tag.id }}" class="card btn-card mb-3">
+          <a href="{% url task_url info.id %}?tag={{ info.work_tag.id }}&amp;status=5" class="card btn-card mb-3">
             <div class="card-body">
               <div class="row">
                 <div class="col icon">
@@ -105,7 +105,7 @@
             </div>
           </a>
 
-          <a href="{% url task_url info.id %}?tag={{ info.work_tag.id }}" class="card btn-card mb-3">
+          <a href="{% url task_url info.id %}?tag={{ info.work_tag.id }}&amp;status=2" class="card btn-card mb-3">
             <div class="card-body">
               <div class="row">
                 <div class="col icon">
@@ -122,11 +122,26 @@
             </div>
           </a>
 
-          <h4>Progress</h4>
-
           <div class="progress mb-3">
             <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{ percentage }}%;" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100" title="{{ work_list.done }} tasks out of {{ work_list.all }} have been completed.">{{ percentage|floatformat:0 }}%</div>
           </div>
+
+          <h4 class="mt-5">My tasks</h4>
+
+          {% if work_list.my_work %}
+          <ul>
+          {% for each in work_list.my_work %}
+            <li class="mb-3"><a href="">{{ each }}</a><br>{{ each.get_status }}</li>
+          {% endfor %}
+          </ul>
+          {% else %}
+            <p>
+              <em>
+                You are not yet assigned to any tasks yet. 
+                Browse the task list and pick something to get going!
+              </em>
+            </p>
+          {% endif %}
 
         </div>
 
