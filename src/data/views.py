@@ -200,13 +200,3 @@ def datasets(request, space):
     }
     return render(request, "data/datasets.html", context)
 
-@xframe_options_exempt
-def dataset(request, space, dataset):
-    space = get_space(request, space)
-    context = {
-        "space": space,
-        "header_image": space.photo,
-        "menu": "library",
-        "iframe": True,
-    }
-    return render(request, "data/dataset.html", context)

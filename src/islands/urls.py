@@ -4,6 +4,7 @@ from core import views as core
 from community import views as community
 from library import views as library
 from data import views as data
+from staf import views as staf
 from ie.urls_baseline import baseline_urlpatterns
 from ie.urls_staf_baseline import baseline_staf_urlpatterns
 
@@ -25,7 +26,7 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("<slug:space>/sectors/", data.sectors, name="sectors"),
     path("<slug:space>/sectors/<slug:sector>/", data.sector, name="sector"),
     path("<slug:space>/sectors/<slug:sector>/<slug:article>/", data.article, name="article"),
-    path("<slug:space>/datasets/<slug:dataset>/", data.dataset, name="dataset"),
+    path("<slug:space>/datasets/<slug:dataset>/", staf.dataset, name="dataset"),
     path("<slug:space>/resources/photos/", data.photos, name="photos"),
     path("<slug:space>/resources/reports/", data.library, {"type": "reports"}, name="reports"),
     path("<slug:space>/resources/theses/", data.library, {"type": "theses"}, name="theses"),

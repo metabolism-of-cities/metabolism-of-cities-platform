@@ -84,3 +84,9 @@ def unauthorized_access(request):
     #)
     raise PermissionDenied
 
+# Quick debugging, sometimes it's tricky to locate the PRINT in all the Django 
+# output in the console, so just using a simply function to highlight it better
+def p(text):
+    print("----------------------")
+    print(text)
+    print("----------------------")

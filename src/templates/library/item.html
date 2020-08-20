@@ -28,6 +28,14 @@
 
 {% block content %}
 
+  {% if spaces %}
+    <section class="fullwidth-wrapper">
+      <div class="container">
+        <iframe class="dataset card" src="{% url "data:dataset" info.id %}" onload="resizeIframe(this)"></iframe>
+      </div>
+    </section>
+  {% endif %}
+
   <div class="container">
     <div class="row">
       <div class="col-lg-4 text-center">

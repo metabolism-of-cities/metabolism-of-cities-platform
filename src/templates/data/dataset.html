@@ -16,20 +16,24 @@
 {% block iframe_content %}
   <div class="card shadow-none">
     <div class="card-body">
-      <h3>Cape Town fish catch in 2013</h3>
+      <h3>{{ info }}</h3>
       <div class="description">
         Aquatic agriculture catch from Cape Town in 2013, measured in tonnes
       </div>
       <hr class="tab-divider">
       <div class="nav nav-pills nav-fill">
-        <a class="nav-item nav-link active" data-toggle="tab" href="#tab-chart">
-          <i class="fal fa-fw fa-analytics mr-2"></i>
-          Chart
-        </a>
-        <a class="nav-item nav-link load-map" data-toggle="tab" href="#tab-map">
-          <i class="fal fa-fw fa-map-marked mr-2"></i>
-          Map
-        </a>
+        {% if show_chart %}
+          <a class="nav-item nav-link active" data-toggle="tab" href="#tab-chart">
+            <i class="fal fa-fw fa-analytics mr-2"></i>
+            Chart
+          </a>
+        {% endif %}
+        {% if show_map %}
+          <a class="nav-item nav-link load-map {% if first_view == "map" %}active{% endif %}" data-toggle="tab" href="#tab-map">
+            <i class="fal fa-fw fa-map-marked mr-2"></i>
+            Map
+          </a>
+        {% endif %}
         <a class="nav-item nav-link" data-toggle="tab" href="#tab-quality">
           <i class="fal fa-fw fa-star mr-2"></i>
           Data quality
@@ -52,7 +56,9 @@
 
       <div class="tab-content">
         <!-- chart -->
-        <div class="tab-pane show active" id="tab-chart">
+
+        {% if show_chart %}
+        <div class="tab-pane show {% if first_view == "chart" %}active{% endif %}" id="tab-chart">
 
           <div class="row">
             <div class="col-lg-5 mb-2 mb-lg-0">
@@ -88,14 +94,18 @@
           <div id="chart"></div>
         </div>
 
+        {% endif %}
+
+        {% if show_map %}
         <!-- map -->
-        <div class="tab-pane" id="tab-map">
+        <div class="tab-pane {% if first_view == "map" %}active{% endif %}" id="tab-map">
           <div id="map" class="mb-4"></div>
           <button class="btn btn-primary float-lg-right mr-2 download-map">
             <i class="fas fa-fw fa-save"></i>
             Save map as image
           </button>
         </div>
+        {% endif %}
 
         <!-- data quality -->
         <div class="tab-pane" id="tab-quality">
@@ -185,48 +195,59 @@
         <!-- metadata -->
         <div class="tab-pane" id="tab-metadata">
           <div class="row">
-            <div class="col-lg-6">
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                  <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> Brussels, Belgium
-                </li>
-                <li class="list-group-item">
-                  <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 01 January 2012 - 31 December 2017
-                </li>
-                <li class="list-group-item">
-                  <i class="far fa-fw fa-flask mb-1 mr-1" aria-hidden="true"></i> Materials
-                  <br>
-                  <a class="btn btn-sm btn-primary-outline mt-1" href="">Agricultural products</a>
-                </li>
-                <li class="list-group-item table-item">
-                  <div><i class="far fa-fw fa-dot-circle mr-1"></i> Data points</div>
-                  <div>13</div>
-                </li>
-                <li class="list-group-item table-item">
-                  <div><i class="far fa-fw fa-database mr-1"></i> Source(s)</div>
-                  <div><a href="https://metabolismofcities.org/resources/publications/851">Freight Transport</a></div>
-                </li>
-                <li class="list-group-item table-item">
-                  <div><i class="far fa-fw fa-user mr-1"></i> Uploaded by</div>
-                  <div><a href="">Fulano de Tal</a></div>
-                </li>
-                <li class="list-group-item table-item">
-                  <div><i class="far fa-fw fa-calendar-day mr-1"></i> Upload date</div>
-                  <div>12 March 2018</div>
-                </li>
-              </ul>
+            <div class="col-12">
+              <h3>Sources</h3>
+              {% if sources %}
+                {% for each in sources %}
+                  <div class="">
+                    <a href="{% url library_item each.id %}">{{ each.get_full_citation }}
+                  </div>
+                {% endfor %}
             </div>
-            <div class="col-lg-6">
-              <div class="alert alert-light">
-                <strong>Replication</strong>
-                <ol>
-                  <li>Enter the IBSA website http://ibsa.brussels</li>
-                  <li>Go in Themes page</li>
-                  <li>Go in Mobility and Transport page</li>
-                  <li>Download the Freight Transport .xls file (available just in French)</li>
-                </ol>
+            {% else %}
+              <div class="col-lg-6">
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">
+                    <i class="far fa-fw fa-map-marker-alt mr-1" aria-hidden="true"></i> Brussels, Belgium
+                  </li>
+                  <li class="list-group-item">
+                    <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> 01 January 2012 - 31 December 2017
+                  </li>
+                  <li class="list-group-item">
+                    <i class="far fa-fw fa-flask mb-1 mr-1" aria-hidden="true"></i> Materials
+                    <br>
+                    <a class="btn btn-sm btn-primary-outline mt-1" href="">Agricultural products</a>
+                  </li>
+                  <li class="list-group-item table-item">
+                    <div><i class="far fa-fw fa-dot-circle mr-1"></i> Data points</div>
+                    <div>13</div>
+                  </li>
+                  <li class="list-group-item table-item">
+                    <div><i class="far fa-fw fa-database mr-1"></i> Source(s)</div>
+                    <div><a href="https://metabolismofcities.org/resources/publications/851">Freight Transport</a></div>
+                  </li>
+                  <li class="list-group-item table-item">
+                    <div><i class="far fa-fw fa-user mr-1"></i> Uploaded by</div>
+                    <div><a href="">Fulano de Tal</a></div>
+                  </li>
+                  <li class="list-group-item table-item">
+                    <div><i class="far fa-fw fa-calendar-day mr-1"></i> Upload date</div>
+                    <div>12 March 2018</div>
+                  </li>
+                </ul>
               </div>
-            </div>
+              <div class="col-lg-6">
+                <div class="alert alert-light">
+                  <strong>Replication</strong>
+                  <ol>
+                    <li>Enter the IBSA website http://ibsa.brussels</li>
+                    <li>Go in Themes page</li>
+                    <li>Go in Mobility and Transport page</li>
+                    <li>Download the Freight Transport .xls file (available just in French)</li>
+                  </ol>
+                </div>
+              </div>
+            {% endif %}
           </div>
         </div>
 
@@ -238,8 +259,12 @@
           <div class="table-wrapper">
             <div class="alert alert-light">
               <h3 class="mb-0">
-                <i class="fal fa-spinner-third fa-spin mr-4"></i>
-                Loading table
+                {% if spaces %}
+                  {% for each in spaces %}
+                    <h4>Location data: {{ each }}</h4>
+                    {{ each.location.id }}
+                  {% endfor %}
+                {% endif %}
               </h3>
             </div>
           </div>
@@ -248,7 +273,7 @@
         <!-- share -->
         <div class="tab-pane" id="tab-share">
           <div class="form-group">
-            <input id="share-url" class="form-control" value="https://metabolismofcities.org/cities/the-hague/datasets/52/" readonly>
+            <input id="share-url" class="form-control" value="{{ PROJECT.get_website }}{{ request.get_full_path }}" readonly>
           </div>
 
           <button class="btn btn-primary copy-url">
@@ -294,6 +319,8 @@
       }, 3000);
     });
   </script>
+
+  {% if show_chart %}
 
   <!-- load highcharts -->
   <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -482,19 +509,8 @@
       });
     });
 
-    // when opening data tab, load table with ajax
-    let dataLoaded = false;
-
-    $(".nav-link.load-data").click(function() {
-      console.log("hi!");
-      if (!dataLoaded) {
-        $.get("the/url").done(function(data) {
-          $(".table-wrapper").html(data);
-          dataLoaded = true;
-        });
-      }
-    });
   </script>
+  {% endif %}
 
   <!-- load leaflet -->
   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
@@ -503,7 +519,8 @@
   </script>
   <script src="https://unpkg.com/leaflet-image@0.4.0/leaflet-image.js"></script>
   <script>
-    var map = L.map("map").setView([51.505, -0.09], 13);
+
+    var map = L.map("map");
 
     function loadMap() {
       L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
@@ -513,25 +530,46 @@
         tileSize: 512,
         zoomOffset: -1,
       }).addTo(map);
-      var marker = L.marker([51.5, -0.09]).addTo(map);
 
-      var circle = L.circle([51.508, -0.11], {
-          color: 'red',
-          fillColor: '#f03',
-          fillOpacity: 0.5,
-          radius: 500,
-          renderer: L.canvas(),
-      }).addTo(map);
+      function onEachFeature(geometries, layer) {
+        var popupContent = "<p>Type: " +
+            geometries.type;
+        if (geometries.properties && geometries.properties.popupContent) {
+          popupContent += geometries.properties.popupContent;
+        }
+        layer.bindPopup(popupContent);
+      }
 
-      var polygon = L.polygon([
-          [51.509, -0.08],
-          [51.503, -0.06],
-          [51.51, -0.047]
-      ], {
-        renderer: L.canvas(),
-      }).addTo(map);
+      {% for each in spaces %}
+        {% if each.location %}
+        geojsonlayer_{{ each.id }} = L.geoJSON({{ each.location.geometry.geojson|safe }}, {
+          style: function (geometries) {
+            return geometries.properties && geometries.properties.style;
+          },
+          onEachFeature: onEachFeature,
+          pointToLayer: function (geometries, latlng) {
+            return L.circleMarker(latlng, {
+              radius: 8,
+              fillColor: "#ff7800",
+              color: "#000",
+              weight: 1,
+              opacity: 1,
+              fillOpacity: 0.8
+            });
+          }
+        }).addTo(map);
+        {% endif %}
+      {% endfor %}
+
+      {% for each in spaces %}
+        {% if each.location %}
+          {% if forloop.counter == 1 %}
+            map.fitBounds(geojsonlayer_{{ each.id }}.getBounds());
+            {% endif %}
+        {% endif %}
+      {% endfor %}
+
     }
-
 
     let mapLoaded = false;
 
