@@ -914,14 +914,6 @@ table thead th {
 .sprint-bar {
   background-color: #96bac8; }
 
-body.homepage .jumbotron {
-  padding-bottom: 275px; }
-
-body.homepage section.projects {
-  margin-top: -275px; }
-  body.homepage section.projects .single-project img {
-    object-position: top; }
-
 body.projects .card .card-img-top,
 body.single-project .card .card-img-top {
   padding: 1.25rem; }

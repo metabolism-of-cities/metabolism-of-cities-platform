@@ -1368,32 +1368,6 @@ table thead th {
 }
 
 // PAGES
-// HOMEPAGE
-body.homepage {
-  .jumbotron {
-    padding-bottom: 275px;
-  }
-
-  section.projects {
-    margin-top: -275px;
-
-    .single-project img {
-      object-position: top;
-    }
-
-    // .single-project:not(:nth-of-type(-n+3)) {
-    //   display: none;
-    // }
-
-    // @media (max-width: 1199px) {
-    //   .single-project:not(:nth-of-type(-n+2)) {
-    //     display: none;
-    //   }
-    // }
-
-  }
-}
-
 // PROJECT PAGES
 body.projects,
 body.single-project {

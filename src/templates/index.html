@@ -4,20 +4,73 @@
 {% block page_name %}homepage{% endblock %}
 
 {% block css %}
-<style type="text/css">
-.jumbotron a {color:#fff;text-decoration:underline;opacity:0.8;font-weight:bold}
-.jumbotron a:hover{color:#fff;text-decoration:none;opacity:1}
+<link rel="stylesheet"  type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+
+<style>
+  .container.main-content {
+    display: none;
+  }
+
+  .jumbotron a {
+    color: #fff;
+    text-decoration: underline;
+    opacity: 0.8;
+    font-weight: bold;
+  }
+
+  .jumbotron a:hover{
+    color: #fff;
+    text-decoration: none;
+    opacity: 1
+  }
+
+  .slick-container {
+    padding: 40px;
+    color: #333;
+    background: gray;
+  }
+
+  .single-project img {
+    object-position: top;
+  }
+
+  .slick-slide {
+    transition: all .6s linear;
+    transform: scale(.9);
+  }
+
+  .slick-slide.slick-center {
+    transform: none;
+  }
+
+  .projects {
+    padding-top: 4rem;
+  }
+
+  .slick-prev::before,
+  .slick-next::before {
+    color: #144d58;
+  }
+
+  .projects {
+    background-image: url(https://resourcewatch.org/static/images/components/layout/header-bg-texture.png);
+    background-size: cover;
+  }
 </style>
 {% endblock %}
 
 {% block content %}
 
+</div> <!-- close main content container so we cna  -->
+
 <section class="projects">
-  <div class="row">
-    {% for each in projects %}
-      <div class="col-xl-4 col-lg-6 mb-4 single-project">
-        <div class="card btn-card">
-          <a href="{{ each.get_website }}"><img src="{{ each.screenshot.medium.url }}" class="card-img-top" alt="{{ each }}"></a>
+  <div class="container">
+    <div class="slick row">
+      {% for each in projects %}
+      <div class="col-md-4">
+        <div class="card single-project my-4">
+          <img src="{{ each.screenshot.medium.url }}" class="card-img-top" alt="{{ each }}">
           <div class="card-body">
             <h5 class="card-title">{{ each }}</h5>
             <p class="card-text">{{ each.summary_sentence }}</p>
@@ -34,17 +87,18 @@
           </div>
         </div>
       </div>
-    {% endfor %}
+      {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+      <a class="btn btn-primary btn-lg" href="/projects">
+        <i class="fas fa-toolbox"></i> View all projects
+      </a>
+    </div>
   </div>
-
-  <a class="btn btn-primary btn-lg" href="/projects">
-    <i class="fas fa-toolbox"></i> All projects
-  </a>
-
 </section>
 
 {% if False %}
-<section class="what">
+<section class="what container">
   <h3>What we do</h3>
   <div class="row">
     <div class="col-md-6 col-lg-3 mb-4">
@@ -101,8 +155,9 @@
     </div>
   </div>
 </section>
+{% endif %}
 
-<section class="extra">
+<section class="extra container">
   <h3>Latest news</h3>
   <div class="row">
     <div class="col-lg-4 mb-sm-4 mb-lg-0">
@@ -150,5 +205,23 @@
     <i class="fas fa-newspaper"></i> All news
   </a>
 </section>
-{% endif %}
+
+<div>
+
+{% endblock %}
+
+{% block footer %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.5.9/slick.min.js"></script>
+  <script>
+    $(".slick").slick({
+      centerMode: true,
+      slidesToShow: 3,
+      infinite: true,
+      speed: 600,
+      centerPadding: "0",
+      cssEase: "linear",
+      autoplay: true,
+      autoplaySpeed: 5000,
+    });
+  </script>
 {% endblock %}
