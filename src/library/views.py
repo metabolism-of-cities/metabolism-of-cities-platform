@@ -299,7 +299,7 @@ def search_ajax(request):
         "results": []
     }
     if query:
-        list = LibraryItem.objects.filter(name__contains=query)
+        list = LibraryItem.objects.filter(name__icontains=query)
         for each in list:
             r["results"].append({"id": each.id, "text": each.name + " - " + str(each.year)})
     return JsonResponse(r, safe=False)
