@@ -95,9 +95,16 @@ def progress(request):
     list = ActivatedSpace.objects.filter(part_of_project_id=request.project)
     context = {
         "list": list,
-        "done": ["done", ""],
+        "done": ["collected", "processed", ""],
     }
     return render(request, "data/progress.html", context)
+
+def progress_details(request):
+    list = ActivatedSpace.objects.filter(part_of_project_id=request.project)
+    context = {
+        "list": list,
+    }
+    return render(request, "data/progress.details.html", context)
 
 def dashboard(request, space):
     space = get_space(request, space)
@@ -108,6 +115,7 @@ def dashboard(request, space):
         "space": space,
         "header_image": space.photo,
         "dashboard": True,
+        "done": ["collected", "processed", ""],
     }
     return render(request, "data/dashboard.html", context)
 

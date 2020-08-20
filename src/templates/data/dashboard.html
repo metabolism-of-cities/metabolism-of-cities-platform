@@ -1,6 +1,5 @@
 {% extends "_base.html" %}
 {% load static %}
-{% block page_name %}city-subsite dashboard{% endblock %}
 {% block title %}City{% endblock %}
 
 {% block head %}
@@ -8,6 +7,51 @@
    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
    crossorigin=""/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+
+<style>
+  .single-datapoint {
+    display: inline-block;
+    background-color: #efefef;
+    margin-right: 1px;
+    height: 12px;
+  }
+
+  .single-datapoint.collected {
+    background-color: #ff8a4e;
+  }
+
+  .single-datapoint.processed {
+    background-color: #144d58;
+  }
+
+  .single-datapoint:last-of-type {
+    margin-right: 0;
+  }
+
+  .context .single-datapoint {
+    width: calc(100% / 6 - 1px);
+  }
+
+  .biophysical .single-datapoint {
+    width: calc(100% / 7 - 1px);
+  }
+
+  .infrastructure .single-datapoint {
+    width: calc(100% / 31 - 1px);
+  }
+
+  .stocks .single-datapoint {
+    width: calc(100% / 18 - 1px);
+  }
+
+  .progress-section .card {
+    height: 100%;
+  }
+
+  .get-involved .btn {
+    margin: auto;
+  }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -18,7 +62,7 @@
         <img src="{{ space.photo.image.medium.url }}" class="card-img-top">
         <div class="card-body">
           <h5 class="card-title">{{ space }}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">South Africa</h6>
+          <h6 class="card-subtitle mb-2 text-muted">{{ space.country }}</h6>
           <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
           <a href="#" class="btn btn-primary">Go somewhere</a>
         </div>
@@ -30,91 +74,209 @@
   </div>
 </section>
 
-      <h1>Local Industries</h1>
-
-      <h3>Manufacturing</h3>
-      <p>{% lorem %}</p>
-      <div class="row">
-        <div class="col-lg-3 col-sm-6 mb-4">
-          <a href="#" class="btn-thumbnail" style="background-image: url('https://images.pexels.com/photos/3082785/pexels-photo-3082785.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');">
-            <span class="title">Bread</span>
-          </a>
-          <div class="progress mt-2">
-            <div class="progress-bar bg-success" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Stub</div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-sm-6 mb-4">
-          <a href="#" class="btn-thumbnail" style="background-image: url('https://images.pexels.com/photos/3687999/pexels-photo-3687999.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');">
-            <span class="title">Processed food</span>
-          </a>
-          <div class="progress mt-2">
-            <div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Complete article</div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-sm-6 mb-4">
-          <a href="sectors/manufacturing/wine/" class="btn-thumbnail" style="background-image: url('https://images.pexels.com/photos/434311/pexels-photo-434311.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');">
-            <span class="title">Wine</span>
-          </a>
-          <div class="progress mt-2">
-            <div class="progress-bar bg-success" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Medium article</div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-sm-6 mb-4">
-          <a href="#" class="btn-thumbnail" style="background-image: url('https://images.pexels.com/photos/3823225/pexels-photo-3823225.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');">
-            <span class="title">Boat production</span>
-          </a>
-          <div class="progress mt-2">
-            <div class="progress-bar bg-success" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Medium article</div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-sm-6 mb-4">
-          <a href="#" class="btn-thumbnail" style="background-image: url('https://images.pexels.com/photos/1813331/pexels-photo-1813331.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');">
-            <span class="title">Paper manufacturing</span>
-          </a>
-          <div class="progress mt-2">
-            <div class="progress-bar bg-success" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Medium article</div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-sm-6 mb-4">
-          <a href="#" class="btn-thumbnail" style="background-image: url('https://images.pexels.com/photos/1571577/yarn-skeins-string-multicolor-1571577.jpeg?cs=srgb&dl=multi-colored-laces-1571577.jpg&fm=jpg');">
-            <span class="title">Clothes</span>
-          </a>
-          <div class="progress mt-2">
-            <div class="progress-bar bg-success" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Medium article</div>
-          </div>
-        </div>
-
+<section class="progress-section">
+  <h2>Progress</h2>
+  <div class="row">
+    <div class="col-md-6 col-lg-3 context mb-4">
+      <div class="card card-body d-block">
+        <h5><i class="fal mr-2 fa-map-marked-alt fa-fw"></i> Context</h5>
+        {% spaceless %}
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+        {% endspaceless %}
       </div>
-
-      <h3 class="mt-4">Extractive industries</h3>
-      <p>{% lorem %}</p>
-      <div class="row">
-
-        <div class="col-lg-3 col-sm-6 mb-4">
-          <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/mining.jpg');">
-            <span class="title">Mining</span>
-          </a>
-          <div class="progress mt-2">
-            <div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Complete article</div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-sm-6 mb-4">
-          <a href="#" class="btn-thumbnail" style="background-image: url('https://images.pexels.com/photos/722995/pexels-photo-722995.jpeg?cs=srgb&dl=blue-fishing-boat-722995.jpg&fm=jpg');">
-            <span class="title">Fishing</span>
-          </a>
-          <div class="progress mt-2">
-            <div class="progress-bar bg-success" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Stub</div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-sm-6 mb-4">
-          <a href="#" class="btn-thumbnail" style="background-image: url('https://images.pexels.com/photos/175389/pexels-photo-175389.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');">
-            <span class="title">Agriculture</span>
-          </a>
-          <div class="progress mt-2">
-            <div class="progress-bar bg-success" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Medium article</div>
-          </div>
-        </div>
+    </div>
+    <div class="col-md-6 col-lg-3 biophysical mb-4">
+      <div class="card card-body d-block">
+        <h5><i class="fal mr-2 fa-trees fa-fw"></i> Biophysical</h5>
+        {% spaceless %}
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+        {% endspaceless %}
       </div>
+    </div>
+    <div class="col-md-6 col-lg-3 infrastructure mb-4">
+      <div class="card card-body d-block">
+        <h5><i class="fal mr-2 fa-industry-alt fa-fw"></i> Infrastructure</h5>
+        {% spaceless %}
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+        {% endspaceless %}
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3 stocks mb-4">
+      <div class="card card-body d-block">
+        <h5><i class="fal mr-2 fa-random fa-fw"></i> Stocks and flows</h5>
+        {% spaceless %}
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+          <div class="single-datapoint {{ done|random }}"></div>
+        {% endspaceless %}
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card card-body text-center">
+        <h5>Data points added this week</h5>
+        <h2 class="mb-0">41</h2>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card card-body text-center">
+        <h5>Biggest contributer</h5>
+        <h2 class="mb-0">Jane Doe</h2>
+      </div>
+    </div>
+    <div class="col-lg-4 align-middle">
+      <a class="card btn-card card-body text-center get-involved" href="">
+        <div class="btn btn-lg btn-primary">
+          <i class="fad fa-hands-helping"></i> Get involved
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h1>Local Industries</h1>
+
+  <h3>Manufacturing</h3>
+  <p>{% lorem %}</p>
+  <div class="row">
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('https://images.pexels.com/photos/3082785/pexels-photo-3082785.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');">
+        <span class="title">Bread</span>
+      </a>
+      <div class="progress mt-2">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Stub</div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('https://images.pexels.com/photos/3687999/pexels-photo-3687999.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');">
+        <span class="title">Processed food</span>
+      </a>
+      <div class="progress mt-2">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Complete article</div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="sectors/manufacturing/wine/" class="btn-thumbnail" style="background-image: url('https://images.pexels.com/photos/434311/pexels-photo-434311.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');">
+        <span class="title">Wine</span>
+      </a>
+      <div class="progress mt-2">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Medium article</div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('https://images.pexels.com/photos/3823225/pexels-photo-3823225.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');">
+        <span class="title">Boat production</span>
+      </a>
+      <div class="progress mt-2">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Medium article</div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('https://images.pexels.com/photos/1813331/pexels-photo-1813331.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');">
+        <span class="title">Paper manufacturing</span>
+      </a>
+      <div class="progress mt-2">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Medium article</div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-sm-6 mb-4">
+      <a href="#" class="btn-thumbnail" style="background-image: url('https://images.pexels.com/photos/1571577/yarn-skeins-string-multicolor-1571577.jpeg?cs=srgb&dl=multi-colored-laces-1571577.jpg&fm=jpg');">
+        <span class="title">Clothes</span>
+      </a>
+      <div class="progress mt-2">
+        <div class="progress-bar bg-success" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Medium article</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<h3 class="mt-4">Extractive industries</h3>
+<p>{% lorem %}</p>
+<div class="row">
+
+  <div class="col-lg-3 col-sm-6 mb-4">
+    <a href="#" class="btn-thumbnail" style="background-image: url('/static/img/mining.jpg');">
+      <span class="title">Mining</span>
+    </a>
+    <div class="progress mt-2">
+      <div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Complete article</div>
+    </div>
+  </div>
+  <div class="col-lg-3 col-sm-6 mb-4">
+    <a href="#" class="btn-thumbnail" style="background-image: url('https://images.pexels.com/photos/722995/pexels-photo-722995.jpeg?cs=srgb&dl=blue-fishing-boat-722995.jpg&fm=jpg');">
+      <span class="title">Fishing</span>
+    </a>
+    <div class="progress mt-2">
+      <div class="progress-bar bg-success" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Stub</div>
+    </div>
+  </div>
+  <div class="col-lg-3 col-sm-6 mb-4">
+    <a href="#" class="btn-thumbnail" style="background-image: url('https://images.pexels.com/photos/175389/pexels-photo-175389.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');">
+      <span class="title">Agriculture</span>
+    </a>
+    <div class="progress mt-2">
+      <div class="progress-bar bg-success" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">Medium article</div>
+    </div>
+  </div>
+</div>
 
 <section class="resources">
   <h2>Resources</h2>
@@ -132,25 +294,25 @@
       </a>
     </div>
     <div class="col-xl-4 col-lg-6 col-md-6">
-      <a class="btn-icon" href="{% url "data:journal_articles" space.slug %}">
+      <a class="btn-icon" href="{% url 'data:journal_articles' space.slug %}">
         <div class="title"><i class="fal fa-books fa-fw"></i> Journal articles</div>
         <div class="text">Relevant academic literature published in peer-reviewed journals</div>
       </a>
     </div>
     <div class="col-xl-4 col-lg-6 col-md-6">
-      <a class="btn-icon" href="{% url "data:reports" space.slug %}">
+      <a class="btn-icon" href="{% url 'data:reports' space.slug %}">
         <div class="title"><i class="fal fa-file-alt fa-fw"></i> Reports</div>
         <div class="text">Governmental reports, institutional reports, corporate reports, and other relevant reports </div>
       </a>
     </div>
     <div class="col-xl-4 col-lg-6 col-md-6">
-      <a class="btn-icon" href="{% url "data:theses" space.slug %}">
+      <a class="btn-icon" href="{% url 'data:theses' space.slug %}">
         <div class="title"><i class="fal fa-graduation-cap fa-fw"></i> Theses</div>
         <div class="text">Academic theses, dissertations, and other relevant academic work </div>
       </a>
     </div>
     <div class="col-xl-4 col-lg-6 col-md-6">
-      <a class="btn-icon" href="{% url "data:photos" space.slug %}">
+      <a class="btn-icon" href="{% url 'data:photos' space.slug %}">
         <div class="title"><i class="fal fa-images fa-fw"></i> Photos</div>
         <div class="text">View photos of resource infrastructure, material flows, and more </div>
       </a>

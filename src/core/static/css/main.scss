@@ -78,6 +78,14 @@ a {
   }
 }
 
+.bg-primary {
+  background-color: $primary !important;
+}
+
+.bg-secondary {
+  background-color: $secondary !important;
+}
+
 .avatar {
   border-radius: 100%;
   object-fit: cover;

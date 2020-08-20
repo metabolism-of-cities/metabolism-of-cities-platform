@@ -30,5 +30,6 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
 
     path("overview/", views.overview, name="overview"),
     path("progress/", views.progress, name="progress"),
+    path("progress-details/", views.progress_details, name="progress_details"),
 
 ]

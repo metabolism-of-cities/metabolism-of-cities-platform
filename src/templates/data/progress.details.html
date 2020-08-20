@@ -1,0 +1,127 @@
+{% extends "_base.html" %}
+{% block title %}{{ SYSTEM_NAME_PLURAL }}{% endblock %}
+
+{% block head %}
+<style>
+  .single-datapoint {
+    display: inline-block;
+    background-color: #efefef;
+    margin-right: 1px;
+    height: 12px;
+  }
+
+  .single-datapoint.done {
+    background-color: #144d58;
+  }
+
+  th.city,
+  td.city {
+    max-width: 125px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  td .single-datapoint:last-of-type {
+    margin-right: 0;
+  }
+
+  td.context .single-datapoint {
+    width: calc(100% / 6 - 1px);
+  }
+
+  td.biophysical .single-datapoint {
+    width: calc(100% / 7 - 1px);
+  }
+
+  td.infrastructure .single-datapoint {
+    width: calc(100% / 31 - 1px);
+  }
+
+  td.stocks .single-datapoint {
+    width: calc(100% / 18 - 1px);
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  .progress {
+    height: .5rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  {% for each in list %}
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card" href="../dashboards/{{ each.slug }}">
+        <img src="https://metabolismofcities.org/media/photos/32500830212_69e4954085_k.large.jpg" class="card-img-top" alt="{{ each }}">
+        <div class="card-body">
+          <h5 class="card-title mb-0">{{ each }}</h5>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <i class="fal fa-fw fa-dot-circle mr-1"></i> 412 data points
+          </li>
+          <li class="list-group-item">
+            <i class="fal fa-fw fa-arrow-up mr-1"></i> 15 added this week
+          </li>
+          <li class="list-group-item">
+            <i class="fal fa-fw fa-star mr-1"></i> Biggest contributer: <a href="#">Jane Doe</a>
+          </li>
+          <li class="list-group-item table-item">
+            <div><i class="fal mr-2 fa-map-marked-alt fa-fw"></i> Context</div>
+            <div>
+              <div class="progress">
+                <div class="progress-bar bg-primary" role="progressbar" style="width: 21%" aria-valuenow="21" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar bg-secondary" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item table-item">
+            <div><i class="fal mr-2 fa-trees fa-fw"></i> Biophysical</div>
+            <div>
+              <div class="progress">
+                <div class="progress-bar bg-primary" role="progressbar" style="width: 62%" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar bg-secondary" role="progressbar" style="width: 6%" aria-valuenow="6" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item table-item">
+            <div><i class="fal mr-2 fa-industry-alt fa-fw"></i> Infrastructure</div>
+            <div>
+              <div class="progress">
+                <div class="progress-bar bg-primary" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar bg-secondary" role="progressbar" style="width: 14%" aria-valuenow="14" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item table-item">
+            <div><i class="fal mr-2 fa-random fa-fw"></i> Stocks & flows</div>
+            <div>
+              <div class="progress">
+                <div class="progress-bar bg-primary" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar bg-secondary" role="progressbar" style="width: 21%" aria-valuenow="21" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <div class="card-body">
+          <a class="btn btn-primary" href="#">
+            <i class="fad fa-city"></i> Explore city
+          </a>
+          <a class="btn btn-primary-basic" href="#">
+            <i class="fad fa-hands-helping"></i> Contribute
+          </a>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

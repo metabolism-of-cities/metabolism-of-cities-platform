@@ -42,6 +42,12 @@ a {
     color: #144d58;
     text-decoration: none; }
 
+.bg-primary {
+  background-color: #144d58 !important; }
+
+.bg-secondary {
+  background-color: #ff8a4e !important; }
+
 .avatar {
   border-radius: 100%;
   object-fit: cover;
