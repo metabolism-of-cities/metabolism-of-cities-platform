@@ -114,6 +114,14 @@
           <label class="custom-control-label" for="entry">Only entry tasks</label>
         </div>
       </div>
+      {% if request.user.is_superuser %}
+        <div class="col-3">
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="bot" name="bot_hide" value="true" {% if request.GET.bot_hide %}checked{% endif %}>
+            <label class="custom-control-label" for="bot">Hide MoC bot tasks</label>
+          </div>
+        </div>
+      {% endif %}
       <div class="col-5 text-right d-lg-none">
         <button class="btn btn-primary btn-filter ml-2" form="filters" type="submit">
           <i class="fas fa-filter"></i>

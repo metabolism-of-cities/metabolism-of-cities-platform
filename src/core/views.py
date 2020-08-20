@@ -960,6 +960,9 @@ def work_grid(request, sprint=None):
         list = list.filter(part_of_project_id=project)
         selected_project = project
 
+    if "bot_hide" in request.GET and request.GET["bot_hide"]:
+        list = list.exclude(last_update__posted_by_id=32070)
+
     if status:
         if status == "open_unassigned":
             list = list.filter(status=1, assigned_to__isnull=True)
