@@ -46,6 +46,12 @@
 
 <div class="container pt-4">
 
+  {% if info.description %}
+    <div class="row">
+      {{ info.get_description }}
+    </div>
+  {% endif %}
+
   {% if info.get_status == "upcoming" %}
 
     <div class="jumbotron jumbotron-fluid text-center" style="display:block">
