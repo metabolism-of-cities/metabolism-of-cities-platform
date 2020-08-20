@@ -272,6 +272,12 @@ class Project(Record):
     screenshot = StdImageField(upload_to="project_screenshots", variations={"thumbnail": (350, 350), "medium": (510, 510), "large": (1280, 1024)}, blank=True, null=True, help_text="1280x1024 is best - do not include browser tabs/menus")
     summary_sentence = models.CharField(max_length=255, null=True, blank=True, help_text="Describe the project in a single sentence")
 
+    def get_slug(self):
+        if self.slug:
+            return self.slug
+        else:
+            return "core"
+
     def get_absolute_url(self):
         return reverse("core:project", args=[self.slug])
 
@@ -1207,6 +1213,7 @@ class WorkSprint(Record):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField(null=True, blank=True)
     projects = models.ManyToManyField(Project, blank=True)
+    work_tag = models.ForeignKey(Tag, on_delete=models.CASCADE, null=True, blank=True)
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()

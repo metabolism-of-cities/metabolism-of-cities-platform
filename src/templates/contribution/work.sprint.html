@@ -64,7 +64,74 @@
   <div class="row">
     <div class="col-lg-6">
 
-      {% if request.user.is_authenticated %}
+      {% if info.work_tag %}
+        <h3>Tasks</h3>
+
+        <div class="dual-iconbox">
+          <a href="{% url task_url info.id %}?tag={{ info.work_tag.id }}" class="card btn-card mb-3">
+            <div class="card-body">
+              <div class="row">
+                <div class="col icon">
+                  <i class="fal fa-fw fa-layer-group" aria-hidden="true"></i>
+                </div>
+                <div class="col">
+                  <strong>Total number of tasks</strong>
+                  <br>
+                  <span class="badge badge-light">
+                    {{ work_list.all }} tasks
+                  </span>
+                  <span class="badge badge-primary">
+                    {{ work_list.unassigned }} unassigned
+                  </span>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="{% url task_url info.id %}?tag={{ info.work_tag.id }}" class="card btn-card mb-3">
+            <div class="card-body">
+              <div class="row">
+                <div class="col icon">
+                  <i class="fal fa-fw fa-layer-group" aria-hidden="true"></i>
+                </div>
+                <div class="col">
+                  <strong>Work in progress</strong>
+                  <br>
+                  <span class="badge badge-warning">
+                    {{ work_list.progress }} tasks
+                  </span>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <a href="{% url task_url info.id %}?tag={{ info.work_tag.id }}" class="card btn-card mb-3">
+            <div class="card-body">
+              <div class="row">
+                <div class="col icon">
+                  <i class="fal fa-fw fa-layer-group" aria-hidden="true"></i>
+                </div>
+                <div class="col">
+                  <strong>Work completed</strong>
+                  <br>
+                  <span class="badge badge-success">
+                    {{ work_list.done }} tasks
+                  </span>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <h4>Progress</h4>
+
+          <div class="progress mb-3">
+            <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{ percentage }}%;" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100" title="{{ work_list.done }} tasks out of {{ work_list.all }} have been completed.">{{ percentage|floatformat:0 }}%</div>
+          </div>
+
+        </div>
+
+
+      {% elif request.user.is_authenticated %}
 
         <h3>Chat</h3>
 

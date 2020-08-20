@@ -140,7 +140,7 @@ class OrgAdmin(SearchCompleteAdmin):
 class SprintAdmin(SearchAdmin):
     list_display = ["name", "start_date", "end_date"]
     list_filter = ["projects"]
-    exclude = ["old_id", "meta_data", "tags", "spaces", "sectors", "is_deleted", "image", "is_public"]
+    exclude = DEFAULT_EXCLUDE + ["meta_data", "image", "is_public"]
 
 class NewsAdmin(SearchCompleteAdmin):
     list_display = ["name", "date", "is_public"]

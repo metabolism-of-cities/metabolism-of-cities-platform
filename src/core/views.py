@@ -1100,7 +1100,7 @@ def work_sprints(request):
 
 def work_sprint(request, id=None):
 
-    project = request.project
+    project = get_object_or_404(Project, pk=request.project)
     info = WorkSprint.objects.get(pk=id)
     updates = None
     last_update = 0
@@ -1126,6 +1126,18 @@ def work_sprint(request, id=None):
 
     message_list = Chat.objects.filter(channel=id).order_by("timestamp")
 
+    work_list = {}
+    if info.work_tag:
+        work_all = Work.objects.filter(tags=info.work_tag)
+        work_list = {
+            "all": work_all.count(),
+            "unassigned": work_all.filter(assigned_to__isnull=True).count(),
+            "done": work_all.filter(status=Work.WorkStatus.COMPLETED).count(),
+            "progress": work_all.filter(status=Work.WorkStatus.PROGRESS).count(),
+            "percentage": work_all.filter(status=Work.WorkStatus.COMPLETED).count()/work_all.count()*100 if work_all else 0,
+        }
+        updates = updates.filter(parent__work__tags=info.work_tag)
+
     context = {
         "info": info,
         "edit_link": "/admin/core/worksprint/" + str(info.id) + "/change/",
@@ -1134,6 +1146,8 @@ def work_sprint(request, id=None):
         "last_update": last_update,
         "message_list": message_list,
         "participants": People.objects.filter(parent_list__record_child=info, parent_list__relationship__id=27),
+        "work_list": work_list,
+        "task_url": project.get_slug() + ":work_sprint_tasks",
     }
     
     return render(request, "contribution/work.sprint.html", context)
