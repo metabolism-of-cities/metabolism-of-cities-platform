@@ -262,7 +262,7 @@
                 {% if spaces %}
                   {% for each in spaces %}
                     <h4>Location data: {{ each }}</h4>
-                    {{ each.geometry }}
+                    {{ each.location.id }}
                   {% endfor %}
                 {% endif %}
               </h3>
