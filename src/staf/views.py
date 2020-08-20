@@ -26,6 +26,7 @@ import codecs
 
 import shapefile
 from core.mocfunctions import *
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 THIS_PROJECT = PROJECT_ID["staf"]
 
@@ -1228,22 +1229,30 @@ def hub_processing_gis(request, id, classify=False, space=None):
             # TODO
             # It works fine though
 
-            if "matches" in request.POST:
-                matches = request.POST.getlist("matches")
+            if "matches" in request.POST and request.POST["matches"]:
+                if "," in request.POST["matches"]:
+                    m = request.POST["matches"]
+                    matches = m.split(",")
+                else:
+                    matches = request.POST.getlist("matches")
+                p(matches)
                 for each in matches:
-                    check = each.split("_")
-                    rename_id = int(check[1])
-                    new = request.POST.get(each)
-                    rename_list[rename_id] = new
-                    count = 0
-                    temp = names
-                    names = []
-                    for name in temp:
-                        count += 1
-                        if count == rename_id:
-                            names.append(new)
-                        else:
-                            names.append(name)
+                    if each:
+                        check = each.split("_")
+                        p(each)
+                        p(check[1])
+                        rename_id = int(check[1])
+                        new = request.POST.get(each)
+                        rename_list[rename_id] = new
+                        count = 0
+                        temp = names
+                        names = []
+                        for name in temp:
+                            count += 1
+                            if count == rename_id:
+                                names.append(new)
+                            else:
+                                names.append(name)
 
             context["matches"] = matches
             hits = ReferenceSpace.objects.filter(name__in=names)
@@ -1280,7 +1289,7 @@ def hub_processing_gis(request, id, classify=False, space=None):
                 error = True
                 messages.error(request, "You have items in the list that do not have a name -- please review the source data or the name column selection.")
 
-            if request.method == "POST" and not error and not "reclassify" in request.POST:
+            if request.method == "POST" and not error and "save" in request.POST:
                 from django.contrib.gis.geos import GEOSGeometry
 
                 name_field = document.meta_data["columns"]["name"]
@@ -1319,6 +1328,8 @@ def hub_processing_gis(request, id, classify=False, space=None):
             context["duplicates"] = duplicates
             context["rename_list"] = rename_list
         except Exception as e:
+            import traceback
+            print(traceback.print_exc())
             messages.error(request, "Your file could not be processed. Please review the error below.<br><strong>" + str(e) + "</strong>")
             error = True
 
@@ -1326,4 +1337,40 @@ def hub_processing_gis(request, id, classify=False, space=None):
         
     return render(request, "hub/" + page, context)
 
+@xframe_options_exempt
+def dataset(request, space=None, dataset=None, id=None):
+    project = get_object_or_404(Project, pk=request.project)
+    if space:
+        space = get_space(request, space)
+        context = {
+            "space": space,
+            "header_image": space.photo,
+            "menu": "library",
+            "iframe": True,
+        }
+    else:
+        info = get_object_or_404(LibraryItem, pk=id)
+        context = {
+            "info": info,
+            "iframe": True,
+            "spaces": info.reference_spaces(),
+            "first_view": "map",
+            "show_map": True,
+            "sources": [info],
+            "library_item": project.get_slug() + ":library_item",
+        }
+    return render(request, "data/dataset.html", context)
+
+@xframe_options_exempt
+def dataframe(request, id):
+    info = get_object_or_404(LibraryItem, pk=id)
+    context = {
+        "info": info,
+        "iframe": True,
+        "spaces": info.reference_spaces(),
+        "first_view": "map",
+        "show_map": True,
+        "library_item": project.get_slug() + ":library_item",
+    }
+    return render(request, "data/dataset.html", context)
 

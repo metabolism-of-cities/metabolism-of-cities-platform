@@ -241,7 +241,10 @@ class Document(Record):
     objects = PublicActiveRecordManager()
 
     def get_kb(self):
-        return self.file.size / 1024 if self.file else self.image.size / 1024
+        try:
+            return self.file.size / 1024 if self.file else self.image.size / 1024
+        except:
+            return 0
 
     def get_url(self):
         return self.file.url if self.file else self.image.url
@@ -791,6 +794,7 @@ class LibraryItem(Record):
     isbn = models.CharField(max_length=255, null=True, blank=True)
     comments = models.TextField(null=True, blank=True)
     license = models.ForeignKey(License, on_delete=models.CASCADE, null=True, blank=True)
+
     STATUS = (
         ("pending", "Pending"),
         ("active", "Active"),
@@ -885,6 +889,12 @@ class LibraryItem(Record):
         else:
             return ""
 
+    def get_full_citation(self):
+        return mark_safe("<em>" + self.name + "</em>, " + self.get_author_citation() + ", " + str(self.year))
+        
+    def reference_spaces(self):
+        return ReferenceSpace.objects.filter(child_list__record_parent=self, child_list__relationship_id=30)
+
     def embed(self):
         if "ted" in self.url:
             try:
@@ -896,7 +906,10 @@ class LibraryItem(Record):
                 return "<div class='alert alert-warning'>Embedded video unavailable. <a href='" + self.url + "'>Click here to view the video</a></div>"
 
     def get_kb(self):
-        return self.file.size / 1024 if self.file else None
+        try:
+            return self.file.size / 1024 if self.file else None
+        except:
+            return 0
 
     def get_mb(self):
         return self.file.size / 1024 / 1024 if self.file else None
@@ -951,7 +964,8 @@ class Video(LibraryItem):
 
     def embed(self):
         if self.video_site == "youtube":
-            return f'<iframe class="video-embed youtube-video" src="https://www.youtube.com/embed/{self.embed_code}?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+            code = self.get_embed_code()
+            return f'<iframe class="video-embed youtube-video" src="https://www.youtube.com/embed/{code}?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
         elif self.url and "ted.com" in self.url:
             try:
                 url = self.url
@@ -1357,6 +1371,7 @@ class ReferenceSpace(Record):
 
     class Meta:
         db_table = "stafdb_referencespace"
+        ordering = ["name"]
 
 class ReferenceSpaceLocation(models.Model):
     space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE)

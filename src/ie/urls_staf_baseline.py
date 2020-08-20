@@ -34,12 +34,14 @@ baseline_staf_urlpatterns = [
     path("resources/multimedia/", staf.multimedia, name="multimedia"),
     path("resources/<slug:slug>/", library.list, name="library"),
 
+    path("datasets/<int:id>/", staf.dataset, name="dataset"),
+
     # Data dashboards
     path("dashboards/<slug:space>/sectors/", data.sectors, name="sectors"),
     path("dashboards/<slug:space>/sectors/<slug:sector>/", data.sector, name="sector"),
     path("dashboards/<slug:space>/sectors/<slug:sector>/<slug:article>/", data.article, name="article"),
     path("dashboards/<slug:space>/datasets/", data.datasets, name="datasets"),
-    path("dashboards/<slug:space>/datasets/<slug:dataset>/", data.dataset, name="dataset"),
+    path("dashboards/<slug:space>/datasets/<slug:dataset>/", staf.dataset, name="dataset"),
     path("dashboards/<slug:space>/resources/photos/", data.photos, name="photos"),
     path("dashboards/<slug:space>/resources/reports/", data.library, {"type": "reports"}, name="reports"),
     path("dashboards/<slug:space>/resources/theses/", data.library, {"type": "theses"}, name="theses"),
