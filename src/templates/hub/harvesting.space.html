@@ -90,7 +90,14 @@
 
           {% endfor %}
 
+        <hr>
+        <a class="nav-link" id="v-pills-photo-tab" data-toggle="pill" href="#v-pills-photo" role="tab" aria-controls="v-pills-photo" aria-selected="true">
+          <i class="fa fa-image fa-fw"></i> Extra: General photos
+        </a>
+
       </div>
+
+
     </div>
     <div class="col-8">
       <div class="tab-content" id="v-pills-tabContent">
@@ -113,6 +120,25 @@
           <a href="{% url 'data:hub_harvesting_worksheet' %}">View entire worksheet &raquo;</a></p>
         </div>
         {% endfor %}
+        <div class="tab-pane fade" id="v-pills-photo" role="tabpanel" aria-labelledby="v-pills-photo-tab">
+          <h4>Photos</h4>
+          {% if photos %}
+            <div class="row lightbox gallery">
+              {% for each in photos %}
+                {% spaceless %}
+                  <div class="col-sm-6 col-md-4 col-lg-3 mb-2">
+                    <a href="{{ each.image.url }}" style="background-image: url('{{ each.image.thumbnail.url }}');" data-caption=""></a>
+                  </div>
+                {% endspaceless %}
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="alert alert-warning">
+              <i class="fa fa-warning"></i> There are no general photos available yet.
+            </div>
+          {% endif %}
+          <a class="btn btn-default-outline" href="0/form/?inventory=true&amp;type=38&amp;next={{ request.get_full_path }}&amp;hide_tags=true"><i class="fal fa-plus"></i> Add</a>
+        </div>
       </div>
     </div>
   </div>

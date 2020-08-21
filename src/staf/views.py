@@ -768,6 +768,8 @@ def hub_harvesting_space(request, space):
         "menu": "harvesting",
         "hide_space_menu": True,
         "all_link": project.slug + ":hub_harvesting",
+        "photos": Photo.objects.filter(spaces=info, is_deleted=False).exclude(tags__parent_tag__parent_tag_id=845).order_by("position"),
+        "load_lightbox": True,
     }
     return render(request, "hub/harvesting.space.html", context)
 
