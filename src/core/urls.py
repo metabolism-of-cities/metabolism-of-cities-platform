@@ -73,8 +73,19 @@ urlpatterns = baseline_urlpatterns + [
     path("tags/", views.tags),
     path("dataimport/", views.dataimport),
 
+    # Social media content manager
+    path("socialmedia/", views.socialmedia, name="socialmedia"),
+    path("socialmedia/campaigns/", views.socialmedia_campaigns, name="socialmedia_campaigns"),
+    path("socialmedia/campaigns/<int:id>/", views.socialmedia_campaign, name="socialmedia_campaign"),
+    path("socialmedia/campaigns/create/", views.socialmedia_campaign, name="socialmedia_campaign"),
+    path("socialmedia/search/", views.socialmedia_form_search, name="socialmedia_form_search"),
+    path("socialmedia/<int:id>/", views.socialmedia_form, name="socialmedia_form"),
+    path("socialmedia/create/", views.socialmedia_form, name="socialmedia_form"),
+
     path("socialmedia/<slug:type>/callback", views.socialmediaCallback),
-    path("socialmedia/<slug:type>/", views.socialmedia),
+    path("socialmedia/<slug:type>/", views.socialmedia_post),
+    path("search/ajax/<slug:type>/", views.search_ajax, name="search_ajax"),
+
 
     path("eurostat/", views.eurostat, name="eurostat"),
     path("forum/", community.forum_list, name="forum_list"),

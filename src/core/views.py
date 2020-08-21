@@ -1230,6 +1230,133 @@ def notifications(request):
     }
     return render(request, "contribution/notifications.html", context)
 
+# Social media
+
+@staff_member_required
+def socialmedia(request):
+    list = SocialMedia.objects.exclude(status="discarded")
+    if "campaign" in request.GET and request.GET["campaign"]:
+        list = list.filter(campaign_id=request.GET.get("campaign"))
+    context = {
+        "list": list,
+        "menu": "content",
+        "load_datatables": True,
+    }
+    return render(request, "socialmedia/index.html", context)
+
+@staff_member_required
+def socialmedia_campaigns(request):
+    list = Tag.objects.filter(parent_tag=927)
+    context = {
+        "list": list,
+        "menu": "campaigns",
+    }
+    return render(request, "socialmedia/campaigns.html", context)
+
+@staff_member_required
+def socialmedia_campaign(request, id=None):
+    ModelForm = modelform_factory(Tag, fields=["name", "description", "color"])
+
+    if id:
+        info = get_object_or_404(Tag, pk=id)
+        form = ModelForm(request.POST or None, instance=info)
+    else:
+        form = ModelForm(request.POST or None)
+
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save(commit=False)
+            info.parent_tag_id = 927
+            info.save()
+
+            messages.success(request, "Campaign was saved.")
+            return redirect(reverse("core:socialmedia_campaigns"))
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    context = {
+        "form": form,
+        "title": "Social media campaign",
+        "menu": "campaigns",
+    }
+    return render(request, "socialmedia/campaign.html", context)
+
+@staff_member_required
+def socialmedia_form(request, id=None):
+
+    ModelForm = modelform_factory(SocialMedia, fields=["name", "description", "image", "campaign", "status", "date", "platforms"])
+    record = None
+
+    if id:
+        info = get_object_or_404(SocialMedia, pk=id)
+        record = info
+        form = ModelForm(request.POST or None, request.FILES or None, instance=info)
+    elif "record" in request.GET:
+        record = get_object_or_404(Record, pk=request.GET["record"])
+        # Remove tags
+        if record.description:
+            description = re.sub('<[^<]+?>', '', record.description)
+        else:
+            description = None
+        form = ModelForm(request.POST or None, initial={"name": record.name, "description": description, "image": record.image})
+    else:
+        form = ModelForm(request.POST or None)
+
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save(commit=False)
+            if "record" in request.GET:
+                info.record = record
+            info.save()
+            form.save_m2m()
+
+            messages.success(request, "Post was saved.")
+            return redirect(reverse("core:socialmedia"))
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    context = {
+        "list": list,
+        "form": form,
+        "record": record,
+        "title": "Load new post",
+        "menu": "content",
+    }
+    return render(request, "socialmedia/form.html", context)
+
+@staff_member_required
+def socialmedia_form_search(request):
+    context = {
+        "load_select2": True,
+        "menu": "content",
+    }
+    return render(request, "socialmedia/search.html", context)
+
+@staff_member_required
+def search_ajax(request, type):
+    query = request.GET.get("q")
+    r = {
+        "results": []
+    }
+    if query:
+        if type == "news":
+            list = News.objects.all()
+        elif type == "event":
+            list = Event.objects.all()
+        elif type == "project":
+            list = Project.objects.all()
+        elif type == "dataset":
+            list = Dataset.objects.all()
+        elif type == "video":
+            list = Video.objects.all()
+        elif type == "course":
+            list = Course.objects.all()
+
+        list = list.filter(name__icontains=query)
+        for each in list:
+            r["results"].append({"id": each.id, "text": each.name})
+    return JsonResponse(r, safe=False)
+
 # People
 
 def contributor(request):
@@ -1321,7 +1448,7 @@ def pdf(request):
 
     return response
 
-def socialmedia(request, type):
+def socialmedia_post(request, type):
     list = SocialMedia.objects.filter(published=False, platform=type)
     response = ""
     for each in list:

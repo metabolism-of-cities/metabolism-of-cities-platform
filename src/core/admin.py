@@ -154,8 +154,8 @@ class EventAdmin(SearchCompleteAdmin):
 
 class SocialMediaAdmin(admin.ModelAdmin):
     autocomplete_fields = ["record"]
-    list_display = ["record", "platform", "date", "published"]
-    list_filter = ["platform", "published"]
+    list_display = ["name", "record", "date"]
+    list_filter = ["platforms", "status"]
 
 class ProjectAdmin(SearchCompleteAdmin):
     list_display = ["name", "type", "start_date", "slug", "has_subsite", "status"]
@@ -312,6 +312,7 @@ admin_site.register(PublicProject, PublicProjectAdmin)
 admin_site.register(Relationship, RelationshipAdmin)
 admin_site.register(RecordRelationship, RecordRelationshipAdmin)
 admin_site.register(SocialMedia, SocialMediaAdmin)
+admin_site.register(SocialMediaPlatform)
 admin_site.register(LibraryItem, LibraryAdmin)
 admin_site.register(Photo, LibraryAdmin)
 admin_site.register(LibraryItemType, LibraryItemTypeAdmin)

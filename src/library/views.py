@@ -470,6 +470,9 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             if tag:
                 initial["tags"] = tag
 
+        if "inventory" in request.GET:
+            files = True
+
         if type.name == "Journal Article" or type.name == "Thesis" or type.name == "Conference Paper":
             labels["description"] = "Abstract"
             if type.name == "Journal Article":

@@ -1,0 +1,93 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1>{% block title %}Add new post{% endblock %}</h1>
+
+  <p>Library item
+    <select id="library" class="select2 custom-select"></select>
+  </p>
+
+  <p>News
+    <select id="news" class="select2 custom-select"></select>
+  </p>
+
+  <p>Event
+    <select id="event" class="select2 custom-select"></select>
+  </p>
+
+  <p>Video
+    <select id="video" class="select2 custom-select"></select>
+  </p>
+
+  <p>Dataset
+    <select id="dataset" class="select2 custom-select"></select>
+  </p>
+
+  <p>Project
+    <select id="project" class="select2 custom-select"></select>
+  </p>
+
+  <p>Course
+    <select id="course" class="select2 custom-select"></select>
+  </p>
+
+{% endblock %}
+
+{% block footer %}
+<script>
+  $("#library").select2({
+    theme: "bootstrap4",
+    ajax: {
+      url: "{% url "library:search_ajax" %}",
+      dataType: "json"
+    }
+  });
+  $("#news").select2({
+    theme: "bootstrap4",
+    ajax: {
+      url: "{% url "core:search_ajax" "news" %}",
+      dataType: "json"
+    }
+  });
+  $("#event").select2({
+    theme: "bootstrap4",
+    ajax: {
+      url: "{% url "core:search_ajax" "event" %}",
+      dataType: "json"
+    }
+  });
+  $("#project").select2({
+    theme: "bootstrap4",
+    ajax: {
+      url: "{% url "core:search_ajax" "project" %}",
+      dataType: "json"
+    }
+  });
+  $("#course").select2({
+    theme: "bootstrap4",
+    ajax: {
+      url: "{% url "core:search_ajax" "course" %}",
+      dataType: "json"
+    }
+  });
+  $("#video").select2({
+    theme: "bootstrap4",
+    ajax: {
+      url: "{% url "core:search_ajax" "video" %}",
+      dataType: "json"
+    }
+  });
+  $("#dataset").select2({
+    theme: "bootstrap4",
+    ajax: {
+      url: "{% url "core:search_ajax" "dataset" %}",
+      dataType: "json"
+    }
+  });
+  $("select").on("select2:select", function (e) {
+      var data = e.params.data;
+      window.location = "../create/?record="+ data.id;
+  });
+</script>
+{% endblock %}

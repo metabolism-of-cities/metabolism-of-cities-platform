@@ -1,0 +1,16 @@
+<h1>Social media management platform</h1>
+
+<ul class="nav nav-tabs mb-4 mt-3">
+  <li class="nav-item">
+    <a class="nav-link {% if menu == "content" %}active{% endif %}" href="{% url "core:socialmedia" %}">
+      <i class="fa fa-text fa-fw"></i>
+      Content
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if menu == "campaigns" %}active{% endif %}" href="{% url "core:socialmedia_campaigns" %}">
+      <i class="fa fa-list fa-fw"></i>
+      Campaigns
+    </a>
+  </li>
+</ul>
