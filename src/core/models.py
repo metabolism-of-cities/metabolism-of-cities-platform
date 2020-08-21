@@ -97,6 +97,7 @@ class Tag(models.Model):
     is_deleted = models.BooleanField(default=False, db_index=True)
     is_public = models.BooleanField(default=True, db_index=True)
     icon = models.CharField(max_length=50, null=True, blank=True, help_text="Only include the icon name, not fa- classes --- see https://fontawesome.com/icons?d=gallery")
+    color = models.CharField(max_length=30, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -447,19 +448,32 @@ class RecordRelationship(models.Model):
         verbose_name = "relationship manager"
         unique_together = ["record_parent", "relationship", "record_child"]
 
+class SocialMediaPlatform(models.Model):
+    name = models.CharField(max_length=255)
+    icon = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.name
+
 class SocialMedia(models.Model):
-    record = models.ForeignKey(Record, on_delete=models.CASCADE)
-    PLATFORM = [
-        ("instagram", "Instagram"),
-        ("facebook", "Facebook"),
-        ("twitter", "Twitter"),
-        ("linkedin", "LinkedIn"),
+    name = models.CharField(max_length=255)
+    record = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True)
+    STATUS = [
+        ("draft", "Draft"),
+        ("discarded", "Discarded"),
+        ("ready", "Ready for publication"),
+        ("published", "Published"),
     ]
-    platform = models.CharField(max_length=20, blank=True, null=True, choices=PLATFORM)
+    status = models.CharField(max_length=20, blank=True, null=True, choices=STATUS, default="draft")
     date = models.DateTimeField(null=True, blank=True)
-    published = models.BooleanField(default=False)
-    blurb = models.TextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     response = models.TextField(null=True, blank=True)
+    image = StdImageField(upload_to="socialmedia", variations={"thumbnail": (480, 480), "large": (1280, 1024)}, blank=True, null=True)
+    campaign = models.ForeignKey(Tag, on_delete=models.CASCADE, limit_choices_to={"parent_tag_id": 927})
+    platforms = models.ManyToManyField(SocialMediaPlatform)
+
+    def __str__(self):
+        return self.name
 
 class Event(Record):
     EVENT_TYPE = [

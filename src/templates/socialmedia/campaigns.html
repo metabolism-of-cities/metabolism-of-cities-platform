@@ -1,0 +1,29 @@
+{% extends "_base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+  {% include "socialmedia/_nav.html" %}
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Posts</th>
+        <th>Options</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in list %}
+      <tr>
+        <td><span style="background:{{ each.color }}" class="p-2">{{ each }}</span></td>
+        <td><a href="../?campaign={{ each.id }}">View posts</a></td>
+        <td><a href="{% url "core:socialmedia_campaign" each.id %}">Edit</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <a class="btn btn-default-outline" href="{% url "core:socialmedia_campaign" %}"><i class="fal fa-plus" aria-hidden="true"></i> Add</a>
+
+{% endblock %}
