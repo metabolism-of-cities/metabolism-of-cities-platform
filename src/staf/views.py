@@ -798,7 +798,7 @@ def hub_harvesting_tag(request, space, tag):
         # Econ descriptions
         types = [report,website]
     elif tag.id == 854:
-        types = dataset
+        types = written + dataset
     elif tag.id == 855:
         # Population
         types = dataset
