@@ -169,21 +169,25 @@ class Record(models.Model):
 
     def get_absolute_url(self):
         if hasattr(self, "dataset"):
-            return reverse("data:dataset", args=[self.id])
+            url = reverse("data:dataset", args=[self.id])
         elif hasattr(self, "libraryitem"):
-            return reverse("library:item", args=[self.id])
+            url = reverse("library:item", args=[self.id])
         elif hasattr(self, "news"):
-            return reverse("core:news", args=[self.news.slug])
+            url = reverse("core:news", args=[self.news.slug])
         elif hasattr(self, "event"):
-            return reverse("core:event", args=[self.event.slug])
+            url = reverse("core:event", args=[self.event.slug])
         elif hasattr(self, "video"):
-            return reverse("multimedia:video", args=[self.id])
+            url = reverse("multimedia:video", args=[self.id])
         elif hasattr(self, "course"):
-            return reverse("education:course", args=[self.course.slug])
+            url = reverse("education:course", args=[self.course.slug])
         elif hasattr(self, "project"):
-            return self.project.get_website()
+            url = self.project.get_website()
         else:
             return None
+        first_chars = url[:5]
+        if first_chars == "/http":
+            url = url[1:]
+        return url
 
     def get_methodologies(self):
         self.tags.filter(parent_tag__id=318)
