@@ -48,18 +48,23 @@ from django.db.models import Sum
 # To get recently registered students in the course
 import datetime
 
-def get_date_range(start, end):
+def get_date_range(start, end, months_only=False):
 
+    if start and not end and months_only:
+        return "Since " + start.strftime("%b %Y")
+        
     if not start or not end:
         return None
 
-    start_date = start.strftime("%b %d, %Y")
-    start_time = start.strftime("%H:%M")
-    end_date = end.strftime("%b %d, %Y")
-    end_time = end.strftime("%H:%M")
+    start_date = start.strftime("%b %Y") if months_only else start.strftime("%b %d, %Y")
+    start_time = "00:00" if months_only else start.strftime("%H:%M")
+    end_date = end.strftime("%b %Y") if months_only else end.strftime("%b %d, %Y")
+    end_time = "00:00" if months_only else end.strftime("%H:%M")
 
     if start_date == end_date:
-        if start_time == "00:00" and end_time == "00:00":
+        if months_only:
+            return start_date
+        elif start_time == "00:00" and end_time == "00:00":
             return start_date
         elif start_time == end_time:
             return start.strftime("%b %d, %Y %H:%M")
@@ -69,9 +74,12 @@ def get_date_range(start, end):
         if start.strftime("%Y%m") == end.strftime("%Y%m"):
             return start.strftime("%b") + " " + start.strftime("%d") + " - " + end.strftime("%d") + ", " + start.strftime("%Y")
         elif start_time != "00:00" and end_time != "00:00":
-            return start.strftime("%b %d, %Y %H:%M") + " " + end.strftime("%b %d, %Y %H:%M")
+            return start.strftime("%b %d, %Y %H:%M") + " - " + end.strftime("%b %d, %Y %H:%M")
         elif start.strftime("%Y") == end.strftime("%Y"):
-            return start.strftime("%b %d") + " - " + end_date
+            if months_only:
+                return start.strftime("%b") + " - " + end_date
+            else:
+                return start.strftime("%b %d") + " - " + end_date
         else:
             return start_date + " - " + end_date
 
@@ -321,7 +329,13 @@ class Project(Record):
 
     class Meta:
         ordering = ["name"]
+
+    def get_dates(self):
+        return get_date_range(self.start_date, self.end_date)
     
+    def get_dates_months(self):
+        return get_date_range(self.start_date, self.end_date, True)
+
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()

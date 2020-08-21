@@ -1,13 +1,8 @@
 {% extends "_base.html" %}
-{% load static %}
-{% load sass_tags %}
 
 {% block page_name %}projects{% endblock %}
 
 {% block title %}Blank page{% endblock %}
-t.js
-{% block css %}
-{% endblock %}
 
 {% block subtitle %}{% endblock %}
 
@@ -47,8 +42,7 @@ t.js
             {% endif %}
             <li class="list-group-item">
               <i class="far fa-fw fa-calendar"></i>
-              {{ each.start_date }}
-              {% if each.end_date %}{{ each.end_date }}{% endif %}
+              {{ each.get_dates_months|default_if_none:"" }}
             </li>
             <li class="list-group-item">
               <i class="far fa-fw fa-{% if each.status == "ongoing" %}play{% else %}check{% endif %}"></i> {{ each.get_status_display }}
