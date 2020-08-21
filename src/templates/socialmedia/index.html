@@ -22,7 +22,7 @@
         <td data-sort="{{ each.date|date:"YmdHis" }}" class="text-nowrap">{{ each.date|date:"M d" }}</td>
         <td class="text-nowrap"><span style="background:{{ each.campaign.color }}" class="p-2">{{ each.campaign }}</span></td>
         <td><a href="{% url "core:socialmedia_form" each.id %}">{{ each|truncatewords:7 }}</a></td>
-        <td>{{ each.status }}</td>
+        <td>{{ each.get_status_display }}</td>
         <td>{{ each.description|truncatewords:10 }}</td>
         <td>{% if each.image %}<a href="{{ each.image.url }}"><i class="fa fa-check"></i></a>{% endif %}</td>
         <td>{% for platform in each.platforms.all %}<i class="mr-2 fa fa-{{ platform.icon }}"></i>{% endfor %}</td>

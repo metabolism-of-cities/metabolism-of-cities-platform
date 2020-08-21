@@ -168,9 +168,20 @@ class Record(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        # We got to fix this!
-        if hasattr(self, "libraryitem"):
+        if hasattr(self, "dataset"):
+            return reverse("data:dataset", args=[self.id])
+        elif hasattr(self, "libraryitem"):
             return reverse("library:item", args=[self.id])
+        elif hasattr(self, "news"):
+            return reverse("core:news", args=[self.news.slug])
+        elif hasattr(self, "event"):
+            return reverse("core:event", args=[self.event.slug])
+        elif hasattr(self, "video"):
+            return reverse("multimedia:video", args=[self.id])
+        elif hasattr(self, "course"):
+            return reverse("education:course", args=[self.course.slug])
+        elif hasattr(self, "project"):
+            return self.project.get_website()
         else:
             return None
 

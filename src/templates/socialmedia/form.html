@@ -9,6 +9,15 @@
     {% if record and record.image %}
       <img src="{{ record.image.url }}" alt="" class="img-thumbnail mb-4" />
     {% endif %}
+
+    {% if record %}
+      <div class="alert alert-warning">
+      URL: 
+      <a href="{{ record.get_absolute_url }}">
+      {{ record.get_absolute_url }}
+      </a>
+      </div>
+    {% endif %}
       
     {% bootstrap_form form layout="horizontal" %}
 
