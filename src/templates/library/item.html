@@ -66,7 +66,7 @@
         <div class="basic-details mb-4">
           <h1 class="item-title">{{ info }}</h1>
 
-          {% if info.image %}
+          {% if info.image and info.type.name != "Video Recording" %}
             <img src="{{ info.image.url }}" class="img-fluid img-thumbnail" alt="" />
           {% endif %}
 

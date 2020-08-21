@@ -488,15 +488,25 @@ def projects(request):
 
 def project(request, slug):
     info = get_object_or_404(Project, slug=slug)
+    videos = None
+
+    if info.id == 18379:
+        # Masterclasses videos
+        videos = Video.objects.filter(tags__id=929).order_by("name")
+
     context = {
         "edit_link": "/admin/core/project/" + str(info.id) + "/change/",
         "info": info,
         "team": People.objects.filter(parent_list__record_child=info, parent_list__relationship__name="Team member"),
         "alumni": People.objects.filter(parent_list__record_child=info, parent_list__relationship__name="Former team member"),
+        "partners": Organization.objects.filter(parent_list__record_child=info, parent_list__relationship__name="Partner"),
         "header_title": str(info),
-        "header_subtitle_link": "<a href='/projects/'>Projects</a>",
+        "header_subtitle_link": "<a style='color:#fff' href='/projects/'>Projects</a>",
         "show_relationship": info.id,
         "menu": "projects",
+        "news": News.objects.filter(projects=info).order_by("-date"),
+        "videos": videos,
+        "events": Event.objects.filter(projects=info).order_by("-start_date"),
     }
     return render(request, "project.html", context)
 

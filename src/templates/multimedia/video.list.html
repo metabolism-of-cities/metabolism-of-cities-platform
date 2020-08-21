@@ -24,11 +24,9 @@
     </div>
   </div>
   <div class="col-9">
-
-
     <div class="row">
       {% for each in list %}
-        <div class="video col-lg-4 col-md-6 col-sm-8 {% for tag in each.tags.all %}tag-{{ tag.id }} {% endfor %}">
+        <div class="mt-3 video col-lg-4 col-md-6 col-sm-8 {% for tag in each.tags.all %}tag-{{ tag.id }} {% endfor %}">
           <a class="card btn-card" href="{{ each.get_absolute_url }}">
             <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
             <div class="card-body">
@@ -38,7 +36,6 @@
         </div>
       {% endfor %}
     </div>
-
   </div>
 </div>
 

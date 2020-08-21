@@ -182,10 +182,8 @@
           <h1 class="display-4">{{ header_title }}</h1>
         {% endif %}
         {% if header_subtitle_link %}
-          <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-              &laquo; {{ header_subtitle_link|safe }}
-            </ol>
+            <i class="fa fa-arrow-left"></i>
+            {{ header_subtitle_link|safe }}
           </nav>
         {% elif header_subtitle %}
           <h2>{{ header_subtitle|safe }}</h2>
