@@ -23,13 +23,13 @@
       <hr class="tab-divider">
       <div class="nav nav-pills nav-fill">
         {% if show_chart %}
-          <a class="nav-item nav-link active" data-toggle="tab" href="#tab-chart">
+          <a class="nav-item nav-link{% if first_view == 'chart' %} active{% endif %}" data-toggle="tab" href="#tab-chart">
             <i class="fal fa-fw fa-analytics mr-2"></i>
             Chart
           </a>
         {% endif %}
         {% if show_map %}
-          <a class="nav-item nav-link load-map {% if first_view == "map" %}active{% endif %}" data-toggle="tab" href="#tab-map">
+          <a class="nav-item nav-link load-map" data-toggle="tab" href="#tab-map">
             <i class="fal fa-fw fa-map-marked mr-2"></i>
             Map
           </a>
@@ -58,7 +58,7 @@
         <!-- chart -->
 
         {% if show_chart %}
-        <div class="tab-pane show {% if first_view == "chart" %}active{% endif %}" id="tab-chart">
+        <div class="tab-pane show {% if first_view == 'chart' %}active{% endif %}" id="tab-chart">
 
           <div class="row">
             <div class="col-lg-5 mb-2 mb-lg-0">
@@ -98,7 +98,7 @@
 
         {% if show_map %}
         <!-- map -->
-        <div class="tab-pane {% if first_view == "map" %}active{% endif %}" id="tab-map">
+        <div class="tab-pane" id="tab-map">
           <div id="map" class="mb-4"></div>
           <button class="btn btn-primary float-lg-right mr-2 download-map">
             <i class="fas fa-fw fa-save"></i>
@@ -522,6 +522,9 @@
 
     var map = L.map("map");
 
+    // variable with all features, to use later
+    var allContent;
+
     function loadMap() {
       L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -540,12 +543,16 @@
         layer.bindPopup(popupContent);
       }
 
+      var standardStyle = {
+        "color": "#144d58",
+        "weight": 1,
+        "opacity": 0.8
+      };
+
       {% for each in spaces %}
         {% if each.location %}
-        geojsonlayer_{{ each.id }} = L.geoJSON({{ each.location.geometry.geojson|safe }}, {
-          style: function (geometries) {
-            return geometries.properties && geometries.properties.style;
-          },
+        var geojsonlayer_{{ each.id }} = L.geoJSON({{ each.location.geometry.geojson|safe }}, {
+          style: standardStyle,
           onEachFeature: onEachFeature,
           pointToLayer: function (geometries, latlng) {
             return L.circleMarker(latlng, {
@@ -557,18 +564,13 @@
               fillOpacity: 0.8
             });
           }
-        }).addTo(map);
+        });
         {% endif %}
       {% endfor %}
 
-      {% for each in spaces %}
-        {% if each.location %}
-          {% if forloop.counter == 1 %}
-            map.fitBounds(geojsonlayer_{{ each.id }}.getBounds());
-            {% endif %}
-        {% endif %}
-      {% endfor %}
+      allContent = new L.featureGroup([{% for each in spaces %}{% if each.location %}geojsonlayer_{{ each.id }}, {% endif %}{% endfor %}]).addTo(map);
 
+      map.fitBounds(allContent.getBounds());
     }
 
     let mapLoaded = false;
@@ -588,9 +590,15 @@
     $(".load-map").click(function() {
       if (!mapLoaded) {
         loadMap();
+
+        setTimeout(function(){
+          map.invalidateSize().fitBounds(allContent.getBounds());
+        }, 400);
+
         mapLoaded = true;
       }
-      setTimeout(function(){ map.invalidateSize()}, 400);
     })
+
+    {% if first_view == "map" %}$(".load-map").click(){% endif %}
   </script>
 {% endblock %}
