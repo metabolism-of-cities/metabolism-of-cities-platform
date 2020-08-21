@@ -8,21 +8,39 @@
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
 
 <style>
+  .top-layer {
+    background-image: url("https://i.imgur.com/z6m1Dgc.jpg");
+    min-height: 70vh;
+    position: relative;
+  }
+
+  .jumbotron {
+    text-align: center;
+    position: relative;
+  }
+
+  img.main-logo {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .top-layer .dark-cover {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,.35);
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+  }
+
+  .navbar {
+    background-color: rgba(0,0,0,.3);
+    z-index: 2;
+  }
+
   .container.main-content {
     display: none;
-  }
-
-  .jumbotron a {
-    color: #fff;
-    text-decoration: underline;
-    opacity: 0.8;
-    font-weight: bold;
-  }
-
-  .jumbotron a:hover{
-    color: #fff;
-    text-decoration: none;
-    opacity: 1
   }
 
   .slick-container {
@@ -37,7 +55,12 @@
 
   .slick-slide {
     transition: all .6s linear;
-    transform: scale(.9);
+  }
+
+  @media(min-width: 1024px) {
+    .slick-slide {
+      transform: scale(.9);
+    }
   }
 
   .slick-slide.slick-center {
@@ -53,39 +76,42 @@
     color: #144d58;
   }
 
-  .projects {
+  .projects,
+  .what {
     background-image: url(https://resourcewatch.org/static/images/components/layout/header-bg-texture.png);
     background-size: cover;
   }
+
+  .statement {
+    font-size: 2rem;
+  }
+
+
 </style>
 {% endblock %}
 
 {% block content %}
 
-</div> <!-- close main content container so we cna  -->
+</div> <!-- close main content container so we can have full-width content -->
 
-<section class="projects">
-  <div class="container">
+<section class="projects border-bottom">
+  <div class="container py-4">
+    <h2 class="text-center font-weight-bold my-4">Featured projects</h2>
     <div class="slick row">
       {% for each in projects %}
       <div class="col-md-4">
-        <div class="card single-project my-4">
+        <a class="card btn-card single-project my-4" href="{{ each.get_website }}">
           <img src="{{ each.screenshot.medium.url }}" class="card-img-top" alt="{{ each }}">
           <div class="card-body">
             <h5 class="card-title">{{ each }}</h5>
             <p class="card-text">{{ each.summary_sentence }}</p>
           </div>
           <div class="card-footer">
-            <a class="btn btn-primary-basic" href="{{ each.get_website }}hub">
-              <i class="fal fa-users"></i>
-              Volunteers
-            </a>
-            <a class="btn btn-primary float-right" href="{{ each.get_website }}">
-              <i class="fal fa-info-circle"></i>
-              Prototype site
-            </a>
+            <div class="btn btn-primary">
+              Learn more <i class="fa fa-arrow-right mr-0 ml-2"></i>
+            </div>
           </div>
-        </div>
+        </a>
       </div>
       {% endfor %}
     </div>
@@ -97,113 +123,135 @@
   </div>
 </section>
 
-{% if False %}
-<section class="what container">
-  <h3>What we do</h3>
-  <div class="row">
-    <div class="col-md-6 col-lg-3 mb-4">
-      <div class="card icon-card">
-        <div class="icon">
-          <i class="far fa-fw fa-file-chart-line"></i>
-        </div>
-        <div class="card-header">Creating knowledge</div>
-        <div class="card-body">
-          <p class="what-text">
-            We aim to create new knowledge by participating and collaborating in research projects and developing new open source tools.
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6 col-lg-3 mb-4">
-      <div class="card icon-card">
-        <div class="icon">
-          <i class="far fa-fw fa-share-alt"></i>
-        </div>
-        <div class="card-header">Sharing knowledge</div>
-        <div class="card-body">
-          <p class="what-text">
-            We aim to gather and curate (all) knowledge around urban metabolism in one central platform in order to make it accessible to different target audiences.
-          </p>
+<section class="statement bg-light border-bottom">
+  <div class="container-fluid font-weight-bold text-center">
+    Metabolism of Cities is a global network of people who work together on systemically reducing net environmental impacts of cities and territories in a socially just manner and context-specific way.
+  </div>
+</section>
+
+<section class="what bg-primary border-bottom">
+  <div class="container">
+    <h2 class="text-center text-light font-weight-bold my-4">What we do</h2>
+    <div class="row pt-4">
+      <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card icon-card">
+          <div class="icon bg-light">
+            <i class="fal fa-fw fa-file-chart-line"></i>
+          </div>
+          <div class="card-header bg-light text-dark">
+            <h5>Creating knowledge</h5>
+          </div>
+          <div class="card-body">
+            <p class="what-text">
+              We aim to create new knowledge by participating and collaborating in research projects and developing new open source tools.
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-md-6 col-lg-3 mb-4">
-      <div class="card icon-card">
-        <div class="icon">
-          <i class="far fa-fw fa-wrench"></i>
-        </div>
-        <div class="card-header">Applying knowledge</div>
-        <div class="card-body">
-          <p class="what-text">
-            We help policy makers and practitioners to tackle their challenges with Urban Metabolism thinking.
-          </p>
+      <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card icon-card">
+          <div class="icon bg-light">
+            <i class="fal fa-fw fa-share-alt"></i>
+          </div>
+          <div class="card-header bg-light text-dark">
+            <h5>Sharing knowledge</h5>
+          </div>
+          <div class="card-body">
+            <p class="what-text">
+              We aim to gather and curate (all) knowledge around urban metabolism in one central platform in order to make it accessible to different target audiences.
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-md-6 col-lg-3 mb-4">
-      <div class="card icon-card">
-        <div class="icon">
-          <i class="far fa-fw fa-user-friends"></i>
+      <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card icon-card">
+          <div class="icon bg-light">
+            <i class="fal fa-fw fa-wrench"></i>
+          </div>
+          <div class="card-header bg-light text-dark">
+            <h5>Applying knowledge</h5>
+          </div>
+          <div class="card-body">
+            <p class="what-text">
+              We help policy makers and practitioners to tackle their challenges with Urban Metabolism thinking.
+            </p>
+          </div>
         </div>
-        <div class="card-header">Fostering a community</div>
-        <div class="card-body">
-          <p class="what-text">
-            We believe that tackling the urban sustainability challenge can not be done alone. We want to foster a community of stakeholders that collaborates on developing solutions.
-          </p>
+      </div>
+      <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card icon-card">
+          <div class="icon bg-light">
+            <i class="fal fa-fw fa-user-friends"></i>
+          </div>
+          <div class="card-header bg-light text-dark">
+            <h5>Fostering a community</h5>
+          </div>
+          <div class="card-body">
+            <p class="what-text">
+              We believe that tackling the urban sustainability challenge can not be done alone. We want to foster a community of stakeholders that collaborates on developing solutions.
+            </p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
-{% endif %}
 
-<section class="extra container">
-  <h3>Latest news</h3>
-  <div class="row">
-    <div class="col-lg-4 mb-sm-4 mb-lg-0">
-      <a class="card btn-card" href="">
-        <img src="https://i.imgur.com/qAvCcSH.jpg" class="card-img-top" alt="">
-        <div class="card-body">
-          <h5 class="card-title">
-            Praesentium in est id dolorem cumque
-          </h5>
-          <p class="card-text">
-            Esse cumque quo ratione ea eveniet sed. Non qui odit est nam tempora minus. Culpa ut illum eaque ut.
-          </p>
-        </div>
-      </a>
+<section class="news border-bottom">
+  <div class="container">
+    <h2 class="text-center font-weight-bold my-4">Latest news</h2>
+    <div class="row my-4">
+      <div class="col-lg-4 mb-sm-4 mb-lg-0">
+        <a class="card btn-card" href="">
+          <img src="https://i.imgur.com/qAvCcSH.jpg" class="card-img-top" alt="">
+          <div class="card-body">
+            <h5 class="card-title">
+              Praesentium in est id dolorem cumque
+            </h5>
+            <p class="card-text">
+              Esse cumque quo ratione ea eveniet sed. Non qui odit est nam tempora minus. Culpa ut illum eaque ut.
+            </p>
+          </div>
+        </a>
+      </div>
+      <div class="col-lg-4 mb-sm-4 mb-lg-0">
+        <a class="card btn-card" href="">
+          <img src="https://i.imgur.com/812pGkD.jpg" class="card-img-top" alt="">
+          <div class="card-body">
+            <h5 class="card-title">
+              Praesentium in est id dolorem cumque
+            </h5>
+            <p class="card-text">
+              Esse cumque quo ratione ea eveniet sed. Non qui odit est nam tempora minus. Culpa ut illum eaque ut.
+            </p>
+          </div>
+        </a>
+      </div>
+      <div class="col-lg-4 mb-sm-4 mb-lg-0">
+        <a class="card btn-card" href="">
+          <img src="https://i.imgur.com/PrFev5H.jpg" class="card-img-top" alt="">
+          <div class="card-body">
+            <h5 class="card-title">
+              Praesentium in est id dolorem cumque
+            </h5>
+            <p class="card-text">
+              Esse cumque quo ratione ea eveniet sed. Non qui odit est nam tempora minus. Culpa ut illum eaque ut.
+            </p>
+          </div>
+        </a>
+      </div>
     </div>
-    <div class="col-lg-4 mb-sm-4 mb-lg-0">
-      <a class="card btn-card" href="">
-        <img src="https://i.imgur.com/812pGkD.jpg" class="card-img-top" alt="">
-        <div class="card-body">
-          <h5 class="card-title">
-            Praesentium in est id dolorem cumque
-          </h5>
-          <p class="card-text">
-            Esse cumque quo ratione ea eveniet sed. Non qui odit est nam tempora minus. Culpa ut illum eaque ut.
-          </p>
-        </div>
-      </a>
-    </div>
-    <div class="col-lg-4 mb-sm-4 mb-lg-0">
-      <a class="card btn-card" href="">
-        <img src="https://i.imgur.com/PrFev5H.jpg" class="card-img-top" alt="">
-        <div class="card-body">
-          <h5 class="card-title">
-            Praesentium in est id dolorem cumque
-          </h5>
-          <p class="card-text">
-            Esse cumque quo ratione ea eveniet sed. Non qui odit est nam tempora minus. Culpa ut illum eaque ut.
-          </p>
-        </div>
+
+    <div class="text-center pt-4">
+      <a class="btn btn-primary btn-lg" href="#">
+        <i class="fas fa-newspaper"></i> All news
       </a>
     </div>
   </div>
+</section>
 
-  <a class="btn btn-primary btn-lg mt-3" href="">
-    <i class="fas fa-newspaper"></i> All news
-  </a>
+<section class="forum border-bottom bg-light">
+
 </section>
 
 <div>
@@ -221,7 +269,16 @@
       centerPadding: "0",
       cssEase: "linear",
       autoplay: true,
-      autoplaySpeed: 5000,
+      autoplaySpeed: 4000,
+      responsive: [
+        {
+          breakpoint: 1024,
+          settings: {
+            slidesToShow: 1,
+            dots: true
+          }
+        },
+      ]
     });
   </script>
 {% endblock %}

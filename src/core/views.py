@@ -63,7 +63,7 @@ def user_register(request, project="core", section=None):
     project = get_object_or_404(Project, pk=request.project)
 
     if request.GET.get("next"):
-        redirect_url = request.GET.get("next")  
+        redirect_url = request.GET.get("next")
     elif project:
         redirect_url = project.get_website()
     else:
@@ -115,7 +115,7 @@ def user_register(request, project="core", section=None):
             if "organization" in request.POST and request.POST["organization"]:
                 organization = Organization.objects.create(name=request.POST["organization"])
 
-                # Make this person a PlatformU admin, or otherwise a team member of this organization 
+                # Make this person a PlatformU admin, or otherwise a team member of this organization
                 relationship = 1 if project.id == 16 else 6
                 RecordRelationship.objects.create(
                     record_parent = people,
@@ -189,7 +189,7 @@ def user_login(request, project=None):
     slug = project.slug if project.slug else "core"
     redirect_url = project.get_website()
     if request.GET.get("next"):
-        redirect_url = request.GET.get("next")  
+        redirect_url = request.GET.get("next")
 
     if request.user.is_authenticated:
         return redirect(redirect_url)
@@ -254,7 +254,7 @@ def user_profile(request, id=None, project=None):
 @login_required
 def user_profile_form(request):
     ModelForm = modelform_factory(
-        People, 
+        People,
         fields = ("name", "description", "research_interests", "image", "website", "email", "twitter", "google_scholar", "orcid", "researchgate", "linkedin"),
         labels = { "description": "Profile/bio", "image": "Photo" }
     )
@@ -300,15 +300,32 @@ def index(request):
 
     count = Project.objects.all().count()
     blurb = """
-      We are a global network of people, working together on systemically
-      reducing net environmental impacts of cities and other territories in a
-      socially just manner and context-specific way.<br><br>
-      This website explains our <a href="projects/">""" + str(count) + """ projects</a>
-      and it is the central place of our community to 
-      <a href="forum/">discuss</a>, <a href="events/">get together</a>, and
-      <a href="tasks/">get things done</a>!"""
+        <img class="main-logo my-4" alt="Metabolism of Cities" src="/media/logos/Metabolism_of_Cities_full_logo_white.png">
+        <div class="my-4 font-weight-bold">
+            We are a global network of people working together on systemically
+            reducing net environmental impacts of cities
+        </div>
+        <div class="row pt-4 my-4 text-center">
+          <div class="col-md-4 mb-3">
+            <a class="btn btn-lg btn-inverse d-block font-weight-bold py-3" href="forum/">
+              <i class="fa fa-comments-alt"></i> Discuss
+            </a>
+          </div>
+          <div class="col-md-4 mb-3">
+            <a class="btn btn-lg btn-inverse d-block font-weight-bold py-3" href="events/">
+              <i class="fa fa-handshake"></i> Get together
+            </a>
+          </div>
+          <div class="col-md-4 mb-3">
+            <a class="btn btn-lg btn-inverse d-block font-weight-bold py-3" href="tasks/">
+              <i class="fa fa-hammer"></i> Get things done
+            </a>
+          </div>
+        </div>
+    """
 
     context = {
+        "HOMEPAGE": True,
         "header_subtitle": blurb,
         "show_project_design": True,
         "projects": Project.objects.filter(pk__in=[2,3,4,32018,16,18]),
@@ -657,7 +674,7 @@ def hub_selector(request):
 # Control panel and general contribution components
 
 def controlpanel(request, space=None):
-    
+
     if space:
         space = get_space(request, space)
 
@@ -832,7 +849,7 @@ def controlpanel_data_article(request, space, id=None):
 
     space = get_space(request, space)
     ModelForm = modelform_factory(
-        DataArticle, 
+        DataArticle,
         fields=("name", "category", "sub_category", "completion"),
         labels = { "name": "Title", "sub_category": "Sub category (optional)" },
     )
@@ -1075,7 +1092,7 @@ def work_item(request, id, sprint=None):
                 return redirect(info.url)
 
     context = {
-        "info": info, 
+        "info": info,
         "load_messaging": True,
         "list_messages": message_list,
         "forum_title": "History and discussion",
@@ -1117,7 +1134,7 @@ def work_sprint(request, id=None):
             messages.success(request, "Great! You are now signed up for this sprint.")
     if info.end_date:
         updates = Message.objects.filter(
-            date_created__gte=info.start_date, 
+            date_created__gte=info.start_date,
             date_created__lte=info.end_date,
             parent__work__part_of_project__in=info.projects.all(),
         ).order_by("date_created")
@@ -1154,7 +1171,7 @@ def work_sprint(request, id=None):
         "work_list": work_list,
         "task_url": project.get_slug() + ":work_sprint_tasks",
     }
-    
+
     return render(request, "contribution/work.sprint.html", context)
 
 def work_portal(request, slug, space=None):
@@ -1204,7 +1221,7 @@ def work_portal(request, slug, space=None):
 
 @login_required
 def notifications(request):
-    
+
     if "read" in request.POST:
         read = request.POST.get("read")
         items = read.split(",")
@@ -1222,7 +1239,7 @@ def notifications(request):
         if old:
             list = old[:15]
             unread = False
-        
+
     context = {
         "list": list,
         "title": "Notifications",
@@ -1420,7 +1437,7 @@ def newsletter(request):
             )
             is_subscribed = True
             messages.success(request, "You have successfully subscribed to our newsletter")
-        
+
     context = {
         "title": "Newsletter signup",
         "is_subscribed": is_subscribed,
@@ -1698,9 +1715,9 @@ def dataimport(request):
                         catalog = natural
                     if catalog:
                         Activity.objects.create(
-                            old_id = row["id"], 
-                            name = row["name"], 
-                            description = row["description"], 
+                            old_id = row["id"],
+                            name = row["name"],
+                            description = row["description"],
                             is_separator = row["is_separator"],
                             code = row["code"],
                             catalog = catalog,
@@ -2225,7 +2242,7 @@ def dataimport(request):
             FlowBlocks.objects.create(origin_id=activity(398935), origin_label="Wastewater treatment", destination_id=activity(67), destination_label="Rain, rivers, and other natural water processes", diagram=water)
             FlowBlocks.objects.create(origin_id=activity(398935), origin_label="Wastewater treatment", destination_id=activity(399468), destination_label="Water consumption", diagram=water)
 
-    
+
         # Temp import stuff
         if "import" in request.GET:
             import csv
