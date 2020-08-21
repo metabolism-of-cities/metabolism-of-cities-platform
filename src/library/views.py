@@ -569,7 +569,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             info.type = type
             if "parent" in request.GET:
                 info.is_part_of_id = request.GET.get("parent")
-            if type.name == "Image":
+            if type.name == "Image" and not id:
                 # So here is the dealio... when we upload images we MAY be doing this as part of 
                 # a data collection effort, which means that the tag is set to indicate which tag (layer)
                 # this is uploaded to. We use a hack of sorts and take that ID and use that for 
@@ -577,7 +577,13 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 # That way, photos are automatically grouped by their layer. Furthermore, when a 'general'
                 # photo is uploaded, tag = 0, so that means that these photos always appear first, which
                 # is also something that we want. 
-                info.position = tag if tag == 0 else tag.id
+                if tag == 0:
+                    position = 0
+                elif tag:
+                    position = tag.id
+                else:
+                    tag = None
+                info.position = tag
             info.save()
             form.save_m2m()
 
