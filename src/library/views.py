@@ -462,11 +462,12 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             initial["license"] = 11
             hide_search_box = True
 
-        if curator:
+        if curator and "tags" not in fields:
             fields.append("tags")
 
         if "inventory" in request.GET or project.slug == "data" or project.slug == "islands":
-            fields.append("tags")
+            if "tags" not in fields:
+                fields.append("tags")
             if tag:
                 initial["tags"] = tag
 
@@ -476,11 +477,13 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         if type.name == "Journal Article" or type.name == "Thesis" or type.name == "Conference Paper":
             labels["description"] = "Abstract"
             if type.name == "Journal Article":
-                fields.append("doi")
+                if "doi" not in fields:
+                    fields.append("doi")
                 journals = Organization.objects.filter(type="journal")
 
         elif type.name == "Data visualisation" or type.name == "Image":
-            fields.append("image")
+            if "image" not in fields:
+                fields.append("image")
             if type.name == "Image":
                 fields.remove("language")
 
@@ -495,13 +498,15 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             files = True
 
         if project.slug == "untraceable":
-            fields.append("tags")
+            if "tags" not in fields:
+                fields.append("tags")
             initial["tags"] = request.GET.get("tag")
 
         if space:
             initial["spaces"] = space.id
 
-        fields.append("comments")
+        if "comments" not in fields:
+            fields.append("comments")
 
         if "update_tags" in request.GET:
             fields = ["name", "tags", "description"]
@@ -521,7 +526,18 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             if "comments" in fields:
                 fields.remove("comments")
 
-        ModelForm = modelform_factory(LibraryItem, fields=fields, labels = labels)
+        if "hide_tags" in request.GET and "tags" in fields:
+            fields.remove("tags")
+
+        if type.name == "Image":
+            model = Photo
+            files = False
+            if "image" not in fields:
+                fields.append("image")
+        else:
+            model = LibraryItem
+
+        ModelForm = modelform_factory(model, fields=fields, labels = labels)
 
     if info:
         form = ModelForm(request.POST or None, request.FILES or None, instance=info)
@@ -553,6 +569,15 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             info.type = type
             if "parent" in request.GET:
                 info.is_part_of_id = request.GET.get("parent")
+            if type.name == "Image":
+                # So here is the dealio... when we upload images we MAY be doing this as part of 
+                # a data collection effort, which means that the tag is set to indicate which tag (layer)
+                # this is uploaded to. We use a hack of sorts and take that ID and use that for 
+                # the position field. The position dictates the order in which photos are shown.
+                # That way, photos are automatically grouped by their layer. Furthermore, when a 'general'
+                # photo is uploaded, tag = 0, so that means that these photos always appear first, which
+                # is also something that we want. 
+                info.position = tag if tag == 0 else tag.id
             info.save()
             form.save_m2m()
 

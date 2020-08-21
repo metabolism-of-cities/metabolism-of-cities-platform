@@ -1019,7 +1019,7 @@ class Video(LibraryItem):
     objects = PublicActiveRecordManager()
 
 class Photo(LibraryItem):
-    position = models.PositiveSmallIntegerField(null=True, blank=True, db_index=True)
+    position = models.PositiveSmallIntegerField(null=True, blank=True, db_index=True, default=1)
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
