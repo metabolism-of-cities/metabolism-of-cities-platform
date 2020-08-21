@@ -77,15 +77,24 @@
             View open tasks
           </a>
 
-          <select id="translate" class="float-right">
-            <option value="">-- OTHER LANGUAGES --</option>
-            <option value="es">Spanish</option>
-            <option value="zh-CN">Chinese (simplified)</option>
-            <option value="hi">Hindi</option>
-            <option value="bn">Bengali</option>
-            <option value="pt">Portuguese</option>
-            <option value="more">Other languages...</option>
-          </select>
+          <div class="d-inline-block align-bottom float-right">
+            <div class="input-group translate-input mt-2 mr-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text border-0">
+                  <i class="fa fa-language"></i>
+                </span>
+              </div>
+              <select id="translate" class="custom-select border-0">
+                <option selected value="">Translate</option>
+                <option value="es">Español</option>
+                <option value="zh-CN">地球</option>
+                <option value="hi">हिन्दी</option>
+                <option value="bn">বাংলা</option>
+                <option value="pt">Português</option>
+                <option value="more">Other languages...</option>
+              </select>
+            </div>
+          </div>
           {% endif %}
 
         </div>

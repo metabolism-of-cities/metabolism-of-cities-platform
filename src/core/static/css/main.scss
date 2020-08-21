@@ -327,6 +327,10 @@ nav {
 footer {
   padding: 36px 0;
 
+  .translate-input {
+    max-width: 200px;
+  }
+
   &#involved {
     background-image: url("/static/img/footer.jpg");
     background-color: $black;

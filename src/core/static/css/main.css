@@ -212,6 +212,8 @@ nav a.nav-link {
 
 footer {
   padding: 36px 0; }
+  footer .translate-input {
+    max-width: 200px; }
   footer#involved {
     background-image: url("/static/img/footer.jpg");
     background-color: #000;

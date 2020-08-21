@@ -86,7 +86,19 @@
     font-size: 2rem;
   }
 
+  .forum img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+  }
 
+  .stats {
+    font-size: 1.5rem;
+  }
+
+  section.social {
+    padding-bottom: 2rem;
+  }
 </style>
 {% endblock %}
 
@@ -139,7 +151,7 @@
             <i class="fal fa-fw fa-file-chart-line"></i>
           </div>
           <div class="card-header bg-light text-dark">
-            <h5>Creating knowledge</h5>
+            <h5>Create knowledge</h5>
           </div>
           <div class="card-body">
             <p class="what-text">
@@ -154,7 +166,7 @@
             <i class="fal fa-fw fa-share-alt"></i>
           </div>
           <div class="card-header bg-light text-dark">
-            <h5>Sharing knowledge</h5>
+            <h5>Share knowledge</h5>
           </div>
           <div class="card-body">
             <p class="what-text">
@@ -169,7 +181,7 @@
             <i class="fal fa-fw fa-wrench"></i>
           </div>
           <div class="card-header bg-light text-dark">
-            <h5>Applying knowledge</h5>
+            <h5>Apply knowledge</h5>
           </div>
           <div class="card-body">
             <p class="what-text">
@@ -184,7 +196,7 @@
             <i class="fal fa-fw fa-user-friends"></i>
           </div>
           <div class="card-header bg-light text-dark">
-            <h5>Fostering a community</h5>
+            <h5>Foster a community</h5>
           </div>
           <div class="card-body">
             <p class="what-text">
@@ -197,7 +209,100 @@
   </div>
 </section>
 
-<section class="news border-bottom">
+<section class="stats border-bottom bg-light">
+  <div class="container mt-4">
+    <div class="row text-center">
+      <div class="col-lg-4 mb-4">
+        <a class="card btn-card card-body" href="#">
+          <div><i class="fal fa-users mr-2"></i> 412 contributors</div>
+          <small class="text-success"></i> +14 this month</small>
+        </a>
+      </div>
+      <div class="col-lg-4 mb-4">
+        <a class="card btn-card card-body" href="#">
+          <div><i class="fal fa-table mr-2"></i> 1341 datasets</div>
+          <small class="text-success"></i> +7 this week</small>
+        </a>
+      </div>
+      <div class="col-lg-4 mb-4">
+        <a class="card btn-card card-body" href="#">
+          <div><i class="fal fa-city mr-2"></i> 31 cities</div>
+          <small class="text-success"></i> +5 this year</small>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center pt-4">
+    <a class="btn btn-primary btn-lg" href="#">
+      <i class="fas fa-fist-raised"></i> Join us
+    </a>
+  </div>
+</section>
+
+<section class="forum border-bottom">
+  <div class="container">
+    <h2 class="text-center font-weight-bold my-4">Latest forum posts</h2>
+    <div class="row my-4">
+      <div class="col-lg-4 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-text font-weight-bold">
+              <a href="#">{% lorem 8 w random %}</a>
+            </div>
+            <p class="card-text">
+              {% lorem 20 w random %}
+            </p>
+          </div>
+          <div class="card-footer">
+            <img class="rounded-circle mr-2" src="https://new.metabolismofcities.org/media/records/photo.thumbnail.jpg">
+            <a href="">{% lorem 2 w random %}</a> 2 hours ago
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-text font-weight-bold">
+              <a href="#">{% lorem 8 w random %}</a>
+            </div>
+            <p class="card-text">
+              {% lorem 20 w random %}
+            </p>
+          </div>
+          <div class="card-footer">
+            <img class="rounded-circle mr-2" src="https://new.metabolismofcities.org/media/records/photo.thumbnail.jpg">
+            <a href="">{% lorem 2 w random %}</a> 2 hours ago
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-text font-weight-bold">
+              <a href="#">{% lorem 8 w random %}</a>
+            </div>
+            <p class="card-text">
+              {% lorem 20 w random %}
+            </p>
+          </div>
+          <div class="card-footer">
+            <img class="rounded-circle mr-2" src="https://new.metabolismofcities.org/media/records/photo.thumbnail.jpg">
+            <a href="">{% lorem 2 w random %}</a> 2 hours ago
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center pt-4">
+      <a class="btn btn-primary btn-lg" href="#">
+        <i class="fas fa-comments-alt"></i> Go to forum
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="news border-bottom bg-light">
   <div class="container">
     <h2 class="text-center font-weight-bold my-4">Latest news</h2>
     <div class="row my-4">
@@ -250,11 +355,17 @@
   </div>
 </section>
 
-<section class="forum border-bottom bg-light">
-
+<section class="social bg-primary border-bottom border-light text-light text-center">
+  <div class="container">
+    <h2 class="font-weight-bold my-4">Follow us</h2>
+    <a class="text-light" href="https://twitter.com/CityMetabolism"><i class="fab fa-twitter fa-4x m-4"></i></a>
+    <a class="text-light" href="https://www.youtube.com/metabolismofcities"><i class="fab fa-youtube fa-4x m-4"></i></a>
+    <a class="text-light" href="https://www.instagram.com/MetabolismOfCities/"><i class="fab fa-instagram fa-4x m-4"></i></a>
+    <a class="text-light" href="https://linkedin.com/company/metabolism-of-cities"><i class="fab fa-linkedin fa-4x m-4"></i></a>
+  </div>
 </section>
 
-<div>
+<div>  <!-- open div because we closed the main content container earlier -->
 
 {% endblock %}
 
