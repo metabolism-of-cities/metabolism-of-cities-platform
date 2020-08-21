@@ -520,7 +520,9 @@
   <script src="https://unpkg.com/leaflet-image@0.4.0/leaflet-image.js"></script>
   <script>
 
-    var map = L.map("map");
+    var map = L.map("map", {
+      preferCanvas: true
+    });
 
     // variable with all features, to use later
     var allContent;
