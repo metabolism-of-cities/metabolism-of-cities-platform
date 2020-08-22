@@ -6,8 +6,8 @@
     {% for each in list %}
       <div class="col-lg-4 col-md-6 col-sm-8">
         <a class="card btn-card" href="{{ each.get_absolute_url }}">
-          {% if False %}
-            <img src="https://metabolismofcities.org/media/photos/the-hague-1491554_1920.large.jpg" class="card-img-top" alt="...">
+          {% if each.image %}
+            <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
           {% endif %}
           <div class="card-body">
             <h5 class="card-title">{{ each }}</h5>

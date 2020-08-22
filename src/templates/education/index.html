@@ -4,12 +4,26 @@
 
 <div class="jumbotron jumbotron-fluid">
   <div class="container">
-    <h1 class="display-4">This is a blank slate...</h1>
-    <p class="lead">We are still figuring out what we will put in here. 
-        Have a look at some of our initial ideas in the <a href="hub/">volunteer hub</a>,
-        and be sure to share your ideas in the <a href="hub/forum/">forum</a>.
-    </p>
+    <h1 class="display-4">{{ PROJECT }}</h1>
+    {{ PROJECT.get_description }}
   </div>
 </div>
+
+  <h2>Online courses</h2>
+  <div class="row mb-4">
+    {% for each in list %}
+      <div class="col-lg-4 col-md-6 col-sm-8">
+        <a class="card btn-card" href="{{ each.get_absolute_url }}">
+          {% if each.image %}
+            <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title">{{ each }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ each.modules.count }} modules</h6>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
 
 {% endblock %}

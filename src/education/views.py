@@ -15,8 +15,18 @@ from django.utils.safestring import mark_safe
 def index(request):
     context = {
         "show_project_design": True,
+        "list": Course.objects.all(),
     }
     return render(request, "education/index.html", context)
+
+def theses(request):
+    context = {
+        "items": LibraryItem.objects.filter(tags__id=11, type_id=29),
+        "title": "Theses",
+        "load_datatables": True,
+        "webpage": Webpage.objects.get(pk=36777),
+    }
+    return render(request, "library/list.html", context)
 
 def courses(request):
     context = {
