@@ -23,7 +23,11 @@
       {% spaceless %}
         <div class="search-select">
           <select class="search" name="search">
-            <option disabled hidden selected>Search through library</option>
+            {% if request.GET.search and not tag %}
+              <option selected>{{ request.GET.search }}</option>
+            {% else %}
+              <option disabled hidden selected>Search through library</option>
+            {% endif %}
             {% for each in tags %}
               <option value="{{ each.id }}" {% if each == tag %}selected {% endif %}>{{ each }}</option>
             {% endfor %}

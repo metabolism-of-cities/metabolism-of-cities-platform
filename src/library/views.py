@@ -33,8 +33,13 @@ def index(request):
         if urban_only:
             list = list.filter(tags__id=11)
     if "search" in request.GET:
-        tag = Tag.objects_unfiltered.get(id=request.GET.get("search"))
-        list = list.filter(tags=tag)
+        q = request.GET.get("search")
+        if isinstance(q, int):
+            tag = Tag.objects_unfiltered.get(id=q)
+            list = list.filter(tags=tag)
+        else:
+            # Search by open-ended keyword, so let's search for that
+            list = list.filter(Q(name__icontains=q)|Q(description__icontains=q))
     if "after" in request.GET and request.GET["after"]:
         list = list.filter(year__gte=request.GET["after"])
     if "before" in request.GET and request.GET["before"]:
