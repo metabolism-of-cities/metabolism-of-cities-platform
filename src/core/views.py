@@ -1009,6 +1009,10 @@ def work_grid(request, sprint=None):
     list = list.order_by("-last_update__date_created")
     projects = Project.objects.filter(pk__in=OPEN_WORK_PROJECTS).order_by("name")
 
+    if list.count() > 200:
+        list = list[:200]
+        messages.warning(request, "There are more than 200 tasks found. We only show the first 200 tasks. Use the filters to find the right tasks.")
+
     context = {
         "task_list": list,
         "load_datatables": True,
@@ -1038,6 +1042,14 @@ def work_item(request, id, sprint=None):
 
     if sprint:
         sprint = WorkSprint.objects.get(pk=sprint)
+    else:
+        # Check if there are active sprints and if this is part of that sprint
+        sprints = WorkSprint.objects.filter(start_date__lte=timezone.now(), end_date__gte=timezone.now())
+        if sprints:
+            check_sprint = sprints[0]
+            if check_sprint.work_tag in info.tags.all():
+                sprint = check_sprint
+                
 
     message_list = Message.objects.filter(parent=info)
     if request.user.is_authenticated:
