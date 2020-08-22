@@ -137,7 +137,7 @@
           {% if work_list.my_work %}
           <ul>
           {% for each in work_list.my_work %}
-            <li class="mb-3"><a href="">{{ each }}</a><br>{{ each.get_status }}</li>
+            <li class="mb-3"><a href="/tasks/{{ each.id }}/">{{ each }}</a><br>{{ each.get_status }}</li>
           {% endfor %}
           </ul>
           {% else %}
