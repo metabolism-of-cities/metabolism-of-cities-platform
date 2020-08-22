@@ -45,6 +45,40 @@
           <div class="card-header">Project settings</div>
         </a>
       </div>
+      {% if PROJECT.slug == "library" %}
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="library/">
+            <div class="icon">
+              <i class="fal fa-fw fa-books"></i>
+            </div>
+            <div class="card-header">Library</div>
+          </a>
+        </div>
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="journals/">
+            <div class="icon">
+              <i class="fal fa-fw fa-book"></i>
+            </div>
+            <div class="card-header">Journals</div>
+          </a>
+        </div>
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="publishers/">
+            <div class="icon">
+              <i class="fal fa-fw fa-building"></i>
+            </div>
+            <div class="card-header">Publishers</div>
+          </a>
+        </div>
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="tags/">
+            <div class="icon">
+              <i class="fal fa-fw fa-tag"></i>
+            </div>
+            <div class="card-header">Tags</div>
+          </a>
+        </div>
+      {% endif %}
       {% if PROJECT.slug == "education" %}
         <div class="col-md-3 mb-3">
           <a class="card icon-card btn-card" href="courses/">

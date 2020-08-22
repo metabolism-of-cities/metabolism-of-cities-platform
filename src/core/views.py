@@ -493,6 +493,8 @@ def project(request, slug):
     if info.id == 18379:
         # Masterclasses videos
         videos = Video.objects.filter(tags__id=929).order_by("name")
+    elif info.slug == "seminarseries":
+        videos = Video.objects.filter(tags__id=920).order_by("name")
 
     context = {
         "edit_link": "/admin/core/project/" + str(info.id) + "/change/",

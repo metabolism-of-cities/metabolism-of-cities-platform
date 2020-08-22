@@ -60,57 +60,6 @@ def index(request):
     }
     return render(request, "library/index.html", context)
 
-def tags(request):
-    id = request.GET.get("id")
-    context = {
-        "info": Tag.objects_unfiltered.get(pk=id) if id else None,
-    }
-    return render(request, "library/tags.html", context)
-
-def tag_form(request, id=None):
-    ModelForm = modelform_factory(Tag, fields=["name", "description", "parent_tag", "include_in_glossary", "is_public", "is_deleted", "icon"])
-    if id:
-        info = get_object_or_404(Tag, pk=id)
-        form = ModelForm(request.POST or None, request.FILES or None, instance=info)
-    else:
-        initial = None
-        if "parent" in request.GET:
-            initial = {"parent_tag": request.GET.get("parent")}
-        form = ModelForm(request.POST or None, initial=initial)
-
-    if request.method == "POST":
-        if form.is_valid():
-            info = form.save()
-            if "next" in request.GET:
-                return redirect(request.GET.get("next"))
-            else:
-                return redirect("library:tags")
-        else:
-            messages.error(request, "We could not save your form, please fill out all fields")
-
-    context = {
-        "form": form,
-        "title": "Tag",
-    }
-    return render(request, "modelform.html", context)
-
-def tags_json(request):
-    id = request.GET.get("id")
-    if id:
-        tags = Tag.objects.filter(parent_tag_id=id, hidden=False)
-    else:
-        tags = Tag.objects.filter(parent_tag__isnull=True, hidden=False)
-    tag_list = []
-    for each in tags:
-        this_tag = {
-            "title": each.name,
-            "key": each.id,
-            "lazy": True,
-        }
-        tag_list.append(this_tag)
-    response = JsonResponse(tag_list, safe=False)
-    return response
-
 def list(request, type):
     title = type
     webpage = None
@@ -755,3 +704,93 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         "view_processing": view_processing,
     }
     return render(request, "library/form.html", context)
+
+# Control panel sections
+# The main control panel views are in the core/views file, but these are library-specific
+
+@login_required
+def controlpanel_library(request):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    context = {
+        "load_select2": True,
+    }
+    return render(request, "controlpanel/library.html", context)
+
+@login_required
+def controlpanel_tags(request):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+    id = request.GET.get("id")
+    context = {
+        "info": Tag.objects_unfiltered.get(pk=id) if id else None,
+        "load_select2": True,
+    }
+    return render(request, "library/tags.html", context)
+
+@login_required
+def controlpanel_tag_form(request, id=None):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+    ModelForm = modelform_factory(Tag, fields=["name", "description", "parent_tag", "include_in_glossary", "is_public", "is_deleted", "icon"])
+    if id:
+        info = get_object_or_404(Tag, pk=id)
+        form = ModelForm(request.POST or None, request.FILES or None, instance=info)
+    else:
+        initial = None
+        if "parent" in request.GET:
+            initial = {"parent_tag": request.GET.get("parent")}
+        form = ModelForm(request.POST or None, initial=initial)
+
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save()
+            messages.success(request, "Information was saved.")
+            if "next" in request.GET:
+                return redirect(request.GET.get("next"))
+            else:
+                return redirect("library:tags")
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    context = {
+        "form": form,
+        "title": "Tag",
+    }
+    return render(request, "modelform.html", context)
+
+@login_required
+def controlpanel_tags_json(request):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+    id = request.GET.get("id")
+    if id:
+        tags = Tag.objects.filter(parent_tag_id=id, hidden=False)
+    else:
+        tags = Tag.objects.filter(parent_tag__isnull=True, hidden=False)
+    tag_list = []
+    for each in tags:
+        this_tag = {
+            "title": each.name,
+            "key": each.id,
+            "lazy": True,
+        }
+        tag_list.append(this_tag)
+    response = JsonResponse(tag_list, safe=False)
+    return response
+
+@login_required
+def search_tags_ajax(request):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+    query = request.GET.get("q")
+    r = {
+        "results": []
+    }
+    if query:
+        list = Tag.objects.filter(name__icontains=query)
+        for each in list:
+            r["results"].append({"id": each.id, "text": each.name})
+    return JsonResponse(r, safe=False)
+

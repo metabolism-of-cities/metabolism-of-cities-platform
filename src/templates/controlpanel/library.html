@@ -1,0 +1,48 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1 class="mb-0">{% block title %}Library{% endblock %}</h1>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+  <div class="alert alert-warning">
+    <p>
+      <i class="fa fa-search"></i>
+      Use the insta-search below to search through the library by title.
+    </p>
+    <p>
+      <select id="existing" class="select2 custom-select">
+      </select>
+    </p>
+  </div>
+
+
+  <a href="../" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+{% endblock %}
+
+{% block footer %}
+<script>
+
+    $("#existing").select2({
+      theme: "bootstrap4",
+      ajax: {
+        url: "{% url "library:search_ajax" %}",
+        dataType: "json"
+        // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+      }
+    });
+
+    $("#existing").on("select2:select", function (e) {
+        var data = e.params.data;
+        window.location = "https://library.metabolismofcities.org/items/"+ data.id;
+    });
+
+</script>
+{% endblock %}

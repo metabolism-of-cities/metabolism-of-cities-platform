@@ -10,10 +10,6 @@ urlpatterns = baseline_urlpatterns + [
 
     path("", views.index, name="index"),
     path("casestudies/", views.casestudies, name="casestudies"),
-    path("tags/", views.tags, name="tags"),
-    path("tags/<int:id>/edit/", views.tag_form, name="tag_form"),
-    path("tags/create/", views.tag_form, name="tag_form"),
-    path("tags/json/", views.tags_json, name="tags_json"),
     path("list/", views.list, name="list"),
     path("methods/", views.methodologies, name="methods"),
     path("methods/<int:id>/<slug:slug>/", views.methodology, name="method"),
@@ -31,5 +27,12 @@ urlpatterns = baseline_urlpatterns + [
     path("item/<int:id>/", views.form, name="form"),
 
     path("search/ajax/", views.search_ajax, name="search_ajax"),
+
+    path("search/ajax/tags/", views.search_tags_ajax, name="search_tags_ajax"),
+    path("controlpanel/library/", views.controlpanel_library),
+    path("controlpanel/tags/", views.controlpanel_tags, name="tags"),
+    path("controlpanel/tags/<int:id>/edit/", views.controlpanel_tag_form, name="tag_form"),
+    path("controlpanel/tags/create/", views.controlpanel_tag_form, name="tag_form"),
+    path("controlpanel/tags/json/", views.controlpanel_tags_json, name="tags_json"),
     
 ]

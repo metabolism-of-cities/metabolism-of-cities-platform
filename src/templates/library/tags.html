@@ -37,8 +37,28 @@
 {% endblock %}
 
 {% block content %}
+
+  <h1 class="mb-0">Tags</h1>
+
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
   <div class="input-group mb-3">
-    <input placeholder="Search" name="search" type="search" class="form-control search-fancytree">
+    <select name="search_edit" class="form-control instasearch" id="quickedit">
+      <option value="">Full search - edit</option>
+    </select>
+  </div>
+
+  <div class="input-group mb-3">
+    <select name="search_edit" class="form-control instasearch" id="quickadd">
+      <option value="">Full search - add child</option>
+    </select>
+  </div>
+
+  <div class="input-group mb-3">
+    <input placeholder="Search in table below" name="search" type="search" class="form-control search-fancytree">
     <div class="input-group-append">
       <button class="btn btn-primary-outline clear-search" hidden>
         <i class="fal fa-times mr-0"></i>
@@ -255,5 +275,25 @@
 
     // clear search on page load
     searchBox.val("");
+
+    $(".instasearch").select2({
+      theme: "bootstrap4",
+      ajax: {
+        url: "{% url "library:search_tags_ajax" %}",
+        dataType: "json"
+      }
+    });
+
+    $("#quickedit").on("select2:select", function (e) {
+        var data = e.params.data;
+        window.location = data.id + "/edit/?next={{ request.get_full_path }}" ;
+    });
+
+    $("#quickadd").on("select2:select", function (e) {
+        var data = e.params.data;
+        window.location = "create/?parent=" + data.id + "&next={{ request.get_full_path }}";
+    });
+
+
   </script>
 {% endblock %}
