@@ -6,7 +6,7 @@
 
 {% if webpage %}
   <div class="mb-3">
-    {{ webpage.description|safe }}
+    {{ webpage.get_description }}
   </div>
 {% endif %}
 
