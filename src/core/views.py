@@ -305,23 +305,6 @@ def index(request):
             We are a global network of people working together on systemically
             reducing net environmental impacts of cities
         </div>
-        <div class="row pt-4 my-4 text-center">
-          <div class="col-md-4 mb-3">
-            <a class="btn btn-lg btn-inverse d-block font-weight-bold py-3" href="forum/">
-              <i class="fa fa-comments-alt"></i> Discuss
-            </a>
-          </div>
-          <div class="col-md-4 mb-3">
-            <a class="btn btn-lg btn-inverse d-block font-weight-bold py-3" href="events/">
-              <i class="fa fa-handshake"></i> Get together
-            </a>
-          </div>
-          <div class="col-md-4 mb-3">
-            <a class="btn btn-lg btn-inverse d-block font-weight-bold py-3" href="tasks/">
-              <i class="fa fa-hammer"></i> Get things done
-            </a>
-          </div>
-        </div>
     """
 
     context = {
@@ -1051,7 +1034,7 @@ def work_item(request, id, sprint=None):
             check_sprint = sprints[0]
             if check_sprint.work_tag in info.tags.all():
                 sprint = check_sprint
-                
+
 
     message_list = Message.objects.filter(parent=info)
     if request.user.is_authenticated:
