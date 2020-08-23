@@ -3,11 +3,8 @@
 {% block page_name %}journals{% endblock %}
 
 {% block content %}
-  <h1>{{ article.title }}</h1>
-
-  <p>
-    {{ article.content|safe }}
-  </p>
+  <h1>{{ webpage }}</h1>
+  {{ webpage.get_description }}
 
   <section id="journal-list">
     <div class="row">

@@ -430,6 +430,17 @@ class Organization(Record):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(unidecode(self.name))
+        if self.email:
+            self.email=self.email.lower()
+        if self.twitter:
+            try:
+                url = self.twitter
+                if url[:4] == "http":
+                    self.twitter = url.rsplit("/", 1)[-1]
+                elif url[:1] == "@":
+                    self.twitter = url[1:]
+            except:
+                pass
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):

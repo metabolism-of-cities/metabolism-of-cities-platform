@@ -8,7 +8,7 @@
   {% if info.description %}
     <div class="col-md-8">
       <div>
-        {{ info.description|safe }}
+        {{ info.get_description }}
       </div>
       {% if info.publisher %}
         <p>Published by {{ info.publisher }}.</p>

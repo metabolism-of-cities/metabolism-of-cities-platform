@@ -8,71 +8,55 @@
 
       <div class="col-lg-4">
         <div class="card">
+          {% if info.image %}
+            <img src="{{ info.image.thumbnail.url }}" class="card-img-top p-3" alt="">
+          {% endif %}
           <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-              <i class="far fa-fw fa-user-edit mb-1 mr-1" aria-hidden="true"></i> Author(s)
-              <br>
-              {% for each in info.authors %}
-                <a class="btn btn-sm btn-primary-outline mt-1" href="">{{ each }}</a>
-              {% endfor %}
-            </li>
-            {% if info.publisher %}
-              <li class="list-group-item table-item">
-                <div><i class="far fa-fw fa-book mr-1"></i> Publisher</div>
-                <div>{{ info.publisher }}</div>
-              </li>
-            {% endif %}
-            <li class="list-group-item">
-              <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Tags
-              <br>
-              {% for each in info.tags.all %}
-                <a class="btn btn-sm btn-primary-outline mt-1" href="{% url "library:index" %}?find=true&amp;search={{ each.id }}">{{ each }}</a>
-              {% endfor %}
-            </li>
-            <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-language mr-1"></i> Language</div>
-              <div>{{ info.get_language_display }}</div>
-            </li>
-            <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-universal-access mr-1"></i> Open access</div>
-              <div><i class="fas fa-fw text-success fa-check-circle"></i></div>
-            </li>
             {% if info.url %}
               <a class="list-group-item" href="{{ info.url }}">
-                <i class="far fa-fw fa-link mb-1 mr-1" aria-hidden="true"></i> External site
+                <i class="far fa-fw fa-link mb-1 mr-1" aria-hidden="true"></i> Website
               </a>
             {% endif %}
-            {% if info.doi %}
+
+            {% if info.twitter %}
               <li class="list-group-item">
-                <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> DOI
-                <br>
-                <a class="badge badge-primary" href="https://doi.org/{{ info.doi }}">
-                  {{ info.doi }}
+                <a href="https://twitter.com/{{ info.twitter }}">
+                <i class="fab fa-fw fa-twitter mb-1 mr-1" aria-hidden="true"></i> @{{ info.twitter }}
                 </a>
               </li>
             {% endif %}
-            {% if info.isbn %}
+
+            {% if info.email %}
               <li class="list-group-item">
-                <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> ISBN
-                <br>
-                <span class="badge badge-primary">{{ info.isbn }}</span>
+                <a href="mailto:{{ info.email }}">
+                <i class="far fa-fw fa-email mb-1 mr-1" aria-hidden="true"></i> {{ info.email }}
+                </a>
               </li>
             {% endif %}
-            {% if info.type.group != "multimedia" %}
-            <li class="list-group-item">
-              <i class="far fa-fw fa-search mb-1 mr-1" aria-hidden="true"></i> Search
-              <br>
-              <a class="btn btn-sm btn-primary-outline mt-1" href="https://unpaywall.org/{{ info.doi }}">UnPaywall</a>
-              <a class="btn btn-sm btn-primary-outline mt-1" href="https://scholar.google.com/scholar?q={{ info|urlencode }}">Google Scholar</a>
-              <a class="btn btn-sm btn-primary-outline mt-1" href="https://google.com/search?q={{ info|urlencode }}">Google</a>
-            </li>
-            {% endif %}
+
           </ul>
         </div>
       </div>
 
       <div class="col-lg-8 mb-4">
-        {{ info.description|safe|linebreaks }}
+        <h1 class="h3">{{ info }}</h1>
+        {{ info.get_description }}
+
+        {% if items %}
+          <section>
+            <h2 class="h4">Publications</h2>
+            {% include "_library.list.html" %}
+          </section>
+        {% endif %}
+
+        <hr>
+        <p>
+          <a href="{% url "community:organizations" info.type %}">
+          <i class="fa fa-arrow-left mr-2"></i>
+          {{ info.get_type_display }}
+          </a>
+        </p>
+
       </div>
     </div>
   </div>

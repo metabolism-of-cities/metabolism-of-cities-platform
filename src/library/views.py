@@ -175,7 +175,7 @@ def journals(request, article):
     info = get_object_or_404(Webpage, pk=article)
     list = Organization.objects.prefetch_related("parent_to").filter(type="journal")
     context = {
-        "article": info,
+        "webpage": info,
         "list": list,
         "menu": "journals",
     }
@@ -730,6 +730,7 @@ def controlpanel_organizations(request, type=None):
     context = {
         "load_datatables": True,
         "list": list,
+        "type": type,
     }
     return render(request, "controlpanel/organizations.html", context)
 
