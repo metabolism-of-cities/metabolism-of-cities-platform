@@ -12,6 +12,16 @@
             <img src="{{ info.image.thumbnail.url }}" class="card-img-top p-3" alt="">
           {% endif %}
           <ul class="list-group list-group-flush">
+
+            {% if info.spaces.all %}
+              <li class="list-group-item">
+                <i class="far fa-fw fa-map-marker-alt mb-1 mr-1" aria-hidden="true"></i> 
+                {% for each in info.spaces.all %}
+                  {{ each }}
+                {% endfor %}
+              </li>
+            {% endif %}
+
             {% if info.url %}
               <a class="list-group-item" href="{{ info.url }}">
                 <i class="far fa-fw fa-link mb-1 mr-1" aria-hidden="true"></i> Website

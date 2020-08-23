@@ -2,25 +2,136 @@
 
 {% block content %}
 
-  <table class="table table-striped datatable">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Location</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for each in list %}
-      <tr>
-        <td><a href="{{ each.id }}">{{ each }}</a></td>
-        <td>
-          {% for space in each.spaces.all %}
-            {{ space }}
-          {% endfor %}
-        </td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
+<h1>{{ title }}</h1>
 
+<div id="organization-list">
+
+  <div class="input-group mb-2">
+    <div class="input-group-prepend">
+      <div class="input-group-text"><i class="fa fa-search"></i></div>
+    </div>
+    <input type="text" class="form-control search" placeholder="Search by organization title...">
+  </div>
+
+  <div class="row list">
+    {% for each in list %}
+      <div class="col-xl-4 col-md-6 mb-4 single-organization" data-type="seminar">
+        <a class="card btn-card contain" href="{{ each.id }}/">
+
+          {% if each.image %}
+            <img class="card-img-top p-3" src="{{ each.image.url }}" alt="" />
+          {% endif %}
+
+          <div class="card-body">
+            <h5 class="card-title organization-name">{{ each }}</h5>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <i class="far fa-fw fa-map-marker-alt"></i> {% for space in each.spaces.all %}{{ space }}{% endfor %}
+            </li>
+          </ul>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="card no-results">
+  <div class="card-body text-center">
+    <h2 class="my-4"><i class="fad fa-search"></i> No organisations found</h2>
+    <button class="btn btn-lg btn-primary clear-filter my-4">Show all organisations</button>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+<script>
+  var listOptions = {
+      valueNames: ["organization-name"]
+  };
+
+  var organizationList = new List("organization-list", listOptions);
+
+  // filters
+  // basic function to check if item matches filter
+  function organizationFilter(type, value) {
+    if (value != "all") {
+      organizationList.filter(function(item) {
+        if (item.values()[type] != value) {
+          item.values({inFilter: false})
+        }
+      });
+    }
+  }
+
+  // showing all items that match filters
+  function applyFilters() {
+    organizationList.filter(function(item) {
+      if (item.values().inFilter == true) {
+         return true;
+      } else {
+         return false;
+      }
+    });
+  };
+
+  // function to check the number of matches
+  function checkCount() {
+    var count = $("#organization-list .single-organization:visible").length;
+    if (count == 0) {
+      $(".no-results").addClass("visible");
+    } else {
+      $(".no-results").removeClass("visible");
+    }
+  }
+
+  // function to apply filters on every dropdown
+  function runAllFilters() {
+    // set every item as matching filter
+    $(organizationList.items).each(function() {
+      this.values({
+        inFilter: true,
+      });
+    });
+
+    // remove items that don't match filter
+    $(".filters select").each(function() {
+      var type = $(this).data("type");
+      var value = $(this).val()
+      organizationFilter(type, value)
+    });
+
+    // show items that remain in filter
+    applyFilters();
+    checkCount();
+  }
+
+  // update contact count when searching by name
+  organizationList.on("searchComplete", function(){
+    checkCount();
+  });
+
+  // make dropdowns work as filters
+  $(".filters select").change(function() {
+    runAllFilters()
+  });
+
+  // clear search and filters
+  function resetSearchFilters() {
+    organizationList.search();
+    organizationList.filter();
+    $(".filters select").val("all");
+    $("input.search").val("");
+  }
+
+  $(".clear-filter").click(function() {
+    resetSearchFilters();
+    checkCount();
+  })
+
+  // reset all filters on page load
+  resetSearchFilters()
+</script>
 {% endblock %}

@@ -168,12 +168,15 @@ def project(request, id):
 
 def organizations(request, slug=None):
     list = Organization.objects.filter(type=slug)
+    types = Organization.ORG_TYPE
+    title = "Organisations"
+    if slug and list:
+        title = list[0].get_type_display
     context = {
         "list": list,
         "load_datatables": True,
         "slug": slug,
-        "header_title": slug,
-        "header_subtitle": "List of organisations active in the field of urban metabolism",
+        "title": title,
     }
     return render(request, "community/organizations.html", context)
 
