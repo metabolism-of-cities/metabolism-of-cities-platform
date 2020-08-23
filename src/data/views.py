@@ -123,6 +123,7 @@ def index(request):
         "document_counter": document_counter,
         "webpage": Webpage.objects.get(pk=37077),
         "dashboard_link": project.slug + ":dashboard",
+        "harvesting_link": project.slug + ":hub_harvesting_space",
         "total": ActivatedSpace.objects.filter(part_of_project_id=request.project).count(),
     }
     return render(request, "data/index.html", context)
