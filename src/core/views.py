@@ -300,10 +300,11 @@ def index(request):
 
     count = Project.objects.all().count()
     blurb = """
-        <img class="main-logo my-4" alt="Metabolism of Cities" src="/media/logos/logo.svg">
+        <img class="main-logo my-4" alt="Metabolism of Cities" src="/media/logos/Metabolism_of_Cities_full_logo_white.png">
         <div class="my-4 font-weight-bold">
             We are a global network of people working together on systemically
             reducing net environmental impacts of cities
+            and territories in a socially just manner and context-specific way. 
         </div>
     """
 

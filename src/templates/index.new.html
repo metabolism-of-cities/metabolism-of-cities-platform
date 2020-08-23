@@ -10,7 +10,7 @@
 <style>
   .top-layer {
     background-image: url("https://i.imgur.com/z6m1Dgc.jpg");
-    min-height: 55vh;
+    min-height: 70vh;
     position: relative;
   }
 
@@ -27,7 +27,7 @@
   .top-layer .dark-cover {
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,.5);
+    background-color: rgba(0,0,0,.35);
     position: absolute;
     left: 0;
     top: 0;
@@ -35,7 +35,7 @@
   }
 
   .navbar {
-    background-color: rgba(0,0,0,.5);
+    background-color: rgba(0,0,0,.3);
     z-index: 2;
   }
 
@@ -50,20 +50,17 @@
   }
 
   .single-project img {
-    height: 100%;
-  }
-
-  .single-project img {
     object-position: top;
-  }
-
-  .slick-track {
-    display: flex;
   }
 
   .slick-slide {
     transition: all .6s linear;
-    height: inherit;
+  }
+
+  @media(min-width: 1024px) {
+    .slick-slide {
+      transform: scale(.9);
+    }
   }
 
   .slick-slide.slick-center {
@@ -76,30 +73,11 @@
 
   .slick-prev::before,
   .slick-next::before {
-    color: #f8f9fa;
-    font-size: 2rem;
+    color: #144d58;
   }
 
-  .slick-dots li button::before {
-    color: #f8f9fa;
-    opacity: .5;
-    font-size: .75rem;
-  }
-
-  .slick-dots li.slick-active button::before {
-    color: #f8f9fa;
-    opacity: 1;
-  }
-
-  .slick-prev {
-    left: -2rem;
-  }
-
-  .slick-next {
-    right: -20px;
-  }
-
-  .projects {
+  .projects,
+  .what {
     background-image: url(https://resourcewatch.org/static/images/components/layout/header-bg-texture.png);
     background-size: cover;
   }
@@ -121,12 +99,6 @@
   section.social {
     padding-bottom: 2rem;
   }
-
-  .join,
-  .news,
-  .stats {
-    background-color: #dddedf;
-  }
 </style>
 {% endblock %}
 
@@ -134,15 +106,15 @@
 
 </div> <!-- close main content container so we can have full-width content -->
 
-<section class="projects bg-primary text-light">
+<section class="projects border-bottom">
   <div class="container py-4">
     <h2 class="text-center font-weight-bold my-4">Featured projects</h2>
     <div class="slick row">
       {% for each in projects %}
-      <div class="px-3 py-4">
-        <a class="card btn-card single-project mb-4" href="{{ each.get_website }}">
+      <div class="col-md-4">
+        <a class="card btn-card single-project my-4" href="{{ each.get_website }}">
           <img src="{{ each.screenshot.medium.url }}" class="card-img-top" alt="{{ each }}">
-          <div class="card-body pb-0">
+          <div class="card-body">
             <h5 class="card-title">{{ each }}</h5>
             <p class="card-text">{{ each.summary_sentence }}</p>
           </div>
@@ -156,23 +128,29 @@
       {% endfor %}
     </div>
     <div class="text-center mt-4">
-      <a class="btn btn-inverse btn-lg mt-4" href="/projects">
+      <a class="btn btn-primary btn-lg" href="/projects">
         <i class="fas fa-toolbox"></i> View all projects
       </a>
     </div>
   </div>
 </section>
 
-<section class="what">
+<section class="statement bg-light border-bottom">
+  <div class="container-fluid font-weight-bold text-center">
+    Metabolism of Cities is a global network of people who work together on systemically reducing net environmental impacts of cities and territories in a socially just manner and context-specific way.
+  </div>
+</section>
+
+<section class="what bg-primary border-bottom">
   <div class="container">
-    <h2 class="text-center font-weight-bold my-4">What we do</h2>
+    <h2 class="text-center text-light font-weight-bold my-4">What we do</h2>
     <div class="row pt-4">
       <div class="col-md-6 col-lg-3 mb-4">
         <div class="card icon-card">
-          <div class="icon bg-primary">
-            <i class="fal fa-fw fa-file-chart-line text-light"></i>
+          <div class="icon bg-light">
+            <i class="fal fa-fw fa-file-chart-line"></i>
           </div>
-          <div class="card-header bg-primary text-light">
+          <div class="card-header bg-light text-dark">
             <h5>Create knowledge</h5>
           </div>
           <div class="card-body">
@@ -184,10 +162,10 @@
       </div>
       <div class="col-md-6 col-lg-3 mb-4">
         <div class="card icon-card">
-          <div class="icon bg-primary">
-            <i class="fal fa-fw fa-share-alt text-light"></i>
+          <div class="icon bg-light">
+            <i class="fal fa-fw fa-share-alt"></i>
           </div>
-          <div class="card-header bg-primary text-light">
+          <div class="card-header bg-light text-dark">
             <h5>Share knowledge</h5>
           </div>
           <div class="card-body">
@@ -199,10 +177,10 @@
       </div>
       <div class="col-md-6 col-lg-3 mb-4">
         <div class="card icon-card">
-          <div class="icon bg-primary">
-            <i class="fal fa-fw fa-wrench text-light"></i>
+          <div class="icon bg-light">
+            <i class="fal fa-fw fa-wrench"></i>
           </div>
-          <div class="card-header bg-primary text-light">
+          <div class="card-header bg-light text-dark">
             <h5>Apply knowledge</h5>
           </div>
           <div class="card-body">
@@ -214,10 +192,10 @@
       </div>
       <div class="col-md-6 col-lg-3 mb-4">
         <div class="card icon-card">
-          <div class="icon bg-primary">
-            <i class="fal fa-fw fa-user-friends text-light"></i>
+          <div class="icon bg-light">
+            <i class="fal fa-fw fa-user-friends"></i>
           </div>
-          <div class="card-header bg-primary text-light">
+          <div class="card-header bg-light text-dark">
             <h5>Foster a community</h5>
           </div>
           <div class="card-body">
@@ -231,55 +209,41 @@
   </div>
 </section>
 
-<section class="stats">
-  <div class="container">
-    <h2 class="text-center font-weight-bold my-4">Get involved</h2>
-    <div class="row pt-4 my-4 text-center">
-      <div class="col-md-4 mb-3">
-        <a class="btn btn-lg btn-default d-block font-weight-bold py-3" href="forum/">
-          <i class="fa fa-comments-alt"></i> Discuss
-        </a>
-      </div>
-      <div class="col-md-4 mb-3">
-        <a class="btn btn-lg btn-default d-block font-weight-bold py-3" href="events/">
-          <i class="fa fa-handshake"></i> Get together
-        </a>
-      </div>
-      <div class="col-md-4 mb-3">
-        <a class="btn btn-lg btn-default d-block font-weight-bold py-3" href="tasks/">
-          <i class="fa fa-hammer"></i> Get things done
-        </a>
-      </div>
-    </div>
-
+<section class="stats border-bottom bg-light">
+  <div class="container mt-4">
     <div class="row text-center">
       <div class="col-lg-4 mb-4">
         <a class="card btn-card card-body" href="#">
           <div><i class="fal fa-users mr-2"></i> 412 contributors</div>
-          <small class="text-success"> +14 this month</small>
+          <small class="text-success"></i> +14 this month</small>
         </a>
       </div>
       <div class="col-lg-4 mb-4">
         <a class="card btn-card card-body" href="#">
           <div><i class="fal fa-table mr-2"></i> 1341 datasets</div>
-          <small class="text-success"> +7 this week</small>
+          <small class="text-success"></i> +7 this week</small>
         </a>
       </div>
       <div class="col-lg-4 mb-4">
         <a class="card btn-card card-body" href="#">
           <div><i class="fal fa-city mr-2"></i> 31 cities</div>
-          <small class="text-success"> +5 this year</small>
+          <small class="text-success"></i> +5 this year</small>
         </a>
       </div>
     </div>
+  </div>
 
+  <div class="text-center pt-4">
+    <a class="btn btn-primary btn-lg" href="#">
+      <i class="fas fa-fist-raised"></i> Join us
+    </a>
   </div>
 </section>
 
-<section class="forum">
+<section class="forum border-bottom">
   <div class="container">
     <h2 class="text-center font-weight-bold my-4">Latest forum posts</h2>
-    <div class="row mt-4">
+    <div class="row my-4">
       <div class="col-lg-4 mb-4">
         <div class="card">
           <div class="card-body">
@@ -332,13 +296,13 @@
 
     <div class="text-center pt-4">
       <a class="btn btn-primary btn-lg" href="#">
-        <i class="fas fa-comments-alt"></i> Go to the forum
+        <i class="fas fa-comments-alt"></i> Go to forum
       </a>
     </div>
   </div>
 </section>
 
-<section class="news">
+<section class="news border-bottom bg-light">
   <div class="container">
     <h2 class="text-center font-weight-bold my-4">Latest news</h2>
     <div class="row my-4">
@@ -394,14 +358,10 @@
 <section class="social bg-primary border-bottom border-light text-light text-center">
   <div class="container">
     <h2 class="font-weight-bold my-4">Follow us</h2>
-    <a class="text-light" href="https://twitter.com/CityMetabolism"><i class="fab fa-twitter fa-3x m-4"></i></a>
-    <a class="text-light" href="https://www.youtube.com/metabolismofcities"><i class="fab fa-youtube fa-3x m-4"></i></a>
-    <a class="text-light" href="https://www.instagram.com/MetabolismOfCities/"><i class="fab fa-instagram fa-3x m-4"></i></a>
-    <a class="text-light" href="https://linkedin.com/company/metabolism-of-cities"><i class="fab fa-linkedin fa-3x m-4"></i></a>
-    <div>
-      <a class="btn btn-lg btn-inverse-outline my-4" href="#">
-        <i class="fa fa-paper-plane"></i> Subscribe to our newsletter</a>
-    </div>
+    <a class="text-light" href="https://twitter.com/CityMetabolism"><i class="fab fa-twitter fa-4x m-4"></i></a>
+    <a class="text-light" href="https://www.youtube.com/metabolismofcities"><i class="fab fa-youtube fa-4x m-4"></i></a>
+    <a class="text-light" href="https://www.instagram.com/MetabolismOfCities/"><i class="fab fa-instagram fa-4x m-4"></i></a>
+    <a class="text-light" href="https://linkedin.com/company/metabolism-of-cities"><i class="fab fa-linkedin fa-4x m-4"></i></a>
   </div>
 </section>
 
@@ -420,13 +380,13 @@
       centerPadding: "0",
       cssEase: "linear",
       autoplay: true,
-      dots: true,
       autoplaySpeed: 4000,
       responsive: [
         {
           breakpoint: 1024,
           settings: {
             slidesToShow: 1,
+            dots: true
           }
         },
       ]
