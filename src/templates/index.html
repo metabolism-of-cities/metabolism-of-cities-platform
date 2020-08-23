@@ -134,102 +134,10 @@
 
 </div> <!-- close main content container so we can have full-width content -->
 
-<section class="projects bg-primary text-light">
-  <div class="container py-4">
-    <h2 class="text-center font-weight-bold my-4">Featured projects</h2>
-    <div class="slick row">
-      {% for each in projects %}
-      <div class="px-3 py-4">
-        <a class="card btn-card single-project mb-4" href="{{ each.get_website }}">
-          <img src="{{ each.screenshot.medium.url }}" class="card-img-top" alt="{{ each }}">
-          <div class="card-body pb-0">
-            <h5 class="card-title">{{ each }}</h5>
-            <p class="card-text">{{ each.summary_sentence }}</p>
-          </div>
-          <div class="card-footer">
-            <div class="btn btn-primary">
-              Learn more <i class="fa fa-arrow-right mr-0 ml-2"></i>
-            </div>
-          </div>
-        </a>
-      </div>
-      {% endfor %}
-    </div>
-    <div class="text-center mt-4">
-      <a class="btn btn-inverse btn-lg mt-4" href="/projects">
-        <i class="fas fa-toolbox"></i> View all projects
-      </a>
-    </div>
-  </div>
-</section>
 
-<section class="what">
-  <div class="container">
-    <h2 class="text-center font-weight-bold my-4">What we do</h2>
-    <div class="row pt-4">
-      <div class="col-md-6 col-lg-3 mb-4">
-        <div class="card icon-card">
-          <div class="icon bg-primary">
-            <i class="fal fa-fw fa-file-chart-line text-light"></i>
-          </div>
-          <div class="card-header bg-primary text-light">
-            <h5>Create knowledge</h5>
-          </div>
-          <div class="card-body">
-            <p class="what-text">
-              We aim to create new knowledge by participating and collaborating in research projects and developing new open source tools.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-3 mb-4">
-        <div class="card icon-card">
-          <div class="icon bg-primary">
-            <i class="fal fa-fw fa-share-alt text-light"></i>
-          </div>
-          <div class="card-header bg-primary text-light">
-            <h5>Share knowledge</h5>
-          </div>
-          <div class="card-body">
-            <p class="what-text">
-              We aim to gather and curate (all) knowledge around urban metabolism in one central platform in order to make it accessible to different target audiences.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-3 mb-4">
-        <div class="card icon-card">
-          <div class="icon bg-primary">
-            <i class="fal fa-fw fa-wrench text-light"></i>
-          </div>
-          <div class="card-header bg-primary text-light">
-            <h5>Apply knowledge</h5>
-          </div>
-          <div class="card-body">
-            <p class="what-text">
-              We help policy makers and practitioners to tackle their challenges with Urban Metabolism thinking.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-3 mb-4">
-        <div class="card icon-card">
-          <div class="icon bg-primary">
-            <i class="fal fa-fw fa-user-friends text-light"></i>
-          </div>
-          <div class="card-header bg-primary text-light">
-            <h5>Foster a community</h5>
-          </div>
-          <div class="card-body">
-            <p class="what-text">
-              We believe that tackling the urban sustainability challenge can not be done alone. We want to foster a community of stakeholders that collaborates on developing solutions.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+{% include "_home.whatwedo.html" %}
+
+{% include "_home.projects.html" %}
 
 <section class="stats">
   <div class="container">
