@@ -1,0 +1,53 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1 class="mb-0">{% block title %}Course list{% endblock %}</h1>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Image</th>
+        <th>Description</th>
+        <th>URL</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in list %}
+      <tr>
+        <td><a href="{{ each.id }}/?next={{ request.get_full_path }}">{{ each }}</a></td>
+        <td>
+          {% if each.image %}
+            <i class="fa fa-check"><i>
+          {% endif %}
+        </td>
+        <td>
+          {% if each.description %}
+            <i class="fa fa-check"><i>
+          {% endif %}
+        </td>
+        <td>
+          {% if each.url %}
+            <i class="fa fa-check"><i>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <a class="btn btn-default-outline" href="create/?next={{ request.get_full_path }}"><i class="fal fa-plus"></i> Add</a>
+
+  <div>
+  <a href="../" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+  </div>
+
+{% endblock %}

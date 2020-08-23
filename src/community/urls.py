@@ -23,6 +23,7 @@ urlpatterns = baseline_urlpatterns + [
     path("organisations/", community.organizations, name="organizations"),
     path("organisations/<slug:slug>/", community.organizations, name="organizations"),
     path("organisations/<slug:slug>/<int:id>/", community.organization, name="organization"),
+    path("organisations/<slug:slug>/<int:id>/edit/", community.organization_form, name="organization_form"),
 
     # News and events URLs from baseline
     path("news/", core.news_list, { "project_name": app_name, "header_subtitle": "The latest news from the urban metabolism community" }, name="news"),

@@ -505,3 +505,69 @@ def event_form(request, id=None, project_name="community"):
     }
     return render(request, "community/event.form.html", context)
 
+@login_required
+def organization_form(request, slug, id=None):
+
+    curator = False
+    if has_permission(request, request.project, ["curator"]):
+        curator = True
+    
+    project = get_object_or_404(Project, pk=request.project)
+
+    ModelForm = modelform_factory(
+        Organization, 
+        fields=["name", "image", "type", "url", "twitter", "linkedin", "researchgate", "email"],
+        labels={"image": "Logo", "url": "Website URL"},
+        )
+    if id:
+        info = get_object_or_404(Organization, pk=id)
+        form = ModelForm(request.POST or None, request.FILES or None, instance=info)
+    else:
+        form = ModelForm(request.POST or None, request.FILES or None, initial={"type": slug})
+        info = None
+
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save(commit=False)
+            info.description = request.POST.get("description")
+            info.save()
+            messages.success(request, "The information was saved.")
+
+            if not id:
+                RecordRelationship.objects.create(
+                    record_parent = request.user.people,
+                    record_child = info,
+                    relationship_id = RELATIONSHIP_ID["uploader"],
+                )
+
+                work = Work.objects.create(
+                    status = Work.WorkStatus.COMPLETED,
+                    part_of_project = project,
+                    workactivity_id = 31,
+                    related_to = info,
+                    assigned_to = request.user.people,
+                    name = "Adding new organisation",
+                )
+                message = Message.objects.create(posted_by=request.user.people, parent=work, name="Status change", description="Task was completed")
+
+            if "next" in request.GET:
+                return redirect(request.GET.get("next"))
+            else:
+                return redirect("community:organizations")
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    context = {
+        "form": form,
+        "title": "Add organisation",
+        "load_markdown": True,
+        "curator": curator,
+        "info": info,
+    }
+
+    if slug == "journal":
+        context["publishers"] = Organization.objects.filter(type="publisher")
+        context["load_select2"] = True
+
+    return render(request, "community/organization.form.html", context)
+

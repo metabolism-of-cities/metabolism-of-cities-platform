@@ -1,0 +1,63 @@
+{% extends "_base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+  <h1 class="mb-4">{{ title }}</h1>
+
+  <form method="post" enctype="multipart/form-data">
+    {% bootstrap_form form layout="horizontal" %}
+
+    {% if publishers %}
+
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label">Publisher</label>
+        <div class="col-sm-9">
+          <select class="custom-select" id="publishers">
+            <option value=""></option>
+            {% for each in publishers %}
+              <option value="{{ each.id }}">{{ each }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+    {% endif %}
+
+    {% if load_markdown %}
+      <div class="form-group markdown-textarea">
+        {% include "_markdown.html" %}
+        <textarea class="form-control mb-4" id="text" rows="10" name="description">{{ info.description|default_if_none:"" }}</textarea>
+      </div>
+    {% endif %}
+
+    {% buttons %}
+      <div class="row">
+        <div class="col-md-12">
+          <button type="submit" class="btn btn-success">
+            <i class="fa fa-fw fa-save"></i>
+            Save
+         </button>
+        </div>
+      </div>
+    {% endbuttons %}
+
+    {% csrf_token %}
+  </form>
+
+  <a href="javascript:history.back()" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    Back
+  </a>
+
+{% endblock %}
+
+{% if publishers %}
+  {% block footer %}
+  <script>
+    $("#publishers").select2({
+      theme: "bootstrap4",
+    });
+  </script>
+  {% endblock %}
+{% endif %}
