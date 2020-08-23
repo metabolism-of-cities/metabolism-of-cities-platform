@@ -1,28 +1,28 @@
 {% load static %}
 
+{% if SPRINTS %}
+  {% for each in SPRINTS %}
+    <div class="sprint-bar">
+      <div class="container">
+        <i class="fa fa-heart-rate"></i> Active work sprint!
+        <a href="{% url 'core:work_sprint' each.id %}">{{ each }}</a>
+        <div class="float-right">
+          <a class="badge badge-light" href="{% url "core:work_sprint" each.id %}">
+            Sprint overview
+          </a>
+          <a class="badge badge-light" href="{% url "core:tasks" %}">
+            Task list
+          </a>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+{% endif %}
+
 <div class="top-layer">
 
   {% if HOMEPAGE %}
     <div class="dark-cover"></div>
-  {% endif %}
-
-  {% if SPRINTS %}
-    {% for each in SPRINTS %}
-      <div class="sprint-bar">
-        <div class="container">
-          <i class="fa fa-heart-rate"></i> Active work sprint!
-          <a href="{% url 'core:work_sprint' each.id %}">{{ each }}</a>
-          <div class="float-right">
-            <a class="badge badge-light" href="{% url "core:work_sprint" each.id %}">
-              Sprint overview
-            </a>
-            <a class="badge badge-light" href="{% url "core:tasks" %}">
-              Task list
-            </a>
-          </div>
-        </div>
-      </div>
-    {% endfor %}
   {% endif %}
 
   {% if DESIGN.back_link or PERMISSIONS or request.user.is_staff or NOTIFICATIONS %}
