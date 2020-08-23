@@ -1,5 +1,6 @@
 {% extends "_base.html" %}
 {% load static %}
+{% load humanize %}
 
 {% block page_name %}homepage{% endblock %}
 
@@ -9,7 +10,7 @@
 
 <style>
   .top-layer {
-    background-image: url("https://i.imgur.com/z6m1Dgc.jpg");
+    background-image: url("{% static 'img/home.bg.jpg' %}");
     min-height: 55vh;
     position: relative;
   }
@@ -81,13 +82,12 @@
   }
 
   .slick-dots li button::before {
-    color: #f8f9fa;
+    color: #{% if alternative_design %}000{% else %}f8f9fa{% endif %};
     opacity: .5;
     font-size: .75rem;
   }
 
   .slick-dots li.slick-active button::before {
-    color: #f8f9fa;
     opacity: 1;
   }
 
@@ -127,6 +127,9 @@
   .stats {
     background-color: #dddedf;
   }
+  {% if alternative_design %}
+    .sprint-bar,.return-bar,.navbar-rand { display:none; }
+  {% endif %}
 </style>
 {% endblock %}
 
@@ -134,10 +137,20 @@
 
 </div> <!-- close main content container so we can have full-width content -->
 
+{% if alternative_design %}
+  {% include "_home.projects.html" %}
 
-{% include "_home.whatwedo.html" %}
+  <section class="statement bg-light border-bottom border-top">
+    <div class="container-fluid text-center">
+      Metabolism of Cities is a global network of people who work together on systemically reducing net environmental impacts of cities and territories in a socially just manner and context-specific way.
+    </div>
+  </section>
 
-{% include "_home.projects.html" %}
+  {% include "_home.whatwedo.html" %}
+{% else %}
+  {% include "_home.whatwedo.html" %}
+  {% include "_home.projects.html" %}
+{% endif %}
 
 <section class="stats">
   <div class="container">
@@ -188,58 +201,29 @@
   <div class="container">
     <h2 class="text-center font-weight-bold my-4">Latest forum posts</h2>
     <div class="row mt-4">
+      {% for each in posts %}
       <div class="col-lg-4 mb-4">
         <div class="card">
           <div class="card-body">
             <div class="card-text font-weight-bold">
-              <a href="#">{% lorem 8 w random %}</a>
+              <a href="forum/{{ each.id }}/">{{ each }}</a>
             </div>
             <p class="card-text">
-              {% lorem 20 w random %}
+              {{ each.last_update.get_description|truncatewords_html:20 }}
             </p>
           </div>
           <div class="card-footer">
-            <img class="rounded-circle mr-2" src="https://new.metabolismofcities.org/media/records/photo.thumbnail.jpg">
-            <a href="">{% lorem 2 w random %}</a> 2 hours ago
+            {{ each.last_update.posted_by.avatar }}
+            <a href="">{{ each.last_update.posted_by }}</a> 
+            {{ each.last_update.date_created|naturaltime }}
           </div>
         </div>
       </div>
-      <div class="col-lg-4 mb-4">
-        <div class="card">
-          <div class="card-body">
-            <div class="card-text font-weight-bold">
-              <a href="#">{% lorem 8 w random %}</a>
-            </div>
-            <p class="card-text">
-              {% lorem 20 w random %}
-            </p>
-          </div>
-          <div class="card-footer">
-            <img class="rounded-circle mr-2" src="https://new.metabolismofcities.org/media/records/photo.thumbnail.jpg">
-            <a href="">{% lorem 2 w random %}</a> 2 hours ago
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-4 mb-4">
-        <div class="card">
-          <div class="card-body">
-            <div class="card-text font-weight-bold">
-              <a href="#">{% lorem 8 w random %}</a>
-            </div>
-            <p class="card-text">
-              {% lorem 20 w random %}
-            </p>
-          </div>
-          <div class="card-footer">
-            <img class="rounded-circle mr-2" src="https://new.metabolismofcities.org/media/records/photo.thumbnail.jpg">
-            <a href="">{% lorem 2 w random %}</a> 2 hours ago
-          </div>
-        </div>
-      </div>
+      {% endfor %}
     </div>
 
     <div class="text-center pt-4">
-      <a class="btn btn-primary btn-lg" href="#">
+      <a class="btn btn-primary btn-lg" href="/forum/">
         <i class="fas fa-comments-alt"></i> Go to the forum
       </a>
     </div>
@@ -250,49 +234,27 @@
   <div class="container">
     <h2 class="text-center font-weight-bold my-4">Latest news</h2>
     <div class="row my-4">
-      <div class="col-lg-4 mb-sm-4 mb-lg-0">
-        <a class="card btn-card" href="">
-          <img src="https://i.imgur.com/qAvCcSH.jpg" class="card-img-top" alt="">
-          <div class="card-body">
-            <h5 class="card-title">
-              Praesentium in est id dolorem cumque
-            </h5>
-            <p class="card-text">
-              Esse cumque quo ratione ea eveniet sed. Non qui odit est nam tempora minus. Culpa ut illum eaque ut.
-            </p>
-          </div>
-        </a>
-      </div>
-      <div class="col-lg-4 mb-sm-4 mb-lg-0">
-        <a class="card btn-card" href="">
-          <img src="https://i.imgur.com/812pGkD.jpg" class="card-img-top" alt="">
-          <div class="card-body">
-            <h5 class="card-title">
-              Praesentium in est id dolorem cumque
-            </h5>
-            <p class="card-text">
-              Esse cumque quo ratione ea eveniet sed. Non qui odit est nam tempora minus. Culpa ut illum eaque ut.
-            </p>
-          </div>
-        </a>
-      </div>
-      <div class="col-lg-4 mb-sm-4 mb-lg-0">
-        <a class="card btn-card" href="">
-          <img src="https://i.imgur.com/PrFev5H.jpg" class="card-img-top" alt="">
-          <div class="card-body">
-            <h5 class="card-title">
-              Praesentium in est id dolorem cumque
-            </h5>
-            <p class="card-text">
-              Esse cumque quo ratione ea eveniet sed. Non qui odit est nam tempora minus. Culpa ut illum eaque ut.
-            </p>
-          </div>
-        </a>
-      </div>
+      {% for each in news %}
+        <div class="col-lg-4 mb-sm-4 mb-lg-0">
+          <a class="card btn-card" href="{% url "core:news" each.slug %}">
+            {% if each.image %}
+              <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">
+                {{ each }}
+              </h5>
+              <p class="card-text">
+              {{ each.get_description|truncatewords_html:20 }}
+              </p>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
     </div>
 
     <div class="text-center pt-4">
-      <a class="btn btn-primary btn-lg" href="#">
+      <a class="btn btn-primary btn-lg" href="news/">
         <i class="fas fa-newspaper"></i> All news
       </a>
     </div>

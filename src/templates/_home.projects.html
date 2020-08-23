@@ -1,4 +1,4 @@
-<section class="projects bg-primary text-light">
+<section class="projects {% if alternative_design %}{% else %}bg-primary text-light{% endif %}">
   <div class="container py-4">
     <h2 class="text-center font-weight-bold my-4">Featured projects</h2>
     <div class="slick row">
@@ -20,7 +20,7 @@
       {% endfor %}
     </div>
     <div class="text-center mt-4">
-      <a class="btn btn-inverse btn-lg mt-4" href="/projects">
+      <a class="btn btn-inverse btn-lg mt-4" href="/projects/">
         <i class="fas fa-toolbox"></i> View all projects
       </a>
     </div>

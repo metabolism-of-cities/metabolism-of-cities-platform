@@ -32,7 +32,9 @@
   {% else %}
     {% block title %}{% endblock %}
   {% endif %}
+  {% if not HOMEPAGE %}
   |
+  {% endif %}
   {{ PROJECT }}
   {% if PROJECT.back_link %}
     | Metabolism of Cities

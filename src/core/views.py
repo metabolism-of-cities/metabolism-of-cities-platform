@@ -308,11 +308,40 @@ def index(request):
         </div>
     """
 
+    alternative_design = False
+    if request.user.id == 1 or settings.DEBUG:
+        # Paul prefers the homepage in a certain style - different from the actual design
+        # because he opens the page many times a day he is hereby creating a setting to 
+        # show, only to him, this alternative design
+        alternative_design = True
+        blurb = """
+            <img class="main-logo my-4" alt="Metabolism of Cities" src="/media/logos/Metabolism_of_Cities_full_logo_white.png">
+            <div class="row pt-4 my-4 text-center">
+              <div class="col-md-4 mb-3">
+                <a class="btn btn-lg btn-inverse d-block font-weight-bold py-3" href="forum/">
+                  <i class="fa fa-comments-alt"></i> Discuss
+                </a>
+              </div>
+              <div class="col-md-4 mb-3">
+                <a class="btn btn-lg btn-inverse d-block font-weight-bold py-3" href="events/">
+                  <i class="fa fa-handshake"></i> Get together
+                </a>
+              </div>
+              <div class="col-md-4 mb-3">
+                <a class="btn btn-lg btn-inverse d-block font-weight-bold py-3" href="tasks/">
+                  <i class="fa fa-hammer"></i> Get things done
+                </a>
+              </div>
+            </div>"""
+
     context = {
         "HOMEPAGE": True,
         "header_subtitle": blurb,
         "show_project_design": True,
         "projects": Project.objects.filter(pk__in=[2,3,4,32018,16,18]),
+        "alternative_design": alternative_design,
+        "posts": ForumTopic.objects.all()[:3],
+        "news": News.objects.filter(projects__in=MOC_PROJECTS).distinct()[:3]
     }
     return render(request, "index.html", context)
 
