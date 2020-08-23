@@ -12,6 +12,9 @@
     <thead>
       <tr>
         <th>Name</th>
+        {% if not type %}
+          <th>Type</th>
+        {% endif %}
         <th>Image</th>
         <th>Description</th>
         <th>URL</th>
@@ -21,6 +24,9 @@
     {% for each in list %}
       <tr>
         <td><a href="{{ each.id }}/?next={{ request.get_full_path }}">{{ each }}</a></td>
+        {% if not type %}
+          <td>{{ each.get_type_display }}</td>
+        {% endif %}
         <td>
           {% if each.image %}
             <i class="fa fa-check"><i>

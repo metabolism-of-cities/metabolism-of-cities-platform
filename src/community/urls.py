@@ -31,4 +31,9 @@ urlpatterns = baseline_urlpatterns + [
     path("events/", community.event_list, { "project_name": app_name }, name="events"),
     path("events/<int:id>/", community.event, { "project_name": app_name }, name="event"),
     path("events/create/", community.event_form, { "project_name": app_name }, name="event_form"),
+
+    # Controlpanel
+    path("controlpanel/organisations/", community.controlpanel_organizations),
+    path("controlpanel/organisations/<int:id>/", community.organization_form),
+    path("controlpanel/organisations/create/", community.organization_form),
 ]

@@ -45,6 +45,16 @@
           <div class="card-header">Project settings</div>
         </a>
       </div>
+      {% if PROJECT.slug == "community" %}
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="organisations/">
+            <div class="icon">
+              <i class="fal fa-fw fa-building"></i>
+            </div>
+            <div class="card-header">Organisations</div>
+          </a>
+        </div>
+      {% endif %}
       {% if PROJECT.slug == "library" %}
         <div class="col-md-3 mb-3">
           <a class="card icon-card btn-card" href="library/">

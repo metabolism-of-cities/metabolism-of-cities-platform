@@ -451,7 +451,7 @@ def event_form(request, id=None, project_name="community"):
     return render(request, "community/event.form.html", context)
 
 @login_required
-def organization_form(request, slug, id=None):
+def organization_form(request, slug=None, id=None):
 
     curator = False
     if has_permission(request, request.project, ["curator"]):
@@ -516,3 +516,18 @@ def organization_form(request, slug, id=None):
 
     return render(request, "community/organization.form.html", context)
 
+@login_required
+def controlpanel_organizations(request, type=None):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    list = Organization.objects.all()
+    if type:
+        list = list.filter(type=type)
+
+    context = {
+        "load_datatables": True,
+        "list": list,
+        "type": type,
+    }
+    return render(request, "controlpanel/organizations.html", context)

@@ -30,10 +30,10 @@ urlpatterns = baseline_urlpatterns + [
 
     path("search/ajax/tags/", views.search_tags_ajax, name="search_tags_ajax"),
     path("controlpanel/library/", views.controlpanel_library),
-    path("controlpanel/journals/", views.controlpanel_organizations, {"type": "journal"}),
+    path("controlpanel/journals/", community.controlpanel_organizations, {"type": "journal"}),
     path("controlpanel/journals/<int:id>/", community.organization_form, {"slug": "journal"}),
     path("controlpanel/journals/create/", community.organization_form, {"slug": "journal"}),
-    path("controlpanel/publishers/", views.controlpanel_organizations, {"type": "publisher"}),
+    path("controlpanel/publishers/", community.controlpanel_organizations, {"type": "publisher"}),
     path("controlpanel/publishers/<int:id>/", community.organization_form, {"slug": "publisher"}),
     path("controlpanel/publishers/create/", community.organization_form, {"slug": "publisher"}),
     path("controlpanel/tags/", views.controlpanel_tags, name="tags"),

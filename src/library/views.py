@@ -719,54 +719,6 @@ def controlpanel_library(request):
     return render(request, "controlpanel/library.html", context)
 
 @login_required
-def controlpanel_organizations(request, type=None):
-    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
-        unauthorized_access(request)
-
-    list = Organization.objects.all()
-    if type:
-        list = list.filter(type=type)
-
-    context = {
-        "load_datatables": True,
-        "list": list,
-        "type": type,
-    }
-    return render(request, "controlpanel/organizations.html", context)
-
-@login_required
-def controlpanel_organization(request, id=None):
-    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
-        unauthorized_access(request)
-    ModelForm = modelform_factory(Tag, fields=["name", "description", "parent_tag", "include_in_glossary", "is_public", "is_deleted", "icon"])
-    if id:
-        info = get_object_or_404(Tag, pk=id)
-        form = ModelForm(request.POST or None, request.FILES or None, instance=info)
-    else:
-        initial = None
-        if "parent" in request.GET:
-            initial = {"parent_tag": request.GET.get("parent")}
-        form = ModelForm(request.POST or None, initial=initial)
-
-    if request.method == "POST":
-        if form.is_valid():
-            info = form.save()
-            messages.success(request, "Information was saved.")
-            if "next" in request.GET:
-                return redirect(request.GET.get("next"))
-            else:
-                return redirect("library:tags")
-        else:
-            messages.error(request, "We could not save your form, please fill out all fields")
-
-    context = {
-        "form": form,
-        "title": "Tag",
-    }
-    return render(request, "modelform.html", context)
-
-
-@login_required
 def controlpanel_tags(request):
     if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
