@@ -979,9 +979,7 @@ body.city-subsite #img-city-wrapper {
     box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2); }
 
 body.city-subsite #navbar-city {
-  background-color: #efefef;
-  padding-top: .3rem;
-  padding-bottom: 0; }
+  background-color: #efefef; }
   body.city-subsite #navbar-city a.nav-link {
     color: #212529 !important;
     white-space: nowrap; }

@@ -5,7 +5,7 @@
       <div class="city-name"><a href="{% url 'data:dashboard' space.slug %}">{{ space }}</a></div>
     </div>
   </div>
-  <nav id="navbar-city" class="navbar navbar-light navbar-expand-md">
+  <nav id="navbar-city" class="navbar navbar-light navbar-expand-md py-0">
     <div class="container">
       <button class="navbar-toggler ml-3" type="button" data-toggle="collapse" data-target="#city-navbar" aria-controls="city-navbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -18,95 +18,25 @@
               <i class="fa fa-fw fa-home"></i>
             </a>
           </li>
-
-          <li class="nav-item dropdown projects-dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="projects-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Local industries
+          <li class="nav-item">
+            <a class="nav-link{% if context %} active{% endif %}" href="{% url 'data:dashboard' space.slug %}">
+              Context
             </a>
-            <div class="dropdown-menu projects-dropdown-menu" aria-labelledby="projects-dropdown" style="max-width:700px;top:60px;left:-402px;">
-                <div class="row">
-                  <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
-                    <div class="projects-category"><i class="mr-2 far fa-fw fa-toolbox"></i>Primary sector</div>
-                    <a href="#">Fishing</a>
-                    <a href="#">Mining</a>
-                    <a href="#">Agriculture</a>
-                  </div>
-                  <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
-                    <div class="projects-category"><i class="mr-2 far fa-fw fa-play-circle"></i>Secondary sector</div>
-                    <a href="#">Bread and baked goods</a>
-                    <a href="#">Wine</a>
-                    <a href="#">Processed foods</a>
-                    <a href="#">Paper manufacturing</a>
-                    <a href="#">Clothes</a>
-                  </div>
-                  <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
-                    <div class="projects-category"><i class="mr-2 far fa-fw fa-user-graduate"></i>Tertiary industries</div>
-                    <a href="#">Water and sanitation</a>
-                    <a href="#">Retail and wholesale</a>
-                    <a href="#">Transportation</a>
-                    <a href="#">Construction</a>
-                  </div>
-                </div>
-            </div>
           </li>
-
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle{% if menu == 'resource_use' %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Households
+          <li class="nav-item">
+            <a class="nav-link{% if context %} active{% endif %}" href="{% url 'data:dashboard' space.slug %}">
+              Biophysical
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Overview</a>
-              <a class="dropdown-item" href="#">Demographics</a>
-              <a class="dropdown-item" href="#">Water consumption</a>
-              <a class="dropdown-item" href="#">Electricity consumption</a>
-              <a class="dropdown-item" href="#">Food consumption</a>
-            </div>
           </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle{% if menu == 'resource_use' %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Material stock
+          <li class="nav-item">
+            <a class="nav-link{% if context %} active{% endif %}" href="{% url 'data:dashboard' space.slug %}">
+              Infrastructure
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Overview</a>
-              <a class="dropdown-item" href="#">Buildings</a>
-              <a class="dropdown-item" href="#">Sand</a>
-            </div>
           </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle{% if menu == 'waste' %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Waste
+          <li class="nav-item">
+            <a class="nav-link{% if context %} active{% endif %}" href="{% url 'data:dashboard' space.slug %}">
+              Stocks and flows
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Overview</a>
-              <a class="dropdown-item" href="#">Emissions</a>
-              <a class="dropdown-item" href="#">Organic waste</a>
-              <a class="dropdown-item" href="#">Municipal solid waste</a>
-              <a class="dropdown-item" href="#">Wastewater</a>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle{% if menu == 'library' %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Library
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Maps</a>
-              <a class="dropdown-item" href="#">Journal articles</a>
-              <a class="dropdown-item" href="#">Reports</a>
-              <a class="dropdown-item" href="#">Theses</a>
-              <a class="dropdown-item" href="#">Photos</a>
-              <a class="dropdown-item" href="#">Videos</a>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle{% if menu == 'data' %} active{% endif %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Data
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{% url 'data:datasets' space.slug %}">All datasets</a>
-              <a class="dropdown-item" href="{% url 'data:hub' %}">Upload data</a>
-              <a hidden class="dropdown-item" href="{% url 'data:maps' space.slug %}">Download</a>
-              <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/dashboards/{{ space.slug }}/hub/">Data management platform</a>
-            </div>
           </li>
         </ul>
       </div>
@@ -117,7 +47,6 @@
           Data management
         </a>
       </div>
-
     </div>
   </nav>
 </div>
