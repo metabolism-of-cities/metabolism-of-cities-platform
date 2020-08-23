@@ -298,6 +298,15 @@ def user_profile_form(request):
 
 def index(request):
 
+    if "u" in request.GET:
+        all = News.objects.all()
+        for each in all:
+            if each.id <= 18621:
+                if not each.meta_data:
+                    each.meta_data = {}
+                each.meta_data["format"] = "html"
+                each.save()
+
     count = Project.objects.all().count()
     blurb = """
         <img class="main-logo my-4" alt="Metabolism of Cities" src="/media/logos/Metabolism_of_Cities_full_logo_white.png">
