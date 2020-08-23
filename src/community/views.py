@@ -167,15 +167,6 @@ def project(request, id):
     return render(request, "community/project.html", context)
 
 def organizations(request, slug=None):
-    if "u" in request.GET:
-        list = Organization.objects.all()
-        for each in list:
-            if each.meta_data:
-                each.meta_data["format"] = "html"
-            else:
-                each.meta_data = {"format": "html"}
-            each.save()
-
     list = Organization.objects.filter(type=slug)
     context = {
         "list": list,
