@@ -1,9 +1,16 @@
 {% extends "_base.html" %}
-
+{% load moc_extras %}
 {% load static %}
+
 {% block page_name %}datahub{% endblock %}
 
 {% block title %}Index{% endblock %}
+
+{% block css %}
+<style type="text/css">
+#box2,#box3{display:none}
+</style>
+{% endblock %}
 
 {% block content %}
 <section>
@@ -11,6 +18,52 @@
   <h2>Metabolism of Cities Data Hub</h2>
   {{ webpage.get_description }}
 
+  <h2>Phases</h2>
+  <div class="row phases">
+    <div class="col-sm-4 col-lg-4 mb-4">
+      <a class="large-icon-box bg-success text-light" href="#box1" data-box="1">
+        <div class="description">Data collection</div>
+        <div class="statistic">1</div>
+        <i class="fad fa-table text-success text-light"></i>
+      </a>
+    </div>
+    <div class="col-sm-4 col-lg-4 mb-4">
+      <a class="large-icon-box" href="#box2" data-box="2">
+        <div class="description">Data processing</div>
+        <div class="statistic">2</div>
+        <i class="fad fa-chart-area text-info"></i>
+      </a>
+    </div>
+    <div class="col-sm-4 col-lg-4 mb-4">
+      <a class="large-icon-box" href="#box3" data-box="3">
+        <div class="description">Data analysis</div>
+        <div class="statistic">3</div>
+        <i class="fad fa-chart-network text-warning"></i>
+      </a>
+    </div>
+  </div>
+
+  <div class="boxes">
+    <div class="bg-success text-light p-4 mb-5 large-icon-box" id="box1">
+      In the <strong>Data collection</strong> phase, we focus on gather datasets, geospatial information,
+      government reports, academic work, and other contextual and supporting material to provide a
+      strong baseline before starting to work with the data.
+    </div>
+
+    <div class="bg-info text-light p-4 mb-5 large-icon-box" id="box2">
+      In the <strong>Data processing</strong> phase, we focus on gather datasets, geospatial information,
+      government reports, academic work, and other contextual and supporting material to provide a
+      strong baseline before starting to work with the data.
+    </div>
+
+    <div class="bg-warning text-dark p-4 mb-5 large-icon-box" id="box3">
+      In the <strong>Data analysis</strong> phase, we focus on gather datasets, geospatial information,
+      government reports, academic work, and other contextual and supporting material to provide a
+      strong baseline before starting to work with the data.
+    </div>
+  </div>
+
+  <h2 class="text-center mb-4">Current progress</h2>
   {% include "data/_space.progress.html" %}
 
   <div class="text-center mb-4">
@@ -21,6 +74,8 @@
       <i class="fas fa-th" aria-hidden="true"></i> View progress
     </a>
   </div>
+
+  {% if False %}
 
   <div class="row">
     <div class="col-sm-6 col-lg-3 mb-4">
@@ -151,22 +206,34 @@
     </div>
   </div>
 </section>
+
+{% endif %}
+
 {% endblock %}
 
 {% block footer %}
-<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
 <script>
-  var map = L.map("map").setView([51.505, -0.09], 2);
-  L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    minZoom: 1,
-    maxZoom: 18,
-    id: "mapbox/streets-v11",
-    tileSize: 512,
-    zoomOffset: -1,
-    scrollWheelZoom: false,
-    accessToken: "your.mapbox.access.token"
-  }).addTo(map);
-  var marker = L.marker([51.5, -0.09]).addTo(map);
-  </script>
-  {% endblock %}
+  $(".phases a").click(function(e){
+    e.preventDefault();
+    var box = $(this).data("box");
+    $(".phases a").removeClass("bg-success");
+    $(".phases a").removeClass("bg-info");
+    $(".phases a").removeClass("bg-warning");
+    $(".phases a").removeClass("text-light");
+    $(".phases i").removeClass("text-light");
+    $(this).addClass("text-light");
+    $(".boxes div").hide();
+    if (box == 1) {
+      $(this).addClass("bg-success");
+      $(this).find("i").addClass("text-light");
+    } else if (box == 2) {
+      $(this).addClass("bg-info");
+      $(this).find("i").addClass("text-light");
+    } else if (box == 3) {
+      $(this).addClass("bg-warning");
+      $(this).find("i").addClass("text-light");
+    }
+    $("#box" + box).show();
+  });
+</script>
+{% endblock %}

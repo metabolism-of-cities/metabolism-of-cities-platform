@@ -12,7 +12,6 @@ import pytz
 from functools import wraps
 
 from django.views.decorators.clickjacking import xframe_options_exempt
-from collections import defaultdict
 from core.mocfunctions import *
 
 def get_space(request, slug):
@@ -87,9 +86,10 @@ def index(request):
     list = ReferenceSpace.objects.filter(id__in=selected)
     layers = Tag.objects.filter(parent_tag_id=845)
     items = LibraryItem.objects.filter(spaces__in=list, tags__parent_tag__in=layers).distinct()
-    counter = defaultdict(dict)
-    check = defaultdict(dict)
+    counter = {}
+    check = {}
     document_counter = {}
+    completion = {}
     project = get_object_or_404(Project, pk=request.project)
 
     # TODO yeah one day we need to do a clever JOIN and COUNT and whatnot and sort this out through SQL
@@ -105,22 +105,28 @@ def index(request):
                         document_counter[space.id] += 1
                     except:
                         document_counter[space.id] = 1
-                    try:
-                        check[space.id][t][tag.id] = True
-                    except:
+                    if space.id not in check:
+                        check[space.id] = {}
+                    if t not in check[space.id]:
                         check[space.id][t] = {}
-                        check[space.id][t][tag.id] = True
-                        try:
-                            counter[space.id][t] += 1
-                        except:
+                    if tag.id not in check[space.id][t]:
+                        if space.id not in completion:
+                            completion[space.id] = 0
+                        completion[space.id] += 1
+                        if space.id not in counter:
+                            counter[space.id] = {}
+                        if t not in counter[space.id]:
                             counter[space.id][t] = 1
-
+                        else:
+                            counter[space.id][t] += 1
+                    check[space.id][t][tag.id] = True
 
     context = {
         "show_project_design": True,
         "list": list,
-        "counter": dict(counter),
+        "counter": counter,
         "document_counter": document_counter,
+        "completion": completion,
         "webpage": Webpage.objects.get(pk=37077),
         "dashboard_link": project.slug + ":dashboard",
         "harvesting_link": project.slug + ":hub_harvesting_space",
@@ -140,8 +146,9 @@ def progress(request, style="list"):
     list = list
     layers = Tag.objects.filter(parent_tag_id=845)
     items = LibraryItem.objects.filter(spaces__in=list, tags__parent_tag__in=layers).distinct()
-    counter = defaultdict(dict)
-    check = defaultdict(dict)
+    counter = {}
+    check = {}
+    completion = {}
     document_counter = {}
     project = get_object_or_404(Project, pk=request.project)
 
@@ -157,20 +164,25 @@ def progress(request, style="list"):
                         document_counter[space.id] += 1
                     except:
                         document_counter[space.id] = 1
-                    try:
-                        check[space.id][t][tag.id] = True
-                    except:
+                    if space.id not in check:
+                        check[space.id] = {}
+                    if t not in check[space.id]:
                         check[space.id][t] = {}
-                        check[space.id][t][tag.id] = True
-                        if t in counter[space.id]:
-                            counter[space.id][t] += 1
-                        else:
-                            p(counter[space.id])
+                    if tag.id not in check[space.id][t]:
+                        if space.id not in completion:
+                            completion[space.id] = 0
+                        completion[space.id] += 1
+                        if space.id not in counter:
+                            counter[space.id] = {}
+                        if t not in counter[space.id]:
                             counter[space.id][t] = 1
-
+                        else:
+                            counter[space.id][t] += 1
+                    check[space.id][t][tag.id] = True
     context = {
         "list": list,
-        "counter": dict(counter),
+        "counter": counter,
+        "completion": completion,
         "document_counter": document_counter,
         "dashboard_link": project.slug + ":dashboard",
         "harvesting_link": project.slug + ":hub_harvesting_space",

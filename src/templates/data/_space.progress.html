@@ -6,10 +6,10 @@
       <div class="col-md-6 col-lg-4 mb-4">
         <div class="card">
           <a href="{% url dashboard_link each.slug %}">
-            <img src="{{ each.photo.image.url }}" class="card-img-top" alt="{{ each }}" style="max-height:200px">
+            <img src="{{ each.photo.image.large.url }}" class="card-img-top" alt="{{ each }}" style="max-height:200px">
           </a>
           <div class="card-body">
-            <h5 class="card-title mb-0"><a href="{% url dashboard_link each.slug %}">{{ each }}</h5>
+            <h5 class="card-title mb-0"><a href="{% url dashboard_link each.slug %}">{{ each }}</a></h5>
           </div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item">
@@ -58,6 +58,9 @@
                   <div class="progress-bar bg-success" role="progressbar" style="width: calc({% if counter|get_item:each.id %}{{ counter|get_item:each.id|get_item:849 }}{% else %}0{% endif %}/18*100%)" aria-valuenow="{% if counter|get_item:each.id %}{{ counter|get_item:each.id|get_item:849 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="18"></div>
                 </div>
               </div>
+            </li>
+            <li class="list-group-item">
+              <i class="fal fa-fw fa-check mr-1"></i> {% widthratio completion|get_item:each.id 63 100 %}% data collection completion
             </li>
           </ul>
           <div class="card-body">
