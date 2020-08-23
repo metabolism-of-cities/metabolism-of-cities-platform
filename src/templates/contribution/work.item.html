@@ -38,24 +38,24 @@
         <div class="card mb-4">
           <ul class="list-group list-group-flush">
             <li class="list-group-item table-item">
-              <div><i class="fal fa-fw fa-fingerprint mr-1" aria-hidden="true"></i>ID</div>
+              <div><i class="fal fa-fw fa-fingerprint mr-2"></i>ID</div>
               <div> {{ info.id }}</div>
             </li>
             <li class="list-group-item table-item">
-              <div><i class="fal fa-fw fa-play mr-1" aria-hidden="true"></i>Status</div>
+              <div><i class="fal fa-fw fa-play mr-2"></i>Status</div>
               <div class="text-{% if info.get_status_display == 'In Progress' %}info{% elif info.get_status_display == 'Completed' %}success{% elif info.get_status_display == 'Discarded' %}danger{% else %}dark{% endif %}"> {{ info.get_status_display }}</div>
             </li>
             <li class="list-group-item table-item">
-              <div><i class="fal fa-fw fa-thermometer-half mr-1" aria-hidden="true"></i>Priority</div>
+              <div><i class="fal fa-fw fa-thermometer-half mr-2"></i>Priority</div>
               <div> {{ info.get_priority_display }}</div>
             </li>
             <li class="list-group-item table-item">
-              <div><i class="fal fa-fw fa-box mr-1" aria-hidden="true"></i>Type</div>
+              <div><i class="fal fa-fw fa-box mr-2"></i>Type</div>
               <div> {{ info.workactivity }}</div>
             </li>
             {% if info.related_to %}
               <li class="list-group-item table-item">
-                <div><i class="fal fa-fw fa-link mr-1"></i>Related to</div>
+                <div><i class="fal fa-fw fa-link mr-2"></i>Related to</div>
                 <div>
                   {% if info.url %}
                     <a href="{{ info.url }}">
@@ -72,13 +72,13 @@
               </li>
             {% endif %}
             <li class="list-group-item table-item">
-              <div><i class="fal fa-fw fa-user mr-1"></i>Assigned to</div>
+              <div><i class="fal fa-fw fa-user mr-2"></i>Assigned to</div>
               <div> {{ info.assigned_to|default_if_none:"<em>No one yet</em>" }}</div>
             </li>
             {% if info.subscribers.all %}
               <li class="list-group-item table-item">
                 <div class="align-top" title="These people are notified about updates to this task">
-                  <i class="far fa-fw fa-users mr-1"></i>Subscribers
+                  <i class="fal fa-fw fa-users mr-2"></i>Subscribers
                 </div>
                 <div class="subscribers">
                   {% for each in info.subscribers.all %}
@@ -96,17 +96,17 @@
 
         {% if not request.user.is_authenticated %}
           <div class="text-center pt-4 pb-4 alert alert-dark">
-            <h2 class="my-4"><i class="fad fa-user-alt-slash" aria-hidden="true"></i> You are not logged in</h2>
-            <a class="btn btn-lg btn-primary clear-filter my-4" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/login/?next={{ request.get_full_path }}"><i class="fa fa-sign-in" aria-hidden="true"></i> Log In</a>
-            <a class="btn btn-lg btn-primary clear-filter my-4" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/join/?next={{ request.get_full_path }}"><i class="fa fa-user-plus" aria-hidden="true"></i> Register</a>
+            <h2 class="my-4"><i class="fad fa-user-alt-slash"></i> You are not logged in</h2>
+            <a class="btn btn-lg btn-primary clear-filter my-4" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/login/?next={{ request.get_full_path }}"><i class="fa fa-sign-in"></i> Log In</a>
+            <a class="btn btn-lg btn-primary clear-filter my-4" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/join/?next={{ request.get_full_path }}"><i class="fa fa-user-plus"></i> Register</a>
             <p><small class="text-muted">Please join us and let's build things, together!</small></p>
           </div>
         {% else %}
           <div class="text-center pt-4 alert alert-dark pb-5">
             <h2 class="my-4">
-              <i class="fad fa-digging" aria-hidden="true"></i>
+              <i class="fad fa-digging"></i>
               {% if info.assigned_to and info.assigned_to != request.user.people %}
-                {{ info.assigned_to }} 
+                {{ info.assigned_to }}
                 {% if info.get_status_display == 'Completed' %}
                   completed this!
                 {% else %}
