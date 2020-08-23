@@ -12,6 +12,8 @@ import pytz
 from functools import wraps
 
 from django.views.decorators.clickjacking import xframe_options_exempt
+from collections import defaultdict
+from core.mocfunctions import *
 
 def get_space(request, slug):
     # Here we can build an expansion if we want particular people to see dashboards that are under construction
@@ -77,10 +79,51 @@ def index(request):
                         print("not FOUND!")
                         print(row)
 
-    list = ActivatedSpace.objects.filter(part_of_project_id=request.project)
+    
+    import random
+    selected_cities = {12046, 12093, 14402, 12008, 12183, 33989, 12067, 14592, 14398, 12054, 12182}
+    selected = random.sample(selected_cities, 3)
+
+    list = ReferenceSpace.objects.filter(id__in=selected)
+    layers = Tag.objects.filter(parent_tag_id=845)
+    items = LibraryItem.objects.filter(spaces__in=list, tags__parent_tag__in=layers).distinct()
+    counter = defaultdict(dict)
+    check = defaultdict(dict)
+    document_counter = {}
+    project = get_object_or_404(Project, pk=request.project)
+
+    # TODO yeah one day we need to do a clever JOIN and COUNT and whatnot and sort this out through SQL
+    # until then, this hack will do
+    # Code is repeated in the progress-details page!
+
+    for each in items:
+        for tag in each.tags.all():
+            if tag.parent_tag in layers:
+                for space in each.spaces.all():
+                    t = tag.parent_tag.id
+                    try:
+                        document_counter[space.id] += 1
+                    except:
+                        document_counter[space.id] = 1
+                    try:
+                        check[space.id][t][tag.id] = True
+                    except:
+                        check[space.id][t] = {}
+                        check[space.id][t][tag.id] = True
+                        try:
+                            counter[space.id][t] += 1
+                        except:
+                            counter[space.id][t] = 1
+
+
     context = {
         "show_project_design": True,
         "list": list,
+        "counter": dict(counter),
+        "document_counter": document_counter,
+        "webpage": Webpage.objects.get(pk=37077),
+        "dashboard_link": project.slug + ":dashboard",
+        "total": ActivatedSpace.objects.filter(part_of_project_id=request.project).count(),
     }
     return render(request, "data/index.html", context)
 
@@ -91,20 +134,53 @@ def overview(request):
     }
     return render(request, "data/overview.html", context)
 
-def progress(request):
-    list = ActivatedSpace.objects.filter(part_of_project_id=request.project)
-    context = {
-        "list": list,
-        "done": ["collected", "processed", ""],
-    }
-    return render(request, "data/progress.html", context)
+def progress(request, style="list"):
+    list = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)
+    list = list
+    layers = Tag.objects.filter(parent_tag_id=845)
+    items = LibraryItem.objects.filter(spaces__in=list, tags__parent_tag__in=layers).distinct()
+    counter = defaultdict(dict)
+    check = defaultdict(dict)
+    document_counter = {}
+    project = get_object_or_404(Project, pk=request.project)
 
-def progress_details(request):
-    list = ActivatedSpace.objects.filter(part_of_project_id=request.project)
+    # TODO yeah one day we need to do a clever JOIN and COUNT and whatnot and sort this out through SQL
+    # until then, this hack will do
+    # Code is repeated in the index!
+    for each in items:
+        for tag in each.tags.all():
+            if tag.parent_tag in layers:
+                for space in each.spaces.all():
+                    t = tag.parent_tag.id
+                    try:
+                        document_counter[space.id] += 1
+                    except:
+                        document_counter[space.id] = 1
+                    try:
+                        check[space.id][t][tag.id] = True
+                    except:
+                        check[space.id][t] = {}
+                        check[space.id][t][tag.id] = True
+                        if t in counter[space.id]:
+                            counter[space.id][t] += 1
+                        else:
+                            p(counter[space.id])
+                            counter[space.id][t] = 1
+
     context = {
         "list": list,
+        "counter": dict(counter),
+        "document_counter": document_counter,
+        "dashboard_link": project.slug + ":dashboard",
+        "harvesting_link": project.slug + ":hub_harvesting_space",
     }
-    return render(request, "data/progress.details.html", context)
+
+    if style == "list":
+        page = "data/progress.html"
+    else:
+        page = "data/progress.details.html"
+
+    return render(request, page, context)
 
 def dashboard(request, space):
     space = get_space(request, space)

@@ -2033,3 +2033,6 @@ body.volunteer.portal.latest th.date {
 
 .badge-level-3 {
   color: #FFCC01; }
+
+.progress-list .progress {
+  height: .5rem; }

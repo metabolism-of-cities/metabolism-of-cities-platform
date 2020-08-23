@@ -1059,7 +1059,7 @@ class Photo(LibraryItem):
     objects = PublicActiveRecordManager()
 
 class ActivatedSpace(models.Model):
-    space = models.ForeignKey("ReferenceSpace", on_delete=models.CASCADE)
+    space = models.ForeignKey("ReferenceSpace", on_delete=models.CASCADE, related_name="activated")
     part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE)
     slug = models.CharField(max_length=255, db_index=True)
 

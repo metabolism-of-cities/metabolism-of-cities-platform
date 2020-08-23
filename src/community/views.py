@@ -89,9 +89,6 @@ def projects(request, project_name="core"):
     project = PROJECT_ID[project_name]
     project = Project.objects.get(pk=project)
     list = PublicProject.objects.filter(part_of_project=project)
-    for each in list:
-        each.meta_data["format"] = "html"
-        each.save()
     context = {
         "list": list,
         "load_datatables": True,

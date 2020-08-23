@@ -4,25 +4,22 @@
 {% block page_name %}datahub{% endblock %}
 
 {% block title %}Index{% endblock %}
-{% block head %}
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
-{% endblock %}
 
 {% block content %}
 <section>
-  <h2>What is the Data Hub?</h2>
-  <p>
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <a class="badge badge-primary" href=""><i class="fas fa-fw fa-angle-down"></i> More</a>
-  </p>
 
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 mt-4">
-    {% for each in list %}
-    <div class="col mb-4">
-      <a href="{% url 'data:dashboard' each.slug %}" class="btn-thumbnail" style="background-image: url('{{ each.space.photo.image.url }}');">
-        <span class="title">{{ each }}</span>
-      </a>
-    </div>
-    {% endfor %}
+  <h2>Metabolism of Cities Data Hub</h2>
+  {{ webpage.get_description }}
+
+  {% include "data/_space.progress.html" %}
+
+  <div class="text-center mb-4">
+    <a class="btn btn-inverse btn-lg mt-4" href="{% url "data:dashboards" %}">
+      <i class="fas fa-city" aria-hidden="true"></i> View all cities ({{ total }})
+    </a>
+    <a class="btn btn-inverse btn-lg mt-4" href="{% url "data:progress" %}">
+      <i class="fas fa-th" aria-hidden="true"></i> View progress
+    </a>
   </div>
 
   <div class="row">
@@ -57,7 +54,7 @@
   </div>
 </section>
 
-<section hidden>
+<section>
   <svg viewBox="0 0 470 235" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
     <defs>
       <linearGradient id="stroke-gradient">

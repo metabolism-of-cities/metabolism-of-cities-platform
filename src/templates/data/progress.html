@@ -1,5 +1,7 @@
 {% extends "_base.html" %}
-{% block title %}{{ SYSTEM_NAME_PLURAL }}{% endblock %}
+{% load moc_extras %}
+
+{% block title %}Progress overview{% endblock %}
 
 {% block head %}
 <style>
@@ -70,84 +72,26 @@
     <tbody>
       {% for each in list %}
         <tr>
-          <td class="city"><a href="../dashboards/{{ each.slug }}">{{ each }}</a></td>
+          <td class="city"><a href="{% url harvesting_link each.slug %}">{{ each }}</a></td>
           <td class="context">
-            {% spaceless %}
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-            {% endspaceless %}
+            <div class="progress">
+              <div class="progress-bar bg-success" role="progressbar" style="width: calc({% if counter|get_item:each.id %}{{ counter|get_item:each.id|get_item:846 }}{% else %}0{% endif %}/6*100%)" aria-valuenow="{% if counter|get_item:each.id %}{{ counter|get_item:each.id|get_item:846 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="6"></div>
+            </div>
           </td>
           <td class="biophysical">
-            {% spaceless %}
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-            {% endspaceless %}
+            <div class="progress">
+              <div class="progress-bar bg-success" role="progressbar" style="width: calc({% if counter|get_item:each.id %}{{ counter|get_item:each.id|get_item:847 }}{% else %}0{% endif %}/7*100%)" aria-valuenow="{% if counter|get_item:each.id %}{{ counter|get_item:each.id|get_item:847 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="7"></div>
+            </div>
           </td>
           <td class="infrastructure">
-            {% spaceless %}
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-            {% endspaceless %}
+            <div class="progress">
+              <div class="progress-bar bg-success" role="progressbar" style="width: calc({% if counter|get_item:each.id %}{{ counter|get_item:each.id|get_item:848 }}{% else %}0{% endif %}/32*100%)" aria-valuenow="{% if counter|get_item:each.id %}{{ counter|get_item:each.id|get_item:848 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="32"></div>
+            </div>
           </td>
           <td class="stocks">
-            {% spaceless %}
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-              <div class="single-datapoint {{ done|random }}"></div>
-            {% endspaceless %}
+            <div class="progress">
+              <div class="progress-bar bg-success" role="progressbar" style="width: calc({% if counter|get_item:each.id %}{{ counter|get_item:each.id|get_item:849 }}{% else %}0{% endif %}/18*100%)" aria-valuenow="{% if counter|get_item:each.id %}{{ counter|get_item:each.id|get_item:849 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="18"></div>
+            </div>
           </td>
         </tr>
       {% endfor %}

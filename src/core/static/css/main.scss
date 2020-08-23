@@ -3105,3 +3105,10 @@ body.volunteer.portal.latest {
 .badge-level-3 {
   color: #FFCC01;
 }
+
+// Progress bar in the overview boxes 
+.progress-list {
+  .progress {
+    height: .5rem;
+  }
+}
