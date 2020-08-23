@@ -1,157 +1,44 @@
 {% extends "_base.html" %}
+{% load humanize %}
 
 {% block page_name %}projects{% endblock %}
 
 {% block content %}
 
-<div id="project-list">
-  <div class="row mb-4">
-    <div class="col-md-6 mb-2">
-      <input type="text" class="form-control search" placeholder="Search by project title...">
-    </div>
-    <div class="col-md-6 mb-2">
-      <select class="type-filter custom-select">
-        <option value="all" selected>Filter by category</option>
-        {% for each in types %}
-          <option value="{{ each.id }}">{{ each }}</option>
+<h1>{% block title %}Projects{% endblock %}</h1>
+
+<table class="table table-striped datatable">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Funding programme</th>
+      <th>Budget</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for each in list %}
+    <tr>
+      <td>
+        <a href="{{ each.id }}/">{{ each }}</a><br>
+      </td>
+      <td>
+        {% for funder in each.funders %}
+          {{ funder }}
         {% endfor %}
-      </select>
-    </div>
-  </div>
-
-  <div class="row list">
-    {% for each in list %}
-      <div class="col-xl-4 col-md-6 mb-4 single-project" data-type="seminar">
-        <a class="card btn-card contain" href="{{ each.get_absolute_url }}">
-
-          {% if each.image %}
-            <img class="card-img-top" src="{{ each.image.url }}" alt="" />
-          {% endif %}
-
-          <div class="card-body">
-            <h5 class="card-title project-name">{{ each }}</h5>
-          </div>
-          <ul class="list-group list-group-flush">
-            {% if False %}
-            <li class="list-group-item">
-              <i class="far fa-fw fa-map-marker-alt"></i> Cape Town, South Africa
-            </li>
-            {% endif %}
-            <li class="list-group-item">
-              <i class="far fa-fw fa-calendar"></i>
-              {{ each.start_date }}
-              {% if each.end_date %}{{ each.end_date }}{% endif %}
-            </li>
-            <li class="list-group-item">
-              <i class="far fa-fw fa-{% if each.status == "ongoing" %}play{% else %}check{% endif %}"></i> {{ each.get_status_display }}
-            </li>
-            <li class="list-group-item">
-              <i class="far fa-fw fa-{{ each.type.icon }}"></i> 
-              {{ each.type }}
-            </li>
-          </ul>
-        </a>
-      </div>
-    {% endfor %}
-  </div>
-</div>
-
-<div class="card no-results">
-  <div class="card-body text-center">
-    <h2 class="my-4"><i class="fad fa-search"></i> No projects found</h2>
-    <button class="btn btn-lg btn-primary clear-filter my-4">Show all projects</button>
-  </div>
-</div>
+      </td>
+      <td class="text-nowrap" data-sort="{{ each.meta_data.budget }}">
+      {% if each.meta_data.budget_currency %}
+        &euro;
+      {% else %}
+        {{ each.meta_data.budget_currency }}
+      {% endif %}
+      {{ each.meta_data.budget|floatformat:0|intcomma }}</td>
+      <td class="text-nowrap" data-sort="{{ each.start_date|date:"Ymd" }}">{{ each.get_dates_months|default_if_none:"" }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
 
 {% endblock %}
 
-{% block footer %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-<script>
-  var listOptions = {
-      valueNames: ["project-name"]
-  };
-
-  var projectList = new List("project-list", listOptions);
-
-  // filters
-  // basic function to check if item matches filter
-  function projectFilter(type, value) {
-    if (value != "all") {
-      projectList.filter(function(item) {
-        if (item.values()[type] != value) {
-          item.values({inFilter: false})
-        }
-      });
-    }
-  }
-
-  // showing all items that match filters
-  function applyFilters() {
-    projectList.filter(function(item) {
-      if (item.values().inFilter == true) {
-         return true;
-      } else {
-         return false;
-      }
-    });
-  };
-
-  // function to check the number of matches
-  function checkCount() {
-    var count = $("#project-list .single-project:visible").length;
-    if (count == 0) {
-      $(".no-results").addClass("visible");
-    } else {
-      $(".no-results").removeClass("visible");
-    }
-  }
-
-  // function to apply filters on every dropdown
-  function runAllFilters() {
-    // set every item as matching filter
-    $(projectList.items).each(function() {
-      this.values({
-        inFilter: true,
-      });
-    });
-
-    // remove items that don't match filter
-    $(".filters select").each(function() {
-      var type = $(this).data("type");
-      var value = $(this).val()
-      projectFilter(type, value)
-    });
-
-    // show items that remain in filter
-    applyFilters();
-    checkCount();
-  }
-
-  // update contact count when searching by name
-  projectList.on("searchComplete", function(){
-    checkCount();
-  });
-
-  // make dropdowns work as filters
-  $(".filters select").change(function() {
-    runAllFilters()
-  });
-
-  // clear search and filters
-  function resetSearchFilters() {
-    projectList.search();
-    projectList.filter();
-    $(".filters select").val("all");
-    $("input.search").val("");
-  }
-
-  $(".clear-filter").click(function() {
-    resetSearchFilters();
-    checkCount();
-  })
-
-  // reset all filters on page load
-  resetSearchFilters()
-</script>
-{% endblock %}

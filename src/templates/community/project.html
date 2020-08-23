@@ -10,30 +10,40 @@
       <div class="col-lg-4">
         <div class="card">
         {% if info.image %}
-          <img src="{{ info.image.url }}" alt="" />
+          <img src="{{ info.image.url }}" alt="" class="card-img-top p-3" />
         {% endif %}
 
           <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-              <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Tags
-              <br>
-              {% for each in info.tags.all %}
-                <a class="btn btn-sm btn-primary-outline mt-1" href="{% url "library:index" %}?find=true&amp;search={{ each.id }}">{{ each }}</a>
-              {% endfor %}
-            </li>
+
+            {% if info.tags.all %}
+              <li class="list-group-item">
+                <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Tags
+                <br>
+                {% for each in info.tags.all %}
+                  <a class="btn btn-sm btn-primary-outline mt-1" href="{% url "library:index" %}?find=true&amp;search={{ each.id }}">{{ each }}</a>
+                {% endfor %}
+              </li>
+            {% endif %}
+
+            {% if info.start_date %}
+              <li class="list-group-item">
+                <i class="far fa-fw fa-calendar mb-1 mr-1" aria-hidden="true"></i> 
+                {{ info.get_dates }}
+              </li>
+            {% endif %}
 
             {% if info.meta_data.budget %}
               <li class="list-group-item">
-                <i class="far fa-fw fa-wallet mb-1 mr-1" aria-hidden="true"></i> Budget
+                <i class="far fa-fw fa-wallet mb-1 mr-1" aria-hidden="true"></i> Budget:
                 {{ info.meta_data.budget_currency }}
-                {{ info.meta_data.budget|intcomma }}
+                {{ info.meta_data.budget|floatformat:0|intcomma }}
               </li>
             {% endif %}
 
             {% if relationships %}
               {% for each in relationships %}
               <li class="list-group-item">
-                <i class="far fa-fw fa-wallet mb-1 mr-1" aria-hidden="true"></i> 
+                <i class="far fa-fw fa-building mb-1 mr-1" aria-hidden="true"></i> 
                 {{ each }}
               </li>
               {% endfor %}
@@ -49,7 +59,8 @@
       </div>
 
       <div class="col-lg-8 mb-4">
-        {{ info.description|safe|linebreaks }}
+        <h1 class="h3">{{ info }}</h1>
+        {{ info.get_description }}
       </div>
     </div>
 

@@ -206,6 +206,9 @@ class Record(models.Model):
     def authors(self):
         return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)
 
+    def funders(self):
+        return Record.objects.filter(parent_list__record_child=self, parent_list__relationship__id=5)
+
     def author(self):
         try:
             return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)[0]
@@ -356,6 +359,12 @@ class PublicProject(Record):
     )
     status = models.CharField(max_length=20, choices=STATUS, default="ongoing")
     part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
+
+    def get_dates(self):
+        return get_date_range(self.start_date, self.end_date)
+    
+    def get_dates_months(self):
+        return get_date_range(self.start_date, self.end_date, True)
 
     def get_absolute_url(self):
         return reverse("community:project", args=[self.id])
