@@ -1778,11 +1778,6 @@ body.staf-review.uploaded .statistic {
 body.work.item .description p:last-of-type {
   margin-bottom: 0; }
 
-body.work.item .forum {
-  max-height: 50vh;
-  overflow-y: auto;
-  overflow-x: hidden; }
-
 body.work.item .subscribers > div:not(:last-of-type) {
   margin-bottom: .125rem; }
 
