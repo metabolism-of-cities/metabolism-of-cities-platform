@@ -895,7 +895,7 @@ class LibraryItem(Record):
             return reverse("multimedia:podcast", args=[self.id])
         elif self.type_id == 10 or self.type_id == 40:
             # Datasets and shapefiles are opened in the data hub
-            return reverse("data:item", args=[self.id])
+            return reverse("data:dataset", args=[self.id])
         else:
             return reverse("library:item", args=[self.id])
 
