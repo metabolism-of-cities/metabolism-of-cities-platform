@@ -2553,5 +2553,5 @@ def eurostat(request):
 
 def redirect_publication(request, id):
     info = get_object_or_404(LibraryItem, old_id=id)
-    return redirect(info.get_absolute_url(), permanent=True)
+    return redirect(info.get_canonical_website() + info.get_absolute_url(), permanent=True)
 
