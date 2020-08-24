@@ -5,7 +5,7 @@
 {% block title %}{{ info }}{% endblock %}
 
 {% block head %}
-  <link rel="canonical" href="{{ info.get_canonical_website }}{{ info.get_absolute_url }}" />
+  <link rel="canonical" href="{{ info.get_full_url }}" />
 {% endblock %}
 
 {% block css %}
