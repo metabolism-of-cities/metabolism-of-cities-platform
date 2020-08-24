@@ -536,8 +536,8 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 elif tag:
                     position = tag.id
                 else:
-                    tag = None
-                info.position = tag
+                    position = None
+                info.position = position
             info.save()
             form.save_m2m()
 
