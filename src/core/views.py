@@ -808,7 +808,7 @@ def controlpanel_news(request):
 
     list = News.objects.all()
     if request.project != 1:
-        list = list.filter(projects__id=project),
+        list = list.filter(projects__id=project)
 
     context = {
         "pages": list,
