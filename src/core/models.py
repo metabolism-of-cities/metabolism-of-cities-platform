@@ -907,6 +907,17 @@ class LibraryItem(Record):
         else:
             return "https://library.metabolismofcities.org"
 
+    def get_full_url(self):
+        # Depending on which subsite we are on, the absolute url may
+        # already or may not yet include the HTTP part, so here we try to 
+        # make sure we always have the full URL
+        url = self.get_absolute_url()
+        first_chars = url[:4]
+        if first_chars == "http":
+            return url
+        else:
+            return self.get_canonical_website() + url
+
     def get_edit_link(self):
         if self.type_id == 31:
             # Videos are opened in the multimedia library
