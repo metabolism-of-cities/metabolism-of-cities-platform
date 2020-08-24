@@ -786,29 +786,10 @@ def hub_harvesting_tag(request, space, tag):
     visual = [33,38,20,31]
     document = [11]
     
-    report = 27
-    website = 32
+    report = [27]
+    website = [32]
 
-    if tag.id == 914:
-        # Policy documents
-        types = document
-    elif tag.id == 852 or tag.id == 851:
-        types = shapefile
-    elif tag.id == 853:
-        # Econ descriptions
-        types = [report,website]
-    elif tag.id == 854:
-        types = written + dataset
-    elif tag.id == 855:
-        # Population
-        types = dataset
-    elif tag.id == 855:
-        # Population
-        types = dataset
-    elif tag.id == 916:
-        # Visuals
-        types = visual
-    elif tag.parent_tag.id == 847:
+    if tag.parent_tag.id == 847:
         # Layer two
         types = shapefile + written + dataset + visual
     elif tag.parent_tag.id == 850:
@@ -820,6 +801,22 @@ def hub_harvesting_tag(request, space, tag):
     elif tag.parent_tag.id == 848:
         # Layer 3
         types = shapefile + written + dataset + visual
+    elif tag.id == 914:
+        # Policy documents
+        types = document
+    elif tag.id == 852 or tag.id == 851:
+        types = shapefile
+    elif tag.id == 853:
+        # Econ descriptions
+        types = report + website
+    elif tag.id == 854:
+        types = written + dataset
+    elif tag.id == 855:
+        # Population
+        types = dataset + report + website
+    elif tag.id == 916:
+        # Visuals
+        types = visual
 
     forum_topic = ForumTopic.objects.filter(part_of_project_id=request.project, parent_url=request.get_full_path())
     if forum_topic:
