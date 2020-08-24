@@ -390,7 +390,8 @@ def news(request, slug):
         "header_subtitle": info,
         "info": info,
         "latest": list[:3],
-        "edit_link": "/admin/core/news/" + str(id) + "/change/"
+        "edit_link": "/controlpanel/news/" + str(info.id) + "/?next=" + request.get_full_path(),
+        "add_link": "/controlpanel/news/create/",
     }
     return render(request, "news.html", context)
 
@@ -698,7 +699,11 @@ def hub_selector(request):
 
 # Control panel and general contribution components
 
+@login_required
 def controlpanel(request, space=None):
+
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
 
     if space:
         space = get_space(request, space)
@@ -793,6 +798,94 @@ def controlpanel_project(request):
         "header_subtitle": "Use this section to manage the general project details",
     }
     return render(request, "controlpanel/project.html", context)
+
+@login_required
+def controlpanel_news(request):
+
+    project = request.project
+    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    list = News.objects.all()
+    if request.project != 1:
+        list = list.filter(projects__id=project),
+
+    context = {
+        "pages": list,
+        "load_datatables": True,
+        "title": "News",
+    }
+    return render(request, "controlpanel/news.html", context)
+
+@login_required
+def controlpanel_news_form(request, id=None):
+
+    project = request.project
+    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    info = None
+    ModelForm = modelform_factory(News, fields=("name", "date", "image", "projects", "include_in_timeline", "is_deleted"))
+    if id:
+        info = get_object_or_404(News, pk=id)
+        form = ModelForm(request.POST or None, request.FILES or None, instance=info)
+    else:
+        form = ModelForm(request.POST or None, request.FILES or None)
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save(commit=False)
+            if not id:
+                info.part_of_project_id = project
+            info.description = request.POST.get("description")
+            meta_data = info.meta_data if info.meta_data else {}
+            meta_data["format"] = request.POST.get("format")
+            info.meta_data = meta_data
+            info.save()
+            form.save_m2m()
+
+            # TO DO
+            # There is a contraint, for slug + project combined, and we should
+            # check for that and properly return an error
+
+            existing_authors = []
+            if info.authors:
+                for each in info.authors():
+                    existing_authors.append(each.id)
+
+            if "authors" in request.POST:
+                for each in request.POST.getlist("authors"):
+                    each = int(each)
+                    if each not in existing_authors:
+                        RecordRelationship.objects.create(
+                            record_parent_id = each,
+                            record_child = info,
+                            relationship_id = 4,
+                        )
+                    else:
+                        existing_authors.remove(each)
+
+            for each in existing_authors:
+                check = RecordRelationship.objects.filter(record_parent_id=each, record_child=info, relationship_id=4)
+                check.delete()
+
+            messages.success(request, "Information was saved.")
+            url = info.get_absolute_url()
+            messages.warning(request, f'<a href="{url}"><i class="fa fa-fw fa-link"></i> View news article</a>')
+            if "next" in request.GET:
+                return redirect(request.GET.get("next"))
+            else:
+                return redirect("../")
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    context = {
+        "load_select2": True,
+        "form": form,
+        "info": info,
+        "title": info.name if info else "Create news article",
+        "load_markdown": True,
+    }
+    return render(request, "controlpanel/news.form.html", context)
 
 @login_required
 def controlpanel_content(request):
@@ -1405,6 +1498,8 @@ def search_ajax(request, type):
             list = Video.objects.all()
         elif type == "course":
             list = Course.objects.all()
+        elif type == "people":
+            list = People.objects.all()
 
         list = list.filter(name__icontains=query)
         for each in list:

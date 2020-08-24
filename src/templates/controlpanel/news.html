@@ -1,0 +1,55 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1 class="mb-0">News</h1>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+  <a class="btn btn-default-basic float-right mb-4" href="create/?next={{ request.get_full_path }}"><i class="fal fa-plus"></i> Add page</a>
+
+  <table class="table table-striped datatable table-card">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Date</th>
+        <th>Timeline?</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in pages %}
+      <tr>
+        <td>
+          <a href="{{ each.id }}/?next={{ request.get_full_path }}">{{ each }}</a>
+          {% if PROJECT.id == 1 %}
+            <br>
+            {% for project in each.projects.all %}
+              <span class="badge">{{ project }}</span>
+            {% endfor %}
+          {% endif %}
+        </td>
+        <td class="text-nowrap" data-sort="{{ each.date|date:"Ymd" }}">{{ each.date|date:"M d, Y" }}</td>
+        <td>
+          {% if each.include_in_timeline %}
+            <i class="fa fa-check"></i>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <a class="btn btn-default-basic float-right mt-4" href="create/?next={{ request.get_full_path }}"><i class="fal fa-plus"></i> Add page</a>
+  <a href="../" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+{% endblock %}
+
+{% block footer %}
+<script>
+  datatable.column("1:visible").order("desc").draw();
+</script>
+{% endblock %}

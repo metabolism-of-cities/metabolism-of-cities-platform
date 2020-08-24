@@ -176,7 +176,7 @@
   {% if load_datatables %}
     <script src="{% static 'js/datatables.min.js' %}"></script>
     <script>
-      $(".datatable").DataTable();
+      var datatable = $(".datatable").DataTable();
     </script>
   {% endif %}
 

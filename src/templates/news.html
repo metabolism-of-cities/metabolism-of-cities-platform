@@ -24,15 +24,23 @@
   <div class="col-lg-4">
     <div class="card basic-info">
       <ul class="list-group list-group-flush">
+        {% if info.authors %}
         <li class="list-group-item">
-          <i class="far fa-fw fa-user mr-1" aria-hidden="true"></i> Fulano de Tal
+          <i class="far fa-fw fa-user mr-1" aria-hidden="true"></i> 
+          {% if info.authors.count == 1 %}
+            Author: {{ info.authors.0 }}
+          {% else %}
+            Authors:<br> 
+            {% for each in info.authors %}
+              {{ each }}<br>
+            {% endfor %}
+          {% endif %}
         </li>
+        {% endif %}
         <li class="list-group-item">
           <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> {{ info.date }}
         </li>
-        <li class="list-group-item">
-          <i class="far fa-fw fa-link mr-1" aria-hidden="true"></i> <a href="#">Submit abstract</a>
-        </li>
+        {% if False %}
         <li class="list-group-item">
           <i class="far fa-fw fa-share-alt mb-1 mr-1" aria-hidden="true"></i> Share
           <br>
@@ -43,6 +51,7 @@
             <a class="btn btn-sm btn-primary-outline"><i class="fas fa-fw fa-envelope"></i></a>
           </div>
         </li>
+        {% endif %}
       </ul>
     </div>
 

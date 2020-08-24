@@ -381,7 +381,15 @@ class News(Record):
     include_in_timeline = models.BooleanField(default=False)
 
     def get_absolute_url(self):
-        return reverse("community:news", args=[self.slug])
+        if self.projects.count() == 1:
+            url = self.projects.all()[0].get_website()
+            url += "news/" + self.slug
+            return url
+        else:
+            return reverse("community:news", args=[self.slug])
+
+    def authors(self):
+        return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(unidecode(self.name))

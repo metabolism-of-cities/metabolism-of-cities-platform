@@ -29,7 +29,7 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     #path("curation/articles/<int:id>/", staf.review_article, name="review_article"),
 
     path("overview/", views.overview, name="overview"),
-    path("dashboards/", views.progress, name="progress"),
-    path("progress/", views.progress, { "style": "grid" }, name="dashboards"),
+    path("dashboards/", views.progress, { "style": "grid"}, name="dashboards"),
+    path("progress/", views.progress, name="progress"),
 
 ]
