@@ -913,7 +913,9 @@ class LibraryItem(Record):
         # make sure we always have the full URL
         url = self.get_absolute_url()
         first_chars = url[:4]
-        if first_chars == "http":
+        if first_chars == "/htt":
+            return url[1:]
+        elif first_chars == "http":
             return url
         else:
             return self.get_canonical_website() + url
