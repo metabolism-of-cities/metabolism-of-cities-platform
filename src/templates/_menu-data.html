@@ -1,13 +1,4 @@
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="cities-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Cities
-  </a>
-  <div class="dropdown-menu" aria-labelledby="cities-dropdown">
-    <a class="dropdown-item" href="{% url "data:overview" %}">View all</a>
-    <a class="dropdown-item" href="{% url "data:dashboard" "cape-town" %}">Cape Town</a>
-    <a class="dropdown-item" href="{% url "data:dashboard" "toronto" %}">Toronto</a>
-  </div>
-</li>
+<li class="nav-item"><a class="nav-link" href="{% url "data:dashboards" %}">Cities</a></li>
 <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="view-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
    Data inventory
@@ -29,5 +20,6 @@
     <a class="dropdown-item" href="https://multimedia.metabolismofcities.org/media/library/screenrecording.mp4">Instruction video</a>
   </div>
 </li>
-<li class="nav-item"><a class="disabled nav-link" href="#">About</a></li>
+<li class="nav-item"><a class="nav-link" href="https://data.metabolismofcities.org/news/new-metabolism-of-cities-data-hub-launched/">About</a></li>
+
 {% include "_menu-account.html" %}
