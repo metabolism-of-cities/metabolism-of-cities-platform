@@ -9,6 +9,7 @@ from core import views as core
 from community import views as community
 from django.contrib.auth import views as auth_views
 from core.validation_email import EmailValidationOnForgotPassword
+from django.views.generic.base import TemplateView
 
 #
 # Baseline links shared between all projects
@@ -51,6 +52,12 @@ baseline_urlpatterns = [
         "accounts/passwordreset/complete/",
         auth_views.PasswordResetCompleteView.as_view(template_name="auth/reset.success.html"),
         name="password_reset_complete",
+    ),
+
+
+    path(
+        "robots.txt",
+        TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
     ),
 
     # Work-related items
