@@ -10,7 +10,8 @@
 
 <style>
   .top-layer {
-    background-image: url("{% static 'img/home.bg.jpg' %}");
+    background-image: url("{% static 'img/home.bg.jpg' %}") !important;
+    background-size: cover !important;
     min-height: 55vh;
     position: relative;
   }
@@ -73,6 +74,9 @@
 
   .projects {
     padding-top: 4rem;
+
+background-color: #053c5e; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='76' height='76' viewBox='0 0 90 90'%3E%3Ccircle fill='%231f7a8c' cx='45' cy='45' r='6'/%3E%3Cg fill='%23a31621' fill-opacity='1'%3E%3Ccircle cx='0' cy='90' r='9'/%3E%3Ccircle cx='90' cy='90' r='9'/%3E%3Ccircle cx='90' cy='0' r='9'/%3E%3Ccircle cx='0' cy='0' r='9'/%3E%3C/g%3E%3C/svg%3E");
+
   }
 
   .slick-prev::before,
@@ -173,7 +177,7 @@
       </div>
     </div>
 
-    <div class="row text-center">
+    <div class="row text-center" hidden>
       <div class="col-lg-4 mb-4">
         <a class="card btn-card card-body" href="#">
           <div><i class="fal fa-users mr-2"></i> 412 contributors</div>
