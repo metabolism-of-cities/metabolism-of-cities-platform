@@ -367,7 +367,7 @@ def event_list(request, header_subtitle=None, project_name=None):
     }
     return render(request, "community/event.list.html", context)
 
-def event(request, id, project_name=None):
+def event(request, id, slug):
     info = get_object_or_404(Event, pk=id)
     today = timezone.now().date()
     context = {

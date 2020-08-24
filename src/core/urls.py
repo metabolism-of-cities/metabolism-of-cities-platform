@@ -23,8 +23,6 @@ urlpatterns = baseline_urlpatterns + [
     # News
     path("news/", views.news_list, name="news"),
     path("news/<slug:slug>/", views.news, name="news"),
-    path("events/", views.event_list, name="events"),
-    path("events/<slug:slug>/", views.event, name="event"),
     path("news_events/", views.news_events_list, name="news_events"),
 
     # Projects

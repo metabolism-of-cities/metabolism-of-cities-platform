@@ -161,5 +161,9 @@ textarea#id_author_list{height:100px}
       $("#id_file").attr("accept", ".csv");
     {% endif %}
 
+    {% if not info and type.name == "Image" %}
+      $("#id_image").attr("required", "required");
+    {% endif %}
+
   </script>
 {% endblock %}

@@ -55,7 +55,7 @@
             {% endif %}
           {% endifchanged %}
 
-          <a href="../events/{{ each.slug }}/" class="list-group-item list-group-item-action">
+          <a href="../events/{{ each.id }}/{{ each.slug }}/" class="list-group-item list-group-item-action">
             <div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1">{{ each }}</h5>
               <small>{{ each.get_status }}</small>

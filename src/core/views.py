@@ -419,8 +419,8 @@ def event_list(request, header_subtitle=None):
     }
     return render(request, "event.list.html", context)
 
-def event(request, slug):
-    info = get_object_or_404(Event, slug=slug)
+def event(request, id, slug):
+    info = get_object_or_404(Event, pk=id)
     today = timezone.now().date()
     subscription = None
     participants = None

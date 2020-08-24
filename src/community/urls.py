@@ -26,11 +26,11 @@ urlpatterns = baseline_urlpatterns + [
     path("organisations/<slug:slug>/<int:id>/edit/", community.organization_form, name="organization_form"),
 
     # News and events URLs from baseline
-    path("news/", core.news_list, { "project_name": app_name, "header_subtitle": "The latest news from the urban metabolism community" }, name="news"),
-    path("news/<slug:slug>/", core.news, { "project_name": app_name }, name="news"),
-    path("events/", community.event_list, { "project_name": app_name }, name="events"),
-    path("events/<int:id>/", community.event, { "project_name": app_name }, name="event"),
-    path("events/create/", community.event_form, { "project_name": app_name }, name="event_form"),
+    path("news/", core.news_list, { "header_subtitle": "The latest news from the urban metabolism community" }, name="news"),
+    path("news/<slug:slug>/", core.news, name="news"),
+    path("events/", community.event_list, name="events"),
+    path("events/<int:id>/<slug:slug>/", community.event, name="event"),
+    path("events/create/", community.event_form, name="event_form"),
 
     # Controlpanel
     path("controlpanel/organisations/", community.controlpanel_organizations),

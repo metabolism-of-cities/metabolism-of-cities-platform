@@ -4,6 +4,10 @@
 {% block page_name %}library item fullwidth{% endblock %}
 {% block title %}{{ info }}{% endblock %}
 
+{% block head %}
+  <link rel="canonical" href="{{ info.get_canonical_website }}{{ info.get_absolute_url }}" />
+{% endblock %}
+
 {% block css %}
   <style type="text/css">
     .export, .audioblock {

@@ -381,10 +381,8 @@ class News(Record):
     include_in_timeline = models.BooleanField(default=False)
 
     def get_absolute_url(self):
-        if self.projects.count() == 1:
-            url = self.projects.all()[0].get_website()
-            url += "news/" + self.slug
-            return url
+        if self.projects.count() > 0:
+            return self.projects.all()[0].get_website() + "news/" + self.slug + "/"
         else:
             return reverse("community:news", args=[self.slug])
 
@@ -554,7 +552,10 @@ class Event(Record):
         ordering = ["-start_date", "-id"]
 
     def get_absolute_url(self):
-        return reverse("community:event", args=[self.id])
+        if self.projects.count() > 0:
+            return self.projects.all()[0].get_website() + "events/" + str(self.id) + "/" + self.slug + "/"
+        else:
+            return reverse("community:event", args=[self.id, self.slug])
 
     def get_dates(self):
         return get_date_range(self.start_date, self.end_date)
@@ -892,8 +893,19 @@ class LibraryItem(Record):
         elif self.type_id == 24:
             # Podcasts are opened in the multimedia library
             return reverse("multimedia:podcast", args=[self.id])
+        elif self.type_id == 10 or self.type_id == 40:
+            # Datasets and shapefiles are opened in the data hub
+            return reverse("data:item", args=[self.id])
         else:
             return reverse("library:item", args=[self.id])
+
+    def get_canonical_website(self):
+        if self.type_id == 31 or self.type_id == 33 or self.type_id == 24:
+            return "https://multimedia.metabolismofcities.org"
+        elif self.type_id == 10 or self.type_id == 40:
+            return "https://data.metabolismofcities.org"
+        else:
+            return "https://library.metabolismofcities.org"
 
     def get_edit_link(self):
         if self.type_id == 31:
