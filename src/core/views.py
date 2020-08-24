@@ -2547,3 +2547,11 @@ def eurostat(request):
         context["load_datatables"] = True
 
     return render(request, "temp.eurostat.html", context)
+
+# These are permanent redirects to sort out old URL patterns 
+# At some point, say Dec 2021, we should just remove this
+
+def redirect_publication(request, id):
+    info = get_object_or_404(LibraryItem, old_id=id)
+    return redirect(info.get_absolute_url(), permanent=True)
+

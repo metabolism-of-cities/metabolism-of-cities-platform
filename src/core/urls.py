@@ -98,4 +98,7 @@ urlpatterns = baseline_urlpatterns + [
     path("tasks/<int:id>/", views.work_item, name="work_item"),
     path("tasks/<int:id>/edit/", views.work_form, name="work_form"),
 
+    # These are permanent redirects to sort out old URL patterns 
+    # At some point, say Dec 2021, we should just remove this
+    path("resources/publications/<int:id>", views.redirect_publication),
 ]
