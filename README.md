@@ -1,13 +1,22 @@
 # Overview
 
-This repository contains the source code of [Metabolism of Cities](https://metabolismofcities.org/). This repository supersedes the previous Github-hosted repository of our old website. This new website is written in Python using Django. The following technologies are used:
+This repository contains the source code of [Metabolism of Cities](https://metabolismofcities.org/). The following technologies are used:
 
-- Django 2.1
+- Django 3
 - Python 3
 - PostgreSQL 
+- PostGIS
 - Docker
 
+In order to meaningfully contribute to this project (or clone it and use it for your own purposes), you should ideally be comfortable with (or willing to learn about) the aforementioned technologies.
+
+The tech work on Metabolism of Cities has so far be done by a small number of people. However, we are very keen to get others involved. Due to the nature of the work, it would be ideal if you have a background both in urban metabolism/industrial ecology, and in web development. If you are not yet there, but you are willing to learn and spend time on this project, then we are happy to assist you in that journey. 
+
+We don't manage tasks through github, but instead have an online forum and task list integrated on our website. If you are thinking of contributing, please open a new [forum thread](https://metabolismofcities.org/forum/) and let us know what you have in mind.
+
 # Getting started
+
+DISCLAIMER: the system is currently running in a Linux environment only, but it should also work perfectly fine on Windows or other operating systems if you have Docker running on it. The commands shown below, however, are Linux specific, but these are simply copy / create directory commands that should be easy enough in any OS.
 
 To get started with this project, do the following:
 
@@ -32,3 +41,5 @@ Now that this is done, you can run the container like so:
     $ docker-compose up
 
 Wait a few moments, and the website should be up and running at http://localhost:8000
+
+NOTE: you may need to close and restart the container the first time around, as the initializing database boots too slowly on the first run and the web server fails without the db. Only occurs on the first time after building the container.
