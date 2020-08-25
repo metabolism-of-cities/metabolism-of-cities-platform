@@ -48,6 +48,8 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/resources/journal-articles/", data.library, {"type": "articles"}, name="journal_articles"),
     path("dashboards/<slug:space>/maps/", data.maps, name="maps"),
 
+    path("dashboards/<slug:space>/infrastructure/<slug:slug>/", staf.referencespace, name="referencespace"),
+
     # Hub
     path("hub/harvesting/", staf.hub_harvesting, name="hub_harvesting"),
     path("hub/harvesting/worksheet/", staf.hub_harvesting_worksheet, name="hub_harvesting_worksheet"),

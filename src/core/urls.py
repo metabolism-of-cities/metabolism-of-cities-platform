@@ -10,8 +10,29 @@ from community import views as community
 from ie.urls_baseline import baseline_urlpatterns
 
 app_name = "core"
+site_url = ''
+archive_url = 'https://archive.metabolismofcities.org'
 
 urlpatterns = baseline_urlpatterns + [
+
+    # Redirecting old URLs
+    path('omat', RedirectView.as_view(url=site_url+'/projects/omat', permanent=False)),
+    path('resources/omat', RedirectView.as_view(url=site_url+'/projects/omat', permanent=False)),
+    path('omat/<slug:slug>', RedirectView.as_view(url=archive_url+'/omat/%(slug)s', permanent=False)),
+    path('page/casestudies', RedirectView.as_view(url=archive_url+'/page/casestudies', permanent=False)),
+    path('page/casestudies/<slug:slug>', RedirectView.as_view(url=archive_url+'/page/casestudies/%(slug)s', permanent=False)),
+    path('casestudy/<slug:slug>', RedirectView.as_view(url=archive_url+'/casestudy/%(slug)s', permanent=False)),
+    path('data/areas/<slug:slug>', RedirectView.as_view(url=archive_url+'/data/areas/%(slug)s', permanent=False)),
+    path('data/subareas/<slug:slug>', RedirectView.as_view(url=archive_url+'/data/subareas/%(slug)s', permanent=False)),
+    path('stakeholders', RedirectView.as_view(url='/projects/stakeholders-initiative/', permanent=True)),
+    path('stakeholders/<slug:slug>', RedirectView.as_view(url='/projects/stakeholders-initiative/', permanent=True)),
+
+    # Redirecting v2 URLs
+    path('cities', RedirectView.as_view(url='https://data.metabolismofcities.org/', permanent=False)),
+    path('cities/<slug:slug>', RedirectView.as_view(url='https://data.metabolismofcities.org/dashboards/%(slug)s', permanent=False)),
+    path("cities/<slug:space>/infrastructure/<slug:type>/<slug:slug>/", RedirectView.as_view(url='https://data.metabolismofcities.org/dashboards/%(space)s/infrastructure/%(slug)s', permanent=False)),
+    path('cities/<slug:slug>/sectors/', RedirectView.as_view(url='https://data.metabolismofcities.org/dashboards/%(slug)s', permanent=False)),
+    path('cities/<slug:slug>/sectors/<slug:sector>', RedirectView.as_view(url='https://data.metabolismofcities.org/dashboards/%(slug)s', permanent=False)),
 
     # Homepage
     path("", views.index, name="index"),

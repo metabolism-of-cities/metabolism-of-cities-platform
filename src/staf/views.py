@@ -322,8 +322,11 @@ def referencespaces_list(request, id):
     }
     return render(request, "staf/referencespaces.list.html", context)
 
-def referencespace(request, id):
-    info = ReferenceSpace.objects.get(pk=id)
+def referencespace(request, id=None, space=None, slug=None):
+    if id:
+        info = ReferenceSpace.objects.get(pk=id)
+    elif slug:
+        info = get_object_or_404(ReferenceSpace, slug=slug)
     this_location = None
     inside_the_space = None
     if info.location:
