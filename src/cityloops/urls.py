@@ -7,6 +7,6 @@ from ie.urls_staf_baseline import baseline_staf_urlpatterns
 app_name = "cityloops"
 
 urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
-    path("", data.overview, name="index"),
-    path("overview/", data.overview, name="overview"),
+    path("", data.progress, { "style": "grid"}, name="index"),
+    path("overview/", data.progress, { "style": "grid"}, name="overview"),
 ]

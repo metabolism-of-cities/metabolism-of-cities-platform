@@ -2,7 +2,7 @@
 
 <div class="row progress-list">
   {% for each in list %}
-    {% if counter|get_item:each.id %}
+    {% if counter|get_item:each.id or PROJECT.slug == "cityloops" %}
       <div class="col-md-6 col-lg-4 mb-4">
         <div class="card">
           <a href="{% url dashboard_link each.slug %}">
