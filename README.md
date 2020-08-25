@@ -43,3 +43,5 @@ Now that this is done, you can run the container like so:
 Wait a few moments, and the website should be up and running at http://localhost:8000
 
 NOTE: you may need to close and restart the container the first time around, as the initializing database boots too slowly on the first run and the web server fails without the db. Only occurs on the first time after building the container.
+
+NOTE 2: you should migrate to get the database structure in place. If you know Django, this should be no problem. However please note that if you would like to seriously work on our website, then it would be most practical to get a copy of our live database so that you have actual data running on your local machine. Just ask us through the [forum](https://metabolismofcities.org/forum/) and we'll work this out.
