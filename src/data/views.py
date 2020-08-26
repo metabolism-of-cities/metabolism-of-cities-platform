@@ -294,34 +294,6 @@ def datasets(request, space):
 @staff_member_required
 def eurostat(request):
 
-    if "mass_tag" in request.GET:
-        nuts3 = Tag.objects.get(pk=817)
-        nuts2 = Tag.objects.get(pk=816)
-        nuts1 = Tag.objects.get(pk=932)
-        metro = Tag.objects.get(pk=935)
-        greater = Tag.objects.get(pk=934)
-        all = EurostatDB.objects.filter(is_duplicate=False).order_by("id")
-
-        nuts = all.filter(Q(title__icontains="NUTS3")|Q(title__icontains="NUTS 3"))
-        for each in nuts:
-            each.tags.add(nuts3)
-
-        nuts = all.filter(Q(title__icontains="NUTS2")|Q(title__icontains="NUTS 2"))
-        for each in nuts:
-            each.tags.add(nuts2)
-
-        nuts = all.filter(Q(title__icontains="NUTS1")|Q(title__icontains="NUTS 1"))
-        for each in nuts:
-            each.tags.add(nuts1)
-
-        c = all.filter(code__startswith="urb_")
-        for each in c:
-            each.tags.add(greater)
-
-        c = all.filter(code__startswith="met_")
-        for each in c:
-            each.tags.add(metro)
-
     from django.core.paginator import Paginator
     page = "regular"
 

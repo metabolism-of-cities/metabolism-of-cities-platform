@@ -1,0 +1,53 @@
+{% extends "_base.html" %}
+{% load moc_extras %}
+
+{% block head %}
+<style type="text/css">
+.fa-check{cursor:pointer}
+</style>
+{% endblock %}
+
+{% block content %}
+  <h1>Eurostat database grid</h1>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Layer</th>
+        <th>Cities and greater cities</th>
+        <th>Metropolitan regions</th>
+        <th>NUTS 3</th>
+        <th>NUTS 2</th>
+        <th>NUTS 1</th>
+        <th>Unclassified</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in layers %}
+      <tr>
+        <td>{{ each }}</td>
+        {% for category in categories %}
+        <td class="{% if not hit|get_item:each.id|get_item:category %}bg-danger{% else %}text-center{% endif %}">
+          {% if hit|get_item:each.id|get_item:category %}
+            <i class="fa fa-check text-success"></i>
+            <span style="display:none">
+            {% for item in hit|get_item:each.id|get_item:category %}
+              <a href="/admin/core/eurostatdb/{{ item.id }}/change/">{{ item }}</a><br>
+            {% endfor %}
+          {% endif %}
+          </span>
+        </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+
+{% block footer %}
+<script>
+$(".fa-check").click(function(){
+  $(this).closest("td").find('span').toggle();
+});
+</script>
+{% endblock %}
