@@ -624,6 +624,11 @@ footer {
   }
 }
 
+img.card-img-top {
+  object-fit: cover;
+  height: 200px;
+}
+
 .btn-card {
   @extend %raised-hover;
   @extend %box-shadow;
@@ -640,11 +645,6 @@ footer {
     left: calc(50% - 3rem);
     position: absolute;
     top: calc(50% - 3rem);
-  }
-
-  img.card-img-top {
-    height: 180px;
-    object-fit: cover;
   }
 
   &.contain img.card-img-top {
@@ -3107,7 +3107,7 @@ body.volunteer.portal.latest {
   color: #FFCC01;
 }
 
-// Progress bar in the overview boxes 
+// Progress bar in the overview boxes
 .progress-list {
   .progress {
     height: .5rem;
