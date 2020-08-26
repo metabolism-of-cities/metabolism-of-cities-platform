@@ -348,11 +348,11 @@
           </ul>
         {% endif %}
 
-        {% if spaces %}
+        {% if info.spaces.all %}
           <h3 class="mt-5">Reference spaces</h3>
           <ul>
-          {% for each in spaces %}
-            <li><a href="{% url "staf:referencespace" each.id %}">{{ each }}</a></li>
+          {% for each in info.spaces.all %}
+            <li>{{ each }}</li>
           {% endfor %}
           </ul>
         {% endif %}
