@@ -626,6 +626,7 @@ footer {
 
 img.card-img-top {
   object-fit: cover;
+  height: 200px;
 }
 
 .btn-card {
@@ -644,11 +645,6 @@ img.card-img-top {
     left: calc(50% - 3rem);
     position: absolute;
     top: calc(50% - 3rem);
-  }
-
-  img.card-img-top {
-    height: 180px;
-    object-fit: cover;
   }
 
   &.contain img.card-img-top {

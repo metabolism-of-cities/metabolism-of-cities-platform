@@ -410,7 +410,8 @@ footer {
     color: #efefef; }
 
 img.card-img-top {
-  object-fit: cover; }
+  object-fit: cover;
+  height: 200px; }
 
 .btn-card {
   color: #212529;
@@ -423,9 +424,6 @@ img.card-img-top {
     left: calc(50% - 3rem);
     position: absolute;
     top: calc(50% - 3rem); }
-  .btn-card img.card-img-top {
-    height: 180px;
-    object-fit: cover; }
   .btn-card.contain img.card-img-top {
     object-fit: contain; }
   .btn-card .card-body.media img {
