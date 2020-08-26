@@ -3,9 +3,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.db.models import Count
 from django.contrib import messages
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, JsonResponse, HttpResponse
 from django.forms import modelform_factory
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.admin.views.decorators import staff_member_required
+from django.db.models import Q
 
 from django.utils import timezone
 import pytz
@@ -288,4 +290,104 @@ def datasets(request, space):
         "items": Dataset.objects.filter(spaces=space),
     }
     return render(request, "data/datasets.html", context)
+
+@staff_member_required
+def eurostat(request):
+
+    if "mass_tag" in request.GET:
+        nuts3 = Tag.objects.get(pk=817)
+        nuts2 = Tag.objects.get(pk=816)
+        nuts1 = Tag.objects.get(pk=932)
+        metro = Tag.objects.get(pk=935)
+        greater = Tag.objects.get(pk=934)
+        all = EurostatDB.objects.filter(is_duplicate=False).order_by("id")
+
+        nuts = all.filter(Q(title__icontains="NUTS3")|Q(title__icontains="NUTS 3"))
+        for each in nuts:
+            each.tags.add(nuts3)
+
+        nuts = all.filter(Q(title__icontains="NUTS2")|Q(title__icontains="NUTS 2"))
+        for each in nuts:
+            each.tags.add(nuts2)
+
+        nuts = all.filter(Q(title__icontains="NUTS1")|Q(title__icontains="NUTS 1"))
+        for each in nuts:
+            each.tags.add(nuts1)
+
+        c = all.filter(code__startswith="urb_")
+        for each in c:
+            each.tags.add(greater)
+
+        c = all.filter(code__startswith="met_")
+        for each in c:
+            each.tags.add(metro)
+
+    from django.core.paginator import Paginator
+    page = "regular"
+
+    hits = 1000
+    if "full" in request.GET or request.GET.get("show") == "full":
+        hits = 10000
+        page = "full"
+
+    full_list = EurostatDB.objects.filter(is_duplicate=False).order_by("id")
+    full_list = full_list.exclude(code__startswith="med_")
+    full_list = full_list.exclude(code__startswith="cpc_")
+    full_list = full_list.exclude(code__startswith="enpr_")
+
+    if "accepted" in request.GET or request.GET.get("show") == "accepted":
+        full_list = full_list.filter(is_approved=True).exclude(type="folder")
+        page = "accepted"
+
+    if "pending" in request.GET or request.GET.get("show") == "pending":
+        full_list = full_list.filter(is_reviewed=False).exclude(type="folder")
+        page = "pending"
+
+    if "q" in request.GET and request.GET.get("q"):
+        full_list = full_list.filter(title__icontains=request.GET.get("q"))
+
+    paginator = Paginator(full_list, hits)
+    page_number = request.GET.get("page")
+    list = paginator.get_page(page_number)
+
+    if "action" in request.GET:
+        try:
+            info = EurostatDB.objects.get(pk=request.GET["id"])
+            info.is_reviewed = True
+            if request.GET["action"] == "deny":
+                info.is_denied = True
+                info.is_approved = False
+            else:
+                info.is_denied = False
+                info.is_approved = True
+            info.save()
+            return JsonResponse({"status":"OK"})
+        except:
+            return JsonResponse({"status":"Fail"})
+
+    if "deadlink" in request.GET:
+        info = EurostatDB.objects.get(pk=request.GET["deadlink"])
+        info.has_no_meta_data = True
+        info.save()
+        return JsonResponse({"status":"OK"})
+
+    progress = full_list.filter(is_reviewed=True).count()
+    no_folders = full_list.exclude(type="folder")
+    percentage = progress/no_folders.count() if no_folders else 0
+
+    context = {
+        "list": list,
+        "title": "Eurostat database manager",
+        "progress": progress,
+        "percentage": percentage*100,
+        "full_list": full_list,
+        "no_folders": no_folders,
+        "page": page,
+        "webpage": Webpage.objects.get(slug="/eurostat/"),
+    }
+
+    if "full" in request.GET or request.GET.get("show") == "full" or "accepted" in request.GET:
+        context["load_datatables"] = True
+
+    return render(request, "temp.eurostat.html", context)
 

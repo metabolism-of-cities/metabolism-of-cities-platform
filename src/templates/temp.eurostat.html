@@ -32,16 +32,16 @@ td.mini {
 
   <ul class="nav nav-tabs mb-4">
     <li class="nav-item">
-      <a class="nav-link {% if page == "regular" %}active{% endif %}" href="/eurostat/">Regular</a>
+      <a class="nav-link {% if page == "regular" %}active{% endif %}" href="./">Regular</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link {% if page == "accepted" %}active{% endif %}" href="/eurostat/?accepted=true">Accepted</a>
+      <a class="nav-link {% if page == "accepted" %}active{% endif %}" href="./?accepted=true">Accepted</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link {% if page == "full" %}active{% endif %}" href="/eurostat/?full=true">Full list with search</a>
+      <a class="nav-link {% if page == "full" %}active{% endif %}" href="./?full=true">Full list with search</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link {% if page == "pending" %}active{% endif %}" href="/eurostat/?pending=true">Pending items only</a>
+      <a class="nav-link {% if page == "pending" %}active{% endif %}" href="./?pending=true">Pending items only</a>
     </li>
   </ul>
 
@@ -134,7 +134,7 @@ td.mini {
       button = $(this);
       var id = $(this).data("id");
       var action = $(this).data("action");
-      $.get("{% url "core:eurostat" %}",{
+      $.get("{% url "cityloops:eurostat" %}",{
         deadlink: id,
       }, function(data) {
         if (data.status == "OK") {
@@ -155,7 +155,7 @@ td.mini {
       var action = $(this).data("action");
       console.log("ID: "+id);
       console.log("action: "+action);
-      $.get("{% url "core:eurostat" %}",{
+      $.get("{% url "cityloops:eurostat" %}",{
         id: id,
         action: action,
       }, function(data) {

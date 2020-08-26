@@ -105,8 +105,6 @@ urlpatterns = baseline_urlpatterns + [
     path("socialmedia/<slug:type>/", views.socialmedia_post),
     path("search/ajax/<slug:type>/", views.search_ajax, name="search_ajax"),
 
-
-    path("eurostat/", views.eurostat, name="eurostat"),
     path("forum/", community.forum_list, name="forum_list"),
     path("tasks/", views.work_grid, name="tasks"),
     path("tasks/sprints/", views.work_sprints, name="work_sprints"),

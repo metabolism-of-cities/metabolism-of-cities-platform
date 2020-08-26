@@ -9,4 +9,5 @@ app_name = "cityloops"
 urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("", data.progress, { "style": "grid"}, name="index"),
     path("overview/", data.progress, { "style": "grid"}, name="overview"),
+    path("eurostat/", data.eurostat, name="eurostat"),
 ]
