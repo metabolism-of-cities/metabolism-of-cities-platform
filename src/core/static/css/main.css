@@ -409,6 +409,9 @@ footer {
     border-color: transparent;
     color: #efefef; }
 
+img.card-img-top {
+  object-fit: cover; }
+
 .btn-card {
   color: #212529;
   height: 100%; }
