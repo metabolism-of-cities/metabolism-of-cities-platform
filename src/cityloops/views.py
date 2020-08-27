@@ -69,12 +69,24 @@ def eurostat_grid(request):
                     if tag.id in hit:
                         hit[tag.id]["metro"].append(each)
 
+    counter = {}
+    for each in hit:
+        counter[each] = {
+            "nuts3": hit[each]["nuts3"].count,
+            "nuts2": hit[each]["nuts2"].count,
+            "nuts1": hit[each]["nuts1"].count,
+            "greater": hit[each]["greater"].count,
+            "metro": hit[each]["metro"].count,
+            "unclassified": hit[each]["unclassified"].count,
+        }
+
     context = {
         "list": full_list,
         "title": "Eurostat database grid",
         "layers": layer_list,
         "hit": hit,
         "categories": ["greater", "metro", "nuts3", "nuts2", "nuts1", "unclassified"],
+        "counter": counter,
     }
 
     return render(request, "cityloops/eurostat.grid.html", context)

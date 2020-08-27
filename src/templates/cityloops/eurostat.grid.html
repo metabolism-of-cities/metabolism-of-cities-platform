@@ -4,13 +4,19 @@
 {% block head %}
 <style type="text/css">
 .fa-check{cursor:pointer}
+.faded{background:#ccc !important;color:#999}
+.faded.bg-danger{background:#ccc !important}
+.bg-danger{background:#004d76 !important}
+.faded .text-success{color:#999 !important}
+.nothing .bg-danger{background:orange !important}
+.nothing .faded.bg-danger{background:#ccc !important}
 </style>
 {% endblock %}
 
 {% block content %}
   <h1>Eurostat database grid</h1>
 
-  <table class="table table-striped">
+  <table class="table table-striped" id="analysis">
     <thead>
       <tr>
         <th>Layer</th>
@@ -25,14 +31,17 @@
     <tbody>
     {% for each in layers %}
       <tr>
-        <td>{{ each }}</td>
+        <td class="{% if each.id == 852 or each.id == 853 or each.id == 854 or each.id == 915 or each.id == 916 %}faded{% endif %}">{{ each }}</td>
         {% for category in categories %}
-        <td class="{% if not hit|get_item:each.id|get_item:category %}bg-danger{% else %}text-center{% endif %}">
+        <td class="{% if not hit|get_item:each.id|get_item:category %}bg-danger{% else %}text-center{% endif %}
+          {% if each.id == 852 or each.id == 853 or each.id == 854 or each.id == 915 or each.id == 916 %}faded{% endif %}
+        ">
           {% if hit|get_item:each.id|get_item:category %}
             <i class="fa fa-check text-success"></i>
+            {{ hit|get_item:each.id|get_item:category|length }}
             <span style="display:none">
             {% for item in hit|get_item:each.id|get_item:category %}
-              <a href="/admin/core/eurostatdb/{{ item.id }}/change/">{{ item }}</a><br>
+              <a target="_blank" href="/admin/core/eurostatdb/{{ item.id }}/change/">{{ item }}</a><br>
             {% endfor %}
           {% endif %}
           </span>
@@ -48,6 +57,12 @@
 <script>
 $(".fa-check").click(function(){
   $(this).closest("td").find('span').toggle();
+});
+$("#analysis tr").each(function(){
+  a = $(this);
+  if (! a.find('.fa-check').length) {
+    $(this).addClass("nothing");
+  }
 });
 </script>
 {% endblock %}
