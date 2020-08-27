@@ -451,6 +451,10 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         elif type.name == "Report":
             files = True
 
+        elif type.name == "GPS Coordinates":
+            fields.remove("language")
+            fields.remove("url")
+
         if project.slug == "untraceable":
             if "tags" not in fields:
                 fields.append("tags")
