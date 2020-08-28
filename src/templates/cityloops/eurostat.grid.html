@@ -31,10 +31,10 @@
     <tbody>
     {% for each in layers %}
       <tr>
-        <td class="{% if each.id == 852 or each.id == 853 or each.id == 854 or each.id == 915 or each.id == 916 %}faded{% endif %}">{{ each }}</td>
+        <td class="{% if each.id == 852 or each.id == 853 or each.id == 914 or each.id == 915 or each.id == 916 %}faded{% endif %}">{{ each }}</td>
         {% for category in categories %}
         <td class="{% if not hit|get_item:each.id|get_item:category %}bg-danger{% else %}text-center{% endif %}
-          {% if each.id == 852 or each.id == 853 or each.id == 854 or each.id == 915 or each.id == 916 %}faded{% endif %}
+          {% if each.id == 852 or each.id == 853 or each.id == 914 or each.id == 915 or each.id == 916 %}faded{% endif %}
         ">
           {% if hit|get_item:each.id|get_item:category %}
             <i class="fa fa-check text-success"></i>
