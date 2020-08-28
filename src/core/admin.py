@@ -280,7 +280,7 @@ class LogEntryAdmin(admin.ModelAdmin):
         return request.user.is_superuser
 
 class UserAdmin(admin.ModelAdmin):
-     list_display = ["username", "email", "is_staff", "is_active"]
+     list_display = ["username", "email", "first_name", "date_joined", "is_staff", "is_active"]
      list_filter = ["is_staff", "is_active"]
      search_fields = ["username", "email"]
 
