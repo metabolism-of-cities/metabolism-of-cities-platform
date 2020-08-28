@@ -78,6 +78,9 @@ def user_register(request, project="core", section=None):
         password = request.POST.get("password")
         email = request.POST.get("email")
         name = request.POST.get("name")
+        if request.POST.get("tw").lower() != "hello":
+            messages.error(request, "Please enter 'hello' in the last box.")
+            error = True
         if not password:
             messages.error(request, "You did not enter a password.")
             error = True
@@ -237,7 +240,7 @@ def user_profile(request, id=None, project=None):
         info = request.user.people
     else:
         project = get_object_or_404(Project, pk=request.project)
-        return redirect(project.slug + ":login")
+        return redirect(project.get_slug() + ":login")
 
     completed = Work.objects.filter(assigned_to=info, status=Work.WorkStatus.COMPLETED)
     open = Work.objects.filter(assigned_to=info).filter(Q(status=Work.WorkStatus.OPEN)|Q(status=Work.WorkStatus.PROGRESS))
