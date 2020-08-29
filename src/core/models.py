@@ -975,8 +975,11 @@ class LibraryItem(Record):
                     lastname = each.rpartition(" ")[2]
                     author_array.append(lastname)
             else:
-                lastname = author_list.rpartition(" ")[2]
-                author_array.append(lastname)
+                # One option is to show JUST the lastname, but in practice it's more likely 
+                # that this is the name of an entity like "City of Cape Town", so let's do the 
+                # whole name instead
+                # lastname = author_list.rpartition(" ")[2]
+                author_array.append(author_list)
             if len(author_array) == 1:
                 return author_array[0]
             elif len(author_array) == 2:

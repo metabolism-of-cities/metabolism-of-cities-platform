@@ -193,14 +193,6 @@ def journal(request, slug):
     return render(request, "library/journal.html", context)
 
 def item(request, id, show_export=True):
-    
-    if "update" in request.GET and request.user.id == 1:
-        all = LibraryItem.objects.all()
-        for each in all:
-            each.save()
-        all = Message.objects.all()
-        for each in all:
-            each.save()
 
     info = get_object_or_404(LibraryItem, pk=id)
     section = "library"
@@ -211,6 +203,12 @@ def item(request, id, show_export=True):
     if "edit" in request.GET:
         if has_permission(request, request.project, ["curator"]) or request.user.people == info.uploader():
             return form(request, info.id)
+
+    if "delete" in request.GET:
+        if has_permission(request, request.project, ["curator"]) or request.user.people == info.uploader():
+            info.is_deleted = True
+            info.save()
+            messages.success(request, "This item was deleted")
 
     spaces = info.reference_spaces()
 

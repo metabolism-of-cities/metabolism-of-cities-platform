@@ -57,4 +57,5 @@ def site(request):
         "NOTIFICATIONS": notifications,
         "SYSTEM_NAME_SINGULAR": system_name_singular,
         "SYSTEM_NAME_PLURAL": system_name_plural,
+        "URL_PROFILE": project.get_slug() + ":" + "user",
     }
