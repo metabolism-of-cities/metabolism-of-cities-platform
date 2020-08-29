@@ -256,7 +256,7 @@
                   {% endfor %}
                 </li>
               {% endif %}
-              {% if info.language %}
+              {% if info.language and not info.type.name == "Image" %}
               <li class="list-group-item table-item">
                 <div><i class="far fa-fw fa-language mr-1"></i> Language</div>
                 <div>{{ info.get_language_display }}</div>
@@ -341,11 +341,21 @@
 
         {% if info.children.all %}
           <h3 class="mt-5">Available within this {{ info.type }}</h3>
-          <ul>
+          <div class="row mb-4">
           {% for each in info.children.all %}
-            <li><a href="../{{ each.id }}/">{{ each }}</a></li>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+              <a class="card btn-card" href="../{{ each.id }}/">
+                {% if each.image %}
+                  <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
+                {% endif %}
+                <div class="card-body">
+                  <h5 class="card-title">{{ each }}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">{{ each.type }}</h6>
+                </div>
+              </a>
+            </div>
           {% endfor %}
-          </ul>
+          </div>
         {% endif %}
 
         {% if info.spaces.all %}

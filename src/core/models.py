@@ -227,17 +227,20 @@ class Record(models.Model):
     def save(self, *args, **kwargs):
         if not self.description:
             self.description_html = None
-        elif self.meta_data and "format" in self.meta_data:
+        elif self.meta_data and "format" in self.meta_data and self.meta_data["format"] != "markdown":
             if self.meta_data["format"] == "markdown_html":
                 # Here it wouldn't hurt to apply bleach and take out unnecessary tags
                 self.description_html = markdown(self.description)
             elif self.meta_data["format"] == "html":
                 # Here it wouldn't hurt to apply bleach and take out unnecessary tags
                 self.description_html = self.description
-            else:
-                self.description_html = markdown(bleach.clean(self.description))
         else:
             self.description_html = markdown(bleach.clean(self.description))
+            # In normal Markdown convention, a single newline will NOT be converted to <br>
+            # However this is not how regular textareas work, and people are expecting this to work
+            # so we add these <br>s. Ideally we would avoid <p>hello</p><br><p>newline</p> but 
+            # for now that's the additional consequence -- doesn't seem to be a really visible impact anyways
+            self.description_html = self.description_html.replace("\n", "<br>")
         super().save(*args, **kwargs)
 
     objects_unfiltered = models.Manager()
