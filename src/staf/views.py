@@ -549,6 +549,8 @@ def flowdiagram(request, id, show_form=False):
 
     if has_permission(request, request.project, ["curator", "admin"]):
         curator = True
+    else:
+        show_form = False
 
     if "edit" in request.GET and curator:
         flowblock = FlowBlocks.objects.get(pk=request.GET["edit"])
@@ -590,6 +592,7 @@ def flowdiagram(request, id, show_form=False):
     }
     return render(request, "staf/flowdiagram.html", context)
 
+@staff_member_required
 def flowdiagram_meta(request, id=None):
     ModelForm = modelform_factory(FlowDiagram, fields=("name", "description", "icon", "is_public"))
     if id:

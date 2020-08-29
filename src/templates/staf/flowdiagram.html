@@ -1,5 +1,6 @@
 {% extends "_base.html" %}
 {% load bootstrap4 %}
+{% load moc_extras %}
 
 {% block head %}
 <style>
@@ -23,7 +24,7 @@
         <div class="card-body mermaid">
           graph TB
             {% for each in blocks %}
-            block{{ each.origin.id }}{{ each.get_origin_slug }}[{{ each.get_origin|escapejs }}] --> block{{ each.destination.id }}{{ each.get_destination_slug }}[{{ each.get_destination|escapejs }}]
+            block{{ each.origin.id }}{{ each.get_origin_slug }}[{{ each.get_origin|escapejs|convert_dash }}] --> block{{ each.destination.id }}{{ each.get_destination_slug }}[{{ each.get_destination|escapejs|convert_dash }}]
             {% endfor %}
         </div>
       </div>
