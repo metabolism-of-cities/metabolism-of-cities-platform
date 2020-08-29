@@ -540,34 +540,53 @@ def flowdiagrams(request):
     }
     return render(request, "staf/flowdiagrams.html", context)
 
-def flowdiagram(request, id, form=False):
+def flowdiagram(request, id, show_form=False):
     info = get_object_or_404(FlowDiagram, pk=id)
-    if request.method == "POST":
-        if "delete" in request.POST:
-            item = FlowBlocks.objects.filter(diagram=info, pk=request.POST["delete"])
-            if item:
-                item.delete()
-                messages.success(request, "This block was removed.")
-        else:
-            FlowBlocks.objects.create(
-                diagram = info,
-                origin_id = request.POST["from"],
-                destination_id = request.POST["to"],
-                origin_label = request.POST["from_label"],
-                destination_label = request.POST["to_label"],
-                description = request.POST["label"],
-            )
-            messages.success(request, "The information was saved.")
+
+    curator = False
+    form = None
+    flowblock = None
+
+    if has_permission(request, request.project, ["curator", "admin"]):
+        curator = True
+
+    if "edit" in request.GET and curator:
+        flowblock = FlowBlocks.objects.get(pk=request.GET["edit"])
+
+    if show_form:
+        ModelForm = modelform_factory(FlowBlocks, exclude=["diagram"])
+        form = ModelForm(request.POST or None, instance=flowblock)
+        if request.method == "POST":
+            if form.is_valid():
+                b = form.save(commit=False)
+                if not flowblock:
+                    b.diagram = info
+                b.save()
+
+                messages.success(request, "Information was saved.")
+            else:
+                messages.error(request, "We could not save your form, please fill out all fields")
+            if "next" in request.GET:
+                return redirect(request.GET["next"])
+
+    if request.method == "POST" and "delete" in request.POST and curator:
+        item = FlowBlocks.objects.filter(diagram=info, pk=request.POST["delete"])
+        if item:
+            item.delete()
+            messages.success(request, "This block was removed.")
+
     blocks = info.blocks.all()
     activities = Activity.objects.all()
+
     context = {
         "activities": activities,
         "load_select2": True,
         "load_mermaid": True,
         "info": info,
         "blocks": blocks,
-        "form": form,
         "title": info.name if info else "Create new flow diagram",
+        "flowblock": flowblock,
+        "form": form,
     }
     return render(request, "staf/flowdiagram.html", context)
 

@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% load bootstrap4 %}
 
 {% block head %}
 <style>
@@ -11,135 +12,100 @@
 
 <h1>{{ info }}</h1>
 
-<div class="row mb-4">
-  <div class="col-lg-12">
-    <div class="card">
-      <div class="card-header">
-        Flow diagram
-      </div>
-      <div class="card-body mermaid">
-        graph TB
-          {% for each in blocks %}
-          block{{ each.origin.id }}{{ each.get_origin_slug }}[{{ each.get_origin|escapejs }}] --> block{{ each.destination.id }}{{ each.get_destination_slug }}[{{ each.get_destination|escapejs }}]
-          {% endfor %}
-      </div>
-    </div>
-  </div>
-</div>
+{% if not "edit" in request.GET %}
 
-{% if form %}
-
-  <div class="row">
+  <div class="row mb-4">
     <div class="col-lg-12">
-      <form method="post" class="form form-horizontal">
-
-        <div class="form-group row">
-          <label class="col-sm-2 col-form-label">From</label>
-          <div class="col-sm-10">
-            <select name="from" class="custom-select select2" required>
-              <option value=""></option>
-              {% for each in activities %}
-                <option value="{{ each.id }}">{{ each }}</option>
-              {% endfor %}
-            </select>
-          </div>
+      <div class="card">
+        <div class="card-header">
+          Flow diagram
         </div>
-
-        <div class="form-group row">
-          <label class="col-sm-2 col-form-label">From label (optional)</label>
-          <div class="col-sm-10">
-            <input name="from_label" class="form-control">
-          </div>
+        <div class="card-body mermaid">
+          graph TB
+            {% for each in blocks %}
+            block{{ each.origin.id }}{{ each.get_origin_slug }}[{{ each.get_origin|escapejs }}] --> block{{ each.destination.id }}{{ each.get_destination_slug }}[{{ each.get_destination|escapejs }}]
+            {% endfor %}
         </div>
-
-        <div class="form-group row">
-          <label class="col-sm-2 col-form-label">To</label>
-          <div class="col-sm-10">
-            <select name="to" class="custom-select select2" required>
-              <option value=""></option>
-              {% for each in activities %}
-                <option value="{{ each.id }}">{{ each }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label class="col-sm-2 col-form-label">To label (optional)</label>
-          <div class="col-sm-10">
-            <input name="to_label" class="form-control">
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label class="col-sm-2 col-form-label">Material label (optional)</label>
-          <div class="col-sm-10">
-            <input name="label" class="form-control">
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <div class="col-md-10 offset-md-2">
-            <button type="submit" class="btn btn-success">
-              <i class="fas fa-save"></i> 
-              Save
-            </button>
-          </div>
-        </div>
-        {% csrf_token %}
-      </form>
+      </div>
     </div>
   </div>
 
 {% endif %}
 
-<h2 class="mt-4">List</h2>
+{% if form %}
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Origin</th>
-      <th>Destination</th>
-      {% if form %}
-        <th>Options</th>
-      {% endif %}
-    </tr>
-  </thead>
-  <tbody>
-  {% for each in blocks %}
-    <tr>
-      <td>
-        {% if each.origin_label %}
-          <strong>{{ each.origin_label }}</strong><br>
+  <form method="post" class="form form-horizontal boxit pad-all" enctype="multipart/form-data">
+    {% bootstrap_form form layout="horizontal" %}
+    {% buttons %}
+      <div class="col-md-offset-3 col-md-9">
+        <button type="submit" class="btn btn-success">Save</button>
+      </div>
+    {% endbuttons %}
+    {% csrf_token %}
+  </form>
+
+{% endif %}
+
+{% if not "edit" in request.GET %}
+
+  <h2 class="mt-4">List</h2>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Origin</th>
+        <th>Destination</th>
+        {% if form %}
+          <th>Options</th>
         {% endif %}
-        {{ each.origin }}
-      </td>
-      <td>
-        {% if each.destination_label %}
-          <strong>{{ each.destination_label }}</strong><br>
-        {% endif %}
-        {{ each.destination }}
-      </td>
-      {% if form %}
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in blocks %}
+      <tr>
         <td>
-          <form method="post" class="form form-horizontal">
-            <button type="submit" class="btn btn-danger">
-              <i class="fas fa-trash-alt"></i> 
-              Delete
-            </button>
-            {% csrf_token %}
-            <input type="hidden" name="delete" value="{{ each.id }}" />
-          </form>
+          {% if each.origin_label %}
+            <strong>{{ each.origin_label }}</strong><br>
+          {% endif %}
+          {{ each.origin }}
         </td>
-      {% endif %}
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
+        <td>
+          {% if each.destination_label %}
+            <strong>{{ each.destination_label }}</strong><br>
+          {% endif %}
+          {{ each.destination }}
+        </td>
+        {% if form %}
+          <td>
+            <form method="post" class="form form-horizontal">
+              <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i> 
+                Delete
+              </button>
+              {% csrf_token %}
+              <input type="hidden" name="delete" value="{{ each.id }}" />
+            </form>
+            <a class="btn btn-default-basic" href="?edit={{ each.id }}&amp;next={{ request.get_full_path }}"><i class="fal fa-edit"></i> Edit</a>
+          </td>
+        {% endif %}
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endif %}
 
 <a href="{% url "staf:flowdiagrams" %}" class="btn btn-primary-basic">
   <i class="fal fa-angle-left"></i>
   Back to list
 </a>
 
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+  $("select").select2({
+    theme: "bootstrap4",
+  });
+</script>
 {% endblock %}
