@@ -321,7 +321,7 @@
             {% if request.user.is_superuser or request.user.people == info.uploader %}
               <div class="text-center mt-3 mb-2"><a href="?edit&amp;return={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a></div>
             {% endif %}
-            {% if request.user.is_superuser %}
+            {% if request.user.is_superuser or request.user.people == info.uploader %}
               <div class="text-center mt-3 mb-2"><a onclick="javascript:return confirm('Are you sure?')" href="?delete&amp;return={{ request.get_full_path }}" class="btn btn-danger"><i class="fa fa-trash-alt"></i> Delete</a></div>
             {% endif %}
           {% endif %}
@@ -349,7 +349,7 @@
               <img src="{{ info.get_shapefile_plot }}" alt="" />
             {% else %}
               <em>There is no preview plot available.</em>
-              {% if request.user.is_superuser or request.user.people == info.uploader %}
+              {% if request.user.is_superuser %}
                 <br><a href="?create_shapefile_plot=true">Create preview map now.</a>
               {% endif %}
             {% endif %}
