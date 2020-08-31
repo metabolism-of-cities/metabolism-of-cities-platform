@@ -198,8 +198,9 @@ def item(request, id, show_export=True):
     section = "library"
 
     curator = False
-    if has_permission(request, request.project, ["curator"]) or request.user.people == info.uploader():
-        curator = True
+    if request.user.is_authenticated:
+        if has_permission(request, request.project, ["curator"]) or request.user.people == info.uploader():
+            curator = True
 
     if info.type.group == "multimedia":
         section = "multimedia_library"
