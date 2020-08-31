@@ -255,6 +255,7 @@ def upload_directory(instance, filename):
     # file will be uploaded to MEDIA_ROOT/uuid/<filename>
     directory = "uploads/"
     #parent = instance.attached if hasattr(instance, "attached_to") else instance
+    # Should be fixed library item vs document
     parent = instance.attached_to if instance.attached_to else instance
     object_type = parent.__class__.__name__
     object_type = object_type.lower()
