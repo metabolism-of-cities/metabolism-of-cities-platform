@@ -3113,3 +3113,12 @@ body.volunteer.portal.latest {
     height: .5rem;
   }
 }
+#resource-list {
+  .author {
+    max-width: 200px;
+  }
+  .author .text-truncate {
+    max-width: 100%;
+    display: inline-block;
+  }
+}

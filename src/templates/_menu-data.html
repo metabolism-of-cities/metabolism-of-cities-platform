@@ -1,4 +1,6 @@
 <li class="nav-item"><a class="nav-link" href="{% url "data:dashboards" %}">Cities</a></li>
+
+{% if request.user.is_superuser %}
 <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="view-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
    Data inventory
@@ -9,6 +11,9 @@
     <a class="dropdown-item" href="{% url "data:view_dataportals" %}">Dataset portals</a>
   </div>
 </li>
+{% else %}
+  <li class="nav-item"><a class="nav-link" href="{% url "data:layers" %}">Data inventory</a></li>
+{% endif %}
 <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="upload-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Upload

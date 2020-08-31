@@ -339,9 +339,21 @@
           <h3 class="mt-4">Attachment(s)</h3>
           <ul>
           {% for each in info.attachments.all %}
-            <li><a href="{{ each.file.url }}">{{ each }}</a> ({{ each.file.size|filesizeformat }})</li>
+            <li><a href="{{ each.file.url }}">{{ each }}</a> ({{ each.get_size }})</li>
           {% endfor %}
           </ul>
+
+          {% if info.type.name == "Shapefile" %}
+            <h3 class="mt-4">Preview</h3>
+            {% if info.get_shapefile_plot %}
+              <img src="{{ info.get_shapefile_plot }}" alt="" />
+            {% else %}
+              <em>There is no preview plot available.</em>
+              {% if request.user.is_superuser or request.user.people == info.uploader %}
+                <br><a href="?create_shapefile_plot=true">Create preview map now.</a>
+              {% endif %}
+            {% endif %}
+          {% endif %}
         {% endif %}
         {% if request.user.is_authenticated %}
           {% if info.comments %}

@@ -1,5 +1,6 @@
 {% extends "_base.html" %}
 {% load moc_extras %}
+{% load humanize %}
 {% block page_name %}staf verify{% endblock %}
 
 {% block content %}
@@ -35,7 +36,7 @@
             <dt class="col-sm-3">File(s)</dt>
             <dd class="col-sm-9">
               {% for each in info.attachments.all %}
-                <span class="badge">{{ each }}</span>
+                <span class="badge">{{ each }} ({{ each.file.size|filesizeformat }})</span>
               {% endfor %}
             </dd>
           </dl>
@@ -157,72 +158,4 @@
 
   </section>
 
-{% endblock %}
-
-{% block footer %}
-  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
-          integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
-          crossorigin="">
-  </script>
-
-  <script>
-    // checking how many columns need a type
-    function checkColumns() {
-      let unidentifiedCount = $("#data .is-invalid").length;
-
-      $("#unidentified-columns-count").text(unidentifiedCount)
-
-      if (unidentifiedCount == 0) {
-        let alert = $(".alert-danger");
-
-        alert
-          .addClass("alert-success")
-          .removeClass("alert-danger")
-          .html("<i class='fal fa-check-circle mr-1'></i> All columns are identified, you can continue to the next step")
-
-        $(".btn.looks-good").removeClass("disabled");
-      }
-    }
-
-    // what happens when a column is identified
-    $("select.unidentified-column").change(function() {
-      $(this).removeClass("is-invalid");
-      $(this).addClass("is-valid");
-
-      checkColumns()
-
-      // check all select values to prevent duplicates
-      $("select[name='column'] option").removeAttr("disabled")
-      $("select[name='column'] option[value='none']").attr("disabled", "disabled")
-
-      $("select[name='column']").each(function() {
-        let columnValue = $(this).val();
-
-        if (columnValue) {
-          $("select[name='column'] option[value='" + columnValue + "']").attr("disabled", "disabled")
-        }
-      })
-    })
-
-    // check unidentified columns on page load
-    checkColumns();
-
-    // https://leafletjs.com/reference-1.6.0.html
-    // var map = L.map("map");
-    // L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
-    //   attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    //   id: "mapbox/streets-v11",
-    //   tileSize: 512,
-    //   zoomOffset: -1,
-    // }).addTo(map);
-
-    // geojsonlayer = L.geoJSON({{ geojson|safe }}, {
-    //   style: {
-    //     color: "#144d58",
-    //     weight: 2,
-    //   }
-    // }).addTo(map);
-
-    // map.fitBounds(geojsonlayer.getBounds());
-  </script>
 {% endblock %}

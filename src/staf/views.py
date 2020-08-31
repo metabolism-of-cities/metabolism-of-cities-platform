@@ -8,6 +8,7 @@ from django.forms import modelform_factory
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
+from django.db.models import Q
 
 from django.utils import timezone
 import pytz
@@ -27,6 +28,10 @@ import codecs
 import shapefile
 from core.mocfunctions import *
 from django.views.decorators.clickjacking import xframe_options_exempt
+
+import numpy as np
+import pandas as pd
+import geopandas
 
 THIS_PROJECT = PROJECT_ID["staf"]
 
@@ -77,6 +82,38 @@ def upload_staf(request, id=None):
         "sublist": FlowBlocks.objects.filter(diagram__in=list),
     }
     return render(request, "staf/upload/staf.html", context)
+
+def layers(request, id=None):
+    layers = Tag.objects.filter(parent_tag_id=845)
+    spaces = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)
+    items = LibraryItem.objects.filter(spaces__in=spaces, tags__parent_tag__in=layers).distinct()
+    counter = {}
+    for each in items:
+        for tag in each.tags.all():
+            if tag.parent_tag in layers:
+                if tag.id not in counter:
+                    counter[tag.id] = 1
+                else:
+                    counter[tag.id] += 1
+
+    context = {
+        "layers": layers,
+        "counter": counter,
+        "title": "Data inventory: layer overview",
+    }
+    return render(request, "staf/layers.html", context)
+
+def layer(request, id):
+    spaces = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)
+    layer = Tag.objects.get(parent_tag__parent_tag_id=845, pk=id)
+    list = LibraryItem.objects.filter(spaces__in=spaces, tags=layer)
+    context = {
+        "title": layer.name,
+        "items": list,
+        "load_datatables": True,
+        "show_spaces": True,
+    }
+    return render(request, "library/list.html", context)
 
 @login_required
 def upload_staf_data(request, id=None, block=None, project_name="staf"):
@@ -988,7 +1025,14 @@ def hub_processing_dataset(request, id, classify=False, space=None):
 
     rows = None
     header = None
+    # Whenever a CSV file is uploaded, we use that one. If none is present, we look for other spreadsheet files
     files = info.attachments.filter(file__iendswith=".csv").order_by("-id")
+    excel = False
+
+    if not files:
+        files = info.attachments.filter(Q(file__iendswith=".xlsx")|Q(file__iendswith=".xls")|Q(file__iendswith=".ods")).order_by("-id")
+        excel = True
+
     error = False
     unidentified_columns = [
         "Start date", 
@@ -1013,29 +1057,37 @@ def hub_processing_dataset(request, id, classify=False, space=None):
     labels = {}
 
     show_name = None
-    try:
-        show_name = files[0].name
-        filename = settings.MEDIA_ROOT + "/" + files[0].file.name
-        f = codecs.open(filename, encoding="utf-8")
-        rows = csv.reader(f)
+    if not files:
+        messages.error(request, "No CSV or spreadsheet file found in the attachments. Please make sure the data file is actually attached!")
+    else:
+        try:
+            show_name = files[0].name
+            filename = settings.MEDIA_ROOT + "/" + files[0].file.name
+            #f = codecs.open(filename, encoding="utf-8")
+            #rows = csv.reader(f)
 
-        # We will review each column to see if we can auto-detect what value this contains
-        header = next(rows)
-        for each in header:
-            for column in unidentified_columns:
-                if each.lower().strip() == column.lower():
-                    labels[each] = column
-                    unidentified_columns.remove(column)
-                    break
-            for key,column in alias_columns.items():
-                if each.lower().strip() == key.lower():
-                    labels[each] = column
-                    unidentified_columns.remove(column)
-                    break
+            if excel:
+                df = pd.read_excel(filename, index_col=0)  
+            else:
+                df = read_csv(filename)
 
-    except Exception as e:
-        messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
-        error = True
+            # We will review each column to see if we can auto-detect what value this contains
+            header = next(rows)
+            for each in header:
+                for column in unidentified_columns:
+                    if each.lower().strip() == column.lower():
+                        labels[each] = column
+                        unidentified_columns.remove(column)
+                        break
+                for key,column in alias_columns.items():
+                    if each.lower().strip() == key.lower():
+                        labels[each] = column
+                        unidentified_columns.remove(column)
+                        break
+
+        except Exception as e:
+            messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
+            error = True
 
     list_messages = work.messages.all()
 

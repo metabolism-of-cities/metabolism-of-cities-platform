@@ -48,6 +48,10 @@ from django.db.models import Sum
 # To get recently registered students in the course
 import datetime
 
+import geopandas
+
+from django.template.defaultfilters import filesizeformat
+
 def get_date_range(start, end, months_only=False):
 
     if start and not end and months_only:
@@ -250,7 +254,7 @@ class Record(models.Model):
 def upload_directory(instance, filename):
     # file will be uploaded to MEDIA_ROOT/uuid/<filename>
     directory = "uploads/"
-    parent = instance.attached_to if instance.attached_to else instance
+    parent = instance.attached if hasattr(instance, "attached_to") else instance
     object_type = parent.__class__.__name__
     object_type = object_type.lower()
     directory += object_type + "/"
@@ -270,9 +274,9 @@ class Document(Record):
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
 
-    def get_kb(self):
+    def get_size(self):
         try:
-            return self.file.size / 1024 if self.file else self.image.size / 1024
+            return filesizeformat(self.file.size) if self.file else None
         except:
             return 0
 
@@ -1007,18 +1011,33 @@ class LibraryItem(Record):
             except:
                 return "<div class='alert alert-warning'>Embedded video unavailable. <a href='" + self.url + "'>Click here to view the video</a></div>"
 
-    def get_kb(self):
+    def get_size(self):
         try:
-            return self.file.size / 1024 if self.file else None
+            return filesizeformat(self.file.size) if self.file else None
         except:
             return 0
 
-    def get_mb(self):
-        return self.file.size / 1024 / 1024 if self.file else None
+    def get_shapefile_plot(self):
+        try:
+            return settings.MEDIA_URL + self.meta_data["shapefile_plot"]
+        except:
+            return None
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
+
+    def create_shapefile_plot(self):
+        file = self.attachments.filter(file__iendswith=".shp")
+        file = file[0]
+        filename = settings.MEDIA_ROOT + "/" + file.file.name
+        gp = geopandas.read_file(filename)
+        plot = gp.plot()
+        fig = plot.get_figure()
+        output = upload_directory(self, "shapefile_plot.png")
+        fig.savefig(settings.MEDIA_ROOT + "/" + output)
+        self.meta_data["shapefile_plot"] = output
+        self.save()
 
     def save(self, *args, **kwargs):
         if self.doi:

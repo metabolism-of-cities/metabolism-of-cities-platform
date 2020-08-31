@@ -197,18 +197,24 @@ def item(request, id, show_export=True):
     info = get_object_or_404(LibraryItem, pk=id)
     section = "library"
 
+    curator = False
+    if has_permission(request, request.project, ["curator"]) or request.user.people == info.uploader():
+        curator = True
+
     if info.type.group == "multimedia":
         section = "multimedia_library"
 
-    if "edit" in request.GET:
-        if has_permission(request, request.project, ["curator"]) or request.user.people == info.uploader():
-            return form(request, info.id)
+    if "edit" in request.GET and curator:
+        return form(request, info.id)
 
-    if "delete" in request.GET:
-        if has_permission(request, request.project, ["curator"]) or request.user.people == info.uploader():
-            info.is_deleted = True
-            info.save()
-            messages.success(request, "This item was deleted")
+    if "delete" in request.GET and curator:
+        info.is_deleted = True
+        info.save()
+        messages.success(request, "This item was deleted")
+
+    if "create_shapefile_plot" in request.GET and curator:
+        info.create_shapefile_plot()
+        messages.success(request, "We have tried generating the plot. If no image appears, there is an issue with the shapefile.")
 
     spaces = info.reference_spaces()
 

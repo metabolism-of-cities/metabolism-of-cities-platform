@@ -36,6 +36,9 @@ baseline_staf_urlpatterns = [
 
     path("datasets/<int:id>/", staf.dataset, name="dataset"),
 
+    path("layers/", staf.layers, name="layers"),
+    path("layers/<int:id>/", staf.layer, name="layer"),
+
     # Data dashboards
     path("dashboards/<slug:space>/sectors/", data.sectors, name="sectors"),
     path("dashboards/<slug:space>/sectors/<slug:sector>/", data.sector, name="sector"),

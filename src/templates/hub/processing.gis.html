@@ -100,6 +100,8 @@
 
       {% if not error %}
 
+        {{ my_html|safe }}
+
         <div id="viewmap" class="btn btn-primary">
           <i class="fal fa-angle-down"></i>
           View map
@@ -110,6 +112,7 @@
           View raw data
         </div>
 
+        <a class="btn btn-primary-basic" href="edit/?next={{ request.get_full_path }}"><i class="fa fa-fw fa-pencil"></i> Edit</a>
 
         <pre class="alert alert-light mt-2 mb-0" id="raw">
           {{ layer.srs }}
@@ -129,7 +132,7 @@
         <ul class="list-group list-group-flush">
           <li class="list-group-item table-item">
             <div><i class="fal fa-fw fa-fingerprint mr-1"></i> ID</div>
-            <div>{{ document.id }}</div>
+            <div><a href="{% url URL_LIBRARY_ITEM document.id %}">{{ document.id }}</a></div>
           </li>
           <li class="list-group-item table-item">
             <div><i class="fal fa-fw fa-user mr-1"></i> Uploaded by</div>
@@ -184,7 +187,7 @@
       {% if layer.num_feat > 100 %}
         <div class="alert alert-primary">
           <i class="fal fa-info-circle mr-1"></i>
-          Only the first 100 items are shown. In total, there are <strong>{{ layer.num_feat }}</strong> items in your shapefile
+          Only the first 100 items are shown. In total, there are <strong>{{ layer.num_feat|floatformat:0 }}</strong> items in your shapefile
         </div>
       {% endif %}
       <table class="table datatable datatable-card">

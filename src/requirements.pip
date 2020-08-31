@@ -25,3 +25,9 @@ channels_redis
 bleach
 unidecode
 ffmpeg-python
+numpy
+pandas
+geopandas
+xlrd
+matplotlib
+descartes

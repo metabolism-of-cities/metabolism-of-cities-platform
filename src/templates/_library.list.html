@@ -4,7 +4,10 @@
   <thead>
     <tr>
       <th>Title</th>
-      <th>Author(s)</th>
+      {% if show_spaces %}
+        <th>Spaces</th>
+      {% endif %}
+      <th class="author">Author(s)</th>
       <th>Year</th>
     </tr>
   </thead>
@@ -26,11 +29,18 @@
             | {{ each.publisher }}
           {% endif %}
         </td>
-        <td>
-          {{ each.get_author_citation|safe }}
+        {% if show_spaces %}
+          <td>
+            {% for space in each.spaces.all %}
+              <span class="badge badge-dark">{{ space }}</span>
+            {% endfor %}
+          </td>
+        {% endif %}
+        <td class="author">
+          <span class="text-truncate">{{ each.get_author_citation|safe }}</span>
           <span hidden>{{ each.author_list }}</span>
         </td>
-        <td>{{ each.year }}</td>
+        <td>{{ each.year|default_if_none:"" }}</td>
       </tr>
     {% endfor %}
   </tbody>

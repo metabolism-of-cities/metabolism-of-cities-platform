@@ -2037,3 +2037,10 @@ body.volunteer.portal.latest th.date {
 
 .progress-list .progress {
   height: .5rem; }
+
+#resource-list .author {
+  max-width: 200px; }
+
+#resource-list .author .text-truncate {
+  max-width: 100%;
+  display: inline-block; }
