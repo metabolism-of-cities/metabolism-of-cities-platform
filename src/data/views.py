@@ -200,12 +200,37 @@ def progress(request, style="list"):
 def dashboard(request, space):
     space = get_space(request, space)
     project = get_object_or_404(Project, pk=request.project)
-    if not settings.DEBUG:
+
+    if not settings.DEBUG and project.slug != "islands":
         return redirect(project.slug + ":hub_harvesting_space", space=space.slug)
+
+    list = LibraryItem.objects.filter(spaces=space)
+    layers = Tag.objects.filter(parent_tag_id=845)
+
+    counter = {}
+    check = {}
+    completion = {}
+    document_counter = {}
+
+    for each in list:
+        for tag in each.tags.all():
+            if tag.parent_tag in layers:
+                for space in each.spaces.all():
+                    t = tag.parent_tag.id
+                    if t not in check:
+                        check[t] = {}
+                    if tag.id not in check[t]:
+                        if t not in counter:
+                            counter[t] = 1
+                        else:
+                            counter[t] += 1
+                    check[t][tag.id] = True
     context = {
         "space": space,
         "header_image": space.photo,
         "dashboard": True,
+        "layers": layers,
+        "check": check,
         "done": ["collected", "processed", ""],
     }
     return render(request, "data/dashboard.html", context)

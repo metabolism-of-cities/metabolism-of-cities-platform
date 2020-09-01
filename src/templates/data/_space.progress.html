@@ -2,7 +2,7 @@
 
 <div class="row progress-list">
   {% for each in list %}
-    {% if counter|get_item:each.id or PROJECT.slug == "cityloops" %}
+    {% if counter|get_item:each.id or PROJECT.slug == "cityloops" or PROJECT.slug == "islands" %}
       <div class="col-md-6 col-lg-4 mb-4">
         <div class="card">
           <a href="{% url dashboard_link each.slug %}">
@@ -13,7 +13,7 @@
           </div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item">
-              <i class="fal fa-fw fa-dot-circle mr-1"></i> {{ document_counter|get_item:each.id }} documents
+              <i class="fal fa-fw fa-dot-circle mr-1"></i> {% if each.id in document_counter %}{{ document_counter|get_item:each.id }}{% else %}0{% endif %} documents
             </li>
             {% if False %}
               <li class="list-group-item">

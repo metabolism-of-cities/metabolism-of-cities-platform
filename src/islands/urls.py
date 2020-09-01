@@ -13,7 +13,7 @@ app_name = "islands"
 urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
 
     path("", views.index, name="index"),
-    path("overview/", data.overview, name="overview"),
+    path("overview/", data.progress, {"style": "grid"}, name="overview"),
     path("news_events/", core.news_events_list, name="news_events"),
     path("about/<slug:slug>/", core.article, { "prefix": "/about/"  }, name="about"),
     path("community/research/projects/", community.projects, name="projects"),

@@ -1132,7 +1132,7 @@ class Video(LibraryItem):
             except:
                 file = self.attachments.all()[0]
                 file = file.file.url
-            return mark_safe(f'<video src="{file}" controls preload="metadata"></video><br><a href="{file}">Download video</a>')
+            return mark_safe(f'<video src="{file}" controls preload="metadata" style="height:30vh;width:100vw"></video><br><a href="{file}">Download video</a>')
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
