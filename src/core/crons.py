@@ -6,8 +6,19 @@ from .models import *
 
 TAG_ID = settings.TAG_ID_LIST
 
-class CreateMapJS(CronJobBase):
+class CreatePlotPreview(CronJobBase):
     RUN_EVERY_MINS = 60
+    schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
+    code = "core.createplotpreview" # Unique code for logging purposes
+
+    def do(self):
+        list = LibraryItem.objects.filter(type__name="Shapefile").exclude(meta_data__shapefile_plot__isnull=False).exclude(meta_data__shapefile_plot_error__isnull=False)[:2]
+        for each in list:
+            each.create_shapefile_plot()
+            print(each)
+
+class CreateMapJS(CronJobBase):
+    RUN_EVERY_MINS = 60*12
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = "core.createmapjs" # Unique code for logging purposes
 

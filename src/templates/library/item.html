@@ -348,10 +348,13 @@
             {% if info.get_shapefile_plot %}
               <img src="{{ info.get_shapefile_plot }}" alt="" />
             {% else %}
-              <em>There is no preview plot available.</em>
-              {% if request.user.is_superuser %}
-                <br><a href="?create_shapefile_plot=true">Create preview map now.</a>
+              <p><em>There is no preview plot available.</em></p>
+              {% if info.meta_data.shapefile_plot_error %}
+                <div class="alert alert-danger"><strong>Error:</strong><br>{{ info.meta_data.shapefile_plot_error }}</div>
               {% endif %}
+            {% endif %}
+            {% if request.user.is_superuser %}
+              <br><a href="?create_shapefile_plot=true">Create preview map now.</a>
             {% endif %}
           {% endif %}
         {% endif %}

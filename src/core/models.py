@@ -48,7 +48,9 @@ from django.db.models import Sum
 # To get recently registered students in the course
 import datetime
 
+# To create the sample shapefile images
 import geopandas
+import contextily as ctx
 
 from django.template.defaultfilters import filesizeformat
 
@@ -254,9 +256,12 @@ class Record(models.Model):
 def upload_directory(instance, filename):
     # file will be uploaded to MEDIA_ROOT/uuid/<filename>
     directory = "uploads/"
-    #parent = instance.attached if hasattr(instance, "attached_to") else instance
-    # Should be fixed library item vs document
-    parent = instance.attached_to if instance.attached_to else instance
+    if hasattr(instance, "attached_to"):
+        parent = instance.attached_to
+    elif hasattr(instance, "attached"):
+        parent = instance.attached
+    else:
+        parent = instance
     object_type = parent.__class__.__name__
     object_type = object_type.lower()
     directory += object_type + "/"
@@ -1030,16 +1035,28 @@ class LibraryItem(Record):
     objects = PublicActiveRecordManager()
 
     def create_shapefile_plot(self):
-        file = self.attachments.filter(file__iendswith=".shp")
-        file = file[0]
-        filename = settings.MEDIA_ROOT + "/" + file.file.name
-        gp = geopandas.read_file(filename)
-        plot = gp.plot()
-        fig = plot.get_figure()
-        output = upload_directory(self, "shapefile_plot.png")
-        fig.savefig(settings.MEDIA_ROOT + "/" + output)
-        self.meta_data["shapefile_plot"] = output
-        self.save()
+        try:
+            file = self.attachments.filter(file__iendswith=".shp")
+            if not self.meta_data:
+                self.meta_data = {}
+            if not file:
+                self.meta_data["shapefile_plot_error"] = "No shapefile (.shp) found!"
+            else:
+                file = file[0]
+                filename = settings.MEDIA_ROOT + "/" + file.file.name
+                df = geopandas.read_file(filename)
+                df = df.to_crs(epsg=3857)
+                ax = df.plot(alpha=0.5, edgecolor="k")
+                ctx.add_basemap(ax)
+                fig = ax.get_figure()
+                output = upload_directory(self, "shapefile_plot.png")
+                fig.savefig(settings.MEDIA_ROOT + "/" + output)
+                self.meta_data["shapefile_plot"] = output
+                self.meta_data["shapefile_plot_error"] = None
+            self.save()
+        except Exception as e:
+            self.meta_data["shapefile_plot_error"] = str(e)
+            self.save()
 
     def save(self, *args, **kwargs):
         if self.doi:

@@ -31,3 +31,4 @@ geopandas
 xlrd
 matplotlib
 descartes
+contextily

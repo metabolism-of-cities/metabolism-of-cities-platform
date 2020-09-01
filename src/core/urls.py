@@ -31,8 +31,12 @@ urlpatterns = baseline_urlpatterns + [
     path('cities', RedirectView.as_view(url='https://data.metabolismofcities.org/', permanent=False)),
     path('cities/<slug:slug>', RedirectView.as_view(url='https://data.metabolismofcities.org/dashboards/%(slug)s', permanent=False)),
     path("cities/<slug:space>/infrastructure/<slug:type>/<slug:slug>/", RedirectView.as_view(url='https://data.metabolismofcities.org/dashboards/%(space)s/infrastructure/%(slug)s', permanent=False)),
+    path("cities/<slug:space>/infrastructure/<slug:type>/", RedirectView.as_view(url='https://data.metabolismofcities.org/dashboards/%(space)s/', permanent=False)),
     path('cities/<slug:slug>/sectors/', RedirectView.as_view(url='https://data.metabolismofcities.org/dashboards/%(slug)s', permanent=False)),
-    path('cities/<slug:slug>/sectors/<slug:sector>', RedirectView.as_view(url='https://data.metabolismofcities.org/dashboards/%(slug)s', permanent=False)),
+    path('cities/<slug:slug>/sectors/<slug:sector>/', RedirectView.as_view(url='https://data.metabolismofcities.org/dashboards/%(slug)s', permanent=False)),
+    path('cities/<slug:slug>/datasets/', RedirectView.as_view(url='https://data.metabolismofcities.org/dashboards/%(slug)s', permanent=False)),
+    path('cities/<slug:slug>/datasets/<int:id>/', RedirectView.as_view(url='https://data.metabolismofcities.org/dashboards/%(slug)s', permanent=False)),
+    path('cities/<slug:slug>/datasets/<int:id>/graph/<int:gr>/', RedirectView.as_view(url='https://data.metabolismofcities.org/dashboards/%(slug)s', permanent=False)),
 
     # Homepage
     path("", views.index, name="index"),
