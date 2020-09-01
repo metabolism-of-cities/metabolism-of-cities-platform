@@ -86,7 +86,7 @@ def index(request):
     selected = random.sample(selected_cities, 3)
 
     list = ReferenceSpace.objects.filter(id__in=selected)
-    layers = Tag.objects.filter(parent_tag_id=845)
+    layers = LAYERS
     items = LibraryItem.objects.filter(spaces__in=list, tags__parent_tag__in=layers).distinct()
     counter = {}
     check = {}
@@ -146,7 +146,7 @@ def overview(request):
 def progress(request, style="list"):
     list = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)
     list = list
-    layers = Tag.objects.filter(parent_tag_id=845)
+    layers = LAYERS
     items = LibraryItem.objects.filter(spaces__in=list, tags__parent_tag__in=layers).distinct()
     counter = {}
     check = {}
@@ -202,10 +202,13 @@ def dashboard(request, space):
     project = get_object_or_404(Project, pk=request.project)
 
     if not settings.DEBUG and project.slug != "islands":
-        return redirect(project.slug + ":hub_harvesting_space", space=space.slug)
+        if request.user.is_authenticated and request.user.is_superuser:
+            pass
+        else:
+            return redirect(project.slug + ":hub_harvesting_space", space=space.slug)
 
     list = LibraryItem.objects.filter(spaces=space)
-    layers = Tag.objects.filter(parent_tag_id=845)
+    layers = LAYERS
 
     counter = {}
     check = {}
@@ -225,13 +228,25 @@ def dashboard(request, space):
                         else:
                             counter[t] += 1
                     check[t][tag.id] = True
+
+    highscore = Work.objects.filter(related_to__spaces=space, status=Work.WorkStatus.COMPLETED) \
+        .values("assigned_to__name") \
+        .annotate(total=Sum("workactivity__points")) \
+        .order_by("-total")
+
+    last_fourteen_days = datetime.datetime.now() - datetime.timedelta(days=14)
+    added = LibraryItem.objects.filter(spaces=space, date_created__gte=last_fourteen_days).count()
+
     context = {
         "space": space,
         "header_image": space.photo,
         "dashboard": True,
         "layers": layers,
-        "check": check,
+        "counter": counter,
+        "layers_count": LAYERS_COUNT,
         "done": ["collected", "processed", ""],
+        "highscore": highscore[0] if highscore else None,
+        "added": added,
     }
     return render(request, "data/dashboard.html", context)
 

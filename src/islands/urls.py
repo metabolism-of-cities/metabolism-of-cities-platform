@@ -33,7 +33,4 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("<slug:space>/resources/journal-articles/", data.library, {"type": "articles"}, name="journal_articles"),
     path("<slug:space>/maps/", data.maps, name="maps"),
 
-    # City data portal
-
-    path("<slug:space>/", data.dashboard, name="dashboard"),
 ]

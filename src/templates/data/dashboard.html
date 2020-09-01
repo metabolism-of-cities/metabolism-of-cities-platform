@@ -1,5 +1,7 @@
 {% extends "_base.html" %}
+{% load moc_extras %}
 {% load static %}
+
 {% block title %}{{ space }}{% endblock %}
 
 {% block head %}
@@ -140,107 +142,42 @@
   <div class="row">
     {% for each in layers %}
     <div class="col-md-6 col-lg-3 context mb-4">
-      <div class="card card-body d-block">
-        <h5><i class="fal mr-2 fa-{{ each.icon }} fa-fw"></i> {{ each }}</h5>
+      <a class="btn-icon" href="layers/{{ each.id }}/">
+        <h5><i class="fal mr-2 fa-{{ each.icon }} fa-fw"></i> {{ each.get_name_after_colon }}</h5>
+        <div class="progress">
+          <div 
+            class="progress-bar bg-success" 
+            role="progressbar" 
+            style="width: calc({% if counter|get_item:each.id %}{{ counter|get_item:each.id }}{% else %}0{% endif %}/{{ layers_count|get_item:each.id }}*100%)" 
+            aria-valuenow="{% if counter|get_item:each.id %}{{ counter|get_item:each.id }}{% else %}0{% endif %}" 
+            aria-valuemin="0" 
+            aria-valuemax="6">
+          </div>
+        </div>
+
+        {% if False %}
         {% spaceless %}
           <div class="single-datapoint {{ done|random }}"></div>
           <div class="single-datapoint {{ done|random }}"></div>
           <div class="single-datapoint {{ done|random }}"></div>
           <div class="single-datapoint {{ done|random }}"></div>
           <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
         {% endspaceless %}
-      </div>
+        {% endif %}
+      </a>
     </div>
     {% endfor %}
-    <div class="col-md-6 col-lg-3 biophysical mb-4">
-      <div class="card card-body d-block">
-        <h5><i class="fal mr-2 fa-trees fa-fw"></i> Biophysical</h5>
-        {% spaceless %}
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-        {% endspaceless %}
-      </div>
-    </div>
-    <div class="col-md-6 col-lg-3 infrastructure mb-4">
-      <div class="card card-body d-block">
-        <h5><i class="fal mr-2 fa-industry-alt fa-fw"></i> Infrastructure</h5>
-        {% spaceless %}
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-        {% endspaceless %}
-      </div>
-    </div>
-    <div class="col-md-6 col-lg-3 stocks mb-4">
-      <div class="card card-body d-block">
-        <h5><i class="fal mr-2 fa-random fa-fw"></i> Stocks and flows</h5>
-        {% spaceless %}
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-          <div class="single-datapoint {{ done|random }}"></div>
-        {% endspaceless %}
-      </div>
-    </div>
 
     <div class="col-lg-4">
       <div class="card card-body text-center">
-        <h5>Data points added this week</h5>
-        <h2 class="mb-0">41</h2>
+        <h5>Document added last 14 days</h5>
+        <h2 class="mb-0">{{ added }}</h2>
       </div>
     </div>
     <div class="col-lg-4">
       <div class="card card-body text-center">
         <h5>Biggest contributer</h5>
-        <h2 class="mb-0">Jane Doe</h2>
+        <h2 class="mb-0">{{ highscore.assigned_to__name }}</h2>
       </div>
     </div>
     <div class="col-lg-4 align-middle">

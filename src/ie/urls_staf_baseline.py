@@ -53,6 +53,8 @@ baseline_staf_urlpatterns = [
 
     path("dashboards/<slug:space>/infrastructure/<slug:slug>/", staf.referencespace, name="referencespace"),
 
+    path("dashboards/<slug:space>/layers/<int:id>/", staf.layer, name="layer"),
+
     # Hub
     path("hub/harvesting/", staf.hub_harvesting, name="hub_harvesting"),
     path("hub/harvesting/worksheet/", staf.hub_harvesting_worksheet, name="hub_harvesting_worksheet"),

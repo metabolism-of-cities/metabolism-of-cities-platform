@@ -126,6 +126,16 @@ class Tag(models.Model):
         else:
             return ""
 
+    def get_name_after_colon(self):
+        # For some tags, we have a long name like:
+        # Layer 1: Infrastructure
+        # And we want an easy way to just get "Infrastructure" returned
+        try:
+            string = self.name
+            return string.split(":")[1]
+        except:
+            return self.name
+
     def save(self, *args, **kwargs):
         if not self.description:
             self.description_html = None

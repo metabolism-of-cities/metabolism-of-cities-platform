@@ -103,8 +103,10 @@ def layers(request, id=None):
     }
     return render(request, "staf/layers.html", context)
 
-def layer(request, id):
+def layer(request, id, space=None):
     spaces = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)
+    if space:
+        spaces = get_space(request, space)
     layer = Tag.objects.get(parent_tag__parent_tag_id=845, pk=id)
     list = LibraryItem.objects.filter(spaces__in=spaces, tags=layer)
     context = {
