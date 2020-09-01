@@ -228,6 +228,7 @@ def item(request, id, show_export=True):
         "authors": People.objects_unfiltered.filter(parent_list__record_child=info, parent_list__relationship__id=4),
         "load_messaging": True,
         "list_messages": Message.objects.filter(parent=info),
+        "curator": curator,
     }
     return render(request, "library/item.html", context)
 

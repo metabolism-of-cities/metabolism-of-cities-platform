@@ -12,10 +12,9 @@ class CreatePlotPreview(CronJobBase):
     code = "core.createplotpreview" # Unique code for logging purposes
 
     def do(self):
-        list = LibraryItem.objects.filter(type__name="Shapefile").exclude(meta_data__shapefile_plot__isnull=False).exclude(meta_data__shapefile_plot_error__isnull=False)[:2]
+        list = LibraryItem.objects.filter(type__name="Shapefile").exclude(meta_data__shapefile_plot__isnull=False).exclude(meta_data__shapefile_plot_error__isnull=False)
         for each in list:
             each.create_shapefile_plot()
-            print(each)
 
 class CreateMapJS(CronJobBase):
     RUN_EVERY_MINS = 60*12

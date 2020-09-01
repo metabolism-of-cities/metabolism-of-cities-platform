@@ -283,8 +283,9 @@ class Document(Record):
     objects = PublicActiveRecordManager()
 
     def get_size(self):
+        file = self.file if self.file else self.image
         try:
-            return filesizeformat(self.file.size) if self.file else None
+            return filesizeformat(file.size) if file else None
         except:
             return 0
 
