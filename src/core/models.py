@@ -53,6 +53,7 @@ import geopandas
 import contextily as ctx
 
 from django.template.defaultfilters import filesizeformat
+from django.db.models import Q
 
 def get_date_range(start, end, months_only=False):
 
@@ -1035,24 +1036,31 @@ class LibraryItem(Record):
     objects = PublicActiveRecordManager()
 
     def create_shapefile_plot(self):
+        if not self.meta_data:
+            self.meta_data = {}
         try:
-            file = self.attachments.filter(file__iendswith=".shp")
-            if not self.meta_data:
-                self.meta_data = {}
-            if not file:
-                self.meta_data["shapefile_plot_error"] = "No shapefile (.shp) found!"
+            files = self.attachments.filter(Q(file__iendswith=".shp")|Q(file__iendswith=".shx")|Q(file__iendswith=".dbf")|Q(file__iendswith=".prj"))
+            print(files.count())
+            if files.count() < 4:
+                self.meta_data["shapefile_plot_error"] = "No shapefile found! Make sure all required files are uploaded (.shp, .shx, .dbf, .prj)."
+            elif files.count() > 4:
+                self.meta_data["shapefile_plot_error"] = "Too many files found! Make sure one file is uploaded for all four required types (.shp, .shx, .dbf, .prj)."
             else:
-                file = file[0]
-                filename = settings.MEDIA_ROOT + "/" + file.file.name
-                df = geopandas.read_file(filename)
-                df = df.to_crs(epsg=3857)
-                ax = df.plot(alpha=0.5, edgecolor="k")
-                ctx.add_basemap(ax)
-                fig = ax.get_figure()
-                output = upload_directory(self, "shapefile_plot.png")
-                fig.savefig(settings.MEDIA_ROOT + "/" + output)
-                self.meta_data["shapefile_plot"] = output
-                self.meta_data["shapefile_plot_error"] = None
+                file = files.filter(file__iendswith=".shp")
+                if not file:
+                    self.meta_data["shapefile_plot_error"] = "No shapefile (.shp) found!"
+                else:
+                    file = file[0]
+                    filename = settings.MEDIA_ROOT + "/" + file.file.name
+                    df = geopandas.read_file(filename)
+                    df = df.to_crs(epsg=3857)
+                    ax = df.plot(alpha=0.5, edgecolor="k")
+                    ctx.add_basemap(ax)
+                    fig = ax.get_figure()
+                    output = upload_directory(self, "shapefile_plot.png")
+                    fig.savefig(settings.MEDIA_ROOT + "/" + output)
+                    self.meta_data["shapefile_plot"] = output
+                    self.meta_data["shapefile_plot_error"] = None
             self.save()
         except Exception as e:
             self.meta_data["shapefile_plot_error"] = str(e)

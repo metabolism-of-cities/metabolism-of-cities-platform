@@ -18,9 +18,21 @@ textarea#id_author_list{height:100px}
     <h1>Adding: {{ type }}</h1>
   {% endif %}
 
-  {% if info %}
-
+  {% if type.name == "Shapefile" %}
+    <div class="alert alert-warning">
+      <i class="fa fa-fw fa-info-circle"></i> Instructions: make sure you attach all the required files 
+      (do not zip them!). You should have <em>at least</em> these four file types:
+      <code>.shp</code>, <code>.shx</code>, <code>.dbf</code>, <code>.prj</code>.
+      <br>
+      <a href="https://multimedia.metabolismofcities.org/videos/34002/" class="btn btn-primary mt-3">
+        <i class="fa fa-video"></i> Instruction video (Engish)
+      </a>
+      <a href="https://multimedia.metabolismofcities.org/videos/34883/" class="btn btn-primary mt-3">
+        <i class="fa fa-video"></i> Instruction video (Spanish)
+      </a>
+    </div>
   {% endif %}
+
   <form method="post" enctype="multipart/form-data">
 
     {% if not info and not request.GET.parent and not hide_search_box and not request.GET.inventory %}
