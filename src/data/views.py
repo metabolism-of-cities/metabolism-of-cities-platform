@@ -218,16 +218,15 @@ def dashboard(request, space):
     for each in list:
         for tag in each.tags.all():
             if tag.parent_tag in layers:
-                for space in each.spaces.all():
-                    t = tag.parent_tag.id
-                    if t not in check:
-                        check[t] = {}
-                    if tag.id not in check[t]:
-                        if t not in counter:
-                            counter[t] = 1
-                        else:
-                            counter[t] += 1
-                    check[t][tag.id] = True
+                t = tag.parent_tag.id
+                if t not in check:
+                    check[t] = {}
+                if tag.id not in check[t]:
+                    if t not in counter:
+                        counter[t] = 1
+                    else:
+                        counter[t] += 1
+                check[t][tag.id] = True
 
     highscore = Work.objects.filter(related_to__spaces=space, status=Work.WorkStatus.COMPLETED) \
         .values("assigned_to__name") \
@@ -236,6 +235,11 @@ def dashboard(request, space):
 
     last_fourteen_days = datetime.datetime.now() - datetime.timedelta(days=14)
     added = LibraryItem.objects.filter(spaces=space, date_created__gte=last_fourteen_days).count()
+
+    try:
+        second_photo = Photo.objects.filter(spaces=space).order_by("position")[1]
+    except:
+        second_photo = None
 
     context = {
         "space": space,
@@ -247,6 +251,7 @@ def dashboard(request, space):
         "done": ["collected", "processed", ""],
         "highscore": highscore[0] if highscore else None,
         "added": added,
+        "second_photo": second_photo,
     }
     return render(request, "data/dashboard.html", context)
 

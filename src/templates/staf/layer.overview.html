@@ -1,0 +1,26 @@
+{% extends "_base.html" %}
+{% load moc_extras %}
+
+{% block title %}{{ layer }} | {{ space }}{% endblock %}
+
+{% block content %}
+
+<h3>
+  <i class="fa fa-fw fa-{{ layer.icon }}"></i>
+  {{ layer }}
+</h3>
+
+{% for each in children %}
+  {% if list|get_item:each.id %}
+
+    <h4 class="h5 mt-5">{{ each }}</h4>
+
+    {% with items=list|get_item:each.id %}
+      {% include "_library.list.html" %}
+    {% endwith %}
+
+  {% endif %}
+
+{% endfor %}
+
+{% endblock %}

@@ -113,6 +113,7 @@ class Tag(models.Model):
     is_public = models.BooleanField(default=True, db_index=True)
     icon = models.CharField(max_length=50, null=True, blank=True, help_text="Only include the icon name, not fa- classes --- see https://fontawesome.com/icons?d=gallery")
     color = models.CharField(max_length=30, null=True, blank=True)
+    slug = models.SlugField(max_length=50, unique=True, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -1142,7 +1143,7 @@ class Video(LibraryItem):
             except:
                 file = self.attachments.all()[0]
                 file = file.file.url
-            return mark_safe(f'<video src="{file}" controls preload="metadata" style="height:30vh;width:100vw"></video><br><a href="{file}">Download video</a>')
+            return mark_safe(f'<video src="{file}" controls preload="metadata" style="height:30vh;width:100vw;max-width:100%"></video><br><a href="{file}">Download video</a>')
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()

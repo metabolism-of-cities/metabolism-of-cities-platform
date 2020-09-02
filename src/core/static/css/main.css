@@ -2038,9 +2038,12 @@ body.volunteer.portal.latest th.date {
 .progress-list .progress {
   height: .5rem; }
 
-#resource-list .author {
-  max-width: 200px; }
+.resource-list .year {
+  width: 100px; }
 
-#resource-list .author .text-truncate {
-  max-width: 100%;
+.resource-list .author {
+  width: 200px; }
+
+.resource-list .author .text-truncate {
+  max-width: 200px;
   display: inline-block; }

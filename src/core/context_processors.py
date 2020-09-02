@@ -14,18 +14,41 @@ def site(request):
     notifications = None
     system_name_singular = None
     system_name_plural = None
+    urls = {}
+    is_data_portal = False # only used on this page, to indicate if we need to load data-specific stuff
 
     if hasattr(request, "project"):
         project = Project.objects.get(pk=request.project)
     else:
         project = Project.objects.get(pk=1)
 
-    if project.slug == "data" or project.slug == "cityloops":
+    # So here is the dealio... we have these URLs that are available on all subsites
+    # because we load them through these urls_xxxxxxx_baseline files. It's very handy.
+    # However, it means that the url named say 'profile' can be available through 
+    # core:profile, staf:profile, data:profile, etc etc. In order to have this url
+    # available anywhere without having to concatenate this out of thin air, we create
+    # these context variables with commonly used urls. 
+
+    slug = project.get_slug()
+
+    urls = {
+        "PROFILE": slug + ":" + "user",
+        "LIBRARY_ITEM": slug + ":" + "library_item",
+    }
+
+    if slug == "data" or slug == "cityloops":
         system_name_singular = "city"
         system_name_plural = "cities"
-    elif project.slug == "islands":
+        is_data_portal = True
+    elif slug == "islands":
         system_name_singular = "island"
         system_name_plural = "islands"
+        is_data_portal = True
+
+    if is_data_portal:
+        urls["LAYER_OVERVIEW"] = slug + ":" + "layer_overview"
+        urls["LIBRARY_OVERVIEW"] = slug + ":" + "library_overview"
+        urls["DASHBOARD"] = slug + ":" + "dashboard"
 
     if request.user.is_authenticated and request.user.people:
         people = request.user.people
@@ -57,6 +80,5 @@ def site(request):
         "NOTIFICATIONS": notifications,
         "SYSTEM_NAME_SINGULAR": system_name_singular,
         "SYSTEM_NAME_PLURAL": system_name_plural,
-        "URL_PROFILE": project.get_slug() + ":" + "user",
-        "URL_LIBRARY_ITEM": project.get_slug() + ":" + "library_item",
+        "URLS": urls,
     }

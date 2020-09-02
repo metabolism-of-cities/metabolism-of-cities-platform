@@ -751,7 +751,7 @@ def controlpanel_tags(request):
 def controlpanel_tag_form(request, id=None):
     if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
-    ModelForm = modelform_factory(Tag, fields=["name", "description", "parent_tag", "include_in_glossary", "is_public", "is_deleted", "icon"])
+    ModelForm = modelform_factory(Tag, fields=["name", "description", "parent_tag", "slug", "include_in_glossary", "is_public", "is_deleted", "icon"])
     if id:
         info = get_object_or_404(Tag, pk=id)
         form = ModelForm(request.POST or None, request.FILES or None, instance=info)

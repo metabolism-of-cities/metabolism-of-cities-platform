@@ -5,7 +5,7 @@ We import this file in every urls file so if we ever have
 to change anything, we can do it in one place
 """
 
-from django.urls import include, path
+from django.urls import include, path, re_path
 from staf import views as staf
 from library import views as library
 from core import views as core
@@ -43,17 +43,18 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/sectors/", data.sectors, name="sectors"),
     path("dashboards/<slug:space>/sectors/<slug:sector>/", data.sector, name="sector"),
     path("dashboards/<slug:space>/sectors/<slug:sector>/<slug:article>/", data.article, name="article"),
-    path("dashboards/<slug:space>/datasets/", data.datasets, name="datasets"),
+    #path("dashboards/<slug:space>/datasets/", data.datasets, name="datasets"),
     path("dashboards/<slug:space>/datasets/<slug:dataset>/", staf.dataset, name="dataset"),
     path("dashboards/<slug:space>/resources/photos/", data.photos, name="photos"),
     path("dashboards/<slug:space>/resources/reports/", data.library, {"type": "reports"}, name="reports"),
     path("dashboards/<slug:space>/resources/theses/", data.library, {"type": "theses"}, name="theses"),
     path("dashboards/<slug:space>/resources/journal-articles/", data.library, {"type": "articles"}, name="journal_articles"),
-    path("dashboards/<slug:space>/maps/", data.maps, name="maps"),
+    #path("dashboards/<slug:space>/maps/", data.maps, name="maps"),
 
     path("dashboards/<slug:space>/infrastructure/<slug:slug>/", staf.referencespace, name="referencespace"),
 
-    path("dashboards/<slug:space>/layers/<int:id>/", staf.layer, name="layer"),
+    re_path(r'dashboards/(?P<space>[-\w]+)/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/$', staf.layer_overview, name="layer_overview"),
+    re_path(r'dashboards/(?P<space>[-\w]+)/(?P<type>datasets|publications|maps|multimedia)/$', staf.library_overview, name="library_overview"),
 
     # Hub
     path("hub/harvesting/", staf.hub_harvesting, name="hub_harvesting"),

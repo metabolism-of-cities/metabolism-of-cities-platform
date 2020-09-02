@@ -80,7 +80,9 @@
   <div class="row">
     <div class="col-xl-4 col-lg-6 col-md-6">
       <div class="card">
-        <img src="{{ space.photo.image.thumbnail.url }}" class="card-img-top">
+        {% if second_photo %}
+          <img src="{{ second_photo.image.thumbnail.url }}" class="card-img-top">
+        {% endif %}
         <div class="card-body">
           <h5 class="card-title">{{ space }}</h5>
           <h6 class="card-subtitle mb-2 text-muted">{{ space.country }}</h6>
@@ -142,7 +144,7 @@
   <div class="row">
     {% for each in layers %}
     <div class="col-md-6 col-lg-3 context mb-4">
-      <a class="btn-icon" href="layers/{{ each.id }}/">
+      <a class="btn-icon" href="{{ each.slug }}/">
         <h5><i class="fal mr-2 fa-{{ each.icon }} fa-fw"></i> {{ each.get_name_after_colon }}</h5>
         <div class="progress">
           <div 

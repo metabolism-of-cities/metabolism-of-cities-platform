@@ -2,7 +2,7 @@
   <div id="img-city" {% if not dashboard %}class="smaller"{% endif %} style="background-image: url('{{ space.photo.image.url }}')">
     <div class="black-cover"></div>
     <div class="container">
-      <div class="city-name"><a href="{% url 'data:dashboard' space.slug %}">{{ space }}</a></div>
+      <div class="city-name"><a href="{% url URLS.DASHBOARD space.slug %}">{{ space }}</a></div>
     </div>
   </div>
   <nav id="navbar-city" class="navbar navbar-light navbar-expand-md py-0">
@@ -14,35 +14,46 @@
       <div class="collapse navbar-collapse" id="city-navbar">
         <ul class="navbar-nav mr-auto ml-3 ml-md-0">
           <li class="nav-item">
-            <a class="nav-link{% if dashboard %} active{% endif %}" href="{% url 'data:dashboard' space.slug %}">
+            <a class="nav-link{% if dashboard %} active{% endif %}" href="{% url URLS.DASHBOARD space.slug %}">
               <i class="fa fa-fw fa-home"></i>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link{% if context %} active{% endif %}" href="{% url 'data:dashboard' space.slug %}">
+            <a class="nav-link{% if layer == 'context' %} active{% endif %}" href="{% url URLS.LAYER_OVERVIEW space.slug 'context' %}">
               Context
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link{% if context %} active{% endif %}" href="{% url 'data:dashboard' space.slug %}">
+            <a class="nav-link{% if layer == 'biophysical' %} active{% endif %}" href="{% url URLS.LAYER_OVERVIEW space.slug 'biophysical' %}">
               Biophysical
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link{% if context %} active{% endif %}" href="{% url 'data:dashboard' space.slug %}">
+            <a class="nav-link{% if layer == 'infrastructure' %} active{% endif %}" href="{% url URLS.LAYER_OVERVIEW space.slug 'infrastructure' %}">
               Infrastructure
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link{% if context %} active{% endif %}" href="{% url 'data:dashboard' space.slug %}">
+            <a class="nav-link{% if layer == 'stocks-and-flows' %} active{% endif %}" href="{% url URLS.LAYER_OVERVIEW space.slug 'stocks-and-flows' %}">
               Stocks and flows
             </a>
           </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="view-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Browse by type
+              </a>
+              <div class="dropdown-menu" aria-labelledby="view-dropdown">
+                <a class="dropdown-item" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'datasets' %}">Datasets</a>
+                <a class="dropdown-item" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'publications' %}">Publications</a>
+                <a class="dropdown-item" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'maps' %}">Maps</a>
+                <a class="dropdown-item" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'multimedia' %}">Multimedia</a>
+              </div>
+            </li>
         </ul>
       </div>
 
       <div class="float-right">
-        <a class="badge badge-primary" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/dashboards/{{ space.slug }}/hub/">
+        <a class="badge badge-primary" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/dashboards/{{ space.slug }}/hub/harvesting/">
           <i class="fa fa-lock mr-1" aria-hidden="true"></i>
           Data management
         </a>

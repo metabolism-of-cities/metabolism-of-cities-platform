@@ -103,10 +103,8 @@ def layers(request, id=None):
     }
     return render(request, "staf/layers.html", context)
 
-def layer(request, id, space=None):
+def layer(request, id):
     spaces = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)
-    if space:
-        spaces = get_space(request, space)
     layer = Tag.objects.get(parent_tag__parent_tag_id=845, pk=id)
     list = LibraryItem.objects.filter(spaces__in=spaces, tags=layer)
     context = {
@@ -114,6 +112,44 @@ def layer(request, id, space=None):
         "items": list,
         "load_datatables": True,
         "show_spaces": True,
+    }
+    return render(request, "library/list.html", context)
+
+def layer_overview(request, layer, space=None):
+    space = get_space(request, space)
+    layer = Tag.objects.get(parent_tag_id=845, slug=layer)
+    children = Tag.objects.filter(parent_tag=layer)
+    list = {}
+
+    for each in children:
+        list[each.id] = LibraryItem.objects.filter(spaces=space, tags=each)
+
+    context = {
+        "layer": layer,
+        "list": list,
+        "children": children,
+        "space": space,
+    }
+    return render(request, "staf/layer.overview.html", context)
+
+def library_overview(request, type, space=None):
+    space = get_space(request, space)
+    list = LibraryItem.objects.filter(spaces=space)
+    if type == "datasets":
+        list = list.filter(type__id=10)
+    elif type == "maps":
+        list = list.filter(type__id__in=[40,41,20])
+    elif type == "multimedia":
+        list = list.filter(type__group="multimedia")
+    elif type == "publications":
+        list = list.filter(type__group__in=["academic", "reports"])
+
+    context = {
+        "title": type.capitalize(),
+        "items": list,
+        "load_datatables": True,
+        "space": space,
+        "show_tags": True,
     }
     return render(request, "library/list.html", context)
 

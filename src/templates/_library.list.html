@@ -1,14 +1,17 @@
-<div id="resource-list">
+<div class="resource-list">
 
-<table class="table datatable">
-  <thead>
+<table class="table {% if load_datatables %}datatable{% endif %} table-striped">
+  <thead{% if not load_datatables %} class="thead-dark"{% endif %}>
     <tr>
       <th>Title</th>
       {% if show_spaces %}
         <th>Spaces</th>
       {% endif %}
+      {% if show_tags %}
+        <th>Tag(s)</th>
+      {% endif %}
       <th class="author">Author(s)</th>
-      <th>Year</th>
+      <th class="year">Year</th>
     </tr>
   </thead>
   <tbody>
@@ -29,6 +32,15 @@
             | {{ each.publisher }}
           {% endif %}
         </td>
+        {% if show_tags %}
+          <td>
+            <ul class="list-unstyled">
+            {% for tag in each.tags.all %}
+              <li><span class="badge badge-light">{{ tag }}</span></li>
+            {% endfor %}
+            </ul>
+          </td>
+        {% endif %}
         {% if show_spaces %}
           <td>
             {% for space in each.spaces.all %}
@@ -40,7 +52,7 @@
           <span class="text-truncate">{{ each.get_author_citation|safe }}</span>
           <span hidden>{{ each.author_list }}</span>
         </td>
-        <td>{{ each.year|default_if_none:"" }}</td>
+        <td class="year">{{ each.year|default_if_none:"" }}</td>
       </tr>
     {% endfor %}
   </tbody>
