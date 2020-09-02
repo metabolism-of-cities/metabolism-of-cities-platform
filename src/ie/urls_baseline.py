@@ -7,13 +7,13 @@ to change anything, we can do it in one place
 from django.urls import include, path
 from core import views as core
 from community import views as community
+from library import views as library
 from django.contrib.auth import views as auth_views
 from core.validation_email import EmailValidationOnForgotPassword
 from django.views.generic.base import TemplateView
 
 #
 # Baseline links shared between all projects
-# Last change Aug 18, 2020
 #
 
 baseline_urlpatterns = [
@@ -88,6 +88,10 @@ baseline_urlpatterns = [
     path("forum/create/", community.forum_form),
     path("contributor/", core.contributor, name="contributor"),
     path("support/", core.support, name="support"),
+
+    # Site-specific library
+    path("library/", library.index, name="library"),
+    path("library/<int:id>/", library.item, { "show_export": False }, name="library_item"),
 
     # Control panel URLS
     path("controlpanel/", core.controlpanel, name="controlpanel"),

@@ -120,9 +120,13 @@ def layer_overview(request, layer, space=None):
     layer = Tag.objects.get(parent_tag_id=845, slug=layer)
     children = Tag.objects.filter(parent_tag=layer)
     list = {}
+    empty_page = True
 
     for each in children:
-        list[each.id] = LibraryItem.objects.filter(spaces=space, tags=each)
+        l = LibraryItem.objects.filter(spaces=space, tags=each)
+        list[each.id] = l
+        if l:
+            empty_page = False
 
     context = {
         "layer": layer,
@@ -130,12 +134,15 @@ def layer_overview(request, layer, space=None):
         "children": children,
         "space": space,
         "relative_url": True,
+        "empty_page": empty_page,
     }
     return render(request, "staf/layer.overview.html", context)
 
 def library_overview(request, type, space=None):
     space = get_space(request, space)
     list = LibraryItem.objects.filter(spaces=space)
+    days = 14
+    title = None
     if type == "datasets":
         list = list.filter(type__id=10)
     elif type == "maps":
@@ -144,17 +151,26 @@ def library_overview(request, type, space=None):
         list = list.filter(type__group="multimedia")
     elif type == "publications":
         list = list.filter(type__group__in=["academic", "reports"])
+    elif type == "recent":
+        title = "Recently added items"
+        if "days" in request.GET:
+            days = int(request.GET.get("days"))
+        date = datetime.datetime.now() - datetime.timedelta(days=days)
+        list = list.filter(date_created__gte=date)
 
     context = {
-        "title": type.capitalize(),
+        "title": type.capitalize() if not title else title,
         "items": list,
         "load_datatables": True,
         "space": space,
         "show_tags": True,
+        "show_creation": True,
         "submenu": "library",
         "relative_url": True,
+        "type": type,
+        "days": days,
     }
-    return render(request, "library/list.html", context)
+    return render(request, "staf/library.html", context)
 
 @login_required
 def upload_staf_data(request, id=None, block=None, project_name="staf"):

@@ -25,19 +25,27 @@ def index(request):
     show_results = False
     tag = list = search_tag = None
     urban_only = True
+    if request.project == THIS_PROJECT:
+        title = "Homepage"
+    else:
+        title = "Library"
+
     if "find" in request.GET:
         show_results = True
-        list = LibraryItem.objects.filter(type__group="academic")
+        if "types" in request.GET and request.GET["types"] == "all":
+            list = LibraryItem.objects.all()
+        else:
+            list = LibraryItem.objects.filter(type__group="academic")
         if not request.GET.get("urban_only"):
             urban_only = False
         if urban_only:
             list = list.filter(tags__id=11)
     if "search" in request.GET:
         q = request.GET.get("search")
-        if isinstance(q, int):
+        try:
             tag = Tag.objects_unfiltered.get(id=q)
             list = list.filter(tags=tag)
-        else:
+        except:
             # Search by open-ended keyword, so let's search for that
             list = list.filter(Q(name__icontains=q)|Q(description__icontains=q))
     if "after" in request.GET and request.GET["after"]:
@@ -55,7 +63,7 @@ def index(request):
         "urban_only": urban_only,
         "menu": "library",
         "starterskit": LibraryItem.objects.filter(tags__id=791).count(),
-        "title": "Homepage" if not tag else tag.name,
+        "title": title if not tag else tag.name,
         "news": News.objects.filter(projects=THIS_PROJECT).distinct()[:3],
     }
     return render(request, "library/index.html", context)

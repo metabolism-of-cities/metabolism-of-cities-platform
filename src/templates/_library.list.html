@@ -3,6 +3,9 @@
 <table class="table {% if load_datatables %}datatable{% endif %} table-striped">
   <thead{% if not load_datatables %} class="thead-dark"{% endif %}>
     <tr>
+      {% if show_creation %}
+        <th>Added</th>
+      {% endif %}
       <th>Title</th>
       {% if show_spaces %}
         <th>Spaces</th>
@@ -17,6 +20,11 @@
   <tbody>
     {% for each in items %}
       <tr>
+        {% if show_creation %}
+          <td data-sort="{{ each.date_created|date:'Ymdhis' }}" class="text-nowrap">
+            {{ each.date_created|date:"M d, Y" }}
+          </td>
+        {% endif %}
         <td>
             <a href="{% if relative_url %}{{ each.id }}/{% else %}{% url URLS.LIBRARY_ITEM each.id %}{% endif %}">
               {{ each }}

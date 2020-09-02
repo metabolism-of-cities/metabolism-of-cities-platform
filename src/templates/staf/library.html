@@ -1,0 +1,23 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<h3>{{ title }}</h3>
+
+{% if type == "recent" %}
+  <ul class="nav nav-tabs mb-2">
+    <li class="nav-item">
+      <a class="nav-link {% if days == 14 %}active{% endif %}" href="./?days=14">Past two weeks</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {% if days == 31 %}active{% endif %}" href="./?days=31">Past month</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {% if days == 365 %}active{% endif %}" href="./?days=365">Past year</a>
+    </li>
+  </ul>
+{% endif %}
+
+{% include "_library.list.html" %}
+
+{% endblock %}

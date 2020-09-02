@@ -34,6 +34,7 @@ def site(request):
     urls = {
         "PROFILE": slug + ":" + "user",
         "LIBRARY_ITEM": slug + ":" + "library_item",
+        "LIBRARY": slug + ":" + "library",
         "FORUM": slug + ":" + "volunteer_forum",
     }
 
@@ -50,6 +51,7 @@ def site(request):
         urls["LAYER_OVERVIEW"] = slug + ":" + "layer_overview"
         urls["LIBRARY_OVERVIEW"] = slug + ":" + "library_overview"
         urls["DASHBOARD"] = slug + ":" + "dashboard"
+        urls["HUB_HARVESTING"] = slug + ":" + "hub_harvesting_space"
 
     if request.user.is_authenticated and request.user.people:
         people = request.user.people

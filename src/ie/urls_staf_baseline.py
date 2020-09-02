@@ -28,8 +28,7 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/controlpanel/data-articles/create/", core.controlpanel_data_article, name="controlpanel_data_article"),
     path("dashboards/<slug:space>/controlpanel/data-articles/<int:id>/", core.controlpanel_data_article, name="controlpanel_data_article"),
 
-    path("resources/publications/", library.list, { "type": "islands" }, name="library"),
-    path("resources/publications/<int:id>/", library.item, { "show_export": False }, name="library_item"),
+    #path("resources/publications/", library.list, { "type": "islands" }, name="library"),
 
     path("resources/multimedia/", staf.multimedia, name="multimedia"),
     path("resources/<slug:slug>/", library.list, name="library"),
@@ -52,9 +51,10 @@ baseline_staf_urlpatterns = [
     #path("dashboards/<slug:space>/maps/", data.maps, name="maps"),
 
     re_path(r'dashboards/(?P<space>[-\w]+)/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/$', staf.layer_overview, name="layer_overview"),
+    re_path(r'dashboards/(?P<space>[-\w]+)/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/instructionvideos/$', data.instructionvideos),
     re_path(r'dashboards/(?P<space>[-\w]+)/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/(?P<id>[0-9]+)/$', library.item),
-    re_path(r'dashboards/(?P<space>[-\w]+)/(?P<type>datasets|publications|maps|multimedia)/$', staf.library_overview, name="library_overview"),
-    re_path(r'dashboards/(?P<space>[-\w]+)/(?P<data_section_type>datasets|publications|maps|multimedia)/(?P<id>[0-9]+)/$', library.item),
+    re_path(r'dashboards/(?P<space>[-\w]+)/(?P<type>datasets|publications|maps|multimedia|recent)/$', staf.library_overview, name="library_overview"),
+    re_path(r'dashboards/(?P<space>[-\w]+)/(?P<data_section_type>datasets|publications|maps|multimedia|recent)/(?P<id>[0-9]+)/$', library.item),
 
     path("dashboards/<slug:space>/infrastructure/<slug:slug>/", staf.referencespace, name="referencespace"),
 

@@ -254,7 +254,7 @@
                   <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Tags
                   <br>
                   {% for each in info.tags.all %}
-                    <a class="btn btn-sm btn-primary-outline mt-1" href="{% url "library:index" %}?find=true&amp;search={{ each.id }}">{{ each }}</a>
+                    <a class="btn btn-sm btn-primary-outline mt-1" href="{% url URLS.LIBRARY %}?find=true&amp;search={{ each.id }}&amp;types=all">{{ each }}</a>
                   {% endfor %}
                 </li>
               {% endif %}

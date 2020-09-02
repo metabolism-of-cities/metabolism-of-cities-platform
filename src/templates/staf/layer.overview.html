@@ -10,17 +10,61 @@
   {{ layer }}
 </h3>
 
-{% for each in children %}
-  {% if list|get_item:each.id %}
+{% if empty_page %}
 
-    <h4 class="h5 mt-5">{{ each }}</h4>
+  <div class="alert alert-dark text-center p-5 mb-0">
+    <h2 class="pt-5 pb-5">
+    <i class="fa fa-exclamation-triangle"></i><br>
+      There are no items available yet.
+    </h2>
+  </div>
 
-    {% with items=list|get_item:each.id %}
-      {% include "_library.list.html" %}
-    {% endwith %}
+{% else %}
 
-  {% endif %}
+  {% for each in children %}
 
-{% endfor %}
+    {% if list|get_item:each.id %}
+
+      <h4 class="h5 mt-5">{{ each }}</h4>
+
+      {% with items=list|get_item:each.id %}
+        {% include "_library.list.html" %}
+      {% endwith %}
+
+    {% endif %}
+
+  {% endfor %}
+
+{% endif %}
+
+<h3 class="mt-5">Contribute to this open source project</h3>
+
+<section class="row btn-cards">
+  <div class="col-md-4 mb-3">
+    <a class="card icon-card btn-card" href="{% url URLS.HUB_HARVESTING space.slug %}">
+      <div class="icon">
+        <i class="fal fa-fw fa-upload"></i>
+      </div>
+      <div class="card-header">Upload data</div>
+    </a>
+  </div>
+  <div class="col-md-4 mb-3">
+    <a class="card icon-card btn-card" href="instructionvideos/">
+      <div class="icon">
+        <i class="fal fa-fw fa-video"></i>
+      </div>
+      <div class="card-header">Instruction videos</div>
+    </a>
+  </div>
+  <div class="col-md-4 mb-3">
+    <a class="card icon-card btn-card" href="https://education.metabolismofcities.org/courses/data-and-urban-metabolism-data-collection/">
+      <div class="icon">
+        <i class="fal fa-fw fa-school"></i>
+      </div>
+      <div class="card-header">Online course: data collection</div>
+    </a>
+  </div>
+</section>
+
 
 {% endblock %}

@@ -86,8 +86,10 @@
         <div class="card-body">
           <h5 class="card-title">{{ space }}</h5>
           <h6 class="card-subtitle mb-2 text-muted">{{ space.country }}</h6>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
+          <p class="card-text">
+            This is the data dashboard for {{ space }}. This is a work in progress, and you can help! 
+          </p>
+          <a href="https://data.metabolismofcities.org/news/new-metabolism-of-cities-data-hub-launched/" class="btn btn-primary">Learn more</a>
         </div>
       </div>
     </div>
@@ -173,7 +175,7 @@
     <div class="col-lg-4">
       <div class="card card-body text-center">
         <h5>Items added last 14 days</h5>
-        <h2 class="mb-0">{{ added }}</h2>
+        <h2 class="mb-0"><a href="{% url URLS.LIBRARY_OVERVIEW space.slug 'recent' %}">{{ added }}</a></h2>
       </div>
     </div>
     <div class="col-lg-4">
@@ -200,13 +202,13 @@
     <div class="col-xl-3 col-md-6">
       <a class="btn-icon" href="hub/harvesting/">
         <div class="title"><i class="fal fa-database fa-fw"></i> Data collection</div>
-        <div class="text">Photos, podcasts, videos, data visualisations, and more.</div>
+        <div class="text">Indexing and uploading of datasets, reports, photos, and more.</div>
       </a>
     </div>
     <div class="col-xl-3 col-md-6">
       <a class="btn-icon" href="hub/processing/">
         <div class="title"><i class="fal fa-cog fa-fw"></i> Processing</div>
-        <div class="text">Photos, podcasts, videos, data visualisations, and more</div>
+        <div class="text">Data are standardised and loaded into a single dataset.</div>
       </a>
     </div>
     <div class="col-xl-3 col-md-6">

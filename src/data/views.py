@@ -263,6 +263,19 @@ def dashboard(request, space):
     }
     return render(request, "data/dashboard.html", context)
 
+def instructionvideos(request, space, layer):
+    space = get_space(request, space)
+    layer = Tag.objects.get(parent_tag_id=845, slug=layer)
+    videos = Video.objects.filter(tags__id=754) # Filter the instruction videos section first
+    videos = videos.filter(Q(tags=layer)|Q(tags__parent_tag=layer)).distinct()
+
+    context = {
+        "space": space,
+        "layer": layer,
+        "list": videos,
+    }
+    return render(request, "data/instructionvideos.html", context)
+
 def users(request, space, scoreboard=False):
 
     webpage = get_object_or_404(Webpage, pk=54)
