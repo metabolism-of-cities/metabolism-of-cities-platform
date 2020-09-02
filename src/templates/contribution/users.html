@@ -2,10 +2,24 @@
 
 {% block content %}
 
-{% include "contribution/_nav.users.html" %}
+{% if not space %}
+  {% include "contribution/_nav.users.html" %}
+{% endif %}
 
 {{ webpage.get_description }}
 
+{% if space %}
+
+<p>
+  The following people have worked on the data collection, processing, and analysis for 
+  <strong>{{ space }}</strong>.
+  <br>
+  <strong>These people made this data portal possible!</strong>
+  <br>
+  Keen to contribute as well? Go to our <a href="/hub/">community hub</a> to learn more.
+</p>
+
+{% else %}
 <p>
   This is the entire community from all of the Metabolism of Cities <a href="/projects/">projects</a>.
   Use the filter below to view individual communities.
@@ -27,6 +41,7 @@
   </div>
 
 </form>
+{% endif %}
 
 <div class="row mb-4">
   {% for each in list %}

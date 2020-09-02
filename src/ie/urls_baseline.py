@@ -100,6 +100,7 @@ baseline_urlpatterns = [
     path("controlpanel/news/", core.controlpanel_news, name="controlpanel_news"),
     path("controlpanel/news/create/", core.controlpanel_news_form, name="controlpanel_news_form"),
     path("controlpanel/news/<int:id>/", core.controlpanel_news_form, name="controlpanel_news_form"),
+    path("controlpanel/cache/", core.controlpanel_cache, name="controlpanel_cache"),
 
     # News links
     path("news/", core.news_list, { "header_subtitle": "News and updates around urban metabolism literature." }, name="news"),

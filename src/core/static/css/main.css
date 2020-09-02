@@ -196,8 +196,6 @@ nav a.nav-link {
   opacity: .7 !important; }
   nav a.nav-link:hover {
     opacity: 1 !important; }
-  nav a.nav-link.dropdown-toggle::after {
-    display: none; }
   nav a.nav-link.dropdown-toggle[aria-expanded="true"] {
     opacity: 1 !important; }
 
@@ -986,6 +984,10 @@ body.city-subsite #navbar-city {
     white-space: nowrap; }
     body.city-subsite #navbar-city a.nav-link:hover {
       color: #000 !important; }
+  body.city-subsite #navbar-city a.active {
+    background: #fff;
+    font-weight: bold;
+    opacity: 1 !important; }
 
 body.event.list .no-results:not(.visible) {
   display: none; }

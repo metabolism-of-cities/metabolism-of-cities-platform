@@ -192,7 +192,17 @@ def journal(request, slug):
     }
     return render(request, "library/journal.html", context)
 
-def item(request, id, show_export=True):
+def item(request, id, show_export=True, space=None, layer=None, data_section_type=None):
+
+    submenu = None
+    # These settings are used when opening the URL from one of the data sites,
+    # for example from http://0.0.0.0:8000/data/dashboards/barcelona/infrastructure/
+    if space:
+        space = get_space(request, space)
+    if layer:
+        layer = Tag.objects.get(parent_tag_id=845, slug=layer)
+    if data_section_type:
+        submenu = "library"
 
     info = get_object_or_404(LibraryItem, pk=id)
     section = "library"
@@ -229,6 +239,9 @@ def item(request, id, show_export=True):
         "load_messaging": True,
         "list_messages": Message.objects.filter(parent=info),
         "curator": curator,
+        "space": space,
+        "layer": layer,
+        "submenu": submenu,
     }
     return render(request, "library/item.html", context)
 
@@ -530,7 +543,10 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             if info:
                 form.fields["tags"].queryset = Tag.objects.filter(Q(parent_tag__parent_tag_id=845)|Q(id__in=info.tags.all()))
             else:
-                form.fields["tags"].queryset = Tag.objects.filter(parent_tag__parent_tag_id=845)
+                if curator:
+                    form.fields["tags"].queryset = Tag.objects.filter(Q(parent_tag__parent_tag_id=845)|Q(pk=936))
+                else:
+                    form.fields["tags"].queryset = Tag.objects.filter(parent_tag__parent_tag_id=845)
 
     if type.name == "Shapefile" or type.name == "Dataset":
         files = True

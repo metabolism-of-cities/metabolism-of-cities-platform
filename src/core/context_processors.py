@@ -34,6 +34,7 @@ def site(request):
     urls = {
         "PROFILE": slug + ":" + "user",
         "LIBRARY_ITEM": slug + ":" + "library_item",
+        "FORUM": slug + ":" + "volunteer_forum",
     }
 
     if slug == "data" or slug == "cityloops":

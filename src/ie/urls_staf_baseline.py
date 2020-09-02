@@ -44,17 +44,19 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/sectors/<slug:sector>/", data.sector, name="sector"),
     path("dashboards/<slug:space>/sectors/<slug:sector>/<slug:article>/", data.article, name="article"),
     #path("dashboards/<slug:space>/datasets/", data.datasets, name="datasets"),
-    path("dashboards/<slug:space>/datasets/<slug:dataset>/", staf.dataset, name="dataset"),
+    #path("dashboards/<slug:space>/datasets/<slug:dataset>/", staf.dataset, name="dataset"),
     path("dashboards/<slug:space>/resources/photos/", data.photos, name="photos"),
     path("dashboards/<slug:space>/resources/reports/", data.library, {"type": "reports"}, name="reports"),
     path("dashboards/<slug:space>/resources/theses/", data.library, {"type": "theses"}, name="theses"),
     path("dashboards/<slug:space>/resources/journal-articles/", data.library, {"type": "articles"}, name="journal_articles"),
     #path("dashboards/<slug:space>/maps/", data.maps, name="maps"),
 
-    path("dashboards/<slug:space>/infrastructure/<slug:slug>/", staf.referencespace, name="referencespace"),
-
     re_path(r'dashboards/(?P<space>[-\w]+)/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/$', staf.layer_overview, name="layer_overview"),
+    re_path(r'dashboards/(?P<space>[-\w]+)/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/(?P<id>[0-9]+)/$', library.item),
     re_path(r'dashboards/(?P<space>[-\w]+)/(?P<type>datasets|publications|maps|multimedia)/$', staf.library_overview, name="library_overview"),
+    re_path(r'dashboards/(?P<space>[-\w]+)/(?P<data_section_type>datasets|publications|maps|multimedia)/(?P<id>[0-9]+)/$', library.item),
+
+    path("dashboards/<slug:space>/infrastructure/<slug:slug>/", staf.referencespace, name="referencespace"),
 
     # Hub
     path("hub/harvesting/", staf.hub_harvesting, name="hub_harvesting"),
@@ -81,6 +83,7 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/hub/processing/datasets/<int:id>/edit/", library.form),
     path("dashboards/<slug:space>/hub/processing/datasets/<int:id>/", staf.hub_processing_dataset, name="hub_processing_dataset"),
     path("dashboards/<slug:space>/hub/processing/datasets/<int:id>/classify/", staf.hub_processing_dataset, {"classify": True}, name="hub_processing_dataset"),
+    path("dashboards/<slug:space>/hub/people/", data.users),
 
     path("dashboards/<slug:space>/", data.dashboard, name="dashboard"),
 

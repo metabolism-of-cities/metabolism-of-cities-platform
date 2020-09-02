@@ -241,6 +241,13 @@ def dashboard(request, space):
     except:
         second_photo = None
 
+    doc_counter = {}
+    list = LibraryItem.objects.filter(spaces=space)
+    doc_counter["datasets"] = list.filter(type__id=10).count()
+    doc_counter["maps"] = list.filter(type__id__in=[40,41,20]).count()
+    doc_counter["multimedia"] = list.filter(type__group="multimedia").count()
+    doc_counter["publications"] = list.filter(type__group__in=["academic", "reports"]).count()
+
     context = {
         "space": space,
         "header_image": space.photo,
@@ -252,8 +259,39 @@ def dashboard(request, space):
         "highscore": highscore[0] if highscore else None,
         "added": added,
         "second_photo": second_photo,
+        "doc_counter": doc_counter,
     }
     return render(request, "data/dashboard.html", context)
+
+def users(request, space, scoreboard=False):
+
+    webpage = get_object_or_404(Webpage, pk=54)
+    space = get_space(request, space)
+
+    if scoreboard:
+        page = "scoreboard"
+    else:
+        page = "users"
+
+    project = None
+    if request.project != 1:
+        project = request.project
+    if "project" in request.GET:
+        project = request.GET.get("project")
+
+    list = People.objects.filter(message_list__isnull=False, user__isnull=False)
+    list = list.filter(message_list__parent__work__related_to__spaces=space)
+    list = list.distinct().order_by("-user__date_joined")
+
+    context = {
+        "webpage": webpage,
+        "list": list,
+        "title": "People",
+        "load_datatables": True,
+        "menu": page,
+        "space": space,
+    }
+    return render(request, "contribution/" + page + ".html", context)
 
 def photos(request, space):
     space = get_space(request, space)

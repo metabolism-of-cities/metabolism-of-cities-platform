@@ -18,7 +18,7 @@
     {% for each in items %}
       <tr>
         <td>
-            <a href="{% if PROJECT.id == 17 %}{% url 'islands:library_item' each.id %}{% elif PROJECT.slug == "data" %}{% url "data:library_item" each.id %}{% else %}{{ each.get_absolute_url }}{% endif %}">
+            <a href="{% if relative_url %}{{ each.id }}/{% else %}{% url URLS.LIBRARY_ITEM each.id %}{% endif %}">
               {{ each }}
             </a>
             {% if show_image_upload_link and each.type.name != "Image" %}

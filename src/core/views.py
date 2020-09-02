@@ -947,6 +947,25 @@ def controlpanel_content_form(request, id=None):
     return render(request, "controlpanel/content.form.html", context)
 
 @login_required
+def controlpanel_cache(request):
+
+    from django.core.cache import caches, cache
+
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    list = caches
+    if request.method == "POST" and "delete" in request.POST:
+        cache.clear()
+        messages.success(request, "All cache was cleared.")
+
+    context = {
+        "title": "Control panel",
+    }
+    return render(request, "controlpanel/cache.html", context)
+
+
+@login_required
 def controlpanel_data_articles(request, space):
 
     project = request.project

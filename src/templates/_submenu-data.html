@@ -19,45 +19,58 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link{% if layer == 'context' %} active{% endif %}" href="{% url URLS.LAYER_OVERVIEW space.slug 'context' %}">
+            <a class="nav-link{% if layer.slug == 'context' %} active{% endif %}" href="{% url URLS.LAYER_OVERVIEW space.slug 'context' %}">
               Context
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link{% if layer == 'biophysical' %} active{% endif %}" href="{% url URLS.LAYER_OVERVIEW space.slug 'biophysical' %}">
+            <a class="nav-link{% if layer.slug == 'biophysical' %} active{% endif %}" href="{% url URLS.LAYER_OVERVIEW space.slug 'biophysical' %}">
               Biophysical
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link{% if layer == 'infrastructure' %} active{% endif %}" href="{% url URLS.LAYER_OVERVIEW space.slug 'infrastructure' %}">
+            <a class="nav-link{% if layer.slug == 'infrastructure' %} active{% endif %}" href="{% url URLS.LAYER_OVERVIEW space.slug 'infrastructure' %}">
               Infrastructure
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link{% if layer == 'stocks-and-flows' %} active{% endif %}" href="{% url URLS.LAYER_OVERVIEW space.slug 'stocks-and-flows' %}">
+            <a class="nav-link{% if layer.slug == 'stocks-and-flows' %} active{% endif %}" href="{% url URLS.LAYER_OVERVIEW space.slug 'stocks-and-flows' %}">
               Stocks and flows
             </a>
           </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="view-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Browse by type
-              </a>
-              <div class="dropdown-menu" aria-labelledby="view-dropdown">
-                <a class="dropdown-item" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'datasets' %}">Datasets</a>
-                <a class="dropdown-item" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'publications' %}">Publications</a>
-                <a class="dropdown-item" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'maps' %}">Maps</a>
-                <a class="dropdown-item" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'multimedia' %}">Multimedia</a>
-              </div>
-            </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle {% if submenu == 'library' %}active{% endif %}" href="#" id="view-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Browse by type
+            </a>
+            <div class="dropdown-menu" aria-labelledby="view-dropdown">
+              <a class="dropdown-item" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'datasets' %}">Datasets</a>
+              <a class="dropdown-item" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'publications' %}">Publications</a>
+              <a class="dropdown-item" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'maps' %}">Maps</a>
+              <a class="dropdown-item" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'multimedia' %}">Multimedia</a>
+            </div>
+          </li>
         </ul>
       </div>
 
       <div class="float-right">
-        <a class="badge badge-primary" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/dashboards/{{ space.slug }}/hub/harvesting/">
-          <i class="fa fa-lock mr-1" aria-hidden="true"></i>
-          Data management
-        </a>
+
+        <div class="dropdown">
+          <a class="badge badge-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-users"></i>
+            Community
+          </a>
+
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="{% url URLS.DASHBOARD space.slug %}hub/harvesting/">Data collection</a>
+            <a class="dropdown-item" href="{% url URLS.DASHBOARD space.slug %}hub/processing/">Data processing</a>
+            <a class="dropdown-item disabled" href="{% url URLS.DASHBOARD space.slug %}hub/analysis/">Data analysis</a>
+            <a class="dropdown-item" href="{% url URLS.DASHBOARD space.slug %}hub/people/">People</a>
+            <a class="dropdown-item" href="{% url URLS.FORUM %}">Forum</a>
+          </div>
+        </div>
       </div>
+
     </div>
   </nav>
 </div>

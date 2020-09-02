@@ -171,6 +171,17 @@
       </div>
     {% endif %}
 
+    {% if request.user.is_superuser %}
+      <div class="col-md-3 mb-3">
+        <a class="card icon-card btn-card" href="cache/">
+          <div class="icon">
+            <i class="far fa-fw fa-hdd"></i>
+          </div>
+          <div class="card-header">Manage cache</div>
+        </a>
+      </div>
+    {% endif %}
+
   </section>
 
   {% if not space %}

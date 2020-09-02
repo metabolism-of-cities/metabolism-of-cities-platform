@@ -1,0 +1,43 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1 class="mb-0">{% block title %}Cache{% endblock %}</h1>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+  aa
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Course</th>
+        <th>Modules</th>
+        <th>Students (all)</th>
+        <th>Students (last 90 days)</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in list %}
+      <tr>
+        <td><a href="{{ each.id }}/">{{ each }}</a></td>
+        <td>{{ each.modules.count }}</td>
+        <td>{{ each.students.count }}</td>
+        <td>{{ each.recent_students.count }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <form method="post">
+    <button type="submit" name="delete" value="true" class="btn btn-danger"><i class="fa fa-trash-alt"></i> Clear all cache</button>
+    {% csrf_token %}
+  </form>
+
+  <a href="../" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+{% endblock %}

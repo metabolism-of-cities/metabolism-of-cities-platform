@@ -113,27 +113,27 @@
   <h2>Resources</h2>
   <div class="row">
     <div class="col-xl-3 col-md-6">
-      <a class="btn-icon" href="/data/the-hague/datasets/">
-        <div class="title"><i class="fal fa-chart-area fa-fw"></i> Datasets <span class="resource-count badge badge-primary">142</span></div>
+      <a class="btn-icon" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'datasets' %}">
+        <div class="title"><i class="fal fa-chart-area fa-fw"></i> Datasets <span class="resource-count badge badge-primary">{{ doc_counter|get_item:"datasets" }}</span></div>
         <div class="text">Explore datasets on material flows, stocks, consumption, and more</div>
       </a>
     </div>
     <div class="col-xl-3 col-md-6">
-      <a class="btn-icon" href="{% url 'data:journal_articles' space.slug %}">
-        <div class="title"><i class="fal fa-books fa-fw"></i> Publications <span class="resource-count badge badge-primary">31</span></div>
+      <a class="btn-icon" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'publications' %}">
+        <div class="title"><i class="fal fa-books fa-fw"></i> Publications <span class="resource-count badge badge-primary">{{ doc_counter|get_item:"publications" }}</span></div>
         <div class="text">Academic literature, reports, and publications published in peer-reviewed journals</div>
       </a>
     </div>
     <div class="col-xl-3 col-md-6">
-      <a class="btn-icon" href="/data/the-hague/datasets/">
-        <div class="title"><i class="fal fa-globe-africa fa-fw"></i> Maps <span class="resource-count badge badge-primary">12</span></div>
+      <a class="btn-icon" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'maps' %}">
+        <div class="title"><i class="fal fa-globe-africa fa-fw"></i> Maps <span class="resource-count badge badge-primary">{{ doc_counter|get_item:"maps" }}</span></div>
         <div class="text">View boundaries, micro-territorial units, infrastructure maps, and more</div>
       </a>
     </div>
     <div class="col-xl-3 col-md-6">
-      <a class="btn-icon" href="{% url 'data:photos' space.slug %}">
-        <div class="title"><i class="fal fa-photo-video fa-fw"></i> Multimedia <span class="resource-count badge badge-primary">73</span></div>
-        <div class="text">Photos, podcasts, videos, data visualisations, and more</div>
+      <a class="btn-icon" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'multimedia' %}">
+        <div class="title"><i class="fal fa-photo-video fa-fw"></i> Multimedia <span class="resource-count badge badge-primary">{{ doc_counter|get_item:"multimedia" }}</span></div>
+        <div class="text">Photos, videos, data visualisations, and more</div>
       </a>
     </div>
   </div>
@@ -172,18 +172,19 @@
 
     <div class="col-lg-4">
       <div class="card card-body text-center">
-        <h5>Document added last 14 days</h5>
+        <h5>Items added last 14 days</h5>
         <h2 class="mb-0">{{ added }}</h2>
       </div>
     </div>
     <div class="col-lg-4">
       <div class="card card-body text-center">
-        <h5>Biggest contributer</h5>
+        <h5>Top contributer</h5>
         <h2 class="mb-0">{{ highscore.assigned_to__name }}</h2>
+        <p><a href="hub/people/">View all contributors</a></p>
       </div>
     </div>
     <div class="col-lg-4 align-middle">
-      <a class="card btn-card card-body text-center get-involved" href="">
+      <a class="card btn-card card-body text-center get-involved" href="hub/">
         <div class="btn btn-lg btn-primary">
           <i class="fa fa-handshake"></i> Get involved
         </div>

@@ -129,6 +129,7 @@ def layer_overview(request, layer, space=None):
         "list": list,
         "children": children,
         "space": space,
+        "relative_url": True,
     }
     return render(request, "staf/layer.overview.html", context)
 
@@ -150,6 +151,8 @@ def library_overview(request, type, space=None):
         "load_datatables": True,
         "space": space,
         "show_tags": True,
+        "submenu": "library",
+        "relative_url": True,
     }
     return render(request, "library/list.html", context)
 

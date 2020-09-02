@@ -299,9 +299,6 @@ nav {
     }
 
     &.dropdown-toggle {
-      &::after {
-        display: none;
-      }
 
       &[aria-expanded="true"] {
         opacity: 1 !important;
@@ -1476,6 +1473,11 @@ body.city-subsite {
       &:hover {
         color: $black !important;
       }
+    }
+    a.active {
+      background: #fff;
+      font-weight: bold;
+      opacity: 1 !important;
     }
   }
 }
