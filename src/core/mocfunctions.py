@@ -92,7 +92,7 @@ def p(text):
     print("----------------------")
 
 # We should cache this baby!! 
-LAYERS = Tag.objects.filter(parent_tag_id=845)
-LAYERS_COUNT = {}
-for each in LAYERS:
-    LAYERS_COUNT[each.id] = each.children.count()
+#LAYERS = Tag.objects.filter(parent_tag_id=845)
+#LAYERS_COUNT = {}
+#for each in LAYERS:
+   # LAYERS_COUNT[each.id] = each.children.count()
