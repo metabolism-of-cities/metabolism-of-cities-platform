@@ -6,9 +6,9 @@
     <h2>Data inventory: layer overview</h2>
     <div class="row">
       <div class="col-4">
-        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <div class="nav flex-column nav-pills">
           {% for each in layers %}
-            <a class="nav-link {% if each.id == 846 %}active{% endif %}" id="v-pills-{{ each.id }}-tab" data-toggle="pill" href="#v-pills-{{ each.id }}" role="tab" aria-controls="v-pills-{{ each.id }}" aria-selected="true">
+            <a class="nav-link {% if each.slug == layer %}active{% endif %}" href="../{{ each.slug }}/">
               <i class="fa fa-{{ each.icon }} fa-fw"></i> {{ each }}
             </a>
           {% endfor %}
@@ -16,32 +16,33 @@
         </div>
       </div>
       <div class="col-8">
-        <div class="tab-content" id="v-pills-tabContent">
+        <div class="tab-content">
           {% for each in layers %}
+            {% if each.slug == layer %}
+              <div class="tab-pane fade show active">
 
-            <div class="tab-pane fade {% if each.id == 846 %}show active{% endif %}" id="v-pills-{{ each.id }}" role="tabpanel" aria-labelledby="v-pills-{{ each.id }}-tab">
+                <ul class="list-group mb-4">
+                  {% for tag in each.children.all %}
+                    <li class="list-group-item">
+                      <a href="{{ tag.id }}/">
+                        {{ tag }}
+                        {% if counter|get_item:tag.id > 0 %}
+                          <span class="badge badge-success float-right">
+                            {{ counter|get_item:tag.id }}
+                          </span>
+                        {% else %}
+                          <span class="badge badge-dark float-right">
+                            0
+                          </span>
+                        {% endif %}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
 
-              <ul class="list-group mb-4">
-                {% for tag in each.children.all %}
-                  <li class="list-group-item">
-                    <a href="{{ tag.id }}/">
-                      {{ tag }}
-                      {% if counter|get_item:tag.id > 0 %}
-                        <span class="badge badge-success float-right">
-                          {{ counter|get_item:tag.id }}
-                        </span>
-                      {% else %}
-                        <span class="badge badge-dark float-right">
-                          0
-                        </span>
-                      {% endif %}
-                    </a>
-                  </li>
-                {% endfor %}
-              </ul>
+              </div>
 
-            </div>
-
+            {% endif %}
           {% endfor %}
 
         </div>

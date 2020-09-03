@@ -41,7 +41,7 @@
 
 <section class="row btn-cards">
   <div class="col-md-4 mb-3">
-    <a class="card icon-card btn-card" href="{% url URLS.HUB_HARVESTING space.slug %}">
+    <a class="card icon-card btn-card" href="{% if space %}{% url URLS.HUB_HARVESTING space.slug %}{% else %}/hub/{% endif %}">
       <div class="icon">
         <i class="fal fa-fw fa-upload"></i>
       </div>

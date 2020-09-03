@@ -36,7 +36,7 @@ baseline_staf_urlpatterns = [
     path("datasets/<int:id>/", staf.dataset, name="dataset"),
 
     path("layers/", staf.layers, name="layers"),
-    path("layers/<int:id>/", staf.layer, name="layer"),
+    path("layers/<slug:slug>/<int:id>/", staf.layer, name="layer"),
 
     # Data dashboards
     path("dashboards/<slug:space>/sectors/", data.sectors, name="sectors"),
@@ -55,6 +55,12 @@ baseline_staf_urlpatterns = [
     re_path(r'dashboards/(?P<space>[-\w]+)/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/(?P<id>[0-9]+)/$', library.item),
     re_path(r'dashboards/(?P<space>[-\w]+)/(?P<type>datasets|publications|maps|multimedia|recent)/$', staf.library_overview, name="library_overview"),
     re_path(r'dashboards/(?P<space>[-\w]+)/(?P<data_section_type>datasets|publications|maps|multimedia|recent)/(?P<id>[0-9]+)/$', library.item),
+
+    re_path(r'layers/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/$', staf.layers, name="layer_overview"),
+    re_path(r'layers/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/instructionvideos/$', data.instructionvideos),
+    re_path(r'layers/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/(?P<id>[0-9]+)/$', library.item),
+    re_path(r'library/(?P<type>datasets|publications|maps|multimedia|recent)/$', staf.library_overview, name="library_overview"),
+    re_path(r'library/(?P<data_section_type>datasets|publications|maps|multimedia|recent)/(?P<id>[0-9]+)/$', library.item),
 
     path("dashboards/<slug:space>/infrastructure/<slug:slug>/", staf.referencespace, name="referencespace"),
 

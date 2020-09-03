@@ -1,20 +1,36 @@
 <li class="nav-item"><a class="nav-link" href="{% url "data:dashboards" %}">Cities</a></li>
 
-{% if request.user.is_superuser %}
 <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="view-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-   Data inventory
+   Data layers
   </a>
   <div class="dropdown-menu" aria-labelledby="view-dropdown">
-    <a class="dropdown-item" href="{% url "data:view_datasets" %}">Datasets</a>
-    <a class="dropdown-item" href="{% url "data:multimedia" %}">Photos</a>
-    <a class="dropdown-item" href="{% url "data:view_dataportals" %}">Dataset portals</a>
-    <a class="dropdown-item" href="{% url "data:layers" %}">Data by layer</a>
+
+    <a class="dropdown-item" href="{% url "data:layer_overview" 'context' %}">Context</a>
+    <a class="dropdown-item" href="{% url "data:layer_overview" 'biophysical' %}">Biophysical Characteristics</a>
+    <a class="dropdown-item" href="{% url "data:layer_overview" 'infrastructure' %}">Infrastructure</a>
+    <a class="dropdown-item" href="{% url "data:layer_overview" 'stocks-and-flows' %}">Stocks and Flows</a>
+
   </div>
 </li>
-{% else %}
-  <li class="nav-item"><a class="nav-link" href="{% url "data:layers" %}">Data inventory</a></li>
-{% endif %}
+
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="view-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+   Library
+  </a>
+  <div class="dropdown-menu" aria-labelledby="view-dropdown">
+
+    <a class="dropdown-item" href="{% url "data:library_overview" 'datasets' %}">Datasets</a>
+    <a class="dropdown-item" href="{% url "data:library_overview" 'publications' %}">Publications</a>
+    <a class="dropdown-item" href="{% url "data:library_overview" 'maps' %}">Maps</a>
+    <a class="dropdown-item" href="{% url "data:library_overview" 'multimedia' %}">Multimedia</a>
+    {% if request.user.is_superuser %}
+      <hr>
+      <a class="dropdown-item" href="{% url "data:view_dataportals" %}">Dataset portals</a>
+    {% endif %}
+  </div>
+</li>
+
 <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="upload-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Upload

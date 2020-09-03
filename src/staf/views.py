@@ -83,8 +83,10 @@ def upload_staf(request, id=None):
     }
     return render(request, "staf/upload/staf.html", context)
 
-def layers(request, id=None):
-    layers = Tag.objects.filter(parent_tag_id=845)
+def layers(request, id=None, layer=None):
+    layers = LAYERS
+    if layer:
+        layers = layers.filter(slug=layer)
     spaces = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)
     items = LibraryItem.objects.filter(spaces__in=spaces, tags__parent_tag__in=layers).distinct()
     counter = {}
@@ -97,16 +99,17 @@ def layers(request, id=None):
                     counter[tag.id] += 1
 
     context = {
-        "layers": layers,
+        "layers": LAYERS,
+        "layer": layer,
         "counter": counter,
         "title": "Data inventory: layer overview",
     }
     return render(request, "staf/layers.html", context)
 
-def layer(request, id):
+def layer(request, slug, id):
     spaces = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)
     layer = Tag.objects.get(parent_tag__parent_tag_id=845, pk=id)
-    list = LibraryItem.objects.filter(spaces__in=spaces, tags=layer)
+    list = LibraryItem.objects.filter(spaces__in=spaces, tags=layer).distinct()
     context = {
         "title": layer.name,
         "items": list,
@@ -116,14 +119,17 @@ def layer(request, id):
     return render(request, "library/list.html", context)
 
 def layer_overview(request, layer, space=None):
-    space = get_space(request, space)
+    if space:
+        space = get_space(request, space)
     layer = Tag.objects.get(parent_tag_id=845, slug=layer)
     children = Tag.objects.filter(parent_tag=layer)
     list = {}
     empty_page = True
 
     for each in children:
-        l = LibraryItem.objects.filter(spaces=space, tags=each)
+        l = LibraryItem.objects.filter(tags=each)
+        if space:
+            l.filter(spaces=space)
         list[each.id] = l
         if l:
             empty_page = False
@@ -139,8 +145,13 @@ def layer_overview(request, layer, space=None):
     return render(request, "staf/layer.overview.html", context)
 
 def library_overview(request, type, space=None):
-    space = get_space(request, space)
-    list = LibraryItem.objects.filter(spaces=space)
+
+    list = LibraryItem.objects.all()
+
+    if space:
+        space = get_space(request, space)
+        list = list.filter(spaces=space)
+
     days = 14
     title = None
     if type == "datasets":
