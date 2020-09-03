@@ -1,0 +1,83 @@
+{% extends "_base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+  <h1 class="mb-0">{% block title %}Relationship manager{% endblock %}</h1>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+  <form method="post" class="form">
+
+    <div class="card mb-4">
+      <div class="card-body">
+
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Person</label>
+            <div class="col-sm-10">
+              <select class="custom-select" id="record_parent" name="record_parent" required>
+                {% if info %}
+                  <option selected value="{{ info.record_parent.id }}">{{ info.record_parent }}</option>
+                {% endif %}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Relationship</label>
+            <div class="col-sm-10">
+              <select class="custom-select" name="relationship" required>
+                <option value=""></option>
+                {% for each in relationships %}
+                  <option {% if each == info.relationship %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+              {{ child }}
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Since</label>
+            <div class="col-sm-10">
+              <input type="date" name="date" class="form-control" {% if info %}value="{{ info.date_created|date:"Y-m-d" }}"{% endif %} />
+            </div>
+          </div>
+
+          {% csrf_token %}
+      </div>
+    </div>
+
+    {% buttons %}
+      <button type="submit" class="btn btn-success">
+        <i class="fas fa-save"></i> Save
+      </button>
+    {% endbuttons %}
+
+  </form>
+
+  <a href="../" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+{% endblock %}
+
+{% block footer %}
+<script>
+
+  $("#record_parent").select2({
+    theme: "bootstrap4",
+    ajax: {
+      url: "{% url "core:search_ajax" type %}",
+      dataType: "json"
+    }
+  });
+
+</script>
+{% endblock %}

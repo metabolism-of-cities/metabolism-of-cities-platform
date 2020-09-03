@@ -722,10 +722,49 @@ def controlpanel_users(request):
     if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
     context = {
-        "users": RecordRelationship.objects.filter(record_child_id=request.project, relationship__is_permission=True),
+        "users": RecordRelationship.objects.filter(record_child_id=request.project),
         "load_datatables": True,
     }
     return render(request, "controlpanel/users.html", context)
+
+@login_required
+def controlpanel_relationship_form(request, id=None):
+
+    project = request.project
+    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    info = None
+    child = None
+
+    if id:
+        info = RecordRelationship.objects.get(pk=id)
+
+    if not child:
+        child = get_object_or_404(Project, pk=request.project)        
+
+    if request.method == "POST":
+        if not id:
+            info = RecordRelationship()
+        info.record_parent_id = request.POST.get("record_parent")
+        info.record_child = child
+        info.relationship_id = request.POST.get("relationship")
+        info.save()
+        if "date" in request.POST:
+            info.date_created = request.POST.get("date")
+            info.save()
+        messages.success(request, "The information was saved.")
+        if "next" in request.GET:
+            return redirect(request.GET.get("next"))
+
+    context = {
+        "type": "people",
+        "load_select2": True,
+        "relationships": Relationship.objects.filter(pk__in=[7,6]),
+        "child": child,
+        "info": info,
+    }
+    return render(request, "controlpanel/relationship.html", context)
 
 @login_required
 def controlpanel_design(request):

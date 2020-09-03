@@ -130,12 +130,6 @@ def dashboard(request, space):
     space = get_space(request, space)
     project = get_object_or_404(Project, pk=request.project)
 
-    if not settings.DEBUG and project.slug != "islands":
-        if request.user.is_authenticated and request.user.is_superuser:
-            pass
-        else:
-            return redirect(project.slug + ":hub_harvesting_space", space=space.slug)
-
     list = LibraryItem.objects.filter(spaces=space)
     layers = LAYERS
 

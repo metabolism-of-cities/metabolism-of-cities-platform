@@ -13,6 +13,7 @@
       <tr>
         <th>User</th>
         <th>Type</th>
+        <th>Since</th>
         {% if show_child %}
           <th>Signed up to</th>
         {% endif %}
@@ -21,8 +22,9 @@
     <tbody>
     {% for each in users %}
       <tr>
-        <td><a href="{{ each.record_parent.id }}/">{{ each.record_parent }}</a></td>
+        <td><a href="{{ each.id }}/">{{ each.record_parent }}</a></td>
         <td>{{ each.relationship.name }}</td>
+        <td>{{ each.date_created|date:"M d, Y" }}</td>
         {% if show_child %}
           <td>{{ each.record_child }}</td>
         {% endif %}
@@ -31,9 +33,13 @@
     </tbody>
   </table>
 
-  <a href="../" class="btn btn-primary-basic mt-4">
-    <i class="fal fa-angle-left"></i>
-    Back to control panel
-  </a>
+  <a class="mt-4 btn btn-default-outline" href="create/?next={{ request.get_full_path }}"><i class="fal fa-plus"></i> Add</a>
+
+  <div>
+    <a href="../" class="btn btn-primary-basic mt-4">
+      <i class="fal fa-angle-left"></i>
+      Back to control panel
+    </a>
+  </div>
 
 {% endblock %}
