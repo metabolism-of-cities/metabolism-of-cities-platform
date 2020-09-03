@@ -31,7 +31,7 @@ baseline_staf_urlpatterns = [
     #path("resources/publications/", library.list, { "type": "islands" }, name="library"),
 
     path("resources/multimedia/", staf.multimedia, name="multimedia"),
-    path("resources/<slug:slug>/", library.list, name="library"),
+    #path("resources/<slug:slug>/", library.list, name="library"),
 
     path("datasets/<int:id>/", staf.dataset, name="dataset"),
 

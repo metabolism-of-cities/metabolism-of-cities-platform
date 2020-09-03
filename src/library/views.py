@@ -761,6 +761,15 @@ def controlpanel_library(request):
     return render(request, "controlpanel/library.html", context)
 
 @login_required
+def controlpanel_zotero(request):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    context = {
+    }
+    return render(request, "controlpanel/zotero.html", context)
+
+@login_required
 def controlpanel_tags(request):
     if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)

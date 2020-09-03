@@ -374,7 +374,6 @@ class PublicProject(Record):
     full_name = models.CharField(max_length=255, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     url = models.URLField(max_length=255, null=True, blank=True)
-    site = models.ForeignKey(Site, on_delete=models.CASCADE)
     target_finish_date = models.CharField(max_length=255, null=True, blank=True)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)

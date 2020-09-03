@@ -1,0 +1,17 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1 class="mb-0">{% block title %}Zotero{% endblock %}</h1>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+  <div>
+    {% if not api_key %}
+      <code>No API key found!</code>
+    {% endif %}
+  </div>
+
+{% endblock %}

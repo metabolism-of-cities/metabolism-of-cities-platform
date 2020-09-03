@@ -1,0 +1,72 @@
+{% extends "_base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+  <h1 class="mb-4">{{ title }}</h1>
+
+  <p><strong>Instructions:</strong><br>
+  enter the start and end date in the format: <code>YYYY-MM-DD</code>, or if there is a specific start/end time, then do:
+  <code>YYYY-MM-DD HH:mm</code>, for example <code>2020-10-05 10:30</code>.
+  </p>
+  {% if info %}
+    <div class="alert alert-warning">
+      <a href="{{ info.get_absolute_url }}">
+        <i class="fa fa-fw fa-link"></i>
+        View event
+      </a>
+    </div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+    {% bootstrap_form form layout="horizontal" %}
+
+    <div class="form-group row">
+    <label class="col-md-3 col-form-label" for="id_type">Formatting</label>
+    <div class="col-md-9">
+    <select name="format" class="form-control" id="id_type">
+      <option value="markdown">Markdown</option>
+      <option value="html" {% if info.meta_data.format == "html" %}selected{% endif %}>HTML</option>
+      <option value="markdown_html" {% if info.meta_data.format == "markdown_html" %}selected{% endif %}>Markdown and HTML</option>
+    </select>
+    </div>
+    </div>
+
+    <div class="form-group markdown-textarea">
+      {% include "_markdown.html" %}
+      <textarea class="form-control mb-4" id="text" rows="30" name="description">{{ info.description|default_if_none:"" }}</textarea>
+    </div>
+
+    {% buttons %}
+      <div class="row">
+        <div class="col-12">
+          <button type="submit" class="btn btn-success">
+            <i class="fa fa-fw fa-save"></i>
+            Save
+         </button>
+        </div>
+      </div>
+    {% endbuttons %}
+    {% csrf_token %}
+  </form>
+
+  <a href="javascript:history.back()" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    Back
+  </a>
+
+{% endblock %}
+
+{% block footer %}
+<script>
+  $("#id_date").attr("type", "date");
+  $("#id_projects").select2();
+  $("#people").select2({
+    theme: "bootstrap4",
+    ajax: {
+      url: "{% url "core:search_ajax" "people" %}",
+      dataType: "json"
+    }
+  });
+</script>
+{% endblock %}

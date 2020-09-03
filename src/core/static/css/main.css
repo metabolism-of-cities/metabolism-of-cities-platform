@@ -411,6 +411,9 @@ img.card-img-top {
   object-fit: cover;
   height: 200px; }
 
+img.tall-img {
+  height: 300px; }
+
 .btn-card {
   color: #212529;
   height: 100%; }

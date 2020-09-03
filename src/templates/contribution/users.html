@@ -46,8 +46,8 @@
 <div class="row mb-4">
   {% for each in list %}
     <div class="col-lg-4 col-md-6 col-sm-8 mb-3">
-      <a class="card btn-card" href="{% url "core:user" each.id %}">
-        <img src="{{ each.get_photo.url }}" class="card-img-top" alt="">
+      <a class="card btn-card" href="{% url URLS.PROFILE each.id %}">
+        <img src="{{ each.get_photo.url }}" class="card-img-top tall-img" alt="">
         <div class="card-body">
           <h5 class="card-title">{{ each }}</h5>
           <h6 class="card-subtitle mb-2 text-muted">{{ each.user.date_joined|date:"M d, Y" }}</h6>

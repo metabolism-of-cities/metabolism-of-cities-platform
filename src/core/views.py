@@ -455,7 +455,7 @@ def event(request, id, slug):
 
     context = {
         "info": info,
-        "upcoming": Event.objects.filter(end_date__gte=today).order_by("start_date")[:3],
+        "upcoming": Event.objects.filter(projects=request.project, end_date__gte=today).order_by("start_date")[:3],
         "header_title": "Events",
         "header_subtitle": info.name,
         "participants": participants,
@@ -842,6 +842,73 @@ def controlpanel_project(request):
     return render(request, "controlpanel/project.html", context)
 
 @login_required
+def controlpanel_events(request):
+
+    project = request.project
+    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    list = Event.objects.all()
+    if request.project != 1:
+        list = list.filter(projects__id=project)
+
+    context = {
+        "pages": list,
+        "load_datatables": True,
+        "title": "Events",
+    }
+    return render(request, "controlpanel/events.html", context)
+
+@login_required
+def controlpanel_event_form(request, id=None):
+
+    project = request.project
+    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    info = None
+    ModelForm = modelform_factory(Event, fields=("name", "start_date", "end_date", "image", "projects", "type", "location", "is_deleted"))
+    if id:
+        info = get_object_or_404(Event, pk=id)
+        form = ModelForm(request.POST or None, request.FILES or None, instance=info)
+    else:
+        form = ModelForm(request.POST or None, request.FILES or None, initial={"projects": request.project})
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save(commit=False)
+            if not id:
+                info.part_of_project_id = project
+            info.description = request.POST.get("description")
+            meta_data = info.meta_data if info.meta_data else {}
+            meta_data["format"] = request.POST.get("format")
+            info.meta_data = meta_data
+            info.save()
+            form.save_m2m()
+
+            # TO DO
+            # There is a contraint, for slug + project combined, and we should
+            # check for that and properly return an error
+
+            messages.success(request, "Information was saved.")
+            url = info.get_absolute_url()
+            messages.warning(request, f'<a href="{url}"><i class="fa fa-fw fa-link"></i> View event</a>')
+            if "next" in request.GET:
+                return redirect(request.GET.get("next"))
+            else:
+                return redirect("../")
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    context = {
+        "load_select2": True,
+        "form": form,
+        "info": info,
+        "title": info.name if info else "Create event",
+        "load_markdown": True,
+    }
+    return render(request, "controlpanel/event.form.html", context)
+
+@login_required
 def controlpanel_news(request):
 
     project = request.project
@@ -872,7 +939,7 @@ def controlpanel_news_form(request, id=None):
         info = get_object_or_404(News, pk=id)
         form = ModelForm(request.POST or None, request.FILES or None, instance=info)
     else:
-        form = ModelForm(request.POST or None, request.FILES or None)
+        form = ModelForm(request.POST or None, request.FILES or None, initial={"projects": request.project})
     if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)

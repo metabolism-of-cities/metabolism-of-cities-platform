@@ -86,9 +86,19 @@ def people_list(request):
 
 def projects(request, project_name="core"):
 
-    project = PROJECT_ID[project_name]
-    project = Project.objects.get(pk=project)
-    list = PublicProject.objects.filter(part_of_project=project)
+    # Currently all projects are tagged as MoC, so we must link to that project instead of the Community Portal
+
+    project = 1 if request.project == 18 else request.project
+    list = PublicProject.objects.filter(part_of_project_id=project)
+
+    if "update" in request.GET:
+        for each in list:
+            if not each.meta_data:
+                each.meta_data = {}
+            each.meta_data["format"] = "html"
+            each.save()
+            p(each.meta_data)
+
     context = {
         "list": list,
         "load_datatables": True,
@@ -531,3 +541,77 @@ def controlpanel_organizations(request, type=None):
         "type": type,
     }
     return render(request, "controlpanel/organizations.html", context)
+
+@login_required
+def controlpanel_project_form(request, slug=None, id=None):
+
+    curator = False
+    if has_permission(request, request.project, ["curator"]):
+        curator = True
+    
+    project = get_object_or_404(Project, pk=request.project)
+
+    ModelForm = modelform_factory(
+        PublicProject, 
+        fields=["name", "image", "status", "url", "email", "start_date", "end_date", "part_of_project"],
+        labels={"image": "Logo", "url": "Website URL", "part_of_project": "Project"},
+        )
+    if id:
+        info = get_object_or_404(PublicProject, pk=id)
+        form = ModelForm(request.POST or None, request.FILES or None, instance=info)
+    else:
+        form = ModelForm(request.POST or None, request.FILES or None, initial={"part_of_project": request.project})
+        info = None
+
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save(commit=False)
+            info.description = request.POST.get("description")
+            info.save()
+            messages.success(request, "The information was saved.")
+
+            if not id:
+                RecordRelationship.objects.create(
+                    record_parent = request.user.people,
+                    record_child = info,
+                    relationship_id = RELATIONSHIP_ID["uploader"],
+                )
+
+                work = Work.objects.create(
+                    status = Work.WorkStatus.COMPLETED,
+                    part_of_project = project,
+                    workactivity_id = 31, # Need to add new activity and update this TODO!
+                    related_to = info,
+                    assigned_to = request.user.people,
+                    name = "Adding new project",
+                )
+                message = Message.objects.create(posted_by=request.user.people, parent=work, name="Status change", description="Task was completed")
+
+            return redirect(request.GET.get("next"))
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    context = {
+        "form": form,
+        "title": "Add project",
+        "load_markdown": True,
+        "curator": curator,
+        "info": info,
+    }
+
+    return render(request, "controlpanel/project.form.html", context)
+
+@login_required
+def controlpanel_projects(request, type=None):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    project = request.project
+    list = PublicProject.objects.filter(part_of_project_id=project)
+
+    context = {
+        "load_datatables": True,
+        "list": list,
+        "type": type,
+    }
+    return render(request, "controlpanel/projects.html", context)

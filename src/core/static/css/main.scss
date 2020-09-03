@@ -626,6 +626,10 @@ img.card-img-top {
   height: 200px;
 }
 
+img.tall-img {
+  height: 300px;
+}
+
 .btn-card {
   @extend %raised-hover;
   @extend %box-shadow;

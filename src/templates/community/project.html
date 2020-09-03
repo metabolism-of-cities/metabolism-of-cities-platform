@@ -49,6 +49,13 @@
               {% endfor %}
             {% endif %}
 
+            {% if info.meta_data.institution %}
+              <li class="list-group-item">
+                <i class="far fa-fw fa-building mb-1 mr-1" aria-hidden="true"></i> 
+                {{ info.meta_data.institution }}
+              </li>
+            {% endif %}
+
             {% if info.url %}
               <a class="list-group-item" href="{{ info.url }}">
                 <i class="far fa-fw fa-link mb-1 mr-1" aria-hidden="true"></i> Project website
@@ -61,6 +68,12 @@
       <div class="col-lg-8 mb-4">
         <h1 class="h3">{{ info }}</h1>
         {{ info.get_description }}
+
+        <a href="javascript:history.back()" class="btn btn-primary-basic">
+          <i class="fal fa-angle-left"></i>
+          Back
+        </a>
+
       </div>
     </div>
 

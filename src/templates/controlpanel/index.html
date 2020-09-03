@@ -2,90 +2,96 @@
 
 {% block page_name %}stafcp controlpanel{% endblock %}
 {% block content %}
+
+  <h2>Control Panel</h2>
   <section class="row">
-    {% if space %}
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="worksheet/">
-          <div class="icon">
-            <i class="fal fa-fw fa-database"></i>
-          </div>
-          <div class="card-header">Data harvesting</div>
-        </a>
-      </div>
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="#" onclick="javascript:return alert('This section becomes available once enough data is harvested')">
-          <div class="icon">
-            <i class="fas fa-fw fa-cubes"></i>
-          </div>
-          <div class="card-header">Data processing</div>
-        </a>
-      </div>
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="#" onclick="javascript:return alert('This section becomes available once enough data is harvested')">
-          <div class="icon">
-            <i class="fal fa-fw fa-check"></i>
-          </div>
-          <div class="card-header">Data publication</div>
-        </a>
-      </div>
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="#" onclick="javascript:return confirm('This section becomes available once enough data is harvested')">
-          <div class="icon">
-            <i class="fal fa-fw fa-pencil-alt"></i>
-          </div>
-          <div class="card-header">Data articles</div>
-        </a>
-      </div>
-    {% else %}
       <div class="col-md-3 mb-3">
         <a class="card icon-card btn-card" href="project/">
           <div class="icon">
             <i class="fal fa-fw fa-sliders-v-square"></i>
           </div>
-          <div class="card-header">Project settings</div>
+          <div class="card-header">Settings</div>
         </a>
       </div>
-      {% if PROJECT.slug == "community" %}
+
+      <div class="col-md-3 mb-3">
+        <a class="card icon-card btn-card" href="design/">
+          <div class="icon">
+            <i class="fal fa-fw fa-ruler"></i>
+          </div>
+          <div class="card-header">Website design</div>
+        </a>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <a class="card icon-card btn-card" href="users/">
+          <div class="icon">
+            <i class="fal fa-fw fa-users-medical"></i>
+          </div>
+          <div class="card-header">Contributors</div>
+        </a>
+      </div>
+
+    {% if request.user.is_superuser %}
+      <div class="col-md-3 mb-3">
+        <a class="card icon-card btn-card" href="cache/">
+          <div class="icon">
+            <i class="far fa-fw fa-hdd"></i>
+          </div>
+          <div class="card-header">Manage cache</div>
+        </a>
+      </div>
+    {% endif %}
+
+  </section>
+
+  <section>
+    <h2>Content</h2>
+    <div class="row">
+      <div class="col-md-3 mb-3">
+        <a class="card icon-card btn-card" href="content/">
+          <div class="icon">
+            <i class="fal fa-fw fa-file-alt"></i>
+          </div>
+          <div class="card-header">Web pages</div>
+        </a>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <a class="card icon-card btn-card" href="news/">
+          <div class="icon">
+            <i class="fal fa-fw fa-newspaper"></i>
+          </div>
+          <div class="card-header">News</div>
+        </a>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <a class="card icon-card btn-card" href="events/">
+          <div class="icon">
+            <i class="fal fa-fw fa-calendar-day"></i>
+          </div>
+          <div class="card-header">Events</div>
+        </a>
+      </div>
+
+      {% if PROJECT.slug == "islands" or PROJECT.slug == "community" %}
+
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="projects/">
+            <div class="icon">
+              <i class="fal fa-fw fa-digging"></i>
+            </div>
+            <div class="card-header">Projects</div>
+          </a>
+        </div>
+
         <div class="col-md-3 mb-3">
           <a class="card icon-card btn-card" href="organisations/">
             <div class="icon">
               <i class="fal fa-fw fa-building"></i>
             </div>
             <div class="card-header">Organisations</div>
-          </a>
-        </div>
-      {% endif %}
-      {% if PROJECT.slug == "library" %}
-        <div class="col-md-3 mb-3">
-          <a class="card icon-card btn-card" href="library/">
-            <div class="icon">
-              <i class="fal fa-fw fa-books"></i>
-            </div>
-            <div class="card-header">Library</div>
-          </a>
-        </div>
-        <div class="col-md-3 mb-3">
-          <a class="card icon-card btn-card" href="journals/">
-            <div class="icon">
-              <i class="fal fa-fw fa-book"></i>
-            </div>
-            <div class="card-header">Journals</div>
-          </a>
-        </div>
-        <div class="col-md-3 mb-3">
-          <a class="card icon-card btn-card" href="publishers/">
-            <div class="icon">
-              <i class="fal fa-fw fa-building"></i>
-            </div>
-            <div class="card-header">Publishers</div>
-          </a>
-        </div>
-        <div class="col-md-3 mb-3">
-          <a class="card icon-card btn-card" href="tags/">
-            <div class="icon">
-              <i class="fal fa-fw fa-tag"></i>
-            </div>
-            <div class="card-header">Tags</div>
           </a>
         </div>
       {% endif %}
@@ -107,39 +113,6 @@
           </a>
         </div>
       {% endif %}
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="users/">
-          <div class="icon">
-            <i class="fal fa-fw fa-users-medical"></i>
-          </div>
-          <div class="card-header">Our contributors</div>
-        </a>
-      </div>
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="design/">
-          <div class="icon">
-            <i class="fal fa-fw fa-ruler"></i>
-          </div>
-          <div class="card-header">Website design</div>
-        </a>
-      </div>
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="news/">
-          <div class="icon">
-            <i class="fal fa-fw fa-newspaper"></i>
-          </div>
-          <div class="card-header">News</div>
-        </a>
-      </div>
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="content/">
-          <div class="icon">
-            <i class="fal fa-fw fa-file-alt"></i>
-          </div>
-          <div class="card-header">Website content</div>
-        </a>
-      </div>
-    {% endif %}
 
     {% if PROJECT.id == 16 %}
       <div class="col-md-3 mb-3">
@@ -171,45 +144,51 @@
       </div>
     {% endif %}
 
-    {% if request.user.is_superuser %}
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="cache/">
-          <div class="icon">
-            <i class="far fa-fw fa-hdd"></i>
-          </div>
-          <div class="card-header">Manage cache</div>
-        </a>
-      </div>
-    {% endif %}
-
+    </div>
   </section>
 
-  {% if not space %}
+  {% if PROJECT.slug == "library" or PROJECT.slug == "islands" %}
     <section>
-      <h2>Contributor tools</h2>
+      <h2>Library management</h2>
       <div class="row">
         <div class="col-md-3 mb-3">
-          <a class="card icon-card btn-card" href="../work/">
+          <a class="card icon-card btn-card" href="library/">
             <div class="icon">
-              <i class="fal fa-fw fa-th"></i>
+              <i class="fal fa-fw fa-books"></i>
             </div>
-            <div class="card-header">Community work grid</div>
+            <div class="card-header">Library</div>
           </a>
         </div>
         <div class="col-md-3 mb-3">
-          <a class="card icon-card btn-card" href="../work/sprints/">
+          <a class="card icon-card btn-card" href="journals/">
             <div class="icon">
-              <i class="fal fa-fw fa-construction"></i>
+              <i class="fal fa-fw fa-book"></i>
             </div>
-            <div class="card-header">Work sprints</div>
+            <div class="card-header">Journals</div>
           </a>
         </div>
         <div class="col-md-3 mb-3">
-          <a class="card icon-card btn-card" href="../curation/">
+          <a class="card icon-card btn-card" href="publishers/">
             <div class="icon">
-              <i class="fal fa-fw fa-database"></i>
+              <i class="fal fa-fw fa-print"></i>
             </div>
-            <div class="card-header">Data curation platform</div>
+            <div class="card-header">Publishers</div>
+          </a>
+        </div>
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="tags/">
+            <div class="icon">
+              <i class="fal fa-fw fa-tag"></i>
+            </div>
+            <div class="card-header">Tags</div>
+          </a>
+        </div>
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="zotero/">
+            <div class="icon">
+              <i class="fal fa-fw fa-file-import"></i>
+            </div>
+            <div class="card-header">Zotero</div>
           </a>
         </div>
       </div>

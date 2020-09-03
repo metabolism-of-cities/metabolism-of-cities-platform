@@ -45,8 +45,8 @@
               </li>
             </ul>
             <div class="card-body">
-              <a class="btn btn-primary" href="{% url harvesting_link each.slug %}">
-                <i class="fad fa-city"></i> Explore city
+              <a class="btn btn-primary" href="{% url URLS.DASHBOARD each.slug %}">
+                <i class="fad fa-city"></i> Explore {{ SYSTEM_NAME_SINGULAR }}
               </a>
               <a class="btn btn-primary-basic" href="/hub/">
                 <i class="fad fa-hands-helping"></i> Contribute
