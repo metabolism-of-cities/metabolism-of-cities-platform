@@ -316,7 +316,7 @@ def eurostat(request):
         page = "pending"
 
     if "q" in request.GET and request.GET.get("q"):
-        full_list = full_list.filter(title__icontains=request.GET.get("q"))
+        full_list = full_list.filter(Q(title__icontains=request.GET.get("q"))|(Q(code__icontains=request.GET.get("q"))))
 
     paginator = Paginator(full_list, hits)
     page_number = request.GET.get("page")
