@@ -7,6 +7,8 @@ register = template.Library()
 def get_item(dictionary, key):
     if dictionary.get(key):
         return dictionary.get(key)
+    elif dictionary.get(str(key)):
+        return dictionary.get(str(key))
     else:
         return ""
 

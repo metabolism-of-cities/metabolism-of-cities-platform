@@ -1529,6 +1529,24 @@ class ReferenceSpace(Record):
         except:
             return Photo.objects.get(pk=33476)
 
+    def get_completion(self):
+        try:
+            return self.meta_data["progress"]["completion"]
+        except:
+            None
+
+    def get_counter(self):
+        try:
+            return self.meta_data["progress"]["counter"]
+        except:
+            None
+
+    def get_document_counter(self):
+        try:
+            return self.meta_data["progress"]["document_counter"]
+        except:
+            None
+
     class Meta:
         db_table = "stafdb_referencespace"
         ordering = ["name"]

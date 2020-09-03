@@ -2,7 +2,7 @@
 
   <div class="row progress-list">
     {% for each in list %}
-      {% if counter|get_item:each.id or PROJECT.slug == "cityloops" or PROJECT.slug == "islands" %}
+      {% if each.get_counter or PROJECT.slug == "cityloops" or PROJECT.slug == "islands" %}
         <div class="col-md-6 col-lg-4 mb-4">
           <div class="card">
             <a href="{% url dashboard_link each.slug %}">
@@ -13,7 +13,7 @@
             </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item">
-                <i class="fal fa-fw fa-dot-circle mr-1"></i> {% if each.id in document_counter %}{{ document_counter|get_item:each.id }}{% else %}0{% endif %} documents
+                <i class="fal fa-fw fa-dot-circle mr-1"></i> {{ each.get_document_counter }} documents
               </li>
               {% if False %}
                 <li class="list-group-item">
@@ -23,44 +23,25 @@
                   <i class="fal fa-fw fa-star mr-1"></i> Biggest contributer: <a href="#">Jane Doe</a>
                 </li>
               {% endif %}
-              <li class="list-group-item table-item">
-                <div><i class="fal mr-2 fa-map-marked-alt fa-fw"></i> Context</div>
-                <div>
-                  <div class="progress">
-                    {% if False %}
-                      <div class="progress-bar bg-primary" role="progressbar" style="width: 21%" aria-valuenow="21" aria-valuemin="0" aria-valuemax="100"></div>
-                      <div class="progress-bar bg-secondary" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                    {% endif %}
-                    <div class="progress-bar bg-success" role="progressbar" style="width: calc({% if counter|get_item:each.id %}{{ counter|get_item:each.id|get_item:846 }}{% else %}0{% endif %}/6*100%)" aria-valuenow="{% if counter|get_item:each.id %}{{ counter|get_item:each.id|get_item:846 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="6"></div>
+
+              {% for layer in layers %}
+                <li class="list-group-item table-item">
+                  <div class="text-truncate"><i class="fal mr-2 fa-{{ layer.icon }} fa-fw"></i> {{ layer.get_name_after_colon }}</div>
+                  <div>
+                    <div class="progress">
+                      {% if False %}
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: 21%" aria-valuenow="21" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-secondary" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                      {% endif %}
+
+                      <div class="progress-bar bg-success" role="progressbar" style="width: calc({% if each.get_counter %}{{ each.get_counter|get_item:layer.id }}{% else %}0{% endif %}/{{ layers_count|get_item:layer.id }}*100%)" aria-valuenow="{% if each.get_counter %}{{ each.get_counter|get_item:layer.id }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="{{ layers_count|get_item:layer.id }}"></div>
+
+                    </div>
                   </div>
-                </div>
-              </li>
-              <li class="list-group-item table-item">
-                <div><i class="fal mr-2 fa-trees fa-fw"></i> Biophysical</div>
-                <div>
-                  <div class="progress">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: calc({% if counter|get_item:each.id %}{{ counter|get_item:each.id|get_item:847 }}{% else %}0{% endif %}/7*100%)" aria-valuenow="{% if counter|get_item:each.id %}{{ counter|get_item:each.id|get_item:847 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="7"></div>
-                  </div>
-                </div>
-              </li>
-              <li class="list-group-item table-item">
-                <div><i class="fal mr-2 fa-industry-alt fa-fw"></i> Infrastructure</div>
-                <div>
-                  <div class="progress">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: calc({% if counter|get_item:each.id %}{{ counter|get_item:each.id|get_item:848 }}{% else %}0{% endif %}/32*100%)" aria-valuenow="{% if counter|get_item:each.id %}{{ counter|get_item:each.id|get_item:848 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="32"></div>
-                  </div>
-                </div>
-              </li>
-              <li class="list-group-item table-item">
-                <div><i class="fal mr-2 fa-random fa-fw"></i> Stocks &amp; flows</div>
-                <div>
-                  <div class="progress">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: calc({% if counter|get_item:each.id %}{{ counter|get_item:each.id|get_item:849 }}{% else %}0{% endif %}/18*100%)" aria-valuenow="{% if counter|get_item:each.id %}{{ counter|get_item:each.id|get_item:849 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="18"></div>
-                  </div>
-                </div>
-              </li>
+                </li>
+              {% endfor %}
               <li class="list-group-item">
-                <i class="fal fa-fw fa-check mr-1"></i> {% widthratio completion|get_item:each.id 63 100 %}% data collection completion
+                <i class="fal fa-fw fa-check mr-1"></i> {% widthratio each.get_completion 63 100 %}% data collection completion
               </li>
             </ul>
             <div class="card-body">

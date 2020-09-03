@@ -152,8 +152,8 @@
           <div 
             class="progress-bar bg-success" 
             role="progressbar" 
-            style="width: calc({% if counter|get_item:each.id %}{{ counter|get_item:each.id }}{% else %}0{% endif %}/{{ layers_count|get_item:each.id }}*100%)" 
-            aria-valuenow="{% if counter|get_item:each.id %}{{ counter|get_item:each.id }}{% else %}0{% endif %}" 
+            style="width: calc({% if space.get_counter %}{{ space.get_counter|get_item:each.id }}{% else %}0{% endif %}/{{ layers_count|get_item:each.id }}*100%)" 
+            aria-valuenow="{% if space.get_counter %}{{ space.get_counter|get_item:each.id }}{% else %}0{% endif %}" 
             aria-valuemin="0" 
             aria-valuemax="6">
           </div>

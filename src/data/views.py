@@ -86,49 +86,13 @@ def index(request):
     selected = random.sample(selected_cities, 3)
 
     list = ReferenceSpace.objects.filter(id__in=selected)
-    layers = LAYERS
-    items = LibraryItem.objects.filter(spaces__in=list, tags__parent_tag__in=layers).distinct()
-    counter = {}
-    check = {}
-    document_counter = {}
-    completion = {}
     project = get_object_or_404(Project, pk=request.project)
-
-    # TODO yeah one day we need to do a clever JOIN and COUNT and whatnot and sort this out through SQL
-    # until then, this hack will do
-    # Code is repeated in the progress-details page!
-
-    for each in items:
-        for tag in each.tags.all():
-            if tag.parent_tag in layers:
-                for space in each.spaces.all():
-                    t = tag.parent_tag.id
-                    try:
-                        document_counter[space.id] += 1
-                    except:
-                        document_counter[space.id] = 1
-                    if space.id not in check:
-                        check[space.id] = {}
-                    if t not in check[space.id]:
-                        check[space.id][t] = {}
-                    if tag.id not in check[space.id][t]:
-                        if space.id not in completion:
-                            completion[space.id] = 0
-                        completion[space.id] += 1
-                        if space.id not in counter:
-                            counter[space.id] = {}
-                        if t not in counter[space.id]:
-                            counter[space.id][t] = 1
-                        else:
-                            counter[space.id][t] += 1
-                    check[space.id][t][tag.id] = True
 
     context = {
         "show_project_design": True,
         "list": list,
-        "counter": counter,
-        "document_counter": document_counter,
-        "completion": completion,
+        "layers": LAYERS,
+        "layers_count": LAYERS_COUNT,
         "webpage": Webpage.objects.get(pk=37077),
         "dashboard_link": project.slug + ":dashboard",
         "harvesting_link": project.slug + ":hub_harvesting_space",
@@ -145,49 +109,14 @@ def overview(request):
 
 def progress(request, style="list"):
     list = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)
-    list = list
-    layers = LAYERS
-    items = LibraryItem.objects.filter(spaces__in=list, tags__parent_tag__in=layers).distinct()
-    counter = {}
-    check = {}
-    completion = {}
-    document_counter = {}
     project = get_object_or_404(Project, pk=request.project)
 
-    # TODO yeah one day we need to do a clever JOIN and COUNT and whatnot and sort this out through SQL
-    # until then, this hack will do
-    # Code is repeated in the index!
-    for each in items:
-        for tag in each.tags.all():
-            if tag.parent_tag in layers:
-                for space in each.spaces.all():
-                    t = tag.parent_tag.id
-                    try:
-                        document_counter[space.id] += 1
-                    except:
-                        document_counter[space.id] = 1
-                    if space.id not in check:
-                        check[space.id] = {}
-                    if t not in check[space.id]:
-                        check[space.id][t] = {}
-                    if tag.id not in check[space.id][t]:
-                        if space.id not in completion:
-                            completion[space.id] = 0
-                        completion[space.id] += 1
-                        if space.id not in counter:
-                            counter[space.id] = {}
-                        if t not in counter[space.id]:
-                            counter[space.id][t] = 1
-                        else:
-                            counter[space.id][t] += 1
-                    check[space.id][t][tag.id] = True
     context = {
-        "list": list,
-        "counter": counter,
-        "completion": completion,
-        "document_counter": document_counter,
         "dashboard_link": project.slug + ":dashboard",
         "harvesting_link": project.slug + ":hub_harvesting_space",
+        "list": list,
+        "layers": LAYERS,
+        "layers_count": LAYERS_COUNT,
     }
 
     if style == "list":
@@ -209,24 +138,6 @@ def dashboard(request, space):
 
     list = LibraryItem.objects.filter(spaces=space)
     layers = LAYERS
-
-    counter = {}
-    check = {}
-    completion = {}
-    document_counter = {}
-
-    for each in list:
-        for tag in each.tags.all():
-            if tag.parent_tag in layers:
-                t = tag.parent_tag.id
-                if t not in check:
-                    check[t] = {}
-                if tag.id not in check[t]:
-                    if t not in counter:
-                        counter[t] = 1
-                    else:
-                        counter[t] += 1
-                check[t][tag.id] = True
 
     highscore = Work.objects.filter(related_to__spaces=space, status=Work.WorkStatus.COMPLETED) \
         .values("assigned_to__name") \
@@ -253,7 +164,6 @@ def dashboard(request, space):
         "header_image": space.photo,
         "dashboard": True,
         "layers": layers,
-        "counter": counter,
         "layers_count": LAYERS_COUNT,
         "done": ["collected", "processed", ""],
         "highscore": highscore[0] if highscore else None,
