@@ -760,7 +760,7 @@ def controlpanel_relationship_form(request, id=None):
     context = {
         "type": "people",
         "load_select2": True,
-        "relationships": Relationship.objects.filter(pk__in=[7,6]),
+        "relationships": Relationship.objects.filter(pk__in=[7,6,31]),
         "child": child,
         "info": info,
     }
