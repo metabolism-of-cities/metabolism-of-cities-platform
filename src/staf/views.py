@@ -129,7 +129,7 @@ def layer_overview(request, layer, space=None):
     for each in children:
         l = LibraryItem.objects.filter(tags=each)
         if space:
-            l.filter(spaces=space)
+            l = l.filter(spaces=space)
         list[each.id] = l
         if l:
             empty_page = False
