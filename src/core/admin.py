@@ -353,6 +353,8 @@ admin_site.register(Activity, ActivityAdmin)
 admin_site.register(MaterialCatalog, SearchAdmin)
 admin_site.register(Material, ActivityAdmin)
 
+admin_site.register(ZoteroCollection, SearchAdmin)
+
 class EurostatAdmin(admin.ModelAdmin):
     form = EurostatForm
     autocomplete_fields = ["spaces", "tags"]

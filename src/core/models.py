@@ -1845,6 +1845,23 @@ class EurostatForm(forms.ModelForm):
         model = EurostatDB
         fields = "__all__"
 
+class ZoteroCollection(Record):
+    uid = models.AutoField(primary_key=True)
+    record_id = models.OneToOneField(
+        Record, on_delete=models.CASCADE,
+        parent_link=True,
+        primary_key=False,
+    )
+    api = models.CharField(max_length=255)
+    zotero_id = models.CharField(max_length=255)
+
+class ZoteroItem(models.Model):
+    title = models.CharField(max_length=255)
+    library_item = models.ForeignKey(LibraryItem, on_delete=models.SET_NULL, null=True, blank=True)
+    collection = models.ForeignKey(ZoteroCollection, on_delete=models.CASCADE)
+    data = JSONField(null=True, blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+
 # This is the format to use from now on
 # Note that there is a uid primary key, separate from the record_id
 # This is must easier to have individual primary key sequences

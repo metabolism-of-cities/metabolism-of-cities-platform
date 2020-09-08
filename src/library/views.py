@@ -765,7 +765,40 @@ def controlpanel_zotero(request):
     if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
+    from pyzotero import zotero
+    project = Project.objects.get(pk=request.project)
+    zotero_api_key = project.meta_data.get("zotero_api_key")
+    zotero_id = project.meta_data.get("zotero_id")
+
+    zot = zotero.Zotero(zotero_id, "group", zotero_api_key)
+    list = zot.top(limit=5)
+    # we've retrieved the latest five top-level items in our library
+    # we can print each item's item type and ID
+    for each in list:
+        info = None
+        key = each["data"].get("key")
+        title = each["data"].get("title")
+        doi = each["data"].get("DOI")
+        isbn = each["data"].get("ISBN")
+        check = LibraryItem.objects.filter(Q(name=title)|Q(meta_data__zotero_key=key))
+        if not check and doi:
+            check = LibraryItem.objects.filter(doi=doi)
+        elif not check and isbn:
+            check = LibraryItem.objects.filter(isbn=isbn)
+        if check:
+            info = check[0]
+            each["data"]["hit"] = info
+        if not info:
+            info = LibraryItem.objects.create(
+                name = title,
+                doi = doi,
+                isbn = isbn,
+                description = each["data"].get("abstractNote"),
+            )
+
     context = {
+        "api_key": zotero_api_key,
+        "list": list,
     }
     return render(request, "controlpanel/zotero.html", context)
 

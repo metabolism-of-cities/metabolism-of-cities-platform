@@ -14,4 +14,27 @@
     {% endif %}
   </div>
 
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author(s)</th>
+        <th>Year</th>
+        <th>Key</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in list %}
+      <tr>
+        <td>{{ each.data.title }}</td>
+        <td>{{ each.data.authors }}</td>
+        <td>
+          {{ each.data.hit }}
+        </td>
+        <td>{{ each.data.key }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
 {% endblock %}

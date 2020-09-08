@@ -32,3 +32,4 @@ xlrd
 matplotlib
 descartes
 contextily
+pyzotero
