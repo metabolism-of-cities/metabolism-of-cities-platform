@@ -481,6 +481,12 @@ def template(request, slug):
         from django.conf import settings
         context["geoapify_api"] = settings.GEOAPIFY_API
 
+    if slug == "tinymce":
+        from tinymce import TinyMCE
+        class MyForm(forms.Form):
+            content = forms.CharField(widget=TinyMCE(mce_attrs={'width': 800}))
+        context["form"] = MyForm()
+
     if slug == "form":
         ModelForm = modelform_factory(Project, fields=("name", "description"))
         form = ModelForm(request.POST or None, request.FILES or None)
@@ -999,36 +1005,48 @@ def controlpanel_news_form(request, id=None):
 @login_required
 def controlpanel_content(request):
 
-    project = request.project
-    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+    project = get_object_or_404(Project, pk=request.project)
+    if not has_permission(request, project.id, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
     context = {
-        "pages": Webpage.objects.filter(part_of_project_id=project),
+        "pages": Webpage.objects.filter(part_of_project=project),
         "load_datatables": True,
         "title": "Web page content",
     }
+
     return render(request, "controlpanel/content.html", context)
 
 @login_required
 def controlpanel_content_form(request, id=None):
 
-    project = request.project
-    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+    project = get_object_or_404(Project, pk=request.project)
+    if not has_permission(request, project.id, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
     info = None
+    tinymce = None
     ModelForm = modelform_factory(Webpage, fields=("name", "slug", "is_deleted"))
     if id:
         info = get_object_or_404(Webpage, pk=id)
         form = ModelForm(request.POST or None, instance=info)
     else:
         form = ModelForm(request.POST or None)
+
+    if project.slug == "islands":
+        from tinymce import TinyMCE
+        class RichTextForm(forms.Form):
+            description = forms.CharField(widget=TinyMCE(mce_attrs={"width": "100%" }))
+        if info:
+            tinymce = RichTextForm({"description": info.description})
+        else:
+            tinymce = RichTextForm()
+
     if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)
             if not id:
-                info.part_of_project_id = project
+                info.part_of_project = project
             info.description = request.POST.get("description")
             meta_data = info.meta_data if info.meta_data else {}
             meta_data["format"] = request.POST.get("format")
@@ -1043,12 +1061,13 @@ def controlpanel_content_form(request, id=None):
             messages.error(request, "We could not save your form, please fill out all fields")
 
     context = {
-        "pages": Webpage.objects.filter(part_of_project_id=project),
+        "pages": Webpage.objects.filter(part_of_project=project),
         "load_datatables": True,
         "form": form,
         "info": info,
         "title": info.name if info else "Create webpage",
         "load_markdown": True,
+        "tinymce": tinymce,
     }
     return render(request, "controlpanel/content.form.html", context)
 

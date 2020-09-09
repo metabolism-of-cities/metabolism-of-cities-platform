@@ -1,6 +1,12 @@
 {% extends "_base.html" %}
 {% load bootstrap4 %}
 
+{% block head %}
+  {% if tinymce %}
+    {{ tinymce.media }}
+  {% endif %}
+{% endblock %}
+
 {% block content %}
 
   <h1 class="mb-4">{{ title }}</h1>
@@ -19,10 +25,14 @@
     </div>
     </div>
 
-    <div class="form-group markdown-textarea">
-      {% include "_markdown.html" %}
-      <textarea class="form-control mb-4" id="text" rows="30" name="description">{{ info.description|default_if_none:"" }}</textarea>
-    </div>
+    {% if tinymce %}
+      {{ tinymce }}
+    {% else %}
+      <div class="form-group markdown-textarea">
+        {% include "_markdown.html" %}
+        <textarea class="form-control mb-4" id="text" rows="30" name="description">{{ info.description|default_if_none:"" }}</textarea>
+      </div>
+    {% endif %}
 
 
     {% buttons %}
