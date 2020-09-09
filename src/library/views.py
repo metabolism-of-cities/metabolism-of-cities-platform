@@ -767,6 +767,11 @@ def controlpanel_zotero(request):
 
     from pyzotero import zotero
     project = Project.objects.get(pk=request.project)
+    
+    # Let's see which Zotero collections this project has access to
+    permissions = None
+    #21
+
     zotero_api_key = project.meta_data.get("zotero_api_key")
     zotero_id = project.meta_data.get("zotero_id")
 

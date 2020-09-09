@@ -1855,12 +1855,30 @@ class ZoteroCollection(Record):
     api = models.CharField(max_length=255)
     zotero_id = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.name
+
 class ZoteroItem(models.Model):
     title = models.CharField(max_length=255)
+    key = models.CharField(max_length=255)
     library_item = models.ForeignKey(LibraryItem, on_delete=models.SET_NULL, null=True, blank=True)
     collection = models.ForeignKey(ZoteroCollection, on_delete=models.CASCADE)
     data = JSONField(null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+    def findMatch(self):
+        check = LibraryItem.objects.filter(name=self.title)
+        if not check and "doi" in self.data and self.data["doi"]:
+            check = LibraryItem.objects.filter(doi=doi)
+        if not check and "isbn" in self.data and self.data["isbn"]:
+            check = LibraryItem.objects.filter(isbn=isbn)
+        if check:
+            return check[0]
+        else:
+            return None
 
 # This is the format to use from now on
 # Note that there is a uid primary key, separate from the record_id

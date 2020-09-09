@@ -131,8 +131,9 @@ MIDDLEWARE = [
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 CRON_CLASSES = [
-    'core.crons.CreateMapJS',
-    'core.crons.EmailNotifications',
+    #'core.crons.CreateMapJS',
+    #'core.crons.EmailNotifications',
+    'core.crons.ZoteroImport',
 ]
 
 ROOT_URLCONF = 'ie.urls'

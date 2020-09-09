@@ -10,6 +10,7 @@ from stafdb.models import *
 from django.contrib.gis import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.html import format_html
+from django_cron.helpers import humanize_duration
 
 DEFAULT_EXCLUDE = ["description_html", "date_created", "tags", "spaces", "sectors", "subscribers", "old_id", "meta_data", "materials"]
 DEFAULT_EXCLUDE_WITH_META = DEFAULT_EXCLUDE
@@ -292,6 +293,27 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ["name", "parent_tag"]
     search_fields = ["name"]
 
+class CronJobLogAdmin(admin.ModelAdmin):
+    class Meta:
+        model = CronJobLog
+
+    search_fields = ('code', 'message')
+    ordering = ('-start_time',)
+    list_display = ('code', 'start_time', 'end_time', 'humanize_duration', 'is_success')
+    list_filter = ('code', 'start_time', 'is_success')
+
+    def get_readonly_fields(self, request, obj=None):
+        if not request.user.is_superuser and obj is not None:
+            names = [f.name for f in CronJobLog._meta.fields if f.name != 'id']
+            return self.readonly_fields + tuple(names)
+        return self.readonly_fields
+
+    def humanize_duration(self, obj):
+        return humanize_duration(obj.end_time - obj.start_time)
+
+    humanize_duration.short_description = "Duration"
+    humanize_duration.admin_order_field = 'duration'
+
 admin_site.register(Tag, TagAdmin)
 admin_site.register(Record, SearchCompleteAdmin)
 admin_site.register(Message, MessageAdmin)
@@ -330,7 +352,7 @@ admin_site.register(CourseContent, CourseContentAdmin)
 admin_site.register(Group)
 admin_site.register(User, UserAdmin)
 admin_site.register(LogEntry, LogEntryAdmin)
-admin_site.register(CronJobLog)
+admin_site.register(CronJobLog, CronJobLogAdmin)
 
 admin_site.register(GeocodeScheme)
 admin_site.register(Geocode, GeocodeAdmin)
@@ -354,6 +376,7 @@ admin_site.register(MaterialCatalog, SearchAdmin)
 admin_site.register(Material, ActivityAdmin)
 
 admin_site.register(ZoteroCollection, SearchAdmin)
+admin_site.register(ZoteroItem, SearchAdmin)
 
 class EurostatAdmin(admin.ModelAdmin):
     form = EurostatForm

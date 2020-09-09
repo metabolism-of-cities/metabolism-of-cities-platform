@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from .models import *
+from core.mocfunctions import *
 
 TAG_ID = settings.TAG_ID_LIST
 
@@ -95,6 +96,34 @@ class CreateMapJS(CronJobBase):
         file = open(file, "w")
         file.write(all_cities)
         file.close()
+
+class ZoteroImport(CronJobBase):
+    RUN_EVERY_MINS = 60*12
+    schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
+    code = "core.ZoteroImport" # Unique code for logging purposes
+
+    def do(self):
+        from pyzotero import zotero
+        collections = ZoteroCollection.objects.all()
+        for collection in collections:
+        
+            api = collection.api
+            zotero_id = collection.zotero_id
+
+            zot = zotero.Zotero(zotero_id, "group", api)
+            list = zot.top(limit=5)
+            # we've retrieved the latest five top-level items in our library
+            # we can print each item's item type and ID
+            for each in list:
+                try:
+                    check = ZoteroItem.objects.get(key=each["data"].get("key"))
+                except:
+                    info = ZoteroItem.objects.create(
+                        title = each["data"].get("title"),
+                        key = each["data"].get("key"),
+                        data = each["data"],
+                        collection = collection,
+                    )
 
 class EmailNotifications(CronJobBase):
     RUN_EVERY_MINS = 60*12
