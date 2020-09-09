@@ -111,15 +111,16 @@ class ZoteroImport(CronJobBase):
             zotero_id = collection.zotero_id
 
             zot = zotero.Zotero(zotero_id, "group", api)
-            list = zot.top(limit=5)
-            # we've retrieved the latest five top-level items in our library
-            # we can print each item's item type and ID
+            #list = zot.top(limit=5)
+            list = zot.everything(zot.top())
+
             for each in list:
                 try:
                     check = ZoteroItem.objects.get(key=each["data"].get("key"))
                 except:
+                    title = each["data"].get("title")
                     info = ZoteroItem.objects.create(
-                        title = each["data"].get("title"),
+                        title = title if title else "No title",
                         key = each["data"].get("key"),
                         data = each["data"],
                         collection = collection,

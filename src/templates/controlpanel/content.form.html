@@ -1,12 +1,6 @@
 {% extends "_base.html" %}
 {% load bootstrap4 %}
 
-{% block head %}
-  {% if tinymce %}
-    {{ tinymce.media }}
-  {% endif %}
-{% endblock %}
-
 {% block content %}
 
   <h1 class="mb-4">{{ title }}</h1>
@@ -33,7 +27,6 @@
         <textarea class="form-control mb-4" id="text" rows="30" name="description">{{ info.description|default_if_none:"" }}</textarea>
       </div>
     {% endif %}
-
 
     {% buttons %}
       <div class="row">

@@ -483,9 +483,14 @@ def template(request, slug):
 
     if slug == "tinymce":
         from tinymce import TinyMCE
-        class MyForm(forms.Form):
-            content = forms.CharField(widget=TinyMCE(mce_attrs={'width': 800}))
-        context["form"] = MyForm()
+        info = None
+        class RichTextForm(forms.Form):
+            description = forms.CharField(widget=TinyMCE(mce_attrs={"width": "100%" }))
+        if info:
+            tinymce = RichTextForm({"description": info.description})
+        else:
+            tinymce = RichTextForm()
+        context["tinymce"] = tinymce
 
     if slug == "form":
         ModelForm = modelform_factory(Project, fields=("name", "description"))
