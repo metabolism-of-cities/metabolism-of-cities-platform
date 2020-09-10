@@ -21,7 +21,7 @@
     {% for each in items %}
       <tr>
         {% if show_creation %}
-          <td data-sort="{{ each.date_created|date:'Ymdhis' }}" class="text-nowrap">
+          <td data-sort="-{{ each.date_created|date:'Ymdhis' }}" class="text-nowrap">
             {{ each.date_created|date:"M d, Y" }}
           </td>
         {% endif %}

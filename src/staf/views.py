@@ -106,15 +106,42 @@ def layers(request, id=None, layer=None):
     }
     return render(request, "staf/layers.html", context)
 
-def layer(request, slug, id):
+def layer(request, slug, id=None):
+
+    filter_types = None
+
     spaces = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)
-    layer = Tag.objects.get(parent_tag__parent_tag_id=845, pk=id)
-    list = LibraryItem.objects.filter(spaces__in=spaces, tags=layer).distinct()
+    if id:
+        layer = Tag.objects.get(parent_tag__parent_tag_id=845, pk=id)
+        list = LibraryItem.objects.filter(spaces__in=spaces, tags=layer).distinct()
+    else:
+        layer = Tag.objects.get(parent_tag__id=845, slug=slug)
+        list = LibraryItem.objects.filter(spaces__in=spaces, tags__parent_tag=layer).distinct()
+
+    if request.GET.get("types"):
+        filter_types = LibraryItemType.objects.filter(id__in=request.GET.getlist("types"))
+        list = list.filter(type__in=filter_types)
+
+    show_spaces = True
+    show_creation = False
+
+    if request.GET.get("show_creation"):
+        show_creation = True
+
+    if request.GET.get("open_filters"):
+        if not request.GET.get("show_spaces"):
+            show_spaces = False
+
     context = {
         "title": layer.name,
         "items": list,
         "load_datatables": True,
-        "show_spaces": True,
+        "show_spaces": show_spaces,
+        "show_creation": show_creation,
+        "show_filters": True,
+        "types": LibraryItemType.objects.all(),
+        "load_select2": True,
+        "filter_types": filter_types,
     }
     return render(request, "library/list.html", context)
 

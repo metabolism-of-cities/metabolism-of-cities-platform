@@ -10,6 +10,61 @@
   </div>
 {% endif %}
 
+{% if show_filters %}
+  <div class="btn btn-primary-basic toggle-filters mb-3">
+    <i class="fal fa-angle-{% if request.GET.open_filters %}up{% else %}down{% endif %}"></i>
+    Filters
+  </div>
+
+  <form class="mb-4" id="filters" {% if not request.GET.open_filters %}style="display:none"{% endif %}>
+
+    <div class="row align-items-center mb-4">
+      <div class="col-4">
+        Restrict by type:
+        <select name="types" class="custom-select select2" multiple>
+          {% for each in types %}
+            <option value="{{ each.id }}" {% if each in filter_types %}selected{% endif %}>{{ each }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-3">
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="show_creation" name="show_creation" value="true"  {% if show_creation %}checked{% endif %}>
+          <label class="custom-control-label" for="show_creation">Show upload date</label>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="show_spaces" name="show_spaces" value="true" {% if show_spaces %}checked{% endif %}>
+          <label class="custom-control-label" for="show_spaces">Show spaces</label>
+        </div>
+      </div>
+      
+      <div class="col-2 text-right">
+        <button class="btn btn-primary btn-filter ml-2" form="filters" type="submit" name="open_filters" value="true">
+          <i class="fas fa-filter"></i>
+          Filter list
+        </button>
+        <input type="hidden" name="tag" value="" />
+      </div>
+    </div>
+  </form>
+{% endif %}
+
 {% include "_library.list.html" %}
 
+<a href="javascript:history.back()" class="btn btn-primary-basic mt-4">
+  <i class="fal fa-angle-left"></i>
+  Back
+</a>
+
+{% endblock %}
+
+{% block footer %}
+  <script type="text/javascript">
+    $(".toggle-filters").click(function() {
+      $("#filters").toggle();
+      $("i", this).toggleClass("fa-angle-down fa-angle-up")
+    })
+  </script>
 {% endblock %}

@@ -6,10 +6,10 @@
   </a>
   <div class="dropdown-menu" aria-labelledby="view-dropdown">
 
-    <a class="dropdown-item" href="{% url "data:layer_overview" 'context' %}">Context</a>
-    <a class="dropdown-item" href="{% url "data:layer_overview" 'biophysical' %}">Biophysical Characteristics</a>
-    <a class="dropdown-item" href="{% url "data:layer_overview" 'infrastructure' %}">Infrastructure</a>
-    <a class="dropdown-item" href="{% url "data:layer_overview" 'stocks-and-flows' %}">Stocks and Flows</a>
+    <a class="dropdown-item" href="{% url "data:layer_overview" "context" %}">Context</a>
+    <a class="dropdown-item" href="{% url "data:layer_overview" "biophysical" %}">Biophysical Characteristics</a>
+    <a class="dropdown-item" href="{% url "data:layer_overview" "infrastructure" %}">Infrastructure</a>
+    <a class="dropdown-item" href="{% url "data:layer_overview" "stocks-and-flows" %}">Stocks and Flows</a>
 
   </div>
 </li>
@@ -20,10 +20,11 @@
   </a>
   <div class="dropdown-menu" aria-labelledby="view-dropdown">
 
-    <a class="dropdown-item" href="{% url "data:library_overview" 'datasets' %}">Datasets</a>
-    <a class="dropdown-item" href="{% url "data:library_overview" 'publications' %}">Publications</a>
-    <a class="dropdown-item" href="{% url "data:library_overview" 'maps' %}">Maps</a>
-    <a class="dropdown-item" href="{% url "data:library_overview" 'multimedia' %}">Multimedia</a>
+    <a class="dropdown-item" href="{% url "data:library_overview" "datasets" %}">Datasets</a>
+    <a class="dropdown-item" href="{% url "data:library_overview" "publications" %}">Publications</a>
+    <a class="dropdown-item" href="{% url "data:library_overview" "maps" %}">Maps</a>
+    <a class="dropdown-item" href="{% url "data:library_overview" "multimedia" %}">Multimedia</a>
+    <a class="dropdown-item" href="{% url "data:library_overview" "recent" %}"><em>Recently added</em></a>
     {% if request.user.is_superuser %}
       <hr>
       <a class="dropdown-item" href="{% url "data:view_dataportals" %}">Dataset portals</a>

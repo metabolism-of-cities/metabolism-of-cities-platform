@@ -37,6 +37,7 @@ baseline_staf_urlpatterns = [
 
     path("layers/", staf.layers, name="layers"),
     path("layers/<slug:slug>/<int:id>/", staf.layer, name="layer"),
+    path("layers/<slug:slug>/all/", staf.layer, name="layer"),
 
     # Data dashboards
     path("dashboards/<slug:space>/sectors/", data.sectors, name="sectors"),
@@ -58,7 +59,7 @@ baseline_staf_urlpatterns = [
 
     re_path(r'layers/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/$', staf.layers, name="layer_overview"),
     re_path(r'layers/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/instructionvideos/$', data.instructionvideos),
-    re_path(r'layers/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/(?P<id>[0-9]+)/$', library.item),
+    #re_path(r'layers/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/(?P<id>[0-9]+)/$', library.item),
     re_path(r'library/(?P<type>datasets|publications|maps|multimedia|recent)/$', staf.library_overview, name="library_overview"),
     re_path(r'library/(?P<data_section_type>datasets|publications|maps|multimedia|recent)/(?P<id>[0-9]+)/$', library.item),
 
