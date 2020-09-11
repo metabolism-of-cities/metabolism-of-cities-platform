@@ -76,6 +76,7 @@
 {% endblock %}
 
 {% block content %}
+
 <section class="basic-info">
   <div class="row">
     <div class="col-xl-4 col-lg-6 col-md-6">
@@ -228,7 +229,6 @@
   </div>
 </section>
 
-
 {% endblock %}
 
 {% block footer %}
@@ -254,6 +254,9 @@
 
     map.scrollWheelZoom.disable();
     map.fitBounds(geojsonlayer.getBounds());
+    {% if space.location.geometry.num_points == 1 %}
+      map.setZoom(6);
+    {% endif %}
   </script>
 {% endif %}
 
