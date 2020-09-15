@@ -9,6 +9,30 @@ def index(request):
     }
     return render(request, "cityloops/index.html", context)
 
+def about(request):
+    info = get_object_or_404(Project, pk=request.project)
+    context = {
+        "info": info,
+        "title": "Project",
+    }
+    return render(request, "cityloops/about.html", context)
+
+def team(request):
+    info = get_object_or_404(Project, pk=request.project)
+    context = {
+        "title": "Team",
+        "team": People.objects.filter(parent_list__record_child=info, parent_list__relationship__name="Team member"),
+    }
+    return render(request, "cityloops/team.html", context)
+
+def partners(request):
+    info = get_object_or_404(Project, pk=request.project)
+    context = {
+        "title": "Partners",
+        "partners": Organization.objects.filter(parent_list__record_child=info, parent_list__relationship__name="Partner"),
+    }
+    return render(request, "cityloops/partners.html", context)
+
 @staff_member_required
 def eurostat_grid(request):
 

@@ -1,0 +1,24 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1>Team</h1>
+
+  <div class="row mb-4">
+    {% for each in team %}
+      <div class="col-lg-4 col-md-6 col-sm-8">
+        <div class="card">
+          <a href="{% url URLS.PROFILE each.id %}">
+            <img src="{{ each.image.thumbnail.url }}" class="card-img-top tall-img" alt="">
+          </a>
+          <div class="card-body">
+            <h5 class="card-title">{{ each }}</h5>
+            <p class="card-text">{{ each.get_description|truncatewords_html:40 }}</p>
+            <a href="{% url URLS.PROFILE each.id %}" class="btn btn-primary">View profile</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+{% endblock %}

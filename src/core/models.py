@@ -1891,6 +1891,22 @@ class ZoteroItem(models.Model):
         else:
             return None
 
+class NewsletterSubscriber(models.Model):
+    people = models.ForeignKey(People, on_delete=models.CASCADE)
+    datasets = models.BooleanField()
+    news = models.BooleanField()
+    events = models.BooleanField()
+    publications = models.BooleanField()
+    dataviz = models.BooleanField()
+    multimedia = models.BooleanField()
+    projects = models.BooleanField()
+    theses = models.BooleanField()
+    reference_spaces = models.ManyToManyField(ReferenceSpace, blank=True)
+    site = models.PositiveSmallIntegerField(null=True, blank=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
+    def __str__(self):
+        return self.people.firstname + " " + self.people.lastname
+
 # This is the format to use from now on
 # Note that there is a uid primary key, separate from the record_id
 # This is must easier to have individual primary key sequences

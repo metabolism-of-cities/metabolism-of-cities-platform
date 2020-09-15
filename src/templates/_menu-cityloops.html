@@ -1,5 +1,54 @@
-<li class="nav-item"><a class="nav-link" href="{% url "cityloops:overview" %}">Cities</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url "cityloops:hub_harvesting_worksheet" %}">Worksheet</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url "cityloops:hub" %}">Data uploading</a></li>
+
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="about-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    About
+  </a>
+  <div class="dropdown-menu" aria-labelledby="about-dropdown">
+      <a class="dropdown-item" href="{% url 'cityloops:about' %}">Project</a>
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'team' %}">Team</a>
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'partners' %}">Partners</a>
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'contact' %}">Contact Us</a>
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'stayinformed' %}">Stay informed</a>
+  </div>
+</li>
+
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="cities-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Cities
+  </a>
+  <div class="dropdown-menu" aria-labelledby="cities-dropdown">
+      <a class="dropdown-item" href="{% url 'cityloops:overview' %}">All</a>
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Project</a>
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Project</a>
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Project</a>
+  </div>
+</li>
+
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="deliverables-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Deliverables
+  </a>
+  <div class="dropdown-menu" aria-labelledby="deliverables-dropdown">
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'reports' %}">Reports</a>
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'videos' %}">Videos</a>
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'methods' %}">Method analysis</a>
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'casestudies' %}">Case studies</a>
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'projects' %}">Analysed projects</a>
+  </div>
+</li>
+
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="datamanager-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Data manager
+  </a>
+  <div class="dropdown-menu" aria-labelledby="datamanager-dropdown">
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Instructions</a>
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Dataset inventory</a>
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Eurostat manager</a>
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Eurostat grid</a>
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Data uploading</a>
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Instructions</a>
+  </div>
+</li>
 
 {% include "_menu-account.html" %}

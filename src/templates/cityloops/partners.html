@@ -1,0 +1,38 @@
+{% extends "_base.html" %}
+
+{% block css %}
+<style type="text/css">
+.btn-thumbnail {
+  background-color: #fff;
+  height: 100%;
+  min-height: 136px;
+  padding: 1rem;
+}
+
+.btn-thumbnail img {
+    height: 100%;
+    border-radius: .25rem;
+    max-height: 136px;
+    width: 100%;
+    object-fit: contain;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <h1>Partners</h1>
+
+  <div class="row partners">
+
+    {% for each in partners %}
+      <div class="col-6 col-md-4 col-lg-3 mb-3">
+        <a class="btn btn-thumbnail" href="{{ each.url }}">
+          <img src="{{ each.image.thumbnail.url }}" alt="{{ each }}">
+        </a>
+      </div>
+    {% endfor %}
+
+  </div>
+
+{% endblock %}
