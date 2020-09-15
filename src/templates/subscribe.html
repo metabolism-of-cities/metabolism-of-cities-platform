@@ -1,0 +1,63 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<p>Subscribe now to our regular newsletter! We send out an overview with the latest updates from Metabolism of Cities including news, events, new datasets and projects, and more. The newsletter can be tailored to suit your needs, and you can unsubscribe at any time.</p>
+
+<form method="post" class="form form-horizontal">
+<div class="form-group"><label class="col-sm-2 control-label">First name</label>
+<div class="col-sm-10"><input class="form-control" type="text" name="firstname" required="" /></div>
+</div>
+<div class="form-group"><label class="col-sm-2 control-label">Last name</label>
+<div class="col-sm-10"><input class="form-control" type="text" name="lastname" required="" /></div>
+</div>
+<div class="form-group"><label class="col-sm-2 control-label">E-mail</label>
+<div class="col-sm-10"><input class="form-control" type="email" name="email" required="" /></div>
+</div>
+<div class="form-group"><label class="col-sm-2 control-label">Organisation</label>
+<div class="col-sm-10"><input class="form-control" type="text" name="organization" placeholder="Optional" /></div>
+</div>
+<p><strong>Include the following <span style="text-decoration: underline;">new</span> content in my newsletter:</strong></p>
+<div class="form-group">
+<div class="col-sm-offset-2 col-sm-10">
+<div class="checkbox"><label> <input type="checkbox" name="news" value="1" checked="checked" /> News </label></div>
+</div>
+</div>
+<div class="form-group">
+<div class="col-sm-offset-2 col-sm-10">
+<div class="checkbox"><label> <input type="checkbox" name="events" value="1" checked="checked" /> Events</label></div>
+</div>
+</div>
+<div class="form-group">
+<div class="col-sm-offset-2 col-sm-10">
+<div class="checkbox"><label> <input type="checkbox" name="publications" value="1" checked="checked" /> Publications </label></div>
+</div>
+</div>
+<div class="form-group">
+<div class="col-sm-offset-2 col-sm-10">
+<div class="checkbox"><label> <input type="checkbox" name="datasets" value="1" checked="checked" /> Datasets </label></div>
+</div>
+</div>
+<div class="form-group">
+<div class="col-sm-offset-2 col-sm-10">
+<div class="checkbox"><label> <input type="checkbox" name="multimedia" value="1" checked="checked" /> Videos and podcasts </label></div>
+</div>
+</div>
+<div class="form-group">
+<div class="col-sm-offset-2 col-sm-10">
+<div class="checkbox"><label> <input type="checkbox" name="projects" value="1" checked="checked" /> Projects </label></div>
+</div>
+</div>
+<div class="form-group">
+<div class="col-sm-offset-2 col-sm-10">
+<div class="checkbox"><label> <input type="checkbox" name="theses" value="1" checked="checked" /> Theses </label></div>
+</div>
+</div>
+<div class="form-group">
+<div class="col-sm-offset-2 col-sm-10"><button type="submit" class="btn btn-primary" style="background-color: #cf4803;">Subscribe</button></div>
+</div>
+<h2>Newsletter archive</h2>
+<p>View the archive of Metabolism of Cities' past newsletters below:</p>
+<p><a href="http://us8.campaign-archive1.com/home/?u=ac623181f98df6ff1b52a1668&amp;id=59a1b98376" class="btn btn-default">View Archive</a></p>
+
+{% endblock %}
