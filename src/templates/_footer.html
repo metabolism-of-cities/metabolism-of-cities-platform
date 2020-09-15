@@ -1,35 +1,6 @@
 {% load static %}
 
-{% if PROJECT.id == 8 %}
-
-  <footer id="involved">
-    <div class="container pt-4 pb-4">
-      <div class="row">
-        <div class="col-12">
-          <p class="logos">
-            <a href="https://www.ie.edu/school-architecture-design/">
-              <img src="/media/records/05_Architecture_H_RGB_BV90BjN.thumbnail.png" alt="IE School of Architecture & Design" />
-            </a>
-            <a href="https://www.ie.edu/school-architecture-design/center/center-sustainable-cities/">
-              <img src="/media/records/CFSC_IE_Logos-with_Clear_2.png" alt="Center for Sustainable Cities" />
-            </a>
-            <a href="https://www.univ-gustave-eiffel.fr/">
-              <img src="/media/records/logo_UnivGustaveEiffel.thumbnail.jpg" alt="" />
-            </a>
-            <a href="https://www.uic.edu/" style="background:#fff;padding:5px;display:inline-block;width:160px">
-              <img src="/media/records/UIC.CAMP.LOCKB.SM.BLK.thumbnail.PNG" alt="" />
-            </a>
-            <a href="https://metabolismofcities.org/">
-              <img src="/media/logos/logo.svg" alt="" />
-            </a>
-          </p>
-        </div>
-      </div>
-
-    </div>
-  </footer>
-
-{% else %}
+{% if DESIGN.show_footer_1 %}
 
   <footer id="involved">
     <div class="container pt-4 pb-4">
@@ -112,50 +83,52 @@
     </div>
   </footer>
 
-  {% if PROJECT.id != 16 and PROJECT.slug != "untraceable" %}
-    <footer id="sitemap">
-      <div class="container">
-        <h3 class="text-center font-weight-bold mb-4">
-          Browse all Metabolism of Cities projects
-        </h3>
-        {% include "_project-menu.html" %}
-      </div>
-    </footer>
-  {% endif %}
+{% endif %}
 
-  {% if PROJECT.slug != "untraceable" %}
-  <footer id="info">
+{% if DESIGN.show_footer_2 %}
+  <footer id="sitemap">
     <div class="container">
-      <div class="row">
-        <div class="col-md-6 mb-4">
-          <div class="links">
-            <a href="https://creativecommons.org/licenses/by/4.0/" class="mb-2">
-              <i class="fab fa-creative-commons"></i> Creative Commons Attribution 4.0 International license
-            </a>
-            <a href="https://github.com/metabolism-of-cities/metabolism-of-cities-platform" class="mb-2">
-              <i class="fab fa-github"></i> Our source code is available on Github
-            </a>
-            <a href="https://metabolismofcities.org/about/contact/">
-              <i class="fas fa-comments"></i> Contact us
-            </a>
-          </div>
-          <div class="social mt-4 mb-2">
-            <a href="https://twitter.com/CityMetabolism"><i class="fab fa-twitter"></i></a>
-            <a href="https://www.youtube.com/metabolismofcities"><i class="fab fa-youtube"></i></a>
-            <a href="https://www.instagram.com/MetabolismOfCities/"><i class="fab fa-instagram"></i></a>
-            <a href="https://linkedin.com/company/metabolism-of-cities"><i class="fab fa-linkedin"></i></a>
-          </div>
-        </div>
-        <div class="col-md-6 logos text-md-right">
-          <a href="https://metabolismofcities.org"><img class="main-logo mb-1" alt="Metabolism of Cities" src="/media/logos/Metabolism_of_Cities_full_logo_white.png"></a>
-          <br>
-          <strong>Visit our twin site</strong>
-          <br>
-          <a href="https://metabolismofislands.org"><img class="second-logo" alt="Metabolism of Islands" src="{% static 'img/islands-logo.svg' %}"></a>
-        </div>
-     </div>
+      <h3 class="text-center font-weight-bold mb-4">
+        Browse all Metabolism of Cities projects
+      </h3>
+      {% include "_project-menu.html" %}
     </div>
   </footer>
-  {% endif %}
-
 {% endif %}
+
+{% if DESIGN.show_footer_3 %}
+<footer id="info">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <div class="links">
+          <a href="https://creativecommons.org/licenses/by/4.0/" class="mb-2">
+            <i class="fab fa-creative-commons"></i> Creative Commons Attribution 4.0 International license
+          </a>
+          <a href="https://github.com/metabolism-of-cities/metabolism-of-cities-platform" class="mb-2">
+            <i class="fab fa-github"></i> Our source code is available on Github
+          </a>
+          <a href="https://metabolismofcities.org/about/contact/">
+            <i class="fas fa-comments"></i> Contact us
+          </a>
+        </div>
+        <div class="social mt-4 mb-2">
+          <a href="https://twitter.com/CityMetabolism"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.youtube.com/metabolismofcities"><i class="fab fa-youtube"></i></a>
+          <a href="https://www.instagram.com/MetabolismOfCities/"><i class="fab fa-instagram"></i></a>
+          <a href="https://linkedin.com/company/metabolism-of-cities"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+      <div class="col-md-6 logos text-md-right">
+        <a href="https://metabolismofcities.org"><img class="main-logo mb-1" alt="Metabolism of Cities" src="/media/logos/Metabolism_of_Cities_full_logo_white.png"></a>
+        <br>
+        <strong>Visit our twin site</strong>
+        <br>
+        <a href="https://metabolismofislands.org"><img class="second-logo" alt="Metabolism of Islands" src="{% static 'img/islands-logo.svg' %}"></a>
+      </div>
+   </div>
+  </div>
+</footer>
+{% endif %}
+
+{{ DESIGN.get_footer_4 }}

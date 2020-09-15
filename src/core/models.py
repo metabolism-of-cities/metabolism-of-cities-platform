@@ -763,8 +763,15 @@ class ProjectDesign(models.Model):
     show_footer_2 = models.BooleanField(default=True)
     show_footer_3 = models.BooleanField(default=True)
     content_footer_4 = models.TextField(null=True, blank=True)
+
     def __str__(self):
         return self.project.name
+
+    def get_footer_4(self):
+        if self.content_footer_4:
+            return mark_safe(self.content_footer_4)
+        else:
+            return ""
 
 class ForumTopic(Record):
     last_update = models.ForeignKey("Message", on_delete=models.SET_NULL, null=True, blank=True)
