@@ -787,32 +787,7 @@ def controlpanel_design(request):
     info = ProjectDesign.objects.get(pk=project)
     ModelForm = modelform_factory(
         ProjectDesign,
-        fields = ("header", "logo", "header_color", "custom_css", "back_link"),
-    )
-    form = ModelForm(request.POST or None, request.FILES or None, instance=info)
-    if request.method == "POST":
-        if form.is_valid():
-            info = form.save()
-            messages.success(request, "The new design was saved")
-
-    context = {
-        "form": form,
-        "header_title": "Design",
-        "header_subtitle": "Use this section to manage the design of this site",
-    }
-    return render(request, "controlpanel/design.html", context)
-
-@login_required
-def controlpanel_design(request):
-
-    project = request.project
-    if not has_permission(request, project, ["curator", "admin", "publisher"]):
-        unauthorized_access(request)
-
-    info = ProjectDesign.objects.get(pk=project)
-    ModelForm = modelform_factory(
-        ProjectDesign,
-        fields = ("header", "logo", "header_color", "custom_css", "back_link"),
+        fields = ("header", "logo", "header_color", "custom_css", "show_footer_1", "show_footer_2", "show_footer_3", "content_footer_4", "back_link"),
     )
     form = ModelForm(request.POST or None, request.FILES or None, instance=info)
     if request.method == "POST":

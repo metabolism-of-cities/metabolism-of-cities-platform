@@ -759,6 +759,10 @@ class ProjectDesign(models.Model):
     logo = models.FileField(null=True, blank=True, upload_to="logos")
     custom_css = models.TextField(null=True, blank=True)
     back_link = models.BooleanField(default=True)
+    show_footer_1 = models.BooleanField(default=True)
+    show_footer_2 = models.BooleanField(default=True)
+    show_footer_3 = models.BooleanField(default=True)
+    content_footer_4 = models.TextField(null=True, blank=True)
     def __str__(self):
         return self.project.name
 
