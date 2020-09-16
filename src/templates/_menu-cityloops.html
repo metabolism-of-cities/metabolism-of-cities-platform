@@ -17,17 +17,12 @@
     Cities
   </a>
   <div class="dropdown-menu" aria-labelledby="cities-dropdown">
-      <a class="dropdown-item" href="{% url 'cityloops:overview' %}">All</a>
       <a class="dropdown-item" href="{% url 'cityloops:city' 'apeldoorn' %}">Apeldoorn</a>
-      <a class="dropdown-item" href="{% url 'cityloops:city' 'bodo' %}">Bodø</a>
-      <a class="dropdown-item" href="{% url 'cityloops:city' 'hoje-taastrup' %}">Høje-Taastrup</a>
-      <a class="dropdown-item" href="{% url 'cityloops:city' 'mikkeli' %}">Mikkeli</a>
-      <a class="dropdown-item" href="{% url 'cityloops:city' 'porto' %}">Porto</a>
-      <a class="dropdown-item" href="{% url 'cityloops:city' 'roskilde' %}">Roskilde</a>
-      <a class="dropdown-item" href="{% url 'cityloops:city' 'sevilla' %}">Sevilla</a>
-  </div>
-</li>
-
+      <a class="dropdown-item" href="{% url 'cityloops:cityURLS.DASHBOARD' %}">Høje-Taastrup</a>
+      <a class="dropdown-item" href="{% url 'cityloops:city' URLS.DASHBOARDkkeli</a>
+      <a class="dropdown-item" href="{% url 'cityloops:city' 'URLS.DASHBOARD</a>
+      <a class="dropdown-item" href="{% url 'cityloops:city' URLS.DASHBOARDoskilde</a>
+      <a class="dropdown-item" href="{% url 'cityloops:city' URLS.DASHBOARDvilla</URLS.DASHBOARD
 <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="deliverables-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Deliverables
@@ -41,17 +36,44 @@
   </div>
 </li>
 
-<li class="nav-item dropdown">
+false>
   <a class="nav-link dropdown-toggle" href="#" id="datamanager-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Data manager
   </a>
   <div class="dropdown-menu" aria-labelledby="datamanager-dropdown">
-      <a class="dropdown-item" href="{% url 'cityloops:article' 'instructions' %}">Instructions</a>
-      <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Dataset inventory</a>
-      <a class="dropdown-item" href="{% url 'cityloops:eurostat' %}">Eurostat manager</a>
-      <a class="dropdown-item" href="{% url 'cityloops:eurostat_grid' %}">Eurostat grid</a>
-      <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Data uploading</a>
       <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Instructions</a>
+  </div>
+</li>
+
+<li class="nav-item dropdown data-dropdown show">
+  <a class="nav-link dropdown-toggle " href="#" id="data-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Data manager
+  </a>
+  <div class="dropdown-menu data-dropdown-menu " aria-labelledby="data-dropdown">
+
+    <div class="row">
+      <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+        <div class="projects-category"><i class="mr-2 far fa-fw fa-play-circle"></i>Media</div>
+          <a href="{% url 'cityloops:article' 'instructions' %}">Instructions</a>
+          <a class="dropdown-item" href="{% url 'cityloops:layer_overview' 'context' %}">Dataset inventory</a>
+          <a class="dropdown-item" href="{% url 'cityloops:eurostat' %}">Eurostat manager</a>
+          <a class="dropdown-item" href="{% url 'cityloops:eurostat_grid' %}">Eurostat grid</a>
+          <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Data uploading</a>
+      <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+        <div class="projects-category"><i class="mr-2 far fa-fw fa-sitemap"></i>Cities</div>
+          <a href="{% url URLS.DASHBOARD 'apeldoorn' %}">Apeldoorn</a>
+          <a href="{% url URLS.DASHBOARD 'bodo' %}">Bodø</a>
+          <a href="{% url URLS.DASHBOARD 'hoje-taastrup' %}">Høje-Taastrup</a>
+          <a href="{% url URLS.DASHBOARD 'mikkeli' %}">Mikkeli</a>
+          <a href="{% url URLS.DASHBOARD 'porto' %}">Porto</a>
+          <a href="{% url 'cityloops:city' 'bodo' %}">Bodø</a>
+          <a href="{% url URLS.DASHBOARD 'roskilde' %}">Roskilde</a>
+          <a href="{% url URLS.DASHBOARD 'sevilla' %}">Sevilla</a>
+          <a href="{% url 'cityloops:overview' %}">All</a>
+      </div>
+    </div>
+
+
   </div>
 </li>
 

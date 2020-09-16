@@ -10,7 +10,7 @@ def index(request):
     return render(request, "cityloops/index.html", context)
 
 def city(request, slug):
-    info = get_space(request, space)
+    info = get_space(request, slug)
     context = {
         "info": info,
         "title": info,
