@@ -89,7 +89,7 @@
 
 </head>
 <!-- each page has a class defined with page_name - useful for assigning css rules -->
-<body class="project-{{ PROJECT.id }} {% block page_name %}{% endblock %}{% if space %}{% if PROJECT.slug == "data" or PROJECT.slug == "islands" %} city-subsite{% endif %}{% endif %}">
+<body class="project-{{ PROJECT.id }} {% block page_name %}{% endblock %}{% if space and IS_DATA_PORTAL %} city-subsite{% endif %}">
 
   <!-- top layer with navbar and hero -->
   {% if not iframe %}

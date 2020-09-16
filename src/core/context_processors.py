@@ -15,7 +15,7 @@ def site(request):
     system_name_singular = None
     system_name_plural = None
     urls = {}
-    is_data_portal = False # only used on this page, to indicate if we need to load data-specific stuff
+    is_data_portal = False
 
     if hasattr(request, "project"):
         project = Project.objects.get(pk=request.project)
@@ -84,4 +84,5 @@ def site(request):
         "SYSTEM_NAME_SINGULAR": system_name_singular,
         "SYSTEM_NAME_PLURAL": system_name_plural,
         "URLS": urls,
+        "IS_DATA_PORTAL": is_data_portal,
     }

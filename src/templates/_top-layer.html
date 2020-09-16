@@ -196,9 +196,7 @@
 
 </div>
 
-{% if PROJECT.id == 17 and space and not hide_space_menu %}
-  {% include "_submenu-data.html" %}
-{% elif PROJECT.id == 4 and space and not hide_space_menu %}
+{% if space and not hide_space_menu and IS_DATA_PORTAL %}
   {% include "_submenu-data.html" %}
 {% elif PROJECT.id == 8 and request.user.is_authenticated %}
   {% include "_submenu-ascus.html" %}
@@ -206,7 +204,7 @@
   {% include "_submenu-platformu.html" %}
 {% endif %}
 
-{% if PROJECT.id == 4 and space %}
+{% if IS_DATA_PORTAL and space %}
   <script>
     // add class when navbar becomes sticky - https://stackoverflow.com/a/57991537/1685643
     // get the sticky element
