@@ -962,8 +962,11 @@ def hub_harvesting_tag(request, space, tag):
     elif tag.id == 914:
         # Policy documents
         types = document
-    elif tag.id == 852 or tag.id == 851:
+    elif tag.id == 852:
         types = shapefile
+    elif tag.id == 851:
+        # Actors
+        types = document
     elif tag.id == 853:
         # Econ descriptions
         types = report + website
