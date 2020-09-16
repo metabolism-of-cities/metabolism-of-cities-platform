@@ -1,0 +1,25 @@
+{% load moc_extras %}
+
+<div class="library-multimedia-list">
+
+{% spaceless %}
+<div class="row lightbox gallery">
+  {% for each in items %}
+  <div class="col-sm-6 col-md-3 col-lg-2">
+    <a 
+      href="{% if each.image %}{{ each.image.large.url }}{% else %}{% if relative_url %}{{ each.id }}/{% else %}{% url URLS.LIBRARY_ITEM each.id %}{% endif %}{% endif %}" 
+      style="{% if each.image %}background-image: url('{{ each.image.thumbnail.url }}');{% else %}padding:0;background:#f4f4f4{% endif %}" 
+      data-caption="{{ each.get_description|convert_quotes|striptags|truncatewords:30 }}<br>{{ each.license }} - {{ each.author_list }}<br><a href='{% if relative_url %}{{ each.id }}/{% else %}{% url URLS.LIBRARY_ITEM each.id %}{% endif %}'>View details</a>">
+    {% if not each.image %}
+      <div class="p-3 text-center">
+        <i class="fa fa-{{ each.type.icon }} h2 text-dark"></i><br>
+        {{ each }}
+      </div>
+    {% endif %}
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% endspaceless %}
+
+</div>

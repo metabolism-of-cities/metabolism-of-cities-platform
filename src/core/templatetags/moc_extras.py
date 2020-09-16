@@ -15,3 +15,7 @@ def get_item(dictionary, key):
 @register.filter
 def convert_dash(string):
     return string.replace(r'\u002D', "-")
+
+@register.filter
+def convert_quotes(string):
+    return string.replace(r'"', "'")

@@ -207,6 +207,7 @@ def library_overview(request, type, space=None):
         "relative_url": True,
         "type": type,
         "days": days,
+        "load_lightbox": True if type == "multimedia" else False,
     }
     return render(request, "staf/library.html", context)
 

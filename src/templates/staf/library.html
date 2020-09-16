@@ -18,6 +18,10 @@
   </ul>
 {% endif %}
 
-{% include "_library.list.html" %}
+{% if type == "multimedia" %}
+  {% include "_library.multimedia.html" %}
+{% else %}
+  {% include "_library.list.html" %}
+{% endif %}
 
 {% endblock %}
