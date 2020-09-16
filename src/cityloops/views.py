@@ -9,6 +9,14 @@ def index(request):
     }
     return render(request, "cityloops/index.html", context)
 
+def city(request, slug):
+    info = get_space(request, space)
+    context = {
+        "info": info,
+        "title": info,
+    }
+    return render(request, "cityloops/city.html", context)
+
 def about(request):
     info = get_object_or_404(Project, pk=request.project)
     context = {
@@ -33,7 +41,6 @@ def partners(request):
     }
     return render(request, "cityloops/partners.html", context)
 
-@staff_member_required
 def eurostat_grid(request):
 
     layer_list = Tag.objects.filter(parent_tag__parent_tag_id=845).order_by("name")

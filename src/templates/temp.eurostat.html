@@ -21,6 +21,15 @@ td.mini {
 .dead {
   opacity: 0.1;
 }
+{% if not request.user.is_staff %}
+td.mini a:not(.showall) {
+  opacity:0.2;
+  cursor: not-allowed;
+}
+td.mini a:not(.showall):hover {
+  cursor: not-allowed;
+}
+{% endif %}
 </style>
 {% endblock %}
 
@@ -29,6 +38,10 @@ td.mini {
   <div class="p-4">
 
   <h1 class="text-center">Eurostat databases</h1>
+
+   <div class="text-center">
+     {{ webpage.get_description }}
+  </div>
 
   <ul class="nav nav-tabs mb-4">
     <li class="nav-item">
@@ -50,11 +63,6 @@ td.mini {
      <button class="btn btn-primary" type="submit">Search</button>
      <input type="hidden" name="show" value="{{ page }}" />
   </form>
-
-  <div class="mb-3">
-   {{ webpage.get_markdown_description|safe }}
-    <a href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/controlpanel/content/{{ webpage.id }}/?next={{ request.get_full_path }}"><i class="fas fa-edit fa-fw"></i> Edit</a>
-  </div>
 
   <div class="text-center alert alert-warning">
     <span class="step-links">
@@ -99,9 +107,9 @@ td.mini {
               <a data-id="{{ each.id }}" data-action="approve" href="#" class="btn {% if each.is_approved %}btn-success{% else %}btn-default-outline{% endif %}"><i class="fa fa-fw fa-check"></i></a>
               <a data-id="{{ each.id }}" data-action="deny" href="#" class="btn {% if each.is_denied %}btn-danger{% else %}btn-default-outline{% endif %}"><i class="fa fa-fw fa-times"></i></a>
             </span>
-            <a title="Download file" href="https://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?file=data/{{ each.code }}.tsv.gz" class="btn btn-default-outline"><i class="fa fa-file-archive"></i></a>
+            <a title="Download file" href="https://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?file=data/{{ each.code }}.tsv.gz" class="btn btn-default-outline showall"><i class="fa fa-file-archive"></i></a>
           {% endif %}
-            <a title="Meta data" href="https://ec.europa.eu/eurostat/cache/metadata/en/{{ each.code }}_esms.htm" target="_blank" class="{% if each.has_no_meta_data %}dead{% endif %} meta btn btn-default-outline"><i class="fal fa-file"></i></a>
+            <a title="Meta data" href="https://ec.europa.eu/eurostat/cache/metadata/en/{{ each.code }}_esms.htm" target="_blank" class="{% if each.has_no_meta_data %}dead{% endif %} meta btn btn-default-outline showall"><i class="fal fa-file"></i></a>
             {% if not each.has_no_meta_data %}
               <a title="No meta data" href="#" class="btn btn-default-outline deadlink" data-id="{{ each.id }}"><i class="fas fa-unlink"></i></a>
             {% endif %}

@@ -18,9 +18,13 @@
   </a>
   <div class="dropdown-menu" aria-labelledby="cities-dropdown">
       <a class="dropdown-item" href="{% url 'cityloops:overview' %}">All</a>
-      <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Project</a>
-      <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Project</a>
-      <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Project</a>
+      <a class="dropdown-item" href="{% url 'cityloops:city' 'apeldoorn' %}">Apeldoorn</a>
+      <a class="dropdown-item" href="{% url 'cityloops:city' 'bodo' %}">Bodø</a>
+      <a class="dropdown-item" href="{% url 'cityloops:city' 'hoje-taastrup' %}">Høje-Taastrup</a>
+      <a class="dropdown-item" href="{% url 'cityloops:city' 'mikkeli' %}">Mikkeli</a>
+      <a class="dropdown-item" href="{% url 'cityloops:city' 'porto' %}">Porto</a>
+      <a class="dropdown-item" href="{% url 'cityloops:city' 'roskilde' %}">Roskilde</a>
+      <a class="dropdown-item" href="{% url 'cityloops:city' 'sevilla' %}">Sevilla</a>
   </div>
 </li>
 
@@ -42,10 +46,10 @@
     Data manager
   </a>
   <div class="dropdown-menu" aria-labelledby="datamanager-dropdown">
-      <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Instructions</a>
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'instructions' %}">Instructions</a>
       <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Dataset inventory</a>
-      <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Eurostat manager</a>
-      <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Eurostat grid</a>
+      <a class="dropdown-item" href="{% url 'cityloops:eurostat' %}">Eurostat manager</a>
+      <a class="dropdown-item" href="{% url 'cityloops:eurostat_grid' %}">Eurostat grid</a>
       <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Data uploading</a>
       <a class="dropdown-item" href="{% url 'cityloops:article' 'project' %}">Instructions</a>
   </div>

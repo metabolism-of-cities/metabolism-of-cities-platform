@@ -1,0 +1,19 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1>{{ info }}</h1>
+
+  <div class="alert alert-dark text-center p-5 mb-0">
+    <h2 class="pt-5 pb-5">
+    <i class="fa fa-exclamation-triangle"></i><br>
+      Data dashboard not yet available.
+    </h2>
+    <div class="mt-4">
+      Together with people in {{ info }}, we are working hard to prepare this data dashboard.
+      <br>
+      Go to the <a href="/dashboards/{{ info.slug }}/hub/harvesting/">Data Manager</a> section to upload information for {{ info }}.
+    </div>
+  </div>
+
+{% endblock %}

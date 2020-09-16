@@ -291,7 +291,6 @@ def datasets(request, space):
     }
     return render(request, "data/datasets.html", context)
 
-@staff_member_required
 def eurostat(request):
 
     from django.core.paginator import Paginator
@@ -322,26 +321,27 @@ def eurostat(request):
     page_number = request.GET.get("page")
     list = paginator.get_page(page_number)
 
-    if "action" in request.GET:
-        try:
-            info = EurostatDB.objects.get(pk=request.GET["id"])
-            info.is_reviewed = True
-            if request.GET["action"] == "deny":
-                info.is_denied = True
-                info.is_approved = False
-            else:
-                info.is_denied = False
-                info.is_approved = True
+    if request.user.is_authenticated and request.user.is_staff:
+        if "action" in request.GET:
+            try:
+                info = EurostatDB.objects.get(pk=request.GET["id"])
+                info.is_reviewed = True
+                if request.GET["action"] == "deny":
+                    info.is_denied = True
+                    info.is_approved = False
+                else:
+                    info.is_denied = False
+                    info.is_approved = True
+                info.save()
+                return JsonResponse({"status":"OK"})
+            except:
+                return JsonResponse({"status":"Fail"})
+
+        if "deadlink" in request.GET:
+            info = EurostatDB.objects.get(pk=request.GET["deadlink"])
+            info.has_no_meta_data = True
             info.save()
             return JsonResponse({"status":"OK"})
-        except:
-            return JsonResponse({"status":"Fail"})
-
-    if "deadlink" in request.GET:
-        info = EurostatDB.objects.get(pk=request.GET["deadlink"])
-        info.has_no_meta_data = True
-        info.save()
-        return JsonResponse({"status":"OK"})
 
     progress = full_list.filter(is_reviewed=True).count()
     no_folders = full_list.exclude(type="folder")
