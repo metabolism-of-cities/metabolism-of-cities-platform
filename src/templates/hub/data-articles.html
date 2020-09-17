@@ -2,26 +2,33 @@
 
 {% block content %}
 
-  <h1 class="mb-0">Data articles</h1>
+  {% include "hub/_nav.html" %}
+
+  <h3 class="mb-0">Data articles</h3>
   <a href="../" class="btn btn-primary-basic mb-4">
     <i class="fal fa-angle-left"></i>
-    Back to control panel
+    Back to data analysis
   </a>
 
-  <a class="btn btn-default-basic float-right" href="create/"><i class="fal fa-plus" aria-hidden="true"></i> Create new data article</a>
+  {% if space %}
+    <a class="btn btn-default-basic float-right" href="create/"><i class="fal fa-plus" aria-hidden="true"></i> Create new data article</a>
+  {% endif %}
+
   <table class="table table-striped datatable table-card">
     <thead>
       <tr>
         <th>Article title</th>
-        <th>Section</th>
+        <th>Preview</th>
+        <th>Status</th>
         <th>Creation date</th>
       </tr>
     </thead>
     <tbody>
     {% for each in list %}
       <tr>
-        <td><a href="{{ each.id }}/">{{ each }}</a></td>
-        <td>{{ each.get_category_display }}</td>
+        <td><a href="{{ each.uid }}/">{{ each }}</a></td>
+        <td><a href="{% url URLS.DATA_ARTICLE space.slug each.slug %}">Preview</a></td>
+        <td><em>Unpublished</em></td>
         <td>{{ each.date_created|date:"M d, Y" }}</td>
       </tr>
     {% endfor %}
@@ -30,6 +37,6 @@
 
   <a href="../" class="btn btn-primary-basic mt-4">
     <i class="fal fa-angle-left"></i>
-    Back to control panel
+    Back to data analysis
   </a>
 {% endblock %}

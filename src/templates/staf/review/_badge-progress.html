@@ -2,17 +2,20 @@
   <div class="card-body">
     <div class="mb-4">
       {% if request.user.is_authenticated %}
-      <a href="">
+      <a href="{% url URLS.PROFILE request.user.people.id %}">
         {{ request.user.people.avatar }}
       </a>
       <span class="details">
-        <a href=""><strong>{{ request.user.people }}</strong></a>
+      <a href="{% url URLS.PROFILE request.user.people.id %}">
+        <strong>{{ request.user.people }}</strong></a>
         <br>
         <span class="points">{{ request.user.people.points }} points</span>
       </span>
       {% endif %}
     </div>
 
+    <h4 class="h5 mb-3">Your badges</h4>
+    <p><em>This is a sample -- badges are still being worked on!</em></p>
     <div class="award">
       <span class="badge badge-dark">
         <i class="fas fa-circle text-secondary"></i> Reviewer
@@ -33,5 +36,6 @@
       </span>
       approve 41 more uploads
     </div>
+
   </div>
 </div>

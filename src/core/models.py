@@ -258,7 +258,16 @@ class Record(models.Model):
             # However this is not how regular textareas work, and people are expecting this to work
             # so we add these <br>s. Ideally we would avoid <p>hello</p><br><p>newline</p> but 
             # for now that's the additional consequence -- doesn't seem to be a really visible impact anyways
-            self.description_html = self.description_html.replace("\n", "<br>")
+            if hasattr(self, "dataarticle"):
+                # For data articles, however, we don't want that and instead we want
+                # to replace #ID for the iframes
+                import re
+                p = re.compile("\[#(\d*)\]")
+                # For local testing, add /data/ to src=
+                self.description_html = p.sub(r'<iframe class="dataset card" src="/data/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.description_html)
+
+            else:
+                self.description_html = self.description_html.replace("\n", "<br>")
         super().save(*args, **kwargs)
 
     objects_unfiltered = models.Manager()
@@ -688,7 +697,7 @@ class RecordHistory(models.Model):
 
     status = models.IntegerField(choices=Status.choices, db_index=True)
     name = models.CharField(max_length=255)
-    description = HTMLField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     record = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="history")
     people = models.ForeignKey(People, on_delete=models.CASCADE, related_name="record_history")
@@ -1776,32 +1785,34 @@ class UploadFile(models.Model):
 
 class DataArticle(Record):
 
-    class Category(models.IntegerChoices):
-        LOCAL_INDUSTRIES = 1, "Local industries"
-        RESOURCE_USE = 2, "Resource use"
-        MATERIAL_STOCK = 3, "Material stock"
-        WASTE = 4, "Waste"
-
-    class SubCategory(models.IntegerChoices):
-        MANUFACTURING = 1, "Manufacturing industries"
-        EXTRACTIVE = 2, "Extractive industries"
-        OTHER = 3, "Other industries"
+    uid = models.AutoField(primary_key=True)
+    record_id = models.OneToOneField(
+        Record, on_delete=models.CASCADE,
+        parent_link=True,
+        primary_key=False,
+    )
 
     class Completion(models.IntegerChoices):
         STUB = 1, "Stub"
         HALF = 2, "Medium article"
         COMPLETE = 3, "Complete article"
 
-    category = models.IntegerField(choices=Category.choices, db_index=True)
-    sub_category = models.IntegerField(choices=SubCategory.choices, db_index=True, null=True, blank=True)
     completion = models.IntegerField(choices=Completion.choices)
     part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    slug = models.SlugField(max_length=100, unique=True, blank=True, null=True)
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
 
-# Need to remove this (and from stafdb models) when resetting migrations
+    def save(self, *args, **kwargs):
+        if not self.id:
+            slug = slugify(unidecode(self.name))
+            check = DataArticle.objects.filter(slug=slug).exists()
+            # In the unlikely event that the slug already exists, add timestamp to it
+            self.slug = slug if not check else str(datetime.timestamp) + "-" + slug
+        super().save(*args, **kwargs)
+
 def shapefile_directory():
     pass
 

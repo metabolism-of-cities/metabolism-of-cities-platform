@@ -1513,6 +1513,86 @@ def hub_processing_gis(request, id, classify=False, space=None):
         
     return render(request, "hub/" + page, context)
 
+def hub_analysis(request, space=None):
+
+    project = request.project
+
+    if space:
+        space = get_space(request, space)
+
+    context = {
+        "menu": "analysis",
+        "space": space,
+        "hide_space_menu": True,
+    }
+    return render(request, "hub/analysis.html", context)
+
+def hub_data_articles(request, space=None):
+
+    project = request.project
+    if space:
+        space = get_space(request, space)
+
+    context = {
+        "list": DataArticle.objects.filter(part_of_project_id=project, spaces=space),
+        "load_datatables": True,
+        "space": space,
+        "hide_space_menu": True,
+        "menu": "analysis",
+        "title": "Data articles",
+    }
+    return render(request, "hub/data-articles.html", context)
+
+@login_required
+def hub_data_article(request, space=None, id=None):
+
+    project = request.project
+
+    if space:
+        space = get_space(request, space)
+
+    ModelForm = modelform_factory(
+        DataArticle,
+        fields=("name", "completion"),
+        labels = { "name": "Title" },
+    )
+    info = get_object_or_404(DataArticle, pk=id, part_of_project_id=project) if id else None
+    form = ModelForm(request.POST or None, instance=info)
+    if request.method == 'POST':
+        if form.is_valid():
+            description = request.POST.get("text")
+            info = form.save(commit=False)
+            info.part_of_project_id = project
+            info.description = description
+            info.save()
+            if not id:
+                info.spaces.add(space)
+            RecordHistory.objects.create(
+                status = 1,
+                name = info.name,
+                description = description,
+                record = info,
+                people = request.user.people,
+            )
+            messages.success(request, "Information was saved.")
+            if "next" in request.GET:
+                return redirect(request.GET["next"])
+            else:
+                return redirect("data:hub_data_articles", space=space.slug)
+        else:
+            messages.error(request, 'We could not save your form, please fill out all fields')
+
+    context = {
+        "load_markdown": True,
+        "space": space,
+        "form": form,
+        "info": info,
+        "hide_space_menu": True,
+        "title": info if info else "New data article",
+    }
+    return render(request, "hub/data-article.html", context)
+
+
 @xframe_options_exempt
 def dataset(request, space=None, dataset=None, id=None):
     project = get_object_or_404(Project, pk=request.project)
@@ -1540,6 +1620,7 @@ def dataset(request, space=None, dataset=None, id=None):
 @xframe_options_exempt
 def dataframe(request, id):
     info = get_object_or_404(LibraryItem, pk=id)
+    project = get_object_or_404(Project, pk=request.project)
     context = {
         "info": info,
         "iframe": True,
@@ -1549,4 +1630,18 @@ def dataframe(request, id):
         "library_item": project.get_slug() + ":library_item",
     }
     return render(request, "data/dataset.html", context)
+
+@xframe_options_exempt
+def libraryframe(request, id):
+    info = get_object_or_404(LibraryItem, pk=id)
+    project = get_object_or_404(Project, pk=request.project)
+    context = {
+        "info": info,
+        "iframe": True,
+        "spaces": info.reference_spaces(),
+        "first_view": "map",
+        "show_map": True,
+        "library_item": project.get_slug() + ":library_item",
+    }
+    return render(request, "library/item.iframe.html", context)
 

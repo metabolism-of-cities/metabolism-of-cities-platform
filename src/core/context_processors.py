@@ -52,6 +52,7 @@ def site(request):
         urls["LIBRARY_OVERVIEW"] = slug + ":" + "library_overview"
         urls["DASHBOARD"] = slug + ":" + "dashboard"
         urls["HUB_HARVESTING"] = slug + ":" + "hub_harvesting_space"
+        urls["DATA_ARTICLE"] = slug + ":" + "article"
 
     if request.user.is_authenticated and request.user.people:
         people = request.user.people

@@ -7,15 +7,20 @@
 
 <section class="container">
   <div class="row">
-    <div class="col-9">
-      <h1>Wine Industry</h1>
+    <div class="col-12">
 
-      <h3>Introduction</h3>
-      <p>{% lorem 2 %}</p>
+      {% if request.user.is_authenticated %}
+        <a class="float-right btn btn-warning" href="{% url "data:hub_data_article" space.slug info.uid %}?next={{ request.get_full_path }}"><i class="fa fa-pencil"></i> Edit</a>
+      {% endif %}
 
-      <h2>Overview</h2>
-      <p>{% lorem 1 %}</p>
+      <h1>{{ info }}</h1>
+
+
+      {{ info.get_description }}
+      
     </div>
+
+    {% if False %}
     <div class="col-3">
       <h3>Related resources:</h3>
       <div class="list-group">
@@ -43,7 +48,10 @@
       </div>
     </div>
   </div>
+  {% endif %}
 </section>
+
+{% if False %}
 
 <section class="fullwidth-wrapper">
   <div class="container">
@@ -105,13 +113,7 @@
   </div>
 </section>
 
-<section class="container">
-  <p>{% lorem 1 %}</p>
-  <p>{% lorem 2 %}</p>
-
-  <h3 class="mt-4">Publications</h3>
-  {% include "_library.list.html" %}
-</section>
+{% endif %}
 
 {% endblock %}
 

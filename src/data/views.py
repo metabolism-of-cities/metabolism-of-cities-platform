@@ -260,15 +260,18 @@ def sector(request, space, sector):
     }
     return render(request, "data/sector.html", context)
 
-def article(request, space, sector, article):
+def article(request, space, slug):
     space = get_space(request, space)
     items = LibraryItem.objects.filter(spaces=space).filter(type__group="academic")
+    info = DataArticle.objects.get(slug=slug)
     context = {
         "space": space,
         "header_image": space.photo,
         "menu": "industries",
         "load_lightbox": True,
         "items": items,
+        "info": info,
+        "title": info.name,
     }
     return render(request, "data/article.html", context)
 

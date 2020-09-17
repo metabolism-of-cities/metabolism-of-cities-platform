@@ -1,0 +1,117 @@
+{% extends "_base.html" %}
+
+{% block page_name %}staf-review index{% endblock %}
+
+{% block title %}Analysis{% endblock %}
+
+{% block css %}
+<style type="text/css">
+a.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+a.disabled:hover {
+  opacity: 0.2;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+{% include "hub/_nav.html" %}
+
+<div class="row">
+  <div class="col-lg-8 dual-iconbox">
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <a href="javascript:alert('Not yet available')" class="card btn-card disabled">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-balance-scale" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>Material flow balancer</strong>
+                <br>
+                <small>Review the inputs and outputs to understand flow dynamics.</small>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <a href="javascript:alert('Not yet available')" class="card btn-card disabled">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-project-diagram" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>System diagram manager</strong>
+                <br>
+                <small>Create product or industry-specific system diagrams</small>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <a href="data-articles/" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-file-spreadsheet" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>Data articles</strong>
+                <br>
+                <small>Write and publish data articles on the website</small>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <a href="javascript:alert('Not yet available')" class="card btn-card disabled">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-chart-pie-alt" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>Data gap analysis</strong>
+                <br>
+                <small>Review missing data pieces based on system diagrams</small>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <a href="javascript:alert('Not yet available')" class="card btn-card disabled">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-chart-scatter" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>Modelling tools</strong>
+                <br>
+                <small>Use our modelling tools to understand patterns and predict impacts</small>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4 sidebar">
+    {% include "staf/review/_badge-progress.html" %}
+    <!-- or -->
+    <!-- {% include "staf/review/_introduction.html" %} -->
+  </div>
+</div>
+
+{% endblock %}
+

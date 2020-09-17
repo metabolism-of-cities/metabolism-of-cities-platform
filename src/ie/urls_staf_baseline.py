@@ -22,12 +22,6 @@ baseline_staf_urlpatterns = [
     #path("dashboards/<slug:slug>/controlpanel/worksheet/<int:tag>/", staf.referencespace_worksheet_tag),
     #path("dashboards/<slug:space>/controlpanel/worksheet/<int:tag>/form/", library.form),
 
-    # Controlpanel
-    path("dashboards/<slug:space>/controlpanel/", core.controlpanel, name="controlpanel_space"),
-    path("dashboards/<slug:space>/controlpanel/data-articles/", core.controlpanel_data_articles, name="controlpanel_data_articles"),
-    path("dashboards/<slug:space>/controlpanel/data-articles/create/", core.controlpanel_data_article, name="controlpanel_data_article"),
-    path("dashboards/<slug:space>/controlpanel/data-articles/<int:id>/", core.controlpanel_data_article, name="controlpanel_data_article"),
-
     #path("resources/publications/", library.list, { "type": "islands" }, name="library"),
 
     path("resources/multimedia/", staf.multimedia, name="multimedia"),
@@ -42,7 +36,7 @@ baseline_staf_urlpatterns = [
     # Data dashboards
     path("dashboards/<slug:space>/sectors/", data.sectors, name="sectors"),
     path("dashboards/<slug:space>/sectors/<slug:sector>/", data.sector, name="sector"),
-    path("dashboards/<slug:space>/sectors/<slug:sector>/<slug:article>/", data.article, name="article"),
+    path("dashboards/<slug:space>/sectors/<slug:sector>/<slug:article>/", data.article),
     #path("dashboards/<slug:space>/datasets/", data.datasets, name="datasets"),
     #path("dashboards/<slug:space>/datasets/<slug:dataset>/", staf.dataset, name="dataset"),
     path("dashboards/<slug:space>/resources/photos/", data.photos, name="photos"),
@@ -76,6 +70,10 @@ baseline_staf_urlpatterns = [
     path("hub/processing/datasets/<int:id>/edit/", library.form),
     path("hub/processing/datasets/<int:id>/", staf.hub_processing_dataset, name="hub_processing_dataset"),
     path("hub/processing/datasets/<int:id>/classify/", staf.hub_processing_dataset, {"classify": True}, name="hub_processing_dataset"),
+    path("hub/analysis/", staf.hub_analysis, name="hub_analysis"),
+    path("hub/analysis/data-articles/", staf.hub_data_articles, name="hub_data_articles"),
+    path("hub/analysis/data-articles/create/", staf.hub_data_article, name="hub_data_article"),
+    path("hub/analysis/data-articles/<int:id>/", staf.hub_data_article, name="hub_data_article"),
 
     path("dashboards/<slug:space>/hub/", core.work_portal, {"slug": "data"}),
     path("dashboards/<slug:space>/hub/harvesting/", staf.hub_harvesting_space, name="hub_harvesting_space"),
@@ -91,6 +89,12 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/hub/processing/datasets/<int:id>/", staf.hub_processing_dataset, name="hub_processing_dataset"),
     path("dashboards/<slug:space>/hub/processing/datasets/<int:id>/classify/", staf.hub_processing_dataset, {"classify": True}, name="hub_processing_dataset"),
     path("dashboards/<slug:space>/hub/people/", data.users),
+    path("dashboards/<slug:space>/articles/<slug:slug>/", data.article, name="article"),
+
+    path("dashboards/<slug:space>/hub/analysis/", staf.hub_analysis, name="hub_analysis"),
+    path("dashboards/<slug:space>/hub/analysis/data-articles/", staf.hub_data_articles, name="hub_data_articles"),
+    path("dashboards/<slug:space>/hub/analysis/data-articles/create/", staf.hub_data_article, name="hub_data_article"),
+    path("dashboards/<slug:space>/hub/analysis/data-articles/<int:id>/", staf.hub_data_article, name="hub_data_article"),
 
     path("dashboards/<slug:space>/", data.dashboard, name="dashboard"),
 
@@ -99,4 +103,5 @@ baseline_staf_urlpatterns = [
     path("referencespaces/<int:id>/", staf.referencespaces_list, name="referencespaces_list"),
     path("referencespaces/<slug:group>/", staf.referencespaces, name="referencespaces"),
 
+    path("library/preview/<int:id>/", staf.libraryframe, name="libraryframe"),
 ]

@@ -1069,59 +1069,6 @@ def controlpanel_cache(request):
     }
     return render(request, "controlpanel/cache.html", context)
 
-
-@login_required
-def controlpanel_data_articles(request, space):
-
-    project = request.project
-    if not has_permission(request, project, ["curator", "admin", "publisher"]):
-        unauthorized_access(request)
-
-    space = get_space(request, space)
-    context = {
-        "list": DataArticle.objects.filter(part_of_project_id=project, spaces=space),
-        "load_datatables": True,
-        "space": space,
-    }
-    return render(request, "controlpanel/data-articles.html", context)
-
-@login_required
-def controlpanel_data_article(request, space, id=None):
-
-    project = request.project
-    if not has_permission(request, project, ["curator", "admin", "publisher"]):
-        unauthorized_access(request)
-
-    space = get_space(request, space)
-    ModelForm = modelform_factory(
-        DataArticle,
-        fields=("name", "category", "sub_category", "completion"),
-        labels = { "name": "Title", "sub_category": "Sub category (optional)" },
-    )
-    info = get_object_or_404(DataArticle, pk=id, part_of_project_id=project) if id else None
-    form = ModelForm(request.POST or None, instance=info)
-    if request.method == 'POST':
-        if form.is_valid():
-            info = form.save(commit=False)
-            info.part_of_project_id = project
-            info.description = request.POST.get("text")
-            info.save()
-            if not id:
-                info.spaces.add(space)
-            messages.success(request, "The data article was added.")
-            return redirect("data:controlpanel_data_articles", space=space.slug)
-        else:
-            messages.error(request, 'We could not save your form, please fill out all fields')
-
-    context = {
-        "articles": DataArticle.objects.filter(part_of_project_id=project, spaces=space),
-        "load_datatables": True,
-        "space": space,
-        "form": form,
-        "info": info,
-    }
-    return render(request, "controlpanel/data-article.html", context)
-
 @login_required
 def work_form(request, id=None, sprint=None):
     project = request.project
