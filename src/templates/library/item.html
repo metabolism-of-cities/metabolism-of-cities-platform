@@ -357,7 +357,7 @@
                 <div class="alert alert-danger"><strong>Error:</strong><br>{{ info.meta_data.shapefile_plot_error }}</div>
               {% endif %}
             {% endif %}
-            {% if curator and not info.get_shapefile_plot %}
+            {% if curator and not info.get_shapefile_plot or DEBUG %}
               <br><a href="?create_shapefile_plot=true">Create preview map now.</a>
             {% endif %}
           {% endif %}

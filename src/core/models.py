@@ -48,12 +48,18 @@ from django.db.models import Sum
 # To get recently registered students in the course
 import datetime
 
+# To add a timestamp if needed to duplicated slugs
+import time
+
 # To create the sample shapefile images
 import geopandas
 import contextily as ctx
 
 from django.template.defaultfilters import filesizeformat
 from django.db.models import Q
+
+# For the regular extpression replacement in Data Articles
+import re
 
 def get_date_range(start, end, months_only=False):
 
@@ -261,10 +267,13 @@ class Record(models.Model):
             if hasattr(self, "dataarticle"):
                 # For data articles, however, we don't want that and instead we want
                 # to replace #ID for the iframes
-                import re
                 p = re.compile("\[#(\d*)\]")
                 # For local testing, add /data/ to src=
-                self.description_html = p.sub(r'<iframe class="dataset card" src="/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.description_html)
+                self.description_html = p.sub(r'<iframe class="libraryitem card" src="/data/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.description_html)
+
+                p = re.compile("\[@(\d*)\]")
+                # For local testing, add /data/ to src=
+                self.description_html = p.sub(r'<sup>[<a data-id="\1" href="/data/library/\1/">source</a>]</sup>', self.description_html)
 
             else:
                 self.description_html = self.description_html.replace("\n", "<br>")
@@ -1783,6 +1792,11 @@ class UploadFile(models.Model):
     class Meta:
         db_table = "stafdb_uploadfile"
 
+class Language(models.Model):
+    name = models.CharField(max_length=255)
+    def __str__(self):
+        return self.name
+
 class DataArticle(Record):
 
     uid = models.AutoField(primary_key=True)
@@ -1799,18 +1813,25 @@ class DataArticle(Record):
 
     completion = models.IntegerField(choices=Completion.choices)
     part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    language = models.ForeignKey(Language, on_delete=models.CASCADE, null=True, blank=True)
     slug = models.SlugField(max_length=100, unique=True, blank=True, null=True)
 
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
     objects = PublicActiveRecordManager()
 
+    def authors(self):
+        return People.objects.filter(record_history__record=self).distinct()
+
+    def last_version(self):
+        return RecordHistory.objects.filter(record=self).order_by("-id")[0]
+
     def save(self, *args, **kwargs):
         if not self.id:
             slug = slugify(unidecode(self.name))
             check = DataArticle.objects.filter(slug=slug).exists()
             # In the unlikely event that the slug already exists, add timestamp to it
-            self.slug = slug if not check else str(datetime.timestamp) + "-" + slug
+            self.slug = slug if not check else str(int(time.time())) + "-" + slug
         super().save(*args, **kwargs)
 
 def shapefile_directory():

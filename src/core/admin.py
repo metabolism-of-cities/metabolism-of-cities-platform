@@ -377,6 +377,7 @@ admin_site.register(Material, ActivityAdmin)
 
 admin_site.register(ZoteroCollection, SearchAdmin)
 admin_site.register(ZoteroItem, SearchAdmin)
+admin_site.register(Language, SearchAdmin)
 
 class EurostatAdmin(admin.ModelAdmin):
     form = EurostatForm

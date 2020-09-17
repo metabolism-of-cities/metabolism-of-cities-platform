@@ -3,6 +3,14 @@
 
 {% block page_name %}fullwidth{% endblock %}
 
+{% block css %}
+<style type="text/css">
+.top-message-box { 
+  text-align: center;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 
 <section class="container">
@@ -14,7 +22,15 @@
       {% endif %}
 
       <h1>{{ info }}</h1>
-
+      <hr>
+      <h4 class="h5">
+        <em>By 
+          {% for each in info.authors %}
+            {{ each }}
+          {% endfor %}
+        </em>
+      </h4>
+      <p><em>Last update: {{ info.last_version.date_created|date:"M d, Y" }}</em></p>
 
       {{ info.get_description }}
       

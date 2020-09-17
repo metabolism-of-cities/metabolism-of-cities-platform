@@ -1546,27 +1546,33 @@ def hub_data_articles(request, space=None):
 @login_required
 def hub_data_article(request, space=None, id=None):
 
-    project = request.project
+    project = get_object_or_404(Project, pk=request.project)
 
     if space:
         space = get_space(request, space)
 
     ModelForm = modelform_factory(
         DataArticle,
-        fields=("name", "completion"),
-        labels = { "name": "Title" },
+        fields=("name", "language", "completion"),
+        labels = { "name": "Title", "completion": "Completion status" },
     )
-    info = get_object_or_404(DataArticle, pk=id, part_of_project_id=project) if id else None
+
+    info = get_object_or_404(DataArticle, pk=id) if id else None
     form = ModelForm(request.POST or None, instance=info)
     if request.method == 'POST':
         if form.is_valid():
             description = request.POST.get("text")
             info = form.save(commit=False)
-            info.part_of_project_id = project
+            info.part_of_project = project
             info.description = description
             info.save()
             if not id:
                 info.spaces.add(space)
+                # Note that we save AGAIN because the first time around the 
+                # object is not yet associated with the DataArticle and the 
+                # regular expressions in the model don't run otherwise
+                info = get_object_or_404(DataArticle, uid=info.uid)
+                info.save()
             RecordHistory.objects.create(
                 status = 1,
                 name = info.name,
@@ -1578,7 +1584,7 @@ def hub_data_article(request, space=None, id=None):
             if "next" in request.GET:
                 return redirect(request.GET["next"])
             else:
-                return redirect("data:hub_data_articles", space=space.slug)
+                return redirect(project.slug + ":article", space=space.slug, slug=info.slug)
         else:
             messages.error(request, 'We could not save your form, please fill out all fields')
 
@@ -1589,6 +1595,7 @@ def hub_data_article(request, space=None, id=None):
         "info": info,
         "hide_space_menu": True,
         "title": info if info else "New data article",
+        "menu": "analysis",
     }
     return render(request, "hub/data-article.html", context)
 

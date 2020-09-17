@@ -1142,6 +1142,11 @@ iframe.dataset {
   border: none;
   min-height: 700px; }
 
+iframe.libraryitem {
+  width: 100%;
+  border: none;
+  min-height: 400px; }
+
 body.dataset.editor .preview-wrap {
   padding: 1rem;
   border: 1px solid #808080;
@@ -1657,10 +1662,6 @@ body.stafcp.controlpanel .icon-card .card-header {
   border-bottom-left-radius: .25rem;
   border-bottom-right-radius: .25rem;
   height: 100%; }
-
-body.stafcp.design textarea#id_custom_css {
-  white-space: pre;
-  font-family: "Ubuntu Mono", "Fira Mono", "Liberation Mono", "Courier New", monospace; }
 
 body.stafcp.workgrid .btn-filter {
   white-space: nowrap;
