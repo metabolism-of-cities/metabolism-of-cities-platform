@@ -264,7 +264,7 @@ class Record(models.Model):
                 import re
                 p = re.compile("\[#(\d*)\]")
                 # For local testing, add /data/ to src=
-                self.description_html = p.sub(r'<iframe class="dataset card" src="/data/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.description_html)
+                self.description_html = p.sub(r'<iframe class="dataset card" src="/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.description_html)
 
             else:
                 self.description_html = self.description_html.replace("\n", "<br>")
