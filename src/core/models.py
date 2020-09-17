@@ -269,11 +269,11 @@ class Record(models.Model):
                 # to replace #ID for the iframes
                 p = re.compile("\[#(\d*)\]")
                 # For local testing, add /data/ to src=
-                self.description_html = p.sub(r'<iframe class="libraryitem card" src="/data/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.description_html)
+                self.description_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.description_html)
 
                 p = re.compile("\[@(\d*)\]")
                 # For local testing, add /data/ to src=
-                self.description_html = p.sub(r'<sup>[<a data-id="\1" href="/data/library/\1/">source</a>]</sup>', self.description_html)
+                self.description_html = p.sub(r'<sup>[<a data-id="\1" href="/library/\1/">source</a>]</sup>', self.description_html)
 
             else:
                 self.description_html = self.description_html.replace("\n", "<br>")
