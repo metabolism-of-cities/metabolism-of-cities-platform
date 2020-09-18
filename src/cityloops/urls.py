@@ -12,6 +12,8 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("about/", views.about, name="about"),
     path("partners/", views.partners, name="partners"),
     path("team/", views.team, name="team"),
+    path("reports/", views.reports, name="reports"),
+    path("projects/", views.projects, name="projects"),
     path("contact/", core.article, { "id":56 }, name="contact"),
     path("videos/", core.article, { "id":49324 }),
     path("methods/", core.article, { "id":49331 }),

@@ -33,11 +33,29 @@ def team(request):
     }
     return render(request, "cityloops/team.html", context)
 
+def reports(request):
+    info = get_object_or_404(Project, pk=request.project)
+    context = {
+        "title": "Team",
+        "reports": People.objects.filter(parent_list__record_child=info, parent_list__relationship__name="Team member"),
+    }
+    return render(request, "cityloops/reports.html", context)
+
+def projects(request):
+    info = get_object_or_404(Project, pk=request.project)
+    context = {
+        "title": "Team",
+        "projects": People.objects.filter(parent_list__record_child=info, parent_list__relationship__name="Team member"),
+    }
+    return render(request, "cityloops/projects.html", context)
+
 def partners(request):
     info = get_object_or_404(Project, pk=request.project)
+    webpage = get_object_or_404(Webpage, pk=50439)
     context = {
         "title": "Partners",
         "partners": Organization.objects.filter(parent_list__record_child=info, parent_list__relationship__name="Partner"),
+        "webpage": webpage,
     }
     return render(request, "cityloops/partners.html", context)
 
