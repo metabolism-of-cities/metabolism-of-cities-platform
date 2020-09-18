@@ -18,7 +18,25 @@
   </ul>
 {% endif %}
 
-{% if type == "multimedia" %}
+{% if type == "maps" %}
+
+  <ul class="nav nav-pills mb-3">
+    <li class="nav-item">
+      <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Display mode:</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {% if not request.GET.shapefiles %}active{% endif %}" href="./"><i class="fa fa-list"></i> List</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {% if request.GET.shapefiles %}active{% endif %}" href="./?shapefiles=true"><i class="fa fa-image"></i> Shapefile previews</a>
+    </li>
+  </ul>
+
+{% endif %}
+
+{% if request.GET.shapefiles %}
+  {% include "_library.shapefiles.html" %}
+{% elif type == "multimedia" %}
   {% include "_library.multimedia.html" %}
 {% else %}
   {% include "_library.list.html" %}
