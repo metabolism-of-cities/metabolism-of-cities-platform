@@ -1,0 +1,12 @@
+<div class="row">
+  {% for each in list %}
+    <div class="mt-3 video col-lg-4 col-md-6 col-sm-8 {% for tag in each.tags.all %}tag-{{ tag.id }} {% endfor %}">
+      <a class="card btn-card" href="{% if library_link %}{% url URLS.LIBRARY_ITEM each.id %}{% else %}{{ each.id }}/{% endif %}">
+        <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
+        <div class="card-body">
+          <h5 class="card-title">{{ each }}</h5>
+        </div>
+      </a>
+    </div>
+  {% endfor %}
+</div>

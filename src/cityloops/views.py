@@ -25,6 +25,15 @@ def about(request):
     }
     return render(request, "cityloops/about.html", context)
 
+def videos(request):
+    videos = Video.objects.filter(id__in=[49994,49999,50002])
+    context = {
+        "webpage": get_object_or_404(Webpage, pk=49324),
+        "library_link": True,
+        "list": videos,
+    }
+    return render(request, "cityloops/videos.html", context)
+
 def team(request):
     info = get_object_or_404(Project, pk=request.project)
     context = {

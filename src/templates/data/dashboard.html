@@ -148,7 +148,7 @@
     {% for each in layers %}
     <div class="col-md-6 col-lg-3 context mb-4">
       <a class="btn-icon" href="{{ each.slug }}/">
-        <h5><i class="fal mr-2 fa-{{ each.icon }} fa-fw"></i> {{ each.get_name_after_colon }}</h5>
+        <h5 class="text-truncate"><i class="fal mr-2 fa-{{ each.icon }} fa-fw"></i> {{ each.get_name_after_colon }}</h5>
         <div class="progress">
           <div 
             class="progress-bar bg-success" 

@@ -4,6 +4,8 @@
 
 {% block content %}
 
+<h1>{{ SYSTEM_NAME_PLURAL|title }}</h1>
+
 <ul class="nav nav-pills mb-3">
   <li class="nav-item">
     <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"><i class="fa fa-sort-amount-up-alt"></i> Sort order:</a>
@@ -18,6 +20,20 @@
     <a class="nav-link {% if request.GET.sort == "percentage" %}active{% endif %}" href="./?sort=percentage">Completion percentage</a>
   </li>
 </ul>
+
+{% if PROJECT.slug == "data" or PROJECT.slug == "islands" %}
+
+  <div class="alert alert-dark">
+    Below is an overview of all {{ SYSTEM_NAME_SINGULAR }} that our community are currently working on. 
+    The completion rate is an estimate of how many of the layers have <em>at least</em>
+    one document -- this is not an exact indicator as the quality and completeness 
+    of these document is only verified once we enter our next phase of data processing.
+    Would you like to help? <a href="/hub/">Join our community</a>, connect through
+    <a href="/hub/forum/">our forum</a>, or do our free and open 
+    <a href="https://education.metabolismofcities.org/courses/">online course on data collection</a>.
+  </div>
+  
+{% endif %}
 
 {% include "data/_space.progress.html" %}
 

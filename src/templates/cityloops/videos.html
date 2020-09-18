@@ -1,0 +1,11 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1>{{ webpage }}</h1>
+
+  {{ webpage.get_description }}
+
+  {% include "_library.videos.html" %}    
+
+{% endblock %}
