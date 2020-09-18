@@ -260,15 +260,13 @@ class Record(models.Model):
                 self.description_html = self.description
         else:
             self.description_html = markdown(bleach.clean(self.description))
-            # In normal Markdown convention, a single newline will NOT be converted to <br>
-            # However this is not how regular textareas work, and people are expecting this to work
-            # so we add these <br>s. Ideally we would avoid <p>hello</p><br><p>newline</p> but 
-            # for now that's the additional consequence -- doesn't seem to be a really visible impact anyways
             if hasattr(self, "dataarticle"):
-                # For data articles, however, we don't want that and instead we want
-                # to replace #ID for the iframes
+                # For data articles we have a special syntax that converts things like [@3893] to a link, or [#3983] to an iframe
+
                 p = re.compile("\[#(\d*)\]")
                 # For local testing, add /data/ to src=
+                # ---- AND BE SURE TO REMOVE WHEN DEPLOYING IN PRODUCTION! ---
+                # (yeah we should fine a better solution)
                 self.description_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.description_html)
 
                 p = re.compile("\[@(\d*)\]")
@@ -276,6 +274,10 @@ class Record(models.Model):
                 self.description_html = p.sub(r'<sup>[<a data-id="\1" href="/library/\1/">source</a>]</sup>', self.description_html)
 
             else:
+                # In normal Markdown convention, a single newline will NOT be converted to <br>
+                # However this is not how regular textareas work, and people are expecting this to work
+                # so we add these <br>s. Ideally we would avoid <p>hello</p><br><p>newline</p> but 
+                # for now that's the additional consequence -- doesn't seem to be a really visible impact anyways
                 self.description_html = self.description_html.replace("\n", "<br>")
         super().save(*args, **kwargs)
 

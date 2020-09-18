@@ -64,6 +64,9 @@
           <div class="mt-3 mb-2"><a href="{{ info.file.url }}" class="btn btn-primary"><i class="fa fa-download"></i> Download</a></div>
         {% elif info.image and info.type.name == "Image" %}
           <div class="mt-3 mb-2"><a href="{{ info.image.url }}" class="btn btn-primary"><i class="fa fa-download"></i> Download</a></div>
+          {% if request.user.id == 1 %}
+            <div class="mt-3 mb-2"><a href="./?reload=true" class="btn btn-warning"><i class="fa fa-sync"></i> Re-create thumbnail</a></div>
+          {% endif %}
         {% endif %}
 
       </div>

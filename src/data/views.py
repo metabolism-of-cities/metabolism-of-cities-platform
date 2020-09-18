@@ -82,7 +82,7 @@ def index(request):
 
     
     import random
-    selected_cities = {12046, 12093, 14402, 12008, 12183, 33989, 12067, 14592, 14398, 12054, 12182}
+    selected_cities = {12046, 12093, 14402, 12008, 12183, 33989, 12067, 14592, 14398, 12054, 12182, 34816, 14571, 16640, 12183, 38542, 34832, 14412, 15984, 34813}
     selected = random.sample(selected_cities, 3)
 
     list = ReferenceSpace.objects.filter(id__in=selected)
@@ -110,6 +110,11 @@ def overview(request):
 def progress(request, style="list"):
     list = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)
     project = get_object_or_404(Project, pk=request.project)
+    
+    if request.GET.get("sort") == "documents":
+        list = list.order_by("-meta_data__progress__document_counter", "name")
+    elif request.GET.get("sort") == "percentage":
+        list = list.order_by("-meta_data__progress__completion", "name")
 
     context = {
         "dashboard_link": project.slug + ":dashboard",

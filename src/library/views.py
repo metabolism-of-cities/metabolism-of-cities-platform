@@ -237,6 +237,25 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
 
     spaces = info.reference_spaces()
 
+    if "reload" in request.GET and request.user.is_superuser and False:
+        from django.core.files.images import ImageFile
+        open_file = open(info.image.path, "rb")
+        django_file = ImageFile(open_file)
+        r = settings.MEDIA_ROOT
+        info.image = django_file
+        if r in info.image.path:
+            # For some weird reason the absolute path is being used.
+            # Let's cut that out
+            path_length = len(r)
+            p(info.image.path)
+            new_path = info.image.path[path_length:]
+            first_letter = new_path[:1]
+            p(new_path)
+            if first_letter == "/":
+                new_path = new_path[1:]
+            info.image.name = new_path
+        info.save()
+
     context = {
         "info": info,
         "spaces": spaces,

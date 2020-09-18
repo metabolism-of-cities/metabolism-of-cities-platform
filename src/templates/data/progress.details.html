@@ -4,6 +4,21 @@
 
 {% block content %}
 
+<ul class="nav nav-pills mb-3">
+  <li class="nav-item">
+    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"><i class="fa fa-sort-amount-up-alt"></i> Sort order:</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if not request.GET.sort %}active{% endif %}" href="./">Alphabetically</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if request.GET.sort == "documents" %}active{% endif %}" href="./?sort=documents">Total documents</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if request.GET.sort == "percentage" %}active{% endif %}" href="./?sort=percentage">Completion percentage</a>
+  </li>
+</ul>
+
 {% include "data/_space.progress.html" %}
 
 {% endblock %}
