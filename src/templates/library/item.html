@@ -365,6 +365,32 @@
             {% endif %}
           {% endif %}
         {% endif %}
+
+
+        {% if PROJECT.slug == "ascus" %}
+
+          <form method="post" class="form form-horizontal" action="{% url "ascus:account_vote" %}">
+            {% csrf_token %}
+            <div class="alert alert-warning">
+              <h3>Best PTA document</h3>
+              <p>
+              {% if best_vote.count == 3 %}
+                You already cast all your votes
+              {% else %}
+                <p><em>You have cast {{ best_vote.count }} out of 3 votes.</em></p>
+                {% if check_vote %}
+                  <p><em>You already voted for this document</em></p>
+                {% else %}
+                  <button type="submit" class="btn btn-success" name="best_pta" value="{{ info.id }}"><i class="fa fa-vote-yea"></i> Vote for this document.</button>
+                {% endif %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+              {% endif %}
+              </p>
+            </div>
+          </form>
+
+        {% endif %}
+
         {% if request.user.is_authenticated %}
           {% if info.comments %}
             <h3 class="mt-5">Uploader notes</h3>

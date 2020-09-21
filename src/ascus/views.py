@@ -274,6 +274,19 @@ def account_vote(request):
             messages.error(request, "You have already cast a vote.")
         return redirect("ascus:overview")
 
+    check_vote = RecordRelationship.objects.filter(relationship_id=32, record_parent=request.user.people)
+    if "best_pta" in request.POST:
+        if not check_vote or check_vote.count() < 3:
+            RecordRelationship.objects.create(
+                record_parent = request.user.people,
+                record_child_id = request.POST["best_pta"],
+                relationship_id = 32,
+            )
+            messages.success(request, "Thanks for your vote!")
+        else:
+            messages.error(request, "You have already cast a vote.")
+        return redirect(request.POST["next"])
+
 @check_ascus_access
 def forum(request):
     list = ForumTopic.objects_include_private.filter(part_of_project_id=8).order_by("-last_update")
