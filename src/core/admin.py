@@ -373,6 +373,7 @@ admin_site.register(Badge, BadgeAdmin)
 admin_site.register(ActivityCatalog)
 admin_site.register(Activity, ActivityAdmin)
 admin_site.register(MaterialCatalog, SearchAdmin)
+admin_site.register(Dataset, SearchAdmin)
 admin_site.register(Material, ActivityAdmin)
 
 admin_site.register(ZoteroCollection, SearchAdmin)
