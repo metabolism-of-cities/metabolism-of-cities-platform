@@ -60,13 +60,13 @@
 
             {% if PERMISSIONS or request.user.is_staff %}
             <a title="Control panel" class="badge badge-primary" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}/{% elif PROJECT.id == 1 %}/{% else %}{{ PROJECT.get_website }}{% endif %}controlpanel/">
-              <i class="fa fa-gear mr-1"></i>
+              <i class="fa fa-cog"></i>
             </a>
             {% endif %}
 
             {% if request.user.is_staff %}
               <a title="Network activity" class="badge badge-primary" href="{% url 'core:network_activity' %}">
-                <i class="fa fa-heart-rate mr-1"></i>
+                <i class="fa fa-heart-rate"></i>
               </a>
             {% endif %}
 
