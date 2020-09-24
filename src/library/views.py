@@ -537,6 +537,11 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             files = False
             if "image" not in fields:
                 fields.append("image")
+            if "position" not in fields and id:
+                info = info.photo
+                if not info.tags.all():
+                    # Only those not tagged will have a position field
+                    fields.append("position")
         else:
             model = LibraryItem
 
