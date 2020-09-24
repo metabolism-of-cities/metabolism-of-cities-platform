@@ -44,9 +44,10 @@ def team(request):
 
 def reports(request):
     info = get_object_or_404(Project, pk=request.project)
+    webpage = get_object_or_404(Webpage, pk=51220)
     context = {
-        "title": "Team",
         "reports": People.objects.filter(parent_list__record_child=info, parent_list__relationship__name="Team member"),
+        "webpage": webpage,
     }
     return render(request, "cityloops/reports.html", context)
 
