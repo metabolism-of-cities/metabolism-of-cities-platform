@@ -55,7 +55,7 @@ def get_parents(record):
 # General script to check if a user has a certain permission
 # This is used for validating access to certain pages only, so superusers
 # will always have access
-# Version 1.0
+# Version 1.1
 def has_permission(request, record_id, allowed_permissions):
     if request.user.is_authenticated and request.user.is_superuser:
         return True
@@ -64,7 +64,7 @@ def has_permission(request, record_id, allowed_permissions):
     try:
         people = request.user.people
         check = RecordRelationship.objects.filter(
-            relationship__slug__in = permissions,
+            relationship__slug__in = allowed_permissions,
             record_parent = request.user.people,
             record_child_id = record_id,
         )
