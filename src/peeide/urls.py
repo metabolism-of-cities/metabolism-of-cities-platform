@@ -7,6 +7,6 @@ from ie.urls_library_baseline import baseline_library_urlpatterns
 
 app_name = "peeide"
 urlpatterns = baseline_urlpatterns + baseline_library_urlpatterns + [
-    path("", views.index, name="index"),
+    path("", core.article, {"id": 51471}, name="index"),
     path("<slug:slug>/", core.article, name="page"),
 ]
