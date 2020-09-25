@@ -15,6 +15,7 @@ urlpatterns = baseline_urlpatterns + baseline_library_urlpatterns + baseline_sta
 
     path("", views.index, name="index"),
     path("team/", views.team, name="team"),
+    path("community/", views.community, name="community"),
     path("overview/", data.progress, {"style": "grid"}, name="overview"),
     path("news_events/", core.news_events_list, name="news_events"),
     path("about/<slug:slug>/", core.article, { "prefix": "/about/"  }, name="about"),

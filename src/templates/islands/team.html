@@ -6,16 +6,6 @@
   {{ webpage.get_description }}
 
   <div class="row mb-4">
-    {% for each in core_list %}
-      <div class="col-lg-4 col-md-6 col-sm-8 mb-3">
-        <a class="card btn-card" href="{% url URLS.PROFILE each.id %}">
-          <img src="{{ each.get_photo.url }}" class="card-img-top tall-img" alt="">
-          <div class="card-body">
-            <h5 class="card-title">{{ each }}</h5>
-          </div>
-        </a>
-      </div>
-    {% endfor %}
     {% for each in list %}
       <div class="col-lg-4 col-md-6 col-sm-8 mb-3">
         <a class="card btn-card" href="{% url URLS.PROFILE each.id %}">

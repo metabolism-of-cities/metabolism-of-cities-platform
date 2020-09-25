@@ -52,12 +52,16 @@
 
 {% endblock %}
 
-{% if publishers %}
-  {% block footer %}
-  <script>
-    $("#publishers").select2({
-      theme: "bootstrap4",
-    });
+{% block footer %}
+  {% if publishers %}
+    <script>
+      $("#publishers").select2({
+        theme: "bootstrap4",
+      });
+    </script>
+  {% endif %}
+  <script type="text/javascript">
+    $("#id_start_date").attr("type", "date");
+    $("#id_end_date").attr("type", "date");
   </script>
-  {% endblock %}
-{% endif %}
+{% endblock %}

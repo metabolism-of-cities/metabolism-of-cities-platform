@@ -31,11 +31,17 @@ def index(request):
     return render(request, "islands/index.html", context)
 
 def team(request):
-    core_list = People.objects.filter(parent_list__record_child_id=request.project, parent_list__relationship__id=31).order_by("parent_list__date_created")
+    list = People.objects.filter(parent_list__record_child_id=request.project, parent_list__relationship__id=31).order_by("parent_list__date_created")
+    context = {
+        "list": list,
+        "webpage": Webpage.objects.get(pk=31881),
+    }
+    return render(request, "islands/team.html", context)
+
+def community(request):
     list = People.objects.filter(parent_list__record_child_id=request.project, parent_list__relationship__id=6).order_by("parent_list__date_created")
     context = {
         "list": list,
-        "core_list": core_list,
-        "webpage": Webpage.objects.get(pk=31881),
+        "webpage": Webpage.objects.get(pk=51385),
     }
     return render(request, "islands/team.html", context)

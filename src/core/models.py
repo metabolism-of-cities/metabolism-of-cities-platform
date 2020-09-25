@@ -1899,6 +1899,7 @@ class ZoteroCollection(Record):
     )
     api = models.CharField(max_length=255)
     zotero_id = models.CharField(max_length=255)
+    part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name

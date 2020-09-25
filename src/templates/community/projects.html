@@ -11,8 +11,10 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>Funding programme</th>
-      <th>Budget</th>
+      {% if PROJECT.slug != "islands" %}
+        <th>Funding programme</th>
+        <th>Budget</th>
+      {% endif %}
       <th>Date</th>
     </tr>
   </thead>
@@ -22,18 +24,20 @@
       <td>
         <a href="{{ each.id }}/">{{ each }}</a><br>
       </td>
-      <td>
-        {% for funder in each.funders %}
-          {{ funder }}
-        {% endfor %}
-      </td>
-      <td class="text-nowrap" data-sort="{{ each.meta_data.budget }}">
-      {% if each.meta_data.budget_currency %}
-        &euro;
-      {% else %}
-        {{ each.meta_data.budget_currency }}
+      {% if PROJECT.slug != "islands" %}
+        <td>
+          {% for funder in each.funders %}
+            {{ funder }}
+          {% endfor %}
+        </td>
+        <td class="text-nowrap" data-sort="{{ each.meta_data.budget }}">
+        {% if each.meta_data.budget_currency %}
+          &euro;
+        {% else %}
+          {{ each.meta_data.budget_currency }}
+        {% endif %}
+        {{ each.meta_data.budget|floatformat:0|intcomma }}</td>
       {% endif %}
-      {{ each.meta_data.budget|floatformat:0|intcomma }}</td>
       <td class="text-nowrap" data-sort="{{ each.start_date|date:"Ymd" }}">{{ each.get_dates_months|default_if_none:"" }}</td>
     </tr>
   {% endfor %}
