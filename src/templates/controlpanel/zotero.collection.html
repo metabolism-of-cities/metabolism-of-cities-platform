@@ -8,8 +8,8 @@
     Back
   </a>
 
-  {% if not request.GET.matches %}
-    <p><a class="btn btn-warning" href="./?match=true">Check for matches</a></p>
+  {% if not request.GET.match %}
+    <p><a class="btn btn-warning" href="./?match=true"><i class="fa fa-random"></i> Check for matches</a></p>
   {% else %}
     <div class="alert alert-warning">Match check was performed, see results below...</div>
   {% endif %}
