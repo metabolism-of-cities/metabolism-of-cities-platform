@@ -159,6 +159,15 @@ class Tag(models.Model):
         else:
             return self.name
 
+    @property
+    def fullname(self):
+        "Returns full name without abbreviation -- text between parenthesis -- if there is any"
+        if "(" in self.name:
+            s = self.name
+            return s[0:s.find("(")-1]
+        else:
+            return self.name
+
     class Meta:
         ordering = ["name"]
 
@@ -1925,6 +1934,24 @@ class ZoteroItem(models.Model):
             return check[0]
         else:
             return None
+
+    def findTags(self):
+        tags = Tag.objects.filter(parent_tag__parent_tag_id=792)
+        hits = []
+        for each in tags:
+            if each.fullname in self.title:
+                hits.append(each)
+            elif "abstractNote" in self.data and each.fullname in self.data["abstractNote"]:
+                hits.append(each)
+        return hits
+
+    def findSpaces(self):
+        spaces = ActivatedSpace.objects.all()
+        hits = []
+        for each in spaces:
+            if each.space.name in self.title:
+                hits.append(each)
+        return hits
 
 # This is the format to use from now on
 # Note that there is a uid primary key, separate from the record_id

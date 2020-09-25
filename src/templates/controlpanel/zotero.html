@@ -8,30 +8,18 @@
     Back to control panel
   </a>
 
-  <div>
-    {% if not api_key %}
-      <code>No API key found!</code>
-    {% endif %}
-  </div>
-
   <table class="table table-striped">
     <thead>
       <tr>
         <th>Title</th>
-        <th>Author(s)</th>
-        <th>Year</th>
-        <th>Key</th>
+        <th>Zotero ID</th>
       </tr>
     </thead>
     <tbody>
     {% for each in list %}
       <tr>
-        <td>{{ each.data.title }}</td>
-        <td>{{ each.data.authors }}</td>
-        <td>
-          {{ each.data.hit }}
-        </td>
-        <td>{{ each.data.key }}</td>
+        <td><a href="{{ each.pk }}/">{{ each }}</a></td>
+        <td>{{ each.zotero_id }}</td>
       </tr>
     {% endfor %}
     </tbody>

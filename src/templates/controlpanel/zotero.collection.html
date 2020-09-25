@@ -1,0 +1,55 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1 class="mb-0">{% block title %}{{ info }}{% endblock %}</h1>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back
+  </a>
+
+  {% if not request.GET.matches %}
+    <p><a class="btn btn-warning" href="./?match=true">Check for matches</a></p>
+  {% else %}
+    <div class="alert alert-warning">Match check was performed, see results below...</div>
+  {% endif %}
+
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        {% if request.GET.match %}
+          <th>Matches</th>
+        {% else %}
+          <th>Import date</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in list %}
+      <tr>
+        <td>{{ each.key }}</td>
+        <td>{{ each.title }}</td>
+        {% if request.GET.match %}
+          <td>
+            {% for tag in each.findTags %}
+              <span class="badge badge-info">
+                {{ tag }}
+              </span>
+            {% endfor %}
+            {% for space in each.findSpaces %}
+              <span class="badge badge-primary">
+                {{ space }}
+              </span>
+            {% endfor %}
+          </td>
+        {% else %}
+          <td>{{ each.date_created }}</td>
+        {% endif %}
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

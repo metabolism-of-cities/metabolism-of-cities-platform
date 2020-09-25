@@ -780,47 +780,31 @@ def controlpanel_zotero(request):
     if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
-    from pyzotero import zotero
     project = Project.objects.get(pk=request.project)
     
     # Let's see which Zotero collections this project has access to
-    permissions = None
     #21
-
-    zotero_api_key = project.meta_data.get("zotero_api_key")
-    zotero_id = project.meta_data.get("zotero_id")
-
-    zot = zotero.Zotero(zotero_id, "group", zotero_api_key)
-    list = zot.top(limit=5)
-    # we've retrieved the latest five top-level items in our library
-    # we can print each item's item type and ID
-    for each in list:
-        info = None
-        key = each["data"].get("key")
-        title = each["data"].get("title")
-        doi = each["data"].get("DOI")
-        isbn = each["data"].get("ISBN")
-        check = LibraryItem.objects.filter(Q(name=title)|Q(meta_data__zotero_key=key))
-        if not check and doi:
-            check = LibraryItem.objects.filter(doi=doi)
-        elif not check and isbn:
-            check = LibraryItem.objects.filter(isbn=isbn)
-        if check:
-            info = check[0]
-            each["data"]["hit"] = info
-        if not info:
-            info = LibraryItem.objects.create(
-                name = title,
-                doi = doi,
-                isbn = isbn,
-                description = each["data"].get("abstractNote"),
-            )
+    list = ZoteroCollection.objects.filter(part_of_project=project)
 
     context = {
-        "api_key": zotero_api_key,
         "list": list,
     }
     return render(request, "controlpanel/zotero.html", context)
+
+@login_required
+def controlpanel_zotero_collection(request, id):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    project = Project.objects.get(pk=request.project)
+    info = ZoteroCollection.objects.get(pk=id, part_of_project=project)
+
+    context = {
+        "info": info,
+        "list": ZoteroItem.objects.filter(collection=info),
+        "load_datatables": True,
+    }
+    return render(request, "controlpanel/zotero.collection.html", context)
 
 @login_required
 def controlpanel_tags(request):
