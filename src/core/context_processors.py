@@ -18,7 +18,7 @@ def site(request):
     is_data_portal = False
 
     if hasattr(request, "project"):
-        project = Project.objects.get(pk=request.project)
+        project = Project.objects_unfiltered.get(pk=request.project)
     else:
         project = Project.objects.get(pk=1)
 

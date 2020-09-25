@@ -1,7 +1,8 @@
 Example: new project called stocks
 
 sudo docker exec -it moc_web python manage.py startapp stocks
-remove models.py file and migrations directory
+chown -R user:user src/stocks (otherwise owned by root)
+remove models.py file and migrations directory and admin.py file
 
 Then copy a URLs file and put in the directory
 Edit the urls and put
@@ -11,7 +12,7 @@ Adjust the URLs to suit your needs
 
 ------------------
 
-In the admin section, add a new project and enter the details
+In the admin section, add a new project and enter the details, and add a project design.
 Under slug, enter the word to use as subdomain/subfolder, eg 'stocks'
 In settings.py > PROJECT_ID_LIST add the id and slug
 Add it under PROJECT_LIST as well

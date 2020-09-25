@@ -14,7 +14,6 @@ from functools import wraps
 from django.views.decorators.clickjacking import xframe_options_exempt
 from core.mocfunctions import *
 
-
 def index(request):
     list = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)[:3]
     project = get_object_or_404(Project, pk=request.project)
