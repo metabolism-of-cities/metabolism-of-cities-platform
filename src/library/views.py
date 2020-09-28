@@ -212,6 +212,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     if data_section_type:
         submenu = "library"
 
+    project = get_object_or_404(Project, pk=request.project)
     info = get_object_or_404(LibraryItem, pk=id)
     section = "library"
 
@@ -256,6 +257,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         "space": space,
         "layer": layer,
         "submenu": submenu,
+        "url_processing": project.slug + ":hub_processing_gis",
 
         # The following we'll only have during the AScUS voting round; remove afterwards
         "best_vote": RecordRelationship.objects.filter(relationship_id=32, record_parent=request.user.people) if request.user.is_authenticated else None,

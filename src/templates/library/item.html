@@ -354,6 +354,9 @@
             <h3 class="mt-4">Preview</h3>
             {% if info.get_shapefile_plot %}
               <img src="{{ info.get_shapefile_plot }}" alt="" />
+              {% if IS_DATA_PORTAL %}
+                <p><a href="{% url url_processing info.id %}" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> Process this shapefile</a></p>
+              {% endif %}
             {% else %}
               <p><em>There is no preview plot available.</em></p>
               {% if info.meta_data.shapefile_plot_error %}
@@ -361,7 +364,7 @@
               {% endif %}
             {% endif %}
             {% if curator and not info.get_shapefile_plot or DEBUG %}
-              <br><a href="?create_shapefile_plot=true">Create preview map now.</a>
+              <a href="?create_shapefile_plot=true" class="btn btn-default-outline"><i class="fa fa-image"></i> Create preview map now.</a>
             {% endif %}
           {% endif %}
         {% endif %}
