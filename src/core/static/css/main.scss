@@ -1279,6 +1279,7 @@ table.fancytree-container .fancytree-active > td {
 // TABLE
 table thead th {
   background-color: $light;
+
 }
 
 @media (min-width: 992px) {
@@ -3117,15 +3118,26 @@ body.volunteer.portal.latest {
     height: .5rem;
   }
 }
+
 .resource-list {
-  .year {
+  table {
+    table-layout: fixed;
+  }
+
+  td,
+  th {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  th:not(.title),
+  td:not(.title) {
     width: 100px;
   }
-  .author {
+
+  th.author,
+  td.author {
     width: 200px;
-  }
-  .author .text-truncate {
-    max-width: 200px;
-    display: inline-block;
   }
 }
