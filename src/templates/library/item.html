@@ -33,7 +33,7 @@
       .main-content .container {
         opacity:0.3;
       }
-    {% endif %} 
+    {% endif %}
   </style>
 {% endblock %}
 
@@ -55,9 +55,11 @@
             <img src="{{ info.publisher.image.url }}" class="journal mt-4">
           </a>
         {% else %}
-          <span class="largeicon">
-            <i class="fal fa-{{ info.type.icon }}"></i>
-          </span>
+          <div class="p-4 bg-light rounded border">
+            <span class="largeicon">
+              <i class="fal fa-{{ info.type.icon }}"></i>
+            </span>
+          </div>
         {% endif %}
 
         {% if info.file %}
@@ -191,7 +193,7 @@
             <div class="card">
               <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                  <i class="far fa-fw fa-user-edit mb-1 mr-1" aria-hidden="true"></i> 
+                  <i class="far fa-fw fa-user-edit mb-1 mr-1" aria-hidden="true"></i>
                   <strong>
                   Author(s)
                   </strong>
@@ -409,7 +411,7 @@
         {% if info.is_part_of %}
           <h3 class="mt-5">Original source</h3>
           <p>
-            This is part of the following item: 
+            This is part of the following item:
             <a href="../{{ info.is_part_of.id }}/">{{ info.is_part_of }}</a>
           </p>
         {% endif %}
@@ -447,8 +449,12 @@
           {% include "_messages.html" %}
         </div>
         {% endif %}
-        
-        <div class="mt-4"><a href="javascript:history.back()" class="btn btn-default-outline">&laquo; Back</a></div>
+
+        <div class="mt-4">
+          <a href="javascript:history.back()" class="btn btn-primary">
+            <i class="fa fa-arrow-left"></i> Back
+          </a>
+        </div>
       </div>
     </div>
   </div>

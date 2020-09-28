@@ -5,15 +5,12 @@
 
 {% block content %}
 
-<h3>
-  <i class="fa fa-fw fa-{{ layer.icon }}"></i>
-  {{ layer }}
-</h3>
+<h3><i class="fa fa-fw fa-{{ layer.icon }} mr-2"></i> {{ layer }}</h3>
 
 {% if empty_page %}
 
-  <div class="alert alert-dark text-center p-5 mb-0">
-    <h2 class="pt-5 pb-5">
+  <div class="alert alert-dark text-center p-4">
+    <h2 class="py-4 m-0">
     <i class="fa fa-exclamation-triangle"></i><br>
       There are no items available yet.
     </h2>
@@ -25,7 +22,7 @@
 
     {% if list|get_item:each.id %}
 
-      <h4 class="h5 mt-5">{{ each }}</h4>
+      <h4 class="mt-5">{{ each }}</h4>
 
       {% with items=list|get_item:each.id %}
         {% include "_library.list.html" %}

@@ -88,7 +88,7 @@
           <h5 class="card-title">{{ space }}</h5>
           <h6 class="card-subtitle mb-2 text-muted">{{ space.country }}</h6>
           <p class="card-text">
-            This is the data dashboard for {{ space }}. This is a work in progress, and you can help! 
+            This is the data dashboard for {{ space }}. This is a work in progress, and you can help!
           </p>
           <a href="https://data.metabolismofcities.org/news/new-metabolism-of-cities-data-hub-launched/" class="btn btn-primary">Learn more</a>
         </div>
@@ -150,12 +150,12 @@
       <a class="btn-icon" href="{{ each.slug }}/">
         <h5 class="text-truncate"><i class="fal mr-2 fa-{{ each.icon }} fa-fw"></i> {{ each.get_name_after_colon }}</h5>
         <div class="progress">
-          <div 
-            class="progress-bar bg-success" 
-            role="progressbar" 
-            style="width: calc({% if space.get_counter %}{{ space.get_counter|get_item:each.id }}{% else %}0{% endif %}/{{ layers_count|get_item:each.id }}*100%)" 
-            aria-valuenow="{% if space.get_counter %}{{ space.get_counter|get_item:each.id }}{% else %}0{% endif %}" 
-            aria-valuemin="0" 
+          <div
+            class="progress-bar bg-success"
+            role="progressbar"
+            style="width: calc({% if space.get_counter %}{{ space.get_counter|get_item:each.id }}{% else %}0{% endif %}/{{ layers_count|get_item:each.id }}*100%)"
+            aria-valuenow="{% if space.get_counter %}{{ space.get_counter|get_item:each.id }}{% else %}0{% endif %}"
+            aria-valuemin="0"
             aria-valuemax="6">
           </div>
         </div>
