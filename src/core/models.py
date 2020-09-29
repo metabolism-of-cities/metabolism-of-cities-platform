@@ -1541,6 +1541,7 @@ class ReferenceSpace(Record):
     slug = models.CharField(max_length=255, null=True)
     location = models.ForeignKey("ReferenceSpaceLocation", on_delete=models.SET_NULL, null=True, blank=True)
     geocodes = models.ManyToManyField(Geocode, through="ReferenceSpaceGeocode")
+    geometry = models.GeometryField(null=True, blank=True)
 
     def __str__(self):
         return self.name

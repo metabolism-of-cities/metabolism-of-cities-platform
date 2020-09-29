@@ -40,6 +40,19 @@ def index(request):
         "show_project_design": True,
         "show_relationship": THIS_PROJECT,
     }
+    if request.user.id == 1:
+        a = ReferenceSpaceLocation.objects.all()
+        for each in a:
+            info = each.space
+            if info.geometry:
+                p("Already exists!!")
+                print(info.id)
+                print(each)
+                print(info)
+                p("NEXT")
+            else:
+                info.geometry = each.geometry
+                info.save()
     return render(request, "staf/index.html", context)
 
 def review_articles(request):
