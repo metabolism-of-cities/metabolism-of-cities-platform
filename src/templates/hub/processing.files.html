@@ -1,0 +1,79 @@
+{% extends "_base.html" %}
+{% load bootstrap4 %}
+{% block page_name %}staf review session{% endblock %}
+
+{% block css %}
+  <style type="text/css">
+    {% if error %}
+      .top-message-box{display:none}
+    {% endif %}
+    #startbox{display:none}
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  {% include "hub/_nav.html" %}
+
+  <section class="row">
+    <div class="col-lg-8 mb-4 mb-lg-0">
+      <div class="card card-table mb-4 p-3">
+
+          <form method="post" enctype="multipart/form-data">
+
+          <h2>Modify files</h2>
+            
+          {% csrf_token %}
+
+          <div class="form-group">
+            <label>File(s)</label>
+            <input type="file" name="files" multiple class="form-control" />
+          </div>
+          {% if document.attachments.all %}
+            <div>
+              <p>Existing files:</p>
+              <ul class="list-unstyled">
+              {% for each in document.attachments.all %}
+                <li>
+                  <label class="mr-4">
+                    <input type="checkbox" name="delete_file" value="{{ each.id }}">
+                    Delete
+                  </label>
+                  <a href="{{ each.file.url }}">
+                  {{ each }}
+                  </a>
+                </li>
+              {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+
+        {% buttons %}
+          <button type="submit" class="btn btn-success">
+            <i class="fa fa-save"></i>
+            Save and go to step 2
+          </button>
+        {% endbuttons %}
+
+        <input type="hidden" name="updatefiles" value="true" />
+
+      </form>
+
+      </div>
+
+    </div>
+
+    <div class="col-lg-4">
+      {% include "hub/_processing.gis.menu.html" %}
+    </div>
+
+  </section>
+
+  <section>
+
+    <h2>History and comments</h2>
+    {% include "_messages.html" %}
+
+  </section>
+
+{% endblock %}

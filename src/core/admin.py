@@ -167,12 +167,9 @@ class PublicProjectAdmin(SearchCompleteAdmin):
     list_display = ["name", "start_date", "status"]
 
 class ReferenceSpaceAdmin(SearchAdmin):
-    list_display = ["name", "location_date", "is_deleted"]
+    list_display = ["name", "is_deleted"]
     search_fields = ["name"]
-    autocomplete_fields = ["location"]
     exclude = ["slug"]
-    def location_date(self, obj):
-        return obj.location.start if obj.location else None
 
 class LibraryAdmin(SearchCompleteAdmin):
     list_filter = ["status", "type", "year"]
@@ -193,11 +190,6 @@ class SpaceAdmin(admin.ModelAdmin):
     search_fields = ["space__name"]
     autocomplete_fields = ["space"]
     exclude = ["slug"]
-
-class LocationAdmin(admin.OSMGeoAdmin):
-    search_fields = ["referencespace__name"]
-    autocomplete_fields = ["space"]
-    num_zoom = 1
 
 class RecordRelationshipAdmin(admin.ModelAdmin):
     search_fields = ["record_parent__name", "record_child__name"]
@@ -357,7 +349,6 @@ admin_site.register(CronJobLog, CronJobLogAdmin)
 admin_site.register(GeocodeScheme)
 admin_site.register(Geocode, GeocodeAdmin)
 admin_site.register(ReferenceSpace, ReferenceSpaceAdmin)
-admin_site.register(ReferenceSpaceLocation, LocationAdmin)
 admin_site.register(ReferenceSpaceGeocode)
 admin_site.register(Sector, SearchAdmin)
 #admin_site.register(DataArticle, SearchAdmin)

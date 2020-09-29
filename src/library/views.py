@@ -18,6 +18,9 @@ from django.db.models import Q
 
 from core.mocfunctions import *
 
+#from folium import Map
+import folium
+
 THIS_PROJECT = PROJECT_ID["library"]
 
 def index(request):
@@ -236,13 +239,31 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         info.create_shapefile_plot()
         messages.success(request, "We have tried generating the plot. If no image appears, there is an issue with the shapefile.")
 
-    spaces = info.reference_spaces()
-
     if "reload" in request.GET and request.user.is_superuser:
         # Temporary solution to re-resize the thumbnails that are too small
         from django.core.files.uploadedfile import UploadedFile
         info.image = UploadedFile(file=open(info.image.path, "rb"))
         info.save()
+
+    spaces = info.imported_spaces.all()
+    if spaces.count() > 20:
+        spaces = spaces[:20]
+
+    map = None
+    if spaces:
+        # Quick hack, we simply get the centroid of the first space
+        # and use that to position the map. Ideally we want to just use fitBounds
+        centroid = spaces[0].geometry.centroid
+        map = folium.Map(
+            location=[centroid[1], centroid[0]],
+            zoom_start=10
+        )
+
+        for each in spaces:
+            folium.GeoJson(
+                each.geometry.geojson,
+                name="geojson"
+            ).add_to(map)
 
     context = {
         "info": info,
@@ -258,6 +279,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         "layer": layer,
         "submenu": submenu,
         "url_processing": project.slug + ":hub_processing_gis",
+        "map": map._repr_html_() if map else None,
 
         # The following we'll only have during the AScUS voting round; remove afterwards
         "best_vote": RecordRelationship.objects.filter(relationship_id=32, record_parent=request.user.people) if request.user.is_authenticated else None,

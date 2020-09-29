@@ -4,19 +4,20 @@
 {% block page_name %}staf review session{% endblock %}
 
 {% block css %}
-  {% if error %}
-    <style type="text/css">
-    .top-message-box{display:none}
-    </style>
-  {% endif %}
+  <style type="text/css">
+    {% if error %}
+      .top-message-box{display:none}
+    {% endif %}
+    #startbox{display:none}
+  </style>
 {% endblock %}
 
 {% block content %}
 
   {% include "hub/_nav.html" %}
 
-  <section class="row">
-    <div class="col-lg-8 mb-4 mb-lg-0">
+  <section class="row pb-0">
+    <div class="col-lg-8 mb-2 mb-lg-0">
       <div class="card card-table mb-4">
         {% if error %}
           <div class="alert alert-dark text-center p-5 mb-0">
@@ -125,8 +126,6 @@
           View raw data
         </div>
 
-        <a class="btn btn-primary-basic" href="edit/?next={{ request.get_full_path }}"><i class="fa fa-fw fa-pencil"></i> Edit</a>
-
         <pre class="alert alert-light mt-2 mb-0" id="raw">
           {{ layer.srs }}
         </pre>
@@ -135,63 +134,14 @@
     </div>
 
     <div class="col-lg-4">
-
-      <div class="card mb-4">
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item table-item">
-            <div><i class="fal fa-fw fa-fingerprint mr-1"></i> ID</div>
-            <div><a href="{% url URLS.LIBRARY_ITEM document.id %}">{{ document.id }}</a></div>
-          </li>
-          <li class="list-group-item table-item">
-            <div><i class="fal fa-fw fa-user mr-1"></i> Uploaded by</div>
-            <div>{{ document.uploader }}</div>
-          </li>
-          <li class="list-group-item table-item">
-            <div><i class="fal fa-fw fa-box mr-1"></i> Type</div>
-            <div>{{ layer.geom_type.name }}</div>
-          </li>
-          <li class="list-group-item table-item">
-            <div><i class="fal fa-fw fa-layer-group mr-1"></i> Properties</div>
-            <div>{{ layer.num_fields }}</div>
-          </li>
-          <li class="list-group-item table-item">
-            <div><i class="far fa-fw fa-dot-circle mr-1"></i> Items</div>
-            <div>{{ layer.num_feat }}</div>
-          </li>
-          {% if work.assigned_to %}
-            <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-user-check mr-1"></i> Assigned to</div>
-              <div>{{ work.assigned_to }}</div>
-            </li>
-          {% endif %}
-        </ul>
-      </div>
-
-      <form method="post">
-        {% if not work.assigned_to %}
-          <button type="submit" name="start_work" value="true" class="btn btn-primary">
-            <i class="fas fa-user-plus"></i>
-            Start working on this
-          </button>
-        {% elif work.assigned_to == request.user.people %}
-          <button type="submit" name="stop_work" value="true" class="btn btn-warning">
-            <i class="fas fa-user-times"></i>
-            Stop working on this
-          </button>
-          <a href="edit/?next={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
-        {% endif %}
-        {% csrf_token %}
-      </form>
-      <a href="../" class="btn btn-primary-basic mt-4">
-        <i class="fal fa-angle-left"></i>
-        Back to overview
-      </a>
+      {% include "hub/_processing.gis.menu.html" %}
     </div>
+
   </section>
 
   {% if not error %}
     <section id="contentsection">
-      <h3 class="mt-4">Shapefile content</h3>
+      <h3>Shapefile content</h3>
       {% if layer.num_feat > 100 %}
         <div class="alert alert-primary">
           <i class="fal fa-info-circle mr-1"></i>
@@ -219,51 +169,6 @@
         </tbody>
       </table>
 
-      <h3 class="mt-4">Identify columns</h3>
-      <div class="alert alert-danger alert-identify">
-        <i class="fas fa-exclamation-triangle mr-2"></i>
-        You must tell the system which column contains the <em>names</em> of the reference spaces.
-      </div>
-
-      <form id="identify-columns" method="post" action="?classify=true">
-        <div class="form-row">
-          <div class="col-md-4 col-lg-3 mb-4">
-            <label class="category mb-0">Name</label>
-            <select class="custom-select{% if not document.meta_data.columns.name %} unidentified{% endif %}" name="classify_name">
-              <option value="none" selected disabled>Name</option>
-              {% for field in layer.fields %}
-                <option value="{{ field }}" {% if document.meta_data.columns.name == field %}selected{% endif %}>{{ field }}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="col-md-4 col-lg-3">
-            <label class="category mb-0">Identifier</label>
-            <select class="custom-select{% if not document.meta_data.columns.identifier %} unidentified{% endif %}" name="identifier">
-              <option value="none" selected disabled>Identifier</option>
-              {% for field in layer.fields %}
-                <option value="{{ field }}" {% if document.meta_data.columns.identifier == field %}selected{% endif %}>{{ field }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Reference space classification(s)</label>
-          <select class="form-control select2" multiple required name="geocodes">
-            <option></option>
-            {% for each in geocodes %}
-              <option value="{{ each.id }}" {% if each in active_geocodes %}selected{% endif %}>{{ each.name }} - {{ each.scheme }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        {% csrf_token %}
-      </form>
-
-      <button class="btn disabled save btn-success" disabled form="identify-columns">
-        <i class="fas fa-save"></i>
-        Save and next
-      </button>
     </section>
 
   {% endif %}
@@ -284,64 +189,9 @@
       $("i", this).toggleClass("fa-angle-down, fa-angle-up")
       $("#raw").toggle();
     });
-
-    // checking how many columns need a type
-    function checkColumns() {
-      $("#identify-columns select").each(function() {
-        if ($(this).val()) {
-          $(this).removeClass("unidentified").addClass("is-valid");
-        }
-      });
-
-      let unidentifiedCount = $("#identify-columns select.unidentified").length;
-      console.log(unidentifiedCount);
-
-      $("#unidentified-columns-count").text(unidentifiedCount)
-
-      if (unidentifiedCount != 0 && $("select[name='classify_name']").hasClass("is-valid")) {
-        let alert = $(".alert-identify");
-
-        alert
-          .addClass("alert-primary")
-          .removeClass("alert-danger")
-          .html("<i class='fal fa-info-circle mr-1'></i> You have selected a name and can continue to the next step. However, there are still unselected identifiers")
-
-        $(".btn.save").removeClass("disabled");
-        $(".btn.save").removeAttr("disabled");
-      } else if (unidentifiedCount == 0) {
-        let alert = $(".alert-identify");
-
-        alert
-          .addClass("alert-success")
-          .removeClass("alert-danger alert-primary")
-          .html("<i class='fal fa-check-circle mr-1'></i> You have identified all columns. Please continue to the next step")
-
-        $(".btn.save").removeClass("disabled");
-        $(".btn.save").removeAttr("disabled");
-      }
-    }
-
-    // what happens when a column is identified
-    $("#identify-columns select").change(function() {
-      $(this).removeClass("is-invalid unidentified");
-      $(this).addClass("is-valid");
-
-      checkColumns()
-
-      // check all select values to prevent duplicates
-      $("#identify-columns select option").removeAttr("hidden")
-      $("#identify-columns select option[value='none']").attr("hidden", "hidden")
-
-      $("#identify-columns select").each(function() {
-        let columnValue = $(this).val();
-
-        if (columnValue) {
-          $("#identify-columns select option[value='" + columnValue + "']").attr("hidden", "hidden")
-        }
-      })
-    })
-
-    // check unidentified columns on page load
-    checkColumns();
+    $("#showstart").click(function(){
+      $(this).hide();
+      $("#startbox").show();
+    });
   </script>
 {% endblock %}

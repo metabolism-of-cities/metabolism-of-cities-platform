@@ -39,7 +39,7 @@
 
 {% block content %}
 
-  {% if spaces %}
+  {% if spaces and False %}
     <section class="fullwidth-wrapper">
       <div class="container">
         <iframe class="dataset card" src="{% url "data:dataset" info.id %}" onload="resizeIframe(this)"></iframe>
@@ -331,7 +331,14 @@
               <div class="text-center mt-3 mb-2"><a href="?edit&amp;return={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a></div>
             {% endif %}
             {% if curator %}
-              <div class="text-center mt-3 mb-2"><a onclick="javascript:return confirm('Are you sure?')" href="?delete&amp;return={{ request.get_full_path }}" class="btn btn-danger"><i class="fa fa-trash-alt"></i> Delete</a></div>
+              {% if IS_DATA_PORTAL %}
+                <div class="text-center mt-3 mb-3">
+                  <a href="{% url url_processing info.id %}" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> Process this shapefile</a>
+                </div>
+              {% endif %}
+              <div class="text-center mt-3 mb-2">
+                <a onclick="javascript:return confirm('Are you sure?')" href="?delete&amp;return={{ request.get_full_path }}" class="btn btn-danger"><i class="fa fa-trash-alt"></i> Delete</a>
+              </div>
             {% endif %}
           {% endif %}
 
@@ -352,13 +359,10 @@
           {% endfor %}
           </ul>
 
-          {% if info.type.name == "Shapefile" %}
+          {% if info.type.name == "Shapefile" and not map %}
             <h3 class="mt-4">Preview</h3>
             {% if info.get_shapefile_plot %}
               <img src="{{ info.get_shapefile_plot }}" alt="" />
-              {% if IS_DATA_PORTAL %}
-                <p><a href="{% url url_processing info.id %}" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> Process this shapefile</a></p>
-              {% endif %}
             {% else %}
               <p><em>There is no preview plot available.</em></p>
               {% if info.meta_data.shapefile_plot_error %}
@@ -438,14 +442,29 @@
           </div>
         {% endif %}
 
+        {% if map %}
+          <h3>Map</h3>
+          {{ map|safe }}
+        {% endif %}
+
         {% if info.spaces.all %}
-          <h3 class="mt-5">Reference spaces</h3>
+          <h3 class="mt-5">Associated space(s)</h3>
           <ul>
           {% for each in info.spaces.all %}
             <li>{{ each }}</li>
           {% endfor %}
           </ul>
         {% endif %}
+
+        {% if spaces %}
+          <h3 class="mt-5">Part of this shapefile</h3>
+          <ul>
+          {% for each in spaces %}
+            <li><a href="{% url URLS.SPACE each.id %}">{{ each }}</a></li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+          
 
         {% if PROJECT.slug == "ascus" %}
         <div class="mt-5">

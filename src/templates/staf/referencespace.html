@@ -45,12 +45,27 @@
       <dt class="col-sm-3">Description</dt>
       <dd class="col-sm-9">{{ info.get_description }}</dd>
     {% endif %}
+
+    {% if info.source %}
+      <dt class="col-sm-3">Source document</dt>
+      <dd class="col-sm-9"><a href="{% url URLS.LIBRARY_ITEM info.source.id %}">{{ info.source }}</a></dd>
+    {% endif %}
     
     </dd>
 
   </dl>
 
-  {% if location %}
+  {% if info.meta_data.features %}
+    <h2>Features</h2>
+    <dl class="row">
+      {% for key,value in info.meta_data.features.items %}
+        <dt class="col-sm-3">{{ key }}</dt>
+        <dd class="col-sm-9">{{ value }}</dd>
+      {% endfor %}
+    </dl>
+  {% endif %}
+
+  {% if info.geometry %}
   <h2>Location</h2>
     <div id="map" class="leaflet-map"></div>
       <table class="table table-bordered datatable">
@@ -104,7 +119,7 @@
       layer.bindPopup(popupContent);
     }
 
-    geojsonlayer = L.geoJSON({{ location.geometry.geojson|safe }}, {
+    geojsonlayer = L.geoJSON({{ info.geometry.geojson|safe }}, {
       style: function (geometries) {
         return geometries.properties && geometries.properties.style;
       },

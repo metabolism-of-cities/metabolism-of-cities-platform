@@ -61,6 +61,9 @@ from django.db.models import Q
 # For the regular extpression replacement in Data Articles
 import re
 
+# For our shapefile work
+from django.contrib.gis.gdal import DataSource
+
 def get_date_range(start, end, months_only=False):
 
     if start and not end and months_only:
@@ -1057,9 +1060,6 @@ class LibraryItem(Record):
     def get_full_citation(self):
         return mark_safe("<em>" + self.name + "</em>, " + self.get_author_citation() + ", " + str(self.year))
         
-    def reference_spaces(self):
-        return ReferenceSpace.objects.filter(child_list__record_parent=self, child_list__relationship_id=30)
-
     def embed(self):
         if "ted" in self.url:
             try:
@@ -1082,9 +1082,44 @@ class LibraryItem(Record):
         except:
             return None
 
-    objects_unfiltered = models.Manager()
-    objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
+    def convert_shapefile(self):
+
+        check = ReferenceSpace.objects.filter(source=self)
+        if check:
+            check.delete()
+
+        from django.contrib.gis.gdal import OGRGeometry
+        layer = self.get_gis_layer()
+        fields = layer.fields
+
+        count = 0
+        for each in layer:
+            count += 1
+            meta_data = {}
+            
+            # We'll get all the properties and we store this in the meta data of the new object
+            for f in fields:
+                # We can't save datetime objects in json, so if it's a datetime then we convert to string
+                meta_data[f] = str(each.get(f)) if isinstance(each.get(f), datetime.date) else each.get(f)
+
+            name = str(each.get(self.meta_data["columns"]["name"]))
+            geo = each.geom
+
+            # We use WGS 84 as coordinate reference system, so we gotta convert to that
+            geo.transform(4326)
+            geo = geo.wkt
+
+            space = ReferenceSpace.objects.create(
+                name = name,
+                geometry = geo,
+                source = self,
+                meta_data = {"features": meta_data},
+            )
+            # Limit to 20 for now, while we debug and test
+            if count == 20:
+                return True
+
+        return True
 
     def create_shapefile_plot(self):
         if not self.meta_data:
@@ -1117,6 +1152,17 @@ class LibraryItem(Record):
             self.meta_data["shapefile_plot_error"] = str(e)
             self.save()
 
+    def get_gis_layer(self):
+        # Here we try to get the .shp file and load it as a gdal layer
+        try:
+            file = self.attachments.filter(file__iendswith=".shp")
+            file = file[0]
+            filename = settings.MEDIA_ROOT + "/" + file.file.name
+            datasource = DataSource(filename)
+            return datasource[0]
+        except:
+            return None
+
     def save(self, *args, **kwargs):
         if self.doi:
             try:
@@ -1126,6 +1172,10 @@ class LibraryItem(Record):
             except:
                 pass
         super(LibraryItem, self).save(*args, **kwargs)
+
+    objects_unfiltered = models.Manager()
+    objects_include_private = PrivateRecordManager()
+    objects = PublicActiveRecordManager()
 
 class Video(LibraryItem):
     embed_code = models.CharField(max_length=20, null=True, blank=True)
@@ -1538,17 +1588,19 @@ class Geocode(Record):
 
 # The reference space, for instance the country "South Africa", the city "Cape Town", or the postal code 8000
 class ReferenceSpace(Record):
-    slug = models.CharField(max_length=255, null=True)
-    location = models.ForeignKey("ReferenceSpaceLocation", on_delete=models.SET_NULL, null=True, blank=True)
     geocodes = models.ManyToManyField(Geocode, through="ReferenceSpaceGeocode")
     geometry = models.GeometryField(null=True, blank=True)
+    source = models.ForeignKey(LibraryItem, on_delete=models.CASCADE, null=True, blank=True, related_name="imported_spaces")
 
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        self.slug = slugify(unidecode(self.name))
-        super().save(*args, **kwargs)
+    # Let's bring back slug as a field, but make it nullable and only set when activating a space
+    # TODO
+
+    @property
+    def slug(self):
+        return slugify(unidecode(self.name))
 
     @property
     def is_city(self):
@@ -1590,21 +1642,6 @@ class ReferenceSpace(Record):
     class Meta:
         db_table = "stafdb_referencespace"
         ordering = ["name"]
-
-class ReferenceSpaceLocation(models.Model):
-    space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE)
-    description = models.TextField(null=True, blank=True)
-    start = models.DateField(null=True, blank=True, db_index=True)
-    end = models.DateField(null=True, blank=True, db_index=True)
-    geometry = models.GeometryField()
-    is_deleted = models.BooleanField(default=False, db_index=True)
-
-    def __str__(self):
-        return "Location for " + self.space.name
-
-    class Meta:
-        db_table = "stafdb_referencespace_location"
-        ordering = ["-start"]
 
 class ReferenceSpaceGeocode(models.Model):
     geocode = models.ForeignKey(Geocode, on_delete=models.CASCADE)

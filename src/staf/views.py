@@ -40,19 +40,6 @@ def index(request):
         "show_project_design": True,
         "show_relationship": THIS_PROJECT,
     }
-    if request.user.id == 1:
-        a = ReferenceSpaceLocation.objects.all()
-        for each in a:
-            info = each.space
-            if info.geometry:
-                p("Already exists!!")
-                print(info.id)
-                print(each)
-                print(info)
-                p("NEXT")
-            else:
-                info.geometry = each.geometry
-                info.save()
     return render(request, "staf/index.html", context)
 
 def review_articles(request):
@@ -475,12 +462,11 @@ def referencespace(request, id=None, space=None, slug=None):
         info = get_object_or_404(ReferenceSpace, slug=slug)
     this_location = None
     inside_the_space = None
-    if info.location:
-        this_location = info.location.geometry
-        inside_the_space = ReferenceSpace.objects.filter(location__geometry__contained=this_location).order_by("name").prefetch_related("geocodes").exclude(pk=id)
+    if info.geometry:
+        this_location = info.geometry
+        inside_the_space = ReferenceSpace.objects.filter(geometry__contained=this_location).order_by("name").prefetch_related("geocodes").exclude(pk=id)
     context = {
         "info": info,
-        "location": info.location,
         "inside_the_space": inside_the_space,
         "load_datatables": True,
         "title": info.name,
@@ -1267,7 +1253,7 @@ def hub_processing_gis(request, id, classify=False, space=None):
             if each.people != request.user.people:
                 Notification.objects.create(record=message, people=each.people)
 
-    if "start_work" in request.POST:
+    if "start_work" in request.POST or "start_work_edit" in request.POST:
         try:
             message_description = "Task was assigned to " + str(request.user.people) + " and status was changed: " + work.get_status_display() + " → "
             work.status = Work.WorkStatus.PROGRESS
@@ -1291,26 +1277,14 @@ def hub_processing_gis(request, id, classify=False, space=None):
             for each in work.subscribers.all():
                 if each.people != request.user.people:
                     Notification.objects.create(record=message, people=each.people)
+
+            if "start_work_edit" in request.POST:
+                return redirect(request.POST["start_work_edit"])
+            elif "start_work" in request.POST:
+                return redirect(request.POST["start_work"])
+
         except Exception as e:
             messages.error(request, "Sorry, we could not assign you -- perhaps someone else grabbed this work in the meantime? Otherwise please report this error. <br><strong>Error code: " + str(e) + "</strong>")
-
-
-    if "classify_name" in request.POST:
-        meta_data = document.meta_data
-        if not "columns" in meta_data:
-            meta_data["columns"] = {}
-        meta_data["columns"]["name"] = request.POST.get("classify_name")
-        meta_data["columns"]["identifier"] = request.POST.get("identifier")
-        if not "geocodes" in meta_data:
-            meta_data["geocodes"] = []
-        meta_data["geocodes"] = request.POST.getlist("geocodes")
-        document.meta_data = meta_data 
-        document.save()
-        messages.success(request, "Settings were saved.")
-        if space:
-            return redirect(project.slug + ":hub_processing_gis_classify", id=document.id, space=space.slug)
-        else:
-            return redirect(project.slug + ":hub_processing_gis_classify", id=document.id)
 
     geojson = None
     error = False
@@ -1319,63 +1293,10 @@ def hub_processing_gis(request, id, classify=False, space=None):
     size = None
     geocode = None
 
-    file = document.attachments.filter(file__iendswith=".shp")
-    if not file:
+    layer = document.get_gis_layer()
+    if not layer:
         error = True
         messages.error(request, "No shapefile was found. Make sure a .shp file is included in the uploaded files.")
-    else:
-        try:
-            file = file[0]
-            filename = settings.MEDIA_ROOT + "/" + file.file.name
-
-            from django.contrib.gis.gdal import DataSource
-            datasource = DataSource(filename)
-            layer = datasource[0]
-            size = file.file.size/1024/1024
-            #geocode = Geocode.objects.get(pk=shapefile.meta_data.get("geocode"))
-            
-            if "geojson" in request.GET:
-
-                if layer.srs["SPHEROID"] == "WGS 84":
-                    sf = shapefile.Reader(filename)
-                    shapes = sf.shapes()
-                    geojson = shapes.__geo_interface__
-                    geojson = json.dumps(geojson)
-                    return HttpResponse(geojson, content_type="application/json")
-
-                else:
-                    # If it's not WGS 84 then we need to convert it
-                    feature_collection = {
-                        "type": "FeatureCollection",
-                        "crs": {
-                            "type": "name",
-                            "properties": {"name": "EPSG:4326"}
-                        },
-                        "features": []
-                    }
-
-                    for n in range(datasource.layer_count):
-                        layer = datasource[n]
-                        # Transform the coordinates to epsg:4326
-                        features = map(lambda geom: geom.transform(4326, clone=True), layer.get_geoms())
-                        for feature_i, feature in enumerate(features):
-                            feature_collection['features'].append(
-                                {
-                                    'type': 'Feature',
-                                    'geometry': json.loads(feature.json),
-                                    'properties': {
-                                        'name': f'feature_{feature_i}'
-                                    }
-                                }
-                            )
-                    return HttpResponse(json.dumps(feature_collection), content_type="application/json")
-
-        except Exception as e:
-            messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
-            error = True
-
-    page = "processing.gis.html"
-    list = None
 
     try:
         active_geocodes = Geocode.objects.filter(pk__in=document.meta_data["geocodes"])
@@ -1404,127 +1325,94 @@ def hub_processing_gis(request, id, classify=False, space=None):
         "load_messaging": True,
         "forum_id": work.id if Work else None,
     }
-
-    if classify:
-        page = "processing.gis.classify.html"
-        try:
-
-            names = layer.get_fields(document.meta_data["columns"]["name"])
-            rename_list = {}
-            matches = None
-
-            # If the user reclassified any names, then we need to ALSO search for these names
-            # This seems banana code and I'd like to change it, but I'm not sure how
-            # TODO
-            # It works fine though
-
-            if "matches" in request.POST and request.POST["matches"]:
-                if "," in request.POST["matches"]:
-                    m = request.POST["matches"]
-                    matches = m.split(",")
-                else:
-                    matches = request.POST.getlist("matches")
-                p(matches)
-                for each in matches:
-                    if each:
-                        check = each.split("_")
-                        p(each)
-                        p(check[1])
-                        rename_id = int(check[1])
-                        new = request.POST.get(each)
-                        rename_list[rename_id] = new
-                        count = 0
-                        temp = names
-                        names = []
-                        for name in temp:
-                            count += 1
-                            if count == rename_id:
-                                names.append(new)
-                            else:
-                                names.append(name)
-
-            context["matches"] = matches
-            hits = ReferenceSpace.objects.filter(name__in=names)
-            hit = {}
-            hitlist = {}
-            for each in hits:
-                hit[each.name] = each.id
-                hitlist[each.name] = each
-
-            # Let's check to see if there are duplicates
-            seen = {}
-            duplicates = []
-            empty_name = False
-
-            for name in names:
-                if not name:
-                    empty_name = True
-                else:
-                    if name not in seen:
-                        seen[name] = 1
-                    else:
-                        if seen[name] == 1:
-                            duplicates.append(name)
-                        seen[name] += 1
-
-            if duplicates:
-                error = True
-                duplicates_li = ""
-                for each in duplicates:
-                    duplicates_li += "<li>" + str(each) + "</li>"
-                messages.error(request, "You have duplicates in your list -- please review the source data or the name column selection. Duplicates:<ul>" + duplicates_li + "</ul>")
-
-            if empty_name:
-                error = True
-                messages.error(request, "You have items in the list that do not have a name -- please review the source data or the name column selection.")
-
-            if request.method == "POST" and not error and "save" in request.POST:
-                from django.contrib.gis.geos import GEOSGeometry
-
-                name_field = document.meta_data["columns"]["name"]
-                count = 0
-                for each in layer:
-                    count += 1
-                    if count in rename_list:
-                        name = rename_list[count]
-                    else:
-                        name = each.get(name_field)
-                    name = str(name)
-                    geo = each.geom.wkt
-                    if name in hitlist:
-                        space = hitlist[name]
-                    else:
-                        space = ReferenceSpace.objects.create(
-                            name = name,
-                        )
-                    location = ReferenceSpaceLocation.objects.create(
-                        space = space,
-                        geometry = geo,
-                    )
-                    space.location = location
-                    space.save()
-                    RecordRelationship.objects.create(
-                        record_parent = document,
-                        record_child = space,
-                        relationship_id = 30,
-                    )
-                messages.success(request, "Your shapefile has been imported!")
-                return redirect(project.slug + ":library_item", document.id)
-
-            context["hit"] = hit
-            context["names"] = names
-            context["hit_count"] = len(hit)
-            context["duplicates"] = duplicates
-            context["rename_list"] = rename_list
-        except Exception as e:
-            import traceback
-            print(traceback.print_exc())
-            messages.error(request, "Your file could not be processed. Please review the error below.<br><strong>" + str(e) + "</strong>")
-            error = True
-
-        context["error"] = error
         
-    return render(request, "hub/" + page, context)
+    return render(request, "hub/processing.gis.html", context)
+
+def hub_processing_files(request, id, gis=False, space=None):
+    document = get_object_or_404(LibraryItem, pk=id)
+    project = get_object_or_404(Project, pk=request.project)
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    try:
+        work = Work.objects.filter(status__in=[1,4,5], part_of_project_id=request.project, workactivity_id=2, related_to=document)
+        work = work[0]
+    except Exception as e:
+        work = None
+        messages.error(request, "We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
+
+    if request.method == "POST" and "updatefiles" in request.POST:
+        info = get_object_or_404(LibraryItem, pk=id)
+        if "delete_file" in request.POST:
+            for each in request.POST.getlist("delete_file"):
+                try:
+                    document = Document.objects.get(pk=each, attached_to=info)
+                    os.remove(document.file.path)
+                    document.delete()
+                except Exception as e:
+                    messages.error(request, "Sorry, we could not remove a file.<br><strong>Error code: " + str(e) + "</strong>")
+        if "files" in request.FILES:
+            for each in request.FILES.getlist("files"):
+                document = Document.objects.create(name=str(each), file=each, attached_to=info)
+        messages.success(request, "The information was saved. Please review the shapefile content below.")
+        return redirect("../classify/")
+
+    context = {
+        "document": document,
+        "layer": document.get_gis_layer(),
+        "list_messages": work.messages.all() if work else None,
+        "load_messaging": True,
+        "forum_id": work.id if Work else None,
+        "work": work,
+    }
+    return render(request, "hub/processing.files.html", context)
+
+def hub_processing_classify(request, id, gis=False, space=None):
+    document = get_object_or_404(LibraryItem, pk=id)
+    project = get_object_or_404(Project, pk=request.project)
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    try:
+        work = Work.objects.filter(status__in=[1,4,5], part_of_project_id=request.project, workactivity_id=2, related_to=document)
+        work = work[0]
+    except Exception as e:
+        work = None
+        messages.error(request, "We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
+
+    if request.method == "POST" and "updatefiles" in request.POST:
+        meta_data = document.meta_data
+        if not "columns" in meta_data:
+            meta_data["columns"] = {}
+        meta_data["columns"]["name"] = request.POST.get("classify_name")
+        meta_data["columns"]["identifier"] = request.POST.get("identifier")
+        if not "geocodes" in meta_data:
+            meta_data["geocodes"] = []
+        meta_data["geocodes"] = request.POST.getlist("geocodes")
+        document.meta_data = meta_data 
+        document.save()
+        messages.success(request, "Settings were saved.")
+
+        document.convert_shapefile()
+
+        if space:
+            return redirect(project.slug + ":hub_processing_gis_classify", id=document.id, space=space.slug)
+        else:
+            return redirect(project.slug + ":hub_processing_gis_classify", id=document.id)
+
+        messages.success(request, "The information was saved. Please review the shapefile content below.")
+        return redirect("../classify/")
+
+    context = {
+        "document": document,
+        "layer": document.get_gis_layer(),
+        "list_messages": work.messages.all() if work else None,
+        "load_messaging": True,
+        "forum_id": work.id if Work else None,
+        "work": work,
+    }
+    return render(request, "hub/processing.classify.html", context)
+
 
 def hub_analysis(request, space=None):
 

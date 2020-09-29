@@ -95,7 +95,7 @@
       </div>
     </div>
     <div class="col-xl-8 col-lg-6 col-md-6">
-      {% if space.location %}
+      {% if space.geometry %}
         <div class="leaflet-map" id="space-map"></div>
       {% else %}
         <div class="alert alert-dark text-center p-5 mb-0">
@@ -234,10 +234,10 @@
 {% block footer %}
 <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
 
-{% if space.location %}
+{% if space.geometry %}
   <script>
     var map = L.map("space-map");
-    var geojson = {{ space.location.geometry.geojson|safe }};
+    var geojson = {{ space.geometry.geojson|safe }};
     var geojsonlayer = L.geoJSON(geojson).addTo(map);
 
     L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
@@ -254,7 +254,7 @@
 
     map.scrollWheelZoom.disable();
     map.fitBounds(geojsonlayer.getBounds());
-    {% if space.location.geometry.num_points == 1 %}
+    {% if space.geometry.num_points == 1 %}
       map.setZoom(6);
     {% endif %}
   </script>
