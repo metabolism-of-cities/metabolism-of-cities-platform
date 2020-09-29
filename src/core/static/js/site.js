@@ -34,10 +34,24 @@ $("input[type='date']").attr({
 
 // For the translation button
 $("#translate").change(function(){
-    url = encodeURI(window.location.href); 
+    url = encodeURI(window.location.href);
     language = $(this).val();
     window.location = "https://translate.google.com/translate?hl=&sl=en&tl=" + language + "&u=" + url;
 });
+
+// generic function to show something when loading slow page
+function loadBigPage(content) {
+  $(".loading-big-page #loading-content").text(content);
+  $("body").addClass("overflow-hidden");
+  $(".loading-big-page").addClass("active");
+  $(".loading-big-page i").addClass("fa-spin");
+}
+
+// all links with this class should show loading feedback
+$(".open-big-page").click(function() {
+  let content = $(this).data("content");
+  loadBigPage(content)
+})
 
 // TEMPORARY GEOJSON FOR STOCKS MAP
 const brussels = {
