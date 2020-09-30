@@ -935,6 +935,7 @@ class LibraryItem(Record):
     isbn = models.CharField(max_length=255, null=True, blank=True)
     comments = models.TextField(null=True, blank=True)
     license = models.ForeignKey(License, on_delete=models.CASCADE, null=True, blank=True)
+    geocodes = models.ManyToManyField("Geocode", blank=True)
 
     STATUS = (
         ("pending", "Pending"),

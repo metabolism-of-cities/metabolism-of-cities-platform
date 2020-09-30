@@ -14,6 +14,10 @@
 
         <form method="post">
 
+        <section class="card p-3">
+
+          <h3 class="h4">Document details</h3>
+
           <div class="form-group">
             <label>Title</label>
             <input type="text" name="name" value="{{ document.name }}" class="form-control" required />
@@ -26,13 +30,60 @@
 
           <div class="form-group">
             <label>Tags</label>
-            <select class="custom-select select2" multiple>
+            <select class="custom-select select2" multiple name="tags">
               {% for each in tags %}
-                <option value="{{ each.id }}">{{ each }}</option>
+                <option value="{{ each.id }}" {% if each in document.tags.all %}selected{% endif %}>{{ each }}</option>
               {% endfor %}
             </select>
           </div>
 
+          <div class="form-group">
+            <label>Geocode(s)</label>
+            <select class="custom-select select2" multiple name="geocodes">
+              {% for each in geocodes %}
+                <option value="{{ each.id }}" {% if each in document.geocodes.all %}selected{% endif %}>{{ each }} ({{ each.scheme }})</option>
+              {% endfor %}
+            </select>
+          </div>
+
+        </section>
+
+        <section class="card p-3 mt-3">
+
+          <span class="text-right">
+            <a href="javascript:alert('Tutorial available soon')"><i class="fa fa-info-circle"></i> Learn more</a>
+          </span>
+
+          <h3 class="h4">Data quality</h3>
+
+          <div class="form-group">
+            <label>Does this shapefile have complete coverage on the topic of concern?
+            </label>
+            <select class="custom-select" name="completeness" required>
+              <option value=""></option>
+              <option value="complete" {% if document.meta_data.dqi.completeness == "complete" %}selected{% endif %}>Yes</option>
+              <option value="incomplete" {% if document.meta_data.dqi.completeness == "incomplete" %}selected{% endif %}>No</option>
+              <option value="unsure" {% if document.meta_data.dqi.completeness == "unsure" %}selected{% endif %}>Unsure</option>
+              <option value="notapplicable" {% if document.meta_data.dqi.completeness == "notapplicable" %}selected{% endif %}>Not applicable</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>When should this be updated?</label>
+            <textarea name="update_required" class="form-control" rows="5">{{ document.meta_data.dqi.update_required }}</textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Any known flaws or limitations?</label>
+            <textarea name="limitations" class="form-control" rows="5">{{ document.meta_data.dqi.limitations }}</textarea>
+          </div>
+
+          <button type="submit" class="btn btn-dark mb-3">Save</button>
+          <div class="alert alert-dark">
+          GUUS please remove this button and instead make the SAVE AND PUBLISH on the right
+          link to this form. I just put it here because I don't want to mess with the 
+          _included menu file while you're working on it.
+          </div>
           
           {% csrf_token %}
         </form>

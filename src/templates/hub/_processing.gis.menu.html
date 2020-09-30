@@ -74,13 +74,10 @@
           Back to overview
         </a>
       {% elif step == 2 %}
-        <form method="post">
           <div class="card p-3">
-            <button name="next" value="true" type="submit" class="btn btn-success mb-3">Save and next <i class="fa fa-arrow-right"></i></button>
+            <button form="select_column" name="next" value="true" type="submit" class="btn btn-success mb-3">Save and next <i class="fa fa-arrow-right"></i></button>
             <a href="../" class="btn btn-dark"><i class="fa fa-arrow-left"></i> Back</a>
           </div>
-          {% csrf_token %}
-        </form>
       {% elif step == 3 %}
         <form method="post">
           <div class="card p-3">

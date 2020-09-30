@@ -1407,6 +1407,7 @@ def hub_processing_gis_classify(request, id, space=None):
         return redirect("../classify/")
 
     if request.method == "POST" and "next" in request.POST:
+        p(request.POST)
         messages.success(request, "The information was saved.")
         return redirect("../save/")
 
@@ -1436,6 +1437,18 @@ def hub_processing_gis_save(request, id, space=None):
         work = None
         messages.error(request, "We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
 
+    if request.method == "POST":
+        document.name = request.POST.get("name")
+        document.description = request.POST.get("description")
+        document.tags.set(request.POST.getlist("tags"))
+        document.geocodes.set(request.POST.getlist("geocodes"))
+        document.meta_data["dqi"] = {
+             "completeness": request.POST.get("completeness"),
+             "update_required": request.POST.get("update_required"),
+             "limitations": request.POST.get("limitations"),
+        }
+        document.save()
+
     context = {
         "document": document,
         "layer": document.get_gis_layer(),
@@ -1447,10 +1460,10 @@ def hub_processing_gis_save(request, id, space=None):
         "menu": "processing",
         "step": 3,
         "load_select2": True,
-        "tags": Tag.objects.all(),
+        "tags": Tag.objects.filter(Q(parent_tag__parent_tag_id=845)|Q(id__in=document.tags.all())),
+        "geocodes": Geocode.objects.all(),
     }
     return render(request, "hub/processing.gis.save.html", context)
-
 
 def hub_analysis(request, space=None):
 

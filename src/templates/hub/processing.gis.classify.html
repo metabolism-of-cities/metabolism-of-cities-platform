@@ -23,10 +23,10 @@ col:hover{cursor:pointer;background:green}
           Please select the column that contains the name for the different elements in 
           the shapefile. Once the column is selected, click NEXT.
         </div>
-        {% if layer.num_feat > 100 %}
+        {% if layer.num_feat > 20 %}
           <div class="alert alert-primary">
             <i class="fal fa-info-circle mr-1"></i>
-            Only the first 100 items are shown. In total, there are <strong>{{ layer.num_feat|floatformat:0 }}</strong> items in your shapefile
+            Only the first 20 items are shown. In total, there are <strong>{{ layer.num_feat|floatformat:0 }}</strong> items in your shapefile
           </div>
         {% endif %}
         <table class="table content-table">
@@ -42,7 +42,7 @@ col:hover{cursor:pointer;background:green}
           </thead>
           <tbody>
             {% for each in layer %}
-              {% if forloop.counter <= 100 %}
+              {% if forloop.counter <= 20 %}
                 <tr>
                   {% for field in layer.fields %}
                     <td>{{ each|get_item:field }}</td>
@@ -55,8 +55,10 @@ col:hover{cursor:pointer;background:green}
 
       </section>
 
-        <form method="post">
-          <input type="hidden" name="column" value="" />
+        <form method="post" id="select_column">
+          <input type="text" name="column" value="" />
+          Guus please make this into a hidden input once it's working! I'm making it visible
+          so I can use it manually for now.
           {% csrf_token %}
         </form>
 
