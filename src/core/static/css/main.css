@@ -265,6 +265,21 @@ footer {
       font-size: 1.5rem;
       margin-right: 12px; }
 
+.loading-big-page {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: rgba(33, 37, 41, 0.65);
+  transition: opacity 2s;
+  opacity: 0;
+  pointer-events: none;
+  height: 100%;
+  width: 100%;
+  color: #fff;
+  padding-top: 40vh; }
+  .loading-big-page.active {
+    opacity: 1; }
+
 .btn {
   text-decoration: none !important; }
 
@@ -836,7 +851,7 @@ table.fancytree-container .fancytree-active > td {
     border-color: #0f3b43 !important;
     background-color: #0f3b43 !important; }
 
-.datatable.datatable-card {
+table.datatable-card {
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
   border-radius: .25rem;
   margin-bottom: 1rem !important;

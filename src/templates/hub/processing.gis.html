@@ -31,19 +31,16 @@
               {% endfor %}
             </div>
           </div>
-        {% else %}
-
-        <div>
-          {% if document.get_shapefile_plot %}
-            <img src="{{ document.get_shapefile_plot }}" alt="" />
-          {% else %}
-            <p><em>There is no preview plot available.</em></p>
-            {% if document.meta_data.shapefile_plot_error %}
-              <div class="alert alert-danger"><strong>Error:</strong><br>{{ document.meta_data.shapefile_plot_error }}</div>
-            {% endif %}
-          {% endif %}
         </div>
+      {% else %}
+        {% if not document.get_shapefile_plot %}
+          <p><em>There is no preview plot available.</em></p>
+          {% if document.meta_data.shapefile_plot_error %}
+            <div class="alert alert-danger"><strong>Error:</strong><br>{{ document.meta_data.shapefile_plot_error }}</div>
+          {% endif %}
+        {% endif %}
 
+        <div class="card card-table mb-4">
           <table class="table">
             <thead>
               <tr>
@@ -102,9 +99,8 @@
               {% endif %}
             </tbody>
           </table>
-        {% endif %}
-
-      </div>
+        </div>
+      {% endif %}
 
       {% if document.comments %}
         <div class="card mb-2">
@@ -148,7 +144,7 @@
           Only the first 100 items are shown. In total, there are <strong>{{ layer.num_feat|floatformat:0 }}</strong> items in your shapefile
         </div>
       {% endif %}
-      <table class="table datatable datatable-card">
+      <table class="table content-table datatable-card">
         <thead>
           <tr>
             {% for field in layer.fields %}
@@ -193,5 +189,11 @@
       $(this).hide();
       $("#startbox").show();
     });
+
+    // enable datatable
+    $(".content-table").dataTable( {
+      "scrollX": true
+    });
+
   </script>
 {% endblock %}

@@ -423,6 +423,25 @@ footer {
   }
 }
 
+// LOADING BIG PAGE
+.loading-big-page {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: rgba($dark, .65);
+  transition: opacity 2s;
+  opacity: 0;
+  pointer-events: none;
+  height: 100%;
+  width: 100%;
+  color: $white;
+  padding-top: 40vh;
+
+  &.active {
+    opacity: 1;
+  }
+}
+
 // BUTTONS
 .btn {
   text-decoration: none !important;
@@ -1250,7 +1269,7 @@ table.fancytree-container .fancytree-active > td {
   }
 }
 
-.datatable.datatable-card {
+table.datatable-card {
   box-shadow: $basic-shadow;
   border-radius: .25rem;
   margin-bottom: 1rem !important;
