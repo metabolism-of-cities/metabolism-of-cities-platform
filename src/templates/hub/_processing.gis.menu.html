@@ -1,8 +1,8 @@
 
       <div class="mb-3">
-        <div title="Check general info" class="avatar letter" style="background:#218838">1</div>
-        <div title="Classify columns" class="avatar letter">2</div>
-        <div title="Verify data" class="avatar letter">3</div>
+        <div href="../" title="Check general info" class="avatar letter" style="background:#218838">1</div>
+        <div title="Classify columns" class="avatar letter" {% if step > 1 %}style="background:#218838"{% endif %}>2</div>
+        <div title="Verify meta data" class="avatar letter" {% if step > 2 %}style="background:#218838"{% endif %}>3</div>
       </div>
 
       <div class="card mb-4">
@@ -36,33 +36,57 @@
         </ul>
       </div>
 
-      <form method="post">
-        {% if not work.assigned_to %}
-          <span class="btn btn-default-outline" id="showstart">
-            <i class="fas fa-user-plus"></i>
-            Start working on this
-          </span>
-          <div class="card p-3" id="startbox">
-            <h2 class="h4">Thanks for working on this!</h2>
-            <p><a href="javascript:alert('Tutorial will be available soon!')">Click here</a> for a tutorial if you are new to this.</p>
-            <p>Is the shapefile looking good?</p>
-            <button type="submit" name="start_work" value="classify/" class="btn btn-primary mb-3">
-              Yes, go to step 2
+      {% if step == 1 %}
+        <form method="post">
+          {% if not work.assigned_to %}
+            <span class="btn btn-default-outline" id="showstart">
+              <i class="fas fa-user-plus"></i>
+              Start working on this
+            </span>
+          {% endif %}
+
+          {% if work.assigned_to == request.user.people or not work.assigned_to %}
+            <div class="card p-3" id="startbox">
+              <h2 class="h4">Thanks for working on this!</h2>
+              <p><a href="javascript:alert('Tutorial will be available soon!')">Click here</a> for a tutorial if you are new to this.</p>
+              <p>Is the shapefile looking good?</p>
+              <button type="submit" name="start_work" value="classify/" class="btn btn-success mb-3">
+                Yes, go to step 2 <i class="fa fa-arrow-right"></i>
+              </button>
+              <button type="submit" name="start_work_edit" value="files/" class="btn btn-dark">
+                <i class="fa fa-upload"></i>
+                No, I will upload a different file first 
+              </button>
+            </div>
+          {% endif %}
+
+          {% if work.assigned_to == request.user.people %}
+            <button type="submit" name="stop_work" value="true" class="btn btn-warning">
+              <i class="fas fa-user-times"></i>
+              Stop working on this
             </button>
-            <button type="submit" name="start_work_edit" value="files/" class="btn btn-secondary">
-              No, I will upload a different file first
-            </button>
+          {% endif %}
+
+          {% csrf_token %}
+        </form>
+        <a href="../" class="btn btn-primary-basic mt-4">
+          <i class="fal fa-angle-left"></i>
+          Back to overview
+        </a>
+      {% elif step == 2 %}
+        <form method="post">
+          <div class="card p-3">
+            <button name="next" value="true" type="submit" class="btn btn-success mb-3">Save and next <i class="fa fa-arrow-right"></i></button>
+            <a href="../" class="btn btn-dark"><i class="fa fa-arrow-left"></i> Back</a>
           </div>
-        {% elif work.assigned_to == request.user.people %}
-          <button type="submit" name="stop_work" value="true" class="btn btn-warning">
-            <i class="fas fa-user-times"></i>
-            Stop working on this
-          </button>
-          <a href="edit/?next={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
-        {% endif %}
-        {% csrf_token %}
-      </form>
-      <a href="../" class="btn btn-primary-basic mt-4">
-        <i class="fal fa-angle-left"></i>
-        Back to overview
-      </a>
+          {% csrf_token %}
+        </form>
+      {% elif step == 3 %}
+        <form method="post">
+          <div class="card p-3">
+            <button name="next" value="true" type="submit" class="btn btn-success mb-3">Save and publish <i class="fa fa-check"></i></button>
+            <a href="../classify/" class="btn btn-dark"><i class="fa fa-arrow-left"></i> Back</a>
+          </div>
+          {% csrf_token %}
+        </form>
+      {% endif %}

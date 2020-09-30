@@ -1324,6 +1324,7 @@ def hub_processing_gis(request, id, classify=False, space=None):
         "list_messages": work.messages.all() if work else None,
         "load_messaging": True,
         "forum_id": work.id if Work else None,
+        "step": 1,
     }
         
     return render(request, "hub/processing.gis.html", context)
@@ -1364,10 +1365,12 @@ def hub_processing_files(request, id, gis=False, space=None):
         "load_messaging": True,
         "forum_id": work.id if Work else None,
         "work": work,
+        "title": document,
+        "step": 1,
     }
     return render(request, "hub/processing.files.html", context)
 
-def hub_processing_classify(request, id, gis=False, space=None):
+def hub_processing_gis_classify(request, id, space=None):
     document = get_object_or_404(LibraryItem, pk=id)
     project = get_object_or_404(Project, pk=request.project)
     if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
@@ -1403,6 +1406,10 @@ def hub_processing_classify(request, id, gis=False, space=None):
         messages.success(request, "The information was saved. Please review the shapefile content below.")
         return redirect("../classify/")
 
+    if request.method == "POST" and "next" in request.POST:
+        messages.success(request, "The information was saved.")
+        return redirect("../save/")
+
     context = {
         "document": document,
         "layer": document.get_gis_layer(),
@@ -1410,8 +1417,39 @@ def hub_processing_classify(request, id, gis=False, space=None):
         "load_messaging": True,
         "forum_id": work.id if Work else None,
         "work": work,
+        "title": document,
+        "menu": "processing",
+        "step": 2,
     }
-    return render(request, "hub/processing.classify.html", context)
+    return render(request, "hub/processing.gis.classify.html", context)
+
+def hub_processing_gis_save(request, id, space=None):
+    document = get_object_or_404(LibraryItem, pk=id)
+    project = get_object_or_404(Project, pk=request.project)
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    try:
+        work = Work.objects.filter(status__in=[1,4,5], part_of_project_id=request.project, workactivity_id=2, related_to=document)
+        work = work[0]
+    except Exception as e:
+        work = None
+        messages.error(request, "We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
+
+    context = {
+        "document": document,
+        "layer": document.get_gis_layer(),
+        "list_messages": work.messages.all() if work else None,
+        "load_messaging": True,
+        "forum_id": work.id if Work else None,
+        "work": work,
+        "title": document,
+        "menu": "processing",
+        "step": 3,
+        "load_select2": True,
+        "tags": Tag.objects.all(),
+    }
+    return render(request, "hub/processing.gis.save.html", context)
 
 
 def hub_analysis(request, space=None):

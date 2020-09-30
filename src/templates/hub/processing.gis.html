@@ -8,7 +8,9 @@
     {% if error %}
       .top-message-box{display:none}
     {% endif %}
-    #startbox{display:none}
+    {% if not work.assigned_to %}
+      #startbox{display:none}
+    {% endif %}
   </style>
 {% endblock %}
 

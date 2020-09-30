@@ -1,180 +1,78 @@
-NOTE:
-We need to either pick this up again
-or remove this file
-If it still exists on Jan 1, 2021 then this file can be safely removed
-
-
-
 {% extends "_base.html" %}
 {% load moc_extras %}
 {% load humanize %}
 {% block page_name %}staf review session{% endblock %}
 
-{% block content %}
+{% block css %}
+<style type="text/css">
+col:hover{cursor:pointer;background:green}
+</style>
+{% endblock %}
 
-  <h1>{{ session }}</h1>
+{% block content %}
 
   {% include "hub/_nav.html" %}
 
-  <section id="contentsection">
+  <section class="row pb-0">
+    <div class="col-lg-8 mb-2 mb-lg-0" style="overflow:scroll">
 
-    <a href="../" class="btn btn-primary-basic float-right">
-      <i class="fal fa-angle-left"></i>
-      Back
-    </a>
+      <section id="contentsection">
+        <h3>Select the name column</h3>
+        <div class="alert alert-warning">
+          <i class="fa fa-info-circle"></i>
+          Please select the column that contains the name for the different elements in 
+          the shapefile. Once the column is selected, click NEXT.
+        </div>
+        {% if layer.num_feat > 100 %}
+          <div class="alert alert-primary">
+            <i class="fal fa-info-circle mr-1"></i>
+            Only the first 100 items are shown. In total, there are <strong>{{ layer.num_feat|floatformat:0 }}</strong> items in your shapefile
+          </div>
+        {% endif %}
+        <table class="table content-table">
+          {% for field in layer.fields %}
+            <col data-field="{{ field }}"></col>
+          {% endfor %}
+          <thead>
+            <tr>
+              {% for field in layer.fields %}
+                <th>{{ field }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for each in layer %}
+              {% if forloop.counter <= 100 %}
+                <tr>
+                  {% for field in layer.fields %}
+                    <td>{{ each|get_item:field }}</td>
+                  {% endfor %}
+                </tr>
+              {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
 
-    <h3 class="mt-4">Shapefile content</h3>
-    <div class="alert alert-primary">
-      <i class="fal fa-info-circle mr-1"></i>
-      In total, there are <strong>{{ layer.num_feat }}</strong> items in your shapefile. We have been able to match <strong>{{ hit_count }}</strong> items with existing reference spaces.<br>
-      Please review the list below in detail.
+      </section>
+
+        <form method="post">
+          <input type="hidden" name="column" value="" />
+          {% csrf_token %}
+        </form>
+
     </div>
 
-    <table class="table places datatable-card">
-      <thead>
-        <tr>
-          <th>Place</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for each in names %}
-          <tr>
-            <td>
-              <span class="place-name">{{ each }}</span>
-              <input type="text" value="{{ each }}" class="form-control rename-input" name="rename_{{ forloop.counter }}">
-            </td>
-            <td>
-              {% if not each %}
-                <span class="text-danger">
-                  <i class="fa fa-exclamation-triangle"></i>
-                  ERROR: Name not set
-                </span>
-              {% elif each in duplicates %}
-                <span class="text-danger">
-                  <i class="fa fa-exclamation-triangle"></i>
-                  ERROR: Duplicate entry
-                </span>
-              {% elif not each in hit %}
-                No match found
-              {% else %}
-                {% with link=PROJECT.slug|add:":referencespace" %}
-                  <a target="_blank" href="{% url link hit|get_item:each %}">Match found <i class="fal fa-external-link ml-2"></i></a>
-                {% endwith %}
-              {% endif %}
-            </td>
-            <td>
-              {% if each and not each in duplicates and not each in hit %}
-                New space will be created
-              {% else %}
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="match_{{ hit|get_item:each }}" name="{{ hit|get_item:each }}" checked>
-                  <label class="custom-control-label" for="match_{{ hit|get_item:each }}">Use match</label>
-                </div>
-              {% endif %}
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <div class="col-lg-4">
+      {% include "hub/_processing.gis.menu.html" %}
+    </div>
 
-    <form method="post" class="pt-4">
-      <input type="text" name="matches" hidden>
-      <div id="renames" hidden>
-        {% for key,value in rename_list.items %}
-          <input type="text" name="rename_{{ key }}" value="{{ value }}" />
-        {% endfor %}
-        {% if matches %}
-          <input type="hidden" name="reclassify" value="true" />
-          {% for each in matches %}
-            <input type="text" name="matches" value="{{ each }}" />
-          {% endfor %}
-        {% endif %}
-      </div>
-      <a href="../" class="btn btn-primary-basic">
-        <i class="fal fa-angle-left"></i>
-        Back
-      </a>
-      {% csrf_token %}
-
-      <div class="btn btn-dark rename">
-        <i class="fas fa-pencil"></i>
-        Change place names
-      </div>
-      <div class="btn btn-dark cancel-rename" hidden>
-        <i class="fas fa-undo"></i>
-        Cancel renaming
-      </div>
-      <button class="btn {% if error %}disabled{% endif %} btn-warning reclassify" hidden {% if error %}disabled{% endif %} name="reclassify" value="true">
-        <i class="fas fa-sync"></i>
-        Re-classify based on new names
-      </button>
-      <button class="btn {% if error %}disabled{% endif %} btn-success save" {% if error %}disabled{% endif %} name="save" value="true">
-        <i class="fas fa-save"></i>
-        Save
-      </button>
-    </form>
   </section>
 
-{% endblock %}
+  <section>
 
-{% block footer %}
-<script>
-  // sort by whether or not there is a match
-  $("table.places").DataTable().order([2, "asc"]).draw();
+    <h2>History and comments</h2>
+    {% include "_messages.html" %}
 
-  // create array of new spaces
-  let newSpaces = [];
+  </section>
 
-  // when toggle is changed, add or remove id from array of new spaces
-  $("table input").change(function() {
-    let input = $(this);
-    let matchID = input.attr("name");
-
-    if (input.prop("checked")) {
-      input.next("label").text("Use match");
-      let matchIndex = newSpaces.indexOf(matchID);
-      if (matchIndex > -1) {
-        newSpaces.splice(matchIndex, 1);
-      }
-    } else {
-      input.next("label").text("New space will be created");
-      newSpaces.push(matchID);
-    };
-
-    // set array as value of input that is sent to server
-    $("input[name='matches']").val(newSpaces);
-  })
-
-  // show rename input boxes
-  $(".rename").click(function(){
-    $("table.places").addClass("renaming")
-    $(".btn.rename").attr("hidden", "hidden");
-    $(".btn.cancel-rename").removeAttr("hidden");
-  });
-
-  $(".cancel-rename").click(function() {
-    $("table.places").removeClass("renaming")
-    $(".btn.rename, button.save").removeAttr("hidden");
-    $(".btn.cancel-rename, button.reclassify").attr("hidden", "hidden");
-  })
-
-  // update rename form when user changes it in table
-  $("body").on("keyup", ".rename-input", function() {
-    let thisInput = $(this);
-    let value = thisInput.val()
-    let id = thisInput.attr("name");
-
-    if ( thisInput.hasClass("created") ) {
-      $("#renames input[name='" + id + "']").val(value);
-    } else {
-      $("#renames").append("<input type='text' name='" + id + "' value='" + value + "'>");
-      thisInput.addClass("created");
-    }
-
-    $("button.reclassify").removeAttr("hidden");
-    $("button.save").attr("hidden", "hidden");
-  });
-</script>
 {% endblock %}
