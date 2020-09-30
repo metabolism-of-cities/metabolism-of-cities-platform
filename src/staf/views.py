@@ -1517,7 +1517,7 @@ def dataset(request, space=None, dataset=None, id=None):
         context = {
             "info": info,
             "iframe": True,
-            "spaces": info.reference_spaces(),
+            "spaces": info.imported_spaces.all,
             "first_view": "map",
             "show_map": True,
             "sources": [info],
@@ -1532,7 +1532,7 @@ def dataframe(request, id):
     context = {
         "info": info,
         "iframe": True,
-        "spaces": info.reference_spaces(),
+        "spaces": info.imported_spaces.all,
         "first_view": "map",
         "show_map": True,
         "library_item": project.get_slug() + ":library_item",
@@ -1546,7 +1546,7 @@ def libraryframe(request, id):
     context = {
         "info": info,
         "iframe": True,
-        "spaces": info.reference_spaces(),
+        "spaces": info.imported_spaces.all,
         "first_view": "map",
         "show_map": True,
         "library_item": project.get_slug() + ":library_item",
