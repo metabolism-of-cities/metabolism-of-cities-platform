@@ -1107,8 +1107,10 @@ class LibraryItem(Record):
             geo = each.geom
 
             # We use WGS 84 as coordinate reference system, so we gotta convert to that
-            #geo.transform(4326)
+            debug_old = geo.wkt
+            geo.transform(4326)
             geo = geo.wkt
+            debug_new = geo
 
             space = ReferenceSpace.objects.create(
                 name = name,
@@ -1118,6 +1120,9 @@ class LibraryItem(Record):
             )
 
         self.meta_data["processed"] = True
+
+        self.meta_data["debug_old"] = debug_old
+        self.meta_data["debug_new"] = debug_new
         self.save()
 
         return True
