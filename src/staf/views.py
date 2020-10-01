@@ -460,6 +460,10 @@ def referencespace(request, id=None, space=None, slug=None):
         info = ReferenceSpace.objects.get(pk=id)
     elif slug:
         info = get_object_or_404(ReferenceSpace, slug=slug)
+    check_active_space = ActivatedSpace.objects.filter(space=info, part_of_project_id=request.project)
+    if check_active_space:
+        project = get_object_or_404(Project, pk=request.project)
+        return redirect(project.slug + ":dashboard", info.slug)
     this_location = None
     inside_the_space = None
     if info.geometry:
@@ -1224,7 +1228,7 @@ def hub_processing_gis(request, id, classify=False, space=None):
         space = get_space(request, space)
 
     try:
-        work = Work.objects.filter(status__in=[1,4,5], part_of_project_id=request.project, workactivity_id=2, related_to=document)
+        work = Work.objects.filter(part_of_project_id=request.project, workactivity_id=2, related_to=document)
         work = work[0]
     except Exception as e:
         work = None
@@ -1323,7 +1327,7 @@ def hub_processing_gis(request, id, classify=False, space=None):
         "active_geocodes": active_geocodes,
         "list_messages": work.messages.all() if work else None,
         "load_messaging": True,
-        "forum_id": work.id if Work else None,
+        "forum_id": work.id if work else None,
         "step": 1,
     }
         
@@ -1383,31 +1387,13 @@ def hub_processing_gis_classify(request, id, space=None):
         work = None
         messages.error(request, "We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
 
-    if request.method == "POST" and "updatefiles" in request.POST:
+    if request.method == "POST" and "next" in request.POST:
         meta_data = document.meta_data
         if not "columns" in meta_data:
             meta_data["columns"] = {}
-        meta_data["columns"]["name"] = request.POST.get("classify_name")
-        meta_data["columns"]["identifier"] = request.POST.get("identifier")
-        if not "geocodes" in meta_data:
-            meta_data["geocodes"] = []
-        meta_data["geocodes"] = request.POST.getlist("geocodes")
+        meta_data["columns"]["name"] = request.POST.get("column")
         document.meta_data = meta_data 
         document.save()
-        messages.success(request, "Settings were saved.")
-
-        document.convert_shapefile()
-
-        if space:
-            return redirect(project.slug + ":hub_processing_gis_classify", id=document.id, space=space.slug)
-        else:
-            return redirect(project.slug + ":hub_processing_gis_classify", id=document.id)
-
-        messages.success(request, "The information was saved. Please review the shapefile content below.")
-        return redirect("../classify/")
-
-    if request.method == "POST" and "next" in request.POST:
-        p(request.POST)
         messages.success(request, "The information was saved.")
         return redirect("../save/")
 
@@ -1448,6 +1434,25 @@ def hub_processing_gis_save(request, id, space=None):
              "limitations": request.POST.get("limitations"),
         }
         document.save()
+        document.convert_shapefile()
+
+        message_description = "Status change: " + work.get_status_display() + " → "
+        work.status = Work.WorkStatus.COMPLETED
+        work.save()
+        work.refresh_from_db()
+        new_status = str(work.get_status_display())
+        message_description += new_status
+
+        message = Message.objects.create(
+            name = "Status change",
+            description = message_description,
+            parent = work,
+            posted_by = request.user.people,
+        )
+        set_autor(request.user.people.id, message.id)
+        work.subscribers.add(request.user.people)
+
+        return redirect(project.slug + ":library_item", document.id)
 
     context = {
         "document": document,

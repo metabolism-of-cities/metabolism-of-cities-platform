@@ -1116,9 +1116,9 @@ class LibraryItem(Record):
                 source = self,
                 meta_data = {"features": meta_data},
             )
-            # Limit to 20 for now, while we debug and test
-            if count == 20:
-                return True
+
+        self.meta_data["processed"] = True
+        self.save()
 
         return True
 

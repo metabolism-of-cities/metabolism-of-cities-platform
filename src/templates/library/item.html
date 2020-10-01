@@ -451,7 +451,7 @@
           <h3 class="mt-5">Associated space(s)</h3>
           <ul>
           {% for each in info.spaces.all %}
-            <li>{{ each }}</li>
+            <li><a href="{% url URLS.SPACE each.id %}">{{ each }}</a></li>
           {% endfor %}
           </ul>
         {% endif %}
