@@ -1107,7 +1107,7 @@ class LibraryItem(Record):
             geo = each.geom
 
             # We use WGS 84 as coordinate reference system, so we gotta convert to that
-            geo.transform(4326)
+            #geo.transform(4326)
             geo = geo.wkt
 
             space = ReferenceSpace.objects.create(
