@@ -452,6 +452,8 @@
           {{ info.meta_data.debug_old|truncatewords:30 }}
           <h2>New</h2>
           {{ info.meta_data.debug_new|truncatewords:30 }}
+          <h2>SRID</h2>
+          {{ info.meta_data.srid }}
         {% endif %}
 
         {% if info.spaces.all %}

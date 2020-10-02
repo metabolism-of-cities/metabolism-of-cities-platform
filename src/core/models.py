@@ -1106,13 +1106,11 @@ class LibraryItem(Record):
             name = str(each.get(self.meta_data["columns"]["name"]))
             geo = each.geom
 
-            debug_old = geo.wkt
-
             # We use WGS 84 (4326) as coordinate reference system, so we gotta convert to that
             # if it uses something else
+            debug_old = geo.wkt
             if layer.srs.srid != 4326:
                 geo.transform(4326)
-
             geo = geo.wkt
             debug_new = geo
 
@@ -1127,7 +1125,6 @@ class LibraryItem(Record):
 
         self.meta_data["debug_old"] = debug_old
         self.meta_data["debug_new"] = debug_new
-        self.meta_data["srid"] = layer.srs.srid
         self.save()
 
         return True
