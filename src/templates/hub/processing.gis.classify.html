@@ -12,7 +12,6 @@
   .select-column.selected {
     background-color: #efefef;
   }
-
 </style>
 {% endblock %}
 
@@ -36,7 +35,7 @@
           </div>
         {% endif %}
 
-        <div class="card card-table">
+        <div class="card card-table overflow-auto">
           <table class="table content-table">
             <thead>
               <tr>
@@ -92,8 +91,5 @@
 
       $(".btn-next").removeClass("disabled").removeAttr("disabled").html("Save and next <i class='fa fa-arrow-right ml-2 mr-0'></i>");
     })
-
-    // fix horizontal scrolling datatable
-    $(".datatable.datatable-card").parent().addClass("overflow-auto");
   </script>
 {% endblock %}
