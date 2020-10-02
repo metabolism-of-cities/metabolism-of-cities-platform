@@ -447,6 +447,13 @@
           {{ map|safe }}
         {% endif %}
 
+        {% if request.user.id == 1 %}
+          <h2>Old</h2>
+          {{ info.meta_data.debug_old|truncatewords:30 }}
+          <h2>New</h2>
+          {{ info.meta_data.debug_new|truncatewords:30 }}
+        {% endif %}
+
         {% if info.spaces.all %}
           <h3 class="mt-5">Associated space(s)</h3>
           <ul>
