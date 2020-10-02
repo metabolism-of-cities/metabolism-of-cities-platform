@@ -4,8 +4,15 @@
 {% block page_name %}staf review session{% endblock %}
 
 {% block css %}
-<style type="text/css">
-col:hover{cursor:pointer;background:green}
+<style>
+  .select-column {
+    cursor: pointer;
+  }
+
+  .select-column.selected {
+    background-color: #efefef;
+  }
+
 </style>
 {% endblock %}
 
@@ -14,14 +21,13 @@ col:hover{cursor:pointer;background:green}
   {% include "hub/_nav.html" %}
 
   <section class="row pb-0">
-    <div class="col-lg-8 mb-2 mb-lg-0" style="overflow:scroll">
+    <div class="col-lg-8 mb-2 mb-lg-0">
 
-      <section id="contentsection">
+      <div id="contentsection">
         <h3>Select the name column</h3>
-        <div class="alert alert-warning">
+        <div class="alert alert-primary">
           <i class="fa fa-info-circle"></i>
-          Please select the column that contains the name for the different elements in 
-          the shapefile. Once the column is selected, click NEXT.
+          Please select the column that contains the name for the different elements in the shapefile. Once the column is selected, click next.
         </div>
         {% if layer.num_feat > 20 %}
           <div class="alert alert-primary">
@@ -29,52 +35,62 @@ col:hover{cursor:pointer;background:green}
             Only the first 20 items are shown. In total, there are <strong>{{ layer.num_feat|floatformat:0 }}</strong> items in your shapefile
           </div>
         {% endif %}
-        <table class="table content-table">
-          {% for field in layer.fields %}
-            <col data-field="{{ field }}"></col>
-          {% endfor %}
-          <thead>
-            <tr>
-              {% for field in layer.fields %}
-                <th>{{ field }}</th>
+
+        <div class="card card-table">
+          <table class="table content-table">
+            <thead>
+              <tr>
+                {% for field in layer.fields %}
+                  <th class="select-column" data-field="{{ field }}">{{ field }}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for each in layer %}
+                {% if forloop.counter <= 20 %}
+                  <tr>
+                    {% for field in layer.fields %}
+                      <td class="select-column" data-field="{{ field }}">{{ each|get_item:field }}</td>
+                    {% endfor %}
+                  </tr>
+                {% endif %}
               {% endfor %}
-            </tr>
-          </thead>
-          <tbody>
-            {% for each in layer %}
-              {% if forloop.counter <= 20 %}
-                <tr>
-                  {% for field in layer.fields %}
-                    <td>{{ each|get_item:field }}</td>
-                  {% endfor %}
-                </tr>
-              {% endif %}
-            {% endfor %}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-      </section>
-
-        <form method="post" id="select_column">
-          <input type="text" name="column" value="" />
-          Guus please make this into a hidden input once it's working! I'm making it visible
-          so I can use it manually for now.
-          {% csrf_token %}
-        </form>
-
+      <form method="post" id="select_column" hidden>
+        <input type="text" name="column" value="" />
+        {% csrf_token %}
+      </form>
     </div>
 
     <div class="col-lg-4">
       {% include "hub/_processing.gis.menu.html" %}
     </div>
-
   </section>
 
   <section>
-
     <h2>History and comments</h2>
     {% include "_messages.html" %}
-
   </section>
 
+{% endblock %}
+
+{% block footer %}
+  <script>
+    $(".btn-next").addClass("disabled").attr("disabled", "disabled").text("Please select a column");
+
+    $(".select-column").click(function() {
+      let field = $(this).data("field");
+
+      $("#select_column input[name='column']").val(field);
+
+      $(".select-column").removeClass("selected");
+      $(".select-column[data-field='" + field + "']").addClass("selected");
+
+      $(".btn-next").removeClass("disabled").removeAttr("disabled").html("Save and next <i class='fa fa-arrow-right ml-2 mr-0'></i>");
+    })
+  </script>
 {% endblock %}

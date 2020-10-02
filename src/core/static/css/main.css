@@ -42,6 +42,9 @@ a {
     color: #144d58;
     text-decoration: none; }
 
+.border-primary {
+  border-color: #1F7A8C !important; }
+
 .bg-primary {
   background-color: #1F7A8C !important; }
 

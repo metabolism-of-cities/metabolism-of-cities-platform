@@ -1,89 +1,104 @@
+<div class="sticky-top">
+  <div class="mb-3">
+    <ul class="list-group list-group-horizontal">
+      <li class="list-group-item text-center {% if step == 1 %}bg-light{% endif %}">
+        <i class="far fa-fw fa-2x {% if step == 1 %}fa-info-circle{% else %}fa-check text-success{% endif %}"></i>
+        <small class="d-block mt-2">Check general info</small>
+      </li>
+      <li class="list-group-item text-center {% if step == 2 %}bg-light{% endif %}">
+        <i class="far fa-fw fa-2x {% if step < 3 %}fa-columns{% else %}fa-check text-success{% endif %}"></i>
+        <small class="d-block mt-2">Classify columns</small>
+      </li>
+      <li class="list-group-item text-center {% if step == 3 %}bg-light{% endif %}">
+        <i class="far fa-fw fa-2x fa-clipboard-list"></i>
+        <small class="d-block mt-2">Verify metadata</small>
+      </li>
+    </ul>
+  </div>
 
-      <div class="mb-3">
-        <div href="../" title="Check general info" class="avatar letter" style="background:#218838">1</div>
-        <div title="Classify columns" class="avatar letter" {% if step > 1 %}style="background:#218838"{% endif %}>2</div>
-        <div title="Verify meta data" class="avatar letter" {% if step > 2 %}style="background:#218838"{% endif %}>3</div>
-      </div>
-
-      <div class="card mb-4">
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item table-item">
-            <div><i class="fal fa-fw fa-fingerprint mr-1"></i> ID</div>
-            <div><a href="{% url URLS.LIBRARY_ITEM document.id %}">{{ document.id }}</a></div>
-          </li>
-          <li class="list-group-item table-item">
-            <div><i class="fal fa-fw fa-user mr-1"></i> Uploaded by</div>
-            <div>{{ document.uploader }}</div>
-          </li>
-          <li class="list-group-item table-item">
-            <div><i class="fal fa-fw fa-box mr-1"></i> Type</div>
-            <div>{{ layer.geom_type.name }}</div>
-          </li>
-          <li class="list-group-item table-item">
-            <div><i class="fal fa-fw fa-layer-group mr-1"></i> Properties</div>
-            <div>{{ layer.num_fields }}</div>
-          </li>
-          <li class="list-group-item table-item">
-            <div><i class="far fa-fw fa-dot-circle mr-1"></i> Items</div>
-            <div>{{ layer.num_feat }}</div>
-          </li>
-          {% if work.assigned_to %}
-            <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-user-check mr-1"></i> Assigned to</div>
-              <div>{{ work.assigned_to }}</div>
-            </li>
-          {% endif %}
-        </ul>
-      </div>
-
-      {% if step == 1 %}
-        <form method="post">
-          {% if not work.assigned_to %}
-            <span class="btn btn-default-outline" id="showstart">
-              <i class="fas fa-user-plus"></i>
-              Start working on this
-            </span>
-          {% endif %}
-
-          {% if work.assigned_to == request.user.people or not work.assigned_to %}
-            <div class="card p-3" id="startbox">
-              <h2 class="h4">Thanks for working on this!</h2>
-              <p><a href="javascript:alert('Tutorial will be available soon!')">Click here</a> for a tutorial if you are new to this.</p>
-              <p>Is the shapefile looking good?</p>
-              <button type="submit" name="start_work" value="classify/" class="btn btn-success mb-3">
-                Yes, go to step 2 <i class="fa fa-arrow-right"></i>
-              </button>
-              <button type="submit" name="start_work_edit" value="files/" class="btn btn-dark">
-                <i class="fa fa-upload"></i>
-                No, I will upload a different file first 
-              </button>
-            </div>
-          {% endif %}
-
-          {% if work.assigned_to == request.user.people %}
-            <button type="submit" name="stop_work" value="true" class="btn btn-warning">
-              <i class="fas fa-user-times"></i>
-              Stop working on this
-            </button>
-          {% endif %}
-
-          {% csrf_token %}
-        </form>
-        <a href="../" class="btn btn-primary-basic mt-4">
-          <i class="fal fa-angle-left"></i>
-          Back to overview
-        </a>
-      {% elif step == 2 %}
-          <div class="card p-3">
-            <button form="select_column" name="next" value="true" type="submit" class="btn btn-success mb-3">Save and next <i class="fa fa-arrow-right"></i></button>
-            <a href="../" class="btn btn-dark"><i class="fa fa-arrow-left"></i> Back</a>
-          </div>
-      {% elif step == 3 %}
-        <form method="post">
-          <div class="card p-3">
-            <button name="next" value="true" type="submit" class="btn btn-success mb-3">Save and publish <i class="fa fa-check"></i></button>
-            <a href="../classify/" class="btn btn-dark"><i class="fa fa-arrow-left"></i> Back</a>
-          </div>
-          {% csrf_token %}
-        </form>
+  {% if step == 1 %}
+    <form method="post">
+      {% if not work.assigned_to %}
+        <span class="btn btn-primary" id="showstart">
+          <i class="fas fa-user-plus"></i>
+          Start working on this
+        </span>
       {% endif %}
+
+      {% if work.assigned_to == request.user.people or not work.assigned_to %}
+        <div class="card mb-4" id="startbox">
+          <div class="card-body">
+            <h2 class="h4">Thanks for working on this!</h2>
+            <p><a href="javascript:alert('Tutorial will be available soon!')">Click here</a> for a tutorial if you are new to this.</p>
+            <p>Is the shapefile looking good?</p>
+            <button type="submit" name="start_work" value="classify/" class="btn btn-block btn-success mb-3">
+              Yes, go to step 2 <i class="fa fa-arrow-right mr-0 ml-2"></i>
+            </button>
+            <button type="submit" name="start_work_edit" value="files/" class="btn btn-block btn-dark">
+              <i class="fa fa-upload"></i>
+              No, upload a different file
+            </button>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if work.assigned_to == request.user.people %}
+        <button type="submit" name="stop_work" value="true" class="btn btn-warning">
+          <i class="fas fa-user-times"></i>
+          Stop working on this
+        </button>
+      {% endif %}
+
+      {% csrf_token %}
+    </form>
+
+    <a href="../" class="btn btn-primary-basic mt-2 mb-4">
+      <i class="fal fa-angle-left"></i>
+      Back to overview
+    </a>
+  {% elif step == 2 %}
+    <div class="card p-3 mb-4">
+      <button form="select_column" name="next" value="true" type="submit" class="btn btn-success btn-next mb-3">Save and next <i class="fa fa-arrow-right ml-2 mr-0"></i></button>
+      <a href="../" class="btn btn-dark"><i class="fa fa-arrow-left"></i> Back</a>
+    </div>
+  {% elif step == 3 %}
+    <form method="post">
+      <div class="card p-3 mb-4">
+        <button name="next" value="true" type="submit" class="btn btn-success mb-3">Save and publish <i class="fa fa-check ml-2 mr-0"></i></button>
+        <a href="../classify/" class="btn btn-dark"><i class="fa fa-arrow-left"></i> Back</a>
+      </div>
+      {% csrf_token %}
+    </form>
+  {% endif %}
+
+  <div class="card mb-4">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item table-item">
+        <div><i class="fal fa-fw fa-fingerprint mr-1"></i> ID</div>
+        <div><a href="{% url URLS.LIBRARY_ITEM document.id %}">{{ document.id }}</a></div>
+      </li>
+      <li class="list-group-item table-item">
+        <div><i class="fal fa-fw fa-user mr-1"></i> Uploaded by</div>
+        <div>{{ document.uploader }}</div>
+      </li>
+      <li class="list-group-item table-item">
+        <div><i class="fal fa-fw fa-box mr-1"></i> Type</div>
+        <div>{{ layer.geom_type.name }}</div>
+      </li>
+      <li class="list-group-item table-item">
+        <div><i class="fal fa-fw fa-layer-group mr-1"></i> Properties</div>
+        <div>{{ layer.num_fields }}</div>
+      </li>
+      <li class="list-group-item table-item">
+        <div><i class="far fa-fw fa-dot-circle mr-1"></i> Items</div>
+        <div>{{ layer.num_feat }}</div>
+      </li>
+      {% if work.assigned_to %}
+        <li class="list-group-item table-item">
+          <div><i class="far fa-fw fa-user-check mr-1"></i> Assigned to</div>
+          <div>{{ work.assigned_to }}</div>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</div>

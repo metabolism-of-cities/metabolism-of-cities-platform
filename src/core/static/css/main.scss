@@ -79,6 +79,10 @@ a {
   }
 }
 
+.border-primary {
+  border-color: $bg-primary !important;
+}
+
 .bg-primary {
   background-color: $bg-primary !important;
 }

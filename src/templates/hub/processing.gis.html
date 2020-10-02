@@ -4,13 +4,22 @@
 {% block page_name %}staf review session{% endblock %}
 
 {% block css %}
-  <style type="text/css">
+  <style>
     {% if error %}
-      .top-message-box{display:none}
+      .top-message-box {
+        display:none
+      }
     {% endif %}
+
     {% if not work.assigned_to %}
-      #startbox{display:none}
+      #startbox {
+        display:none
+      }
     {% endif %}
+
+    table {
+      width: 100%;
+    }
   </style>
 {% endblock %}
 
@@ -21,90 +30,91 @@
   <section class="row pb-0">
     <div class="col-lg-8 mb-2 mb-lg-0">
 
-      <div class="card card-table mb-4">
-        {% if error %}
-          <div class="alert alert-dark text-center p-5 mb-0">
-            <h2>
-            <i class="fa fa-exclamation-triangle"></i><br>
-            Unable to read shapefile
-            </h2>
-            <div class="mt-4">
-              {% for each in messages %}
-                {{ each|safe }}
-              {% endfor %}
-            </div>
+      {% if error %}
+        <div class="alert alert-dark text-center p-5 mb-0">
+          <h2>
+          <i class="fa fa-exclamation-triangle"></i><br>
+          Unable to read shapefile
+          </h2>
+          <div class="mt-4">
+            {% for each in messages %}
+              {{ each|safe }}
+            {% endfor %}
           </div>
+        </div>
       {% else %}
 
-       {% if document.get_shapefile_plot %}
-         <img src="{{ document.get_shapefile_plot }}" alt="" />
-       {% else %}
-          <p><em>There is no preview plot available.</em></p>
-          {% if document.meta_data.shapefile_plot_error %}
-            <div class="alert alert-danger"><strong>Error:</strong><br>{{ document.meta_data.shapefile_plot_error }}</div>
-          {% endif %}
-        {% endif %}
-
-        <div class="card card-table mb-4">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Feature</th>
-                <th>Property</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% if request.user.is_superuser and DEBUG %}
-                <tr>
-                  <td>UUID</td>
-                  <td>{{ document.meta_data.uuid }}</td>
-                </tr>
-              {% endif %}
-              <tr>
-                <td>Document name</td>
-                <td>{{ document }}</td>
-              </tr>
-              <tr>
-                <td>Layer name</td>
-                <td>{{ layer.name }}</td>
-              </tr>
-              <tr>
-                <td>File size</td>
-                <td>{{ file|floatformat }} Mb</td>
-              </tr>
-              <tr>
-                <td>Coordinate reference system</td>
-                <td>{{ layer.srs.DATUM }}</td>
-              </tr>
-              <tr>
-                <td>PROJCS</td>
-                <td>{{ layer.srs.PROJCS }}</td>
-              </tr>
-              <tr>
-                <td>AUTHORITY</td>
-                <td>{{ layer.srs.AUTHORITY }}</td>
-              </tr>
-              <tr>
-                <td>SPHEROID</td>
-                <td>{{ layer.srs.SPHEROID }}</td>
-              </tr>
-              <tr>
-                <td>UNIT</td>
-                <td>{{ layer.srs.UNIT }}</td>
-              </tr>
-              {% if active_geocodes %}
-                <tr>
-                  <td>Geocode(s)</td>
-                  <td>
-                    {% for geocode in active_geocodes %}
-                    {{ geocode.scheme }} <i class="fal fa-angle-right mx-2"></i> {{ geocode }}
-                    {% endfor %}
-                  </td>
-                </tr>
-              {% endif %}
-            </tbody>
-          </table>
+      {% if document.get_shapefile_plot %}
+        <div class="rounded border bg-white text-center mb-4">
+          <img class="img-fluid rounded" src="{{ document.get_shapefile_plot }}" alt="" />
         </div>
+      {% else %}
+        <p><em>There is no preview plot available.</em></p>
+        {% if document.meta_data.shapefile_plot_error %}
+          <div class="alert alert-danger"><strong>Error:</strong><br>{{ document.meta_data.shapefile_plot_error }}</div>
+        {% endif %}
+      {% endif %}
+
+      <div class="card card-table mb-4">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Property</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if request.user.is_superuser and DEBUG %}
+              <tr>
+                <td>UUID</td>
+                <td>{{ document.meta_data.uuid }}</td>
+              </tr>
+            {% endif %}
+            <tr>
+              <td>Document name</td>
+              <td>{{ document }}</td>
+            </tr>
+            <tr>
+              <td>Layer name</td>
+              <td>{{ layer.name }}</td>
+            </tr>
+            <tr>
+              <td>File size</td>
+              <td>{{ file|floatformat }} Mb</td>
+            </tr>
+            <tr>
+              <td>Coordinate reference system</td>
+              <td>{{ layer.srs.DATUM }}</td>
+            </tr>
+            <tr>
+              <td>PROJCS</td>
+              <td>{{ layer.srs.PROJCS }}</td>
+            </tr>
+            <tr>
+              <td>AUTHORITY</td>
+              <td>{{ layer.srs.AUTHORITY }}</td>
+            </tr>
+            <tr>
+              <td>SPHEROID</td>
+              <td>{{ layer.srs.SPHEROID }}</td>
+            </tr>
+            <tr>
+              <td>UNIT</td>
+              <td>{{ layer.srs.UNIT }}</td>
+            </tr>
+            {% if active_geocodes %}
+              <tr>
+                <td>Geocode(s)</td>
+                <td>
+                  {% for geocode in active_geocodes %}
+                  {{ geocode.scheme }} <i class="fal fa-angle-right mx-2"></i> {{ geocode }}
+                  {% endfor %}
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
       {% endif %}
 
       {% if document.comments %}
@@ -133,12 +143,10 @@
 
       {% endif %}
     </div>
-  </div>
 
     <div class="col-lg-4">
       {% include "hub/_processing.gis.menu.html" %}
     </div>
-
   </section>
 
   {% if not error %}
@@ -150,7 +158,7 @@
           Only the first 100 items are shown. In total, there are <strong>{{ layer.num_feat|floatformat:0 }}</strong> items in your shapefile
         </div>
       {% endif %}
-      <table class="table content-table datatable-card">
+      <table class="table datatable datatable-card">
         <thead>
           <tr>
             {% for field in layer.fields %}
@@ -170,16 +178,13 @@
           {% endfor %}
         </tbody>
       </table>
-
     </section>
 
   {% endif %}
 
   <section>
-
     <h2>History and comments</h2>
     {% include "_messages.html" %}
-
   </section>
 
 {% endblock %}
@@ -191,14 +196,13 @@
       $("i", this).toggleClass("fa-angle-down, fa-angle-up")
       $("#raw").toggle();
     });
+
     $("#showstart").click(function(){
       $(this).hide();
       $("#startbox").show();
     });
-    // enable datatable
-    $(".content-table").dataTable( {
-      "scrollX": true
-    });
 
+    // fix horizontal scrolling datatable
+    $(".datatable.datatable-card").parent().addClass("overflow-auto");
   </script>
 {% endblock %}

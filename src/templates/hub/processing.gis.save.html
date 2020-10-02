@@ -1,5 +1,19 @@
 {% extends "_base.html" %}
 
+{% block css %}
+  <style>
+    .learn-more {
+      top: 0;
+      right: 0;
+    }
+
+    .learn-more .btn {
+      border-top-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  </style>
+{% endblock %}
+
 {% block content %}
 
   {% include "hub/_nav.html" %}
@@ -7,14 +21,14 @@
   <section class="row pb-0">
     <div class="col-lg-8 mb-2 mb-lg-0">
 
-        <div class="alert alert-warning">
-          <i class="fa fa-info-circle"></i>
-          Please review the meta data and correct where needed.
-        </div>
+      <div class="alert alert-warning">
+        <i class="fa fa-info-circle"></i>
+        Please review the meta data and correct where needed.
+      </div>
 
-        <form method="post">
+      <form method="post">
 
-        <section class="card p-3">
+        <section class="card p-3 mb-4">
 
           <h3 class="h4">Document details</h3>
 
@@ -37,7 +51,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group mb-0">
             <label>Geocode(s)</label>
             <select class="custom-select select2" multiple name="geocodes">
               {% for each in geocodes %}
@@ -45,14 +59,13 @@
               {% endfor %}
             </select>
           </div>
-
         </section>
 
-        <section class="card p-3 mt-3">
+        <section class="card position-relative p-3 mt-3">
 
-          <span class="text-right">
-            <a href="javascript:alert('Tutorial available soon')"><i class="fa fa-info-circle"></i> Learn more</a>
-          </span>
+          <div class="position-absolute learn-more">
+            <a class="btn btn-sm btn-primary" href="javascript:alert('Tutorial available soon')"><i class="fa fa-info-circle"></i> Learn more</a>
+          </div>
 
           <h3 class="h4">Data quality</h3>
 
@@ -73,21 +86,13 @@
             <textarea name="update_required" class="form-control" rows="5">{{ document.meta_data.dqi.update_required }}</textarea>
           </div>
 
-          <div class="form-group">
+          <div class="form-group mb-0">
             <label>Any known flaws or limitations?</label>
             <textarea name="limitations" class="form-control" rows="5">{{ document.meta_data.dqi.limitations }}</textarea>
           </div>
+        </section>
 
-          <button type="submit" class="btn btn-dark mb-3">Save</button>
-          <div class="alert alert-dark">
-          GUUS please remove this button and instead make the SAVE AND PUBLISH on the right
-          link to this form. I just put it here because I don't want to mess with the 
-          _included menu file while you're working on it.
-          </div>
-          
-          {% csrf_token %}
-        </form>
-
+      </form>
     </div>
 
     <div class="col-lg-4">
@@ -97,10 +102,8 @@
   </section>
 
   <section>
-
     <h2>History and comments</h2>
     {% include "_messages.html" %}
-
   </section>
 
 {% endblock %}
