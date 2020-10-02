@@ -92,5 +92,8 @@
 
       $(".btn-next").removeClass("disabled").removeAttr("disabled").html("Save and next <i class='fa fa-arrow-right ml-2 mr-0'></i>");
     })
+
+    // fix horizontal scrolling datatable
+    $(".datatable.datatable-card").parent().addClass("overflow-auto");
   </script>
 {% endblock %}
