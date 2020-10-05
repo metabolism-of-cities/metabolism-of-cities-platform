@@ -1423,6 +1423,8 @@ def hub_processing_gis_save(request, id, space=None):
         work = None
         messages.error(request, "We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
 
+    layer = document.get_gis_layer()
+    total_objects = layer.num_feat
     if request.method == "POST":
         document.name = request.POST.get("name")
         document.description = request.POST.get("description")
@@ -1434,8 +1436,13 @@ def hub_processing_gis_save(request, id, space=None):
              "limitations": request.POST.get("limitations"),
         }
         document.save()
-        document.convert_shapefile()
-
+        if layer.num_feat > 1000:
+            document.meta_data["ready_for_processing"] = True
+            document.save()
+            messages.success(request, "The shapefile was processed! However, because more than 1,000 items are included in this layer it will take some time to complete the processing. It can take up to 6 hours for processing to complete.")
+        else:
+            document.convert_shapefile()
+        
         message_description = "Status change: " + work.get_status_display() + " → "
         work.status = Work.WorkStatus.COMPLETED
         work.save()
@@ -1456,7 +1463,7 @@ def hub_processing_gis_save(request, id, space=None):
 
     context = {
         "document": document,
-        "layer": document.get_gis_layer(),
+        "layer": layer,
         "list_messages": work.messages.all() if work else None,
         "load_messaging": True,
         "forum_id": work.id if Work else None,

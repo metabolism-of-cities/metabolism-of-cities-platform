@@ -26,6 +26,17 @@
         Please review the meta data and correct where needed.
       </div>
 
+      {% if layer.num_feat > 1000 %}
+
+        <div class="alert alert-warning">
+          <i class="fa fa-exclamation-triangle"></i>
+          This shapefile has over 1,000 items so processing will not be done instantly 
+          and it will instead be scheduled for processing later today (within 6 hours from now).
+        </div>
+
+      {% endif %}
+
+
       <form method="post" id="saveform">
 
         {% csrf_token %}

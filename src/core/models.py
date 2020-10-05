@@ -59,7 +59,8 @@ from django.db.models import Q
 import re
 
 # For our shapefile work
-from django.contrib.gis.gdal import DataSource
+from django.contrib.gis.gdal import DataSource, OGRGeometry
+from django.contrib.gis.gdal.srs import (AxisOrder, CoordTransform, SpatialReference)
 
 def get_date_range(start, end, months_only=False):
 
@@ -1086,8 +1087,6 @@ class LibraryItem(Record):
         if check:
             check.delete()
 
-        from django.contrib.gis.gdal import OGRGeometry
-        from django.contrib.gis.gdal.srs import (AxisOrder, CoordTransform, SpatialReference)
         layer = self.get_gis_layer()
         fields = layer.fields
 
@@ -1108,7 +1107,6 @@ class LibraryItem(Record):
             # if it uses something else
             debug_old = geo.wkt
             if layer.srs.srid != 4326:
-                #wgs84_trad = SpatialReference(4326, axis_order=AxisOrder.TRADITIONAL)
                 ct = CoordTransform(layer.srs, SpatialReference("WGS84"))
                 geo.transform(ct)
             geo = geo.wkt

@@ -28,6 +28,7 @@ class MyAdminSite(AdminSite):
 
     # Text to put at the top of the admin index page.
     index_title = ugettext_lazy("Metabolism of Cities")
+    enable_nav_sidebar = False
 
 admin_site = MyAdminSite()
 

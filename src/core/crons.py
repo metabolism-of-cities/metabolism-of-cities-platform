@@ -17,6 +17,19 @@ class CreatePlotPreview(CronJobBase):
         for each in list:
             each.create_shapefile_plot()
 
+class ProcessShapefile(CronJobBase):
+    RUN_EVERY_MINS = 60*6
+    schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
+    code = "core.process_shapefile" # Unique code for logging purposes
+
+    def do(self):
+        list = LibraryItem.objects.filter(type__name="Shapefile", meta_data__ready_for_processing=True)
+        for each in list:
+            each.convert_shapefile()
+            each.meta_data["processed"] = True
+            each.meta_data["ready_for_processing"] = False
+            each.save()
+
 class CheckDataProgress(CronJobBase):
     RUN_EVERY_MINS = 85
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
