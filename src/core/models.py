@@ -23,9 +23,6 @@ User = get_user_model()
 import bleach
 from django.utils.safestring import mark_safe
 
-# For the JSON field
-from django.contrib.postgres.fields import JSONField
-
 # To get the geometry fields
 from django.contrib.gis.db import models
 
@@ -206,7 +203,7 @@ class Record(models.Model):
     # We are going to delete this post-launch
     old_id = models.IntegerField(null=True, blank=True, db_index=True, help_text="Only used for the migration between old and new structure")
 
-    meta_data = JSONField(null=True, blank=True)
+    meta_data = models.JSONField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -809,7 +806,7 @@ class ForumTopic(Record):
     last_update = models.ForeignKey("Message", on_delete=models.SET_NULL, null=True, blank=True)
     part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     parent = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="forum_topics")
-    is_starred = models.NullBooleanField(default=False)
+    is_starred = models.BooleanField(default=False, null=True)
     parent_url = models.URLField(null=True, blank=True, db_index=True)
 
     def posters(self):
@@ -930,7 +927,7 @@ class LibraryItem(Record):
     file = models.FileField(null=True, blank=True, upload_to="library")
     url = models.CharField(max_length=500, null=True, blank=True)
     file_url = models.URLField(null=True, blank=True)
-    open_access = models.NullBooleanField(null=True, blank=True)
+    open_access = models.BooleanField(null=True, blank=True)
     doi = models.CharField(max_length=255, null=True, blank=True)
     isbn = models.CharField(max_length=255, null=True, blank=True)
     comments = models.TextField(null=True, blank=True)
@@ -1967,7 +1964,7 @@ class ZoteroItem(models.Model):
     key = models.CharField(max_length=255)
     library_item = models.ForeignKey(LibraryItem, on_delete=models.SET_NULL, null=True, blank=True)
     collection = models.ForeignKey(ZoteroCollection, on_delete=models.CASCADE)
-    data = JSONField(null=True, blank=True)
+    data = models.JSONField(null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
