@@ -380,7 +380,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
     if data_management and type.name in processing_is_possible and curator and not id:
         # We only show the direct processing option if we are on a data-site, and the
-        # particular type of entry requires processing, and the user has curation permissions, 
+        # particular type of entry requires processing, and the user has curation permissions,
         # and only when we add, not when we edit items.
         view_processing = True
 
@@ -416,7 +416,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
         if "update_tags" in request.GET:
             fields = ["name", "tags", "description"]
-            
+
         if info:
             info = info.dataset
 
@@ -439,7 +439,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             }
         )
     elif type.name == "Video Recording":
-        fields = ["name", "description", "url", "video_site", "author_list", "duration", "spaces", "year", "language", "license", "comments"] 
+        fields = ["name", "description", "url", "video_site", "author_list", "duration", "spaces", "year", "language", "license", "comments"]
 
         if info:
             info = info.video
@@ -605,13 +605,13 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             if "parent" in request.GET:
                 info.is_part_of_id = request.GET.get("parent")
             if type.name == "Image" and not id:
-                # So here is the dealio... when we upload images we MAY be doing this as part of 
+                # So here is the dealio... when we upload images we MAY be doing this as part of
                 # a data collection effort, which means that the tag is set to indicate which tag (layer)
-                # this is uploaded to. We use a hack of sorts and take that ID and use that for 
+                # this is uploaded to. We use a hack of sorts and take that ID and use that for
                 # the position field. The position dictates the order in which photos are shown.
                 # That way, photos are automatically grouped by their layer. Furthermore, when a 'general'
                 # photo is uploaded, tag = 0, so that means that these photos always appear first, which
-                # is also something that we want. 
+                # is also something that we want.
                 if tag == 0:
                     position = 0
                 elif tag:
@@ -690,7 +690,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                     activity_id = 14
 
                 if type_name != "Dataset" and type_name != "Shapefile" and curator:
-                    # We do NOT create a new task to process this file because we assume that 
+                    # We do NOT create a new task to process this file because we assume that
                     # curators that upload library items properly tag them when they upload it.
                     pass
                 else:
@@ -721,8 +721,8 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                             messages.error(request, "Sorry, we could not remove a file.<br><strong>Error code: " + str(e) + "</strong>")
                 if "files" in request.FILES:
                     if info.type.name == "Shapefile":
-                        # Shapefiles should be placed in sub directories because of the way 
-                        # the files are read. If a record has a uuid in the meta_data, then 
+                        # Shapefiles should be placed in sub directories because of the way
+                        # the files are read. If a record has a uuid in the meta_data, then
                         # this will be used for creating a sub director. So let's create one
                         # if it doesn't exist yet.
                         if not info.meta_data:
@@ -805,7 +805,7 @@ def controlpanel_zotero(request):
         unauthorized_access(request)
 
     project = Project.objects.get(pk=request.project)
-    
+
     # Let's see which Zotero collections this project has access to
     #21
     list = ZoteroCollection.objects.filter(part_of_project=project)
