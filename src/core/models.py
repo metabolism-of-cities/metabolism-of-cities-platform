@@ -2014,3 +2014,4 @@ class ZoteroItem(models.Model):
 #        primary_key=False,
 #    )
 #    info = models.CharField(max_length=100)
+
