@@ -1090,6 +1090,7 @@ class LibraryItem(Record):
             check.delete()
 
         from django.contrib.gis.gdal import OGRGeometry
+        from django.contrib.gis.gdal.srs import (AxisOrder, CoordTransform, SpatialReference)
         layer = self.get_gis_layer()
         fields = layer.fields
 
@@ -1110,7 +1111,8 @@ class LibraryItem(Record):
             # if it uses something else
             debug_old = geo.wkt
             if layer.srs.srid != 4326:
-                geo.transform(4326)
+                wgs84_trad = SpatialReference(4326, axis_order=AxisOrder.TRADITIONAL)
+                geo.transform(wgs84_trad)
             geo = geo.wkt
             debug_new = geo
 
