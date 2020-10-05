@@ -26,7 +26,9 @@
         Please review the meta data and correct where needed.
       </div>
 
-      <form method="post">
+      <form method="post" id="saveform">
+
+        {% csrf_token %}
 
         <section class="card p-3 mb-4">
 

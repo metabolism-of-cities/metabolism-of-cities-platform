@@ -62,13 +62,10 @@
       <a href="../" class="btn btn-dark"><i class="fa fa-arrow-left"></i> Back</a>
     </div>
   {% elif step == 3 %}
-    <form method="post">
       <div class="card p-3 mb-4">
-        <button name="next" value="true" type="submit" class="btn btn-success mb-3">Save and publish <i class="fa fa-check ml-2 mr-0"></i></button>
+        <button name="next" form="saveform" value="true" type="submit" class="btn btn-success mb-3">Save and publish <i class="fa fa-check ml-2 mr-0"></i></button>
         <a href="../classify/" class="btn btn-dark"><i class="fa fa-arrow-left"></i> Back</a>
       </div>
-      {% csrf_token %}
-    </form>
   {% endif %}
 
   <div class="card mb-4">
