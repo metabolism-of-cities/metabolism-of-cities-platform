@@ -246,7 +246,9 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         info.save()
 
     spaces = info.imported_spaces.all()
+    spaces_message = None
     if spaces.count() > 20:
+        spaces_message = f"This shapefile contains {spaces.count()} items - we are only displaying the first 20 below"
         spaces = spaces[:20]
 
     map = None
@@ -280,6 +282,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         "submenu": submenu,
         "url_processing": project.slug + ":hub_processing_gis",
         "map": map._repr_html_() if map else None,
+        "spaces_message": spaces_message,
 
         # The following we'll only have during the AScUS voting round; remove afterwards
         "best_vote": RecordRelationship.objects.filter(relationship_id=32, record_parent=request.user.people) if request.user.is_authenticated else None,
@@ -571,10 +574,13 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
         ModelForm = modelform_factory(model, fields=fields, labels = labels)
 
+
     if info:
         form = ModelForm(request.POST or None, request.FILES or None, instance=info)
+        form.fields["spaces"].queryset = ReferenceSpace.objects.filter(Q(activated__isnull=False)|Q(id__in=info.spaces.all())).distinct()
     else:
         form = ModelForm(request.POST or None, request.FILES or None, initial=initial)
+        form.fields["spaces"].queryset = ReferenceSpace.objects.filter(activated__isnull=False).distinct()
 
     if type.name == "Dataset" and curator and False:
         form.fields["activities"].queryset = Activity.objects.filter(catalog_id=3655)
