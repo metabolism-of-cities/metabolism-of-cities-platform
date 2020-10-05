@@ -458,6 +458,11 @@
 
         {% if spaces %}
           <h3 class="mt-5">Part of this shapefile</h3>
+          {% if spaces_message %}
+            <div class="alert alert-warning">
+              <i class="fa fa-info-circle"></i> {{ spaces_message }}
+            </div>
+          {% endif %}
           <ul>
           {% for each in spaces %}
             <li><a href="{% url URLS.SPACE each.id %}">{{ each }}</a></li>

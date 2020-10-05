@@ -246,7 +246,9 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         info.save()
 
     spaces = info.imported_spaces.all()
+    spaces_message = None
     if spaces.count() > 20:
+        spaces_message = f"This shapefile contains {spaces.count()} items - we are only displaying the first 20 below"
         spaces = spaces[:20]
 
     map = None
@@ -280,6 +282,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         "submenu": submenu,
         "url_processing": project.slug + ":hub_processing_gis",
         "map": map._repr_html_() if map else None,
+        "spaces_message": spaces_message,
 
         # The following we'll only have during the AScUS voting round; remove afterwards
         "best_vote": RecordRelationship.objects.filter(relationship_id=32, record_parent=request.user.people) if request.user.is_authenticated else None,
