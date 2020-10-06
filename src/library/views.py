@@ -882,6 +882,13 @@ def controlpanel_tags(request):
         unauthorized_access(request)
 
     id = request.GET.get("id")
+    project = get_object_or_404(Project, pk=request.project)
+
+    if project.slug != "library" and not id:
+        # Only from within the main library do we want to allow
+        # super admins to manage all tags, from other sites we limit them
+        id = 938
+
     info = Tag.objects_unfiltered.get(pk=id) if id else None
     list = None
 
@@ -898,6 +905,9 @@ def controlpanel_tags(request):
         "load_select2": True,
         "list": list,
         "load_datatables": True,
+        "tags_url": project.slug + ":tags",
+        "edit_tags_url": project.slug + ":tag_form",
+        "id": id,
     }
     return render(request, "library/tags.html", context)
 
