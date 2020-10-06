@@ -57,7 +57,7 @@
     </select>
   </div>
 
-  <div class="input-group mb-3">
+  <div class="input-group mb-3" hidden>
     <input placeholder="Search in table below" name="search" type="search" class="form-control search-fancytree">
     <div class="input-group-append">
       <button class="btn btn-primary-outline clear-search" hidden>
@@ -72,14 +72,17 @@
   </div>
 
   {% if info %}
-    <h2>{{ info }}</h2>
+    <h2>{{ info }}
+      <a class="h6 ml-3" href="./{{ info.id }}/edit/?next={{ request.get_full_path }}"><i class="fa fa-edit"></i></a>
+    </h2>
     {% if info.parent_tag %}
-      <a href="{% url "library:tags" %}?id={{ info.parent_tag.id }}">Go one level up</a>
+      <a href="{% url "library:tags" %}?id={{ info.parent_tag.id }}"><i class="fa fa-arrow-up"></i> Go one level up ({{ info.parent_tag }})</a>
     {% else %}
-      <a href="{% url "library:tags" %}">Back to top level</a>
+      <a href="{% url "library:tags" %}"><i class="fa fa-arrow-left"></i> Back to top level</a>
     {% endif %}
   {% endif %}
-  <div class="card">
+
+  <div class="card mt-5 mb-3">
     <div class="card-body">
       <div class="fancytree-grid-container flexbox-item-grow">
         <table id="treetable" class="table-hover">
@@ -108,7 +111,32 @@
     </div>
   </div>
 
-  <a href="{% url 'library:tag_form' %}?parent={{ request.GET.id }}&amp;next={{ request.get_full_path }}">Add tag in this section</a>
+  <a href="{% url 'library:tag_form' %}?parent={{ request.GET.id }}&amp;next={{ request.get_full_path }}"><i class="fa fa-plus"></i> Add tag in this section</a>
+
+  {% if info %}
+
+    <h2 class="mt-4">Items with this tag</h2>
+    <p><em>We show up to 20 items here.</em></p>
+    <table class="table table-striped datatable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Record</th>
+          <th>All tags</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in list %}
+        <tr>
+          <td>{{ each.pk }}</td>
+          <td>{{ each }}</td>
+          <td>{% for tag in each.tags.all %}<span class="badge badge-info">{{ tag }}</span> {% endfor %}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+  {% endif %}
 
 {% endblock %}
 

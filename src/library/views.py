@@ -880,10 +880,24 @@ def controlpanel_zotero_tags(request, id):
 def controlpanel_tags(request):
     if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
+
     id = request.GET.get("id")
+    info = Tag.objects_unfiltered.get(pk=id) if id else None
+    list = None
+
+    if info:
+        if request.user.is_superuser:
+            list = Record.objects_unfiltered.filter(tags=info)
+        else:
+            list = Record.objects.filter(tags=info)
+        if list:
+            list = list[:20]
+
     context = {
-        "info": Tag.objects_unfiltered.get(pk=id) if id else None,
+        "info": info,
         "load_select2": True,
+        "list": list,
+        "load_datatables": True,
     }
     return render(request, "library/tags.html", context)
 
