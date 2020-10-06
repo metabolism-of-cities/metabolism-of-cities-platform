@@ -739,6 +739,18 @@ def controlpanel_users(request):
     return render(request, "controlpanel/users.html", context)
 
 @login_required
+def controlpanel_spaces(request):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    list = ReferenceSpace.objects.filter(geocodes=request.GET["geocode"])
+    context = {
+        "list": list,
+        "load_datatables": True,
+    }
+    return render(request, "controlpanel/spaces.html", context)
+
+@login_required
 def controlpanel_relationship_form(request, id=None):
 
     project = request.project

@@ -110,6 +110,7 @@ baseline_urlpatterns = [
     path("controlpanel/events/create/", core.controlpanel_event_form, name="controlpanel_event_form"),
     path("controlpanel/events/<int:id>/", core.controlpanel_event_form, name="controlpanel_event_form"),
     path("controlpanel/cache/", core.controlpanel_cache, name="controlpanel_cache"),
+    path("controlpanel/spaces/", core.controlpanel_spaces, name="controlpanel_spaces"),
 
     # News links
     path("news/", core.news_list, { "header_subtitle": "News and updates around urban metabolism literature." }, name="news"),

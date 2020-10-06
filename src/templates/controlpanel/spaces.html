@@ -1,0 +1,37 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1 class="mb-0">{% block title %}Spaces{% endblock %}</h1>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Options</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in list %}
+      <tr>
+        <td><a href="{% url URLS.SPACE each.id %}">{{ each }}</a></td>
+        <td>Edit</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <a class="mt-4 btn btn-default-outline" href="create/?next={{ request.get_full_path }}"><i class="fal fa-plus"></i> Add</a>
+
+  <div>
+    <a href="../" class="btn btn-primary-basic mt-4">
+      <i class="fal fa-angle-left"></i>
+      Back to control panel
+    </a>
+  </div>
+
+{% endblock %}

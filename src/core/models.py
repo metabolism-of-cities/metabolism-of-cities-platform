@@ -2000,10 +2000,12 @@ class ZoteroItem(models.Model):
         return hits
 
     def findSpaces(self):
-        spaces = ActivatedSpace.objects.all()
+        spaces = ReferenceSpace.objects.filter(geocodes=8355)
         hits = []
         for each in spaces:
-            if each.space.name in self.title:
+            if each.name in self.title:
+                hits.append(each)
+            elif "abstractNote" in self.data and each.name in self.data["abstractNote"]:
                 hits.append(each)
         return hits
 

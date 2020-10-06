@@ -95,6 +95,18 @@
           </a>
         </div>
       {% endif %}
+
+      {% if PROJECT.slug == "islands" %}
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="spaces/?geocode=8355">
+            <div class="icon">
+              <i class="fal fa-fw fa-island-tropical"></i>
+            </div>
+            <div class="card-header">Islands</div>
+          </a>
+        </div>
+      {% endif %}
+
       {% if PROJECT.slug == "education" %}
         <div class="col-md-3 mb-3">
           <a class="card icon-card btn-card" href="courses/">

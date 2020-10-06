@@ -22,8 +22,15 @@
       {% endfor %}
     </dd>
 
+    <dt class="col-2">Detected spaces</dt>
+    <dd class="col-10">
+      {% for each in info.findSpaces %}
+        <span class="badge badge-success">{{ each }}</span>
+      {% endfor %}
+    </dd>
+
     {% for key,value in info.data.items %}
-      {% if value %}
+      {% if value and key != "tags" %}
         <dt class="col-2">{{ key }}</dt>
         <dd class="col-10">{{ value }}</dd>
       {% endif %}
