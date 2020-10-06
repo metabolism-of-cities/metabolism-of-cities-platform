@@ -813,8 +813,11 @@ def controlpanel_zotero(request):
     project = Project.objects.get(pk=request.project)
 
     # Let's see which Zotero collections this project has access to
-    #21
     list = ZoteroCollection.objects.filter(part_of_project=project)
+    if list.count() == 1:
+        # If there is only one collection then we can just show that one, no need
+        # for a list with options
+        return redirect(str(list[0].pk) + "/")
 
     context = {
         "list": list,
@@ -835,6 +838,43 @@ def controlpanel_zotero_collection(request, id):
         "load_datatables": True,
     }
     return render(request, "controlpanel/zotero.collection.html", context)
+
+@login_required
+def controlpanel_zotero_item(request, collection, id):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    project = Project.objects.get(pk=request.project)
+    collection = ZoteroCollection.objects.get(pk=collection, part_of_project=project)
+    info = ZoteroItem.objects.get(collection_id=collection, pk=id)
+
+    context = {
+        "info": info,
+        "collection": collection,
+    }
+    return render(request, "controlpanel/zotero.item.html", context)
+
+@login_required
+def controlpanel_zotero_tags(request, id):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    info = ZoteroCollection.objects.get(pk=id, part_of_project_id=request.project)
+    list = ZoteroItem.objects.filter(collection=info)
+    all = {}
+    for each in list:
+        tags = each.getTags()
+        for tag in tags:
+            if tag not in all:
+                check = Tag.objects.filter(name=tag).exists()
+                all[tag] = check
+
+    context = {
+        "info": info,
+        "list": all,
+        "load_datatables": True,
+    }
+    return render(request, "controlpanel/zotero.tags.html", context)
 
 @login_required
 def controlpanel_tags(request):

@@ -1968,6 +1968,16 @@ class ZoteroItem(models.Model):
     def __str__(self):
         return self.title
 
+    def getTags(self):
+        if "tags" in self.data:
+            tags = self.data["tags"]
+            all = []
+            for each in tags:
+                all.append(each["tag"])                
+            return all
+        else:
+            return None
+
     def findMatch(self):
         check = LibraryItem.objects.filter(name=self.title)
         if not check and "doi" in self.data and self.data["doi"]:

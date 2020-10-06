@@ -3,13 +3,16 @@
 {% block content %}
 
   <h1 class="mb-0">{% block title %}{{ info }}{% endblock %}</h1>
-  <a href="../" class="btn btn-primary-basic mb-4">
+  <a href="../../" class="btn btn-primary-basic mb-4">
     <i class="fal fa-angle-left"></i>
     Back
   </a>
 
   {% if not request.GET.match %}
-    <p><a class="btn btn-warning" href="./?match=true"><i class="fa fa-random"></i> Check for matches</a></p>
+    <p>
+      <a class="btn btn-warning" href="./?match=true"><i class="fa fa-random"></i> Check for matches</a>
+      <a class="btn btn-default-outline" href="tags/">View all tags</a>
+    </p>
   {% else %}
     <div class="alert alert-warning">Match check was performed, see results below...</div>
   {% endif %}
@@ -19,6 +22,7 @@
       <tr>
         <th>ID</th>
         <th>Title</th>
+        <th>Type</th>
         {% if request.GET.match %}
           <th>Matches</th>
         {% else %}
@@ -30,7 +34,8 @@
     {% for each in list %}
       <tr>
         <td>{{ each.key }}</td>
-        <td>{{ each.title }}</td>
+        <td><a href="{{ each.pk }}/">{{ each.title }}</a></td>
+        <td>{{ each.data.itemType }}</td>
         {% if request.GET.match %}
           <td>
             {% for tag in each.findTags %}

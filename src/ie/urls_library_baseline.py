@@ -28,5 +28,7 @@ baseline_library_urlpatterns = [
     path("controlpanel/tags/json/", library.controlpanel_tags_json, name="tags_json"),
     path("controlpanel/zotero/", library.controlpanel_zotero),
     path("controlpanel/zotero/<int:id>/", library.controlpanel_zotero_collection),
+    path("controlpanel/zotero/<int:collection>/<int:id>/", library.controlpanel_zotero_item),
+    path("controlpanel/zotero/<int:id>/tags/", library.controlpanel_zotero_tags),
 
 ]
