@@ -27,7 +27,7 @@
     {% for each in list %}
       <tr>
         <td><a href="{{ each.uid }}/">{{ each }}</a></td>
-        <td><a href="{% url URLS.DATA_ARTICLE space.slug each.slug %}">Preview</a></td>
+        <td><a href="{% url URLS.DATA_ARTICLE each.spaces.all.0.slug each.slug %}">Preview</a></td>
         <td><em>Unpublished</em></td>
         <td>{{ each.date_created|date:"M d, Y" }}</td>
       </tr>

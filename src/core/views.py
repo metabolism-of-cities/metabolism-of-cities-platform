@@ -1656,7 +1656,7 @@ def newsletter(request):
 def pdf(request):
     name = request.GET["name"]
     score = request.GET["score"]
-    date = datetime.now()
+    date = datetime.datetime.now()
     date = date.strftime("%d %B %Y")
     site = Site.objects.get_current()
 

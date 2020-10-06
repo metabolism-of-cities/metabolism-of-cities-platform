@@ -1494,11 +1494,13 @@ def hub_analysis(request, space=None):
 def hub_data_articles(request, space=None):
 
     project = request.project
+    list = DataArticle.objects.filter(part_of_project_id=project)
     if space:
         space = get_space(request, space)
+        list = list.filter(spaces=space)
 
     context = {
-        "list": DataArticle.objects.filter(part_of_project_id=project, spaces=space),
+        "list": list,
         "load_datatables": True,
         "space": space,
         "hide_space_menu": True,
