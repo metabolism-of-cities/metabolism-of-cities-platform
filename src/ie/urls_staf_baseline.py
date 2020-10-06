@@ -28,6 +28,7 @@ baseline_staf_urlpatterns = [
     #path("resources/<slug:slug>/", library.list, name="library"),
 
     path("datasets/<int:id>/", staf.dataset, name="dataset"),
+    path("datasets/<int:id>/json/", staf.shapefile_json, name="shapefile_json"),
 
     path("layers/", staf.layers, name="layers"),
     path("layers/<slug:slug>/<int:id>/", staf.layer, name="layer"),

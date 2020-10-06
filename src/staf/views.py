@@ -1565,6 +1565,19 @@ def hub_data_article(request, space=None, id=None):
     }
     return render(request, "hub/data-article.html", context)
 
+def shapefile_json(request, id):
+
+    info = get_object_or_404(LibraryItem, pk=id)
+    spaces = info.imported_spaces.all()
+    string = "{\"type\":\"FeatureCollection\",\"features\":["
+    last = spaces.last()
+    for each in spaces:
+        string += each.geometry.geojson
+        if each != last:
+            string += ","
+    string += "]}"
+    return HttpResponse(string, content_type="application/json")
+
 
 @xframe_options_exempt
 def dataset(request, space=None, dataset=None, id=None):

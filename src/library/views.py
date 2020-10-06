@@ -203,7 +203,7 @@ def journal(request, slug):
     }
     return render(request, "library/journal.html", context)
 
-def item(request, id, show_export=True, space=None, layer=None, data_section_type=None):
+def item(request, id, show_export=True, space=None, layer=None, data_section_type=None, json=False):
 
     submenu = None
     # These settings are used when opening the URL from one of the data sites,

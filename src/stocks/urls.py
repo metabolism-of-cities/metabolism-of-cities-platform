@@ -3,9 +3,10 @@ from . import views
 from core import views as core
 from library import views as library
 from ie.urls_baseline import baseline_urlpatterns
+from ie.urls_staf_baseline import baseline_staf_urlpatterns
 
 app_name = "stocks"
-urlpatterns = baseline_urlpatterns + [
+urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("", views.landing, name="landing"),
     path("home/", views.index, name="index"),
     path("contribute/", views.contribute, name="contribute"),

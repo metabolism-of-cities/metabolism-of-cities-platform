@@ -368,8 +368,13 @@ class Project(Record):
     def get_absolute_url(self):
         return reverse("core:project", args=[self.slug])
 
-    def get_website(self):
-        if self.url:
+    def get_website(self, remove_local_slug=False):
+        if settings.DEBUG and self.has_subsite:
+            local_url = "http://0.0.0.0:8000/"
+            if remove_local_slug:
+                return local_url
+            return local_url + self.slug + "/"
+        elif self.url:
             return self.url
         elif self.has_subsite:
             return "/" + self.slug + "/"

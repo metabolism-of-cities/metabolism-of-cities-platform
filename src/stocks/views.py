@@ -114,14 +114,22 @@ def map(request, slug, id):
 
 def choropleth(request):
 
-    state_geo = "https://raw.githubusercontent.com/python-visualization/folium/master/examples/data/us-states.json"
+    info = LibraryItem.objects.get(pk=33886)
+    project = get_object_or_404(Project, pk=request.project)
+
+    # We need to remove trailing slash from the get_website, to avoid double slashes
+    geojson = project.get_website(True)[:-1] + reverse(project.slug + ":shapefile_json", args=[info.id])
+
+    # Here is to show you which URL is being loaded -- check the terminal output
+    p(geojson)
+
     state_unemployment = "https://raw.githubusercontent.com/python-visualization/folium/master/examples/data/US_Unemployment_Oct2012.csv"
     state_data = pd.read_csv(state_unemployment)
 
     map = folium.Map(location=[48, -102], zoom_start=3)
 
     folium.Choropleth(
-        geo_data=state_geo,
+        geo_data=geojson,
         name='choropleth',
         data=state_data,
         columns=['State', 'Unemployment'],
