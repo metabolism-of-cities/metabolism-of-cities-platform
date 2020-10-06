@@ -23,4 +23,5 @@ urlpatterns = baseline_urlpatterns + [
     path("dataset_editor/", views.dataset_editor, name="dataset_editor"),
     path("dataset_editor/chart/", views.chart_editor, name="chart_editor"),
     path("dataset_editor/map/", views.map_editor, name="map_editor"),
+    path("choropleth/", views.choropleth, name="choropleth"),
 ]
