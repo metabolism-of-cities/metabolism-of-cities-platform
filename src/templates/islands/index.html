@@ -10,7 +10,7 @@
 
 <style>
   .top-layer {
-    background-image: url("{% static 'img/home.bg.jpg' %}") !important;
+    background-image: url("/media/records/USVI_St_Thomas_Dec_2019_1.JPG") !important;
     background-size: cover !important;
     min-height: 55vh;
     position: relative;
@@ -79,7 +79,7 @@
   }
 
   .slick-dots li button::before {
-    color: #{% if alternative_design %}000{% else %}f8f9fa{% endif %};
+    color: #f8f9fa;
     opacity: .5;
     font-size: .75rem;
   }
@@ -124,9 +124,6 @@
   .stats {
     background-color: #dddedf;
   }
-  {% if alternative_design %}
-    .sprint-bar,.return-bar,.navbar-rand { display:none; }
-  {% endif %}
 </style>
 {% endblock %}
 
@@ -134,9 +131,75 @@
 
 </div> <!-- close main content container so we can have full-width content -->
 
-{% include "_home.whatwedo.html" %}
+<section class="what">
+  <div class="container">
+    <h2 class="text-center font-weight-bold my-4 ">What we do</h2>
+    <div class="row pt-4">
+      <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card icon-card">
+          <div class="icon bg-primary">
+            <i class="fal fa-fw fa-file-chart-line text-light"></i>
+          </div>
+          <div class="card-header bg-primary text-light">
+            <h5>Create knowledge</h5>
+          </div>
+          <div class="card-body">
+            <p class="what-text">
+              We aim to create new knowledge by participating and collaborating in research projects and developing new open source tools.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card icon-card">
+          <div class="icon bg-{% if alternative_design %}light{% else %}primary{% endif %}">
+            <i class="fal fa-fw fa-share-alt {% if not alternative_design %} text-light{% endif %}"></i>
+          </div>
+          <div class="card-header bg-{% if alternative_design %}light text-dark{% else %}primary text-light{% endif %}">
+            <h5>Share knowledge</h5>
+          </div>
+          <div class="card-body">
+            <p class="what-text">
+              We aim to gather and curate (all) knowledge around island metabolism in one central platform in order to make it accessible to different target audiences.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card icon-card">
+          <div class="icon bg-{% if alternative_design %}light{% else %}primary{% endif %}">
+            <i class="fal fa-fw fa-wrench {% if not alternative_design %} text-light{% endif %}"></i>
+          </div>
+          <div class="card-header bg-{% if alternative_design %}light text-dark{% else %}primary text-light{% endif %}">
+            <h5>Apply knowledge</h5>
+          </div>
+          <div class="card-body">
+            <p class="what-text">
+              We help policy makers and practitioners to tackle their challenges with Urban Metabolism thinking.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card icon-card">
+          <div class="icon bg-{% if alternative_design %}light{% else %}primary{% endif %}">
+            <i class="fal fa-fw fa-user-friends {% if not alternative_design %} text-light{% endif %}"></i>
+          </div>
+          <div class="card-header bg-{% if alternative_design %}light text-dark{% else %}primary text-light{% endif %}">
+            <h5>Foster a community</h5>
+          </div>
+          <div class="card-body">
+            <p class="what-text">
+              We believe that tackling the island sustainability challenge can not be done alone. We want to foster a community of stakeholders that collaborates on developing solutions.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-<section class="projects {% if alternative_design %}{% else %}bg-primary text-light{% endif %}">
+<section class="projects bg-primary text-light">
   <div class="container text-dark">
       {% include "data/_space.progress.html" %}
   </div>

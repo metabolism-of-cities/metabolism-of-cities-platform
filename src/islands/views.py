@@ -17,6 +17,16 @@ from core.mocfunctions import *
 def index(request):
     list = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)[:3]
     project = get_object_or_404(Project, pk=request.project)
+    blurb = """
+        <img class="main-logo my-4" alt="Metabolism of Cities" src="/media/logos/logo.flat.svg?u=true">
+        <div class="my-4 font-weight-bold" style="text-shadow:2px 2px 8px #000">
+            MoI is a network of scholars that conducts policy-relevant research
+            to support island economies achieve resource security and
+            self-reliance, and build resilience to the impacts of climate
+            change.
+        </div>
+    """
+
     context = {
         "show_project_design": True,
         "list": list,
@@ -25,7 +35,9 @@ def index(request):
         "layers": LAYERS,
         "layers_count": LAYERS_COUNT,
         "posts": ForumTopic.objects.filter(part_of_project=request.project).order_by("-last_update__date_created")[:3],
-        "news": News.objects.filter(projects=request.project).distinct()[:3]
+        "news": News.objects.filter(projects=request.project).distinct()[:3],
+        "header_subtitle": blurb,
+        "header_overwrite": "full",
     }
     return render(request, "islands/index.html", context)
 

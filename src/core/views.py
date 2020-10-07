@@ -2415,6 +2415,30 @@ def dataimport(request):
                         info.sectors.add(Sector.objects.get(old_id=row["process_group_id"]))
                         print("Adding sector!")
 
+        elif request.GET["table"] == "projects":
+            import csv
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    if row["site_id"] == "2" and row["type"] == "theses":
+                        print(row["name"])
+                        PublicProject.objects.create(
+                            name = row["name"],
+                            email = row["email"],
+                            start_date = row["start_date"] if row["start_date"] else None,
+                            end_date = row["end_date"] if row["end_date"] else None,
+                            description = row["description"],
+                            target_finish_date = row["target_finish_date"],
+                            status = row["status"],
+                            url = row["url"],
+                            meta_data = {
+                                "institution": row["institution"],
+                                "researcher": row["researcher"],
+                                "supervisor": row["supervisor"],
+                                "thesistype": row["thesistype"],
+                            }
+                        )
+
         elif request.GET["table"] == "referencespacelocations":
             import sys
             csv.field_size_limit(sys.maxsize)
@@ -2555,7 +2579,7 @@ def dataimport(request):
         "videos": Video.objects.all().count(),
         "people": People.objects.all().count(),
         "spaces": ReferenceSpace.objects.all().count(),
-        "locations": ReferenceSpaceLocation.objects.all().count(),
+        "locations": ReferenceSpace.objects.all().count(),
         "libraryitems": LibraryItem.objects.all().count(),
         "librarytypes": LibraryItemType.objects.all().count(),
         "tttt": Tag.objects.all().count(),

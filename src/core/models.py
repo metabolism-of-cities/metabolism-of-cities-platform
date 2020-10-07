@@ -1995,7 +1995,7 @@ class ZoteroItem(models.Model):
             return None
 
     def findTags(self):
-        tags = Tag.objects.filter(parent_tag__parent_tag_id=792)
+        tags = Tag.objects.filter(parent_tag__parent_tag_id=938)
         hits = []
         for each in tags:
             if each.fullname in self.title:

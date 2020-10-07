@@ -133,7 +133,7 @@
   <nav class="navbar navbar-expand-lg navbar-{{ DESIGN.header_color }} main-nav-project-{{ PROJECT.id }}">
     <div class="container">
       <a class="navbar-brand" href="{% if DEBUG %}/{% if PROJECT.id != 1 %}{{ PROJECT.slug }}{% endif %}{% else %}{{ PROJECT.get_website }}{% endif %}">
-        <img alt="{{ PROJECT }}" src="{{ LOGO }}">
+        <img alt="{{ PROJECT }}" src="{{ LOGO }}?u=true">
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#project-navbar" aria-controls="project-navbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
