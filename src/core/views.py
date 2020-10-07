@@ -2431,6 +2431,8 @@ def dataimport(request):
                             target_finish_date = row["target_finish_date"],
                             status = row["status"],
                             url = row["url"],
+                            part_of_project_id = 17,
+                            type = "thesis",
                             meta_data = {
                                 "institution": row["institution"],
                                 "researcher": row["researcher"],

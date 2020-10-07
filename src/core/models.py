@@ -419,6 +419,11 @@ class PublicProject(Record):
         ("cancelled", "Cancelled"),
     )
     status = models.CharField(max_length=20, choices=STATUS, default="ongoing")
+    TYPE = (
+        ("thesis", "Thesis project"),
+        ("research", "Research project"),
+    )
+    type = models.CharField(max_length=20, choices=TYPE, default="research")
     part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
 
     def get_dates(self):
