@@ -1,2 +1,11 @@
 User-Agent: *
 Disallow: /media/uploads/
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: / 
+
+User-agent: MJ12bot
+Disallow: /
