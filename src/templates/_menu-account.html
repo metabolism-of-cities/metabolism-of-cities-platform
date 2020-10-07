@@ -8,8 +8,8 @@
       <a class="dropdown-item" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/profile/">My profile</a>
       <a class="dropdown-item" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/logout/?next={{ request.get_full_path }}">Sign out</a>
     {% else %}
-      <a class="dropdown-item" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/register/?next={{ request.get_full_path }}">Register</a>
-      <a class="dropdown-item" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/login/?next={{ request.get_full_path }}">Sign in</a>
+      <a class="dropdown-item" rel="nofollow" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/register/?next={{ request.get_full_path }}">Register</a>
+      <a class="dropdown-item" rel="nofollow" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/login/?next={{ request.get_full_path }}">Sign in</a>
     {% endif %}
   </div>
 </li>

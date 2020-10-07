@@ -87,6 +87,15 @@
           {% if info.year %}
             <div>{{ info.year }}</div>
           {% endif %}
+
+        {% if PROJECT.slug == "islands" and info.type.name == "Dataset" %}
+          <div class="alert alert-warning mt-3">
+            We are currently busy importing data from our previous website --
+            data visualizations and data export options will be available later
+            this month (October 2020).
+          </div>
+        {% endif %}
+
         </div>
       </div>
     </div>
@@ -347,6 +356,7 @@
       {% endif %}
 
       <div class="col-lg-8 mb-4">
+
         {% if info.description %}
           {{ info.get_description }}
         {% endif %}
