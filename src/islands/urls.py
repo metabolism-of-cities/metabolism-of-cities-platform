@@ -19,13 +19,13 @@ urlpatterns = baseline_urlpatterns + baseline_library_urlpatterns + baseline_sta
     path("overview/", data.progress, {"style": "grid"}, name="overview"),
     path("news_events/", core.news_events_list, name="news_events"),
     path("about/<slug:slug>/", core.article, { "prefix": "/about/"  }, name="about"),
-    path("community/research/projects/", community.projects, name="projects"),
+    path("community/research/projects/", community.projects, { "type": "research"}, name="projects"),
     path("community/research/projects/<int:id>/", community.project, name="project"),
-    path("community/research/theses/", library.list, { "type": "island_theses" }),
+    path("community/research/theses/", community.projects, { "type": "thesis" }),
+    path("community/research/theses/<int:id>/", community.project, name="project"),
     path("community/<slug:slug>/", core.article, { "prefix": "/community/"}, name="community"),
     path("resources/map/", library.map, { "article": 59, "tag": 219 }, name="map"),
     path("resources/publications/", library.list, { "type": "islands" }, name="resources"),
-
 
     # Controlpanel
     path("controlpanel/organisations/", community.controlpanel_organizations),

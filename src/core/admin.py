@@ -165,7 +165,8 @@ class ProjectAdmin(SearchCompleteAdmin):
     exclude = DEFAULT_EXCLUDE_WITH_META
 
 class PublicProjectAdmin(SearchCompleteAdmin):
-    list_display = ["name", "start_date", "status"]
+    list_display = ["name", "start_date", "part_of_project", "type", "status"]
+    list_filter = ["part_of_project", "type"]
 
 class ReferenceSpaceAdmin(SearchAdmin):
     list_display = ["name", "is_deleted"]

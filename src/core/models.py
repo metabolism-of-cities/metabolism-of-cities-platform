@@ -67,6 +67,9 @@ def get_date_range(start, end, months_only=False):
     if start and not end and months_only:
         return "Since " + start.strftime("%b %Y")
         
+    elif start and not end:
+        return "Start date: " + start.strftime("%b %d, %Y")
+        
     if not start or not end:
         return None
 

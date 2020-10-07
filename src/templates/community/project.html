@@ -52,7 +52,24 @@
             {% if info.meta_data.institution %}
               <li class="list-group-item">
                 <i class="far fa-fw fa-building mb-1 mr-1" aria-hidden="true"></i> 
+                <strong>Institution:</strong><br>
                 {{ info.meta_data.institution }}
+              </li>
+            {% endif %}
+
+            {% if info.meta_data.researcher %}
+              <li class="list-group-item">
+                <i class="far fa-fw fa-user mb-1 mr-1" aria-hidden="true"></i> 
+                <strong>Researcher(s):</strong><br>
+                {{ info.meta_data.researcher }}
+              </li>
+            {% endif %}
+
+            {% if info.meta_data.supervisor %}
+              <li class="list-group-item">
+                <i class="far fa-fw fa-user mb-1 mr-1" aria-hidden="true"></i> 
+                <strong>Supervisor(s):</strong><br>
+                {{ info.meta_data.supervisor }}
               </li>
             {% endif %}
 

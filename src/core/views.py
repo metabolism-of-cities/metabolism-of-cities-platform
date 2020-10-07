@@ -2438,6 +2438,7 @@ def dataimport(request):
                                 "researcher": row["researcher"],
                                 "supervisor": row["supervisor"],
                                 "thesistype": row["thesistype"],
+                                "format": "html",
                             }
                         )
 

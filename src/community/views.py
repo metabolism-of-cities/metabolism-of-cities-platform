@@ -84,12 +84,12 @@ def people_list(request):
     return render(request, "people.list.html", context)
 
 
-def projects(request, project_name="core"):
+def projects(request, project_name="core", type="research"):
 
     # Currently all projects are tagged as MoC, so we must link to that project instead of the Community Portal
 
     project = 1 if request.project == 18 else request.project
-    list = PublicProject.objects.filter(part_of_project_id=project)
+    list = PublicProject.objects.filter(part_of_project_id=project, type=type)
 
     if "update" in request.GET:
         for each in list:
@@ -553,7 +553,7 @@ def controlpanel_project_form(request, slug=None, id=None):
 
     ModelForm = modelform_factory(
         PublicProject, 
-        fields=["name", "image", "status", "url", "email", "start_date", "end_date", "part_of_project"],
+        fields=["name", "type", "image", "status", "url", "email", "start_date", "end_date", "part_of_project"],
         labels={"image": "Logo", "url": "Website URL", "part_of_project": "Project"},
         )
     if id:
