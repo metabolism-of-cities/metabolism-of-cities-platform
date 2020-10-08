@@ -2420,27 +2420,15 @@ def dataimport(request):
             with open(file, "r") as csvfile:
                 contents = csv.DictReader(csvfile)
                 for row in contents:
-                    if row["site_id"] == "2" and row["type"] == "theses":
-                        print(row["name"])
-                        PublicProject.objects.create(
-                            name = row["name"],
-                            email = row["email"],
-                            start_date = row["start_date"] if row["start_date"] else None,
-                            end_date = row["end_date"] if row["end_date"] else None,
-                            description = row["description"],
-                            target_finish_date = row["target_finish_date"],
-                            status = row["status"],
-                            url = row["url"],
-                            part_of_project_id = 17,
-                            type = "thesis",
-                            meta_data = {
+                    if row["site_id"] == "2" and row["type"] == "projects":
+                        info = PublicProject.objects.get(name=row["name"])
+                        info.meta_data = {
                                 "institution": row["institution"],
                                 "researcher": row["researcher"],
                                 "supervisor": row["supervisor"],
-                                "thesistype": row["thesistype"],
                                 "format": "html",
-                            }
-                        )
+                        }
+                        info.save()
 
         elif request.GET["table"] == "referencespacelocations":
             import sys
