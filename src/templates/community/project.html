@@ -73,6 +73,14 @@
               </li>
             {% endif %}
 
+            {% if info.email %}
+              <li class="list-group-item">
+                <i class="far fa-fw fa-envelope mb-1 mr-1" aria-hidden="true"></i> 
+                <strong>E-mail:</strong><br>
+                {{ info.email }}
+              </li>
+            {% endif %}
+
             {% if info.url %}
               <a class="list-group-item" href="{{ info.url }}">
                 <i class="far fa-fw fa-link mb-1 mr-1" aria-hidden="true"></i> Project website
