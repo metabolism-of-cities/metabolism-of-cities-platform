@@ -1,6 +1,9 @@
 User-Agent: *
 Disallow: /media/uploads/
 
+User-Agent: *
+Disallow: /theme/
+
 User-agent: PetalBot
 Disallow: /
 
