@@ -2003,12 +2003,14 @@ class ZoteroItem(models.Model):
             return None
 
     def findTags(self):
-        tags = Tag.objects.filter(parent_tag__parent_tag_id=938)
+        tags = Tag.objects.filter(Q(parent_tag__parent_tag_id=938)|Q(parent_tag__parent_tag__parent_tag_id=938))
         hits = []
         for each in tags:
-            if each.fullname in self.title:
+            n = each.fullname
+            t = self.title
+            if n.lower() in t.lower():
                 hits.append(each)
-            elif "abstractNote" in self.data and each.fullname in self.data["abstractNote"]:
+            elif "abstractNote" in self.data and n.lower() in self.data["abstractNote"].lower():
                 hits.append(each)
         return hits
 
