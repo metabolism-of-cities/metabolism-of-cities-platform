@@ -25,7 +25,8 @@ urlpatterns = baseline_urlpatterns + baseline_library_urlpatterns + baseline_sta
     path("community/research/theses/<int:id>/", community.project, name="project"),
     path("community/<slug:slug>/", core.article, { "prefix": "/community/"}, name="community"),
     path("resources/map/", library.map, { "article": 59, "tag": 219 }, name="map"),
-    path("resources/publications/", library.list, { "type": "islands" }, name="resources"),
+    path("resources/publications/", library.index, name="resources"),
+    path("resources/reviews/", library.list, { "type": "reviews"}, name="reviews"),
 
     # Controlpanel
     path("controlpanel/organisations/", community.controlpanel_organizations),

@@ -23,11 +23,18 @@ import folium
 
 THIS_PROJECT = PROJECT_ID["library"]
 
+def get_site_tag(request):
+    if request.project == 17:
+        return 219
+    else:
+        return 11
+
 def index(request):
     tags = [324, 322, 664, 318, 739]
     show_results = False
     tag = list = search_tag = None
     urban_only = True
+    core_filter = get_site_tag(request)
     if request.project == THIS_PROJECT:
         title = "Homepage"
     else:
@@ -42,15 +49,19 @@ def index(request):
         if not request.GET.get("urban_only"):
             urban_only = False
         if urban_only:
-            list = list.filter(tags__id=11)
+            list = list.filter(tags__id=core_filter)
     if "search" in request.GET:
         q = request.GET.get("search")
-        try:
-            tag = Tag.objects_unfiltered.get(id=q)
-            list = list.filter(tags=tag)
-        except:
-            # Search by open-ended keyword, so let's search for that
-            list = list.filter(Q(name__icontains=q)|Q(description__icontains=q))
+        if q == "_ALL_":
+            list = LibraryItem.objects.filter(tags__id=core_filter)
+            show_results = True
+        else:
+            try:
+                tag = Tag.objects_unfiltered.get(id=q)
+                list = list.filter(tags=tag)
+            except:
+                # Search by open-ended keyword, so let's search for that
+                list = list.filter(Q(name__icontains=q)|Q(description__icontains=q))
     if "after" in request.GET and request.GET["after"]:
         list = list.filter(year__gte=request.GET["after"])
     if "before" in request.GET and request.GET["before"]:
@@ -68,6 +79,8 @@ def index(request):
         "starterskit": LibraryItem.objects.filter(tags__id=791).count(),
         "title": title if not tag else tag.name,
         "news": News.objects.filter(projects=THIS_PROJECT).distinct()[:3],
+        "review_count": LibraryItem.objects.filter(tags__id=3).filter(tags__id=core_filter).count(),
+        "all_count": LibraryItem.objects.filter(tags__id=core_filter).count(),
     }
     return render(request, "library/index.html", context)
 
@@ -80,6 +93,8 @@ def list(request, type):
         list = Dataset.objects_unfiltered.all()
     elif type == "reviews":
         list = LibraryItem.objects.filter(tags__id=3)
+        if request.project == 17:
+            list = list.filter(tags__id=get_site_tag(request))
         title = "Review papers"
     elif type == "islands":
         list = LibraryItem.objects.filter(tags__id=219)
@@ -292,14 +307,19 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
 
 def map(request, article, tag=None):
     info = get_object_or_404(Webpage, pk=article)
-    if tag:
+    project = get_object_or_404(Project, pk=request.project)
+    if project.slug == "islands":
+        list = ReferenceSpace.objects.filter(geocodes=8355)
+        items = LibraryItem.objects.filter(status="active", spaces__in=list)
+    elif tag:
         items = LibraryItem.objects.filter(status="active", tags__id=tag)
     else:
         items = LibraryItem.objects.filter(status="active", tags__id=TAG_ID["case_study"])
     context = {
         "article": info,
-        "items": items,
+        "items": items.distinct(),
         "menu": "casestudies",
+        "title": "Case studies map",
     }
     return render(request, "library/map.html", context)
 

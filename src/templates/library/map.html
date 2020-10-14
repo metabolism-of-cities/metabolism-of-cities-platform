@@ -89,13 +89,15 @@
     var allCities = [];
     {% for each in items %}
       {% for space in each.spaces.all %}
-        {% if space.is_city and space.location.geometry %}
-          allCities.push({
-            "city": "{{ space }}",
-            "id": "{{ space.id }}",
-            "lat": {{ space.location.geometry.centroid.1 }},
-            "lon": {{ space.location.geometry.centroid.0 }},
-          });
+        {% if space.geometry %}
+          {% if PROJECT.slug == "islands" and space.is_island or PROJECT.slug != "islands" and space.is_city %}
+            allCities.push({
+              "city": "{{ space }}",
+              "id": "{{ space.id }}",
+              "lat": {{ space.geometry.centroid.1 }},
+              "lon": {{ space.geometry.centroid.0 }},
+            });
+          {% endif %}
         {% endif %}
       {% endfor %}
     {% endfor %}

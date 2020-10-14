@@ -38,7 +38,7 @@
           <div class="">
             <label>
               <input type="checkbox" name="urban_only" value="true" {% if urban_only %}checked{% endif %} />
-              Only show work on an urban scale
+              Only show work on {{ SYSTEM_NAME_PLURAL }}
             </label>
           </div>
           <div class="btn btn-primary-basic btn-advanced mt-2"><i class="far fa-tools"></i> Show advanced options</div>
@@ -97,99 +97,142 @@
       {{ article.content|safe }}
     </section>
 
-    <section class="container">
-      <div class="row">
-        <div class="col-sm-6 col-xl-3 mb-4">
-          <a class="large-icon-box" href="{% url "library:casestudies" "map" %}">
-            <div class="description">Case studies</div>
-            <div class="statistic">Browse our map</div>
-            <i class="fad fa-globe text-success" aria-hidden="true"></i>
-          </a>
-        </div>
-        <div class="col-sm-6 col-xl-3 mb-4">
-          <a class="large-icon-box" href="{% url "library:list" "reviews" %}">
-            <div class="description">Review papers</div>
-            <div class="statistic">30 articles</div>
-            <i class="fad fa-file-alt text-danger" aria-hidden="true"></i>
-          </a>
-        </div>
-        <div class="col-sm-6 col-xl-3 mb-4">
-          <a class="large-icon-box" href="{% url "library:methods" %}">
-            <div class="description">Browse by method</div>
-            <div class="statistic">29 methods</div>
-            <i class="fad fa-vial text-warning" aria-hidden="true"></i>
-          </a>
-        </div>
-        <div class="col-sm-6 col-xl-3 mb-4">
-          <a class="large-icon-box" href="{% url "library:list" "starterskit" %}">
-            <div class="description">Starter's Kit</div>
-            <div class="statistic">{{ starterskit }} articles</div>
-            <i class="fad fa-play-circle text-info" aria-hidden="true"></i>
-          </a>
-        </div>
-      </div>
-
-      <a class="btn btn-primary mt-2" href="{% url "library:upload" %}">
-        <i class="fas fa-file-plus fa-fw"></i> Add a missing publication
-      </a>
-      <a class="btn btn-primary-basic mt-2" href="{% url "library:hub" %}">
-        <i class="far fa-user-plus fa-fw"></i> Join our curation team
-      </a>
-      <a class="btn btn-primary-basic mt-2" href="#">
-        <i class="far fa-video fa-fw"></i> Watch a digital tour
-      </a>
-    </section>
-
-    <section class="container">
-      <h2>News</h2>
-
-      <div class="row">
-
-        {% for each in news %}
-          <div class="col-lg-4 mb-sm-4 mb-lg-0">
-            <a class="card btn-card" href="{% url "library:news" each.slug %}">
-              {% if each.image %}
-                <img src="{{ each.image.url }}" class="card-img-top" alt="">
-              {% endif %}
-              <div class="card-body">
-                <h5 class="card-title">
-                  {{ each }}
-                  <small class="d-inline-block text-muted">{{ each.date }}</small>
-                </h5>
-                <p class="card-text">
-                  {{ each.introduction }}
-                </p>
-              </div>
+    {% if PROJECT.slug == "islands" %}
+      <section class="container mb-4">
+        <div class="row">
+          <div class="col-sm-6 col-xl-4 mb-4">
+            <a class="large-icon-box" href="{% if DEBUG %}/islands{% endif %}/resources/map/">
+              <div class="description">Case studies</div>
+              <div class="statistic">Browse our map</div>
+              <i class="fad fa-globe text-success" aria-hidden="true"></i>
             </a>
           </div>
-        {% endfor %}
+          <div class="col-sm-6 col-xl-4 mb-4">
+            <a class="large-icon-box" href="{% url "islands:reviews" %}">
+              <div class="description">Review papers</div>
+              <div class="statistic">{{ review_count }} articles</div>
+              <i class="fad fa-pencil-alt text-danger" aria-hidden="true"></i>
+            </a>
+          </div>
+          <div class="col-sm-6 col-xl-4 mb-4">
+            <a class="large-icon-box" href="./?search=_ALL_">
+              <div class="description">View all</div>
+              <div class="statistic">{{ all_count }} items</div>
+              <i class="fad fa-file-alt text-warning" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
 
-      </div>
-    </section>
+        <a class="btn btn-primary mt-2" href="{% url "library:upload" %}">
+          <i class="fas fa-file-plus fa-fw"></i> Add a missing publication
+        </a>
+        <a class="btn btn-primary-basic mt-2" href="{% url "library:hub" %}">
+          <i class="far fa-user-plus fa-fw"></i> Join our curation team
+        </a>
+        <a class="btn btn-primary-basic mt-2" href="#" hidden>
+          <i class="far fa-video fa-fw"></i> Watch a digital tour
+        </a>
+      </section>
+    {% else %}
+      <section class="container">
+        <div class="row">
+          <div class="col-sm-6 col-xl-3 mb-4">
+            <a class="large-icon-box" href="{% url "library:casestudies" "map" %}">
+              <div class="description">Case studies</div>
+              <div class="statistic">Browse our map</div>
+              <i class="fad fa-globe text-success" aria-hidden="true"></i>
+            </a>
+          </div>
+          <div class="col-sm-6 col-xl-3 mb-4">
+            <a class="large-icon-box" href="{% url "library:list" "reviews" %}">
+              <div class="description">Review papers</div>
+              <div class="statistic">{{ review_count }} articles</div>
+              <i class="fad fa-file-alt text-danger" aria-hidden="true"></i>
+            </a>
+          </div>
+          <div class="col-sm-6 col-xl-3 mb-4">
+            <a class="large-icon-box" href="{% url "library:methods" %}">
+              <div class="description">Browse by method</div>
+              <div class="statistic">29 methods</div>
+              <i class="fad fa-vial text-warning" aria-hidden="true"></i>
+            </a>
+          </div>
+          <div class="col-sm-6 col-xl-3 mb-4">
+            <a class="large-icon-box" href="{% url "library:list" "starterskit" %}">
+              <div class="description">Starter's Kit</div>
+              <div class="statistic">{{ starterskit }} articles</div>
+              <i class="fad fa-play-circle text-info" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
 
-    <section class="container pb-4 mb-4">
-      <h2>Download or export</h2>
-      <div class="row">
-        <div class="col-md-4">
-          <a class="btn-icon" href="/cities/the-hague/datasets/">
-            <div class="title"><i class="fal fa-file-download fa-fw"></i> Download entire library</div>
-            <div class="text">A CSV file of all 1,497 articles in the library</div>
-          </a>
+        <a class="btn btn-primary mt-2" href="{% url "library:upload" %}">
+          <i class="fas fa-file-plus fa-fw"></i> Add a missing publication
+        </a>
+        <a class="btn btn-primary-basic mt-2" href="{% url "library:hub" %}">
+          <i class="far fa-user-plus fa-fw"></i> Join our curation team
+        </a>
+        <a class="btn btn-primary-basic mt-2" href="#" hidden>
+          <i class="far fa-video fa-fw"></i> Watch a digital tour
+        </a>
+      </section>
+
+    {% endif %}
+
+    {% if PROJECT.slug != "islands" %}
+
+      <section class="container">
+        <h2>News</h2>
+
+        <div class="row">
+
+          {% for each in news %}
+            <div class="col-lg-4 mb-sm-4 mb-lg-0">
+              <a class="card btn-card" href="{% url "library:news" each.slug %}">
+                {% if each.image %}
+                  <img src="{{ each.image.url }}" class="card-img-top" alt="">
+                {% endif %}
+                <div class="card-body">
+                  <h5 class="card-title">
+                    {{ each }}
+                    <small class="d-inline-block text-muted">{{ each.date }}</small>
+                  </h5>
+                  <p class="card-text">
+                    {{ each.introduction }}
+                  </p>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+
         </div>
-        <div class="col-md-4">
-          <a class="btn-icon" href="/cities/the-hague/datasets/">
-            <div class="title"><i class="fal fa-file-download fa-fw"></i> Urban case studies</div>
-            <div class="text">Download just the 597 urban case studies</div>
-          </a>
+      </section>
+
+      <section class="container pb-4 mb-4">
+        <h2>Download or export</h2>
+        <div class="row">
+          <div class="col-md-4">
+            <a class="btn-icon" href="/cities/the-hague/datasets/">
+              <div class="title"><i class="fal fa-file-download fa-fw"></i> Download entire library</div>
+              <div class="text">A CSV file of all 1,497 articles in the library</div>
+            </a>
+          </div>
+          <div class="col-md-4">
+            <a class="btn-icon" href="/cities/the-hague/datasets/">
+              <div class="title"><i class="fal fa-file-download fa-fw"></i> Urban case studies</div>
+              <div class="text">Download just the 597 urban case studies</div>
+            </a>
+          </div>
+          <div class="col-md-4">
+            <a class="btn-icon" href="/cities/the-hague/datasets/">
+              <div class="title"><i class="fal fa-file-export fa-fw"></i> Export to Zotero</div>
+              <div class="text">Manage the complete library with Zotero</div>
+            </a>
+          </div>
         </div>
-        <div class="col-md-4">
-          <a class="btn-icon" href="/cities/the-hague/datasets/">
-            <div class="title"><i class="fal fa-file-export fa-fw"></i> Export to Zotero</div>
-            <div class="text">Manage the complete library with Zotero</div>
-          </a>
-        </div>
-      </div>
-    </section>
+      </section>
+
+    {% endif %}
 
   {% endif %}
 
