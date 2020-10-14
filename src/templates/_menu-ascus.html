@@ -13,7 +13,7 @@
 
 
 <li class="nav-item"><a class="nav-link" href="{% url "ascus:article" "keynotes" %}">Keynotes</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url "ascus:article" "technology" %}">Technology</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url "ascus:article" "outputs" %}">Outputs</a></li>
 <li class="nav-item"><a class="nav-link" href="{% url "ascus:article" "awards" %}">Awards</a></li>
 {% if not request.user.is_authenticated %}
   <li class="nav-item"><a class="nav-link" href="{% url "ascus:article" "login" %}">Login</a></li>

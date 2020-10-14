@@ -423,7 +423,6 @@ def ascus_account_edit(request):
     }
     return render(request, "ascus/account.edit.html", context)
 
-@check_ascus_access
 def account_outputs(request):
     webpage = get_object_or_404(Webpage, slug="/ascus/outputs/")
     outputs = LibraryItem.objects_include_private \
