@@ -129,7 +129,7 @@ class ZoteroImport(CronJobBase):
 
             for each in list:
                 try:
-                    check = ZoteroItem.objects.get(key=each["data"].get("key"))
+                    info = ZoteroItem.objects.get(key=each["data"].get("key"))
                 except:
                     title = each["data"].get("title")
                     info = ZoteroItem.objects.create(
@@ -138,6 +138,8 @@ class ZoteroImport(CronJobBase):
                         data = each["data"],
                         collection = collection,
                     )
+                if collection.uid == 3:
+                    info.import_to_library()
 
 class EmailNotifications(CronJobBase):
     RUN_EVERY_MINS = 60*12

@@ -848,6 +848,10 @@ def controlpanel_zotero_item(request, collection, id):
     collection = ZoteroCollection.objects.get(pk=collection, part_of_project=project)
     info = ZoteroItem.objects.get(collection_id=collection, pk=id)
 
+    if "import" in request.POST:
+        info.import_to_library()
+        messages.success(request, "Information was synced with the library.")
+
     context = {
         "info": info,
         "collection": collection,
@@ -863,7 +867,7 @@ def controlpanel_zotero_tags(request, id):
     list = ZoteroItem.objects.filter(collection=info)
     all = {}
     for each in list:
-        tags = each.getTags()
+        tags = each.get_tags()
         for tag in tags:
             if tag not in all:
                 check = Tag.objects.filter(name=tag).exists()

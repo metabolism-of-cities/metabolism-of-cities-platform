@@ -15,16 +15,32 @@
     <dt class="col-2">Date imported</dt>
     <dd class="col-10">{{ info.date_created }}</dd>
 
+    <dt class="col-2">Library record</dt>
+    <dd class="col-10">
+      {% if info.library_item %}
+        <a href="{% url URLS.LIBRARY_ITEM info.library_item.id %}">Library item #{{ info.library_item.id }}</a>
+      {% else %}
+        <em>not yet imported into the library</em>
+      {% endif %}
+    </dd>
+
     <dt class="col-2">Tags</dt>
     <dd class="col-10">
-      {% for each in info.getTags %}
+      {% for each in info.get_tags %}
         <span class="badge badge-info">{{ each }}</span>
       {% endfor %}
     </dd>
 
     <dt class="col-2">Detected spaces</dt>
     <dd class="col-10">
-      {% for each in info.findSpaces %}
+      {% for each in info.find_spaces %}
+        <span class="badge badge-success">{{ each }}</span>
+      {% endfor %}
+    </dd>
+
+    <dt class="col-2">Detected tags</dt>
+    <dd class="col-10">
+      {% for each in info.find_tags %}
         <span class="badge badge-success">{{ each }}</span>
       {% endfor %}
     </dd>
@@ -37,5 +53,11 @@
     {% endfor %}
 
   </dl>
+
+  <form method="post">
+    <button type="submit" class="btn btn-primary">Import to library</button>
+    <input type="hidden" name="import" value="true" />
+    {% csrf_token %}
+  </form>
 
 {% endblock %}

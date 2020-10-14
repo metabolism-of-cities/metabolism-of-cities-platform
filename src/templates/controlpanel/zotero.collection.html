@@ -21,6 +21,7 @@
     <thead>
       <tr>
         <th>ID</th>
+        <th>Date</th>
         <th>Title</th>
         <th>Type</th>
         {% if request.GET.match %}
@@ -34,16 +35,17 @@
     {% for each in list %}
       <tr>
         <td>{{ each.key }}</td>
+        <td>{{ each.get_year }}</td>
         <td><a href="{{ each.pk }}/">{{ each.title }}</a></td>
         <td>{{ each.data.itemType }}</td>
         {% if request.GET.match %}
           <td>
-            {% for tag in each.findTags %}
+            {% for tag in each.find_tags %}
               <span class="badge badge-info">
                 {{ tag }}
               </span>
             {% endfor %}
-            {% for space in each.findSpaces %}
+            {% for space in each.find_spaces %}
               <span class="badge badge-primary">
                 {{ space }}
               </span>

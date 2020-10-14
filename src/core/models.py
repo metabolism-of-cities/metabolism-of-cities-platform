@@ -1981,7 +1981,59 @@ class ZoteroItem(models.Model):
     def __str__(self):
         return self.title
 
-    def getTags(self):
+    def get_year(self):
+        # Returns the year of publication, which is part of the date field
+        # which is a string and can be formatted in any possible way, so we just 
+        # look for four digits, starting with 1 or 2
+        #hit = re.search(r'.*([1-2][0-9]{3})', self.data.get("date"))
+        try:
+            pattern = re.compile("([1-2][0-9]{3})")
+            return pattern.findall(self.data.get("date"))[0]
+        except:
+            return None
+
+    def import_to_library(self):
+        info = self.find_match()
+        if not info:
+            info = LibraryItem()
+        info.name = self.title
+        info.author_list = self.get_authors()
+        info.year = self.get_year()
+        info.url = self.data.get("url")
+        info.description = self.data.get("abstractNote")
+        try:
+            # Zotero uses camelCase so we convert that into spaces
+            full_type = re.sub(r"(\w)([A-Z])", r"\1 \2", self.data.get("itemType"))
+            type = LibraryItemType.objects.get(name__iexact=full_type)
+            info.type = type
+        except:
+            info.type_id = 16 # Default to journal article if all else fails
+        info.save()
+
+        # Let's now add the tags
+        if self.collection.uid == 3:
+            # Adding the island tag
+            info.tags.add(Tag.objects.get(id=219))
+
+        for each in self.find_tags():
+            info.tags.add(each)
+
+        for each in self.find_spaces():
+            info.spaces.add(each)
+
+        self.library_item = info
+        self.save()
+
+    def get_authors(self):
+        all = self.data.get("creators")
+        text = ""
+        for each in all:
+            if text != "":
+                text += " and "
+            text += each.get("lastName") + ", " + each.get("firstName")
+        return text
+
+    def get_tags(self):
         if "tags" in self.data:
             tags = self.data["tags"]
             all = []
@@ -1991,7 +2043,7 @@ class ZoteroItem(models.Model):
         else:
             return None
 
-    def findMatch(self):
+    def find_match(self):
         check = LibraryItem.objects.filter(name=self.title)
         if not check and "doi" in self.data and self.data["doi"]:
             check = LibraryItem.objects.filter(doi=doi)
@@ -2002,11 +2054,13 @@ class ZoteroItem(models.Model):
         else:
             return None
 
-    def findTags(self):
+    def find_tags(self):
         tags = Tag.objects.filter(Q(parent_tag__parent_tag_id=938)|Q(parent_tag__parent_tag__parent_tag_id=938))
         hits = []
         for each in tags:
-            n = each.fullname
+            # Note that we add a space before the keyword because we want the entire word
+            # to be found, and otherwise e.g. "Afghanistan" will also yield a match of the STAN software package
+            n = " " + each.fullname
             t = self.title
             if n.lower() in t.lower():
                 hits.append(each)
@@ -2014,7 +2068,7 @@ class ZoteroItem(models.Model):
                 hits.append(each)
         return hits
 
-    def findSpaces(self):
+    def find_spaces(self):
         spaces = ReferenceSpace.objects.filter(geocodes=8355)
         hits = []
         for each in spaces:
