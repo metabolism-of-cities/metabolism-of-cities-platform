@@ -23,6 +23,7 @@ urlpatterns = baseline_urlpatterns + [
     path("login/", core.user_login, name="login"),
     path("logout/", core.user_logout, name="logout"),
     path("overview/", views.overview, name="overview"),
+    path("awards/", core.article, {"id": 329634}, name="awards"),
     path("preconference/", views.overview, { "preconf": True}, name="preconference"),
     path("participants/", views.participants, name="participants"),
     path("introvideos/", views.introvideos, name="introvideos"),

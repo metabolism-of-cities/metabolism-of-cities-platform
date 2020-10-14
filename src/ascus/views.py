@@ -721,14 +721,14 @@ def presentations(request):
 # AScUS admin section
 @check_ascus_admin_access
 def ascus_admin(request):
-    voting = None
+    voting = True
     if voting:
     # List all the voting IDs
-        list = [22,23,24,25,26]
+        list = [32]
         voting = {}
         relationships = Relationship.objects.filter(id__in=list)
         for each in relationships:
-            voting[each.name] = RecordRelationship.objects.filter(relationship=each).values("record_child__name").annotate(total=Count("record_child__name")).order_by("total")
+            voting[each.name] = RecordRelationship.objects.filter(relationship=each).values("record_child__name").annotate(total=Count("record_child__name")).order_by("-total")
     context = {
         "header_title": "AScUS Admin",
         "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
