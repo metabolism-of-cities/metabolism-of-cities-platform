@@ -201,9 +201,12 @@ def users(request, space, scoreboard=False):
     if "project" in request.GET:
         project = request.GET.get("project")
 
-    list = People.objects.filter(message_list__isnull=False, user__isnull=False)
-    list = list.filter(message_list__parent__work__related_to__spaces=space)
-    list = list.distinct().order_by("-user__date_joined")
+    # Crazy CPU load with this list, no idea why
+    # Let's disable for now
+    #list = People.objects.filter(message_list__isnull=False, user__isnull=False)
+    #list = list.filter(message_list__parent__work__related_to__spaces=space)
+    #list = list.distinct().order_by("-user__date_joined")
+    list = None
 
     context = {
         "webpage": webpage,
