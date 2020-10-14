@@ -2030,7 +2030,7 @@ class ZoteroItem(models.Model):
         for each in all:
             if text != "":
                 text += " and "
-            text += each.get("lastName") + ", " + each.get("firstName")
+            text += each.get("lastName", "") + ", " + each.get("firstName", "")
         return text
 
     def get_tags(self):
