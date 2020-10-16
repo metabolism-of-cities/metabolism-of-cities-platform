@@ -171,6 +171,7 @@ class PublicProjectAdmin(SearchCompleteAdmin):
 class ReferenceSpaceAdmin(SearchAdmin):
     list_display = ["name", "is_deleted"]
     search_fields = ["name"]
+    autocomplete_fields = ["spaces", "tags", "subscribers", "materials", "source"]
     exclude = ["slug"]
 
 class LibraryAdmin(SearchCompleteAdmin):
