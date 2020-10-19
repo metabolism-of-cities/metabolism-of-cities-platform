@@ -120,8 +120,12 @@
     {% include "contribution/_tasks.html" %}
   {% endif %}
 
-  <h2 class="mt-5" id="chat">Discussion and questions</h2>
-  {% include "_messages.html" %}
+  {% if PROJECT.slug != "islands" %}
+
+    <h2 class="mt-5" id="chat">Discussion and questions</h2>
+    {% include "_messages.html" %}
+
+  {% endif %}
 
   {% if not request.user.is_authenticated %}
     {% include "_notauthenticated.html" %}
