@@ -8,10 +8,8 @@ from .models import *
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.contrib.sites.models import Site
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.sites.shortcuts import get_current_site
 
 from django.db.models import Count
 from django.db.models import Q
@@ -167,7 +165,7 @@ def user_register(request, project="core", section=None):
                 msg_html = render_to_string("mailbody/welcome.html", mailcontext)
                 msg_plain = render_to_string("mailbody/welcome.txt", mailcontext)
 
-            sender = '"' + request.site.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
+            sender = '"' + project.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
             recipient = '"' + name + '" <' + email + '>'
 
             if request.project == PROJECT_ID["platformu"]:
@@ -1671,9 +1669,8 @@ def pdf(request):
     score = request.GET["score"]
     date = datetime.datetime.now()
     date = date.strftime("%d %B %Y")
-    site = Site.objects.get_current()
 
-    context = Context({"name": name, "score": score, "date": date, "site": site.domain})
+    context = Context({"name": name, "score": score, "date": date})
 
     response = HttpResponse(content_type="application/pdf")
     response["Content-Disposition"] = "inline; filename=test.pdf"
@@ -1865,6 +1862,7 @@ Link to review: {review_link}''',
 
 @login_required
 def massmail(request,people=None):
+    project = get_object_or_404(Project, pk=request.project)
     try:
         id_list = request.GET["people"]
         last_char = id_list[-1]
@@ -1883,7 +1881,7 @@ def massmail(request,people=None):
             }
             msg_html = render_to_string("mailbody/mail.template.html", mailcontext)
             msg_plain = message
-            sender = '"' + request.site.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
+            sender = '"' + project.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
             if "send_preview" in request.POST:
                 # If a preview is being sent, then it must ONLY go to the logged-in user
                 recipients = People.objects.filter(user=request.user)

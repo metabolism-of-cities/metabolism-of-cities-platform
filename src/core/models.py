@@ -4,8 +4,6 @@ from django.db import models
 from stdimage.models import StdImageField
 
 # To indicate which site a record belongs to
-from django.contrib.sites.models import Site
-from django.contrib.sites.managers import CurrentSiteManager
 from django.urls import reverse
 from django.forms import ModelForm
 from django.conf import settings
@@ -472,9 +470,7 @@ class News(Record):
 
 class Blog(Record):
     date = models.DateField()
-    site = models.ForeignKey(Site, on_delete=models.CASCADE)
     objects = models.Manager()
-    on_site = CurrentSiteManager()
     slug = models.SlugField(max_length=255)
     class Meta:
         ordering = ["-date", "-id"]

@@ -336,7 +336,6 @@ admin_site.register(LibraryItemType, LibraryItemTypeAdmin)
 admin_site.register(ActivatedSpace, SpaceAdmin)
 
 admin_site.register(License)
-admin_site.register(Site)
 
 admin_site.register(Course, CourseAdmin)
 admin_site.register(CourseModule, CourseModuleAdmin)
