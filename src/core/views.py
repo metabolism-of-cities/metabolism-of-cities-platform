@@ -664,13 +664,14 @@ def hub(request):
 
 def hub_latest(request, network_wide=False):
     project = request.project
-    days = 7
+    days = 1
     from datetime import datetime, timedelta
-    generate_date = datetime.now() - timedelta(days=days)
 
     if request.GET.get("days"):
         days = request.GET.get("days")
-
+        generate_date = datetime.now() - timedelta(days=int(days))
+    else:
+        generate_date = datetime.now() - timedelta(hours=24)
 
     if network_wide:
         # The network-wide update page shows updates from ALL the projects,

@@ -9,6 +9,7 @@
 
   <div class="btn-group mb-4" role="group" aria-label="History">
     <a href="#" class="btn btn-secondary disabled"><i class="fal fa-history mr-0"></i></a>
+    <a href="?days=1" class="btn btn-primary{% if days != 1 %}-outline{% endif %}">Last 24 hours</a>
     <a href="?days=7" class="btn btn-primary{% if days != 7 %}-outline{% endif %}">Last 7 days</a>
     <a href="?days=14" class="btn btn-primary{% if days != 14 %}-outline{% endif %}">14 days</a>
     <a href="?days=30" class="btn btn-primary{% if days != 30 %}-outline{% endif %}">30 days</a>
@@ -26,7 +27,7 @@
     {% for each in updates %}
       <tr>
         <td data-sort="-{{ each.date_created|date:"U" }}">
-          <img src="{{ each.posted_by.image.thumbnail.url }}" title="{{ each.posted_by}}" alt="{{ each.posted_by}}" class="avatar">
+          {{ each.posted_by.avatar }}
           {{ each.posted_by }}
         </td>
         <td>
