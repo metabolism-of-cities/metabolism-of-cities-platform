@@ -34,7 +34,6 @@ baseline_urlpatterns = [
             html_email_template_name = "mailbody/password.reset.html", 
             subject_template_name = "mailbody/password.reset.subject.txt", 
             success_url = "/accounts/passwordreset/sent/",
-            extra_email_context = { "domain": "https://new.metabolismofcities.org" },
         ), 
         name="password_reset", 
     ),
