@@ -1,5 +1,3 @@
-from django.contrib.sites.models import Site
-
 from django.utils import timezone
 import pytz
 
@@ -7,7 +5,6 @@ from core.models import RecordRelationship, Project, ProjectDesign, Work, WorkSp
 from django.conf import settings
 
 def site(request):
-    site = Site.objects.get_current()
     permissions = None
     open = None
     sprints = None
@@ -69,9 +66,9 @@ def site(request):
     design = ProjectDesign.objects.select_related("project").get(pk=project)
 
     return {
-        "SITE_ID": site.id, 
-        "SITE_URL": site.domain, 
-        "SITE_NAME": site.name, 
+        "SITE_ID": 1, 
+        "SITE_URL": "https://metabolismofcities.org", 
+        "SITE_NAME": "Metabolism of Cities", 
         "MAPBOX_API_KEY": "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", 
         "DEBUG": settings.DEBUG,
         "CURRENT_PAGE": request.get_full_path(),
