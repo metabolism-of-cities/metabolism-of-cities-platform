@@ -38,6 +38,9 @@ urlpatterns = baseline_urlpatterns + [
     path('cities/<slug:slug>/datasets/<int:id>/', RedirectView.as_view(url='https://data.metabolismofcities.org/dashboards/%(slug)s', permanent=False)),
     path('cities/<slug:slug>/datasets/<int:id>/graph/<int:gr>/', RedirectView.as_view(url='https://data.metabolismofcities.org/dashboards/%(slug)s', permanent=False)),
 
+    # Shortcut to course
+    path('curso/', RedirectView.as_view(url='https://education.metabolismofcities.org/courses/metabolismo-urbano-y-manejo-de-datos-procesamiento-de-datos/', permanent=False)),
+
     # Homepage
     path("", views.index, name="index"),
 
