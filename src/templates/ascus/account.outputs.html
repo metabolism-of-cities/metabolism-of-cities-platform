@@ -13,7 +13,7 @@
     <tbody>
     {% for each in outputs %}
       <tr>
-        <td><a href="{{ each.id }}/">{{ each }}</a></td>
+        <td><a href="{% url URLS.LIBRARY_ITEM each.id %}">{{ each }}</a></td>
         <td>{{ each.author_list }}</td>
       </tr>
     {% endfor %}

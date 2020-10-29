@@ -425,7 +425,7 @@ def ascus_account_edit(request):
 
 def account_outputs(request):
     webpage = get_object_or_404(Webpage, slug="/ascus/outputs/")
-    outputs = LibraryItem.objects_include_private \
+    outputs = LibraryItem.objects \
         .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
         .filter(tags__id=919)
     context = {
