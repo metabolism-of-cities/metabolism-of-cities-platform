@@ -23,6 +23,7 @@
         Participant list
       </a>
     </li>
+  {% if course.id != 331733 %}
     <li class="nav-item">
       <a 
         class="nav-link {% if syllabus %}active{% endif %}" 
@@ -30,6 +31,7 @@
         Syllabus
       </a>
     </li>
+  {% endif %}
   {% endif %}
   {% if course.faq %}
   <li class="nav-item">
