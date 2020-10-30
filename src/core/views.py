@@ -108,6 +108,8 @@ def user_register(request, project="core", section=None):
                 meta_data["english"] = request.POST.get("english")
             if "homework_time" in request.POST:
                 meta_data["homework_time"] = request.POST.get("homework_time")
+            if "interest" in request.POST:
+                meta_data["interest"] = request.POST.get("interest")
             if "city" in request.POST:
                 meta_data["city"] = request.POST.get("city")
             people.meta_data = meta_data
