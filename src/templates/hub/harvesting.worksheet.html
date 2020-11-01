@@ -2,12 +2,209 @@
 
 {% block content %}
 
+  <h1>Sevilla worksheet</h1>
+
+  <section>
+    <div class="row">
+      <div class="col-lg">
+        <a class="btn-icon" href="/cities/the-hague/datasets/">
+          <div class="title"><i class="fal fa-play fa-fw"></i> Kick off a sublayer</div>
+          <div class="text">Start collecting data for a sublayer that hasn't been worked on yet</div>
+        </a>
+      </div>
+      <div class="col-lg">
+        <a class="btn-icon" href="/cities/the-hague/datasets/">
+          <div class="title"><i class="fal fa-flag-checkered fa-fw"></i> Finish indicator</div>
+          <div class="text">Take the last step to complete an indicator</div>
+        </a>
+      </div>
+      <div class="col-lg">
+        <a class="btn-icon" href="/cities/the-hague/datasets/">
+          <div class="title"><i class="fal fa-random fa-fw"></i> Random task</div>
+          <div class="text">Give me a random task to work on</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h4>Sublayers</h4>
+    <div class="card card-table">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Indicators</th>
+            <th>Collected</th>
+            <th>Processed</th>
+            <th>Analysed</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><i class="fa fa-circle text-primary mr-2"></i> 1.1 City boundaries</td>
+            <td>
+              <a class="badge badge-success" href="">Neighborhoud calculations</a>
+            </td>
+            <td><a href="">Límites del termino municipal de Sevilla</a></td>
+            <td><i class="fa fa-check-circle text-success"></i></td>
+            <td><i class="fa fa-check-circle text-success"></i></td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-circle text-secondary mr-2"></i>1.2. Economic activity - descriptions</td>
+            <td></td>
+            <td>
+              <a href="">{% lorem 2 w random %}</a>
+            </td>
+            <td>
+              <i class="fa fa-clock text-warning"></i><br>
+            </td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <td rowspan="4"><i class="fa fa-circle text-warning mr-2"></i>1.3. Economic activity - figures</td>
+            <td rowspan="4">
+              <a class="badge badge-success" href="">Neighborhoud calculations</a><br>
+              <a class="badge badge-warning" href="">Per capita calculations</a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a href="">{% lorem 4 w random %}</a>
+            </td>
+            <td>
+              <i class="fa fa-check-circle text-success"></i><br>
+            </td>
+            <td>
+              <i class="fa fa-clock text-warning"></i><br>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a href="">{% lorem 4 w random %}</a>
+            </td>
+            <td>
+              <i class="fa fa-check-circle text-success"></i><br>
+            </td>
+            <td>
+              <i class="fa fa-clock text-warning"></i><br>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a href="">{% lorem 4 w random %}</a>
+            </td>
+            <td>
+              <i class="fa fa-check-circle text-success"></i><br>
+            </td>
+            <td>
+              <i class="fa fa-check-circle text-success"></i><br>
+            </td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-circle text-primary mr-2"></i> 1.4. Population</td>
+            <td>
+              <a class="badge badge-warning" href="">Per capita calculations</a>
+            </td>
+            <td class="has-button" colspan="3">
+              <a class="btn btn-sm btn-primary" href="">
+                <i class="fa fa-play"></i> Get started
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-circle text-primary mr-2"></i> 1.5. Policy documents</td>
+            <td>
+            </td>
+            <td><a href="">{% lorem 3 w random %}</a></td>
+            <td><i class="fa fa-check-circle text-success"></i></td>
+            <td><i class="fa fa-check-circle text-success"></i></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h4>Indicators</h4>
+    <div class="card card-table">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Sublayers</th>
+            <th>Status</th>
+            <th>Datasets</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan="3"><i class="fa fa-fw fa-check-circle text-success mr-1"></i> <a href="">Neighbourhood calculations</a></td>
+            <td><a href="">1.1 City boundaries</a></td>
+            <td><i class="fa fa-check text-success fa-fw mr-1"></i> Completed</td>
+            <td><a href="">Límites del termino municipal de Sevilla</a></td>
+          </tr>
+          <tr>
+            <td rowspan="2"><a href="">1.3 Economic figures</a></td>
+            <td><i class="fa fa-check text-success fa-fw mr-1"></i> Completed</td>
+            <td><a href="">2018 Economic report</a></td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-check text-success fa-fw mr-1"></i> Completed</td>
+            <td><a href="">2019 Economic report</a></td>
+          </tr>
+          <tr>
+            <td rowspan="3"><i class="fa fa-fw fa-clock text-warning mr-1"></i> <a href="">Per capita calculations</a></td>
+            <td><a href="">1.4 Population</a></td>
+            <td><i class="fa fa-clock text-warning fa-fw mr-1"></i> Unprocessed</td>
+            <td class="has-button">
+              <a class="btn btn-sm btn-primary" href="">
+                <i class="fa fa-cog"></i> Process dataset
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td rowspan="2"><a href="">1.3 Economic figures</a></td>
+            <td><i class="fa fa-check text-success fa-fw mr-1"></i> Completed</td>
+            <td><a href="">2018 Economic report</a></td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-check text-success fa-fw mr-1"></i> Completed</td>
+            <td><a href="">2019 Economic report</a></td>
+          </tr>
+          <tr>
+            <td rowspan="2"><i class="fa fa-fw fa-exclamation-circle text-danger mr-1"></i> <a href="">Materials per building</a></td>
+            <td><a href="">2.2 Buildings in Sevilla</a></td>
+            <td><i class="fa fa-exclamation-circle text-danger fa-fw mr-1"></i> Unstarted</td>
+            <td class="has-button">
+              <a class="btn btn-sm btn-primary" href="">
+                <i class="fa fa-play"></i> Get started
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td><a href="">2.3 Building archetypes</a></td>
+            <td><i class="fa fa-exclamation-circle text-danger fa-fw mr-1"></i> Unstarted</td>
+            <td class="has-button">
+              <a class="btn btn-sm btn-primary" href="">
+                <i class="fa fa-play"></i> Get started
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- OLD PART START -->
+
+  <!--
   {% for each in layers %}
 
-    <h2>
-      <i class="fa fa-{{ each.icon }} fa-fw"></i>
-      {{ each }}
-    </h2>
+    <div class=""></div>
+
+    <h3><i class="fa fa-{{ each.icon }} fa-fw mr-2"></i> {{ each }}</h3>
 
     {{ each.get_description }}
 
@@ -19,5 +216,7 @@
     {% endfor %}
 
   {% endfor %}
+  -->
+  <!-- OLD PART END -->
 
 {% endblock %}

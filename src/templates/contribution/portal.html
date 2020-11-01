@@ -84,7 +84,9 @@
               <li>{{ tag }}</li>
             {% endfor %}
           </ul>
-          <a href="{% url 'data:hub_harvesting_worksheet' %}">View entire worksheet &raquo;</a></p>
+          <a class="btn btn-primary" href="{% url 'data:hub_harvesting_worksheet' %}">
+            <i class="fa fa-file"></i> View entire worksheet
+          </a>
         </div>
         {% endfor %}
       </div>
@@ -96,7 +98,7 @@
     <h2>Active {{ SYSTEM_NAME_PLURAL }} to work on</h2>
 
     <p>
-      For each activated {{ SYSTEM_NAME_SINGULAR }}, there is a data management platform available. 
+      For each activated {{ SYSTEM_NAME_SINGULAR }}, there is a data management platform available.
       This allows all interested contributors to upload and work with data and information for this {{ SYSTEM_NAME_SINGULAR }}.
       Click the links below to go to the relevant data management platform.
     </p>

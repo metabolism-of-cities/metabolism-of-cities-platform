@@ -1,5 +1,5 @@
-""" 
-Baseline URLs which we want to apply to every site that 
+"""
+Baseline URLs which we want to apply to every site that
 works with STAF data.
 We import this file in every urls file so if we ever have
 to change anything, we can do it in one place

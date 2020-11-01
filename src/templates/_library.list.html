@@ -1,71 +1,69 @@
 <div class="resource-list">
-  <div class="card card-table">
-    <table class="table {% if load_datatables %}datatable{% endif %}">
-      <thead>
+  <table class="table {% if load_datatables %}datatable datatable-card{% endif %}">
+    <thead>
+      <tr>
+        {% if show_creation %}
+          <th class="date">Added</th>
+        {% endif %}
+        <th class="title">Title</th>
+        <th class="type">Type</th>
+        {% if show_spaces %}
+          <th class="spaces">Spaces</th>
+        {% endif %}
+        {% if show_tags %}
+          <th class="tags">Tag(s)</th>
+        {% endif %}
+        <th class="author">Author(s)</th>
+        <th class="year">Year</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for each in items %}
         <tr>
           {% if show_creation %}
-            <th class="date">Added</th>
+            <td data-sort="-{{ each.date_created|date:'Ymdhis' }}" class="date">
+              {{ each.date_created|date:"M d, Y" }}
+            </td>
           {% endif %}
-          <th class="title">Title</th>
-          <th class="type">Type</th>
-          {% if show_spaces %}
-            <th class="spaces">Spaces</th>
-          {% endif %}
-          {% if show_tags %}
-            <th class="tags">Tag(s)</th>
-          {% endif %}
-          <th class="author">Author(s)</th>
-          <th class="year">Year</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for each in items %}
-          <tr>
-            {% if show_creation %}
-              <td data-sort="-{{ each.date_created|date:'Ymdhis' }}" class="date">
-                {{ each.date_created|date:"M d, Y" }}
-              </td>
-            {% endif %}
-            <td class="title">
-              <a href="{% if relative_url %}{{ each.id }}/{% else %}{% url URLS.LIBRARY_ITEM each.id %}{% endif %}">
-                {{ each }}
+          <td class="title">
+            <a href="{% if relative_url %}{{ each.id }}/{% else %}{% url URLS.LIBRARY_ITEM each.id %}{% endif %}">
+              {{ each }}
+            </a>
+            {% if show_image_upload_link and each.type.name != "Image" %}
+              <a href="form/?inventory=true&amp;type=38&amp;parent={{ each.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" title="Upload an image from this document" class="ml-2">
+                <i class="fa fa-image"></i>
               </a>
-              {% if show_image_upload_link and each.type.name != "Image" %}
-                <a href="form/?inventory=true&amp;type=38&amp;parent={{ each.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" title="Upload an image from this document" class="ml-2">
-                  <i class="fa fa-image"></i>
-                </a>
-              {% endif %}
-            </td>
-            <td class="type">
-              {{ each.type }}
-              {% if each.publisher %}
-                | {{ each.publisher }}
-              {% endif %}
-            </td>
-            {% if show_tags %}
-              <td class="tags">
-                <ul class="list-unstyled">
-                {% for tag in each.tags.all %}
-                  <li><span class="badge badge-light">{{ tag }}</span></li>
-                {% endfor %}
-                </ul>
-              </td>
             {% endif %}
-            {% if show_spaces %}
-              <td class="spaces">
-                {% for space in each.spaces.all %}
-                  <span class="badge badge-dark">{{ space }}</span>
-                {% endfor %}
-              </td>
+          </td>
+          <td class="type">
+            {{ each.type }}
+            {% if each.publisher %}
+              | {{ each.publisher }}
             {% endif %}
-            <td class="author">
-              <span class="text-truncate">{{ each.get_author_citation|safe }}</span>
-              <span hidden>{{ each.author_list }}</span>
+          </td>
+          {% if show_tags %}
+            <td class="tags">
+              <ul class="list-unstyled">
+              {% for tag in each.tags.all %}
+                <li><span class="badge badge-light">{{ tag }}</span></li>
+              {% endfor %}
+              </ul>
             </td>
-            <td class="year">{{ each.year|default_if_none:"" }}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+          {% endif %}
+          {% if show_spaces %}
+            <td class="spaces">
+              {% for space in each.spaces.all %}
+                <span class="badge badge-dark">{{ space }}</span>
+              {% endfor %}
+            </td>
+          {% endif %}
+          <td class="author">
+            <span class="text-truncate">{{ each.get_author_citation|safe }}</span>
+            <span hidden>{{ each.author_list }}</span>
+          </td>
+          <td class="year">{{ each.year|default_if_none:"" }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>

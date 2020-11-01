@@ -4,7 +4,7 @@
   <h1 class="mb-0">Community Portal</h1>
 
   {% if space %}
-    <a href="{% url URLS.DASHBOARD space.slug %}" class="badge badge-warning">{{ space }}</a>
+    <a href="{% url URLS.DASHBOARD space.slug %}" class="btn btn-sm btn-primary-light">{{ space }}</a>
   {% endif %}
 
   <ul class="nav nav-tabs mb-4 mt-3">

@@ -30,7 +30,7 @@
       <div class="container">
         {% if DESIGN.back_link %}
           {% if DEBUG %}
-            <a href="/"><i class="fad fa-arrow-circle-left"></i> 
+            <a href="/"><i class="fad fa-arrow-circle-left"></i>
               Return to Metabolism of Cities
             </a>
           {% else %}
@@ -214,11 +214,13 @@
     // get the sticky element
     const imgCityWrapper = document.getElementById("img-city-wrapper")
 
-    const observer = new IntersectionObserver(
-      ([e]) => e.target.classList.toggle("is-sticky", e.intersectionRatio < 1),
-      {threshold: [1]}
-    );
+    if (imgCityWrapper) {
+      const observer = new IntersectionObserver(
+        ([e]) => e.target.classList.toggle("is-sticky", e.intersectionRatio < 1),
+        {threshold: [1]}
+      );
 
-    observer.observe(imgCityWrapper)
+      observer.observe(imgCityWrapper)
+    }
   </script>
 {% endif %}

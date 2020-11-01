@@ -43,10 +43,10 @@ a {
     text-decoration: none; }
 
 .border-primary {
-  border-color: #1F7A8C !important; }
+  border-color: #144d58 !important; }
 
 .bg-primary {
-  background-color: #1F7A8C !important; }
+  background-color: #144d58 !important; }
 
 .bg-secondary {
   background-color: #ff8a4e !important; }
@@ -314,6 +314,15 @@ footer {
   .btn-primary-outline:active, .btn-primary-outline:focus {
     border-color: #144d58 !important;
     background-color: rgba(20, 77, 88, 0.1) !important;
+    color: #144d58; }
+
+.btn-primary-light {
+  background-color: rgba(20, 77, 88, 0.1);
+  border-color: transparent;
+  color: #144d58; }
+  .btn-primary-light:hover {
+    background-color: rgba(20, 77, 88, 0.2);
+    border-color: transparent;
     color: #144d58; }
 
 .btn-primary-basic {
@@ -667,8 +676,8 @@ a.large-icon-box {
 
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
-  background-color: #144d58;
-  color: #fff; }
+  background-color: rgba(20, 77, 88, 0.25);
+  color: #144d58; }
 
 .nav-tabs .nav-item.show .nav-link,
 .nav-tabs .nav-link.active {
@@ -873,6 +882,11 @@ table.datatable-card {
 
 table thead th {
   background-color: #efefef; }
+
+td.has-button {
+  padding-top: 0;
+  padding-bottom: 0;
+  vertical-align: middle; }
 
 @media (min-width: 992px) {
   table .narrow-cell {

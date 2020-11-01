@@ -80,11 +80,11 @@ a {
 }
 
 .border-primary {
-  border-color: $bg-primary !important;
+  border-color: $primary !important;
 }
 
 .bg-primary {
-  background-color: $bg-primary !important;
+  background-color: $primary !important;
 }
 
 .bg-secondary {
@@ -489,6 +489,18 @@ footer {
   &:active, &:focus {
     border-color: $primary !important;
     background-color: transparentize($primary, 0.9) !important;
+    color: $primary;
+  }
+}
+
+.btn-primary-light {
+  background-color: transparentize($primary, 0.9);
+  border-color: transparent;
+  color: $primary;
+
+  &:hover {
+    background-color: transparentize($primary, 0.8);
+    border-color: transparent;
     color: $primary;
   }
 }
@@ -1005,8 +1017,8 @@ a.large-icon-box {
 
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
-  background-color: $primary;
-  color: $white;
+  background-color: transparentize($primary, 0.75);
+  color: $primary;
 }
 
 // TABS
@@ -1302,7 +1314,13 @@ table.datatable-card {
 // TABLE
 table thead th {
   background-color: $light;
+}
 
+// cell with a button in it
+td.has-button {
+  padding-top: 0;
+  padding-bottom: 0;
+  vertical-align: middle;
 }
 
 @media (min-width: 992px) {

@@ -223,7 +223,7 @@ def upload_staf_data(request, id=None, block=None, project_name="staf"):
         if not session:
             session = UploadSession.objects.create(
                 uploader=request.user.people,
-                name=request.POST.get("name"), 
+                name=request.POST.get("name"),
                 type="flowdata",
                 part_of_project_id = project,
             )
@@ -280,7 +280,7 @@ def upload_staf_data(request, id=None, block=None, project_name="staf"):
                 )
             except Exception as e:
                 messages.error(request, "Sorry, we could not record your data. <br><strong>Error code: " + str(e) + "</strong>")
-        elif not session: 
+        elif not session:
             messages.error(request, "Please upload a file or enter your data!")
         return redirect("staf:upload_staf_verify", id=session.id)
     context = {
@@ -313,7 +313,7 @@ def upload_gis_file(request, id=None):
         if not session:
             session = UploadSession.objects.create(
                 uploader=request.user.people,
-                name=request.POST.get("name"), 
+                name=request.POST.get("name"),
                 type="shapefile",
                 part_of_project_id = project,
                 meta_data = { "geocode": request.GET.get("type") },
@@ -373,8 +373,8 @@ def upload_gis_verify(request, id):
         filename = settings.MEDIA_ROOT + "/" + files[0].file.name
         shape = shapefile.Reader(filename)
         feature = shape.shape(0)
-        geojson = feature.__geo_interface__ 
-        geojson = json.dumps(geojson) 
+        geojson = feature.__geo_interface__
+        geojson = json.dumps(geojson)
     except Exception as e:
         messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
         error = True
@@ -399,7 +399,7 @@ def upload_gis_meta(request, id):
 
     if request.method == "POST":
         session.is_uploaded = True
-        session.meta_data = { 
+        session.meta_data = {
             "geocode": session.meta_data["geocode"],
             "meta": request.POST,
         }
@@ -946,7 +946,7 @@ def hub_harvesting_tag(request, space, tag):
     dataset = [10]
     visual = [33,38,20,31]
     document = [11]
-    
+
     report = [27]
     website = [32]
     gps = [41]
@@ -1137,7 +1137,7 @@ def hub_processing_dataset(request, id, classify=False, space=None):
 
     error = False
     unidentified_columns = [
-        "Start date", 
+        "Start date",
         "End date",
         "Material name",
         "Material code",
@@ -1169,7 +1169,7 @@ def hub_processing_dataset(request, id, classify=False, space=None):
             #rows = csv.reader(f)
 
             if excel:
-                df = pd.read_excel(filename, index_col=0)  
+                df = pd.read_excel(filename, index_col=0)
             else:
                 df = read_csv(filename)
 
@@ -1330,7 +1330,7 @@ def hub_processing_gis(request, id, classify=False, space=None):
         "forum_id": work.id if work else None,
         "step": 1,
     }
-        
+
     return render(request, "hub/processing.gis.html", context)
 
 def hub_processing_files(request, id, gis=False, space=None):
@@ -1392,7 +1392,7 @@ def hub_processing_gis_classify(request, id, space=None):
         if not "columns" in meta_data:
             meta_data["columns"] = {}
         meta_data["columns"]["name"] = request.POST.get("column")
-        document.meta_data = meta_data 
+        document.meta_data = meta_data
         document.save()
         messages.success(request, "The information was saved.")
         return redirect("../save/")
@@ -1442,7 +1442,7 @@ def hub_processing_gis_save(request, id, space=None):
             messages.success(request, "The shapefile was processed! However, because more than 1,000 items are included in this layer it will take some time to complete the processing. It can take up to 6 hours for processing to complete.")
         else:
             document.convert_shapefile()
-        
+
         message_description = "Status change: " + work.get_status_display() + " → "
         work.status = Work.WorkStatus.COMPLETED
         work.save()
@@ -1534,8 +1534,8 @@ def hub_data_article(request, space=None, id=None):
             info.save()
             if not id:
                 info.spaces.add(space)
-                # Note that we save AGAIN because the first time around the 
-                # object is not yet associated with the DataArticle and the 
+                # Note that we save AGAIN because the first time around the
+                # object is not yet associated with the DataArticle and the
                 # regular expressions in the model don't run otherwise
                 info = get_object_or_404(DataArticle, uid=info.uid)
                 info.save()
