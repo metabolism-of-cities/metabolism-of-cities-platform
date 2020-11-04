@@ -102,6 +102,30 @@
       </div>
     </div>
   </div>
+
+  <h2>Geojson</h2>
+  {% for each in spaces %}
+    <strong class="mt-3 d-block">
+      {% if link %}
+        <a href="{% url "stocks:map" space.slug link each.id %}">{{ each }}</a>
+      {% else %}
+        {{ each }}
+      {% endif %}
+    </strong>
+    <code>{{ each.geometry.geojson|truncatechars:100 }}</code>
+  {% endfor %}
+
+  <h2>Data</h2>
+  {% for each in data %}
+    <strong class="mt-3 d-block">{{ each.space_name }}</strong>
+    Space ID: {{ each.space }}<br>
+    Quantity: {{ each.quantity }} {{ each.unit }}<br>
+    Date: {{ each.date }}
+  {% endfor %}
+
+  <h2>Bounding box</h2>
+  <code>{{ box.geometry.geojson|truncatechars:300 }}</code>
+
 {% endblock %}
 
 {% block footer %}

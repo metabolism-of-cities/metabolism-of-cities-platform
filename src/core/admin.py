@@ -6,7 +6,6 @@ from django.utils.translation import ugettext_lazy
 from django.contrib.auth.models import User, Group
 from django.contrib.admin.models import LogEntry
 from django_cron.models import CronJobLog
-from stafdb.models import *
 from django.contrib.gis import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.html import format_html
@@ -190,6 +189,7 @@ class LibraryItemTypeAdmin(SearchAdmin):
 
 class SpaceAdmin(admin.ModelAdmin):
     list_display = ["space", "slug", "part_of_project"]
+    list_filter = ["part_of_project"]
     search_fields = ["space__name"]
     autocomplete_fields = ["space"]
     exclude = ["slug"]

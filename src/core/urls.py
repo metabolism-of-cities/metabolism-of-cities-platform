@@ -46,6 +46,7 @@ urlpatterns = baseline_urlpatterns + [
 
     # Templates
     path("templates/", views.templates, name="templates"),
+    path("templates/folium/", views.template_folium, name="template_folium"),
     path("templates/<slug:slug>/", views.template, name="template"),
 
     # News

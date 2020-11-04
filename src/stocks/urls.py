@@ -17,6 +17,7 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("cities/<slug:slug>/archetypes/", views.archetypes, name="archetypes"),
     path("cities/<slug:slug>/maps/", views.maps, name="maps"),
     path("cities/<slug:slug>/map/<int:id>/", views.map, name="map"),
+    path("cities/<slug:slug>/map/<int:id>/<int:box>/", views.map, name="map"),
     path("cities/<slug:slug>/compare/", views.compare, name="compare"),
     path("cities/<slug:slug>/modeller/", views.modeller, name="modeller"),
     path("cities/<slug:slug>/stories/", views.stories, name="stories"),

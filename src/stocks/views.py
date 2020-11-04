@@ -74,22 +74,50 @@ def maps(request, slug):
     }
     return render(request, "stocks/maps.html", context)
 
-def map(request, slug, id):
-    info = LibraryItem.objects.get(pk=33940)
+def map(request, slug, id, box=None):
+    info = LibraryItem.objects.get(pk=id)
+    space = ActivatedSpace.objects.all()[0]
+
+    if box:
+        box = ReferenceSpace.objects.get(pk=box)
+
+    links = {
+        # Melbourne
+        33931: 33962,
+        33962: 33940,
+
+        # Brussels
+        33886: 33895,
+        33895: 33913,
+    }
+
+    link = links.get(id)
 
     spaces = info.imported_spaces.all()
+    if box:
+        spaces = spaces.filter(geometry__within=box.geometry)
+
     if spaces.count() > 100:
-        spaces = spaces[:100]
+        pass
+        #spaces = spaces[:100]
 
     map = None
     if spaces:
 
         geojson = []
+        data = []
 
+        import random
         for each in spaces:
             geojson.append(each.geometry.geojson)
+            data.append({
+                "space": each.id,
+                "space_name": each.name,
+                "quantity": random.randint(1,200),
+                "unit": "kg",
+                "date": "2011",
+            })
 
-        centroid = spaces[0].geometry.centroid
         map = folium.Map(
             tiles="https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q",
             attr="Map data &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='https://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>",
@@ -108,6 +136,10 @@ def map(request, slug, id):
         "example": geojson,
         "spaces": spaces,
         "map": map._repr_html_() if map else None,
+        "data": data,
+        "link": link,
+        "space": space,
+        "box": box,
     }
 
     return render(request, "stocks/map.html", context)
