@@ -20,7 +20,7 @@ def index(request):
     blurb = """
         <img class="main-logo my-4" alt="Metabolism of Cities" src="/media/logos/logo.flat.svg?u=true">
         <div class="my-4 font-weight-bold" style="text-shadow:2px 2px 8px #000">
-            MoI is a network of scholars that conducts policy-relevant research
+            MoI is a network of scholars conducting policy-relevant research
             to support island economies achieve resource security and
             self-reliance, and build resilience to the impacts of climate
             change.
