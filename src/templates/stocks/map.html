@@ -78,15 +78,15 @@
 
   // Data layer
   function getColor(n) {
-    return n > 75317 ? 'green' :
-           n > 75315  ? 'blue' :
-           n > 75312  ? 'red' :
-                      'pink';
+    return n > 150 ? '#144d58' :
+           n > 100 ? '#4b8793' :
+           n > 50  ? '#8bc3ce' :
+                      '#b3dde6';
   }
 
   function dataStyle(feature) {
     return {
-      fillColor: getColor(feature.properties.value),
+      fillColor: getColor(feature.properties.quantity),
       weight: .2,
       opacity: 1,
       color: "white",
@@ -94,7 +94,7 @@
     };
   }
 
-  let mapData = {{ data|safe }};
+  let mapData = {{ data|safe|escape }};
 
   let dataLayer = L.geoJson(mapData, {style: dataStyle})
   map.addLayer(dataLayer);

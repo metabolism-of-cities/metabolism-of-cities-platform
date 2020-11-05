@@ -104,7 +104,6 @@ def map(request, slug, id, box=None):
     map = None
     if spaces:
 
-        data = []
         features = []
 
         import random
@@ -118,13 +117,13 @@ def map(request, slug, id, box=None):
                     "unit": "kg",
                     "date": "2011",
                 },
-                "geometry": each.geometry.geojson
+                "geometry": json.loads(each.geometry.json)
             })
 
-        data.append({
+        data = {
             "type":"FeatureCollection",
             "features": features,
-        })
+        }
 
     context = {
         "info": info,
