@@ -104,36 +104,30 @@ def map(request, slug, id, box=None):
     map = None
     if spaces:
 
-        geojson = []
         data = []
+        features = []
 
         import random
         for each in spaces:
-            geojson.append(each.geometry.geojson)
-            data.append({
-                "space": each.id,
-                "space_name": each.name,
-                "quantity": random.randint(1,200),
-                "unit": "kg",
-                "date": "2011",
+            features.append({
+                "type": "Feature",
+                "id": each.id,
+                "properties": {
+                    "space_name": each.name,
+                    "quantity": random.randint(1,200),
+                    "unit": "kg",
+                    "date": "2011",
+                },
+                "geometry": each.geometry.geojson
             })
 
-        map = folium.Map(
-            tiles="https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q",
-            attr="Map data &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='https://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>",
-        )
-
-        for each in spaces:
-            folium.GeoJson(
-                each.geometry.geojson,
-                name="geojson"
-            ).add_to(map)
-
-        map.fit_bounds(map.get_bounds())
+        data.append({
+            "type":"FeatureCollection",
+            "features": features,
+        })
 
     context = {
         "info": info,
-        "example": geojson,
         "spaces": spaces,
         "map": map._repr_html_() if map else None,
         "data": data,

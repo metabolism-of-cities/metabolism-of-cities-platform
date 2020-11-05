@@ -11,97 +11,16 @@
         crossorigin=""/>
 
   <!-- slider filter -->
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css">
 
-  <!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
+  <!-- fullscreen plugin -->
   <link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet" />
 {% endblock %}
 
 {% block content %}
   {% include "_submenu-stocks.html" %}
 
-  <!-- TEMPORARY SIMPLE LAYER -->
-  {% if not request.GET.simple %}
-    <form class="form-row">
-      <div class="col">
-        <div class="form-group">
-          <label for="archetype">Archetype</label>
-          <select class="custom-select" id="archetype" name="archetype">
-            <option selected value="all">All</option>
-            <option value="7">Apartment building</option>
-            <option value="5b">Office</option>
-            <option value="5c">House</option>
-            <option value="5a">5a</option>
-            <option value="1a">1a</option>
-            <option value="4b">4b</option>
-          </select>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group">
-          <label for="age">Completion year</label>
-          <div class="slider-wrapper">
-            <input class="slider" id="age" name="age">
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="input-group">
-          <label for="surface">Surface area (m<sup>2</sup>)</label>
-          <div class="slider-wrapper">
-            <input class="slider" id="surface" name="surface">
-          </div>
-        </div>
-      </div>
-    </form>
-  {% endif %}
-
-  <div id="map-wrapper">
-    {{ map|safe }}
-    <div id="feature-details-wrapper">
-      <div id="feature-details">
-        <div class="header">
-          <span class="muni"></span>
-          <button type="button" class="close close-feature" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <table class="table">
-          <tr>
-            <th scope="row">Most common archetype</th>
-            <td class="age">Apartment building</td>
-          </tr>
-          <tr>
-            <th scope="row">Glass</th>
-            <td class="glass">21 tonnes</td>
-          </tr>
-          <tr>
-            <th scope="row">Wood</th>
-            <td class="wood">812 tonnes</td>
-          </tr>
-          <tr>
-            <th scope="row">Steel</th>
-            <td class="steel">4124 tonnes</td>
-          </tr>
-          <tr>
-            <th scope="row">Schauff</th>
-            <td class="schauff"></td>
-          </tr>
-        </table>
-
-        <div class="feature-content">
-          <a class="btn btn-primary" href="{% url 'stocks:map' 'brussels' 1 %}">
-            <i class="fas fa-arrow-alt-circle-down"></i> Drill down
-          </a>
-
-          <a class="btn btn-primary-basic" href="{% url 'stocks:compare' 'brussels' %}">
-            <i class="fal fa-layer-group"></i>
-            Compare
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div id="map" class="leaflet-map"></div>
 
   <h2>Geojson</h2>
   {% for each in spaces %}
@@ -124,10 +43,116 @@
   {% endfor %}
 
   <h2>Bounding box</h2>
-  <code>{{ box.geometry.geojson|truncatechars:300 }}</code>
+  <code>{{ box.geometry.geojson }}</code>
 
 {% endblock %}
 
 {% block footer %}
+
+<!-- leaflet -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+  crossorigin=""></script>
+
+<!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
+<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
+
+<!-- download map as image -->
+<script src="https://unpkg.com/leaflet-image@0.4.0/leaflet-image.js"></script>
+
+
+<script>
+  var map = L.map("map", {
+    renderer: L.canvas(),
+    fullscreenControl: true,
+  });
+
+  L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 20,
+      id: "mapbox/streets-v11",
+      tileSize: 512,
+      zoomOffset: -1,
+      accessToken: "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q",
+  }).addTo(map);
+
+  // Data layer
+  function getColor(n) {
+    return n > 75317 ? 'green' :
+           n > 75315  ? 'blue' :
+           n > 75312  ? 'red' :
+                      'pink';
+  }
+
+  function dataStyle(feature) {
+    return {
+      fillColor: getColor(feature.properties.value),
+      weight: .2,
+      opacity: 1,
+      color: "white",
+      fillOpacity: 0.7
+    };
+  }
+
+  let mapData = {{ data|safe }};
+
+  let dataLayer = L.geoJson(mapData, {style: dataStyle})
+  map.addLayer(dataLayer);
+
+  // Bounding box
+  {% if box.geometry.geojson %}
+    const boundingStyle = {
+      fillColor: "transparent",
+      weight: 3,
+      opacity: 1,
+      color: "black",
+      fillOpacity: 0
+    };
+
+    let boundingData = {{ box.geometry.geojson|safe }};
+    let boundingLayer = L.geoJson(boundingData, {style: boundingStyle})
+
+    map.addLayer(boundingLayer)
+
+    map.fitBounds(boundingLayer.getBounds())
+  {% else %}
+    map.fitBounds(dataLayer.getBounds())
+  {% endif %}
+
+  // download map as image
+  function downloadImage(err, canvas) {
+    var downloadLink = document.createElement("a");
+    downloadLink.href = canvas.toDataURL("image/png");
+    downloadLink.download = "map.png";
+
+    downloadLink.click();
+  }
+
+  // download map as image button
+  L.Control.Download = L.Control.extend({
+    onAdd: function(map) {
+
+      var downloadButtonWrapper = L.DomUtil.create("div", "download-map-wrapper");
+
+      var downloadButton = L.DomUtil.create("div", "download-map");
+      downloadButton.innerHTML = "<i class='fal fa-fw fa-save'></i>";
+
+      downloadButtonWrapper.appendChild(downloadButton);
+
+      return downloadButtonWrapper;
+    }
+  });
+
+  L.control.Download = function(opts) {
+    return new L.Control.Download(opts);
+  }
+
+  L.control.Download({ position: "topleft" }).addTo(map);
+
+  // click button to download
+  $(".download-map").click(function() {
+    leafletImage(map, downloadImage);
+  })
+</script>
 
 {% endblock %}
