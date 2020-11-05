@@ -173,9 +173,9 @@ class Tag(models.Model):
     class Meta:
         ordering = ["name"]
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
 class Record(models.Model):
     name = models.CharField(max_length=255)
@@ -292,9 +292,9 @@ class Record(models.Model):
                 self.description_html = self.description_html.replace("\n", "<br>")
         super().save(*args, **kwargs)
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
 def upload_directory(instance, filename):
     # file will be uploaded to MEDIA_ROOT/uuid/<filename>
@@ -320,9 +320,9 @@ class Document(Record):
     file = models.FileField(null=True, blank=True, upload_to=upload_directory, max_length=255)
     attached_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="attachments")
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
     def get_size(self):
         file = self.file if self.file else self.image
@@ -402,9 +402,9 @@ class Project(Record):
     def get_dates_months(self):
         return get_date_range(self.start_date, self.end_date, True)
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
 class PublicProject(Record):
     full_name = models.CharField(max_length=255, null=True, blank=True)
@@ -436,13 +436,12 @@ class PublicProject(Record):
     def get_absolute_url(self):
         return reverse("community:project", args=[self.id])
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
 class News(Record):
     date = models.DateField()
-    objects = models.Manager()
     slug = models.SlugField(max_length=255)
     projects = models.ManyToManyField(Project)
     include_in_timeline = models.BooleanField(default=False)
@@ -464,13 +463,12 @@ class News(Record):
         verbose_name_plural = "news"
         ordering = ["-date", "-id"]
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
 class Blog(Record):
     date = models.DateField()
-    objects = models.Manager()
     slug = models.SlugField(max_length=255)
     class Meta:
         ordering = ["-date", "-id"]
@@ -480,9 +478,9 @@ class Blog(Record):
         self.slug = slugify(unidecode(self.name))
         super().save(*args, **kwargs)
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
 class Organization(Record):
     url = models.CharField(max_length=255, null=True, blank=True)
@@ -531,9 +529,9 @@ class Organization(Record):
         # record that are linked to this organization (e.g. journal or publishing house) as a parent
         return LibraryItem.objects.select_related("type").filter(child_list__record_parent=self, child_list__relationship__id=2)
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
     class Meta:
         ordering = ["name"]
@@ -641,9 +639,9 @@ class Event(Record):
         except:
             return "upcoming"
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
 class People(Record):
     firstname = models.CharField(max_length=255, null=True, blank=True)
@@ -710,9 +708,9 @@ class People(Record):
                 pass
         super(People, self).save(*args, **kwargs)
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
 # We use this to keep a version history of records (which is done for some, not all)
 # We save the record name/title and the description, which allows us to go 
@@ -745,9 +743,9 @@ class Webpage(Record):
     slug = models.CharField(db_index=True, max_length=100)
     part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, related_name="webpages")
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
     def get_absolute_url(self):
         return self.slug
@@ -883,9 +881,9 @@ class Message(Record):
     class Meta:
         ordering = ["date_created"]
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
 class License(models.Model):
     name = models.CharField(max_length=255)
@@ -1188,9 +1186,9 @@ class LibraryItem(Record):
                 pass
         super(LibraryItem, self).save(*args, **kwargs)
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
 class Video(LibraryItem):
     embed_code = models.CharField(max_length=20, null=True, blank=True)
@@ -1249,15 +1247,16 @@ class Video(LibraryItem):
                 file = file.file.url
             return mark_safe(f'<video src="{file}" controls preload="metadata" style="height:30vh;width:100vw;max-width:100%"></video><br><a href="{file}">Download video</a>')
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
 class Photo(LibraryItem):
     position = models.PositiveSmallIntegerField(null=True, blank=True, db_index=True, default=1)
+
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
 class ActivatedSpace(models.Model):
     space = models.ForeignKey("ReferenceSpace", on_delete=models.CASCADE, related_name="activated")
@@ -1288,9 +1287,9 @@ class Dataset(LibraryItem):
     size = models.IntegerField(null=True, blank=True, help_text="Size in MB")
     activities = models.ManyToManyField("Activity", blank=True)
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
 class DataPortal(LibraryItem):
 
@@ -1309,10 +1308,9 @@ class DataPortal(LibraryItem):
     software = models.IntegerField(choices=Software.choices, null=True, blank=True)
     has_api = models.BooleanField(default=True, db_index=True)
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
-
 
 class Course(Record):
     slug = models.CharField(max_length=255, null=True)
@@ -1347,6 +1345,13 @@ class CourseModule(Record):
 
     class Meta:
         ordering = ["name"]
+
+    # Important to note! The unfiltered objects come first, unlike other tables where 
+    # the regular objects manager comes first. The reason is that we recurringly want to show
+    # all modules, but we mark out those that are not yet published (not active).
+    objects_unfiltered = models.Manager()
+    objects = PublicActiveRecordManager()
+    objects_include_private = PrivateRecordManager()
 
 class CourseQuestion(models.Model):
     question = models.CharField(max_length=255)
@@ -1504,9 +1509,9 @@ class WorkSprint(Record):
     projects = models.ManyToManyField(Project, blank=True)
     work_tag = models.ForeignKey(Tag, on_delete=models.CASCADE, null=True, blank=True)
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
     def get_dates(self):
         return get_date_range(self.start_date, self.end_date)
@@ -1569,9 +1574,9 @@ class GeocodeScheme(Record):
 
     type = models.IntegerField(choices=Type.choices, db_index=True, default=3)
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
     def __str__(self):
         return self.name
@@ -1590,9 +1595,9 @@ class Geocode(Record):
     scheme = models.ForeignKey(GeocodeScheme, on_delete=models.CASCADE, related_name="geocodes")
     depth = models.PositiveSmallIntegerField()
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
     def __str__(self):
         return self.name
@@ -1706,9 +1711,9 @@ class FlowDiagram(Record):
     class Meta:
         db_table = "stafdb_flowdiagram"
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
 class FlowBlocks(models.Model):
     diagram = models.ForeignKey(FlowDiagram, on_delete=models.CASCADE, related_name="blocks")
@@ -1880,9 +1885,9 @@ class DataArticle(Record):
     language = models.ForeignKey(Language, on_delete=models.CASCADE, null=True, blank=True)
     slug = models.SlugField(max_length=100, unique=True, blank=True, null=True)
 
+    objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
-    objects = PublicActiveRecordManager()
 
     def authors(self):
         return People.objects.filter(record_history__record=self).distinct()

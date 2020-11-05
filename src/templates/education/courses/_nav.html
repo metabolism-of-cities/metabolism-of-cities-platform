@@ -9,7 +9,7 @@
   {% for each in course.modules.all %}
     <li class="nav-item">
       <a 
-        class="nav-link {% if not check_register %}disabled{% elif info == each %}active{% endif %}" 
+        class="nav-link {% if not check_register or not each.is_active %}disabled{% elif info == each %}active{% endif %}" 
         href="{% url "education:module" course.slug each.id %}">
         {{ each }}
       </a>
@@ -23,7 +23,6 @@
         Participant list
       </a>
     </li>
-  {% if course.id != 331733 %}
     <li class="nav-item">
       <a 
         class="nav-link {% if syllabus %}active{% endif %}" 
@@ -31,7 +30,6 @@
         Syllabus
       </a>
     </li>
-  {% endif %}
   {% endif %}
   {% if course.faq %}
   <li class="nav-item">

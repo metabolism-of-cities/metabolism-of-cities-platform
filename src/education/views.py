@@ -10,8 +10,6 @@ from django.views.decorators.csrf import csrf_exempt
 from markdown import markdown
 from django.utils.safestring import mark_safe
 
-# Create your views here.
-
 def index(request):
     context = {
         "show_project_design": True,
@@ -41,6 +39,9 @@ def course(request, slug):
     first_module = None
     if info.modules.all():
         first_module = info.modules.all()[0]
+        if not first_module.is_public:
+            # If this module is not yet activated, we consider it as non-existent
+            first_module = None
     if request.user.is_authenticated:
         check_register = RecordRelationship.objects.filter(record_parent=request.user.people, record_child=info, relationship_id=12)
         if "register" in request.POST and not check_register:
@@ -51,7 +52,8 @@ def course(request, slug):
                     relationship_id = 12,
                 )
                 messages.success(request, "You have been successfully registered for this course.")
-                return redirect(first_module.get_absolute_url())
+                if first_module:
+                    return redirect(first_module.get_absolute_url())
             except:
                 messages.error(request, "Sorry, we could not register you. Try again or contact us if this issue persists.")
 
