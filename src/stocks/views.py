@@ -133,6 +133,7 @@ def map(request, slug, id, box=None):
         "link": link,
         "space": space,
         "box": box,
+        "load_datatables": True,
     }
 
     return render(request, "stocks/map.html", context)

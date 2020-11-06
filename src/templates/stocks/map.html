@@ -15,35 +15,79 @@
 
   <!-- fullscreen plugin -->
   <link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet" />
+
+  <style>
+    .chart .bar {
+      height: 5px;
+    }
+
+    .chart .bar.selected {
+      background-color: gold !important;
+    }
+
+    #average-line {
+      height: 100%;
+      width: 2px;
+      background-color: #000;
+      position: absolute;
+      top: 0;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
   {% include "_submenu-stocks.html" %}
 
-  <div id="map" class="leaflet-map"></div>
+  <section>
+    <div class="row">
+      <div class="col-lg-4">
+        <table id="feature-details" class="table mt-4">
+          <tr>
+            <th scope="row">Name</th>
+            <td class="name text-right">{{ info }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Density</th>
+            <td class="quantity text-right"></td>
+          </tr>
+        </table>
 
-  <h2>Geojson</h2>
-  {% for each in spaces %}
-    <strong class="mt-3 d-block">
-      {% if link %}
-        <a href="{% url "stocks:map" space.slug link each.id %}">{{ each }}</a>
-      {% else %}
-        {{ each }}
-      {% endif %}
-    </strong>
-    <code>{{ each.geometry.geojson|truncatechars:100 }}</code>
-  {% endfor %}
+        <!-- spaces chart -->
+        <div class="chart position-relative">
+          <div class="bars">
+            {% for each in data.features %}
+              <div class="bar" data-space="{{ each.id }}" data-value="{{ each.properties.quantity }}"></div>
+            {% endfor %}
+          </div>
+          <div id="average-line"></div>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div id="map" class="leaflet-map"></div>
+      </div>
+    </div>
+  </section>
 
-  <h2>Data</h2>
-  {% for each in data %}
-    <strong class="mt-3 d-block">{{ each.space_name }}</strong>
-    Space ID: {{ each.space }}<br>
-    Quantity: {{ each.quantity }} {{ each.unit }}<br>
-    Date: {{ each.date }}
-  {% endfor %}
-
-  <h2>Bounding box</h2>
-  <code>{{ box.geometry.geojson }}</code>
+  <section>
+    <table class="table datatable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>ID</th>
+          <th>Quantity</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for each in data.features %}
+        <tr>
+          <td><a href="">{{ each.properties.space_name }}</a></td>
+          <td>{{ each.id }}</td>
+          <td>{{ each.properties.quantity }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
 
 {% endblock %}
 
@@ -62,11 +106,13 @@
 
 
 <script>
+  // set up map
   var map = L.map("map", {
     renderer: L.canvas(),
     fullscreenControl: true,
   });
 
+  // add basemap
   L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 20,
@@ -76,59 +122,151 @@
       accessToken: "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q",
   }).addTo(map);
 
-  // Data layer
+  // BOUNDING BOX START -- ONLY NECESSARY IF IT EXSTS
+  {% if box.geometry.geojson %}
+    // set style
+    const boundingStyle = {
+      fillColor: "transparent",
+      weight: 3,
+      opacity: 1,
+      color: "black",
+    };
+
+    // bounding box data variable, add it to the map,
+    let boundingData = {{ box.geometry.geojson|safe }};
+    let boundingLayer = L.geoJson(boundingData, {
+      style: boundingStyle,
+      interactive: false
+    });
+
+    map.addLayer(boundingLayer)
+  {% endif %}
+  // BOUNDING BOX END
+
+  // DATA LAYER START
+  // set the color based on a value
   function getColor(n) {
-    return n > 150 ? '#144d58' :
-           n > 100 ? '#4b8793' :
-           n > 50  ? '#8bc3ce' :
-                      '#b3dde6';
+    return n > 150 ? "#144d58" :
+           n > 100 ? "#4b8793" :
+           n > 50  ? "#8bc3ce" :
+                     "#b3dde6";
   }
 
+  // apply style to each feature
   function dataStyle(feature) {
     return {
       fillColor: getColor(feature.properties.quantity),
-      weight: .2,
+      weight: 1,
       opacity: 1,
       color: "white",
       fillOpacity: 0.7
     };
   }
 
+  // function when hovering over an area
+  function hoverArea(e) {
+    var layer = e.target;
+
+    layer.setStyle({
+      weight: 2,
+      color: "gold",
+    });
+
+    var layerID = layer.feature.id
+
+    $(".chart .bar[data-space='" + layerID + "']").addClass("selected");
+
+    $("#feature-details .name").text(layer.feature.properties.space_name)
+    $("#feature-details .quantity").text(layer.feature.properties.quantity)
+
+    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+      layer.bringToFront();
+    }
+  }
+
+  // function when hovering out of an area
+  function resetHover(e) {
+    var layer = e.target;
+    dataLayer.resetStyle(layer);
+    var layerID = layer.feature.id
+
+    $(".chart .bar[data-space='" + layerID + "']").removeClass("selected");
+  }
+
+  // function when clicking on an area
+  function selectArea(e) {
+    var layer = e.target;
+
+    layer.setStyle({
+      weight: 2,
+      color: "gold",
+    });
+  }
+
+  // function to apply to each feature
+  function onEachFeature(feature, layer) {
+    layer.on({
+      mouseover: hoverArea,
+      mouseout: resetHover,
+      click: selectArea
+    });
+  }
+
+  // variable for the data, add it to the map
   let mapData = {{ data|safe|escape }};
-
-  let dataLayer = L.geoJson(mapData, {style: dataStyle})
+  let dataLayer = L.geoJson(mapData, {
+    style: dataStyle,
+    onEachFeature: onEachFeature,
+  })
   map.addLayer(dataLayer);
+  // DATA LAYER END
 
-  // Bounding box
+  // set bounds of map to bounding box if it exists, otherwise to data layer
   {% if box.geometry.geojson %}
-    const boundingStyle = {
-      fillColor: "transparent",
-      weight: 3,
-      opacity: 1,
-      color: "black",
-      fillOpacity: 0
-    };
-
-    let boundingData = {{ box.geometry.geojson|safe }};
-    let boundingLayer = L.geoJson(boundingData, {style: boundingStyle})
-
-    map.addLayer(boundingLayer)
-
     map.fitBounds(boundingLayer.getBounds())
   {% else %}
     map.fitBounds(dataLayer.getBounds())
   {% endif %}
 
-  // download map as image
+  // LEGEND START
+  // create variable for the legend
+  var mapDataLegend = L.control({
+    position: "bottomright"
+  });
+
+  // when the legend is added to the map, build up the contents
+  mapDataLegend.onAdd = function(map) {
+    var div = L.DomUtil.create("div", "legend"),
+        grades = [0, 50, 100, 150],
+        labels = [];
+
+    div.innerHTML = "<div>Wood stock per building<br>(in tonnes)</div><hr class='my-2'>"
+
+    // loop through our schauff intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+            "<i style='background:" + getColor(grades[i] + 1) + "'></i> " +
+            grades[i] + (grades[i + 1] ? " – " + grades[i + 1] + "<br>" : "+");
+    }
+
+    return div;
+  };
+
+  // add legend to map
+  map.addControl(mapDataLegend);
+
+  // LEGEND END
+
+  // DOWNLOAD MAP AS IMAGE START
+  // function to convert canvas data to png and simulate click on download button
   function downloadImage(err, canvas) {
     var downloadLink = document.createElement("a");
     downloadLink.href = canvas.toDataURL("image/png");
     downloadLink.download = "map.png";
-
     downloadLink.click();
   }
 
-  // download map as image button
+  // define the download button's details
   L.Control.Download = L.Control.extend({
     onAdd: function(map) {
 
@@ -143,16 +281,52 @@
     }
   });
 
+  // create a new leaflet control and apply download button details
   L.control.Download = function(opts) {
     return new L.Control.Download(opts);
   }
 
+  // add download button to the map
   L.control.Download({ position: "topleft" }).addTo(map);
 
-  // click button to download
+  // run function when clicking the button
   $(".download-map").click(function() {
     leafletImage(map, downloadImage);
   })
+  // DOWNLOAD MAP END
+
+  // BAR GRAPH START
+  // get the highest values of the dataset
+  let dataValues = [{% for each in data.features %}{{ each.properties.quantity }}, {% endfor %}]
+  let maxValue = Math.max(...dataValues);
+
+  // apply width and color to each bar
+  $(".chart .bar").each(function() {
+    let value = $(this).data("value")
+    let width = value / maxValue * 100
+
+    $(this).width(width + "%").css("background-color", getColor(value));
+  })
+
+  // sort bars by value
+  var bars = $(".chart .bar");
+  var sortedBars = bars.sort(function (a, b) {
+    return $(a).data("value") > $(b).data("value");
+  });
+
+  // set html of the charts div with sorted bars
+  $(".chart .bars").html(sortedBars);
+
+  // get average of values
+  // https://stackoverflow.com/questions/10359907/how-to-compute-the-sum-and-average-of-elements-in-an-array
+  const average = arr => arr.reduce( ( p, c ) => p + c, 0 ) / arr.length;
+  let averageValue = average(dataValues);
+
+  // position average line
+  let averagePosition = averageValue / maxValue * 100;
+  $("#average-line").css("left", "calc(" + averagePosition + "% - 1px)");
+
+  // BAR GRAPH END
 </script>
 
 {% endblock %}
