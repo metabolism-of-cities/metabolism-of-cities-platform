@@ -17,23 +17,35 @@
   <link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet" />
 
   <style>
-    .chart {
-      width: 100%;
-      height: 400px;
+    .chart .bar {
+      height: 5px;
     }
 
     .chart .bar.selected {
-      fill: gold !important;
+      background-color: gold !important;
+    }
+
+    #start-line {
+      height: 100%;
+      width: 1px;
+      background-color: black;
+      position: absolute;
+      top: 0;
+      left: 0;
     }
 
     #average-line {
       height: 100%;
-      width: 2px;
-      background-color: #000;
+      width: 0px;
+      border-right: dashed 1px black;
       position: absolute;
       top: 0;
     }
 
+    .labels {
+      font-size: .75rem;
+      line-height: .75rem;
+    }
   </style>
 {% endblock %}
 
@@ -55,15 +67,20 @@
         </table>
 
         <!-- spaces chart -->
-        <svg class="chart" preserveAspectRatio="none">
-          <g class="bars">
+        <div class="chart position-relative">
+          <div class="bars">
             {% for each in data.features %}
-              <rect data-space="{{ each.id }}" class="bar" x="0" width="{{ each.properties.quantity }}" height="1"/>
+              <div class="bar" data-space="{{ each.id }}" data-value="{{ each.properties.quantity }}"></div>
             {% endfor %}
-          </g>
-          <rect class="start-line" x="0" y="0" height="100%" width="1px"/>
-          <line class="average-line" y1="0" stroke="black" stroke-dasharray="2"/>
-        </svg>
+          </div>
+          <div id="start-line"></div>
+          <div id="average-line"></div>
+        </div>
+        <div class="labels">
+          <span class="start-label">0</span>
+          <span class="average-label position-absolute"></span>
+          <span class="end-label text-right float-right"></span>
+        </div>
       </div>
       <div class="col-lg-8">
         <div id="map" class="leaflet-map"></div>
@@ -129,6 +146,27 @@
       zoomOffset: -1,
       accessToken: "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q",
   }).addTo(map);
+
+  // BOUNDING BOX START -- ONLY NECESSARY IF IT EXSTS
+  {% if box.geometry.geojson %}
+    // set style
+    const boundingStyle = {
+      fillColor: "transparent",
+      weight: 3,
+      opacity: 1,
+      color: "black",
+    };
+
+    // bounding box data variable, add it to the map,
+    let boundingData = {{ box.geometry.geojson|safe }};
+    let boundingLayer = L.geoJson(boundingData, {
+      style: boundingStyle,
+      interactive: false
+    });
+
+    map.addLayer(boundingLayer)
+  {% endif %}
+  // BOUNDING BOX END
 
   // DATA LAYER START
   // set the color based on a value
@@ -208,32 +246,12 @@
   map.addLayer(dataLayer);
   // DATA LAYER END
 
-  // BOUNDING BOX START -- ONLY NECESSARY IF IT EXSTS
+  // set bounds of map to bounding box if it exists, otherwise to data layer
   {% if box.geometry.geojson %}
-    // set style
-    const boundingStyle = {
-      fillColor: "transparent",
-      weight: 3,
-      opacity: 1,
-      color: "black",
-    };
-
-    // bounding box data variable, add it to the map,
-    let boundingData = {{ box.geometry.geojson|safe }};
-    let boundingLayer = L.geoJson(boundingData, {
-      style: boundingStyle,
-      interactive: false
-    });
-
-    map.addLayer(boundingLayer)
-
     map.fitBounds(boundingLayer.getBounds())
   {% else %}
     map.fitBounds(dataLayer.getBounds())
   {% endif %}
-  // BOUNDING BOX END
-
-  // set bounds of map to bounding box if it exists, otherwise to data layer
 
   // LEGEND START
   // create variable for the legend
@@ -307,29 +325,30 @@
   let dataValues = [{% for each in data.features %}{{ each.properties.quantity }}, {% endfor %}]
   let maxValue = Math.max(...dataValues);
 
-  let viewBox = "0 0 " + maxValue + " " + dataValues.length
+  // set end label to max value
+  $(".end-label").text(maxValue);
 
-  $(".chart").attr("viewBox", viewBox)
+  // apply width and color to each bar
+  $(".chart .bar").each(function() {
+    let value = $(this).data("value");
+    let width = value / maxValue * 100;
+    let height = 400 / dataValues.length;
+
+    if (height > 5) {
+      height = 5
+    };
+
+    $(this).width(width + "%").height(height).css("background-color", getColor(value));
+  })
 
   // sort bars by value
   var bars = $(".chart .bar");
   var sortedBars = bars.sort(function (a, b) {
-    return Number($(a).attr("width")) > Number($(b).attr("width"));
+    return $(a).data("value") > $(b).data("value");
   });
 
   // set html of the charts div with sorted bars
   $(".chart .bars").html(sortedBars);
-
-  let i = 0;
-  $(".chart .bar").each(function() {
-    let value = $(this).attr("width");
-    $(this).attr({
-      "fill": getColor(value),
-      "y": i
-    });
-
-    i++;
-  })
 
   // get average of values
   // https://stackoverflow.com/questions/10359907/how-to-compute-the-sum-and-average-of-elements-in-an-array
@@ -338,7 +357,14 @@
 
   // position average line
   let averagePosition = averageValue / maxValue * 100;
-  $("#average-line").css("left", "calc(" + averagePosition + "% - 1px)");
+  $("#average-line").css("left", averagePosition + "%");
+
+  // set average label to average
+  let averageLabel = $(".average-label");
+
+  averageLabel.text(Math.round(averageValue))
+  let averageLabelWidth = averageLabel.width() / 2;
+  averageLabel.css("left", "calc(" + averagePosition + "% - " + averageLabelWidth + "px)");
 
   // BAR GRAPH END
 </script>
