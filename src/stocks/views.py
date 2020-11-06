@@ -24,7 +24,6 @@ from core.mocfunctions import *
 #from folium import Map
 import folium
 
-
 # temporary landing until section is ready
 def landing(request):
     context = {
@@ -47,36 +46,53 @@ def cities(request):
     }
     return render(request, "stocks/cities.html", context)
 
-def city(request, slug):
+def city(request, space):
+    space = get_space(request, space)
     context = {
         "city": True,
+        "space": space,
     }
     return render(request, "stocks/city.html", context)
 
-def data(request, slug):
+def data(request, space):
+    space = get_space(request, space)
     context = {
         "data": True,
         "load_datatables": True,
         "load_select2": True,
+        "space": space,
     }
     return render(request, "stocks/data.html", context)
 
-def archetypes(request, slug):
+def archetypes(request, space):
+    space = get_space(request, space)
     context = {
         "archetypes": True,
+        "space": space,
     }
     return render(request, "stocks/archetypes.html", context)
 
-def maps(request, slug):
+def maps(request, space):
+    space = get_space(request, space)
+
+    if space.name == "Melbourne":
+        id = 33931
+    elif space.name == "Brussels":
+        id = 33886
+
+    info = LibraryItem.objects.get(pk=id)
+
     context = {
-        "map": True,
         "load_select2": True,
+        "space": space,
+        "info": info,
+        "menu": "maps",
     }
     return render(request, "stocks/maps.html", context)
 
-def map(request, slug, id, box=None):
+def map(request, space, id, box=None):
     info = LibraryItem.objects.get(pk=id)
-    space = ActivatedSpace.objects.all()[0]
+    space = get_space(request, space)
 
     if box:
         box = ReferenceSpace.objects.get(pk=box)
@@ -108,9 +124,17 @@ def map(request, slug, id, box=None):
 
         import random
         for each in spaces:
+            if link:
+                get_link = reverse("stocks:map", args=[space.slug, link, each.id])
+                if box:
+                    get_link += "?source_box=" + str(box.id)
+            else:
+                get_link = "javascript:alert('no page yet')"
+
             features.append({
                 "type": "Feature",
                 "id": each.id,
+                "link": get_link,
                 "properties": {
                     "space_name": each.name,
                     "quantity": random.randint(1,200),
@@ -131,9 +155,11 @@ def map(request, slug, id, box=None):
         "map": map._repr_html_() if map else None,
         "data": data,
         "link": link,
+        "source_link": links.get(box.source.id) if box else 0,
         "space": space,
         "box": box,
         "load_datatables": True,
+        "menu": "maps",
     }
 
     return render(request, "stocks/map.html", context)
@@ -174,26 +200,33 @@ def choropleth(request):
 
     return render(request, "stocks/map.html", context)
 
-def compare(request, slug):
+def compare(request, space):
+    space = get_space(request, space)
     context = {
         "compare": True,
         "load_select2": True,
+        "space": space,
     }
     return render(request, "stocks/compare.html", context)
 
-def modeller(request, slug):
+def modeller(request, space):
+    space = get_space(request, space)
     context = {
         "modeller": True,
+        "space": space,
     }
     return render(request, "stocks/modeller.html", context)
 
-def stories(request, slug):
+def stories(request, space):
+    space = get_space(request, space)
     context = {
         "stories": True,
+        "space": space,
     }
     return render(request, "stocks/stories.html", context)
 
-def story(request, slug, title):
+def story(request, space, title):
+    space = get_space(request, space)
     context = {
         "stories": True,
     }

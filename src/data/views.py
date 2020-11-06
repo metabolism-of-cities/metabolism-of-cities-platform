@@ -16,11 +16,6 @@ from functools import wraps
 from django.views.decorators.clickjacking import xframe_options_exempt
 from core.mocfunctions import *
 
-def get_space(request, slug):
-    # Here we can build an expansion if we want particular people to see dashboards that are under construction
-    check = get_object_or_404(ActivatedSpace, slug=slug, part_of_project_id=request.project)
-    return check.space
-
 def index(request):
 
     if "import" in request.GET and request.user.id == 1:

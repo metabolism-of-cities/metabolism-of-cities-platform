@@ -83,6 +83,17 @@
         </div>
       </div>
       <div class="col-lg-8">
+        {% if box %}
+          <p>
+            {% if request.GET.source_box %}
+              <a href="{% url "stocks:map" space.slug box.source.id request.GET.source_box %}">{{ box.source }}</a> 
+            {% else %}
+              <a href="{% url "stocks:map" space.slug box.source.id %}">{{ box.source }}</a> 
+            {% endif %}
+            &raquo; {{ box }}
+          </p>
+        {% endif %}
+
         <div id="map" class="leaflet-map"></div>
       </div>
     </div>
@@ -234,7 +245,7 @@
       mouseover: hoverArea,
       mouseout: resetHover,
       click: selectArea
-    }){% if link %}.bindPopup("<strong>" + layer.feature.properties.space_name + "</strong><br><a class='btn btn-primary' href='../{{ link}}/" + layer.feature.id + "'><i class='fa fa-search-plus'></i> Explore area</a>");{% endif %}
+    }){% if link %}.bindPopup("<strong>" + layer.feature.properties.space_name + "</strong><br><a class='btn btn-primary' href='" + layer.feature.link + "'><i class='fa fa-search-plus'></i> Explore area</a>");{% endif %}
   }
 
   // variable for the data, add it to the map
