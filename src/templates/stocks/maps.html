@@ -24,15 +24,15 @@
           <h5 class="card-title">Wood stock</h5>
           <div class="input-group">
             <select class="custom-select" name="area" id="wood">
-              <option value="{{ info.id }}" selected>{{ space }}</option>
+              <option value="{% url 'stocks:map' space.slug info.id %}" selected>{{ space }}</option>
               <optgroup label="">
                 {% for each in info.imported_spaces.all %}
-                  <option value="{% url "stocks:map" space.slug info.id each.id %}?filter=wood">{{ each }}</option>
+                  <option value="{% url 'stocks:map' space.slug link each.id %}?filter=wood">{{ each }}</option>
                 {% endfor %}
               </optgroup>
             </select>
             <div class="input-group-append">
-              <a class="btn btn-primary" href="{% url 'stocks:map' space.slug info.id %}">
+              <a class="btn btn-primary" data-type="wood" href="{% url 'stocks:map' space.slug info.id %}">
                 <i class="fa fa-arrow-right mr-0"></i>
               </a>
             </div>
@@ -47,15 +47,15 @@
           <h5 class="card-title">Glass stock</h5>
           <div class="input-group">
             <select class="custom-select" name="area" id="glass">
-              <option value="{{ info.id }}" selected>{{ space }}</option>
+              <option value="{% url 'stocks:map' space.slug info.id %}" selected>{{ space }}</option>
               <optgroup label="">
                 {% for each in info.imported_spaces.all %}
-                  <option value="{% url "stocks:map" space.slug info.id each.id %}?filter=glass">{{ each }}</option>
+                  <option value="{% url 'stocks:map' space.slug link each.id %}?filter=glass">{{ each }}</option>
                 {% endfor %}
               </optgroup>
             </select>
             <div class="input-group-append">
-              <a class="btn btn-primary" href="{% url 'stocks:map' space.slug info.id %}">
+              <a class="btn btn-primary" data-type="glass" href="{% url 'stocks:map' space.slug info.id %}">
                 <i class="fa fa-arrow-right mr-0"></i>
               </a>
             </div>
@@ -70,15 +70,15 @@
           <h5 class="card-title">Building age</h5>
           <div class="input-group">
             <select class="custom-select" name="area" id="age">
-              <option value="{{ info.id }}" selected>{{ space }}</option>
+              <option value="{% url 'stocks:map' space.slug info.id %}" selected>{{ space }}</option>
               <optgroup label="">
                 {% for each in info.imported_spaces.all %}
-                  <option value="{% url "stocks:map" space.slug info.id each.id %}?filter=age">{{ each }}</option>
+                  <option value="{% url 'stocks:map' space.slug link each.id %}?filter=age">{{ each }}</option>
                 {% endfor %}
               </optgroup>
             </select>
             <div class="input-group-append">
-              <a class="btn btn-primary" href="{% url 'stocks:map' space.slug info.id %}">
+              <a class="btn btn-primary" data-type="age" href="{% url 'stocks:map' space.slug info.id %}">
                 <i class="fa fa-arrow-right mr-0"></i>
               </a>
             </div>
@@ -97,7 +97,11 @@
   // initialise select2
   $("select[name='area']").select2({
     theme: "bootstrap4",
-  });
+  }).change(function() {
+    let id = $(this).attr("id");
+    let value = $(this).val();
+    $(".btn[data-type='" + id + "']").attr("href", value);
+  })
 </script>
 {% endblock %}
 

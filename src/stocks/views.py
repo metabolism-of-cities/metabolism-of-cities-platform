@@ -77,8 +77,10 @@ def maps(request, space):
 
     if space.name == "Melbourne":
         id = 33931
+        link = 33962
     elif space.name == "Brussels":
         id = 33886
+        link = 33962
 
     info = LibraryItem.objects.get(pk=id)
 
@@ -86,6 +88,7 @@ def maps(request, space):
         "load_select2": True,
         "space": space,
         "info": info,
+        "link": link,
         "menu": "maps",
     }
     return render(request, "stocks/maps.html", context)

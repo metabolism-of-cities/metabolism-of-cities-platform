@@ -12,11 +12,20 @@
 
   <div class="row">
     <div class="col-md-6 col-lg-4">
-      <a class="card btn-card" href="{% url 'stocks:city' 1 %}">
+      <a class="card btn-card" href="{% url 'stocks:city' 'brussels' %}">
         <img src="https://metabolismofcities.org/media/photos/Brussels.large.jpg" class="card-img-top" alt="Brussels">
         <div class="card-body">
           <h5 class="card-title">Brussels</h5>
           <h6 class="card-subtitle mb-2 text-muted">Belgium</h6>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-6 col-lg-4">
+      <a class="card btn-card" href="{% url 'stocks:city' 'melbourne' %}">
+        <img src="https://data.metabolismofcities.org/media/records/15449961731_0fb7684b40_k.jpg" class="card-img-top" alt="Melbourne">
+        <div class="card-body">
+          <h5 class="card-title">Melbourne</h5>
+          <h6 class="card-subtitle mb-2 text-muted">Australia</h6>
         </div>
       </a>
     </div>

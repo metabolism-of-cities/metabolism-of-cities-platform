@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css">
 
   <!-- fullscreen plugin -->
-  <link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css">
 
   <style>
     .chart .bar {
@@ -46,6 +46,11 @@
       font-size: .75rem;
       line-height: .75rem;
     }
+
+    #feature-details tbody tr:first-of-type th,
+    #feature-details tbody tr:first-of-type td {
+      border-top: 0;
+    }
   </style>
 {% endblock %}
 
@@ -53,12 +58,25 @@
   {% include "_submenu-stocks.html" %}
 
   <section>
+    {% if box %}
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          {% if request.GET.source_box %}
+            <li class="breadcrumb-item"><a href="{% url 'stocks:map' space.slug box.source.id request.GET.source_box %}">{{ box.source }}</a></li>
+          {% else %}
+            <li class="breadcrumb-item"><a href="{% url 'stocks:map' space.slug box.source.id %}">{{ box.source }}</a></li>
+          {% endif %}
+          <li class="breadcrumb-item active" aria-current="page">{{ box }}</li>
+        </ol>
+      </nav>
+    {% endif %}
+
     <div class="row">
       <div class="col-lg-4">
-        <table id="feature-details" class="table mt-4">
+        <table id="feature-details" class="table mb-4">
           <tr>
             <th scope="row">Name</th>
-            <td class="name text-right">{{ info }}</td>
+            <td class="name text-right">{{ box }}</td>
           </tr>
           <tr>
             <th scope="row">Density</th>
@@ -83,17 +101,6 @@
         </div>
       </div>
       <div class="col-lg-8">
-        {% if box %}
-          <p>
-            {% if request.GET.source_box %}
-              <a href="{% url "stocks:map" space.slug box.source.id request.GET.source_box %}">{{ box.source }}</a> 
-            {% else %}
-              <a href="{% url "stocks:map" space.slug box.source.id %}">{{ box.source }}</a> 
-            {% endif %}
-            &raquo; {{ box }}
-          </p>
-        {% endif %}
-
         <div id="map" class="leaflet-map"></div>
       </div>
     </div>
@@ -112,12 +119,12 @@
         {% for each in data.features %}
         <tr>
           {% if link %}
-          <td><a href="{% url 'stocks:map' space.slug link each.id %}">{{ each.properties.space_name }}</a></td>
+            <td><a href="{% url 'stocks:map' space.slug link each.id %}">{{ each.properties.space_name }}</a></td>
           {% else %}
-          <td>{{ each.properties.space_name }}</td>
+            <td>{{ each.properties.space_name }}</td>
           {% endif %}
-          <td>{{ each.id }}</td>
-          <td>{{ each.properties.quantity }}</td>
+            <td>{{ each.id }}</td>
+            <td>{{ each.properties.quantity }}</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -245,7 +252,7 @@
       mouseover: hoverArea,
       mouseout: resetHover,
       click: selectArea
-    }){% if link %}.bindPopup("<strong>" + layer.feature.properties.space_name + "</strong><br><a class='btn btn-primary' href='" + layer.feature.link + "'><i class='fa fa-search-plus'></i> Explore area</a>");{% endif %}
+    }){% if link %}.bindPopup("<h5>" + layer.feature.properties.space_name + "</h5><a class='btn btn-primary' href='" + layer.feature.link + "'><i class='fa fa-search-plus'></i> Explore area</a>");{% endif %}
   }
 
   // variable for the data, add it to the map
