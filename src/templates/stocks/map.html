@@ -80,7 +80,11 @@
       <tbody>
         {% for each in data.features %}
         <tr>
-          <td><a href="">{{ each.properties.space_name }}</a></td>
+          {% if link %}
+          <td><a href="{% url 'stocks:map' space.slug link each.id %}">{{ each.properties.space_name }}</a></td>
+          {% else %}
+          <td>{{ each.properties.space_name }}</td>
+          {% endif %}
           <td>{{ each.id }}</td>
           <td>{{ each.properties.quantity }}</td>
         </tr>
@@ -110,6 +114,7 @@
   var map = L.map("map", {
     renderer: L.canvas(),
     fullscreenControl: true,
+    scrollWheelZoom: false,
   });
 
   // add basemap
@@ -209,7 +214,7 @@
       mouseover: hoverArea,
       mouseout: resetHover,
       click: selectArea
-    });
+    }){% if link %}.bindPopup("<strong>" + layer.feature.properties.space_name + "</strong><br><a class='btn btn-primary' href='../{{ link}}/" + layer.feature.id + "'><i class='fa fa-search-plus'></i> Explore area</a>");{% endif %}
   }
 
   // variable for the data, add it to the map

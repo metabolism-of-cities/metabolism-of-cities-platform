@@ -102,9 +102,9 @@ def map(request, slug, id, box=None):
         #spaces = spaces[:100]
 
     map = None
-    if spaces:
+    features = []
 
-        features = []
+    if spaces:
 
         import random
         for each in spaces:
@@ -120,10 +120,10 @@ def map(request, slug, id, box=None):
                 "geometry": json.loads(each.geometry.json)
             })
 
-        data = {
-            "type":"FeatureCollection",
-            "features": features,
-        }
+    data = {
+        "type":"FeatureCollection",
+        "features": features,
+    }
 
     context = {
         "info": info,

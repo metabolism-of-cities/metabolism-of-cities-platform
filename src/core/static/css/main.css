@@ -718,34 +718,8 @@ a.badge-secondary:focus {
   min-height: 300px;
   width: 100%;
   font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif; }
-  .leaflet-map .leaflet-popup a.leaflet-popup-close-button {
-    color: #efefef; }
-    .leaflet-map .leaflet-popup a.leaflet-popup-close-button:hover {
-      color: #fbfbfb; }
-  .leaflet-map .leaflet-popup-content-wrapper {
-    border-radius: .25rem;
-    box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
-    padding: 0;
-    font-size: 1rem;
-    font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif; }
-  .leaflet-map .leaflet-popup-content,
-  .leaflet-map .leaflet-popup-content p {
-    margin: 0; }
-  .leaflet-map .leaflet-popup-content p {
-    padding: .75rem; }
-  .leaflet-map .popup-title {
-    font-weight: bold;
-    background-color: #144d58;
-    border-top-left-radius: .25rem;
-    border-top-right-radius: .25rem;
-    color: #fbfbfb;
-    padding: .75rem; }
-    .leaflet-map .popup-title > * {
-      margin-bottom: 0; }
-  .leaflet-map .leaflet-popup table {
-    margin-bottom: 0; }
-    .leaflet-map .leaflet-popup table th {
-      background-color: #efefef; }
+  .leaflet-map a.btn-primary {
+    color: #fff; }
   .leaflet-map .show-world.button {
     width: 30px;
     height: 30px;
