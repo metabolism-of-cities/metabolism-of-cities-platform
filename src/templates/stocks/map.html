@@ -17,12 +17,13 @@
   <link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet" />
 
   <style>
-    .chart .bar {
-      height: 5px;
+    .chart {
+      width: 100%;
+      height: 400px;
     }
 
     .chart .bar.selected {
-      background-color: gold !important;
+      fill: gold !important;
     }
 
     #average-line {
@@ -32,6 +33,7 @@
       position: absolute;
       top: 0;
     }
+
   </style>
 {% endblock %}
 
@@ -53,14 +55,15 @@
         </table>
 
         <!-- spaces chart -->
-        <div class="chart position-relative">
-          <div class="bars">
+        <svg class="chart" preserveAspectRatio="none">
+          <g class="bars">
             {% for each in data.features %}
-              <div class="bar" data-space="{{ each.id }}" data-value="{{ each.properties.quantity }}"></div>
+              <rect data-space="{{ each.id }}" class="bar" x="0" width="{{ each.properties.quantity }}" height="1"/>
             {% endfor %}
-          </div>
-          <div id="average-line"></div>
-        </div>
+          </g>
+          <rect class="start-line" x="0" y="0" height="100%" width="1px"/>
+          <line class="average-line" y1="0" stroke="black" stroke-dasharray="2"/>
+        </svg>
       </div>
       <div class="col-lg-8">
         <div id="map" class="leaflet-map"></div>
@@ -126,27 +129,6 @@
       zoomOffset: -1,
       accessToken: "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q",
   }).addTo(map);
-
-  // BOUNDING BOX START -- ONLY NECESSARY IF IT EXSTS
-  {% if box.geometry.geojson %}
-    // set style
-    const boundingStyle = {
-      fillColor: "transparent",
-      weight: 3,
-      opacity: 1,
-      color: "black",
-    };
-
-    // bounding box data variable, add it to the map,
-    let boundingData = {{ box.geometry.geojson|safe }};
-    let boundingLayer = L.geoJson(boundingData, {
-      style: boundingStyle,
-      interactive: false
-    });
-
-    map.addLayer(boundingLayer)
-  {% endif %}
-  // BOUNDING BOX END
 
   // DATA LAYER START
   // set the color based on a value
@@ -226,12 +208,32 @@
   map.addLayer(dataLayer);
   // DATA LAYER END
 
-  // set bounds of map to bounding box if it exists, otherwise to data layer
+  // BOUNDING BOX START -- ONLY NECESSARY IF IT EXSTS
   {% if box.geometry.geojson %}
+    // set style
+    const boundingStyle = {
+      fillColor: "transparent",
+      weight: 3,
+      opacity: 1,
+      color: "black",
+    };
+
+    // bounding box data variable, add it to the map,
+    let boundingData = {{ box.geometry.geojson|safe }};
+    let boundingLayer = L.geoJson(boundingData, {
+      style: boundingStyle,
+      interactive: false
+    });
+
+    map.addLayer(boundingLayer)
+
     map.fitBounds(boundingLayer.getBounds())
   {% else %}
     map.fitBounds(dataLayer.getBounds())
   {% endif %}
+  // BOUNDING BOX END
+
+  // set bounds of map to bounding box if it exists, otherwise to data layer
 
   // LEGEND START
   // create variable for the legend
@@ -305,22 +307,29 @@
   let dataValues = [{% for each in data.features %}{{ each.properties.quantity }}, {% endfor %}]
   let maxValue = Math.max(...dataValues);
 
-  // apply width and color to each bar
-  $(".chart .bar").each(function() {
-    let value = $(this).data("value")
-    let width = value / maxValue * 100
+  let viewBox = "0 0 " + maxValue + " " + dataValues.length
 
-    $(this).width(width + "%").css("background-color", getColor(value));
-  })
+  $(".chart").attr("viewBox", viewBox)
 
   // sort bars by value
   var bars = $(".chart .bar");
   var sortedBars = bars.sort(function (a, b) {
-    return $(a).data("value") > $(b).data("value");
+    return Number($(a).attr("width")) > Number($(b).attr("width"));
   });
 
   // set html of the charts div with sorted bars
   $(".chart .bars").html(sortedBars);
+
+  let i = 0;
+  $(".chart .bar").each(function() {
+    let value = $(this).attr("width");
+    $(this).attr({
+      "fill": getColor(value),
+      "y": i
+    });
+
+    i++;
+  })
 
   // get average of values
   // https://stackoverflow.com/questions/10359907/how-to-compute-the-sum-and-average-of-elements-in-an-array
