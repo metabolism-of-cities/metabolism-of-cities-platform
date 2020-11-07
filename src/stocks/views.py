@@ -107,7 +107,8 @@ def map(request, space, id, box=None):
 
         # Brussels
         33886: 33895,
-        33895: 33913,
+        33895: 33904,
+        33904: 33913,
     }
 
     link = links.get(id)
