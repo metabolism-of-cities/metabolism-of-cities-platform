@@ -101,7 +101,7 @@
     </div>
 
     <!-- page content -->
-    <div class="container main-content">
+    <div class="{% if request.GET.wide %}ml-2 mr-2{% else %}container{% endif %} main-content">
       {% if messages %}
         <div class="top-message-box">
           {% for message in messages %}
