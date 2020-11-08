@@ -432,14 +432,13 @@ def upload_gis_meta(request, id):
 def referencespaces(request, group=None):
     list = geocodes = None
     if group == "administrative":
-        list = GeocodeScheme.objects.filter(is_deleted=False).exclude(name__startswith="Sector").exclude(name__startswith="Subdivision")
-        geocodes = Geocode.objects.filter(is_deleted=False).exclude(scheme__name__startswith="Sector").exclude(scheme__name__startswith="Subdivision")
+        list = GeocodeScheme.objects.filter(type=3)
     elif group == "national":
-        list = GeocodeScheme.objects.filter(is_deleted=False, name__startswith="Subdivision")
-        geocodes = Geocode.objects.filter(is_deleted=False, scheme__name__startswith="Subdivision")
+        list = GeocodeScheme.objects.filter(type=1)
     elif group == "sectoral":
-        list = GeocodeScheme.objects.filter(is_deleted=False, name__startswith="Sector")
-        geocodes = Geocode.objects.filter(is_deleted=False, scheme__name__startswith="Sector")
+        list = GeocodeScheme.objects.filter(type=2)
+    if list:
+        geocodes = Geocode.objects.filter(scheme__in=list)
     context = {
         "list": list,
         "geocodes": geocodes,

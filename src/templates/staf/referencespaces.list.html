@@ -1,7 +1,7 @@
 {% extends "_base.html" %}
 
 {% block content %}
-  <h1>{{ geocode }}</h1>
+  <h1>{% block title %}{{ geocode }}{% endblock %}</h1>
   <table class="table table-striped datatable">
     <thead>
       <tr>
@@ -14,7 +14,7 @@
     {% for each in list %}
       <tr>
         <td>{{ each.name }}</td>
-        <td>{% if each.location %}Yes{% endif %}</td>
+        <td>{% if each.geometry %}Yes{% endif %}</td>
         <td>
           <a class="btn btn-info" href="{% url "staf:referencespace" each.id %}"><i class="fa fa-eye"></i> View</a>
           <a class="btn btn-info" href="{% url "staf:flowdiagram_form" each.id %}"><i class="fa fa-pencil"></i> Edit</a>

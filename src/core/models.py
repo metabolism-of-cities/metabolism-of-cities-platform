@@ -1569,7 +1569,7 @@ class GeocodeScheme(Record):
 
     class Type(models.IntegerChoices):
         SUBDIVISION = 1, "National subdivisions"
-        SECTOR = 2, "Sectoral infrastructure"
+        SECTOR = 2, "Infrastructure"
         AREAS = 3, "Administrative areas"
 
     type = models.IntegerField(choices=Type.choices, db_index=True, default=3)

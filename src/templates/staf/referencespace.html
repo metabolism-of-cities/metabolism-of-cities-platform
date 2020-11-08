@@ -7,6 +7,16 @@
       height: 500px;
       margin-bottom: 30px;
     }
+    dl.row.features {
+      max-height: 200px;
+      margin-bottom: 20px;
+      overflow-y: scroll;
+      border: 1px solid #999;
+      border-radius: 3px;
+      background: #f4f4f4;
+      color: #535050;
+    }
+
   </style>
 {% endblock %}
 
@@ -57,7 +67,7 @@
 
   {% if info.meta_data.features %}
     <h2>Features</h2>
-    <dl class="row">
+    <dl class="row features">
       {% for key,value in info.meta_data.features.items %}
         <dt class="col-sm-3">{{ key }}</dt>
         <dd class="col-sm-9">{{ value }}</dd>

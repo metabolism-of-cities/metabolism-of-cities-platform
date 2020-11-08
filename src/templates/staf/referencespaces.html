@@ -1,7 +1,8 @@
 {% extends "_base.html" %}
+{% load static %}
 
 {% block content %}
-  <h1>Reference Spaces</h1>
+  <h1>{% block title %}Reference Spaces{% endblock %}</h1>
 
   <p>What kind of reference spaces are you interested in?</p>
 
@@ -9,7 +10,7 @@
   <div class="card-deck">
     <div class="card">
       <a href="{% url "staf:referencespaces" "administrative" %}">
-        <img src="https://images.pexels.com/photos/408503/pexels-photo-408503.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" class="card-img-top" alt="...">
+        <img src="{% get_media_prefix %}images/geocode.type.1.jpg" class="card-img-top" alt="">
       </a>
       <div class="card-body">
         <h5 class="card-title">Administrative areas</h5>
@@ -23,7 +24,7 @@
     </div>
     <div class="card">
       <a href="{% url "staf:referencespaces" "national" %}">
-        <img src="https://images.pexels.com/photos/108942/pexels-photo-108942.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" class="card-img-top" alt="...">
+        <img src="{% get_media_prefix %}images/geocode.type.2.jpg" class="card-img-top" alt="">
       </a>
       <div class="card-body">
         <h5 class="card-title">National subdivisions</h5>
@@ -37,10 +38,10 @@
     </div>
     <div class="card">
       <a href="{% url "staf:referencespaces" "sectoral" %}">
-        <img src="https://images.pexels.com/photos/2226458/pexels-photo-2226458.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" class="card-img-top" alt="...">
+        <img src="{% get_media_prefix %}images/geocode.type.3.jpg" class="card-img-top" alt="">
       </a>
       <div class="card-body">
-        <h5 class="card-title">Sectoral infrastructure</h5>
+        <h5 class="card-title">Infrastructure</h5>
         <p class="card-text">
           Farms, power plants, markets, train stations, etc.
         </p>
