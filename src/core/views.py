@@ -791,6 +791,44 @@ def controlpanel_spaces(request):
     return render(request, "controlpanel/spaces.html", context)
 
 @login_required
+def controlpanel_permissions_create(request):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    relationship = Relationship.objects.get(slug="dataprocessor")
+    project = Project.objects.get(name="Metabolism of Cities Data Hub")
+    try:
+        id_list = request.GET["people"]
+        last_char = id_list[-1]
+        if last_char == ",":
+            id_list = id_list[:-1]
+        ids = id_list.split(",")
+        list = People.objects.filter(id__in=ids)
+    except Exception as e:
+        messages.error(request, "You did not select any people to send this mail to! <br><strong>Error: " + str(e) + "</strong>")
+        list = None
+
+    if request.method == "POST" and "save" in request.POST:
+        for each in list:
+            try:
+                RecordRelationship.objects.create(
+                    record_parent = each,
+                    relationship = relationship,
+                    record_child = project,
+                )
+                messages.success(request, str(each) + " has been granted this permission")
+            except:
+                messages.warning(request, str(each) + " already has this permissions")
+
+    context = {
+        "list": list,
+        "load_datatables": True,
+        "relationship": relationship,
+        "project": project,
+    }
+    return render(request, "controlpanel/permissions.create.html", context)
+
+@login_required
 def controlpanel_relationship_form(request, id=None):
 
     project = request.project

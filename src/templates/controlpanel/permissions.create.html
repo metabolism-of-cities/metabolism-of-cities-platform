@@ -1,0 +1,34 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1>Add permissions</h1>
+
+  <p>You will be adding the following permission to these people:</p>
+
+  <div class="alert alert-warning">
+    <strong>{{ relationship.name }}</strong> permission on <strong>{{ project }}</strong>
+  </div>
+
+  {% if not list.count %}
+    <p>No people selected</p>
+  {% else %}
+    <ol>
+      {% if list %}
+        {% for each in list %}
+          <li {% if not each.email %} class="text-danger" {% endif %}>{{ each }} {% if each.email %}&laquo;{{ each.email }}&raquo;{% endif %}
+            {% for permission in each.record_parent.all %}
+              {{ permission }}
+            {% endfor %}
+          </li>
+        {% endfor %}
+      {% endif %}
+    </ol>
+
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-success" name="save">Save</button>
+    </form>
+  {% endif %}
+
+{% endblock %}
