@@ -32,7 +32,7 @@
       {% for each in list %}
         <tr>
           <td><code>{{ each.related_to.id }}</code></td>
-          <td><a href="{{ each.related_to.id }}/">{{ each.related_to }}</a></td>
+          <td><a href="{{ each.related_to.id }}/">{{ each.related_to }}</a><br>{{ each.related_to.spaces.all.0 }}</td>
           <td data-sort="{{ each.date_created|date:"U" }}">{{ each.date_created|naturaltime }}</td>
         </tr>
       {% endfor %}

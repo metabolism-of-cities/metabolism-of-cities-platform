@@ -339,7 +339,7 @@
             {% if curator %}
               <div class="text-center mt-3 mb-2"><a href="?edit&amp;return={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a></div>
             {% endif %}
-            {% if curator %}
+            {% if curator or "datacollector" in PERMISSIONS %}
               {% if IS_DATA_PORTAL %}
                 <div class="text-center mt-3 mb-3">
                   <a href="{% url url_processing info.id %}" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> Process this shapefile</a>
