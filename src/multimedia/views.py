@@ -278,7 +278,7 @@ def video_editor(request):
 
     list = Video.objects.filter(attachments__id__isnull=False)
     context = {
-        "list": list,
+        "list": list.order_by("-date_created"),
         "MEDIA_URL": settings.MEDIA_URL,
     }
     return render(request, "controlpanel/video.editor.html", context)
