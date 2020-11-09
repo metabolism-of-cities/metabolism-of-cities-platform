@@ -8,7 +8,7 @@
 
 <div class="row">
   <div class="col-lg-8">
-    <ul class="list-group list-group-horizontal mb-4">
+    <ul class="list-group list-group-horizontal mb-4" hidden>
       <li class="list-group-item">
         <span class="statistic">{{ list.count }}</span> pending uploads
       </li>
@@ -47,7 +47,9 @@
   </div>
   <div class="col-lg-4 sidebar">
     {% include "staf/review/_badge-progress.html" %}
+    {% if False %}
     {% include "staf/review/_instructions.html" %}
+    {% endif %}
   </div>
 </div>
 {% endblock %}
