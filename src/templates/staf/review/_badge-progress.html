@@ -9,7 +9,7 @@
       <a href="{% url URLS.PROFILE request.user.people.id %}">
         <strong>{{ request.user.people }}</strong></a>
         <br>
-        <span class="points">{{ request.user.people.points }} points</span>
+        <span class="points">{{ request.user.people.points|default_if_none:0 }} points</span>
       </span>
       {% endif %}
     </div>

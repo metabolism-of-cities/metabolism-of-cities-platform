@@ -1058,7 +1058,7 @@ def hub_processing_list(request, space=None, type=None):
 
 def hub_processing_dataset(request, id, classify=False, space=None):
 
-    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         unauthorized_access(request)
 
     if space:
@@ -1220,7 +1220,7 @@ def hub_processing_gis(request, id, classify=False, space=None):
 
     document = get_object_or_404(LibraryItem, pk=id)
     project = get_object_or_404(Project, pk=request.project)
-    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         unauthorized_access(request)
 
     if space:
@@ -1335,7 +1335,7 @@ def hub_processing_gis(request, id, classify=False, space=None):
 def hub_processing_files(request, id, gis=False, space=None):
     document = get_object_or_404(LibraryItem, pk=id)
     project = get_object_or_404(Project, pk=request.project)
-    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         unauthorized_access(request)
 
     try:
@@ -1376,7 +1376,7 @@ def hub_processing_files(request, id, gis=False, space=None):
 def hub_processing_gis_classify(request, id, space=None):
     document = get_object_or_404(LibraryItem, pk=id)
     project = get_object_or_404(Project, pk=request.project)
-    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         unauthorized_access(request)
 
     try:
@@ -1412,7 +1412,7 @@ def hub_processing_gis_classify(request, id, space=None):
 def hub_processing_gis_save(request, id, space=None):
     document = get_object_or_404(LibraryItem, pk=id)
     project = get_object_or_404(Project, pk=request.project)
-    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         unauthorized_access(request)
 
     try:
