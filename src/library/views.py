@@ -270,6 +270,17 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         info.image = UploadedFile(file=open(info.image.path, "rb"))
         info.save()
 
+    if request.method == "POST" and "zipfile" in request.POST:
+        from django.http import HttpResponse
+        import zipfile
+        response = HttpResponse(content_type="application/zip")
+        zip_file = zipfile.ZipFile(response, "w")
+        for each in info.attachments.all():
+            zip_file.write(each.file.path, os.path.basename(each.file.name))
+        zip_file.close()
+        response["Content-Disposition"] = "attachment; filename={}.zip".format(info.name)
+        return response
+
     spaces = info.imported_spaces.all()
     spaces_message = None
     if spaces.count() > 20:

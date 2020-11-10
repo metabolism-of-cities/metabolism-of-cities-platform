@@ -368,6 +368,12 @@
             <li><a href="{{ each.file.url }}">{{ each }}</a> ({{ each.get_size }})</li>
           {% endfor %}
           </ul>
+          {% if info.attachments.count > 2 %}
+            <form method="post">
+              <button type="submit" class="btn btn-default-outline" name="zipfile" value="true"><i class="fa fa-file-archive"></i> Download as zipfile</button>
+              {% csrf_token %}
+            </form>
+          {% endif %}
 
           {% if info.type.name == "Shapefile" and not map %}
             <h3 class="mt-4">Preview</h3>
