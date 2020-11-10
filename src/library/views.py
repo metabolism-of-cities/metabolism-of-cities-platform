@@ -617,10 +617,12 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
     if info:
         form = ModelForm(request.POST or None, request.FILES or None, instance=info)
-        form.fields["spaces"].queryset = ReferenceSpace.objects.filter(Q(activated__isnull=False)|Q(id__in=info.spaces.all())).distinct()
+        if "spaces" in fields:
+            form.fields["spaces"].queryset = ReferenceSpace.objects.filter(Q(activated__isnull=False)|Q(id__in=info.spaces.all())).distinct()
     else:
         form = ModelForm(request.POST or None, request.FILES or None, initial=initial)
-        form.fields["spaces"].queryset = ReferenceSpace.objects.filter(activated__isnull=False).distinct()
+        if "spaces" in fields:
+            form.fields["spaces"].queryset = ReferenceSpace.objects.filter(activated__isnull=False).distinct()
 
     if type.name == "Dataset" and curator and False:
         form.fields["activities"].queryset = Activity.objects.filter(catalog_id=3655)

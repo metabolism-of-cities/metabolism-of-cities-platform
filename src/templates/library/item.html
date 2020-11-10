@@ -462,7 +462,11 @@
           {% endif %}
           <ul>
           {% for each in spaces %}
-            <li><a href="{% url URLS.SPACE each.id %}">{{ each }}</a></li>
+            {% if URLS.SPACE %}
+              <li><a href="{% url URLS.SPACE each.id %}">{{ each }}</a></li>
+            {% else %}
+              <li>{{ each }}</li>
+            {% endif %}
           {% endfor %}
           </ul>
         {% endif %}
