@@ -40,6 +40,10 @@ def index(request):
     else:
         title = "Library"
 
+    if request.project == 17:
+        # The islands use a 'Themes' subset of tags, which we need to add to the list
+        tags.append(944)
+
     if "find" in request.GET:
         show_results = True
         if "types" in request.GET and request.GET["types"] == "all":
@@ -50,6 +54,7 @@ def index(request):
             urban_only = False
         if urban_only:
             list = list.filter(tags__id=core_filter)
+
     if "search" in request.GET:
         q = request.GET.get("search")
         if q == "_ALL_":
@@ -62,6 +67,7 @@ def index(request):
             except:
                 # Search by open-ended keyword, so let's search for that
                 list = list.filter(Q(name__icontains=q)|Q(description__icontains=q))
+
     if "after" in request.GET and request.GET["after"]:
         list = list.filter(year__gte=request.GET["after"])
     if "before" in request.GET and request.GET["before"]:
