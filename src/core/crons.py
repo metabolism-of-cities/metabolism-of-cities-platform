@@ -130,6 +130,8 @@ class ZoteroImport(CronJobBase):
             for each in list:
                 try:
                     info = ZoteroItem.objects.get(key=each["data"].get("key"))
+                    info.data = each["data"]
+                    info.save()
                 except:
                     title = each["data"].get("title")
                     info = ZoteroItem.objects.create(
