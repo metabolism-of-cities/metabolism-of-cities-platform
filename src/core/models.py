@@ -2018,6 +2018,9 @@ class ZoteroItem(models.Model):
 
         for each in self.find_tags():
             info.tags.add(each)
+            print("-----")
+            print(each)
+            print("-----")
 
         for each in self.find_spaces():
             info.spaces.add(each)
@@ -2058,7 +2061,14 @@ class ZoteroItem(models.Model):
     def find_tags(self):
         tags = Tag.objects.filter(Q(parent_tag__parent_tag_id=938)|Q(parent_tag__parent_tag__parent_tag_id=938))
         hits = []
+        for each in self.get_tags():
+            # We check for tags in two ways: first we see if the "tags" in the paper exist in our tag list...
+            check = Tag.objects.filter(name=each)
+            if check:
+                hits.append(check[0])
         for each in tags:
+            # And then we do a broader search in which we check all tags in our database and we see if those
+            # words are used in the title/abstract...
             # Note that we add a space before the keyword because we want the entire word
             # to be found, and otherwise e.g. "Afghanistan" will also yield a match of the STAN software package
             n = " " + each.fullname
