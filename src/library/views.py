@@ -81,6 +81,7 @@ def index(request):
         "news": News.objects.filter(projects=THIS_PROJECT).distinct()[:3],
         "review_count": LibraryItem.objects.filter(tags__id=3).filter(tags__id=core_filter).count(),
         "all_count": LibraryItem.objects.filter(tags__id=core_filter).count(),
+        "ie_count": LibraryItem.objects.filter(tags__id=963).count() if request.project == 17 else None, # We only need this for the island site
     }
     return render(request, "library/index.html", context)
 
@@ -100,6 +101,9 @@ def list(request, type):
         list = LibraryItem.objects.filter(tags__id=219)
         webpage = Webpage.objects.get(pk=31887)
         title = webpage.name
+    elif type == "island_ie":
+        list = LibraryItem.objects.filter(tags__id=963)
+        title = "Island Industrial Ecology"
     elif type == "island_theses":
         list = LibraryItem.objects.filter(tags__id=219, type_id=29)
         webpage = Webpage.objects.get(pk=31886)

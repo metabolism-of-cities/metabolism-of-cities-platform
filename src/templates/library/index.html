@@ -115,10 +115,17 @@
             </a>
           </div>
           <div class="col-sm-6 col-xl-4 mb-4">
+            <a class="large-icon-box" href="{% url "islands:island_ie" %}">
+              <div class="description">Island Industrial Ecology</div>
+              <div class="statistic">{{ ie_count }} items</div>
+              <i class="fad fa-island-tropical text-warning" aria-hidden="true"></i>
+            </a>
+          </div>
+          <div class="col-sm-6 col-xl-4 mb-4">
             <a class="large-icon-box" href="./?search=_ALL_">
               <div class="description">View all</div>
               <div class="statistic">{{ all_count }} items</div>
-              <i class="fad fa-file-alt text-warning" aria-hidden="true"></i>
+              <i class="fad fa-file-alt text-primary" aria-hidden="true"></i>
             </a>
           </div>
         </div>

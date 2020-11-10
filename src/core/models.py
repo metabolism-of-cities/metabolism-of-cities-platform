@@ -1139,7 +1139,6 @@ class LibraryItem(Record):
             self.meta_data = {}
         try:
             files = self.attachments.filter(Q(file__iendswith=".shp")|Q(file__iendswith=".shx")|Q(file__iendswith=".dbf")|Q(file__iendswith=".prj"))
-            print(files.count())
             if files.count() < 4:
                 self.meta_data["shapefile_plot_error"] = "No shapefile found! Make sure all required files are uploaded (.shp, .shx, .dbf, .prj)."
             elif files.count() > 4:
@@ -2018,9 +2017,6 @@ class ZoteroItem(models.Model):
 
         for each in self.find_tags():
             info.tags.add(each)
-            print("-----")
-            print(each)
-            print("-----")
 
         for each in self.find_spaces():
             info.spaces.add(each)

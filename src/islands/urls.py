@@ -27,6 +27,7 @@ urlpatterns = baseline_urlpatterns + baseline_library_urlpatterns + baseline_sta
     path("resources/map/", library.map, { "article": 59, "tag": 219 }, name="map"),
     path("resources/publications/", library.index, name="resources"),
     path("resources/reviews/", library.list, { "type": "reviews"}, name="reviews"),
+    path("resources/islandindustrialecology/", library.list, { "type": "island_ie"}, name="island_ie"),
 
     # Controlpanel
     path("controlpanel/organisations/", community.controlpanel_organizations),
