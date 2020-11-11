@@ -12,8 +12,14 @@
 
   <a class="btn btn-default-basic float-right mt-4" href="{% url "multimedia:form" %}?type=31&amp;next={{ request.get_full_path }}"><i class="fal fa-plus"></i> Add video</a>
 
-  <p>You can use this page to add an intro, outro, and title page in the Metabolism of Cities house style.</p>
-  <p><strong>NOTE: </strong> we are assuming that you record a video in a resolution of 1920x1080!</p>
+  <p>You can use this page to add an intro, outro, and title page in the Metabolism of Cities house style. Make sure to upload videos that have these properties:</p>
+  <ul>
+    <li>Resolution: 1920x1080</li>
+    <li>Framerate: 30fps</li>
+    <li>Audio frequency: 44100 Hz</li>
+    <li>Pixel format: yuv420p</li>
+    <li>Tip: use <code>ffprobe</code> to check the video details.</li>
+  </ul>
 
   <table class="table table-striped datatable videos table-card">
     <thead>
