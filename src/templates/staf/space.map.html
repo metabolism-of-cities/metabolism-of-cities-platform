@@ -30,7 +30,7 @@
             <ul class="list-group list-group-flush">
               {% for layer in hits|get_item:each.id %}
                 <li class="list-group-item toggle-layer" data-id="{{ layer.id }}" data-geojson="{% url URLS.GEOJSON layer.id %}" data-color="{{ layer.color }}">
-                  <i class="fad fa-swap-opacity fa-fw text-primary fa-circle"></i> {{ layer.meta_data.shortname|default:layer }}
+                  <i class="fad fa-swap-opacity fa-fw fa-circle" style="color: {{ layer.color  }}"></i> {{ layer.meta_data.shortname|default:layer }}
                   <i class="far fa-fw fa-check-circle"></i>
                 </li>
               {% endfor %}
@@ -60,6 +60,7 @@
           integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
           crossorigin="">
   </script>
+
   <!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
   <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
 
