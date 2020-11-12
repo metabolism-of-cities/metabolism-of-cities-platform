@@ -218,18 +218,22 @@ def space_map(request, space):
     features = []
     hits = {}
     data = {}
+    getcolor = {}
     for each in list:
-        for tag in each.tags.filter(parent_tag__parent_tag_id=845):
-            if not tag in parents:
-                parents.append(tag)
-                hits[tag.id] = []
-            hits[tag.id].append(each)
+        if each.imported_spaces.count() < 1000000:
+            for tag in each.tags.filter(parent_tag__parent_tag_id=845):
+                if not tag in parents:
+                    parents.append(tag)
+                    hits[tag.id] = []
+                hits[tag.id].append(each)
+                getcolor[each.id] = each.get_color()
 
     context = {
         "space": space,
         "parents": parents,
         "hits": hits,
         "data": data,
+        "getcolors": getcolor,
     }
     return render(request, "staf/space.map.html", context)
 
@@ -1284,6 +1288,7 @@ def hub_processing_gis(request, id, classify=False, space=None):
     document = get_object_or_404(LibraryItem, pk=id)
     project = get_object_or_404(Project, pk=request.project)
     curator = False
+    error = False
 
     if has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         curator = True
@@ -1301,6 +1306,39 @@ def hub_processing_gis(request, id, classify=False, space=None):
     except Exception as e:
         work = None
         messages.error(request, "We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
+
+    if "delete_document" in request.GET or "new_type" in request.GET and request.GET.get("new_type").isdigit():
+        if not curator:
+            unauthorized_access(request)
+        if "delete_document" in request.GET:
+            message_description = "This document was deleted and the task was therefore completed. Status change: " + work.get_status_display() + " → "
+        else:
+            new_type = LibraryItemType.objects.get(pk=request.GET["new_type"])
+            message_description = "This document was converted to a new type (" + str(new_type) + ") and the original task was therefore completed. Status change: " + work.get_status_display() + " → "
+        work.status = Work.WorkStatus.COMPLETED
+        work.save()
+        work.refresh_from_db()
+        new_status = str(work.get_status_display())
+        message_description += new_status
+
+        message = Message.objects.create(
+            name = "Status change",
+            description = message_description,
+            parent = work,
+            posted_by = request.user.people,
+        )
+        set_autor(request.user.people.id, message.id)
+        work.subscribers.add(request.user.people)
+
+        if "delete_document" in request.GET:
+            document.is_deleted = True
+        else:
+            document.type = new_type
+            messages.success(request, "The document type was successfully changed.")
+        document.save()
+        error = True
+        project = Project.objects.get(pk=request.project)
+        return redirect(project.slug + ":hub_processing_list", "gis")
 
     if "stop_work" in request.POST:
         message_description = "Task was no longer assigned to " + str(request.user.people) + " and status was changed: " + work.get_status_display() + " → "
@@ -1369,7 +1407,6 @@ def hub_processing_gis(request, id, classify=False, space=None):
             messages.error(request, "Sorry, we could not assign you -- perhaps someone else grabbed this work in the meantime? Otherwise please report this error. <br><strong>Error code: " + str(e) + "</strong>")
 
     geojson = None
-    error = False
     datasource = None
     layer = None
     size = None
@@ -1408,6 +1445,7 @@ def hub_processing_gis(request, id, classify=False, space=None):
         "forum_id": work.id if work else None,
         "step": 1,
         "curator": curator,
+        "load_sweetalerts": True,
     }
 
     return render(request, "hub/processing.gis.html", context)

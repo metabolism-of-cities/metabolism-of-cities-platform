@@ -206,6 +206,10 @@
     </script>
   {% endif %}
 
+  {% if load_sweetalerts %}
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  {% endif %}
+
   {% block footer %}{% endblock %}
 
   {% if load_url_fixer %}

@@ -20,6 +20,9 @@
     table {
       width: 100%;
     }
+    #wrongoptions {
+      display: none;
+    }
   </style>
 {% endblock %}
 
@@ -35,13 +38,19 @@
         <div class="alert alert-dark text-center p-5 mb-0">
           <h2>
           <i class="fa fa-exclamation-triangle"></i><br>
-          Unable to read shapefile
+          {% if document.is_deleted %}
+            This document was deleted.
+          {% else %}
+            Unable to read shapefile
+          {% endif %}
           </h2>
           <div class="mt-4">
             {% for each in messages %}
               {{ each|safe }}
             {% endfor %}
-            <p class="mt-4"><a href="{% url URLS.LIBRARY_ITEM document.id %}" class="btn btn-dark">Review the uploaded information</a></p>
+            {% if not document.is_deleted %}
+              <p class="mt-4"><a href="{% url URLS.LIBRARY_ITEM document.id %}" class="btn btn-dark">Review the uploaded information</a></p>
+            {% endif %}
           </div>
         </div>
       {% else %}
@@ -74,7 +83,7 @@
             {% endif %}
             <tr>
               <td>Document name</td>
-              <td>{{ document }}</td>
+              <td><a href="{% url URLS.LIBRARY_ITEM document.id %}">{{ document }}</a></td>
             </tr>
             <tr>
               <td>Layer name</td>
@@ -115,8 +124,8 @@
       </div>
       {% endif %}
 
-      {% if document.comments %}
-        <div class="card mb-2">
+      {% if document.comments and not document.is_deleted %}
+        <div class="card mb-2 mt-3">
           <div class="card-header">
             Uploader comments
           </div>
@@ -142,9 +151,11 @@
       {% endif %}
     </div>
 
-    <div class="col-lg-4">
-      {% include "hub/_processing.gis.menu.html" %}
-    </div>
+    {% if not document.is_deleted %}
+      <div class="col-lg-4">
+        {% include "hub/_processing.gis.menu.html" %}
+      </div>
+    {% endif %}
   </section>
 
   {% if not error %}
@@ -200,7 +211,81 @@
       $("#startbox").show();
     });
 
+    $("#somethingwrong").click(function(e){
+      e.preventDefault();
+      $(this).hide()
+      $("#wrongoptions").show();
+    });
+
     // fix horizontal scrolling datatable
     $(".datatable.datatable-card").parent().addClass("overflow-auto");
+
+    // two buttons, one to cancel, the other to confirm the action
+    // note the dangerMode setting; set this to true to make the confirmation button red rather than the default colour
+    // https://sweetalert.js.org/docs/#buttons
+    $(".sweetalert.delete-record").click(function(e){
+      e.preventDefault();
+      var form = this;
+      swal({
+        title: "Delete file",
+        text: "Are you sure you want to delete '{{ document }}'?",
+        icon: "warning",
+        closeOnClickOutside: true,
+        closeOnEsc: true,
+        dangerMode: true,
+        buttons: {
+          cancel: true,
+          confirm: {
+            text: "Delete",
+            value: true,
+            visible: true,
+            closeModal: true
+          }
+        }
+      }).then(function(isConfirm) {
+      if (isConfirm) {
+        swal({
+          title: "Record deleted!",
+          text: "We have deleted '{{ document }}'",
+          icon: "success"
+        }).then(function() {
+          //form.submit(); // <--- submit form programmatically
+          window.location = "{{ request.get_full_path }}?delete_document=true";
+        });
+      } else {
+        swal("Cancelled", "We have kept the document, no changes made", "error");
+      }
+    })
+      ;
+    });
+
+    $(".sweetalert.change-record").click(function(e){
+      e.preventDefault();
+      swal({
+        title: "Select type of record",
+        text: "What kind of document is this?",
+        icon: "info",
+        closeOnClickOutside: true,
+        closeOnEsc: true,
+        buttons: {
+          map: {
+            text: "Map (image)",
+            value: "20",
+          },
+          dataset: {
+            text: "Dataset",
+            value: "10",
+          },
+          report: {
+            text: "Report",
+            value: "27",
+          }
+        },
+      })
+      .then((value) => {
+        window.location = "{{ request.get_full_path }}?new_type="+value;
+      });
+    });
+
   </script>
 {% endblock %}
