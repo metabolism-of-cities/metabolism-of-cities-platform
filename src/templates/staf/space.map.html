@@ -29,7 +29,7 @@
             </div>
             <ul class="list-group list-group-flush">
               {% for layer in hits|get_item:each.id %}
-                <li class="list-group-item toggle-layer" data-id="{{ layer.id }}" data-geojson="{% url URLS.GEOJSON layer.id %}" data-color="{{ layer.color }}">
+                <li class="list-group-item toggle-layer" data-id="{{ layer.id }}" data-geojson="{% url URLS.GEOJSON layer.id %}" data-color="{{ layer.get_color }}">
                   <i class="fad fa-swap-opacity fa-fw text-primary fa-circle"></i> {{ layer.meta_data.shortname|default:layer }}
                   <i class="far fa-fw fa-check-circle"></i>
                 </li>
