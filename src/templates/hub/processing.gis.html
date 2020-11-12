@@ -31,6 +31,7 @@
     <div class="col-lg-8 mb-2 mb-lg-0">
 
       {% if error %}
+        <h1 class="h3">{{ document }}</h1>
         <div class="alert alert-dark text-center p-5 mb-0">
           <h2>
           <i class="fa fa-exclamation-triangle"></i><br>
@@ -40,6 +41,7 @@
             {% for each in messages %}
               {{ each|safe }}
             {% endfor %}
+            <p class="mt-4"><a href="{% url URLS.LIBRARY_ITEM document.id %}" class="btn btn-dark">Review the uploaded information</a></p>
           </div>
         </div>
       {% else %}

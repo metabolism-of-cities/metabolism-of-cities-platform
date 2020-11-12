@@ -1036,8 +1036,17 @@ def hub_processing(request, space=None):
 def hub_processing_list(request, space=None, type=None):
 
     if type == "gis":
-        list = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=2)
         title = "GIS data processing"
+        list = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).prefetch_related("spaces").exclude(meta_data__processed__isnull=False)
+
+        if "update" in request.GET:
+            l = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=2, assigned_to__isnull=False)
+            for each in l:
+                d = each.related_to
+                if not d.meta_data:
+                    d.meta_data = {}
+                d.meta_data["assigned_to"] = str(each.assigned_to)
+                d.save()
     elif type == "datasets":
         list = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=30)
         title = "Stocks and flows data processing"
@@ -1053,6 +1062,7 @@ def hub_processing_list(request, space=None, type=None):
         "space": space,
         "title": title,
         "hide_space_menu": True,
+        "load_datatables": True,
     }
     return render(request, "hub/processing.list.html", context)
 
@@ -1092,6 +1102,11 @@ def hub_processing_dataset(request, id, classify=False, space=None):
         )
         set_autor(request.user.people.id, message.id)
 
+        if not info.meta_data:
+            info.meta_data = {}
+        info.meta_data["assigned_to"] = None
+        info.save()
+
         for each in work.subscribers.all():
             if each.people != request.user.people:
                 Notification.objects.create(record=message, people=each.people)
@@ -1120,6 +1135,11 @@ def hub_processing_dataset(request, id, classify=False, space=None):
             for each in work.subscribers.all():
                 if each.people != request.user.people:
                     Notification.objects.create(record=message, people=each.people)
+
+            if not info.meta_data:
+                info.meta_data = {}
+            info.meta_data["assigned_to"] = request.user.people.name
+            info.save()
 
         except Exception as e:
             messages.error(request, "Sorry, we could not assign you -- perhaps someone else grabbed this work in the meantime? Otherwise please report this error. <br><strong>Error code: " + str(e) + "</strong>")
@@ -1256,6 +1276,11 @@ def hub_processing_gis(request, id, classify=False, space=None):
             if each.people != request.user.people:
                 Notification.objects.create(record=message, people=each.people)
 
+        if not document.meta_data:
+            document.meta_data = {}
+        document.meta_data["assigned_to"] = None
+        document.save()
+
     if "start_work" in request.POST or "start_work_edit" in request.POST:
         try:
             message_description = "Task was assigned to " + str(request.user.people) + " and status was changed: " + work.get_status_display() + " → "
@@ -1280,6 +1305,11 @@ def hub_processing_gis(request, id, classify=False, space=None):
             for each in work.subscribers.all():
                 if each.people != request.user.people:
                     Notification.objects.create(record=message, people=each.people)
+
+            if not document.meta_data:
+                document.meta_data = {}
+            document.meta_data["assigned_to"] = request.user.people.name
+            document.save()
 
             if "start_work_edit" in request.POST:
                 return redirect(request.POST["start_work_edit"])
