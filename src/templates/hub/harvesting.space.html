@@ -120,6 +120,7 @@
                     <td{% if forloop.first %} class="border-0"{% endif %}>
                       <i class="fa fa-fw mr-2 {% if tag.id in counter %}text-success fa-check{% else %}fa-fw{% endif %}"></i>
                       <a href="{{ tag.id }}/">{{ tag }}</a>
+                      {% if tag.icon %}<i class="float-right fa fa-{{ tag.icon }}"></i>{% endif %}
                     </td>
                   </tr>
                   {% endfor %}
