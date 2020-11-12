@@ -1,5 +1,4 @@
 {% extends "_base.html" %}
-{% block page_name %}fullwidth{% endblock %}
 
 {% block css %}
 
@@ -30,88 +29,80 @@
 
 {% block content %}
 
-  <div class="container">
+  <h1>{{ info }}</h1>
 
-    <h1>{{ info }}</h1>
+  {% if info.photo.id != 33476 %}
+    <img src="{{ info.photo.image.thumbnail.url }}" alt="" class="img-thumbnail" />
+  {% endif %}
 
-    {% if info.photo.id != 33476 %}
-      <img src="{{ info.photo.image.thumbnail.url }}" alt="" class="img-thumbnail" />
-    {% endif %}
+  <dl class="row">
+    <dt class="col-sm-3">ID</dt>
+    <dd class="col-sm-9">{{ info.id }}</dd>
 
-    <dl class="row">
-      <dt class="col-sm-3">ID</dt>
-      <dd class="col-sm-9">{{ info.id }}</dd>
-
-      <dt class="col-sm-3">Geocode(s)</dt>
-      <dd class="col-sm-9">
-        {% if info.geocodes.all %}
-          <ul class="list-unstyled">
-          {% for each in info.geocodes.all %}
-            <li>{{ each }}</li>
-          {% endfor %}
-          </ul>
-        {% else %}
-          <em>None</em>
-        {% endif %}
-
-      {% if info.description %}
-        <dt class="col-sm-3">Description</dt>
-        <dd class="col-sm-9">{{ info.get_description }}</dd>
-      {% endif %}
-
-      {% if info.source %}
-        <dt class="col-sm-3">Source document</dt>
-        <dd class="col-sm-9"><a href="{% url URLS.LIBRARY_ITEM info.source.id %}">{{ info.source }}</a></dd>
-      {% endif %}
-      
-      </dd>
-
-    </dl>
-
-    {% if info.meta_data.features %}
-      <h2>Features</h2>
-      <dl class="row features">
-        {% for key,value in info.meta_data.features.items %}
-          <dt class="col-sm-3">{{ key }}</dt>
-          <dd class="col-sm-9">{{ value }}</dd>
+    <dt class="col-sm-3">Tags</dt>
+    <dd class="col-sm-9">
+      {% if info.source.tags.all %}
+        <ul class="list-unstyled">
+        {% for each in info.source.tags.all %}
+          <li>{{ each }}</li>
         {% endfor %}
-      </dl>
+        </ul>
+      {% else %}
+        <em>None</em>
+      {% endif %}
+
+    {% if info.description %}
+      <dt class="col-sm-3">Description</dt>
+      <dd class="col-sm-9">{{ info.get_description }}</dd>
     {% endif %}
 
-    {% if info.geometry %}
-    </div>
+    {% if info.source %}
+      <dt class="col-sm-3">Source document</dt>
+      <dd class="col-sm-9"><a href="{% url URLS.LIBRARY_ITEM info.source.id %}">{{ info.source }}</a></dd>
+    {% endif %}
+    
+    </dd>
+
+  </dl>
+
+  {% if info.meta_data.features %}
+    <h2>Features</h2>
+    <dl class="row features">
+      {% for key,value in info.meta_data.features.items %}
+        <dt class="col-sm-3">{{ key }}</dt>
+        <dd class="col-sm-9">{{ value }}</dd>
+      {% endfor %}
+    </dl>
+  {% endif %}
+
+  {% if info.geometry %}
 
     <h2>Location</h2>
     <div id="map" class="leaflet-map"></div>
 
-    <div class="container">
-      <table class="table table-bordered datatable">
-        <thead>
+    <table class="table table-bordered datatable">
+      <thead>
+        <tr>
+          <th>Inside this space</th>
+          <th>Source</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for each in inside_the_space %}
           <tr>
-            <th>Inside this space</th>
-            <th>Source</th>
-            <th>Type</th>
+            <td><a href="{% url "staf:referencespace" each.id  %}">{{ each.name }}</a></td>
+            <td>{% if each.source %}<a href="{% url URLS.LIBRARY_ITEM each.source.id %}">{{ each.source }}</a>{% endif %}</td>
+            <td>
+              {% for tag in each.source.tags.all %}
+                <span class="badge">{{ tag }}</span>
+              {% endfor %}
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {% for each in inside_the_space %}
-            <tr>
-              <td><a href="{% url "staf:referencespace" each.id  %}">{{ each.name }}</a></td>
-              <td>{% if each.source %}<a href="{% url URLS.LIBRARY_ITEM each.source.id %}">{{ each.source }}</a>{% endif %}</td>
-              <td>
-                {% for geocode in each.geocodes.all %}
-                  {% if geocode.is_public and not geocode.is_deleted %}
-                    <span class="badge">{{ geocode }}</span>
-                  {% endif %}
-                {% endfor %}
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    {% endif %}
-
-  </div>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
 
 {% endblock %}
 

@@ -513,7 +513,7 @@ def referencespace(request, id=None, space=None, slug=None):
         inside_the_space = ReferenceSpace.objects.filter(geometry__contained=this_location).order_by("name").prefetch_related("geocodes").exclude(pk=id)
     context = {
         "info": info,
-        "inside_the_space": inside_the_space,
+        "inside_the_space": inside_the_space[:200] if inside_the_space.count() > 200 else inside_the_space,
         "load_datatables": True,
         "title": info.name,
     }
