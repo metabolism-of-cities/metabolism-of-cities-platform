@@ -145,6 +145,16 @@ class Tag(models.Model):
         except:
             return self.name
 
+    def get_name_after_period(self):
+        # For some tags, we have a long name like:
+        # 1.1. City boundaries
+        # And we want an easy way to just get "City boundaries" returned
+        try:
+            string = self.name
+            return string.split(".")[-1]
+        except:
+            return self.name
+
     def save(self, *args, **kwargs):
         if not self.description:
             self.description_html = None

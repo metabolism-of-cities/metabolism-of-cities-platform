@@ -211,6 +211,49 @@ def library_overview(request, type, space=None):
     }
     return render(request, "staf/library.html", context)
 
+def space_map(request, space):
+    space = get_space(request, space)
+    list = LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False)
+    parents = []
+    features = []
+    hits = {}
+    data = {}
+    for each in list:
+        for tag in each.tags.filter(parent_tag__parent_tag_id=845):
+            if not tag in parents:
+                parents.append(tag)
+                hits[tag.id] = []
+            hits[tag.id].append(each)
+
+    context = {
+        "space": space,
+        "parents": parents,
+        "hits": hits,
+        "data": data,
+    }
+    return render(request, "staf/space.map.html", context)
+
+def geojson(request, id):
+    info = LibraryItem.objects.get(pk=id)
+    features = []
+    for each in info.imported_spaces.all():
+        if each.geometry:
+            features.append({
+                "type": "Feature",
+                "id": each.id,
+                "link": "https://google.com",
+                "properties": {
+                    "space_name": each.name,
+                },
+                "geometry": json.loads(each.geometry.json)
+            })
+
+    data = {
+        "type":"FeatureCollection",
+        "features": features,
+    }
+    return JsonResponse(data)
+
 @login_required
 def upload_staf_data(request, id=None, block=None, project_name="staf"):
     session = None

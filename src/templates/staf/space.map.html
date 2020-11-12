@@ -1,7 +1,8 @@
 {% extends '_base.html' %}
+{% load moc_extras %}
 
 {% block page_name %}full map{% endblock %}
-{% block title %}Full map{% endblock %}
+{% block title %}Map - {{ space }}{% endblock %}
 
 {% block head %}
   <!-- leaflet -->
@@ -18,53 +19,39 @@
   <div class="row">
     <div class="col-lg-3" id="map-control">
       <div class="row">
+
+        {% for each in parents %}
         <div class="col-sm-6 col-md-4 col-lg-12">
           <div class="card mb-3">
             <div class="card-header collapsed">
-              <i class="fas fa-fw fa-tint"></i> Water
+              <i class="fas fa-fw fa-{{ each.icon }}"></i> {{ each.get_name_after_period }}
               <i class="fas fa-fw fa-angle-down angle"></i>
             </div>
             <ul class="list-group list-group-flush">
-              <li class="list-group-item toggle-layer" data-layer="pumpsLayer"><i class="fad fa-swap-opacity fa-fw fa-circle" style="color: green"></i> Water pumps <i class="far fa-fw fa-check-circle"></i></li>
-              <li class="list-group-item toggle-layer" data-layer="plantsLayer"><i class="fad fa-swap-opacity fa-fw fa-circle" style="color: red"></i> Desalination plants <i class="far fa-fw fa-check-circle"></i></li>
-              <li class="list-group-item toggle-layer" data-layer="otherLayer"><i class="fad fa-swap-opacity fa-fw fa-circle"></i> Lakes <i class="far fa-fw fa-check-circle"></i></li>
+              {% for layer in hits|get_item:each.id %}
+                <li class="list-group-item toggle-layer" data-layer="{% url URLS.GEOJSON layer.id %}">
+                  <i class="fad fa-swap-opacity fa-fw fa-circle" style="color: green"></i> {{ layer.meta_data.shortname|default:layer }}
+                  <i class="far fa-fw fa-check-circle"></i>
+                </li>
+              {% endfor %}
             </ul>
           </div>
         </div>
-        <div class="col-sm-6 col-md-4 col-lg-12">
-          <div class="card mb-3">
-            <div class="card-header collapsed">
-              <i class="fas fa-fw fa-bolt"></i> Electricity
-              <i class="fas fa-fw fa-angle-down angle"></i>
-            </div>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item toggle-layer" data-layer="otherLayer"><i class="fad fa-swap-opacity fa-fw fa-circle"></i> Transmission masts <i class="far fa-fw fa-check-circle"></i></li>
-              <li class="list-group-item toggle-layer" data-layer="otherLayer"><i class="fad fa-swap-opacity fa-fw fa-circle"></i> Wind turbines <i class="far fa-fw fa-check-circle"></i></li>
-              <li class="list-group-item toggle-layer" data-layer="otherLayer"><i class="fad fa-swap-opacity fa-fw fa-circle"></i> Energy storage <i class="far fa-fw fa-check-circle"></i></li>
-              <li class="list-group-item toggle-layer" data-layer="otherLayer"><i class="fad fa-swap-opacity fa-fw fa-circle"></i> Electric charging stations <i class="far fa-fw fa-check-circle"></i></li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-sm-6 col-md-4 col-lg-12">
-          <div class="card mb-3">
-            <div class="card-header collapsed">
-              <i class="fas fa-fw fa-car-bus"></i> Transport
-              <i class="fas fa-fw fa-angle-down angle"></i>
-            </div>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item toggle-layer" data-layer="otherLayer"><i class="fad fa-swap-opacity fa-fw fa-circle"></i> Train stations <i class="far fa-fw fa-check-circle"></i></li>
-              <li class="list-group-item toggle-layer" data-layer="otherLayer"><i class="fad fa-swap-opacity fa-fw fa-circle"></i> Bus stops <i class="far fa-fw fa-check-circle"></i></li>
-              <li class="list-group-item toggle-layer" data-layer="otherLayer"><i class="fad fa-swap-opacity fa-fw fa-circle"></i> Tram stops <i class="far fa-fw fa-check-circle"></i></li>
-              <li class="list-group-item toggle-layer" data-layer="otherLayer"><i class="fad fa-swap-opacity fa-fw fa-circle"></i> Bicycle racks <i class="far fa-fw fa-check-circle"></i></li>
-            </ul>
-          </div>
-        </div>
+        {% endfor %}
+
       </div>
     </div>
     <div class="col-lg-9 col-map">
       <div id="map" class="leaflet-map sticky-top"></div>
     </div>
   </div>
+
+{% for key,value in data.items %}
+  <div class="mt-3 alert alert-warning">
+    layer_{{ key }}: {{ value }}
+  </div>
+{% endfor %}
+
 {% endblock %}
 
 {% block footer %}
@@ -79,7 +66,7 @@
   <script>
     // create leaflet map - https://leafletjs.com/reference-1.6.0.html
     var map = L.map("map", {
-      center: [39.74739, -105],
+      center: [ 6.252731, -75.584306 ],
       zoom: 13,
       minZoom: 2,
       maxZoom: 18,

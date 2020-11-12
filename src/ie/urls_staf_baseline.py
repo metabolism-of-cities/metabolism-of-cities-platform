@@ -29,6 +29,7 @@ baseline_staf_urlpatterns = [
 
     path("datasets/<int:id>/", staf.dataset, name="dataset"),
     path("datasets/<int:id>/json/", staf.shapefile_json, name="shapefile_json"),
+    path("geojson/<int:id>/", staf.geojson, name="geojson"),
 
     path("layers/", staf.layers, name="layers"),
     path("layers/<slug:slug>/<int:id>/", staf.layer, name="layer"),
@@ -44,7 +45,7 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/resources/reports/", data.library, {"type": "reports"}, name="reports"),
     path("dashboards/<slug:space>/resources/theses/", data.library, {"type": "theses"}, name="theses"),
     path("dashboards/<slug:space>/resources/journal-articles/", data.library, {"type": "articles"}, name="journal_articles"),
-    #path("dashboards/<slug:space>/maps/", data.maps, name="maps"),
+    path("dashboards/<slug:space>/map/", staf.space_map, name="space_map"),
 
     re_path(r'dashboards/(?P<space>[-\w]+)/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/$', staf.layer_overview, name="layer_overview"),
     re_path(r'dashboards/(?P<space>[-\w]+)/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/instructionvideos/$', data.instructionvideos),
