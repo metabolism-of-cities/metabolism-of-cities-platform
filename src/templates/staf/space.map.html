@@ -89,7 +89,7 @@
 
     // enable popups so na user can click on an object on the map and see extra information
     function onEachFeature(feature, layer) {
-      var popupContent = "<div class='popup-title'>" + feature.properties.name + "</div><div class='popup-content'><p>" + feature.properties.description + "</p><table class='table'>" + feature.properties.table + "</table></div>"
+      var popupContent = "<div class='popup-title font-weight-bold'>" + feature.properties.space_name + "</div>" + feature.properties.content;
 
       layer.bindPopup(popupContent);
     }
