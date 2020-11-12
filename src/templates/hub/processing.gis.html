@@ -66,7 +66,7 @@
             </tr>
           </thead>
           <tbody>
-            {% if request.user.is_superuser and DEBUG %}
+            {% if request.user.is_superuser and DEBUG and False %}
               <tr>
                 <td>UUID</td>
                 <td>{{ document.meta_data.uuid }}</td>
@@ -79,10 +79,6 @@
             <tr>
               <td>Layer name</td>
               <td>{{ layer.name }}</td>
-            </tr>
-            <tr>
-              <td>File size</td>
-              <td>{{ file|floatformat }} Mb</td>
             </tr>
             <tr>
               <td>Coordinate reference system</td>

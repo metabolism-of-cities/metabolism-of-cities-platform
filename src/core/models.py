@@ -1185,6 +1185,11 @@ class LibraryItem(Record):
         except:
             return None
 
+    def get_color(self):
+        import random
+        list = ["green", "blue", "red", "orange", "brown", "navy", "teal", "purple", "pink", "maroon", "chocolate", "gold", "ivory", "snow"]
+        return random.choice(list)
+
     def save(self, *args, **kwargs):
         if self.doi:
             try:

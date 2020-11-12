@@ -29,8 +29,8 @@
             </div>
             <ul class="list-group list-group-flush">
               {% for layer in hits|get_item:each.id %}
-                <li class="list-group-item toggle-layer" data-id="{{ layer.id }}" data-geojson="{% url URLS.GEOJSON layer.id %}" data-color="{{ layer.color }}">
-                  <i class="fad fa-swap-opacity fa-fw fa-circle" style="color: {{ layer.color  }}"></i> {{ layer.meta_data.shortname|default:layer }}
+                <li class="list-group-item toggle-layer" data-id="{{ layer.id }}" data-geojson="{% url URLS.GEOJSON layer.id %}" data-color="{{ layer.get_color }}">
+                  <i class="fad fa-swap-opacity fa-fw fa-circle" style="color: {{ layer.get_color  }}"></i> {{ layer.meta_data.shortname|default:layer }}
                   <i class="far fa-fw fa-check-circle"></i>
                 </li>
               {% endfor %}
@@ -130,6 +130,7 @@
       // data-id="{{ layer.id }}" data-geojson=
       var id = button.data("id");
       var url = button.data("geojson");
+      var color = button.data("color");
       var layer = "layer_" + button.data("id");
 
       if ( button.hasClass("visible") ) {
@@ -138,7 +139,7 @@
         if ( button.hasClass("downloaded") ) {
           map.addLayer(window[layer])
         } else {
-          downloadLayer(id, url)
+          downloadLayer(id, url, color)
           button.addClass("downloaded")
         }
       }
