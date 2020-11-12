@@ -46,8 +46,14 @@
           <h3 class="h4">Document details</h3>
 
           <div class="form-group">
-            <label>Title</label>
+            <label>Document Title</label>
             <input type="text" name="name" value="{{ document.name }}" class="form-control" required />
+          </div>
+
+          <div class="form-group">
+            <label>Short Title (for use in legends)</label>
+            <input type="text" name="shortname" maxlength="50" value="{{ document.meta_data.shortname }}" class="form-control" required />
+            <small>Exactly WHAT is in this shapefile? Only include the fundamental parts of the title. Do not repeat the name of the city.</small>
           </div>
 
           <div class="form-group">
@@ -64,14 +70,17 @@
             </select>
           </div>
 
-          <div class="form-group mb-0">
-            <label>Geocode(s)</label>
-            <select class="custom-select select2" multiple name="geocodes">
-              {% for each in geocodes %}
-                <option value="{{ each.id }}" {% if each in document.geocodes.all %}selected{% endif %}>{{ each }} ({{ each.scheme }})</option>
-              {% endfor %}
-            </select>
-          </div>
+          {% if False %}
+            <div class="form-group mb-0">
+              <label>Geocode(s)</label>
+              <select class="custom-select select2" multiple name="geocodes">
+                {% for each in geocodes %}
+                  <option value="{{ each.id }}" {% if each in document.geocodes.all %}selected{% endif %}>{{ each }} ({{ each.scheme }})</option>
+                {% endfor %}
+              </select>
+            </div>
+          {% endif %}
+
         </section>
 
         <section class="card position-relative p-3 mt-3">
@@ -95,14 +104,23 @@
           </div>
 
           <div class="form-group">
-            <label>When should this be updated?</label>
-            <textarea name="update_required" class="form-control" rows="5">{{ document.meta_data.dqi.update_required }}</textarea>
-          </div>
-
-          <div class="form-group mb-0">
             <label>Any known flaws or limitations?</label>
             <textarea name="limitations" class="form-control" rows="5">{{ document.meta_data.dqi.limitations }}</textarea>
           </div>
+
+          <div class="form-group">
+            <label>When should this be updated?</label>
+            <select class="custom-select" name="update_required" required>
+              <option value=""></option>
+              <option value="6months" {% if document.meta_data.dqi.update_required == "6months" %}selected{% endif %}>In 6 months</option>
+              <option value="1year" {% if document.meta_data.dqi.update_required == "1year" %}selected{% endif %}>In 1 year</option>
+              <option value="2year" {% if document.meta_data.dqi.update_required == "2year" %}selected{% endif %}>In 2 years</option>
+              <option value="unsure" {% if document.meta_data.dqi.update_required == "unsure" %}selected{% endif %}>Unsure</option>
+              <option value="notapplicable" {% if document.meta_data.dqi.update_required == "notapplicable" %}selected{% endif %}>Not applicable</option>
+            </select>
+
+          </div>
+
         </section>
 
       </form>

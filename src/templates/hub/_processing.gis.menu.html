@@ -17,40 +17,53 @@
   </div>
 
   {% if step == 1 %}
-    <form method="post">
-      {% if not work.assigned_to %}
-        <span class="btn btn-primary" id="showstart">
-          <i class="fas fa-user-plus"></i>
-          Start working on this
-        </span>
-      {% endif %}
+    {% if not request.user.is_authenticated %}
+      <div class="alert alert-warning">
+        You are not logged in. Please <a href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/login/?next={{ request.get_full_path }}">log in</a> to work on this task.
+      </div>
+    {% elif not curator %}
+      <div class="alert alert-warning">
+        You need to have obtained a "Data Processor" badge in order to
+        start working on this shapefile.
+      </div>
+    {% else %}
+      <form method="post">
 
-      {% if work.assigned_to == request.user.people or not work.assigned_to %}
-        <div class="card mb-4" id="startbox">
-          <div class="card-body">
-            <h2 class="h4">Thanks for working on this!</h2>
-            <p><a href="javascript:alert('Tutorial will be available soon!')">Click here</a> for a tutorial if you are new to this.</p>
-            <p>Is the shapefile looking good?</p>
-            <button type="submit" name="start_work" value="classify/" class="btn btn-block btn-success mb-3">
-              Yes, go to step 2 <i class="fa fa-arrow-right mr-0 ml-2"></i>
-            </button>
-            <button type="submit" name="start_work_edit" value="files/" class="btn btn-block btn-dark">
-              <i class="fa fa-upload"></i>
-              No, upload a different file
-            </button>
+        {% if not work.assigned_to %}
+          <span class="btn btn-primary" id="showstart">
+            <i class="fas fa-user-plus"></i>
+            Start working on this
+          </span>
+        {% endif %}
+
+        {% if work.assigned_to == request.user.people or not work.assigned_to %}
+          <div class="card mb-4" id="startbox">
+            <div class="card-body">
+              <h2 class="h4">Thanks for working on this!</h2>
+              <p><a href="javascript:alert('Tutorial will be available soon!')">Click here</a> for a tutorial if you are new to this.</p>
+              <p>Is the shapefile looking good?</p>
+              <button type="submit" name="start_work" value="classify/" class="btn btn-block btn-success mb-3">
+                Yes, go to step 2 <i class="fa fa-arrow-right mr-0 ml-2"></i>
+              </button>
+              <button type="submit" name="start_work_edit" value="files/" class="btn btn-block btn-dark">
+                <i class="fa fa-upload"></i>
+                No, upload a different file
+              </button>
+            </div>
           </div>
-        </div>
-      {% endif %}
+        {% endif %}
 
-      {% if work.assigned_to == request.user.people %}
-        <button type="submit" name="stop_work" value="true" class="btn btn-warning">
-          <i class="fas fa-user-times"></i>
-          Stop working on this
-        </button>
-      {% endif %}
+        {% if work.assigned_to == request.user.people and work.assigned_to %}
+          <button type="submit" name="stop_work" value="true" class="btn btn-warning">
+            <i class="fas fa-user-times"></i>
+            Stop working on this
+          </button>
+        {% endif %}
 
-      {% csrf_token %}
-    </form>
+        {% csrf_token %}
+      </form>
+
+    {% endif %}
 
     <a href="../" class="btn btn-primary-basic mt-2 mb-4">
       <i class="fal fa-angle-left"></i>

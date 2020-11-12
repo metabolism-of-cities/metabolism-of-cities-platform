@@ -1037,19 +1037,19 @@ def hub_processing_list(request, space=None, type=None):
 
     if type == "gis":
         title = "GIS data processing"
-        list = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).prefetch_related("spaces").exclude(meta_data__processed__isnull=False)
+        list = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
 
-        if "update" in request.GET:
-            l = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=2, assigned_to__isnull=False)
+    elif type == "datasets":
+        list = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=30)
+        title = "Stocks and flows data processing"
+        if "update" in request.GET and False:
+            l = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=30, assigned_to__isnull=False)
             for each in l:
                 d = each.related_to
                 if not d.meta_data:
                     d.meta_data = {}
                 d.meta_data["assigned_to"] = str(each.assigned_to)
                 d.save()
-    elif type == "datasets":
-        list = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=30)
-        title = "Stocks and flows data processing"
 
     if space:
         space = get_space(request, space)
@@ -1240,7 +1240,13 @@ def hub_processing_gis(request, id, classify=False, space=None):
 
     document = get_object_or_404(LibraryItem, pk=id)
     project = get_object_or_404(Project, pk=request.project)
-    if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
+    curator = False
+
+    if has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
+        curator = True
+    elif request.method == "POST":
+        # User who don't have curation permission can view the page, but make no changes, so 
+        # if there is a POST request we will throw an error
         unauthorized_access(request)
 
     if space:
@@ -1358,6 +1364,7 @@ def hub_processing_gis(request, id, classify=False, space=None):
         "load_messaging": True,
         "forum_id": work.id if work else None,
         "step": 1,
+        "curator": curator,
     }
 
     return render(request, "hub/processing.gis.html", context)
@@ -1459,6 +1466,7 @@ def hub_processing_gis_save(request, id, space=None):
         document.description = request.POST.get("description")
         document.tags.set(request.POST.getlist("tags"))
         document.geocodes.set(request.POST.getlist("geocodes"))
+        document.meta_data["shortname"] = request.POST.get("shortname")
         document.meta_data["dqi"] = {
              "completeness": request.POST.get("completeness"),
              "update_required": request.POST.get("update_required"),
