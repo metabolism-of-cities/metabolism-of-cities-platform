@@ -1,8 +1,8 @@
 {% extends "_base.html" %}
 
+{% block title %}Student: {{ info }}{% endblock %}
 {% block content %}
-
-  <h1 class="mb-0">{% block title %}Student: {{ info }}{% endblock %}</h1>
+  <h1 class="mb-0">Student: <a href="{% url URLS.PROFILE info.id %}">{{ info }}</a></h1>
   <a href="../" class="btn btn-primary-basic mb-4">
     <i class="fal fa-angle-left"></i>
     Back to control panel
