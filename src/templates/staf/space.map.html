@@ -29,7 +29,7 @@
             </div>
             <ul class="list-group list-group-flush">
               {% for layer in hits|get_item:each.id %}
-                <li class="list-group-item toggle-layer" data-id="{{ layer.id }}" data-geojson="{% url URLS.GEOJSON layer.id %}">
+                <li class="list-group-item toggle-layer" data-id="{{ layer.id }}" data-geojson="{% url URLS.GEOJSON layer.id %}" data-color="{{ layer.color }}">
                   <i class="fad fa-swap-opacity fa-fw text-primary fa-circle"></i> {{ layer.meta_data.shortname|default:layer }}
                   <i class="far fa-fw fa-check-circle"></i>
                 </li>
@@ -103,27 +103,19 @@
 
     // when opening a layer for the first time, download it and add it to the map
     // this function should only run once per layer
-    function downloadLayer(id, url) {
+    function downloadLayer(id, url, color) {
       let layerVariable = "layer_" + id;
 
       $.get(url, function(geojson) {
         window[layerVariable] = L.geoJSON(geojson, {
           style: {
-            color: "green",
+            color: color,
             fillOpacity: .4,
             weight: 2,
           },
 
           // function to create the popup
           onEachFeature: onEachFeature,
-
-          pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, {
-              fillColor: "green",
-              fillOpacity: .4,
-              weight: 2,
-            });
-          }
         });
 
         map.addLayer(window[layerVariable])
