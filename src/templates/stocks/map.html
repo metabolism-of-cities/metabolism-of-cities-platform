@@ -47,9 +47,37 @@
       line-height: .75rem;
     }
 
-    #feature-details tbody tr:first-of-type th,
-    #feature-details tbody tr:first-of-type td {
-      border-top: 0;
+    .details {
+      border: 2px solid rgba(0, 0, 0, 0.2);
+      background-clip: padding-box;
+      border-radius: .25rem;
+    }
+
+    .details div {
+      display: inline-block;
+      background-color: #fff;
+      padding: 0 .5rem;
+      height: 30px;
+      line-height: 30px;
+    }
+
+    .details .space-name {
+      border-radius: .25rem 0 0 .25rem;
+      border-right: 1px solid rgba(0, 0, 0, 0.2);
+    }
+
+    .details .value {
+      border-radius: 0 .25rem .25rem 0;
+    }
+
+    .compact-table-wrapper {
+      font-size: .75rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .compact-table tr.selected {
+      background-color: gold;
     }
   </style>
 {% endblock %}
@@ -73,31 +101,33 @@
 
     <div class="row">
       <div class="col-lg-4">
-        <table id="feature-details" class="table mb-4">
-          <tr>
-            <th scope="row">Name</th>
-            <td class="name text-right">{{ box }}</td>
-          </tr>
-          <tr>
-            <th scope="row">Density</th>
-            <td class="quantity text-right"></td>
-          </tr>
-        </table>
-
         <!-- spaces chart -->
-        <div class="chart position-relative">
-          <div class="bars">
-            {% for each in data.features %}
-              <div class="bar" data-space="{{ each.id }}" data-value="{{ each.properties.quantity }}"></div>
-            {% endfor %}
+        <div class="chart-wrapper mb-4">
+          <div class="chart position-relative">
+            <div class="bars">
+              {% for each in data.features %}
+                <div class="bar" data-space="{{ each.id }}" data-value="{{ each.properties.quantity }}"></div>
+              {% endfor %}
+            </div>
+            <div id="start-line"></div>
+            <div id="average-line"></div>
           </div>
-          <div id="start-line"></div>
-          <div id="average-line"></div>
+          <div class="labels">
+            <span class="start-label">0</span>
+            <span class="average-label position-absolute"></span>
+            <span class="end-label text-right float-right"></span>
+          </div>
         </div>
-        <div class="labels">
-          <span class="start-label">0</span>
-          <span class="average-label position-absolute"></span>
-          <span class="end-label text-right float-right"></span>
+
+        <div class="compact-table-wrapper">
+          <table class="table compact-table table-sm">
+            {% for each in data.features %}
+            <tr data-space="{{ each.id }}">
+              <th>{{ each.properties.space_name }}</th>
+              <td>{{ each.properties.quantity }}</td>
+            </tr>
+            {% endfor %}
+          </table>
         </div>
       </div>
       <div class="col-lg-8">
@@ -217,10 +247,9 @@
 
     var layerID = layer.feature.id
 
-    $(".chart .bar[data-space='" + layerID + "']").addClass("selected");
+    $(".chart .bar[data-space='" + layerID + "'], .compact-table tr[data-space='" + layerID + "']").addClass("selected");
 
-    $("#feature-details .name").text(layer.feature.properties.space_name)
-    $("#feature-details .quantity").text(layer.feature.properties.quantity)
+    details.update(layer.feature.properties);
 
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
       layer.bringToFront();
@@ -232,8 +261,14 @@
     var layer = e.target;
     dataLayer.resetStyle(layer);
     var layerID = layer.feature.id
+    details.update();
 
-    $(".chart .bar[data-space='" + layerID + "']").removeClass("selected");
+    $(".chart .bar[data-space='" + layerID + "'], .compact-table tr[data-space='" + layerID + "']").removeClass("selected");
+  }
+
+  // function that highlights the area on the map, in the chart, and table
+  function highlight(id) {
+    // https://gis.stackexchange.com/questions/154310/selecting-features-by-attribute-in-leaflet
   }
 
   // function when clicking on an area
@@ -299,6 +334,27 @@
   map.addControl(mapDataLegend);
 
   // LEGEND END
+
+  // FEATURE DETAILS START
+
+  // add control that shows details on hover
+  var details = L.control();
+
+  details.onAdd = function(map) {
+    this._div = L.DomUtil.create("div", "details");
+    this.update();
+    return this._div;
+  };
+
+  details.update = function(properties) {
+    this._div.innerHTML = (properties ?
+      "<div class='space-name'>" + properties.space_name + "</div><div class='value'>" + properties.quantity + "</div>" :
+      "<div class='space-name'>{{ box }}</div><div class='value'>123</div>");
+  };
+
+  details.addTo(map);
+
+  // FEATURE DETAILS END
 
   // DOWNLOAD MAP AS IMAGE START
   // function to convert canvas data to png and simulate click on download button
