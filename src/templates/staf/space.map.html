@@ -110,6 +110,8 @@
   <script>
     // create leaflet map - https://leafletjs.com/reference-1.6.0.html
     var map = L.map("map", {
+      center: [{{ space.get_centroids }}],
+      zoom: 10,
       minZoom: 2,
       maxZoom: 18,
       scrollWheelZoom: false,
@@ -337,6 +339,15 @@
 
     $(".clear-map.button").click(function() {
       clearMap()
+    });
+
+    // toggle scrollwheel zoom when entering/exiting fullscreen
+    map.on("fullscreenchange", function () {
+      if (map.isFullscreen()) {
+        map.scrollWheelZoom.enable()
+      } else {
+        map.scrollWheelZoom.disable()
+      }
     });
 
     // open default layer that should be shown from the start
