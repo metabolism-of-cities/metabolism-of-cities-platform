@@ -213,20 +213,28 @@ def library_overview(request, type, space=None):
 
 def space_map(request, space):
     space = get_space(request, space)
-    list = LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False)
+    list = LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False).order_by("date_created")
+    project = get_project(request)
     parents = []
     features = []
     hits = {}
     data = {}
     getcolor = {}
+    colors = ["green", "blue", "red", "orange", "brown", "navy", "teal", "purple", "pink", "maroon", "chocolate", "gold", "ivory", "deepskyblue", "salmon", "lightpink", "orchid", "peru", "powderblue", "darkgray", "paleturquoise", "darkmagenta", "magenta"]
+
+    i = 0
     for each in list:
-        if each.imported_spaces.count() < 1000000:
+        if each.imported_spaces.count() < 1000:
             for tag in each.tags.filter(parent_tag__parent_tag_id=845):
                 if not tag in parents:
                     parents.append(tag)
                     hits[tag.id] = []
                 hits[tag.id].append(each)
-                getcolor[each.id] = each.get_color()
+                try:
+                    getcolor[each.id] = colors[i]
+                except:
+                    getcolor[each.id] = "yellow"
+                i += 1
 
     context = {
         "space": space,
@@ -234,20 +242,24 @@ def space_map(request, space):
         "hits": hits,
         "data": data,
         "getcolors": getcolor,
+        "processing_url": project.slug + ":hub_processing_boundaries",
     }
     return render(request, "staf/space.map.html", context)
 
 def geojson(request, id):
     info = LibraryItem.objects.get(pk=id)
     features = []
+    project = get_project(request)
     for each in info.imported_spaces.all():
         if each.geometry:
+            url = reverse(project.slug + ":referencespace", args=[each.id])
             features.append({
                 "type": "Feature",
                 "id": each.id,
                 "link": "https://google.com",
                 "properties": {
                     "space_name": each.name,
+                    "content": "<a href='" + url + "'>View details</a>",
                 },
                 "geometry": json.loads(each.geometry.json)
             })
@@ -1118,6 +1130,48 @@ def hub_processing_list(request, space=None, type=None):
         "unassigned": unassigned,
     }
     return render(request, "hub/processing.list.html", context)
+
+def hub_processing_boundaries(request, space=None):
+
+    if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
+        messages.error(request, "Please note that you need data processing permissions to make changes in this section.")
+        curator = False
+        if request.method == "POST":
+            unauthorized_access(request)
+    else:
+        curator = True
+
+    project = get_project(request)
+    if space:
+        space = get_space(request, space)
+
+    info = None
+    if "id" in request.GET:
+        info = get_object_or_404(LibraryItem, pk=request.GET.get("id"))
+
+    if request.method == "POST" and "boundaries" in request.POST:
+        boundaries = get_object_or_404(ReferenceSpace, pk=request.POST.get("boundaries"))
+        space.geometry = boundaries.geometry
+        if not space.meta_data:
+            space.meta_data = {}
+        space.meta_data["boundaries_origin"] = boundaries.id
+        space.save()
+        messages.success(request, "The boundaries have been successfully saved. You can see them on the overview map below.")
+        return redirect(project.slug + ":space_map", space.slug)
+
+    context = {
+        "menu": "processing",
+        "space": space,
+        "hide_space_menu": True,
+        "load_datatables": True,
+        "load_select2": True,
+        "info": info,
+        "curator": curator,
+        "spaces": ActivatedSpace.objects.filter(part_of_project_id=request.project),
+        "processing_url": project.slug + ":hub_processing_boundaries",
+    }
+    return render(request, "hub/processing.boundaries.html", context)
+
 
 def hub_processing_dataset(request, id, classify=False, space=None):
 

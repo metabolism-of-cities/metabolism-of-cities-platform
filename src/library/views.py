@@ -366,6 +366,8 @@ def search_ajax(request):
     }
     if query:
         list = LibraryItem.objects.filter(name__icontains=query)
+        if "type" in request.GET:
+            list = list.filter(type_id=request.GET.get("type"))
         for each in list:
             r["results"].append({"id": each.id, "text": each.name + " - " + str(each.year)})
     return JsonResponse(r, safe=False)

@@ -42,6 +42,9 @@ def get_space(request, slug):
     check = get_object_or_404(ActivatedSpace, slug=slug, part_of_project_id=request.project)
     return check.space
 
+def get_project(request):
+    return get_object_or_404(Project, pk=request.project)
+
 # Get all the child relationships, but making sure we only show is_deleted=False and is_public=True
 def get_children(record):
     list = RecordRelationship.objects.filter(record_parent=record).filter(record_child__is_deleted=False, record_child__is_public=True)

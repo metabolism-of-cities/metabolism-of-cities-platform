@@ -16,35 +16,53 @@
 {% endblock %}
 
 {% block content %}
-  <div class="row">
-    <div class="col-lg-3" id="map-control">
-      <div class="row">
 
-        {% for each in parents %}
-        <div class="col-sm-6 col-md-4 col-lg-12">
-          <div class="card mb-3">
-            <div class="card-header collapsed">
-              <i class="fas fa-fw fa-{{ each.icon }}"></i> {{ each.get_name_after_period }}
-              <i class="fas fa-fw fa-angle-down angle"></i>
+  {% if not space.geometry %}
+    <div class="alert alert-warning">
+      We do not yet have the official boundaries on record for {{ space }}. Do you know where we can find them?
+      Become a contributor and upload the official boundaries in shapefile format so that we can create a map
+      for {{ space }}. <a href="/hub/">Read more here</a>.
+      If the boundaries are already available then data processors <a href="{% url processing_url space.slug %}">can activate the boundaries here</a>.
+    </div>
+  {% else %}
+    <div class="row">
+      <div class="col-lg-3" id="map-control">
+        <div class="row">
+
+          {% if not parents %}
+            <div class="alert alert-dark ml-2">
+              There are no layers available yet. Be sure to process shapefiles
+              (<a href="https://multimedia.metabolismofcities.org/videos/332795/">instructions
+              here</a> [spanish]) in order to add layers to the map.
             </div>
-            <ul class="list-group list-group-flush">
-              {% for layer in hits|get_item:each.id %}
-                <li class="list-group-item toggle-layer" data-id="{{ layer.id }}" data-geojson="{% url URLS.GEOJSON layer.id %}" data-color="{{ getcolors|get_item:layer.id }}">
-                  <i class="fad fa-swap-opacity fa-fw fa-circle" style="color: {{ getcolors|get_item:layer.id }}"></i> {{ layer.meta_data.shortname|default:layer }}
-                  <i class="far fa-fw fa-check-circle"></i>
-                </li>
-              {% endfor %}
-            </ul>
-          </div>
-        </div>
-        {% endfor %}
+          {% else %}
+            {% for each in parents %}
+            <div class="col-sm-6 col-md-4 col-lg-12">
+              <div class="card mb-3">
+                <div class="card-header collapsed">
+                  <i class="fas fa-fw fa-{{ each.icon }}"></i> {{ each.get_name_after_period }}
+                  <i class="fas fa-fw fa-angle-down angle"></i>
+                </div>
+                <ul class="list-group list-group-flush">
+                  {% for layer in hits|get_item:each.id %}
+                    <li class="list-group-item toggle-layer" data-id="{{ layer.id }}" data-geojson="{% url URLS.GEOJSON layer.id %}" data-color="{{ getcolors|get_item:layer.id }}">
+                      <i class="fad fa-swap-opacity fa-fw fa-circle" style="color: {{ getcolors|get_item:layer.id }}"></i> {{ layer.meta_data.shortname|default:layer }}
+                      <i class="far fa-fw fa-check-circle"></i>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+            {% endfor %}
+          {% endif %}
 
+        </div>
+      </div>
+      <div class="col-lg-9 col-map">
+        <div id="map" class="leaflet-map sticky-top"></div>
       </div>
     </div>
-    <div class="col-lg-9 col-map">
-      <div id="map" class="leaflet-map sticky-top"></div>
-    </div>
-  </div>
+  {% endif %}
 
 {% for key,value in data.items %}
   <div class="mt-3 alert alert-warning">
@@ -64,10 +82,11 @@
   <!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
   <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
 
+  {% if space.geometry %}
   <script>
     // create leaflet map - https://leafletjs.com/reference-1.6.0.html
     var map = L.map("map", {
-      center: [50.85, 4.35],
+      center: [{{ space.get_centroids }}],
       zoom: 13,
       minZoom: 2,
       maxZoom: 18,
@@ -87,6 +106,21 @@
     })
 
     tileLayer.addTo(map);
+
+    function style(feature) {
+        return {
+            fillColor: '#3388FF',
+            weight: 4,
+            opacity: 0.9,
+            color: '#3388FF',
+            fillOpacity: 0.05,
+        };
+    }
+
+    // Add boundaries
+    var boundaries = {{ space.geometry.geojson|safe }};
+    boundaries_layer = L.geoJSON(boundaries, { style: style }).addTo(map);
+    map.fitBounds(boundaries_layer.getBounds());
 
     // enable popups so na user can click on an object on the map and see extra information
     function onEachFeature(feature, layer) {
@@ -198,4 +232,5 @@
       clearMap()
     });
   </script>
+  {% endif %}
 {% endblock %}

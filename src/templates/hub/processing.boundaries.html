@@ -1,0 +1,104 @@
+{% extends "_base.html" %}
+{% load humanize %}
+{% block page_name %}staf-review uploaded{% endblock %}
+
+{% block title %}{{ SYSTEM_NAME_SINGULAR|title }} boundaries{% endblock %}
+
+{% block content %}
+
+{% include "hub/_nav.html" %}
+
+  {% if info %}
+    <h3>{{ space }}</h3>
+    <h4>{{ info }}</h4>
+    {% if not info.imported_spaces.count %}
+      <div class="alert alert-danger">
+        There are no reference spaces imported from this shapefile! Are you sure this 
+        file was successfully processed? 
+      </div>
+    {% endif %}
+    <table class="table table-striped datatable">
+      <thead>
+        <tr>
+          <th>Space</th>
+          <th>Select</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in info.imported_spaces.all %}
+        <tr>
+          <td><a href="{% url URLS.SPACE each.id %}">{{ each }}</a></td>
+          <td>
+            <form method="post">
+              <button name="boundaries" value="{{ each.id }}" type="submit" class="btn btn-primary">Select these boundaries</button>
+              {% csrf_token %}
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% elif space %}
+    <h3>{{ space }}</h3>
+    <div class="alert alert-warning">
+      <p>
+        <i class="fa fa-search"></i>
+        Use the insta-search below to find the shapefile that contains the official boundaries.
+      </p>
+      <p>
+        <select id="existing" class="select2 custom-select">
+        </select>
+      </p>
+    </div>
+    {% if not curator %}
+      <em>Please log in or obtain the required permissions so that you can work on these files.</em>
+    {% endif %}
+  {% else %}
+    <h3>Select {{ SYSTEM_NAME_SINGULAR }}</h3>
+    <table class="table table-striped datatable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Options</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in spaces %}
+        <tr>
+          <td>{{ each.space }}</td>
+          <td><a class="btn btn-info" href="{% url processing_url each.space.slug %}">Select <i class="fa fa-arrow-right"></i></a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  <div>
+    <a href="../" class="btn btn-primary-basic mt-4">
+      <i class="fal fa-angle-left"></i>
+      Back to overview
+    </a>
+  </div>
+
+{% endblock %}
+
+{% block footer %}
+  {% if curator %}
+  <script>
+
+      $("#existing").select2({
+        theme: "bootstrap4",
+        ajax: {
+          url: "{% url "library:search_ajax" %}?type=40",
+          dataType: "json",
+        }
+      });
+
+      $("#existing").on("select2:select", function (e) {
+          var data = e.params.data;
+          window.location = "{{ request.get_full_path }}?id="+ data.id;
+      });
+
+  </script>
+{% endif %}
+{% endblock %}

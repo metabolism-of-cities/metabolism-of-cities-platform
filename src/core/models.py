@@ -1648,6 +1648,15 @@ class ReferenceSpace(Record):
         check = self.geocodes.filter(name="Island").exists()
         return True if check else False
 
+    @property
+    def get_centroids(self):
+        try:
+            lat = self.geometry.centroid[1]
+            lng = self.geometry.centroid[0]
+            return str(lat) + ", " + str(lng)
+        except:
+            return None
+
     def photo(self):
         from core.models import Photo
         try:
