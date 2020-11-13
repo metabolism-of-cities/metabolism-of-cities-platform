@@ -1,7 +1,6 @@
 {% extends '_base.html' %}
 {% load moc_extras %}
 
-{% block page_name %}full map{% endblock %}
 {% block title %}Map - {{ space }}{% endblock %}
 
 {% block head %}
@@ -13,6 +12,38 @@
 
   <!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
   <link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet" />
+
+  <style>
+    .leaflet-map {
+      height: 800px;
+      max-height: 80vh;
+    }
+
+    .layer-toggles {
+      border: 2px solid rgba(0,0,0,0.2);
+      background-clip: padding-box;
+      border-radius: .25rem;
+    }
+
+    .layer-toggles .category {
+      line-height: 30px;
+      background-color: #efefef;
+      padding: 0 .5rem;
+    }
+
+    .layer-toggles .toggle-layer {
+      background-color: #fff;
+      cursor: pointer;
+      line-height: 30px;
+      height: 30px;
+      padding: 0 .5rem;
+    }
+
+    .layer-toggles .toggle-layer:hover {
+      background-color: #f4f4f4;
+    }
+
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -25,50 +56,21 @@
       If the boundaries are already available then data processors <a href="{% url processing_url space.slug %}">can activate the boundaries here</a>.
     </div>
   {% else %}
-    <div class="row">
-      <div class="col-lg-3" id="map-control">
-        <div class="row">
-
-          {% if not parents %}
-            <div class="alert alert-dark ml-2">
-              There are no layers available yet. Be sure to process shapefiles
-              (<a href="https://multimedia.metabolismofcities.org/videos/332795/">instructions
-              here</a> [spanish]) in order to add layers to the map.
-            </div>
-          {% else %}
-            {% for each in parents %}
-            <div class="col-sm-6 col-md-4 col-lg-12">
-              <div class="card mb-3">
-                <div class="card-header collapsed">
-                  <i class="fas fa-fw fa-{{ each.icon }}"></i> {{ each.get_name_after_period }}
-                  <i class="fas fa-fw fa-angle-down angle"></i>
-                </div>
-                <ul class="list-group list-group-flush">
-                  {% for layer in hits|get_item:each.id %}
-                    <li class="list-group-item toggle-layer" data-id="{{ layer.id }}" data-geojson="{% url URLS.GEOJSON layer.id %}" data-color="{{ getcolors|get_item:layer.id }}">
-                      <i class="fad fa-swap-opacity fa-fw fa-circle" style="color: {{ getcolors|get_item:layer.id }}"></i> {{ layer.meta_data.shortname|default:layer }}
-                      <i class="far fa-fw fa-check-circle"></i>
-                    </li>
-                  {% endfor %}
-                </ul>
-              </div>
-            </div>
-            {% endfor %}
-          {% endif %}
-
-        </div>
+    {% if not parents %}
+      <div class="alert alert-dark ml-2">
+        There are no layers available yet. Be sure to process shapefiles
+        (<a href="https://multimedia.metabolismofcities.org/videos/332795/">instructions
+        here</a> [spanish]) in order to add layers to the map.
       </div>
-      <div class="col-lg-9 col-map">
-        <div id="map" class="leaflet-map sticky-top"></div>
-      </div>
-    </div>
+    {% endif %}
+    <div id="map" class="leaflet-map"></div>
   {% endif %}
 
-{% for key,value in data.items %}
-  <div class="mt-3 alert alert-warning">
-    layer_{{ key }}: {{ value }}
-  </div>
-{% endfor %}
+  {% for key,value in data.items %}
+    <div class="mt-3 alert alert-warning">
+      layer_{{ key }}: {{ value }}
+    </div>
+  {% endfor %}
 
 {% endblock %}
 
@@ -78,6 +80,9 @@
           integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
           crossorigin="">
   </script>
+
+  <!-- download map as image -->
+  <script src="https://unpkg.com/leaflet-image@0.4.0/leaflet-image.js"></script>
 
   <!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
   <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
@@ -92,6 +97,7 @@
       maxZoom: 18,
       scrollWheelZoom: false,
       fullscreenControl: true,
+      renderer: L.canvas(),
     })
 
     // add tile layer
@@ -155,10 +161,60 @@
 
         map.addLayer(window[layerVariable])
       })
-    }
+    };
 
-    // function to toggle visibility of layers, buttons in #map-control div
-    $("#map-control .toggle-layer").click(function() {
+    {% if parents %}
+      // add buttons to toggle visibility of layers to map
+      L.Control.LayerToggles = L.Control.extend({
+        onAdd: function(map) {
+
+          var layerTogglesWrapper = L.DomUtil.create("div", "layer-toggles");
+
+          {% for each in parents %}
+            var layerCategory_{{ each.id }} = L.DomUtil.create("div", "category");
+            layerCategory_{{ each.id }}.innerHTML = "<i class='fal fa-fw fa-{{ each.icon }}'></i> {{ each.get_name_after_period }} <i class='fas fa-fw fa-angle-down angle'></i>";
+            layerTogglesWrapper.appendChild(layerCategory_{{ each.id }});
+
+            {% for layer in hits|get_item:each.id %}
+              var toggle_{{ layer.id }}_layer = L.DomUtil.create("div", "toggle-layer");
+
+              toggle_{{ layer.id }}_layer.setAttribute("data-id", "{{ layer.id }}");
+              toggle_{{ layer.id }}_layer.setAttribute("data-geojson", "{% url URLS.GEOJSON layer.id %}");
+              toggle_{{ layer.id }}_layer.setAttribute("data-color", "{{ getcolors|get_item:layer.id }}");
+
+              toggle_{{ layer.id }}_layer.innerHTML = "{{ layer.meta_data.shortname|default:layer }}";
+              layerCategory_{{ each.id }}.appendChild(toggle_{{ layer.id }}_layer);
+            {% endfor %}
+          {% endfor %}
+
+          return layerTogglesWrapper;
+        }
+      });
+
+      // create a new leaflet control and apply download button details
+      L.control.LayerToggles = function(opts) {
+        return new L.Control.LayerToggles(opts);
+      }
+
+      // add download button to the map
+      L.control.LayerToggles({ position: "topright" }).addTo(map);
+
+      // function to toggle layer
+      function toggleLayer(layer) {
+        console.log(layer);
+      }
+    {% endif %}
+
+
+    // run function when clicking the button
+    $(".download-map").click(function() {
+      toggleLayer(layer);
+    })
+    // DOWNLOAD MAP END
+    {% endif %}
+
+    // function to toggle visibility of layers, buttons in map control div
+    $(".toggle-layer").click(function() {
       var button = $(this);
 
       // data-id="{{ layer.id }}" data-geojson=
@@ -181,7 +237,7 @@
       button.toggleClass("visible")
 
       // check if any layers are visible to determine is clear map button should be visible
-      var layersVisible = $("#map-control .toggle-layer.visible").length
+      var layersVisible = $(".toggle-layer.visible").length
 
       if (layersVisible == 0) {
         $(".clear-map.button").hide()
@@ -191,11 +247,49 @@
     })
 
     // toggle visibility of menu
-    $("#map-control .card-header").click(function() {
+    $(".card-header").click(function() {
       $(this).next(".list-group").slideToggle("fast");
       $(this).toggleClass("collapsed");
       $("i.angle", this).toggleClass("fa-angle-down fa-angle-up");
     })
+
+    // DOWNLOAD MAP AS IMAGE START
+    // function to convert canvas data to png and simulate click on download button
+    function downloadImage(err, canvas) {
+      var downloadLink = document.createElement("a");
+      downloadLink.href = canvas.toDataURL("image/png");
+      downloadLink.download = "map.png";
+      downloadLink.click();
+    }
+
+    // define the download button's details
+    L.Control.Download = L.Control.extend({
+      onAdd: function(map) {
+
+        var downloadButtonWrapper = L.DomUtil.create("div", "download-map-wrapper");
+
+        var downloadButton = L.DomUtil.create("div", "download-map");
+        downloadButton.innerHTML = "<i class='fal fa-fw fa-save'></i>";
+
+        downloadButtonWrapper.appendChild(downloadButton);
+
+        return downloadButtonWrapper;
+      }
+    });
+
+    // create a new leaflet control and apply download button details
+    L.control.Download = function(opts) {
+      return new L.Control.Download(opts);
+    }
+
+    // add download button to the map
+    L.control.Download({ position: "topleft" }).addTo(map);
+
+    // run function when clicking the button
+    $(".download-map").click(function() {
+      leafletImage(map, downloadImage);
+    })
+    // DOWNLOAD MAP END
 
     // function to clear the map of markers, but not tiles
     function clearMap() {
@@ -207,7 +301,7 @@
       });
 
       // remove visible states from all
-      $("#map-control .toggle-layer").removeClass("visible")
+      $(".toggle-layer").removeClass("visible")
 
       // hide clear map button because it's not needed until layers are added again
       $(".clear-map.button").hide()
@@ -232,5 +326,4 @@
       clearMap()
     });
   </script>
-  {% endif %}
 {% endblock %}
