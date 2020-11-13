@@ -25,6 +25,10 @@
       border-radius: .25rem;
     }
 
+    .layer-toggles .category:not(:first-of-type) {
+      border-top: 1px solid #ccc;
+    }
+
     .layer-toggles .category-title {
       line-height: 14px;
       background-color: #efefef;
@@ -34,11 +38,13 @@
     }
 
     .layer-toggles .category:first-of-type .category-title {
-      border-radius: .25rem .25rem 0 0;
+      border-top-left-radius: .25rem;
+      border-top-right-radius: .25rem;
     }
 
     .layer-toggles .category:last-of-type .category-title.collapsed {
-      border-radius: .25rem;
+      border-bottom-left-radius: .25rem;
+      border-bottom-right-radius: .25rem;
     }
 
     .layer-toggles .toggle-layer {
@@ -47,7 +53,7 @@
       width: 250px;
       padding: .5rem;
       line-height: 14px;
-      border-top: 1px solid rgba(0,0,0,0.2);
+      border-top: 1px solid #ccc;
     }
 
     .layer-toggles .category:last-of-type .toggle-layer:last-of-type {
@@ -61,6 +67,10 @@
     .layer-toggles .fa-ul {
       margin-left: 19px;
       margin-bottom: 0;
+    }
+
+    .category-buttons {
+      display: none;
     }
   </style>
 {% endblock %}
@@ -193,7 +203,7 @@
 
           {% for each in parents %}
             var layerCategory_{{ each.id }} = L.DomUtil.create("div", "category");
-            layerCategory_{{ each.id }}.innerHTML = "<div class='category-title'><i class='fal fa-fw fa-{{ each.icon }}'></i> {{ each.get_name_after_period }} <i class='fas fa-fw fa-angle-down angle float-right'></i></div>";
+            layerCategory_{{ each.id }}.innerHTML = "<div class='category-title collapsed'><i class='fal fa-fw fa-{{ each.icon }}'></i> {{ each.get_name_after_period }} <i class='fas fa-fw fa-angle-down angle float-right'></i></div>";
             layerTogglesWrapper.appendChild(layerCategory_{{ each.id }});
 
             var categoryButtons_{{ each.id }} = L.DomUtil.create("div", "category-buttons");
@@ -351,6 +361,7 @@
     });
 
     // open default layer that should be shown from the start
+    $(".toggle-layer[data-id='33877']").parent().prev(".category-title").click();
     $(".toggle-layer[data-id='33877']").click();
   </script>
   {% endif %}
