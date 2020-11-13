@@ -31,6 +31,31 @@
           </div>
         </a>
       </div>
+      {% if DEBUG %}
+      <div class="col-md-6 mb-4">
+        <a href="geospreadsheet/" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-list" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>Geospatial spreadsheet queue</strong>
+                <br>
+                <small>Convert spreadsheets with coordinate data into reference spaces</small>
+                <br>
+                <span class="badge badge-light">
+                  {{ gis }} task{% if datasets != 1 %}s{% endif %}
+                </span>
+                <span class="badge badge-primary">
+                  {{ gis_open }} unassigned
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endif %}
       <div class="col-md-6 mb-4">
         <a href="boundaries/" class="card btn-card">
           <div class="card-body">

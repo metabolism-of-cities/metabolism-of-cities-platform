@@ -41,7 +41,7 @@
           {% if document.is_deleted %}
             This document was deleted.
           {% else %}
-            Unable to read shapefile
+            Unable to read file
           {% endif %}
           </h2>
           <div class="mt-4">
@@ -55,73 +55,121 @@
         </div>
       {% else %}
 
-      {% if document.get_shapefile_plot %}
-        <div class="rounded border bg-white text-center mb-4">
-          <img class="img-fluid rounded" src="{{ document.get_shapefile_plot }}" alt="" />
-        </div>
-      {% else %}
-        <p><em>There is no preview plot available.</em></p>
-        {% if document.meta_data.shapefile_plot_error %}
-          <div class="alert alert-danger"><strong>Error:</strong><br>{{ document.meta_data.shapefile_plot_error }}</div>
-        {% endif %}
-      {% endif %}
+        {% if geospreadsheet %}
+          <div class="card card-table mb-4">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th>Property</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if request.user.is_superuser and DEBUG and False %}
+                  <tr>
+                    <td>UUID</td>
+                    <td>{{ document.meta_data.uuid }}</td>
+                  </tr>
+                {% endif %}
+                <tr>
+                  <td>Document name</td>
+                  <td><a href="{% url URLS.LIBRARY_ITEM document.id %}">{{ document }}</a></td>
+                </tr>
+                <tr>
+                  <td>File name</td>
+                  <td><a href="{{ spreadsheet.file.file.url }}">{{ spreadsheet.file }}</a></td>
+                </tr>
+                <tr>
+                  <td>Extension</td>
+                  <td>.{{ spreadsheet.extension }}</td>
+                </tr>
+                <tr>
+                  <td>Document type</td>
+                  <td>{{ spreadsheet.type }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-      <div class="card card-table mb-4">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Feature</th>
-              <th>Property</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% if request.user.is_superuser and DEBUG and False %}
-              <tr>
-                <td>UUID</td>
-                <td>{{ document.meta_data.uuid }}</td>
-              </tr>
+          {% if spreadsheet.df %}
+            <section id="contentsection">
+              <h3>Spreadsheet content</h3>
+              {{ spreadsheet.df }}
+            </section>
+          {% endif %}
+
+        {% else %}
+
+          {% if document.get_shapefile_plot %}
+            <div class="rounded border bg-white text-center mb-4">
+              <img class="img-fluid rounded" src="{{ document.get_shapefile_plot }}" alt="" />
+            </div>
+          {% else %}
+            <p><em>There is no preview plot available.</em></p>
+            {% if document.meta_data.shapefile_plot_error %}
+              <div class="alert alert-danger"><strong>Error:</strong><br>{{ document.meta_data.shapefile_plot_error }}</div>
             {% endif %}
-            <tr>
-              <td>Document name</td>
-              <td><a href="{% url URLS.LIBRARY_ITEM document.id %}">{{ document }}</a></td>
-            </tr>
-            <tr>
-              <td>Layer name</td>
-              <td>{{ layer.name }}</td>
-            </tr>
-            <tr>
-              <td>Coordinate reference system</td>
-              <td>{{ layer.srs.DATUM }}</td>
-            </tr>
-            <tr>
-              <td>PROJCS</td>
-              <td>{{ layer.srs.PROJCS }}</td>
-            </tr>
-            <tr>
-              <td>AUTHORITY</td>
-              <td>{{ layer.srs.AUTHORITY }}</td>
-            </tr>
-            <tr>
-              <td>SPHEROID</td>
-              <td>{{ layer.srs.SPHEROID }}</td>
-            </tr>
-            <tr>
-              <td>UNIT</td>
-              <td>{{ layer.srs.UNIT }}</td>
-            </tr>
-            {% if active_geocodes %}
-              <tr>
-                <td>Geocode(s)</td>
-                <td>
-                  {% for geocode in active_geocodes %}
-                  {{ geocode.scheme }} <i class="fal fa-angle-right mx-2"></i> {{ geocode }}
-                  {% endfor %}
-                </td>
-              </tr>
-            {% endif %}
-          </tbody>
-        </table>
-      </div>
+          {% endif %}
+
+          <div class="card card-table mb-4">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th>Property</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if request.user.is_superuser and DEBUG and False %}
+                  <tr>
+                    <td>UUID</td>
+                    <td>{{ document.meta_data.uuid }}</td>
+                  </tr>
+                {% endif %}
+                <tr>
+                  <td>Document name</td>
+                  <td><a href="{% url URLS.LIBRARY_ITEM document.id %}">{{ document }}</a></td>
+                </tr>
+                <tr>
+                  <td>Layer name</td>
+                  <td>{{ layer.name }}</td>
+                </tr>
+                <tr>
+                  <td>Coordinate reference system</td>
+                  <td>{{ layer.srs.DATUM }}</td>
+                </tr>
+                <tr>
+                  <td>PROJCS</td>
+                  <td>{{ layer.srs.PROJCS }}</td>
+                </tr>
+                <tr>
+                  <td>AUTHORITY</td>
+                  <td>{{ layer.srs.AUTHORITY }}</td>
+                </tr>
+                <tr>
+                  <td>SPHEROID</td>
+                  <td>{{ layer.srs.SPHEROID }}</td>
+                </tr>
+                <tr>
+                  <td>UNIT</td>
+                  <td>{{ layer.srs.UNIT }}</td>
+                </tr>
+                {% if active_geocodes %}
+                  <tr>
+                    <td>Geocode(s)</td>
+                    <td>
+                      {% for geocode in active_geocodes %}
+                      {{ geocode.scheme }} <i class="fal fa-angle-right mx-2"></i> {{ geocode }}
+                      {% endfor %}
+                    </td>
+                  </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+
+        {% endif %}
+
       {% endif %}
 
       {% if document.comments and not document.is_deleted %}
@@ -135,7 +183,7 @@
         </div>
       {% endif %}
 
-      {% if not error %}
+      {% if not error and not geospreadsheet %}
 
         {{ my_html|safe }}
 
@@ -158,7 +206,7 @@
     {% endif %}
   </section>
 
-  {% if not error %}
+  {% if not error and not geospreadsheet %}
     <section id="contentsection">
       <h3>Shapefile content</h3>
       {% if layer.num_feat > 100 %}
@@ -219,6 +267,7 @@
 
     // fix horizontal scrolling datatable
     $(".datatable.datatable-card").parent().addClass("overflow-auto");
+    $(".spreadsheet-table").parent().addClass("overflow-auto");
 
     // two buttons, one to cancel, the other to confirm the action
     // note the dangerMode setting; set this to true to make the confirmation button red rather than the default colour

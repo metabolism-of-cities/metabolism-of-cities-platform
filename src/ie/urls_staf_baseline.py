@@ -67,6 +67,7 @@ baseline_staf_urlpatterns = [
     path("hub/processing/", staf.hub_processing, name="hub_processing"),
     path("hub/processing/boundaries/", staf.hub_processing_boundaries, name="hub_processing_boundaries"),
     path("hub/processing/<slug:type>/", staf.hub_processing_list, name="hub_processing_list"),
+    path("hub/processing/geospreadsheet/<int:id>/", staf.hub_processing_gis, { "geospreadsheet": True }, name="hub_processing_geospreadsheet"),
     path("hub/processing/gis/<int:id>/", staf.hub_processing_gis, name="hub_processing_gis"),
     path("hub/processing/gis/<int:id>/classify/", staf.hub_processing_gis_classify, name="hub_processing_gis_classify"),
     path("hub/processing/gis/<int:id>/save/", staf.hub_processing_gis_save, name="hub_processing_gis_save"),

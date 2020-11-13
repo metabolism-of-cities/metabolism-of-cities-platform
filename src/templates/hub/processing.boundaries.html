@@ -59,6 +59,7 @@
       <thead>
         <tr>
           <th>Name</th>
+          <th>Existing boundaries?</th>
           <th>Options</th>
         </tr>
       </thead>
@@ -66,6 +67,11 @@
       {% for each in spaces %}
         <tr>
           <td>{{ each.space }}</td>
+          <td>
+            {% if each.space.geometry %}
+              <i class="fa fa-check"></i>
+            {% endif %}
+          </td>
           <td><a class="btn btn-info" href="{% url processing_url each.space.slug %}">Select <i class="fa fa-arrow-right"></i></a></td>
         </tr>
       {% endfor %}

@@ -32,6 +32,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 import numpy as np
 import pandas as pd
 import geopandas
+from django.utils.safestring import mark_safe
 
 THIS_PROJECT = PROJECT_ID["staf"]
 
@@ -1102,6 +1103,12 @@ def hub_processing_list(request, space=None, type=None):
         unassigned = list.exclude(meta_data__assigned_to__isnull=False).count()
         processed = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct().count()
 
+    elif type == "geospreadsheet":
+        title = "Geospatial spreadsheets"
+        list = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        unassigned = list.exclude(meta_data__assigned_to__isnull=False).count()
+        processed = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct().count()
+
     elif type == "datasets":
         list = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=30)
         title = "Stocks and flows data processing"
@@ -1343,7 +1350,7 @@ def hub_processing_dataset(request, id, classify=False, space=None):
     else:
         return render(request, "hub/processing.dataset.html", context)
 
-def hub_processing_gis(request, id, classify=False, space=None):
+def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=False):
 
     document = get_object_or_404(LibraryItem, pk=id)
     project = get_object_or_404(Project, pk=request.project)
@@ -1361,7 +1368,8 @@ def hub_processing_gis(request, id, classify=False, space=None):
         space = get_space(request, space)
 
     try:
-        work = Work.objects.filter(part_of_project_id=request.project, workactivity_id=2, related_to=document)
+        work_id = 14 if geospreadsheet else 2
+        work = Work.objects.filter(part_of_project_id=request.project, workactivity_id=work_id, related_to=document)
         work = work[0]
     except Exception as e:
         work = None
@@ -1472,15 +1480,49 @@ def hub_processing_gis(request, id, classify=False, space=None):
     size = None
     geocode = None
 
-    layer = document.get_gis_layer()
-    if not layer:
-        error = True
-        messages.error(request, "No shapefile was found. Make sure a .shp file is included in the uploaded files.")
-
-    try:
-        active_geocodes = Geocode.objects.filter(pk__in=document.meta_data["geocodes"])
-    except:
-        active_geocodes = None
+    if geospreadsheet:
+        spreadsheet = {}
+        options = {
+            "xls": "Excel spreadsheet",
+            "xlsx": "Excel spreadsheet",
+            "csv": "Comma separated file",
+            "ods": "OpenDocument Spreadsheet Document",
+        }
+        doc = document.attachments.count()
+        if doc == 0:
+            error = True
+            messages.error(request, "No file was found. Make sure a spreadsheet file (CSV, ODS, XLS, XLSX) is uploaded.")
+        elif doc == 1:
+            doc = document.attachments.all()[0]
+        else:
+            doc = documents.attachments.filter(name__icontains=".processed.")
+            if doc.count() == 1:
+                doc = doc[0]
+            else:
+                error = True
+                messages.error(request, "Multiple files were found. Please upload ONE file that contains '.processed' in the name (example.processed.xls) so that we know which file to work with")
+        if doc:
+            spreadsheet["file"] = doc
+            extension = doc.name
+            extension = extension.split(".")
+            extension = extension[-1].lower()
+            spreadsheet["extension"] = extension
+            if extension in options:
+                spreadsheet["type"] = options[extension]
+                try:
+                    spreadsheet["df"] = mark_safe(pd.read_excel(doc.file.file).to_html(classes="table table-striped spreadsheet-table"))
+                except Exception as e:
+                    error = True
+                    messages.error(request, "We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
+            else:
+                error = True
+                spreadsheet["type"] = "Unrecognised format"
+                messages.error(request, "This file is invalid. Make sure a spreadsheet file (CSV, ODS, XLS, XLSX) is uploaded.")
+    else:
+        layer = document.get_gis_layer()
+        if not layer:
+            error = True
+            messages.error(request, "No shapefile was found. Make sure a .shp file is included in the uploaded files.")
 
     context = {
         "document": document,
@@ -1499,13 +1541,14 @@ def hub_processing_gis(request, id, classify=False, space=None):
         "hide_space_menu": True,
         "load_select2": True,
         "geocodes": Geocode.objects.all(),
-        "active_geocodes": active_geocodes,
         "list_messages": work.messages.all() if work else None,
         "load_messaging": True,
         "forum_id": work.id if work else None,
         "step": 1,
         "curator": curator,
         "load_sweetalerts": True,
+        "geospreadsheet": geospreadsheet,
+        "spreadsheet": spreadsheet,
     }
 
     return render(request, "hub/processing.gis.html", context)
