@@ -11,6 +11,9 @@
             <div class="card-body">
               <h5 class="card-title">{{ each }}</h5>
               <h6 class="card-subtitle mb-2 text-muted">{{ each.get_author_citation }}</h6>
+              {% if each.meta_data.processed %}
+                <p class="text-success"><i class="fa fa-check"></i> Shapefile was processed</p>
+              {% endif %}
             </div>
           </a>
         </div>

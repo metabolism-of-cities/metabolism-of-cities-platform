@@ -8,15 +8,15 @@
 
 <div class="row">
   <div class="col-lg-8">
-    <ul class="list-group list-group-horizontal mb-4" hidden>
+    <ul class="list-group list-group-horizontal mb-4">
       <li class="list-group-item">
-        <span class="statistic">{{ list.count }}</span> pending uploads
+        <span class="statistic">{{ list.count }}</span> pending files
       </li>
       <li class="list-group-item">
-        <span class="statistic">33</span> uploads this month
+        <span class="statistic">{{ unassigned }}</span> unassigned files
       </li>
       <li class="list-group-item">
-        <span class="statistic">3432</span> uploads all-time
+        <span class="statistic">{{ processed }}</span> files processed
       </li>
     </ul>
 

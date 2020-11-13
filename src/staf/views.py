@@ -1082,9 +1082,13 @@ def hub_processing(request, space=None):
 
 def hub_processing_list(request, space=None, type=None):
 
+    processed = None
+    unassigned = None
     if type == "gis":
         title = "GIS data processing"
         list = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        unassigned = list.exclude(meta_data__assigned_to__isnull=False).count()
+        processed = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct().count()
 
     elif type == "datasets":
         list = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=30)
@@ -1110,6 +1114,8 @@ def hub_processing_list(request, space=None, type=None):
         "title": title,
         "hide_space_menu": True,
         "load_datatables": True,
+        "processed": processed,
+        "unassigned": unassigned,
     }
     return render(request, "hub/processing.list.html", context)
 
