@@ -121,6 +121,7 @@ def list(request, type):
     elif type == "stock":
         list = LibraryItem.objects.filter(tags__id=135)
         title = "Material stock publications"
+        webpage = Webpage.objects.get(pk=334007)
     context = {
         "items": list,
         "type": type,
