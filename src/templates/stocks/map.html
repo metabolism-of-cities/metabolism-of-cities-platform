@@ -76,6 +76,11 @@
       overflow-y: auto;
     }
 
+    .compact-table tr:first-of-type th,
+    .compact-table tr:first-of-type td {
+      border-top: none;
+    }
+
     .compact-table tr.selected {
       background-color: gold;
     }
@@ -122,8 +127,8 @@
           </div>
         </div>
 
-        <div class="compact-table-wrapper">
-          <table class="table compact-table table-sm">
+        <div class="compact-table-wrapper border rounded">
+          <table class="table compact-table table-sm mb-0">
             {% for each in data.features %}
             <tr data-space="{{ each.id }}">
               <th>{{ each.properties.space_name }}</th>
