@@ -116,7 +116,7 @@
   <!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
   <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
 
-  {% if space.geometry %}
+  {% if space.geometry and space.meta_data.boundaries_origin %}
   <script>
     // create leaflet map - https://leafletjs.com/reference-1.6.0.html
     var map = L.map("map", {
@@ -189,7 +189,7 @@
           $(".toggle-layer[data-id='" + id + "'] i").toggleClass("fa-circle fa-sync fa-spin fal fas")
           map.addLayer(window[layerVariable]);
 
-          if (id == "33877") {
+          if (id == "{{ boundaries.source.id }}") {
             map.fitBounds(window[layerVariable].getBounds());
           }
         })
@@ -213,7 +213,7 @@
               var toggle_{{ layer.id }}_layer = L.DomUtil.create("div", "toggle-layer");
 
               toggle_{{ layer.id }}_layer.setAttribute("data-id", "{{ layer.id }}");
-              toggle_{{ layer.id }}_layer.setAttribute("data-geojson", "{% url URLS.GEOJSON layer.id %}");
+              toggle_{{ layer.id }}_layer.setAttribute("data-geojson", "{% url URLS.GEOJSON layer.id %}{% if layer == boundaries.source %}?space={{ boundaries.id }}{% endif %}");
               toggle_{{ layer.id }}_layer.setAttribute("data-color", "{{ getcolors|get_item:layer.id }}");
 
               toggle_{{ layer.id }}_layer.innerHTML = "<ul class='fa-ul'><li><span class='fa-li'><i class='fal fa-fw fa-circle' style='color: {{ getcolors|get_item:layer.id }}'></i></span>{{ layer.meta_data.shortname|default:layer }}</li></ul>";
@@ -361,8 +361,8 @@
     });
 
     // open default layer that should be shown from the start
-    $(".toggle-layer[data-id='33877']").parent().prev(".category-title").click();
-    $(".toggle-layer[data-id='33877']").click();
+    $(".toggle-layer[data-id='{{ boundaries.source.id }}']").parent().prev(".category-title").click();
+    $(".toggle-layer[data-id='{{ boundaries.source.id }}']").click();
   </script>
   {% endif %}
 {% endblock %}

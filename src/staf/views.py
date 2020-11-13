@@ -237,6 +237,11 @@ def space_map(request, space):
                     getcolor[each.id] = "yellow"
                 i += 1
 
+    try:
+        boundaries = get_object_or_404(ReferenceSpace, pk=space.meta_data["boundaries_origin"])
+    except:
+        boundaries = None
+
     context = {
         "space": space,
         "parents": parents,
@@ -244,6 +249,7 @@ def space_map(request, space):
         "data": data,
         "getcolors": getcolor,
         "processing_url": project.slug + ":hub_processing_boundaries",
+        "boundaries": boundaries,
     }
     return render(request, "staf/space.map.html", context)
 
@@ -251,13 +257,15 @@ def geojson(request, id):
     info = LibraryItem.objects.get(pk=id)
     features = []
     project = get_project(request)
-    for each in info.imported_spaces.all():
+    spaces = info.imported_spaces.all()
+    if "space" in request.GET:
+        spaces = spaces.filter(id=request.GET["space"])
+    for each in spaces:
         if each.geometry:
             url = reverse(project.slug + ":referencespace", args=[each.id])
             features.append({
                 "type": "Feature",
                 "id": each.id,
-                "link": "https://google.com",
                 "properties": {
                     "space_name": each.name,
                     "content": "<a href='" + url + "'>View details</a>",
