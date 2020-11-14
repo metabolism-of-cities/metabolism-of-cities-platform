@@ -24,6 +24,9 @@ from django.utils.safestring import mark_safe
 # To get the geometry fields
 from django.contrib.gis.db import models
 
+# To record the points for gps spreadsheets
+from django.contrib.gis.geos import Point
+
 # To be able to set an UUID
 import uuid
 
@@ -1103,45 +1106,106 @@ class LibraryItem(Record):
     def convert_shapefile(self):
 
         check = ReferenceSpace.objects.filter(source=self)
+        error = False
+
+        # Yeah we soon need to do more thorough checks for this!
         if check:
             check.delete()
 
-        layer = self.get_gis_layer()
-        fields = layer.fields
+        if self.type.id == 40: # Type = shapefile
 
-        count = 0
-        for each in layer:
-            count += 1
-            meta_data = {}
-            
-            # We'll get all the properties and we store this in the meta data of the new object
-            for f in fields:
-                # We can't save datetime objects in json, so if it's a datetime then we convert to string
-                meta_data[f] = str(each.get(f)) if isinstance(each.get(f), datetime.date) else each.get(f)
+            layer = self.get_gis_layer()
+            fields = layer.fields
 
-            name = str(each.get(self.meta_data["columns"]["name"]))
-            geo = each.geom
+            count = 0
+            for each in layer:
+                count += 1
+                meta_data = {}
+                
+                # We'll get all the properties and we store this in the meta data of the new object
+                for f in fields:
+                    # We can't save datetime objects in json, so if it's a datetime then we convert to string
+                    meta_data[f] = str(each.get(f)) if isinstance(each.get(f), datetime.date) else each.get(f)
 
-            # We use WGS 84 (4326) as coordinate reference system, so we gotta convert to that
-            # if it uses something else
-            debug_old = geo.wkt
-            if layer.srs.srid != 4326:
-                ct = CoordTransform(layer.srs, SpatialReference("WGS84"))
-                geo.transform(ct)
-            geo = geo.wkt
-            debug_new = geo
+                name = str(each.get(self.meta_data["columns"]["name"]))
+                geo = each.geom
 
-            space = ReferenceSpace.objects.create(
-                name = name,
-                geometry = geo,
-                source = self,
-                meta_data = {"features": meta_data},
-            )
+                # We use WGS 84 (4326) as coordinate reference system, so we gotta convert to that
+                # if it uses something else
+                debug_old = geo.wkt
+                if layer.srs.srid != 4326:
+                    ct = CoordTransform(layer.srs, SpatialReference("WGS84"))
+                    geo.transform(ct)
+                geo = geo.wkt
+                debug_new = geo
 
-        self.meta_data["processed"] = True
+                space = ReferenceSpace.objects.create(
+                    name = name,
+                    geometry = geo,
+                    source = self,
+                    meta_data = {"features": meta_data},
+                )
 
-        self.meta_data["debug_old"] = debug_old
-        self.meta_data["debug_new"] = debug_new
+            self.meta_data["debug_old"] = debug_old
+            self.meta_data["debug_new"] = debug_new
+
+        elif self.type.id == 41: # Type = GPS coordinate spreadsheet
+
+            spreadsheet = self.get_spreadsheet()
+            df = spreadsheet["df"]
+            rows = len(df.index)-1
+
+            cols = self.meta_data.get("columns")
+
+            # We need to retrieve the settings for each column to figure out which is lat, lng, description, etc
+            count = 0
+            field_match = {}
+            for each in df.columns:
+                try:
+                    field_match[each] = cols[count]
+                except:
+                    error = "We are unable to match all columns - please ensure they have all been properly matched"
+                count += 1
+
+            if "Name" not in cols or "Latitude" not in cols or "Longitude" not in cols:
+                error = "Not all required fields are matched (Name, Latitude, Longitude)"
+            elif rows > 1000:
+                # We don't process files with more than a 1000 items
+                error = "More than 1,000 items - we can not import spreadsheets of this size."
+            else:
+                for i, row in df.iterrows():
+                    this_row = {}
+                    # This CERTAINLY needs to be rewritten, I read everywhere that this looping is not ideal
+                    # But I'm not sure how, so TODO
+                    for column_name, content in row.iteritems():
+                        meta_data = {}
+                        this_field = field_match[column_name]
+                        this_row[column_name] = content
+                        if this_field == "Name":
+                            name = content
+                        elif this_field == "Latitude":
+                            lat = content
+                        elif this_field == "Longitude":
+                            lng = content
+                        else:
+                            meta_data[column_name] = content
+
+                    try:
+                        geo = Point(lng, lat)
+                    except:
+                        geo = None
+
+                    space = ReferenceSpace.objects.create(
+                        name = name,
+                        geometry = geo,
+                        source = self,
+                        meta_data = {"features": meta_data} if len(meta_data) else None,
+                    )
+        if error:
+            self.meta_data["processing_error"] = error
+        else:
+            self.meta_data["processed"] = True
+
         self.save()
 
         return True

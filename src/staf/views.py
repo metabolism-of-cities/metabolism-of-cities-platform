@@ -538,7 +538,7 @@ def referencespace(request, id=None, space=None, slug=None):
         inside_the_space = ReferenceSpace.objects.filter(geometry__contained=this_location).order_by("name").prefetch_related("geocodes").exclude(pk=id)
     context = {
         "info": info,
-        "inside_the_space": inside_the_space[:200] if inside_the_space.count() > 200 else inside_the_space,
+        "inside_the_space": inside_the_space[:200] if inside_the_space and inside_the_space.count() > 200 else inside_the_space,
         "load_datatables": True,
         "title": info.name,
     }
@@ -1487,9 +1487,9 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
     layer = None
     size = None
     geocode = None
+    spreadsheet = {}
 
     if geospreadsheet:
-        spreadsheet = {}
         get_file = document.get_spreadsheet()
         doc = get_file["file"]
         if get_file["error"]:
@@ -1500,6 +1500,7 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
             spreadsheet["type"] = get_file["file_type"]
             spreadsheet["extension"] = get_file["extension"]
             df = get_file["df"]
+            df = df.replace(np.NaN, "")
             spreadsheet["rowcount"] = len(df.index)-1 # Remove header row
             spreadsheet["colcount"] = len(df.columns)
             spreadsheet["table"] = mark_safe(df.to_html(classes="table table-striped spreadsheet-table"))
@@ -1642,13 +1643,14 @@ def hub_processing_geospreadsheet_classify(request, id, space=None):
     get_file = document.get_spreadsheet()
     df = None
     labels = {}
-    unidentified_columns = ["Name", "Latitude", "Longitude", "Description (optional)"]
+    unidentified_columns = ["Name", "Latitude", "Longitude", "Description"]
     rows = []
 
     if get_file["error"]:
         messages.error(request, get_file["error_message"])
     else:
         df = get_file["df"]
+        df = df.replace(np.NaN, "")
         c = list(df.columns)
         for each in c:
             # Here we check the see if the column matches the names of the columns that we need. If so,
@@ -1669,12 +1671,6 @@ def hub_processing_geospreadsheet_classify(request, id, space=None):
             count += 1
             this_row = {}
             for column_name, content in row.iteritems():
-                # We don't want 'nan' printed in the table, we just want an empty field
-                try:
-                    if np.isnan(content):
-                        content = ""
-                except:
-                    pass
                 this_row[column_name] = content
             rows.append(this_row)
             if count == 5:

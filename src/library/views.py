@@ -299,10 +299,11 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         )
 
         for each in spaces:
-            folium.GeoJson(
-                each.geometry.geojson,
-                name="geojson"
-            ).add_to(map)
+            if each.geometry:
+                folium.GeoJson(
+                    each.geometry.geojson,
+                    name="geojson"
+                ).add_to(map)
 
     context = {
         "info": info,
