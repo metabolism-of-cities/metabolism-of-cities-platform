@@ -1132,7 +1132,7 @@ def hub_processing_list(request, space=None, type=None):
     if space:
         space = get_space(request, space)
         title += " | " + space.name
-        list = list.filter(related_to__spaces=space)
+        list = list.filter(spaces=space)
 
     context = {
         "list": list,
