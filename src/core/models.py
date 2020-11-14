@@ -46,6 +46,8 @@ import datetime
 # To add a timestamp if needed to duplicated slugs
 import time
 
+import pandas as pd
+
 # To create the sample shapefile images
 import geopandas
 import contextily as ctx
@@ -1184,6 +1186,64 @@ class LibraryItem(Record):
             return datasource[0]
         except:
             return None
+
+    def get_spreadsheet(self):
+        # We use this to retrieve the attached spreadsheet, if there is one.
+        # We return some general info (file type, the file object), and a pandas data frame
+
+        doc = self.attachments.count()
+
+        error = False
+        error_message = None
+        df = None
+        extension = None
+        file_type = None
+
+        if doc == 0:
+            error = True
+            error_message = "No file was found. Make sure a spreadsheet file (CSV, ODS, XLS, XLSX) is uploaded."
+        elif doc == 1:
+            doc = self.attachments.all()[0]
+        else:
+            doc = self.attachments.filter(name__icontains=".processed.")
+            if doc.count() == 1:
+                doc = doc[0]
+            else:
+                error = True
+                error_message = "Multiple files were found. Please upload ONE file that contains '.processed' in the name (example.processed.xls) so that we know which file to work with"
+        if doc:
+            extension = doc.name
+            extension = extension.split(".")
+            extension = extension[-1].lower()
+
+            options = {
+                "xls": "Excel spreadsheet",
+                "xlsx": "Excel spreadsheet",
+                "csv": "Comma separated file",
+                "ods": "OpenDocument Spreadsheet Document",
+            }
+
+            if extension in options:
+                file_type = options[extension]
+                try:
+                    df = pd.read_excel(doc.file.file)
+                except Exception as e:
+                    error = True
+                    error_message = mark_safe("We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
+            else:
+                error = True
+                doc = None
+                file_type = "Unrecognised format"
+                error_message = "This file is invalid. Make sure a spreadsheet file (CSV, ODS, XLS, XLSX) is uploaded."
+
+        return {
+            "file": doc,
+            "file_type": file_type,
+            "df": df,
+            "error": error,
+            "error_message": error_message,
+            "extension": extension,
+        }
 
     def get_color(self):
         import random

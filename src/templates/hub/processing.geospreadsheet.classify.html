@@ -1,0 +1,135 @@
+{% extends "_base.html" %}
+{% load moc_extras %}
+{% block page_name %}staf verify{% endblock %}
+
+{% block content %}
+
+{% include "hub/_nav.html" %}
+
+  <div class="alert alert-warning">
+      <i class="fal fa-exclamation-triangle mr-1"></i>
+      You have <strong id="unidentified-columns-count"></strong> column(s) left to identify
+  </div>
+
+  <form method="post">
+    
+    {% csrf_token %}
+
+    <div class="card card-table">
+      <table class="table" id="data">
+        <thead>
+          <tr>
+            {% for each in df.columns %}
+              <th>{{ each }}</th>
+            {% endfor %}
+          </tr>
+          <tr>
+            {% for each in df.columns %}
+              <th>
+                {% if labels|get_item:each %}
+                  <select name="column" class="form-control is-valid custom-select" disabled>
+                    {% if labels|get_item:each == each %}
+                      <option value="{{ labels|get_item:each }}" selected>{{ each }}</option>
+                    {% else %}
+                      <option value="{{ labels|get_item:each }}" selected>{{ labels|get_item:each }}</option>
+                    {% endif %}
+                  </select>
+                  <input type="hidden" name="column" value="{{ labels|get_item:each }}" />
+                {% else %}
+                  <div>
+                    <select required class="form-control custom-select is-invalid unidentified-column">
+                      <option value="none" selected disabled>Select an option</option>
+                      {% for each in unidentified_columns %}
+                        <option value="{{ each }}">{{ each }}</option>
+                      {% endfor %}
+                    </select>
+                    <input type="hidden" name="column" value="" />
+                  </div>
+                {% endif %}
+              </th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+        {% for each in rows %}
+          <tr>
+            {% for col in df.columns %}
+              <td>
+                {% if each|get_item:col != nan %}{{ each|get_item:col }}{% endif %}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-4 mb-5">
+      <a href="../" class="btn btn-danger">
+        <i class="fas fa-fw fa-arrow-left mr-1"></i> Go back
+      </a>
+      {% if not error %}
+      <button class="btn btn-success disabled looks-good" type="submit" name="next" value="true">
+        All good, next <i class="fas fa-fw fa-arrow-right mr-0 ml-1"></i>
+      </button>
+      {% endif %}
+    </div>
+
+  </form>
+
+{% endblock %}
+
+{% block footer %}
+
+  <script>
+    // checking how many columns need a type
+    function checkColumns() {
+      let unidentifiedCount = $("#data .is-invalid").length;
+
+      $("#unidentified-columns-count").text(unidentifiedCount)
+
+      if (unidentifiedCount == 0) {
+        let alert = $(".alert-warning");
+
+        alert
+          .addClass("alert-success")
+          .removeClass("alert-warning")
+          .html("<i class='fal fa-check-circle mr-1'></i> All columns are identified, you can continue to the next step")
+
+        $(".btn.looks-good").removeClass("disabled");
+      }
+    }
+
+    // what happens when a column is identified
+    $("select.unidentified-column").change(function() {
+      $(this).removeClass("is-invalid");
+      $(this).addClass("is-valid");
+
+      checkColumns()
+
+      // check all select values to prevent duplicates
+      $("select.unidentified-column option").removeAttr("disabled")
+      $("select.unidentified-column option[value='none']").attr("disabled", "disabled")
+      
+      // We mark the <select> field as disabled by giving it a 'disabled' attribute 
+      // That means the value will NOT be sent to the server, so we copy it into a hidden input
+      input_field = $(this).siblings("input");
+      input_field.val($(this).val());
+
+      $("select.unidentified-column").each(function() {
+        let columnValue = $(this).val();
+
+        if (columnValue) {
+          // We can have the OTHER FIELD options selected multiple times
+          if (columnValue != "Other field - import" && columnValue != "Other field - discard") {
+            $("select.unidentified-column option[value='" + columnValue + "']").attr("disabled", "disabled")
+          }
+        }
+      })
+    })
+
+    // check unidentified columns on page load
+    checkColumns();
+
+  </script>
+{% endblock %}

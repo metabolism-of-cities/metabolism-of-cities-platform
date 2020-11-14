@@ -1490,42 +1490,19 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
 
     if geospreadsheet:
         spreadsheet = {}
-        options = {
-            "xls": "Excel spreadsheet",
-            "xlsx": "Excel spreadsheet",
-            "csv": "Comma separated file",
-            "ods": "OpenDocument Spreadsheet Document",
-        }
-        doc = document.attachments.count()
-        if doc == 0:
+        get_file = document.get_spreadsheet()
+        doc = get_file["file"]
+        if get_file["error"]:
             error = True
-            messages.error(request, "No file was found. Make sure a spreadsheet file (CSV, ODS, XLS, XLSX) is uploaded.")
-        elif doc == 1:
-            doc = document.attachments.all()[0]
+            messages.error(request, get_file["error_message"])
         else:
-            doc = documents.attachments.filter(name__icontains=".processed.")
-            if doc.count() == 1:
-                doc = doc[0]
-            else:
-                error = True
-                messages.error(request, "Multiple files were found. Please upload ONE file that contains '.processed' in the name (example.processed.xls) so that we know which file to work with")
-        if doc:
             spreadsheet["file"] = doc
-            extension = doc.name
-            extension = extension.split(".")
-            extension = extension[-1].lower()
-            spreadsheet["extension"] = extension
-            if extension in options:
-                spreadsheet["type"] = options[extension]
-                try:
-                    spreadsheet["df"] = mark_safe(pd.read_excel(doc.file.file).to_html(classes="table table-striped spreadsheet-table"))
-                except Exception as e:
-                    error = True
-                    messages.error(request, "We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
-            else:
-                error = True
-                spreadsheet["type"] = "Unrecognised format"
-                messages.error(request, "This file is invalid. Make sure a spreadsheet file (CSV, ODS, XLS, XLSX) is uploaded.")
+            spreadsheet["type"] = get_file["file_type"]
+            spreadsheet["extension"] = get_file["extension"]
+            df = get_file["df"]
+            spreadsheet["rowcount"] = len(df.index)-1 # Remove header row
+            spreadsheet["colcount"] = len(df.columns)
+            spreadsheet["table"] = mark_safe(df.to_html(classes="table table-striped spreadsheet-table"))
     else:
         layer = document.get_gis_layer()
         if not layer:
@@ -1561,14 +1538,15 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
 
     return render(request, "hub/processing.gis.html", context)
 
-def hub_processing_files(request, id, gis=False, space=None):
+def hub_processing_files(request, id, gis=False, geospreadsheet=False, space=None):
     document = get_object_or_404(LibraryItem, pk=id)
     project = get_object_or_404(Project, pk=request.project)
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         unauthorized_access(request)
 
     try:
-        work = Work.objects.filter(status__in=[1,4,5], part_of_project_id=request.project, workactivity_id=2, related_to=document)
+        work_id = 14 if geospreadsheet else 2
+        work = Work.objects.filter(status__in=[1,4,5], part_of_project_id=request.project, workactivity_id=work_id, related_to=document)
         work = work[0]
     except Exception as e:
         work = None
@@ -1592,7 +1570,7 @@ def hub_processing_files(request, id, gis=False, space=None):
 
     context = {
         "document": document,
-        "layer": document.get_gis_layer(),
+        "layer": document.get_gis_layer() if gis else None,
         "list_messages": work.messages.all() if work else None,
         "load_messaging": True,
         "forum_id": work.id if Work else None,
@@ -1638,21 +1616,124 @@ def hub_processing_gis_classify(request, id, space=None):
     }
     return render(request, "hub/processing.gis.classify.html", context)
 
-def hub_processing_gis_save(request, id, space=None):
+def hub_processing_geospreadsheet_classify(request, id, space=None):
     document = get_object_or_404(LibraryItem, pk=id)
     project = get_object_or_404(Project, pk=request.project)
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         unauthorized_access(request)
 
     try:
-        work = Work.objects.filter(status__in=[1,4,5], part_of_project_id=request.project, workactivity_id=2, related_to=document)
+        work = Work.objects.filter(status__in=[1,4,5], part_of_project_id=request.project, workactivity_id=14, related_to=document)
         work = work[0]
     except Exception as e:
         work = None
         messages.error(request, "We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
 
-    layer = document.get_gis_layer()
-    total_objects = layer.num_feat
+    if request.method == "POST" and "next" in request.POST:
+        meta_data = document.meta_data
+        if not "columns" in meta_data:
+            meta_data["columns"] = {}
+        meta_data["columns"] = request.POST.getlist("column")
+        document.meta_data = meta_data
+        document.save()
+        messages.success(request, "The information was saved.")
+        return redirect("../save/")
+
+    get_file = document.get_spreadsheet()
+    df = None
+    labels = {}
+    unidentified_columns = ["Name", "Latitude", "Longitude", "Description (optional)"]
+    rows = []
+
+    if get_file["error"]:
+        messages.error(request, get_file["error_message"])
+    else:
+        df = get_file["df"]
+        c = list(df.columns)
+        for each in c:
+            # Here we check the see if the column matches the names of the columns that we need. If so,
+            # then we can auto-mark it
+            for column in unidentified_columns:
+                if each.lower().strip() == column.lower():
+                    labels[each] = column
+                    unidentified_columns.remove(column)
+                    break
+
+        count = 0
+        # Okay so here's the deal. We need to loop over each row in the template so that we can create 
+        # a table that we can add some stuff to (like the <select> at the top row), which we can't do
+        # (as far as I know) with the regular pandas _to_html function. So we need to loop over the rows, 
+        # BUT the column names are never the same, so we need to get them upfront, so that we can print them
+        # It all feels like a messy hack but at least it works. If someone can straighten this out PLEASE go ahead
+        for i, row in df.iterrows():
+            count += 1
+            this_row = {}
+            for column_name, content in row.iteritems():
+                # We don't want 'nan' printed in the table, we just want an empty field
+                try:
+                    if np.isnan(content):
+                        content = ""
+                except:
+                    pass
+                this_row[column_name] = content
+            rows.append(this_row)
+            if count == 5:
+                break
+
+        num_columns = len(df.columns)
+        # Each column in the table needs to be identified. We have three possible (required) options, so we should
+        # add additional options (IMPORT | DISCARD) if there are more than three columns
+        additional_columns = num_columns-3
+        if additional_columns > 0:
+            unidentified_columns.append("Other field - import")
+            unidentified_columns.append("Other field - discard")
+
+    context = {
+        "document": document,
+        "list_messages": work.messages.all() if work else None,
+        "load_messaging": True,
+        "forum_id": work.id if Work else None,
+        "work": work,
+        "title": document,
+        "menu": "processing",
+        "step": 2,
+        "df": df,
+        "labels": labels,
+        "unidentified_columns": unidentified_columns,
+        "rows": rows,
+    }
+    return render(request, "hub/processing.geospreadsheet.classify.html", context)
+
+def hub_processing_gis_save(request, id, space=None):
+    document = get_object_or_404(LibraryItem, pk=id)
+    geospreadsheet = False
+    spreadsheet = {}
+
+    if document.type.name != "Shapefile":
+        geospreadsheet = document.get_spreadsheet()
+
+    project = get_object_or_404(Project, pk=request.project)
+    if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
+        unauthorized_access(request)
+
+    try:
+        work_id = 14 if geospreadsheet else 2
+        work = Work.objects.filter(status__in=[1,4,5], part_of_project_id=request.project, workactivity_id=work_id, related_to=document)
+        work = work[0]
+    except Exception as e:
+        work = None
+        messages.error(request, "We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
+
+    if geospreadsheet:
+        layer = None
+        df = geospreadsheet["df"]
+        total_objects = len(df.index)-1 # Remove header row
+        spreadsheet["rowcount"] = len(df.index)-1 # Remove header row
+        spreadsheet["colcount"] = len(df.columns)
+    else:
+        layer = document.get_gis_layer()
+        total_objects = layer.num_feat
+
     if request.method == "POST":
         document.name = request.POST.get("name")
         document.description = request.POST.get("description")
@@ -1665,10 +1746,10 @@ def hub_processing_gis_save(request, id, space=None):
              "limitations": request.POST.get("limitations"),
         }
         document.save()
-        if layer.num_feat > 1000:
+        if total_objects > 1000:
             document.meta_data["ready_for_processing"] = True
             document.save()
-            messages.success(request, "The shapefile was processed! However, because more than 1,000 items are included in this layer it will take some time to complete the processing. It can take up to 6 hours for processing to complete.")
+            messages.success(request, "The file was processed! However, because more than 1,000 items are included in this layer it will take some time to complete the processing. It can take up to 6 hours for processing to complete.")
         else:
             document.convert_shapefile()
 
@@ -1703,6 +1784,8 @@ def hub_processing_gis_save(request, id, space=None):
         "load_select2": True,
         "tags": Tag.objects.filter(Q(parent_tag__parent_tag_id=845)|Q(id__in=document.tags.all())),
         "geocodes": Geocode.objects.all(),
+        "geospreadsheet": geospreadsheet,
+        "spreadsheet": spreadsheet,
     }
     return render(request, "hub/processing.gis.save.html", context)
 

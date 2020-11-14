@@ -24,7 +24,7 @@
     {% elif not curator %}
       <div class="alert alert-warning">
         You need to have obtained a "Data Processor" badge in order to
-        start working on this shapefile.
+        start working on this file.
       </div>
     {% else %}
       <form method="post">
@@ -41,7 +41,7 @@
             <div class="card-body">
               <h2 class="h4">Thanks for working on this!</h2>
               <p><a href="javascript:alert('Tutorial will be available soon!')">Click here</a> for a tutorial if you are new to this.</p>
-              <p>Is the shapefile looking good?</p>
+              <p>Is the {% if geospreadsheet %}spreadsheet{% else %}shapefile{% endif %} looking good?</p>
               <button type="submit" name="start_work" value="classify/" class="btn btn-block btn-success mb-3">
                 Yes, go to step 2 <i class="fa fa-arrow-right mr-0 ml-2"></i>
               </button>
@@ -52,7 +52,7 @@
               <p class="mt-4"><a id="somethingwrong" href="#wrongoptions">Something wrong with this entire entry?</a></p>
               <div id="wrongoptions" class="hide">
                 <h4>What is wrong?</h4>
-                <button class="btn btn-warning sweetalert change-record"><i class="fa fa-exchange"></i> Item is not a shapefile but something else</button>
+                <button class="btn btn-warning sweetalert change-record"><i class="fa fa-exchange"></i> Item is not a {% if geospreadsheet %}spreadsheet{% else %}shapefile{% endif %} but something else</button>
                 <button class="btn btn-danger mb-2 sweetalert delete-record mt-3"><i class="fas fa-trash"></i> This entry should be deleted</button>
               </div>
             </div>
@@ -97,18 +97,29 @@
         <div><i class="fal fa-fw fa-user mr-1"></i> Uploaded by</div>
         <div>{{ document.uploader }}</div>
       </li>
-      <li class="list-group-item table-item">
-        <div><i class="fal fa-fw fa-box mr-1"></i> Type</div>
-        <div>{{ layer.geom_type.name }}</div>
-      </li>
-      <li class="list-group-item table-item">
-        <div><i class="fal fa-fw fa-layer-group mr-1"></i> Properties</div>
-        <div>{{ layer.num_fields }}</div>
-      </li>
-      <li class="list-group-item table-item">
-        <div><i class="far fa-fw fa-dot-circle mr-1"></i> Items</div>
-        <div>{{ layer.num_feat }}</div>
-      </li>
+      {% if geospreadsheet %}
+        <li class="list-group-item table-item">
+          <div><i class="far fa-fw fa-dot-circle mr-1"></i> Items</div>
+          <div>{{ spreadsheet.rowcount }}</div>
+        </li>
+        <li class="list-group-item table-item">
+          <div><i class="fal fa-fw fa-layer-group mr-1"></i> Properties</div>
+          <div>{{ spreadsheet.colcount }}</div>
+        </li>
+      {% else %}
+        <li class="list-group-item table-item">
+          <div><i class="fal fa-fw fa-box mr-1"></i> Type</div>
+          <div>{{ layer.geom_type.name }}</div>
+        </li>
+        <li class="list-group-item table-item">
+          <div><i class="fal fa-fw fa-layer-group mr-1"></i> Properties</div>
+          <div>{{ layer.num_fields }}</div>
+        </li>
+        <li class="list-group-item table-item">
+          <div><i class="far fa-fw fa-dot-circle mr-1"></i> Items</div>
+          <div>{{ layer.num_feat }}</div>
+        </li>
+      {% endif %}
       {% if work.assigned_to %}
         <li class="list-group-item table-item">
           <div><i class="far fa-fw fa-user-check mr-1"></i> Assigned to</div>
