@@ -23,6 +23,8 @@
     <li><a href="/dataimport/?table=photos">Photos</a> -- {{ photos }}</li>
     <li><a href="/dataimport/?table=subscribers">Subscribers</a> -- {{ subscribers }}</li>
     <li><a href="/dataimport/?table=projects">Projects</a> </li>
+    <hr>
+    <li><a href="/dataimport/?table=meta_referencespaces">Reference spaces meta data</a> </li>
   </ul>
 
   <div class="alert alert-warning">
@@ -83,6 +85,9 @@ ssh -t industrialecology 'csvdump "SELECT * FROM staf_csv ORDER BY id" stafcsv.c
 
 ssh -t industrialecology 'csvdump "SELECT * FROM staf_dataset WHERE deleted = False ORDER BY id" stafdataset.csv'
 ssh -t industrialecology 'csvdump "SELECT * FROM core_newslettersubscriber" subscribers.csv'
+
+ssh -t industrialecology 'csvdump "SELECT * FROM multiplicity_referencespacecsv ORDER BY id" referencespacecsv.csv'
+ssh -t industrialecology 'csvdump "SELECT * FROM multiplicity_mtu ORDER BY id" mtu.csv'
 
   </pre>
 

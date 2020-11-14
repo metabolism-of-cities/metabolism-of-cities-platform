@@ -1989,13 +1989,110 @@ def massmail(request,people=None):
 
 # TEMPORARY
 def dataimport(request):
+    import csv
     error = False
     if request.user.id != 1:
         return redirect("/")
+    if "table" in request.GET and request.GET.get("table") != "meta_referencespaces":
+        return redirect("/")
+
     if "table" in request.GET:
         messages.warning(request, "Trying to import " + request.GET["table"])
         file = settings.MEDIA_ROOT + "/import/" + request.GET["table"] + ".csv"
         messages.warning(request, "Using file: " + file)
+
+        if request.GET["table"] == "meta_referencespaces":
+            file = settings.MEDIA_ROOT + "/import/referencespacecsv.csv"
+            csv_meta = {}
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    row["id"] = int(row["id"])
+                    csv_meta[row["id"]] = row
+            file = settings.MEDIA_ROOT + "/import/referencespacetypes.csv"
+            types = {}
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    types[row["id"]] = row["name"]
+            file = settings.MEDIA_ROOT + "/import/referencespaces.csv"
+            if True:
+                csv_to_import = []
+                mtu_to_import = []
+                with open(file, "r") as csvfile:
+                    contents = csv.DictReader(csvfile)
+                    for row in contents:
+                        if row["csv_id"]:
+                            try:
+                                info = ReferenceSpace.objects.get(old_id=row["id"])
+                                if not info.meta_data:
+                                    info.meta_data = {}
+                                row["csv_id"] = int(row["csv_id"])
+                                info.meta_data["csv"] = csv_meta[row["csv_id"]]
+                                info.meta_data["old_city_id"] = row["city_id"]
+                                info.save()
+                                if row["csv_id"] not in csv_to_import:
+                                    csv_to_import.append(row["csv_id"])
+                            except Exception as e:
+                                import traceback
+                                print(traceback.print_exc())
+                        elif row["mtu_id"]:
+                            try:
+                                info = ReferenceSpace.objects.get(old_id=row["id"])
+                                if not info.meta_data:
+                                    info.meta_data = {}
+                                info.meta_data["mtu_id"] = row["mtu_id"]
+                                info.save()
+                                if row["mtu_id"] not in mtu_to_import:
+                                    mtu_to_import.append(row["mtu_id"])
+                            except Exception as e:
+                                import traceback
+                                print(traceback.print_exc())
+                print(mtu_to_import)
+                for each in csv_to_import:
+                    data = csv_meta[each]
+                    description = ""
+                    if data["how_obtained"]:
+                        description += "_How were these GPS points obtained?_\n" + data["how_obtained"]
+                    if data["gaps"]:
+                        description += "\n\n_Are there any known data gaps?_\n" + data["gaps"]
+                    name = types[data["type_id"]] + " list"
+                    year = data["created_at"]
+                    year = year[:4]
+                    user = User.objects.get(pk=data["user_id"])
+                    info = LibraryItem.objects.create(
+                        author_list=str(user.people),
+                        year=year,
+                        name=name,
+                        description=description,
+                        url=data["source"],
+                        old_id=data["id"],
+                        type_id=41,
+                        meta_data={"old_type_id": data["type_id"]},
+                    )
+                    info.spaces.add(ReferenceSpace.objects.get(old_id=data["space_id"]))
+                    info.date_created = data["created_at"]
+                    info.save()
+
+                    work = Work.objects.create(
+                        status = Work.WorkStatus.COMPLETED,
+                        part_of_project_id = 4,
+                        workactivity_id = 28,
+                        related_to = info,
+                        assigned_to = user.people,
+                    )
+
+                    RecordRelationship.objects.create(
+                        record_parent = user.people,
+                        record_child = info,
+                        relationship_id = RELATIONSHIP_ID["uploader"],
+                    )
+
+                    message = Message.objects.create(posted_by=user.people, parent=work, name="Status change", description="Document was uploaded (migration from old site)")
+
+                    spaces = ReferenceSpace.objects.filter(meta_data__csv__id=each)
+                    spaces.update(source_id=info)
+
         if request.GET["table"] == "activities":
             ActivityCatalog.objects.all().delete()
             nace = ActivityCatalog.objects.create(name="Statistical Classification of Economic Activities in the European Community, Rev. 2 (2008)", url="https://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=LST_NOM_DTL&StrNom=NACE_REV2&StrLanguageCode=EN&IntPcKey=&StrLayoutCode=HIERARCHIC")
