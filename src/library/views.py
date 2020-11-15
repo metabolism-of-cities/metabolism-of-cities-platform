@@ -292,18 +292,21 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     if spaces:
         # Quick hack, we simply get the centroid of the first space
         # and use that to position the map. Ideally we want to just use fitBounds
-        centroid = spaces[0].geometry.centroid
-        map = folium.Map(
-            location=[centroid[1], centroid[0]],
-            zoom_start=10
-        )
+        try:
+            centroid = spaces[0].geometry.centroid
+            map = folium.Map(
+                location=[centroid[1], centroid[0]],
+                zoom_start=10
+            )
 
-        for each in spaces:
-            if each.geometry:
-                folium.GeoJson(
-                    each.geometry.geojson,
-                    name="geojson"
-                ).add_to(map)
+            for each in spaces:
+                if each.geometry:
+                    folium.GeoJson(
+                        each.geometry.geojson,
+                        name="geojson"
+                    ).add_to(map)
+        except:
+            pass
 
     context = {
         "info": info,
