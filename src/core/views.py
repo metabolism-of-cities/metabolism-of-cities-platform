@@ -1991,6 +1991,7 @@ def massmail(request,people=None):
 def dataimport(request):
     import csv
     error = False
+
     if request.user.id != 1:
         return redirect("/")
     if "table" in request.GET and request.GET.get("table") != "meta_referencespaces":
@@ -2009,6 +2010,14 @@ def dataimport(request):
                 for row in contents:
                     row["id"] = int(row["id"])
                     csv_meta[row["id"]] = row
+
+            file = settings.MEDIA_ROOT + "/import/mtu.csv"
+            mtu_meta = {}
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    mtu_meta[row["id"]] = row
+
             file = settings.MEDIA_ROOT + "/import/referencespacetypes.csv"
             types = {}
             with open(file, "r") as csvfile:
@@ -2016,7 +2025,7 @@ def dataimport(request):
                 for row in contents:
                     types[row["id"]] = row["name"]
             file = settings.MEDIA_ROOT + "/import/referencespaces.csv"
-            if True:
+            if "step1" in request.GET:
                 csv_to_import = []
                 mtu_to_import = []
                 with open(file, "r") as csvfile:
@@ -2048,7 +2057,88 @@ def dataimport(request):
                             except Exception as e:
                                 import traceback
                                 print(traceback.print_exc())
+
+                print(csv_to_import)
                 print(mtu_to_import)
+
+            elif "step2" in request.GET:
+                mtu_to_import = ['5', '6', '9', '14', '15', '16', '17', '19', '21', '22']
+                mtu_uploaders = {
+                    "5": { "id": 2, "date": "2019-01-31", "name": "Quartiers" },
+                    "6": { "id": 53, "date": "2019-02-10", "name": "Parishes" },
+                    "9": { "id": 7, "date": "2019-02-20", "name": "Buurten" },
+                    "14": { "id": 71, "date": "2019-06-01", "name": "Municipal Wards of Cape Town" },
+                    "15": { "id": 71, "date": "2019-06-01", "name": "Suburbs" },
+                    "16": { "id": 7, "date": "2019-06-03", "name": "Neighbourhoods" },
+                    "17": { "id": 7, "date": "2019-06-03", "name": "Former Municipality Boundaries" },
+                    "19": { "id": 93, "date": "2019-09-05", "name": "Master Plan 2014 Subzones" },
+                    "21": { "id": 161, "date": "2020-03-18", "name": "Cheix en Retz" },
+                    "22": { "id": 161, "date": "2020-03-18", "name": "Ilots Regroupés pour l'information statistique (IRIS)" },
+                }
+                for each in mtu_to_import:
+                    data = mtu_meta[each]
+                    u = mtu_uploaders[each]
+
+                    name = u["name"]
+                    try:
+                        year = data["timeframe"]
+                        year = year[:4]
+                    except:
+                        year = 2018
+                    if year == "":
+                        year = 2018
+                    user = User.objects.get(pk=u["id"])
+                    info = LibraryItem.objects.create(
+                        author_list=data["source"],
+                        year=year,
+                        name=name,
+                        description=data["description"],
+                        url=data["source"],
+                        old_id=data["id"],
+                        type_id=40,
+                        meta_data={
+                            "mtu": data,
+                            "shortname": name,
+                            "processed": True,
+                            "auto_import_from_old_site": True,
+                        },
+                    )
+                    info.spaces.add(ReferenceSpace.objects.get(old_id=data["space_id"]))
+                    info.date_created = u["date"]
+                    info.save()
+                    try:
+                        info.tags.add(t)
+                    except:
+                        t = Tag.objects.get(pk=852)
+                        info.tags.add(t)
+
+                    work = Work.objects.create(
+                        status = Work.WorkStatus.COMPLETED,
+                        part_of_project_id = 4,
+                        workactivity_id = 28,
+                        related_to = info,
+                        assigned_to = user.people,
+                    )
+                    work.date_created = u["date"]
+                    work.save()
+
+                    r = RecordRelationship.objects.create(
+                        record_parent = user.people,
+                        record_child = info,
+                        relationship_id = RELATIONSHIP_ID["uploader"],
+                    )
+                    r.date_created = u["date"]
+                    r.save()
+
+                    message = Message.objects.create(posted_by=user.people, parent=work, name="Status change", description="Document was uploaded (migration from old site)")
+                    message.date_created = u["date"]
+                    message.save()
+
+                    spaces = ReferenceSpace.objects.filter(meta_data__mtu_id=each)
+                    spaces.update(source_id=info)
+
+            elif "step3" in request.GET:
+                csv_to_import = [1, 2, 3, 4, 5, 15, 9, 19, 21, 25, 26, 27, 28, 29, 30, 32, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 45, 46, 47, 48, 49, 57, 64, 67, 84, 87, 128, 129, 130, 132, 133, 152, 160, 167, 169, 171, 172, 173, 174, 177, 178, 187, 191, 200, 203]
                 for each in csv_to_import:
                     data = csv_meta[each]
                     description = ""
@@ -2068,7 +2158,12 @@ def dataimport(request):
                         url=data["source"],
                         old_id=data["id"],
                         type_id=41,
-                        meta_data={"old_type_id": data["type_id"]},
+                        meta_data={
+                            "old_type_id": data["type_id"],
+                            "shortname": types[data["type_id"]],
+                            "processed": True,
+                            "auto_import_from_old_site": True,
+                        },
                     )
                     info.spaces.add(ReferenceSpace.objects.get(old_id=data["space_id"]))
                     info.date_created = data["created_at"]
@@ -2081,17 +2176,57 @@ def dataimport(request):
                         related_to = info,
                         assigned_to = user.people,
                     )
+                    work.date_created = data["created_at"]
+                    work.save()
 
-                    RecordRelationship.objects.create(
+                    r = RecordRelationship.objects.create(
                         record_parent = user.people,
                         record_child = info,
                         relationship_id = RELATIONSHIP_ID["uploader"],
                     )
+                    r.date_created = data["created_at"]
 
                     message = Message.objects.create(posted_by=user.people, parent=work, name="Status change", description="Document was uploaded (migration from old site)")
+                    message.date_created = data["created_at"]
+                    message.save()
 
                     spaces = ReferenceSpace.objects.filter(meta_data__csv__id=each)
                     spaces.update(source_id=info)
+
+            elif "step4" in request.GET:
+                list = LibraryItem.objects.filter(type_id=41, meta_data__auto_import_from_old_site=True)
+                for each in list:
+                    a = each.meta_data["shortname"]
+                    matchnames = {
+                        'Airports' : 893,
+                        'Bicycle racks' : 893, 
+                        'Border Crossings' : 893,
+                        'Bus stops' : 893, 
+                        'Electric charging stations' : 893,
+                        'Farms' : 865,
+                        'Fuel storage facilities' : 870,
+                        'Landfills' : 894,
+                        'Lighthouses' : 893,
+                        'Marine outfalls' : 895,
+                        'Mines' : 890,
+                        'Ports' : 893,
+                        'Power plants' : 867,
+                        'Pumping stations' : 895,
+                        'Refineries' : 870,
+                        'Train stations' : 893,
+                        'Transmission masts' : 868,
+                        'Waste drop-off sites' : 894,
+                        'Waste transfer station' : 894,
+                        'Wastewater treatment plants' : 895,
+                        'Water treatment works' : 895,
+                        'Wind turbines' : 867,
+                        'Dams' : 895,
+                        'Energy storage' : 869,
+                        'Water reservoirs' : 895,
+                    }
+                    m = matchnames[a]
+                    tag = Tag.objects.get(pk=m)
+                    each.tags.add(tag)
 
         if request.GET["table"] == "activities":
             ActivityCatalog.objects.all().delete()

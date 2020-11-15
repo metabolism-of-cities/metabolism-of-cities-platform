@@ -332,6 +332,14 @@
                 </div>
               </li>
               {% endif %}
+              {% if info.processor %}
+              <li class="list-group-item table-item">
+                <div><i class="far fa-fw fa-user mr-1"></i> Processed by</div>
+                <div>
+                  <a href="{% url URLS.PROFILE info.processor.id %}">{{ info.processor }}</a>
+                </div>
+              </li>
+              {% endif %}
             </ul>
           </div>
 

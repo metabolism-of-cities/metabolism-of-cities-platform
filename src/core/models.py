@@ -1029,6 +1029,10 @@ class LibraryItem(Record):
         list = People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=11)
         return list[0] if list else None
 
+    def processor(self):
+        list = People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=34)
+        return list[0] if list else None
+
     # The 'author_list' part will be highly varied... some contain Firstname Lastname, Firstname Lastname 
     # others contain Lastname, Firstname and Lastname, Firstname
     # others contain Firstname Lastname; Firstname Lastname; etc.
