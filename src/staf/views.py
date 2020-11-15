@@ -1765,6 +1765,12 @@ def hub_processing_gis_save(request, id, space=None):
         set_autor(request.user.people.id, message.id)
         work.subscribers.add(request.user.people)
 
+        RecordRelationship.objects.create(
+            record_parent = request.user.people,
+            record_child = document,
+            relationship_id = RELATIONSHIP_ID["processor"],
+        )
+
         return redirect(project.slug + ":library_item", document.id)
 
     context = {

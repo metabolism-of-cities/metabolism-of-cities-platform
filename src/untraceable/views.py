@@ -12,16 +12,7 @@ from django.http import Http404, HttpResponseRedirect
 
 from django.conf import settings
 
-# This array defines all the IDs in the database of the articles that are loaded for the
-# various pages in the menu. Here we can differentiate between the different sites.
-
-TAG_ID = settings.TAG_ID_LIST
-PAGE_ID = settings.PAGE_ID_LIST
-PROJECT_ID = settings.PROJECT_ID_LIST
-RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
-THIS_PROJECT = PROJECT_ID["untraceable"]
-PROJECT_LIST = settings.PROJECT_LIST
-AUTO_BOT = 32070
+from core.mocfunctions import *
 
 def index(request):
     context = {

@@ -10,26 +10,7 @@ logger = logging.getLogger(__name__)
 
 from django.forms import modelform_factory
 
-# This array defines all the IDs in the database of the articles that are loaded for the
-# various pages in the menu. Here we can differentiate between the different sites.
-
-TAG_ID = settings.TAG_ID_LIST
-PAGE_ID = settings.PAGE_ID_LIST
-PROJECT_ID = settings.PROJECT_ID_LIST
-RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
-
-# If users ARE logged in, but they try to access pages that they don't have
-# access to, then we log this request for further debugging/review
-# Version 1.0
-def unauthorized_access(request):
-    from django.core.exceptions import PermissionDenied
-    logger.error("No access to this UploadSession")
-    Work.objects.create(
-        name = "Unauthorized access detected",
-        description = request.META,
-        priority = Work.WorkPriority.HIGH,
-    )
-    raise PermissionDenied
+from core.mocfunctions import *
 
 # my_organizations returns the list of organizations that this user
 # is the admin for -- this is normally one, but could be several

@@ -12,9 +12,18 @@ logger = logging.getLogger(__name__)
 TAG_ID = settings.TAG_ID_LIST
 PAGE_ID = settings.PAGE_ID_LIST
 PROJECT_ID = settings.PROJECT_ID_LIST
-RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
 PROJECT_LIST = settings.PROJECT_LIST
 AUTO_BOT = 32070
+
+RELATIONSHIP_ID = { 
+    "author": 4,
+    "uploader": 11,
+    "participant": 12,
+    "member": 6,
+    "publisher": 2,
+    "platformu_admin": 1,
+    "processor": 34,
+}
 
 # If we add any new project, we should add it to this list. 
 # We must make sure to filter like this to exclude non-project news

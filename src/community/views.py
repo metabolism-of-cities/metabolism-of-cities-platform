@@ -19,49 +19,6 @@ import logging
 logger = logging.getLogger(__name__)
 from core.mocfunctions import *
 
-PROJECT_ID = settings.PROJECT_ID_LIST
-RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
-AUTO_BOT = 32070
-
-# Quick function to make someone the author of something
-# Version 1.0
-def set_author(author, item):
-    RecordRelationship.objects.create(
-        relationship_id = RELATIONSHIP_ID["author"],
-        record_parent_id = author,
-        record_child_id = item,
-    )
-
-# General script to check if a user has a certain permission
-# This is used for validating access to certain pages only, so superusers
-# will always have access
-# Version 1.0
-def has_permission(request, record_id, allowed_permissions):
-    if request.user.is_authenticated and request.user.is_superuser:
-        return True
-    elif request.user.is_authenticated and request.user.is_staff:
-        return True
-    try:
-        people = request.user.people
-        check = RecordRelationship.objects.filter(
-            relationship__slug__in = permissions,
-            record_parent = request.user.people,
-            record_child_id = record_id,
-        )
-    except:
-        return False
-    return True if check.exists() else False
-
-def unauthorized_access(request):
-    from django.core.exceptions import PermissionDenied
-    logger.error("No access to this UploadSession")
-    Work.objects.create(
-        name = "Unauthorized access detected",
-        description = request.META,
-        priority = Work.WorkPriority.HIGH,
-    )
-    raise PermissionDenied
-
 def person(request, id):
     article = get_object_or_404(Webpage, pk=PAGE_ID["people"])
     info = get_object_or_404(People, pk=id)

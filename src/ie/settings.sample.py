@@ -61,15 +61,6 @@ PROJECT_ID_LIST = {
     "untraceable": 32542,
 }
 
-RELATIONSHIP_ID_LIST = { 
-    "author": 4,
-    "uploader": 11,
-    "participant": 12,
-    "member": 6,
-    "publisher": 2,
-    "platformu_admin": 1,
-}
-
 PROJECT_LIST = {
     "library": { "id": 2, "url": "library/" },
     "multimedia": { "id": 3, "url": "multimedia/" },

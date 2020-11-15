@@ -6,17 +6,6 @@ from django.contrib.auth.decorators import login_required
 from core.mocfunctions import *
 from django.contrib import messages
 
-TAG_ID = settings.TAG_ID_LIST
-PAGE_ID = settings.PAGE_ID_LIST
-PROJECT_ID = settings.PROJECT_ID_LIST
-RELATIONSHIP_ID = settings.RELATIONSHIP_ID_LIST
-THIS_PROJECT = PROJECT_ID["multimedia"]
-
-# Get all the parent relationships, but making sure we only show is_deleted=False and is_public=True
-def get_parents(record):
-    list = RecordRelationship.objects.filter(record_child=record).filter(record_parent__is_deleted=False, record_parent__is_public=True)
-    return list
-
 def index(request):
     webpage = get_object_or_404(Project, pk=PAGE_ID["multimedia_library"])
     videos = Video.objects.filter(tags__parent_tag__id=749).distinct()
