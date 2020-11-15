@@ -2130,7 +2130,29 @@ def dataimport(request):
                     r.date_created = u["date"]
                     r.save()
 
-                    message = Message.objects.create(posted_by=user.people, parent=work, name="Status change", description="Document was uploaded (migration from old site)")
+                    message = Message.objects.create(posted_by=user.people, parent=work, name="Status change", description="Document was uploaded")
+                    message.date_created = u["date"]
+                    message.save()
+
+                    work = Work.objects.create(
+                        status = Work.WorkStatus.COMPLETED,
+                        part_of_project_id = 4,
+                        workactivity_id = 2,
+                        related_to = info,
+                        assigned_to = user.people,
+                    )
+                    work.date_created = u["date"]
+                    work.save()
+
+                    r = RecordRelationship.objects.create(
+                        record_parent = user.people,
+                        record_child = info,
+                        relationship_id = RELATIONSHIP_ID["processor"],
+                    )
+                    r.date_created = u["date"]
+                    r.save()
+
+                    message = Message.objects.create(posted_by=user.people, parent=work, name="Status change", description="Document was processed")
                     message.date_created = u["date"]
                     message.save()
 
@@ -2186,7 +2208,28 @@ def dataimport(request):
                     )
                     r.date_created = data["created_at"]
 
-                    message = Message.objects.create(posted_by=user.people, parent=work, name="Status change", description="Document was uploaded (migration from old site)")
+                    message = Message.objects.create(posted_by=user.people, parent=work, name="Status change", description="Document was uploaded")
+                    message.date_created = data["created_at"]
+                    message.save()
+
+                    work = Work.objects.create(
+                        status = Work.WorkStatus.COMPLETED,
+                        part_of_project_id = 4,
+                        workactivity_id = 2,
+                        related_to = info,
+                        assigned_to = user.people,
+                    )
+                    work.date_created = data["created_at"]
+                    work.save()
+
+                    r = RecordRelationship.objects.create(
+                        record_parent = user.people,
+                        record_child = info,
+                        relationship_id = RELATIONSHIP_ID["processor"],
+                    )
+                    r.date_created = data["created_at"]
+
+                    message = Message.objects.create(posted_by=user.people, parent=work, name="Status change", description="Document was processed")
                     message.date_created = data["created_at"]
                     message.save()
 

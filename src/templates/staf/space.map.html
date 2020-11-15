@@ -116,7 +116,7 @@
   <!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
   <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
 
-  {% if space.geometry and space.meta_data.boundaries_origin %}
+  {% if space.geometry %}
   <script>
     // create leaflet map - https://leafletjs.com/reference-1.6.0.html
     var map = L.map("map", {
@@ -360,9 +360,11 @@
       }
     });
 
-    // open default layer that should be shown from the start
-    $(".toggle-layer[data-id='{{ boundaries.source.id }}']").parent().prev(".category-title").click();
-    $(".toggle-layer[data-id='{{ boundaries.source.id }}']").click();
+    {% if boundaries %}
+      // open default layer that should be shown from the start
+      $(".toggle-layer[data-id='{{ boundaries.source.id }}']").parent().prev(".category-title").click();
+      $(".toggle-layer[data-id='{{ boundaries.source.id }}']").click();
+    {% endif %}
   </script>
   {% endif %}
 {% endblock %}
