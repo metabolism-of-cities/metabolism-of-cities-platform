@@ -77,6 +77,11 @@
 
   <h1>{% block title %}{{ info }}: Map{% endblock %}</h1>
 
+  <a href="../" class="btn btn-primary-basic">
+    <i class="fal fa-angle-left"></i>
+    Back to {{ info }}
+  </a>
+
   {% if not spaces %}
     <div class="alert alert-dark ml-2">
       There are no layers available yet. Be sure to process shapefiles
@@ -84,10 +89,10 @@
       here</a> [spanish]) in order to add layers to the map.
     </div>
   {% else %}
-    <div id="map" class="leaflet-map">{{ map|safe }}</div>
+    <div id="map" class="leaflet-map mb-3">{{ map|safe }}</div>
   {% endif %}
 
-  <h2 class="mt-4">All reference spaces inside this file</h2>
+  <h2 class="mt-4">All elements inside this file</h2>
 
   {% if info.imported_spaces.count > 500 %}
     <div class="alert alert-warning">NOTE: the table is restricted to the first 500 items</div>
@@ -106,7 +111,7 @@
       <tr>
         <td><a href="{% url URLS.SPACE each.id %}">{{ each }}</a></td>
         <td>{{ each.get_centroids }}</td>
-        <td>{{ each.description|truncatewords:30 }}</td>
+        <td>{{ each.description|default_if_none:""|truncatewords:30 }}</td>
       </tr>
     {% endfor %}
     </tbody>

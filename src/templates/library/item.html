@@ -370,6 +370,29 @@
         {% endif %}
 
         {% if info.attachments.all %}
+
+          {% if info.type.name == "Shapefile" %}
+            <h3 class="mt-4">Map</h3>
+            {% if info.get_shapefile_plot %}
+              {% if info.meta_data.processed and IS_DATA_PORTAL %}
+                <a href="{% url URLS.MAP_ITEM info.id %}"><img src="{{ info.get_shapefile_plot }}" alt="" /></a>
+              {% else %}
+                <img src="{{ info.get_shapefile_plot }}" alt="" />
+              {% endif %}
+            {% else %}
+              <p><em>There is no preview plot available.</em></p>
+              {% if info.meta_data.shapefile_plot_error %}
+                <div class="alert alert-danger"><strong>Error:</strong><br>{{ info.meta_data.shapefile_plot_error }}</div>
+              {% endif %}
+            {% endif %}
+            {% if info.meta_data.processed and IS_DATA_PORTAL %}
+              <a href="{% url URLS.MAP_ITEM info.id %}" class="btn btn-primary"><i class="fa fa-map"></i> View interactive map</a>
+            {% endif %}
+            {% if curator and not info.get_shapefile_plot or DEBUG %}
+              <a href="?create_shapefile_plot=true" class="btn btn-default-outline"><i class="fa fa-image"></i> Create preview map now.</a>
+            {% endif %}
+          {% endif %}
+
           <h3 class="mt-4">Attachment(s)</h3>
           <ul>
           {% for each in info.attachments.all %}
@@ -383,20 +406,6 @@
             </form>
           {% endif %}
 
-          {% if info.type.name == "Shapefile" and not map %}
-            <h3 class="mt-4">Preview</h3>
-            {% if info.get_shapefile_plot %}
-              <img src="{{ info.get_shapefile_plot }}" alt="" />
-            {% else %}
-              <p><em>There is no preview plot available.</em></p>
-              {% if info.meta_data.shapefile_plot_error %}
-                <div class="alert alert-danger"><strong>Error:</strong><br>{{ info.meta_data.shapefile_plot_error }}</div>
-              {% endif %}
-            {% endif %}
-            {% if curator and not info.get_shapefile_plot or DEBUG %}
-              <a href="?create_shapefile_plot=true" class="btn btn-default-outline"><i class="fa fa-image"></i> Create preview map now.</a>
-            {% endif %}
-          {% endif %}
         {% endif %}
 
         {% if request.user.is_authenticated %}
@@ -439,11 +448,6 @@
             </div>
           {% endfor %}
           </div>
-        {% endif %}
-
-        {% if map %}
-          <h3 class="mt-4">Map</h3>
-          {{ map|safe }}
         {% endif %}
 
         {% if info.spaces.all %}
