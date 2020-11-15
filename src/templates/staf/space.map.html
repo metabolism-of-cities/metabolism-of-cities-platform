@@ -77,7 +77,7 @@
 
 {% block content %}
 
-  {% if not space.geometry %}
+  {% if space and not space.geometry %}
     <div class="alert alert-warning">
       We do not yet have the official boundaries on record for {{ space }}. Do you know where we can find them?
       Become a contributor and upload the official boundaries in shapefile format so that we can create a map

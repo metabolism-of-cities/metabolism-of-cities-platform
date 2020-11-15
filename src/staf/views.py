@@ -34,6 +34,9 @@ import pandas as pd
 import geopandas
 from django.utils.safestring import mark_safe
 
+import folium
+from folium.plugins import Fullscreen
+
 THIS_PROJECT = PROJECT_ID["staf"]
 
 def index(request):
@@ -250,8 +253,48 @@ def space_map(request, space):
         "getcolors": getcolor,
         "processing_url": project.slug + ":hub_processing_boundaries",
         "boundaries": boundaries,
+        "submenu": "library",
     }
     return render(request, "staf/space.map.html", context)
+
+def map_item(request, id):
+    info = LibraryItem.objects.get(pk=id)
+    project = get_project(request)
+    spaces = info.imported_spaces.all()
+    map = None
+
+    if spaces:
+        map = folium.Map(
+            location=[spaces[0].geometry.centroid[1], spaces[0].geometry.centroid[0]],
+            zoom_start=15,
+            scrollWheelZoom=False,
+            tiles=STREET_TILES,
+            attr="Mapbox",
+        )
+
+        if spaces.count() < 500:
+            for each in spaces:
+                folium.GeoJson(
+                    each.geometry.geojson,
+                    name="geojson",
+                ).add_to(map)
+            spaces = spaces[:500]
+        else:
+            messages.error(request, "Sorry, this map has > 500 items and will take too long to load - we work on providing alternative views for such maps")
+
+        Fullscreen().add_to(map)
+
+        # Make fitbounds
+        # show popup
+
+    context = {
+        "info": info,
+        "submenu": "library",
+        "spaces": spaces,
+        "map": map._repr_html_() if map else None,
+        "load_datatables": True,
+    }
+    return render(request, "staf/item.map.html", context)
 
 def geojson(request, id):
     info = LibraryItem.objects.get(pk=id)
@@ -263,12 +306,16 @@ def geojson(request, id):
     for each in spaces:
         if each.geometry:
             url = reverse(project.slug + ":referencespace", args=[each.id])
+            content = ""
+            if each.photo.id != 33476:
+                content = f"<div class='mb-3'><a href='{url}'><img class='img-thumbnail' alt='' src='{each.photo.image.thumbnail.url}' /></a></div>"
+            content = content + f"<a href='{url}'>View details</a>"
             features.append({
                 "type": "Feature",
                 "id": each.id,
                 "properties": {
                     "space_name": each.name,
-                    "content": "<a href='" + url + "'>View details</a>",
+                    "content": content,
                 },
                 "geometry": json.loads(each.geometry.json)
             })
@@ -523,24 +570,75 @@ def referencespaces_list(request, id):
     return render(request, "staf/referencespaces.list.html", context)
 
 def referencespace(request, id=None, space=None, slug=None):
+
     if id:
         info = ReferenceSpace.objects.get(pk=id)
     elif slug:
         info = get_object_or_404(ReferenceSpace, slug=slug)
+
     check_active_space = ActivatedSpace.objects.filter(space=info, part_of_project_id=request.project)
+
     if check_active_space:
         project = get_object_or_404(Project, pk=request.project)
         return redirect(project.slug + ":dashboard", info.slug)
+
     this_location = None
     inside_the_space = None
+    map = None
+    satmap = None
+    associated_spaces = None
+
     if info.geometry:
         this_location = info.geometry
-        inside_the_space = ReferenceSpace.objects.filter(geometry__contained=this_location).order_by("name").prefetch_related("geocodes").exclude(pk=id)
+        #inside_the_space = ReferenceSpace.objects.filter(geometry__contained=this_location).order_by("name").prefetch_related("geocodes").exclude(pk=id)
+
+        map = folium.Map(
+            location=[info.geometry.centroid[1], info.geometry.centroid[0]],
+            zoom_start=15,
+            scrollWheelZoom=False,
+            tiles=STREET_TILES,
+            attr="Mapbox",
+        )
+        folium.GeoJson(
+            info.geometry.geojson,
+            name="geojson"
+        ).add_to(map)
+
+        Fullscreen().add_to(map)
+
+        satmap = folium.Map(
+            location=[info.geometry.centroid[1], info.geometry.centroid[0]],
+            zoom_start=17,
+            scrollWheelZoom=False,
+            tiles=SATELLITE_TILES,
+            attr="Mapbox",
+        )
+
+        Fullscreen().add_to(satmap)
+
+        # Note that there may be _multiple_ spaces (e.g. cities) associated with the source document, for instance
+        # because it is a national coverage shapefile. So we must check which of the spaces THIS item fits into
+        associated_spaces = info.source.spaces.filter(geometry__contains=info.geometry)
+
+    all_siblings = 0
+    try:
+        siblings = info.source.imported_spaces.exclude(id=info.id)
+        if siblings:
+            all_siblings = siblings.count()
+            siblings = siblings[:5]
+    except:
+        siblings = None
+
     context = {
         "info": info,
         "inside_the_space": inside_the_space[:200] if inside_the_space and inside_the_space.count() > 200 else inside_the_space,
         "load_datatables": True,
         "title": info.name,
+        "map": map._repr_html_() if map else None,
+        "satmap": satmap._repr_html_() if satmap else None,
+        "siblings": siblings,
+        "all_siblings": all_siblings,
+        "associated_spaces": associated_spaces,
     }
     return render(request, "staf/referencespace.html", context)
 

@@ -15,6 +15,11 @@ PROJECT_ID = settings.PROJECT_ID_LIST
 PROJECT_LIST = settings.PROJECT_LIST
 AUTO_BOT = 32070
 
+# Also defined in context_processor for templates, but we need it sometimes in the Folium map configuration
+MAPBOX_API_KEY = "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q"
+SATELLITE_TILES = "https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}@2x.png?access_token=" + MAPBOX_API_KEY
+STREET_TILES = "https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}@2x.png?access_token=" + MAPBOX_API_KEY
+
 RELATIONSHIP_ID = { 
     "author": 4,
     "uploader": 11,

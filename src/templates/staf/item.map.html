@@ -1,0 +1,115 @@
+{% extends '_base.html' %}
+{% load moc_extras %}
+
+{% block head %}
+  <!-- leaflet -->
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+
+  <!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
+  <link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet" />
+
+  <style>
+    .leaflet-map {
+      height: 800px;
+      max-height: 80vh;
+    }
+
+    .layer-toggles {
+      border: 2px solid rgba(0,0,0,0.2);
+      background-clip: padding-box;
+      border-radius: .25rem;
+    }
+
+    .layer-toggles .category:not(:first-of-type) {
+      border-top: 1px solid #ccc;
+    }
+
+    .layer-toggles .category-title {
+      line-height: 14px;
+      background-color: #efefef;
+      padding: .5rem;
+      width: 250px;
+      cursor: pointer;
+    }
+
+    .layer-toggles .category:first-of-type .category-title {
+      border-top-left-radius: .25rem;
+      border-top-right-radius: .25rem;
+    }
+
+    .layer-toggles .category:last-of-type .category-title.collapsed {
+      border-bottom-left-radius: .25rem;
+      border-bottom-right-radius: .25rem;
+    }
+
+    .layer-toggles .toggle-layer {
+      background-color: #fff;
+      cursor: pointer;
+      width: 250px;
+      padding: .5rem;
+      line-height: 14px;
+      border-top: 1px solid #ccc;
+    }
+
+    .layer-toggles .category:last-of-type .toggle-layer:last-of-type {
+      border-radius: 0 0 .25rem .25rem;
+    }
+
+    .layer-toggles .toggle-layer:hover {
+      background-color: #f4f4f4;
+    }
+
+    .layer-toggles .fa-ul {
+      margin-left: 19px;
+      margin-bottom: 0;
+    }
+
+    .category-buttons {
+      display: none;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  <h1>{% block title %}{{ info }}: Map{% endblock %}</h1>
+
+  {% if not spaces %}
+    <div class="alert alert-dark ml-2">
+      There are no layers available yet. Be sure to process shapefiles
+      (<a href="https://multimedia.metabolismofcities.org/videos/332795/">instructions
+      here</a> [spanish]) in order to add layers to the map.
+    </div>
+  {% else %}
+    <div id="map" class="leaflet-map">{{ map|safe }}</div>
+  {% endif %}
+
+  <h2 class="mt-4">All reference spaces inside this file</h2>
+
+  {% if info.imported_spaces.count > 500 %}
+    <div class="alert alert-warning">NOTE: the table is restricted to the first 500 items</div>
+  {% endif %}
+
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>Space</th>
+        <th>Coordinates</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for each in spaces %}
+      <tr>
+        <td><a href="{% url URLS.SPACE each.id %}">{{ each }}</a></td>
+        <td>{{ each.get_centroids }}</td>
+        <td>{{ each.description|truncatewords:30 }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

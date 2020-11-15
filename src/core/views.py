@@ -1994,6 +1994,7 @@ def dataimport(request):
 
     if request.user.id != 1:
         return redirect("/")
+    return redirect("/")
     if "table" in request.GET and request.GET.get("table") != "meta_referencespaces":
         return redirect("/")
 

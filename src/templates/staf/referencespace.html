@@ -16,6 +16,9 @@
       background: #f4f4f4;
       color: #535050;
     }
+    .largeicon {
+      font-size: 5rem;
+    }
 
   </style>
 {% endblock %}
@@ -32,38 +35,113 @@
   <h1>{{ info }}</h1>
 
   {% if info.photo.id != 33476 %}
-    <img src="{{ info.photo.image.thumbnail.url }}" alt="" class="img-thumbnail" />
+    <div class="text-center mb-4">
+      <img src="{{ info.photo.image.large.url }}" alt="" class="img-thumbnail" />
+      <br>
+      <em>Photo by <a href="{% url URLS.LIBRARY_ITEM info.photo.id %}">{{ info.photo.get_author_citation }}</a> | {{ info.photo.license }} | {{ info.photo.year }}</em>
+    </div>
   {% endif %}
 
-  <dl class="row">
-    <dt class="col-sm-3">ID</dt>
-    <dd class="col-sm-9">{{ info.id }}</dd>
+  {% if info.geometry %}
 
-    <dt class="col-sm-3">Tags</dt>
-    <dd class="col-sm-9">
-      {% if info.source.tags.all %}
-        <ul class="list-unstyled">
-        {% for each in info.source.tags.all %}
-          <li>{{ each }}</li>
-        {% endfor %}
+    <div class="mt-2 alert alert-dark text-center">
+      <i class="fa fa-map-marker-alt"></i>
+      Coordinates: {{ info.get_centroids }}<br>
+      <a href="http://www.openstreetmap.org/?mlat={{ info.geometry.centroid.1 }}&amp;mlon={{ info.geometry.centroid.0 }}&amp;zoom=12">View on OpenStreetMap</a> | 
+      <a href="https://www.google.com/maps/search/?api=1&query={{ info.get_centroids }}">View on Google Maps</a>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="leaflet-map">
+          {{ map|safe }}
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="leaflet-map">
+          {{ satmap|safe }}
+        </div>
+      </div>
+    </div>
+
+  {% endif %}
+
+  <div class="row mt-3">
+
+    <div class="col-lg-4">
+
+      <div class="p-4 bg-light rounded border text-center">
+        <span class="largeicon">
+          <i class="fal fa-{{ info.source.tags.all.0.icon }}"></i>
+        </span>
+      </div>
+
+      <div class="card">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item table-item">
+            <div><i class="far fa-fw fa-fingerprint mr-1"></i> ID</div>
+            <div><code>{{ info.id }}</code></div>
+          </li>
+          {% if associated_spaces %}
+            <li class="list-group-item ">
+              <div>
+                <i class="far fa-fw fa-globe-africa mr-1"></i> Associated space(s)
+                <br>
+                {% for each in associated_spaces %}
+                  <a href="{% url URLS.SPACE each.id %}">{{ each }}</a><br>
+                {% endfor %}
+              </div>
+            </li>
+          {% endif %}
+          {% if info.source %}
+            <li class="list-group-item ">
+              <div>
+                <i class="far fa-fw fa-file mr-1"></i> Source document
+                <br>
+                <a href="{% url URLS.LIBRARY_ITEM info.source.id %}">{{ info.source }}</a>
+              </div>
+            </li>
+            {% if siblings %}
+              <li class="list-group-item ">
+                <div>
+                  <i class="far fa-fw fa-plus mr-1"></i> More from the same source
+                  <br>
+                  {% for each in siblings %}
+                    <a href="{% url URLS.SPACE each.id %}">{{ each }}</a><br>
+                  {% endfor %}
+                  <hr>
+                  <a href="{% url URLS.MAP_ITEM info.source.id %}">View all on map ({{ all_siblings }})</a>
+                </div>
+              </li>
+            {% endif %}
+          {% endif %}
+          {% if info.source.tags.all %}
+            <li class="list-group-item">
+              <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Tags
+              <br>
+              {% for each in info.source.tags.all %}
+                <a class="btn btn-sm btn-primary-outline mt-1" href="{% url URLS.LIBRARY %}?find=true&amp;search={{ each.id }}&amp;types=all">{{ each }}</a>
+              {% endfor %}
+            </li>
+          {% endif %}
         </ul>
+      </div>
+    </div>
+
+    <div class="col-lg-8">
+      {% if info.description %}
+        {{ info.get_description }}
       {% else %}
-        <em>None</em>
+        <div class="alert alert-dark text-center p-5 mb-0">
+          <h2>
+          <i class="fa fa-info-circle"></i><br class="mb-4">
+            We don't have a description for {{ info }} yet. 
+        </div>
       {% endif %}
 
-    {% if info.description %}
-      <dt class="col-sm-3">Description</dt>
-      <dd class="col-sm-9">{{ info.get_description }}</dd>
-    {% endif %}
+    </div>
 
-    {% if info.source %}
-      <dt class="col-sm-3">Source document</dt>
-      <dd class="col-sm-9"><a href="{% url URLS.LIBRARY_ITEM info.source.id %}">{{ info.source }}</a></dd>
-    {% endif %}
-    
-    </dd>
-
-  </dl>
+  </div>
 
   {% if info.meta_data.features %}
     <h2>Features</h2>
@@ -75,10 +153,7 @@
     </dl>
   {% endif %}
 
-  {% if info.geometry %}
-
-    <h2>Location</h2>
-    <div id="map" class="leaflet-map"></div>
+  {% if inside_the_space %}
 
     <table class="table table-bordered datatable">
       <thead>
@@ -104,51 +179,4 @@
     </table>
   {% endif %}
 
-{% endblock %}
-
-{% block footer %}
-  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
-          integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
-          crossorigin="">
-  </script>
-
-  <script>
-    // https://leafletjs.com/reference-1.6.0.html
-  var map = L.map("map");
-  L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    id: "mapbox/streets-v11",
-    tileSize: 512,
-    zoomOffset: -1,
-  }).addTo(map);
-
-  function onEachFeature(geometries, layer) {
-      var popupContent = "<p>Type: " +
-          geometries.type;
-      if (geometries.properties && geometries.properties.popupContent) {
-        popupContent += geometries.properties.popupContent;
-      }
-      layer.bindPopup(popupContent);
-    }
-
-    geojsonlayer = L.geoJSON({{ info.geometry.geojson|safe }}, {
-      style: function (geometries) {
-        return geometries.properties && geometries.properties.style;
-      },
-      onEachFeature: onEachFeature,
-      pointToLayer: function (geometries, latlng) {
-        return L.circleMarker(latlng, {
-          radius: 8,
-          fillColor: "red",
-          color: "#000",
-          weight: 1,
-          opacity: 1,
-          fillOpacity: 0.8
-        });
-      }
-    }).addTo(map);
-
-    map.fitBounds(geojsonlayer.getBounds());
-
-  </script>
 {% endblock %}

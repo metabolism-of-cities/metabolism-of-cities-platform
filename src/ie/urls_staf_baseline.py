@@ -46,6 +46,7 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/resources/theses/", data.library, {"type": "theses"}, name="theses"),
     path("dashboards/<slug:space>/resources/journal-articles/", data.library, {"type": "articles"}, name="journal_articles"),
     path("dashboards/<slug:space>/maps/overview/", staf.space_map, name="space_map"),
+    path("library/maps/<int:id>/view/", staf.map_item, name="map_item"),
 
     re_path(r'dashboards/(?P<space>[-\w]+)/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/$', staf.layer_overview, name="layer_overview"),
     re_path(r'dashboards/(?P<space>[-\w]+)/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/instructionvideos/$', data.instructionvideos),

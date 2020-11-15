@@ -52,6 +52,7 @@ def site(request):
         urls["DATA_ARTICLE"] = slug + ":" + "article"
         urls["SPACE"] = slug + ":" + "referencespace"
         urls["GEOJSON"] = slug + ":" + "geojson"
+        urls["MAP_ITEM"] = slug + ":" + "map_item"
 
     if request.user.is_authenticated and request.user.people:
         people = request.user.people

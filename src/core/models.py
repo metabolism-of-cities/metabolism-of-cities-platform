@@ -1114,9 +1114,10 @@ class LibraryItem(Record):
 
         # Yeah we soon need to do more thorough checks for this!
         if check:
-            check.delete()
+            #check.delete()
+            error = "This file was already processed - we can not process it again"
 
-        if self.type.id == 40: # Type = shapefile
+        if self.type.id == 40 and not error: # Type = shapefile
 
             layer = self.get_gis_layer()
             fields = layer.fields
@@ -1153,7 +1154,7 @@ class LibraryItem(Record):
             self.meta_data["debug_old"] = debug_old
             self.meta_data["debug_new"] = debug_new
 
-        elif self.type.id == 41: # Type = GPS coordinate spreadsheet
+        elif self.type.id == 41 and not error: # Type = GPS coordinate spreadsheet
 
             spreadsheet = self.get_spreadsheet()
             df = spreadsheet["df"]
@@ -1785,6 +1786,7 @@ class ReferenceSpace(Record):
         except:
             return None
 
+    @property
     def photo(self):
         from core.models import Photo
         try:
