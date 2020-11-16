@@ -604,6 +604,11 @@ def referencespace(request, id=None, space=None, slug=None):
             name="geojson"
         ).add_to(map)
 
+        if info.geometry.geom_type != "Point":
+            # For a point we want to give some space around it, but polygons should be 
+            # an exact fit
+            map.fit_bounds(map.get_bounds())
+
         Fullscreen().add_to(map)
 
         satmap = folium.Map(
@@ -613,6 +618,10 @@ def referencespace(request, id=None, space=None, slug=None):
             tiles=SATELLITE_TILES,
             attr="Mapbox",
         )
+        if info.geometry.geom_type != "Point":
+            # For a point we want to give some space around it, but polygons should be 
+            # an exact fit
+            satmap.fit_bounds(map.get_bounds())
 
         Fullscreen().add_to(satmap)
 
