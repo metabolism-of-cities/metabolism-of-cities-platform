@@ -119,3 +119,9 @@ def get_space(request, slug):
     check = get_object_or_404(ActivatedSpace, slug=slug, part_of_project_id=request.project)
     return check.space
 
+def set_author(author, item):
+    RecordRelationship.objects.create(
+        relationship_id = RELATIONSHIP_ID["author"],
+        record_parent_id = author,
+        record_child_id = item,
+    )
