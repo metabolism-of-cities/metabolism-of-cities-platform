@@ -601,7 +601,7 @@ def referencespace(request, id=None, space=None, slug=None):
         )
         folium.GeoJson(
             info.geometry.geojson,
-            name="geojson"
+            name="geojson",
         ).add_to(map)
 
         if info.geometry.geom_type != "Point":
@@ -620,8 +620,19 @@ def referencespace(request, id=None, space=None, slug=None):
         )
         if info.geometry.geom_type != "Point":
             # For a point we want to give some space around it, but polygons should be 
-            # an exact fit
+            # an exact fit, and we also want to show the outline of the polygon on the 
+            # satellite image
             satmap.fit_bounds(map.get_bounds())
+            def style_function(feature):
+                return {
+                    "fillOpacity": 0,
+                    "weight": 4,
+                }
+            folium.GeoJson(
+                info.geometry.geojson,
+                name="geojson",
+                style_function=style_function,
+            ).add_to(satmap)
 
         Fullscreen().add_to(satmap)
 
