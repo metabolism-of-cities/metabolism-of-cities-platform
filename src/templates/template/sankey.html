@@ -20,9 +20,9 @@
     shape-rendering: crispEdges;
   }
 
-  text {
-    font-size: 12px;
+  #chart text {
     font-family: monospace;
+    font-size: 12px;
   }
 
   .link {
@@ -59,43 +59,31 @@
       colors: ["#666"],
       keys: ["from", "to", "weight", "code"],
       data: [
-        // Imports --> Y
-        ["Imports", "Manufacturing", 1, "MF.3.8 Sand and gravel"],
-        ["Imports", "Waste", 1, "MF.3.8 Sand and gravel"],
-
-        // Imports X --> Y
-
-        // Extraction --> Y
-        ["Extraction", "Waste", 1, "MF.3.8 Sand and gravel"],
-        ["Extraction", "Manufacturing", 1, "MF.3.8 Sand and gravel"],
-        ["Extraction", "Emission to air", 1, "MF.3.8 Sand and gravel"],
-        ["Extraction", "Emission to water", 1, "MF.3.8 Sand and gravel"],
-
-        // Manufacturing --> Y
-        ["Manufacturing", "Waste", 1, "MF.3.8 Sand and gravel"],
-        ["Manufacturing", "New construction", 1, "MF.3.8 Sand and gravel"],
-        ["Manufacturing", "Renovation", 1, "MF.3.8 Sand and gravel"],
-        ["Manufacturing", "Reuse", 1, "MF.3.8 Sand and gravel"],
-        ["Manufacturing", "Remanufacture", 1, "MF.3.8 Sand and gravel"],
-        ["Manufacturing", "Emission to air", 1, "MF.3.8 Sand and gravel"],
-        ["Manufacturing", "Emission to water", 1, "MF.3.8 Sand and gravel"],
-
-        // X --> Emissions
-        ["Emission to air", "Emissions", 1, "MF.3.8 Sand and gravel"],
-        ["Emission to water", "Emissions", 1, "MF.3.8 Sand and gravel"],
-
-        // X --> Exports
-        ["Extraction", "Exports", 1, "MF.3.8 Sand and gravel"],
-        ["Manufacturing", "Exports", 1, "MF.3.8 Sand and gravel"],
-        ["Imports", "Exports", 1, "MF.3.8 Sand and gravel"],
-        ["Waste", "Exports", 1, "MF.3.8 Sand and gravel"],
-
-        // Exports --> Y
-        ["Waste", "Landfill", 1, "MF.3.8 Sand and gravel"],
-        ["Waste", "Recycling", 1, "MF.3.8 Sand and gravel"],
-
-        // Exports X --> Y
-
+        ["Extraction", "Waste", 1],
+        ["Extraction", "Exports", 1],
+        ["Extraction", "Manufacturing", 1],
+        ["Extraction", "Emissions to air", 1],
+        ["Extraction", "Emissions to water", 1],
+        ["Imports", "Use", 1],
+        ["Imports", "Recycling", 1],
+        ["Imports", "Landfill", 1],
+        ["Imports", "Reuse", 1],
+        ["Imports", "Remanufacture", 1],
+        ["Imports", "Waste Treatment", 1],
+        ["Imports", "Manufacturing", 1],
+        ["Imports", "Exports", 1],
+        ["Manufacturing", "Waste", 1],
+        ["Manufacturing", "Emissions to air", 1],
+        ["Manufacturing", "Emissions to water", 1],
+        ["Manufacturing", "Exports", 1],
+        ["Manufacturing", "Use", 1],
+        ["Manufacturing", "New construction", 1],
+        ["Manufacturing", "Renovation", 1],
+        ["Manufacturing", "Vehicles", 1],
+        ["Use", "Demolition", 1],
+        ["Waste", "Use", 1],
+        ["Waste", "Manufacturing", 1],
+        ["Waste", "Exports", 1],
       ],
       clip: false,
       type: "sankey",
@@ -156,65 +144,50 @@
 <script>
   let data = {
     "nodes": [
-      { "name": "startA" },
-      { "name": "startB" },
-      { "name": "process1" },
-      { "name": "process2" },
-      { "name": "process3" },
-      { "name": "process4" },
-      { "name": "process5" },
-      { "name": "process6" },
-      { "name": "process7" },
-      { "name": "process8" },
-      { "name": "process9" },
-      { "name": "process10" },
-      { "name": "process11" },
-      { "name": "process12" },
-      { "name": "process13" },
-      { "name": "process14" },
-      { "name": "process15" },
-      { "name": "process16" },
-      { "name": "finishA" },
-      { "name": "finishB" }
+      {"name": "Extraction"},
+      {"name": "Imports"},
+      {"name": "Manufacturing"},
+      {"name": "Use"},
+      {"name": "Waste"},
+      {"name": "Exports"},
+      {"name": "Emissions to air"},
+      {"name": "Emissions to water"},
+      {"name": "Recycling"},
+      {"name": "Landfill"},
+      {"name": "Reuse"},
+      {"name": "Remanufacture"},
+      {"name": "Waste Treatment"},
+      {"name": "New construction"},
+      {"name": "Renovation"},
+      {"name": "Vehicles"},
+      {"name": "Demolition"},
     ],
     "links": [
-      { "source": "startA", "target": "process8", "value": 20, "optimal": "yes" },
-      { "source": "startA", "target": "process5", "value": 20, "optimal": "yes" },
-      { "source": "startA", "target": "process6", "value": 20, "optimal": "yes" },
-      { "source": "startB", "target": "process1", "value": 15, "optimal": "yes" },
-      { "source": "startB", "target": "process5", "value": 15, "optimal": "yes" },
-      { "source": "process1", "target": "process4", "value": 30, "optimal": "yes" },
-      { "source": "process4", "target": "process1", "value": 10, "optimal": "yes" },
-      { "source": "process2", "target": "process7", "value": 35, "optimal": "yes" },
-      { "source": "process1", "target": "process3", "value": 20, "optimal": "yes" },
-      { "source": "process5", "target": "process1", "value": 20, "optimal": "yes" },
-      { "source": "process6", "target": "startA", "value": 5, "optimal": "yes" },
-      { "source": "process4", "target": "process2", "value": 5, "optimal": "yes" },
-      { "source": "process6", "target": "process8", "value": 15, "optimal": "yes" },
-      { "source": "process4", "target": "startB", "value": 5, "optimal": "yes" },
-      { "source": "process3", "target": "process2", "value": 15, "optimal": "yes" },
-      { "source": "process3", "target": "startB", "value": 5, "optimal": "yes" },
-      { "source": "process15", "target": "process13", "value": 10, "optimal": "yes" },
-      { "source": "process13", "target": "process9", "value": 10, "optimal": "yes" },
-      { "source": "process7", "target": "startB", "value": 20, "optimal": "yes" },
-      { "source": "process8", "target": "process1", "value": 10, "optimal": "yes" },
-       { "source": "process8", "target": "process16", "value": 10, "optimal": "yes" },
-      { "source": "process16", "target": "process9", "value": 10, "optimal": "yes" },
-      { "source": "process8", "target": "process11", "value": 25, "optimal": "yes" },
-      { "source": "process11", "target": "process10", "value": 20, "optimal": "yes" },
-      { "source": "process4", "target": "process12", "value": 10, "optimal": "yes" },
-      { "source": "process12", "target": "process11", "value": 10, "optimal": "yes" },
-      { "source": "process7", "target": "process15", "value": 15, "optimal": "yes" },
-      { "source": "process15", "target": "process14", "value": 10, "optimal": "yes" },
-      { "source": "process10", "target": "process13", "value": 10, "optimal": "yes" },
-      { "source": "process10", "target": "process16", "value": 10, "optimal": "yes" },
-      { "source": "process14", "target": "finishB", "value": 10, "optimal": "yes" },
-      { "source": "process9", "target": "finishA", "value": 10, "optimal": "yes" },
-      { "source": "process16", "target": "process8", "value": 10, "optimal": "yes" },
-      { "source": "process9", "target": "finishB", "value": 10, "optimal": "yes" },
-      { "source": "process15", "target": "finishB", "value": 10, "optimal": "yes" },
-      { "source": "process15", "target": "finishA", "value": 10, "optimal": "yes" },
-      { "source": "process11", "target": "process15", "value": 25, "optimal": "yes" }
+      {"source": "Extraction", "target": "Waste", "value": 1, "optimal": "yes"},
+      {"source": "Extraction", "target": "Exports", "value": 1, "optimal": "yes"},
+      {"source": "Extraction", "target": "Manufacturing", "value": 1, "optimal": "yes"},
+      {"source": "Extraction", "target": "Emissions to air", "value": 1, "optimal": "yes"},
+      {"source": "Extraction", "target": "Emissions to water", "value": 1, "optimal": "yes"},
+      {"source": "Imports", "target": "Use", "value": 1, "optimal": "yes"},
+      {"source": "Imports", "target": "Recycling", "value": 1, "optimal": "yes"},
+      {"source": "Imports", "target": "Landfill", "value": 1, "optimal": "yes"},
+      {"source": "Imports", "target": "Reuse", "value": 1, "optimal": "yes"},
+      {"source": "Imports", "target": "Remanufacture", "value": 1, "optimal": "yes"},
+      {"source": "Imports", "target": "Waste Treatment", "value": 1, "optimal": "yes"},
+      {"source": "Imports", "target": "Manufacturing", "value": 1, "optimal": "yes"},
+      {"source": "Imports", "target": "Exports", "value": 1, "optimal": "yes"},
+      {"source": "Manufacturing", "target": "Waste", "value": 1, "optimal": "yes"},
+      {"source": "Manufacturing", "target": "Emissions to air", "value": 1, "optimal": "yes"},
+      {"source": "Manufacturing", "target": "Emissions to water", "value": 1, "optimal": "yes"},
+      {"source": "Manufacturing", "target": "Exports", "value": 1, "optimal": "yes"},
+      {"source": "Manufacturing", "target": "Use", "value": 1, "optimal": "yes"},
+      {"source": "Manufacturing", "target": "New construction", "value": 1, "optimal": "yes"},
+      {"source": "Manufacturing", "target": "Renovation", "value": 1, "optimal": "yes"},
+      {"source": "Manufacturing", "target": "Vehicles", "value": 1, "optimal": "yes"},
+      {"source": "Use", "target": "Demolition", "value": 1, "optimal": "yes"},
+      {"source": "Waste", "target": "Use", "value": 1, "optimal": "yes"},
+      {"source": "Waste", "target": "Manufacturing", "value": 1, "optimal": "yes"},
+      {"source": "Waste", "target": "Exports", "value": 1, "optimal": "yes"},
     ]
   };
 
