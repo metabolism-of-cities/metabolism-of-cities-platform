@@ -1274,12 +1274,12 @@ class LibraryItem(Record):
         elif doc == 1:
             doc = self.attachments.all()[0]
         else:
-            doc = self.attachments.filter(name__icontains=".processed.")
+            doc = self.attachments.filter(name__icontains=".final.")
             if doc.count() == 1:
                 doc = doc[0]
             else:
                 error = True
-                error_message = "Multiple files were found. Please upload ONE file that contains '.processed' in the name (example.processed.xls) so that we know which file to work with"
+                error_message = "Multiple files were found. Please upload ONE file that contains '.final' in the name (example.final.xls) so that we know which file to work with"
         if doc:
             extension = doc.name
             extension = extension.split(".")
@@ -1295,7 +1295,10 @@ class LibraryItem(Record):
             if extension in options:
                 file_type = options[extension]
                 try:
-                    df = pd.read_excel(doc.file.file)
+                    if extension == "csv":
+                        df = pd.read_csv(doc.file.file)
+                    else:
+                        df = pd.read_excel(doc.file.file)
                 except Exception as e:
                     error = True
                     error_message = mark_safe("We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")

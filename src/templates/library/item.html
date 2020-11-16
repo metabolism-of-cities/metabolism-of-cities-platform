@@ -369,9 +369,9 @@
           {{ info.get_description }}
         {% endif %}
 
-        {% if info.attachments.all %}
+        {% if info.attachments.all or info.imported_spaces.all %}
 
-          {% if info.type.name == "Shapefile" %}
+          {% if info.type.name == "Shapefile" or info.imported_spaces.all %}
             <h3 class="mt-4">Map</h3>
             {% if info.get_shapefile_plot %}
               {% if info.meta_data.processed and IS_DATA_PORTAL %}
@@ -379,7 +379,7 @@
               {% else %}
                 <img src="{{ info.get_shapefile_plot }}" alt="" />
               {% endif %}
-            {% else %}
+            {% elif info.type.name == "Shapefile" %}
               <p><em>There is no preview plot available.</em></p>
               {% if info.meta_data.shapefile_plot_error %}
                 <div class="alert alert-danger"><strong>Error:</strong><br>{{ info.meta_data.shapefile_plot_error }}</div>
@@ -393,17 +393,20 @@
             {% endif %}
           {% endif %}
 
-          <h3 class="mt-4">Attachment(s)</h3>
-          <ul>
-          {% for each in info.attachments.all %}
-            <li><a href="{{ each.file.url }}">{{ each }}</a> ({{ each.get_size }})</li>
-          {% endfor %}
-          </ul>
-          {% if info.attachments.count > 2 %}
-            <form method="post">
-              <button type="submit" class="btn btn-default-outline" name="zipfile" value="true"><i class="fa fa-file-archive"></i> Download as zipfile</button>
-              {% csrf_token %}
-            </form>
+          {% if info.attachments.all %}
+            <h3 class="mt-4">Attachment(s)</h3>
+            <ul>
+            {% for each in info.attachments.all %}
+              <li><a href="{{ each.file.url }}">{{ each }}</a> ({{ each.get_size }})</li>
+            {% endfor %}
+            </ul>
+            {% if info.attachments.count > 2 %}
+              <form method="post">
+                <button type="submit" class="btn btn-default-outline" name="zipfile" value="true"><i class="fa fa-file-archive"></i> Download as zipfile</button>
+                {% csrf_token %}
+              </form>
+            {% endif %}
+
           {% endif %}
 
         {% endif %}

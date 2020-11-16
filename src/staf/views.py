@@ -618,7 +618,9 @@ def referencespace(request, id=None, space=None, slug=None):
 
         # Note that there may be _multiple_ spaces (e.g. cities) associated with the source document, for instance
         # because it is a national coverage shapefile. So we must check which of the spaces THIS item fits into
-        associated_spaces = info.source.spaces.filter(geometry__contains=info.geometry)
+        associated_spaces = info.source.spaces.all()
+        if associated_spaces.count() > 1:
+            associated_spaces = info.source.spaces.filter(geometry__contains=info.geometry)
 
     all_siblings = 0
     try:

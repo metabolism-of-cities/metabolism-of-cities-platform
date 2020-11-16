@@ -115,7 +115,7 @@
                     <a href="{% url URLS.SPACE each.id %}">{{ each }}</a><br>
                   {% endfor %}
                   <hr>
-                  <a href="{% url URLS.MAP_ITEM info.source.id %}">View all on map ({{ all_siblings }})</a>
+                  <a href="{% url URLS.MAP_ITEM info.source.id %}"><i class="fa fa-map"></i> View all on map ({{ info.source.imported_spaces.count }})</a>
                 </div>
               </li>
             {% endif %}

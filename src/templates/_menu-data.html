@@ -34,13 +34,14 @@
 
 <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="upload-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Upload
+    Community
   </a>
   <div class="dropdown-menu" aria-labelledby="upload-dropdown">
-    <a hidden class="dropdown-item" href="{% url "data:upload_dataset" %}">Dataset</a>
-    <a hidden class="dropdown-item" href="{% url "data:upload_dataportal" %}">Dataset portal</a>
     <a class="dropdown-item" href="{% url "data:hub" %}">Community hub</a>
-    <a class="dropdown-item" href="https://multimedia.metabolismofcities.org/media/library/screenrecording.mp4">Instruction video</a>
+    <a class="dropdown-item" href="{% url "data:hub_harvesting" %}">Data collection</a>
+    <a class="dropdown-item" href="{% url "data:hub_processing" %}">Data processing</a>
+    <a class="dropdown-item" href="{% url "data:hub_analysis" %}">Data analysis</a>
+    <a class="dropdown-item" href="{% url "data:volunteer_forum" %}">Forum</a>
   </div>
 </li>
 <li class="nav-item"><a class="nav-link" href="https://data.metabolismofcities.org/news/new-metabolism-of-cities-data-hub-launched/">About</a></li>

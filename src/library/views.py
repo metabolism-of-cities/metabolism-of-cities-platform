@@ -650,7 +650,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 else:
                     form.fields["tags"].queryset = Tag.objects.filter(parent_tag__parent_tag_id=845)
 
-    if type.name == "Shapefile" or type.name == "Dataset":
+    if type.name == "Shapefile" or type.name == "Dataset" or type.name == "GPS Coordinates":
         files = True
 
     if request.method == "POST":
