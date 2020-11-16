@@ -46,9 +46,9 @@
 
     <div class="mt-2 alert alert-dark text-center">
       <i class="fa fa-map-marker-alt"></i>
-      Coordinates: {{ info.get_centroids }}<br>
-      <a href="http://www.openstreetmap.org/?mlat={{ info.geometry.centroid.1 }}&amp;mlon={{ info.geometry.centroid.0 }}&amp;zoom=12">View on OpenStreetMap</a> | 
-      <a href="https://www.google.com/maps/search/?api=1&query={{ info.get_centroids }}">View on Google Maps</a>
+      Coordinates: {{ info.get_lat }}, {{ info.get_lng }}<br>
+      <a href="http://www.openstreetmap.org/?mlat={{ info.get_lat }} }}&amp;mlon={{ info.get_lng }}&amp;zoom=12">View on OpenStreetMap</a> | 
+      <a href="https://www.google.com/maps/search/?api=1&query={{ info.get_lat }},{{ info.get_lng }}">View on Google Maps</a>
     </div>
 
     <div class="row">

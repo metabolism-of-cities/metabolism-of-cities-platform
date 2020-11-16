@@ -260,12 +260,12 @@ def space_map(request, space):
 def map_item(request, id):
     info = LibraryItem.objects.get(pk=id)
     project = get_project(request)
-    spaces = info.imported_spaces.all()
+    spaces = info.imported_spaces.filter(geometry__isnull=False)
     map = None
 
     if spaces:
         map = folium.Map(
-            location=[spaces[0].geometry.centroid[1], spaces[0].geometry.centroid[0]],
+            location=spaces[0].get_centroids,
             zoom_start=15,
             scrollWheelZoom=False,
             tiles=STREET_TILES,
@@ -283,14 +283,14 @@ def map_item(request, id):
             messages.error(request, "Sorry, this map has > 500 items and will take too long to load - we work on providing alternative views for such maps")
 
         Fullscreen().add_to(map)
+        map.fit_bounds(map.get_bounds())
 
-        # Make fitbounds
         # show popup
 
     context = {
         "info": info,
         "submenu": "library",
-        "spaces": spaces,
+        "spaces": info.imported_spaces.all(),
         "map": map._repr_html_() if map else None,
         "load_datatables": True,
     }
@@ -1178,21 +1178,25 @@ def hub_harvesting_worksheet(request, space=None):
 
 def hub_processing(request, space=None):
 
-    gis = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=2)
-    datasets = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=30)
     title = "Data processing"
+    datasets = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=30)
+    gis = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).exclude(meta_data__processed__isnull=False).distinct()
+    spreadsheet = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project).exclude(meta_data__processed__isnull=False).distinct()
 
     if space:
         space = get_space(request, space)
         title += " | " + space.name
-        gis = gis.filter(related_to__spaces=space)
+        gis = gis.filter(spaces=space)
+        spreadsheet = spreadsheet.filter(spaces=space)
 
     context = {
         "menu": "processing",
         "space": space,
         "hide_space_menu": True,
         "gis": gis.count(),
-        "gis_open": gis.filter(status=1, assigned_to__isnull=True).count(),
+        "gis_open": gis.exclude(meta_data__assigned_to__isnull=False).count(),
+        "spreadsheet": spreadsheet.count(),
+        "spreadsheet_open": spreadsheet.exclude(meta_data__assigned_to__isnull=False).count(),
         "datasets": datasets.count(),
         "datasets_open": datasets.filter(status=1, assigned_to__isnull=True).count(),
         "title": title,
@@ -1206,17 +1210,19 @@ def hub_processing_list(request, space=None, type=None):
     if type == "gis":
         title = "GIS data processing"
         list = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
-        unassigned = list.exclude(meta_data__assigned_to__isnull=False).count()
-        processed = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct().count()
+        unassigned = list.exclude(meta_data__assigned_to__isnull=False)
+        processed = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct()
 
     elif type == "geospreadsheet":
         title = "Geospatial spreadsheets"
         list = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
-        unassigned = list.exclude(meta_data__assigned_to__isnull=False).count()
-        processed = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct().count()
+        unassigned = list.exclude(meta_data__assigned_to__isnull=False)
+        processed = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct()
 
     elif type == "datasets":
         list = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=30)
+        processed = list
+        unassigned = list
         title = "Stocks and flows data processing"
         if "update" in request.GET and False:
             l = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=30, assigned_to__isnull=False)
@@ -1230,7 +1236,12 @@ def hub_processing_list(request, space=None, type=None):
     if space:
         space = get_space(request, space)
         title += " | " + space.name
-        list = list.filter(spaces=space)
+        try:
+            list = list.filter(spaces=space)
+            unassigned = unassigned.filter(spaces=space)
+            processed = processed.filter(spaces=space)
+        except:
+            pass
 
     context = {
         "list": list,
@@ -1239,8 +1250,8 @@ def hub_processing_list(request, space=None, type=None):
         "title": title,
         "hide_space_menu": True,
         "load_datatables": True,
-        "processed": processed,
-        "unassigned": unassigned,
+        "processed": processed.count(),
+        "unassigned": unassigned.count(),
     }
     return render(request, "hub/processing.list.html", context)
 
@@ -1869,7 +1880,7 @@ def hub_processing_gis_save(request, id, space=None):
             relationship_id = RELATIONSHIP_ID["processor"],
         )
 
-        return redirect(project.slug + ":library_item", document.id)
+        return redirect(project.slug + ":map_item", document.id)
 
     context = {
         "document": document,

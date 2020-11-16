@@ -1782,7 +1782,21 @@ class ReferenceSpace(Record):
         try:
             lat = self.geometry.centroid[1]
             lng = self.geometry.centroid[0]
-            return str(lat) + ", " + str(lng)
+            return [lat,lng]
+        except:
+            return None
+
+    @property
+    def get_lat(self):
+        try:
+            return self.geometry.centroid[1]
+        except:
+            return None
+
+    @property
+    def get_lng(self):
+        try:
+            return self.geometry.centroid[0]
         except:
             return None
 

@@ -88,6 +88,12 @@
       (<a href="https://multimedia.metabolismofcities.org/videos/332795/">instructions
       here</a> [spanish]) in order to add layers to the map.
     </div>
+  {% elif not map %}
+    <div class="alert alert-dark ml-2">
+      <i class="fa fa-exclamation-triangle"></i>
+      We have been unable to generate a map. It seems like the elements in this map do not
+      have coordinates. Be sure to check the source file.
+    </div>
   {% else %}
     <div id="map" class="leaflet-map mb-3">{{ map|safe }}</div>
   {% endif %}
