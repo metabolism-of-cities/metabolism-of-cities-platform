@@ -26,7 +26,7 @@
         (<a href="https://multimedia.metabolismofcities.org/videos/332795/">instructions
         here</a> [spanish]) in order to add layers to the map.
       </div>
-    {% elif not map %}
+    {% elif not data %}
       <div class="alert alert-dark ml-2">
         <i class="fa fa-exclamation-triangle"></i>
         We have been unable to generate a map. It seems like the elements in this map do not
@@ -83,7 +83,7 @@
 
 {% endblock %}
 
-{% block javascript %}
+{% block footer %}
   <script>
     // function when hovering over an area
     function hoverArea(e) {

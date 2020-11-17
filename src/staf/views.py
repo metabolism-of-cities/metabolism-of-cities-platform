@@ -37,12 +37,10 @@ from django.utils.safestring import mark_safe
 import folium
 from folium.plugins import Fullscreen
 
-THIS_PROJECT = PROJECT_ID["staf"]
-
 def index(request):
     context = {
         "show_project_design": True,
-        "show_relationship": THIS_PROJECT,
+        "show_relationship": request.project,
     }
     return render(request, "staf/index.html", context)
 
@@ -263,6 +261,7 @@ def map_item(request, id):
     project = get_project(request)
     spaces = info.imported_spaces.filter(geometry__isnull=False)
     space_count = None
+    features = []
 
     if spaces.count() > 500:
         space_count = spaces.count()
@@ -271,6 +270,7 @@ def map_item(request, id):
     size = info.get_shapefile_size
     map = None
     simplify_factor = None
+
     # If the file is larger than 3MB, then we simplify
     if not "show_full" in request.GET:
         if size > 1024*1024*20:
@@ -280,43 +280,37 @@ def map_item(request, id):
         elif size > 1024*1024*5:
             simplify_factor = 0.001
 
-    if spaces:
-        map = folium.Map(
-            location=spaces[0].get_centroids,
-            zoom_start=15,
-            scrollWheelZoom=False,
-            tiles=STREET_TILES,
-            attr="Mapbox",
-        )
+    for each in spaces:
 
-        for each in spaces:
+        if simplify_factor:
+            geo = each.geometry.simplify(simplify_factor)
+        else:
+            geo = each.geometry
 
-            if simplify_factor:
-                folium.GeoJson(
-                    each.geometry.simplify(simplify_factor).geojson,
-                ).add_to(map)
-            else:
-                folium.GeoJson(
-                    each.geometry.geojson,
-                ).add_to(map)
+        features.append({
+            "type": "Feature",
+            "id": each.id,
+            "properties": {
+                "space_name": each.name,
+            },
+            "geometry": json.loads(geo.json)
+        })
 
-            spaces = spaces[:500]
-
-        Fullscreen().add_to(map)
-        map.fit_bounds(map.get_bounds())
-
-        # show popup
+    data = {
+        "type":"FeatureCollection",
+        "features": features,
+    }
 
     context = {
         "info": info,
         "submenu": "library",
         "spaces": info.imported_spaces.all() if not space_count else spaces,
-        "map": map._repr_html_() if map else None,
         "load_leaflet": True,
         "load_datatables": True,
         "size": filesizeformat(size),
         "simplify_factor": simplify_factor,
         "space_count": space_count,
+        "data": data,
     }
     return render(request, "staf/item.map.html", context)
 
