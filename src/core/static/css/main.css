@@ -720,37 +720,25 @@ a.badge-secondary:focus {
   font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif; }
   .leaflet-map a.btn-primary {
     color: #fff; }
-  .leaflet-map .download-map-wrapper {
+  .leaflet-map .download-map-wrapper,
+  .leaflet-map .clear-map-wrapper {
     border: 2px solid rgba(0, 0, 0, 0.2);
     background-clip: padding-box;
     border-radius: .25rem; }
-  .leaflet-map .download-map {
+  .leaflet-map .download-map,
+  .leaflet-map .clear-map {
     background-color: #fff;
     cursor: pointer;
     line-height: 30px;
     height: 30px;
     width: 30px;
     text-align: center;
-    font-size: 20px;
+    font-size: 1rem;
+    color: #404040;
     border-radius: .25rem; }
-    .leaflet-map .download-map:hover {
+    .leaflet-map .download-map:hover,
+    .leaflet-map .clear-map:hover {
       background-color: #f4f4f4; }
-  .leaflet-map .leaflet-control.clear-map.button {
-    width: 34px;
-    height: 34px;
-    line-height: 30px;
-    border-radius: 4px;
-    border: 2px solid #bbb;
-    background-color: #fff;
-    cursor: pointer;
-    font-family: "Font Awesome 5 Pro";
-    text-align: center;
-    font-size: 14px;
-    display: none; }
-    .leaflet-map .leaflet-control.clear-map.button:hover {
-      background-color: #f4f4f4; }
-    .leaflet-map .leaflet-control.clear-map.button::before {
-      content: "\f2ed"; }
   .leaflet-map .show-world.button {
     width: 30px;
     height: 30px;

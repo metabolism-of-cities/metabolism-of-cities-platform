@@ -1079,44 +1079,27 @@ a.badge-secondary:focus {
     color: $white;
   }
 
-  .download-map-wrapper {
+  .download-map-wrapper,
+  .clear-map-wrapper {
     border: 2px solid rgba(0,0,0,0.2);
     background-clip: padding-box;
     border-radius: .25rem;
   }
 
-  .download-map {
+  .download-map,
+  .clear-map {
     background-color: $white;
     cursor: pointer;
     line-height: 30px;
     height: 30px;
     width: 30px;
     text-align: center;
-    font-size: 20px;
+    font-size: 1rem;
+    color: #404040;
     border-radius: .25rem;
 
     &:hover {
       background-color: #f4f4f4;
-    }
-  }
-
-  .leaflet-control.clear-map.button {
-    width: 34px;
-    height: 34px;
-    line-height: 30px;
-    border-radius: 4px;
-    border: 2px solid #bbb;
-    background-color: #fff;
-    cursor: pointer;
-    font-family: "Font Awesome 5 Pro";
-    text-align: center;
-    font-size: 14px;
-    display: none;
-    &:hover {
-      background-color: #f4f4f4;
-    }
-    &::before {
-      content: "\f2ed";
     }
   }
 

@@ -124,7 +124,7 @@
         mouseover: hoverArea,
         mouseout: resetHover,
         click: selectArea
-      }).bindPopup("<h5>" + layer.feature.properties.space_name + "</h5><a class='btn btn-primary' href='" + layer.feature.link + "'><i class='fa fa-search-plus'></i> Explore area</a>");
+      }).bindPopup("<div class='title'>" + feature.properties.name + "</div><div class='content'>" + feature.properties.content + "</div>");
     }
 
     // variable for the data, add it to the map
@@ -140,6 +140,6 @@
       onEachFeature: onEachFeature,
     })
 
-    map.addLayer(dataLayer);
+    map.addLayer(dataLayer).fitBounds(dataLayer.getBounds())
   </script>
 {% endblock %}

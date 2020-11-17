@@ -154,8 +154,7 @@
 
     // enable popups so na user can click on an object on the map and see extra information
     function onEachFeature(feature, layer) {
-      var popupContent = "<div class='popup-title font-weight-bold'>" + feature.properties.space_name + "</div>" + feature.properties.content;
-
+      var popupContent = "<div class='title'>" + feature.properties.name + "</div><div class='content'>" + feature.properties.content + "</div>";
       layer.bindPopup(popupContent);
     }
 
@@ -175,16 +174,30 @@
         $(".toggle-layer[data-id='" + id + "'] i").toggleClass("fa-circle fa-sync fa-spin")
 
         $.get(url, function(geojson) {
-          window[layerVariable] = L.geoJSON(geojson, {
-            style: {
-              color: color,
-              fillOpacity: .4,
-              weight: 2,
-            },
+          if (geojson.markers == true) {
+            window[layerVariable] = L.geoJSON(geojson, {
+              style: {
+                color: color,
+                fillOpacity: .4,
+                weight: 2,
+              },
 
-            // function to create the popup
-            onEachFeature: onEachFeature,
-          });
+              // function to create the popup
+              onEachFeature: onEachFeature,
+            });
+          } else {
+            window[layerVariable] = L.geoJSON(geojson, {
+              style: {
+                color: color,
+                fillOpacity: .4,
+                weight: 2,
+              },
+
+              // function to create the popup
+              onEachFeature: onEachFeature,
+            });
+          }
+
 
           $(".toggle-layer[data-id='" + id + "'] i").toggleClass("fa-circle fa-sync fa-spin fal fas")
           map.addLayer(window[layerVariable]);
@@ -263,9 +276,9 @@
       var layersVisible = $(".toggle-layer.visible").length
 
       if (layersVisible == 0) {
-        $(".clear-map.button").hide()
+        $(".clear-map-wrapper").hide()
       } else {
-        $(".clear-map.button").show()
+        $(".clear-map-wrapper").show()
       }
     })
 
@@ -292,7 +305,7 @@
         var downloadButtonWrapper = L.DomUtil.create("div", "download-map-wrapper");
 
         var downloadButton = L.DomUtil.create("div", "download-map");
-        downloadButton.innerHTML = "<i class='fal fa-fw fa-save'></i>";
+        downloadButton.innerHTML = "<i class='fas fa-fw fa-save'></i>";
 
         downloadButtonWrapper.appendChild(downloadButton);
 
@@ -328,15 +341,19 @@
       $(".toggle-layer i").removeClass("fas").addClass("fal")
 
       // hide clear map button because it's not needed until layers are added again
-      $(".clear-map.button").hide()
+      $(".clear-map-wrapper").hide()
     }
 
     // add button to clear map
     L.Control.clearMap = L.Control.extend({
       onAdd: function(map) {
-        var button = L.DomUtil.create("div", "clear-map button");
+        var clearMapWrapper = L.DomUtil.create("div", "clear-map-wrapper leaflet-control");
+        var clearMapButton = L.DomUtil.create("div", "clear-map");
 
-        return button;
+        clearMapButton.innerHTML = "<i class='fas fa-fw fa-trash'></i>";
+        clearMapWrapper.appendChild(clearMapButton);
+
+        return clearMapWrapper;
       }
     });
 
@@ -346,7 +363,7 @@
 
     L.control.clearmap({ position: 'topleft' }).addTo(map);
 
-    $(".clear-map.button").click(function() {
+    $(".clear-map-wrapper").click(function() {
       clearMap()
     });
 
@@ -364,6 +381,16 @@
       $(".toggle-layer[data-id='{{ boundaries.source.id }}']").parent().prev(".category-title").click();
       $(".toggle-layer[data-id='{{ boundaries.source.id }}']").click();
     {% endif %}
+
+    // coloured markers
+    var greenIcon = new L.Icon({
+      iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+      shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
   </script>
   {% endif %}
 {% endblock %}
