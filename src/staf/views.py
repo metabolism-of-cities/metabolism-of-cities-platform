@@ -289,11 +289,11 @@ def map_item(request, id):
 
         features.append({
             "type": "Feature",
-            "id": each.id,
+            "geometry": json.loads(geo.json),
             "properties": {
-                "space_name": each.name,
+                "name": each.name,
+                "id": each.id,
             },
-            "geometry": json.loads(geo.json)
         })
 
     data = {
@@ -330,12 +330,12 @@ def geojson(request, id):
             content = content + f"<a href='{url}'>View details</a>"
             features.append({
                 "type": "Feature",
-                "id": each.id,
+                "geometry": json.loads(each.geometry.json),
                 "properties": {
-                    "space_name": each.name,
+                    "name": each.name,
                     "content": content,
+                    "id": each.id,
                 },
-                "geometry": json.loads(each.geometry.json)
             })
 
     data = {
