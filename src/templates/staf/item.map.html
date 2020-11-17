@@ -84,5 +84,62 @@
 {% endblock %}
 
 {% block javascript %}
+  <script>
+    // function when hovering over an area
+    function hoverArea(e) {
+      var layer = e.target;
 
+      layer.setStyle({
+        weight: 2,
+        color: "gold",
+      });
+
+      if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+        layer.bringToFront();
+      }
+    }
+
+    // function when hovering out of an area
+    function resetHover(e) {
+      var layer = e.target;
+      dataLayer.resetStyle(layer);
+      var layerID = layer.feature.id
+
+      $(".chart .bar[data-space='" + layerID + "'], .compact-table tr[data-space='" + layerID + "']").removeClass("selected");
+    }
+
+    // function when clicking on an area
+    function selectArea(e) {
+      var layer = e.target;
+
+      layer.setStyle({
+        weight: 2,
+        color: "gold",
+      });
+    }
+
+    // function to apply to each feature
+    function onEachFeature(feature, layer) {
+      layer.on({
+        mouseover: hoverArea,
+        mouseout: resetHover,
+        click: selectArea
+      }).bindPopup("<h5>" + layer.feature.properties.space_name + "</h5><a class='btn btn-primary' href='" + layer.feature.link + "'><i class='fa fa-search-plus'></i> Explore area</a>");
+    }
+
+    // variable for the data, add it to the map
+    let mapData = {{ data|safe|escape }};
+    let dataLayer = L.geoJson(mapData, {
+      style: {
+        fillColor: "#144d58",
+        fillOpacity: 0.7,
+        weight: 1,
+        opacity: 1,
+        color: "white",
+      },
+      onEachFeature: onEachFeature,
+    })
+
+    map.addLayer(dataLayer);
+  </script>
 {% endblock %}
