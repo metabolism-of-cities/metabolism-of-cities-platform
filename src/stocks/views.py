@@ -137,10 +137,10 @@ def map(request, space, id, box=None):
 
             features.append({
                 "type": "Feature",
-                "id": each.id,
-                "link": get_link,
                 "properties": {
-                    "space_name": each.name,
+                    "id": each.id,
+                    "link": get_link,
+                    "name": each.name,
                     "quantity": random.randint(1,200),
                     "unit": "kg",
                     "date": "2011",
