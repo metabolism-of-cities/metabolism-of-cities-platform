@@ -112,6 +112,20 @@
           {% endif %}
 
           <div class="card card-table mb-4">
+
+            {% if layer.num_feat > 1000 %}
+              <div class="alert alert-warning">
+                <i class="fa fa-exclamation-triangle"></i>
+                <strong>Important</strong><br>
+                This file contains {{ layer.num_feat }} different elements. That is a lot. Sometimes, this makes sense
+                (for instance, if we want to index all zipcodes in a country). However, it may also mean that this file 
+                is much too detailed. Before processing this, please consider whether we really benefit from having 
+                this in our system.
+                <strong>Because of the file size, administrator approval is needed to process this file. Use the 
+                chat box below to make the case and get approval to process this file.</strong>
+              </div>
+            {% endif %}
+
             <table class="table">
               <thead>
                 <tr>
@@ -129,6 +143,10 @@
                 <tr>
                   <td>Document name</td>
                   <td><a href="{% url URLS.LIBRARY_ITEM document.id %}">{{ document }}</a></td>
+                </tr>
+                <tr>
+                  <td>File size</td>
+                  <td>{{ size }}</td>
                 </tr>
                 <tr>
                   <td>Layer name</td>

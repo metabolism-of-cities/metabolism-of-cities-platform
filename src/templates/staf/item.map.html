@@ -95,7 +95,16 @@
       have coordinates. Be sure to check the source file.
     </div>
   {% else %}
-    {% if simplify_factor %}
+    {% if space_count %}
+      <div class="alert alert-warning">
+        <i class="fa fa-exclamation-circle"></i>
+        The map contains a total of {{ space_count }} items. Due to this large number of elements, we are 
+        only showing a partial map below.
+        {% if simplify_factor %} The map is furthermore simplified to make it easier to render.{% endif %}
+        We recommend you download the original shapefile if you would like 
+        to view the entire mape.
+      </div>
+    {% elif simplify_factor %}
       <div class="alert alert-warning">
         <i class="fa fa-exclamation-circle"></i>
         We are showing a simplified version of this map, due to the large file size ({{ size }}). If you want to

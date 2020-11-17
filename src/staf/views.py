@@ -200,6 +200,7 @@ def library_overview(request, type, space=None):
         date = datetime.datetime.now() - datetime.timedelta(days=days)
         list = list.filter(date_created__gte=date)
 
+    list = list.prefetch_related("tags")
     context = {
         "title": type.capitalize() if not title else title,
         "items": list,
@@ -261,10 +262,15 @@ def map_item(request, id):
     info = LibraryItem.objects.get(pk=id)
     project = get_project(request)
     spaces = info.imported_spaces.filter(geometry__isnull=False)
+    space_count = None
+
+    if spaces.count() > 500:
+        space_count = spaces.count()
+        spaces = spaces[:500]
+
     size = info.get_shapefile_size
     map = None
     simplify_factor = None
-    p(size)
     # If the file is larger than 3MB, then we simplify
     if not "show_full" in request.GET:
         if size > 1024*1024*20:
@@ -283,22 +289,18 @@ def map_item(request, id):
             attr="Mapbox",
         )
 
-        if spaces.count() < 500:
+        for each in spaces:
 
-            for each in spaces:
-
-                if simplify_factor:
-                    folium.GeoJson(
-                        each.geometry.simplify(simplify_factor).geojson,
-                    ).add_to(map)
-                else:
-                    folium.GeoJson(
-                        each.geometry.geojson,
-                    ).add_to(map)
+            if simplify_factor:
+                folium.GeoJson(
+                    each.geometry.simplify(simplify_factor).geojson,
+                ).add_to(map)
+            else:
+                folium.GeoJson(
+                    each.geometry.geojson,
+                ).add_to(map)
 
             spaces = spaces[:500]
-        else:
-            messages.error(request, "Sorry, this map has > 500 items and will take too long to load - we work on providing alternative views for such maps")
 
         Fullscreen().add_to(map)
         map.fit_bounds(map.get_bounds())
@@ -308,11 +310,12 @@ def map_item(request, id):
     context = {
         "info": info,
         "submenu": "library",
-        "spaces": info.imported_spaces.all(),
+        "spaces": info.imported_spaces.all() if not space_count else spaces,
         "map": map._repr_html_() if map else None,
         "load_datatables": True,
         "size": filesizeformat(size),
         "simplify_factor": simplify_factor,
+        "space_count": space_count,
     }
     return render(request, "staf/item.map.html", context)
 
@@ -1639,6 +1642,7 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
     size = None
     geocode = None
     spreadsheet = {}
+    size = None
 
     if geospreadsheet:
         get_file = document.get_spreadsheet()
@@ -1657,13 +1661,13 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
             spreadsheet["table"] = mark_safe(df.to_html(classes="table table-striped spreadsheet-table"))
     else:
         layer = document.get_gis_layer()
+        size = filesizeformat(document.get_shapefile_size)
         if not layer:
             error = True
             messages.error(request, "No shapefile was found. Make sure a .shp file is included in the uploaded files.")
 
     context = {
         "document": document,
-        "file": size,
         "load_map": True,
         "load_datatables": True,
         "error": error,
@@ -1686,6 +1690,7 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
         "load_sweetalerts": True,
         "geospreadsheet": geospreadsheet,
         "spreadsheet": spreadsheet,
+        "size": size,
     }
 
     return render(request, "hub/processing.gis.html", context)
