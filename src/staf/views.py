@@ -312,6 +312,7 @@ def map_item(request, id):
         "submenu": "library",
         "spaces": info.imported_spaces.all() if not space_count else spaces,
         "map": map._repr_html_() if map else None,
+        "load_leaflet": True,
         "load_datatables": True,
         "size": filesizeformat(size),
         "simplify_factor": simplify_factor,
@@ -520,7 +521,7 @@ def upload_gis_verify(request, id):
         "geojson": geojson,
         "session": session,
         "error": error,
-        "load_map": True,
+        "load_leaflet": True,
     }
     return render(request, "staf/upload/gis.verify.html", context)
 
@@ -628,7 +629,7 @@ def referencespace(request, id=None, space=None, slug=None):
         ).add_to(map)
 
         if info.geometry.geom_type != "Point":
-            # For a point we want to give some space around it, but polygons should be 
+            # For a point we want to give some space around it, but polygons should be
             # an exact fit
             map.fit_bounds(map.get_bounds())
 
@@ -642,8 +643,8 @@ def referencespace(request, id=None, space=None, slug=None):
             attr="Mapbox",
         )
         if info.geometry.geom_type != "Point":
-            # For a point we want to give some space around it, but polygons should be 
-            # an exact fit, and we also want to show the outline of the polygon on the 
+            # For a point we want to give some space around it, but polygons should be
+            # an exact fit, and we also want to show the outline of the polygon on the
             # satellite image
             satmap.fit_bounds(map.get_bounds())
             def style_function(feature):
@@ -1522,7 +1523,7 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
     if has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         curator = True
     elif request.method == "POST":
-        # User who don't have curation permission can view the page, but make no changes, so 
+        # User who don't have curation permission can view the page, but make no changes, so
         # if there is a POST request we will throw an error
         unauthorized_access(request)
 
@@ -1668,7 +1669,7 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
 
     context = {
         "document": document,
-        "load_map": True,
+        "load_leaflet": True,
         "load_datatables": True,
         "error": error,
         "title": "Review shapefile #" + str(document.id),
@@ -1818,9 +1819,9 @@ def hub_processing_geospreadsheet_classify(request, id, space=None):
                     break
 
         count = 0
-        # Okay so here's the deal. We need to loop over each row in the template so that we can create 
+        # Okay so here's the deal. We need to loop over each row in the template so that we can create
         # a table that we can add some stuff to (like the <select> at the top row), which we can't do
-        # (as far as I know) with the regular pandas _to_html function. So we need to loop over the rows, 
+        # (as far as I know) with the regular pandas _to_html function. So we need to loop over the rows,
         # BUT the column names are never the same, so we need to get them upfront, so that we can print them
         # It all feels like a messy hack but at least it works. If someone can straighten this out PLEASE go ahead
         for i, row in df.iterrows():

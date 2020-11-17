@@ -2,142 +2,87 @@
 {% load moc_extras %}
 
 {% block head %}
-  <!-- leaflet -->
-  <link rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-        crossorigin=""/>
-
-  <!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
-  <link href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" rel="stylesheet" />
-
   <style>
     .leaflet-map {
-      height: 800px;
+      height: 600px;
       max-height: 80vh;
-    }
-
-    .layer-toggles {
-      border: 2px solid rgba(0,0,0,0.2);
-      background-clip: padding-box;
-      border-radius: .25rem;
-    }
-
-    .layer-toggles .category:not(:first-of-type) {
-      border-top: 1px solid #ccc;
-    }
-
-    .layer-toggles .category-title {
-      line-height: 14px;
-      background-color: #efefef;
-      padding: .5rem;
-      width: 250px;
-      cursor: pointer;
-    }
-
-    .layer-toggles .category:first-of-type .category-title {
-      border-top-left-radius: .25rem;
-      border-top-right-radius: .25rem;
-    }
-
-    .layer-toggles .category:last-of-type .category-title.collapsed {
-      border-bottom-left-radius: .25rem;
-      border-bottom-right-radius: .25rem;
-    }
-
-    .layer-toggles .toggle-layer {
-      background-color: #fff;
-      cursor: pointer;
-      width: 250px;
-      padding: .5rem;
-      line-height: 14px;
-      border-top: 1px solid #ccc;
-    }
-
-    .layer-toggles .category:last-of-type .toggle-layer:last-of-type {
-      border-radius: 0 0 .25rem .25rem;
-    }
-
-    .layer-toggles .toggle-layer:hover {
-      background-color: #f4f4f4;
-    }
-
-    .layer-toggles .fa-ul {
-      margin-left: 19px;
-      margin-bottom: 0;
-    }
-
-    .category-buttons {
-      display: none;
     }
   </style>
 {% endblock %}
 
 {% block content %}
 
-  <h1>{% block title %}{{ info }}: Map{% endblock %}</h1>
+  <h1>{% block title %}Map of {{ info }}{% endblock %}</h1>
 
   <a href="../" class="btn btn-primary-basic">
     <i class="fal fa-angle-left"></i>
     Back to {{ info }}
   </a>
 
-  {% if not spaces %}
-    <div class="alert alert-dark ml-2">
-      There are no layers available yet. Be sure to process shapefiles
-      (<a href="https://multimedia.metabolismofcities.org/videos/332795/">instructions
-      here</a> [spanish]) in order to add layers to the map.
-    </div>
-  {% elif not map %}
-    <div class="alert alert-dark ml-2">
-      <i class="fa fa-exclamation-triangle"></i>
-      We have been unable to generate a map. It seems like the elements in this map do not
-      have coordinates. Be sure to check the source file.
-    </div>
-  {% else %}
-    {% if space_count %}
-      <div class="alert alert-warning">
-        <i class="fa fa-exclamation-circle"></i>
-        The map contains a total of {{ space_count }} items. Due to this large number of elements, we are 
-        only showing a partial map below.
-        {% if simplify_factor %} The map is furthermore simplified to make it easier to render.{% endif %}
-        We recommend you download the original shapefile if you would like 
-        to view the entire mape.
+  <section>
+    {% if not spaces %}
+      <div class="alert alert-dark ml-2">
+        There are no layers available yet. Be sure to process shapefiles
+        (<a href="https://multimedia.metabolismofcities.org/videos/332795/">instructions
+        here</a> [spanish]) in order to add layers to the map.
       </div>
-    {% elif simplify_factor %}
-      <div class="alert alert-warning">
-        <i class="fa fa-exclamation-circle"></i>
-        We are showing a simplified version of this map, due to the large file size ({{ size }}). If you want to
-        view the map with full details, click the button below.<br>
-        <a href="./?show_full=true" rel="nofollow" class="btn btn-primary">View full version</a>
+    {% elif not map %}
+      <div class="alert alert-dark ml-2">
+        <i class="fa fa-exclamation-triangle"></i>
+        We have been unable to generate a map. It seems like the elements in this map do not
+        have coordinates. Be sure to check the source file.
       </div>
+    {% else %}
+      {% if space_count %}
+        <div class="alert alert-warning">
+          <i class="fa fa-exclamation-circle"></i>
+          The map contains a total of {{ space_count }} items. Due to this large number of elements, we are
+          only showing a partial map below.
+          {% if simplify_factor %} The map is furthermore simplified to make it easier to render.{% endif %}
+          We recommend you download the original shapefile if you would like
+          to view the entire mape.
+        </div>
+      {% elif simplify_factor %}
+        <div class="alert alert-warning">
+          <i class="fa fa-exclamation-circle"></i>
+          We are showing a simplified version of this map, due to the large file size ({{ size }}). If you want to
+          view the map with full details, click the button below.<br>
+          <a href="./?show_full=true" rel="nofollow" class="btn btn-primary">View full version</a>
+        </div>
+      {% endif %}
+      <div id="map" class="leaflet-map mt-4"></div>
     {% endif %}
-    <div id="map" class="leaflet-map mb-3">{{ map|safe }}</div>
-  {% endif %}
+  </section>
 
-  <h2 class="mt-4">All elements inside this file</h2>
+  <section>
+    <h2 class="mt-4">All elements inside this file</h2>
 
-  {% if info.imported_spaces.count > 500 %}
-    <div class="alert alert-warning">NOTE: the table is restricted to the first 500 items</div>
-  {% endif %}
+    {% if info.imported_spaces.count > 500 %}
+      <div class="alert alert-warning">NOTE: the table is restricted to the first 500 items</div>
+    {% endif %}
 
-  <table class="table table-striped datatable">
-    <thead>
-      <tr>
-        <th>Space</th>
-        <th>Coordinates</th>
-        <th>Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for each in spaces %}
-      <tr>
-        <td><a href="{% url URLS.SPACE each.id %}">{{ each }}</a></td>
-        <td>{{ each.get_centroids }}</td>
-        <td>{{ each.description|default_if_none:""|truncatewords:30 }}</td>
+    <table class="table datatable">
+      <thead>
+        <tr>
+          <th>Space</th>
+          <th>Coordinates</th>
+          <th>Description</th>
       </tr>
-    {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+      {% for each in spaces %}
+        <tr>
+          <td><a href="{% url URLS.SPACE each.id %}">{{ each }}</a></td>
+          <td>{{ each.get_centroids }}</td>
+          <td>{{ each.description|default_if_none:""|truncatewords:30 }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+{% endblock %}
+
+{% block javascript %}
 
 {% endblock %}
