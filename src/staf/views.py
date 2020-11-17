@@ -270,6 +270,7 @@ def map_item(request, id):
     size = info.get_shapefile_size
     map = None
     simplify_factor = None
+    geom_type = None
 
     # If the file is larger than 3MB, then we simplify
     if not "show_full" in request.GET:
@@ -282,6 +283,7 @@ def map_item(request, id):
 
     for each in spaces:
 
+        geom_type = each.geometry.geom_type
         if simplify_factor:
             geo = each.geometry.simplify(simplify_factor)
         else:
@@ -299,6 +301,7 @@ def map_item(request, id):
     data = {
         "type":"FeatureCollection",
         "features": features,
+        "geom_type": geom_type,
     }
 
     context = {
@@ -321,6 +324,7 @@ def geojson(request, id):
     spaces = info.imported_spaces.all()
     if "space" in request.GET:
         spaces = spaces.filter(id=request.GET["space"])
+    geom_type = None
     for each in spaces:
         if each.geometry:
             url = reverse(project.slug + ":referencespace", args=[each.id])
@@ -328,6 +332,7 @@ def geojson(request, id):
             if each.photo.id != 33476:
                 content = f"<div class='mb-3'><a href='{url}'><img class='img-thumbnail' alt='' src='{each.photo.image.thumbnail.url}' /></a></div>"
             content = content + f"<a href='{url}'>View details</a>"
+            geom_type = each.geometry.geom_type
             features.append({
                 "type": "Feature",
                 "geometry": json.loads(each.geometry.json),
@@ -341,6 +346,7 @@ def geojson(request, id):
     data = {
         "type":"FeatureCollection",
         "features": features,
+        "geom_type": geom_type,
     }
     return JsonResponse(data)
 
