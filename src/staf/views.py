@@ -261,7 +261,18 @@ def map_item(request, id):
     info = LibraryItem.objects.get(pk=id)
     project = get_project(request)
     spaces = info.imported_spaces.filter(geometry__isnull=False)
+    size = info.get_shapefile_size
     map = None
+    simplify_factor = None
+    p(size)
+    # If the file is larger than 3MB, then we simplify
+    if not "show_full" in request.GET:
+        if size > 1024*1024*20:
+            simplify_factor = 0.05
+        elif size > 1024*1024*10:
+            simplify_factor = 0.02
+        elif size > 1024*1024*5:
+            simplify_factor = 0.001
 
     if spaces:
         map = folium.Map(
@@ -273,11 +284,18 @@ def map_item(request, id):
         )
 
         if spaces.count() < 500:
+
             for each in spaces:
-                folium.GeoJson(
-                    each.geometry.geojson,
-                    name="geojson",
-                ).add_to(map)
+
+                if simplify_factor:
+                    folium.GeoJson(
+                        each.geometry.simplify(simplify_factor).geojson,
+                    ).add_to(map)
+                else:
+                    folium.GeoJson(
+                        each.geometry.geojson,
+                    ).add_to(map)
+
             spaces = spaces[:500]
         else:
             messages.error(request, "Sorry, this map has > 500 items and will take too long to load - we work on providing alternative views for such maps")
@@ -293,6 +311,8 @@ def map_item(request, id):
         "spaces": info.imported_spaces.all(),
         "map": map._repr_html_() if map else None,
         "load_datatables": True,
+        "size": filesizeformat(size),
+        "simplify_factor": simplify_factor,
     }
     return render(request, "staf/item.map.html", context)
 

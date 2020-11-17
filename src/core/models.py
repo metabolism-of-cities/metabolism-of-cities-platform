@@ -1101,6 +1101,15 @@ class LibraryItem(Record):
         except:
             return 0
 
+    @property
+    def get_shapefile_size(self):
+        try:
+            file = self.attachments.get(file__iendswith=".shp")
+            return file.file.size
+        except:
+            return 0
+
+    @property
     def get_shapefile_plot(self):
         try:
             return settings.MEDIA_URL + self.meta_data["shapefile_plot"]

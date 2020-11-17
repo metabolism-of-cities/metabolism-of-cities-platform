@@ -288,26 +288,6 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         spaces_message = f"This shapefile contains {spaces.count()} items - we are only displaying the first 20 below"
         spaces = spaces[:20]
 
-    map = None
-    if spaces:
-        # Quick hack, we simply get the centroid of the first space
-        # and use that to position the map. Ideally we want to just use fitBounds
-        try:
-            centroid = spaces[0].geometry.centroid
-            map = folium.Map(
-                location=[centroid[1], centroid[0]],
-                zoom_start=10
-            )
-
-            for each in spaces:
-                if each.geometry:
-                    folium.GeoJson(
-                        each.geometry.geojson,
-                        name="geojson"
-                    ).add_to(map)
-        except:
-            pass
-
     context = {
         "info": info,
         "spaces": spaces,
@@ -322,7 +302,6 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         "layer": layer,
         "submenu": submenu,
         "url_processing": project.slug + ":hub_processing_gis",
-        "map": map._repr_html_() if map else None,
         "spaces_message": spaces_message,
 
         # The following we'll only have during the AScUS voting round; remove afterwards

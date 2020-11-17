@@ -95,6 +95,14 @@
       have coordinates. Be sure to check the source file.
     </div>
   {% else %}
+    {% if simplify_factor %}
+      <div class="alert alert-warning">
+        <i class="fa fa-exclamation-circle"></i>
+        We are showing a simplified version of this map, due to the large file size ({{ size }}). If you want to
+        view the map with full details, click the button below.<br>
+        <a href="./?show_full=true" rel="nofollow" class="btn btn-primary">View full version</a>
+      </div>
+    {% endif %}
     <div id="map" class="leaflet-map mb-3">{{ map|safe }}</div>
   {% endif %}
 
