@@ -154,7 +154,7 @@
         {% for each in data.features %}
         <tr>
           {% if link %}
-            <td><a href="{% url 'stocks:map' space.slug link each.id %}">{{ each.properties.space_name }}</a></td>
+            <td><a href="{% url 'stocks:map' space.slug link each.properties.id %}">{{ each.properties.space_name }}</a></td>
           {% else %}
             <td>{{ each.properties.space_name }}</td>
           {% endif %}
