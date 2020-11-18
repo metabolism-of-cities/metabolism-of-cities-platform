@@ -271,6 +271,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         from django.core.files.uploadedfile import UploadedFile
         info.image = UploadedFile(file=open(info.image.path, "rb"))
         info.save()
+        messages.success(request, "Image re-saved... " + info.image.path)
 
     if request.method == "POST" and "zipfile" in request.POST:
         from django.http import HttpResponse

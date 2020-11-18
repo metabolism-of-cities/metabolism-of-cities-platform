@@ -87,7 +87,14 @@ def upload_staf(request, id=None):
 
 def space_maps(request, space):
     space = get_space(request, space)
-    infrastructure = LibraryItem.objects.filter(spaces=space, tags__parent_tag=Tag.objects.get(pk=848), type_id__in=[40,41,20])
+    all = LibraryItem.objects.filter(spaces=space, type_id__in=[40,41,20]).distinct()
+    master_map = False
+    processed = all.filter(meta_data__processed=True).count() 
+    # We only show the master map if we have layers available
+    if processed and space.geometry:
+        master_map = True
+
+    infrastructure = LibraryItem.objects.filter(spaces=space, tags__parent_tag=Tag.objects.get(pk=848), type_id__in=[40,41,20]).distinct()
     try:
         # Let's see if one of the infrastructure items has an attached photo so we can show that
         photo_infrastructure = ReferenceSpace.objects.filter(source__in=infrastructure, image__isnull=False)[0]
@@ -97,10 +104,12 @@ def space_maps(request, space):
         
     context = {
         "space": space,
-        "boundaries": LibraryItem.objects.filter(spaces=space, tags=Tag.objects.get(pk=852), type_id__in=[40,41,20]),
+        "boundaries": LibraryItem.objects.filter(spaces=space, tags=Tag.objects.get(pk=852), type_id__in=[40,41,20]).distinct(),
         "infrastructure": infrastructure,
-        "all": LibraryItem.objects.filter(spaces=space, type_id__in=[40,41,20]),
+        "all": all,
         "photo_infrastructure": photo_infrastructure,
+        "master_map": master_map,
+        "submenu": "library",
     }
     return render(request, "staf/maps.html", context)
 
@@ -246,9 +255,18 @@ def space_map(request, space):
     hits = {}
     data = {}
     getcolor = {}
-    colors = ["green", "blue", "red", "orange", "brown", "navy", "teal", "purple", "pink", "maroon", "chocolate", "gold", "ivory", "deepskyblue", "salmon", "lightpink", "orchid", "peru", "powderblue", "darkgray", "paleturquoise", "darkmagenta", "magenta"]
-
+    colors = ["blue", "gold", "red", "green", "orange", "yellow", "violet", "grey", "black"]
+    boundaries_colors = ["orange", "green", "violet", "red", "DarkGreen", "Sienna", "navy", "black", "maroon"]
     i = 0
+    boundaries_tag = Tag.objects.get(pk=852)
+    # These are the official boundaries for this space
+    try:
+        boundaries = get_object_or_404(ReferenceSpace, pk=space.meta_data["boundaries_origin"])
+        boundaries_source = boundaries.source
+    except:
+        boundaries = None
+        boundaries_source = None
+
     for each in list:
         if each.imported_spaces.count() < 1000:
             for tag in each.tags.filter(parent_tag__parent_tag_id=845):
@@ -256,16 +274,22 @@ def space_map(request, space):
                     parents.append(tag)
                     hits[tag.id] = []
                 hits[tag.id].append(each)
-                try:
-                    getcolor[each.id] = colors[i]
-                except:
-                    getcolor[each.id] = "yellow"
+                if each == boundaries_source:
+                    getcolor[each.id] = "#126180"
+                elif tag == boundaries_tag:
+                    # For the boundaries we use specific colors
+                    try:
+                        getcolor[each.id] = boundaries_colors[i]
+                    except:
+                        getcolor[each.id] = "purple"
+                        i = 0
+                else:
+                    try:
+                        getcolor[each.id] = colors[i]
+                    except:
+                        getcolor[each.id] = "yellow"
+                        i = 0
                 i += 1
-
-    try:
-        boundaries = get_object_or_404(ReferenceSpace, pk=space.meta_data["boundaries_origin"])
-    except:
-        boundaries = None
 
     context = {
         "space": space,
@@ -343,6 +367,7 @@ def map_item(request, id, space=None):
         "space_count": space_count,
         "data": data,
         "space": space,
+        "show_grid": True if info.imported_spaces.count() < 50 else False,
     }
     return render(request, "staf/item.map.html", context)
 

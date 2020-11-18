@@ -1,6 +1,12 @@
 {% extends "_base.html" %}
 {% load static %}
 
+{% block css %}
+<style type="text/css">
+  .fade-half{opacity:0.2}
+</style>
+{% endblock %}
+
 {% block content %}
   <h1>{% block title %}Maps{% endblock %}</h1>
 
@@ -21,7 +27,7 @@
           Infrastructure
         </div>
         <a href="infrastructure/">
-          <img src="{{ photo_infrastructure }}" class="card-img-top" alt="">
+          <img src="{{ photo_infrastructure }}" class="card-img-top {% if not infrastructure %}fade-half{% endif %}" alt="">
         </a>
         <ul class="list-group list-group-flush">
           {% for each in infrastructure %}
@@ -37,7 +43,11 @@
           {% if infrastructure.count > 5 %}
             <li class="list-group-item"><a href="#" class="view-all" data-show="infrastructure"><i class="fa fa-arrow-down"></i> <strong>View all</strong> ({{ infrastructure.count }})</a></li>
           {% endif %}
-          <li class="list-group-item text-right bg-dark"><a href="infrastructure/" class="text-light"><i class="fa fa-list"></i> <strong>View list</strong></a></li>
+          {% if infrastructure %}
+            <li class="list-group-item text-right bg-dark"><a href="infrastructure/" class="text-light"><i class="fa fa-list"></i> <strong>View list</strong></a></li>
+          {% else %}
+            <li class="list-group-item text-right bg-light"><i class="fa fa-minus-circle"></i> No infrastructure maps available yet.</li>
+          {% endif %}
         </ul>
       </div>
     </div>
@@ -48,7 +58,7 @@
           Administrative boundaries
         </div>
         <a href="boundaries/">
-          <img src="/media/images/geocode.type.2.jpg" class="card-img-top" alt="">
+          <img src="/media/images/geocode.type.2.jpg" class="card-img-top {% if not boundaries %}fade-half{% endif %}" alt="">
         </a>
         <ul class="list-group list-group-flush">
           {% for each in boundaries %}
@@ -64,7 +74,11 @@
           {% if boundaries.count > 5 %}
             <li class="list-group-item"><a href="#" class="view-all" data-show="boundaries"><i class="fa fa-arrow-down"></i> <strong>View all</strong> ({{ boundaries.count }})</a></li>
           {% endif %}
-          <li class="list-group-item text-right bg-dark"><a href="boundaries/" class="text-light"><i class="fa fa-list"></i> <strong>View list</strong></a></li>
+          {% if boundaries %}
+            <li class="list-group-item text-right bg-dark"><a href="boundaries/" class="text-light"><i class="fa fa-list"></i> <strong>View list</strong></a></li>
+          {% else %}
+            <li class="list-group-item text-right bg-light"><i class="fa fa-minus-circle"></i> No boundaries available yet.</li>
+          {% endif %}
         </ul>
       </div>
     </div>
@@ -75,17 +89,29 @@
           Master map
         </div>
         <a href="overview/">
-          <img src="{% get_media_prefix %}images/fullmap2.jpg" class="card-img-top" alt="">
+          <img src="{% get_media_prefix %}images/fullmap2.jpg" class="card-img-top {% if not master_map %}fade-half{% endif %}" alt="">
         </a>
-        <div class="card-body">
-          <p class="card-text">
-            All boundaries and infrastructure on a single map.
-          </p>
-          <a href="overview/" class="btn btn-primary"><i class="fa fa-map"></i> View map</a>
-        </div>
+        {% if not master_map %}
+          <li class="list-group-item text-right bg-light"><i class="fa fa-minus-circle"></i> Not available yet.</li>
+        {% else %}
+          <div class="card-body">
+            <p class="card-text">
+              All boundaries and infrastructure on a single map.
+            </p>
+            <a href="overview/" class="btn btn-primary"><i class="fa fa-map"></i> View map</a>
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>
+
+  <section class="mt-3">
+    <div class="alert alert-success text-center">
+      <i class="fa fa-fist-raised"></i>
+      <strong>Please help by collecting and processing maps!</strong><br>
+      <a href="../hub/">Click here to learn more</a>
+    </div>
+  </section>
 
 {% endblock %}
 
