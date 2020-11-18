@@ -1260,6 +1260,9 @@ def hub_processing_list(request, space=None, type=None):
         list = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
         processed = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct()
+        if "update" in request.GET:
+            for each in list:
+                each.save()
 
     elif type == "geospreadsheet":
         title = "Geospatial spreadsheets"

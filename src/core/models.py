@@ -1339,6 +1339,21 @@ class LibraryItem(Record):
                     self.doi = url.rsplit("/", 1)[-1]
             except:
                 pass
+        if self.type_id == 40:
+            try:
+                # For shapefiles we check to see if this is a beginners-friendly shapefile
+                # We only care about that if the record has not yet been processed
+                if not self.meta_data:
+                    self.meta_data = {}
+                if not "processed" in self.meta_data:
+                    # If the system successfully generated the preview plot (which means the GIS file is in principle okay)
+                    # and the shapefile is less than 1MB and it contains less than 500 items, then we consider it beginner-friendly
+                    if self.get_shapefile_plot and self.get_shapefile_size < 1024*1024 and self.get_gis_layer().num_feat < 500:
+                        self.meta_data["beginner_friendly"] = True
+                    elif "beginner_friendly" in self.meta_data:
+                        self.meta_data.pop("beginner_friendly")
+            except:
+                pass
         super(LibraryItem, self).save(*args, **kwargs)
 
     objects = PublicActiveRecordManager()

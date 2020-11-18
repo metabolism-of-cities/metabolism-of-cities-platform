@@ -31,7 +31,14 @@
       <tbody>
       {% for each in list %}
         <tr>
-          <td><a href="{{ each.id }}/">{{ each }}</a><br>{% for space in each.spaces.all %}{{ space }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+          <td>
+            <a href="{{ each.id }}/">{{ each }}</a>
+            <br>{% for space in each.spaces.all %}{{ space }}{% if not forloop.last %}, {% endif %}{% endfor %}
+            {% if each.meta_data.beginner_friendly %}
+              <br>
+              <span class="badge badge-warning"><i class="fa fa-check"></i> Good for beginners</span>
+            {% endif %}
+          </td>
           <td data-sort="{{ each.date_created|date:"U" }}">{{ each.date_created|naturaltime }}</td>
           <td>{{ each.meta_data.assigned_to|default_if_none:"" }}</td>
         </tr>
