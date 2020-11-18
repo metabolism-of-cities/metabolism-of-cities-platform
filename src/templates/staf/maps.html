@@ -1,0 +1,127 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block css %}
+<style type="text/css">
+  .fade-half{opacity:0.2}
+</style>
+{% endblock %}
+
+{% block content %}
+  <h1>{% block title %}Maps{% endblock %}</h1>
+
+  <p>
+    We have a total of <strong>{{ all.count }}</strong> maps in our library for {{ space }}. You can browse these maps below.
+  </p>
+  
+  <p class="alert alert-warning">
+    <i class="fa fa-map"></i>
+    Interactive maps are available for documents with this icon.
+  </p>
+
+  <div class="row">
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          Infrastructure
+        </div>
+        <a href="infrastructure/">
+          <img src="{{ photo_infrastructure }}" class="card-img-top {% if not infrastructure %}fade-half{% endif %}" alt="">
+        </a>
+        <ul class="list-group list-group-flush">
+          {% for each in infrastructure %}
+            <li class="list-group-item {% if forloop.counter > 5 %}d-none{% endif %} view-infrastructure">
+              <a href="{{ each.id }}/{% if each.meta_data.processed %}view/{% endif %}">
+                {{ each }}
+                {% if each.meta_data.processed %}
+                  <i class="fa fa-map float-right"></i>
+                {% endif %}
+              </a>
+            </li>
+          {% endfor %}
+          {% if infrastructure.count > 5 %}
+            <li class="list-group-item"><a href="#" class="view-all" data-show="infrastructure"><i class="fa fa-arrow-down"></i> <strong>View all</strong> ({{ infrastructure.count }})</a></li>
+          {% endif %}
+          {% if infrastructure %}
+            <li class="list-group-item text-right bg-dark"><a href="infrastructure/" class="text-light"><i class="fa fa-list"></i> <strong>View list</strong></a></li>
+          {% else %}
+            <li class="list-group-item text-right bg-light"><i class="fa fa-minus-circle"></i> No infrastructure maps available yet.</li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          Administrative boundaries
+        </div>
+        <a href="boundaries/">
+          <img src="/media/images/geocode.type.2.jpg" class="card-img-top {% if not boundaries %}fade-half{% endif %}" alt="">
+        </a>
+        <ul class="list-group list-group-flush">
+          {% for each in boundaries %}
+            <li class="list-group-item {% if forloop.counter > 5 %}d-none{% endif %} view-boundaries">
+              <a href="{{ each.id }}/{% if each.meta_data.processed %}view/{% endif %}">
+                {{ each }}
+                {% if each.meta_data.processed %}
+                  <i class="fa fa-map float-right"></i>
+                {% endif %}
+              </a>
+            </li>
+          {% endfor %}
+          {% if boundaries.count > 5 %}
+            <li class="list-group-item"><a href="#" class="view-all" data-show="boundaries"><i class="fa fa-arrow-down"></i> <strong>View all</strong> ({{ boundaries.count }})</a></li>
+          {% endif %}
+          {% if boundaries %}
+            <li class="list-group-item text-right bg-dark"><a href="boundaries/" class="text-light"><i class="fa fa-list"></i> <strong>View list</strong></a></li>
+          {% else %}
+            <li class="list-group-item text-right bg-light"><i class="fa fa-minus-circle"></i> No boundaries available yet.</li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          Master map
+        </div>
+        <a href="overview/">
+          <img src="{% get_media_prefix %}images/fullmap2.jpg" class="card-img-top {% if not master_map %}fade-half{% endif %}" alt="">
+        </a>
+        {% if not master_map %}
+          <li class="list-group-item text-right bg-light"><i class="fa fa-minus-circle"></i> Not available yet.</li>
+        {% else %}
+          <div class="card-body">
+            <p class="card-text">
+              All boundaries and infrastructure on a single map.
+            </p>
+            <a href="overview/" class="btn btn-primary"><i class="fa fa-map"></i> View map</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <section class="mt-3">
+    <div class="alert alert-success text-center">
+      <i class="fa fa-fist-raised"></i>
+      <strong>Please help by collecting and processing maps!</strong><br>
+      <a href="../hub/">Click here to learn more</a>
+    </div>
+  </section>
+
+{% endblock %}
+
+{% block footer %}
+  <script>
+  $("a.view-all").click(function(e){
+    e.preventDefault();
+    $(this).hide();
+    var show = $(this).data("show");
+    $(".view-"+show).removeClass("d-none");
+  });
+  </script>
+{% endblock %}

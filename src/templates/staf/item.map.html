@@ -14,10 +14,17 @@
 
   <h1>{% block title %}Map of {{ info }}{% endblock %}</h1>
 
-  <a href="../" class="btn btn-primary-basic">
-    <i class="fal fa-angle-left"></i>
-    Back to {{ info }}
-  </a>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="../../">Maps</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="../">
+        {{ info }}
+      </a>
+    </li>
+    <li class="breadcrumb-item">Interactive map</li>
+  </ol>
 
   <section>
     {% if not spaces %}
@@ -55,13 +62,47 @@
   </section>
 
   <section>
-    <h2 class="mt-4">All elements inside this file</h2>
+    <h2 class="mt-4">{{ info }}</h2>
+
+    {% if show_grid %}
+      <ul class="nav nav-tabs toggle-tabs mb-3">
+        <li class="nav-item">
+          <a class="nav-link active" href="#" data-show="grid">
+            <i class="fa fa-th-large"></i>
+            Grid view
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-show="table">
+            <i class="fa fa-list"></i>
+            Table view
+          </a>
+        </li>
+      </ul>
+    {% endif %}
 
     {% if info.imported_spaces.count > 500 %}
       <div class="alert alert-warning">NOTE: the table is restricted to the first 500 items</div>
     {% endif %}
 
-    <table class="table datatable">
+    {% if show_grid %}
+
+       <div class="row show-grid show-element">
+         {% for each in spaces %}
+           <div class="col-lg-4 col-md-6 col-sm-6 mb-3">
+            <a class="card btn-card" href="{% url URLS.SPACE each.id %}">
+              <img src="{{ each.get_thumbnail }}" class="card-img-top" alt="">
+              <div class="card-body">
+                <h5 class="card-title">{{ each }}</h5>
+              </div>
+            </a>
+          </div> 
+        {% endfor %}
+       </div>
+
+    {% endif %}
+
+    <table class="table datatable {% if show_grid %}d-none{% endif %} show-table show-element">
       <thead>
         <tr>
           <th>Space</th>
@@ -79,9 +120,21 @@
       {% endfor %}
       </tbody>
     </table>
+
+
   </section>
 
 {% endblock %}
 
 {% block footer %}
+<script type="text/javascript">
+  $(".toggle-tabs a").click(function(e){
+    $(".toggle-tabs a").removeClass("active");
+    $(this).addClass("active");
+    e.preventDefault();
+    var show = $(this).data("show");
+    $(".show-element").addClass("d-none");
+    $(".show-"+show).removeClass("d-none");
+  });
+</script>
 {% endblock %}

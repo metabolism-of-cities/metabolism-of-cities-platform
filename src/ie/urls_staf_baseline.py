@@ -45,8 +45,11 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/resources/reports/", data.library, {"type": "reports"}, name="reports"),
     path("dashboards/<slug:space>/resources/theses/", data.library, {"type": "theses"}, name="theses"),
     path("dashboards/<slug:space>/resources/journal-articles/", data.library, {"type": "articles"}, name="journal_articles"),
+    path("dashboards/<slug:space>/maps/", staf.space_maps, name="space_maps"),
     path("dashboards/<slug:space>/maps/overview/", staf.space_map, name="space_map"),
+    path("maps/<int:id>/view/", staf.map_item, name="map_item"),
     path("library/maps/<int:id>/view/", staf.map_item, name="map_item"),
+    path("dashboards/<slug:space>/maps/<int:id>/view/", staf.map_item, name="map_item"),
 
     re_path(r'dashboards/(?P<space>[-\w]+)/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/$', staf.layer_overview, name="layer_overview"),
     re_path(r'dashboards/(?P<space>[-\w]+)/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/instructionvideos/$', data.instructionvideos),
@@ -60,6 +63,9 @@ baseline_staf_urlpatterns = [
     re_path(r'library/(?P<type>datasets|publications|maps|multimedia|recent)/$', staf.library_overview, name="library_overview"),
     re_path(r'library/(?P<data_section_type>datasets|publications|maps|multimedia|recent)/(?P<id>[0-9]+)/$', library.item),
 
+    path("dashboards/<slug:space>/maps/<slug:type>/", staf.library_overview),
+    path("dashboards/<slug:space>/maps/infrastructure/<int:id>/", library.item),
+    path("dashboards/<slug:space>/maps/boundaries/<int:id>/", library.item),
     path("dashboards/<slug:space>/infrastructure/<slug:slug>/", staf.referencespace, name="referencespace"),
 
     # Hub
