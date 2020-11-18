@@ -781,6 +781,7 @@ a.badge-secondary:focus {
     width: calc(100% + 38px); }
   .leaflet-popup-content-wrapper img {
     border-radius: .25rem;
+    min-width: 200px;
     width: 100%; }
 
 .slider-wrapper {
