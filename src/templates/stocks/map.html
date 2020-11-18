@@ -1,22 +1,23 @@
 {% extends "_base.html" %}
 {% load static %}
+{% block leaflet.style %}light-v10{% endblock %}
 
 {% block title %}Material Stocks{% endblock %}
 {% block page_name %}material-stocks map{% endblock %}
 
 {% block head %}
-  <link rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-        crossorigin=""/>
-
-  <!-- slider filter -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css">
-
-  <!-- fullscreen plugin -->
-  <link rel="stylesheet" href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css">
-
   <style>
+    .leaflet-map {
+      min-height: 500px;
+      height: 100%;
+      max-height: 90vh;
+    }
+
+    .legend hr {
+      width: calc(100% + 1rem);
+      margin-left: -.5rem;
+    }
+
     .chart .bar {
       height: 5px;
     }
@@ -84,6 +85,10 @@
     .compact-table tr.selected {
       background-color: gold;
     }
+
+    .col-submit {
+      max-width: 40px;
+    }
   </style>
 {% endblock %}
 
@@ -104,6 +109,31 @@
       </nav>
     {% endif %}
 
+    <div class="form-row mb-4">
+      <div class="col-md mb-3 mb-md-0">
+        <label class="font-weight-bold m-0">Dataset</label>
+        <select class="custom-select select2">
+          <option value="0" selected>Wood stock</option>
+        </select>
+      </div>
+      <div class="col-md mb-3 mb-md-0">
+        <label class="font-weight-bold m-0">Area</label>
+        <select class="custom-select select2">
+          <option value="0" selected>Melbourne</option>
+        </select>
+      </div>
+      <div class="col-md mb-3 mb-md-0">
+        <label class="font-weight-bold m-0">Detail level</label>
+        <select class="custom-select select2">
+          <option value="0" selected>City-wide</option>
+        </select>
+      </div>
+      <div class="col-md col-submit">
+        <label class="font-weight-bold m-0">&nbsp;</label>
+        <button class="btn btn-primary"><i class="fa fa-arrow-right m-0"></i></button>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-lg-8">
         <div id="map" class="leaflet-map"></div>
@@ -114,7 +144,7 @@
           <div class="chart position-relative">
             <div class="bars">
               {% for each in data.features %}
-                <div class="bar" data-space="{{ each.id }}" data-value="{{ each.properties.quantity }}"></div>
+                <div class="bar" data-space="{{ each.properties.id }}" data-value="{{ each.properties.quantity }}"></div>
               {% endfor %}
             </div>
             <div id="start-line"></div>
@@ -127,11 +157,11 @@
           </div>
         </div>
 
-        <div class="compact-table-wrapper border rounded">
+        <div id="compact-table" class="compact-table-wrapper border rounded">
           <table class="table compact-table table-sm mb-0">
             {% for each in data.features %}
-            <tr data-space="{{ each.id }}">
-              <th>{{ each.properties.space_name }}</th>
+            <tr data-space="{{ each.properties.id }}">
+              <th>{{ each.properties.name }}</th>
               <td>{{ each.properties.quantity }}</td>
             </tr>
             {% endfor %}
@@ -154,11 +184,11 @@
         {% for each in data.features %}
         <tr>
           {% if link %}
-            <td><a href="{% url 'stocks:map' space.slug link each.properties.id %}">{{ each.properties.space_name }}</a></td>
+            <td><a href="{% url 'stocks:map' space.slug link each.properties.id %}">{{ each.properties.name }}</a></td>
           {% else %}
-            <td>{{ each.properties.space_name }}</td>
+            <td>{{ each.properties.name }}</td>
           {% endif %}
-            <td>{{ each.id }}</td>
+            <td>{{ each.properties.id }}</td>
             <td>{{ each.properties.quantity }}</td>
         </tr>
         {% endfor %}
@@ -169,36 +199,7 @@
 {% endblock %}
 
 {% block footer %}
-
-<!-- leaflet -->
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-  crossorigin=""></script>
-
-<!-- leaflet fullscreen plugin - https://github.com/Leaflet/Leaflet.fullscreen -->
-<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
-
-<!-- download map as image -->
-<script src="https://unpkg.com/leaflet-image@0.4.0/leaflet-image.js"></script>
-
 <script>
-  // set up map
-  var map = L.map("map", {
-    renderer: L.canvas(),
-    fullscreenControl: true,
-    scrollWheelZoom: false,
-  });
-
-  // add basemap
-  L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-      maxZoom: 20,
-      id: "mapbox/light-v10",
-      tileSize: 512,
-      zoomOffset: -1,
-      accessToken: "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q",
-  }).addTo(map);
-
   // BOUNDING BOX START -- ONLY NECESSARY IF IT EXSTS
   {% if box.geometry.geojson %}
     // set style
@@ -249,11 +250,12 @@
       color: "gold",
     });
 
-    var layerID = layer.feature.id
+    var layerID = layer.feature.properties.id
 
-    $(".chart .bar[data-space='" + layerID + "'], .compact-table tr[data-space='" + layerID + "']").addClass("selected");
+    highlightData(layerID)
 
-    details.update(layer.feature.properties);
+    let rowPosition = $(".compact-table tr[data-space='" + layerID + "']").position().top;
+    compactTable.scrollTop = rowPosition;
 
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
       layer.bringToFront();
@@ -261,18 +263,12 @@
   }
 
   // function when hovering out of an area
-  function resetHover(e) {
+  function resetHoverArea(e) {
     var layer = e.target;
     dataLayer.resetStyle(layer);
-    var layerID = layer.feature.id
-    details.update();
 
-    $(".chart .bar[data-space='" + layerID + "'], .compact-table tr[data-space='" + layerID + "']").removeClass("selected");
-  }
-
-  // function that highlights the area on the map, in the chart, and table
-  function highlight(id) {
-    // https://gis.stackexchange.com/questions/154310/selecting-features-by-attribute-in-leaflet
+    var layerID = layer.feature.properties.id
+    removeHighlightData(layerID)
   }
 
   // function when clicking on an area
@@ -289,9 +285,9 @@
   function onEachFeature(feature, layer) {
     layer.on({
       mouseover: hoverArea,
-      mouseout: resetHover,
+      mouseout: resetHoverArea,
       click: selectArea
-    }){% if link %}.bindPopup("<h5>" + layer.feature.properties.space_name + "</h5><a class='btn btn-primary' href='" + layer.feature.link + "'><i class='fa fa-search-plus'></i> Explore area</a>");{% endif %}
+    }){% if link %}.bindPopup("<h5>" + layer.feature.properties.name + "</h5><a class='btn btn-primary' href='" + layer.feature.properties.link + "'><i class='fa fa-search-plus'></i> Explore area</a>");{% endif %}
   }
 
   // variable for the data, add it to the map
@@ -352,51 +348,13 @@
 
   details.update = function(properties) {
     this._div.innerHTML = (properties ?
-      "<div class='space-name'>" + properties.space_name + "</div><div class='value'>" + properties.quantity + "</div>" :
+      "<div class='space-name'>" + properties.name + "</div><div class='value'>" + properties.quantity + "</div>" :
       "<div class='space-name'>{{ box }}</div><div class='value'>123</div>");
   };
 
   details.addTo(map);
 
   // FEATURE DETAILS END
-
-  // DOWNLOAD MAP AS IMAGE START
-  // function to convert canvas data to png and simulate click on download button
-  function downloadImage(err, canvas) {
-    var downloadLink = document.createElement("a");
-    downloadLink.href = canvas.toDataURL("image/png");
-    downloadLink.download = "map.png";
-    downloadLink.click();
-  }
-
-  // define the download button's details
-  L.Control.Download = L.Control.extend({
-    onAdd: function(map) {
-
-      var downloadButtonWrapper = L.DomUtil.create("div", "download-map-wrapper");
-
-      var downloadButton = L.DomUtil.create("div", "download-map");
-      downloadButton.innerHTML = "<i class='fal fa-fw fa-save'></i>";
-
-      downloadButtonWrapper.appendChild(downloadButton);
-
-      return downloadButtonWrapper;
-    }
-  });
-
-  // create a new leaflet control and apply download button details
-  L.control.Download = function(opts) {
-    return new L.Control.Download(opts);
-  }
-
-  // add download button to the map
-  L.control.Download({ position: "topleft" }).addTo(map);
-
-  // run function when clicking the button
-  $(".download-map").click(function() {
-    leafletImage(map, downloadImage);
-  })
-  // DOWNLOAD MAP END
 
   // BAR GRAPH START
   // get the highest values of the dataset
@@ -445,6 +403,52 @@
   averageLabel.css("left", "calc(" + averagePosition + "% - " + averageLabelWidth + "px)");
 
   // BAR GRAPH END
-</script>
+  function hoverData(id, source) {
+    dataLayer.eachLayer(function(layer) {
+      if (layer.feature.properties.id == id) {
+        layer.setStyle({
+          weight: 2,
+          color: "gold",
+        });
+      }
+    });
 
+    highlightData(id)
+  };
+
+  function resetHoverData(id) {
+    dataLayer.resetStyle()
+    removeHighlightData(id)
+  }
+
+  const compactTable = document.getElementById("compact-table");
+
+  function highlightData(id, source) {
+    $(".chart .bar[data-space='" + id + "'], .compact-table tr[data-space='" + id + "']").addClass("selected");
+  }
+
+  function removeHighlightData(id) {
+    $(".chart .bar[data-space='" + id + "'], .compact-table tr[data-space='" + id + "']").removeClass("selected");
+  };
+
+  $(".chart .bar").mouseover(function() {
+    let id = $(this).data("space");
+
+    hoverData(id)
+
+    let rowPosition = $(".compact-table tr[data-space='" + id + "']").position().top;
+    compactTable.scrollTop = rowPosition;
+  });
+
+  $("#compact-table tr").mouseover(function() {
+    let id = $(this).data("space");
+
+    hoverData(id)
+  });
+
+  $(".chart .bar, #compact-table tr").mouseout(function() {
+    let id = $(this).data("space");
+    resetHoverData(id)
+  })
+</script>
 {% endblock %}
