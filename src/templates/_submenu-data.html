@@ -1,5 +1,5 @@
 <div {% if not dashboard %}id="img-city-wrapper" class="sticky-top"{% endif %}>
-  <div id="img-city" {% if not dashboard %}class="smaller"{% endif %} style="background-image: url('{{ space.photo.image.url }}')">
+  <div id="img-city" {% if not dashboard %}class="smaller"{% endif %} style="background-image: url('{{ space.get_large_photo }}')">
     <div class="black-cover"></div>
     <div class="container">
       <div class="city-name"><a href="{% url URLS.DASHBOARD space.slug %}">{{ space }}</a></div>

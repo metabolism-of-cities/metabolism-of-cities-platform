@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% block title %}Data collection{% endblock %}
 
 {% block content %}
 
@@ -7,7 +8,7 @@
   <div class="row">
     {% for each in spaces %}
       <div class="col-lg-3 col-sm-6 mb-4">
-        <a href="{% url processing_link each.space.slug %}" class="btn-thumbnail" style="background-image: url('{% if each.space.photo.image %}{{ each.space.photo.image.thumbnail.url }}{% endif %}');">
+        <a href="{% url processing_link each.space.slug %}" class="btn-thumbnail" style="background-image: url('{{ each.space.get_thumbnail }}');">
           <span class="title">{{ each }}</span>
         </a>
       </div>

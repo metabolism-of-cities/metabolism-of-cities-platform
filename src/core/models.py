@@ -65,6 +65,10 @@ import re
 from django.contrib.gis.gdal import DataSource, OGRGeometry
 from django.contrib.gis.gdal.srs import (AxisOrder, CoordTransform, SpatialReference)
 
+# For the signals we use to update reference spaces when new pics are uploaded
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 def get_date_range(start, end, months_only=False):
 
     if start and not end and months_only:
@@ -1827,6 +1831,13 @@ class ReferenceSpace(Record):
         except:
             return None
 
+    # So this was what we used before, but it means a db query every time we pull this field in
+    # Not efficient. We now have a signal (update_referencespace_photo) that simply checks if 
+    # photos are being changed and then adds it to the IMAGE field in the reference space, allowing
+    # us to pull in the photo using the get_thumbnail or get_large_photo properties instead, which 
+    # don't need any additional db query. This photo field needs to be phased out but I want to see
+    # exactly where it lives on the site. Let's try to phase out no later than March 2021...
+
     @property
     def photo(self):
         from core.models import Photo
@@ -1834,6 +1845,20 @@ class ReferenceSpace(Record):
             return Photo.objects.filter(spaces=self, is_deleted=False).order_by("position")[0]
         except:
             return Photo.objects.get(pk=33476)
+
+    @property
+    def get_thumbnail(self):
+        if self.image:
+            return self.image.thumbnail.url
+        else:
+            return "/media/records/placeholder.thumbnail.png"
+
+    @property
+    def get_large_photo(self):
+        if self.image:
+            return self.image.large.url
+        else:
+            return "/media/records/placeholder.png"
 
     def get_completion(self):
         try:
@@ -1856,6 +1881,18 @@ class ReferenceSpace(Record):
     class Meta:
         db_table = "stafdb_referencespace"
         ordering = ["name"]
+
+@receiver(post_save, sender=Photo)
+def update_referencespace_photo(sender, instance, created, **kwargs):
+    for space in instance.spaces.all():
+        # Let's see which spaces this photo is related with - if any
+        # And if it turns out that this is the first photo then we mark this as the primary image
+        try:
+            photo = Photo.objects.filter(spaces=space, is_deleted=False).order_by("position")[0]
+        except:
+            photo = Photo.objects.get(pk=33476)
+        space.image = photo.image
+        space.save()
 
 class ReferenceSpaceGeocode(models.Model):
     geocode = models.ForeignKey(Geocode, on_delete=models.CASCADE)

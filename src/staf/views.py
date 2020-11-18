@@ -1092,6 +1092,10 @@ def multimedia(request):
 
 def hub_harvesting(request):
 
+    if "update" in request.GET:
+        all = Photo.objects.all()
+        for each in all:
+            each.save()
     project = get_object_or_404(Project, pk=request.project)
     context = {
         "spaces": ActivatedSpace.objects.filter(part_of_project_id=request.project),
@@ -1255,14 +1259,12 @@ def hub_processing_list(request, space=None, type=None):
 
     processed = None
     unassigned = None
+
     if type == "gis":
         title = "GIS data processing"
         list = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
         processed = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct()
-        if "update" in request.GET:
-            for each in list:
-                each.save()
 
     elif type == "geospreadsheet":
         title = "Geospatial spreadsheets"
