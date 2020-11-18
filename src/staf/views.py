@@ -1092,10 +1092,6 @@ def multimedia(request):
 
 def hub_harvesting(request):
 
-    if "update" in request.GET:
-        all = Photo.objects.all()
-        for each in all:
-            each.save()
     project = get_object_or_404(Project, pk=request.project)
     context = {
         "spaces": ActivatedSpace.objects.filter(part_of_project_id=request.project),
