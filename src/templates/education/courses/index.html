@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% load moc_extras %}
 
 {% block content %}
   <h1>Online courses</h1>
@@ -26,7 +27,7 @@
   <div class="row mb-4">
     {% for each in list %}
       <div class="col-lg-4 col-md-6 col-sm-8 mb-3">
-        <a class="card btn-card" href="{{ each.get_absolute_url }}">
+        <a class="card btn-card" href="{{ each.get_absolute_url|strip_first_slash }}">
           {% if each.image %}
             <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
           {% endif %}
