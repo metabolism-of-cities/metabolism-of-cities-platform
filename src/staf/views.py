@@ -289,12 +289,14 @@ def map_item(request, id):
         else:
             geo = each.geometry
 
+        link = reverse(project.slug + ":referencespace", args=[each.id])
         features.append({
             "type": "Feature",
             "geometry": json.loads(geo.json),
             "properties": {
                 "name": each.name,
                 "id": each.id,
+                "content": f"<a href='{link}' class='btn btn-primary'>More details</a>",
             },
         })
 
