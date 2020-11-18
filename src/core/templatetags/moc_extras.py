@@ -22,8 +22,7 @@ def convert_quotes(string):
 
 @register.filter
 def strip_first_slash(string):
-    first_chars = string[0:4]
-    if first_chars == "/http":
+    if string[0:5] == "/http":
         # We have an issue with links to subsites being prefaced with a slash, 
         # and we use this hack to remove them. Not pretty but what can we do?!
         return string[1:]
