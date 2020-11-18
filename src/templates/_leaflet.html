@@ -18,8 +18,6 @@
   var tileLayer = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={{ MAPBOX_API_KEY }}", {
     attribution: "Map data &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='https://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>",
     id: "{% if leaflet.style %}{{ leaflet.style }}{% else %}mapbox/streets-v11{% endif %}",
-    // id: "mapbox/light-v10",
-    // id: "mapbox/dark-v10",
     tileSize: 512,
     zoomOffset: -1,
     // this "layer" option must be kept, as it prevents the tiles from disappearing when removing all other layers from the map
@@ -90,8 +88,9 @@
   // function when hovering out of an area
   function resetHover(e) {
     var layer = e.target;
-    dataLayer.resetStyle(layer);
-    var layerID = layer.feature.id
+    // layer.resetStyle(layer);
+    console.log(layer)
+    console.log(e)
   }
 
   // function when clicking on an area
@@ -110,21 +109,6 @@
       mouseover: hoverArea,
       mouseout: resetHover,
       click: selectArea
-    }).bindPopup("<div class='title'><h3 class='h5'>" + feature.properties.name + "</h3></div><div class='content'>" + feature.properties.content + "</div>");
+    }).bindPopup("<div class='title'>" + feature.properties.name + "</div><hr><div class='content'>" + feature.properties.content + "</div>");
   }
-
-  // variable for the data, add it to the map
-  let mapData = {{ data|safe|escape }};
-  let dataLayer = L.geoJson(mapData, {
-    style: {
-      fillColor: "#144d58",
-      fillOpacity: 0.7,
-      weight: 1,
-      opacity: 1,
-      color: "white",
-    },
-    onEachFeature: onEachFeature,
-  })
-
-  map.addLayer(dataLayer).fitBounds(dataLayer.getBounds())
 </script>

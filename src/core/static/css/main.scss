@@ -1190,6 +1190,23 @@ a.badge-secondary:focus {
   }
 }
 
+.leaflet-popup-content-wrapper {
+  border-radius: .25rem !important;
+
+  .leaflet-popup-content {
+    line-height: 1 !important;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  hr {
+    margin: 13px 0 13px -19px;
+    width: calc(100% + 38px);
+  }
+}
+
 // SLIDER
 .slider-wrapper {
   border-radius: .25rem;

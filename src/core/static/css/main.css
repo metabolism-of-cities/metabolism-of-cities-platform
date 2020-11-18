@@ -770,6 +770,16 @@ a.badge-secondary:focus {
     margin-right: 8px;
     opacity: 0.7; }
 
+.leaflet-popup-content-wrapper {
+  border-radius: .25rem !important; }
+  .leaflet-popup-content-wrapper .leaflet-popup-content {
+    line-height: 1 !important; }
+  .leaflet-popup-content-wrapper .title {
+    font-size: 1.25rem; }
+  .leaflet-popup-content-wrapper hr {
+    margin: 13px 0 13px -19px;
+    width: calc(100% + 38px); }
+
 .slider-wrapper {
   border-radius: .25rem;
   padding: .375rem .75rem;

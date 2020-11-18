@@ -1,0 +1,225 @@
+{% load static %}
+{% load moc_extras %}
+
+<script>
+  {% if parents %}
+    // create variables for each layer
+    {% for each in parents %}
+      {% for layer in hits|get_item:each.id %}
+        var layer_{{ each.id }};
+      {% endfor %}
+    {% endfor %}
+
+    // when opening a layer for the first time, download it and add it to the map
+    // this function should only run once per layer
+    function downloadLayer(id, url, color) {
+      let layerVariable = "layer_" + id;
+
+      $(".toggle-layer[data-id='" + id + "'] i").toggleClass("fa-circle fa-sync fa-spin")
+
+      $.get(url, function(geojson) {
+        // check to see if data is points or polygons
+        if (geojson.geom_type == "Point") {
+          window[layerVariable] = L.geoJSON(geojson, {
+            pointToLayer: function (feature, latlng) {
+              return L.marker(latlng, {
+                icon: greenIcon
+              })
+            },
+
+            // function to create the popup
+            onEachFeature: onEachFeature,
+          })
+        } else {
+          window[layerVariable] = L.geoJSON(geojson, {
+            style: {
+              color: color,
+              fillOpacity: .4,
+              weight: 2,
+            },
+
+            // function to create the popup
+            onEachFeature: onEachFeature,
+          });
+        }
+
+
+        $(".toggle-layer[data-id='" + id + "'] i").toggleClass("fa-circle fa-sync fa-spin fal fas")
+        map.addLayer(window[layerVariable]);
+
+        if (id == "{{ boundaries.source.id }}") {
+          map.fitBounds(window[layerVariable].getBounds());
+        }
+      })
+    };
+
+    // add buttons to toggle visibility of layers to map
+    L.Control.LayerToggles = L.Control.extend({
+      onAdd: function(map) {
+
+        var layerTogglesWrapper = L.DomUtil.create("div", "layer-toggles");
+
+        {% for each in parents %}
+          var layerCategory_{{ each.id }} = L.DomUtil.create("div", "category");
+          layerCategory_{{ each.id }}.innerHTML = "<div class='category-title collapsed'><i class='fal fa-fw fa-{{ each.icon }}'></i> {{ each.get_name_after_period }} <i class='fas fa-fw fa-angle-down angle float-right'></i></div>";
+          layerTogglesWrapper.appendChild(layerCategory_{{ each.id }});
+
+          var categoryButtons_{{ each.id }} = L.DomUtil.create("div", "category-buttons");
+          layerCategory_{{ each.id }}.appendChild(categoryButtons_{{ each.id }});
+
+          {% for layer in hits|get_item:each.id %}
+            var toggle_{{ layer.id }}_layer = L.DomUtil.create("div", "toggle-layer");
+
+            toggle_{{ layer.id }}_layer.setAttribute("data-id", "{{ layer.id }}");
+            toggle_{{ layer.id }}_layer.setAttribute("data-geojson", "{% url URLS.GEOJSON layer.id %}{% if layer == boundaries.source %}?space={{ boundaries.id }}{% endif %}");
+            toggle_{{ layer.id }}_layer.setAttribute("data-color", "{{ getcolors|get_item:layer.id }}");
+
+            toggle_{{ layer.id }}_layer.innerHTML = "<ul class='fa-ul'><li><span class='fa-li'><i class='fal fa-fw fa-circle' style='color: {{ getcolors|get_item:layer.id }}'></i></span>{{ layer.meta_data.shortname|default:layer }}</li></ul>";
+            categoryButtons_{{ each.id }}.appendChild(toggle_{{ layer.id }}_layer);
+          {% endfor %}
+        {% endfor %}
+
+        return layerTogglesWrapper;
+      }
+    });
+
+    // create a new leaflet control and apply download button details
+    L.control.LayerToggles = function(opts) {
+      return new L.Control.LayerToggles(opts);
+    }
+
+    // add toggle layer buttons to the map
+    L.control.LayerToggles({ position: "topright" }).addTo(map);
+  {% endif %}
+
+  // function to toggle visibility of layers, buttons in map control div
+  $(".toggle-layer").click(function() {
+    var button = $(this);
+
+    // data-id="{{ layer.id }}" data-geojson=
+    var id = button.data("id");
+    var url = button.data("geojson");
+    var color = button.data("color");
+    var layer = "layer_" + button.data("id");
+
+    if ( button.hasClass("visible") ) {
+      map.removeLayer(window[layer])
+      button.find(".fa-circle").toggleClass("fal fas");
+    } else {
+      if ( button.hasClass("downloaded") ) {
+        map.addLayer(window[layer])
+        button.find(".fa-circle").toggleClass("fal fas");
+      } else {
+        downloadLayer(id, url, color)
+        button.addClass("downloaded")
+      }
+    }
+
+    button.toggleClass("visible");
+
+    // check if any layers are visible to determine is clear map button should be visible
+    var layersVisible = $(".toggle-layer.visible").length
+
+    if (layersVisible == 0) {
+      $(".clear-map-wrapper").hide()
+    } else {
+      $(".clear-map-wrapper").show()
+    }
+  })
+
+  // toggle visibility of menu
+  $(".category-title").click(function() {
+    $(this).next(".category-buttons").slideToggle("fast");
+    $(this).toggleClass("collapsed");
+    $("i.angle", this).toggleClass("fa-angle-down fa-angle-up");
+  })
+
+
+  {% if boundaries %}
+    // open default layer that should be shown from the start
+    $(".toggle-layer[data-id='{{ boundaries.source.id }}']").parent().prev(".category-title").click();
+    $(".toggle-layer[data-id='{{ boundaries.source.id }}']").click();
+  {% endif %}
+
+  // coloured markers
+  var blueIcon = new L.Icon({
+    iconUrl: "{% static 'img/leaflet-markers/marker-icon-2x-blue.png' %}",
+    shadowUrl: "{% static 'img/leaflet-markers/marker-shadow.png' %}",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  var goldIcon = new L.Icon({
+    iconUrl: "{% static 'img/leaflet-markers/marker-icon-2x-gold.png' %}",
+    shadowUrl: "{% static 'img/leaflet-markers/marker-shadow.png' %}",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  var redIcon = new L.Icon({
+    iconUrl: "{% static 'img/leaflet-markers/marker-icon-2x-red.png' %}",
+    shadowUrl: "{% static 'img/leaflet-markers/marker-shadow.png' %}",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  var greenIcon = new L.Icon({
+    iconUrl: "{% static 'img/leaflet-markers/marker-icon-2x-green.png' %}",
+    shadowUrl: "{% static 'img/leaflet-markers/marker-shadow.png' %}",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  var orangeIcon = new L.Icon({
+    iconUrl: "{% static 'img/leaflet-markers/marker-icon-2x-orange.png' %}",
+    shadowUrl: "{% static 'img/leaflet-markers/marker-shadow.png' %}",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  var yellowIcon = new L.Icon({
+    iconUrl: "{% static 'img/leaflet-markers/marker-icon-2x-yellow.png' %}",
+    shadowUrl: "{% static 'img/leaflet-markers/marker-shadow.png' %}",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  var violetIcon = new L.Icon({
+    iconUrl: "{% static 'img/leaflet-markers/marker-icon-2x-violet.png' %}",
+    shadowUrl: "{% static 'img/leaflet-markers/marker-shadow.png' %}",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  var greyIcon = new L.Icon({
+    iconUrl: "{% static 'img/leaflet-markers/marker-icon-2x-grey.png' %}",
+    shadowUrl: "{% static 'img/leaflet-markers/marker-shadow.png' %}",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  var blackIcon = new L.Icon({
+    iconUrl: "{% static 'img/leaflet-markers/marker-icon-2x-black.png' %}",
+    shadowUrl: "{% static 'img/leaflet-markers/marker-shadow.png' %}",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+</script>

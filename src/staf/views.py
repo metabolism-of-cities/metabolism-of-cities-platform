@@ -253,6 +253,8 @@ def space_map(request, space):
         "processing_url": project.slug + ":hub_processing_boundaries",
         "boundaries": boundaries,
         "submenu": "library",
+        "load_leaflet": True,
+        "load_leaflet_space": True,
     }
     return render(request, "staf/space.map.html", context)
 
