@@ -1205,6 +1205,11 @@ a.badge-secondary:focus {
     margin: 13px 0 13px -19px;
     width: calc(100% + 38px);
   }
+
+  img {
+    border-radius: .25rem;
+    width: 100%;
+  }
 }
 
 // SLIDER

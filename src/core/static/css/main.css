@@ -779,6 +779,9 @@ a.badge-secondary:focus {
   .leaflet-popup-content-wrapper hr {
     margin: 13px 0 13px -19px;
     width: calc(100% + 38px); }
+  .leaflet-popup-content-wrapper img {
+    border-radius: .25rem;
+    width: 100%; }
 
 .slider-wrapper {
   border-radius: .25rem;
