@@ -7,15 +7,6 @@
       height: 500px;
       margin-bottom: 30px;
     }
-    dl.row.features {
-      max-height: 200px;
-      margin-bottom: 20px;
-      overflow-y: scroll;
-      border: 1px solid #999;
-      border-radius: 3px;
-      background: #f4f4f4;
-      color: #535050;
-    }
     .largeicon {
       font-size: 5rem;
     }
@@ -144,19 +135,19 @@
         </div>
       {% endif %}
 
+      {% if info.meta_data.features %}
+        <h2 class="mt-3">Features</h2>
+        <dl class="row">
+          {% for key,value in info.meta_data.features.items %}
+            <dt class="col-sm-3">{{ key }}</dt>
+            <dd class="col-sm-9">{{ value }}</dd>
+          {% endfor %}
+        </dl>
+      {% endif %}
+
     </div>
 
   </div>
-
-  {% if info.meta_data.features %}
-    <h2>Features</h2>
-    <dl class="row features">
-      {% for key,value in info.meta_data.features.items %}
-        <dt class="col-sm-3">{{ key }}</dt>
-        <dd class="col-sm-9">{{ value }}</dd>
-      {% endfor %}
-    </dl>
-  {% endif %}
 
   {% if inside_the_space %}
 
