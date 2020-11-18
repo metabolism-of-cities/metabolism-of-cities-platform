@@ -174,17 +174,18 @@
         $(".toggle-layer[data-id='" + id + "'] i").toggleClass("fa-circle fa-sync fa-spin")
 
         $.get(url, function(geojson) {
-          if (geojson.markers == true) {
+          // check to see if data is points or polygons
+          if (geojson.geom_type == "Point") {
             window[layerVariable] = L.geoJSON(geojson, {
-              style: {
-                color: color,
-                fillOpacity: .4,
-                weight: 2,
+              pointToLayer: function (feature, latlng) {
+                return L.marker(latlng, {
+                  icon: greenIcon
+                })
               },
 
               // function to create the popup
               onEachFeature: onEachFeature,
-            });
+            })
           } else {
             window[layerVariable] = L.geoJSON(geojson, {
               style: {
