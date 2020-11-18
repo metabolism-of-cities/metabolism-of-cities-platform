@@ -86,6 +86,7 @@ def index(request):
         "title": title if not tag else tag.name,
         "news": News.objects.filter(projects=THIS_PROJECT).distinct()[:3],
         "review_count": LibraryItem.objects.filter(tags__id=3).filter(tags__id=core_filter).count(),
+        "casestudies_count": LibraryItem.objects.filter(tags__id=1).filter(tags__id=core_filter).count(),
         "all_count": LibraryItem.objects.filter(tags__id=core_filter).count(),
         "ie_count": LibraryItem.objects.filter(tags__id=963).count() if request.project == 17 else None, # We only need this for the island site
     }

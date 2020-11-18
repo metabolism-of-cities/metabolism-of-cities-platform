@@ -9,8 +9,8 @@ def site(request):
     open = None
     sprints = None
     notifications = None
-    system_name_singular = None
-    system_name_plural = None
+    system_name_singular = "city"
+    system_name_plural = "cities"
     urls = {}
     is_data_portal = False
 
@@ -36,8 +36,6 @@ def site(request):
     }
 
     if slug == "data" or slug == "cityloops" or slug == "stocks":
-        system_name_singular = "city"
-        system_name_plural = "cities"
         is_data_portal = True
     elif slug == "islands":
         system_name_singular = "island"

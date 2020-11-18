@@ -103,14 +103,14 @@
           <div class="col-sm-6 col-xl-4 mb-4">
             <a class="large-icon-box" href="{% if DEBUG %}/islands{% endif %}/resources/map/">
               <div class="description">Case studies</div>
-              <div class="statistic">Browse our map</div>
+              <div class="statistic">{{ casestudies_count }} items</div>
               <i class="fad fa-globe text-success" aria-hidden="true"></i>
             </a>
           </div>
           <div class="col-sm-6 col-xl-4 mb-4">
             <a class="large-icon-box" href="{% url "islands:reviews" %}">
               <div class="description">Review papers</div>
-              <div class="statistic">{{ review_count }} articles</div>
+              <div class="statistic">{{ review_count }} items</div>
               <i class="fad fa-pencil-alt text-danger" aria-hidden="true"></i>
             </a>
           </div>
