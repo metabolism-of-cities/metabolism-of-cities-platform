@@ -70,33 +70,4 @@
       map.scrollWheelZoom.disable()
     }
   });
-
-  // function when hovering over an area
-  function hoverArea(e) {
-    var layer = e.target;
-
-    layer.setStyle({
-      weight: 2,
-      color: "gold",
-    });
-
-    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-      layer.bringToFront();
-    }
-  }
-
-  // function when hovering out of an area
-  function resetHover(e) {
-    dataLayer.resetStyle(e.target);
-  }
-
-  // function when clicking on an area
-  function selectArea(e) {
-    var layer = e.target;
-
-    layer.setStyle({
-      weight: 2,
-      color: "gold",
-    });
-  }
 </script>

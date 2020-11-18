@@ -12,7 +12,8 @@
 
     // function to apply to each feature
     function onEachFeature(feature, layer) {
-      layer.bindPopup("<div class='title'>" + feature.properties.name + "</div><hr><div class='content'>" + feature.properties.content + "</div>");
+      layer.on({
+      }).bindPopup("<div class='title'>" + feature.properties.name + "</div><hr><div class='content'>" + feature.properties.content + "</div>");
     }
 
     // when opening a layer for the first time, download it and add it to the map
@@ -25,6 +26,7 @@
       $.get(url, function(geojson) {
         // check to see if data is points or polygons
         if (geojson.geom_type == "Point") {
+          console.log(geojson);
           window[layerVariable] = L.geoJSON(geojson, {
             pointToLayer: function (feature, latlng) {
               return L.marker(latlng, {
