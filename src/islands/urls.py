@@ -3,6 +3,7 @@ from . import views
 from core import views as core
 from community import views as community
 from library import views as library
+from education import views as education
 from data import views as data
 from staf import views as staf
 from ie.urls_baseline import baseline_urlpatterns
@@ -26,6 +27,7 @@ urlpatterns = baseline_urlpatterns + baseline_library_urlpatterns + baseline_sta
     path("community/<slug:slug>/", core.article, { "prefix": "/community/"}, name="community"),
     path("resources/map/", library.map, { "article": 59, "tag": 219 }, name="map"),
     path("resources/publications/", library.index, name="resources"),
+    path("resources/courses/", education.courses, name="courses"),
     path("resources/reviews/", library.list, { "type": "reviews"}, name="reviews"),
     path("resources/islandindustrialecology/", library.list, { "type": "island_ie"}, name="island_ie"),
 

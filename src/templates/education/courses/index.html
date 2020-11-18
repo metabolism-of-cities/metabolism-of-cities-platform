@@ -2,9 +2,19 @@
 
 {% block content %}
   <h1>Online courses</h1>
+
+  {% if PROJECT.slug == "islands" %}
+    <div class="alert alert-warning">
+      <i class="fa fa-info-circle"></i>
+      These online courses are part of the <a href="https://education.metabolismofcities.org/">Metabolism of Cities Education Hub</a>.
+      While the courses have been developed from an urban metabolism perspective, nearly all of the material is equally applicable
+      to island metabolism.
+    </div>
+  {% endif %}
+
   <div class="row mb-4">
     {% for each in list %}
-      <div class="col-lg-4 col-md-6 col-sm-8">
+      <div class="col-lg-4 col-md-6 col-sm-8 mb-3">
         <a class="card btn-card" href="{{ each.get_absolute_url }}">
           {% if each.image %}
             <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
