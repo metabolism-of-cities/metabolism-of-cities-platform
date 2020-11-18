@@ -30,7 +30,7 @@
           window[layerVariable] = L.geoJSON(geojson, {
             pointToLayer: function (feature, latlng) {
               return L.marker(latlng, {
-                icon: greenIcon
+                icon: window[color + "Icon"]
               })
             },
 
