@@ -85,6 +85,25 @@ def upload_staf(request, id=None):
     }
     return render(request, "staf/upload/staf.html", context)
 
+def space_maps(request, space):
+    space = get_space(request, space)
+    infrastructure = LibraryItem.objects.filter(spaces=space, tags__parent_tag=Tag.objects.get(pk=848), type_id__in=[40,41,20])
+    try:
+        # Let's see if one of the infrastructure items has an attached photo so we can show that
+        photo_infrastructure = ReferenceSpace.objects.filter(source__in=infrastructure, image__isnull=False)[0]
+        photo_infrastructure = photo_infrastructure.image.url
+    except:
+        photo_infrastructure = "/media/images/geocode.type.3.jpg"
+        
+    context = {
+        "space": space,
+        "boundaries": LibraryItem.objects.filter(spaces=space, tags=Tag.objects.get(pk=852), type_id__in=[40,41,20]),
+        "infrastructure": infrastructure,
+        "all": LibraryItem.objects.filter(spaces=space, type_id__in=[40,41,20]),
+        "photo_infrastructure": photo_infrastructure,
+    }
+    return render(request, "staf/maps.html", context)
+
 def layers(request, id=None, layer=None):
     layers = LAYERS
     if layer:
@@ -185,8 +204,12 @@ def library_overview(request, type, space=None):
     title = None
     if type == "datasets":
         list = list.filter(type__id=10)
-    elif type == "maps":
+    elif type == "maps" or type == "infrastructure" or type == "boundaries":
         list = list.filter(type__id__in=[40,41,20])
+        if type == "infrastructure":
+            list = list.filter(tags__parent_tag=Tag.objects.get(pk=848))
+        elif type == "boundaries":
+            list = list.filter(tags__id=852)
     elif type == "multimedia":
         list = list.filter(type__group="multimedia")
     elif type == "publications":
@@ -256,12 +279,15 @@ def space_map(request, space):
     }
     return render(request, "staf/space.map.html", context)
 
-def map_item(request, id):
+def map_item(request, id, space=None):
     info = LibraryItem.objects.get(pk=id)
     project = get_project(request)
     spaces = info.imported_spaces.filter(geometry__isnull=False)
     space_count = None
     features = []
+
+    if space:
+        space = get_space(request, space)
 
     if spaces.count() > 500:
         space_count = spaces.count()
@@ -316,6 +342,7 @@ def map_item(request, id):
         "simplify_factor": simplify_factor,
         "space_count": space_count,
         "data": data,
+        "space": space,
     }
     return render(request, "staf/item.map.html", context)
 

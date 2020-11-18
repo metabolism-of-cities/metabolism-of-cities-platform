@@ -6,6 +6,8 @@
 
 {% block head %}
   <link rel="canonical" href="{{ info.get_full_url }}" />
+  <!-- When we have fully figured all this out we can consider getting it indexed. Ensure there is a canonical link as this page is generated with various URLs -->
+  <meta name="robots" content="noindex">
 {% endblock %}
 
 {% block css %}
