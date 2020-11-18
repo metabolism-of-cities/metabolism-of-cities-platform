@@ -1,6 +1,13 @@
-{% include "_leaflet.html" %}
-
 <script>
+  // function to apply to each feature
+  function onEachFeature(feature, layer) {
+    layer.on({
+      mouseover: hoverArea,
+      mouseout: resetHover,
+      click: selectArea
+    }).bindPopup("<div class='title'>" + feature.properties.name + "</div><hr><div class='content'>" + feature.properties.content + "</div>");
+  }
+
   // variable for the data, add it to the map
   let mapData = {{ data|safe|escape }};
   let dataLayer = L.geoJson(mapData, {

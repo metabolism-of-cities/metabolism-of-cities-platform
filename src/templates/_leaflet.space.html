@@ -10,6 +10,11 @@
       {% endfor %}
     {% endfor %}
 
+    // function to apply to each feature
+    function onEachFeature(feature, layer) {
+      layer.bindPopup("<div class='title'>" + feature.properties.name + "</div><hr><div class='content'>" + feature.properties.content + "</div>");
+    }
+
     // when opening a layer for the first time, download it and add it to the map
     // this function should only run once per layer
     function downloadLayer(id, url, color) {

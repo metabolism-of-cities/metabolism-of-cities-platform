@@ -87,10 +87,7 @@
 
   // function when hovering out of an area
   function resetHover(e) {
-    var layer = e.target;
-    // layer.resetStyle(layer);
-    console.log(layer)
-    console.log(e)
+    dataLayer.resetStyle(e.target);
   }
 
   // function when clicking on an area
@@ -101,14 +98,5 @@
       weight: 2,
       color: "gold",
     });
-  }
-
-  // function to apply to each feature
-  function onEachFeature(feature, layer) {
-    layer.on({
-      mouseover: hoverArea,
-      mouseout: resetHover,
-      click: selectArea
-    }).bindPopup("<div class='title'>" + feature.properties.name + "</div><hr><div class='content'>" + feature.properties.content + "</div>");
   }
 </script>

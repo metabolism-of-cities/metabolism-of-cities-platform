@@ -89,7 +89,7 @@ def space_maps(request, space):
     space = get_space(request, space)
     all = LibraryItem.objects.filter(spaces=space, type_id__in=[40,41,20]).distinct()
     master_map = False
-    processed = all.filter(meta_data__processed=True).count() 
+    processed = all.filter(meta_data__processed=True).count()
     # We only show the master map if we have layers available
     if processed and space.geometry:
         master_map = True
@@ -101,7 +101,7 @@ def space_maps(request, space):
         photo_infrastructure = photo_infrastructure.image.url
     except:
         photo_infrastructure = "/media/images/geocode.type.3.jpg"
-        
+
     context = {
         "space": space,
         "boundaries": LibraryItem.objects.filter(spaces=space, tags=Tag.objects.get(pk=852), type_id__in=[40,41,20]).distinct(),
@@ -363,6 +363,7 @@ def map_item(request, id, space=None):
         "submenu": "library",
         "spaces": info.imported_spaces.all() if not space_count else spaces,
         "load_leaflet": True,
+        "load_leaflet_item": True,
         "load_datatables": True,
         "size": filesizeformat(size),
         "simplify_factor": simplify_factor,
