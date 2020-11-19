@@ -341,14 +341,20 @@ def map_item(request, id, space=None):
         else:
             geo = each.geometry
 
-        link = reverse(project.slug + ":referencespace", args=[each.id])
+        url = reverse(project.slug + ":referencespace", args=[each.id])
+
+        content = ""
+        if each.image:
+            content = f"<a class='d-block' href='{url}'><img alt='{each.name}' src='{each.get_thumbnail}' /></a><hr>"
+        content = content + f"<a href='{url}'>View details</a>"
+
         features.append({
             "type": "Feature",
             "geometry": json.loads(geo.json),
             "properties": {
                 "name": each.name,
                 "id": each.id,
-                "content": f"<a href='{link}' class='btn btn-primary'>More details</a>",
+                "content": content,
             },
         })
 
@@ -386,10 +392,11 @@ def geojson(request, id):
         if each.geometry:
             url = reverse(project.slug + ":referencespace", args=[each.id])
             content = ""
-            if each.photo.id != 33476:
-                content = f"<a class='d-block' href='{url}'><img alt='{each.name}' src='{each.photo.image.thumbnail.url}' /></a><hr>"
+            if each.image:
+                content = f"<a class='d-block' href='{url}'><img alt='{each.name}' src='{each.get_thumbnail}' /></a><hr>"
             content = content + f"<a href='{url}'>View details</a>"
-            geom_type = each.geometry.geom_type
+            if not geom_type:
+                geom_type = each.geometry.geom_type
             features.append({
                 "type": "Feature",
                 "geometry": json.loads(each.geometry.json),
