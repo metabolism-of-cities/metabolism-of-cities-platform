@@ -163,6 +163,8 @@ def map(request, space, id, box=None):
         "space": space,
         "box": box,
         "load_datatables": True,
+        "load_leaflet": True,
+        "load_select2": True,
         "menu": "maps",
     }
 

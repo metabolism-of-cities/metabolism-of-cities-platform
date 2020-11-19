@@ -779,6 +779,10 @@ a.badge-secondary:focus {
   .leaflet-popup-content-wrapper hr {
     margin: 13px 0 13px -19px;
     width: calc(100% + 38px); }
+  .leaflet-popup-content-wrapper img {
+    border-radius: .25rem;
+    min-width: 200px;
+    width: 100%; }
 
 .slider-wrapper {
   border-radius: .25rem;
@@ -1840,43 +1844,6 @@ body.material-stocks.landing .navbar-nav,
 body.material-stocks.landing .return-bar,
 body.material-stocks.landing footer {
   display: none; }
-
-body.material-stocks.maps .card img {
-  height: 200px;
-  object-fit: cover; }
-
-body.material-stocks.map #map {
-  height: 700px;
-  max-height: 90vh; }
-
-body.material-stocks.map .legend hr {
-  width: calc(100% + 1rem);
-  margin-left: -.5rem; }
-
-body.material-stocks.compare .leaflet-map {
-  height: 350px; }
-
-body.material-stocks.compare .selects {
-  background-color: #fcfcfc;
-  top: 0; }
-
-body.material-stocks.compare .tables th {
-  padding-left: 0;
-  padding-right: 0; }
-
-body.material-stocks.compare .tables td {
-  width: 40%; }
-  body.material-stocks.compare .tables td:first-of-type {
-    padding-right: 0; }
-  body.material-stocks.compare .tables td:last-of-type {
-    padding-left: 0; }
-
-body.material-stocks.compare section {
-  padding: 1rem 0; }
-  body.material-stocks.compare section:first-of-type {
-    padding-top: 0; }
-  body.material-stocks.compare section:last-of-type {
-    padding-bottom: 0; }
 
 body.work.sprint .jumbotron {
   display: none; }

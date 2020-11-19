@@ -134,6 +134,46 @@
     }
   })
 
+  // function to clear the map of markers, but not tiles
+  function clearMap() {
+    // remove the layers
+    map.eachLayer(function (layer) {
+      if ( layer.options.layer != "tiles" ) {
+        map.removeLayer(layer);
+      }
+    });
+
+    // remove visible states from all
+    $(".toggle-layer").removeClass("visible");
+    $(".toggle-layer i").removeClass("fas").addClass("fal")
+
+    // hide clear map button because it's not needed until layers are added again
+    $(".clear-map-wrapper").hide()
+  }
+
+  // add button to clear map
+  L.Control.clearMap = L.Control.extend({
+    onAdd: function(map) {
+      var clearMapWrapper = L.DomUtil.create("div", "clear-map-wrapper leaflet-control");
+      var clearMapButton = L.DomUtil.create("div", "clear-map");
+
+      clearMapButton.innerHTML = "<i class='fas fa-fw fa-trash'></i>";
+      clearMapWrapper.appendChild(clearMapButton);
+
+      return clearMapWrapper;
+    }
+  });
+
+  L.control.clearmap = function(opts) {
+    return new L.Control.clearMap(opts)
+  }
+
+  L.control.clearmap({ position: 'topleft' }).addTo(map);
+
+  $(".clear-map-wrapper").click(function() {
+    clearMap()
+  });
+
   // toggle visibility of menu
   $(".category-title").click(function() {
     $(this).next(".category-buttons").slideToggle("fast");

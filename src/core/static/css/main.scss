@@ -1205,6 +1205,12 @@ a.badge-secondary:focus {
     margin: 13px 0 13px -19px;
     width: calc(100% + 38px);
   }
+
+  img {
+    border-radius: .25rem;
+    min-width: 200px;
+    width: 100%;
+  }
 }
 
 // SLIDER
@@ -2867,164 +2873,6 @@ body.material-stocks.landing {
     display: none;
   }
 }
-
-body.material-stocks.maps {
-  .card img {
-    height: 200px;
-    object-fit: cover;
-  }
-}
-
-// MATERIAL STOCKS MAP
-body.material-stocks.map {
-  #map {
-    height: 700px;
-    max-height: 90vh;
-  }
-
-  .legend hr {
-    width: calc(100% + 1rem);
-    margin-left: -.5rem;
-  }
-}
-
-// body.material-stocks.map {
-//   #feature-details-wrapper {
-//     position: absolute;
-//     overflow: hidden;
-//     pointer-events: none;
-//     width: 300px;
-//     height: 100%;
-//     left: 0;
-//     top: 0;
-//     border-bottom-left-radius: .25rem;
-//     border-top-left-radius: .25rem;
-//   }
-
-//   #feature-details {
-//     top: 0;
-//     left: -300px;
-//     background-color: #fff;
-//     height: 100%;
-//     z-index: 1000;
-//     position: absolute;
-//     width: 300px;
-//     max-width: 90vw;
-//     transition: all .3s;
-//     border-bottom-left-radius: .25rem;
-//     border-top-left-radius: .25rem;
-
-//     table tr:first-of-type th,
-//     table tr:first-of-type td {
-//       border-top: none;
-//     }
-
-//     .feature-content {
-//       padding-left: .75rem;
-//       padding-right: .75rem;
-//     }
-
-//     .header {
-//      padding: .75rem;
-//      background-color: $light;
-//      font-weight: bold;
-//     }
-//   }
-
-//   #map-wrapper {
-//     position: relative;
-
-//     .leaflet-left .leaflet-control {
-//       transition: margin-left .3s;
-//     }
-
-//     &.feature-open {
-//       .leaflet-left .leaflet-control {
-//         margin-left: 310px;
-//       }
-
-//       #feature-details-wrapper {
-//         pointer-events: unset;
-//       }
-
-//       #feature-details {
-//         left: 0;
-//       }
-//     }
-//   }
-
-//   .view-button {
-//     background-color: $white;
-//     border-bottom: 1px solid #ccc;
-//     cursor: pointer;
-//     line-height: 30px;
-//     height: 30px;
-//     padding: 0 0.5rem;
-
-//     &:first-of-type {
-//       border-top-right-radius: .25rem;
-//       border-top-left-radius: .25rem;
-//     }
-
-//     &:last-of-type {
-//       border-bottom: none;
-//       border-bottom-right-radius: .25rem;
-//       border-bottom-left-radius: .25rem;
-//     }
-
-//     &:hover {
-//       background-color: #f4f4f4;
-//     }
-
-//     i {
-//       margin-right: .5rem;
-//     }
-//   }
-// }
-
-// MATERIAL STOCKS COMPARISON PAGE
-body.material-stocks.compare {
-  .leaflet-map {
-    height: 350px;
-  }
-
-  .selects {
-    background-color: #fcfcfc;
-    top: 0;
-  }
-
-  .tables {
-    th {
-      padding-left: 0;
-      padding-right: 0;
-    }
-
-    td {
-      width: 40%;
-
-      &:first-of-type {
-        padding-right: 0;
-      }
-
-      &:last-of-type {
-        padding-left: 0;
-      }
-    }
-  }
-
-  section {
-    padding: 1rem 0;
-
-    &:first-of-type {
-      padding-top: 0;
-    }
-
-    &:last-of-type {
-      padding-bottom: 0;
-    }
-  }
-}
-
 
 // WORK SPRINT PAGE
 body.work.sprint {

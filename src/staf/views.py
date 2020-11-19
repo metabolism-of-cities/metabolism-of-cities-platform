@@ -387,7 +387,7 @@ def geojson(request, id):
             url = reverse(project.slug + ":referencespace", args=[each.id])
             content = ""
             if each.photo.id != 33476:
-                content = f"<div class='mb-3'><a href='{url}'><img class='img-thumbnail' alt='' src='{each.photo.image.thumbnail.url}' /></a></div>"
+                content = f"<a class='d-block' href='{url}'><img alt='{each.name}' src='{each.photo.image.thumbnail.url}' /></a><hr>"
             content = content + f"<a href='{url}'>View details</a>"
             geom_type = each.geometry.geom_type
             features.append({
