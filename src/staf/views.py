@@ -1331,18 +1331,10 @@ def hub_processing_list(request, space=None, type=None):
         processed = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct()
 
     elif type == "datasets":
-        list = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=30)
-        processed = list
-        unassigned = list
+        list = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        unassigned = list.exclude(meta_data__assigned_to__isnull=False)
+        processed = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct()
         title = "Stocks and flows data processing"
-        if "update" in request.GET and False:
-            l = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=30, assigned_to__isnull=False)
-            for each in l:
-                d = each.related_to
-                if not d.meta_data:
-                    d.meta_data = {}
-                d.meta_data["assigned_to"] = str(each.assigned_to)
-                d.save()
 
     if space:
         space = get_space(request, space)

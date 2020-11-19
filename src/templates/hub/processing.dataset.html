@@ -36,7 +36,7 @@
             <dt class="col-sm-3">File(s)</dt>
             <dd class="col-sm-9">
               {% for each in info.attachments.all %}
-                <span class="badge">{{ each }} ({{ each.file.size|filesizeformat }})</span>
+                <span class="badge"><a href="{{ each.file.url }}">{{ each }}</a> ({{ each.file.size|filesizeformat }})</span>
               {% endfor %}
             </dd>
           </dl>
