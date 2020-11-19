@@ -50,6 +50,7 @@ import datetime
 import time
 
 import pandas as pd
+import numpy as np
 
 # To create the sample shapefile images
 import geopandas
@@ -1171,6 +1172,7 @@ class LibraryItem(Record):
 
             spreadsheet = self.get_spreadsheet()
             df = spreadsheet["df"]
+            df = df.replace(np.NaN, "")
             rows = len(df.index)-1
 
             cols = self.meta_data.get("columns")

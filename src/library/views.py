@@ -245,11 +245,16 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     project = get_object_or_404(Project, pk=request.project)
     info = get_object_or_404(LibraryItem, pk=id)
     section = "library"
-
+    url_processing = None
     curator = False
+
     if request.user.is_authenticated:
         if has_permission(request, request.project, ["curator"]) or request.user.people == info.uploader():
             curator = True
+            if info.type.id == 40:
+                url_processing = project.slug + ":hub_processing_gis"
+            elif info.type.id == 41:
+                url_processing = project.slug + ":hub_processing_geospreadsheet"
 
     if info.type.group == "multimedia":
         section = "multimedia_library"
@@ -303,7 +308,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         "space": space,
         "layer": layer,
         "submenu": submenu,
-        "url_processing": project.slug + ":hub_processing_gis",
+        "url_processing": url_processing,
         "spaces_message": spaces_message,
 
         # The following we'll only have during the AScUS voting round; remove afterwards

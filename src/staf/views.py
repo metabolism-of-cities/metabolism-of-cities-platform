@@ -1980,11 +1980,15 @@ def hub_processing_gis_save(request, id, space=None):
         set_autor(request.user.people.id, message.id)
         work.subscribers.add(request.user.people)
 
-        RecordRelationship.objects.create(
-            record_parent = request.user.people,
-            record_child = document,
-            relationship_id = RELATIONSHIP_ID["processor"],
-        )
+        try:
+            RecordRelationship.objects.create(
+                record_parent = request.user.people,
+                record_child = document,
+                relationship_id = RELATIONSHIP_ID["processor"],
+            )
+        except:
+            # This fails if the relationship already exists, e.g. if it was processed twice
+            pass
 
         return redirect(project.slug + ":map_item", document.id)
 
