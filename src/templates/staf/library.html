@@ -16,9 +16,8 @@
       <a class="nav-link {% if days == 365 %}active{% endif %}" href="./?days=365">Past year</a>
     </li>
   </ul>
-{% endif %}
 
-{% if type == "maps" %}
+{% elif type == "maps" %}
 
   <ul class="nav nav-pills mb-3">
     <li class="nav-item">
@@ -36,6 +35,15 @@
       </li>
     {% endif %}
   </ul>
+
+{% elif type == "infrastructure" or type == "boundaries" %}
+
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="../">Maps</a>
+    </li>
+    <li class="breadcrumb-item">{{ type|title }}</li>
+  </ol>
 
 {% endif %}
 

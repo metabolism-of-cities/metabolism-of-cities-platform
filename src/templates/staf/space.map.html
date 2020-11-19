@@ -2,8 +2,6 @@
 {% load static %}
 {% load moc_extras %}
 
-{% block title %}Map - {{ space }}{% endblock %}
-
 {% block head %}
   <style>
     .leaflet-map {
@@ -68,6 +66,15 @@
 {% endblock %}
 
 {% block content %}
+
+  <h1>{% block title %}Master map{% endblock %}</h1>
+
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="../">Maps</a>
+    </li>
+    <li class="breadcrumb-item">Master map</li>
+  </ol>
 
   {% if space and not space.geometry %}
     <div class="alert alert-warning">
