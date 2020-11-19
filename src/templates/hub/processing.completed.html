@@ -1,0 +1,56 @@
+{% extends "_base.html" %}
+{% load humanize %}
+{% block page_name %}staf-review uploaded{% endblock %}
+
+{% block content %}
+
+{% include "hub/_nav.html" %}
+
+<h3>Completed work</h3>
+<a href="../" class="btn btn-primary-basic">
+  <i class="fal fa-angle-left"></i>
+  Back
+</a>
+
+<table class="table datatable">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Name</th>
+      <th>Processor</th>
+      <th>Status</th>
+      <th>Spaces</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for each in list %}
+    <tr>
+      <td data-sort="-{{ each.date_created|date:"U" }}">{{ each.date_created|naturaltime }}</td>
+      <td>
+        <a href="{% url URLS.MAP_ITEM each.id %}">{{ each }}</a>
+        <br>{% for space in each.spaces.all %}<a href="{% url URLS.DASHBOARD space.slug %}">{{ space }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+        {% if each.meta_data.beginner_friendly %}
+          <br>
+          <span class="badge badge-warning"><i class="fa fa-check"></i> Good for beginners</span>
+        {% endif %}
+      </td>
+      <td>{{ each.meta_data.assigned_to|default_if_none:"" }}</td>
+      <td>
+        {% if each.meta_data.processing_error %}
+          <span class="text-danger">{{ each.meta_data.processing_error }}</span>
+        {% else %}
+          <span class="text-success">OK</span>
+        {% endif %}
+      </td>
+      <td>{{ each.imported_spaces.count|intcomma }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<a href="../" class="btn btn-primary-basic">
+  <i class="fal fa-angle-left"></i>
+  Back
+</a>
+
+{% endblock %}

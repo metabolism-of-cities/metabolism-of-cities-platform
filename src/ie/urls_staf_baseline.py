@@ -74,6 +74,7 @@ baseline_staf_urlpatterns = [
     path("hub/processing/", staf.hub_processing, name="hub_processing"),
     path("hub/processing/boundaries/", staf.hub_processing_boundaries, name="hub_processing_boundaries"),
     path("hub/processing/<slug:type>/", staf.hub_processing_list, name="hub_processing_list"),
+    path("hub/processing/<slug:type>/completed/", staf.hub_processing_completed, name="hub_processing_completed"),
     path("hub/processing/geospreadsheet/<int:id>/", staf.hub_processing_gis, { "geospreadsheet": True }, name="hub_processing_geospreadsheet"),
     path("hub/processing/geospreadsheet/<int:id>/files/", staf.hub_processing_files, {"geospreadsheet": True}, name="hub_processing_files"),
     path("hub/processing/geospreadsheet/<int:id>/classify/", staf.hub_processing_geospreadsheet_classify, name="hub_processing_geospreadsheet_classify"),
@@ -111,6 +112,7 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/hub/processing/datasets/<int:id>/edit/", library.form),
     path("dashboards/<slug:space>/hub/processing/datasets/<int:id>/", staf.hub_processing_dataset, name="hub_processing_dataset"),
     path("dashboards/<slug:space>/hub/processing/datasets/<int:id>/classify/", staf.hub_processing_dataset, {"classify": True}, name="hub_processing_dataset"),
+    path("dashboards/<slug:space>/hub/processing/<slug:type>/completed/", staf.hub_processing_completed, name="hub_processing_completed"),
     path("dashboards/<slug:space>/hub/people/", data.users),
     path("dashboards/<slug:space>/articles/<slug:slug>/", data.article, name="article"),
 

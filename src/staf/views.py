@@ -1358,6 +1358,36 @@ def hub_processing_list(request, space=None, type=None):
     }
     return render(request, "hub/processing.list.html", context)
 
+def hub_processing_completed(request, space=None, type=None):
+
+    processed = None
+    unassigned = None
+
+    related_ids = {
+        "gis": 40,
+        "geospreadsheet": 41,
+        "datasets": 10,
+    }
+    type_id = related_ids[type]
+
+    list = LibraryItem.objects.filter(type__id=type_id, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct()
+
+    title = "Completed work"
+    if space:
+        space = get_space(request, space)
+        title += " | " + space.name
+        list = list.filter(spaces=space)
+
+    context = {
+        "list": list,
+        "menu": "processing",
+        "space": space,
+        "title": title,
+        "hide_space_menu": True,
+        "load_datatables": True,
+    }
+    return render(request, "hub/processing.completed.html", context)
+
 def hub_processing_boundaries(request, space=None):
 
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
