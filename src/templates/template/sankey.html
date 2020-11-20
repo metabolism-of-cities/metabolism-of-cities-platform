@@ -28,6 +28,22 @@
   .link {
     fill: none;
   }
+
+  .sankey-link.green {
+    stroke: green;
+  }
+
+  .sankey-link.gold {
+    stroke: gold;
+  }
+
+  .sankey-link.red {
+    stroke: red;
+  }
+
+  .sankey-link.blue {
+    stroke: blue;
+  }
 </style>
 {% endblock %}
 
@@ -57,32 +73,62 @@
     },
     series: [{
       colors: ["#666"],
-      keys: ["from", "to", "weight", "code"],
+      keys: ["from", "to", "weight", "color"],
       data: [
-        ["Imports", "Direct material inputs", 1.7],
-        ["Natural resources extracted", "Direct material inputs", 5.32],
-        ["Direct material inputs", "Processed material", 7.02],
-
-        ["Processed material", "Exports", 0.76],
-        ["Processed material", "Dissipative flows", 0.26],
-        ["Processed material", "Total emissions", 2.49],
-        ["Processed material", "Material use", 4.46],
-
-        ["Total emissions", "Emissions to air", 2.59],
-        ["Total emissions", "Emissions to water", 0.01],
-
-        ["Material use", "Waste treatment", 1.75],
-        ["Material use", "Material accumulation", 2.72],
-
-        ["Waste treatment", "Backfilling", 0.21],
-        ["Waste treatment", "Recycling", 0.72],
-        ["Waste treatment", "Inciniration", 0.11],
-        ["Waste treatment", "Waste landfilled", 0.71],
-
-        ["Inciniration", "Total emissions", 0.11],
-
-        ["Backfilling", "Processed material", 0.21],
-        ["Recycling", "Processed material", 0.72],
+        ["Imports", "Direct material inputs", 0.2, "green"],
+        ["Imports", "Direct material inputs", 0.25, "red"],
+        ["Imports", "Direct material inputs", 0.1, "blue"],
+        ["Imports", "Direct material inputs", 1.1, "gold"],
+        ["Natural resources extracted", "Direct material inputs", 1.61, "green"],
+        ["Natural resources extracted", "Direct material inputs", 0.21, "red"],
+        ["Natural resources extracted", "Direct material inputs", 2.93, "blue"],
+        ["Natural resources extracted", "Direct material inputs", 0.57, "gold"],
+        ["Direct material inputs", "Processed material", 1.8, "green"],
+        ["Direct material inputs", "Processed material", 0.46, "red"],
+        ["Direct material inputs", "Processed material", 3.03, "blue"],
+        ["Direct material inputs", "Processed material", 1.67, "gold"],
+        ["Processed material", "Total emissions", 1.16, "green"],
+        ["Processed material", "Total emissions", 1.33, "gold"],
+        ["Processed material", "Dissipative flows", 0.22, "green"],
+        ["Processed material", "Dissipative flows", 0.04, "blue"],
+        ["Processed material", "Material use", 0.39, "green"],
+        ["Processed material", "Material use", 0.41, "red"],
+        ["Processed material", "Material use", 3.58, "blue"],
+        ["Processed material", "Material use", 0.09, "gold"],
+        ["Processed material", "Exports", 0.2, "green"],
+        ["Processed material", "Exports", 0.13, "red"],
+        ["Processed material", "Exports", 0.27, "blue"],
+        ["Processed material", "Exports", 0.06, "gold"],
+        ["Total emissions", "Emissions to air", 1.22, "green"],
+        ["Total emissions", "Emissions to air", 1.35, "gold"],
+        ["Total emissions", "Emissions to water", 0.01, "green"],
+        ["Incineration", "Total emissions", 0.07, "green"],
+        ["Incineration", "Total emissions", 0.01, "blue"],
+        ["Incineration", "Total emissions", 0.02, "gold"],
+        ["Material use", "Waste treatment", 0.24, "green"],
+        ["Material use", "Waste treatment", 0.09, "red"],
+        ["Material use", "Waste treatment", 1.35, "blue"],
+        ["Material use", "Waste treatment", 0.06, "gold"],
+        ["Material use", "Material accumulation", 0.14, "green"],
+        ["Material use", "Material accumulation", 0.32, "red"],
+        ["Material use", "Material accumulation", 2.23, "blue"],
+        ["Material use", "Material accumulation", 0.03, "gold"],
+        ["Waste treatment", "Backfilling", 0.21, "blue"],
+        ["Waste treatment", "Recycling", 0.14, "green"],
+        ["Waste treatment", "Recycling", 0.08, "red"],
+        ["Waste treatment", "Recycling", 0.46, "blue"],
+        ["Waste treatment", "Recycling", 0.03, "gold"],
+        ["Waste treatment", "Incineration", 0.07, "green"],
+        ["Waste treatment", "Incineration", 0.01, "blue"],
+        ["Waste treatment", "Incineration", 0.02, "gold"],
+        ["Waste treatment", "Waste landfilled", 0.03, "green"],
+        ["Waste treatment", "Waste landfilled", 0.67, "blue"],
+        ["Waste treatment", "Waste landfilled", 0.01, "gold"],
+        ["Backfilling", "Processed material", 0.21, "blue"],
+        ["Recycling", "Processed material", 0.14, "green"],
+        ["Recycling", "Processed material", 0.08, "red"],
+        ["Recycling", "Processed material", 0.46, "blue"],
+        ["Recycling", "Processed material", 0.03, "gold"],
       ],
       clip: false,
       type: "sankey",
@@ -95,45 +141,6 @@
     }]
 
   });
-
-  // Highcharts.chart("simple", {
-  //   chart: {
-  //     marginLeft: 100,
-  //     marginBottom: 200,
-  //     marginRight: 200
-  //   },
-  //   title: {
-  //     text: "Highcharts Sankey Diagram"
-  //   },
-  //   series: [{
-  //     colors: ["#4242a4", "#b73232", "#1f1fa8", "#365cb7", "#6389e3", "#3d1c6c", "#4b92d0", "blue", "green", "#56b756", "orange", "gold"],
-  //     keys: ["from", "to", "weight"],
-  //     data: [
-  //       ["Bagazo", "Generation", 14308],
-  //       ["Carbón", "Generation", 9366],
-  //       ["Gas natural", "Generation", 165559],
-  //       ["Diesel", "Generation", 15232],
-  //       ["Fuel oil", "Generation", 6203],
-  //       ["Hydro", "Generation", 130771],
-  //       ["Solar", "Generation", 1186],
-  //       ["Generation", "Pérdidas de transformación", 157099],
-  //       ["Generation", "Electricity", 189839],
-  //       ["Electricity", "Transmission loss", 20000],
-  //       ["Electricity", "Consumption", 169839],
-  //       ["Consumption", "Generation", 40000],
-  //       ["Transmission loss", "Generation", 10000],
-  //     ],
-  //     clip: false,
-  //     type: "sankey",
-  //     cursor: "pointer",
-  //     events: {
-  //       click: function(event) {
-  //         console.log(event.point);
-  //         alert(event.point.weight + " from " + event.point.from + " to " + event.point.to);
-  //       }
-  //     }
-  //   }]
-  // });
 </script>
 
 <!-- d3 just to try -->
@@ -152,7 +159,7 @@
       {"name": "Exports"},
       {"name": "Material use"},
       {"name": "Waste treatment"},
-      {"name": "Inciniration"},
+      {"name": "Incineration"},
       {"name": "Backfilling"},
       {"name": "Recycling"},
       {"name": "Waste landfilled"},
@@ -161,35 +168,88 @@
       {"name": "Emissions to air"},
     ],
     "links": [
-      {"source":"Imports", "target": "Direct material inputs", "value": 1.7, "optimal": "yes"},
-      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 5.32, "optimal": "yes"},
-      {"source":"Direct material inputs", "target": "Processed material", "value": 7.02, "optimal": "yes"},
-      {"source":"Processed material", "target": "Total emissions", "value": 2.49, "optimal": "yes"},
-      {"source":"Processed material", "target": "Dissipative flows", "value": 0.26, "optimal": "yes"},
-      {"source":"Processed material", "target": "Material use", "value": 4.46, "optimal": "yes"},
-      {"source":"Processed material", "target": "Exports", "value": 0.76, "optimal": "yes"},
-      {"source":"Total emissions", "target": "Emissions to air", "value": 2.59, "optimal": "yes"},
-      {"source":"Total emissions", "target": "Emissions to water", "value": 0.01, "optimal": "yes"},
-      {"source":"Inciniration", "target": "Total emissions", "value": 0.11, "optimal": "yes"},
-      {"source":"Material use", "target": "Waste treatment", "value": 1.75, "optimal": "yes"},
-      {"source":"Material use", "target": "Material accumulation", "value": 2.72, "optimal": "yes"},
-      {"source":"Waste treatment", "target": "Backfilling", "value": 0.21, "optimal": "yes"},
-      {"source":"Waste treatment", "target": "Recycling", "value": 0.72, "optimal": "yes"},
-      {"source":"Waste treatment", "target": "Inciniration", "value": 0.11, "optimal": "yes"},
-      {"source":"Waste treatment", "target": "Waste landfilled", "value": 0.71, "optimal": "yes"},
-      {"source":"Backfilling", "target": "Processed material", "value": 0.21, "optimal": "yes"},
-      {"source":"Recycling", "target": "Processed material", "value": 0.72, "optimal": "yes"},
+      {"source":"Imports", "target": "Direct material inputs", "value": 0.2, "optimal": "yes", "color": "green"},
+      {"source":"Imports", "target": "Direct material inputs", "value": 0.25, "optimal": "yes", "color": "red"},
+      {"source":"Imports", "target": "Direct material inputs", "value": 0.1, "optimal": "yes", "color": "blue"},
+      {"source":"Imports", "target": "Direct material inputs", "value": 1.1, "optimal": "yes", "color": "gold"},
+
+      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 1.61, "optimal": "yes", "color": "green"},
+      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 0.21, "optimal": "yes", "color": "red"},
+      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 2.93, "optimal": "yes", "color": "blue"},
+      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 0.57, "optimal": "yes", "color": "gold"},
+
+      {"source":"Direct material inputs", "target": "Processed material", "value": 1.8, "optimal": "yes", "color": "green"},
+      {"source":"Direct material inputs", "target": "Processed material", "value": 0.46, "optimal": "yes", "color": "red"},
+      {"source":"Direct material inputs", "target": "Processed material", "value": 3.03, "optimal": "yes", "color": "blue"},
+      {"source":"Direct material inputs", "target": "Processed material", "value": 1.67, "optimal": "yes", "color": "gold"},
+
+      {"source":"Processed material", "target": "Total emissions", "value": 1.16, "optimal": "yes", "color": "green"},
+      {"source":"Processed material", "target": "Total emissions", "value": 1.33, "optimal": "yes", "color": "gold"},
+
+      {"source":"Processed material", "target": "Dissipative flows", "value": 0.22, "optimal": "yes", "color": "green"},
+      {"source":"Processed material", "target": "Dissipative flows", "value": 0.04, "optimal": "yes", "color": "blue"},
+
+      {"source":"Processed material", "target": "Material use", "value": 0.39, "optimal": "yes", "color": "green"},
+      {"source":"Processed material", "target": "Material use", "value": 0.41, "optimal": "yes", "color": "red"},
+      {"source":"Processed material", "target": "Material use", "value": 3.58, "optimal": "yes", "color": "blue"},
+      {"source":"Processed material", "target": "Material use", "value": 0.09, "optimal": "yes", "color": "gold"},
+
+      {"source":"Processed material", "target": "Exports", "value": 0.2, "optimal": "yes", "color": "green"},
+      {"source":"Processed material", "target": "Exports", "value": 0.13, "optimal": "yes", "color": "red"},
+      {"source":"Processed material", "target": "Exports", "value": 0.27, "optimal": "yes", "color": "blue"},
+      {"source":"Processed material", "target": "Exports", "value": 0.06, "optimal": "yes", "color": "gold"},
+
+      {"source":"Total emissions", "target": "Emissions to air", "value": 1.22, "optimal": "yes", "color": "green"},
+      {"source":"Total emissions", "target": "Emissions to air", "value": 1.35, "optimal": "yes", "color": "gold"},
+
+      {"source":"Total emissions", "target": "Emissions to water", "value": 0.01, "optimal": "yes", "color": "green"},
+
+      {"source":"Incineration", "target": "Total emissions", "value": 0.07, "optimal": "yes", "color": "green"},
+      {"source":"Incineration", "target": "Total emissions", "value": 0.01, "optimal": "yes", "color": "blue"},
+      {"source":"Incineration", "target": "Total emissions", "value": 0.02, "optimal": "yes", "color": "gold"},
+
+      {"source":"Material use", "target": "Waste treatment", "value": 0.24, "optimal": "yes", "color": "green"},
+      {"source":"Material use", "target": "Waste treatment", "value": 0.09, "optimal": "yes", "color": "red"},
+      {"source":"Material use", "target": "Waste treatment", "value": 1.35, "optimal": "yes", "color": "blue"},
+      {"source":"Material use", "target": "Waste treatment", "value": 0.06, "optimal": "yes", "color": "gold"},
+
+      {"source":"Material use", "target": "Material accumulation", "value": 0.14, "optimal": "yes", "color": "green"},
+      {"source":"Material use", "target": "Material accumulation", "value": 0.32, "optimal": "yes", "color": "red"},
+      {"source":"Material use", "target": "Material accumulation", "value": 2.23, "optimal": "yes", "color": "blue"},
+      {"source":"Material use", "target": "Material accumulation", "value": 0.03, "optimal": "yes", "color": "gold"},
+
+      {"source":"Waste treatment", "target": "Backfilling", "value": 0.21, "optimal": "yes", "color": "blue"},
+
+      {"source":"Waste treatment", "target": "Recycling", "value": 0.14, "optimal": "yes", "color": "green"},
+      {"source":"Waste treatment", "target": "Recycling", "value": 0.08, "optimal": "yes", "color": "red"},
+      {"source":"Waste treatment", "target": "Recycling", "value": 0.46, "optimal": "yes", "color": "blue"},
+      {"source":"Waste treatment", "target": "Recycling", "value": 0.03, "optimal": "yes", "color": "gold"},
+
+      {"source":"Waste treatment", "target": "Incineration", "value": 0.07, "optimal": "yes", "color": "green"},
+      {"source":"Waste treatment", "target": "Incineration", "value": 0.01, "optimal": "yes", "color": "blue"},
+      {"source":"Waste treatment", "target": "Incineration", "value": 0.02, "optimal": "yes", "color": "gold"},
+
+      {"source":"Waste treatment", "target": "Waste landfilled", "value": 0.03, "optimal": "yes", "color": "green"},
+      {"source":"Waste treatment", "target": "Waste landfilled", "value": 0.67, "optimal": "yes", "color": "blue"},
+      {"source":"Waste treatment", "target": "Waste landfilled", "value": 0.01, "optimal": "yes", "color": "gold"},
+
+      {"source":"Backfilling", "target": "Processed material", "value": 0.21, "optimal": "yes", "color": "blue"},
+
+      {"source":"Recycling", "target": "Processed material", "value": 0.14, "optimal": "yes", "color": "green"},
+      {"source":"Recycling", "target": "Processed material", "value": 0.08, "optimal": "yes", "color": "red"},
+      {"source":"Recycling", "target": "Processed material", "value": 0.46, "optimal": "yes", "color": "blue"},
+      {"source":"Recycling", "target": "Processed material", "value": 0.03, "optimal": "yes", "color": "gold"},
     ]
   };
 
   var margin = { top: 30, right: 30, bottom: 30, left: 30};
       var width = 1100;
-      var height = 600;
+      var height = 1100;
 
       var sankey = d3.sankeyCircular()
         .nodeWidth(10)
         .nodePadding(40) //note that this will be overridden by nodePaddingRatio
-        .nodePaddingRatio(0.5)
+        .nodePaddingRatio(0)
         .size([width, height])
         .nodeId(function (d) {
           return d.name;
@@ -280,15 +340,17 @@
         .append("g")
 
       link.append("path")
-        .attr("class", "sankey-link")
+        .attr("class", function(d){
+          return d.color + " sankey-link";
+        })
+        .attr("data-circular", function (link, i) {
+          return link.circular ? true : false
+        })
         .attr("d", function(link){
           return link.path;
         })
         .style("stroke-width", function (d) { return Math.max(1, d.width); })
         .style("opacity", 0.7)
-        .style("stroke", function (link, i) {
-          return link.circular ? "red" : "black"
-        })
 
       link.append("title")
         .text(function (d) {
