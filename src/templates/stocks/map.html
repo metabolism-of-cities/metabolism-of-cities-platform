@@ -235,9 +235,7 @@
     let rowPosition = $(".compact-table tr[data-space='" + layerID + "']").position().top;
     compactTable.scrollTop = rowPosition;
 
-    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-      layer.bringToFront();
-    }
+    layer.bringToFront();
   }
 
   // function when hovering out of an area
@@ -373,6 +371,8 @@
           weight: 2,
           color: "gold",
         });
+
+        layer.bringToFront();
       }
     });
 
