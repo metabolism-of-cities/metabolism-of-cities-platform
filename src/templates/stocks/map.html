@@ -142,7 +142,7 @@
         <!-- spaces chart -->
         <div class="chart-wrapper mb-4">
           <div class="chart position-relative">
-            <div class="bars">
+            <div id="chart-bars" class="bars">
               {% for each in data.features %}
                 <div class="bar" data-space="{{ each.properties.id }}" data-value="{{ each.properties.quantity }}"></div>
               {% endfor %}
@@ -378,13 +378,14 @@
   })
 
   // sort bars by value
-  var bars = $(".chart .bar");
-  var sortedBars = bars.sort(function (a, b) {
-    return $(a).data("value") > $(b).data("value");
-  });
+  function sortBars(items) {
+    [...items.children]
+      .sort((a,b)=>Number(a.getAttribute("data-value"))>Number(b.getAttribute("data-value"))?1:-1)
+      .forEach(node=>chartBars.appendChild(node))
+  }
 
-  // set html of the charts div with sorted bars
-  $(".chart .bars").html(sortedBars);
+  var chartBars = document.querySelector("#chart-bars")
+  sortBars(chartBars);
 
   // get average of values
   // https://stackoverflow.com/questions/10359907/how-to-compute-the-sum-and-average-of-elements-in-an-array
