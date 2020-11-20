@@ -46,6 +46,7 @@
     .labels {
       font-size: .75rem;
       line-height: .75rem;
+      position: relative;
     }
 
     .compact-table-wrapper {
@@ -361,7 +362,7 @@
   let medianLabel = $(".median-label");
 
   medianLabel.html("<div>" + Math.round(medianValue) + "</div><div>(median)</div>")
-  let medianLabelWidth = (medianLabel.width() / 2) + 1;
+  let medianLabelWidth = medianLabel.width() / 2;
   medianLabel.css("left", "calc(" + medianPosition + "% - " + medianLabelWidth + "px)");
 
   // BAR GRAPH END

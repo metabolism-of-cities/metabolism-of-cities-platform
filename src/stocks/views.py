@@ -48,9 +48,22 @@ def cities(request):
 
 def city(request, space):
     space = get_space(request, space)
+
+    if space.name == "Melbourne":
+        id = 33931
+        link = 33962
+    elif space.name == "Brussels":
+        id = 33886
+        link = 33962
+
+    info = LibraryItem.objects.get(pk=id)
+
     context = {
         "city": True,
+        "load_select2": True,
         "space": space,
+        "info": info,
+        "link": link,
     }
     return render(request, "stocks/city.html", context)
 
@@ -71,27 +84,6 @@ def archetypes(request, space):
         "space": space,
     }
     return render(request, "stocks/archetypes.html", context)
-
-def maps(request, space):
-    space = get_space(request, space)
-
-    if space.name == "Melbourne":
-        id = 33931
-        link = 33962
-    elif space.name == "Brussels":
-        id = 33886
-        link = 33962
-
-    info = LibraryItem.objects.get(pk=id)
-
-    context = {
-        "load_select2": True,
-        "space": space,
-        "info": info,
-        "link": link,
-        "menu": "maps",
-    }
-    return render(request, "stocks/maps.html", context)
 
 def map(request, space, id, box=None):
     info = LibraryItem.objects.get(pk=id)
