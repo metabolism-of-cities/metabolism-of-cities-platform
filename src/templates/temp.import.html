@@ -25,9 +25,12 @@
     <li><a href="/dataimport/?table=projects">Projects</a> </li>
     <hr>
     <li><a href="/dataimport/?table=meta_referencespaces&step1=true">Reference spaces meta data - step 1</a></li>
-      <li><a href="/dataimport/?table=meta_referencespaces&step2=true">Reference spaces meta data - step 2</a></li>
-      <li><a href="/dataimport/?table=meta_referencespaces&step3=true">Reference spaces meta data - step 3</a></li>
-      <li><a href="/dataimport/?table=meta_referencespaces&step4=true">Reference spaces meta data - step 4</a></li>
+    <li><a href="/dataimport/?table=meta_referencespaces&step2=true">Reference spaces meta data - step 2</a></li>
+    <li><a href="/dataimport/?table=meta_referencespaces&step3=true">Reference spaces meta data - step 3</a></li>
+    <li><a href="/dataimport/?table=meta_referencespaces&step4=true">Reference spaces meta data - step 4</a></li>
+    <hr>
+    <li><a href="/dataimport/?table=timeperiod">Time periods</a></li>
+    <li><a href="/dataimport/?table=data">Data</a></li>
   </ul>
 
   <div class="alert alert-warning">
@@ -41,6 +44,7 @@ SELECT setval('auth_user_id_seq', (SELECT MAX(id) FROM auth_user)+1);
 SELECT setval('core_dataviz_id_seq', (SELECT MAX(id) FROM core_dataviz)+1);
 SELECT setval('core_unit_id_seq', (SELECT MAX(id) FROM core_unit)+1);
 SELECT setval('stafdb_referencespace_location_id_seq', (SELECT MAX(id) FROM stafdb_referencespace_location)+1);
+SELECT setval('stafdb_timeperiod_id_seq', (SELECT MAX(id) FROM stafdb_timeperiod)+1);
 
 UPDATE core_newslettersubscriber SET project_id = 1 WHERE site = 1;
 UPDATE core_newslettersubscriber SET project_id = 17 WHERE site = 2;
@@ -91,6 +95,9 @@ ssh -t industrialecology 'csvdump "SELECT * FROM core_newslettersubscriber" subs
 
 ssh -t industrialecology 'csvdump "SELECT * FROM multiplicity_referencespacecsv ORDER BY id" referencespacecsv.csv'
 ssh -t industrialecology 'csvdump "SELECT * FROM multiplicity_mtu ORDER BY id" mtu.csv'
+
+ssh -t industrialecology 'csvdump "SELECT * FROM staf_data ORDER BY id" data.csv'
+ssh -t industrialecology 'csvdump "SELECT * FROM staf_timeperiod ORDER BY id" timeperiod.csv'
 
   </pre>
 

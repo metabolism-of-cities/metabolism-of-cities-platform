@@ -494,6 +494,35 @@
         </div>
         {% endif %}
 
+        {% if request.user.id == 1 %}
+          {% if info.data.all %}
+            <h2>Data</h2>
+
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Quantity</th>
+                  <th>Material</th>
+                  <th>From</th>
+                  <th>To</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for each in info.data.all %}
+                <tr>
+                  <td>{{ each.timeframe }}</td>
+                  <td>{{ each.quantity }} {{ each.unit }}</td>
+                  <td>{{ each.material_name }}</td>
+                  <td>{{ each.origin_space }}</td>
+                  <td>{{ each.destination_space }}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          {% endif %}
+        {% endif %}
+
         <div class="mt-4">
           <a href="javascript:history.back()" class="btn btn-primary">
             <i class="fa fa-arrow-left"></i> Back

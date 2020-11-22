@@ -355,8 +355,6 @@ admin_site.register(ReferenceSpaceGeocode)
 admin_site.register(Sector, SearchAdmin)
 #admin_site.register(DataArticle, SearchAdmin)
 admin_site.register(Notification, NotificationAdmin)
-admin_site.register(UploadSession)
-admin_site.register(UploadFile)
 
 admin_site.register(WorkSprint, SprintAdmin)
 

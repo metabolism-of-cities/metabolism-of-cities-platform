@@ -940,6 +940,7 @@ class LibraryItem(Record):
         ("GE", "German"),
         ("NL", "Dutch"),
         ("PT", "Portuguese"),
+        ("CT", "Catalan"),
         ("OT", "Other"),
     )
     language = models.CharField(max_length=2, choices=LANGUAGES, default="EN", null=True, blank=True)
@@ -1562,53 +1563,6 @@ class CourseContent(Record):
     class Meta:
         ordering = ["position"]
 
-#class MOOCModuleQuestion(models.Model):
-#    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE, related_name="questions")
-#    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE)
-#    position = models.PositiveSmallIntegerField(db_index=True, null=True, blank=True)
-#    date_created = models.DateTimeField(auto_now_add=True)
-#
-#    def __str__(self):
-#        return self.module.name + " - " + self.question.question
-#
-#    class Meta:
-#        ordering = ["position"]
-#
-#class MOOCVideo(models.Model):
-#    video = models.ForeignKey(Video, on_delete=models.CASCADE)
-#    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE)
-#    date_created = models.DateTimeField(auto_now_add=True)
-#
-#    def __str__(self):
-#        return self.module.name + " - " + self.video.video_site + " - " + self.video.url
-#
-#class MOOCAnswer(models.Model):
-#    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE)
-#    answer = models.CharField(max_length=255)
-#    date_created = models.DateTimeField(auto_now_add=True)
-#
-#    def __str__(self):
-#        return self.answer
-#
-#class MOOCProgress(models.Model):
-#    video = models.ForeignKey(MOOCVideo, on_delete=models.CASCADE)
-#    module = models.ForeignKey(MOOCModule, on_delete=models.CASCADE)
-#    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-#    date_created = models.DateTimeField(auto_now_add=True)
-#
-#    def __str__(self):
-#        return self.module.name
-#
-#class MOOCQuizAnswers(models.Model):
-#    mooc = models.ForeignKey(MOOC, on_delete=models.CASCADE)
-#    question = models.ForeignKey(MOOCQuestion, on_delete=models.CASCADE)
-#    answer = models.ForeignKey(MOOCAnswer, on_delete=models.CASCADE)
-#    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-#    date_created = models.DateTimeField(auto_now_add=True)
-#
-#    def __str__(self):
-#        return self.mooc.name
-
 class WorkActivity(models.Model):
 
     class WorkType(models.IntegerChoices):
@@ -2058,42 +2012,6 @@ class Sector(Record):
     #def datasets(self):
     #    return DatasetType.objects.filter(Q(origin_process__in=self.processes.all()) | Q(destination_process__in=self.processes.all()))
 
-class UploadSession(Record):
-    uploader = models.ForeignKey(People, on_delete=models.CASCADE)
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
-    part_of_project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
-    TYPE = (
-        ("shapefile", "Shapefile"),
-        ("flowdata", "Material flow data"),
-        ("stockdata", "Material stock data"),
-    )
-    type = models.CharField(max_length=20, choices=TYPE)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        db_table = "stafdb_uploadsession"
-
-class UploadFile(models.Model):
-    session = models.ForeignKey(UploadSession, on_delete=models.CASCADE, related_name="files")
-    file = models.FileField(upload_to=upload_directory, max_length=255)
-
-    def __str__(self):
-        return self.file.name
-
-    @property
-    def filename(self):
-        return os.path.basename(self.file.name)
-
-    @property
-    def extension(self):
-        filename, file_extension = os.path.splitext(str(self.file.name))
-        return file_extension.lower()
-
-    class Meta:
-        db_table = "stafdb_uploadfile"
-
 class Language(models.Model):
     name = models.CharField(max_length=255)
     def __str__(self):
@@ -2318,6 +2236,34 @@ class ZoteroItem(models.Model):
             elif "abstractNote" in self.data and each.name in self.data["abstractNote"]:
                 hits.append(each)
         return hits
+
+class TimePeriod(models.Model):
+    start = models.DateField(db_index=True)
+    end = models.DateField(db_index=True, null=True, blank=True)
+    name = models.CharField(max_length=255, db_index=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = "stafdb_timeperiod"
+
+class Data(models.Model):
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True, blank=True)
+    quantity = models.FloatField(null=True, blank=True)
+    material = models.ForeignKey(Material, on_delete=models.CASCADE, null=True, blank=True)
+    material_name = models.CharField(max_length=500, null=True, blank=True)
+    source = models.ForeignKey(LibraryItem, on_delete=models.CASCADE, related_name="data")
+    origin_space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE, null=True, blank=True, related_name="data_from_space")
+    destination_space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE, null=True, blank=True, related_name="data_to_space")
+    origin = models.ForeignKey(Activity, on_delete=models.CASCADE, null=True, blank=True, related_name="data_from")
+    destination = models.ForeignKey(Activity, on_delete=models.CASCADE, null=True, blank=True, related_name="data_to")
+    comments = models.TextField(null=True, blank=True)
+    timeframe = models.ForeignKey(TimePeriod, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "stafdb_data"
+        ordering = ["timeframe__start", "id"]
 
 # This is the format to use from now on
 # Note that there is a uid primary key, separate from the record_id

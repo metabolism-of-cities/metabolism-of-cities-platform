@@ -1994,8 +1994,8 @@ def dataimport(request):
 
     if request.user.id != 1:
         return redirect("/")
-    return redirect("/")
-    if "table" in request.GET and request.GET.get("table") != "meta_referencespaces":
+    #return redirect("/")
+    if "table" in request.GET and request.GET.get("table") != "data" and request.GET.get("table") != "timeperiod":
         return redirect("/")
 
     if "table" in request.GET:
@@ -2003,7 +2003,95 @@ def dataimport(request):
         file = settings.MEDIA_ROOT + "/import/" + request.GET["table"] + ".csv"
         messages.warning(request, "Using file: " + file)
 
-        if request.GET["table"] == "meta_referencespaces":
+        if request.GET["table"] == "timeperiod":
+            import csv
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                for row in contents:
+                    TimePeriod.objects.create(
+                        id = row["id"],
+                        start = row["start"],
+                        end = row["end"] if row["end"] != "" else None,
+                        name = row["name"],
+                    )
+
+        if request.GET["table"] == "data":
+            import csv
+            with open(file, "r") as csvfile:
+                contents = csv.DictReader(csvfile)
+                spaces = {}
+                datasets = {}
+                materials = {}
+                activities = {}
+                for row in contents:
+                    id = row["destination_space_id"]
+                    skip = False
+                    origin_space = None
+                    destination_space = None
+
+                    if id:
+                        if row["destination_space_id"] not in spaces:
+                            c = ReferenceSpace.objects.get(old_id=id)
+                            spaces[id] = c
+                        destination_space = spaces[id]
+
+                    id = row["origin_space_id"]
+                    if id:
+                        if row["origin_space_id"] not in spaces:
+                            c = ReferenceSpace.objects.get(old_id=id)
+                            spaces[id] = c
+                        origin_space = spaces[id]
+
+                    id = row["dataset_id"]
+                    if row["dataset_id"] not in datasets:
+                        try:
+                            c = Dataset.objects.get(old_id=id)
+                            datasets[id] = c
+                            source = datasets[id]
+                        except:
+                            skip = True
+
+                    id = row["material_id"]
+                    if row["material_id"] not in materials:
+                        c = Material.objects.get(old_id=id)
+                        materials[id] = c
+                    material = materials[id]
+
+                    origin = None
+                    destination = None
+
+                    if False:
+
+                        id = row["origin_id"]
+                        if id and id != "":
+                            if id not in activities:
+                                c = Activity.objects.get(old_id=id)
+                                activities[id] = c
+                            origin = activities[id]
+
+                        id = row["destination_id"]
+                        if id and id != "":
+                            if id not in activities:
+                                c = Activity.objects.get(old_id=id)
+                                activities[id] = c
+                            destination = activities[id]
+
+
+                    if not skip:
+                        Data.objects.create(
+                            quantity = row["quantity"] if row["quantity"] != "" else None,
+                            material = material,
+                            unit_id = row["unit_id"],
+                            destination_space = destination_space,
+                            origin_space = origin_space,
+                            timeframe_id = row["timeframe_id"],
+                            material_name = row["material_name"],
+                            comments = row["comments"],
+                            source = source,
+                        )
+
+
+        elif request.GET["table"] == "meta_referencespaces":
             file = settings.MEDIA_ROOT + "/import/referencespacecsv.csv"
             csv_meta = {}
             with open(file, "r") as csvfile:
