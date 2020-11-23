@@ -510,13 +510,15 @@
               </thead>
               <tbody>
               {% for each in info.data.all %}
-                <tr>
-                  <td>{{ each.timeframe }}</td>
-                  <td>{{ each.quantity }} {{ each.unit }}</td>
-                  <td>{{ each.material_name }}</td>
-                  <td>{{ each.origin_space }}</td>
-                  <td>{{ each.destination_space }}</td>
-                </tr>
+                {% if forloop.counter < 100 %}
+                  <tr>
+                    <td>{{ each.timeframe }}</td>
+                    <td>{{ each.quantity }} {{ each.unit }}</td>
+                    <td>{{ each.material_name }}</td>
+                    <td>{{ each.origin_space }}</td>
+                    <td>{{ each.destination_space }}</td>
+                  </tr>
+                {% endif %}
               {% endfor %}
               </tbody>
             </table>

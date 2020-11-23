@@ -75,23 +75,22 @@ def index(request):
                         print("not FOUND!")
                         print(row)
 
-    
     import random
-    selected_cities = {12046, 12093, 14402, 12008, 12183, 33989, 12067, 14592, 14398, 12054, 12182, 34816, 14571, 16640, 12183, 38542, 34832, 14412, 15984, 34813}
-    selected = random.sample(selected_cities, 3)
-
-    list = ReferenceSpace.objects.filter(id__in=selected)
     project = get_object_or_404(Project, pk=request.project)
+    id_list = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project, image__isnull=False, meta_data__progress__counter__gte=1).values_list("id", flat=True)
+    selected = random.sample(list(id_list), 3)
+    objects = ReferenceSpace.objects.filter(id__in=selected)
 
     context = {
         "show_project_design": True,
-        "list": list,
+        "list": objects,
         "layers": LAYERS,
         "layers_count": LAYERS_COUNT,
         "webpage": Webpage.objects.get(pk=37077),
         "dashboard_link": project.slug + ":dashboard",
         "harvesting_link": project.slug + ":hub_harvesting_space",
         "total": ActivatedSpace.objects.filter(part_of_project_id=request.project).count(),
+        "show_all": True,
     }
     return render(request, "data/index.html", context)
 
