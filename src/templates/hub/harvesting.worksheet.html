@@ -1,9 +1,89 @@
 {% extends "_base.html" %}
 
+{% block css %}
+<style>
+  .last-row {
+    border-bottom: 3px solid #dee2e6;
+  }
+
+  .objective.minimised {
+    max-height: 300px;
+    overflow: hidden;
+  }
+
+  .objective:not(.minimised) .show-more {
+    display: none;
+  }
+
+  .show-more {
+    position: absolute;
+    bottom: 0;
+    height: 40px;
+    background-color: #efefef;
+    width: 100%;
+    line-height: 38px;
+    border-top: 2px solid #dee2e6;
+    cursor: pointer;
+  }
+
+  .show-more:hover {
+    background-color: #ececec;
+  }
+</style>
+{% endblock %}
 {% block content %}
 
-  <h1>Sevilla worksheet</h1>
+  <!-- <h1>Sevilla worksheet</h1> -->
 
+  <section>
+    <h2 class="text-center">What would you like to work on?</h2>
+    <ul class="list-group list-group-horizontal">
+      <li class="list-group-item flex-fill text-center scroll-to" data-scroll="reduce">
+        <i class="fal fa-fw fa-recycle fa-2x"></i>
+        <br>
+        Reduce (harmful) raw material consumption
+      </li>
+      <li class="list-group-item flex-fill text-center scroll-to" data-scroll="reduce">
+        <i class="fal fa-fw fa-wind-turbine fa-2x"></i>
+        <br>
+        Reduce energy demand and increase share of renewable energy
+      </li>
+
+      <li class="list-group-item flex-fill text-center scroll-to" data-scroll="reduce">
+        <i class="fal fa-fw fa-wind-turbine fa-2x"></i>
+        <br>
+        Increased share of renewable and secondary raw materials in overall material demand
+      </li>
+
+      <li class="list-group-item flex-fill text-center scroll-to" data-scroll="reduce">
+        <i class="fal fa-fw fa-wind-turbine fa-2x"></i>
+        <br>
+        Increased self-sufficiency / self-reliance
+      </li>
+    </ul>
+
+    <ul class="list-group list-group-horizontal">
+      <li class="list-group-item flex-fill text-center border-top-0 scroll-to" data-scroll="reduce">
+        <i class="fal fa-fw fa-wind-turbine fa-2x"></i>
+        <br>
+        Increased quantity of materials available for the next cycle
+      </li>
+
+      <li class="list-group-item flex-fill text-center border-top-0 scroll-to" data-scroll="reduce">
+        <i class="fal fa-fw fa-wind-turbine fa-2x"></i>
+        <br>
+        Reduced waste generation
+      </li>
+
+      <li class="list-group-item flex-fill text-center border-top-0 scroll-to" data-scroll="reduce">
+        <i class="fal fa-fw fa-wind-turbine fa-2x"></i>
+        <br>
+        Reduced incineration and landfilling activities and amounts subjected
+      </li>
+    </ul>
+  </section>
+
+  <!--
   <section>
     <div class="row">
       <div class="col-lg">
@@ -125,14 +205,15 @@
       </table>
     </div>
   </section>
+  -->
 
-  <section>
-    <h4>Indicators</h4>
-    <div class="card card-table">
+  <section id="reduce">
+    <h4>Reduced overall energy demand and increased share of renewable energy</h4>
+    <div class="card card-table objective minimised">
       <table class="table">
         <thead>
           <tr>
-            <th>Name</th>
+            <th>Indicator</th>
             <th>Sublayers</th>
             <th>Status</th>
             <th>Datasets</th>
@@ -140,7 +221,113 @@
         </thead>
         <tbody>
           <tr>
-            <td rowspan="3"><i class="fa fa-fw fa-check-circle text-success mr-1"></i> <a href="">Neighbourhood calculations</a></td>
+            <td rowspan="3"><i class="fa fa-fw fa-check-circle text-success mr-1"></i> <a href="">Total energy demand per capita</a></td>
+            <td><a href="">1.1 City boundaries</a></td>
+            <td><i class="fa fa-check text-success fa-fw mr-1"></i> Completed</td>
+            <td><a href="">Límites del termino municipal de Sevilla</a></td>
+          </tr>
+          <tr>
+            <td rowspan="2"><a href="">1.3 Economic figures</a></td>
+            <td><i class="fa fa-check text-success fa-fw mr-1"></i> Completed</td>
+            <td><a href="">2018 Economic report</a></td>
+          </tr>
+          <tr class="last-row">
+            <td><i class="fa fa-check text-success fa-fw mr-1"></i> Completed</td>
+            <td><a href="">2019 Economic report</a></td>
+          </tr>
+          <tr>
+            <td rowspan="3"><i class="fa fa-fw fa-clock text-warning mr-1"></i> <a href="">Fossil fuels consumption</a></td>
+            <td><a href="">1.4 Population</a></td>
+            <td><i class="fa fa-clock text-warning fa-fw mr-1"></i> Unprocessed</td>
+            <td class="has-button">
+              <a class="btn btn-sm btn-primary" href="">
+                <i class="fa fa-cog"></i> Process dataset
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td rowspan="2"><a href="">1.3 Economic figures</a></td>
+            <td><i class="fa fa-check text-success fa-fw mr-1"></i> Completed</td>
+            <td><a href="">2018 Economic report</a></td>
+          </tr>
+          <tr class="last-row">
+            <td><i class="fa fa-check text-success fa-fw mr-1"></i> Completed</td>
+            <td><a href="">2019 Economic report</a></td>
+          </tr>
+          <tr>
+            <td rowspan="2"><i class="fa fa-fw fa-exclamation-circle text-danger mr-1"></i> <a href="">Renewable energy consumption</a></td>
+            <td><a href="">2.2 Buildings in Sevilla</a></td>
+            <td><i class="fa fa-exclamation-circle text-danger fa-fw mr-1"></i> Unstarted</td>
+            <td class="has-button">
+              <a class="btn btn-sm btn-primary" href="">
+                <i class="fa fa-play"></i> Get started
+              </a>
+            </td>
+          </tr>
+          <tr class="last-row">
+            <td><a href="">2.3 Building archetypes</a></td>
+            <td><i class="fa fa-exclamation-circle text-danger fa-fw mr-1"></i> Unstarted</td>
+            <td class="has-button">
+              <a class="btn btn-sm btn-primary" href="">
+                <i class="fa fa-play"></i> Get started
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td rowspan="3"><i class="fa fa-fw fa-check-circle text-success mr-1"></i> <a href="">Capacity for generation of renewable energy</a></td>
+            <td><a href="">1.1 City boundaries</a></td>
+            <td><i class="fa fa-check text-success fa-fw mr-1"></i> Completed</td>
+            <td><a href="">Límites del termino municipal de Sevilla</a></td>
+          </tr>
+          <tr>
+            <td rowspan="2"><a href="">1.3 Economic figures</a></td>
+            <td><i class="fa fa-check text-success fa-fw mr-1"></i> Completed</td>
+            <td><a href="">2018 Economic report</a></td>
+          </tr>
+          <tr class="last-row">
+            <td><i class="fa fa-check text-success fa-fw mr-1"></i> Completed</td>
+            <td><a href="">2019 Economic report</a></td>
+          </tr>
+          <tr>
+            <td rowspan="3"><i class="fa fa-fw fa-clock text-warning mr-1"></i> <a href="">Share of renewable energy in total energy demand</a></td>
+            <td><a href="">1.4 Population</a></td>
+            <td><i class="fa fa-clock text-warning fa-fw mr-1"></i> Unprocessed</td>
+            <td class="has-button">
+              <a class="btn btn-sm btn-primary" href="">
+                <i class="fa fa-cog"></i> Process dataset
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td rowspan="2"><a href="">1.3 Economic figures</a></td>
+            <td><i class="fa fa-check text-success fa-fw mr-1"></i> Completed</td>
+            <td><a href="">2018 Economic report</a></td>
+          </tr>
+          <tr class="last-row">
+            <td><i class="fa fa-check text-success fa-fw mr-1"></i> Completed</td>
+            <td><a href="">2019 Economic report</a></td>
+          </tr>
+          <tr>
+            <td rowspan="2"><i class="fa fa-fw fa-exclamation-circle text-danger mr-1"></i> <a href="">Share of local renewable energy in total energy demand</a></td>
+            <td><a href="">2.2 Buildings in Sevilla</a></td>
+            <td><i class="fa fa-exclamation-circle text-danger fa-fw mr-1"></i> Unstarted</td>
+            <td class="has-button">
+              <a class="btn btn-sm btn-primary" href="">
+                <i class="fa fa-play"></i> Get started
+              </a>
+            </td>
+          </tr>
+          <tr class="last-row">
+            <td><a href="">2.3 Building archetypes</a></td>
+            <td><i class="fa fa-exclamation-circle text-danger fa-fw mr-1"></i> Unstarted</td>
+            <td class="has-button">
+              <a class="btn btn-sm btn-primary" href="">
+                <i class="fa fa-play"></i> Get started
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td rowspan="3"><i class="fa fa-fw fa-check-circle text-success mr-1"></i> <a href="">Local biomass for energy generation</a></td>
             <td><a href="">1.1 City boundaries</a></td>
             <td><i class="fa fa-check text-success fa-fw mr-1"></i> Completed</td>
             <td><a href="">Límites del termino municipal de Sevilla</a></td>
@@ -155,45 +342,11 @@
             <td><a href="">2019 Economic report</a></td>
           </tr>
           <tr>
-            <td rowspan="3"><i class="fa fa-fw fa-clock text-warning mr-1"></i> <a href="">Per capita calculations</a></td>
-            <td><a href="">1.4 Population</a></td>
-            <td><i class="fa fa-clock text-warning fa-fw mr-1"></i> Unprocessed</td>
-            <td class="has-button">
-              <a class="btn btn-sm btn-primary" href="">
-                <i class="fa fa-cog"></i> Process dataset
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td rowspan="2"><a href="">1.3 Economic figures</a></td>
-            <td><i class="fa fa-check text-success fa-fw mr-1"></i> Completed</td>
-            <td><a href="">2018 Economic report</a></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-check text-success fa-fw mr-1"></i> Completed</td>
-            <td><a href="">2019 Economic report</a></td>
-          </tr>
-          <tr>
-            <td rowspan="2"><i class="fa fa-fw fa-exclamation-circle text-danger mr-1"></i> <a href="">Materials per building</a></td>
-            <td><a href="">2.2 Buildings in Sevilla</a></td>
-            <td><i class="fa fa-exclamation-circle text-danger fa-fw mr-1"></i> Unstarted</td>
-            <td class="has-button">
-              <a class="btn btn-sm btn-primary" href="">
-                <i class="fa fa-play"></i> Get started
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td><a href="">2.3 Building archetypes</a></td>
-            <td><i class="fa fa-exclamation-circle text-danger fa-fw mr-1"></i> Unstarted</td>
-            <td class="has-button">
-              <a class="btn btn-sm btn-primary" href="">
-                <i class="fa fa-play"></i> Get started
-              </a>
-            </td>
-          </tr>
         </tbody>
       </table>
+      <div class="show-more shadow-sm text-center">
+        <i class="fal fa-fw fa-arrow-down mr-1"></i> Show more
+      </div>
     </div>
   </section>
 
@@ -219,4 +372,16 @@
   -->
   <!-- OLD PART END -->
 
+{% endblock %}
+
+{% block footer %}
+  <script>
+    $(".show-more").click(function() {
+      $(this).parent().removeClass("minimised");
+    })
+
+    $(".scroll-to").click(function() {
+      scrollToID("reduce")
+    })
+  </script>
 {% endblock %}
