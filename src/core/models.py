@@ -1228,6 +1228,10 @@ class LibraryItem(Record):
             self.meta_data["processing_error"] = error
         else:
             self.meta_data["processed"] = True
+            if "processing_error" in self.meta_data:
+                self.meta_data.pop("processing_error")
+            if "allow_deletion_spaces" in self.meta_data:
+                self.meta_data.pop("allow_deletion_spaces")
 
         self.save()
 
