@@ -1138,38 +1138,46 @@ class LibraryItem(Record):
 
             layer = self.get_gis_layer()
             fields = layer.fields
+            total_count = layer.num_feat
+            type = layer.geom_type.name
+            if total_count > 1000:
+                # Add some overwriting function here
+                error = "This file has too many objects"
+            else:
+                count = 0
+                for each in layer:
+                    count += 1
+                    meta_data = {}
+                    
+                    # We'll get all the properties and we store this in the meta data of the new object
+                    for f in fields:
+                        # We can't save datetime objects in json, so if it's a datetime then we convert to string
+                        meta_data[f] = str(each.get(f)) if isinstance(each.get(f), datetime.date) else each.get(f)
 
-            count = 0
-            for each in layer:
-                count += 1
-                meta_data = {}
-                
-                # We'll get all the properties and we store this in the meta data of the new object
-                for f in fields:
-                    # We can't save datetime objects in json, so if it's a datetime then we convert to string
-                    meta_data[f] = str(each.get(f)) if isinstance(each.get(f), datetime.date) else each.get(f)
+                    name = str(each.get(self.meta_data["columns"]["name"]))
 
-                name = str(each.get(self.meta_data["columns"]["name"]))
-                geo = each.geom
+                    if type == "Point25D":
+                        # This type has a "Z" geometry which needs to be changed to a 2-dimensional geometry
+                        # See also https://stackoverflow.com/questions/35851577/strip-z-dimension-on-geodjango-force-2d-geometry
+                        get_clone = each.geom.clone()
+                        get_clone.coord_dim = 2
+                        geo = get_clone
+                    else:
+                        geo = each.geom
 
-                # We use WGS 84 (4326) as coordinate reference system, so we gotta convert to that
-                # if it uses something else
-                debug_old = geo.wkt
-                if layer.srs.srid != 4326:
-                    ct = CoordTransform(layer.srs, SpatialReference("WGS84"))
-                    geo.transform(ct)
-                geo = geo.wkt
-                debug_new = geo
+                    # We use WGS 84 (4326) as coordinate reference system, so we gotta convert to that
+                    # if it uses something else
+                    if layer.srs.srid != 4326:
+                        ct = CoordTransform(layer.srs, SpatialReference("WGS84"))
+                        geo.transform(ct)
+                    geo = geo.wkt
 
-                space = ReferenceSpace.objects.create(
-                    name = name,
-                    geometry = geo,
-                    source = self,
-                    meta_data = {"features": meta_data},
-                )
-
-            self.meta_data["debug_old"] = debug_old
-            self.meta_data["debug_new"] = debug_new
+                    space = ReferenceSpace.objects.create(
+                        name = name,
+                        geometry = geo,
+                        source = self,
+                        meta_data = {"features": meta_data},
+                    )
 
         elif self.type.id == 41 and not error: # Type = GPS coordinate spreadsheet
 
