@@ -876,7 +876,7 @@ def material(request, catalog, id):
 
 @login_required
 def material_form(request, catalog=None, id=None, parent=None, project_name=None):
-    ModelForm = modelform_factory(Material, fields=("name", "code", "measurement_type", "description", "icon", "parent"))
+    ModelForm = modelform_factory(Material, fields=("name", "code", "measurement_type", "description", "icon", "parent", "is_deleted"))
     info = None
     if id:
         info = get_object_or_404(Material, pk=id)
