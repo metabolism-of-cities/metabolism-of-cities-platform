@@ -783,7 +783,7 @@ def activity(request, catalog, id):
     return render(request, "staf/activities.html", context)
 
 def materials_catalogs(request):
-    if "load" in request.GET:
+    if "load" in request.GET and request.user.id == 1:
         info = MaterialCatalog.objects.get(pk=request.GET["load"])
         if not info.content.all():
             parents = {}
@@ -830,12 +830,13 @@ def materials_catalogs(request):
     }
     return render(request, "staf/materials.catalogs.html", context)
 
-def materials(request, id=None, catalog=None, project_name=None, edit_mode=False):
+def materials(request, id=None, catalog=None, project_name=None, edit_mode=True):
 
     # If the user enters into edit_mode, we must make sure they have access:
     if project_name and edit_mode:
         if not has_permission(request, PROJECT_ID[project_name], ["curator", "admin", "publisher"]):
-            unauthorized_access(request)
+            edit_mode = False
+            #unauthorized_access(request)
 
     info = None
     if id:
@@ -847,6 +848,14 @@ def materials(request, id=None, catalog=None, project_name=None, edit_mode=False
         list = Material.objects.filter(parent__isnull=True, catalog_id=catalog)
 
     list = list.order_by("code", "name")
+
+    if "update" in request.GET:
+        all = Material.objects.filter(catalog_id=18998)
+        for each in all:
+            if not each.meta_data:
+                each.meta_data = {}
+            each.meta_data["old_code"] = each.code
+            each.save()
 
     context = {
         "list": list,
@@ -867,13 +876,16 @@ def material(request, catalog, id):
 
 @login_required
 def material_form(request, catalog=None, id=None, parent=None, project_name=None):
-    ModelForm = modelform_factory(Material, fields=("name", "code", "measurement_type", "description", "icon"))
+    ModelForm = modelform_factory(Material, fields=("name", "code", "measurement_type", "description", "icon", "parent"))
     info = None
     if id:
         info = get_object_or_404(Material, pk=id)
         form = ModelForm(request.POST or None, instance=info)
     else:
         form = ModelForm(request.POST or None)
+    if info:
+        catalog = info.catalog.id
+        form.fields["parent"].queryset = Material.objects.filter(catalog_id=catalog)
     if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)

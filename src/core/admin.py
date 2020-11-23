@@ -96,6 +96,10 @@ class SearchAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     exclude = DEFAULT_EXCLUDE
 
+class MaterialAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
+    exclude = DEFAULT_EXCLUDE + ["parent"]
+
 class NotificationAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     list_display = ["people", "record", "is_read"]
@@ -364,7 +368,7 @@ admin_site.register(Badge, BadgeAdmin)
 admin_site.register(ActivityCatalog)
 admin_site.register(Activity, ActivityAdmin)
 admin_site.register(MaterialCatalog, SearchAdmin)
-admin_site.register(Material, ActivityAdmin)
+admin_site.register(Material, MaterialAdmin)
 
 admin_site.register(ZoteroCollection, SearchAdmin)
 admin_site.register(ZoteroItem, SearchAdmin)
