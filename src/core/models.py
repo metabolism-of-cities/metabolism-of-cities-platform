@@ -1127,10 +1127,12 @@ class LibraryItem(Record):
         check = ReferenceSpace.objects.filter(source=self)
         error = False
 
-        # Yeah we soon need to do more thorough checks for this!
         if check:
-            #check.delete()
-            error = "This file was already processed - we can not process it again"
+            if self.meta_data.get("allow_deletion_spaces"):
+                # only if this is flagged to allow for deletion will we allow it - otherwise we'll stop this process
+                check.delete()
+            else:
+                error = "This file was already processed - we can not process it again"
 
         if self.type.id == 40 and not error: # Type = shapefile
 

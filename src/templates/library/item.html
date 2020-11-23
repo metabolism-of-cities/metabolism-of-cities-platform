@@ -351,9 +351,20 @@
             {% endif %}
             {% if curator or "datacollector" in PERMISSIONS %}
               {% if IS_DATA_PORTAL and url_processing %}
-                <div class="text-center mt-3 mb-3">
-                  <a href="{% url url_processing info.id %}" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> Process this file</a>
-                </div>
+                {% if not info.meta_data.processed %}
+                  <div class="text-center mt-3 mb-3">
+                    <a href="{% url url_processing info.id %}" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> Process this file</a>
+                  </div>
+                {% endif %}
+
+                {% if request.user.is_staff and info.meta_data.processed %}
+                  <div class="text-center mt-3 mb-3">
+                    <a href="?reset_processing=true" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> RESET processing</a>
+                    <br>
+                    This means that the file can be processed again. <strong>Existing reference spaces and associated info will be lost!</strong>
+                  </div>
+                {% endif %}
+
               {% endif %}
               <div class="text-center mt-3 mb-2">
                 <a onclick="javascript:return confirm('Are you sure?')" href="?delete&amp;return={{ request.get_full_path }}" class="btn btn-danger"><i class="fa fa-trash-alt"></i> Delete</a>

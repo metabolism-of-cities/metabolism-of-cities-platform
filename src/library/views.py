@@ -271,6 +271,12 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         info.create_shapefile_plot()
         messages.success(request, "We have tried generating the plot. If no image appears, there is an issue with the shapefile.")
 
+    if "reset_processing" in request.GET and curator:
+        info.meta_data.pop("processed")
+        info.meta_data["allow_deletion_spaces"] = True
+        info.save()
+        messages.success(request, "File processing options were reset - it will now appear in the list again.")
+
     if "reload" in request.GET and request.user.is_superuser:
         # Temporary solution to re-resize the thumbnails that are too small
         from django.core.files.uploadedfile import UploadedFile
