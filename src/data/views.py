@@ -23,6 +23,12 @@ def index(request):
         for each in l:
             each.meta_data['processed'] = True
             each.save()
+        l = Material.objects.filter(catalog_id=18998)
+        for each in l:
+            code = each.code
+            code = code.replace("MF", "EMP")
+            each.code = code
+            each.save()
         
     if "import" in request.GET and request.user.id == 1:
         import csv
