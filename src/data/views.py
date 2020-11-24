@@ -18,6 +18,12 @@ from core.mocfunctions import *
 
 def index(request):
 
+    if "update" in request.GET and request.user.id == 1:
+        l = Dataset.objects.filter(meta_data__type__isnull=False)
+        for each in l:
+            each.meta_data['processed'] = True
+            each.save()
+        
     if "import" in request.GET and request.user.id == 1:
         import csv
         file = settings.MEDIA_ROOT + "/import/stafdataset.csv"
