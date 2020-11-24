@@ -129,4 +129,16 @@ baseline_staf_urlpatterns = [
     path("referencespaces/<slug:group>/", staf.referencespaces, name="referencespaces"),
 
     path("library/preview/<int:id>/", staf.libraryframe, name="libraryframe"),
+
+    path("materials/catalogs/", staf.materials_catalogs, name="materials_catalogs"),
+    path("materials/", staf.materials, name="materials"),
+    path("materials/<int:id>/", staf.materials, name="materials"),
+    path("materials/create/", staf.material_form, name="material_form"),
+    path("materials/<int:id>/view/", staf.material, name="material"),
+    path("materials/<int:id>/edit/", staf.material_form, name="material_form"),
+    path("materials/<int:parent>/create/", staf.material_form, name="material_form"),
+    path("units/", staf.units, name="units"),
+    path("units/conversion/", staf.units_conversion, name="units_conversion"),
+    path("units/<int:id>/", staf.unit, name="unit"),
+    path("units/create/", staf.unit, name="unit"),
 ]

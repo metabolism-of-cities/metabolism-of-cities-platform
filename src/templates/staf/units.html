@@ -41,6 +41,8 @@
       </tbody>
     </table>
 
-  <a class="btn btn-default-basic" href="{% url "staf:unit" %}"><i class="fal fa-plus"></i> Add unit</a>
+  {% if request.user.is_superuser %}
+    <a class="btn btn-default-basic" href="{% url "staf:unit" %}"><i class="fal fa-plus"></i> Add unit</a>
+  {% endif %}
 
 {% endblock %}

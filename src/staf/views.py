@@ -830,13 +830,16 @@ def materials_catalogs(request):
     }
     return render(request, "staf/materials.catalogs.html", context)
 
-def materials(request, id=None, catalog=None, project_name=None, edit_mode=True):
+def materials(request, id=None, catalog=None, project_name=None, edit_mode=False):
 
     # If the user enters into edit_mode, we must make sure they have access:
     if project_name and edit_mode:
         if not has_permission(request, PROJECT_ID[project_name], ["curator", "admin", "publisher"]):
             edit_mode = False
             #unauthorized_access(request)
+
+    if request.user.is_authenticated and request.user.id == 1:
+        edit_mode = True
 
     info = None
     if id:
@@ -906,7 +909,7 @@ def material_form(request, catalog=None, id=None, parent=None, project_name=None
     return render(request, "staf/material.form.html", context)
 
 def units(request):
-    list = Unit.objects.all()
+    list = Unit.objects.exclude(type=99)
     context = {
         "list": list,
         "load_datatables": True,
