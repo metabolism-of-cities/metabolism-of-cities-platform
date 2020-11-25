@@ -126,8 +126,65 @@
       </tbody>
     </table>
 
-
   </section>
+
+  <h2 class="mt-4">Downloads</h2>
+
+
+<div class="row">
+  <div class="col-sm-6 col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title"><i class="fa fa-list fa-fw"></i> CSV format</h5>
+        <p class="card-text">This file contains a list of all spaces, and the coordinates of each space (if we have a polygon area for the space, then 
+            we convert this to the <a href="https://en.wikipedia.org/wiki/Centroid" target="_blank">centroids</a>).</p>
+        <form method="post" class="mb-3">
+          <button name="csv" value="true" type="submit" class="btn btn-primary"><i class="fa fa-download"></i> Download CSV file</button>
+          {% csrf_token %}
+        </form>
+        <p class="card-text"><small class="text-muted">CSV files can be opened in any spreadsheet software</small></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title"><i class="fa fa-globe fa-fw"></i> GeoJSON format</h5>
+        <p class="card-text">
+          This contains all items in this list with either coordinates or other spatial references (e.g. polygons), in a 
+          <a href="https://en.wikipedia.org/wiki/GeoJSON">GeoJSON</a> format.
+        </p>
+        <form method="post" class="mb-3">
+          <button name="geojson" value="true" type="submit" class="btn btn-primary"><i class="fa fa-download"></i> Download GeoJSON file</button>
+          {% csrf_token %}
+        </form>
+        <p class="card-text"><small class="text-muted">GeoJSON can be read by GIS software, and is widely used on the web.</small></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title"><i class="fa fa-map fa-fw"></i> Shapefile format</h5>
+        <p class="card-text">
+          This format contains the original shapefile that was uploaded to create this map. Note: not all files have a shapefile.
+        </p>
+        {% if info.get_shapefile_size %}
+          <form method="post" class="mb-3" action="{% url URLS.LIBRARY_ITEM info.id %}">
+            <button name="zipfile" value="true" type="submit" class="btn btn-primary"><i class="fa fa-download"></i> Download shapefiles</button>
+            {% csrf_token %}
+          </form>
+        {% else %}
+          <div class="alert alert-dark">
+            No shapefile available for this map.
+          </div>
+        {% endif %}
+        <p class="card-text"><small class="text-muted">Shapefiles can be read by GIS software.</small></p>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 {% endblock %}
 

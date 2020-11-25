@@ -312,6 +312,22 @@ def map_item(request, id, space=None):
     space_count = None
     features = []
 
+    if request.method == "POST":
+        # Note that we use POST to avoid any bot indexing of the download pages, there's no other
+        # reason for not using GET.
+        if "csv" in request.POST:
+            response = HttpResponse(content_type="text/csv")
+            response["Content-Disposition"] = f"attachment; filename=\"{info.name}.csv\""
+
+            writer = csv.writer(response)
+            writer.writerow(["Name", "Latitude", "Longitude"])
+            for each in spaces:
+                writer.writerow([each.name, each.get_lat, each.get_lng])
+            return response
+
+        elif "geojson" in request.POST:
+            return shapefile_json(request, info.id, True)
+
     if space:
         space = get_space(request, space)
 
@@ -2142,7 +2158,7 @@ def hub_data_article(request, space=None, id=None):
     }
     return render(request, "hub/data-article.html", context)
 
-def shapefile_json(request, id):
+def shapefile_json(request, id, download=False):
 
     info = get_object_or_404(LibraryItem, pk=id)
     spaces = info.imported_spaces.all()
@@ -2153,8 +2169,11 @@ def shapefile_json(request, id):
         if each != last:
             string += ","
     string += "]}"
-    return HttpResponse(string, content_type="application/json")
 
+    response = HttpResponse(string, content_type="application/json")
+    if download:
+        response["Content-Disposition"] = f"attachment; filename=\"{info.name}.json\""
+    return response
 
 @xframe_options_exempt
 def dataset(request, space=None, dataset=None, id=None):
