@@ -365,6 +365,16 @@
                   </div>
                 {% endif %}
 
+                {% if request.user.is_staff and info.meta_data.processing_error %}
+                  <div class="text-center mt-3 mb-3">
+                    <a href="?skip_size_check=true" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> Overwrite large-file block</a>
+                    <br>
+                    If you mark this, it means that all reference spaces will be imported, even if this is too large. We also mark this as 
+                    'ready for processing'. Only mark this if someone has finished the processing workflow and it's now in limbo until
+                    this restriction is lifted.
+                  </div>
+                {% endif %}
+
               {% endif %}
               <div class="text-center mt-3 mb-2">
                 <a onclick="javascript:return confirm('Are you sure?')" href="?delete&amp;return={{ request.get_full_path }}" class="btn btn-danger"><i class="fa fa-trash-alt"></i> Delete</a>
@@ -541,6 +551,19 @@
             <i class="fa fa-arrow-left"></i> Back
           </a>
         </div>
+
+        {% if request.user.is_superuser %}
+          <h2 class="mt-4">Meta data</h2>
+          <p><strong><em>Available to super user only.</em></strong></p>
+          {% if info.meta_data %}
+            {% for key,value in info.meta_data.items %}
+              <p><strong>{{ key }}</strong>:<br> {{ value }}</p>
+            {% endfor %}
+          {% else %}
+            <em>This file has no meta data.</em>
+          {% endif %}
+        {% endif %}
+
       </div>
     </div>
   </div>

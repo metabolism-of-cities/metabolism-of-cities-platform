@@ -277,6 +277,13 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         info.save()
         messages.success(request, "File processing options were reset - it will now appear in the list again.")
 
+    if "skip_size_check" in request.GET and curator:
+        info.meta_data.pop("processing_error")
+        info.meta_data["ready_for_processing"] = True
+        info.meta_data["skip_size_check"] = True
+        info.save()
+        messages.success(request, "File processing options were changed - no more size check.")
+
     if "reload" in request.GET and request.user.is_superuser:
         # Temporary solution to re-resize the thumbnails that are too small
         from django.core.files.uploadedfile import UploadedFile

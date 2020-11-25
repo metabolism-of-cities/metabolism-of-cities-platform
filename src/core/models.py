@@ -1140,8 +1140,7 @@ class LibraryItem(Record):
             fields = layer.fields
             total_count = layer.num_feat
             type = layer.geom_type.name
-            if total_count > 1000:
-                # Add some overwriting function here
+            if total_count > 1000 and not self.meta_data.get("skip_size_check"):
                 error = "This file has too many objects. It needs to be verified by an administrator in order to be fully loaded into the system."
             else:
                 count = 0

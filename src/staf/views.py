@@ -2172,7 +2172,7 @@ def shapefile_json(request, id, download=False):
 
     response = HttpResponse(string, content_type="application/json")
     if download:
-        response["Content-Disposition"] = f"attachment; filename=\"{info.name}.json\""
+        response["Content-Disposition"] = f"attachment; filename=\"{info.name}.geojson\""
     return response
 
 @xframe_options_exempt
