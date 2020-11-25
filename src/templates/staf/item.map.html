@@ -27,7 +27,12 @@
   </ol>
 
   <section>
-    {% if not spaces %}
+    {% if info.meta_data.processing_error %}
+      <div class="alert alert-danger ml-2">
+        <strong>There was an issue processing this shapefile.</strong><br>
+        {{ info.meta_data.processing_error }}
+      </div>
+    {% elif not spaces %}
       <div class="alert alert-dark ml-2">
         There are no layers available yet. Be sure to process shapefiles
         (<a href="https://multimedia.metabolismofcities.org/videos/332795/">instructions

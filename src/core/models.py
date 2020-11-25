@@ -1142,7 +1142,7 @@ class LibraryItem(Record):
             type = layer.geom_type.name
             if total_count > 1000:
                 # Add some overwriting function here
-                error = "This file has too many objects"
+                error = "This file has too many objects. It needs to be verified by an administrator in order to be fully loaded into the system."
             else:
                 count = 0
                 for each in layer:
