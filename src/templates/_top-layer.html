@@ -75,10 +75,10 @@
             {% if request.user.is_staff %}
 
               <div class="dropdown d-inline">
-                <button class="badge badge-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="badge badge-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="fa fa-lock"></i>
                   Quick links
-                </button>
+                </div>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
                   {% if request.user.is_authenticated and request.user.is_staff and show_project_design %}

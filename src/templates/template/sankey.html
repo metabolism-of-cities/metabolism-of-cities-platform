@@ -48,104 +48,18 @@
 {% endblock %}
 
 {% block content %}
+  <div id="chart"></div>
 
-  <div id="sandkey"></div>
+  <!-- <div id="sandkey"></div> -->
 
   <!-- <div id="simple"></div> -->
 
-   <div id="chart"></div>
 {% endblock %}
 
 {% block footer %}
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/sankey.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-
-<script>
-  Highcharts.chart("sandkey", {
-    chart: {
-      marginLeft: 100,
-      marginBottom: 200,
-      marginRight: 200,
-    },
-    title: {
-      text: "Sandkey"
-    },
-    series: [{
-      colors: ["#666"],
-      keys: ["from", "to", "weight", "color"],
-      data: [
-        ["Imports", "Direct material inputs", 0.2, "green"],
-        ["Imports", "Direct material inputs", 0.25, "red"],
-        ["Imports", "Direct material inputs", 0.1, "blue"],
-        ["Imports", "Direct material inputs", 1.1, "gold"],
-        ["Natural resources extracted", "Direct material inputs", 1.61, "green"],
-        ["Natural resources extracted", "Direct material inputs", 0.21, "red"],
-        ["Natural resources extracted", "Direct material inputs", 2.93, "blue"],
-        ["Natural resources extracted", "Direct material inputs", 0.57, "gold"],
-        ["Direct material inputs", "Processed material", 1.8, "green"],
-        ["Direct material inputs", "Processed material", 0.46, "red"],
-        ["Direct material inputs", "Processed material", 3.03, "blue"],
-        ["Direct material inputs", "Processed material", 1.67, "gold"],
-        ["Processed material", "Total emissions", 1.16, "green"],
-        ["Processed material", "Total emissions", 1.33, "gold"],
-        ["Processed material", "Dissipative flows", 0.22, "green"],
-        ["Processed material", "Dissipative flows", 0.04, "blue"],
-        ["Processed material", "Material use", 0.39, "green"],
-        ["Processed material", "Material use", 0.41, "red"],
-        ["Processed material", "Material use", 3.58, "blue"],
-        ["Processed material", "Material use", 0.09, "gold"],
-        ["Processed material", "Exports", 0.2, "green"],
-        ["Processed material", "Exports", 0.13, "red"],
-        ["Processed material", "Exports", 0.27, "blue"],
-        ["Processed material", "Exports", 0.06, "gold"],
-        ["Total emissions", "Emissions to air", 1.22, "green"],
-        ["Total emissions", "Emissions to air", 1.35, "gold"],
-        ["Total emissions", "Emissions to water", 0.01, "green"],
-        ["Incineration", "Total emissions", 0.07, "green"],
-        ["Incineration", "Total emissions", 0.01, "blue"],
-        ["Incineration", "Total emissions", 0.02, "gold"],
-        ["Material use", "Waste treatment", 0.24, "green"],
-        ["Material use", "Waste treatment", 0.09, "red"],
-        ["Material use", "Waste treatment", 1.35, "blue"],
-        ["Material use", "Waste treatment", 0.06, "gold"],
-        ["Material use", "Material accumulation", 0.14, "green"],
-        ["Material use", "Material accumulation", 0.32, "red"],
-        ["Material use", "Material accumulation", 2.23, "blue"],
-        ["Material use", "Material accumulation", 0.03, "gold"],
-        ["Waste treatment", "Backfilling", 0.21, "blue"],
-        ["Waste treatment", "Recycling", 0.14, "green"],
-        ["Waste treatment", "Recycling", 0.08, "red"],
-        ["Waste treatment", "Recycling", 0.46, "blue"],
-        ["Waste treatment", "Recycling", 0.03, "gold"],
-        ["Waste treatment", "Incineration", 0.07, "green"],
-        ["Waste treatment", "Incineration", 0.01, "blue"],
-        ["Waste treatment", "Incineration", 0.02, "gold"],
-        ["Waste treatment", "Waste landfilled", 0.03, "green"],
-        ["Waste treatment", "Waste landfilled", 0.67, "blue"],
-        ["Waste treatment", "Waste landfilled", 0.01, "gold"],
-        ["Backfilling", "Processed material", 0.21, "blue"],
-        ["Recycling", "Processed material", 0.14, "green"],
-        ["Recycling", "Processed material", 0.08, "red"],
-        ["Recycling", "Processed material", 0.46, "blue"],
-        ["Recycling", "Processed material", 0.03, "gold"],
-      ],
-      clip: false,
-      type: "sankey",
-      cursor: "pointer",
-      events: {
-        click: function(event) {
-          alert(event.point.weight + " from " + event.point.from + " to " + event.point.to + "(" + event.point.code + ")");
-        }
-      }
-    }]
-
-  });
-</script>
-
-<!-- d3 just to try -->
+<!-- d3 -->
 <script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="https://bl.ocks.org/tomshanley/raw/6eb025290888935f10b142e4bc576d8d/d3-sankey-circular.js"></script>
+<script src="{% static 'js/d3-sankey-circular.js' %}"></script>
 <script src="https://bl.ocks.org/tomshanley/raw/6eb025290888935f10b142e4bc576d8d/d3-path-arrows.js"></script>
 <script>
   let data = {
@@ -243,158 +157,298 @@
   };
 
   var margin = { top: 30, right: 30, bottom: 30, left: 30};
-      var width = 1100;
-      var height = 1100;
+    var width = 1100;
+    var height = 500;
 
-      var sankey = d3.sankeyCircular()
-        .nodeWidth(10)
-        .nodePadding(40) //note that this will be overridden by nodePaddingRatio
-        .nodePaddingRatio(0)
-        .size([width, height])
-        .nodeId(function (d) {
-          return d.name;
-        })
-        .nodeAlign(d3.sankeyJustify)
-        .iterations(32)
-        .circularLinkGap(2);
+    var sankey = d3.sankeyCircular()
+      .nodeWidth(10)
+      .nodePadding(40) //note that this will be overridden by nodePaddingRatio
+      .nodePaddingRatio(0)
+      .size([width, height])
+      .nodeId(function (d) {
+        return d.name;
+      })
+      .nodeAlign(d3.sankeyJustify)
+      .iterations(1)
+      .circularLinkGap(2);
 
-      var svg = d3.select("#chart").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom);
+    var svg = d3.select("#chart").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom);
 
-      var g = svg.append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    var g = svg.append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
-      var linkG = g.append("g")
-        .attr("class", "links")
-        .attr("fill", "none")
-        .attr("stroke-opacity", 0.2)
-        .selectAll("path");
+    var linkG = g.append("g")
+      .attr("class", "links")
+      .attr("fill", "none")
+      .attr("stroke-opacity", 0.2)
+      .selectAll("path");
 
-      var nodeG = g.append("g")
-        .attr("class", "nodes")
-        .attr("font-family", "sans-serif")
-        .attr("font-size", 10)
-        .selectAll("g");
+    var nodeG = g.append("g")
+      .attr("class", "nodes")
+      .attr("font-family", "sans-serif")
+      .attr("font-size", 10)
+      .selectAll("g");
 
-      //run the Sankey + circular over the data
-      let sankeyData = sankey(data);
-      let sankeyNodes = sankeyData.nodes;
-      let sankeyLinks = sankeyData.links;
+    //run the Sankey + circular over the data
+    let sankeyData = sankey(data);
+    let sankeyNodes = sankeyData.nodes;
+    let sankeyLinks = sankeyData.links;
 
-      console.log(sankeyLinks);
+    let depthExtent = d3.extent(sankeyNodes, function (d) { return d.depth; });
 
-      let depthExtent = d3.extent(sankeyNodes, function (d) { return d.depth; });
+    var nodeColour = d3.scaleSequential(d3.interpolateCool)
+    .domain([0,width]);
 
-      var nodeColour = d3.scaleSequential(d3.interpolateCool)
-      .domain([0,width]);
-
-      var node = nodeG.data(sankeyNodes)
-        .enter()
-        .append("g");
-
-      node.append("rect")
-        .attr("x", function (d) { return d.x0; })
-        .attr("y", function (d) { return d.y0; })
-        .attr("height", function (d) { return d.y1 - d.y0; })
-        .attr("width", function (d) { return d.x1 - d.x0; })
-        .style("fill", function (d) { return nodeColour(d.x0); })
-        .style("opacity", 0.5)
-        .on("mouseover", function (d) {
-
-          let thisName = d.name;
-
-          node.selectAll("rect")
-            .style("opacity", function (d) {
-              return highlightNodes(d, thisName)
-            })
-
-          d3.selectAll(".sankey-link")
-            .style("opacity", function (l) {
-              return l.source.name == thisName || l.target.name == thisName ? 1 : 0.3;
-            })
-
-          node.selectAll("text")
-            .style("opacity", function (d) {
-              return highlightNodes(d, thisName)
-            })
-        })
-        .on("mouseout", function (d) {
-          d3.selectAll("rect").style("opacity", 0.5);
-          d3.selectAll(".sankey-link").style("opacity", 0.7);
-          d3.selectAll("text").style("opacity", 1);
-        })
-
-      node.append("text")
-        .attr("x", function (d) { return (d.x0 + d.x1) / 2; })
-        .attr("y", function (d) { return d.y0 - 12; })
-        .attr("dy", "0.35em")
-        .attr("text-anchor", "middle")
-        .text(function (d) { return d.name; });
-
-      node.append("title")
-        .text(function (d) { return d.name + "\n" + (d.value); });
-
-      var link = linkG.data(sankeyLinks)
-        .enter()
-        .append("g")
-
-      link.append("path")
-        .attr("class", function(d){
-          return d.color + " sankey-link";
-        })
-        .attr("data-circular", function (link, i) {
-          return link.circular ? true : false
-        })
-        .attr("d", function(link){
-          return link.path;
-        })
-        .style("stroke-width", function (d) { return Math.max(1, d.width); })
-        .style("opacity", 0.7)
-
-      link.append("title")
-        .text(function (d) {
-          return d.source.name + " → " + d.target.name + "\n Index: " + (d.index);
-        });
+    var node = nodeG.data(sankeyNodes)
+      .enter().append("g")
+        .attr("class", "node")
+        .attr("transform", function(d) {
+        return "translate(" + d.x + "," + d.y + ")"; })
+        .call(d3.drag()
+          .subject(function(d) {
+            return d;
+          })
+          .on("start", function() {
+            this.parentNode.appendChild(this);
+          })
+          .on("drag", dragmove));
 
 
-       var arrowsG = linkG.data(sankeyLinks)
-        .enter()
-        .append("g")
-        .attr("class", "g-arrow")
-        .call(appendArrows, 20, 300, 4)
+    node.append("rect")
+      .attr("x", function (d) { return d.x0; })
+      .attr("y", function (d) { return d.y0; })
+      .attr("height", function (d) { return d.y1 - d.y0; })
+      .attr("width", function (d) { return d.x1 - d.x0; })
+      .style("fill", function (d) { return nodeColour(d.x0); })
+      .style("opacity", 0.5)
+      .on("mouseover", function (d) {
 
-      function highlightNodes(node, name) {
+        let thisName = d.name;
 
-        let opacity = 0.3
+        node.selectAll("rect")
+          .style("opacity", function (d) {
+            return highlightNodes(d, thisName)
+          })
 
-        if (node.name == name) {
-          opacity = 1;
-        }
-        node.sourceLinks.forEach(function (link) {
-          if (link.target.name == name) {
-            opacity = 1;
-          };
-        })
-        node.targetLinks.forEach(function (link) {
-          if (link.source.name == name) {
-            opacity = 1;
-          };
-        })
+        d3.selectAll(".sankey-link")
+          .style("opacity", function (l) {
+            return l.source.name == thisName || l.target.name == thisName ? 1 : 0.3;
+          })
 
-        return opacity;
+        node.selectAll("text")
+          .style("opacity", function (d) {
+            return highlightNodes(d, thisName)
+          })
+      })
+      .on("mouseout", function (d) {
+        d3.selectAll("rect").style("opacity", 0.5);
+        d3.selectAll(".sankey-link").style("opacity", 0.7);
+        d3.selectAll("text").style("opacity", 1);
+      })
 
+    node.append("text")
+      .attr("x", function (d) { return (d.x0 + d.x1) / 2; })
+      .attr("y", function (d) { return d.y0 - 12; })
+      .attr("dy", "0.35em")
+      .attr("text-anchor", "middle")
+      .text(function (d) { return d.name; });
+
+    node.append("title")
+      .text(function (d) { return d.name + "\n" + (d.value); });
+
+    var link = linkG.data(sankeyLinks)
+      .enter()
+      .append("g")
+
+    link.append("path")
+      .attr("class", function(d){
+        return d.color + " sankey-link";
+      })
+      .attr("data-circular", function (link, i) {
+        return link.circular ? true : false
+      })
+      .attr("d", function(link){
+        return link.path;
+      })
+      .style("stroke-width", function (d) { return Math.max(1, d.width); })
+      .style("opacity", 0.7)
+
+    link.append("title")
+      .text(function (d) {
+        return d.source.name + " → " + d.target.name + "\n Index: " + (d.index);
+      });
+
+
+     var arrowsG = linkG.data(sankeyLinks)
+      .enter()
+      .append("g")
+      .attr("class", "g-arrow")
+      .call(appendArrows, 20, 300, 4)
+
+    function highlightNodes(node, name) {
+
+      let opacity = 0.3
+
+      if (node.name == name) {
+        opacity = 1;
       }
+      node.sourceLinks.forEach(function (link) {
+        if (link.target.name == name) {
+          opacity = 1;
+        };
+      })
+      node.targetLinks.forEach(function (link) {
+        if (link.source.name == name) {
+          opacity = 1;
+        };
+      })
+
+      return opacity;
+    }
+
+    sankey.layout = function(iterations) {
+      computeNodeLinks();
+      computeNodeValues();
+      computeNodeBreadths();
+      computeNodeDepths(iterations);
+      computeLinkDepths();
+      return sankey;
+    };
+
+    sankey.relayout = function() {
+      computeLinkDepths();
+      return sankey;
+    };
+
+    var path = sankey.link();
+
+    // the function for moving the nodes
+      function dragmove(d) {
+        d3.select(this)
+          .attr("transform",
+                "translate("
+                   + d.x + ","
+                   + (d.y = Math.max(
+                      0, Math.min(height - d.dy, d3.event.y))
+                     ) + ")");
+        sankey.relayout();
+        link.attr("d", path);
+      }
+
+        function computeLinkDepths() {
+          sankeyNodes.forEach(function(node) {
+            node.sourceLinks.sort(ascendingTargetDepth);
+            node.targetLinks.sort(ascendingSourceDepth);
+          });
+
+          sankeyNodes.forEach(function(node) {
+            var sy = 0, ty = 0;
+            node.sourceLinks.forEach(function(link) {
+              link.sy = sy;
+              sy += link.dy;
+            });
+            node.targetLinks.forEach(function(link) {
+              link.ty = ty;
+              ty += link.dy;
+            });
+          });
+
+          function ascendingSourceDepth(a, b) {
+            return a.source.y - b.source.y;
+          }
+
+          function ascendingTargetDepth(a, b) {
+            return a.target.y - b.target.y;
+          }
+        }
 </script>
+
+<!--
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/sankey.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+<script>
+  Highcharts.chart("sandkey", {
+    chart: {
+      marginLeft: 100,
+      marginBottom: 200,
+      marginRight: 200,
+    },
+    title: {
+      text: "Sandkey"
+    },
+    series: [{
+      colors: ["#666"],
+      keys: ["from", "to", "weight", "color"],
+      data: [
+        ["Imports", "Direct material inputs", 0.2, "green"],
+        ["Imports", "Direct material inputs", 0.25, "red"],
+        ["Imports", "Direct material inputs", 0.1, "blue"],
+        ["Imports", "Direct material inputs", 1.1, "gold"],
+        ["Natural resources extracted", "Direct material inputs", 1.61, "green"],
+        ["Natural resources extracted", "Direct material inputs", 0.21, "red"],
+        ["Natural resources extracted", "Direct material inputs", 2.93, "blue"],
+        ["Natural resources extracted", "Direct material inputs", 0.57, "gold"],
+        ["Direct material inputs", "Processed material", 1.8, "green"],
+        ["Direct material inputs", "Processed material", 0.46, "red"],
+        ["Direct material inputs", "Processed material", 3.03, "blue"],
+        ["Direct material inputs", "Processed material", 1.67, "gold"],
+        ["Processed material", "Total emissions", 1.16, "green"],
+        ["Processed material", "Total emissions", 1.33, "gold"],
+        ["Processed material", "Dissipative flows", 0.22, "green"],
+        ["Processed material", "Dissipative flows", 0.04, "blue"],
+        ["Processed material", "Material use", 0.39, "green"],
+        ["Processed material", "Material use", 0.41, "red"],
+        ["Processed material", "Material use", 3.58, "blue"],
+        ["Processed material", "Material use", 0.09, "gold"],
+        ["Processed material", "Exports", 0.2, "green"],
+        ["Processed material", "Exports", 0.13, "red"],
+        ["Processed material", "Exports", 0.27, "blue"],
+        ["Processed material", "Exports", 0.06, "gold"],
+        ["Total emissions", "Emissions to air", 1.22, "green"],
+        ["Total emissions", "Emissions to air", 1.35, "gold"],
+        ["Total emissions", "Emissions to water", 0.01, "green"],
+        ["Incineration", "Total emissions", 0.07, "green"],
+        ["Incineration", "Total emissions", 0.01, "blue"],
+        ["Incineration", "Total emissions", 0.02, "gold"],
+        ["Material use", "Waste treatment", 0.24, "green"],
+        ["Material use", "Waste treatment", 0.09, "red"],
+        ["Material use", "Waste treatment", 1.35, "blue"],
+        ["Material use", "Waste treatment", 0.06, "gold"],
+        ["Material use", "Material accumulation", 0.14, "green"],
+        ["Material use", "Material accumulation", 0.32, "red"],
+        ["Material use", "Material accumulation", 2.23, "blue"],
+        ["Material use", "Material accumulation", 0.03, "gold"],
+        ["Waste treatment", "Backfilling", 0.21, "blue"],
+        ["Waste treatment", "Recycling", 0.14, "green"],
+        ["Waste treatment", "Recycling", 0.08, "red"],
+        ["Waste treatment", "Recycling", 0.46, "blue"],
+        ["Waste treatment", "Recycling", 0.03, "gold"],
+        ["Waste treatment", "Incineration", 0.07, "green"],
+        ["Waste treatment", "Incineration", 0.01, "blue"],
+        ["Waste treatment", "Incineration", 0.02, "gold"],
+        ["Waste treatment", "Waste landfilled", 0.03, "green"],
+        ["Waste treatment", "Waste landfilled", 0.67, "blue"],
+        ["Waste treatment", "Waste landfilled", 0.01, "gold"],
+        ["Backfilling", "Processed material", 0.21, "blue"],
+        ["Recycling", "Processed material", 0.14, "green"],
+        ["Recycling", "Processed material", 0.08, "red"],
+        ["Recycling", "Processed material", 0.46, "blue"],
+        ["Recycling", "Processed material", 0.03, "gold"],
+      ],
+      clip: false,
+      type: "sankey",
+      cursor: "pointer",
+      events: {
+        click: function(event) {
+          alert(event.point.weight + " from " + event.point.from + " to " + event.point.to + "(" + event.point.code + ")");
+        }
+      }
+    }]
+  });
+</script>
+-->
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-

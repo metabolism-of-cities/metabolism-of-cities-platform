@@ -11,29 +11,35 @@
 {% endblock %}
 
 {% block css %}
-  <style type="text/css">
-    .export, .audioblock {
-      background:#f4f4f4;
-    }
+  <style>
     .journal {
-      max-height:160px;
+      max-height: 160px;
     }
+
     .videoblock {
       background: #000;
     }
+
     .video-embed {
       width: 100%;
       height: 70vh;
     }
+
     .largeicon {
       font-size: 5rem;
     }
+
     .top-message-box .alert {
       text-align: center;
     }
+
+    audio {
+      width: 100%;
+    }
+
     {% if info.is_deleted %}
       .main-content .container {
-        opacity:0.3;
+        opacity: .3;
       }
     {% endif %}
   </style>
@@ -41,485 +47,484 @@
 
 {% block content %}
 
-  {% if spaces and False %}
-    <section class="fullwidth-wrapper">
-      <div class="container">
-        <iframe class="dataset card" src="{% url "data:dataset" info.id %}" onload="resizeIframe(this)"></iframe>
-      </div>
-    </section>
-  {% endif %}
+{% if spaces and False %}
+  <section class="fullwidth-wrapper">
+    <div class="container">
+      <iframe class="dataset card" src="{% url 'data:dataset' info.id %}" onload="resizeIframe(this)"></iframe>
+    </div>
+  </section>
+{% endif %}
 
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-4 text-center">
-        {% if info.publisher.image %}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-4 pb-4 order-2 order-lg-1">
+      {% if info.publisher.image %}
+        <div class="text-center">
           <a href="{{ info.publisher.get_absolute_url }}">
-            <img src="{{ info.publisher.image.url }}" class="journal mt-4">
+            <img src="{{ info.publisher.image.url }}" class="journal rounded mt-4">
           </a>
-        {% else %}
-          <div class="p-4 bg-light rounded border">
-            <span class="largeicon">
-              <i class="fal fa-{{ info.type.icon }}"></i>
-            </span>
-          </div>
-        {% endif %}
-
-        {% if info.file %}
-          <div class="mt-3 mb-2"><a href="{{ info.file.url }}" class="btn btn-primary"><i class="fa fa-download"></i> Download</a></div>
-        {% elif info.image and info.type.name == "Image" %}
-          <div class="mt-3 mb-2"><a href="{{ info.image.url }}" class="btn btn-primary"><i class="fa fa-download"></i> Download</a></div>
-          {% if request.user.id == 1 %}
-            <div class="mt-3 mb-2"><a href="./?reload=true" class="btn btn-warning"><i class="fa fa-sync"></i> Re-create thumbnail</a></div>
-          {% endif %}
-        {% endif %}
-
-      </div>
-      <div class="col-lg-8 mb-4">
-        <div class="basic-details mb-4">
-          <h1 class="item-title">{{ info }}</h1>
-
-          {% if info.image and info.type.name != "Video Recording" %}
-            <img src="{{ info.image.url }}" class="img-fluid img-thumbnail" alt="" />
-          {% endif %}
-
-          <div><em>{{ info.type }}</em></div>
-          {% if info.publisher %}
-            <div><a href="{{ info.publisher.get_absolute_url }}">{{ info.publisher }}</a></div>
-          {% endif %}
-          {% if info.year %}
-            <div>{{ info.year }}</div>
-          {% endif %}
-
-        {% if PROJECT.slug == "islands" and info.type.name == "Dataset" %}
-          <div class="alert alert-warning mt-3">
-            We are currently busy importing data from our previous website --
-            data visualizations and data export options will be available later
-            this month (October 2020).
-          </div>
-        {% endif %}
-
         </div>
-      </div>
-    </div>
-  </div>
-
-  {% if info.type.name == "Video Recording" %}
-
-    <div class="videoblock">
-      {% if info.video %}
-        {{ info.video.embed|safe }}
       {% else %}
-        {{ info.embed|safe }}
+        <div class="p-4 bg-light rounded border text-center">
+          <span class="largeicon">
+            <i class="fal fa-{{ info.type.icon }}"></i>
+          </span>
+        </div>
       {% endif %}
-    </div>
 
-  {% elif info.type.name == "Podcast" %}
+      {% if info.file %}
+        <div class="mt-3 mb-2"><a href="{{ info.file.url }}" class="btn btn-primary"><i class="fa fa-download"></i> Download</a></div>
+      {% elif info.image and info.type.name == "Image" %}
+        <div class="mt-3 mb-2"><a href="{{ info.image.url }}" class="btn btn-primary"><i class="fa fa-download"></i> Download</a></div>
+        {% if request.user.id == 1 %}
+          <div class="mt-3 mb-2"><a href="./?reload=true" class="btn btn-warning"><i class="fa fa-sync"></i> Re-create thumbnail</a></div>
+        {% endif %}
+      {% endif %}
 
-    {% if info.file_url or info.file %}
+      <div class="card my-4">
+        <ul class="list-group list-group-flush">
 
-      <div class="audioblock">
-        <div class="container pt-5 pb-5">
-          <h3>Listen now!</h3>
-           <audio controls style="width:100%">
-             <source src="{% if info.file_url %}{{ info.file_url }}{% else %}{{ info.file.url }}{% endif %}" type="audio/mp3">
-             Your browser does not support the audio tag.
-          </audio>
-          <div>
-            <a class="btn btn-default-outline" href="{% if info.file_url %}{{ info.file_url }}{% else %}{{ info.file.url }}{% endif %}">
-              <i class="fa fa-download"></i>
-              Download
-            </a>
-          </div>
-        </div>
-      </div>
+          <li class="list-group-item table-item">
+            <div><i class="far fa-fw fa-{{ info.type.icon }} mr-1"></i>Type</div>
+            <div>{{ info.type }}</div>
+          </li>
 
-    {% endif %}
+          {% if info.publisher %}
+            <li class="list-group-item table-item">
+              <div><i class="far fa-fw fa-building mr-1"></i> Publisher</div>
+              <div><a href="{{ info.publisher.get_absolute_url }}">{{ info.publisher }}</a></div>
+            </li>
+          {% endif %}
+
+          {% if info.year %}
+            <li class="list-group-item table-item">
+              <div><i class="far fa-fw fa-calendar mr-1"></i> Year</div>
+              <div>{{ info.year }}</div>
+            </li>
+          {% endif %}
 
 
-  {% else %}
+          <li class="list-group-item table-item">
+            <div><i class="far fa-fw fa-fingerprint mr-1"></i> ID</div>
+            <div class="text-monospace">{{ info.id }}</div>
+          </li>
 
-    {% if show_export and False %}
+          {% if info.author_list %}
+            <li class="list-group-item">
+              <i class="far fa-fw fa-user-edit mb-1 mr-1" aria-hidden="true"></i> Author(s)
+              <br>
+              {% if info.authors.all %}
+                {% for each in info.authors %}
+                  <a class="btn btn-sm btn-primary-outline mt-1" href="">{{ each }}</a>
+                {% endfor %}
+              {% else %}
+                {{ info.get_author_citation }}
+              {% endif %}
+            </li>
+          {% endif %}
 
-      <div class="export">
-        <div class="container">
-          <div class="row pt-4">
-            <div class="col-lg-4 mb-4">
-              <h4>Save</h4>
-              <div class="row">
-                <div class="col-md-12">
-                  <a class="btn-icon" href="#">
-                    <div class="title mb-0"><i class="fal fa-save fa-fw"></i> To my collection</div>
-                  </a>
-                </div>
-                <div class="col-md-12">
-                  <a class="btn-icon" href="#">
-                    <div class="title mb-0"><i class="fal fa-folder-plus fa-fw"></i> Create new collection</div>
-                  </a>
-                </div>
+          {% if info.tags.all %}
+            <li class="list-group-item">
+              <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Tags
+              <br>
+              {% for each in info.tags.all %}
+                <a class="btn btn-sm btn-primary-outline mt-1" href="{% url URLS.LIBRARY %}?find=true&amp;search={{ each.id }}&amp;types=all">{{ each }}</a>
+              {% endfor %}
+            </li>
+          {% endif %}
+
+          {% if info.language and not info.type.name == "Image" %}
+          <li class="list-group-item table-item">
+            <div><i class="far fa-fw fa-language mr-1"></i> Language</div>
+            <div>{{ info.get_language_display }}</div>
+          </li>
+          {% endif %}
+
+          {% if info.license %}
+            <li class="list-group-item table-item">
+              <div><i class="far fa-fw fa-universal-access mr-1"></i> License</div>
+              <div>{{ info.license }}</div>
+            </li>
+          {% endif %}
+
+          {% if info.url %}
+            <li class="list-group-item table-item">
+              {% if info.type.name == "Report" or info.type.name == "Dataset" or info.type.name == "Document" %}
+                <div><i class="far fa-fw fa-download mr-1"></i> Download</div>
+              {% else %}
+                <div><i class="far fa-fw fa-link mr-1"></i> Website</div>
+              {% endif %}
+              <div class="text-truncate">
+                <a href="{{ info.url }}">{{ info.url }}</a>
               </div>
-            </div>
-            <div class="col-lg-8 mb-4">
-              <h4>Export</h4>
-              <div class="row">
+            </li>
+          {% endif %}
 
-                <div class="col-md-6">
-                  <button class="btn-icon">
-                    <div class="title mb-0"><i class="fal fa-file-export fa-fw"></i> RIS</div>
-                  </button>
-                </div>
-                <div class="col-md-6">
-                  <button class="btn-icon">
-                    <div class="title mb-0"><i class="fal fa-file-export fa-fw"></i> Bibtex</div>
-                  </button>
-                </div>
-                <div class="col-md-6">
-                  <a class="btn-icon" href="#">
-                    <div class="title mb-0"><i class="fal fa-quote-right fa-fw"></i> Citation</div>
-                  </a>
-                </div>
-                <div class="col-md-6">
-                  <a class="btn-icon" href="javascript:print()">
-                    <div class="title mb-0"><i class="fal fa-print fa-fw"></i> Print</div>
-                  </a>
-                </div>
-              </div>
+          {% if info.doi %}
+            <li class="list-group-item">
+              <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> DOI
+              <br>
+              <a class="badge badge-primary" href="https://doi.org/{{ info.doi }}">
+                {{ info.doi }}
+              </a>
+            </li>
+          {% endif %}
+
+          {% if info.isbn %}
+            <li class="list-group-item">
+              <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> ISBN
+              <br>
+              <span class="badge badge-primary">{{ info.isbn }}</span>
+            </li>
+          {% endif %}
+
+          {% if info.type.group == "academic" %}
+          <li class="list-group-item">
+            <i class="far fa-fw fa-search mb-1 mr-1" aria-hidden="true"></i> Search
+            <br>
+            <a class="btn btn-sm btn-primary-outline mt-1" href="https://scholar.google.com/scholar?q={{ info|urlencode }}">Google Scholar</a>
+            <a class="btn btn-sm btn-primary-outline mt-1" href="https://google.com/search?q={{ info|urlencode }}">Google</a>
+          </li>
+          {% endif %}
+
+          {% if info.uploader %}
+          <li class="list-group-item table-item">
+            <div><i class="far fa-fw fa-user mr-1"></i> Uploaded by</div>
+            <div>
+              <a href="{% url URLS.PROFILE info.uploader.id %}">{{ info.uploader }}</a>
             </div>
-          </div>
-        </div>
+          </li>
+          {% endif %}
+
+          {% if info.processor %}
+          <li class="list-group-item table-item">
+            <div><i class="far fa-fw fa-user mr-1"></i> Processed by</div>
+            <div>
+              <a href="{% url URLS.PROFILE info.processor.id %}">{{ info.processor }}</a>
+            </div>
+          </li>
+          {% endif %}
+        </ul>
       </div>
-
-    {% endif %}
-
-  {% endif %}
-
-  <div class="container pb-5 pt-3">
-
-    <div class="row">
 
       {% if PROJECT.id == 8 %}
 
-        <div class="col-lg-4">
+        {% if info.author_list %}
+          <div class="card">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <i class="far fa-fw fa-user-edit mb-1 mr-1" aria-hidden="true"></i>
+                <strong>
+                Author(s)
+                </strong>
+                <br>
+                {{ info.author_list }}
+              </li>
+            </ul>
+          </div>
+        {% endif %}
 
-          {% if info.author_list %}
-            <div class="card">
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                  <i class="far fa-fw fa-user-edit mb-1 mr-1" aria-hidden="true"></i>
-                  <strong>
-                  Author(s)
-                  </strong>
+        {% for each in authors_temp %}
+          <div class="card mt-4">
+            {% if each.image %}
+            <a href="{% url "ascus:participant" each.id %}">
+              <img class="card-img-top" src="{{ each.image.thumbnail.url }}">
+            </a>
+            {% endif %}
+            <div class="card-body">
+              <div class="mb-4">
+                <span class="details">
+                  {% if each.image %}
+                  <a href="{% url "ascus:participant" each.id %}">
+                    <strong>{{ each }}</strong>
+                  </a>
+                  {% else %}
+                    <strong>{{ each }}</strong>
+                  {% endif %}
+
+                  {% if each.email %}
                   <br>
-                  {{ info.author_list }}
-                </li>
-              </ul>
-            </div>
-          {% endif %}
-
-          {% for each in authors_temp %}
-            <div class="card mb-4 mt-4">
-              {% if each.image %}
-              <a href="{% url "ascus:participant" each.id %}">
-                <img class="card-img-top" src="{{ each.image.thumbnail.url }}">
-              </a>
-              {% endif %}
-              <div class="card-body">
-                <div class="mb-4">
-                  <span class="details">
-                    {% if each.image %}
-                    <a href="{% url "ascus:participant" each.id %}">
-                      <strong>{{ each }}</strong>
-                    </a>
-                    {% else %}
-                      <strong>{{ each }}</strong>
-                    {% endif %}
-
-                    {% if each.email %}
-                    <br>
-                    {{ each.email }}
-                    {% endif %}
-                  </span>
-                </div>
-
+                  {{ each.email }}
+                  {% endif %}
+                </span>
               </div>
-            </div>
-          {% endfor %}
 
-        </div>
+            </div>
+          </div>
+        {% endfor %}
 
       {% else %}
 
-        <div class="col-lg-4">
-
-          <div class="card">
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item table-item">
-                <div><i class="far fa-fw fa-fingerprint mr-1"></i> ID</div>
-                <div>{{ info.id }}</div>
-              </li>
-              {% if info.author_list %}
-                <li class="list-group-item">
-                  <i class="far fa-fw fa-user-edit mb-1 mr-1" aria-hidden="true"></i> Author(s)
-                  <br>
-                  {% if info.authors.all %}
-                    {% for each in info.authors %}
-                      <a class="btn btn-sm btn-primary-outline mt-1" href="">{{ each }}</a>
-                    {% endfor %}
-                  {% else %}
-                    {{ info.get_author_citation }}
-                  {% endif %}
-                </li>
-              {% endif %}
-              {% if info.tags.all %}
-                <li class="list-group-item">
-                  <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Tags
-                  <br>
-                  {% for each in info.tags.all %}
-                    <a class="btn btn-sm btn-primary-outline mt-1" href="{% url URLS.LIBRARY %}?find=true&amp;search={{ each.id }}&amp;types=all">{{ each }}</a>
-                  {% endfor %}
-                </li>
-              {% endif %}
-              {% if info.language and not info.type.name == "Image" %}
-              <li class="list-group-item table-item">
-                <div><i class="far fa-fw fa-language mr-1"></i> Language</div>
-                <div>{{ info.get_language_display }}</div>
-              </li>
-              {% endif %}
-              {% if info.license %}
-                <li class="list-group-item table-item">
-                  <div><i class="far fa-fw fa-universal-access mr-1"></i> License</div>
-                  <div>{{ info.license }}</div>
-                </li>
-              {% endif %}
-              {% if info.url %}
-                <li class="list-group-item table-item">
-                  {% if info.type.name == "Report" or info.type.name == "Dataset" or info.type.name == "Document" %}
-                    <div><i class="far fa-fw fa-download mr-1"></i> Download</div>
-                  {% else %}
-                    <div><i class="far fa-fw fa-link mr-1"></i> Website</div>
-                  {% endif %}
-                  <div class="text-truncate">
-                    <a href="{{ info.url }}">{{ info.url }}</a>
-                  </div>
-                </li>
-              {% endif %}
-              {% if info.doi %}
-                <li class="list-group-item">
-                  <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> DOI
-                  <br>
-                  <a class="badge badge-primary" href="https://doi.org/{{ info.doi }}">
-                    {{ info.doi }}
-                  </a>
-                </li>
-              {% endif %}
-              {% if info.isbn %}
-                <li class="list-group-item">
-                  <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> ISBN
-                  <br>
-                  <span class="badge badge-primary">{{ info.isbn }}</span>
-                </li>
-              {% endif %}
-              {% if info.type.group == "academic" %}
-              <li class="list-group-item">
-                <i class="far fa-fw fa-search mb-1 mr-1" aria-hidden="true"></i> Search
-                <br>
-                <a class="btn btn-sm btn-primary-outline mt-1" href="https://scholar.google.com/scholar?q={{ info|urlencode }}">Google Scholar</a>
-                <a class="btn btn-sm btn-primary-outline mt-1" href="https://google.com/search?q={{ info|urlencode }}">Google</a>
-              </li>
-              {% endif %}
-              {% if info.uploader %}
-              <li class="list-group-item table-item">
-                <div><i class="far fa-fw fa-user mr-1"></i> Uploaded by</div>
-                <div>
-                  <a href="{% url URLS.PROFILE info.uploader.id %}">{{ info.uploader }}</a>
-                </div>
-              </li>
-              {% endif %}
-              {% if info.processor %}
-              <li class="list-group-item table-item">
-                <div><i class="far fa-fw fa-user mr-1"></i> Processed by</div>
-                <div>
-                  <a href="{% url URLS.PROFILE info.processor.id %}">{{ info.processor }}</a>
-                </div>
-              </li>
-              {% endif %}
-            </ul>
-          </div>
-
-          {% if request.user.is_authenticated %}
-            {% if curator %}
-              <div class="text-center mt-3 mb-2"><a href="?edit&amp;return={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a></div>
-            {% endif %}
-            {% if curator or "datacollector" in PERMISSIONS %}
-              {% if IS_DATA_PORTAL and url_processing %}
-                {% if not info.meta_data.processed %}
-                  <div class="text-center mt-3 mb-3">
-                    <a href="{% url url_processing info.id %}" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> Process this file</a>
-                  </div>
-                {% endif %}
-
-                {% if request.user.is_staff and info.meta_data.processed %}
-                  <div class="text-center mt-3 mb-3">
-                    <a href="?reset_processing=true" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> RESET processing</a>
-                    <br>
-                    This means that the file can be processed again. <strong>Existing reference spaces and associated info will be lost!</strong>
-                  </div>
-                {% endif %}
-
-                {% if request.user.is_staff and info.meta_data.processing_error %}
-                  <div class="text-center mt-3 mb-3">
-                    <a href="?skip_size_check=true" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> Overwrite large-file block</a>
-                    <br>
-                    If you mark this, it means that all reference spaces will be imported, even if this is too large. We also mark this as 
-                    'ready for processing'. Only mark this if someone has finished the processing workflow and it's now in limbo until
-                    this restriction is lifted.
-                  </div>
-                {% endif %}
-
-              {% endif %}
-              <div class="text-center mt-3 mb-2">
-                <a onclick="javascript:return confirm('Are you sure?')" href="?delete&amp;return={{ request.get_full_path }}" class="btn btn-danger"><i class="fa fa-trash-alt"></i> Delete</a>
-              </div>
-            {% endif %}
+        {% if request.user.is_authenticated %}
+          {% if curator %}
+            <a href="?edit&amp;return={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
           {% endif %}
+          {% if curator or "datacollector" in PERMISSIONS %}
+            {% if IS_DATA_PORTAL and url_processing %}
+              {% if not info.meta_data.processed %}
+                <a href="{% url url_processing info.id %}" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> Process this file</a>
+              {% endif %}
 
-        </div>
+              {% if request.user.is_staff and info.meta_data.processed %}
+                <a href="?reset_processing=true" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> RESET processing</a>
+                <small class="d-block my-3">
+                  This means that the file can be processed again. <strong>Existing reference spaces and associated info will be lost!</strong>
+                </small>
+              {% endif %}
+
+              {% if request.user.is_staff and info.meta_data.processing_error %}
+                <a href="?skip_size_check=true" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> Overwrite large-file block</a>
+                <small class="d-block my-3">
+                  If you mark this, it means that all reference spaces will be imported, even if this is too large. We also mark this as
+                  'ready for processing'. Only mark this if someone has finished the processing workflow and it's now in limbo until
+                  this restriction is lifted.
+                </small>
+              {% endif %}
+
+            {% endif %}
+              <a onclick="javascript:return confirm('Are you sure?')" href="?delete&amp;return={{ request.get_full_path }}" class="btn btn-danger"><i class="fa fa-trash-alt"></i> Delete</a>
+          {% endif %}
+        {% endif %}
 
       {% endif %}
 
-      <div class="col-lg-8 mb-4">
+      <div class="mt-4">
+        <a href="javascript:history.back()" class="btn btn-primary-outline">
+          <i class="fa fa-arrow-left"></i> Back
+        </a>
+      </div>
+    </div>
+    <div class="col-lg-8 mb-4 order-1 order-lg-2">
+      <h1>{{ info }}</h1>
 
-        {% if info.description %}
+      {% if info.image and info.type.name != "Video Recording" %}
+        <img src="{{ info.image.url }}" class="img-fluid img-thumbnail rounded" alt="" />
+      {% endif %}
+
+      {% if PROJECT.slug == "islands" and info.type.name == "Dataset" %}
+        <div class="alert alert-warning">
+          We are currently busy importing data from our previous website --
+          data visualizations and data export options will be available later
+          this month (October 2020).
+        </div>
+      {% endif %}
+
+      <!-- show media or export options -->
+      {% if info.type.name == "Video Recording" %}
+        <section class="videoblock">
+          {% if info.video %}
+            {{ info.video.embed|safe }}
+          {% else %}
+            {{ info.embed|safe }}
+          {% endif %}
+        </section>
+
+      {% elif info.type.name == "Podcast" %}
+        <section class="podcast">
+          {% if info.file_url or info.file %}
+            <div class="audioblock row mt-4">
+              <div class="col-lg-6">
+                 <audio controls class="rounded">
+                   <source src="{% if info.file_url %}{{ info.file_url }}{% else %}{{ info.file.url }}{% endif %}" type="audio/mp3">
+                   Your browser does not support the audio tag.
+                </audio>
+              </div>
+              <div class="col-lg-6">
+                <a class="btn btn-primary" href="{% if info.file_url %}{{ info.file_url }}{% else %}{{ info.file.url }}{% endif %}">
+                  <i class="fa fa-download"></i> Download
+                </a>
+              </div>
+            </div>
+          {% endif %}
+        </section>
+      {% else %}
+        {% if show_export and False %}
+          <section class="export">
+            <div class="row">
+              <div class="col-lg-4 mb-4">
+                <h4>Save</h4>
+                <div class="row">
+                  <div class="col-md-12">
+                    <a class="btn-icon" href="#">
+                      <div class="title mb-0"><i class="fal fa-save fa-fw"></i> To my collection</div>
+                    </a>
+                  </div>
+                  <div class="col-md-12">
+                    <a class="btn-icon" href="#">
+                      <div class="title mb-0"><i class="fal fa-folder-plus fa-fw"></i> Create new collection</div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-8 mb-4">
+                <h4>Export</h4>
+                <div class="row">
+
+                  <div class="col-md-6">
+                    <button class="btn-icon">
+                      <div class="title mb-0"><i class="fal fa-file-export fa-fw"></i> RIS</div>
+                    </button>
+                  </div>
+                  <div class="col-md-6">
+                    <button class="btn-icon">
+                      <div class="title mb-0"><i class="fal fa-file-export fa-fw"></i> Bibtex</div>
+                    </button>
+                  </div>
+                  <div class="col-md-6">
+                    <a class="btn-icon" href="#">
+                      <div class="title mb-0"><i class="fal fa-quote-right fa-fw"></i> Citation</div>
+                    </a>
+                  </div>
+                  <div class="col-md-6">
+                    <a class="btn-icon" href="javascript:print()">
+                      <div class="title mb-0"><i class="fal fa-print fa-fw"></i> Print</div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        {% endif %}
+      {% endif %}
+
+      {% if info.description %}
+        <section class="description">
           {{ info.get_description }}
-        {% endif %}
+        </section>
+      {% endif %}
 
-        {% if info.attachments.all or info.imported_spaces.all %}
-
-          {% if info.type.name == "Shapefile" or info.imported_spaces.all %}
-            <h3 class="mt-4">Map</h3>
-            {% if info.get_shapefile_plot %}
-              {% if info.meta_data.processed and IS_DATA_PORTAL %}
-                <a href="{% url URLS.MAP_ITEM info.id %}"><img src="{{ info.get_shapefile_plot }}" alt="" /></a>
-              {% else %}
-                <img src="{{ info.get_shapefile_plot }}" alt="" />
-              {% endif %}
-            {% elif info.type.name == "Shapefile" %}
-              <p><em>There is no preview plot available.</em></p>
-              {% if info.meta_data.shapefile_plot_error %}
-                <div class="alert alert-danger"><strong>Error:</strong><br>{{ info.meta_data.shapefile_plot_error }}</div>
-              {% endif %}
-            {% endif %}
+      {% if info.attachments.all or info.imported_spaces.all %}
+        {% if info.type.name == "Shapefile" or info.imported_spaces.all %}
+          <h3>Map</h3>
+          {% if info.get_shapefile_plot %}
             {% if info.meta_data.processed and IS_DATA_PORTAL %}
-              <a href="{% url URLS.MAP_ITEM info.id %}" class="btn btn-primary"><i class="fa fa-map"></i> View interactive map</a>
+              <a href="{% url URLS.MAP_ITEM info.id %}"><img src="{{ info.get_shapefile_plot }}" alt="" /></a>
+            {% else %}
+              <img src="{{ info.get_shapefile_plot }}" alt="" />
             {% endif %}
-            {% if curator and not info.get_shapefile_plot or DEBUG %}
-              <a href="?create_shapefile_plot=true" class="btn btn-default-outline"><i class="fa fa-image"></i> Create preview map now.</a>
+          {% elif info.type.name == "Shapefile" %}
+            <p><em>There is no preview plot available.</em></p>
+            {% if info.meta_data.shapefile_plot_error %}
+              <div class="alert alert-danger"><strong>Error:</strong><br>{{ info.meta_data.shapefile_plot_error }}</div>
             {% endif %}
           {% endif %}
+          {% if info.meta_data.processed and IS_DATA_PORTAL %}
+            <a href="{% url URLS.MAP_ITEM info.id %}" class="btn btn-primary"><i class="fa fa-map"></i> View interactive map</a>
+          {% endif %}
+          {% if curator and not info.get_shapefile_plot or DEBUG %}
+            <a href="?create_shapefile_plot=true" class="btn btn-default-outline"><i class="fa fa-image"></i> Create preview map now.</a>
+          {% endif %}
+        {% endif %}
 
-          {% if info.attachments.all %}
-            <h3 class="mt-4">Attachment(s)</h3>
-            <ul>
-            {% for each in info.attachments.all %}
-              <li><a href="{{ each.file.url }}">{{ each }}</a> ({{ each.get_size }})</li>
-            {% endfor %}
-            </ul>
-            {% if info.attachments.count > 2 %}
-              <form method="post">
-                <button type="submit" class="btn btn-default-outline" name="zipfile" value="true"><i class="fa fa-file-archive"></i> Download as zipfile</button>
-                {% csrf_token %}
-              </form>
-            {% endif %}
-
+        {% if info.attachments.all %}
+          <h3 class="mt-4">Attachment(s)</h3>
+          <ul>
+          {% for each in info.attachments.all %}
+            <li><a href="{{ each.file.url }}">{{ each }}</a> ({{ each.get_size }})</li>
+          {% endfor %}
+          </ul>
+          {% if info.attachments.count > 2 %}
+            <form method="post">
+              <button type="submit" class="btn btn-default-outline" name="zipfile" value="true"><i class="fa fa-file-archive"></i> Download as zipfile</button>
+              {% csrf_token %}
+            </form>
           {% endif %}
 
         {% endif %}
+      {% endif %}
 
-        {% if request.user.is_authenticated %}
-          {% if info.comments %}
-            <h3 class="mt-5">Uploader notes</h3>
+      {% if request.user.is_authenticated %}
+        {% if info.comments %}
+          <section class="notes">
+            <h3>Uploader notes</h3>
             {{ info.comments|linebreaks }}
-          {% endif %}
+          </section>
         {% endif %}
+      {% endif %}
 
-        {% if PROJECT.slug == "untraceable" %}
+      {% if PROJECT.slug == "untraceable" %}
         <div class="alert alert-warning">
           Uploaded by {{ info.uploader }}
         </div>
-        <h3 class="mt-5">Uploader notes</h3>
+        <h3>Uploader notes</h3>
         {{ info.comments|linebreaks }}
-        {% endif %}
+      {% endif %}
 
-        {% if info.is_part_of %}
-          <h3 class="mt-5">Original source</h3>
-          <p>
-            This is part of the following item:
-            <a href="../{{ info.is_part_of.id }}/">{{ info.is_part_of }}</a>
-          </p>
-        {% endif %}
+      {% if info.is_part_of %}
+        <section class="source">
+          <h3>Original source</h3>
+          <p>This item is part of <a href="../{{ info.is_part_of.id }}/">{{ info.is_part_of }}</a></p>
+        </section>
+      {% endif %}
 
-        {% if info.children.all %}
-          <h3 class="mt-5">Available within this {{ info.type }}</h3>
-          <div class="row mb-4">
-          {% for each in info.children.all %}
-            <div class="col-lg-6 col-md-6 col-sm-12">
-              <a class="card btn-card" href="../{{ each.id }}/">
-                {% if each.image %}
-                  <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
-                {% endif %}
-                <div class="card-body">
-                  <h5 class="card-title">{{ each }}</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">{{ each.type }}</h6>
-                </div>
-              </a>
-            </div>
-          {% endfor %}
+      {% if info.children.all %}
+        <section class="children">
+          <h3>Available within this {{ info.type }}</h3>
+          <div class="row">
+            {% for each in info.children.all %}
+              <div class="col-md-6 mb-3">
+                <a class="card btn-card" href="../{{ each.id }}/">
+                  {% if each.image %}
+                    <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
+                  {% endif %}
+                  <div class="card-body">
+                    <h5 class="card-title">{{ each }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ each.type }}</h6>
+                  </div>
+                </a>
+              </div>
+            {% endfor %}
           </div>
-        {% endif %}
+        </section>
+      {% endif %}
 
-        {% if info.spaces.all %}
-          <h3 class="mt-5">Associated space(s)</h3>
-          <ul>
-          {% for each in info.spaces.all %}
-            <li>
+      {% if info.spaces.all %}
+        <section class="associated-spaces">
+          <h3>Associated space{{ info.spaces|pluralize }}</h3>
+            {% for each in info.spaces.all %}
               {% if URLS.SPACE %}
                 <a href="{% url URLS.SPACE each.id %}">{{ each }}</a>
               {% else %}
                 {{ each }}
               {% endif %}
-            </li>
-          {% endfor %}
-          </ul>
-        {% endif %}
+              {% if not forloop.last %},{% endif %}
+            {% endfor %}
+        </section>
+      {% endif %}
 
-        {% if spaces %}
-          <h3 class="mt-5">Part of this shapefile</h3>
+      {% if spaces %}
+        <section class="spaces">
+          <h3>Part of this shapefile</h3>
           {% if spaces_message %}
             <div class="alert alert-warning">
               <i class="fa fa-info-circle"></i> {{ spaces_message }}
             </div>
           {% endif %}
-          <ul>
-          {% for each in spaces %}
-            {% if URLS.SPACE %}
-              <li><a href="{% url URLS.SPACE each.id %}">{{ each }}</a></li>
-            {% else %}
-              <li>{{ each }}</li>
-            {% endif %}
-          {% endfor %}
+          <ul class="list-group list-group-flush">
+            {% for each in spaces %}
+              {% if URLS.SPACE %}
+                <li class="list-group-item"><a href="{% url URLS.SPACE each.id %}">{{ each }}</a></li>
+              {% else %}
+                <li class="list-group-item">{{ each }}</li>
+              {% endif %}
+            {% endfor %}
           </ul>
-        {% endif %}
+        </section>
+      {% endif %}
 
-        {% if PROJECT.slug == "ascus" %}
-        <div class="mt-5">
-          {% include "_messages.html" %}
-        </div>
-        {% endif %}
+      {% if request.user.id == 1 %}
+        {% if info.data.all %}
+          <h3>Data</h3>
+          <section class="visualisation">
 
-        {% if request.user.id == 1 %}
-          {% if info.data.all %}
-            <h2>Data</h2>
+          </section>
 
-            <table class="table table-striped">
+          <section class="map">
+
+          </section>
+
+          <section class="table">
+            <table class="table datatable datatable-card">
               <thead>
                 <tr>
                   <th>Date</th>
@@ -536,35 +541,45 @@
                     <td>{{ each.timeframe }}</td>
                     <td>{{ each.quantity }} {{ each.unit }}</td>
                     <td>{{ each.material_name }}</td>
-                    <td>{{ each.origin_space }}</td>
+                    <td>{{ each.origin_space }} | {{ each.origin_space.get_lat }} | {{ each.origin_space.get_lng }}</td>
                     <td>{{ each.destination_space }}</td>
                   </tr>
                 {% endif %}
               {% endfor %}
               </tbody>
             </table>
-          {% endif %}
+          </section>
         {% endif %}
+      {% endif %}
 
-        <div class="mt-4">
-          <a href="javascript:history.back()" class="btn btn-primary">
-            <i class="fa fa-arrow-left"></i> Back
-          </a>
-        </div>
+      {% if PROJECT.slug == "ascus" %}
+        <section class="messages">
+          {% include "_messages.html" %}
+        </section>
+      {% endif %}
 
-        {% if request.user.is_superuser %}
-          <h2 class="mt-4">Meta data</h2>
-          <p><strong><em>Available to super user only.</em></strong></p>
+      {% if request.user.is_superuser %}
+        <section class="metadata">
+          <h3 class="mb-0">Metadata</h3>
+          <span class="badge badge-primary mb-4">Available to super user only</span>
+
           {% if info.meta_data %}
-            {% for key,value in info.meta_data.items %}
-              <p><strong>{{ key }}</strong>:<br> {{ value }}</p>
-            {% endfor %}
+            <div class="card">
+              <ul class="list-group list-group-flush">
+              {% for key,value in info.meta_data.items %}
+                <li class="list-group-item table-item">
+                  <div class="font-weight-bold">{{ key }}</div>
+                  <div>{{ value }}</div>
+                </li>
+              {% endfor %}
+              </ul>
+            </div>
           {% else %}
-            <em>This file has no meta data.</em>
+            <h5>This file has no meta data</h5>
           {% endif %}
-        {% endif %}
-
-      </div>
+        </section>
+      {% endif %}
     </div>
   </div>
+</div>
 {% endblock %}
