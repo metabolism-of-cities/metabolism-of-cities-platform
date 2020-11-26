@@ -4,9 +4,11 @@
 
   <h1>Team</h1>
 
+  {{ webpage.get_description }}
+
   <div class="row mb-4">
     {% for each in team %}
-      <div class="col-lg-4 col-md-6 col-sm-8">
+      <div class="col-lg-4 col-md-6 col-sm-8 mb-3">
         <div class="card">
           <a href="{% url URLS.PROFILE each.id %}">
             <img src="{{ each.image.thumbnail.url }}" class="card-img-top tall-img" alt="">
