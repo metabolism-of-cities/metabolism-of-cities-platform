@@ -317,6 +317,8 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         "authors": People.objects_unfiltered.filter(parent_list__record_child=info, parent_list__relationship__id=4),
         "load_messaging": True,
         "load_datatables": True,
+        "load_leaflet": True,
+        "load_highcharts": True,
         "list_messages": Message.objects.filter(parent=info),
         "curator": curator,
         "space": space,

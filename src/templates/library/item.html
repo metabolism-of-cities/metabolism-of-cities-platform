@@ -516,10 +516,10 @@
         {% if info.data.all %}
           <h3>Data</h3>
           <section class="visualisation">
-
+            <div id="chart"></div>
           </section>
 
-          <section class="map">
+          <section id="map">
 
           </section>
 
@@ -582,4 +582,53 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block footer %}
+  <script>
+    // Create the chart
+    Highcharts.chart("chart", {
+      chart: {
+        type: "column"
+      },
+      title: {
+        text: "Browser market shares. January, 2018"
+      },
+      xAxis: {
+        categories: [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec"
+        ],
+      },
+      yAxis: {
+        min: 0,
+        title: {
+          text: "Quantity in megalitres"
+        }
+      },
+      legend: {
+        enabled: true
+      },
+      series: [
+        {% for each in info.data.all %}
+          {% if forloop.counter < 30 %}
+            {
+                name: "{{ each.origin_space }}",
+                data: [{{ each.quantity }}]
+            },
+          {% endif %}
+        {% endfor %}
+      ]
+    })
+  </script>
 {% endblock %}
