@@ -77,21 +77,21 @@
       {"source":"Direct material inputs", "target": "Processed material", "value": 3.03, "color": "blue"},
       {"source":"Direct material inputs", "target": "Processed material", "value": 1.67, "color": "gold"},
 
-      {"source":"Processed material", "target": "Total emissions", "value": 1.16, "color": "green"},
-      {"source":"Processed material", "target": "Total emissions", "value": 1.33, "color": "gold"},
+      {"source":"Processed material", "target": "Exports", "value": 0.2, "color": "green"},
+      {"source":"Processed material", "target": "Exports", "value": 0.13, "color": "red"},
+      {"source":"Processed material", "target": "Exports", "value": 0.27, "color": "blue"},
+      {"source":"Processed material", "target": "Exports", "value": 0.06, "color": "gold"},
 
       {"source":"Processed material", "target": "Dissipative flows", "value": 0.22, "color": "green"},
       {"source":"Processed material", "target": "Dissipative flows", "value": 0.04, "color": "blue"},
+
+      {"source":"Processed material", "target": "Total emissions", "value": 1.16, "color": "green"},
+      {"source":"Processed material", "target": "Total emissions", "value": 1.33, "color": "gold"},
 
       {"source":"Processed material", "target": "Material use", "value": 0.39, "color": "green"},
       {"source":"Processed material", "target": "Material use", "value": 0.41, "color": "red"},
       {"source":"Processed material", "target": "Material use", "value": 3.58, "color": "blue"},
       {"source":"Processed material", "target": "Material use", "value": 0.09, "color": "gold"},
-
-      {"source":"Processed material", "target": "Exports", "value": 0.2, "color": "green"},
-      {"source":"Processed material", "target": "Exports", "value": 0.13, "color": "red"},
-      {"source":"Processed material", "target": "Exports", "value": 0.27, "color": "blue"},
-      {"source":"Processed material", "target": "Exports", "value": 0.06, "color": "gold"},
 
       {"source":"Total emissions", "target": "Emissions to air", "value": 1.22, "color": "green"},
       {"source":"Total emissions", "target": "Emissions to air", "value": 1.35, "color": "gold"},
@@ -184,7 +184,6 @@
   var node = nodeG.data(sankeyNodes)
     .enter().append("g")
 
-
   node.append("rect")
     .attr("x", function (d) { return d.x0; })
     .attr("y", function (d) { return d.y0; })
@@ -248,9 +247,7 @@
       return d.source.name + " → " + d.target.name + "\n Index: " + (d.index);
     });
 
-
   function highlightNodes(node, name) {
-
     let opacity = 0.3
 
     if (node.name == name) {
@@ -268,7 +265,6 @@
     })
 
     return opacity;
-
   }
 </script>
 
