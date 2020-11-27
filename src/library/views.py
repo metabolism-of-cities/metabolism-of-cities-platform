@@ -342,44 +342,72 @@ def data_json(request, id):
     series = []
     unit = None
     lat_lng = {}
+    top_level = []
 
-    for each in data:
-        x_axis_field = each.timeframe.name
-        stacked_field = each.origin_space.name
-        lat_lng[stacked_field] = each.origin_space.get_centroids
+    if "drilldown" in request.GET:
+        group_by = "timeframe__name"
+        grouped_data = data.values(group_by).annotate(total=Sum("quantity")).order_by(group_by)
 
-        if not unit:
-            unit = each.unit.name
+        for each in grouped_data:
+            # First we need to get the totals per [parameter]
+            top_level.append({
+                "name": each[group_by],
+                "y": each["total"],
+                "drilldown": each[group_by],
+            })
 
-        if x_axis_field not in x_axis:
-            x_axis.append(x_axis_field)
+            # Gotta swap out "timeframe__name" for variable, unsure how!
+            get_this_data = data.filter(timeframe__name=each[group_by])
+            this_data = []
+            for data_point in get_this_data:
+                # Should also swap out origin_space.name for a variable, somehow!
+                this_data.append([data_point.origin_space.name, data_point.quantity])
 
-        if stacked_field not in stacked_fields:
-            stacked_fields.append(stacked_field)
+            series.append({
+                "name": each[group_by],
+                "id": each[group_by],
+                "data": this_data,
+            })
 
-        if stacked_field not in stacked_field_values:
-            stacked_field_values[stacked_field] = {}
+    else:
+        for each in data:
+            x_axis_field = each.timeframe.name
+            stacked_field = each.origin_space.name
+            lat_lng[stacked_field] = each.origin_space.get_centroids
 
-        stacked_field_values[stacked_field][x_axis_field] = each.quantity
+            if not unit:
+                unit = each.unit.name
 
-    for each in stacked_fields:
-        this_series = []
-        for axis in x_axis:
-            try:
-                this_series.append(stacked_field_values[each][axis])
-            except:
-                this_series.append(None)
-        full = {
-            "name": each,
-            "gps": lat_lng[each],
-            "data": this_series,
-        }
-        series.append(full)
+            if x_axis_field not in x_axis:
+                x_axis.append(x_axis_field)
+
+            if stacked_field not in stacked_fields:
+                stacked_fields.append(stacked_field)
+
+            if stacked_field not in stacked_field_values:
+                stacked_field_values[stacked_field] = {}
+
+            stacked_field_values[stacked_field][x_axis_field] = each.quantity
+
+        for each in stacked_fields:
+            this_series = []
+            for axis in x_axis:
+                try:
+                    this_series.append(stacked_field_values[each][axis])
+                except:
+                    this_series.append(None)
+            full = {
+                "name": each,
+                "gps": lat_lng[each],
+                "data": this_series,
+            }
+            series.append(full)
 
     json_object = {
         "x_axis": x_axis,
         "series": series,
         "y_axis_label": unit,
+        "top_level": top_level,
     }
     return JsonResponse(json_object, safe=False)
 
