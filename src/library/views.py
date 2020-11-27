@@ -318,6 +318,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         "load_messaging": True,
         "load_datatables": True,
         "load_leaflet": True,
+        "load_leaflet_time": True,
         "load_highcharts": True,
         "list_messages": Message.objects.filter(parent=info),
         "curator": curator,

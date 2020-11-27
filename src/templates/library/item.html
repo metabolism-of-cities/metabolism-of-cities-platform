@@ -41,6 +41,7 @@
       height: 700px;
     }
 
+    #map,
     #line,
     #area {
       height: 500px;
@@ -530,7 +531,7 @@
             <div id="area" class="mb-4"></div>
           </section>
 
-          <section id="map">
+          <section id="map" class="leaflet-map">
 
           </section>
 
@@ -744,5 +745,7 @@
       createLine(data)
       createArea(data)
     });
+
+    console.log("hi from item!")
   </script>
 {% endblock %}
