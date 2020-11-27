@@ -6,25 +6,6 @@
 
 {% block css %}
 <style>
-  #sandkey {
-    height: 600px;
-    width: 100%;
-  }
-
-  #container {
-    min-width: 300px;
-    height: 600px;
-  }
-
-  rect {
-    shape-rendering: crispEdges;
-  }
-
-  #chart text {
-    font-family: monospace;
-    font-size: 12px;
-  }
-
   .link {
     fill: none;
   }
@@ -60,309 +41,231 @@
 <!-- d3 -->
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="{% static 'js/d3-sankey-circular.js' %}"></script>
-<script src="https://bl.ocks.org/tomshanley/raw/6eb025290888935f10b142e4bc576d8d/d3-path-arrows.js"></script>
 <script>
   let data = {
     "nodes": [
-      {"name": "Total emissions"},
-      {"name": "Dissipative flows"},
-      {"name": "Imports"},
-      {"name": "Natural resources extracted"},
-      {"name": "Direct material inputs"},
-      {"name": "Processed material"},
-      {"name": "Exports"},
-      {"name": "Material use"},
-      {"name": "Waste treatment"},
-      {"name": "Incineration"},
-      {"name": "Backfilling"},
-      {"name": "Recycling"},
-      {"name": "Waste landfilled"},
-      {"name": "Material accumulation"},
-      {"name": "Emissions to water"},
-      {"name": "Emissions to air"},
+      {"name": "Imports", "order": 0},
+      {"name": "Natural resources extracted", "order": 0},
+      {"name": "Direct material inputs", "order": 1},
+      {"name": "Processed material", "order": 2},
+      {"name": "Material use", "order": 3},
+      {"name": "Material accumulation", "order": 4},
+      {"name": "Waste treatment", "order": 4},
+      {"name": "Recycling", "order": 5},
+      {"name": "Backfilling", "order": 5},
+      {"name": "Incineration", "order": 6},
+      {"name": "Total emissions", "order": 7},
+      {"name": "Exports", "order": 8},
+      {"name": "Dissipative flows", "order": 8},
+      {"name": "Waste landfilled", "order": 8},
+      {"name": "Emissions to water", "order": 8},
+      {"name": "Emissions to air", "order": 8},
     ],
     "links": [
-      {"source":"Imports", "target": "Direct material inputs", "value": 0.2, "optimal": "yes", "color": "green"},
-      {"source":"Imports", "target": "Direct material inputs", "value": 0.25, "optimal": "yes", "color": "red"},
-      {"source":"Imports", "target": "Direct material inputs", "value": 0.1, "optimal": "yes", "color": "blue"},
-      {"source":"Imports", "target": "Direct material inputs", "value": 1.1, "optimal": "yes", "color": "gold"},
+      {"source":"Imports", "target": "Direct material inputs", "value": 0.2, "color": "green"},
+      {"source":"Imports", "target": "Direct material inputs", "value": 0.25, "color": "red"},
+      {"source":"Imports", "target": "Direct material inputs", "value": 0.1, "color": "blue"},
+      {"source":"Imports", "target": "Direct material inputs", "value": 1.1, "color": "gold"},
 
-      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 1.61, "optimal": "yes", "color": "green"},
-      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 0.21, "optimal": "yes", "color": "red"},
-      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 2.93, "optimal": "yes", "color": "blue"},
-      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 0.57, "optimal": "yes", "color": "gold"},
+      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 1.61, "color": "green"},
+      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 0.21, "color": "red"},
+      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 2.93, "color": "blue"},
+      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 0.57, "color": "gold"},
 
-      {"source":"Direct material inputs", "target": "Processed material", "value": 1.8, "optimal": "yes", "color": "green"},
-      {"source":"Direct material inputs", "target": "Processed material", "value": 0.46, "optimal": "yes", "color": "red"},
-      {"source":"Direct material inputs", "target": "Processed material", "value": 3.03, "optimal": "yes", "color": "blue"},
-      {"source":"Direct material inputs", "target": "Processed material", "value": 1.67, "optimal": "yes", "color": "gold"},
+      {"source":"Direct material inputs", "target": "Processed material", "value": 1.8, "color": "green"},
+      {"source":"Direct material inputs", "target": "Processed material", "value": 0.46, "color": "red"},
+      {"source":"Direct material inputs", "target": "Processed material", "value": 3.03, "color": "blue"},
+      {"source":"Direct material inputs", "target": "Processed material", "value": 1.67, "color": "gold"},
 
-      {"source":"Processed material", "target": "Total emissions", "value": 1.16, "optimal": "yes", "color": "green"},
-      {"source":"Processed material", "target": "Total emissions", "value": 1.33, "optimal": "yes", "color": "gold"},
+      {"source":"Processed material", "target": "Exports", "value": 0.2, "color": "green"},
+      {"source":"Processed material", "target": "Exports", "value": 0.13, "color": "red"},
+      {"source":"Processed material", "target": "Exports", "value": 0.27, "color": "blue"},
+      {"source":"Processed material", "target": "Exports", "value": 0.06, "color": "gold"},
 
-      {"source":"Processed material", "target": "Dissipative flows", "value": 0.22, "optimal": "yes", "color": "green"},
-      {"source":"Processed material", "target": "Dissipative flows", "value": 0.04, "optimal": "yes", "color": "blue"},
+      {"source":"Processed material", "target": "Dissipative flows", "value": 0.22, "color": "green"},
+      {"source":"Processed material", "target": "Dissipative flows", "value": 0.04, "color": "blue"},
 
-      {"source":"Processed material", "target": "Material use", "value": 0.39, "optimal": "yes", "color": "green"},
-      {"source":"Processed material", "target": "Material use", "value": 0.41, "optimal": "yes", "color": "red"},
-      {"source":"Processed material", "target": "Material use", "value": 3.58, "optimal": "yes", "color": "blue"},
-      {"source":"Processed material", "target": "Material use", "value": 0.09, "optimal": "yes", "color": "gold"},
+      {"source":"Processed material", "target": "Total emissions", "value": 1.16, "color": "green"},
+      {"source":"Processed material", "target": "Total emissions", "value": 1.33, "color": "gold"},
 
-      {"source":"Processed material", "target": "Exports", "value": 0.2, "optimal": "yes", "color": "green"},
-      {"source":"Processed material", "target": "Exports", "value": 0.13, "optimal": "yes", "color": "red"},
-      {"source":"Processed material", "target": "Exports", "value": 0.27, "optimal": "yes", "color": "blue"},
-      {"source":"Processed material", "target": "Exports", "value": 0.06, "optimal": "yes", "color": "gold"},
+      {"source":"Processed material", "target": "Material use", "value": 0.39, "color": "green"},
+      {"source":"Processed material", "target": "Material use", "value": 0.41, "color": "red"},
+      {"source":"Processed material", "target": "Material use", "value": 3.58, "color": "blue"},
+      {"source":"Processed material", "target": "Material use", "value": 0.09, "color": "gold"},
 
-      {"source":"Total emissions", "target": "Emissions to air", "value": 1.22, "optimal": "yes", "color": "green"},
-      {"source":"Total emissions", "target": "Emissions to air", "value": 1.35, "optimal": "yes", "color": "gold"},
+      {"source":"Total emissions", "target": "Emissions to air", "value": 1.22, "color": "green"},
+      {"source":"Total emissions", "target": "Emissions to air", "value": 1.35, "color": "gold"},
 
-      {"source":"Total emissions", "target": "Emissions to water", "value": 0.01, "optimal": "yes", "color": "green"},
+      {"source":"Total emissions", "target": "Emissions to water", "value": 0.01, "color": "green"},
 
-      {"source":"Incineration", "target": "Total emissions", "value": 0.07, "optimal": "yes", "color": "green"},
-      {"source":"Incineration", "target": "Total emissions", "value": 0.01, "optimal": "yes", "color": "blue"},
-      {"source":"Incineration", "target": "Total emissions", "value": 0.02, "optimal": "yes", "color": "gold"},
+      {"source":"Incineration", "target": "Total emissions", "value": 0.07, "color": "green"},
+      {"source":"Incineration", "target": "Total emissions", "value": 0.01, "color": "blue"},
+      {"source":"Incineration", "target": "Total emissions", "value": 0.02, "color": "gold"},
 
-      {"source":"Material use", "target": "Waste treatment", "value": 0.24, "optimal": "yes", "color": "green"},
-      {"source":"Material use", "target": "Waste treatment", "value": 0.09, "optimal": "yes", "color": "red"},
-      {"source":"Material use", "target": "Waste treatment", "value": 1.35, "optimal": "yes", "color": "blue"},
-      {"source":"Material use", "target": "Waste treatment", "value": 0.06, "optimal": "yes", "color": "gold"},
+      {"source":"Material use", "target": "Waste treatment", "value": 0.24, "color": "green"},
+      {"source":"Material use", "target": "Waste treatment", "value": 0.09, "color": "red"},
+      {"source":"Material use", "target": "Waste treatment", "value": 1.35, "color": "blue"},
+      {"source":"Material use", "target": "Waste treatment", "value": 0.06, "color": "gold"},
 
-      {"source":"Material use", "target": "Material accumulation", "value": 0.14, "optimal": "yes", "color": "green"},
-      {"source":"Material use", "target": "Material accumulation", "value": 0.32, "optimal": "yes", "color": "red"},
-      {"source":"Material use", "target": "Material accumulation", "value": 2.23, "optimal": "yes", "color": "blue"},
-      {"source":"Material use", "target": "Material accumulation", "value": 0.03, "optimal": "yes", "color": "gold"},
+      {"source":"Material use", "target": "Material accumulation", "value": 0.14, "color": "green"},
+      {"source":"Material use", "target": "Material accumulation", "value": 0.32, "color": "red"},
+      {"source":"Material use", "target": "Material accumulation", "value": 2.23, "color": "blue"},
+      {"source":"Material use", "target": "Material accumulation", "value": 0.03, "color": "gold"},
 
-      {"source":"Waste treatment", "target": "Backfilling", "value": 0.21, "optimal": "yes", "color": "blue"},
+      {"source":"Waste treatment", "target": "Backfilling", "value": 0.21, "color": "blue"},
 
-      {"source":"Waste treatment", "target": "Recycling", "value": 0.14, "optimal": "yes", "color": "green"},
-      {"source":"Waste treatment", "target": "Recycling", "value": 0.08, "optimal": "yes", "color": "red"},
-      {"source":"Waste treatment", "target": "Recycling", "value": 0.46, "optimal": "yes", "color": "blue"},
-      {"source":"Waste treatment", "target": "Recycling", "value": 0.03, "optimal": "yes", "color": "gold"},
+      {"source":"Waste treatment", "target": "Recycling", "value": 0.14, "color": "green"},
+      {"source":"Waste treatment", "target": "Recycling", "value": 0.08, "color": "red"},
+      {"source":"Waste treatment", "target": "Recycling", "value": 0.46, "color": "blue"},
+      {"source":"Waste treatment", "target": "Recycling", "value": 0.03, "color": "gold"},
 
-      {"source":"Waste treatment", "target": "Incineration", "value": 0.07, "optimal": "yes", "color": "green"},
-      {"source":"Waste treatment", "target": "Incineration", "value": 0.01, "optimal": "yes", "color": "blue"},
-      {"source":"Waste treatment", "target": "Incineration", "value": 0.02, "optimal": "yes", "color": "gold"},
+      {"source":"Waste treatment", "target": "Incineration", "value": 0.07, "color": "green"},
+      {"source":"Waste treatment", "target": "Incineration", "value": 0.01, "color": "blue"},
+      {"source":"Waste treatment", "target": "Incineration", "value": 0.02, "color": "gold"},
 
-      {"source":"Waste treatment", "target": "Waste landfilled", "value": 0.03, "optimal": "yes", "color": "green"},
-      {"source":"Waste treatment", "target": "Waste landfilled", "value": 0.67, "optimal": "yes", "color": "blue"},
-      {"source":"Waste treatment", "target": "Waste landfilled", "value": 0.01, "optimal": "yes", "color": "gold"},
+      {"source":"Waste treatment", "target": "Waste landfilled", "value": 0.03, "color": "green"},
+      {"source":"Waste treatment", "target": "Waste landfilled", "value": 0.67, "color": "blue"},
+      {"source":"Waste treatment", "target": "Waste landfilled", "value": 0.01, "color": "gold"},
 
-      {"source":"Backfilling", "target": "Processed material", "value": 0.21, "optimal": "yes", "color": "blue"},
+      {"source":"Backfilling", "target": "Processed material", "value": 0.21, "color": "blue"},
 
-      {"source":"Recycling", "target": "Processed material", "value": 0.14, "optimal": "yes", "color": "green"},
-      {"source":"Recycling", "target": "Processed material", "value": 0.08, "optimal": "yes", "color": "red"},
-      {"source":"Recycling", "target": "Processed material", "value": 0.46, "optimal": "yes", "color": "blue"},
-      {"source":"Recycling", "target": "Processed material", "value": 0.03, "optimal": "yes", "color": "gold"},
+      {"source":"Recycling", "target": "Processed material", "value": 0.14, "color": "green"},
+      {"source":"Recycling", "target": "Processed material", "value": 0.08, "color": "red"},
+      {"source":"Recycling", "target": "Processed material", "value": 0.46, "color": "blue"},
+      {"source":"Recycling", "target": "Processed material", "value": 0.03, "color": "gold"},
     ]
   };
 
-  var margin = { top: 30, right: 30, bottom: 30, left: 30};
-    var width = 1100;
-    var height = 500;
+  var margin = { top: 70, right: 70, bottom: 70, left: 70};
+  var width = 1100;
+  var height = 400;
 
-    var sankey = d3.sankeyCircular()
-      .nodeWidth(10)
-      .nodePadding(40) //note that this will be overridden by nodePaddingRatio
-      .nodePaddingRatio(0)
-      .size([width, height])
-      .nodeId(function (d) {
-        return d.name;
-      })
-      .nodeAlign(d3.sankeyJustify)
-      .iterations(1)
-      .circularLinkGap(2);
+  var sankey = d3.sankeyCircular()
+    .nodeWidth(10)
+    .nodePadding(4)
+    .size([width, height])
+    .nodeId(function (d) {
+      return d.name;
+    })
+    .nodeAlign(d3.sankeyRight)
+    .iterations(6)
+    .circularLinkGap(0)
+    .sortNodes("order");
 
-    var svg = d3.select("#chart").append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom);
+  var svg = d3.select("#chart").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom);
 
-    var g = svg.append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+  var g = svg.append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
-    var linkG = g.append("g")
-      .attr("class", "links")
-      .attr("fill", "none")
-      .attr("stroke-opacity", 0.2)
-      .selectAll("path");
+  var linkG = g.append("g")
+    .attr("class", "links")
+    .attr("fill", "none")
+    .attr("stroke-opacity", 0.2)
+    .selectAll("path");
 
-    var nodeG = g.append("g")
-      .attr("class", "nodes")
-      .attr("font-family", "sans-serif")
-      .attr("font-size", 10)
-      .selectAll("g");
+  var nodeG = g.append("g")
+    .attr("class", "nodes")
+    .attr("font-family", "sans-serif")
+    .attr("font-size", 10)
+    .selectAll("g");
 
-    //run the Sankey + circular over the data
-    let sankeyData = sankey(data);
-    let sankeyNodes = sankeyData.nodes;
-    let sankeyLinks = sankeyData.links;
+  //run the Sankey + circular over the data
+  let sankeyData = sankey(data);
+  let sankeyNodes = sankeyData.nodes;
+  let sankeyLinks = sankeyData.links;
 
-    let depthExtent = d3.extent(sankeyNodes, function (d) { return d.depth; });
+  let depthExtent = d3.extent(sankeyNodes, function (d) { return d.depth; });
 
-    var nodeColour = d3.scaleSequential(d3.interpolateCool)
-    .domain([0,width]);
+  var nodeColour = d3.scaleSequential(d3.interpolateCool)
+  .domain([0,width]);
 
-    var node = nodeG.data(sankeyNodes)
-      .enter().append("g")
-        .attr("class", "node")
-        .attr("transform", function(d) {
-        return "translate(" + d.x + "," + d.y + ")"; })
-        .call(d3.drag()
-          .subject(function(d) {
-            return d;
-          })
-          .on("start", function() {
-            this.parentNode.appendChild(this);
-          })
-          .on("drag", dragmove));
+  var node = nodeG.data(sankeyNodes)
+    .enter().append("g")
 
+  node.append("rect")
+    .attr("x", function (d) { return d.x0; })
+    .attr("y", function (d) { return d.y0; })
+    .attr("height", function (d) { return d.y1 - d.y0; })
+    .attr("width", function (d) { return d.x1 - d.x0; })
+    .style("fill", function (d) { return nodeColour(d.x0); })
+    .style("opacity", 0.5)
+    .on("mouseover", function (d) {
 
-    node.append("rect")
-      .attr("x", function (d) { return d.x0; })
-      .attr("y", function (d) { return d.y0; })
-      .attr("height", function (d) { return d.y1 - d.y0; })
-      .attr("width", function (d) { return d.x1 - d.x0; })
-      .style("fill", function (d) { return nodeColour(d.x0); })
-      .style("opacity", 0.5)
-      .on("mouseover", function (d) {
+      let thisName = d.name;
 
-        let thisName = d.name;
+      node.selectAll("rect")
+        .style("opacity", function (d) {
+          return highlightNodes(d, thisName)
+        })
 
-        node.selectAll("rect")
-          .style("opacity", function (d) {
-            return highlightNodes(d, thisName)
-          })
+      d3.selectAll(".sankey-link")
+        .style("opacity", function (l) {
+          return l.source.name == thisName || l.target.name == thisName ? 1 : 0.3;
+        })
 
-        d3.selectAll(".sankey-link")
-          .style("opacity", function (l) {
-            return l.source.name == thisName || l.target.name == thisName ? 1 : 0.3;
-          })
+      node.selectAll("text")
+        .style("opacity", function (d) {
+          return highlightNodes(d, thisName)
+        })
+    })
+    .on("mouseout", function (d) {
+      d3.selectAll("rect").style("opacity", 0.5);
+      d3.selectAll(".sankey-link").style("opacity", 0.7);
+      d3.selectAll("text").style("opacity", 1);
+    })
 
-        node.selectAll("text")
-          .style("opacity", function (d) {
-            return highlightNodes(d, thisName)
-          })
-      })
-      .on("mouseout", function (d) {
-        d3.selectAll("rect").style("opacity", 0.5);
-        d3.selectAll(".sankey-link").style("opacity", 0.7);
-        d3.selectAll("text").style("opacity", 1);
-      })
+  node.append("text")
+    .attr("x", function (d) { return (d.x0 + d.x1) / 2; })
+    .attr("y", function (d) { return (d.y0 + d.y1) / 2; })
+    .attr("text-anchor", "middle")
+    .text(function (d) { return d.name; });
 
-    node.append("text")
-      .attr("x", function (d) { return (d.x0 + d.x1) / 2; })
-      .attr("y", function (d) { return d.y0 - 12; })
-      .attr("dy", "0.35em")
-      .attr("text-anchor", "middle")
-      .text(function (d) { return d.name; });
+  node.append("title")
+    .text(function (d) { return d.name + "\n" + (d.value); });
 
-    node.append("title")
-      .text(function (d) { return d.name + "\n" + (d.value); });
+  var link = linkG.data(sankeyLinks)
+    .enter()
+    .append("g")
 
-    var link = linkG.data(sankeyLinks)
-      .enter()
-      .append("g")
+  link.append("path")
+    .attr("class", function(d){
+      return d.color + " sankey-link";
+    })
+    .attr("data-circular", function (link, i) {
+      return link.circular ? true : false
+    })
+    .attr("d", function(link){
+      return link.path;
+    })
+    .style("stroke-width", function (d) { return Math.max(1, d.width); })
+    .style("opacity", 0.7)
 
-    link.append("path")
-      .attr("class", function(d){
-        return d.color + " sankey-link";
-      })
-      .attr("data-circular", function (link, i) {
-        return link.circular ? true : false
-      })
-      .attr("d", function(link){
-        return link.path;
-      })
-      .style("stroke-width", function (d) { return Math.max(1, d.width); })
-      .style("opacity", 0.7)
+  link.append("title")
+    .text(function (d) {
+      return d.source.name + " → " + d.target.name + "\n Index: " + (d.index);
+    });
 
-    link.append("title")
-      .text(function (d) {
-        return d.source.name + " → " + d.target.name + "\n Index: " + (d.index);
-      });
+  function highlightNodes(node, name) {
+    let opacity = 0.3
 
-
-     var arrowsG = linkG.data(sankeyLinks)
-      .enter()
-      .append("g")
-      .attr("class", "g-arrow")
-      .call(appendArrows, 20, 300, 4)
-
-    function highlightNodes(node, name) {
-
-      let opacity = 0.3
-
-      if (node.name == name) {
-        opacity = 1;
-      }
-      node.sourceLinks.forEach(function (link) {
-        if (link.target.name == name) {
-          opacity = 1;
-        };
-      })
-      node.targetLinks.forEach(function (link) {
-        if (link.source.name == name) {
-          opacity = 1;
-        };
-      })
-
-      return opacity;
+    if (node.name == name) {
+      opacity = 1;
     }
+    node.sourceLinks.forEach(function (link) {
+      if (link.target.name == name) {
+        opacity = 1;
+      };
+    })
+    node.targetLinks.forEach(function (link) {
+      if (link.source.name == name) {
+        opacity = 1;
+      };
+    })
 
-    sankey.layout = function(iterations) {
-      computeNodeLinks();
-      computeNodeValues();
-      computeNodeBreadths();
-      computeNodeDepths(iterations);
-      computeLinkDepths();
-      return sankey;
-    };
-
-    sankey.relayout = function() {
-      computeLinkDepths();
-      return sankey;
-    };
-
-    var path = sankey.link();
-
-    // the function for moving the nodes
-      function dragmove(d) {
-        d3.select(this)
-          .attr("transform",
-                "translate("
-                   + d.x + ","
-                   + (d.y = Math.max(
-                      0, Math.min(height - d.dy, d3.event.y))
-                     ) + ")");
-        sankey.relayout();
-        link.attr("d", path);
-      }
-
-        function computeLinkDepths() {
-          sankeyNodes.forEach(function(node) {
-            node.sourceLinks.sort(ascendingTargetDepth);
-            node.targetLinks.sort(ascendingSourceDepth);
-          });
-
-          sankeyNodes.forEach(function(node) {
-            var sy = 0, ty = 0;
-            node.sourceLinks.forEach(function(link) {
-              link.sy = sy;
-              sy += link.dy;
-            });
-            node.targetLinks.forEach(function(link) {
-              link.ty = ty;
-              ty += link.dy;
-            });
-          });
-
-          function ascendingSourceDepth(a, b) {
-            return a.source.y - b.source.y;
-          }
-
-          function ascendingTargetDepth(a, b) {
-            return a.target.y - b.target.y;
-          }
-        }
+    return opacity;
+  }
 </script>
 
 <!--
