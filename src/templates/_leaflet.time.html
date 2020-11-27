@@ -1,8 +1,136 @@
 <script>
-  function createMap(periods, data) {
+  // create global variables so we can reuse them later
+  let periods = [];
+  let mapData = [];
 
+  // which period to load first
+  let currentPeriod = 0;
+  let lastPeriod = 0;
+
+  // only fit bounds on first load
+  let firstLoad = true;
+
+  // function that sets up basics for the map
+  function createMap(data) {
+    // put data in global variables
+    periods = data.x_axis;
+    mapData = data.series;
+
+    // define length of periods, we'll need it for the toggles
+    lastPeriod = periods.length - 1;
+
+    createMenu(periods)
+    loadPeriod(currentPeriod)
   }
 
-  console.log("hi from leaflet time!")
-  // map.addLayer(dataLayer).fitBounds(dataLayer.getBounds())
+  // function to create menu that allows users to switch periods
+  function createMenu(periods) {
+    L.Control.PeriodToggles = L.Control.extend({
+      onAdd: function(map) {
+        let periodTogglesWrapper = L.DomUtil.create("div", "period-toggles");
+
+        // previous button
+        let previous = L.DomUtil.create("div", "switch-period prev");
+        previous.innerHTML = "<i class='far fa-fw fa-arrow-left'></i>";
+
+        periodTogglesWrapper.appendChild(previous);
+
+        // next button
+        let current = L.DomUtil.create("div", "current-period");
+        periodTogglesWrapper.appendChild(current);
+
+        // next button
+        let next = L.DomUtil.create("div", "switch-period next");
+        next.innerHTML = "<i class='far fa-fw fa-arrow-right'></i>";
+
+        periodTogglesWrapper.appendChild(next);
+
+        return periodTogglesWrapper;
+      }
+    })
+
+    // create a new leaflet control and apply toggle button details
+    L.control.PeriodToggles = function(opts) {
+      return new L.Control.PeriodToggles(opts);
+    }
+
+    // add period toggles to the map
+    L.control.PeriodToggles({position: "topright"}).addTo(map);
+
+    // make the period toggles work
+    $(".switch-period").click(function() {
+      let period = $(this).attr("data-period");
+      loadPeriod(period);
+    })
+  }
+
+  // put all markers for a single period together so we can treat them as a group
+  // data layer is a global variable so we can easily remove it from the map
+  let featureGroupMarkers = [];
+  let dataLayer = false;
+
+  // function to change which period is shown on the map
+  function loadPeriod(period) {
+    // clear marker group array and remove it from the map
+    featureGroupMarkers = [];
+    if (dataLayer != false) {
+      map.removeLayer(dataLayer);
+    }
+
+    // put all values of a period in an array to get the highest value and calculate the scale
+    let periodValues = []
+    let periodScale;
+
+    // in order to get a sensible size for the circles, we'll need to know the maximum value for each year
+    $(mapData).each(function() {
+      periodValues.push(this.data[period]);
+    });
+
+    let periodMax = Math.max(...periodValues);
+    periodScale = 30 / periodMax;
+
+    $(mapData).each(function() {
+      if (this.gps) {
+        let radius = this.data[period] * periodScale;
+        if (radius < 5) {
+          radius = 5
+        };
+
+        let marker = L.circleMarker([this.gps[0], this.gps[1]], {"radius": radius, "color": "#144d58"}).bindPopup("<div class='title'>" + this.name + "</div><hr><div class='content'>" + this.data[period] + "</div>")
+        featureGroupMarkers.push(marker)
+      }
+    })
+
+    // define data layer based on marker group
+    dataLayer = L.featureGroup(featureGroupMarkers);
+
+    // add data layer to map
+    map.addLayer(dataLayer)
+
+    // various functions to update the toggles
+    // to start, show current period in toggle menu
+    $(".period-toggles .current-period").text(periods[period])
+
+    let prevPeriod = Number(period) - 1;
+    let nextPeriod = Number(period) + 1;
+
+    // use this to update the buttons, making sure to disable them when on first or last period
+    if (period == 0) {
+      $(".switch-period.prev").addClass("disabled");
+    } else {
+      $(".switch-period.prev").removeClass("disabled").attr("data-period", prevPeriod);
+    }
+
+    if (period == lastPeriod) {
+      $(".switch-period.next").addClass("disabled");
+    } else {
+      $(".switch-period.next").removeClass("disabled").attr("data-period", nextPeriod);
+    }
+
+    // only on page load, fit map bounds to the data
+    if (firstLoad == true) {
+      map.fitBounds(dataLayer.getBounds())
+      firstLoad = false
+    };
+  }
 </script>

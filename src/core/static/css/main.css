@@ -723,11 +723,13 @@ a.badge-secondary:focus {
   font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif; }
   .leaflet-map a.btn-primary {
     color: #fff; }
+  .leaflet-map .period-toggles,
   .leaflet-map .download-map-wrapper,
   .leaflet-map .clear-map-wrapper {
     border: 2px solid rgba(0, 0, 0, 0.2);
     background-clip: padding-box;
     border-radius: .25rem; }
+  .leaflet-map .switch-period,
   .leaflet-map .download-map,
   .leaflet-map .clear-map {
     background-color: #fff;
@@ -739,9 +741,30 @@ a.badge-secondary:focus {
     font-size: 1rem;
     color: #404040;
     border-radius: .25rem; }
+    .leaflet-map .switch-period:hover,
     .leaflet-map .download-map:hover,
     .leaflet-map .clear-map:hover {
       background-color: #f4f4f4; }
+  .leaflet-map .switch-period.prev {
+    display: inline-block;
+    border-radius: .25rem 0 0 .25rem; }
+  .leaflet-map .switch-period.next {
+    display: inline-block;
+    border-radius: 0 .25rem .25rem 0; }
+  .leaflet-map .switch-period.disabled {
+    color: #efefef;
+    cursor: not-allowed;
+    background-color: #fff; }
+  .leaflet-map .current-period {
+    background-color: #f4f4f4;
+    display: inline-block;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    font-size: .75rem;
+    padding: 0 .75rem;
+    vertical-align: top;
+    height: 30px;
+    line-height: 30px; }
   .leaflet-map .show-world.button {
     width: 30px;
     height: 30px;

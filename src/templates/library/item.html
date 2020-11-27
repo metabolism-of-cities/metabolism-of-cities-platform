@@ -742,10 +742,9 @@
 
     $.get("data/json/", function(data) {
       createStackedBar(data);
-      createLine(data)
-      createArea(data)
+      createLine(data);
+      createArea(data);
+      createMap(data)
     });
-
-    console.log("hi from item!")
   </script>
 {% endblock %}

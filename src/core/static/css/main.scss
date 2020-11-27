@@ -1083,6 +1083,7 @@ a.badge-secondary:focus {
     color: $white;
   }
 
+  .period-toggles,
   .download-map-wrapper,
   .clear-map-wrapper {
     border: 2px solid rgba(0,0,0,0.2);
@@ -1090,6 +1091,7 @@ a.badge-secondary:focus {
     border-radius: .25rem;
   }
 
+  .switch-period,
   .download-map,
   .clear-map {
     background-color: $white;
@@ -1106,6 +1108,36 @@ a.badge-secondary:focus {
       background-color: #f4f4f4;
     }
   }
+
+  .switch-period.prev {
+    display: inline-block;
+    border-radius: .25rem 0 0 .25rem;
+  }
+
+  .switch-period.next {
+    display: inline-block;
+    border-radius: 0 .25rem .25rem 0;
+  }
+
+  .switch-period.disabled {
+    color: #efefef;
+    cursor: not-allowed;
+    background-color: $white;
+  }
+
+  .current-period {
+    background-color: #f4f4f4;
+    display: inline-block;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    font-size: .75rem;
+    padding: 0 .75rem;
+    vertical-align: top;
+    height: 30px;
+    line-height: 30px;
+  }
+
+
 
   // .leaflet-popup {
   //   a.leaflet-popup-close-button {
