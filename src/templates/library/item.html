@@ -520,7 +520,9 @@
         {% if info.data.all %}
           <section class="visualisation">
             <h3>Data</h3>
-            <div id="stacked"></div>
+            <div id="stacked" class="mb-4"></div>
+
+            <div id="line" class="mb-4"></div>
           </section>
 
           <section id="map">
@@ -656,8 +658,39 @@
       });
     }
 
+    function createLine(data) {
+      Highcharts.chart("line", {
+        title: {
+          text: "Line graph"
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: "{{ info }}"
+          },
+        },
+        legend: {
+          align: "right",
+          verticalAlign: "bottom",
+        },
+        tooltip: {
+          headerFormat: "<b>{point.x}</b><br/>",
+          pointFormat: "{series.name}: {point.y}<br/>Total: {point.stackTotal}"
+        },
+        plotOptions: {
+          series: {
+            marker: {
+              enabled: false
+            }
+          }
+        },
+        series: data.series
+      });
+    };
+
     $.get("data/json/", function(data) {
       createStackedBar(data);
+      createLine(data)
     });
   </script>
 {% endblock %}
