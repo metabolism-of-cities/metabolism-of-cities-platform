@@ -1650,11 +1650,9 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
 
     try:
         work_id = 14 if geospreadsheet else 2
-        work = Work.objects.filter(part_of_project_id=request.project, workactivity_id=work_id, related_to=document)
-        work = work[0]
+        work = Work.objects.get(part_of_project_id=request.project, workactivity_id=work_id, related_to=document)
     except Exception as e:
-        work = None
-        messages.error(request, "We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
+        work = Work.objects.create(part_of_project_id=request.project, workactivity_id=work_id, related_to=document)
 
     if "delete_document" in request.GET or "new_type" in request.GET and request.GET.get("new_type").isdigit():
         if not curator:
@@ -1719,33 +1717,37 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
 
     if "start_work" in request.POST or "start_work_edit" in request.POST:
         try:
-            message_description = "Task was assigned to " + str(request.user.people) + " and status was changed: " + work.get_status_display() + " → "
-            work.status = Work.WorkStatus.PROGRESS
-            work.assigned_to = request.user.people
-            work.subscribers.add(request.user.people)
-            work.save()
-            messages.success(request, "You are now in charge of this shapefile - good luck!")
+            if work.assigned_to == request.user.people and work.status == Work.WorkStatus.PROGRESS:
+                pass
+                # If this is already assigned to this person we can simply redirect and that's it
+            else:
+                message_description = "Task was assigned to " + str(request.user.people) + " and status was changed: " + work.get_status_display() + " → "
+                work.status = Work.WorkStatus.PROGRESS
+                work.assigned_to = request.user.people
+                work.subscribers.add(request.user.people)
+                work.save()
+                messages.success(request, "You are now in charge of this shapefile - good luck!")
 
-            work.refresh_from_db()
-            new_status = str(work.get_status_display())
-            message_description += new_status
+                work.refresh_from_db()
+                new_status = str(work.get_status_display())
+                message_description += new_status
 
-            message = Message.objects.create(
-                name = "Task assigned and in progress",
-                description = message_description,
-                parent = work,
-                posted_by = request.user.people,
-            )
-            set_autor(request.user.people.id, message.id)
+                message = Message.objects.create(
+                    name = "Task assigned and in progress",
+                    description = message_description,
+                    parent = work,
+                    posted_by = request.user.people,
+                )
+                set_autor(request.user.people.id, message.id)
 
-            for each in work.subscribers.all():
-                if each.people != request.user.people:
-                    Notification.objects.create(record=message, people=each.people)
+                for each in work.subscribers.all():
+                    if each.people != request.user.people:
+                        Notification.objects.create(record=message, people=each.people)
 
-            if not document.meta_data:
-                document.meta_data = {}
-            document.meta_data["assigned_to"] = request.user.people.name
-            document.save()
+                if not document.meta_data:
+                    document.meta_data = {}
+                document.meta_data["assigned_to"] = request.user.people.name
+                document.save()
 
             if "start_work_edit" in request.POST:
                 return redirect(request.POST["start_work_edit"])
@@ -1777,6 +1779,9 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
             df = df.replace(np.NaN, "")
             spreadsheet["rowcount"] = len(df.index)-1 # Remove header row
             spreadsheet["colcount"] = len(df.columns)
+            if spreadsheet["rowcount"] > 20:
+                df = df.head(20)
+                spreadsheet["message"] = f"Showing the first 20 rows below ({spreadsheet['rowcount']} rows in total)."
             spreadsheet["table"] = mark_safe(df.to_html(classes="table table-striped spreadsheet-table"))
     else:
         layer = document.get_gis_layer()

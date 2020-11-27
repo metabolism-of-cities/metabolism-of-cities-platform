@@ -94,6 +94,9 @@
           {% if spreadsheet.table %}
             <section id="contentsection">
               <h3>Spreadsheet content</h3>
+              {% if spreadsheet.message %}
+                <div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ spreadsheet.message }}</div>
+              {% endif %}
               {{ spreadsheet.table }}
             </section>
           {% endif %}
