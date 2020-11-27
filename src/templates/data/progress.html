@@ -65,6 +65,7 @@
     <thead>
       <tr>
         <th class="city">City</th>
+        <th>Total docs</th>
         {% for layer in layers %}
           <th class="{{ layer.slug }} text-truncate"><i class="fal mr-2 fa-{{ layer.icon }} fa-fw"></i> {{ layer.get_name_after_colon }}</th>
         {% endfor %}
@@ -74,6 +75,7 @@
       {% for each in list %}
         <tr>
           <td class="city"><a href="{% url harvesting_link each.slug %}">{{ each }}</a></td>
+          <td>{{ each.get_document_counter }}</td>
 
           {% for layer in layers %}
             <td>

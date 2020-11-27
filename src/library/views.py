@@ -341,10 +341,12 @@ def data_json(request, id):
     stacked_field_values = {}
     series = []
     unit = None
+    lat_lng = {}
 
     for each in data:
         x_axis_field = each.timeframe.name
         stacked_field = each.origin_space.name
+        lat_lng[stacked_field] = each.origin_space.get_centroids
 
         if not unit:
             unit = each.unit.name
@@ -369,6 +371,7 @@ def data_json(request, id):
                 this_series.append(None)
         full = {
             "name": each,
+            "gps": lat_lng[each],
             "data": this_series,
         }
         series.append(full)
