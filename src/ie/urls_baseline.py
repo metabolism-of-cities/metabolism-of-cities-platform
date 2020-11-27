@@ -91,6 +91,7 @@ baseline_urlpatterns = [
     # Site-specific library
     path("library/", library.index, name="library"),
     path("library/<int:id>/", library.item, { "show_export": False }, name="library_item"),
+    path("library/<int:id>/data/json/", library.data_json, name="library_data_json"),
 
     # Control panel URLS
     path("controlpanel/", core.controlpanel, name="controlpanel"),

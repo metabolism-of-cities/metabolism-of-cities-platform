@@ -332,6 +332,53 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     }
     return render(request, "library/item.html", context)
 
+def data_json(request, id):
+    info = get_object_or_404(LibraryItem, pk=id)
+    data = info.data.all()
+    x_axis = []
+    stacked_fields = []
+    stacked_field_values = {}
+    series = []
+    unit = None
+
+    for each in data:
+        x_axis_field = each.timeframe.name
+        stacked_field = each.origin_space.name
+
+        if not unit:
+            unit = each.unit.name
+
+        if x_axis_field not in x_axis:
+            x_axis.append(x_axis_field)
+
+        if stacked_field not in stacked_fields:
+            stacked_fields.append(stacked_field)
+
+        if stacked_field not in stacked_field_values:
+            stacked_field_values[stacked_field] = {}
+
+        stacked_field_values[stacked_field][x_axis_field] = each.quantity
+
+    for each in stacked_fields:
+        this_series = []
+        for axis in x_axis:
+            try:
+                this_series.append(stacked_field_values[each][axis])
+            except:
+                this_series.append(None)
+        full = {
+            "name": each,
+            "data": this_series,
+        }
+        series.append(full)
+
+    json_object = {
+        "x_axis": x_axis,
+        "series": series,
+        "y_axis_label": unit,
+    }
+    return JsonResponse(json_object, safe=False)
+
 def map(request, article, tag=None):
     info = get_object_or_404(Webpage, pk=article)
     project = get_object_or_404(Project, pk=request.project)
