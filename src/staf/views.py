@@ -1323,12 +1323,14 @@ def hub_processing(request, space=None):
     datasets = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=30)
     gis = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).exclude(meta_data__processed__isnull=False).distinct()
     spreadsheet = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project).exclude(meta_data__processed__isnull=False).distinct()
+    datasets = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).exclude(meta_data__processed__isnull=False).distinct()
 
     if space:
         space = get_space(request, space)
         title += " | " + space.name
         gis = gis.filter(spaces=space)
         spreadsheet = spreadsheet.filter(spaces=space)
+        datasets = datasets.filter(spaces=space)
 
     context = {
         "menu": "processing",
@@ -1339,7 +1341,7 @@ def hub_processing(request, space=None):
         "spreadsheet": spreadsheet.count(),
         "spreadsheet_open": spreadsheet.exclude(meta_data__assigned_to__isnull=False).count(),
         "datasets": datasets.count(),
-        "datasets_open": datasets.filter(status=1, assigned_to__isnull=True).count(),
+        "datasets_open": datasets.filter(meta_data__assigned_to__isnull=True).count(),
         "title": title,
     }
     return render(request, "hub/processing.html", context)
@@ -1362,9 +1364,9 @@ def hub_processing_list(request, space=None, type=None):
         processed = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct()
 
     elif type == "datasets":
-        list = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        list = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
-        processed = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct()
+        processed = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849, meta_data__processed__isnull=False).distinct()
         title = "Stocks and flows data processing"
 
     if space:
@@ -1469,14 +1471,13 @@ def hub_processing_dataset(request, id, classify=False, space=None):
     if space:
         space = get_space(request, space)
 
-    info = get_object_or_404(Dataset, pk=id)
+    info = get_object_or_404(LibraryItem, pk=id)
 
     try:
-        work = Work.objects.filter(status__in=[1,4,5], part_of_project_id=request.project, workactivity_id=30, related_to=info)
-        work = work[0]
+        work_id = 30
+        work = Work.objects.get(part_of_project_id=request.project, workactivity_id=work_id, related_to=info)
     except Exception as e:
-        work = None
-        messages.error(request, "We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
+        work = Work.objects.create(part_of_project_id=request.project, workactivity_id=work_id, related_to=info)
 
     if "stop_work" in request.POST:
         message_description = "Task was no longer assigned to " + str(request.user.people) + " and status was changed: " + work.get_status_display() + " → "
