@@ -41,6 +41,11 @@
       height: 700px;
     }
 
+    #line,
+    #area {
+      height: 500px;
+    }
+
     {% if info.is_deleted %}
       .main-content .container {
         opacity: .3;
@@ -521,8 +526,8 @@
           <section class="visualisation">
             <h3>Data</h3>
             <div id="stacked" class="mb-4"></div>
-
             <div id="line" class="mb-4"></div>
+            <div id="area" class="mb-4"></div>
           </section>
 
           <section id="map">
@@ -669,6 +674,9 @@
             text: "{{ info }}"
           },
         },
+        xAxis: {
+          categories: data.x_axis
+        },
         legend: {
           align: "right",
           verticalAlign: "bottom",
@@ -680,9 +688,52 @@
         plotOptions: {
           series: {
             marker: {
-              enabled: false
+              enabled: false,
+              symbol: "circle",
             }
           }
+        },
+        series: data.series
+      });
+    };
+
+    function createArea(data) {
+      Highcharts.chart("area", {
+        chart: {
+          type: "area"
+        },
+        title: {
+          text: "Area graph"
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: "{{ info }}"
+          },
+        },
+        xAxis: {
+          categories: data.x_axis
+        },
+        legend: {
+          align: "right",
+          verticalAlign: "bottom",
+        },
+        tooltip: {
+          headerFormat: "<b>{point.x}</b><br/>",
+          pointFormat: "{series.name}: {point.y}<br/>Total: {point.stackTotal}"
+        },
+        plotOptions: {
+          area: {
+            stacking: "normal",
+            lineColor: "#fcfcfc",
+            lineWidth: 1,
+            marker: {
+              enabled: false,
+              lineWidth: 1,
+              lineColor: "#fcfcfc",
+              symbol: "circle",
+            }
+          },
         },
         series: data.series
       });
@@ -691,6 +742,7 @@
     $.get("data/json/", function(data) {
       createStackedBar(data);
       createLine(data)
+      createArea(data)
     });
   </script>
 {% endblock %}
