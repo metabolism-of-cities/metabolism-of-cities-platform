@@ -1,4 +1,4 @@
-{% extends "_base.html" %}
+  {% extends "_base.html" %}
 
 {% load static %}
 
@@ -25,11 +25,223 @@
   .sankey-link.blue {
     stroke: blue;
   }
+
+  table tr {
+    cursor: grabbing;
+  }
+
+  table tr.hover {
+    background-color: #efefef;
+  }
+
+  #chart path.hover {
+    opacity: 1 !important;
+    stroke-opacity: 1 !important;
+  }
+
+  #chart text {
+    pointer-events: none;
+  }
 </style>
 {% endblock %}
 
 {% block content %}
-  <div id="chart"></div>
+  <div class="row">
+    <div class="col-lg-9">
+      <div id="chart" class="sticky-top"></div>
+    </div>
+    <div class="col-lg-3">
+      <h3>Nodes</h3>
+      <table class="table table-sm nodes">
+        <tbody>
+          <tr data-id="1"><td>Imports</td></tr>
+          <tr data-id="2"><td>Natural resources extracted</td></tr>
+          <tr data-id="3"><td>Direct material inputs</td></tr>
+          <tr data-id="4"><td>Processed material</td></tr>
+          <tr data-id="5"><td>Material use</td></tr>
+          <tr data-id="6"><td>Material accumulation</td></tr>
+          <tr data-id="7"><td>Waste treatment</td></tr>
+          <tr data-id="8"><td>Recycling</td></tr>
+          <tr data-id="9"><td>Backfilling</td></tr>
+          <tr data-id="10"><td>Incineration</td></tr>
+          <tr data-id="11"><td>Total emissions</td></tr>
+          <tr data-id="12"><td>Exports</td></tr>
+          <tr data-id="13"><td>Dissipative flows</td></tr>
+          <tr data-id="14"><td>Waste landfilled</td></tr>
+          <tr data-id="15"><td>Emissions to water</td></tr>
+          <tr data-id="16"><td>Emissions to air</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Links</h3>
+      <table class="table table-sm links">
+        <tbody>
+          <tr data-id="1">
+            <td>Imports <i class="fal fa-arrow-right"></i> Direct material inputs</td>
+            <td>0.2</td></tr>
+          <tr data-id="2">
+            <td>Imports <i class="fal fa-arrow-right"></i> Direct material inputs</td>
+            <td>0.25</td></tr>
+          <tr data-id="3">
+            <td>Imports <i class="fal fa-arrow-right"></i> Direct material inputs</td>
+            <td>0.1</td></tr>
+          <tr data-id="4">
+            <td>Imports <i class="fal fa-arrow-right"></i> Direct material inputs</td>
+            <td>1.1</td></tr>
+          <tr data-id="5">
+            <td>Natural resources extracted <i class="fal fa-arrow-right"></i> Direct material inputs</td>
+            <td>1.61</td></tr>
+          <tr data-id="6">
+            <td>Natural resources extracted <i class="fal fa-arrow-right"></i> Direct material inputs</td>
+            <td>0.21</td></tr>
+          <tr data-id="7">
+            <td>Natural resources extracted <i class="fal fa-arrow-right"></i> Direct material inputs</td>
+            <td>2.93</td></tr>
+          <tr data-id="8">
+            <td>Natural resources extracted <i class="fal fa-arrow-right"></i> Direct material inputs</td>
+            <td>0.57</td></tr>
+          <tr data-id="9">
+            <td>Direct material inputs <i class="fal fa-arrow-right"></i> Processed material</td>
+            <td>1.8</td></tr>
+          <tr data-id="10">
+            <td>Direct material inputs <i class="fal fa-arrow-right"></i> Processed material</td>
+            <td>0.46</td></tr>
+          <tr data-id="11">
+            <td>Direct material inputs <i class="fal fa-arrow-right"></i> Processed material</td>
+            <td>3.03</td></tr>
+          <tr data-id="12">
+            <td>Direct material inputs <i class="fal fa-arrow-right"></i> Processed material</td>
+            <td>1.67</td></tr>
+          <tr data-id="13">
+            <td>Processed material <i class="fal fa-arrow-right"></i> Exports</td>
+            <td>0.2</td></tr>
+          <tr data-id="14">
+            <td>Processed material <i class="fal fa-arrow-right"></i> Exports</td>
+            <td>0.13</td></tr>
+          <tr data-id="15">
+            <td>Processed material <i class="fal fa-arrow-right"></i> Exports</td>
+            <td>0.27</td></tr>
+          <tr data-id="16">
+            <td>Processed material <i class="fal fa-arrow-right"></i> Exports</td>
+            <td>0.06</td></tr>
+          <tr data-id="17">
+            <td>Processed material <i class="fal fa-arrow-right"></i> Dissipative flows</td>
+            <td>0.22</td></tr>
+          <tr data-id="18">
+            <td>Processed material <i class="fal fa-arrow-right"></i> Dissipative flows</td>
+            <td>0.04</td></tr>
+          <tr data-id="19">
+            <td>Processed material <i class="fal fa-arrow-right"></i> Total emissions</td>
+            <td>1.16</td></tr>
+          <tr data-id="20">
+            <td>Processed material <i class="fal fa-arrow-right"></i> Total emissions</td>
+            <td>1.33</td></tr>
+          <tr data-id="21">
+            <td>Processed material <i class="fal fa-arrow-right"></i> Material use</td>
+            <td>0.39</td></tr>
+          <tr data-id="22">
+            <td>Processed material <i class="fal fa-arrow-right"></i> Material use</td>
+            <td>0.41</td></tr>
+          <tr data-id="23">
+            <td>Processed material <i class="fal fa-arrow-right"></i> Material use</td>
+            <td>3.58</td></tr>
+          <tr data-id="24">
+            <td>Processed material <i class="fal fa-arrow-right"></i> Material use</td>
+            <td>0.09</td></tr>
+          <tr data-id="25">
+            <td>Total emissions <i class="fal fa-arrow-right"></i> Emissions to air</td>
+            <td>1.22</td></tr>
+          <tr data-id="26">
+            <td>Total emissions <i class="fal fa-arrow-right"></i> Emissions to air</td>
+            <td>1.35</td></tr>
+          <tr data-id="27">
+            <td>Total emissions <i class="fal fa-arrow-right"></i> Emissions to water</td>
+            <td>0.01</td></tr>
+          <tr data-id="28">
+            <td>Incineration <i class="fal fa-arrow-right"></i> Total emissions</td>
+            <td>0.07</td></tr>
+          <tr data-id="29">
+            <td>Incineration <i class="fal fa-arrow-right"></i> Total emissions</td>
+            <td>0.01</td></tr>
+          <tr data-id="30">
+            <td>Incineration <i class="fal fa-arrow-right"></i> Total emissions</td>
+            <td>0.02</td></tr>
+          <tr data-id="31">
+            <td>Material use <i class="fal fa-arrow-right"></i> Waste treatment</td>
+            <td>0.24</td></tr>
+          <tr data-id="32">
+            <td>Material use <i class="fal fa-arrow-right"></i> Waste treatment</td>
+            <td>0.09</td></tr>
+          <tr data-id="33">
+            <td>Material use <i class="fal fa-arrow-right"></i> Waste treatment</td>
+            <td>1.35</td></tr>
+          <tr data-id="34">
+            <td>Material use <i class="fal fa-arrow-right"></i> Waste treatment</td>
+            <td>0.06</td></tr>
+          <tr data-id="35">
+            <td>Material use <i class="fal fa-arrow-right"></i> Material accumulation</td>
+            <td>0.14</td></tr>
+          <tr data-id="36">
+            <td>Material use <i class="fal fa-arrow-right"></i> Material accumulation</td>
+            <td>0.32</td></tr>
+          <tr data-id="37">
+            <td>Material use <i class="fal fa-arrow-right"></i> Material accumulation</td>
+            <td>2.23</td></tr>
+          <tr data-id="38">
+            <td>Material use <i class="fal fa-arrow-right"></i> Material accumulation</td>
+            <td>0.03</td></tr>
+          <tr data-id="39">
+            <td>Waste treatment <i class="fal fa-arrow-right"></i> Backfilling</td>
+            <td>0.21</td></tr>
+          <tr data-id="40">
+            <td>Waste treatment <i class="fal fa-arrow-right"></i> Recycling</td>
+            <td>0.14</td></tr>
+          <tr data-id="41">
+            <td>Waste treatment <i class="fal fa-arrow-right"></i> Recycling</td>
+            <td>0.08</td></tr>
+          <tr data-id="42">
+            <td>Waste treatment <i class="fal fa-arrow-right"></i> Recycling</td>
+            <td>0.46</td></tr>
+          <tr data-id="43">
+            <td>Waste treatment <i class="fal fa-arrow-right"></i> Recycling</td>
+            <td>0.03</td></tr>
+          <tr data-id="44">
+            <td>Waste treatment <i class="fal fa-arrow-right"></i> Incineration</td>
+            <td>0.07</td></tr>
+          <tr data-id="45">
+            <td>Waste treatment <i class="fal fa-arrow-right"></i> Incineration</td>
+            <td>0.01</td></tr>
+          <tr data-id="46">
+            <td>Waste treatment <i class="fal fa-arrow-right"></i> Incineration</td>
+            <td>0.02</td></tr>
+          <tr data-id="47">
+            <td>Waste treatment <i class="fal fa-arrow-right"></i> Waste landfilled</td>
+            <td>0.03</td></tr>
+          <tr data-id="48">
+            <td>Waste treatment <i class="fal fa-arrow-right"></i> Waste landfilled</td>
+            <td>0.67</td></tr>
+          <tr data-id="49">
+            <td>Waste treatment <i class="fal fa-arrow-right"></i> Waste landfilled</td>
+            <td>0.01</td></tr>
+          <tr data-id="50">
+            <td>Backfilling <i class="fal fa-arrow-right"></i> Processed material</td>
+            <td>0.21</td></tr>
+          <tr data-id="51">
+            <td>Recycling <i class="fal fa-arrow-right"></i> Processed material</td>
+            <td>0.14</td></tr>
+          <tr data-id="52">
+            <td>Recycling <i class="fal fa-arrow-right"></i> Processed material</td>
+            <td>0.08</td></tr>
+          <tr data-id="53">
+            <td>Recycling <i class="fal fa-arrow-right"></i> Processed material</td>
+            <td>0.46</td></tr>
+          <tr data-id="54">
+            <td>Recycling <i class="fal fa-arrow-right"></i> Processed material</td>
+            <td>0.03</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
   <!-- <div id="sandkey"></div> -->
 
@@ -44,100 +256,83 @@
 <script>
   let data = {
     "nodes": [
-      {"name": "Imports", "order": 0},
-      {"name": "Natural resources extracted", "order": 0},
-      {"name": "Direct material inputs", "order": 1},
-      {"name": "Processed material", "order": 2},
-      {"name": "Material use", "order": 3},
-      {"name": "Material accumulation", "order": 4},
-      {"name": "Waste treatment", "order": 4},
-      {"name": "Recycling", "order": 5},
-      {"name": "Backfilling", "order": 5},
-      {"name": "Incineration", "order": 6},
-      {"name": "Total emissions", "order": 7},
-      {"name": "Exports", "order": 8},
-      {"name": "Dissipative flows", "order": 8},
-      {"name": "Waste landfilled", "order": 8},
-      {"name": "Emissions to water", "order": 8},
-      {"name": "Emissions to air", "order": 8},
+      {"name": "Imports", "order": 0, "id": 1},
+      {"name": "Natural resources extracted", "order": 0, "id": 2},
+      {"name": "Direct material inputs", "order": 1, "id": 3},
+      {"name": "Processed material", "order": 2, "id": 4},
+      {"name": "Material use", "order": 3, "id": 5},
+      {"name": "Material accumulation", "order": 4, "id": 6},
+      {"name": "Waste treatment", "order": 4, "id": 7},
+      {"name": "Recycling", "order": 5, "id": 8},
+      {"name": "Backfilling", "order": 5, "id": 9},
+      {"name": "Incineration", "order": 6, "id": 10},
+      {"name": "Total emissions", "order": 7, "id": 11},
+      {"name": "Exports", "order": 8, "id": 12},
+      {"name": "Dissipative flows", "order": 8, "id": 13},
+      {"name": "Waste landfilled", "order": 8, "id": 14},
+      {"name": "Emissions to water", "order": 8, "id": 15},
+      {"name": "Emissions to air", "order": 8, "id": 16},
     ],
     "links": [
-      {"source":"Imports", "target": "Direct material inputs", "value": 0.2, "color": "green"},
-      {"source":"Imports", "target": "Direct material inputs", "value": 0.25, "color": "red"},
-      {"source":"Imports", "target": "Direct material inputs", "value": 0.1, "color": "blue"},
-      {"source":"Imports", "target": "Direct material inputs", "value": 1.1, "color": "gold"},
-
-      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 1.61, "color": "green"},
-      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 0.21, "color": "red"},
-      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 2.93, "color": "blue"},
-      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 0.57, "color": "gold"},
-
-      {"source":"Direct material inputs", "target": "Processed material", "value": 1.8, "color": "green"},
-      {"source":"Direct material inputs", "target": "Processed material", "value": 0.46, "color": "red"},
-      {"source":"Direct material inputs", "target": "Processed material", "value": 3.03, "color": "blue"},
-      {"source":"Direct material inputs", "target": "Processed material", "value": 1.67, "color": "gold"},
-
-      {"source":"Processed material", "target": "Exports", "value": 0.2, "color": "green"},
-      {"source":"Processed material", "target": "Exports", "value": 0.13, "color": "red"},
-      {"source":"Processed material", "target": "Exports", "value": 0.27, "color": "blue"},
-      {"source":"Processed material", "target": "Exports", "value": 0.06, "color": "gold"},
-
-      {"source":"Processed material", "target": "Dissipative flows", "value": 0.22, "color": "green"},
-      {"source":"Processed material", "target": "Dissipative flows", "value": 0.04, "color": "blue"},
-
-      {"source":"Processed material", "target": "Total emissions", "value": 1.16, "color": "green"},
-      {"source":"Processed material", "target": "Total emissions", "value": 1.33, "color": "gold"},
-
-      {"source":"Processed material", "target": "Material use", "value": 0.39, "color": "green"},
-      {"source":"Processed material", "target": "Material use", "value": 0.41, "color": "red"},
-      {"source":"Processed material", "target": "Material use", "value": 3.58, "color": "blue"},
-      {"source":"Processed material", "target": "Material use", "value": 0.09, "color": "gold"},
-
-      {"source":"Total emissions", "target": "Emissions to air", "value": 1.22, "color": "green"},
-      {"source":"Total emissions", "target": "Emissions to air", "value": 1.35, "color": "gold"},
-
-      {"source":"Total emissions", "target": "Emissions to water", "value": 0.01, "color": "green"},
-
-      {"source":"Incineration", "target": "Total emissions", "value": 0.07, "color": "green"},
-      {"source":"Incineration", "target": "Total emissions", "value": 0.01, "color": "blue"},
-      {"source":"Incineration", "target": "Total emissions", "value": 0.02, "color": "gold"},
-
-      {"source":"Material use", "target": "Waste treatment", "value": 0.24, "color": "green"},
-      {"source":"Material use", "target": "Waste treatment", "value": 0.09, "color": "red"},
-      {"source":"Material use", "target": "Waste treatment", "value": 1.35, "color": "blue"},
-      {"source":"Material use", "target": "Waste treatment", "value": 0.06, "color": "gold"},
-
-      {"source":"Material use", "target": "Material accumulation", "value": 0.14, "color": "green"},
-      {"source":"Material use", "target": "Material accumulation", "value": 0.32, "color": "red"},
-      {"source":"Material use", "target": "Material accumulation", "value": 2.23, "color": "blue"},
-      {"source":"Material use", "target": "Material accumulation", "value": 0.03, "color": "gold"},
-
-      {"source":"Waste treatment", "target": "Backfilling", "value": 0.21, "color": "blue"},
-
-      {"source":"Waste treatment", "target": "Recycling", "value": 0.14, "color": "green"},
-      {"source":"Waste treatment", "target": "Recycling", "value": 0.08, "color": "red"},
-      {"source":"Waste treatment", "target": "Recycling", "value": 0.46, "color": "blue"},
-      {"source":"Waste treatment", "target": "Recycling", "value": 0.03, "color": "gold"},
-
-      {"source":"Waste treatment", "target": "Incineration", "value": 0.07, "color": "green"},
-      {"source":"Waste treatment", "target": "Incineration", "value": 0.01, "color": "blue"},
-      {"source":"Waste treatment", "target": "Incineration", "value": 0.02, "color": "gold"},
-
-      {"source":"Waste treatment", "target": "Waste landfilled", "value": 0.03, "color": "green"},
-      {"source":"Waste treatment", "target": "Waste landfilled", "value": 0.67, "color": "blue"},
-      {"source":"Waste treatment", "target": "Waste landfilled", "value": 0.01, "color": "gold"},
-
-      {"source":"Backfilling", "target": "Processed material", "value": 0.21, "color": "blue"},
-
-      {"source":"Recycling", "target": "Processed material", "value": 0.14, "color": "green"},
-      {"source":"Recycling", "target": "Processed material", "value": 0.08, "color": "red"},
-      {"source":"Recycling", "target": "Processed material", "value": 0.46, "color": "blue"},
-      {"source":"Recycling", "target": "Processed material", "value": 0.03, "color": "gold"},
+      {"source":"Imports", "target": "Direct material inputs", "value": 0.2, "color": "green", "id": 1},
+      {"source":"Imports", "target": "Direct material inputs", "value": 0.25, "color": "red", "id": 2},
+      {"source":"Imports", "target": "Direct material inputs", "value": 0.1, "color": "blue", "id": 3},
+      {"source":"Imports", "target": "Direct material inputs", "value": 1.1, "color": "gold", "id": 4},
+      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 1.61, "color": "green", "id": 5},
+      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 0.21, "color": "red", "id": 6},
+      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 2.93, "color": "blue", "id": 7},
+      {"source":"Natural resources extracted", "target": "Direct material inputs", "value": 0.57, "color": "gold", "id": 8},
+      {"source":"Direct material inputs", "target": "Processed material", "value": 1.8, "color": "green", "id": 9},
+      {"source":"Direct material inputs", "target": "Processed material", "value": 0.46, "color": "red", "id": 10},
+      {"source":"Direct material inputs", "target": "Processed material", "value": 3.03, "color": "blue", "id": 11},
+      {"source":"Direct material inputs", "target": "Processed material", "value": 1.67, "color": "gold", "id": 12},
+      {"source":"Processed material", "target": "Exports", "value": 0.2, "color": "green", "id": 13},
+      {"source":"Processed material", "target": "Exports", "value": 0.13, "color": "red", "id": 14},
+      {"source":"Processed material", "target": "Exports", "value": 0.27, "color": "blue", "id": 15},
+      {"source":"Processed material", "target": "Exports", "value": 0.06, "color": "gold", "id": 16},
+      {"source":"Processed material", "target": "Dissipative flows", "value": 0.22, "color": "green", "id": 17},
+      {"source":"Processed material", "target": "Dissipative flows", "value": 0.04, "color": "blue", "id": 18},
+      {"source":"Processed material", "target": "Total emissions", "value": 1.16, "color": "green", "id": 19},
+      {"source":"Processed material", "target": "Total emissions", "value": 1.33, "color": "gold", "id": 20},
+      {"source":"Processed material", "target": "Material use", "value": 0.39, "color": "green", "id": 21},
+      {"source":"Processed material", "target": "Material use", "value": 0.41, "color": "red", "id": 22},
+      {"source":"Processed material", "target": "Material use", "value": 3.58, "color": "blue", "id": 23},
+      {"source":"Processed material", "target": "Material use", "value": 0.09, "color": "gold", "id": 24},
+      {"source":"Total emissions", "target": "Emissions to air", "value": 1.22, "color": "green", "id": 25},
+      {"source":"Total emissions", "target": "Emissions to air", "value": 1.35, "color": "gold", "id": 26},
+      {"source":"Total emissions", "target": "Emissions to water", "value": 0.01, "color": "green", "id": 27},
+      {"source":"Incineration", "target": "Total emissions", "value": 0.07, "color": "green", "id": 28},
+      {"source":"Incineration", "target": "Total emissions", "value": 0.01, "color": "blue", "id": 29},
+      {"source":"Incineration", "target": "Total emissions", "value": 0.02, "color": "gold", "id": 30},
+      {"source":"Material use", "target": "Waste treatment", "value": 0.24, "color": "green", "id": 31},
+      {"source":"Material use", "target": "Waste treatment", "value": 0.09, "color": "red", "id": 32},
+      {"source":"Material use", "target": "Waste treatment", "value": 1.35, "color": "blue", "id": 33},
+      {"source":"Material use", "target": "Waste treatment", "value": 0.06, "color": "gold", "id": 34},
+      {"source":"Material use", "target": "Material accumulation", "value": 0.14, "color": "green", "id": 35},
+      {"source":"Material use", "target": "Material accumulation", "value": 0.32, "color": "red", "id": 36},
+      {"source":"Material use", "target": "Material accumulation", "value": 2.23, "color": "blue", "id": 37},
+      {"source":"Material use", "target": "Material accumulation", "value": 0.03, "color": "gold", "id": 38},
+      {"source":"Waste treatment", "target": "Backfilling", "value": 0.21, "color": "blue", "id": 39},
+      {"source":"Waste treatment", "target": "Recycling", "value": 0.14, "color": "green", "id": 40},
+      {"source":"Waste treatment", "target": "Recycling", "value": 0.08, "color": "red", "id": 41},
+      {"source":"Waste treatment", "target": "Recycling", "value": 0.46, "color": "blue", "id": 42},
+      {"source":"Waste treatment", "target": "Recycling", "value": 0.03, "color": "gold", "id": 43},
+      {"source":"Waste treatment", "target": "Incineration", "value": 0.07, "color": "green", "id": 44},
+      {"source":"Waste treatment", "target": "Incineration", "value": 0.01, "color": "blue", "id": 45},
+      {"source":"Waste treatment", "target": "Incineration", "value": 0.02, "color": "gold", "id": 46},
+      {"source":"Waste treatment", "target": "Waste landfilled", "value": 0.03, "color": "green", "id": 47},
+      {"source":"Waste treatment", "target": "Waste landfilled", "value": 0.67, "color": "blue", "id": 48},
+      {"source":"Waste treatment", "target": "Waste landfilled", "value": 0.01, "color": "gold", "id": 49},
+      {"source":"Backfilling", "target": "Processed material", "value": 0.21, "color": "blue", "id": 50},
+      {"source":"Recycling", "target": "Processed material", "value": 0.14, "color": "green", "id": 51},
+      {"source":"Recycling", "target": "Processed material", "value": 0.08, "color": "red", "id": 52},
+      {"source":"Recycling", "target": "Processed material", "value": 0.46, "color": "blue", "id": 53},
+      {"source":"Recycling", "target": "Processed material", "value": 0.03, "color": "gold", "id": 54},
     ]
   };
 
   var margin = { top: 70, right: 70, bottom: 70, left: 70};
-  var width = 1100;
+  var width = 700;
   var height = 400;
 
   var sankey = d3.sankeyCircular()
@@ -189,6 +384,7 @@
     .attr("y", function (d) { return d.y0; })
     .attr("height", function (d) { return d.y1 - d.y0; })
     .attr("width", function (d) { return d.x1 - d.x0; })
+    .attr("data-id", function (d) { return d.id; })
     .style("fill", function (d) { return nodeColour(d.x0); })
     .style("opacity", 0.5)
     .on("mouseover", function (d) {
@@ -230,15 +426,10 @@
     .append("g")
 
   link.append("path")
-    .attr("class", function(d){
-      return d.color + " sankey-link";
-    })
-    .attr("data-circular", function (link, i) {
-      return link.circular ? true : false
-    })
-    .attr("d", function(link){
-      return link.path;
-    })
+    .attr("class", function(d){ return d.color + " sankey-link"; })
+    .attr("data-circular", function(link, i) { return link.circular ? true : false })
+    .attr("data-id", function(d) { return d.id; })
+    .attr("d", function(link){ return link.path; })
     .style("stroke-width", function (d) { return Math.max(1, d.width); })
     .style("opacity", 0.7)
 
@@ -266,6 +457,32 @@
 
     return opacity;
   }
+
+  // hover over table to show links
+  $("table.links tr").hover(
+    function() {
+      $(this).addClass("hover")
+      let id = $(this).data("id");
+      $("#chart .links g path[data-id=" + id + "]").addClass("hover")
+    }, function() {
+      $(this).removeClass("hover")
+      let id = $(this).data("id");
+      $("#chart .links g path[data-id=" + id + "]").removeClass("hover")
+    }
+  );
+
+  // hover over table to nodes
+  $("table.nodes tr").hover(
+    function() {
+      $(this).addClass("hover")
+      // let id = $(this).data("id");
+      // $("#chart .nodes g rect[data-id=" + id + "]").mouseover()
+    }, function() {
+      $(this).removeClass("hover")
+      // let id = $(this).data("id");
+      // $("#chart .nodes g rect[data-id=" + id + "]").mouseout()
+    }
+  );
 </script>
 
 <!--
