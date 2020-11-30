@@ -49,6 +49,15 @@
       height: 500px;
     }
 
+    .highcharts-drillup-button .highcharts-button-box {
+      fill: #fff !important;
+      stroke: #144d58 !important;
+    }
+
+    .highcharts-container .highcharts-drillup-button text {
+      fill: #144d58 !important;
+    }
+
     {% if info.is_deleted %}
       .main-content .container {
         opacity: .3;
@@ -819,11 +828,6 @@
             showInLegend: true
           }
         },
-        series: [{
-          name: "Months",
-          colorByPoint: true,
-          data: data.series
-        }]
       });
     };
 
