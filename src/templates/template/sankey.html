@@ -54,22 +54,22 @@
       <h3>Nodes</h3>
       <table class="table table-sm nodes">
         <tbody>
-          <tr data-id="1"><td>Imports</td></tr>
-          <tr data-id="2"><td>Natural resources extracted</td></tr>
-          <tr data-id="3"><td>Direct material inputs</td></tr>
-          <tr data-id="4"><td>Processed material</td></tr>
-          <tr data-id="5"><td>Material use</td></tr>
-          <tr data-id="6"><td>Material accumulation</td></tr>
-          <tr data-id="7"><td>Waste treatment</td></tr>
-          <tr data-id="8"><td>Recycling</td></tr>
-          <tr data-id="9"><td>Backfilling</td></tr>
-          <tr data-id="10"><td>Incineration</td></tr>
-          <tr data-id="11"><td>Total emissions</td></tr>
-          <tr data-id="12"><td>Exports</td></tr>
-          <tr data-id="13"><td>Dissipative flows</td></tr>
-          <tr data-id="14"><td>Waste landfilled</td></tr>
-          <tr data-id="15"><td>Emissions to water</td></tr>
-          <tr data-id="16"><td>Emissions to air</td></tr>
+          <tr data-id="0"><td>Imports</td></tr>
+          <tr data-id="1"><td>Natural resources extracted</td></tr>
+          <tr data-id="2"><td>Direct material inputs</td></tr>
+          <tr data-id="3"><td>Processed material</td></tr>
+          <tr data-id="4"><td>Material use</td></tr>
+          <tr data-id="5"><td>Material accumulation</td></tr>
+          <tr data-id="6"><td>Waste treatment</td></tr>
+          <tr data-id="7"><td>Recycling</td></tr>
+          <tr data-id="8"><td>Backfilling</td></tr>
+          <tr data-id="9"><td>Incineration</td></tr>
+          <tr data-id="10"><td>Total emissions</td></tr>
+          <tr data-id="11"><td>Exports</td></tr>
+          <tr data-id="12"><td>Dissipative flows</td></tr>
+          <tr data-id="13"><td>Waste landfilled</td></tr>
+          <tr data-id="14"><td>Emissions to water</td></tr>
+          <tr data-id="15"><td>Emissions to air</td></tr>
         </tbody>
       </table>
 
@@ -388,23 +388,7 @@
     .style("fill", function (d) { return nodeColour(d.x0); })
     .style("opacity", 0.5)
     .on("mouseover", function (d) {
-
-      let thisName = d.name;
-
-      node.selectAll("rect")
-        .style("opacity", function (d) {
-          return highlightNodes(d, thisName)
-        })
-
-      d3.selectAll(".sankey-link")
-        .style("opacity", function (l) {
-          return l.source.name == thisName || l.target.name == thisName ? 1 : 0.3;
-        })
-
-      node.selectAll("text")
-        .style("opacity", function (d) {
-          return highlightNodes(d, thisName)
-        })
+      hoverNode(d)
     })
     .on("mouseout", function (d) {
       d3.selectAll("rect").style("opacity", 0.5);
@@ -437,6 +421,25 @@
     .text(function (d) {
       return d.source.name + " → " + d.target.name + "\n Index: " + (d.index);
     });
+
+  function hoverNode(d) {
+    let thisName = d.name;
+
+    node.selectAll("rect")
+      .style("opacity", function (d) {
+        return highlightNodes(d, thisName)
+      })
+
+    d3.selectAll(".sankey-link")
+      .style("opacity", function (l) {
+        return l.source.name == thisName || l.target.name == thisName ? 1 : 0.3;
+      })
+
+    node.selectAll("text")
+      .style("opacity", function (d) {
+        return highlightNodes(d, thisName)
+      })
+  }
 
   function highlightNodes(node, name) {
     let opacity = 0.3
@@ -475,12 +478,14 @@
   $("table.nodes tr").hover(
     function() {
       $(this).addClass("hover")
-      // let id = $(this).data("id");
-      // $("#chart .nodes g rect[data-id=" + id + "]").mouseover()
+      let id = $(this).data("id");
+
+      hoverNode(sankeyNodes[id])
     }, function() {
       $(this).removeClass("hover")
-      // let id = $(this).data("id");
-      // $("#chart .nodes g rect[data-id=" + id + "]").mouseout()
+      d3.selectAll("rect").style("opacity", 0.5);
+      d3.selectAll(".sankey-link").style("opacity", 0.7);
+      d3.selectAll("text").style("opacity", 1);
     }
   );
 </script>
