@@ -548,7 +548,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         if "update_tags" in request.GET:
             fields = ["name", "tags", "description"]
 
-        if info:
+        if info and hasattr(info, "dataset"):
             info = info.dataset
 
         ModelForm = modelform_factory(
