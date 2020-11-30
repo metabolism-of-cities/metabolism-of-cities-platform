@@ -332,8 +332,11 @@ def upload_directory(instance, filename):
         sub_directory = parent.type.name
         sub_directory = sub_directory.lower()
         directory += sub_directory + "/"
-    if parent.meta_data and "uuid" in parent.meta_data:
-        directory += parent.meta_data["uuid"] + "/"
+    try:
+        if parent.meta_data and "uuid" in parent.meta_data:
+            directory += parent.meta_data["uuid"] + "/"
+    except:
+        pass
     return directory + filename
 
 class Document(Record):
