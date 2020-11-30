@@ -58,6 +58,19 @@
       fill: #144d58 !important;
     }
 
+    .switch-pie.disabled {
+      cursor: not-allowed !important;
+      background-color: #144d58 !important;
+      border-color: #144d58 !important;
+    }
+
+    .current-pie {
+      background: #efefef !important;
+      z-index: 1000 !important;
+      border-left-color: #144d58 !important;
+      border-right-color: #144d58 !important;
+    }
+
     {% if info.is_deleted %}
       .main-content .container {
         opacity: .3;
@@ -543,7 +556,13 @@
             <div id="drilldown" class="mb-4"></div>
             <div class="pie-wrapper mb-4">
               <div id="pie"></div>
-              <div id="pie-toggles"></div>
+              <div id="pie-toggles" class="text-center">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <button type="button" class="btn btn-primary switch-pie prev-pie"><i class="fa fa-arrow-left m-0"></i></button>
+                  <button disabled type="button" class="btn btn-primary-outline disabled current-pie"></button>
+                  <button type="button" class="btn btn-primary switch-pie next-pie"><i class="fa fa-arrow-right m-0"></i></button>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -806,8 +825,18 @@
       });
     };
 
+    // pie chart variables, global so we can use them later
+    let pieChart;
+    let pieData = [];
+    let piePeriods = [];
+    let pieCurrent = 0;
+    let pieLast = 0;
+
     function createPie(data) {
-      Highcharts.chart("pie", {
+      pieData = data.series;
+      piePeriods = data.x_axis;
+
+      pieChart = Highcharts.chart("pie", {
         chart: {
           plotBackgroundColor: null,
           plotBorderWidth: null,
@@ -828,8 +857,72 @@
             showInLegend: true
           }
         },
+        series: [{
+          name: "Periods",
+          colorByPoint: true,
+          data: [{
+              name: 'Chrome',
+              y: 61.41,
+          }, {
+              name: 'Internet Explorer',
+              y: 11.84
+          }, {
+              name: 'Firefox',
+              y: 10.85
+          }, {
+              name: 'Edge',
+              y: 4.67
+          }, {
+              name: 'Safari',
+              y: 4.18
+          }, {
+              name: 'Other',
+              y: 7.05
+          }]
+        }]
       });
+
+      $(".switch-pie").click(function() {
+        let period = $(this).attr("data-period");
+        openPie(period);
+      })
+
+      pieLast = piePeriods.length - 1;
+      openPie(pieCurrent)
     };
+
+    function openPie(period) {
+      let periodValues = []
+
+      $(pieData).each(function() {
+        periodValues.push({
+          name: this.name,
+          y: this.data[period],
+        });
+      });
+
+      pieChart.series[0].setData(periodValues);
+
+      // various functions to update the toggles
+      // to start, show current period in toggle menu
+      $(".current-pie").text(piePeriods[period])
+
+      let prevPeriod = Number(period) - 1;
+      let nextPeriod = Number(period) + 1;
+
+      // use this to update the buttons, making sure to disable them when on first or last period
+      if (period == 0) {
+        $(".prev-pie").addClass("disabled");
+      } else {
+        $(".prev-pie").removeClass("disabled").attr("data-period", prevPeriod);
+      }
+
+      if (period == pieLast) {
+        $(".next-pie").addClass("disabled");
+      } else {
+        $(".next-pie").removeClass("disabled").attr("data-period", nextPeriod);
+      }
+    }
 
     $.get("data/json/", function(data) {
       createStackedBar(data);
