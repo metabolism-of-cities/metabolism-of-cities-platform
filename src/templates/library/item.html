@@ -43,6 +43,8 @@
 
     #map,
     #line,
+    #drilldown,
+    #pie,
     #area {
       height: 500px;
     }
@@ -529,6 +531,11 @@
             <div id="stacked" class="mb-4"></div>
             <div id="line" class="mb-4"></div>
             <div id="area" class="mb-4"></div>
+            <div id="drilldown" class="mb-4"></div>
+            <div class="pie-wrapper mb-4">
+              <div id="pie"></div>
+              <div id="pie-toggles"></div>
+            </div>
           </section>
 
           <section id="map" class="leaflet-map">
@@ -740,11 +747,97 @@
       });
     };
 
+    function createDrilldown(data) {
+      Highcharts.chart("drilldown", {
+        chart: {
+          type: "bar",
+        },
+        title: {
+          text: "Drilldown bar chart"
+        },
+        xAxis: {
+          type: "category"
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            text: "{{ info }}"
+          },
+          stackLabels: {
+            style: {
+              color: "#212529"
+            }
+          }
+        },
+        legend: {
+          enabled: false,
+        },
+        tooltip: {
+          headerFormat: "<b>{point.name}</b>",
+          pointFormat: "{point.y:.0f}"
+        },
+        plotOptions: {
+          series: {
+            borderWidth: 0,
+            dataLabels: {
+              enabled: true,
+              format: "{point.y:.0f}"
+            }
+          }
+        },
+        series: [
+          {
+            name: "Months",
+            data: data.top_level
+          }
+        ],
+        drilldown: {
+          series: data.series
+        }
+      });
+    };
+
+    function createPie(data) {
+      Highcharts.chart("pie", {
+        chart: {
+          plotBackgroundColor: null,
+          plotBorderWidth: null,
+          plotShadow: false,
+          type: "pie"
+        },
+        title: {
+          text: "Pie chart"
+        },
+        tooltip: {
+          pointFormat: "<b>{point.y:.0f}</b>"
+        },
+        plotOptions: {
+          pie: {
+            dataLabels: {
+              enabled: false
+            },
+            showInLegend: true
+          }
+        },
+        series: [{
+          name: "Months",
+          colorByPoint: true,
+          data: data.series
+        }]
+      });
+    };
+
     $.get("data/json/", function(data) {
       createStackedBar(data);
       createLine(data);
       createArea(data);
       createMap(data)
+      createPie(data)
+
+      $.get("data/json/?drilldown=true", function(data) {
+        createDrilldown(data);
+      });
     });
+
   </script>
 {% endblock %}
