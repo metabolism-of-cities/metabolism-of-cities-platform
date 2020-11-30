@@ -1462,8 +1462,7 @@ def hub_processing_boundaries(request, space=None):
     }
     return render(request, "hub/processing.boundaries.html", context)
 
-
-def hub_processing_dataset(request, id, classify=False, space=None):
+def hub_processing_dataset(request, id, space=None):
 
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         unauthorized_access(request)
@@ -1472,6 +1471,7 @@ def hub_processing_dataset(request, id, classify=False, space=None):
         space = get_space(request, space)
 
     info = get_object_or_404(LibraryItem, pk=id)
+    check_files = False
 
     try:
         work_id = 30
@@ -1479,6 +1479,18 @@ def hub_processing_dataset(request, id, classify=False, space=None):
     except Exception as e:
         work = Work.objects.create(part_of_project_id=request.project, workactivity_id=work_id, related_to=info)
 
+    if "next_step" in request.POST:
+        if not "processing" in info.meta_data:
+            info.meta_data["processing"] = {}
+        if "new_file" in request.FILES:
+            each = request.FILES.get("new_file")
+            document = Document.objects.create(name=str(each), file=each, attached_to=info)
+            messages.success(request, "The new file was uploaded. You can review the contents below.")
+            info.meta_data["processing"]["file"] = document.id
+        else:
+            info.meta_data["processing"]["file"] = request.POST.get("file")
+        info.save()
+        return redirect("classify/")
     if "stop_work" in request.POST:
         message_description = "Task was no longer assigned to " + str(request.user.people) + " and status was changed: " + work.get_status_display() + " → "
         work.status = Work.WorkStatus.ONHOLD
@@ -1540,67 +1552,106 @@ def hub_processing_dataset(request, id, classify=False, space=None):
         except Exception as e:
             messages.error(request, "Sorry, we could not assign you -- perhaps someone else grabbed this work in the meantime? Otherwise please report this error. <br><strong>Error code: " + str(e) + "</strong>")
 
-    rows = None
-    header = None
-    # Whenever a CSV file is uploaded, we use that one. If none is present, we look for other spreadsheet files
-    files = info.attachments.filter(file__iendswith=".csv").order_by("-id")
-    excel = False
+    files = info.attachments.filter(Q(file__iendswith=".xlsx")|Q(file__iendswith=".xls")|Q(file__iendswith=".ods")).order_by("-id")
 
-    if not files:
-        files = info.attachments.filter(Q(file__iendswith=".xlsx")|Q(file__iendswith=".xls")|Q(file__iendswith=".ods")).order_by("-id")
-        excel = True
+    list_messages = work.messages.all()
 
-    error = False
-    unidentified_columns = [
-        "Start date",
-        "End date",
-        "Material name",
-        "Material code",
-        "Quantity",
-        "Unit",
-        "Location",
-        "Comments",
-    ]
+    if work.assigned_to and work.assigned_to == request.user.people:
+        check_files = True
 
-    alias_columns = {
-        "Start": "Start date",
-        "End": "End date",
-        "Date": "Start date",
-        "Material": "Material name",
-        "Qty": "Quantity",
-        "Comment": "Comments",
+    context = {
+        "menu": "processing",
+        "step": 0,
+        "space": space,
+        "hide_space_menu": True,
+        "title": info.name,
+        "info": info,
+        "work": work,
+        "list_messages": list_messages,
+        "load_messaging": True,
+        "forum_id": work.id,
+        "check_files": check_files,
     }
+    return render(request, "hub/processing.dataset.html", context)
 
-    labels = {}
+def hub_processing_dataset_classify(request, id, space=None):
 
+    if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
+        unauthorized_access(request)
+
+    if space:
+        space = get_space(request, space)
+
+    info = get_object_or_404(LibraryItem, pk=id)
+
+    try:
+        work_id = 30
+        work = Work.objects.get(part_of_project_id=request.project, workactivity_id=work_id, related_to=info)
+    except Exception as e:
+        work = Work.objects.create(part_of_project_id=request.project, workactivity_id=work_id, related_to=info)
+
+    error = None
+    file = None
+    spreadsheet = {}
+    process_error = False
+    material_list = {}
+    spaces_list = {}
+    spaces_options = None
+    spaces_options_name = None
     show_name = None
-    if not files:
-        messages.error(request, "No CSV or spreadsheet file found in the attachments. Please make sure the data file is actually attached!")
+
+    if request.method == "POST" and "source" in request.POST:
+        info.meta_data["processing"]["source"] = request.POST.get("source")
+        info.save()
+        return redirect("../save/")
+
+    try:
+        file_id = info.meta_data["processing"]["file"]
+        file = info.get_spreadsheet(file_id)
+    except Exception as e:
+        error = e
+
+    if not file:
+        file = {"error": True, "error_message": "No CSV or spreadsheet file found in the attachments. Please make sure the data file is actually attached!" }
     else:
         try:
-            show_name = files[0].name
-            filename = settings.MEDIA_ROOT + "/" + files[0].file.name
-            #f = codecs.open(filename, encoding="utf-8")
-            #rows = csv.reader(f)
+            spreadsheet["type"] = file["file_type"]
+            spreadsheet["extension"] = file["extension"]
+            df = file["df"]
+            df = df.replace(np.NaN, "")
+            spreadsheet["rowcount"] = len(df.index)-1 # Remove header row
+            spreadsheet["colcount"] = len(df.columns)
+            if spreadsheet["rowcount"] > 10:
+                df = df.head(10)
+                spreadsheet["message"] = f"Showing the first 10 rows below ({spreadsheet['rowcount']} rows in total)."
+            spreadsheet["table"] = mark_safe(df.to_html(classes="table table-striped spreadsheet-table"))
 
-            if excel:
-                df = pd.read_excel(filename, index_col=0)
-            else:
-                df = read_csv(filename)
+            # Get the fourth column, containing material codes
+            materials = df.iloc[:,[4]].values.tolist()
+            for each in materials:
+                each = each[0]
+                each = each.strip()
+                if each not in material_list:
+                    try:
+                        check = Material.objects.get(catalog_id=18998, code=each)
+                        material_list[each] = mark_safe("<i class='fa fa-check'></i> <span class='text-success'>" + check.name + '</span>')
+                    except:
+                        material_list[each] = mark_safe("<span class='text-danger'>No hit found! Please check the code was used correctly</span>")
+                        process_error = True
 
-            # We will review each column to see if we can auto-detect what value this contains
-            header = next(rows)
-            for each in header:
-                for column in unidentified_columns:
-                    if each.lower().strip() == column.lower():
-                        labels[each] = column
-                        unidentified_columns.remove(column)
-                        break
-                for key,column in alias_columns.items():
-                    if each.lower().strip() == key.lower():
-                        labels[each] = column
-                        unidentified_columns.remove(column)
-                        break
+            # Get the seventh column, containing material codes
+            spaces = df.iloc[:,[7]].values.tolist()
+            for each in spaces:
+                each = each[0]
+                each = each.strip()
+                if each not in spaces_list:
+                    check = ReferenceSpace.objects.filter(name=each, source__isnull=False)
+                    spaces_list[each] = check
+                    if not check:
+                        process_error = True
+                    if not spaces_options:
+                        spaces_options = check
+                        spaces_options_name = each
 
         except Exception as e:
             messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
@@ -1615,22 +1666,96 @@ def hub_processing_dataset(request, id, classify=False, space=None):
         "title": info.name,
         "info": info,
         "error": error,
-        "first_row": next(rows) if rows else None,
-        "column_count": len(header) if header else None,
-        "row_count": sum(1 for row in rows) if rows else None,
-        "labels": labels,
-        "unidentified_columns": unidentified_columns,
-        "header": header,
-        "show_name": show_name,
         "work": work,
         "list_messages": list_messages,
         "load_messaging": True,
         "forum_id": work.id,
+        "step": 2,
+        "file": file,
+        "spreadsheet": spreadsheet,
+        "process_error": process_error,
+        "material_list": material_list,
+        "spaces_options": spaces_options,
+        "spaces_options_name": spaces_options_name,
     }
-    if classify:
-        return render(request, "hub/processing.dataset.classify.html", context)
-    else:
-        return render(request, "hub/processing.dataset.html", context)
+    return render(request, "hub/processing.dataset.classify.html", context)
+
+def hub_processing_dataset_save(request, id, space=None):
+    info = get_object_or_404(LibraryItem, pk=id)
+
+    project = get_object_or_404(Project, pk=request.project)
+    if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
+        unauthorized_access(request)
+
+    try:
+        work_id = 30
+        work = Work.objects.get(part_of_project_id=request.project, workactivity_id=work_id, related_to=info)
+    except Exception as e:
+        work = Work.objects.create(part_of_project_id=request.project, workactivity_id=work_id, related_to=info)
+
+    if request.method == "POST":
+        info.name = request.POST.get("name")
+        info.description = request.POST.get("description")
+        info.tags.set(request.POST.getlist("tags"))
+        info.geocodes.set(request.POST.getlist("geocodes"))
+        info.meta_data["dqi"] = {
+             "completeness": request.POST.get("completeness"),
+             "update_required": request.POST.get("update_required"),
+             "limitations": request.POST.get("limitations"),
+        }
+        info.save()
+        if True:
+            info.meta_data["ready_for_processing"] = True
+            info.save()
+            messages.success(request, "The file was processed! We run the data conversion once a day, so please wait for up to 24 hours for the data to become available.")
+        else:
+            info.meta_data["ready_for_processing"] = True
+            info.save()
+            messages.success(request, "The file was processed! However, because more than 1,000 items are included in this layer it will take some time to complete the processing. It can take up to 6 hours for processing to complete.")
+
+        message_description = "Status change: " + work.get_status_display() + " → "
+        work.status = Work.WorkStatus.COMPLETED
+        work.save()
+        work.refresh_from_db()
+        new_status = str(work.get_status_display())
+        message_description += new_status
+
+        message = Message.objects.create(
+            name = "Status change",
+            description = message_description,
+            parent = work,
+            posted_by = request.user.people,
+        )
+        set_autor(request.user.people.id, message.id)
+        work.subscribers.add(request.user.people)
+
+        try:
+            RecordRelationship.objects.create(
+                record_parent = request.user.people,
+                record_child = info,
+                relationship_id = RELATIONSHIP_ID["processor"],
+            )
+        except:
+            # This fails if the relationship already exists, e.g. if it was processed twice
+            pass
+
+        return redirect(project.slug + ":library_item", info.id)
+
+    context = {
+        "info": info,
+        "layer": layer,
+        "list_messages": work.messages.all() if work else None,
+        "load_messaging": True,
+        "forum_id": work.id if Work else None,
+        "work": work,
+        "title": info,
+        "menu": "processing",
+        "step": 3,
+        "load_select2": True,
+        "tags": Tag.objects.filter(Q(parent_tag__parent_tag_id=845)|Q(id__in=info.tags.all())),
+    }
+    return render(request, "hub/processing.dataset.save.html", context)
+
 
 def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=False):
 

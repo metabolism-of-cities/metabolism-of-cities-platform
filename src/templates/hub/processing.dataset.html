@@ -1,6 +1,7 @@
 {% extends "_base.html" %}
 {% load moc_extras %}
 {% load humanize %}
+{% load bootstrap4 %}
 {% block page_name %}staf verify{% endblock %}
 
 {% block content %}
@@ -11,62 +12,89 @@
     <div class="col-lg-8 mb-4 mb-lg-0">
 
       <div class="card mb-3">
-        <div class="card-header"><i class="fa fa-info-circle"></i> Meta data</div>
-        <div class="card-body">
-          <a href="edit/?next={{ request.get_full_path }}" class="btn btn-primary-outline float-right"><i class="fa fa-pencil"></i> Edit</a>
-          <dl class="row">
-            <dt class="col-sm-3">Title</dt>
-            <dd class="col-sm-9">
-              {% with link=PROJECT.slug|add:":library_item" %}
-                <a href="{% url link info.id %}">{{ info }}</a>
-              {% endwith %}
-            </dd>
-            <dt class="col-sm-3">Description</dt>
-            <dd class="col-sm-9">{{ info.get_description }}</dd>
-            <dt class="col-sm-3">Year published</dt>
-            <dd class="col-sm-9">{{ info.year }}</dd>
-            <dt class="col-sm-3">Author(s)</dt>
-            <dd class="col-sm-9">{{ info.get_author_citation }}</dd>
-            <dt class="col-sm-3">Tag(s)</dt>
-            <dd class="col-sm-9">
-              {% for each in info.tags.all %}
-                <span class="badge">{{ each }}</span>
-              {% endfor %}
-            </dd>
-            <dt class="col-sm-3">File(s)</dt>
-            <dd class="col-sm-9">
-              {% for each in info.attachments.all %}
-                <span class="badge"><a href="{{ each.file.url }}">{{ each }}</a> ({{ each.file.size|filesizeformat }})</span>
-              {% endfor %}
-            </dd>
-          </dl>
-        </div>
-      </div>
 
-      <div class="card card-table">
-        <div class="card-header"><i class="fa fa-table"></i> Table content - preview</div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-3">
-              <ul class="list-unstyled">
-                {% for each in header %}
-                  <li style="height:1.5em;overflow:hidden;font-weight:bold" class="text-right">
-                    {{ each }}
-                  </li>
-                {% endfor %}
-              </ul>
+
+        {% if check_files %}
+          <div class="card-header"><i class="fa fa-file fa-fw"></i> Files</div>
+          <div class="card-body">
+            <h4>
+              <a href="{% url URLS.LIBRARY_ITEM info.id %}">{{ info }}</a>
+            </h4>
+
+            <form id="next_step" method="post" enctype="multipart/form-data" class="mt-4">
+
+            {% if not info.attachments.all %}
+              <div class="alert alert-warning">We don't have any files yet -- please upload a file to continue.</div>
+            {% else %}
+              <p>
+                Your data needs to be <strong>formatted correctly</strong> and included in the <strong>first sheet</strong>.
+                Only <strong>csv, ods, xls and xlsx files</strong> are allowed. Please select which file to use - or upload
+                a new filed with the processed data.
+              </p>
+              <p>Which files contains formatted data?</p>
+              {% for each in info.attachments.all %}
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="file" value="{{ each.id }}" id="cc_{{ each.id }}">
+                  <label class="form-check-label" for="cc_{{ each.id }}">
+                    <a href="{{ each.file.url }}">{{ each }}</a> ({{ each.file.size|filesizeformat }})</span>
+                  </label>
+                </div>
+              {% endfor %}
+            {% endif %}
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="file" value="newfile" id="newfile">
+              <label class="form-check-label" for="newfile">
+                Upload a new file
+              </label>
             </div>
-            <div class="col-9">
-              <ul class="list-unstyled">
-                {% for each in first_row %}
-                  <li style="height:1.5em;overflow:hidden;opacity:0.5">
-                    {{ each }}
-                  </li>
-                {% endfor %}
-              </ul>
+            <input type="hidden" name="next_step" value="true" />
+
+          <section class="mt-4 d-none" id="uploadnewfile">
+
+            <h3>Upload new file</h3>
+              
+            {% csrf_token %}
+
+            <div class="form-group">
+              <label>File</label>
+              <input type="file" name="new_file" class="form-control" />
             </div>
+
+          </section>
+
+        </form>
+              
           </div>
-        </div>
+        {% else %}
+          <div class="card-header"><i class="fa fa-info-circle"></i> Meta data</div>
+          <div class="card-body">
+            <dl class="row">
+              <dt class="col-sm-3">Title</dt>
+              <dd class="col-sm-9">
+                <a href="{% url URLS.LIBRARY_ITEM info.id %}">{{ info }}</a>
+              </dd>
+              <dt class="col-sm-3">Description</dt>
+              <dd class="col-sm-9">{{ info.get_description }}</dd>
+              <dt class="col-sm-3">Year published</dt>
+              <dd class="col-sm-9">{{ info.year }}</dd>
+              <dt class="col-sm-3">Author(s)</dt>
+              <dd class="col-sm-9">{{ info.get_author_citation }}</dd>
+              <dt class="col-sm-3">Tag(s)</dt>
+              <dd class="col-sm-9">
+                {% for each in info.tags.all %}
+                  <span class="badge">{{ each }}</span>
+                {% endfor %}
+              </dd>
+              <dt class="col-sm-3">File(s)</dt>
+              <dd class="col-sm-9">
+                {% for each in info.attachments.all %}
+                  <span class="badge"><a href="{{ each.file.url }}">{{ each }}</a> ({{ each.file.size|filesizeformat }})</span>
+                {% endfor %}
+              </dd>
+            </dl>
+          </div>
+        {% endif %}
       </div>
 
       {% if document.comments %}
@@ -90,87 +118,22 @@
     </div>
 
     <div class="col-lg-4">
-
-      <div class="sticky-top">
-
-        <div class="mb-3">
-          <ul class="list-group list-group-horizontal">
-            <li class="list-group-item text-center {% if step == 1 %}bg-light{% endif %}">
-              <i class="far fa-fw fa-2x {% if step == 1 %}fa-pencil{% else %}fa-check text-success{% endif %}"></i>
-              <small class="d-block mt-2">Prepare processed file</small>
-            </li>
-            <li class="list-group-item text-center {% if step == 2 %}bg-light{% endif %}">
-              <i class="far fa-fw fa-2x {% if step < 3 %}fa-columns{% else %}fa-check text-success{% endif %}"></i>
-              <small class="d-block mt-2">Review file content</small>
-            </li>
-            <li class="list-group-item text-center {% if step == 3 %}bg-light{% endif %}">
-              <i class="far fa-fw fa-2x fa-clipboard-list"></i>
-              <small class="d-block mt-2">Verify metadata</small>
-            </li>
-          </ul>
-        </div>
-
-        <div class="card mb-4">
-
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item table-item">
-              <div><i class="fal fa-fw fa-fingerprint mr-1"></i> ID</div>
-              <div>{{ info.id }}</div>
-            </li>
-            <li class="list-group-item table-item">
-              <div><i class="fal fa-fw fa-user mr-1"></i> Uploaded by</div>
-              <div>{{ info.uploader }}</div>
-            </li>
-            <li class="list-group-item table-item">
-              <div><i class="fal fa-fw fa-layer-group mr-1"></i> Columns</div>
-              <div>{{ column_count }}</div>
-            </li>
-            <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-table mr-1"></i> Rows</div>
-              <div>{{ row_count }}</div>
-            </li>
-            {% if work.assigned_to %}
-              <li class="list-group-item table-item">
-                <div><i class="far fa-fw fa-user-check mr-1"></i> Assigned to</div>
-                <div>{{ work.assigned_to }}</div>
-              </li>
-            {% endif %}
-          </ul>
-        </div>
-
-        <form method="post">
-          {% if not work.assigned_to %}
-            <button type="submit" name="start_work" value="true" class="btn btn-primary">
-              <i class="fas fa-user-plus"></i>
-              Assign this to me
-            </button>
-          {% elif work.assigned_to == request.user.people %}
-
-            <div class="mt-4 mb-5">
-              {% if not error %}
-              <a href="" class="btn btn-success disabled looks-good">
-                It looks good <i class="fas fa-fw fa-arrow-right mr-0 ml-1"></i>
-              </a>
-              {% endif %}
-            </div>
-
-            <button type="submit" name="stop_work" value="true" class="btn btn-primary-outline mt-5">
-              <i class="fas fa-user-times"></i>
-              Stop working on this
-            </button>
-          {% endif %}
-          {% csrf_token %}
-        </form>
-
-        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="btn btn-primary"><i class="fas fa-fw fa-play"></i> View instruction video</a>
-        <a href="../" class="btn btn-primary-basic mt-4">
-          <i class="fal fa-angle-left"></i>
-          Back to overview
-        </a>
-      </div>
-
+      {% include "hub/_processing.dataset.menu.html" %}
     </div>
 
   </section>
 
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+  $("input[name='file']").change(function(){
+    $(".looks-good").removeAttr("disabled");
+    if($("#newfile").is(":checked")) { 
+      $("#uploadnewfile").removeClass("d-none");
+    } else {
+      $("#uploadnewfile").addClass("d-none");
+    }
+  });
+</script>
 {% endblock %}

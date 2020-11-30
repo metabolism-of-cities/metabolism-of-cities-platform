@@ -1288,7 +1288,7 @@ class LibraryItem(Record):
         except:
             return None
 
-    def get_spreadsheet(self):
+    def get_spreadsheet(self, id=None):
         # We use this to retrieve the attached spreadsheet, if there is one.
         # We return some general info (file type, the file object), and a pandas data frame
 
@@ -1303,6 +1303,8 @@ class LibraryItem(Record):
         if doc == 0:
             error = True
             error_message = "No file was found. Make sure a spreadsheet file (CSV, ODS, XLS, XLSX) is uploaded."
+        elif id:
+            doc = self.attachments.get(pk=id)
         elif doc == 1:
             doc = self.attachments.all()[0]
         else:
@@ -1333,7 +1335,7 @@ class LibraryItem(Record):
                         df = pd.read_excel(doc.file.file)
                 except Exception as e:
                     error = True
-                    error_message = mark_safe("We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
+                    error_message = "We could not fully load all relevant information. The following error ocurred: " + str(e)
             else:
                 error = True
                 doc = None

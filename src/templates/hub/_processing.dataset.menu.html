@@ -1,0 +1,88 @@
+
+      <div class="sticky-top">
+
+        <div class="mb-3">
+          <ul class="list-group list-group-horizontal">
+            <li class="list-group-item text-center {% if step >= 1 %}bg-light{% endif %}">
+              <i class="far fa-fw fa-2x {% if step >= 1 %}fa-check text-success{% elif check_files %}fa-circle text-warning{% else %}fa-pencil{% endif %}"></i>
+              <small class="d-block mt-2">Prepare processed file</small>
+            </li>
+            <li class="list-group-item text-center {% if step == 2 %}bg-light{% endif %}">
+              <i class="far fa-fw fa-2x {% if step > 2 %}fa-check text-success{% elif step == 2 %}fa-circle text-warning{% else %}fa-columns{% endif %}"></i>
+              <small class="d-block mt-2">Review file content</small>
+            </li>
+            <li class="list-group-item text-center {% if step == 3 %}bg-light{% endif %}">
+              <i class="far fa-fw fa-2x {% if step > 3 %}fa-check text-success{% elif step == 3 %}fa-circle text-warning{% else %}fa-clipboard-list{% endif %}"></i>
+              <small class="d-block mt-2">Verify metadata</small>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card mb-4">
+
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item table-item">
+              <div><i class="fal fa-fw fa-fingerprint mr-1"></i> ID</div>
+              <div><a href="{% url URLS.LIBRARY_ITEM info.id %}">{{ info.id }}</a></div>
+            </li>
+            <li class="list-group-item table-item">
+              <div><i class="fal fa-fw fa-user mr-1"></i> Uploaded by</div>
+              <div>{{ info.uploader }}</div>
+            </li>
+            {% if work.assigned_to %}
+              <li class="list-group-item table-item">
+                <div><i class="far fa-fw fa-user-check mr-1"></i> Assigned to</div>
+                <div>{{ work.assigned_to }}</div>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+
+        {% if step < 2 %}
+          {% if not work.assigned_to %}
+          <form method="post">
+            <button type="submit" name="start_work" value="true" class="btn btn-primary">
+              <i class="fas fa-user-plus"></i>
+              Assign this to me
+            </button>
+            {% csrf_token %}
+          </form>
+          {% elif work.assigned_to == request.user.people %}
+
+            <div class="mt-4 mb-5">
+              {% if not error %}
+              <button type="submit" class="btn btn-success looks-good" disabled form="next_step">
+                Review file content
+                <i class="fas fa-fw fa-arrow-right mr-0 ml-1"></i>
+              </button>
+              {% endif %}
+            </div>
+
+            <form method="post">
+              <button type="submit" name="stop_work" value="true" class="btn btn-primary-outline mt-5">
+                <i class="fas fa-user-times"></i>
+                Stop working on this
+              </button>
+              {% csrf_token %}
+            </form>
+
+          {% endif %}
+
+        <a href="../" class="btn btn-primary-basic mt-4">
+          <i class="fal fa-angle-left"></i>
+          Back to overview
+        </a>
+
+      {% elif step == 2 %}
+        <div class="card p-3 mb-4">
+          <button form="next_step" name="next" value="true" type="submit" class="btn btn-success btn-next mb-3">Save and next <i class="fa fa-arrow-right ml-2 mr-0"></i></button>
+          <a href="../" class="btn btn-dark"><i class="fa fa-arrow-left"></i> Back</a>
+        </div>
+      {% elif step == 3 %}
+          <div class="card p-3 mb-4">
+            <button name="next" form="saveform" value="true" type="submit" class="btn btn-success mb-3">Save and publish <i class="fa fa-check ml-2 mr-0"></i></button>
+            <a href="../classify/" class="btn btn-dark"><i class="fa fa-arrow-left"></i> Back</a>
+          </div>
+      {% endif %}
+
+      </div>
