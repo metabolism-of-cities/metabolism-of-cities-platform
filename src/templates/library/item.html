@@ -49,6 +49,11 @@
       height: 500px;
     }
 
+    .visualisations .nav-link {
+      padding: .25rem;
+      cursor: pointer;
+    }
+
     .highcharts-drillup-button .highcharts-button-box {
       fill: #fff !important;
       stroke: #144d58 !important;
@@ -69,6 +74,10 @@
       z-index: 1000 !important;
       border-left-color: #144d58 !important;
       border-right-color: #144d58 !important;
+      width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     {% if info.is_deleted %}
@@ -549,53 +558,97 @@
 
       {% if request.user.id == 1 %}
         {% if info.data.all %}
-          <section class="visualisation">
+          <section class="visualisations">
             <h3>Data</h3>
-            <div id="stacked" class="mb-4"></div>
-            <div id="line" class="mb-4"></div>
-            <div id="area" class="mb-4"></div>
-            <div id="drilldown" class="mb-4"></div>
-            <div class="pie-wrapper mb-4">
-              <div id="pie"></div>
-              <div id="pie-toggles" class="text-center">
-                <div class="btn-group" role="group" aria-label="Basic example">
-                  <button type="button" class="btn btn-primary switch-pie prev-pie"><i class="fa fa-arrow-left m-0"></i></button>
-                  <button disabled type="button" class="btn btn-primary-outline disabled current-pie"></button>
-                  <button type="button" class="btn btn-primary switch-pie next-pie"><i class="fa fa-arrow-right m-0"></i></button>
+
+            <ul class="nav nav-tabs nav-justified mb-4" role="tablist">
+              <li class="nav-item"><a class="nav-link" data-tab="stacked" data-viz="stacked"><i class="fal fa-fw fa-chart-bar"></i> Bar</a></li>
+              <li class="nav-item"><a class="nav-link" data-tab="drilldown" data-viz="drilldown" data-drilldown="true"><i class="fal fa-fw fa-chart-bar"></i> Drilldown</a></li>
+              <li class="nav-item"><a class="nav-link" data-tab="line" data-viz="line"><i class="fal fa-fw fa-chart-line"></i> Line</a></li>
+              <li class="nav-item"><a class="nav-link" data-tab="area" data-viz="area"><i class="fal fa-fw fa-chart-area"></i> Area</a></li>
+              <li class="nav-item"><a class="nav-link" data-tab="pie-wrapper" data-viz="pie"><i class="fal fa-fw fa-chart-pie"></i> Pie</a></li>
+              <li class="nav-item"><a class="nav-link" data-tab="map" data-viz="map"><i class="fal fa-fw fa-map-marked"></i> Map</a></li>
+              <li class="nav-item"><a class="nav-link" data-tab="table"><i class="fal fa-fw fa-table"></i> Table</a></li>
+              {% if request.user.is_superuser %}
+                <li class="nav-item"><a class="nav-link" data-tab="metadata"><i class="fal fa-fw fa-info-circle"></i> Metadata</a></li>
+              {% endif %}
+            </ul>
+
+            <div class="tab-content">
+              <div id="stacked" role="tabpanel" class="mb-4 tab-pane">
+                <h4 class="text-center"><i class="fa fa-cog fa-spin"></i> Loading</h4>
+              </div>
+              <div id="line" role="tabpanel" class="mb-4 tab-pane">
+                <h4 class="text-center"><i class="fa fa-cog fa-spin"></i> Loading</h4>
+              </div>
+              <div id="area" role="tabpanel" class="mb-4 tab-pane">
+                <h4 class="text-center"><i class="fa fa-cog fa-spin"></i> Loading</h4>
+              </div>
+              <div id="drilldown" role="tabpanel" class="mb-4 tab-pane">
+                <h4 class="text-center"><i class="fa fa-cog fa-spin"></i> Loading</h4>
+              </div>
+              <div id="map" role="tabpanel" class="leaflet-map tab-pane">
+                <h4 class="text-center"><i class="fa fa-cog fa-spin"></i> Loading</h4>
+              </div>
+              <div id="pie-wrapper" role="tabpanel" class="pie-wrapper mb-4 tab-pane">
+                <div id="pie">
+                  <h4 class="text-center"><i class="fa fa-cog fa-spin"></i> Loading</h4>
+                </div>
+                <div id="pie-toggles" class="text-center mt-3">
+                  <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-primary switch-pie prev-pie"><i class="fa fa-arrow-left m-0"></i></button>
+                    <button disabled type="button" class="btn btn-primary-outline disabled current-pie"></button>
+                    <button type="button" class="btn btn-primary switch-pie next-pie"><i class="fa fa-arrow-right m-0"></i></button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </section>
+              <div id="table" role="tabpanel" class="table tab-pane">
+                <table class="table datatable datatable-card">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Quantity</th>
+                      <th>Material</th>
+                      <th>From</th>
+                      <th>To</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for each in info.data.all %}
+                    {% if forloop.counter < 100 %}
+                      <tr>
+                        <td>{{ each.timeframe }}</td>
+                        <td>{{ each.quantity }} {{ each.unit }}</td>
+                        <td>{{ each.material_name }}</td>
+                        <td>{{ each.origin_space }}</td>
+                        <td>{{ each.destination_space }}</td>
+                      </tr>
+                    {% endif %}
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% if request.user.is_superuser %}
+              <div id="metadata" role="tabpanel" class="tab-pane">
+                <span class="badge badge-primary mb-4">Available to super user only</span>
 
-          <section id="map" class="leaflet-map">
-
-          </section>
-
-          <section class="table">
-            <table class="table datatable datatable-card">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Quantity</th>
-                  <th>Material</th>
-                  <th>From</th>
-                  <th>To</th>
-                </tr>
-              </thead>
-              <tbody>
-              {% for each in info.data.all %}
-                {% if forloop.counter < 100 %}
-                  <tr>
-                    <td>{{ each.timeframe }}</td>
-                    <td>{{ each.quantity }} {{ each.unit }}</td>
-                    <td>{{ each.material_name }}</td>
-                    <td>{{ each.origin_space }} | {{ each.origin_space.get_lat }} | {{ each.origin_space.get_lng }}</td>
-                    <td>{{ each.destination_space }}</td>
-                  </tr>
+                {% if info.meta_data %}
+                  <div class="card">
+                    <ul class="list-group list-group-flush">
+                    {% for key,value in info.meta_data.items %}
+                      <li class="list-group-item table-item">
+                        <div class="font-weight-bold">{{ key }}</div>
+                        <div>{{ value }}</div>
+                      </li>
+                    {% endfor %}
+                    </ul>
+                  </div>
+                {% else %}
+                  <h5>This file has no meta data</h5>
                 {% endif %}
-              {% endfor %}
-              </tbody>
-            </table>
+              </div>
+              {% endif %}
+            </div>
           </section>
         {% endif %}
       {% endif %}
@@ -603,28 +656,6 @@
       {% if PROJECT.slug == "ascus" %}
         <section class="messages">
           {% include "_messages.html" %}
-        </section>
-      {% endif %}
-
-      {% if request.user.is_superuser %}
-        <section class="metadata">
-          <h3 class="mb-0">Metadata</h3>
-          <span class="badge badge-primary mb-4">Available to super user only</span>
-
-          {% if info.meta_data %}
-            <div class="card">
-              <ul class="list-group list-group-flush">
-              {% for key,value in info.meta_data.items %}
-                <li class="list-group-item table-item">
-                  <div class="font-weight-bold">{{ key }}</div>
-                  <div>{{ value }}</div>
-                </li>
-              {% endfor %}
-              </ul>
-            </div>
-          {% else %}
-            <h5>This file has no meta data</h5>
-          {% endif %}
         </section>
       {% endif %}
     </div>
@@ -652,6 +683,10 @@
       credits: {
         text: "Generated by Metabolism of Cities",
         href: null,
+        position: {
+          y: -3,
+          align: "center",
+        },
         style: {
           fontSize: "12px",
           cursor: "default",
@@ -684,8 +719,6 @@
         },
         legend: {
           reversed: true,
-          align: "right",
-          verticalAlign: "bottom",
         },
         tooltip: {
           headerFormat: "<b>{point.x}</b><br/>",
@@ -713,10 +746,6 @@
         },
         xAxis: {
           categories: data.x_axis
-        },
-        legend: {
-          align: "right",
-          verticalAlign: "bottom",
         },
         tooltip: {
           headerFormat: "<b>{point.x}</b><br/>",
@@ -750,10 +779,6 @@
         },
         xAxis: {
           categories: data.x_axis
-        },
-        legend: {
-          align: "right",
-          verticalAlign: "bottom",
         },
         tooltip: {
           headerFormat: "<b>{point.x}</b><br/>",
@@ -926,18 +951,78 @@
     }
 
 {% with link=PROJECT.slug|add:":library_data_json" %}
-    $.get("{% url link info.id %}", function(data) {
-      createStackedBar(data);
-      createLine(data);
-      createArea(data);
-      createMap(data)
-      createPie(data)
+  // some variables we'll need later
+  let dataDefault;
+  let dataDrill;
 
-      $.get("{% url link info.id %}?drilldown=true", function(data) {
-        createDrilldown(data);
-      });
-    });
+  let dataDefaultLoaded = false;
+  let dataDrillLoaded = false;
+
+  let stackedLoaded = false;
+  let drilldownLoaded = false;
+  let lineLoaded = false;
+  let areaLoaded = false;
+  let pieLoaded = false;
+  let mapLoaded = false;
+
+  $(".visualisations .nav-link").click(function() {
+    let nav = $(this);
+    let tab = nav.data("tab");
+    let viz = nav.data("viz");
+
+    $(".visualisations .nav-link, .tab-content .tab-pane").removeClass("active");
+    $(".tab-pane#" + tab).addClass("active");
+    nav.addClass("active");
+
+    if (nav.data("drilldown") == true) {
+      if (dataDrillLoaded == false) {
+        $.get("{% url link info.id %}?drilldown=true", function(data) {
+          dataDrill = data;
+          dataDrillLoaded = true;
+          $(".tab-pane[data-drilldown='true']").removeClass("loading");
+          createViz(viz)
+        });
+      } else {
+        createViz(viz)
+      }
+    } else {
+      if (dataDefaultLoaded == false) {
+        $.get("{% url link info.id %}", function(data) {
+          dataDefault = data;
+          dataDefaultLoaded = true;
+          $(".tab-pane[data-drilldown!='true']").removeClass("loading");
+          createViz(viz)
+        });
+      } else {
+        createViz(viz)
+      }
+    }
+  })
+
+  function createViz(viz) {
+    if (viz == "stacked" && stackedLoaded == false) {
+      createStackedBar(dataDefault);
+      stackedLoaded = true
+    } else if (viz == "drilldown" && drilldownLoaded == false) {
+      createDrilldown(dataDrill)
+      drilldownLoaded = true
+    } else if (viz == "line" && lineLoaded == false) {
+      createLine(dataDefault)
+      lineLoaded = true
+    } else if (viz == "area" && areaLoaded == false) {
+      createArea(dataDefault)
+      areaLoaded = true
+    } else if (viz == "pie" && pieLoaded == false) {
+      createPie(dataDefault)
+      pieLoaded = true
+    } else if (viz == "map" && mapLoaded == false) {
+      createMap(dataDefault)
+      mapLoaded = true
+    }
+  }
+
+  // first visualisation to open
+  $(".nav-link[data-tab='stacked']").click();
 {% endwith %}
-
-  </script>
+</script>
 {% endblock %}

@@ -764,7 +764,12 @@ a.badge-secondary:focus {
     padding: 0 .75rem;
     vertical-align: top;
     height: 30px;
-    line-height: 30px; }
+    line-height: 30px;
+    width: 125px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; }
   .leaflet-map .show-world.button {
     width: 30px;
     height: 30px;
