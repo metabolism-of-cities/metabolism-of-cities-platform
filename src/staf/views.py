@@ -1317,6 +1317,9 @@ def hub_harvesting_worksheet(request, space=None):
     }
     return render(request, "hub/harvesting.worksheet.html", context)
 
+def hub_harvesting_worksheet_mockup(request, space=None):
+    return render(request, "hub/harvesting.worksheet.mockup.html")
+
 def hub_processing(request, space=None):
 
     title = "Data processing"

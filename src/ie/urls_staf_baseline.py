@@ -98,6 +98,7 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/hub/harvesting/<int:tag>/", staf.hub_harvesting_tag, name="hub_harvesting_tag"),
     path("dashboards/<slug:space>/hub/harvesting/<int:tag>/form/", library.form),
     path("dashboards/<slug:space>/hub/harvesting/worksheet/", staf.hub_harvesting_worksheet, name="hub_harvesting_worksheet"),
+    path("dashboards/<slug:space>/hub/harvesting/worksheet_mockup/", staf.hub_harvesting_worksheet_mockup, name="hub_harvesting_worksheet_mockup"),
     path("dashboards/<slug:space>/hub/processing/", staf.hub_processing, name="hub_processing"),
     path("dashboards/<slug:space>/hub/processing/boundaries/", staf.hub_processing_boundaries, name="hub_processing_boundaries"),
     path("dashboards/<slug:space>/hub/processing/<slug:type>/", staf.hub_processing_list, name="hub_processing_list"),
