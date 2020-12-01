@@ -255,6 +255,8 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
                 url_processing = project.slug + ":hub_processing_gis"
             elif info.type.id == 41:
                 url_processing = project.slug + ":hub_processing_geospreadsheet"
+            elif info.type.id == 10:
+                url_processing = project.slug + ":hub_processing_dataset"
 
     if info.type.group == "multimedia":
         section = "multimedia_library"

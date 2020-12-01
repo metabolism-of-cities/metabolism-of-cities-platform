@@ -28,17 +28,27 @@
       <tr>
         <td data-sort="-{{ each.date_created|date:"U" }}">
           {{ each.posted_by.avatar }}
-          {{ each.posted_by }}
+          <a href="{% url URLS.PROFILE each.posted_by.id %}">
+            {{ each.posted_by }}
+          </a>
         </td>
-        <td>
-          {{ each.date_created|naturaltime }}<br>
-          <a href="../{% if each.parent.work %}work{% else %}forum{% endif %}/{{ each.parent.id }}/">{{ each.parent }}</a>
+        <td data-sort="-{{ each.date_created|date:"U" }}">
+          {{ each.date_created|naturaltime }}
           {% if each.parent.work and each.parent.work.related_to %}
             <br>
-            <em>{{ each.parent.work.related_to }}</em>
+            <em>
+              {% if each.parent.work.related_to.get_absolute_url %}
+                <a href="{{ each.parent.work.related_to.get_absolute_url }}">
+                  {{ each.parent.work.related_to }}
+                </a>
+              {% else %}
+                {{ each.parent.work.related_to }}
+              {% endif %}
+            </em>
           {% endif %}
         </td>
         <td>
+          <a href="../{% if each.parent.work %}work{% else %}forum{% endif %}/{{ each.parent.id }}/">{{ each.parent }}</a><br>
           {{ each.get_markdown_description|safe|truncatewords_html:30 }}
         </td>
       </tr>

@@ -728,6 +728,9 @@ def hub_latest(request, network_wide=False):
         ).order_by("-date_created")
         menu = "log"
 
+    if not "include_bot" in request.GET:
+        updates = updates.exclude(posted_by_id=32070)
+
     context = {
         "updates": updates,
         "load_datatables": True,

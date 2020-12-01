@@ -295,6 +295,7 @@
           {% endif %}
           {% if curator or "datacollector" in PERMISSIONS %}
             {% if IS_DATA_PORTAL and url_processing %}
+
               {% if not info.meta_data.processed %}
                 <a href="{% url url_processing info.id %}" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> Process this file</a>
               {% endif %}

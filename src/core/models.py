@@ -1125,6 +1125,17 @@ class LibraryItem(Record):
         except:
             return None
 
+    # This takes the stocks or flows file and records it in the Data table
+    def convert_stocks_flows_data(self):
+        error = False
+        try:
+            file_id = info.meta_data["processing"]["file"]
+            file = info.get_spreadsheet(file_id)
+        except:
+            error = "We could not find/open this file."
+        
+        
+    # This function converts the shapefile into ReferenceSpaces
     def convert_shapefile(self):
 
         check = ReferenceSpace.objects.filter(source=self)
