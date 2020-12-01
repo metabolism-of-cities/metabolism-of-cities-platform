@@ -374,8 +374,12 @@ def data_json(request, id):
     else:
         for each in data:
             x_axis_field = each.timeframe.name
-            stacked_field = each.origin_space.name
-            lat_lng[stacked_field] = each.origin_space.get_centroids
+            if each.origin_space:
+                stacked_field = each.origin_space.name
+                lat_lng[stacked_field] = each.origin_space.get_centroids
+            elif each.destination_space:
+                stacked_field = each.destination_space.name
+                lat_lng[stacked_field] = each.destination_space.get_centroids
 
             if not unit:
                 unit = each.unit.name

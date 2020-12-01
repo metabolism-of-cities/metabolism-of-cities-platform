@@ -925,17 +925,19 @@
       }
     }
 
-    $.get("data/json/", function(data) {
+{% with link=PROJECT.slug|add:":library_data_json" %}
+    $.get("{% url link info.id %}", function(data) {
       createStackedBar(data);
       createLine(data);
       createArea(data);
       createMap(data)
       createPie(data)
 
-      $.get("data/json/?drilldown=true", function(data) {
+      $.get("{% url link info.id %}?drilldown=true", function(data) {
         createDrilldown(data);
       });
     });
+{% endwith %}
 
   </script>
 {% endblock %}

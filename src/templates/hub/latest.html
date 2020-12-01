@@ -33,19 +33,19 @@
           </a>
         </td>
         <td data-sort="-{{ each.date_created|date:"U" }}">
-          {{ each.date_created|naturaltime }}
           {% if each.parent.work and each.parent.work.related_to %}
-            <br>
-            <em>
               {% if each.parent.work.related_to.get_absolute_url %}
                 <a href="{{ each.parent.work.related_to.get_absolute_url }}">
                   {{ each.parent.work.related_to }}
                 </a>
               {% else %}
-                {{ each.parent.work.related_to }}
+                <em>
+                  {{ each.parent.work.related_to }}
+                </em>
               {% endif %}
-            </em>
+            <br>
           {% endif %}
+          {{ each.date_created|naturaltime }}
         </td>
         <td>
           <a href="../{% if each.parent.work %}work{% else %}forum{% endif %}/{{ each.parent.id }}/">{{ each.parent }}</a><br>
