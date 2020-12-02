@@ -3074,3 +3074,50 @@ body.volunteer.portal.latest {
     width: 200px;
   }
 }
+
+// visualisations for a single datase
+// templates/_item.visualisations.html
+.item-visualisations {
+  #stacked {
+    height: 700px;
+  }
+
+  #map,
+  #line,
+  #drilldown,
+  #pie,
+  #area {
+    height: 500px;
+  }
+
+  .nav-link {
+    padding: .25rem;
+    cursor: pointer;
+  }
+
+  .highcharts-drillup-button .highcharts-button-box {
+    fill: #fff !important;
+    stroke: #144d58 !important;
+  }
+
+  .highcharts-container .highcharts-drillup-button text {
+    fill: #144d58 !important;
+  }
+
+  .switch-pie.disabled {
+    cursor: not-allowed !important;
+    background-color: #144d58 !important;
+    border-color: #144d58 !important;
+  }
+
+  .current-pie {
+    background: #efefef !important;
+    z-index: 1000 !important;
+    border-left-color: #144d58 !important;
+    border-right-color: #144d58 !important;
+    width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

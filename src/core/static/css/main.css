@@ -1994,3 +1994,39 @@ body.volunteer.portal.latest th.date {
 .resource-list th.author,
 .resource-list td.author {
   width: 200px; }
+
+.item-visualisations #stacked {
+  height: 700px; }
+
+.item-visualisations #map,
+.item-visualisations #line,
+.item-visualisations #drilldown,
+.item-visualisations #pie,
+.item-visualisations #area {
+  height: 500px; }
+
+.item-visualisations .nav-link {
+  padding: .25rem;
+  cursor: pointer; }
+
+.item-visualisations .highcharts-drillup-button .highcharts-button-box {
+  fill: #fff !important;
+  stroke: #144d58 !important; }
+
+.item-visualisations .highcharts-container .highcharts-drillup-button text {
+  fill: #144d58 !important; }
+
+.item-visualisations .switch-pie.disabled {
+  cursor: not-allowed !important;
+  background-color: #144d58 !important;
+  border-color: #144d58 !important; }
+
+.item-visualisations .current-pie {
+  background: #efefef !important;
+  z-index: 1000 !important;
+  border-left-color: #144d58 !important;
+  border-right-color: #144d58 !important;
+  width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; }
