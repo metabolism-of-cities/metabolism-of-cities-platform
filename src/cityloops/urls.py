@@ -21,6 +21,7 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("overview/", data.progress, { "style": "grid"}, name="overview"),
     path("eurostat/", data.eurostat, name="eurostat"),
     path("eurostat/grid/", views.eurostat_grid, name="eurostat_grid"),
+    path("circular-city/", views.circular_city, name="circular_city"),
     path("<slug:slug>/", core.article, name="article"),
     path("city/<slug:slug>/", views.city, name="city"),
 ]

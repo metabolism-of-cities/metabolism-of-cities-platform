@@ -1,0 +1,25 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+
+  <h1>Circular City</h1>
+
+  <div class="row">
+    <div class="col-lg-6">
+      <img src="{% static 'img/cityloops.circular-city.png' %}" class="img-fluid rounded border">
+    </div>
+    <div class="col-lg-6">
+      <h5>A circular city is one in which</h5>
+      <ol>
+        <li>The local government, civil society, businesses, the research community and other local stakeholders collaborate to promote the transition from a linear to a circular economy. This means in practice:</li>
+        <li>fostering business models and economic behavioural patterns that maintain the value and utility of products, components, materials and nutrients for as long as sensible, in order to</li>
+        <li>close material loops and minimize as much as possible harmful resource use and waste generation locally, and thereby</li>
+        <li>improve human well-being, minimize net environmental impacts, protect and enhance biodiversity, and promote social inclusion, both within the city and globally, in line with the sustainable development goals.</li>
+      </ol>
+    </div>
+  </div>
+{% endblock %}
