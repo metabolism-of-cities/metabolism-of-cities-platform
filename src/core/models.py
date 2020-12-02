@@ -1975,6 +1975,7 @@ class MaterialType(models.IntegerChoices):
     ENERGY = 5, "Energy"
     LENGTH = 6, "Length"
     FRACTION = 7, "Fraction"
+    POWER = 8, "Power"
     OTHER = 99, "Other"
 
 class Material(Record):
