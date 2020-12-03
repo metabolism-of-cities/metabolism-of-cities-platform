@@ -1631,7 +1631,14 @@ def hub_processing_dataset_classify(request, id, space=None):
             spreadsheet["table"] = mark_safe(df.to_html(classes="table table-striped spreadsheet-table"))
 
             # Get the fourth column, containing material codes
-            materials = df.iloc[:,[4]].values.tolist()
+            if spreadsheet["colcount"] <= 8:
+                # For material stock the order is a bit different
+                material_code_column = 2
+                spaces_column = 5
+            else:
+                material_code_column = 4
+                spaces_column = 7
+            materials = df.iloc[:,[material_code_column]].values.tolist()
             for each in materials:
                 each = each[0]
                 each = each.strip()
@@ -1643,8 +1650,8 @@ def hub_processing_dataset_classify(request, id, space=None):
                         material_list[each] = mark_safe("<span class='text-danger'>No hit found! Please check the code was used correctly</span>")
                         process_error = True
 
-            # Get the seventh column, containing material codes
-            spaces = df.iloc[:,[7]].values.tolist()
+            # Get the seventh column, containing reference spaces codes
+            spaces = df.iloc[:,[spaces_column]].values.tolist()
             for each in spaces:
                 each = each[0]
                 each = each.strip()
