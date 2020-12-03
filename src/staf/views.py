@@ -1602,6 +1602,7 @@ def hub_processing_dataset_classify(request, id, space=None):
     spaces_options = None
     spaces_options_name = None
     show_name = None
+    disable_save = True
 
     if request.method == "POST" and "source" in request.POST:
         info.meta_data["processing"]["source"] = request.POST.get("source")
@@ -1655,6 +1656,9 @@ def hub_processing_dataset_classify(request, id, space=None):
                     if not spaces_options:
                         spaces_options = check
                         spaces_options_name = each
+                        if not process_error:
+                            # If we could get the materials identified and we now have the reference spaces sorted, enable save button
+                            disable_save = False
 
         except Exception as e:
             messages.error(request, "Your file could not be loaded. Please review the error below.<br><strong>" + str(e) + "</strong>")
@@ -1680,6 +1684,7 @@ def hub_processing_dataset_classify(request, id, space=None):
         "material_list": material_list,
         "spaces_options": spaces_options,
         "spaces_options_name": spaces_options_name,
+        "disable_save": disable_save,
     }
     return render(request, "hub/processing.dataset.classify.html", context)
 

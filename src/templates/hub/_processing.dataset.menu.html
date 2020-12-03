@@ -75,7 +75,7 @@
 
       {% elif step == 2 %}
         <div class="card p-3 mb-4">
-          <button form="next_step" name="next" value="true" type="submit" class="btn btn-success btn-next mb-3">Save and next <i class="fa fa-arrow-right ml-2 mr-0"></i></button>
+          <button form="next_step" name="next" value="true" type="submit" class="btn btn-success btn-next mb-3" {% if disable_save %}disabled{% endif %}>Save and next <i class="fa fa-arrow-right ml-2 mr-0"></i></button>
           <a href="../" class="btn btn-dark"><i class="fa fa-arrow-left"></i> Back</a>
         </div>
       {% elif step == 3 %}
