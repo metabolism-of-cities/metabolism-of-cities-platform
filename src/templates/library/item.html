@@ -303,14 +303,6 @@
         <img src="{{ info.image.url }}" class="img-fluid img-thumbnail rounded" alt="" />
       {% endif %}
 
-      {% if PROJECT.slug == "islands" and info.type.name == "Dataset" %}
-        <div class="alert alert-warning">
-          We are currently busy importing data from our previous website --
-          data visualizations and data export options will be available later
-          this month (October 2020).
-        </div>
-      {% endif %}
-
       <!-- show media or export options -->
       {% if info.type.name == "Video Recording" %}
         <section class="videoblock">
@@ -516,7 +508,7 @@
 
       {% if request.user.id == 1 %}
         {% if info.data.all %}
-          {% include "_item.visualisations.html" %}
+          {% include "_data.visualizations.html" %}
         {% endif %}
       {% endif %}
 
@@ -531,5 +523,5 @@
 {% endblock %}
 
 {% block footer %}
-  <script src="{% static 'js/item.js' %}"></script>
+  <script src="{% static 'js/data.js' %}"></script>
 {% endblock %}
