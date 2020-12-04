@@ -1129,11 +1129,73 @@ class LibraryItem(Record):
     def convert_stocks_flows_data(self):
         error = False
         try:
-            file_id = info.meta_data["processing"]["file"]
-            file = info.get_spreadsheet(file_id)
+            file_id = self.meta_data["processing"]["file"]
+            file = self.get_spreadsheet(file_id)
         except:
             error = "We could not find/open this file."
-        
+
+        if not error:
+            df = file["df"]
+
+            materials = {}
+            units = {}
+            spaces = {}
+            times = {}
+            items = []
+
+            for row in df.itertuples():
+                period = row[1]
+                start = row[2]
+                end = row[3]
+                material_name = row[4]
+                material_code = row[5]
+                quantity = row[6]
+                unit = row[7]
+                space = row[8]
+                comment = row[9]
+                segment = row[10]
+
+                if material_code not in materials:
+                    m = Material.objects.get(catalog_id=18998, code=material_code)
+                    materials[material_code] = m
+
+                if space not in spaces:
+                    source = self.meta_data["processing"]["source"]
+                    source = 35514
+                    s = ReferenceSpace.objects.get(source_id=source, name=space)
+                    spaces[space] = s
+
+                if unit not in units:
+                    u = Unit.objects.filter(symbol=unit).exclude(type=99)
+                    units[unit] = u[0]
+
+                start = start.strftime("%Y-%m-%d")
+                end = end.strftime("%Y-%m-%d")
+
+                full_string = str(start) + str(end)
+                if full_string not in times:
+                    t = TimePeriod.objects.create(
+                        start = start,
+                        end = end,
+                        name = period,
+                    )
+                    times[full_string] = t
+
+                items.append(Data(
+                    unit = units[unit],
+                    quantity = quantity,
+                    material = materials[material_code],
+                    material_name = material_name,
+                    source = self,
+                    origin_space = spaces[space],
+                    comments = comment,
+                    timeframe = times[full_string],
+                ))
+            Data.objects.bulk_create(items)
+
+        print(spaces)
+        print(units)
+        print(materials)
         
     # This function converts the shapefile into ReferenceSpaces
     def convert_shapefile(self):

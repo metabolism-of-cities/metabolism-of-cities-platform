@@ -248,7 +248,7 @@ def library_overview(request, type, space=None):
 
 def space_map(request, space):
     space = get_space(request, space)
-    list = LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False).order_by("date_created")
+    list = LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False, type__in=[20,41]).order_by("date_created")
     project = get_project(request)
     parents = []
     features = []
@@ -1630,7 +1630,7 @@ def hub_processing_dataset_classify(request, id, space=None):
                 spreadsheet["message"] = f"Showing the first 10 rows below ({spreadsheet['rowcount']} rows in total)."
             spreadsheet["table"] = mark_safe(df.to_html(classes="table table-striped spreadsheet-table"))
 
-            # Get the fourth column, containing material codes
+            # Get the nth column, containing material codes
             if spreadsheet["colcount"] <= 8:
                 # For material stock the order is a bit different
                 material_code_column = 2
@@ -1650,7 +1650,7 @@ def hub_processing_dataset_classify(request, id, space=None):
                         material_list[each] = mark_safe("<span class='text-danger'>No hit found! Please check the code was used correctly</span>")
                         process_error = True
 
-            # Get the seventh column, containing reference spaces codes
+            # Get the nth column, containing reference spaces codes
             spaces = df.iloc[:,[spaces_column]].values.tolist()
             for each in spaces:
                 each = each[0]

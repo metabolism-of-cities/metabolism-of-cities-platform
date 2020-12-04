@@ -512,16 +512,59 @@
         {% endif %}
       {% endif %}
 
+      {% if info.meta_data.ready_for_processing %}
+        <div class="alert alert-warning mt-3">
+          <i class="fa fa-info-circle"></i> <strong>This file has been processed by one of our contributors.</strong>
+          <br>
+          Data visualisations should soon be available (it can take up to 6 hours for files to be crunched on our servers). 
+          {% if request.user.is_staff %}
+            <hr>
+            <form method="post" class="mt-3">
+              <button class="btn btn-dark" type="submit"><i class="fa fa-server"></i> Let's crunch this file</button>
+              <span class="ml-4 badge badge-primary">Staff only</span>
+              <input type="hidden" name="process_file" value="true" />
+              {% csrf_token %}
+            </form>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if request.user.is_superuser %}
+        <div id="metadata" role="tabpanel" class="tab-pane">
+          <h4>Meta data</h4>
+          <span class="badge badge-primary mb-4">Available to super user only</span>
+
+          {% if info.meta_data %}
+            <div class="card">
+              <ul class="list-group list-group-flush">
+              {% for key,value in info.meta_data.items %}
+                <li class="list-group-item table-item">
+                  <div class="font-weight-bold">{{ key }}</div>
+                  <div>{{ value }}</div>
+                </li>
+              {% endfor %}
+              </ul>
+            </div>
+          {% else %}
+            <h5>This file has no meta data</h5>
+          {% endif %}
+        </div>
+      {% endif %}
+
       {% if PROJECT.slug == "ascus" %}
         <section class="messages">
           {% include "_messages.html" %}
         </section>
       {% endif %}
+
     </div>
   </div>
 </div>
 {% endblock %}
 
 {% block footer %}
-  <script src="{% static 'js/data.js' %}"></script>
+  <script type="text/javascript">
+  let json_url = "/library/{{ info.id }}/data/json/"
+  </script>
+  <script src="{% static 'js/data.js' %}?rl=true"></script>
 {% endblock %}

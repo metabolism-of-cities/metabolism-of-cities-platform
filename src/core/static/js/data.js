@@ -286,7 +286,7 @@ $(".item-visualisations .nav-link").click(function() {
 
   if (nav.data("drilldown") == true) {
     if (dataDrillLoaded == false) {
-      $.get("/data/library/33053/data/json/?drilldown=true", function(data) {
+      $.get(json_url + "?drilldown=true", function(data) {
         dataDrill = data;
         dataDrillLoaded = true;
         $(".tab-pane[data-drilldown='true']").removeClass("loading");
@@ -297,7 +297,7 @@ $(".item-visualisations .nav-link").click(function() {
     }
   } else {
     if (dataDefaultLoaded == false) {
-      $.get("/data/library/33053/data/json/", function(data) {
+      $.get(json_url, function(data) {
         dataDefault = data;
         dataDefaultLoaded = true;
         $(".tab-pane[data-drilldown!='true']").removeClass("loading");

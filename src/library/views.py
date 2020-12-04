@@ -279,6 +279,13 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         info.save()
         messages.success(request, "File processing options were reset - it will now appear in the list again.")
 
+    if "process_file" in request.POST and request.user.is_staff:
+        if info.type.id == 40 or info.type.id == 41:
+            info.convert_shapefile()
+        elif info.type.id == 10:
+            info.convert_stocks_flows_data()
+        messages.success(request, "File processing was started.")
+
     if "skip_size_check" in request.GET and curator:
         info.meta_data.pop("processing_error")
         info.meta_data["ready_for_processing"] = True

@@ -9,9 +9,6 @@
     <li class="nav-item"><a class="nav-link" data-tab="pie-wrapper" data-viz="pie"><i class="fal fa-fw fa-chart-pie"></i> Pie</a></li>
     <li class="nav-item"><a class="nav-link" data-tab="map" data-viz="map"><i class="fal fa-fw fa-map-marked"></i> Map</a></li>
     <li class="nav-item"><a class="nav-link" data-tab="table"><i class="fal fa-fw fa-table"></i> Table</a></li>
-    {% if request.user.is_superuser %}
-      <li class="nav-item"><a class="nav-link" data-tab="metadata"><i class="fal fa-fw fa-info-circle"></i> Metadata</a></li>
-    {% endif %}
   </ul>
 
   <div class="tab-content">
@@ -68,25 +65,5 @@
         </tbody>
       </table>
     </div>
-    {% if request.user.is_superuser %}
-    <div id="metadata" role="tabpanel" class="tab-pane">
-      <span class="badge badge-primary mb-4">Available to super user only</span>
-
-      {% if info.meta_data %}
-        <div class="card">
-          <ul class="list-group list-group-flush">
-          {% for key,value in info.meta_data.items %}
-            <li class="list-group-item table-item">
-              <div class="font-weight-bold">{{ key }}</div>
-              <div>{{ value }}</div>
-            </li>
-          {% endfor %}
-          </ul>
-        </div>
-      {% else %}
-        <h5>This file has no meta data</h5>
-      {% endif %}
-    </div>
-    {% endif %}
   </div>
 </section>

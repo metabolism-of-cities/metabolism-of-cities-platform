@@ -78,7 +78,7 @@
               {% csrf_token %}
               {% for each in spaces_options %}
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="source" value="{{ each.id }}" id="cc_{{ each.id }}" required>
+                  <input class="form-check-input" type="radio" name="source" value="{{ each.source.id }}" id="cc_{{ each.id }}" required>
                   <label class="form-check-label" for="cc_{{ each.id }}">
                     <a href="{% url URLS.SPACE each.id %}">{{ each }}</a> - 
                     <a href="{% url URLS.LIBRARY_ITEM each.source.id %}">{{ each.source }}</a>
