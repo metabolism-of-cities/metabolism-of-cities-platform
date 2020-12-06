@@ -1,0 +1,176 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block css %}
+  <style>
+    .group-title {
+      position: absolute;
+      top: -16px;
+      background: #fcfcfc;
+      padding: 0 1rem;
+      font-weight: bold;
+      font-size: 1.25rem;
+    }
+
+    .objective-number,
+    .objective-title {
+      display: inline-block;
+      font-weight: bold;
+      margin-bottom: .5rem;
+    }
+
+    .objective-number {
+      background-color: #144d58;
+      color: #fff;
+      padding: 0 .5rem;
+      border-radius: .25rem;
+      margin-right: .5rem;
+    }
+
+    div[data-toggle="collapse"] {
+      cursor: pointer;
+    }
+
+    .fa-angle-down {
+      transition: all .3s;
+    }
+
+    div[data-toggle="collapse"][aria-expanded="true"] .fa-angle-down {
+      transform: rotate(180deg);
+    }
+
+    img.sdg {
+      height: 125px;
+      border-radius: .25rem;
+      margin: .5rem .5rem 0 0;
+    }
+
+    .position-relative {
+      margin-top: 3rem;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <h1>Strategic objectives</h1>
+
+  <h4>Closing material loops and reducing harmful resource use</h4>
+
+  <div class="objective-group rounded border p-3 position-relative" id="material-energy-flow">
+    <div class="group-title">Material / energy flow</div>
+
+    <div class="objective my-3">
+      <div data-toggle="collapse" data-target="#reduced-consumption" aria-expanded="false" aria-controls="reduced-consumption">
+        <div class="objective-number">22</div>
+        <div class="objective-title"><i class="fal fa-fw fa-balance-scale-right mr-1"></i> Reduced (harmful) raw material consumption</div>
+        <i class="float-right py-1 fa fa-angle-down"></i>
+      </div>
+      <div class="objective-definition collapse" id="reduced-consumption" data-parent="#material-energy-flow">
+        A state in the local material economy of reduced material consumption (i.e. grouped into non-metallic minerals, metals, fossil energy carriers and biomass) by <strong>refusing</strong> product or material use (abandoning its function, making it redundant or deploying a radically different solution) through reducing overall consumption, consumption of raw materials, and consumption of overexploited or hazardous materials.
+
+        <br>
+
+        <a href="https://www.un.org/sustainabledevelopment/energy/"><img class="sdg" src="{% static 'img/sdg/sdg-12.png' %}"></a>
+      </div>
+    </div>
+
+    <div class="objective">
+      <div data-toggle="collapse" data-target="#reduced-demand" aria-expanded="false" aria-controls="reduced-demand">
+        <div class="objective-number">23</div>
+        <div class="objective-title"><i class="fal fa-fw fa-wind-turbine mr-1"></i> Reduced overall energy demand and increased share of renewable energy</div>
+        <i class="float-right py-1 fa fa-angle-down"></i>
+      </div>
+      <div class="objective-definition collapse" id="reduced-demand" data-parent="#material-energy-flow">
+        A state in the local material economy, in which the consumption of (local) renewable energy is increased and consumption of fossil fuels is reduced in absolute terms.
+
+        <br>
+
+        <a href="https://www.un.org/sustainabledevelopment/poverty/"><img class="sdg" src="{% static 'img/sdg/sdg-01.png' %}"></a>
+        <a href="https://www.un.org/sustainabledevelopment/climate-change/"><img class="sdg" src="{% static 'img/sdg/sdg-13.png' %}"></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="objective-group rounded border p-3 position-relative" id="reuse-recycling">
+    <div class="group-title">Re-use and recycling</div>
+
+    <div class="objective my-3">
+      <div data-toggle="collapse" data-target="#increased-renewables" aria-expanded="false" aria-controls="increased-renewables">
+        <div class="objective-number">24</div>
+        <div class="objective-title"><i class="fal fa-fw fa-trees mr-1"></i> Increased share of renewable and secondary raw materials in overall material demand</div>
+        <i class="float-right py-1 fa fa-angle-down"></i>
+      </div>
+      <div class="objective-definition collapse" id="increased-renewables" data-parent="#reuse-recycling">
+        A state in the local material economy of an increased share of secondary materials in overall raw materials demand and an increased share of renewable raw materials in overall materials demand.
+
+        <br>
+
+        <a href="https://www.un.org/sustainabledevelopment/energy/"><img class="sdg" src="{% static 'img/sdg/sdg-12.png' %}"></a>
+      </div>
+    </div>
+
+    <div class="objective my-3">
+      <div data-toggle="collapse" data-target="#self-sufficiency" aria-expanded="false" aria-controls="self-sufficiency">
+        <div class="objective-number">25</div>
+        <div class="objective-title"><i class="fal fa-fw fa-dot-circle mr-1"></i> Increased self-sufficiency / self-reliance</div>
+        <i class="float-right py-1 fa fa-angle-down"></i>
+      </div>
+      <div class="objective-definition collapse" id="self-sufficiency" data-parent="#reuse-recycling">
+        Self-sufficiency will be increased by decreasing the imports of virgin raw materials, using locally available materials, such as reusing secondary raw materials that were locally produced and decreasing the export of waste materials, instead treating it locally. This will also bring about a state in the local material economy where retention of nutrients (e.g. phosphorus in wastewater) is captured and retained, bringing about an economic benefit, counteracting resource scarcity.
+
+        <br>
+
+        <a href="https://www.un.org/sustainabledevelopment/energy/"><img class="sdg" src="{% static 'img/sdg/sdg-12.png' %}"></a>
+      </div>
+    </div>
+
+    <div class="objective">
+      <div data-toggle="collapse" data-target="#next-cycle" aria-expanded="false" aria-controls="next-cycle">
+        <div class="objective-number">26</div>
+        <div class="objective-title"><i class="fal fa-fw fa-recycle mr-1"></i> Increased quantity of materials available for the next cycle</div>
+        <i class="float-right py-1 fa fa-angle-down"></i>
+      </div>
+      <div class="objective-definition collapse" id="next-cycle" data-parent="#reuse-recycling">
+        The increase of material amounts for the next cycle of use by following the 2018 EU waste hierarchy with the preference starting from the top, namely through <strong>preserving</strong> materials and products (extending lifetimes), <strong>reusing</strong> products or materials (i.e. use of the same product and function by another user), <strong>repairing</strong> products (as to maintain its original function), <strong>repurposing</strong> products (using products or their components in a new product with different function), through <strong>refurbishing</strong> or <strong>remanufacturing</strong>, and <strong>recycling</strong> of products or materials (obtaining higher or lower grade recycled materials for the same function or for inferior products (backfilling)).
+
+        <br>
+
+        <a href="https://www.un.org/sustainabledevelopment/energy/"><img class="sdg" src="{% static 'img/sdg/sdg-12.png' %}"></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="objective-group rounded border p-3 position-relative" id="waste-generation">
+    <div class="group-title">Waste generation / management</div>
+
+    <div class="objective my-3">
+      <div data-toggle="collapse" data-target="#reduced-waste" aria-expanded="false" aria-controls="reduced-waste">
+        <div class="objective-number">27</div>
+        <div class="objective-title"><i class="fal fa-fw fa-trash mr-1"></i> Reduced waste generation</div>
+        <i class="float-right py-1 fa fa-angle-down"></i>
+      </div>
+      <div class="objective-definition collapse" id="reduced-waste" data-parent="#waste-generation">
+        Reduced waste generation, assessed according to different waste fractions, including biodegradable materials (e.g. zero avoidable food waste).
+
+        <br>
+
+        <a href="https://www.un.org/sustainabledevelopment/energy/"><img class="sdg" src="{% static 'img/sdg/sdg-12.png' %}"></a>
+      </div>
+    </div>
+
+    <div class="objective">
+      <div data-toggle="collapse" data-target="#reduced-incineration" aria-expanded="false" aria-controls="reduced-incineration">
+        <div class="objective-number">28</div>
+        <div class="objective-title"><i class="fal fa-fw fa-dumpster-fire mr-1"></i> Reduced incineration and landfilling activities and amounts subjected</div>
+        <i class="float-right py-1 fa fa-angle-down"></i>
+      </div>
+      <div class="objective-definition collapse" id="reduced-incineration" data-parent="#waste-generation">
+        Reduced amounts of (waste) materials, assessed according to different waste fractions, including biodegradable materials, subjected to final destinations such as incineration and landfilling.
+
+        <br>
+
+        <a href="https://www.un.org/sustainabledevelopment/energy/"><img class="sdg" src="{% static 'img/sdg/sdg-12.png' %}"></a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
