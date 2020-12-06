@@ -171,9 +171,9 @@ nav .dropdown.projects-dropdown {
   nav .dropdown.projects-dropdown .projects-category {
     font-weight: bold;
     margin-bottom: .25rem;
-    border-bottom: 2px solid rgba(20, 77, 88, 0.25);
+    border-bottom: 1px solid rgba(20, 77, 88, 0.25);
     color: #144d58;
-    font-size: 1.1rem; }
+    font-size: 17px; }
   nav .dropdown.projects-dropdown .projects-dropdown-menu {
     padding: 15px; }
     @media (min-width: 992px) {
