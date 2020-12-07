@@ -1,5 +1,5 @@
   const defaultFont = "Lato, Helvetica Neue, Arial, Helvetica, sans-serif";
-  const defaultColors = ["#144d58", "#ff8a4e", "#ED561B", "#DDDF00", "#24CBE5", "#64E572", "#FF9655", "#FFF263", "#6AF9C4"]
+  const defaultColors = ["#144d58", "#ff8a4e", "#DDDF00", "#24CBE5", "#ED561B", "#64E572", "#FF9655", "#FFF263", "#6AF9C4"]
 
   Highcharts.setOptions({
     colors: defaultColors,

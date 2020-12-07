@@ -1132,9 +1132,12 @@ class LibraryItem(Record):
         try:
             file_id = self.meta_data["processing"]["file"]
             file = self.get_spreadsheet(file_id)
+            if file["error"]:
+                error = file["error_message"]
         except:
             error = "We could not find/open this file."
 
+        print(file)
         if not error:
             all = Data.objects.filter(source=self)
             all.delete()
@@ -1152,10 +1155,10 @@ class LibraryItem(Record):
                 start = row[2]
                 end = row[3]
                 material_name = row[4]
-                material_code = row[5]
+                material_code = row[5].strip()
                 quantity = row[6]
                 unit = row[7]
-                space = row[8]
+                space = row[8].strip()
                 comment = row[9]
                 segment = row[10]
 
@@ -1165,7 +1168,6 @@ class LibraryItem(Record):
 
                 if space not in spaces:
                     source = self.meta_data["processing"]["source"]
-                    source = 35514
                     s = ReferenceSpace.objects.get(source_id=source, name=space)
                     spaces[space] = s
 
