@@ -1128,6 +1128,7 @@ class LibraryItem(Record):
     # This takes the stocks or flows file and records it in the Data table
     def convert_stocks_flows_data(self):
         error = False
+
         try:
             file_id = self.meta_data["processing"]["file"]
             file = self.get_spreadsheet(file_id)
@@ -1135,6 +1136,9 @@ class LibraryItem(Record):
             error = "We could not find/open this file."
 
         if not error:
+            all = Data.objects.filter(source=self)
+            all.delete()
+
             df = file["df"]
 
             materials = {}

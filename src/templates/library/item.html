@@ -512,7 +512,7 @@
         {% endif %}
       {% endif %}
 
-      {% if info.meta_data.ready_for_processing %}
+      {% if info.meta_data.ready_for_processing or "crunch" in request.GET %}
         <div class="alert alert-warning mt-3">
           <i class="fa fa-info-circle"></i> <strong>This file has been processed by one of our contributors.</strong>
           <br>
