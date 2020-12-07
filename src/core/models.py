@@ -1128,13 +1128,20 @@ class LibraryItem(Record):
     # This takes the stocks or flows file and records it in the Data table
     def convert_stocks_flows_data(self):
         error = False
+
         try:
             file_id = self.meta_data["processing"]["file"]
             file = self.get_spreadsheet(file_id)
+            if file["error"]:
+                error = file["error_message"]
         except:
             error = "We could not find/open this file."
 
+        print(file)
         if not error:
+            all = Data.objects.filter(source=self)
+            all.delete()
+
             df = file["df"]
 
             materials = {}
@@ -1148,12 +1155,15 @@ class LibraryItem(Record):
                 start = row[2]
                 end = row[3]
                 material_name = row[4]
-                material_code = row[5]
+                material_code = row[5].strip()
                 quantity = row[6]
                 unit = row[7]
-                space = row[8]
+                space = row[8].strip()
                 comment = row[9]
-                segment = row[10]
+                try:
+                    segment = row[10]
+                except:
+                    segment = None
 
                 if material_code not in materials:
                     m = Material.objects.get(catalog_id=18998, code=material_code)
@@ -1161,7 +1171,6 @@ class LibraryItem(Record):
 
                 if space not in spaces:
                     source = self.meta_data["processing"]["source"]
-                    source = 35514
                     s = ReferenceSpace.objects.get(source_id=source, name=space)
                     spaces[space] = s
 
@@ -1190,13 +1199,22 @@ class LibraryItem(Record):
                     origin_space = spaces[space],
                     comments = comment,
                     timeframe = times[full_string],
+                    segment_name = segment,
                 ))
             Data.objects.bulk_create(items)
 
-        print(spaces)
-        print(units)
-        print(materials)
-        
+        self.meta_data["ready_for_processing"] = False
+        if error:
+            self.meta_data["processing_error"] = error
+        else:
+            self.meta_data["processed"] = True
+            if "processing_error" in self.meta_data:
+                self.meta_data.pop("processing_error")
+            if "allow_deletion_data" in self.meta_data:
+                self.meta_data.pop("allow_deletion_data")
+
+        self.save()
+
     # This function converts the shapefile into ReferenceSpaces
     def convert_shapefile(self):
 
@@ -2352,6 +2370,7 @@ class Data(models.Model):
     destination = models.ForeignKey(Activity, on_delete=models.CASCADE, null=True, blank=True, related_name="data_to")
     comments = models.TextField(null=True, blank=True)
     timeframe = models.ForeignKey(TimePeriod, on_delete=models.CASCADE)
+    segment_name = models.CharField(max_length=500, null=True, blank=True)
 
     class Meta:
         db_table = "stafdb_data"
