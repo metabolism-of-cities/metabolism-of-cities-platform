@@ -3,7 +3,13 @@ function scrollToID(id){
   $("html,body").animate({
    scrollTop: $("#" + id).offset().top
   }, "slow");
-}
+};
+
+// apply scroll to id using only html in templates
+$(".scroll-to-id").click(function() {
+  let id = $(this).data("id");
+  scrollToID(id);
+})
 
 // open and close markdown help box -- here because it's not possible to add jquery to includes
 $(".open-markdown-help, .close-markdown-help").click(function() {
