@@ -29,7 +29,7 @@ def my_organizations(request, id=None):
             return None
             return redirect("platformu:create_my_organization")
 
-# this makes sure that if I open a record of an organization, that 
+# this makes sure that if I open a record of an organization, that
 # my own organization indeed manages this record, which is done by checking
 # the tag associated with this organization
 def get_entity_record(request, my_organization, entity):
@@ -337,7 +337,7 @@ def admin_entity_material(request, organization, id, slug, material=None, edit=N
         form = ModelForm(request.POST or None, request.FILES or None, instance=demand)
     else:
         form = ModelForm(request.POST or None, request.FILES or None)
-    
+
     if request.method == "POST":
         if "delete" in request.POST:
             demand.delete()

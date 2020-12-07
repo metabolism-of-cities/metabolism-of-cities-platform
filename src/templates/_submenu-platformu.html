@@ -7,25 +7,15 @@
       </button>
 
       <div class="collapse navbar-collapse" id="ascus-navbar">
-        <ul class="navbar-nav mr-auto ml-3 ml-md-0">
-
-          <li class="nav-item"><a class="nav-link" href="{% url "platformu:admin" %}"><i class="fa fa-lock"></i></a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url "platformu:admin" %}">My Organisations</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url "platformu:admin_map" %}">Demand and Supply Map</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url "platformu:admin_data" %}">Full Overview</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url "platformu:volunteer_forum" %}">Forum</a></li>
-
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"><a class="nav-link" href="{% url 'platformu:admin_data' %}">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'platformu:admin' %}">My organisations</a></li>
         </ul>
-
-    <form class="form-inline my-2 my-lg-0">
-      <a href="/accounts/logout/" class="nav-link">
-        <i class="fa fa-sign-out"></i> 
-        Log Out
-      </a>
-    </form>
-
+        <ul class="navbar-nav ml-aut">
+          <li class="nav-item"><a class="nav-link" href="{% url 'platformu:volunteer_forum' %}">Forum</a></li>
+          <li class="nav-item"><a class="nav-link" href="/accounts/logout/"><i class="fa fa-sign-out"></i></a></li>
+        </ul>
       </div>
-
     </div>
   </nav>
 </div>
