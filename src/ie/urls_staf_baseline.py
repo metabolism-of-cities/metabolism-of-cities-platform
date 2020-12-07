@@ -119,6 +119,9 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/hub/people/", data.users),
     path("dashboards/<slug:space>/articles/<slug:slug>/", data.article, name="article"),
 
+    re_path(r'hub/processing/(?P<type>biophysical|climate|economy|demographics)/$', staf.hub_processing_list),
+    re_path(r'hub/processing/(?P<type>biophysical|climate|economy|demographics)/(?P<id>[0-9]+)/$', staf.hub_processing_record),
+
     path("dashboards/<slug:space>/hub/analysis/", staf.hub_analysis, name="hub_analysis"),
     path("dashboards/<slug:space>/hub/analysis/data-articles/", staf.hub_data_articles, name="hub_data_articles"),
     path("dashboards/<slug:space>/hub/analysis/data-articles/create/", staf.hub_data_article, name="hub_data_article"),

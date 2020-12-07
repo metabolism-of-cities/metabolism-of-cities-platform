@@ -1327,6 +1327,10 @@ def hub_processing(request, space=None):
     gis = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).exclude(meta_data__processed__isnull=False).distinct()
     spreadsheet = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project).exclude(meta_data__processed__isnull=False).distinct()
     datasets = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).exclude(meta_data__processed__isnull=False).distinct()
+    demographics = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=855).exclude(meta_data__processed__isnull=False).distinct()
+    economy = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=854).exclude(meta_data__processed__isnull=False).distinct()
+    climate = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[861,862]).exclude(meta_data__processed__isnull=False).distinct()
+    biophysical = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[857,859,863,864]).exclude(meta_data__processed__isnull=False).distinct()
 
     if space:
         space = get_space(request, space)
@@ -1334,6 +1338,10 @@ def hub_processing(request, space=None):
         gis = gis.filter(spaces=space)
         spreadsheet = spreadsheet.filter(spaces=space)
         datasets = datasets.filter(spaces=space)
+        demographics = demographics.filter(spaces=space)
+        economy = economy.filter(spaces=space)
+        climate = climate.filter(spaces=space)
+        biophysical = biophysical.filter(spaces=space)
 
     context = {
         "menu": "processing",
@@ -1345,6 +1353,14 @@ def hub_processing(request, space=None):
         "spreadsheet_open": spreadsheet.exclude(meta_data__assigned_to__isnull=False).count(),
         "datasets": datasets.count(),
         "datasets_open": datasets.filter(meta_data__assigned_to__isnull=True).count(),
+        "demographics": demographics.count(),
+        "demographics_open": demographics.filter(meta_data__assigned_to__isnull=True).count(),
+        "economy": economy.count(),
+        "economy_open": economy.filter(meta_data__assigned_to__isnull=True).count(),
+        "climate": climate.count(),
+        "climate_open": climate.filter(meta_data__assigned_to__isnull=True).count(),
+        "biophysical": biophysical.count(),
+        "biophysical_open": biophysical.filter(meta_data__assigned_to__isnull=True).count(),
         "title": title,
     }
     return render(request, "hub/processing.html", context)
@@ -1372,6 +1388,30 @@ def hub_processing_list(request, space=None, type=None):
         processed = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849, meta_data__processed__isnull=False).distinct()
         title = "Stocks and flows data processing"
 
+    elif type == "demographics":
+        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=855).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        unassigned = list.exclude(meta_data__assigned_to__isnull=False)
+        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=855, meta_data__processed__isnull=False).distinct()
+        title = "Demographic data"
+
+    elif type == "climate":
+        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[861,862]).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        unassigned = list.exclude(meta_data__assigned_to__isnull=False)
+        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[861,862], meta_data__processed__isnull=False).distinct()
+        title = "Climatological data"
+
+    elif type == "economy":
+        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=854).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        unassigned = list.exclude(meta_data__assigned_to__isnull=False)
+        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=854, meta_data__processed__isnull=False).distinct()
+        title = "Economic data"
+
+    elif type == "biophysical":
+        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[857,859,863,864]).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        unassigned = list.exclude(meta_data__assigned_to__isnull=False)
+        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[857,859,863,864], meta_data__processed__isnull=False).distinct()
+        title = "Economic data"
+
     if space:
         space = get_space(request, space)
         title += " | " + space.name
@@ -1393,6 +1433,23 @@ def hub_processing_list(request, space=None, type=None):
         "unassigned": unassigned.count(),
     }
     return render(request, "hub/processing.list.html", context)
+
+def hub_processing_record(request, type, id, space=None):
+
+    if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
+        unauthorized_access(request)
+
+    if space:
+        space = get_space(request, space)
+
+    info = get_object_or_404(LibraryItem, pk=id)
+
+    context = {
+        "space": space,
+        "type": type,
+        "info": info,
+    }
+    return render(request, "hub/processing.record.html", context)
 
 def hub_processing_completed(request, space=None, type=None):
 

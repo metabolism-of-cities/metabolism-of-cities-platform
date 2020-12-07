@@ -116,6 +116,98 @@
           </div>
         </a>
       </div>
+      <div class="col-md-6 mb-4">
+        <a href="demographics/" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-users" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>Demographic data queue</strong>
+                <br>
+                <small>Process population figures</small>
+                <br>
+                <span class="badge badge-light">
+                  {{ demographics }} task{% if demographics != 1 %}s{% endif %}
+                </span>
+                <span class="badge badge-primary">
+                  {{ demographics_open }} unassigned
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <a href="climate/" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-thermometer-three-quarters" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>Climatological data queue</strong>
+                <br>
+                <small>Process rainfall and temperature datasets</small>
+                <br>
+                <span class="badge badge-light">
+                  {{ climate }} task{% if climate != 1 %}s{% endif %}
+                </span>
+                <span class="badge badge-primary">
+                  {{ climate_open }} unassigned
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <a href="economy/" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-money-check-alt" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>Economic data queue</strong>
+                <br>
+                <small>Process GDP and household income data</small>
+                <br>
+                <span class="badge badge-light">
+                  {{ economy }} task{% if economy != 1 %}s{% endif %}
+                </span>
+                <span class="badge badge-primary">
+                  {{ economy_open }} unassigned
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 mb-4">
+        <a href="biophysical/" class="card btn-card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col icon">
+                <i class="fal fa-fw fa-trees" aria-hidden="true"></i>
+              </div>
+              <div class="col">
+                <strong>Biophysical information queue</strong>
+                <br>
+                <small>Tree stock, mineral deposits, soils, water bodies and more</small>
+                <br>
+                <span class="badge badge-light">
+                  {{ biophysical }} task{% if biophysical != 1 %}s{% endif %}
+                </span>
+                <span class="badge badge-primary">
+                  {{ biophysical_open }} unassigned
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
       <div class="col-md-6 mb-4" hidden>
         <a href="" class="card btn-card">
           <div class="card-body">
@@ -124,7 +216,7 @@
                 <i class="fal fa-fw fa-chart-bar" aria-hidden="true"></i>
               </div>
               <div class="col">
-                <strong>Stock and flow publication queue</strong>
+                <strong>Biophysical information queue</strong>
                 <br>
                 <small>Review and publish material stock and flow datasets</small>
                 <br>
