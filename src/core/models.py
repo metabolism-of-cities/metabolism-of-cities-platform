@@ -1160,7 +1160,10 @@ class LibraryItem(Record):
                 unit = row[7]
                 space = row[8].strip()
                 comment = row[9]
-                segment = row[10]
+                try:
+                    segment = row[10]
+                except:
+                    segment = None
 
                 if material_code not in materials:
                     m = Material.objects.get(catalog_id=18998, code=material_code)
