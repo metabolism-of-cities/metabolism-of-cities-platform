@@ -154,12 +154,6 @@ def indicators(request):
     }
     return render(request, "cityloops/indicators.html", context)
 
-def strategic_objectives(request):
-    context = {
-        "title": "Strategic objectives",
-    }
-    return render(request, "cityloops/strategic-objectives.html", context)
-
 def evaluation_plans(request):
     context = {
         "title": "Evaluation plans",

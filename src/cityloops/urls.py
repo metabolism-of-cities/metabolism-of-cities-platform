@@ -23,7 +23,6 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("eurostat/grid/", views.eurostat_grid, name="eurostat_grid"),
     path("circular-city/", views.circular_city, name="circular_city"),
     path("indicators/", views.indicators, name="indicators"),
-    path("strategic-objectives/", views.strategic_objectives, name="strategic_objectives"),
     path("evaluation-plans/", views.evaluation_plans, name="evaluation_plans"),
     path("evaluation-plans/create", views.evaluation_plans_create, name="evaluation_plans_create"),
     path("<slug:slug>/", core.article, name="article"),
