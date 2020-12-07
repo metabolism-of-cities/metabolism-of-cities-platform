@@ -143,9 +143,31 @@ def eurostat_grid(request):
     return render(request, "cityloops/eurostat.grid.html", context)
 
 def circular_city(request):
-    info = get_object_or_404(Project, pk=request.project)
-    webpage = get_object_or_404(Webpage, pk=50439)
     context = {
         "title": "Circular City",
     }
     return render(request, "cityloops/circular-city.html", context)
+
+def indicators(request):
+    context = {
+        "title": "Indicators",
+    }
+    return render(request, "cityloops/indicators.html", context)
+
+def strategic_objectives(request):
+    context = {
+        "title": "Strategic objectives",
+    }
+    return render(request, "cityloops/strategic-objectives.html", context)
+
+def evaluation_plans(request):
+    context = {
+        "title": "Evaluation plans",
+    }
+    return render(request, "cityloops/evaluation-plans.html", context)
+
+def evaluation_plans_create(request):
+    context = {
+        "title": "Create evaluation plan",
+    }
+    return render(request, "cityloops/evaluation-plans.create.html", context)

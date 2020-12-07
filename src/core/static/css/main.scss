@@ -1,7 +1,7 @@
 // VARIABLES
 $primary: #144d58;
 $bg-primary: #1F7A8C;
-$secondary: #ff8a4e;
+$secondary: #CF4803;
 $black: #000;
 $white: #fff;
 $dark: #212529;
@@ -262,9 +262,9 @@ nav {
     .projects-category {
       font-weight: bold;
       margin-bottom: .25rem;
-      border-bottom: 2px solid rgba($primary, .25);
+      border-bottom: 1px solid rgba($primary, .25);
       color: $primary;
-      font-size: 1.1rem;
+      font-size: 17px;
     }
 
     .projects-dropdown-menu {
@@ -306,11 +306,8 @@ nav {
       opacity: 1 !important;
     }
 
-    &.dropdown-toggle {
-
-      &[aria-expanded="true"] {
-        opacity: 1 !important;
-      }
+    &.dropdown-toggle[aria-expanded="true"] {
+      opacity: 1 !important;
     }
   }
 }
