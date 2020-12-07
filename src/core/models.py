@@ -1190,13 +1190,22 @@ class LibraryItem(Record):
                     origin_space = spaces[space],
                     comments = comment,
                     timeframe = times[full_string],
+                    segment_name = segment,
                 ))
             Data.objects.bulk_create(items)
 
-        print(spaces)
-        print(units)
-        print(materials)
-        
+        self.meta_data["ready_for_processing"] = False
+        if error:
+            self.meta_data["processing_error"] = error
+        else:
+            self.meta_data["processed"] = True
+            if "processing_error" in self.meta_data:
+                self.meta_data.pop("processing_error")
+            if "allow_deletion_data" in self.meta_data:
+                self.meta_data.pop("allow_deletion_data")
+
+        self.save()
+
     # This function converts the shapefile into ReferenceSpaces
     def convert_shapefile(self):
 
@@ -2352,6 +2361,7 @@ class Data(models.Model):
     destination = models.ForeignKey(Activity, on_delete=models.CASCADE, null=True, blank=True, related_name="data_to")
     comments = models.TextField(null=True, blank=True)
     timeframe = models.ForeignKey(TimePeriod, on_delete=models.CASCADE)
+    segment_name = models.CharField(max_length=500, null=True, blank=True)
 
     class Meta:
         db_table = "stafdb_data"

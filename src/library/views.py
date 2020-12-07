@@ -356,6 +356,9 @@ def data_json(request, id):
     if "drilldown" in request.GET:
         group_by = "timeframe__name"
         grouped_data = data.values(group_by).annotate(total=Sum("quantity")).order_by(group_by)
+        subdivision = "origin_space"
+        if id == 578115:
+            subdivision = "segment"
 
         for each in grouped_data:
             # First we need to get the totals per [parameter]
@@ -370,7 +373,12 @@ def data_json(request, id):
             this_data = []
             for data_point in get_this_data:
                 # Should also swap out origin_space.name for a variable, somehow!
-                this_data.append([data_point.origin_space.name, data_point.quantity])
+                if subdivision == "origin_space":
+                    this_data.append([data_point.origin_space.name, data_point.quantity])
+                elif subdivision == "segment":
+                    this_data.append([data_point.segment_name, data_point.quantity])
+                elif subdivision == "material":
+                    this_data.append([data_point.material.name, data_point.quantity])
 
             series.append({
                 "name": each[group_by],
@@ -381,7 +389,9 @@ def data_json(request, id):
     else:
         for each in data:
             x_axis_field = each.timeframe.name
-            if each.origin_space:
+            if each.segment_name:
+                stacked_field = each.segment_name
+            elif each.origin_space:
                 stacked_field = each.origin_space.name
                 lat_lng[stacked_field] = each.origin_space.get_centroids
             elif each.destination_space:
@@ -411,7 +421,7 @@ def data_json(request, id):
                     this_series.append(None)
             full = {
                 "name": each,
-                "gps": lat_lng[each],
+                "gps": lat_lng[each] if each in lat_lng else None,
                 "data": this_series,
             }
             series.append(full)
