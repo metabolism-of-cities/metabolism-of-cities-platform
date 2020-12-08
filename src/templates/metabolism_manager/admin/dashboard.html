@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% load static %}
 {% load moc_extras %}
 
 {% block title %}Metabolism Manager dashboard{% endblock %}
@@ -7,6 +8,11 @@
   <style>
     .badge {
       line-height: .75;
+    }
+
+    .leaflet-map {
+      height: 700px;
+      max-height: 90vh;
     }
   </style>
 {% endblock %}
@@ -228,25 +234,16 @@
         onEachFeature: onEachFeature,
 
         pointToLayer: function (feature, latlng) {
-          return L.circleMarker(latlng, {
-            fillOpacity: .7,
-            weight: 2,
-            radius: feature.properties.size,
-          });
-        },
+          let state = "supply";
 
-        style: function(feature) {
-          switch (feature.properties.status) {
-            case "Supply": return {
-              color: "#144d58",
-              fillColor: "#144d58",
-            };
-            case "Demand": return {
-              color: "#dc3545",
-              fillColor: "#dc3545",
-            };
+          if (feature.properties.status == "Demand") {
+            state = "demand"
           }
-        }
+          console.log(state);
+          return L.marker(latlng, {
+            icon: window[state + "Icon"]
+          })
+        },
       });
 
       map.addLayer(filteredLayer).fitBounds(filteredLayer.getBounds())
@@ -272,6 +269,25 @@
     $(".filter").change(function() {
       filterListings()
     })
+
+    // coloured markers
+    var supplyIcon = new L.Icon({
+      iconUrl: "{% static 'img/leaflet-markers/marker-icon-2x-blue.png' %}",
+      shadowUrl: "{% static 'img/leaflet-markers/marker-shadow.png' %}",
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+
+    var demandIcon = new L.Icon({
+      iconUrl: "{% static 'img/leaflet-markers/marker-icon-2x-red.png' %}",
+      shadowUrl: "{% static 'img/leaflet-markers/marker-shadow.png' %}",
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
 
     // reset filters and show listings on load
     filterListings();

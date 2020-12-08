@@ -26,7 +26,6 @@
       $.get(url, function(geojson) {
         // check to see if data is points or polygons
         if (geojson.geom_type == "Point") {
-          console.log(geojson);
           window[layerVariable] = L.geoJSON(geojson, {
             pointToLayer: function (feature, latlng) {
               return L.marker(latlng, {
