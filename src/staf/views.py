@@ -1434,6 +1434,94 @@ def hub_processing_list(request, space=None, type=None):
     }
     return render(request, "hub/processing.list.html", context)
 
+# This function checks for an open work task, and if there is none, it will
+# create a new one
+def get_work(request, info, workactivity_id):
+    try:
+        work = Work.objects.get(part_of_project_id=request.project, related_to=info, workactivity_id=workactivity_id, status__in=[1,4,5])
+    except:
+        work = Work.objects.create(part_of_project_id=request.project, related_to=info, workactivity_id=workactivity_id)
+    return work
+
+# This changes status of work tasks - it should be reused whenever a user changes the work item
+def process_work(request, info):
+    error = None
+    if not request.user.is_authenticated:
+        error = "You are not logged in. Please log in first."
+    else:
+        try:
+            work = Work.objects.get(pk=request.POST.get("work_id"), status__in=[1,4,5], related_to=info)
+            if "start_work" in request.POST:
+                if work.assigned_to:
+                    if work.assigned_to == request.user.people:
+                        error = "This task was already assigned to you."
+                    else:
+                        error = "This was was already assigned to someone else"
+                else:
+                    message_description = "Task was assigned to " + str(request.user.people) + " and status was changed: " + work.get_status_display() + " → "
+                    work.status = Work.WorkStatus.PROGRESS
+                    work.assigned_to = request.user.people
+                    work.subscribers.add(request.user.people)
+                    work.save()
+                    messages.success(request, "You are now in charge of this dataset - good luck!")
+
+                    work.refresh_from_db()
+                    new_status = str(work.get_status_display())
+                    message_description += new_status
+
+                    message = Message.objects.create(
+                        name = "Task assigned and in progress",
+                        description = message_description,
+                        parent = work,
+                        posted_by = request.user.people,
+                    )
+                    set_autor(request.user.people.id, message.id)
+
+                    for each in work.subscribers.all():
+                        if each.people != request.user.people:
+                            Notification.objects.create(record=message, people=each.people)
+
+                    if not info.meta_data:
+                        info.meta_data = {}
+                    info.meta_data["assigned_to"] = request.user.people.name
+                    info.save()
+            elif "stop_work" in request.POST:
+                message_description = "Task was no longer assigned to " + str(request.user.people) + " and status was changed: " + work.get_status_display() + " → "
+                work.status = Work.WorkStatus.ONHOLD
+                work.assigned_to = None
+                work.save()
+                messages.success(request, "You are no longer in charge of this task")
+
+                work.refresh_from_db()
+                new_status = str(work.get_status_display())
+                message_description += new_status
+
+                message = Message.objects.create(
+                    name = "Task unassigned and on hold",
+                    description = message_description,
+                    parent = work,
+                    posted_by = request.user.people,
+                )
+                set_autor(request.user.people.id, message.id)
+
+                if not info.meta_data:
+                    info.meta_data = {}
+                info.meta_data["assigned_to"] = None
+                info.save()
+
+                for each in work.subscribers.all():
+                    if each.people != request.user.people:
+                        Notification.objects.create(record=message, people=each.people)
+            else:
+                error = "Sorry, we do not have an action assigned to this button. Please report this error"
+        except:
+            error = "Sorry, we could not assign this task for you. Please try again or report this error."
+
+    if error:
+        messages.error(request, error)
+
+    return False if error else True
+
 def hub_processing_record(request, type, id, space=None):
 
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
@@ -1444,10 +1532,23 @@ def hub_processing_record(request, type, id, space=None):
 
     info = get_object_or_404(LibraryItem, pk=id)
 
+    if request.method == "POST" and "work_action" in request.POST:
+        process_work(request, info)
+
+    work = get_work(request, info, 14)
+    list_messages = work.messages.all()
+
     context = {
         "space": space,
         "type": type,
         "info": info,
+        "work": work,
+        "list_messages": list_messages,
+        "load_messaging": True,
+        "forum_id": work.id,
+        "title": f"Processing: {info.name}",
+        "menu": "processing",
+        "step": 0,
     }
     return render(request, "hub/processing.record.html", context)
 
