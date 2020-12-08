@@ -15,6 +15,7 @@ urlpatterns = baseline_urlpatterns + [
     path("manager/organizations/create/", views.create_my_organization, name="create_my_organization"),
     path("manager/<int:organization>/map/", views.admin_map, name="admin_map"),
     path("manager/map/", views.admin_map, name="admin_map"),
+    path("manager/dashboard/", views.admin_dashboard, name="admin_dashboard"),
     path("manager/data/", views.admin_data, name="admin_data"),
     path("manager/data/<int:id>/", views.admin_datapoint, name="admin_datapoint"),
     path("manager/<int:organization>/entities/<int:id>/", views.admin_entity, name="admin_entity"),
