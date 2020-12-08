@@ -51,16 +51,18 @@
 
       <form id="next_step" method="post" enctype="multipart/form-data" class="mt-4">
 
-        <div class="card mb-3">
-          <div class="card-header"><i class="fa fa-list fa-fw"></i> Classification of materials</div>
-          <div class="card-body">
+        {% if show_materials %}
+          <div class="card mb-3">
+            <div class="card-header"><i class="fa fa-list fa-fw"></i> Classification of materials</div>
+            <div class="card-body">
 
-            {% for key,value in material_list.items %}
-              {{ key }}: {{ value }}<br>
-            {% endfor %}
-              
+              {% for key,value in material_list.items %}
+                {{ key }}: {{ value }}<br>
+              {% endfor %}
+                
+            </div>
           </div>
-        </div>
+        {% endif %}
 
         <div class="card mb-3">
           <div class="card-header"><i class="fa fa-map fa-fw"></i> Classification of reference spaces</div>

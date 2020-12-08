@@ -46,6 +46,8 @@
       <form method="post" id="saveform">
 
         {% csrf_token %}
+        <input type="hidden" name="work_completed" value="true" />
+        <input type="hidden" name="work_id" value="{{ work.id }}" />
 
         <section class="card p-3 mb-4">
 
@@ -83,6 +85,8 @@
 
         </section>
 
+        {% if not "skip_dqi" in request.GET %}
+
         <section class="card position-relative p-3 mt-3">
 
           <h3 class="h4">Data quality</h3>
@@ -118,6 +122,7 @@
           </div>
 
         </section>
+        {% endif %}
 
       </form>
     </div>

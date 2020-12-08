@@ -1437,10 +1437,14 @@ def hub_processing_list(request, space=None, type=None):
 # This function checks for an open work task, and if there is none, it will
 # create a new one
 def get_work(request, info, workactivity_id):
+    if not isinstance(workactivity_id, list):
+        workactivity_id = [workactivity_id]
     try:
-        work = Work.objects.get(part_of_project_id=request.project, related_to=info, workactivity_id=workactivity_id, status__in=[1,4,5])
+        work = Work.objects.filter(part_of_project_id=request.project, related_to=info, workactivity_id__in=workactivity_id, status__in=[1,4,5])
+        work = work[0]
     except:
-        work = Work.objects.create(part_of_project_id=request.project, related_to=info, workactivity_id=workactivity_id)
+        id = workactivity_id[0]
+        work = Work.objects.create(part_of_project_id=request.project, related_to=info, workactivity_id=id)
     return work
 
 # This changes status of work tasks - it should be reused whenever a user changes the work item
@@ -1477,14 +1481,11 @@ def process_work(request, info):
                     )
                     set_autor(request.user.people.id, message.id)
 
-                    for each in work.subscribers.all():
-                        if each.people != request.user.people:
-                            Notification.objects.create(record=message, people=each.people)
-
                     if not info.meta_data:
                         info.meta_data = {}
                     info.meta_data["assigned_to"] = request.user.people.name
                     info.save()
+
             elif "stop_work" in request.POST:
                 message_description = "Task was no longer assigned to " + str(request.user.people) + " and status was changed: " + work.get_status_display() + " → "
                 work.status = Work.WorkStatus.ONHOLD
@@ -1509,9 +1510,32 @@ def process_work(request, info):
                 info.meta_data["assigned_to"] = None
                 info.save()
 
-                for each in work.subscribers.all():
-                    if each.people != request.user.people:
-                        Notification.objects.create(record=message, people=each.people)
+            elif "work_completed" in request.POST:
+                message_description = "Status change: " + work.get_status_display() + " → "
+                work.status = Work.WorkStatus.COMPLETED
+                work.save()
+                work.refresh_from_db()
+                new_status = str(work.get_status_display())
+                message_description += new_status
+
+                message = Message.objects.create(
+                    name = "Status change",
+                    description = message_description,
+                    parent = work,
+                    posted_by = request.user.people,
+                )
+                set_autor(request.user.people.id, message.id)
+                work.subscribers.add(request.user.people)
+
+                try:
+                    RecordRelationship.objects.create(
+                        record_parent = request.user.people,
+                        record_child = info,
+                        relationship_id = RELATIONSHIP_ID["processor"],
+                    )
+                except:
+                    # This fails if the relationship already exists, e.g. if it was processed twice
+                    pass
             else:
                 error = "Sorry, we do not have an action assigned to this button. Please report this error"
         except:
@@ -1519,6 +1543,10 @@ def process_work(request, info):
 
     if error:
         messages.error(request, error)
+    else:
+        for each in work.subscribers.all():
+            if each.people != request.user.people:
+                Notification.objects.create(record=message, people=each.people)
 
     return False if error else True
 
@@ -1531,12 +1559,22 @@ def hub_processing_record(request, type, id, space=None):
         space = get_space(request, space)
 
     info = get_object_or_404(LibraryItem, pk=id)
+    project = get_project(request)
 
     if request.method == "POST" and "work_action" in request.POST:
         process_work(request, info)
 
-    work = get_work(request, info, 14)
+    work = get_work(request, info, [14,30])
     list_messages = work.messages.all()
+
+    if request.method == "POST" and "action" in request.POST:
+        if request.POST["action"] == "single":
+            # Single dataset embedded here. We will redirect to data processing page.
+            # We will also ensure that the work item is of activity = 30
+            work.workactivity_id = 30
+            work.save()
+            messages.success(request, "Please prepare the population data according to our <a href='/media/files/formato.poblacion.ods'>skeleton file</a>")
+            return redirect(reverse(project.slug + ":hub_processing_dataset", args=[id]))
 
     context = {
         "space": space,
@@ -1761,6 +1799,7 @@ def hub_processing_dataset_classify(request, id, space=None):
     spaces_options_name = None
     show_name = None
     disable_save = True
+    show_materials = True
 
     if request.method == "POST" and "source" in request.POST:
         info.meta_data["processing"]["source"] = request.POST.get("source")
@@ -1789,24 +1828,31 @@ def hub_processing_dataset_classify(request, id, space=None):
             spreadsheet["table"] = mark_safe(df.to_html(classes="table table-striped spreadsheet-table"))
 
             # Get the nth column, containing material codes
-            if spreadsheet["colcount"] <= 8:
+            population_data = info.tags.filter(id=855).exists()
+            if population_data:
+                material_code_column = None
+                spaces_column = 2
+                show_materials = False
+            elif spreadsheet["colcount"] <= 8:
                 # For material stock the order is a bit different
                 material_code_column = 2
                 spaces_column = 5
             else:
                 material_code_column = 4
                 spaces_column = 7
-            materials = df.iloc[:,[material_code_column]].values.tolist()
-            for each in materials:
-                each = each[0]
-                each = each.strip()
-                if each not in material_list:
-                    try:
-                        check = Material.objects.get(catalog_id=18998, code=each)
-                        material_list[each] = mark_safe("<i class='fa fa-check'></i> <span class='text-success'>" + check.name + '</span>')
-                    except:
-                        material_list[each] = mark_safe("<span class='text-danger'>No hit found! Please check the code was used correctly</span>")
-                        process_error = True
+
+            if material_code_column:
+                materials = df.iloc[:,[material_code_column]].values.tolist()
+                for each in materials:
+                    each = each[0]
+                    each = each.strip()
+                    if each not in material_list:
+                        try:
+                            check = Material.objects.get(catalog_id=18998, code=each)
+                            material_list[each] = mark_safe("<i class='fa fa-check'></i> <span class='text-success'>" + check.name + '</span>')
+                        except:
+                            material_list[each] = mark_safe("<span class='text-danger'>No hit found! Please check the code was used correctly</span>")
+                            process_error = True
 
             # Get the nth column, containing reference spaces codes
             spaces = df.iloc[:,[spaces_column]].values.tolist()
@@ -1850,8 +1896,57 @@ def hub_processing_dataset_classify(request, id, space=None):
         "spaces_options": spaces_options,
         "spaces_options_name": spaces_options_name,
         "disable_save": disable_save,
+        "show_materials": show_materials,
     }
     return render(request, "hub/processing.dataset.classify.html", context)
+
+def hub_processing_record_save(request, id, type, space=None):
+    info = get_object_or_404(LibraryItem, pk=id)
+
+    project = get_object_or_404(Project, pk=request.project)
+    if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
+        unauthorized_access(request)
+
+    work = get_work(request, info, 14)
+
+    if request.method == "POST":
+        info.name = request.POST.get("name")
+        info.description = request.POST.get("description")
+        info.tags.set(request.POST.getlist("tags"))
+        if "dqi" in request.POST:
+            info.meta_data["dqi"] = {
+                 "completeness": request.POST.get("completeness"),
+                 "update_required": request.POST.get("update_required"),
+                 "limitations": request.POST.get("limitations"),
+            }
+        info.save()
+        if "dqi" in request.POST:
+            info.meta_data["ready_for_processing"] = True
+            messages.success(request, "The file was processed! We run the data conversion once a day, so please wait for up to 24 hours for the data to become available.")
+        else:
+            info.meta_data["processed"] = True
+            messages.success(request, "Review of the file is completed, thanks for your help!")
+        info.save()
+
+        process_work(request, info)
+
+        return redirect(project.slug + ":library_item", info.id)
+
+    context = {
+        "info": info,
+        "layer": layer,
+        "list_messages": work.messages.all() if work else None,
+        "load_messaging": True,
+        "forum_id": work.id if Work else None,
+        "work": work,
+        "title": info,
+        "menu": "processing",
+        "step": 3,
+        "load_select2": True,
+        "tags": Tag.objects.filter(Q(parent_tag__parent_tag_id=845)|Q(id__in=info.tags.all())),
+        "type": type,
+    }
+    return render(request, "hub/processing.dataset.save.html", context)
 
 def hub_processing_dataset_save(request, id, space=None):
     info = get_object_or_404(LibraryItem, pk=id)

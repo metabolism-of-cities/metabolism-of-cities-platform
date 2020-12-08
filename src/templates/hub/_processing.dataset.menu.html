@@ -61,10 +61,14 @@
                 {% if type == "demographics" %}
 
                   <h4>Does this document contain population data?</h4>
-                  <button class="btn btn-success sweetalert change-record mb-3"><i class="fa fa-check"></i> Yes, I will upload a single population dataset</button>
-                  <button class="btn btn-success sweetalert change-record mb-3"><i class="fa fa-check-double"></i> Yes, I will upload multiple population datasets</button>
-                  <button class="btn btn-warning sweetalert change-record mb-3"><i class="fa fa-square"></i> No, but we should keep this document</button>
-                  <button class="btn btn-danger mb-2 sweetalert delete-record"><i class="fas fa-trash"></i> This document is not at all relevant and should be deleted</button>
+                  
+                  <form method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-success sweetalert change-record mb-3" name="action" value="single"><i class="fa fa-check"></i> Yes, I will upload a single population dataset</button>
+                    <button class="btn btn-success sweetalert change-record mb-3"><i class="fa fa-check-double"></i> Yes, I will upload multiple population datasets</button>
+                    <a class="btn btn-warning sweetalert change-record mb-3" href="save/?skip_dqi=true&amp;return={{ request.get_full_path }}"><i class="fa fa-square"></i> No, but we should keep this document</a>
+                    <button class="btn btn-danger mb-2 sweetalert delete-record"><i class="fas fa-trash"></i> This document is not at all relevant and should be deleted</button>
+                  </form>
 
                 {% else %}
 
@@ -107,7 +111,7 @@
 
         <div class="card p-3 mb-4">
           <button name="next" form="saveform" value="true" type="submit" class="btn btn-success mb-3">Save and publish <i class="fa fa-check ml-2 mr-0"></i></button>
-          <a href="../classify/" class="btn btn-dark"><i class="fa fa-arrow-left"></i> Back</a>
+          <a href="{% if request.GET.return %}{{ request.GET.return }}{% else %}../classify/{% endif %}" class="btn btn-dark"><i class="fa fa-arrow-left"></i> Back</a>
         </div>
 
       {% endif %}

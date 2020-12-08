@@ -80,6 +80,10 @@
               <dd class="col-sm-9">{{ info.year }}</dd>
               <dt class="col-sm-3">Author(s)</dt>
               <dd class="col-sm-9">{{ info.get_author_citation }}</dd>
+              {% if info.url %}
+                <dt class="col-sm-3">Website</dt>
+                <dd class="col-sm-9"><a href="{{ info.url }}" target="_blank">{{ info.url }}</a></dd>
+              {% endif %}
               <dt class="col-sm-3">Tag(s)</dt>
               <dd class="col-sm-9">
                 {% for each in info.tags.all %}
