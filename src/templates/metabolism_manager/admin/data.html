@@ -22,7 +22,7 @@
       <tbody>
       {% for each in data %}
         <tr>
-          <td><a href="{% url "platformu:admin_datapoint" each.id %}">{{ each.start_date }} - {{ each.end_date }}</a></td>
+          <td><a href="{% url 'platformu:admin_datapoint' each.id %}">{{ each.start_date }} - {{ each.end_date }}</a></td>
           {% if key == "Resources" %}
             <td>{{ each.material_type.parent }}</td>
           {% endif %}

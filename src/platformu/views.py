@@ -29,7 +29,7 @@ def my_organizations(request, id=None):
             return None
             return redirect("platformu:create_my_organization")
 
-# this makes sure that if I open a record of an organization, that 
+# this makes sure that if I open a record of an organization, that
 # my own organization indeed manages this record, which is done by checking
 # the tag associated with this organization
 def get_entity_record(request, my_organization, entity):
@@ -105,6 +105,71 @@ def clusters(request, organization):
         "my_organization": my_organization,
     }
     return render(request, "metabolism_manager/admin/clusters.html", context)
+
+@login_required
+def admin_dashboard(request, organization=None):
+
+    types = None
+
+    data = gps = material_list = None
+    min_values = {}
+
+    if organization:
+        my_organization = my_organizations(request, organization)
+    else:
+        my_organization = my_organizations(request)
+        if my_organization:
+            my_organization = my_organization[0]
+        else:
+            return redirect("platformu:create_my_organization")
+
+    organization_list = Organization.objects_include_private.filter(
+            tags__parent_tag_id = TAG_ID["platformu_segments"],
+            tags__belongs_to = my_organization,
+    )
+
+    if not organization_list:
+        messages.error(request, "Please enter data first.")
+    else:
+        types = {
+            "Resources": MaterialDemand.objects.filter(owner__in=organization_list).exclude(material_type__parent_id__in=[31621,31620]),
+            "Space": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31621),
+            "Technology": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31620),
+        }
+
+        gps = organization_list[0].meta_data
+        if not "lat" in gps:
+            messages.error(request, "Please ensure that you enter the address/GPS details first.")
+        data = MaterialDemand.objects.filter(owner__in=organization_list)
+        material_list = MaterialDemand.objects.filter(owner__in=organization_list).values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
+
+        # We need to make each bubble relative to the smallest value in that group
+        # We can improve efficiency... starting with a single query to obtain only largest values
+        # But for now efficiency is not that big a deal
+        for each in data:
+            material = each.material_type
+            if each.unit.multiplication_factor:
+                # We always need to convert to a standard unit
+                multiplied = each.unit.multiplication_factor * each.absolute_quantity()
+                if material.name in min_values:
+                    current = min_values[material.name]
+                    min_values[material.name] = min([multiplied, current])
+                else:
+                    min_values[material.name] = multiplied
+
+    context = {
+        "page": "dashboard",
+        "my_organization": my_organization,
+        "data": data,
+        "material_list": material_list,
+        "gps": gps,
+        "min_values": min_values,
+        "load_datatables": True,
+        "load_leaflet": True,
+        "types": types,
+    }
+
+    return render(request, "metabolism_manager/admin/dashboard.html", context)
 
 @login_required
 def admin_map(request, organization=None):
@@ -207,6 +272,7 @@ def admin_datapoint(request, id):
         "my_organization": my_organization,
         "info": info,
         "data": data,
+        "load_lightbox": True,
     }
     return render(request, "metabolism_manager/admin/datapoint.html", context)
 
@@ -337,7 +403,7 @@ def admin_entity_material(request, organization, id, slug, material=None, edit=N
         form = ModelForm(request.POST or None, request.FILES or None, instance=demand)
     else:
         form = ModelForm(request.POST or None, request.FILES or None)
-    
+
     if request.method == "POST":
         if "delete" in request.POST:
             demand.delete()

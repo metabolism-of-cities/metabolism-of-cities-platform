@@ -156,7 +156,11 @@
     function filterList(tag) {
       materialList.filter(function(item) {
         if (tag == "all") {
-          return true;
+          if (item.values()["material-name"].includes("other") || item.values()["material-name"].includes("Other")) {
+            return false;
+          } else {
+            return true
+          }
         } else {
           if (item.values()["material-tags"].includes(tag)) {
             return true;
@@ -169,6 +173,15 @@
       $("tbody.list").removeAttr("hidden");
       $("input.search").removeAttr("disabled");
       $(".first-load").remove();
+
+      $("tbody.list .material-name").each(function() {
+        let material = $(this);
+        if (material.text() == "other" || material.text() == "Other") {
+          let row = material.closest("tr");
+          row.insertAfter("tbody.list tr:last-of-type");
+        }
+      })
+
       checkCount();
     }
 

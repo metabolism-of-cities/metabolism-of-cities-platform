@@ -1,9 +1,18 @@
 {% extends "_base.html" %}
 
 {% block css %}
-<style type="text/css">
-  .card img {
-    border-bottom: 1px solid #333;
+<style>
+  .contact-info.card img {
+    object-fit: contain;
+  }
+
+  .lightbox a {
+    background-size: cover;
+    background-position: center;
+    cursor: zoom-in;
+    display: block;
+    height: 200px;
+    width: 100%;
   }
 </style>
 {% endblock %}
@@ -12,7 +21,7 @@
 
   <h1>Data entry</h1>
   <a class="btn btn-sm btn-primary-basic" href="javascript:history.back()"><i class="fas fa-angle-left"></i> Back</a>
-  <a class="btn btn-sm btn-primary-basic float-right" href="{% url "platformu:admin_entity_material" my_organization.id info.id "data" data.id %}"><i class="fas fa-pencil"></i> Edit</a>
+  <a class="btn btn-sm btn-primary-basic float-right" href="{% url 'platformu:admin_entity_material' my_organization.id info.id 'data' data.id %}"><i class="fas fa-pencil"></i> Edit</a>
 
   {% if data.description %}
     <div class="mb-4 mt-3">
@@ -20,24 +29,26 @@
     </div>
   {% endif %}
 
-  <div class="card-deck">
+  <div class="card-deck mt-3">
 
-    <div class="card">
+    <div class="card border details">
       <div class="card-header">
         Details
       </div>
       {% if data.image %}
-        <img src="{{ data.image.large.url }}" class="card-img-top">
+        <div class="lightbox">
+          <a href="{{ data.image.large.url }}" style="background-image: url('{{ data.image.large.url }}');" data-caption="{{ data.owner }}" class="card-img-top"></a>
+        </div>
       {% endif %}
       <ul class="list-group list-group-flush">
 
         <li class="list-group-item">
         {% if data.quantity > 0 %}
-          <i class="far fa-sign-in"></i>
+          <i class="far fa-fw mr-2 fa-sign-in"></i>
           Demand
         {% else %}
           <span class="text-success">
-            <i class="far fa-sign-out"></i>
+            <i class="far fa-fw mr-2 fa-sign-out"></i>
             Supply
           </span>
         {% endif %}
@@ -57,12 +68,12 @@
       </ul>
     </div>
 
-    <div class="card">
+    <div class="card border contact-info">
       <div class="card-header">
         Contact information
       </div>
       {% if data.owner.image %}
-        <img src="{{ data.owner.image.large.url }}" class="card-img-top">
+        <img src="{{ data.owner.image.large.url }}" class="card-img-top py-3">
       {% endif %}
       <ul class="list-group list-group-flush">
         <li class="list-group-item"><strong>{{ data.owner }}</strong></li>
@@ -83,7 +94,7 @@
         {{ data.owner.meta_data.address }}</li>
       </ul>
     </div>
-  
+
   </div>
 
 {% endblock %}
