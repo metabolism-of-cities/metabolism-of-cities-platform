@@ -207,6 +207,7 @@ def admin_datapoint(request, id):
         "my_organization": my_organization,
         "info": info,
         "data": data,
+        "load_lightbox": True,
     }
     return render(request, "metabolism_manager/admin/datapoint.html", context)
 

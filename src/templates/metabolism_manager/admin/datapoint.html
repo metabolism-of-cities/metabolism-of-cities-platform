@@ -2,9 +2,17 @@
 
 {% block css %}
 <style>
-  .card img {
-    border-bottom: 1px solid rgba(0,0,0,.125);
+  .contact-info.card img {
     object-fit: contain;
+  }
+
+  .lightbox a {
+    background-size: cover;
+    background-position: center;
+    cursor: zoom-in;
+    display: block;
+    height: 200px;
+    width: 100%;
   }
 </style>
 {% endblock %}
@@ -21,14 +29,19 @@
     </div>
   {% endif %}
 
-  <div class="card-deck">
+  <div class="card-deck mt-3">
 
-    <div class="card">
+    <div class="card border details">
       <div class="card-header">
         Details
       </div>
+      <div class="lightbox card-img-top">
+        <a href="https://platformu.org/media/records/CoM_Albion.large.jpg" style="background-image: url('https://platformu.org/media/records/CoM_Albion.large.jpg');" data-caption="{{ data.owner }}"></a>
+      </div>
       {% if data.image %}
-        <img src="{{ data.image.large.url }}" class="card-img-top">
+        <div class="lightbox">
+          <a href="{{ data.image.large.url }}" style="background-image: url('{{ data.image.large.url }}');" data-caption="{{ data.owner }}" class="card-img-top"></a>
+        </div>
       {% endif %}
       <ul class="list-group list-group-flush">
 
@@ -58,12 +71,12 @@
       </ul>
     </div>
 
-    <div class="card">
+    <div class="card border contact-info">
       <div class="card-header">
         Contact information
       </div>
       {% if data.owner.image %}
-        <img src="{{ data.owner.image.large.url }}" class="card-img-top">
+        <img src="{{ data.owner.image.large.url }}" class="card-img-top py-3">
       {% endif %}
       <ul class="list-group list-group-flush">
         <li class="list-group-item"><strong>{{ data.owner }}</strong></li>
