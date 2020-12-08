@@ -2447,7 +2447,7 @@ def hub_data_article(request, space=None, id=None):
             if "next" in request.GET:
                 return redirect(request.GET["next"])
             else:
-                return redirect(project.slug + ":article", space=space.slug, slug=info.slug)
+                return redirect(project.get_slug() + ":article", space=space.slug, slug=info.slug)
         else:
             messages.error(request, 'We could not save your form, please fill out all fields')
 
