@@ -2479,6 +2479,21 @@ def shapefile_json(request, id, download=False):
         response["Content-Disposition"] = f"attachment; filename=\"{info.name}.geojson\""
     return response
 
+def dataset_editor(request, id):
+    context = {
+    }
+    return render(request, "staf/dataset-editor/index.html", context)
+
+def chart_editor(request, id):
+    context = {
+    }
+    return render(request, "staf/dataset-editor/chart.html", context)
+
+def map_editor(request, id):
+    context = {
+    }
+    return render(request, "staf/dataset-editor/map.html", context)
+
 @xframe_options_exempt
 def dataset(request, space=None, dataset=None, id=None):
     project = get_object_or_404(Project, pk=request.project)

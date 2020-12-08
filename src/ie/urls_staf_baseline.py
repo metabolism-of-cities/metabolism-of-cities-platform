@@ -30,6 +30,9 @@ baseline_staf_urlpatterns = [
     path("datasets/<int:id>/", staf.dataset, name="dataset"),
     path("datasets/<int:id>/json/", staf.shapefile_json, name="shapefile_json"),
     path("geojson/<int:id>/", staf.geojson, name="geojson"),
+    path("datasets/<int:id>/editor/", staf.dataset_editor, name="dataset_editor"),
+    path("datasets/<int:id>/editor/chart/", staf.chart_editor, name="chart_editor"),
+    path("datasets/<int:id>/editor/map/", staf.map_editor, name="map_editor"),
 
     path("layers/", staf.layers, name="layers"),
     path("layers/<slug:slug>/<int:id>/", staf.layer, name="layer"),

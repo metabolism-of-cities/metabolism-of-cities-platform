@@ -229,18 +229,3 @@ def story(request, space, title):
         "stories": True,
     }
     return render(request, "stocks/story.html", context)
-
-def dataset_editor(request):
-    context = {
-    }
-    return render(request, "stocks/dataset-editor/index.html", context)
-
-def chart_editor(request):
-    context = {
-    }
-    return render(request, "stocks/dataset-editor/chart.html", context)
-
-def map_editor(request):
-    context = {
-    }
-    return render(request, "stocks/dataset-editor/map.html", context)
