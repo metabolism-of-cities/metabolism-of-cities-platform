@@ -64,8 +64,8 @@
                   
                   <form method="post">
                     {% csrf_token %}
-                    <button class="btn btn-success sweetalert change-record mb-3" name="action" value="single"><i class="fa fa-check"></i> Yes, I will upload a single population dataset</button>
-                    <button class="btn btn-success sweetalert change-record mb-3"><i class="fa fa-check-double"></i> Yes, I will upload multiple population datasets</button>
+                    <button class="btn btn-success sweetalert change-record mb-3" name="action" value="single"><i class="fa fa-check"></i> Yes, I will upload a population dataset</button>
+                    <button hidden class="btn btn-success sweetalert change-record mb-3"><i class="fa fa-check-double"></i> Yes, I will upload multiple population datasets</button>
                     <a class="btn btn-warning sweetalert change-record mb-3" href="save/?skip_dqi=true&amp;return={{ request.get_full_path }}"><i class="fa fa-square"></i> No, but we should keep this document</a>
                     <button class="btn btn-danger mb-2 sweetalert delete-record"><i class="fas fa-trash"></i> This document is not at all relevant and should be deleted</button>
                   </form>
