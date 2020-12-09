@@ -249,9 +249,6 @@ def library_overview(request, type, space=None):
 def space_map(request, space):
     space = get_space(request, space)
     list = LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False, type__in=[20,40,41]).order_by("date_created")
-    p(list.query)
-    p(list.query)
-    p("A")
     project = get_project(request)
     parents = []
     features = []
@@ -305,6 +302,8 @@ def space_map(request, space):
         "submenu": "library",
         "load_leaflet": True,
         "load_leaflet_space": True,
+        "load_datatables": True,
+        "list": list,
     }
     return render(request, "staf/space.map.html", context)
 
