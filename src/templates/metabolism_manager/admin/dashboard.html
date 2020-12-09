@@ -10,9 +10,33 @@
       line-height: .75;
     }
 
-    .leaflet-map {
+    .leaflet-map,
+    .map-listing {
       height: 700px;
       max-height: 90vh;
+    }
+
+    .map-listing {
+      overflow: hidden;
+      overflow-y: auto;
+    }
+
+    .map-listing tbody tr:hover {
+      background-color: #efefef;
+      cursor: crosshair;
+    }
+
+    .map-listing tbody tr:first-of-type td {
+      border-top: none;
+    }
+
+    .leaflet-popup-content {
+      margin: 0;
+    }
+
+    .popup-title {
+      font-size: 1rem;
+      padding: .75rem 1.25rem;
     }
   </style>
 {% endblock %}
@@ -84,7 +108,31 @@
         </div>
       </form>
 
-      <section id="map" class="leaflet-map"></section>
+      <section class="row">
+        <div class="col-lg-9">
+          <div id="map" class="leaflet-map"></div>
+        </div>
+        <div class="col-lg-3 map-listing">
+          <table class="table table-sm">
+            <tbody>
+              {% for each in data %}
+              <tr data-lat="{{ each.owner.meta_data.lat }}" data-lng="{{ each.owner.meta_data.lng }}">
+                <td class="text-center">
+                  {% if each.type == "supply" %}
+                    <i class="fa fa-sign-out text-success"></i>
+                  {% else %}
+                    <i class="fa fa-sign-in text-danger"></i>
+                  {% endif %}
+                </td>
+                <td>{{ each }}</td>
+                <td>{{ each.absolute_quantity }} {{ each.unit }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+      </section>
     </div>
 
     <div class="tab-pane" id="table" role="tabpanel" aria-labelledby="table-tab">
@@ -141,7 +189,7 @@
         var uglyTo = new Date(feature.properties.end_date * 1000);
         var prettyTo = uglyTo.toLocaleDateString('en-GB', dateOptions);
 
-      var popupContent = "<div class='popup-title'>" + feature.properties.name + "</div><div class='popup-content'><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + feature.properties.address + "</li><li class='list-group-item'><i class='far fa-fw fa-" + feature.properties.icon + " mr-2'></i>" + feature.properties.material + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + feature.properties.quantity + "</li><li class='list-group-item text-" + feature.properties.status_color + "'><i class='far fa-fw fa-" + feature.properties.status_icon + " mr-2'></i>" + feature.properties.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a href='../data/" + feature.properties.id + "/'>View more details</a></li></ul></div>"
+      var popupContent = "<div class='popup-title'>" + feature.properties.name + "</div><div class='popup-content'><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + feature.properties.address + "</li><li class='list-group-item'><i class='far fa-fw fa-" + feature.properties.icon + " mr-2'></i>" + feature.properties.material + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + feature.properties.quantity + "</li><li class='list-group-item text-" + feature.properties.status_color + "'><i class='far fa-fw fa-" + feature.properties.status_icon + " mr-2'></i>" + feature.properties.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a class='btn btn-sm btn-primary' href='../data/" + feature.properties.id + "/'>View more details</a></li></ul></div>"
 
 
       layer.bindPopup(popupContent);
@@ -270,9 +318,10 @@
       filterListings()
     })
 
-    // coloured markers
+
+    // supply and demand icons, green and red to match other icons
     var supplyIcon = new L.Icon({
-      iconUrl: "{% static 'img/leaflet-markers/marker-icon-2x-blue.png' %}",
+      iconUrl: "{% static 'img/leaflet-markers/marker-icon-2x-green.png' %}",
       shadowUrl: "{% static 'img/leaflet-markers/marker-shadow.png' %}",
       iconSize: [25, 41],
       iconAnchor: [12, 41],
@@ -291,5 +340,12 @@
 
     // reset filters and show listings on load
     filterListings();
+
+    $(".map-listing tr").hover(function() {
+      let row = $(this);
+      let lat = Number(row.data("lat"));
+      let lng = Number(row.data("lng"));
+      map.panTo([lat, lng]).setMaxZoom()
+    })
   </script>
 {% endblock %}
