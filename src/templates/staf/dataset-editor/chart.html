@@ -1,15 +1,51 @@
 {% extends "_base.html" %}
 {% load static %}
-{% block page_name %}dataset editor fullwidth{% endblock %}
+{% block page_name %}fullwidth{% endblock %}
 {% block title %}Dataset editor for Cape Town fish catch in 2013{% endblock %}
 
 {% block css %}
-  <link href="{% static 'css/datatables.min.css' %}" rel="stylesheet" />
+  <style>
+    .preview-wrap {
+      padding: 1rem;
+      border: 1px solid #808080;
+      border-radius: .25rem; }
+
+    #color-schemes .single-scheme {
+      padding: .5rem;
+      cursor: pointer;
+      border-radius: .25rem;
+      border: 1px solid #efefef;
+    }
+
+    #color-schemes .single-scheme.active {
+      background-color: #efefef;
+      border-color: #ced4da;
+    }
+
+    #color-schemes .single-color {
+      height: 2rem;
+    }
+
+    #color-schemes .single-color:first-child {
+      border-top-left-radius: .25rem;
+      border-bottom-left-radius: .25rem;
+    }
+
+    #color-schemes .single-color:last-child {
+      border-top-right-radius: .25rem;
+      border-bottom-right-radius: .25rem;
+    }
+
+    input#tooltip-label {
+      font-family: "Ubuntu Mono", "Fira Mono", "Liberation Mono", "Courier New", monospace;
+    }
+  </style>
+
 {% endblock %}
 
 {% block content %}
   <div class="px-4">
-    <h1 class="mb-0">Dataset editor</h1>
+    <h1 class="mb-0">Visualizations editor</h1>
     <a href="#" class="btn btn-primary-basic mb-4">
       <i class="fal fa-angle-left"></i>
       Back to datasets
@@ -18,77 +54,74 @@
     <div class="row pb-4">
       <div class="col-lg-6">
         <form id="chart-form">
-          <div class="form-row mt-4">
+          <div class="form-group">
+            <label class="category">Title</label>
+            <input type="text" class="form-control" id="title" value="Title">
+          </div>
+          <div class="form-group">
+            <label class="category">Subtitle</label>
+            <input type="text" class="form-control" id="subtitle" value="Subtitle">
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-md-6">
+              <div class="form-group enabled-chart-types">
+                <label class="category">Enabled chart types</label>
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="column" checked>
+                  <label class="custom-control-label" for="column">Column</label>
+                </div>
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="bar">
+                  <label class="custom-control-label" for="bar">Bar</label>
+                </div>
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="line">
+                  <label class="custom-control-label" for="line">Line</label>
+                </div>
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="pie">
+                  <label class="custom-control-label" for="pie">Pie</label>
+                </div>
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="area">
+                  <label class="custom-control-label" for="area">Area</label>
+                </div>
+              </div>
+            </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label class="category">Chart type</label>
-                <select class="custom-select" id="chart-type">
-                  <option value="column">Column</option>
-                  <option value="bar">Bar</option>
-                  <option value="line">Line</option>
-                  <option value="pie">Pie</option>
-                  <option value="area">Area</option>
-                  <option value="streamgraph">Stream</option>
-                  <option value="columnrange">Column range</option>
-                  <option value="datetime">Time series</option>
+                <label class="category">Initial chart type</label>
+                <select class="custom-select" id="initial-chart-type">
+                  <option selected value="column">Column</option>
+                  <option hidden value="bar">Bar</option>
+                  <option hidden value="line">Line</option>
+                  <option hidden value="pie">Pie</option>
+                  <option hidden value="area">Area</option>
                 </select>
               </div>
             </div>
-            <div class="col-md-6">
-            </div>
+          </div>
+
+          <div class="row mt-4">
             <div class="col-md-6">
               <div class="form-group">
-                <label class="category">X-axis</label>
+                <label class="category">Data</label>
 
                 <div class="form-group">
-                  <label>Type</label>
-                  <select class="custom-select" id="xaxis-type">
-                    <option value="linear">Linear</option>
-                    <option value="logarithmic">Logarithmic</option>
-                    <option value="datetime">Date / time</option>
-                    <option selected value="category">Category</option>
-                  </select>
-                </div>
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="xaxis-label">
-                  <label class="custom-control-label" for="xaxis-label">Label</label>
-                </div>
-                <div class="form-group xaxis-label-text" hidden>
-                  <input type="text" class="form-control" value="" placeholder="Label text">
-                </div>
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="xaxis-range">
-                  <label class="custom-control-label" for="xaxis-range">Custom range</label>
-                </div>
-                <div class="row xaxis-range-form" hidden>
-                  <div class="col">
-                    <input type="number" class="form-control" placeholder="Min" id="xaxis-min">
-                  </div>
-                  <div class="col">
-                    <input type="number" class="form-control" placeholder="Max" id="xaxis-max">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="category">Y-axis</label>
-
-                <div class="form-group">
-                  <label>Type</label>
+                  <label class="mb-0">Type</label>
                   <select class="custom-select" id="yaxis-type">
                     <option selected value="linear">Linear</option>
                     <option value="logarithmic">Logarithmic</option>
                     <option value="datetime">Date / time</option>
-                    <option value="category">Category</option>
                   </select>
                 </div>
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="yaxis-label" checked>
+                  <input type="checkbox" class="custom-control-input" id="yaxis-label">
                   <label class="custom-control-label" for="yaxis-label">Label</label>
                 </div>
-                <div class="form-group yaxis-label-text">
-                  <input type="text" class="form-control" placeholder="Label text" value="Catch (in tonnes)">
+                <div class="form-group yaxis-label-text" hidden>
+                  <input type="text" class="form-control" placeholder="Label text">
                 </div>
                 <div class="custom-control custom-switch">
                   <input type="checkbox" class="custom-control-input" id="yaxis-range">
@@ -104,9 +137,49 @@
                 </div>
               </div>
             </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="category">Categories</label>
+
+                <div class="form-group" hidden>
+                  <label>Type</label>
+                  <select class="custom-select" id="xaxis-type">
+                    <option value="linear">Linear</option>
+                    <option value="logarithmic">Logarithmic</option>
+                    <option value="datetime">Date / time</option>
+                    <option selected value="category">Category</option>
+                  </select>
+                </div>
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="xaxis-label">
+                  <label class="custom-control-label" for="xaxis-label">Label</label>
+                </div>
+                <div class="form-group xaxis-label-text" hidden>
+                  <input type="text" class="form-control" value="" placeholder="Label text">
+                </div>
+                <div class="custom-control custom-switch" hidden>
+                  <input type="checkbox" class="custom-control-input" id="xaxis-range">
+                  <label class="custom-control-label" for="xaxis-range">Custom range</label>
+                </div>
+                <div class="row xaxis-range-form" hidden>
+                  <div class="col">
+                    <input type="number" class="form-control" placeholder="Min" id="xaxis-min">
+                  </div>
+                  <div class="col">
+                    <input type="number" class="form-control" placeholder="Max" id="xaxis-max">
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group mt-4">
+            <label class="category">Tooltip label</label>
+            <input type="text" class="form-control" id="tooltip-label" value="Tooltip label <b>with bold</b> and <i>italic</i>: {point.y}">
+            <small>Use <code>{point.y}</code> and <code>{point.x}</code> to get the values of either the Y or X axis. You can also add bold and italic text by wrapping it in HTML tags: <code>&lt;b&gt;bold text&lt;/b&gt;</code> and <code>&lt;i&gt;italicized text&lt;/i&gt;</code>.</small>
+          </div>
+
+          <div class="form-group mt-4">
             <label class="category">Color scheme</label>
             <div id="color-schemes" class="row">
               <div class="col-md-6 mb-3">
@@ -206,7 +279,7 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group mt-4">
             <label class="category">Other settings</label>
             <div class="custom-control custom-switch">
               <input type="checkbox" class="custom-control-input" id="data-labels">
@@ -221,16 +294,34 @@
               <label class="custom-control-label" for="individual-colors">Different color for each data point</label>
             </div>
           </div>
+
+          <div class="row mt-4">
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label class="category">Generate preview</label>
+                <select class="custom-select" id="chart-type">
+                  <option selected value="column">Column</option>
+                  <option hidden value="bar">Bar</option>
+                  <option hidden value="line">Line</option>
+                  <option hidden value="pie">Pie</option>
+                  <option hidden value="area">Area</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <label class="category d-block">&nbsp;</label>
+              <div class="btn btn-primary-basic btn-generate-preview">
+                <i class="fal fa-fw fa-eye"></i>
+                Generate preview
+              </div>
+            </div>
+          </div>
+
         </form>
 
         <button type="submit" class="btn btn-success" form="chart">
           <i class="fas fa-fw fa-save"></i>
-          Save chart
-        </button>
-
-        <button class="btn btn-primary-basic btn-generate-preview">
-          <i class="fal fa-fw fa-eye"></i>
-          Generate preview
+          Save charts
         </button>
       </div>
       <div class="col-lg-6">
@@ -258,8 +349,8 @@
 
     // user settings
     // titles
-    let title = "Cape Town fish catch in 2013";
-    let subtitle = "Aquatic agriculture catch from Cape Town in 2013, measured in tonnes";
+    let title = "Title";
+    let subtitle = "Subtitle";
 
     // color scheme
     let colorScheme = moc;
@@ -268,7 +359,7 @@
     let chartType = "column";
 
     // tooltip label
-    let tooltipLabel = "Catch in 2013: <b>{point.y} tonnes</b>";
+    let tooltipLabel = "Tooltip label <b>with bold</b> and <i>italic</i>: {point.y}"
 
     // x-axis
     let xAxisType = "category";
@@ -278,7 +369,7 @@
 
     // y-axis
     let yAxisType = "linear";
-    let yAxisLabelText = "Catch (in tonnes)";
+    let yAxisLabelText = " ";
     let yAxisMin = null;
     let yAxisMax = null;
 
@@ -330,22 +421,16 @@
       // individual-colors
       showIndividualColors = $("#individual-colors").is(":checked") ? true : false;
 
-      // take variables and apply them to the preview
-      // titles
-      $(".preview-title").text(title)
-      $(".preview-subtitle").text(subtitle)
-
-      // map
-      if (showMap) {
-        $("a.tab-map").show();
-      } else {
-        $("a.tab-map").hide();
-      }
-
       // update chart
       chart.update({
         chart: {
           type: chartType,
+        },
+        title: {
+          text: title
+        },
+        subtitle: {
+          text: subtitle
         },
         colors: colorScheme,
         xAxis: {
@@ -651,80 +736,22 @@
       }
     });
 
-    // export chart buttons
-    $(".export-png").click(function() {
-      chart.exportChart();
-    });
+    // only show enabled chart types in the dropdowns for initial chart type and preview
+    function enabledCharts() {
+      $("#initial-chart-type option, #chart-type option").attr("hidden", "hidden");
 
-    $(".export-svg").click(function() {
-      chart.exportChart({type:"image/svg+xml"});
-    });
-
-    // fullscreen chart button
-    $(".fullscreen-chart").click(function() {
-      chart.fullscreen.toggle();
-    })
-
-    // set type on default
-    $(".change-chart-type").val("column");
-
-    // change chart type
-    $(".change-chart-type").change(function() {
-      let chartType = $(this).val()
-
-      chart.update({
-        chart: {
-          type: chartType,
-        },
-        xAxis: {
-          lineColor: "#808080",
-          title: {
-            text: xAxisLabelText,
-          },
-        },
-        yAxis: {
-          title: {
-            text: yAxisLabelText,
-          }
+      $(".enabled-chart-types input").each(function() {
+        let checkbox = $(this);
+        let chartType = checkbox.attr("id");
+        if ( checkbox.prop("checked") ) {
+          $("#initial-chart-type option[value='" + chartType + "'], #chart-type option[value='" + chartType + "']").removeAttr("hidden");
         }
-      });
+      })
+    }
 
-      if (chartType == "pie") {
-        chart.update({
-          xAxis: {
-            lineColor: "transparent",
-            title: {
-              text: null,
-            },
-          },
-          yAxis: {
-            title: {
-              text: null,
-            }
-          },
-          plotOptions: {
-            series: {
-              colorByPoint: true,
-              dataLabels: {
-                enabled: true,
-              },
-            }
-          },
-        });
-      }
-    });
 
-    // when opening data tab, load table with ajax
-    let dataLoaded = false;
-
-    $(".nav-link.load-data").click(function() {
-      console.log("hi!");
-      if (!dataLoaded) {
-        $.get("the/url").done(function(data) {
-          $(".table-wrapper").html(data);
-          dataLoaded = true;
-        });
-      }
-    });
+    $(".enabled-chart-types input").change(function() {
+      enabledCharts()
+    })
   </script>
 {% endblock %}
