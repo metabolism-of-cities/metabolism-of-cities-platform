@@ -2582,7 +2582,22 @@ def dataset_editor(request, id):
     return render(request, "staf/dataset-editor/index.html", context)
 
 def chart_editor(request, id):
+
+    try:
+        info = get_object_or_404(DataViz, source_id=id)
+    except:
+        source = get_object_or_404(LibraryItem, pk=id)
+        info = DataViz.objects.create(name=source.name, source=source)
+
+    if request.method == "POST":
+        if not info.meta_data:
+            info.meta_data = {}
+        info.meta_data["properties"] = request.POST
+        info.save()
+
     context = {
+        "info": info,
+        "properties": info.meta_data.get("properties") if info.meta_data else None,
     }
     return render(request, "staf/dataset-editor/chart.html", context)
 

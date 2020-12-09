@@ -1125,6 +1125,14 @@ class LibraryItem(Record):
         except:
             return None
 
+    @property
+    def get_dataviz_properties(self):
+        if not self.dataviz.all():
+            return {}
+        viz = self.dataviz.all()[0]
+        viz = viz.meta_data["properties"]
+        return viz
+
     # This takes the stocks or flows file and records it in the Data table
     def convert_stocks_flows_data(self):
         error = False
@@ -2375,6 +2383,18 @@ class Data(models.Model):
     class Meta:
         db_table = "stafdb_data"
         ordering = ["timeframe__start", "id"]
+
+class DataViz(Record):
+    uid = models.AutoField(primary_key=True)
+    record_id = models.OneToOneField(
+        Record, on_delete=models.CASCADE,
+        parent_link=True,
+        primary_key=False,
+    )
+    source = models.ForeignKey(LibraryItem, on_delete=models.CASCADE, null=True, blank=True, related_name="dataviz")
+
+    def __str__(self):
+        return self.name
 
 # This is the format to use from now on
 # Note that there is a uid primary key, separate from the record_id

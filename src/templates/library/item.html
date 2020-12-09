@@ -268,10 +268,15 @@
               {% endif %}
 
               {% if request.user.is_staff and info.meta_data.processed %}
-                <a href="?reset_processing=true" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> RESET processing</a>
+                {% with link=PROJECT.slug|add:":chart_editor" %}
+                  <a href="{% url link info.id %}?next={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-chart-pie"></i> Chart editor</a>
+                {% endwith %}
+
+                <a href="?reset_processing=true" class="btn btn-primary mt-2"><i class="fa fa-fw fa-layer-group"></i> RESET processing</a>
                 <small class="d-block my-3">
                   This means that the file can be processed again. <strong>Existing reference spaces and associated info will be lost!</strong>
                 </small>
+
               {% endif %}
 
               {% if request.user.is_staff and info.meta_data.processing_error %}
@@ -564,7 +569,10 @@
 
 {% block footer %}
   <script type="text/javascript">
-  let json_url = "/library/{{ info.id }}/data/json/"
+  let json_url = "/library/{{ info.id }}/data/json/";
+  {% if info.get_dataviz_properties %}
+    properties = {{ info.get_dataviz_properties|safe }};
+  {% endif %}
   </script>
   <script src="{% static 'js/data.js' %}?rl=c"></script>
 {% endblock %}

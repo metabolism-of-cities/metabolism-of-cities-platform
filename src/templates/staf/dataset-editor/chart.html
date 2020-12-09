@@ -46,21 +46,22 @@
 {% block content %}
   <div class="px-4">
     <h1 class="mb-0">Visualizations editor</h1>
-    <a href="#" class="btn btn-primary-basic mb-4">
+    <a href="{% if request.GET.next %}{{ request.GET.next }}{% else %}javascript:history.back(){% endif %}" class="btn btn-primary-basic mb-4">
       <i class="fal fa-angle-left"></i>
-      Back to datasets
+      Back
     </a>
 
     <div class="row pb-4">
       <div class="col-lg-6">
         <form id="chart-form" method="post">
+          {% csrf_token %}
           <div class="form-group">
             <label class="category">Title</label>
-            <input type="text" class="form-control" id="title" value="Title">
+            <input type="text" class="form-control" name="title" id="title" value="{{ info }}">
           </div>
           <div class="form-group">
             <label class="category">Subtitle</label>
-            <input type="text" class="form-control" id="subtitle" value="Subtitle">
+            <input type="text" class="form-control" name="subtitle" id="subtitle" value="{{ properties.subtitle }}">
           </div>
 
           <div class="row mt-4">
@@ -68,23 +69,23 @@
               <div class="form-group enabled-chart-types">
                 <label class="category">Enabled chart types</label>
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="column" checked>
+                  <input type="checkbox" class="custom-control-input" id="column" name="show_column" value="true" {% if properties.show_column %}checked{% endif %}>
                   <label class="custom-control-label" for="column">Column</label>
                 </div>
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="bar">
+                  <input type="checkbox" class="custom-control-input" name="show_bar" value="true" id="bar" {% if properties.show_bar %}checked{% endif %}>
                   <label class="custom-control-label" for="bar">Bar</label>
                 </div>
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="line">
+                  <input type="checkbox" class="custom-control-input" name="show_line" value="true" id="line" {% if properties.show_line %}checked{% endif %}>
                   <label class="custom-control-label" for="line">Line</label>
                 </div>
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="pie">
+                  <input type="checkbox" class="custom-control-input" name="show_pie" value="true" id="pie" {% if properties.show_pie %}checked{% endif %}>
                   <label class="custom-control-label" for="pie">Pie</label>
                 </div>
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="area">
+                  <input type="checkbox" class="custom-control-input" name="show_area" value="true" id="area" {% if properties.show_area %}checked{% endif %}>
                   <label class="custom-control-label" for="area">Area</label>
                 </div>
               </div>
@@ -92,12 +93,12 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label class="category">Initial chart type</label>
-                <select class="custom-select" id="initial-chart-type">
-                  <option selected value="column">Column</option>
-                  <option hidden value="bar">Bar</option>
-                  <option hidden value="line">Line</option>
-                  <option hidden value="pie">Pie</option>
-                  <option hidden value="area">Area</option>
+                <select class="custom-select" id="initial-chart-type" name="initial_chart">
+                  <option {% if properties.initial_chart == "column" %}selected{% endif %} value="column">Column</option>
+                  <option {% if properties.initial_chart == "bar" %}selected{% endif %} hidden value="bar">Bar</option>
+                  <option {% if properties.initial_chart == "line" %}selected{% endif %} hidden value="line">Line</option>
+                  <option {% if properties.initial_chart == "pie" %}selected{% endif %} hidden value="pie">Pie</option>
+                  <option {% if properties.initial_chart == "area" %}selected{% endif %} hidden value="area">Area</option>
                 </select>
               </div>
             </div>
@@ -117,22 +118,22 @@
                   </select>
                 </div>
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="yaxis-label">
+                  <input type="checkbox" class="custom-control-input" id="yaxis-label" name="show_yaxis_label" value="true" {% if properties.show_yaxis_label %}checked{% endif %}>
                   <label class="custom-control-label" for="yaxis-label">Label</label>
                 </div>
-                <div class="form-group yaxis-label-text" hidden>
-                  <input type="text" class="form-control" placeholder="Label text">
+                <div class="form-group yaxis-label-text" {% if not properties.show_yaxis_label %}hidden{% endif %}>
+                  <input type="text" class="form-control" name="yaxis_label" placeholder="Label text" value="{{ properties.yaxis_label }}">
                 </div>
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="yaxis-range">
+                  <input type="checkbox" class="custom-control-input" id="yaxis-range" name="yaxis_range" value="true" {% if properties.yaxis_range %}checked{% endif %}>
                   <label class="custom-control-label" for="yaxis-range">Custom range</label>
                 </div>
-                <div class="row yaxis-range-form" hidden>
+                <div class="row yaxis-range-form" {% if not properties.yaxis_range %}hidden{% endif %}>
                   <div class="col">
-                    <input type="number" class="form-control" placeholder="Min" id="yaxis-min">
+                    <input type="number" class="form-control" placeholder="Min" id="yaxis-min" name="yaxis_min" value="{{ properties.yaxis_min }}">
                   </div>
                   <div class="col">
-                    <input type="number" class="form-control" placeholder="Max" id="yaxis-max">
+                    <input type="number" class="form-control" placeholder="Max" id="yaxis-max" name="yaxis_max" value="{{ properties.yaxis_max }}">
                   </div>
                 </div>
               </div>
@@ -141,33 +142,12 @@
               <div class="form-group">
                 <label class="category">Categories</label>
 
-                <div class="form-group" hidden>
-                  <label>Type</label>
-                  <select class="custom-select" id="xaxis-type">
-                    <option value="linear">Linear</option>
-                    <option value="logarithmic">Logarithmic</option>
-                    <option value="datetime">Date / time</option>
-                    <option selected value="category">Category</option>
-                  </select>
-                </div>
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="xaxis-label">
+                  <input type="checkbox" class="custom-control-input" id="xaxis-label" name="xaxis_label" value="true" {% if properties.xaxis_label %}checked{% endif %}>
                   <label class="custom-control-label" for="xaxis-label">Label</label>
                 </div>
-                <div class="form-group xaxis-label-text" hidden>
-                  <input type="text" class="form-control" value="" placeholder="Label text">
-                </div>
-                <div class="custom-control custom-switch" hidden>
-                  <input type="checkbox" class="custom-control-input" id="xaxis-range">
-                  <label class="custom-control-label" for="xaxis-range">Custom range</label>
-                </div>
-                <div class="row xaxis-range-form" hidden>
-                  <div class="col">
-                    <input type="number" class="form-control" placeholder="Min" id="xaxis-min">
-                  </div>
-                  <div class="col">
-                    <input type="number" class="form-control" placeholder="Max" id="xaxis-max">
-                  </div>
+                <div class="form-group xaxis-label-text" {% if not properties.xaxis_label %}hidden{% endif %}>
+                  <input type="text" name="xaxis_label_text" class="form-control" value="{{ properties.xaxis_label_text }}" placeholder="Label text">
                 </div>
               </div>
             </div>
@@ -175,15 +155,16 @@
 
           <div class="form-group mt-4">
             <label class="category">Tooltip label</label>
-            <input type="text" class="form-control" id="tooltip-label" value="Tooltip label <b>with bold</b> and <i>italic</i>: {point.y}">
+            <input name="tooltip" type="text" class="form-control" id="tooltip-label" value="{% if properties.tooltip %}{{ properties.tooltip }}{% else %}Tooltip label <b>with bold</b> and <i>italic</i>: {point.y}{% endif %}">
             <small>Use <code>{point.y}</code> and <code>{point.x}</code> to get the values of either the Y or X axis. You can also add bold and italic text by wrapping it in HTML tags: <code>&lt;b&gt;bold text&lt;/b&gt;</code> and <code>&lt;i&gt;italicized text&lt;/i&gt;</code>.</small>
           </div>
 
           <div class="form-group mt-4">
             <label class="category">Color scheme</label>
+            <input type="hidden" name="scheme" value="{{ properties.scheme }}" id="scheme" />
             <div id="color-schemes" class="row">
               <div class="col-md-6 mb-3">
-                <div class="single-scheme active" data-scheme="moc">
+                <div class="single-scheme {% if properties.scheme == "moc" or not properties.scheme %}active{% endif %}" data-scheme="moc">
                   <div class='row no-gutters'>
                     <div class="col single-color" style="background-color: #144d58">&nbsp;</div>
                     <div class="col single-color" style="background-color: #a6cee3">&nbsp;</div>
@@ -201,7 +182,7 @@
                 </div>
               </div>
               <div class="col-md-6 mb-3">
-                <div class="single-scheme" data-scheme="dozen">
+                <div class="single-scheme {% if properties.scheme == "dozen" %}active{% endif %}" data-scheme="dozen">
                   <div class='row no-gutters'>
                     <div class="col single-color" style="background-color: #8dd3c7">&nbsp;</div>
                     <div class="col single-color" style="background-color: #ffffb3">&nbsp;</div>
@@ -219,7 +200,7 @@
                 </div>
               </div>
               <div class="col-md-6 mb-3">
-                <div class="single-scheme" data-scheme="pastel">
+                <div class="single-scheme {% if properties.scheme == "pastel" %}active{% endif %}" data-scheme="pastel">
                   <div class='row no-gutters'>
                     <div class="col single-color" style="background-color: #fbb4ae">&nbsp;</div>
                     <div class="col single-color" style="background-color: #b3cde3">&nbsp;</div>
@@ -234,7 +215,7 @@
                 </div>
               </div>
               <div class="col-md-6 mb-3">
-                <div class="single-scheme" data-scheme="set">
+                <div class="single-scheme {% if properties.scheme == "set" %}active{% endif %}" data-scheme="set">
                   <div class='row no-gutters'>
                     <div class="col single-color" style="background-color: #e41a1c">&nbsp;</div>
                     <div class="col single-color" style="background-color: #377eb8">&nbsp;</div>
@@ -249,7 +230,7 @@
                 </div>
               </div>
               <div class="col-md-6 mb-3">
-                <div class="single-scheme" data-scheme="accent">
+                <div class="single-scheme {% if properties.scheme == "accent" %}active{% endif %}" data-scheme="accent">
                   <div class='row no-gutters'>
                     <div class="col single-color" style="background-color: #7fc97f">&nbsp;</div>
                     <div class="col single-color" style="background-color: #beaed4">&nbsp;</div>
@@ -263,7 +244,7 @@
                 </div>
               </div>
               <div class="col-md-6 mb-3">
-                <div class="single-scheme" data-scheme="dark">
+                <div class="single-scheme {% if properties.scheme == "dark" %}active{% endif %}" data-scheme="dark">
                   <div class='row no-gutters'>
                     <div class="col single-color" style="background-color: #1b9e77">&nbsp;</div>
                     <div class="col single-color" style="background-color: #d95f02">&nbsp;</div>
@@ -282,15 +263,15 @@
           <div class="form-group mt-4">
             <label class="category">Other settings</label>
             <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="data-labels">
+              <input type="checkbox" class="custom-control-input" id="data-labels" name="data_labels" value="true" {% if properties.data_labels %}checked{% endif %}>
               <label class="custom-control-label" for="data-labels">Data labels</label>
             </div>
             <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="legend">
+              <input type="checkbox" class="custom-control-input" id="legend" name="legend" value="true" {% if properties.legend %}checked{% endif %}>
               <label class="custom-control-label" for="legend">Legend</label>
             </div>
             <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="individual-colors">
+              <input type="checkbox" class="custom-control-input" id="individual-colors" name="individual_colors" value="true" {% if properties.individual_colors %}checked{% endif %}>
               <label class="custom-control-label" for="individual-colors">Different color for each data point</label>
             </div>
           </div>
@@ -503,6 +484,7 @@
       $(this).addClass("active");
 
       let scheme = $(this).data("scheme");
+      $("#scheme").val(scheme);
       colorScheme = window[scheme]
     })
 
