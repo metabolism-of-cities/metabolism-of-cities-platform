@@ -23,7 +23,7 @@
 
     .map-listing tbody tr:hover {
       background-color: #efefef;
-      cursor: crosshair;
+      cursor: pointer;
     }
 
     .map-listing tbody tr:first-of-type td {
@@ -341,7 +341,7 @@
     // reset filters and show listings on load
     filterListings();
 
-    $(".map-listing tr").hover(function() {
+    $(".map-listing tr").click(function() {
       let row = $(this);
       let lat = Number(row.data("lat"));
       let lng = Number(row.data("lng"));
