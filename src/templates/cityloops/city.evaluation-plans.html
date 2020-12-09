@@ -1,0 +1,75 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block css %}
+  <style>
+    td.checkbox {
+      width: 48px;
+      border-left: 1px solid #dee2e6
+    }
+
+    td.status {
+      width: 125px;
+      text-align: right;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  {% include "_plans-menu-cityloops.html" %}
+
+  <form>
+    <div class="card card-table mb-4">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Indicator</th>
+            <th colspan="2" class="border-left">DA</th>
+            <th colspan="2" class="border-left">Sector</th>
+            <th colspan="2" class="border-left">City</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="text-monospace">01</span> | {% lorem 2 w random %}</td>
+            <td class="checkbox">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="1-da">
+                <label class="custom-control-label" for="1-da"></label>
+              </div>
+            </td>
+            <td class="status">
+              <a href="{% url 'cityloops:city_evaluation_plans_indicator' 'bodo' 1 %}" class="badge badge-lg badge-success">
+                <i class="fa fa-check"></i> Completed
+              </a>
+            </td>
+            <td class="checkbox">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="1-sector">
+                <label class="custom-control-label" for="1-sector"></label>
+              </div>
+            </td>
+            <td class="status"></td>
+
+            <td class="checkbox">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="1-city">
+                <label class="custom-control-label" for="1-city"></label>
+              </div>
+            </td>
+            <td class="status">
+              <a href="{% url 'cityloops:city_evaluation_plans_indicator' 'bodo' 1 %}" class="badge badge-lg badge-danger">
+                <i class="fa fa-clock"></i> Unstarted
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <a href="{% url 'cityloops:city_evaluation_plans_create' 'bodo' %}" class="btn btn-primary">
+      <i class="fa fa-save"></i> Save
+    </a>
+  </form>
+{% endblock %}
