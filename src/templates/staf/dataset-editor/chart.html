@@ -274,6 +274,10 @@
               <input type="checkbox" class="custom-control-input" id="individual-colors" name="individual_colors" value="true" {% if properties.individual_colors %}checked{% endif %}>
               <label class="custom-control-label" for="individual-colors">Different color for each data point</label>
             </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="stack" name="stack" value="normal" {% if properties.stack %}checked{% endif %}>
+              <label class="custom-control-label" for="stack">Stack bars / columns</label>
+            </div>
           </div>
 
           <div class="row mt-4">

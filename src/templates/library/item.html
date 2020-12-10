@@ -593,6 +593,9 @@
           text: "{{ info.get_dataviz_properties.title }}"
         },
         legend: {
+          {% if info.get_dataviz_properties.show_xaxis_label is not "true" %}
+            enabled: false,
+          {% endif %}
           backgroundColor: "#fff",
           borderColor: "#dee2e6",
           borderWidth: 1,
@@ -647,7 +650,7 @@
       });
     {% endif %}
   </script>
-  <script src="{% static 'js/data.js' %}?rl=c"></script>
+  <script src="{% static 'js/data.js' %}?refresh=1333"></script>
   <script>
     // first visualisation to open
     $(".nav-link[data-tab='{{ info.get_dataviz_properties.initial_chart }}']").click();
