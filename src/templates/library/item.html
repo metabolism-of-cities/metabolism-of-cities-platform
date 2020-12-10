@@ -267,10 +267,11 @@
                 <a href="{% url url_processing info.id %}" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> Process this file</a>
               {% endif %}
 
-              {% if request.user.is_staff and info.meta_data.processed %}
                 {% with link=PROJECT.slug|add:":chart_editor" %}
                   <a href="{% url link info.id %}?next={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-{% if info.is_map %}map-marker-edit{% else %}chart-pie{% endif %}"></i> {% if info.is_map %}Map{% else %}Chart{% endif %} editor</a>
                 {% endwith %}
+
+              {% if request.user.is_staff and info.meta_data.processed %}
 
                 <a href="?reset_processing=true" class="btn btn-primary mt-2"><i class="fa fa-fw fa-layer-group"></i> RESET processing</a>
                 <small class="d-block my-3">
@@ -289,7 +290,8 @@
               {% endif %}
 
             {% endif %}
-              <a onclick="javascript:return confirm('Are you sure?')" href="?delete&amp;return={{ request.get_full_path }}" class="btn btn-danger"><i class="fa fa-trash-alt"></i> Delete</a>
+              <br>
+              <a onclick="javascript:return confirm('Are you sure?')" href="?delete&amp;return={{ request.get_full_path }}" class="btn btn-danger mt-3"><i class="fa fa-trash-alt"></i> Delete</a>
           {% endif %}
         {% endif %}
 
@@ -511,10 +513,8 @@
         </section>
       {% endif %}
 
-      {% if request.user.id == 1 %}
-        {% if info.data.all %}
-          {% include "_data.visualizations.html" %}
-        {% endif %}
+      {% if info.data.all %}
+        {% include "_data.visualizations.html" %}
       {% endif %}
 
       {% if info.meta_data.ready_for_processing or "crunch" in request.GET %}

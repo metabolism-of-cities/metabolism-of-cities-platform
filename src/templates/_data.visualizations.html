@@ -2,13 +2,27 @@
   <h3>Data</h3>
 
   <ul class="nav nav-tabs nav-justified mb-4" role="tablist">
-    <li class="nav-item"><a class="nav-link" data-tab="bar" data-viz="bar"><i class="fal fa-fw fa-chart-bar fa-rotate-90"></i> Bar</a></li>
-    <li class="nav-item"><a class="nav-link" data-tab="column" data-viz="column"><i class="fal fa-fw fa-chart-bar"></i> Column</a></li>
-    <li class="nav-item"><a class="nav-link" data-tab="drilldown" data-viz="drilldown" data-drilldown="true"><i class="fal fa-fw fa-chart-bar"></i> Drilldown</a></li>
-    <li class="nav-item"><a class="nav-link" data-tab="line" data-viz="line"><i class="fal fa-fw fa-chart-line"></i> Line</a></li>
-    <li class="nav-item"><a class="nav-link" data-tab="area" data-viz="area"><i class="fal fa-fw fa-chart-area"></i> Area</a></li>
-    <li class="nav-item"><a class="nav-link" data-tab="pie-wrapper" data-viz="pie"><i class="fal fa-fw fa-chart-pie"></i> Pie</a></li>
-    <li class="nav-item"><a class="nav-link" data-tab="map" data-viz="map"><i class="fal fa-fw fa-map-marked"></i> Map</a></li>
+    {% if properties.show_bar or not properties %}
+      <li class="nav-item"><a class="nav-link" data-tab="bar" data-viz="bar"><i class="fal fa-fw fa-chart-bar fa-rotate-90"></i> Bar</a></li>
+    {% endif %}
+    {% if properties.show_column or not properties %}
+      <li class="nav-item"><a class="nav-link" data-tab="column" data-viz="column"><i class="fal fa-fw fa-chart-bar"></i> Column</a></li>
+    {% endif %}
+    {% if properties.show_drilldown or not properties %}
+      <li class="nav-item"><a class="nav-link" data-tab="drilldown" data-viz="drilldown" data-drilldown="true"><i class="fal fa-fw fa-chart-bar"></i> Drilldown</a></li>
+    {% endif %}
+    {% if properties.show_line or not properties %}
+      <li class="nav-item"><a class="nav-link" data-tab="line" data-viz="line"><i class="fal fa-fw fa-chart-line"></i> Line</a></li>
+    {% endif %}
+    {% if properties.show_area or not properties %}
+      <li class="nav-item"><a class="nav-link" data-tab="area" data-viz="area"><i class="fal fa-fw fa-chart-area"></i> Area</a></li>
+    {% endif %}
+    {% if properties.show_pie or not properties %}
+      <li class="nav-item"><a class="nav-link" data-tab="pie-wrapper" data-viz="pie"><i class="fal fa-fw fa-chart-pie"></i> Pie</a></li>
+    {% endif %}
+    {% if properties.show_map or not properties %}
+      <li class="nav-item"><a class="nav-link" data-tab="map" data-viz="map"><i class="fal fa-fw fa-map-marked"></i> Map</a></li>
+    {% endif %}
     <li class="nav-item"><a class="nav-link" data-tab="table"><i class="fal fa-fw fa-table"></i> Table</a></li>
   </ul>
 

@@ -2620,6 +2620,8 @@ def chart_editor(request, id):
         info.save()
         if info.source.is_map:
             return redirect(project.slug + ":map_item", info.source.id)
+        elif "next" in request.GET:
+            return redirect(request.GET["next"])
 
     context = {
         "info": info,
