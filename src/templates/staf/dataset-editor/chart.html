@@ -122,7 +122,7 @@
                   <label class="custom-control-label" for="yaxis-label">Label</label>
                 </div>
                 <div class="form-group yaxis-label-text" {% if not properties.show_yaxis_label %}hidden{% endif %}>
-                  <input type="text" class="form-control" name="yaxis_label" placeholder="Label text" value="{{ properties.yaxis_label }}">
+                  <input type="text" class="form-control" name="yaxis_label_text" placeholder="Data label text" value="{{ properties.yaxis_label_text }}">
                 </div>
                 <div class="custom-control custom-switch">
                   <input type="checkbox" class="custom-control-input" id="yaxis-range" name="yaxis_range" value="true" {% if properties.yaxis_range %}checked{% endif %}>
@@ -143,17 +143,17 @@
                 <label class="category">Categories</label>
 
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="xaxis-label" name="xaxis_label" value="true" {% if properties.xaxis_label %}checked{% endif %}>
+                  <input type="checkbox" class="custom-control-input" id="xaxis-label" name="show_xaxis_label" value="true" {% if properties.show_xaxis_label %}checked{% endif %}>
                   <label class="custom-control-label" for="xaxis-label">Label</label>
                 </div>
-                <div class="form-group xaxis-label-text" {% if not properties.xaxis_label %}hidden{% endif %}>
-                  <input type="text" name="xaxis_label_text" class="form-control" value="{{ properties.xaxis_label_text }}" placeholder="Label text">
+                <div class="form-group xaxis-label-text" {% if not properties.show_xaxis_label %}hidden{% endif %}>
+                  <input type="text" name="xaxis_label_text" class="form-control" value="{{ properties.xaxis_label_text }}" placeholder="Categories label text">
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="form-group mt-4">
+          <div class="form-group mt-4" hidden>
             <label class="category">Tooltip label</label>
             <input name="tooltip" type="text" class="form-control" id="tooltip-label" value="{% if properties.tooltip %}{{ properties.tooltip }}{% else %}Tooltip label <b>with bold</b> and <i>italic</i>: {point.y}{% endif %}">
             <small>Use <code>{point.y}</code> and <code>{point.x}</code> to get the values of either the Y or X axis. You can also add bold and italic text by wrapping it in HTML tags: <code>&lt;b&gt;bold text&lt;/b&gt;</code> and <code>&lt;i&gt;italicized text&lt;/i&gt;</code>.</small>
@@ -164,7 +164,7 @@
             <input type="hidden" name="scheme" value="{{ properties.scheme }}" id="scheme" />
             <div id="color-schemes" class="row">
               <div class="col-md-6 mb-3">
-                <div class="single-scheme {% if properties.scheme == "moc" or not properties.scheme %}active{% endif %}" data-scheme="moc">
+                <div class="single-scheme {% if properties.scheme == 'moc' or not properties.scheme %}active{% endif %}" data-scheme="moc">
                   <div class='row no-gutters'>
                     <div class="col single-color" style="background-color: #144d58">&nbsp;</div>
                     <div class="col single-color" style="background-color: #a6cee3">&nbsp;</div>
@@ -182,7 +182,7 @@
                 </div>
               </div>
               <div class="col-md-6 mb-3">
-                <div class="single-scheme {% if properties.scheme == "dozen" %}active{% endif %}" data-scheme="dozen">
+                <div class="single-scheme {% if properties.scheme == 'dozen' %}active{% endif %}" data-scheme="dozen">
                   <div class='row no-gutters'>
                     <div class="col single-color" style="background-color: #8dd3c7">&nbsp;</div>
                     <div class="col single-color" style="background-color: #ffffb3">&nbsp;</div>
@@ -200,7 +200,7 @@
                 </div>
               </div>
               <div class="col-md-6 mb-3">
-                <div class="single-scheme {% if properties.scheme == "pastel" %}active{% endif %}" data-scheme="pastel">
+                <div class="single-scheme {% if properties.scheme == 'pastel' %}active{% endif %}" data-scheme="pastel">
                   <div class='row no-gutters'>
                     <div class="col single-color" style="background-color: #fbb4ae">&nbsp;</div>
                     <div class="col single-color" style="background-color: #b3cde3">&nbsp;</div>
@@ -215,7 +215,7 @@
                 </div>
               </div>
               <div class="col-md-6 mb-3">
-                <div class="single-scheme {% if properties.scheme == "set" %}active{% endif %}" data-scheme="set">
+                <div class="single-scheme {% if properties.scheme == 'set' %}active{% endif %}" data-scheme="set">
                   <div class='row no-gutters'>
                     <div class="col single-color" style="background-color: #e41a1c">&nbsp;</div>
                     <div class="col single-color" style="background-color: #377eb8">&nbsp;</div>
@@ -230,7 +230,7 @@
                 </div>
               </div>
               <div class="col-md-6 mb-3">
-                <div class="single-scheme {% if properties.scheme == "accent" %}active{% endif %}" data-scheme="accent">
+                <div class="single-scheme {% if properties.scheme == 'accent' %}active{% endif %}" data-scheme="accent">
                   <div class='row no-gutters'>
                     <div class="col single-color" style="background-color: #7fc97f">&nbsp;</div>
                     <div class="col single-color" style="background-color: #beaed4">&nbsp;</div>
@@ -244,7 +244,7 @@
                 </div>
               </div>
               <div class="col-md-6 mb-3">
-                <div class="single-scheme {% if properties.scheme == "dark" %}active{% endif %}" data-scheme="dark">
+                <div class="single-scheme {% if properties.scheme == 'dark' %}active{% endif %}" data-scheme="dark">
                   <div class='row no-gutters'>
                     <div class="col single-color" style="background-color: #1b9e77">&nbsp;</div>
                     <div class="col single-color" style="background-color: #d95f02">&nbsp;</div>
