@@ -2706,5 +2706,67 @@ def libraryframe(request, id):
         "show_map": True,
         "library_item": project.get_slug() + ":library_item",
     }
-    return render(request, "library/item.iframe.html", context)
+    if info.meta_data and "processed" in info.meta_data:
+        if info.is_map:
+            spaces = info.imported_spaces.filter(geometry__isnull=False)
+            size = info.get_shapefile_size
+            map = None
+            simplify_factor = None
+            geom_type = None
+            features = []
+
+            # If the file is larger than 3MB, then we simplify
+            if not "show_full" in request.GET:
+                if size > 1024*1024*20:
+                    simplify_factor = 0.05
+                elif size > 1024*1024*10:
+                    simplify_factor = 0.02
+                elif size > 1024*1024*5:
+                    simplify_factor = 0.001
+
+            for each in spaces:
+
+                geom_type = each.geometry.geom_type
+                if simplify_factor:
+                    geo = each.geometry.simplify(simplify_factor)
+                else:
+                    geo = each.geometry
+
+                url = reverse(project.slug + ":referencespace", args=[each.id])
+
+                content = ""
+                if each.image:
+                    content = f"<a class='d-block' href='{url}'><img alt='{each.name}' src='{each.get_thumbnail}' /></a><hr>"
+                content = content + f"<a href='{url}'>View details</a>"
+
+                features.append({
+                    "type": "Feature",
+                    "geometry": json.loads(geo.json),
+                    "properties": {
+                        "name": each.name,
+                        "id": each.id,
+                        "content": content,
+                    },
+                })
+
+            data = {
+                "type":"FeatureCollection",
+                "features": features,
+                "geom_type": geom_type,
+            }
+
+            properties = info.get_dataviz_properties
+            context_add = {
+                "spaces": info.imported_spaces.all(),
+                "load_leaflet": True,
+                "load_leaflet_item": True,
+                "data": data,
+                "properties": properties,
+            }
+            return render(request, "library/map.iframe.html", {**context, **context_add})
+        else:
+            context["load_highcharts"] = True
+            return render(request, "library/chart.iframe.html", context)
+    else:
+        return render(request, "library/item.iframe.html", context)
 

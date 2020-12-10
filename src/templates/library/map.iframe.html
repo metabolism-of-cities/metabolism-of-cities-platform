@@ -1,0 +1,45 @@
+{% extends "_base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block page_name %}library item fullwidth{% endblock %}
+{% block title %}{{ info }}{% endblock %}
+
+{% block head %}
+  <link rel="canonical" href="{{ info.get_full_url }}" />
+{% endblock %}
+
+{% block css %}
+  <style type="text/css">
+    .top-message-box .alert {
+      text-align: center;
+    }
+    #map {
+      height: 50vh;
+    }
+  </style>
+{% endblock %}
+
+{% block iframe_content %}
+
+<div class="bar alert alert-dark">
+  <h3 class="h5 text-center mb-0 pb-0"><strong>{{ info }}</strong></h3>
+</div>
+
+<div id="map" class="leaflet-map"></div>
+
+<div class="text-center mt-3 mb-3">
+  <a class="btn btn-lg btn-warning" href="{% url URLS.LIBRARY_ITEM info.id %}" target="_parent">View details <i class="fa fa-arrow-right"></i> </a>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+  <script type="text/javascript">
+  let json_url = "/library/{{ info.id }}/data/json/";
+  {% if info.get_dataviz_properties %}
+    properties = {{ info.get_dataviz_properties|safe }};
+  {% endif %}
+  </script>
+  <script src="{% static 'js/data.js' %}?rl=c"></script>
+{% endblock %}
