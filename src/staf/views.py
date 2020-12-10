@@ -316,6 +316,9 @@ def map_item(request, id, space=None):
     spaces = info.imported_spaces.filter(geometry__isnull=False)
     space_count = None
     features = []
+    curator = False
+    if has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
+        curator = True
 
     if request.method == "POST":
         # Note that we use POST to avoid any bot indexing of the download pages, there's no other
@@ -335,6 +338,9 @@ def map_item(request, id, space=None):
 
     if space:
         space = get_space(request, space)
+    elif info.spaces.all().count() == 1:
+        # If this is only associated to a single space then we show that one
+        space = info.spaces.all()[0]
 
     if spaces.count() > 500:
         space_count = spaces.count()
@@ -400,6 +406,7 @@ def map_item(request, id, space=None):
         "space": space,
         "show_grid": True if info.imported_spaces.count() < 50 else False,
         "properties": properties,
+        "curator": curator,
     }
     return render(request, "staf/item.map.html", context)
 
@@ -412,7 +419,7 @@ def geojson(request, id):
         spaces = spaces.filter(id=request.GET["space"])
     if "main_space" in request.GET and False:
         main_space = ReferenceSpace.objects.get(pk=request.GET["main_space"])
-        spaces = spaces.filter(geometry__within=main_space.geometry)
+        spaces = spaces.filter(Q(geometry__within=main_space.geometry)|Q(geometry__intersects=main_space.geometry))
     geom_type = None
     for each in spaces:
         if each.geometry:
@@ -2584,12 +2591,19 @@ def shapefile_json(request, id, download=False):
         response["Content-Disposition"] = f"attachment; filename=\"{info.name}.geojson\""
     return response
 
+@login_required
 def dataset_editor(request, id):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
+        unauthorized_access(request)
     context = {
     }
     return render(request, "staf/dataset-editor/index.html", context)
 
+@login_required
 def chart_editor(request, id):
+
+    if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
+        unauthorized_access(request)
 
     project = get_project(request)
     try:
@@ -2599,23 +2613,19 @@ def chart_editor(request, id):
         source = get_object_or_404(LibraryItem, pk=id)
         info = DataViz.objects.create(name=source.name, source=source)
 
-    is_map = False
-    if info.source.type.name == "Shapefile" or info.source.type.name == "GPS Coordinates":
-        is_map = True
-
     if request.method == "POST":
         if not info.meta_data:
             info.meta_data = {}
         info.meta_data["properties"] = request.POST
         info.save()
-        if is_map:
+        if info.source.is_map:
             return redirect(project.slug + ":map_item", info.source.id)
 
     context = {
         "info": info,
         "properties": info.meta_data.get("properties") if info.meta_data else None,
     }
-    if is_map:
+    if info.source.is_map:
         try:
             spaces = source.imported_spaces.all()[0]
             if spaces.geometry.geom_type == "Point":
@@ -2638,7 +2648,10 @@ def chart_editor(request, id):
     else:
         return render(request, "staf/dataset-editor/chart.html", context)
 
+@login_required
 def map_editor(request, id):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
+        unauthorized_access(request)
     context = {
     }
     return render(request, "staf/dataset-editor/map.html", context)

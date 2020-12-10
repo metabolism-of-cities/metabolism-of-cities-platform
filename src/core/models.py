@@ -1134,6 +1134,13 @@ class LibraryItem(Record):
             viz = {}
         return viz
 
+    @property
+    def is_map(self):
+        if self.type.name == "Shapefile" or self.type.name == "GPS Coordinates":
+            return True
+        else:
+            return False
+
     # Returns either 'point' if this contains points, 'polygon' if it contains other geometry, and 'unknown' if we can't tell
     # This can be used to decide for instance whether to show markers on a map or draw polygons
     # Note that we use the FIRST associated reference space, even though there may be many, and take that type, so we assume

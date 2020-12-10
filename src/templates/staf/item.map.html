@@ -16,7 +16,13 @@
 
   <ol class="breadcrumb">
     <li class="breadcrumb-item">
-      <a href="../../">Maps</a>
+      {% if space %}
+        {% with link=PROJECT.slug|add:":space_maps" %}
+          <a href="{% url link space.slug %}">Maps</a>
+        {% endwith %}
+      {% else %}
+        <a href="../../">Maps</a>
+      {% endif %}
     </li>
     <li class="breadcrumb-item">
       <a href="../">
@@ -63,6 +69,13 @@
         </div>
       {% endif %}
       <div id="map" class="leaflet-map mt-4"></div>
+
+      {% if curator %}
+        {% with link=PROJECT.slug|add:":chart_editor" %}
+          <a href="{% url link info.id %}?next={{ request.get_full_path }}" class="btn btn-primary mt-3"><i class="fa fa-map-marker-edit"></i> Map editor</a>
+        {% endwith %}
+      {% endif %}
+
     {% endif %}
   </section>
 

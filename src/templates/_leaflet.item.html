@@ -45,7 +45,7 @@
     {% include "_leaflet.markers.html" %}
     dataLayer = L.geoJson(mapData, {
       pointToLayer: function (feature, latlng) {
-        return L.marker(latlng{% if info.map_type == "point" %}, { icon: {% if properties.color %}{{ properties.color }}{% else %}blue{% endif %}Icon }{% endif %}).bindPopup("<div class='title'>" + feature.properties.name + "</div><hr><div class='content'>" + feature.properties.content + "</div>")
+        return L.marker(latlng{% if info.get_map_type == "point" %}, { icon: {% if properties.color %}{{ properties.color }}{% else %}blue{% endif %}Icon }{% endif %}).bindPopup("<div class='title'>" + feature.properties.name + "</div><hr><div class='content'>" + feature.properties.content + "</div>")
       },
     })
   } else {
