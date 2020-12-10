@@ -1127,12 +1127,28 @@ class LibraryItem(Record):
 
     @property
     def get_dataviz_properties(self):
-        if not self.dataviz.all():
-            return {}
-        viz = self.dataviz.all()[0]
-        viz = viz.meta_data["properties"]
+        try:
+            viz = self.dataviz.all()[0]
+            viz = viz.meta_data["properties"]
+        except:
+            viz = {}
         return viz
 
+    # Returns either 'point' if this contains points, 'polygon' if it contains other geometry, and 'unknown' if we can't tell
+    # This can be used to decide for instance whether to show markers on a map or draw polygons
+    # Note that we use the FIRST associated reference space, even though there may be many, and take that type, so we assume
+    # that the entire map has the same type (a pretty safe assumption, would be weird if different)
+    @property
+    def get_map_type(self):
+        try:
+            one_space = self.imported_spaces.all()[0]
+            if one_space.geometry.geom_type == "Point":
+                return "point"
+            else:
+                return "polygon"
+        except:
+            return "unknown"
+        
     # This takes the stocks or flows file and records it in the Data table
     def convert_stocks_flows_data(self):
         error = False

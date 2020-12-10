@@ -1,0 +1,84 @@
+{% extends "_base.html" %}
+{% load static %}
+{% block title %}Visualisation editor: {{ info }}{% endblock %}
+
+{% block css %}
+  <style>
+    .example {
+      width:30px;
+      height:30px;
+      display: inline-block;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="px-4">
+    <h1 class="mb-0">Visualizations editor</h1>
+    <a href="{% if request.GET.next %}{{ request.GET.next }}{% else %}javascript:history.back(){% endif %}" class="btn btn-primary-basic mb-4">
+      <i class="fal fa-angle-left"></i>
+      Back
+    </a>
+
+    <div class="row pb-4">
+      <div class="col-lg-12">
+        <form id="chart-form" method="post">
+          {% csrf_token %}
+          <h2>{{ info }}</h2>
+
+          <div class="row mt-4">
+            <div class="col-md-6">
+              <div class="form-group enabled-chart-types">
+                <label class="category">Master map options</label>
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="column" name="show_on_master_map" value="true" {% if properties.show_on_master_map or not properties %}checked{% endif %}>
+                  <label class="custom-control-label" for="column">Show on master map</label>
+                </div>
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" name="crop_boundaries" value="true" id="crop_boundaries" {% if properties.crop_boundaries %}checked{% endif %}>
+                  <label class="custom-control-label" for="crop_boundaries">Limit display of contents to city boundaries</label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="category">Individual map style</label>
+                <select class="custom-select" name="map_layer_style">
+                  <option value=""></option>
+                  {% for each in styles %}
+                  <option {% if properties.map_layer_style == each %}selected{% endif %} value="{{ each }}">{{ each }}</option>
+                  {% endfor %}
+                </select>
+                We use <a href="https://docs.mapbox.com/api/maps/styles/">Mapbox</a> for our maps, and all styles can be previewed on their
+                website.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group mt-4">
+            <label class="category">{% if points %}Marker style{% else %}Colour{% endif %}</label>
+              {% for color in colors %}
+              <div>
+                <label>
+                  <input type="radio" name="color" value="{{ color }}" {% if properties.color == color %}checked{% endif %}>
+                  {% if points %}
+                    <img src="{% get_static_prefix %}img/leaflet-markers/marker-icon-{{ color }}.png" alt="" />
+                  {% else %}
+                    <span class="example" style='background-color:{{ color }}'></span>
+                  {% endif %}
+                  {{ color }}
+                </label>
+              </div>
+              {% endfor %}
+          </div>
+
+        </form>
+
+        <button type="submit" class="btn btn-success" form="chart-form">
+          <i class="fas fa-fw fa-save"></i>
+          Save map
+        </button>
+      </div>
+    </div>
+  </div>
+{% endblock %}

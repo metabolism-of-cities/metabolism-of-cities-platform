@@ -269,12 +269,15 @@ def space_map(request, space):
 
     for each in list:
         if each.imported_spaces.count() < 1000:
+            dataviz = each.get_dataviz_properties
             for tag in each.tags.filter(parent_tag__parent_tag_id=845):
                 if not tag in parents:
                     parents.append(tag)
                     hits[tag.id] = []
                 hits[tag.id].append(each)
-                if each == boundaries_source:
+                if "color" in dataviz:
+                    getcolor[each.id] = dataviz["color"]
+                elif each == boundaries_source:
                     getcolor[each.id] = "#126180"
                 elif tag == boundaries_tag:
                     # For the boundaries we use specific colors
@@ -382,6 +385,7 @@ def map_item(request, id, space=None):
         "geom_type": geom_type,
     }
 
+    properties = info.get_dataviz_properties
     context = {
         "info": info,
         "submenu": "library",
@@ -395,6 +399,7 @@ def map_item(request, id, space=None):
         "data": data,
         "space": space,
         "show_grid": True if info.imported_spaces.count() < 50 else False,
+        "properties": properties,
     }
     return render(request, "staf/item.map.html", context)
 
@@ -405,6 +410,9 @@ def geojson(request, id):
     spaces = info.imported_spaces.all()
     if "space" in request.GET:
         spaces = spaces.filter(id=request.GET["space"])
+    if "main_space" in request.GET and False:
+        main_space = ReferenceSpace.objects.get(pk=request.GET["main_space"])
+        spaces = spaces.filter(geometry__within=main_space.geometry)
     geom_type = None
     for each in spaces:
         if each.geometry:
@@ -2583,23 +2591,52 @@ def dataset_editor(request, id):
 
 def chart_editor(request, id):
 
+    project = get_project(request)
     try:
         info = get_object_or_404(DataViz, source_id=id)
+        source = info.source
     except:
         source = get_object_or_404(LibraryItem, pk=id)
         info = DataViz.objects.create(name=source.name, source=source)
+
+    is_map = False
+    if info.source.type.name == "Shapefile" or info.source.type.name == "GPS Coordinates":
+        is_map = True
 
     if request.method == "POST":
         if not info.meta_data:
             info.meta_data = {}
         info.meta_data["properties"] = request.POST
         info.save()
+        if is_map:
+            return redirect(project.slug + ":map_item", info.source.id)
 
     context = {
         "info": info,
         "properties": info.meta_data.get("properties") if info.meta_data else None,
     }
-    return render(request, "staf/dataset-editor/chart.html", context)
+    if is_map:
+        try:
+            spaces = source.imported_spaces.all()[0]
+            if spaces.geometry.geom_type == "Point":
+                points = True
+            else:
+                points = False
+        except:
+            points = False
+        context["points"] = points
+
+        # For the points we use markers, which are only available in certain colors. For polygons, we can use
+        # any HTML color name
+        if points:
+            context["colors"] = ["blue", "gold", "red", "green", "orange", "yellow", "violet", "grey", "black"]
+        else:
+            context["colors"] = ["#144d58","#a6cee3","#33a02c","#b2df8a","#e31a1c","#fb9a99","#ff7f00","#fdbf6f","#6a3d9a","#cab2d6","#b15928","#ffff99"]
+
+        context["styles"] = ["streets-v11", "outdoors-v11", "light-v10", "dark-v10", "satellite-v9", "satellite-streets-v11"]
+        return render(request, "staf/dataset-editor/map.basic.html", context)
+    else:
+        return render(request, "staf/dataset-editor/chart.html", context)
 
 def map_editor(request, id):
     context = {
