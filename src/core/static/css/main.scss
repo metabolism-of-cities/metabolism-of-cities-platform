@@ -3096,12 +3096,13 @@ body.volunteer.portal.latest {
     cursor: pointer;
   }
 
-  .highcharts-drillup-button .highcharts-button-box {
+
+  .highcharts-button:not(.highcharts-contextbutton) .highcharts-button-box {
     fill: #fff !important;
     stroke: #144d58 !important;
   }
 
-  .highcharts-container .highcharts-drillup-button text {
+  .highcharts-button:not(.highcharts-contextbutton) text {
     fill: #144d58 !important;
   }
 

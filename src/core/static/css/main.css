@@ -2012,11 +2012,11 @@ body.volunteer.portal.latest th.date {
   padding: .25rem;
   cursor: pointer; }
 
-.item-visualisations .highcharts-drillup-button .highcharts-button-box {
+.item-visualisations .highcharts-button:not(.highcharts-contextbutton) .highcharts-button-box {
   fill: #fff !important;
   stroke: #144d58 !important; }
 
-.item-visualisations .highcharts-container .highcharts-drillup-button text {
+.item-visualisations .highcharts-button:not(.highcharts-contextbutton) text {
   fill: #144d58 !important; }
 
 .item-visualisations .switch-pie.disabled {

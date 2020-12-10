@@ -5,6 +5,8 @@
 {% block title %}Metabolism Manager dashboard{% endblock %}
 
 {% block head %}
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
   <style>
     .badge {
       line-height: .75;
@@ -178,6 +180,7 @@
 {% endblock %}
 
 {% block footer %}
+  <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
   <script>
     // center: [{{ gps.lat }}, {{ gps.lng }}],
     // enable popups so na user can click on an object on the map and see extra information
