@@ -1,5 +1,5 @@
-function createStackedBar(data) {
-  Highcharts.chart("stacked", {
+function createBar(data) {
+  Highcharts.chart("bar", {
     chart: {
       type: "bar",
     },
@@ -14,8 +14,34 @@ function createStackedBar(data) {
         }
       }
     },
-    legend: {
-      reversed: true,
+    tooltip: {
+      headerFormat: "<b>{point.x}</b><br/>",
+      pointFormat: "{series.name}: {point.y}<br/>Total: {point.stackTotal}"
+    },
+    plotOptions: {
+      series: {
+        stacking: properties.stack,
+      }
+    },
+    series: data.series
+  });
+}
+
+function createColumn(data) {
+  Highcharts.chart("column", {
+    chart: {
+      type: "column",
+    },
+    xAxis: {
+      categories: data.x_axis
+    },
+    yAxis: {
+      stackLabels: {
+        enabled: true,
+        style: {
+          color: "#212529"
+        }
+      }
     },
     tooltip: {
       headerFormat: "<b>{point.x}</b><br/>",
@@ -23,7 +49,7 @@ function createStackedBar(data) {
     },
     plotOptions: {
       series: {
-        stacking: "normal",
+        stacking: properties.stack,
       }
     },
     series: data.series
@@ -87,9 +113,6 @@ function createDrilldown(data) {
     },
     xAxis: {
       type: "category"
-    },
-    legend: {
-      enabled: false,
     },
     tooltip: {
       headerFormat: "<b>{point.name}</b>",
@@ -197,7 +220,8 @@ let dataDrill;
 let dataDefaultLoaded = false;
 let dataDrillLoaded = false;
 
-let stackedLoaded = false;
+let barLoaded = false;
+let columnLoaded = false;
 let drilldownLoaded = false;
 let lineLoaded = false;
 let areaLoaded = false;
@@ -239,9 +263,12 @@ $(".item-visualisations .nav-link").click(function() {
 })
 
 function createViz(viz) {
-  if (viz == "stacked" && stackedLoaded == false) {
-    createStackedBar(dataDefault);
-    stackedLoaded = true
+  if (viz == "bar" && barLoaded == false) {
+    createBar(dataDefault);
+    barLoaded = true
+  } else if (viz == "column" && columnLoaded == false) {
+    createColumn(dataDefault);
+    columnLoaded = true
   } else if (viz == "drilldown" && drilldownLoaded == false) {
     createDrilldown(dataDrill)
     drilldownLoaded = true

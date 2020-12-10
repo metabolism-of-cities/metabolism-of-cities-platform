@@ -2,7 +2,8 @@
   <h3>Data</h3>
 
   <ul class="nav nav-tabs nav-justified mb-4" role="tablist">
-    <li class="nav-item"><a class="nav-link" data-tab="stacked" data-viz="stacked"><i class="fal fa-fw fa-chart-bar"></i> Bar</a></li>
+    <li class="nav-item"><a class="nav-link" data-tab="bar" data-viz="bar"><i class="fal fa-fw fa-chart-bar fa-rotate-90"></i> Bar</a></li>
+    <li class="nav-item"><a class="nav-link" data-tab="column" data-viz="column"><i class="fal fa-fw fa-chart-bar"></i> Column</a></li>
     <li class="nav-item"><a class="nav-link" data-tab="drilldown" data-viz="drilldown" data-drilldown="true"><i class="fal fa-fw fa-chart-bar"></i> Drilldown</a></li>
     <li class="nav-item"><a class="nav-link" data-tab="line" data-viz="line"><i class="fal fa-fw fa-chart-line"></i> Line</a></li>
     <li class="nav-item"><a class="nav-link" data-tab="area" data-viz="area"><i class="fal fa-fw fa-chart-area"></i> Area</a></li>
@@ -12,7 +13,10 @@
   </ul>
 
   <div class="tab-content">
-    <div id="stacked" role="tabpanel" class="mb-4 tab-pane">
+    <div id="bar" role="tabpanel" class="mb-4 tab-pane">
+      <h4 class="text-center"><i class="fa fa-cog fa-spin"></i> Loading</h4>
+    </div>
+    <div id="column" role="tabpanel" class="mb-4 tab-pane">
       <h4 class="text-center"><i class="fa fa-cog fa-spin"></i> Loading</h4>
     </div>
     <div id="line" role="tabpanel" class="mb-4 tab-pane">

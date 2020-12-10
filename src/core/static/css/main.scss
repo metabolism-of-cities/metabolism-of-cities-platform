@@ -3079,7 +3079,8 @@ body.volunteer.portal.latest {
 // visualisations for a single datase
 // templates/_item.visualisations.html
 .item-visualisations {
-  #stacked {
+  #column,
+  #bar {
     height: 700px;
   }
 

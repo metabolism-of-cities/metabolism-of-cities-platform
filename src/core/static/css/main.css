@@ -1998,7 +1998,8 @@ body.volunteer.portal.latest th.date {
 .resource-list td.author {
   width: 200px; }
 
-.item-visualisations #stacked {
+.item-visualisations #column,
+.item-visualisations #bar {
   height: 700px; }
 
 .item-visualisations #map,
