@@ -648,11 +648,17 @@
           },
         },
       });
+    {% else %}
+      const properties = {}
     {% endif %}
   </script>
   <script src="{% static 'js/data.js' %}?refresh=1333"></script>
   <script>
     // first visualisation to open
-    $(".nav-link[data-tab='{{ info.get_dataviz_properties.initial_chart }}']").click();
+    {% if info.get_dataviz_properties %}
+      $(".nav-link[data-tab='{{ info.get_dataviz_properties.initial_chart }}']").click();
+    {% else %}
+      $(".nav-link[data-tab='bar']").click();
+    {% endif %}
   </script>
 {% endblock %}
