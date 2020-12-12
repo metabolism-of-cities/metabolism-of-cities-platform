@@ -174,7 +174,7 @@ def city_evaluation_plan(request, slug, id):
         "title": "Evaluation plan",
         "info": info,
     }
-    return render(request, "cityloops/evaluation-plans.indicator.html", context)
+    return render(request, "cityloops/evaluation-plan.city.html", context)
 
 def city_evaluation_plan_form(request, slug, id):
     info = get_space(request, slug)
@@ -182,4 +182,4 @@ def city_evaluation_plan_form(request, slug, id):
         "title": "Evaluation plan",
         "info": info,
     }
-    return render(request, "cityloops/evaluation-plans.indicator.html", context)
+    return render(request, "cityloops/evaluation-plan.city.form.html", context)
