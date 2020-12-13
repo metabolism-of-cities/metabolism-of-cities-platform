@@ -692,6 +692,10 @@ def referencespaces_list(request, id):
 
 def referencespace(request, id=None, space=None, slug=None):
 
+    curator = False
+    if has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
+        curator = True
+
     if id:
         info = ReferenceSpace.objects.get(pk=id)
     elif slug:
@@ -772,6 +776,8 @@ def referencespace(request, id=None, space=None, slug=None):
     except:
         siblings = None
 
+    photos = Photo.objects.filter(spaces=info).order_by("position").exclude(pk=info.photo.id)
+
     context = {
         "info": info,
         "inside_the_space": inside_the_space[:200] if inside_the_space and inside_the_space.count() > 200 else inside_the_space,
@@ -782,6 +788,9 @@ def referencespace(request, id=None, space=None, slug=None):
         "siblings": siblings,
         "all_siblings": all_siblings,
         "associated_spaces": associated_spaces,
+        "curator": curator,
+        "photos": photos,
+        "load_lightbox": True if photos else False,
     }
     return render(request, "staf/referencespace.html", context)
 

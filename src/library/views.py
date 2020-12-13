@@ -482,7 +482,7 @@ def search_ajax(request):
     return JsonResponse(r, safe=False)
 
 @login_required
-def form(request, id=None, project_name="library", type=None, slug=None, tag=None, space=None):
+def form(request, id=None, project_name="library", type=None, slug=None, tag=None, space=None, referencespace_photo=None):
 
     # Slug is only there because one of the subsites has it in the URL; it does not do anything
     # This form is used in MANY different places as it is the key form to add new library items
@@ -532,6 +532,10 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         data_management = True
 
     processing_is_possible = ["Dataset", "Shapefile"]
+
+    if referencespace_photo:
+        # When we add a photo to a reference space we don't need a search box
+        hide_search_box = True
 
     if data_management and type.name in processing_is_possible and curator and not id:
         # We only show the direct processing option if we are on a data-site, and the
@@ -708,6 +712,14 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             if "comments" in fields:
                 fields.remove("comments")
 
+        if referencespace_photo:
+            if "tags" in fields:
+                fields.remove("tags")
+            if "spaces" in fields:
+                fields.remove("spaces")
+            if "comments" in fields:
+                fields.remove("comments")
+
         if "hide_tags" in request.GET and "tags" in fields:
             fields.remove("tags")
 
@@ -784,6 +796,9 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
             if tag:
                 info.tags.add(tag)
+
+            if referencespace_photo:
+                info.spaces.add(ReferenceSpace.objects.get(pk=referencespace_photo))
 
             if request.POST.get("publisher") or request.POST.get("journal"):
                 record_new = True
