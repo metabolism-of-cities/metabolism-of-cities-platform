@@ -248,6 +248,9 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     url_processing = None
     curator = False
 
+    if info.type.name == "Image":
+        info = info.photo
+
     if request.user.is_authenticated:
         if has_permission(request, request.project, ["curator"]) or request.user.people == info.uploader():
             curator = True
@@ -799,6 +802,12 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
             if referencespace_photo:
                 info.spaces.add(ReferenceSpace.objects.get(pk=referencespace_photo))
+
+            if type.name == "Image":
+                info.save()
+                # We run this AGAIN because we want to trigger the update_referencespace_photo
+                # function to run. When we first run this a few lines up, the spaces have not 
+                # yet been added so it can't update the photo
 
             if request.POST.get("publisher") or request.POST.get("journal"):
                 record_new = True

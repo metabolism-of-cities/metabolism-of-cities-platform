@@ -789,7 +789,7 @@ def referencespace(request, id=None, space=None, slug=None):
         "all_siblings": all_siblings,
         "associated_spaces": associated_spaces,
         "curator": curator,
-        "photos": photos,
+        "multimedia_list": photos,
         "load_lightbox": True if photos else False,
     }
     return render(request, "staf/referencespace.html", context)

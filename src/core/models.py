@@ -1168,7 +1168,6 @@ class LibraryItem(Record):
         except:
             error = "We could not find/open this file."
 
-        print(file)
         if not error:
             all = Data.objects.filter(source=self)
             all.delete()
@@ -1938,7 +1937,7 @@ class ReferenceSpace(Record):
     def photo(self):
         from core.models import Photo
         try:
-            return Photo.objects.filter(spaces=self, is_deleted=False).order_by("position")[0]
+            return Photo.objects.filter(spaces=self).order_by("position")[0]
         except:
             return Photo.objects.get(pk=33476)
 
@@ -1984,7 +1983,7 @@ def update_referencespace_photo(sender, instance, created, **kwargs):
         # Let's see which spaces this photo is related with - if any
         # And if it turns out that this is the first photo then we mark this as the primary image
         try:
-            photo = Photo.objects.filter(spaces=space, is_deleted=False).order_by("position")[0]
+            photo = Photo.objects.filter(spaces=space).order_by("position", "id")[0]
         except:
             photo = Photo.objects.get(pk=33476)
         space.image = photo.image

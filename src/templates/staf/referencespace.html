@@ -29,22 +29,16 @@
 
   {% if info.photo.id != 33476 %}
     <div class="text-center mb-{% if curator %}1{% else %}4{% endif %}">
-      <img src="{{ info.photo.image.large.url }}" alt="" class="img-thumbnail" />
+      <a href="{% url URLS.LIBRARY_ITEM info.photo.id %}">
+        <img src="{{ info.photo.image.large.url }}" alt="" class="img-thumbnail" />
+      </a>
       <br>
       <em>Photo by <a href="{% url URLS.LIBRARY_ITEM info.photo.id %}">{{ info.photo.get_author_citation }}</a> | {{ info.photo.license }} | {{ info.photo.year }}</em>
     </div>
   {% endif %}
 
-  {% if photos %}
-    {% spaceless %}
-    <div class="row lightbox gallery">
-      {% for each in photos %}
-        <div class="col-sm-6 col-md-3 col-lg-2">
-          <a href="{{ each.image.large.url }}" style="background-image: url('{{ each.image.thumbnail.url }}');" data-caption="{{ each.description|default_if_none:"" }} | {{ each.get_author_citation }} | {{ each.license }}"></a>
-        </div>
-      {% endfor %}
-    {% endspaceless %}
-    </div>
+  {% if multimedia_list %}
+    {% include "_gallery.html" %}
   {% endif %}
 
   {% if curator %}
