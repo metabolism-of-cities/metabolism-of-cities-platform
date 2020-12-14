@@ -35,10 +35,6 @@
       border-top-right-radius: .25rem;
       border-bottom-right-radius: .25rem;
     }
-
-    input#tooltip-label {
-      font-family: "Ubuntu Mono", "Fira Mono", "Liberation Mono", "Courier New", monospace;
-    }
   </style>
 
 {% endblock %}
@@ -69,32 +65,28 @@
               <div class="form-group enabled-chart-types">
                 <label class="category">Enabled chart types</label>
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="column" name="show_column" value="true" {% if properties.show_column %}checked{% endif %}>
-                  <label class="custom-control-label" for="column">Column</label>
+                  <input type="checkbox" class="custom-control-input" name="show_bar" value="true" id="show_bar" data-chart="bar" {% if properties.show_bar %}checked{% endif %}>
+                  <label class="custom-control-label" for="show_bar">Bar</label>
                 </div>
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" name="show_bar" value="true" id="bar" {% if properties.show_bar %}checked{% endif %}>
-                  <label class="custom-control-label" for="bar">Bar</label>
+                  <input type="checkbox" class="custom-control-input" id="show_column" data-chart="column" name="show_column" value="true" {% if properties.show_column %}checked{% endif %}>
+                  <label class="custom-control-label" for="show_column">Column</label>
                 </div>
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" name="show_line" value="true" id="line" {% if properties.show_line %}checked{% endif %}>
-                  <label class="custom-control-label" for="line">Line</label>
+                  <input type="checkbox" class="custom-control-input" name="show_line" value="true" id="show_line" data-chart="line" {% if properties.show_line %}checked{% endif %}>
+                  <label class="custom-control-label" for="show_line">Line</label>
                 </div>
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" name="show_drilldown" value="true" id="drilldown" {% if properties.show_drilldown %}checked{% endif %}>
-                  <label class="custom-control-label" for="drilldown">Drilldown</label>
+                  <input type="checkbox" class="custom-control-input" name="show_drilldown" value="true" id="show_drilldown" data-chart="drilldown" {% if properties.show_drilldown %}checked{% endif %}>
+                  <label class="custom-control-label" for="show_drilldown">Drilldown</label>
                 </div>
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" name="show_pie" value="true" id="pie" {% if properties.show_pie %}checked{% endif %}>
-                  <label class="custom-control-label" for="pie">Pie</label>
+                  <input type="checkbox" class="custom-control-input" name="show_pie" value="true" id="show_pie" data-chart="pie" {% if properties.show_pie %}checked{% endif %}>
+                  <label class="custom-control-label" for="show_pie">Pie</label>
                 </div>
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" name="show_area" value="true" id="area" {% if properties.show_area %}checked{% endif %}>
-                  <label class="custom-control-label" for="area">Area</label>
-                </div>
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" name="show_map" value="true" id="map" {% if properties.show_map %}checked{% endif %}>
-                  <label class="custom-control-label" for="map">Map</label>
+                  <input type="checkbox" class="custom-control-input" name="show_area" value="true" id="show_area" data-chart="area" {% if properties.show_area %}checked{% endif %}>
+                  <label class="custom-control-label" for="show_area">Area</label>
                 </div>
               </div>
             </div>
@@ -102,8 +94,8 @@
               <div class="form-group">
                 <label class="category">Initial chart type</label>
                 <select class="custom-select" id="initial-chart-type" name="initial_chart">
-                  <option {% if properties.initial_chart == "column" %}selected{% endif %} value="column">Column</option>
                   <option {% if properties.initial_chart == "bar" %}selected{% endif %} {% if not properties.show_bar %}hidden{% endif %} value="bar">Bar</option>
+                  <option {% if properties.initial_chart == "column" %}selected{% endif %} value="column">Column</option>
                   <option {% if properties.initial_chart == "line" %}selected{% endif %} {% if not properties.show_line %}hidden{% endif %} value="line">Line</option>
                   <option {% if properties.initial_chart == "pie" %}selected{% endif %} {% if not properties.show_pie %}hidden{% endif %} value="pie">Pie</option>
                   <option {% if properties.initial_chart == "area" %}selected{% endif %} {% if not properties.show_area %}hidden{% endif %} value="area">Area</option>
@@ -163,11 +155,13 @@
             </div>
           </div>
 
+          <!--
           <div class="form-group mt-4" hidden>
             <label class="category">Tooltip label</label>
             <input name="tooltip" type="text" class="form-control" id="tooltip-label" value="{% if properties.tooltip %}{{ properties.tooltip }}{% else %}Tooltip label <b>with bold</b> and <i>italic</i>: {point.y}{% endif %}">
             <small>Use <code>{point.y}</code> and <code>{point.x}</code> to get the values of either the Y or X axis. You can also add bold and italic text by wrapping it in HTML tags: <code>&lt;b&gt;bold text&lt;/b&gt;</code> and <code>&lt;i&gt;italicized text&lt;/i&gt;</code>.</small>
           </div>
+          -->
 
           <div class="form-group mt-4">
             <label class="category">Color scheme</label>
@@ -290,37 +284,89 @@
             </div>
           </div>
 
-          <div class="row mt-4">
-            <div class="col-lg-6">
-              <div class="form-group">
-                <label class="category">Generate preview</label>
-                <select class="custom-select" id="chart-type">
-                  <option selected value="column">Column</option>
-                  <option hidden value="bar">Bar</option>
-                  <option hidden value="line">Line</option>
-                  <option hidden value="pie">Pie</option>
-                  <option hidden value="area">Area</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <label class="category d-block">&nbsp;</label>
-              <div class="btn btn-primary-basic btn-generate-preview">
-                <i class="fal fa-fw fa-eye"></i>
-                Generate preview
-              </div>
-            </div>
+          <button type="submit" class="btn btn-success" form="chart-form">
+            <i class="fas fa-fw fa-save"></i>
+            Save charts
+          </button>
+
+          <div class="btn btn-primary-basic btn-generate-preview">
+            <i class="fal fa-fw fa-eye"></i>
+            Generate preview
           </div>
         </form>
 
-        <button type="submit" class="btn btn-success" form="chart-form">
-          <i class="fas fa-fw fa-save"></i>
-          Save charts
-        </button>
       </div>
       <div class="col-lg-6">
-        <div class="card sticky-top">
-          <div class="card-body" id="chart"></div>
+        <div class="sticky-top p-4 border rounded item-visualisations">
+          <ul class="nav nav-tabs nav-justified mb-4" role="tablist">
+            <li data-chart="bar" {% if not properties.show_bar %}hidden{% endif %} class="nav-item"><a class="nav-link" data-tab="bar" data-viz="bar"><i class="fal fa-fw fa-chart-bar fa-rotate-90"></i> Bar</a></li>
+            <li data-chart="column" {% if not properties.show_column %}hidden{% endif %} class="nav-item"><a class="nav-link" data-tab="column" data-viz="column"><i class="fal fa-fw fa-chart-bar"></i> Column</a></li>
+            <li data-chart="drilldown" {% if not properties.show_drilldown %}hidden{% endif %} class="nav-item"><a class="nav-link" data-tab="drilldown" data-viz="drilldown" data-drilldown="true"><i class="fal fa-fw fa-chart-bar"></i> Drilldown</a></li>
+            <li data-chart="line" {% if not properties.show_line %}hidden{% endif %} class="nav-item"><a class="nav-link" data-tab="line" data-viz="line"><i class="fal fa-fw fa-chart-line"></i> Line</a></li>
+            <li data-chart="area" {% if not properties.show_area %}hidden{% endif %} class="nav-item"><a class="nav-link" data-tab="area" data-viz="area"><i class="fal fa-fw fa-chart-area"></i> Area</a></li>
+            <li data-chart="pie-wrapper" {% if not properties.show_pie %}hidden{% endif %} class="nav-item"><a class="nav-link" data-tab="pie-wrapper" data-viz="pie"><i class="fal fa-fw fa-chart-pie"></i> Pie</a></li>
+            <li data-chart="map" {% if not properties.show_map %}hidden{% endif %} class="nav-item"><a class="nav-link" data-tab="map" data-viz="map"><i class="fal fa-fw fa-map-marked"></i> Map</a></li>
+            <li data-chart="table" class="nav-item"><a class="nav-link" data-tab="table"><i class="fal fa-fw fa-table"></i> Table</a></li>
+          </ul>
+
+          <div class="tab-content">
+            <div id="bar" role="tabpanel" class="mb-4 tab-pane">
+              <h4 class="text-center"><i class="fa fa-cog fa-spin"></i> Loading</h4>
+            </div>
+            <div id="column" role="tabpanel" class="mb-4 tab-pane">
+              <h4 class="text-center"><i class="fa fa-cog fa-spin"></i> Loading</h4>
+            </div>
+            <div id="line" role="tabpanel" class="mb-4 tab-pane">
+              <h4 class="text-center"><i class="fa fa-cog fa-spin"></i> Loading</h4>
+            </div>
+            <div id="area" role="tabpanel" class="mb-4 tab-pane">
+              <h4 class="text-center"><i class="fa fa-cog fa-spin"></i> Loading</h4>
+            </div>
+            <div id="drilldown" role="tabpanel" class="mb-4 tab-pane">
+              <h4 class="text-center"><i class="fa fa-cog fa-spin"></i> Loading</h4>
+            </div>
+            <div id="map" role="tabpanel" class="leaflet-map tab-pane">
+              <h4 class="text-center"><i class="fa fa-cog fa-spin"></i> Loading</h4>
+            </div>
+            <div id="pie-wrapper" role="tabpanel" class="pie-wrapper mb-4 tab-pane">
+              <div id="pie">
+                <h4 class="text-center"><i class="fa fa-cog fa-spin"></i> Loading</h4>
+              </div>
+              <div id="pie-toggles" class="text-center mt-3">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                  <button type="button" class="btn btn-primary switch-pie prev-pie"><i class="fa fa-arrow-left m-0"></i></button>
+                  <button disabled type="button" class="btn btn-primary-outline disabled current-pie"></button>
+                  <button type="button" class="btn btn-primary switch-pie next-pie"><i class="fa fa-arrow-right m-0"></i></button>
+                </div>
+              </div>
+            </div>
+            <div id="table" role="tabpanel" class="table tab-pane">
+              <table class="table datatable datatable-card">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Quantity</th>
+                    <th>Material</th>
+                    <th>From</th>
+                    <th>To</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for each in info.data.all %}
+                  {% if forloop.counter < 100 %}
+                    <tr>
+                      <td>{{ each.timeframe }}</td>
+                      <td>{{ each.quantity }} {{ each.unit }}</td>
+                      <td>{{ each.material_name }}</td>
+                      <td>{{ each.origin_space }}</td>
+                      <td>{{ each.destination_space }}</td>
+                    </tr>
+                  {% endif %}
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -333,6 +379,12 @@
   <script src="https://code.highcharts.com/modules/exporting.js"></script>
   <script src="https://code.highcharts.com/modules/drilldown.js"></script>
   <script>
+    // url to get the data from
+    const json_url = "/library/{{ info.source_id }}/data/json/";
+
+    // dataviz properties
+    const properties = {{ properties|safe }};
+
     // color scheme definitions from colorbrewer2.org combined with default MoC colours
     var moc = ["#144d58","#a6cee3","#33a02c","#b2df8a","#e31a1c","#fb9a99","#ff7f00","#fdbf6f","#6a3d9a","#cab2d6","#b15928","#ffff99"];
     var accent = ["#7fc97f","#beaed4","#fdc086","#ffff99","#386cb0","#f0027f","#bf5b17","#666666"];
@@ -343,8 +395,8 @@
 
     // user settings
     // titles
-    let title = "Title";
-    let subtitle = "Subtitle";
+    let title = "{{ info }}";
+    let subtitle = "{% if properties.subtitle %}{{ properties.subtitle }}{% else %}Subtitle{% endif %}";
 
     // color scheme
     let colorScheme = moc;
@@ -352,33 +404,27 @@
     // chart types
     let chartType = "column";
 
-    // tooltip label
-    let tooltipLabel = "Tooltip label <b>with bold</b> and <i>italic</i>: {point.y}"
-
     // x-axis
     let xAxisType = "category";
-    let xAxisLabelText = " ";
+    let xAxisLabelText = "{{ properties.xaxis_label_text }}";
     let xAxisMin = null;
     let xAxisMax = null;
 
     // y-axis
     let yAxisType = "linear";
-    let yAxisLabelText = " ";
+    let yAxisLabelText = "{{ properties.yaxis_label_text }}";
     let yAxisMin = null;
     let yAxisMax = null;
 
     // other settings
-    let showDataLabels = false;
-    let showLegend = false;
-    let showMap = true;
-    let showIndividualColors = false;
+    let showDataLabels = {% if properties.data_labels %}true{% else %}false{% endif %};
+    let showLegend = {% if properties.legend %}true{% else %}false{% endif %};
+    let showIndividualColors = {% if properties.individual_colors %}true{% else %}false{% endif %};
 
     // function to gather user settings and generate dataset preview
     function generatePreview() {
       // set button icon to load
       $(".btn-generate-preview i").toggleClass("fa-cog fa-spin fa-eye");
-
-      $("#preview").removeAttr("hidden")
 
       // gather user settings
       // titles
@@ -387,9 +433,6 @@
 
       // chart types
       chartType = $("#chart-type").val();
-
-      // tooltip label
-      tooltipLabel = $("#tooltip-label").val();
 
       // x-axis
       xAxisType = $("#xaxis-type").val();
@@ -409,17 +452,10 @@
       // legend
       showLegend = $("#legend").is(":checked") ? true : false;
 
-      // map
-      showMap = $("#map").is(":checked") ? true : false;
-
       // individual-colors
       showIndividualColors = $("#individual-colors").is(":checked") ? true : false;
 
-      // update chart
-      chart.update({
-        chart: {
-          type: chartType,
-        },
+      let updatedSettings = {
         title: {
           text: title
         },
@@ -446,9 +482,6 @@
         legend: {
           enabled: showLegend
         },
-        tooltip: {
-          pointFormat: tooltipLabel
-        },
         plotOptions: {
           series: {
             dataLabels: {
@@ -457,35 +490,53 @@
             colorByPoint: showIndividualColors,
           }
         },
+      }
+
+      // update chart
+      barChart.update(updatedSettings);
+      columnChart.update(updatedSettings);
+      lineChart.update(updatedSettings);
+      areaChart.update(updatedSettings);
+      pieChart.update(updatedSettings);
+
+      pieChart.update({
+        xAxis: {
+          lineColor: "transparent",
+          title: {
+            text: null,
+          },
+        },
+        yAxis: {
+          title: {
+            text: null,
+          }
+        },
+        plotOptions: {
+          series: {
+            colorByPoint: true,
+            dataLabels: {
+              enabled: true,
+            },
+          }
+        },
       });
 
-      if (chartType == "pie") {
-        chart.update({
-          xAxis: {
-            lineColor: "transparent",
-            title: {
-              text: null,
-            },
-          },
-          yAxis: {
-            title: {
-              text: null,
-            }
-          },
-          plotOptions: {
-            series: {
-              colorByPoint: true,
-              dataLabels: {
-                enabled: true,
-              },
-            }
-          },
-        });
-      }
+      // only show enabled chart tabs
+      $("li.nav-item[data-chart!='table']").attr("hidden", "hidden");
+
+      $(".enabled-chart-types input").each(function() {
+        let checkbox = $(this);
+        let chartType = checkbox.data("chart");
+        if ( checkbox.prop("checked") ) {
+          $("li.nav-item[data-chart='" + chartType + "']").removeAttr("hidden");
+        }
+      })
+
+      let initialChart = $("#initial-chart-type").val();
+      $(".nav-link[data-viz='" + initialChart + "']").click();
 
       // revert button icon
       $(".btn-generate-preview i").toggleClass("fa-cog fa-spin fa-eye");
-      scrollToID("preview")
     }
 
     $(".btn-generate-preview").click(function() {
@@ -551,202 +602,131 @@
     })
 
     // highchart defaults
-    const defaultFont = "Lato, Helvetica Neue, Arial, Helvetica, sans-serif";
+    var defaultFont = "Lato, Helvetica Neue, Arial, Helvetica, sans-serif";
+    var moc = ["#144d58","#a6cee3","#33a02c","#b2df8a","#e31a1c","#fb9a99","#ff7f00","#fdbf6f","#6a3d9a","#cab2d6","#b15928","#ffff99"];
+    var accent = ["#7fc97f","#beaed4","#fdc086","#ffff99","#386cb0","#f0027f","#bf5b17","#666666"];
+    var dark = ["#1b9e77","#d95f02","#7570b3","#e7298a","#66a61e","#e6ab02","#a6761d","#666666"];
+    var pastel = ["#fbb4ae","#b3cde3","#ccebc5","#decbe4","#fed9a6","#ffffcc","#e5d8bd","#fddaec","#f2f2f2"];
+    var set = ["#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00","#ffff33","#a65628","#f781bf","#999999"];
+    var dozen = ["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"];
 
     Highcharts.setOptions({
-      lang: {
-        drillUpText: "Back to {series.name}"
-      }
-    });
-
-    var chart = Highcharts.chart("chart", {
+      colors: window["{{ properties.scheme }}"],
+      fontFamily: defaultFont,
       chart: {
-        type: chartType,
+        backgroundColor: "#fcfcfc",
         animation: false,
-        style: {
-          fontFamily: defaultFont
-        },
+        zoomType: "x",
       },
-
-      colors: colorScheme,
       title: {
-        text: title,
+        text: "{{ properties.title }}"
       },
-
       subtitle: {
-        text: subtitle
+        text: "{{ properties.subtitle }}"
       },
-
-      xAxis: {
-        type: xAxisType,
-        lineColor: "#808080",
-        title: {
-          text: xAxisLabelText,
-          margin: 15,
-          style: {
-            fontSize: "14px",
-          }
-        },
-        labels: {
-          style: {
-            fontSize: "14px",
-          }
-        }
-      },
-
-      yAxis: {
-        type: yAxisType,
-        gridLineColor: "#efefef",
-        lineColor: "#808080",
-        title: {
-          text: yAxisLabelText,
-          margin: 30,
-          style: {
-            fontSize: "14px",
-          }
-        },
-        labels: {
-          style: {
-            fontSize: "14px",
-          }
-        }
-      },
-
       legend: {
-        enabled: showLegend
+        {% if properties.show_xaxis_label is not "true" %}
+          enabled: false,
+        {% endif %}
+        backgroundColor: "#fff",
+        borderColor: "#dee2e6",
+        borderWidth: 1,
       },
-
-      tooltip: {
-        pointFormat: tooltipLabel
+      {% if properties.show_xaxis_label == "true" %}
+        xAxis: {
+          title: {
+            text: "{{ properties.xaxis_label_text }}"
+          },
+        },
+      {% endif %}
+      yAxis: {
+        {% if properties.show_yaxis_label == "true" %}
+          title: {
+            text: "{{ properties.yaxis_label_text }}"
+          },
+        {% endif %}
+        {% if properties.yaxis_range == "true" %}
+          softMin: {% if properties.yaxis_min %}{{ properties.yaxis_min }}{% else %}null{% endif %},
+          softMax: {% if properties.yaxis_max %}{{ properties.yaxis_max }}{% else %}null{% endif %},
+        {% endif %}
       },
-
-      exporting: {
-        enabled: false,
-        scale: 4,
-      },
-
+      {% if properties.legend == "true" %}
+        legend: {
+          enabled: true
+        },
+      {% endif %}
       plotOptions: {
         series: {
-          animation: false,
-          states: {
-            inactive: {
-              enabled: false
-            }
-          },
-          dataLabels: {
-            enabled: showDataLabels,
-          },
-          colorByPoint: showIndividualColors,
+          {% if properties.data_labels == "true" %}
+            dataLabels: {
+              enabled: true,
+            },
+          {% endif %}
+          {% if properties.individual_colors == "true" %}
+            colorByPoint: true,
+          {% endif %}
         }
       },
-
       credits: {
         text: "Generated by Metabolism of Cities",
         href: null,
+        position: {
+          y: -3,
+          align: "center",
+        },
         style: {
           fontSize: "12px",
           cursor: "default",
-          height: "50px",
         },
       },
-
-      series: [{
-        name: "Sea catch",
-        data: [
-          {
-            name: "Wild fish",
-            y: 35271,
-            drilldown: "Wild fish"
-          },
-          {
-            name: "Non-fish",
-            y: 14000,
-            drilldown: "Non-fish"
-          },
-          {
-            name: "Aquatic plant",
-            y: 37400,
-            drilldown: "Aquatic plant"
-          },
-        ]
-      }],
-
-      drilldown: {
-        drillUpButton: {
-          theme: {
-            fill: "#144d58",
-            color: "#fff",
-            stroke: "#144d58",
-            r: 4,
-            states: {
-              hover: {
-                fill: "#0f3b43",
-              },
-            },
-          }
-        },
-
-        activeAxisLabelStyle: {
-          "color": "#144d58",
-          "fontWeight": "normal",
-        },
-
-        activeDataLabelStyle: {
-          "color": "#144d58",
-          "fontWeight": "normal",
-        },
-
-        series: [
-          {
-            name: "Wild fish",
-            id: "Wild fish",
-            data: [
-              ["Abalone", 10],
-              ["Small pelagics", 14490],
-              ["Hake longline", 8188],
-              ["Patagonian toothfish", 120],
-              ["West Coast Rock Lobster", 1205],
-              ["Commercial line fishers", 3378],
-              ["Sharks", 24],
-              ["Tuna & swordfish longline/pelagic shark", 3256],
-              ["Tuna pole", 4600],
-            ]
-          },
-          {
-            name: "Non-fish",
-            id: "Non-fish",
-            data: [
-              ["Squid", 11000],
-              ["Octopus", 3000],
-            ]
-          },
-          {
-            name: "Aquatic plant",
-            id: "Aquatic plant",
-            data: [
-              ["Kelp", 37400],
-            ]
-          },
-        ]
-      }
+      lang: {
+        drillUpText: "Back to {series.name}"
+      },
     });
 
     // only show enabled chart types in the dropdowns for initial chart type and preview
     function enabledCharts() {
       $("#initial-chart-type option, #chart-type option").attr("hidden", "hidden");
 
+
       $(".enabled-chart-types input").each(function() {
         let checkbox = $(this);
-        let chartType = checkbox.attr("id");
+        let chartType = checkbox.data("chart");
         if ( checkbox.prop("checked") ) {
           $("#initial-chart-type option[value='" + chartType + "'], #chart-type option[value='" + chartType + "']").removeAttr("hidden");
         }
       })
     }
 
-
     $(".enabled-chart-types input").change(function() {
       enabledCharts()
     })
+
+    {% if properties %}
+      $(".nav-link[data-tab='{{ properties.initial_chart }}']").click();
+    {% else %}
+      $(".nav-link[data-tab='bar']").click();
+    {% endif %}
+  </script>
+  <script src="{% static 'js/data.js' %}?refresh=1333"></script>
+  <script>
+    $.get(json_url, function(data) {
+      dataDefault = data;
+      dataDefaultLoaded = true;
+      $(".tab-pane[data-drilldown!='true']").removeClass("loading");
+      createViz("bar")
+      createViz("column")
+      createViz("line")
+      createViz("area")
+      createViz("pie")
+
+      $(".nav-link[data-viz='{{ properties.initial_chart }}']").click();
+    });
+
+    $.get(json_url + "?drilldown=true", function(data) {
+      dataDrill = data;
+      dataDrillLoaded = true;
+      $(".tab-pane[data-drilldown='true']").removeClass("loading");
+    });
   </script>
 {% endblock %}

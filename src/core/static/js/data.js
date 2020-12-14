@@ -1,5 +1,6 @@
+var barChart;
 function createBar(data) {
-  Highcharts.chart("bar", {
+  barChart = Highcharts.chart("bar", {
     chart: {
       type: "bar",
     },
@@ -27,8 +28,9 @@ function createBar(data) {
   });
 }
 
+var columnChart;
 function createColumn(data) {
-  Highcharts.chart("column", {
+  columnChart = Highcharts.chart("column", {
     chart: {
       type: "column",
     },
@@ -56,8 +58,9 @@ function createColumn(data) {
   });
 }
 
+var lineChart;
 function createLine(data) {
-  Highcharts.chart("line", {
+  lineChart = Highcharts.chart("line", {
     xAxis: {
       categories: data.x_axis
     },
@@ -77,8 +80,9 @@ function createLine(data) {
   });
 };
 
+var areaChart;
 function createArea(data) {
-  Highcharts.chart("area", {
+  areaChart = Highcharts.chart("area", {
     chart: {
       type: "area"
     },
@@ -106,8 +110,9 @@ function createArea(data) {
   });
 };
 
+var drilldownChart;
 function createDrilldown(data) {
-  Highcharts.chart("drilldown", {
+  drilldownChart = Highcharts.chart("drilldown", {
     chart: {
       type: "bar",
     },
