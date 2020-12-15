@@ -1175,7 +1175,9 @@ class LibraryItem(Record):
             df = file["df"]
             column_count = len(df.columns)
 
-            if column_count <= 8:
+            if column_count <= 5:
+                type = "population"
+            elif column_count <= 8:
                 type = "stock"
             else:
                 type= "flows"
@@ -1215,6 +1217,20 @@ class LibraryItem(Record):
                         segment = row[9]
                     except:
                         segment = None
+                elif type == "population":
+                    period = row[1]
+                    start = row[1]
+                    end = None
+                    material_name = "People"
+                    material_code = "EMP1.5.1"
+                    unit = "item"
+                    quantity = row[2]
+                    space = row[3].strip()
+                    comment = row[4]
+                    try:
+                        segment = row[5]
+                    except:
+                        segment = None
 
                 if material_code not in materials:
                     m = Material.objects.get(catalog_id=18998, code=material_code)
@@ -1233,7 +1249,7 @@ class LibraryItem(Record):
                     start = start.strftime("%Y-%m-%d")
                     end = end.strftime("%Y-%m-%d")
                     full_string = str(start) + str(end)
-                elif type == "stock":
+                elif type == "stock" or type == "population":
                     start = start.strftime("%Y-%m-%d")
                     end = None
                     full_string = str(start)
