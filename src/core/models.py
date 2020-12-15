@@ -1173,6 +1173,12 @@ class LibraryItem(Record):
             all.delete()
 
             df = file["df"]
+            column_count = len(df.columns)
+
+            if column_count <= 8:
+                type = "stock"
+            else:
+                type= "flows"
 
             materials = {}
             units = {}
@@ -1181,19 +1187,34 @@ class LibraryItem(Record):
             items = []
 
             for row in df.itertuples():
-                period = row[1]
-                start = row[2]
-                end = row[3]
-                material_name = row[4]
-                material_code = row[5].strip()
-                quantity = row[6]
-                unit = row[7]
-                space = row[8].strip()
-                comment = row[9]
-                try:
-                    segment = row[10]
-                except:
-                    segment = None
+                if type == "flows":
+                    period = row[1]
+                    start = row[2]
+                    end = row[3]
+                    material_name = row[4]
+                    material_code = row[5].strip()
+                    quantity = row[6]
+                    unit = row[7]
+                    space = row[8].strip()
+                    comment = row[9]
+                    try:
+                        segment = row[10]
+                    except:
+                        segment = None
+                elif type == "stock":
+                    period = row[1]
+                    start = row[1]
+                    end = None
+                    material_name = row[2]
+                    material_code = row[3].strip()
+                    quantity = row[4]
+                    unit = row[5]
+                    space = row[6].strip()
+                    comment = row[8]
+                    try:
+                        segment = row[9]
+                    except:
+                        segment = None
 
                 if material_code not in materials:
                     m = Material.objects.get(catalog_id=18998, code=material_code)
@@ -1208,10 +1229,16 @@ class LibraryItem(Record):
                     u = Unit.objects.filter(symbol=unit).exclude(type=99)
                     units[unit] = u[0]
 
-                start = start.strftime("%Y-%m-%d")
-                end = end.strftime("%Y-%m-%d")
+                if type == "flows":
+                    start = start.strftime("%Y-%m-%d")
+                    end = end.strftime("%Y-%m-%d")
+                    full_string = str(start) + str(end)
+                elif type == "stock":
+                    start = start.strftime("%Y-%m-%d")
+                    end = None
+                    full_string = str(start)
+                    period = str(start)
 
-                full_string = str(start) + str(end)
                 if full_string not in times:
                     t = TimePeriod.objects.create(
                         start = start,
