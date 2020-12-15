@@ -357,11 +357,19 @@ def data_json(request, id):
     lat_lng = {}
     top_level = []
 
+    number_of_materials = info.data.values("material_name").distinct().count()
+    number_of_origins = info.data.values("origin_space__name").distinct().count()
+    number_of_segments = info.data.values("segment_name").distinct().count()
+
     if "drilldown" in request.GET:
         group_by = "timeframe__name"
         grouped_data = data.values(group_by).annotate(total=Sum("quantity")).order_by(group_by)
         subdivision = "origin_space"
-        if id == 578115:
+        if number_of_origins > 1:
+            subdivision = "origin_space"
+        elif number_of_materials > 1:
+            subdivision = "material"
+        elif number_of_segments > 1:
             subdivision = "segment"
 
         for each in grouped_data:
@@ -382,7 +390,7 @@ def data_json(request, id):
                 elif subdivision == "segment":
                     this_data.append([data_point.segment_name, data_point.quantity])
                 elif subdivision == "material":
-                    this_data.append([data_point.material.name, data_point.quantity])
+                    this_data.append([data_point.material_name, data_point.quantity])
 
             series.append({
                 "name": each[group_by],
@@ -395,6 +403,8 @@ def data_json(request, id):
             x_axis_field = each.timeframe.name
             if each.segment_name:
                 stacked_field = each.segment_name
+            elif number_of_materials > 1 and number_of_origins < 2:
+                stacked_field = each.material_name
             elif each.origin_space:
                 stacked_field = each.origin_space.name
                 lat_lng[stacked_field] = each.origin_space.get_centroids
