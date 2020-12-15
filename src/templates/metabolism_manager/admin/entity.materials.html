@@ -3,13 +3,22 @@
 {% block title %}Metabolism Manager{% endblock %}
 {% block page_name %}entity materials{% endblock %}
 
+{% block head %}
+  <style>
+    #add-material table.table {
+      border: none !important;
+    }
+  </style>
+{% endblock %}
+
+
 {% block content %}
   {% include "metabolism_manager/admin/_entity.menu.html" %}
 
   <h3>{{ slug|title }}</h3>
 
   {% if data %}
-  <div class="card border table-responsive mb-4">
+  <div class="table-responsive mb-4">
     <table class="table">
       <thead>
         <tr>
@@ -20,17 +29,17 @@
           {% endif %}
           <th class="border-0">Type</th>
           <th class="border-0">Date</th>
-          <th class="border-0">Edit</th>
+          <th class="border-0"></th>
         </tr>
       </thead>
       <tbody>
         {% for each in data %}
           <tr>
             <td>
-            <i class="fa fa-{{ each.material_type.parent.icon }}"></i>
+            <i class="fal fa-fw fa-{{ each.material_type.parent.icon }}"></i>
             {{ each.material_type.parent }}</td>
             <td>
-              <a href="{% url "platformu:admin_datapoint" each.id %}">
+              <a href="{% url 'platformu:admin_datapoint' each.id %}">
               {% if each.name %}
                 {{ each.name }}
               {% else %}
@@ -43,11 +52,11 @@
             {% endif %}
             <td>
             {% if each.quantity > 0 %}
-            <i class="fa fa-sign-in-alt"></i>
+            <i class="fal fa-sign-in-alt"></i>
             Demand
             {% else %}
             <span class="text-success">
-            <i class="fa fa-sign-out-alt"></i>
+            <i class="fal fa-sign-out-alt"></i>
             Supply
             </span>
             {% endif %}
@@ -55,7 +64,7 @@
             <td>
               {{ each.start_date }} - {{ each.end_date }}
             </td>
-            <td><a href="edit/{{ each.id }}/?prev={{ request.get_full_path }}"><i class="fa fa-pencil"></i></a></td>
+            <td class="text-right has-button"><a class="btn btn-primary btn-sm" href="edit/{{ each.id }}/?prev={{ request.get_full_path }}"><i class="fal fa-pencil"></i></a></td>
           </tr>
         {% endfor %}
       </tbody>

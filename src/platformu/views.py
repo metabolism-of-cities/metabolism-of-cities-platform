@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from core.models import *
+from datetime import date
 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -141,26 +142,35 @@ def admin_dashboard(request, organization=None):
         if not "lat" in gps:
             messages.error(request, "Please ensure that you enter the address/GPS details first.")
         data = MaterialDemand.objects.filter(owner__in=organization_list)
+        current = data.filter(start_date__lte=date.today(), end_date__gte=date.today())
+        latest = data.order_by('-id')[:10]
         material_list = MaterialDemand.objects.filter(owner__in=organization_list).values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
 
         # We need to make each bubble relative to the smallest value in that group
         # We can improve efficiency... starting with a single query to obtain only largest values
         # But for now efficiency is not that big a deal
-        for each in data:
-            material = each.material_type
-            if each.unit.multiplication_factor:
-                # We always need to convert to a standard unit
-                multiplied = each.unit.multiplication_factor * each.absolute_quantity()
-                if material.name in min_values:
-                    current = min_values[material.name]
-                    min_values[material.name] = min([multiplied, current])
-                else:
-                    min_values[material.name] = multiplied
+
+        # Message from Guus: we're not using bubbles anymore, so this is no longer necessary
+        # Keeping it just in case
+
+        # for each in data:
+        #     material = each.material_type
+        #     if each.unit.multiplication_factor:
+        #         # We always need to convert to a standard unit
+        #         multiplied = each.unit.multiplication_factor * each.absolute_quantity()
+        #         if material.name in min_values:
+        #             current = min_values[material.name]
+        #             min_values[material.name] = min([multiplied, current])
+        #         else:
+        #             min_values[material.name] = multiplied
 
     context = {
         "page": "dashboard",
         "my_organization": my_organization,
         "data": data,
+        "current": current,
+        "latest": latest,
+        "today": date.today(),
         "material_list": material_list,
         "gps": gps,
         "min_values": min_values,
@@ -282,7 +292,7 @@ def admin_entity(request, organization, id):
     context = {
         "page": "entity",
         "my_organization": my_organization,
-        "info": get_entity_record(request, my_organization, id)
+        "info": get_entity_record(request, my_organization, id),
     }
     return render(request, "metabolism_manager/admin/entity.html", context)
 

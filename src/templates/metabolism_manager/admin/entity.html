@@ -16,54 +16,52 @@
     </div>
   {% endif %}
   <div class="col-md-{% if info.image %}8{% else %}12{% endif %}">
-    <div class="card border">
-      <table class="table mb-0">
-        <tbody>
-          {% if info.meta_data.employees %}
-            <tr>
-              <th>Employees</th>
-              <td> {{ info.meta_data.employees }}</td>
-            </tr>
-          {% endif %}
-          {% if info.sectors.all %}
-            <tr>
-              <th>Sector</th>
-              <td> {% for each in info.sectors.all %}{{ each }}{% endfor %}</td>
-            </tr>
-          {% endif %}
-          {% if info.meta_data.address %}
-            <tr>
-              <th>Address</th>
-              <td> {{ info.meta_data.address }}</td>
-            </tr>
-          {% endif %}
-            <tr>
-              <th>GPS coordinates</th>
-              <td> {{ info.meta_data.lat }}, {{ info.meta_data.lng }}</td>
-            </tr>
-          {% if info.description %}
-            <tr>
-              <th>Description</th>
-              <td> {{ info.description|linebreaksbr }}</td>
-            </tr>
-          {% endif %}
+    <table class="table mb-0">
+      <tbody>
+        {% if info.meta_data.employees %}
           <tr>
-            <th>Email</th>
-            <td><a href="mailto:{{ info.email }}">{{ info.email }}</a></td>
+            <th>Employees</th>
+            <td> {{ info.meta_data.employees }}</td>
           </tr>
-          {% if info.url %}
+        {% endif %}
+        {% if info.sectors.all %}
           <tr>
-            <th>Website</th>
-            <td><a href="{{ info.url }}">{{ info.url }}</a></td>
+            <th>Sector</th>
+            <td> {% for each in info.sectors.all %}{{ each }}{% endfor %}</td>
           </tr>
-          {% endif %}
+        {% endif %}
+        {% if info.meta_data.address %}
           <tr>
-            <th>Status</th>
-            <td>{% if info.is_deleted %} Inactive {% else %} Active {% endif %}</td>
+            <th>Address</th>
+            <td> {{ info.meta_data.address }}</td>
           </tr>
-        </tbody>
-      </table>
-    </div>
+        {% endif %}
+          <tr>
+            <th>GPS coordinates</th>
+            <td> {{ info.meta_data.lat }}, {{ info.meta_data.lng }}</td>
+          </tr>
+        {% if info.description %}
+          <tr>
+            <th>Description</th>
+            <td> {{ info.description|linebreaksbr }}</td>
+          </tr>
+        {% endif %}
+        <tr>
+          <th>Email</th>
+          <td><a href="mailto:{{ info.email }}">{{ info.email }}</a></td>
+        </tr>
+        {% if info.url %}
+        <tr>
+          <th>Website</th>
+          <td><a href="{{ info.url }}">{{ info.url }}</a></td>
+        </tr>
+        {% endif %}
+        <tr>
+          <th>Status</th>
+          <td>{% if info.is_deleted %} Inactive {% else %} Active {% endif %}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 {% endblock %}
