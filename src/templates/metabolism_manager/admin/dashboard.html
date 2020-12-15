@@ -12,6 +12,10 @@
       line-height: .75;
     }
 
+    .leaflet-map {
+      box-shadow: none;
+    }
+
     .leaflet-map,
     .map-listing {
       height: 700px;
@@ -21,6 +25,7 @@
     .map-listing {
       overflow: hidden;
       overflow-y: auto;
+      font-size: .75rem;
     }
 
     .map-listing tbody tr:hover {
@@ -37,8 +42,13 @@
     }
 
     .popup-title {
+      font-weight: bold;
       font-size: 1rem;
       padding: .75rem 1.25rem;
+    }
+
+    #latest .card-img-top {
+      object-fit: contain;
     }
   </style>
 {% endblock %}
@@ -51,9 +61,6 @@
     <li class="nav-item">
       <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Map</a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" id="table-tab" data-toggle="tab" href="#table" role="tab" aria-controls="table" aria-selected="false">Table</a>
-    </li>
     {% for key,data in types.items %}
       <li class="nav-item">
         <a class="nav-link" id="{{ key }}-tab" data-toggle="tab" href="#{{ key }}" role="tab" aria-controls="{{ key }}" aria-selected="false">
@@ -61,6 +68,16 @@
         </a>
       </li>
     {% endfor %}
+    <li class="nav-item">
+      <a class="nav-link" id="latest-tab" data-toggle="tab" href="#latest" role="tab" aria-controls="latest" aria-selected="false">
+        Latest <span class="badge badge-dark ml-2">{{ latest|length }}</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="current-tab" data-toggle="tab" href="#current" role="tab" aria-controls="current" aria-selected="false">
+        Current demand / supply <span class="badge badge-dark ml-2">{{ current|length }}</span>
+      </a>
+    </li>
   </ul>
 
   <div class="tab-content" id="myTabContent">
@@ -112,24 +129,11 @@
 
       <section class="row">
         <div class="col-lg-9">
-          <div id="map" class="leaflet-map"></div>
+          <div id="map" class="leaflet-map border rounded-0"></div>
         </div>
         <div class="col-lg-3 map-listing">
           <table class="table table-sm">
             <tbody>
-              {% for each in data %}
-              <tr data-lat="{{ each.owner.meta_data.lat }}" data-lng="{{ each.owner.meta_data.lng }}">
-                <td class="text-center">
-                  {% if each.type == "supply" %}
-                    <i class="fa fa-sign-out text-success"></i>
-                  {% else %}
-                    <i class="fa fa-sign-in text-danger"></i>
-                  {% endif %}
-                </td>
-                <td>{{ each }}</td>
-                <td>{{ each.absolute_quantity }} {{ each.unit }}</td>
-              </tr>
-              {% endfor %}
             </tbody>
           </table>
         </div>
@@ -137,44 +141,112 @@
       </section>
     </div>
 
-    <div class="tab-pane" id="table" role="tabpanel" aria-labelledby="table-tab">
-      <section id="listings" class="row"></section>
-    </div>
-
     {% for key,data in types.items %}
       <div class="tab-pane" id="{{ key }}" role="tabpanel" aria-labelledby="{{ key }}-tab">
         <table class="table datatable">
           <thead>
             <tr>
-              <th>Date</th>
+              <th>Available from</th>
+              <th>Until</th>
               <th>Type</th>
               {% if key == "Resources" %}
                 <th>Name</th>
               {% endif %}
               <th>Quantity</th>
               <th>Organisation</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
           {% for each in data %}
             <tr>
-              <td><a href="{% url 'platformu:admin_datapoint' each.id %}">{{ each.start_date }} - {{ each.end_date }}</a></td>
+              <td class="text-nowrap">
+                {{ each.start_date|date:'d N Y' }}
+              </td>
+              <td class="text-nowrap">
+                {{ each.end_date|date:'d N Y' }}
+              </td>
               {% if key == "Resources" %}
-                <td>{{ each.material_type.parent }}</td>
+                <td class="text-nowrap">{{ each.material_type.parent }}</td>
               {% endif %}
-              <td>
+              <td class="text-nowrap">
               {% if each.name %}
                 {{ each.name }}<br>
               {% endif %}
               {{ each.material_type }}</td>
-              <td>{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
-              <td>{{ each.owner }}</td>
+              <td class="text-nowrap">{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
+              <td class="text-nowrap">{{ each.owner }}</td>
+              <td class="has-button text-right">
+                <a class="btn btn-primary btn-sm" href="{% url 'platformu:admin_datapoint' each.id %}"><i class="far mr-0 fa-info-circle"></i></a>
+              </td>
             </tr>
           {% endfor %}
           </tbody>
         </table>
       </div>
     {% endfor %}
+
+    <div class="tab-pane" id="latest" role="tabpanel" aria-labelledby="latest-tab">
+      <div class="row">
+        {% for each in latest %}
+          <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card">
+              <div class="card-header">{{ each.owner }}</div>
+              {% if each.owner.image %}
+                <img src="{{ each.owner.image }}" class="card-img-top p-3" alt="{{ each.owner }}">
+              {% endif %}
+              <ul class="list-group list-group-flush">
+                {% if each.owner.meta_data.address %}
+                  <li class="list-group-item"><i class="fal fa-fw fa-map-marker-alt mr-2"></i> {{ each.owner.meta_data.address }}</li>
+                {% endif %}
+                <li class="list-group-item"><i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-2"></i>{{ each.material_type }}</li>
+                <li class="list-group-item"><i class="fal fa-fw fa-balance-scale mr-2"></i>{{ each.absolute_quantity }} {{ each.unit.symbol }}</li>
+                <li class="list-group-item text-{% if each.type == 'supply' %}success{% else %}danger{% endif %}">
+                  <i class="fal fa-fw fa-{% if each.type == 'supply' %}sign-out{% else %}sign-in{% endif %} mr-2"></i>
+                  {% if each.type == "supply" %}Supply{% else %}Demand{% endif %}
+                </li>
+                <li class="list-group-item"><i class="fal fa-fw fa-calendar mr-2"></i>{{ each.start_date|date:'d N Y' }} - {{ each.end_date|date:'d N Y' }}</li>
+                <li class="list-group-item"><i class="fal fa-fw fa-calendar-plus mr-2"></i> Added on {{ each.date_created|date:'d F' }}</li>
+                <li class="list-group-item text-center">
+                  <a class="btn btn-primary" href="{% url 'platformu:admin_datapoint' each.id %}">More details</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="tab-pane" id="current" role="tabpanel" aria-labelledby="current-tab">
+      <div class="row">
+        {% for each in current %}
+          <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card">
+              <div class="card-header">{{ each.owner }}</div>
+              {% if each.owner.image %}
+                <img src="{{ each.owner.image }}" class="card-img-top p-3" alt="{{ each.owner }}">
+              {% endif %}
+              <ul class="list-group list-group-flush">
+                {% if each.owner.meta_data.address %}
+                  <li class="list-group-item"><i class="fal fa-fw fa-map-marker-alt mr-2"></i> {{ each.owner.meta_data.address }}</li>
+                {% endif %}
+                <li class="list-group-item"><i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-2"></i>{{ each.material_type }}</li>
+                <li class="list-group-item"><i class="fal fa-fw fa-balance-scale mr-2"></i>{{ each.absolute_quantity }} {{ each.unit.symbol }}</li>
+                <li class="list-group-item text-{% if each.type == 'supply' %}success{% else %}danger{% endif %}">
+                  <i class="fal fa-fw fa-{% if each.type == 'supply' %}sign-out{% else %}sign-in{% endif %} mr-2"></i>
+                  {% if each.type == "supply" %}Supply{% else %}Demand{% endif %}
+                </li>
+                <li class="list-group-item"><i class="fal fa-fw fa-calendar mr-2"></i>{{ each.start_date|date:'d N Y' }} - {{ each.end_date|date:'d N Y' }}</li>
+                <li class="list-group-item"><i class="fal fa-fw fa-clock mr-2"></i> Available for  {{ each.end_date|timeuntil:today }}</li>
+                <li class="list-group-item text-center">
+                  <a class="btn btn-primary" href="{% url 'platformu:admin_datapoint' each.id %}">More details</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
   </div>
 
 {% endblock %}
@@ -192,7 +264,7 @@
         var uglyTo = new Date(feature.properties.end_date * 1000);
         var prettyTo = uglyTo.toLocaleDateString('en-GB', dateOptions);
 
-      var popupContent = "<div class='popup-title'>" + feature.properties.name + "</div><div class='popup-content'><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + feature.properties.address + "</li><li class='list-group-item'><i class='far fa-fw fa-" + feature.properties.icon + " mr-2'></i>" + feature.properties.material + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + feature.properties.quantity + "</li><li class='list-group-item text-" + feature.properties.status_color + "'><i class='far fa-fw fa-" + feature.properties.status_icon + " mr-2'></i>" + feature.properties.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a class='btn btn-sm btn-primary' href='../data/" + feature.properties.id + "/'>View more details</a></li></ul></div>"
+      var popupContent = "<div class='popup-title'>" + feature.properties.name + "</div><div class='popup-content'><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + feature.properties.address + "</li><li class='list-group-item'><i class='far fa-fw fa-" + feature.properties.icon + " mr-2'></i>" + feature.properties.material + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + feature.properties.quantity + "</li><li class='list-group-item text-" + feature.properties.status_color + "'><i class='far fa-fw fa-" + feature.properties.status_icon + " mr-2'></i>" + feature.properties.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a class='btn btn-sm btn-primary' href='../data/" + feature.properties.id + "/'>More details</a></li></ul></div>"
 
 
       layer.bindPopup(popupContent);
@@ -218,10 +290,9 @@
             "quantity": "{{ each.absolute_quantity }} {{ each.unit }}",
             "status": "{% if each.type == "supply" %}Supply{% else %}Demand{% endif %}",
             "status_icon": "{% if each.type == "supply" %}sign-out{% else %}sign-in{% endif %}",
-            "status_color": "{% if each.type == "supply" %}success{% else %}dark{% endif %}",
+            "status_color": "{% if each.type == "supply" %}success{% else %}danger{% endif %}",
             "start_date": {{ each.start_date|date:"U" }},
             "end_date": {{ each.end_date|date:"U" }},
-            "size": {% if each.unit.multiplication_factor %}Math.min(10*(({{ each.unit.multiplication_factor }}*{{ each.absolute_quantity }})/{{ min_values|get_item:each.material_type.name }}),30){% else %}10{% endif %},
           },
         },
         {% endfor %}
@@ -290,7 +361,6 @@
           if (feature.properties.status == "Demand") {
             state = "demand"
           }
-          console.log(state);
           return L.marker(latlng, {
             icon: window[state + "Icon"]
           })
@@ -300,20 +370,15 @@
       map.addLayer(filteredLayer).fitBounds(filteredLayer.getBounds())
 
       // add listings to the card overview
-      $("section#listings").html("");
+      $(".map-listing tbody").html("");
 
       // date options
-      const dateOptions = {year: 'numeric', month: 'long', day: 'numeric'};
+      const dateOptions = {year: "numeric", month: "long", day: "numeric"};
 
-      $(filteredListings.features).each(function() {
-        var uglyFrom = new Date(this.properties.start_date * 1000);
-        var prettyFrom = uglyFrom.toLocaleDateString('en-GB', dateOptions);
-
-        var uglyTo = new Date(this.properties.end_date * 1000);
-        var prettyTo = uglyTo.toLocaleDateString('en-GB', dateOptions);
-
-        $("section#listings").append("<div class='col-md-6 col-lg-4 mb-4'><div class='card'><div class='card-header'>" + this.properties.name + "</div><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + this.properties.address + "</li><li class='list-group-item'><i class='far fa-fw fa-" + this.properties.icon + " mr-2'></i>" + this.properties.material + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + this.properties.quantity + "</li><li class='list-group-item text-" + this.properties.status_color + "'><i class='far fa-fw fa-" + this.properties.status_icon + " mr-2'></i>" + this.properties.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a href='../data/" + this.properties.id + "/'>View more details</a></li></ul></div></div>")
-      })
+      $.each(filteredLayer._layers, function() {
+        let prop = this.feature.properties;
+        $(".map-listing tbody").append("<tr data-id='" + this._leaflet_id + "'><td class='text-center'><i class='fal fa-fw fa-" + prop.status_icon + " text-" + prop.status_color + "'></i></td><td>" + prop.material + "</td><td>" + prop.quantity + "</td></tr>")
+      });
     }
 
     // run filter whenever one of the filters changes
@@ -344,11 +409,10 @@
     // reset filters and show listings on load
     filterListings();
 
-    $(".map-listing tr").click(function() {
-      let row = $(this);
-      let lat = Number(row.data("lat"));
-      let lng = Number(row.data("lng"));
-      map.panTo([lat, lng]).setMaxZoom()
+    $("body").on("click", ".map-listing tr", function() {
+      let id = $(this).data("id");
+      filteredLayer._layers[id].openPopup();
+      map.setView(filteredLayer._layers[id]._latlng);
     })
   </script>
 {% endblock %}

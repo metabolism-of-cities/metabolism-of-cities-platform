@@ -6,8 +6,8 @@
   {% if not tags %}
     <h2>Organisations</h2>
     <div class="alert alert-warning">
-      You don't have any clusters yet. Please set up a cluster to get started. 
-      A cluster is a way to group the organisations that you manage. You could do this by area (e.g. New York cluster), 
+      You don't have any clusters yet. Please set up a cluster to get started.
+      A cluster is a way to group the organisations that you manage. You could do this by area (e.g. New York cluster),
       by type (e.g. Plumbing cluster), or by any other criteria as you see fit.
    </div>
   {% endif %}
@@ -15,7 +15,7 @@
     <section>
       <h3>Cluster {{ forloop.counter }}: {{ each.name }}</h3>
       {% if each.record_set.all %}
-        <div class="card mb-4 table-responsive">
+        <div class="mb-4 table-responsive">
           <table class="table mb-0">
             <thead>
               <tr>
