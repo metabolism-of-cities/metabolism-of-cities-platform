@@ -193,7 +193,7 @@
             <div class="card">
               <div class="card-header">{{ each.owner }}</div>
               {% if each.owner.image %}
-                <img src="{{ each.owner.image }}" class="card-img-top p-3" alt="{{ each.owner }}">
+                <img src="{{ each.owner.image.url }}" class="card-img-top p-3" alt="{{ each.owner }}">
               {% endif %}
               <ul class="list-group list-group-flush">
                 {% if each.owner.meta_data.address %}
@@ -224,7 +224,7 @@
             <div class="card">
               <div class="card-header">{{ each.owner }}</div>
               {% if each.owner.image %}
-                <img src="{{ each.owner.image }}" class="card-img-top p-3" alt="{{ each.owner }}">
+                <img src="{{ each.owner.image.url }}" class="card-img-top p-3" alt="{{ each.owner }}">
               {% endif %}
               <ul class="list-group list-group-flush">
                 {% if each.owner.meta_data.address %}
