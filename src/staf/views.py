@@ -979,7 +979,7 @@ def units_conversion(request):
 
 @staff_member_required
 def unit(request, id=None):
-    ModelForm = modelform_factory(Unit, fields=("name", "symbol", "type", "multiplication_factor", "description"))
+    ModelForm = modelform_factory(Unit, fields=("name", "symbol", "synonyms", "type", "multiplication_factor", "description"))
     info = None
     if id:
         info = get_object_or_404(Unit, pk=id)

@@ -1226,7 +1226,7 @@ class LibraryItem(Record):
                     spaces[space] = s
 
                 if unit not in units:
-                    u = Unit.objects.filter(symbol=unit).exclude(type=99)
+                    u = Unit.objects.filter(Q(symbol=unit)|Q(synonyms__contains=unit)).exclude(type=99)
                     units[unit] = u[0]
 
                 if type == "flows":
@@ -2138,6 +2138,7 @@ class Unit(models.Model):
     description = models.TextField(null=True, blank=True)
     type = models.IntegerField(choices=MaterialType.choices, db_index=True, default=99)
     multiplication_factor = models.FloatField(null=True, blank=True, help_text="By which factor should we multiply this to get a quantity in the default unit for this type of measurement?")
+    synonyms = models.JSONField(null=True, blank=True)
 
     def __str__(self):
         return self.name
