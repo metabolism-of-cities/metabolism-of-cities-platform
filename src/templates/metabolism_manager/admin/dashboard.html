@@ -254,53 +254,31 @@
 {% block footer %}
   <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
   <script>
-    // center: [{{ gps.lat }}, {{ gps.lng }}],
-    // enable popups so na user can click on an object on the map and see extra information
-    function onEachFeature(feature, layer) {
-        const dateOptions = {year: 'numeric', month: 'long', day: 'numeric'};
-        var uglyFrom = new Date(feature.properties.start_date * 1000);
-        var prettyFrom = uglyFrom.toLocaleDateString('en-GB', dateOptions);
-
-        var uglyTo = new Date(feature.properties.end_date * 1000);
-        var prettyTo = uglyTo.toLocaleDateString('en-GB', dateOptions);
-
-      var popupContent = "<div class='popup-title'>" + feature.properties.name + "</div><div class='popup-content'><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + feature.properties.address + "</li><li class='list-group-item'><i class='far fa-fw fa-" + feature.properties.icon + " mr-2'></i>" + feature.properties.material + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + feature.properties.quantity + "</li><li class='list-group-item text-" + feature.properties.status_color + "'><i class='far fa-fw fa-" + feature.properties.status_icon + " mr-2'></i>" + feature.properties.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a class='btn btn-sm btn-primary' href='../data/" + feature.properties.id + "/'>More details</a></li></ul></div>"
-
-
-      layer.bindPopup(popupContent);
-    }
-
     // a list of all the offers and requests for materials
-    const allListings = {
-      "type": "FeatureCollection",
-      "features": [
-        {% for each in data %}
+    const allListings = [
+      {% for each in data %}
         {
-          "geometry": {
-            "type": "Point",
-            "coordinates": [{{ each.owner.meta_data.lng }}, {{ each.owner.meta_data.lat }}]
-          },
-          "type": "Feature",
-          "properties": {
-            "name": "{{ each.owner }}",
-            "id": "{{ each.id }}",
-            "address": "{{ each.owner.meta_data.address }}",
-            "material": "{{ each.material_type }}",
-            "icon": "{{ each.material_type.parent.icon }}",
-            "quantity": "{{ each.absolute_quantity }} {{ each.unit }}",
-            "status": "{% if each.type == "supply" %}Supply{% else %}Demand{% endif %}",
-            "status_icon": "{% if each.type == "supply" %}sign-out{% else %}sign-in{% endif %}",
-            "status_color": "{% if each.type == "supply" %}success{% else %}danger{% endif %}",
-            "start_date": {{ each.start_date|date:"U" }},
-            "end_date": {{ each.end_date|date:"U" }},
-          },
+          "lat": {{ each.owner.meta_data.lat }},
+          "lng": {{ each.owner.meta_data.lng }},
+          "name": "{{ each.owner }}",
+          "id": "{{ each.id }}",
+          "address": "{{ each.owner.meta_data.address }}",
+          "material": "{{ each.material_type }}",
+          "icon": "{{ each.material_type.parent.icon }}",
+          "quantity": "{{ each.absolute_quantity }} {{ each.unit }}",
+          "status": "{% if each.type == "supply" %}Supply{% else %}Demand{% endif %}",
+          "status_icon": "{% if each.type == "supply" %}sign-out{% else %}sign-in{% endif %}",
+          "status_color": "{% if each.type == "supply" %}success{% else %}danger{% endif %}",
+          "start_date": {{ each.start_date|date:"U" }},
+          "end_date": {{ each.end_date|date:"U" }},
         },
-        {% endfor %}
-      ]
-    };
+      {% endfor %}
+    ]
 
     // creating layer variable, useful so that we can check its existence and manipulate it later
     var filteredLayer = false;
+
+    var dateOptions = {year: 'numeric', month: 'long', day: 'numeric'};
 
     // function to show filtered items on the map
     function filterListings() {
@@ -320,64 +298,82 @@
           }
 
       // add all listings to the filter array
-      var filteredListings = $.extend(true, {}, allListings);
+      var filteredListings = [];
+
+      $.extend(filteredListings, allListings);
 
       // inefficiently filtering one by one - could/should be improved
       // filter status
-      for (var i = filteredListings.features.length - 1; i >= 0; i--) {
+      for (var i = filteredListings.length - 1; i >= 0; i--) {
         if (status != "all") {
-          if (filteredListings.features[i].properties.status != status) {
-            filteredListings.features.splice(i, 1);
+          if (filteredListings[i].status != status) {
+            filteredListings.splice(i, 1);
           }
         }
       }
 
       // filter material
-      for (var i = filteredListings.features.length - 1; i >= 0; i--) {
+      for (var i = filteredListings.length - 1; i >= 0; i--) {
         if (material != "all") {
-          if (filteredListings.features[i].properties.material != material) {
-            filteredListings.features.splice(i, 1);
+          if (filteredListings[i].material != material) {
+            filteredListings.splice(i, 1);
           }
         }
       }
 
       // filter start date
-      for (var i = filteredListings.features.length - 1; i >= 0; i--) {
+      for (var i = filteredListings.length - 1; i >= 0; i--) {
         if (get_date != "") {
-          if (filteredListings.features[i].properties.start_date > get_date || filteredListings.features[i].properties.end_date < get_date) {
-            filteredListings.features.splice(i, 1);
+          if (filteredListings[i].start_date > get_date || filteredListings[i].end_date < get_date) {
+            filteredListings.splice(i, 1);
           }
         }
       }
 
-      //  take the listings and add them to the map
-      filteredLayer = L.geoJSON(filteredListings, {
-        // function to create the popup
-        onEachFeature: onEachFeature,
+      // create the cluster group
+      filteredLayer = L.markerClusterGroup();
 
-        pointToLayer: function (feature, latlng) {
-          let state = "supply";
+      // take the listings and add them to the cluster group
+      // enable popups so na user can click on an object on the map and see extra information
+      for (var i = 0; i < filteredListings.length; i++) {
+        let listing = filteredListings[i];
 
-          if (feature.properties.status == "Demand") {
-            state = "demand"
-          }
-          return L.marker(latlng, {
-            icon: window[state + "Icon"]
-          })
-        },
-      });
+        var uglyFrom = new Date(listing.start_date * 1000);
+        var prettyFrom = uglyFrom.toLocaleDateString('en-GB', dateOptions);
 
+        var uglyTo = new Date(listing.end_date * 1000);
+        var prettyTo = uglyTo.toLocaleDateString('en-GB', dateOptions);
+
+        var popupContent = "<div class='popup-title'>" + listing.name + "</div><div class='popup-content'><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + listing.address + "</li><li class='list-group-item'><i class='far fa-fw fa-" + listing.icon + " mr-2'></i>" + listing.material + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + listing.quantity + "</li><li class='list-group-item text-" + listing.status_color + "'><i class='far fa-fw fa-" + listing.status_icon + " mr-2'></i>" + listing.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a class='btn btn-sm btn-primary' href='../data/" + listing.id + "/'>More details</a></li></ul></div>"
+
+        var marker = L.marker(new L.LatLng(filteredListings[i].lat, filteredListings[i].lng), {
+          "name": listing.name,
+          "status_icon": listing.status_icon,
+          "color": listing.status_color,
+          "material": listing.material,
+          "quantity": listing.quantity,
+        }).bindPopup(popupContent);
+
+        filteredLayer.addLayer(marker);
+      }
+
+      // add the cluster group to the map
       map.addLayer(filteredLayer).fitBounds(filteredLayer.getBounds())
 
       // add listings to the card overview
       $(".map-listing tbody").html("");
 
       // date options
-      const dateOptions = {year: "numeric", month: "long", day: "numeric"};
-
-      $.each(filteredLayer._layers, function() {
-        let prop = this.feature.properties;
-        $(".map-listing tbody").append("<tr data-id='" + this._leaflet_id + "'><td class='text-center'><i class='fal fa-fw fa-" + prop.status_icon + " text-" + prop.status_color + "'></i></td><td>" + prop.material + "</td><td>" + prop.quantity + "</td></tr>")
+      $.each(filteredLayer._featureGroup._layers, function() {
+        if (this._childCount > 0) {
+          let leafletID = this._leaflet_id;
+          let children = this.getAllChildMarkers();
+          $.each(children, function() {
+            $(".map-listing tbody").append("<tr data-parent='" + leafletID + "' data-id='" + this._leaflet_id + "'><td class='text-center'><i class='fal fa-fw fa-" + this.options.status_icon + " text-" + this.options.color + "'></i></td><td>" + this.options.material + "</td><td>" + this.options.quantity + "</td></tr>")
+          })
+        } else {
+          $(".map-listing tbody").append("<tr data-parent='false' data-id='" + this._leaflet_id + "'><td class='text-center'><i class='fal fa-fw fa-" + this.options.status_icon + " text-" + this.options.color + "'></i></td><td>" + this.options.material + "</td><td>" + this.options.quantity + "</td></tr>")
+        }
       });
     }
 
@@ -385,7 +381,6 @@
     $(".filter").change(function() {
       filterListings()
     })
-
 
     // supply and demand icons, green and red to match other icons
     var supplyIcon = new L.Icon({
@@ -410,9 +405,15 @@
     filterListings();
 
     $("body").on("click", ".map-listing tr", function() {
+      let parent = $(this).data("parent");
       let id = $(this).data("id");
-      filteredLayer._layers[id].openPopup();
-      map.setView(filteredLayer._layers[id]._latlng);
+
+      if (parent != false) {
+        filteredLayer._featureGroup._layers[parent].spiderfy()
+      }
+
+      filteredLayer._featureGroup._layers[id].openPopup();
+      map.setView(filteredLayer._featureGroup._layers[id]._latlng);
     })
   </script>
 {% endblock %}
