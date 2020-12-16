@@ -41,7 +41,7 @@
 
 {% block content %}
   <div class="px-4">
-    <h1 class="mb-0">Visualizations editor</h1>
+    <h1 class="mb-0">Graph editor</h1>
     <a href="{% if request.GET.next %}{{ request.GET.next }}{% else %}javascript:history.back(){% endif %}" class="btn btn-primary-basic mb-4">
       <i class="fal fa-angle-left"></i>
       Back
@@ -53,11 +53,11 @@
           {% csrf_token %}
           <div class="form-group">
             <label class="category">Title</label>
-            <input type="text" class="form-control" name="title" id="title" value="{{ info }}">
+            <input type="text" class="form-control" name="title" id="title" value="{% if properties.title %}{{ properties.title }}{% else %}{{ info }}{% endif %}">
           </div>
           <div class="form-group">
             <label class="category">Subtitle</label>
-            <input type="text" class="form-control" name="subtitle" id="subtitle" value="{{ properties.subtitle }}">
+            <input type="text" class="form-control" name="subtitle" id="subtitle" placeholder="Subtitle" value="{% if properties.subtitle %}{{ properties.subtitle }}{% else %}{% endif %}">
           </div>
 
           <div class="row mt-4">
@@ -65,7 +65,7 @@
               <div class="form-group enabled-chart-types">
                 <label class="category">Enabled chart types</label>
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" name="show_bar" value="true" id="show_bar" data-chart="bar" {% if properties.show_bar %}checked{% endif %}>
+                  <input type="checkbox" class="custom-control-input" name="show_bar" value="true" id="show_bar" data-chart="bar" {% if properties.show_bar or not properties %}checked{% endif %}>
                   <label class="custom-control-label" for="show_bar">Bar</label>
                 </div>
                 <div class="custom-control custom-switch">
@@ -94,8 +94,8 @@
               <div class="form-group">
                 <label class="category">Initial chart type</label>
                 <select class="custom-select" id="initial-chart-type" name="initial_chart">
-                  <option {% if properties.initial_chart == "bar" %}selected{% endif %} {% if not properties.show_bar %}hidden{% endif %} value="bar">Bar</option>
-                  <option {% if properties.initial_chart == "column" %}selected{% endif %} value="column">Column</option>
+                  <option {% if properties.initial_chart == "bar" %}selected{% endif %} {% if properties and not properties.show_bar %}hidden{% endif %} value="bar">Bar</option>
+                  <option {% if properties.initial_chart == "column" %}selected{% endif %} {% if not properties.show_column %}hidden{% endif %} value="column">Column</option>
                   <option {% if properties.initial_chart == "line" %}selected{% endif %} {% if not properties.show_line %}hidden{% endif %} value="line">Line</option>
                   <option {% if properties.initial_chart == "pie" %}selected{% endif %} {% if not properties.show_pie %}hidden{% endif %} value="pie">Pie</option>
                   <option {% if properties.initial_chart == "area" %}selected{% endif %} {% if not properties.show_area %}hidden{% endif %} value="area">Area</option>
@@ -165,7 +165,7 @@
 
           <div class="form-group mt-4">
             <label class="category">Color scheme</label>
-            <input type="hidden" name="scheme" value="{{ properties.scheme }}" id="scheme" />
+            <input type="hidden" name="scheme" value="{% if properties.scheme %}{{ properties.scheme }}{% else %}moc{% endif %}" id="scheme" />
             <div id="color-schemes" class="row">
               <div class="col-md-6 mb-3">
                 <div class="single-scheme {% if properties.scheme == 'moc' or not properties.scheme %}active{% endif %}" data-scheme="moc">
@@ -299,7 +299,7 @@
       <div class="col-lg-6">
         <div class="sticky-top p-4 border rounded item-visualisations">
           <ul class="nav nav-tabs nav-justified mb-4" role="tablist">
-            <li data-chart="bar" {% if not properties.show_bar %}hidden{% endif %} class="nav-item"><a class="nav-link" data-tab="bar" data-viz="bar"><i class="fal fa-fw fa-chart-bar fa-rotate-90"></i> Bar</a></li>
+            <li data-chart="bar" {% if properties and not properties.show_bar %}hidden{% endif %} class="nav-item"><a class="nav-link" data-tab="bar" data-viz="bar"><i class="fal fa-fw fa-chart-bar fa-rotate-90"></i> Bar</a></li>
             <li data-chart="column" {% if not properties.show_column %}hidden{% endif %} class="nav-item"><a class="nav-link" data-tab="column" data-viz="column"><i class="fal fa-fw fa-chart-bar"></i> Column</a></li>
             <li data-chart="drilldown" {% if not properties.show_drilldown %}hidden{% endif %} class="nav-item"><a class="nav-link" data-tab="drilldown" data-viz="drilldown" data-drilldown="true"><i class="fal fa-fw fa-chart-bar"></i> Drilldown</a></li>
             <li data-chart="line" {% if not properties.show_line %}hidden{% endif %} class="nav-item"><a class="nav-link" data-tab="line" data-viz="line"><i class="fal fa-fw fa-chart-line"></i> Line</a></li>
@@ -371,6 +371,29 @@
       </div>
     </div>
   </div>
+
+  <div class="modal fade" id="first-run-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Creating graphs for {{ info }}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>No graphs have been saved yet for this dataset.</p>
+          <p>The column on the left lists all possible settings. At the moment, only a simple bar graph has been enabled. You can see this graph in the right hand column.</p>
+          <p>You can play around with the settings to see which graphs work best for this particular dataset. At any point, you can click on the <span class="badge badge-light badge-lg"><i class="fal fa-eye"></i> Generate Preview</span> button to see what your changes look like.</p>
+          <p>When you're happy with the result, just save your settings and you'll see the dataset page with all the edits you've just made.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Got it, let's start</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 {% endblock %}
 
 {% block footer %}
@@ -383,7 +406,17 @@
     const json_url = "/library/{{ info.source_id }}/data/json/";
 
     // dataviz properties
-    const properties = {{ properties|safe }};
+    {% if properties %}
+      const properties = {{ properties|safe }};
+    {% else %}
+      const properties = {
+        "title": "{{ info }}",
+        "scheme": "moc",
+        "show_bar": "true",
+        "initial_chart": "bar",
+        "subtitle": "Subtitle",
+      };
+    {% endif %}
 
     // color scheme definitions from colorbrewer2.org combined with default MoC colours
     var moc = ["#144d58","#a6cee3","#33a02c","#b2df8a","#e31a1c","#fb9a99","#ff7f00","#fdbf6f","#6a3d9a","#cab2d6","#b15928","#ffff99"];
@@ -395,8 +428,8 @@
 
     // user settings
     // titles
-    let title = "{{ info }}";
-    let subtitle = "{% if properties.subtitle %}{{ properties.subtitle }}{% else %}Subtitle{% endif %}";
+    let title = "{% if properties.title %}{{ properties.title }}{% else %}{{ info }}{% endif %}";
+    let subtitle = "{% if properties.subtitle %}{{ properties.subtitle }}{% endif %}";
 
     // color scheme
     let colorScheme = moc;
@@ -611,7 +644,7 @@
     var dozen = ["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"];
 
     Highcharts.setOptions({
-      colors: window["{{ properties.scheme }}"],
+      colors: {% if properties.scheme %}window["{{ properties.scheme }}"]{% else %}moc{% endif %},
       fontFamily: defaultFont,
       chart: {
         backgroundColor: "#fcfcfc",
@@ -619,10 +652,10 @@
         zoomType: "x",
       },
       title: {
-        text: "{{ properties.title }}"
+        text: "{% if properties.title %}{{ properties.title }}{% else %}{{ info }}{% endif %}"
       },
       subtitle: {
-        text: "{{ properties.subtitle }}"
+        text: "{% if properties.subtitle %}{{ properties.subtitle }}{% endif %}"
       },
       legend: {
         {% if properties.show_xaxis_label is not "true" %}
@@ -635,14 +668,14 @@
       {% if properties.show_xaxis_label == "true" %}
         xAxis: {
           title: {
-            text: "{{ properties.xaxis_label_text }}"
+            text: "{% if properties.xaxis_label_text %}{{ properties.xaxis_label_text }}{% endif %}"
           },
         },
       {% endif %}
       yAxis: {
         {% if properties.show_yaxis_label == "true" %}
           title: {
-            text: "{{ properties.yaxis_label_text }}"
+            text: "{% if properties.yaxis_label_text %}{{ properties.yaxis_label_text }}{% endif %}"
           },
         {% endif %}
         {% if properties.yaxis_range == "true" %}
@@ -701,12 +734,6 @@
     $(".enabled-chart-types input").change(function() {
       enabledCharts()
     })
-
-    {% if properties %}
-      $(".nav-link[data-tab='{{ properties.initial_chart }}']").click();
-    {% else %}
-      $(".nav-link[data-tab='bar']").click();
-    {% endif %}
   </script>
   <script src="{% static 'js/data.js' %}?refresh=1333"></script>
   <script>
@@ -720,7 +747,7 @@
       createViz("area")
       createViz("pie")
 
-      $(".nav-link[data-viz='{{ properties.initial_chart }}']").click();
+      $(".nav-link[data-viz='{% if properties.initial_chart %}{{ properties.initial_chart }}{% else %}bar{% endif %}']").click();
     });
 
     $.get(json_url + "?drilldown=true", function(data) {
@@ -728,5 +755,9 @@
       dataDrillLoaded = true;
       $(".tab-pane[data-drilldown='true']").removeClass("loading");
     });
+
+    {% if not properties %}
+      $("#first-run-modal").modal("show");
+    {% endif %}
   </script>
 {% endblock %}
