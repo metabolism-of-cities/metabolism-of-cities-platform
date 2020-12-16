@@ -72,6 +72,17 @@ baseline_urlpatterns = [
     path("hub/work/<int:id>/edit/", core.work_form, name="work_form"),
     path("notifications/", core.notifications, name="notifications"),
 
+    path("tasks/", core.work_grid, name="tasks"),
+    path("tasks/sprints/", core.work_sprints, name="work_sprints"),
+    path("tasks/sprints/<int:id>/", core.work_sprint, name="work_sprint"),
+    path("tasks/sprints/<int:sprint>/tasks/", core.work_grid, name="work_sprint_tasks"),
+    path("tasks/sprints/<int:sprint>/tasks/create/", core.work_form),
+    path("tasks/sprints/<int:sprint>/tasks/<int:id>/", core.work_item),
+    path("tasks/sprints/<int:sprint>/tasks/<int:id>/edit/", core.work_form),
+    path("tasks/create/", core.work_form, name="work_form"),
+    path("tasks/<int:id>/", core.work_item, name="work_item"),
+    path("tasks/<int:id>/edit/", core.work_form, name="work_form"),
+
     # Portals
     path("hub/portals/<slug:slug>/", core.work_portal, name="work_portal"),
 

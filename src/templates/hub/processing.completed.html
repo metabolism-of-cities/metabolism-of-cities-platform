@@ -27,7 +27,7 @@
     <tr>
       <td data-sort="-{{ each.date_created|date:"U" }}">{{ each.date_created|naturaltime }}</td>
       <td>
-        <a href="{% url URLS.MAP_ITEM each.id %}">{{ each }}</a>
+        <a href="{% if each.is_map %}{% url URLS.MAP_ITEM each.id %}{% else %}{% url URLS.LIBRARY_ITEM each.id %}{% endif %}">{{ each }}</a>
         <br>{% for space in each.spaces.all %}<a href="{% url URLS.DASHBOARD space.slug %}">{{ space }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
         {% if each.meta_data.beginner_friendly %}
           <br>

@@ -114,16 +114,6 @@ urlpatterns = baseline_urlpatterns + [
     path("search/ajax/<slug:type>/", views.search_ajax, name="search_ajax"),
 
     path("forum/", community.forum_list, name="forum_list"),
-    path("tasks/", views.work_grid, name="tasks"),
-    path("tasks/sprints/", views.work_sprints, name="work_sprints"),
-    path("tasks/sprints/<int:id>/", views.work_sprint, name="work_sprint"),
-    path("tasks/sprints/<int:sprint>/tasks/", views.work_grid, name="work_sprint_tasks"),
-    path("tasks/sprints/<int:sprint>/tasks/create/", views.work_form),
-    path("tasks/sprints/<int:sprint>/tasks/<int:id>/", views.work_item),
-    path("tasks/sprints/<int:sprint>/tasks/<int:id>/edit/", views.work_form),
-    path("tasks/create/", views.work_form, name="work_form"),
-    path("tasks/<int:id>/", views.work_item, name="work_item"),
-    path("tasks/<int:id>/edit/", views.work_form, name="work_form"),
 
     # These are permanent redirects to sort out old URL patterns 
     # At some point, say Dec 2021, we should just remove this

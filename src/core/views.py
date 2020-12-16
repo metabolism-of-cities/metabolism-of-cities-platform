@@ -1326,6 +1326,14 @@ def work_item(request, id, sprint=None):
                 sprint = check_sprint
 
 
+    if info.name == "Process shapefile":
+        try:
+            project = get_project(request)
+            if info.related_to.libraryitem.type.name == "Shapefile":
+                return redirect(reverse(project.slug + ":hub_processing_gis", args=[info.related_to.id]))
+        except:
+            pass
+        
     message_list = Message.objects.filter(parent=info)
     if request.user.is_authenticated:
         notifications = Notification.objects.filter(people=request.user.people, record__in=message_list, is_read=False)

@@ -1626,9 +1626,16 @@ def hub_processing_completed(request, space=None, type=None):
         "geospreadsheet": 41,
         "datasets": 10,
     }
-    type_id = related_ids[type]
+    related_tags = {
+        "demographics": 855,
+    }
 
-    list = LibraryItem.objects.filter(type__id=type_id, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct()
+    list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct()
+
+    if type in related_ids:
+        list = list.filter(type__id=related_ids[type])
+    else:
+        list = list.filter(tags=related_tags[type])
 
     title = "Completed work"
     if space:
