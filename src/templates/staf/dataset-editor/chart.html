@@ -485,6 +485,9 @@
       // legend
       showLegend = $("#legend").is(":checked") ? true : false;
 
+      // stack
+      stackBars = $("#stack").is(":checked") ? true : false;
+
       // individual-colors
       showIndividualColors = $("#individual-colors").is(":checked") ? true : false;
 
@@ -521,6 +524,7 @@
               enabled: showDataLabels,
             },
             colorByPoint: showIndividualColors,
+            stacking: stackBars,
           }
         },
       }
