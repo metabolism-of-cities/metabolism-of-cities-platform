@@ -1325,7 +1325,6 @@ def work_item(request, id, sprint=None):
             if check_sprint.work_tag in info.tags.all():
                 sprint = check_sprint
 
-
     if info.name == "Process shapefile":
         try:
             project = get_project(request)

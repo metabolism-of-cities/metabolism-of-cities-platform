@@ -78,9 +78,7 @@
           <tr>
             <td data-sort="-{{ each.date_created|date:"U" }}">{{ each.date_created|date:"M d, Y" }}</td>
             <td>
-              {% with link=each.part_of_project.get_slug|add:":work_item" %}
-                <a href="{% url link each.id %}">{{ each }}</a>
-              {% endwith %}
+              <a href="{{ each.part_of_project.get_website }}tasks/{{ each.id }}">{{ each }}</a>
               <br>
               {{ each.related_to }}
             </td>
@@ -116,9 +114,7 @@
         {% for each in open %}
           <tr>
             <td>
-              {% with link=each.part_of_project.get_slug|add:":work_item" %}
-                <a href="{% url link each.id %}">{{ each }}</a>
-              {% endwith %}
+              <a href="{{ each.part_of_project.get_website }}tasks/{{ each.id }}">{{ each }}</a>
               <br>
               {{ each.related_to }}
             </td>
