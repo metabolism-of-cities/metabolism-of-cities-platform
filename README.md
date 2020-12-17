@@ -72,6 +72,18 @@ In this file we have removed ALL the geometry data. That means that none of the 
 
 In this file we removed ALL reference spaces (and therefore also any geometry). This means that there is no infrastructure, boundaries, etc. but also no material stocks and flows data (which is linked to reference spaces). Use this file if you don't care about the data part of the website.
 
+# Tutorials
+
+We made some instruction videos for contributors:
+
+![Installing locally](https://multimedia.metabolismofcities.org/media/records/screenshot_0do6q2O.thumbnail.png)
+
+[Installing Metabolism of Cities locally](https://multimedia.metabolismofcities.org/videos/578485/)
+
+![File structure](https://multimedia.metabolismofcities.org/media/records/Screenshot_2020-12-17_18-52-39.thumbnail.png)
+
+[https://multimedia.metabolismofcities.org/videos/581189/](Metabolism of Cities file structure)
+
 # What to work on?
 
 Before doing any work, check in with us through our online [forum](https://metabolismofcities.org/forum/). We have an online task system where you can see [all open programming tasks](https://metabolismofcities.org/tasks/?type=9&status=open_unassigned&priority=&project=&tag=). Feel free to pick any task and assign it to yourself, but if it is your first time contributing it is highly recommended you leave a note on our site stating your intentions to make sure it fits with our current priorities.
