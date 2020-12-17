@@ -1897,9 +1897,36 @@ def mooc_module(request, id, module):
 
 # Temp stuff
 
+@staff_member_required
 def trim_database(request):
-    User.object.all().delete()
-    return redirect("/")
+    context = {}
+    if not settings.DEBUG:
+        return render(request, "template/blank.html", context)
+    else:
+        User.objects.all().delete()
+        MaterialDemand.objects.all().delete()
+        Message.objects.all().delete()
+        People.objects.all().delete()
+        Relationship.objects.filter(pk=1).delete() # Remove platformu admins
+        Tag.objects.filter(pk=747).delete() # PlatformU segments
+        zotero = ZoteroCollection.objects.all()
+        zotero.update(api="none")
+
+        # There are private or deleted objects that still live in the db
+        # We delete them by querying objects_unfiltered
+        LibraryItem.objects_unfiltered.filter(Q(is_deleted=True)|Q(is_public=False)).delete()
+        Organization.objects_unfiltered.filter(Q(is_deleted=True)|Q(is_public=False)).delete()
+        Tag.objects_unfiltered.filter(Q(is_deleted=True)|Q(is_public=False)).delete()
+        if "remove_referenspace" in request.GET:
+            ReferenceSpace.objects.exclude(activated__isnull=False).delete()
+
+        messages.success(request, "Information was deleted.")
+        messages.warning(request, "Remove the cron logs and sessions!")
+        messages.warning(request, "Run this in adminer: delete from django_cron_cronjoblog;")
+        messages.warning(request, "Run this in adminer: delete from django_session")
+        messages.warning(request, "Run this in adminer: UPDATE stafdb_referencespace SET geometry = NULL;")
+
+        return render(request, "template/blank.html", context)
 
 @login_required
 def tags(request):
