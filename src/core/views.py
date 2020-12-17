@@ -1897,6 +1897,10 @@ def mooc_module(request, id, module):
 
 # Temp stuff
 
+def trim_database(request):
+    User.object.all().delete()
+    return redirect("/")
+
 @login_required
 def tags(request):
     list = Tag.objects_unfiltered.all()

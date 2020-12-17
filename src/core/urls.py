@@ -100,6 +100,9 @@ urlpatterns = baseline_urlpatterns + [
     path("tags/", views.tags),
     path("dataimport/", views.dataimport),
 
+    # Local only
+    path("trim_database/", views.trim_database),
+
     # Social media content manager
     path("socialmedia/", views.socialmedia, name="socialmedia"),
     path("socialmedia/campaigns/", views.socialmedia_campaigns, name="socialmedia_campaigns"),

@@ -26,7 +26,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
 
-SITE_ID = 1
 SITE_EMAIL = 'info@metabolismofcities.org'
 
 SENDGRID_API = 'SG.123123123'
@@ -56,12 +55,15 @@ PROJECT_ID_LIST = {
     "islands": 17,
     "community": 18,
     "podcast": 3458,
+    "education": 32018,
     "stocks": 18683,
+    "peeide": 51458,
     "cityloops": 6,
     "untraceable": 32542,
 }
 
 PROJECT_LIST = {
+    "core": { "id": 1, "url": "core/" },
     "library": { "id": 2, "url": "library/" },
     "multimedia": { "id": 3, "url": "multimedia/" },
     "data": { "id": 4, "url": "data/" },
@@ -74,14 +76,40 @@ PROJECT_LIST = {
     "islands": { "id": 17, "url": "islands/" },
     "community": { "id": 18, "url": "community/" },
     "podcast": { "id": 3458, "url": "podcast/" },
+    "education": { "id": 32018, "url": "education/" },
     "stocks": { "id": 18683, "url": "stocks/" },
+    "peeide": { "id": 51458, "url": "peeide/" },
     "cityloops": { "id": 6, "url": "cityloops/" },
     "untraceable": { "id": 32542, "url": "untraceable/" },
+}
+
+# This defines tags that are frequently used
+TAG_ID_LIST = {
+    "platformu_segments": 747,
+    "case_study": 1,
+    "urban": 11,
+    "methodologies": 318,
+}
+
+# Only used in AScUS - let's try to phase this out
+PAGE_ID_LIST = {
+    "people": 12,
+    "projects": 50,
+    "multimedia_library": 3,
+    "multiplicity": 4,
+    "stafcp": 14,
+    "platformu": 16,
+    "ascus": 8,
+    "podcast": 3458,
+    "education": 32018,
+    "community": 18,
 }
 
 # Application definition
 
 INSTALLED_APPS = [
+    'core.apps.CoreConfig',
+    'stafdb.apps.StafdbConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -92,39 +120,41 @@ INSTALLED_APPS = [
     'django_cron',
     'stdimage',
     'sass_processor',
-    'django.contrib.sites',
     'bootstrap4',
     'tinymce',
     'anymail',
+    'debug_toolbar',
     'django.contrib.humanize',
-#    'debug_toolbar',
     'channels',
+    'bleach',
 ]
 
 # When importing data please deactivate the DebugToolbar, otherwise
 # it will be even slower!
 MIDDLEWARE = [
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'ie.middleware.multihost.MultiHostMiddleware',
+    'ie.middleware.crossdomainsession.CrossDomainSessionMiddleware',
     'django.middleware.security.SecurityMiddleware',
+
+    #'django.middleware.cache.UpdateCacheMiddleware',
+    #'django.middleware.common.CommonMiddleware',
+    #'django.middleware.cache.FetchFromCacheMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
-
-    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
-
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.contrib.sites.middleware.CurrentSiteMiddleware',
 ]
 
-X_FRAME_OPTIONS = 'SAMEORIGIN'
-
 CRON_CLASSES = [
-    #'core.crons.CreateMapJS',
     #'core.crons.EmailNotifications',
+    #'core.crons.CreatePlotPreview',
+    #'core.crons.CheckDataProgress',
     'core.crons.ZoteroImport',
+    'core.crons.ProcessShapefile',
 ]
 
 ROOT_URLCONF = 'ie.urls'
@@ -157,11 +187,10 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('172.26.0.5', 6379)],
+            "hosts": [('redis', 6379)],
         },
     },
 }
-
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -175,7 +204,6 @@ DATABASES = {
         'PORT': 5432,
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -211,7 +239,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = '/src/static/'
 SASS_PROCESSOR_ROOT = STATIC_ROOT
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/src/media/'
 MEDIA_URL = '/media/'
 
 # Added for SASS: https://github.com/jrief/django-sass-processor
@@ -247,4 +275,4 @@ CACHES = {
     }
 }
 
-SESSION_COOKIE_DOMAIN=".metabolismofcities.org"
+#SESSION_COOKIE_DOMAIN=".metabolismofcities.org"
