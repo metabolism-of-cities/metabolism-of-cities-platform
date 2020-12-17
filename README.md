@@ -82,7 +82,7 @@ We made some instruction videos for contributors:
 
 ![File structure](https://multimedia.metabolismofcities.org/media/records/Screenshot_2020-12-17_18-52-39.thumbnail.png)
 
-[https://multimedia.metabolismofcities.org/videos/581189/](Metabolism of Cities file structure)
+[Metabolism of Cities file structure](https://multimedia.metabolismofcities.org/videos/581189/)
 
 # What to work on?
 
