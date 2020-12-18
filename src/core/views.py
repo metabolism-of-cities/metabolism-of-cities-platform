@@ -1335,7 +1335,7 @@ def work_item(request, id, sprint=None):
             if check_sprint.work_tag in info.tags.all():
                 sprint = check_sprint
 
-    if info.name == "Process shapefile":
+    if info.name == "Process shapefile" and not "skip_redirect" in request.GET:
         try:
             project = get_project(request)
             if info.related_to.libraryitem.type.name == "Shapefile":
