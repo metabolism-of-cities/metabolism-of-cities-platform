@@ -36,7 +36,7 @@ RELATIONSHIP_ID = {
 # If we add any new project, we should add it to this list. 
 # We must make sure to filter like this to exclude non-project news
 # (which we want in the community section but not here), as well as MoI news
-MOC_PROJECTS = [1,2,3,4,7,8,11,14,15,16,18,3458]
+MOC_PROJECTS = [1,2,3,4,6,7,8,9,11,13,14,15,16,18,3458,32018,32542]
 
 # This is the list with projects that have an active forum
 # It will show in the dropdown boxes to filter by this category
