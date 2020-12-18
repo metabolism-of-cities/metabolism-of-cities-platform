@@ -5,14 +5,16 @@
 {% block head %}
   <style>
     .leaflet-map {
-      height: 800px;
-      max-height: 80vh;
+      height: 80vh;
     }
 
     .layer-toggles {
       border: 2px solid rgba(0,0,0,0.2);
       background-clip: padding-box;
       border-radius: .25rem;
+      max-height: calc(80vh - 40px);
+      overflow-y: auto;
+      overflow-x: hidden;
     }
 
     .layer-toggles .category:not(:first-of-type) {
@@ -94,7 +96,7 @@
     <div id="map" class="leaflet-map"></div>
 
   <h3 class="mt-4">Source files</h3>
-  <table class="table table-striped datatable">
+  <table class="table datatable">
     <thead>
       <tr>
         <th>File</th>
