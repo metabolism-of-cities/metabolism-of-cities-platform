@@ -66,6 +66,7 @@ urlpatterns = baseline_urlpatterns + [
 
     # About pages
     path("about/", views.article_list, { "id": 31 }, name="about"),
+    path("about/our-story/", views.ourstory, name="ourstory"),
     path("about/<slug:slug>/", views.article, { "prefix": "/about/" }, name="about"),
 
     # Users

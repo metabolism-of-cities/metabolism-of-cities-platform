@@ -622,7 +622,21 @@ def article_list(request, id):
     }
     return render(request, "article.list.html", context)
 
-# Cities
+def ourstory(request):
+    if request.user.is_authenticated and request.user.id == 1:
+        milestones = {}
+        years = Milestone.objects.values_list("year", flat=True).order_by("year").distinct()
+        for each in years:
+            milestones[each] = Milestone.objects.filter(year=each)
+
+        context = {
+            "years": years,
+            "milestones": milestones,
+            "add_link": "/admin/core/milestone/add/",
+        }
+        return render(request, "ourstory.html", context)
+    else:
+        return article(request, None, "our-story", "/about/")
 
 # Users
 

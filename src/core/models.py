@@ -2463,6 +2463,17 @@ class DataViz(Record):
     def __str__(self):
         return self.name
 
+class Milestone(Record):
+    position = models.PositiveSmallIntegerField(db_index=True)
+    year = models.PositiveSmallIntegerField()
+    projects = models.ManyToManyField(Project)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ["year", "position"]
+
 # This is the format to use from now on
 # Note that there is a uid primary key, separate from the record_id
 # This is must easier to have individual primary key sequences

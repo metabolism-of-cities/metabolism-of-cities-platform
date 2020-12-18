@@ -1,0 +1,88 @@
+{% extends "_base.html" %}
+{% load moc_extras %}
+
+{% block page_name %}our-story{% endblock %}
+
+{% block title %}Our story{% endblock %}
+
+{% block content %}
+  <h1>Our story</h1>
+
+  {% for each in years %}
+
+    <section>
+      <h3>{{ each }}</h3>
+      <div class="row">
+        {% for milestone in milestones|get_item:each %}
+        <div class="col-md-6 col-lg-3 mb-4">
+          <div class="card icon-card">
+            <div class="card-header">{{ milestone }}</div>
+            {% if milestone.image %}
+              <img src="{{ milestone.image.thumbnail.url }}" alt="" />
+            {% else %}
+              <div class="icon">
+                <i class="far fa-fw fa-{{ milestone.meta_data.icon }}"></i>
+              </div>
+            {% endif %}
+            <div class="card-body">
+              <p class="what-text">
+                {{ milestone.get_description }}
+              </p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <button class="btn btn-primary-basic toggle-timeline mb-4" data-year="2020">
+        <i class="fal fa-angle-down"></i>
+        Show timeline
+      </button>
+
+      <div class="timeline" data-year="2020">
+        <div class="single-entry people">
+          <div class="title">
+            We did something
+            <div class="date float-md-right ">23 March 2020</div>
+          </div>
+          <p class="text">
+            Metabolism of Cities was originally set up in 2014 by <a href="../../community/people/282">Paul Hoekman</a> (then called MFA Tools) to share information and tools around the topic of material flow analysis. From the start, this has been an open source project and people from the academic community were invited to collaborate.
+          </p>
+          <img src="https://i.imgur.com/PrFev5H.jpg">
+          <p class="text">
+            Metabolism of Cities was originally set up in 2014 by <a href="../../community/people/282">Paul Hoekman</a> (then called MFA Tools) to share information and tools around the topic of material flow analysis. From the start, this has been an open source project and people from the academic community were invited to collaborate.
+          </p>
+        </div>
+
+        <div class="single-entry message">
+          <div class="title">
+            We did something else
+            <div class="date float-md-right ">12 January 2020</div>
+          </div>
+          <p class="text">
+            The first collaborators, <a href="../../community/people/608">Aristide Athanassiadis</a> and <a href="../../community/people/658">Gabriela Fernandez</a>, were both doing their PhDs on material flows analysis on an urban level and it was decided to specifically focus on cities and re-brand the website as Metabolism of Cities. The team continued to expand the website, focusing initially on adding publications, to the <a href="../../resources/publications">online library</a>. In this library, academic literature is indexed and tagged with keywords to make it easy for people to get an understanding of the available literature in the field.
+          </p>
+          <a class="btn btn-primary" href="">
+            <i class="fas fa-elephant"></i>
+            Some link
+          </a>
+        </div>
+      </div>
+    </section>
+
+  {% endfor %}
+
+{% endblock %}
+
+{% block footer %}
+  <script>
+    // toggling timeline
+    $(".toggle-timeline").click(function() {
+      let year = $(this).data("year");
+
+      $(".timeline[data-year='" + year + "']").slideToggle();
+      $("i", this).toggleClass("fa-rotate-180");
+    })
+
+  </script>
+{% endblock %}
