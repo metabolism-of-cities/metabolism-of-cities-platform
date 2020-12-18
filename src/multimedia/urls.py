@@ -11,6 +11,7 @@ app_name = "multimedia"
 urlpatterns = baseline_urlpatterns + [
     path("", views.index, name="index"),
     path("videos/", views.videos, name="videos"),
+    path("videos/collection/<int:collection>/", views.videos, name="videos"),
     path("videos/<int:id>/", library.item, name="video"),
     path("podcasts/", views.podcasts, name="podcasts"),
     path("podcasts/<int:id>/", library.item, name="podcast"),

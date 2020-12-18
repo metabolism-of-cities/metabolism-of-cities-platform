@@ -41,12 +41,14 @@ def index(request):
 
     return render(request, "multimedia/index.html", context)
 
-def videos(request):
+def videos(request, collection=750):
     collections = Tag.objects.get(pk=749)
+    collection = Tag.objects.get(pk=collection)
     context = {
         "webpage": get_object_or_404(Webpage, pk=61),
-        "list": Video.objects.filter(tags__parent_tag=collections).distinct(),
+        "list": Video.objects.filter(tags=collection),
         "categories": Tag.objects.filter(parent_tag=collections).order_by("id"),
+        "collection": collection,
     }
     return render(request, "multimedia/video.list.html", context)
 

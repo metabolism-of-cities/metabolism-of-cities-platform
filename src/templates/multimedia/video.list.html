@@ -1,42 +1,25 @@
 {% extends "_base.html" %}
-
-{% block css %}
-<style type="text/css">
-  .video {
-    display: none;
-  }
-</style>
-{% endblock %}
-
 {% block content %}
 
   <h1>{{ webpage }}</h1>
-  {{ webpage.content|safe }}
 
 <div class="row">
   <div class="col-3">
     <div class="nav flex-column nav-pills" id="video-menu" role="tablist" aria-orientation="vertical">
       {% for each in categories %}
-        <a class="nav-link {% if each.id == 750 %}active{% endif %}" data-toggle="pill" href="#" data-id="{{ each.id }}" role="tab" aria-controls="v-pills-home" aria-selected="true">
+        <a class="nav-link {% if each == collection %}active{% endif %}" href="{% url "multimedia:videos" each.id %}">
           {{ each }}
         </a>
       {% endfor %}
     </div>
   </div>
   <div class="col-9">
+    <h3>{{ collection }}</h3>
+    {% if collection.description %}
+      {{ collection.get_description }}
+    {% endif %}
     {% include "_library.videos.html" %}    
   </div>
 </div>
 
-{% endblock %}
-
-{% block footer %}
-<script>
-  $("#video-menu a").click(function(e){
-    var id = $(this).data("id");
-    $(".video").hide();
-    $(".tag-"+id).show();
-  });
-  $("#video-menu .active").click();
-</script>
 {% endblock %}
