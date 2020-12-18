@@ -74,7 +74,7 @@
   $("#record_parent").select2({
     theme: "bootstrap4",
     ajax: {
-      url: "{% url "core:search_ajax" type %}",
+      url: "{% url "core:search_ajax" "people" %}?show_details=true",
       dataType: "json"
     }
   });

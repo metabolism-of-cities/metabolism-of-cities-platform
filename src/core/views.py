@@ -838,6 +838,7 @@ def controlpanel_relationship_form(request, id=None):
     if not has_permission(request, project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
+    project = get_project(request)
     info = None
     child = None
 
@@ -850,21 +851,30 @@ def controlpanel_relationship_form(request, id=None):
     if request.method == "POST":
         if not id:
             info = RecordRelationship()
-        info.record_parent_id = request.POST.get("record_parent")
-        info.record_child = child
-        info.relationship_id = request.POST.get("relationship")
-        info.save()
-        if "date" in request.POST:
-            info.date_created = request.POST.get("date")
+        try:
+            info.record_parent_id = request.POST.get("record_parent")
+            info.record_child = child
+            info.relationship_id = request.POST.get("relationship")
             info.save()
-        messages.success(request, "The information was saved.")
-        if "next" in request.GET:
-            return redirect(request.GET.get("next"))
+            if "date" in request.POST:
+                # Need to save FIRST otherwise the default = now and can't be overwritten
+                info.date_created = request.POST.get("date")
+                info.save()
+            messages.success(request, "The information was saved.")
+            if "next" in request.GET:
+                return redirect(request.GET.get("next"))
+        except Exception as e:
+            messages.error(request, mark_safe(f"We could not save the information. Maybe this relationship already exists? <br><br>Error message: <br><strong>{e}</strong>"))
+
+    relationships = [7,6,31]
+    if project.is_data_project:
+        # We add DATA PROCESSOR PERMISSIONS if this is a data site
+        relationships.append(33)
 
     context = {
         "type": "people",
         "load_select2": True,
-        "relationships": Relationship.objects.filter(pk__in=[7,6,31]),
+        "relationships": Relationship.objects.filter(pk__in=relationships),
         "child": child,
         "info": info,
     }
@@ -1677,7 +1687,10 @@ def search_ajax(request, type):
 
         list = list.filter(name__icontains=query)
         for each in list:
-            r["results"].append({"id": each.id, "text": each.name})
+            text = each.name
+            if "show_details" in request.GET:
+                text = f"{each.name} (#{each.id} - {each.email})"
+            r["results"].append({"id": each.id, "text": text})
     return JsonResponse(r, safe=False)
 
 # People
