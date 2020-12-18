@@ -10,7 +10,7 @@ This repository contains the source code of [Metabolism of Cities](https://metab
 
 In order to meaningfully contribute to this project (or clone it and use it for your own purposes), you should ideally be comfortable with (or willing to learn about) the aforementioned technologies. You can make a meaningful contribution if you know either about python/Django, or about HTML/CSS/Javascript (allowing you to contribute with back-end or front-end programming, respectively).
 
-The tech work on Metabolism of Cities has so far be done by a small number of people. However, we are very keen to get others involved. Due to the nature of the work, it would be ideal if you have a background both in urban metabolism/industrial ecology, and in web development. If you are not yet there, but you are willing to learn and spend time on this project, then we are happy to assist you in that journey.
+The tech work on Metabolism of Cities has so far be done by a small number of people. However, we are very keen to get others involved. Due to the nature of the work, it would be ideal if you have a background both in urban metabolism/industrial ecology, and in web development. If you are not very familiar with our topic matter, but you are a keen programmer and willing to learn and spend time on this project, then we are happy to assist you in that journey.
 
 We don't manage tasks through github, but instead have an online forum and [task list](https://metabolismofcities.org/tasks/?type=9&status=open_unassigned&priority=&project=&tag=) integrated on our website. If you are thinking of contributing, please open a new [forum thread](https://metabolismofcities.org/forum/) and let us know what you have in mind.
 
@@ -25,6 +25,7 @@ To get started with this project, do the following:
 - Create a number of baseline directories (see below)
 - Create a configuration file (see below)
 - Build your container
+- Import our database
 
 Once this is done, you have completed all the required steps to get the system running. Specific details below:
 
@@ -44,11 +45,17 @@ Wait a few moments, and the containers should be up and running. Your main conta
 
     $ sudo docker container exec -i moc_db psql -U postgres moc < db.sql
 
-Replace "db.sql" for the name of your database file (which should be uncompressed before loading it). After the database is loaded, you _may_ need to reload your container (CTRL+C followed by:
+Replace "db.sql" for the name of your database file (which should be uncompressed before loading it). After the database is loaded, you will need to reload your container (CTRL+C followed by:
 
     $ sudo docker-compose up
 
 And the website should be up and running at [http://0.0.0.0:8000](http://0.0.0.0:8000) and adminer to manage the database is available at [http://0.0.0.0:8080](http://0.0.0.0:8080).
+
+NOTE: there may be additional database migrations that are not yet applied to this database. You can run the migrations by running:
+
+    $ ./migrate
+
+From the root directory of the project. This is a shortcut to migrate any unapplied migrations in the docker container (check out the file contents to see what commands it runs).
 
 # Database
 
@@ -83,6 +90,8 @@ We made some instruction videos for contributors:
 ![File structure](https://multimedia.metabolismofcities.org/media/records/Screenshot_2020-12-17_18-52-39.thumbnail.png)
 
 [Metabolism of Cities file structure](https://multimedia.metabolismofcities.org/videos/581189/)
+
+Also see the [Programming contributor support videos](https://multimedia.metabolismofcities.org/videos/collection/968/) in our multimedia library.
 
 # What to work on?
 
