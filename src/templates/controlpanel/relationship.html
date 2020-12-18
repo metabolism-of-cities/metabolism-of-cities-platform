@@ -69,15 +69,13 @@
 {% endblock %}
 
 {% block footer %}
-<script>
-
-  $("#record_parent").select2({
-    theme: "bootstrap4",
-    ajax: {
-      url: "{% url "core:search_ajax" "people" %}?show_details=true",
-      dataType: "json"
-    }
-  });
-
-</script>
+  <script>
+    $("#record_parent").select2({
+      theme: "bootstrap4",
+      ajax: {
+        url: "{% url "core:search_ajax" "people" %}?show_details=true",
+        dataType: "json"
+      }
+    });
+  </script>
 {% endblock %}

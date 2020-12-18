@@ -1457,6 +1457,7 @@ def hub_processing_list(request, space=None, type=None):
         "load_datatables": True,
         "processed": processed.count(),
         "unassigned": unassigned.count(),
+        "type": type,
     }
     return render(request, "hub/processing.list.html", context)
 
@@ -1691,6 +1692,7 @@ def hub_processing_boundaries(request, space=None):
         "curator": curator,
         "spaces": ActivatedSpace.objects.filter(part_of_project_id=request.project),
         "processing_url": project.slug + ":hub_processing_boundaries",
+        "type": "boundaries",
     }
     return render(request, "hub/processing.boundaries.html", context)
 

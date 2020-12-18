@@ -1,16 +1,91 @@
 <div class="card instructions mb-4">
   <div class="card-body">
-    <h4>Instructions</h4>
-    <ol>
-      <li>Select a dataset</li>
-      <li>Review data</li>
-      <li>Curate and classify the data appropriately</li>
-      <li>Etc.</li>
-    </ol>
+    <h4>Instruction videos</h4>
 
-    <a class="btn btn-primary-outline mb-md-2" href="">
-      <i class="fal fa-fw fa-video"></i>
-      Introduction video
-    </a>
+    <h5>English</h5>
+
+    {% if type == "geospreadsheet" %}
+      <a class="btn btn-primary-outline mb-md-2" href="{% url URLS.LIBRARY_ITEM 578428 %}">
+        <i class="fal fa-fw fa-video"></i>
+        Processing geospatial spreadsheets
+      </a>
+      <h5>Spanish</h5>
+      <a class="btn btn-primary-outline mb-md-2" href="{% url URLS.LIBRARY_ITEM 334780 %}">
+        <i class="fal fa-fw fa-video"></i>
+        Introducción
+      </a>
+      <a class="btn btn-primary-outline mb-md-2" href="{% url URLS.LIBRARY_ITEM 334794 %}">
+        <i class="fal fa-fw fa-video"></i>
+        Procesar hojas geoespaciales
+      </a>
+      <a class="btn btn-primary-outline mb-md-2" href="{% url URLS.LIBRARY_ITEM 334798 %}">
+        <i class="fal fa-fw fa-video"></i>
+        Resolver errores
+      </a>
+    {% elif type == "gis" %}
+      <a class="btn btn-primary-outline mb-md-2" href="{% url URLS.LIBRARY_ITEM 578423 %}">
+        <i class="fal fa-fw fa-video"></i>
+        Processing shapefiles
+      </a>
+      <h5>Spanish</h5>
+      <a class="btn btn-primary-outline mb-md-2" href="{% url URLS.LIBRARY_ITEM 332703 %}">
+        <i class="fal fa-fw fa-video"></i>
+        Anatomía de un shapefile
+      </a>
+      <a class="btn btn-primary-outline mb-md-2" href="{% url URLS.LIBRARY_ITEM 332795 %}">
+        <i class="fal fa-fw fa-video"></i>
+        El proceso
+      </a>
+      <a class="btn btn-primary-outline mb-md-2" href="{% url URLS.LIBRARY_ITEM 333999 %}">
+        <i class="fal fa-fw fa-video"></i>
+        Resolver errores
+      </a>
+    {% elif type == "boundaries" %}
+      <a class="btn btn-primary-outline mb-md-2" href="{% url URLS.LIBRARY_ITEM 578472 %}">
+        <i class="fal fa-fw fa-video"></i>
+        Instructions
+      </a>
+      <h5>Spanish</h5>
+      <a class="btn btn-primary-outline mb-md-2" href="{% url URLS.LIBRARY_ITEM 334027 %}">
+        <i class="fal fa-fw fa-video"></i>
+        Instrucciones
+      </a>
+    {% elif type == "datasets" %}
+      <a class="btn btn-primary-outline mb-md-2" href="{% url URLS.LIBRARY_ITEM 578472 %}">
+        <i class="fal fa-fw fa-video"></i>
+        Instructions
+      </a>
+      <h5>Spanish</h5>
+      <a class="btn btn-primary-outline mb-md-2" href="{% url URLS.LIBRARY_ITEM 332139 %}">
+        <i class="fal fa-fw fa-video"></i>
+        Introducción
+      </a>
+      <a class="btn btn-primary-outline mb-md-2" href="{% url URLS.LIBRARY_ITEM 568608 %}">
+        <i class="fal fa-fw fa-video"></i>
+        Conversión de datos - Ejemplo
+      </a>
+      <a class="btn btn-primary-outline mb-md-2" href="{% url URLS.LIBRARY_ITEM 577812 %}">
+        <i class="fal fa-fw fa-video"></i>
+        Flujos: procedimiento
+      </a>
+      <a class="btn btn-primary-outline mb-md-2" href="{% url URLS.LIBRARY_ITEM 578092 %}">
+        <i class="fal fa-fw fa-video"></i>
+        Stock: procedimiento
+      </a>
+      <p>Más videos disponibles en <a href="https://education.metabolismofcities.org/courses/metabolismo-urbano-y-manejo-de-datos-procesamiento-de-datos/">nuestro curso</a>.</p>
+    {% elif type == "demographics" %}
+      <a class="btn btn-primary-outline mb-md-2" href="{% url URLS.LIBRARY_ITEM 578192 %}">
+        <i class="fal fa-fw fa-video"></i>
+        Instructions
+      </a>
+      <h5>Spanish</h5>
+      <a class="btn btn-primary-outline mb-md-2" href="{% url URLS.LIBRARY_ITEM 578192 %}">
+        <i class="fal fa-fw fa-video"></i>
+        Instrucciones
+      </a>
+    {% else %}
+      <p><em>We are still working on instruction videos for this section. Stay tuned!</em></p>
+    {% endif %}
+
   </div>
 </div>
