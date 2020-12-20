@@ -534,6 +534,15 @@
         </div>
       {% endif %}
 
+      {% if info.meta_data.processing_error %}
+        <div class="alert alert-warning mt-3">
+          <i class="fa fa-exclamation-triangle"></i> <strong>File processing error</strong>
+          <br>
+          We have tried processing this file, but have encountered an error. 
+          {{ info.meta_data.processing_error }}
+        </div>
+      {% endif %}
+
       {% if request.user.is_superuser %}
         <section id="metadata" role="tabpanel" class="tab-pane">
           <h4>Metadata</h4>

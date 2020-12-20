@@ -248,6 +248,11 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     url_processing = None
     curator = False
 
+    if not space and info.spaces.count() > 0:
+        # If this document is linked to a space, then we can load that space here
+        # and thus load the space-specific header where applicable
+        space = info.spaces.all()[0]
+
     if info.type.name == "Image":
         info = info.photo
 

@@ -1158,6 +1158,9 @@ class LibraryItem(Record):
             return "unknown"
         
     # This takes the stocks or flows file and records it in the Data table
+    # Note that I feel this 'try except' fest may be a bit of a loose canon and I am 
+    # very open to people with better ideas on how to structure this and properly catch
+    # errors.
     def convert_stocks_flows_data(self):
         error = False
 
@@ -1190,92 +1193,122 @@ class LibraryItem(Record):
             items = []
 
             for row in df.itertuples():
-                if type == "flows":
-                    period = row[1]
-                    start = row[2]
-                    end = row[3]
-                    material_name = row[4]
-                    material_code = row[5].strip()
-                    quantity = row[6]
-                    unit = row[7]
-                    space = row[8].strip()
-                    comment = row[9]
+                if not error:
                     try:
-                        segment = row[10]
-                    except:
-                        segment = None
-                elif type == "stock":
-                    period = row[1]
-                    start = row[1]
-                    end = None
-                    material_name = row[2]
-                    material_code = row[3].strip()
-                    quantity = row[4]
-                    unit = row[5]
-                    space = row[6].strip()
-                    comment = row[8]
+                        if type == "flows":
+                            period = row[1]
+                            start = row[2]
+                            end = row[3]
+                            material_name = row[4]
+                            material_code = str(row[5])
+                            material_code = material_code.strip()
+                            quantity = row[6]
+                            unit = row[7]
+                            space = str(row[8])
+                            space = space.strip()
+                            comment = row[9]
+                            try:
+                                segment = row[10]
+                            except:
+                                segment = None
+                        elif type == "stock":
+                            period = row[1]
+                            start = row[1]
+                            end = None
+                            material_name = row[2]
+                            material_code = str(row[3])
+                            material_code = material_code.strip()
+                            quantity = row[4]
+                            unit = row[5]
+                            space = str(row[6])
+                            space = space.strip()
+                            comment = row[8]
+                            try:
+                                segment = row[9]
+                            except:
+                                segment = None
+                        elif type == "population":
+                            period = row[1]
+                            start = row[1]
+                            end = None
+                            material_name = "People"
+                            material_code = "EMP1.5.1"
+                            unit = "item"
+                            quantity = row[2]
+                            space = str(row[3])
+                            space = space.strip()
+                            comment = row[4]
+                            try:
+                                segment = row[5]
+                            except:
+                                segment = None
+                    except Exception as e:
+                        error = f"We could not properly interpret all of the columns. Are you sure this is formatted correctly and contains the right data? This is the technical error that was returned by the system: {e}"
+                        
+                    if material_code not in materials:
+                        try:
+                            m = Material.objects.get(catalog_id=18998, code=material_code)
+                            materials[material_code] = m
+                        except:
+                            error = f"We could not find the material/product with code: '{material_code}'"
+
+                    if space not in spaces:
+                        try:
+                            source = self.meta_data["processing"]["source"]
+                            s = ReferenceSpace.objects.get(source_id=source, name=space)
+                            spaces[space] = s
+                        except:
+                            error = f"We could not find the space with the name: '{space}'"
+
+                    if unit not in units:
+                        try:
+                            u = Unit.objects.filter(Q(symbol=unit)|Q(synonyms__contains=unit)).exclude(type=99)
+                            units[unit] = u[0]
+                        except:
+                            error = f"We could not find the unit with the name: '{unit}'"
+
                     try:
-                        segment = row[9]
-                    except:
-                        segment = None
-                elif type == "population":
-                    period = row[1]
-                    start = row[1]
-                    end = None
-                    material_name = "People"
-                    material_code = "EMP1.5.1"
-                    unit = "item"
-                    quantity = row[2]
-                    space = row[3].strip()
-                    comment = row[4]
-                    try:
-                        segment = row[5]
-                    except:
-                        segment = None
+                        if type == "flows":
+                            start = start.strftime("%Y-%m-%d")
+                            end = end.strftime("%Y-%m-%d")
+                            full_string = str(start) + str(end)
+                        elif type == "stock" or type == "population":
+                            start = start.strftime("%Y-%m-%d")
+                            end = None
+                            full_string = str(start)
+                            period = str(start)
 
-                if material_code not in materials:
-                    m = Material.objects.get(catalog_id=18998, code=material_code)
-                    materials[material_code] = m
+                        if full_string not in times:
+                            t = TimePeriod.objects.create(
+                                start = start,
+                                end = end,
+                                name = period,
+                            )
+                            times[full_string] = t
+                    except Exception as e:
+                        error = f"We had an issue formatting your date(s) - this error came back: {e}"
 
-                if space not in spaces:
-                    source = self.meta_data["processing"]["source"]
-                    s = ReferenceSpace.objects.get(source_id=source, name=space)
-                    spaces[space] = s
+                    if not error:
+                        try:
+                            items.append(Data(
+                                unit = units[unit],
+                                quantity = quantity,
+                                material = materials[material_code],
+                                material_name = material_name,
+                                source = self,
+                                origin_space = spaces[space],
+                                comments = comment,
+                                timeframe = times[full_string],
+                                segment_name = segment,
+                            ))
+                        except Exception as e:
+                            error = f"We were unable to add your item - this is the error that came back: {e} is invalid"
 
-                if unit not in units:
-                    u = Unit.objects.filter(Q(symbol=unit)|Q(synonyms__contains=unit)).exclude(type=99)
-                    units[unit] = u[0]
-
-                if type == "flows":
-                    start = start.strftime("%Y-%m-%d")
-                    end = end.strftime("%Y-%m-%d")
-                    full_string = str(start) + str(end)
-                elif type == "stock" or type == "population":
-                    start = start.strftime("%Y-%m-%d")
-                    end = None
-                    full_string = str(start)
-                    period = str(start)
-
-                if full_string not in times:
-                    t = TimePeriod.objects.create(
-                        start = start,
-                        end = end,
-                        name = period,
-                    )
-                    times[full_string] = t
-
-                items.append(Data(
-                    unit = units[unit],
-                    quantity = quantity,
-                    material = materials[material_code],
-                    material_name = material_name,
-                    source = self,
-                    origin_space = spaces[space],
-                    comments = comment,
-                    timeframe = times[full_string],
-                    segment_name = segment,
-                ))
-            Data.objects.bulk_create(items)
+            if not error:
+                try:
+                    Data.objects.bulk_create(items)
+                except Exception as e:
+                    error = f"We were unable to save the records - this is the error that came back: {e}"
 
         self.meta_data["ready_for_processing"] = False
         if error:

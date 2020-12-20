@@ -1879,7 +1879,7 @@ def hub_processing_dataset_classify(request, id, space=None):
             if material_code_column:
                 materials = df.iloc[:,[material_code_column]].values.tolist()
                 for each in materials:
-                    each = each[0]
+                    each = str(each[0])
                     each = each.strip()
                     if each not in material_list:
                         try:
@@ -1892,7 +1892,7 @@ def hub_processing_dataset_classify(request, id, space=None):
             # Get the nth column, containing reference spaces codes
             spaces = df.iloc[:,[spaces_column]].values.tolist()
             for each in spaces:
-                each = each[0]
+                each = str(each[0])
                 each = each.strip()
                 if each not in spaces_list:
                     check = ReferenceSpace.objects.filter(name=each, source__isnull=False)
