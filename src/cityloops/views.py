@@ -17,6 +17,14 @@ def city(request, slug):
     }
     return render(request, "cityloops/city.html", context)
 
+def dashboard_mockup(request, slug):
+    info = get_space(request, slug)
+    context = {
+        "info": info,
+        "title": info,
+    }
+    return render(request, "cityloops/dashboard.mockup.html", context)
+
 def about(request):
     info = get_object_or_404(Project, pk=request.project)
     context = {

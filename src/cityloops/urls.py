@@ -26,6 +26,7 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("indicators/", views.indicators, name="indicators"),
     path("<slug:slug>/", core.article, name="article"),
     path("city/<slug:slug>/", views.city, name="city"),
+    path("city/<slug:slug>/mockup/", views.dashboard_mockup, name="dashboard_mockup"),
     path("city/<slug:slug>/evaluation-plans/", views.city_evaluation_plans, name="city_evaluation_plans"),
     path("city/<slug:slug>/evaluation-plans/<int:id>/", views.city_evaluation_plan, name="city_evaluation_plan"),
     path("city/<slug:slug>/evaluation-plans/<int:id>/form/", views.city_evaluation_plan_form, name="city_evaluation_plan_form"),
