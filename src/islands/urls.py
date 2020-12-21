@@ -9,10 +9,12 @@ from staf import views as staf
 from ie.urls_baseline import baseline_urlpatterns
 from ie.urls_staf_baseline import baseline_staf_urlpatterns
 from ie.urls_library_baseline import baseline_library_urlpatterns
+from ie.urls_education_baseline import baseline_education_urlpatterns
+from django.views.generic.base import RedirectView
 
 app_name = "islands"
 
-urlpatterns = baseline_urlpatterns + baseline_library_urlpatterns + baseline_staf_urlpatterns + [
+urlpatterns = baseline_urlpatterns + baseline_library_urlpatterns + baseline_staf_urlpatterns + baseline_education_urlpatterns + [
 
     path("", views.index, name="index"),
     path("team/", views.team, name="team"),
@@ -27,7 +29,7 @@ urlpatterns = baseline_urlpatterns + baseline_library_urlpatterns + baseline_sta
     path("community/<slug:slug>/", core.article, { "prefix": "/community/"}, name="community"),
     path("resources/map/", library.map, { "article": 59, "tag": 219 }, name="map"),
     path("resources/publications/", library.index, name="resources"),
-    path("resources/courses/", education.courses, name="courses"),
+    path("resources/courses/", RedirectView.as_view(url="/courses/", permanent=False)),
     path("resources/reviews/", library.list, { "type": "reviews"}, name="reviews"),
     path("resources/islandindustrialecology/", library.list, { "type": "island_ie"}, name="island_ie"),
 

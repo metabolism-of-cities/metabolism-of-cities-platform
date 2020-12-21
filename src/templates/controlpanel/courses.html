@@ -20,7 +20,14 @@
     <tbody>
     {% for each in courses %}
       <tr>
-        <td><a href="{{ each.id }}/">{{ each }}</a></td>
+        <td>
+          <a href="{{ each.id }}/">{{ each }}</a>
+          {% if each.is_public %}
+            <span class="ml-3 badge badge-success">Publicly visible</span>
+          {% else %}
+            <span class="ml-3 badge badge-dark">Not publicly visible</span>
+          {% endif %}
+        </td>
         <td>{{ each.modules.count }}</td>
         <td>{{ each.students.count }}</td>
         <td>{{ each.recent_students.count }}</td>

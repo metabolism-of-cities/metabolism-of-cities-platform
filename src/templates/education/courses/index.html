@@ -2,32 +2,14 @@
 {% load moc_extras %}
 
 {% block content %}
-  <h1>Online courses</h1>
-
-  <div class="alert alert-warning">
-    <i class="fa fa-info-circle"></i>
-    {% if PROJECT.slug == "islands" %}
-      These online courses are part of the <a href="https://education.metabolismofcities.org/">Metabolism of Cities Education Hub</a>.
-      While the courses have been developed from an urban metabolism perspective, nearly all of the material is equally applicable
-      to island metabolism.
-    {% else %}
-      Join one of our online courses to learn about urban metabolism, data collection, and data processing! 
-      Our courses are free of charge and all available under a Creative Commons BY license. You can start the course at any time, 
-      and do it at your own pace. However, we also periodically run curated courses, where you can join organised sessions
-      and be part of a group working together on one of these courses under the supervision of an instructor. Keep an eye on 
-      our <a href="{% url "education:news" %}">news section</a> or social media (see links in our footer below) for 
-      more information. <br>
-      <br>
-      If you are an educator, and you would like to integrate our online, open courses as part of your curriculum (or as 
-      an optional exercise for your students), then don't hesitate to <a href="https://metabolismofcities.org/about/contact/">get in touch</a>
-      with Metabolism of Cities. 
-    {% endif %}
-  </div>
+  <h1>{{ webpage }}</h1>
+  
+  {{ webpage.get_description }}  
 
   <div class="row mb-4">
     {% for each in list %}
       <div class="col-lg-4 col-md-6 col-sm-8 mb-3">
-        <a class="card btn-card" href="{{ each.get_absolute_url|strip_first_slash }}">
+        <a class="card btn-card" href="{{ each.slug }}/">
           {% if each.image %}
             <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
           {% endif %}
@@ -39,4 +21,5 @@
       </div>
     {% endfor %}
   </div>
+
 {% endblock %}

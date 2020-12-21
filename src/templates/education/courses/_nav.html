@@ -1,43 +1,53 @@
 <ul class="nav flex-column" id="module_nav">
   <li class="nav-item">
+    {% with link=PROJECT.slug|add:":course" %}
     <a 
       class="nav-link {% if course_home %}active{% endif %}" 
-      href="{% url "education:course" course.slug %}">
+      href="{% url link course.slug %}">
       {{ course }}
     </a>
+    {% endwith %}
   </li>
   {% for each in course.modules.all %}
+    {% with link=PROJECT.slug|add:":module" %}
     <li class="nav-item">
       <a 
         class="nav-link {% if not check_register or not each.is_public %}disabled{% elif info == each %}active{% endif %}" 
-        href="{% url "education:module" course.slug each.id %}">
+        href="{% url link course.slug each.id %}">
         {{ each }}
       </a>
     </li>
+    {% endwith %}
   {% endfor %}
   {% if course.id != 33832 %}
+    {% with link=PROJECT.slug|add:":participants" %}
     <li class="nav-item">
       <a 
         class="nav-link {% if not check_register %}disabled{% elif participant_list %}active{% endif %}" 
-        href="{% url "education:participants" course.slug %}">
+        href="{% url link course.slug %}">
         Participant list
       </a>
     </li>
+    {% endwith %}
+    {% with link=PROJECT.slug|add:":syllabus" %}
     <li class="nav-item">
       <a 
         class="nav-link {% if syllabus %}active{% endif %}" 
-        href="{% url "education:syllabus" course.slug %}">
+        href="{% url link course.slug %}">
         Syllabus
       </a>
     </li>
+    {% endwith %}
   {% endif %}
   {% if course.faq %}
-  <li class="nav-item">
-    <a 
-      class="nav-link {% if faq %}active{% endif %}" 
-      href="{% url "education:faq" course.slug %}">
-      FAQ
-    </a>
-  </li>
+    {% with link=PROJECT.slug|add:":faq" %}
+      <li class="nav-item">
+        <a 
+          class="nav-link {% if faq %}active{% endif %}" 
+          href="{% url link course.slug %}">
+          FAQ
+        </a>
+      </li>
+    {% endwith %}
   {% endif %}
 </ul>

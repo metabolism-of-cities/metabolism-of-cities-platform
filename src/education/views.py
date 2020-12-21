@@ -9,6 +9,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from markdown import markdown
 from django.utils.safestring import mark_safe
+from django.forms import modelform_factory
 
 def index(request):
     context = {
@@ -27,9 +28,23 @@ def theses(request):
     return render(request, "library/list.html", context)
 
 def courses(request):
+    project = get_project(request)
+
+    # This page will have a text blurb at the top - this blurb is configured
+    # on a per-site basis, so we have to query the right webpage:
+    webpages = {
+        "islands": 583724,
+        "education": 583723,
+        "cityloops": 49333,
+    }
+    try:
+        webpage = Webpage.objects.get(pk=webpages[project.slug])
+    except:
+        webpage = None
     context = {
-        "list": Course.objects.all(),
+        "list": Course.objects.filter(projects=project),
         "title": "Online urban metabolism courses",
+        "webpage": webpage,
     }
     return render(request, "education/courses/index.html", context)
 
@@ -199,17 +214,46 @@ def controlpanel_courses(request):
         unauthorized_access(request)
 
     context = {
-        "courses": Course.objects.all(),
+        "courses": Course.objects_unfiltered.all(),
         "load_datatables": True,
     }
     return render(request, "controlpanel/courses.html", context)
+
+@login_required
+def controlpanel_course_form(request, id=None):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    ModelForm = modelform_factory(Course, fields=["name", "description", "faq", "slug", "image", "projects", "language", "is_public", "is_deleted"])
+    if id:
+        info = Course.objects_unfiltered.get(pk=id)
+        form = ModelForm(request.POST or None, request.FILES or None, instance=info)
+    else:
+        form = ModelForm(request.POST or None, request.FILES or None)
+
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save()
+            messages.success(request, "Information was saved.")
+            if "next" in request.GET:
+                return redirect(request.GET.get("next"))
+            else:
+                return redirect("education:controlpanel_courses")
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    context = {
+        "form": form,
+        "title": "Course",
+    }
+    return render(request, "modelform.html", context)
 
 @login_required
 def controlpanel_course(request, id):
     if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
-    info = get_object_or_404(Course, pk=id)
+    info = Course.objects_unfiltered.get(pk=id)
     completed = RecordRelationship.objects.filter(relationship_id=29, record_child__coursecontent__module__part_of_course=info)
     done_people = {}
     done_content = {}

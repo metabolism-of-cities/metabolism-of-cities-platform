@@ -4,10 +4,12 @@ from data import views as data
 from core import views as core
 from ie.urls_baseline import baseline_urlpatterns
 from ie.urls_staf_baseline import baseline_staf_urlpatterns
+from ie.urls_education_baseline import baseline_education_urlpatterns
+from django.views.generic.base import RedirectView
 
 app_name = "cityloops"
 
-urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
+urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + baseline_education_urlpatterns + [
     path("", data.progress, { "style": "grid"}, name="index"),
     path("about/", views.about, name="about"),
     path("evaluation-plans/", views.evaluation_plans, name="evaluation_plans"),
@@ -18,7 +20,7 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("videos/", views.videos),
     path("methods/", core.article, { "id":49331 }),
     path("reports/", core.article, { "id":51220 }),
-    path("instructions/", core.article, { "id":49333 }),
+    path("instructions/", RedirectView.as_view(url="/courses/", permanent=False)),
     path("overview/", data.progress, { "style": "grid"}, name="overview"),
     path("eurostat/", data.eurostat, name="eurostat"),
     path("eurostat/grid/", views.eurostat_grid, name="eurostat_grid"),

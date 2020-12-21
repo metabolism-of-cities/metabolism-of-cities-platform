@@ -339,6 +339,11 @@ def upload_directory(instance, filename):
         pass
     return directory + filename
 
+class Language(models.Model):
+    name = models.CharField(max_length=255)
+    def __str__(self):
+        return self.name
+
 class Document(Record):
     file = models.FileField(null=True, blank=True, upload_to=upload_directory, max_length=255)
     attached_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="attachments")
@@ -1712,8 +1717,10 @@ class DataPortal(LibraryItem):
     objects_include_private = PrivateRecordManager()
 
 class Course(Record):
-    slug = models.CharField(max_length=255, null=True)
+    slug = models.CharField(max_length=255, null=True, help_text="Do NOT change this if the course is already published")
     faq = models.TextField(null=True, blank=True)
+    language = models.ForeignKey(Language, on_delete=models.CASCADE, null=True, blank=True)
+    projects = models.ManyToManyField(Project, blank=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(unidecode(self.name))
@@ -2235,11 +2242,6 @@ class Sector(Record):
     #    return ReferenceSpaceType.objects.filter(processes__in=self.processes.all())
     #def datasets(self):
     #    return DatasetType.objects.filter(Q(origin_process__in=self.processes.all()) | Q(destination_process__in=self.processes.all()))
-
-class Language(models.Model):
-    name = models.CharField(max_length=255)
-    def __str__(self):
-        return self.name
 
 class DataArticle(Record):
 
