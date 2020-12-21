@@ -53,7 +53,12 @@
 
         {% if show_materials %}
           <div class="card mb-3">
-            <div class="card-header"><i class="fa fa-list fa-fw"></i> Classification of materials</div>
+            <div class="card-header"><i class="fa fa-list fa-fw"></i> 
+              Classification of materials
+              {% if spreadsheet.rowcount > 10 %}
+                <br><em>This initial check only analyses <strong>the first 10 records</strong></em>
+              {% endif %}
+            </div>
             <div class="card-body">
 
               {% for key,value in material_list.items %}
