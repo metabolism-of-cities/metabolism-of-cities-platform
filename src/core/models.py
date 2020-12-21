@@ -1111,6 +1111,12 @@ class LibraryItem(Record):
         except:
             return 0
 
+    def get_shortname(self):
+        if self.meta_data and "shortname" in self.meta_data:
+            return self.meta_data["shortname"]
+        else:
+            return self.name
+
     @property
     def get_shapefile_size(self):
         try:

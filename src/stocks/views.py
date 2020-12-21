@@ -103,6 +103,16 @@ def map(request, space, id, box=None):
         33904: 33913,
     }
 
+    melbourne = [33931,33962,33940]
+    brussels = [33886,33895,33904,33913]
+
+    if space.name == "Melbourne":
+        doc_list = melbourne
+    else:
+        doc_list = brussels
+
+    doc_list = LibraryItem.objects.filter(pk__in=doc_list)
+
     link = links.get(id)
 
     spaces = info.imported_spaces.all()
@@ -158,6 +168,7 @@ def map(request, space, id, box=None):
         "load_leaflet": True,
         "load_select2": True,
         "menu": "maps",
+        "doc_list": doc_list,
     }
 
     return render(request, "stocks/map.html", context)
