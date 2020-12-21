@@ -21,6 +21,9 @@ from core.mocfunctions import *
 #from folium import Map
 import folium
 
+# To check if NaN
+import math
+
 THIS_PROJECT = PROJECT_ID["library"]
 
 def get_site_tag(request):
@@ -435,7 +438,12 @@ def data_json(request, id):
             this_series = []
             for axis in x_axis:
                 try:
-                    this_series.append(stacked_field_values[each][axis])
+                    v = stacked_field_values[each][axis]
+                    check = float(v)
+                    if math.isnan(check):
+                        this_series.append(0) # What to add if NaN? 
+                    else:
+                        this_series.append(v)
                 except:
                     this_series.append(None)
             full = {
