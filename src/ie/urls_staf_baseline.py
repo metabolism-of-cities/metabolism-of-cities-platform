@@ -87,10 +87,22 @@ baseline_staf_urlpatterns = [
     path("hub/processing/gis/<int:id>/save/", staf.hub_processing_gis_save, name="hub_processing_gis_save"),
     path("hub/processing/gis/<int:id>/files/", staf.hub_processing_files, {"gis": True}, name="hub_processing_files"),
     path("hub/processing/gis/<int:id>/edit/", library.form),
+    path("hub/processing/flows/<int:id>/edit/", library.form),
+    path("hub/processing/flows/<int:id>/", staf.hub_processing_dataset, name="hub_processing_dataset"),
+    path("hub/processing/flows/<int:id>/classify/", staf.hub_processing_dataset_classify, name="hub_processing_dataset_classify"),
+    path("hub/processing/flows/<int:id>/save/", staf.hub_processing_dataset_save, name="hub_processing_dataset_save"),
+
+    # Delete this block March 2021, forward -> to flows
     path("hub/processing/datasets/<int:id>/edit/", library.form),
     path("hub/processing/datasets/<int:id>/", staf.hub_processing_dataset, name="hub_processing_dataset"),
     path("hub/processing/datasets/<int:id>/classify/", staf.hub_processing_dataset_classify, name="hub_processing_dataset_classify"),
     path("hub/processing/datasets/<int:id>/save/", staf.hub_processing_dataset_save, name="hub_processing_dataset_save"),
+    # End delete block
+
+    path("hub/processing/stock/<int:id>/edit/", library.form),
+    path("hub/processing/stock/<int:id>/", staf.hub_processing_dataset, name="hub_processing_dataset"),
+    path("hub/processing/stock/<int:id>/classify/", staf.hub_processing_dataset_classify, name="hub_processing_dataset_classify"),
+    path("hub/processing/stock/<int:id>/save/", staf.hub_processing_dataset_save, name="hub_processing_dataset_save"),
     path("hub/analysis/", staf.hub_analysis, name="hub_analysis"),
     path("hub/analysis/data-articles/", staf.hub_data_articles, name="hub_data_articles"),
     path("hub/analysis/data-articles/create/", staf.hub_data_article, name="hub_data_article"),
@@ -114,10 +126,22 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/hub/processing/gis/<int:id>/save/", staf.hub_processing_gis_save, name="hub_processing_gis_save"),
     path("dashboards/<slug:space>/hub/processing/gis/<int:id>/files/", staf.hub_processing_files, {"gis": True}, name="hub_processing_files"),
     path("dashboards/<slug:space>/hub/processing/gis/<int:id>/edit/", library.form),
+    path("dashboards/<slug:space>/hub/processing/flows/<int:id>/edit/", library.form),
+    path("dashboards/<slug:space>/hub/processing/flows/<int:id>/", staf.hub_processing_dataset, name="hub_processing_dataset"),
+    path("dashboards/<slug:space>/hub/processing/flows/<int:id>/classify/", staf.hub_processing_dataset_classify, name="hub_processing_dataset_classify"),
+    path("dashboards/<slug:space>/hub/processing/flows/<int:id>/save/", staf.hub_processing_dataset_save, name="hub_processing_dataset_save"),
+
+    # Delete this block March 2021 -> forward to /flows/
     path("dashboards/<slug:space>/hub/processing/datasets/<int:id>/edit/", library.form),
     path("dashboards/<slug:space>/hub/processing/datasets/<int:id>/", staf.hub_processing_dataset, name="hub_processing_dataset"),
     path("dashboards/<slug:space>/hub/processing/datasets/<int:id>/classify/", staf.hub_processing_dataset_classify, name="hub_processing_dataset_classify"),
     path("dashboards/<slug:space>/hub/processing/datasets/<int:id>/save/", staf.hub_processing_dataset_save, name="hub_processing_dataset_save"),
+    # end delete
+
+    path("dashboards/<slug:space>/hub/processing/stock/<int:id>/edit/", library.form),
+    path("dashboards/<slug:space>/hub/processing/stock/<int:id>/", staf.hub_processing_dataset, name="hub_processing_dataset"),
+    path("dashboards/<slug:space>/hub/processing/stock/<int:id>/classify/", staf.hub_processing_dataset_classify, name="hub_processing_dataset_classify"),
+    path("dashboards/<slug:space>/hub/processing/stock/<int:id>/save/", staf.hub_processing_dataset_save, name="hub_processing_dataset_save"),
     path("dashboards/<slug:space>/hub/processing/<slug:type>/completed/", staf.hub_processing_completed, name="hub_processing_completed"),
     path("dashboards/<slug:space>/hub/people/", data.users),
     path("dashboards/<slug:space>/articles/<slug:slug>/", data.article, name="article"),

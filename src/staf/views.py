@@ -1349,10 +1349,11 @@ def hub_harvesting_worksheet_mockup(request, space=None):
 def hub_processing(request, space=None):
 
     title = "Data processing"
-    datasets = Work.objects.filter(part_of_project_id=request.project, status__in=[1,4,5], workactivity_id=30)
+    stocks_tags = [903,904,905,906]
     gis = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).exclude(meta_data__processed__isnull=False).distinct()
     spreadsheet = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project).exclude(meta_data__processed__isnull=False).distinct()
-    datasets = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).exclude(meta_data__processed__isnull=False).distinct()
+    datasets_flows = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).exclude(meta_data__processed__isnull=False).exclude(tags__id__in=stocks_tags).distinct()
+    datasets_stock = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__id__in=stocks_tags).exclude(meta_data__processed__isnull=False).distinct()
     demographics = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=855).exclude(meta_data__processed__isnull=False).distinct()
     economy = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=854).exclude(meta_data__processed__isnull=False).distinct()
     climate = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[861,862]).exclude(meta_data__processed__isnull=False).distinct()
@@ -1363,7 +1364,8 @@ def hub_processing(request, space=None):
         title += " | " + space.name
         gis = gis.filter(spaces=space)
         spreadsheet = spreadsheet.filter(spaces=space)
-        datasets = datasets.filter(spaces=space)
+        datasets_flows = datasets_flows.filter(spaces=space)
+        datasets_stock = datasets_stock.filter(spaces=space)
         demographics = demographics.filter(spaces=space)
         economy = economy.filter(spaces=space)
         climate = climate.filter(spaces=space)
@@ -1377,8 +1379,10 @@ def hub_processing(request, space=None):
         "gis_open": gis.exclude(meta_data__assigned_to__isnull=False).count(),
         "spreadsheet": spreadsheet.count(),
         "spreadsheet_open": spreadsheet.exclude(meta_data__assigned_to__isnull=False).count(),
-        "datasets": datasets.count(),
-        "datasets_open": datasets.filter(meta_data__assigned_to__isnull=True).count(),
+        "datasets_flows": datasets_flows.count(),
+        "datasets_flows_open": datasets_flows.filter(meta_data__assigned_to__isnull=True).count(),
+        "datasets_stock": datasets_stock.count(),
+        "datasets_stock_open": datasets_stock.filter(meta_data__assigned_to__isnull=True).count(),
         "demographics": demographics.count(),
         "demographics_open": demographics.filter(meta_data__assigned_to__isnull=True).count(),
         "economy": economy.count(),
@@ -1395,6 +1399,7 @@ def hub_processing_list(request, space=None, type=None):
 
     processed = None
     unassigned = None
+    stocks_tags = [903,904,905,906]
 
     if type == "gis":
         title = "GIS data processing"
@@ -1409,10 +1414,24 @@ def hub_processing_list(request, space=None, type=None):
         processed = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct()
 
     elif type == "datasets":
+        # We will phase this out, no more active link to this section
+        # remove this block in March 2021
         list = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
         processed = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849, meta_data__processed__isnull=False).distinct()
         title = "Stocks and flows data processing"
+
+    elif type == "flows":
+        list = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(tags__id__in=stocks_tags).distinct()
+        unassigned = list.exclude(meta_data__assigned_to__isnull=False)
+        processed = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849, meta_data__processed__isnull=False).exclude(tags__id__in=stocks_tags).distinct()
+        title = "Material flows data processing"
+
+    elif type == "stock":
+        list = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__id__in=stocks_tags).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        unassigned = list.exclude(meta_data__assigned_to__isnull=False)
+        processed = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__id__in=stocks_tags, meta_data__processed__isnull=False).distinct()
+        title = "Stocks data processing"
 
     elif type == "demographics":
         list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=855).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
@@ -1621,22 +1640,28 @@ def hub_processing_completed(request, space=None, type=None):
 
     processed = None
     unassigned = None
+    stocks_tags = [903,904,905,906]
 
     related_ids = {
         "gis": 40,
         "geospreadsheet": 41,
         "datasets": 10,
+        "stock": 10,
+        "flows": 10,
     }
     related_tags = {
-        "demographics": 855,
+        "demographics": [855],
+        "stock": stocks_tags,
     }
 
     list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct()
 
+    if type == "flows":
+        list = list.filter(tags__parent_tag_id=849).exclude(tags__id__in=stocks_tags)
     if type in related_ids:
         list = list.filter(type__id=related_ids[type])
-    else:
-        list = list.filter(tags=related_tags[type])
+    if type in related_tags:
+        list = list.filter(tags__in=related_tags[type])
 
     title = "Completed work"
     if space:

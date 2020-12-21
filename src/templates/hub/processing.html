@@ -70,23 +70,23 @@
           </div>
         </a>
       </div>
-      <div class="col-md-6 mb-4" hidden>
-        <a href="" class="card btn-card">
+      <div class="col-md-6 mb-4">
+        <a href="flows/" class="card btn-card">
           <div class="card-body">
             <div class="row">
               <div class="col icon">
-                <i class="fal fa-fw fa-layer-group" aria-hidden="true"></i>
+                <i class="fal fa-fw fa-chart-bar" aria-hidden="true"></i>
               </div>
               <div class="col">
-                <strong>GIS publication queue</strong>
+                <strong>Flows data queue</strong>
                 <br>
-                <small>Review and publish shapefile information</small>
+                <small>Process material flow datasets</small>
                 <br>
                 <span class="badge badge-light">
-                  104 tasks
+                  {{ datasets_flows }} task{% if datasets_flows != 1 %}s{% endif %}
                 </span>
                 <span class="badge badge-primary">
-                  34 unassigned
+                  {{ datasets_flows_open }} unassigned
                 </span>
               </div>
             </div>
@@ -94,22 +94,22 @@
         </a>
       </div>
       <div class="col-md-6 mb-4">
-        <a href="datasets/" class="card btn-card">
+        <a href="stock/" class="card btn-card">
           <div class="card-body">
             <div class="row">
               <div class="col icon">
-                <i class="fal fa-fw fa-chart-bar" aria-hidden="true"></i>
+                <i class="fal fa-fw fa-chart-scatter" aria-hidden="true"></i>
               </div>
               <div class="col">
-                <strong>Stock and flow data queue</strong>
+                <strong>Stock data queue</strong>
                 <br>
-                <small>Process material stock and flow datasets</small>
+                <small>Process material stock datasets</small>
                 <br>
                 <span class="badge badge-light">
-                  {{ datasets }} task{% if datasets != 1 %}s{% endif %}
+                  {{ datasets_stock }} task{% if datasets_stock != 1 %}s{% endif %}
                 </span>
                 <span class="badge badge-primary">
-                  {{ datasets_open }} unassigned
+                  {{ datasets_stock_open }} unassigned
                 </span>
               </div>
             </div>
@@ -202,97 +202,6 @@
                 </span>
                 <span class="badge badge-primary">
                   {{ biophysical_open }} unassigned
-                </span>
-              </div>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="col-md-6 mb-4" hidden>
-        <a href="" class="card btn-card">
-          <div class="card-body">
-            <div class="row">
-              <div class="col icon">
-                <i class="fal fa-fw fa-chart-bar" aria-hidden="true"></i>
-              </div>
-              <div class="col">
-                <strong>Biophysical information queue</strong>
-                <br>
-                <small>Review and publish material stock and flow datasets</small>
-                <br>
-                <span class="badge badge-light">
-                  104 tasks
-                </span>
-                <span class="badge badge-primary">
-                  34 unassigned
-                </span>
-              </div>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="col-md-6 mb-4" hidden>
-        <a href="" class="card btn-card">
-          <div class="card-body">
-            <div class="row">
-              <div class="col icon">
-                <i class="fal fa-fw fa-file-alt" aria-hidden="true"></i>
-              </div>
-              <div class="col">
-                <strong>Resources review and publication queue</strong>
-                <br>
-                <small>Review and publish journal articles, reports, and other resources</small>
-                <br>
-                <span class="badge badge-light">
-                  104 tasks
-                </span>
-                <span class="badge badge-primary">
-                  34 unassigned
-                </span>
-              </div>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="col-md-6 mb-4" hidden>
-        <a href="" class="card btn-card">
-          <div class="card-body">
-            <div class="row">
-              <div class="col icon">
-                <i class="fal fa-fw fa-clipboard-list-check" aria-hidden="true"></i>
-              </div>
-              <div class="col">
-                <strong>Data article publication queue</strong>
-                <br>
-                <small>Review data articles before publication.</small>
-                <br>
-                <span class="badge badge-light">
-                  104 tasks
-                </span>
-                <span class="badge badge-primary">
-                  34 unassigned
-                </span>
-              </div>
-            </div>
-          </div>
-        </a>
-      </div><div class="col-md-6 mb-4" hidden>
-        <a href="" class="card btn-card">
-          <div class="card-body">
-            <div class="row">
-              <div class="col icon">
-                <i class="fal fa-fw fa-file" aria-hidden="true"></i>
-              </div>
-              <div class="col">
-                <strong>Incomplete uploads</strong>
-                <br>
-                <small>Overview of information not completely uploaded</small>
-                <br>
-                <span class="badge badge-light">
-                  104 tasks
-                </span>
-                <span class="badge badge-primary">
-                  34 unassigned
                 </span>
               </div>
             </div>
