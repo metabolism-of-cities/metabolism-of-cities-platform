@@ -122,9 +122,9 @@
             </p>
           </div>
 
-          <div class="copy-link">
+          <a class="copy-link text-dark" href="#indicator-41">
             <i class="far fa-fw fa-link"></i> <span class="link-copied pr-1" hidden>Link copied</span>
-          </div>
+          </a>
         </div>
 
         <div class="indicator">
@@ -358,8 +358,10 @@
 
     // share button popup
     $(".copy-link").click(function() {
-      copyToClipboard(window.location.href);
       $(this).find(".link-copied").removeAttr("hidden")
+      setTimeout(function(){
+        copyToClipboard(window.location.href);
+      }, 300);
       setTimeout(function(){
         $(".link-copied").attr("hidden", "hidden")
       }, 5000);
