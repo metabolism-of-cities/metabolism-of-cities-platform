@@ -2505,7 +2505,7 @@ class DataViz(Record):
         return self.name
 
 class Milestone(Record):
-    position = models.PositiveSmallIntegerField(db_index=True)
+    position = models.PositiveSmallIntegerField(db_index=True, help_text="Enter 0 to make this the annual summary")
     year = models.PositiveSmallIntegerField()
     projects = models.ManyToManyField(Project)
 

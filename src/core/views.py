@@ -623,20 +623,25 @@ def article_list(request, id):
     return render(request, "article.list.html", context)
 
 def ourstory(request):
-    if request.user.is_authenticated and request.user.id == 1:
-        milestones = {}
-        years = Milestone.objects.values_list("year", flat=True).order_by("year").distinct()
-        for each in years:
-            milestones[each] = Milestone.objects.filter(year=each)
+    milestones = {}
+    news = {}
+    blurbs = {}
+    years = Milestone.objects.values_list("year", flat=True).order_by("year").distinct()
+    for each in years:
+        milestones[each] = Milestone.objects.filter(year=each, position__gt=0)
+        news[each] = News.objects.filter(include_in_timeline=True, date__year=each).order_by("date")
+        blurb = Milestone.objects.filter(year=each, position=0)
+        blurbs[each] = blurb[0].get_description() if blurb else None
 
-        context = {
-            "years": years,
-            "milestones": milestones,
-            "add_link": "/admin/core/milestone/add/",
-        }
-        return render(request, "ourstory.html", context)
-    else:
-        return article(request, None, "our-story", "/about/")
+    context = {
+        "years": years,
+        "milestones": milestones,
+        "add_link": "/admin/core/milestone/add/",
+        "news": news,
+        "webpage": Webpage.objects.get(pk=52),
+        "blurbs": blurbs,
+    }
+    return render(request, "ourstory.html", context)
 
 # Users
 
