@@ -19,7 +19,7 @@
 
 <h1>My area</h1>
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
   <div class="form-group">
     <label for="description">General information about the area</label>
     <textarea class="form-control" name="description" name="description" rows="3"></textarea>
@@ -48,6 +48,7 @@
     </div>
   </div>
 
+  {% csrf_token %}
   <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
 </form>
 
