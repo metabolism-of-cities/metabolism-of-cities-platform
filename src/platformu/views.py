@@ -101,6 +101,7 @@ def clusters(request, organization):
             belongs_to = my_organization,
         )
     context = {
+        "page": "organisations",
         "info": my_organization,
         "tags": Tag.objects.filter(belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"]).order_by("id"),
         "my_organization": my_organization,
@@ -483,6 +484,13 @@ def admin_entity_user(request, organization, id, user=None):
         "info": info,
     }
     return render(request, "metabolism_manager/admin/entity.user.html", context)
+
+@login_required
+def admin_area(request):
+    context = {
+        "page": "area",
+    }
+    return render(request, "metabolism_manager/admin/area.html", context)
 
 @login_required
 def dashboard(request):

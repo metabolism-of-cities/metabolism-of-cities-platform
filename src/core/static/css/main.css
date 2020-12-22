@@ -203,7 +203,7 @@ nav li.nav-item:not(:last-of-type) {
 nav a.nav-link {
   color: #fff !important;
   opacity: .7 !important; }
-  nav a.nav-link:hover {
+  nav a.nav-link:hover, nav a.nav-link.active {
     opacity: 1 !important; }
   nav a.nav-link.dropdown-toggle[aria-expanded="true"] {
     opacity: 1 !important; }

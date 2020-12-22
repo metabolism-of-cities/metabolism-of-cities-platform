@@ -306,7 +306,8 @@ nav {
     color: $white !important;
     opacity: .7 !important;
 
-    &:hover {
+    &:hover,
+    &.active {
       opacity: 1 !important;
     }
 
