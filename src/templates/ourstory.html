@@ -51,7 +51,8 @@ iframe{max-width:100%}
           {% with blurb=blurbs|get_item:each %}
             {% if blurb.meta_data.video %}
               <iframe style="width:100%;height:50vh" class="video-embed youtube-video" src="https://www.youtube.com/embed/{{ blurb.meta_data.video }}?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            {% else %}
+            {% endif %}
+            {% if blurb.description %}
               <div class="alert alert-info">
                 <strong>{{ each }} summary</strong>
                 {{ blurb.get_description }}

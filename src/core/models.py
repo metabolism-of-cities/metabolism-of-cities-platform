@@ -477,7 +477,11 @@ class News(Record):
 
     def get_absolute_url(self):
         if self.projects.count() > 0:
-            return self.projects.all()[0].get_website() + "news/" + self.slug + "/"
+            p = self.projects.all()[0]
+            if p.has_subsite:
+                return p.get_website() + "news/" + self.slug + "/"
+            else:
+                return reverse("community:news", args=[self.slug])
         else:
             return reverse("community:news", args=[self.slug])
 
