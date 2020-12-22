@@ -1489,62 +1489,6 @@ body.dataviz img.dataviz {
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
   max-width: 100%; }
 
-body.our-story .timeline {
-  position: relative;
-  padding-left: 60px;
-  display: none; }
-  body.our-story .timeline::before {
-    content: " ";
-    background: #efefef;
-    display: inline-block;
-    position: absolute;
-    left: 29px;
-    width: 2px;
-    height: 100%;
-    z-index: 400; }
-  body.our-story .timeline > .single-entry {
-    padding: 1rem;
-    background-color: #fff;
-    max-width: 600px;
-    border-radius: .25rem;
-    box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2); }
-    body.our-story .timeline > .single-entry::before {
-      font-family: "Font Awesome 5 Pro";
-      background: #fbfbfb;
-      color: #144d58;
-      display: inline-block;
-      font-size: 25px;
-      height: 40px;
-      left: 10px;
-      margin-top: -5px;
-      position: absolute;
-      text-align: center;
-      width: 40px;
-      z-index: 400; }
-    body.our-story .timeline > .single-entry.people::before {
-      content: "\f0c0"; }
-    body.our-story .timeline > .single-entry.message::before {
-      content: "\f0e0"; }
-  body.our-story .timeline .single-entry {
-    margin-bottom: 2rem; }
-    body.our-story .timeline .single-entry > * {
-      margin-bottom: .5rem; }
-      body.our-story .timeline .single-entry > *:last-child {
-        margin-bottom: 0; }
-  body.our-story .timeline .title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: .5rem; }
-  body.our-story .timeline .date {
-    color: #808080; }
-  body.our-story .timeline img {
-    max-width: 100%;
-    border-radius: .25rem;
-    max-height: 600px; }
-
-body.our-story .toggle-timeline i {
-  transition: 400ms ease all; }
-
 body.journals .no-results:not(.visible) {
   display: none; }
 
