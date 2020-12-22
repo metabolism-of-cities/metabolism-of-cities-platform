@@ -629,9 +629,9 @@ def ourstory(request):
     years = Milestone.objects.values_list("year", flat=True).order_by("year").distinct()
     for each in years:
         milestones[each] = Milestone.objects.filter(year=each, position__gt=0)
-        news[each] = News.objects.filter(include_in_timeline=True, date__year=each).order_by("date")
+        news[each] = News.objects.filter(include_in_timeline=True, date__year=each, projects__in=MOC_PROJECTS).distinct().order_by("date")
         blurb = Milestone.objects.filter(year=each, position=0)
-        blurbs[each] = blurb[0].get_description() if blurb else None
+        blurbs[each] = blurb[0] if blurb else None
 
     context = {
         "years": years,
