@@ -1940,6 +1940,11 @@ def trim_database(request):
         Message.objects.all().delete()
         People.objects.all().delete()
         Relationship.objects.filter(pk=1).delete() # Remove platformu admins
+        # We should re-create this level though! Otherwise PlatformU won't work!
+        Relationship.objects.create(
+            id=1,
+            name='PlatformU admin',
+        )
         Tag.objects.filter(pk=747).delete() # PlatformU segments
         zotero = ZoteroCollection.objects.all()
         zotero.update(api="none")
