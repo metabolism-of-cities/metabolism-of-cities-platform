@@ -371,7 +371,7 @@ def data_json(request, id):
 
     if "drilldown" in request.GET:
         group_by = "timeframe__name"
-        grouped_data = data.values(group_by).annotate(total=Sum("quantity")).order_by(group_by)
+        grouped_data = data.values(group_by).annotate(total=Sum("quantity")).order_by("timeframe__start")
         subdivision = "origin_space"
         if number_of_origins > 1:
             subdivision = "origin_space"
