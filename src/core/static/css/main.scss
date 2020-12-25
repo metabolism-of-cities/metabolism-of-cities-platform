@@ -306,7 +306,8 @@ nav {
     color: $white !important;
     opacity: .7 !important;
 
-    &:hover {
+    &:hover,
+    &.active {
       opacity: 1 !important;
     }
 
@@ -2297,90 +2298,6 @@ body.dataviz {
     border-radius: .25rem;
     box-shadow: $basic-shadow;
     max-width: 100%;
-  }
-}
-
-// OUR STORY PAGE
-body.our-story {
-  .timeline {
-    position: relative;
-    padding-left: 60px;
-    display: none;
-
-    &::before {
-      content: " ";
-      background: $light;
-      display: inline-block;
-      position: absolute;
-      left: 29px;
-      width: 2px;
-      height: 100%;
-      z-index: 400;
-    }
-
-
-    > .single-entry {
-      padding: 1rem;
-      background-color: $white;
-      max-width: 600px;
-      border-radius: .25rem;
-      box-shadow: $basic-shadow;
-
-      &::before {
-        font-family: "Font Awesome 5 Pro";
-        background: $very-light;
-        color: $primary;
-        display: inline-block;
-        font-size: 25px;
-        height: 40px;
-        left: 10px;
-        margin-top: -5px;
-        position: absolute;
-        text-align: center;
-        width: 40px;
-        z-index: 400;
-      }
-
-      &.people::before {
-        content: "\f0c0"
-      }
-
-      &.message::before {
-        content: "\f0e0"
-      }
-    }
-
-    .single-entry {
-      margin-bottom: 2rem;
-
-      > * {
-        margin-bottom: .5rem;
-
-        &:last-child {
-          margin-bottom: 0;
-        }
-      }
-    }
-
-    .title {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: .5rem;
-    }
-
-    .date {
-      color: $gray;
-    }
-
-    img {
-      max-width: 100%;
-      border-radius: .25rem;
-      max-height: 600px;
-    }
-  }
-
-  .toggle-timeline i {
-    transition: 400ms ease all;
   }
 }
 

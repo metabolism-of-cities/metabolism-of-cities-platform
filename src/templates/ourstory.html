@@ -4,8 +4,109 @@
 {% block page_name %}our-story{% endblock %}
 
 {% block css %}
-<style type="text/css">
-iframe{max-width:100%}
+<style>
+  iframe{
+    width:100%;
+    height:50vh;
+    box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
+  }
+
+  .alert p:last-of-type,
+  .card-body p:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .single-entry p {
+    max-width: 800px;
+  }
+
+  .milestone-img {
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 60px;
+    display: none;
+  }
+
+  .timeline::before {
+    content: " ";
+    background: #efefef;
+    display: inline-block;
+    position: absolute;
+    left: 29px;
+    width: 2px;
+    height: 100%;
+    z-index: 400;
+  }
+
+  .timeline > .single-entry {
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: .25rem;
+    box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
+  }
+
+  .timeline > .single-entry::before {
+    font-family: "Font Awesome 5 Pro";
+    background: #fbfbfb;
+    color: #144d58;
+    display: inline-block;
+    font-size: 25px;
+    height: 40px;
+    left: 10px;
+    margin-top: -5px;
+    position: absolute;
+    text-align: center;
+    width: 40px;
+    z-index: 400;
+  }
+
+  .timeline > .single-entry.people::before {
+    content: "\f0c0";
+  }
+
+  .timeline > .single-entry.message::before {
+    content: "\f0e0";
+  }
+
+  .timeline .single-entry {
+    margin-bottom: 2rem;
+  }
+
+  .timeline .single-entry > * {
+    margin-bottom: .5rem;
+  }
+
+  .timeline .single-entry > *:last-child {
+    margin-bottom: 0;
+  }
+
+  .timeline .title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: .5rem;
+  }
+
+  .timeline .date {
+    color: #808080;
+    font-size: .875rem;
+    margin-top: 2px;
+    font-weight: normal;
+  }
+
+  .timeline img {
+    max-width: 100%;
+    border-radius: .25rem;
+    max-height: 600px;
+  }
+
+  .toggle-timeline i {
+    transition: 400ms ease all;
+  }
 </style>
 {% endblock %}
 
@@ -21,20 +122,18 @@ iframe{max-width:100%}
       <h3>{{ each }}</h3>
       <div class="row">
         {% for milestone in milestones|get_item:each %}
-        <div class="col-md-6 col-lg-3 mb-4">
+        <div class="col-md-6 col-lg-4 mb-4">
           <div class="card icon-card">
             <div class="card-header">{{ milestone }}</div>
             {% if milestone.image %}
-              <img src="{{ milestone.image.thumbnail.url }}" alt="" />
+              <img class="milestone-img border-bottom" src="{{ milestone.image.thumbnail.url }}" alt="{{ milestone }}" />
             {% else %}
               <div class="icon">
                 <i class="far fa-fw fa-{{ milestone.meta_data.icon }}"></i>
               </div>
             {% endif %}
             <div class="card-body">
-              <p class="what-text">
-                {{ milestone.get_description }}
-              </p>
+              {{ milestone.get_description }}
             </div>
           </div>
         </div>
@@ -50,10 +149,10 @@ iframe{max-width:100%}
         {% if blurbs|get_item:each %}
           {% with blurb=blurbs|get_item:each %}
             {% if blurb.meta_data.video %}
-              <iframe style="width:100%;height:50vh" class="video-embed youtube-video" src="https://www.youtube.com/embed/{{ blurb.meta_data.video }}?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              <iframe class="video-embed youtube-video rounded bg-light mb-3" src="https://www.youtube.com/embed/{{ blurb.meta_data.video }}?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             {% endif %}
             {% if blurb.description %}
-              <div class="alert alert-info">
+              <div class="alert alert-primary">
                 <strong>{{ each }} summary</strong>
                 {{ blurb.get_description }}
               </div>

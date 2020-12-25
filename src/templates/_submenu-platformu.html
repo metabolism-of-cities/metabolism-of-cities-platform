@@ -8,11 +8,12 @@
 
       <div class="collapse navbar-collapse" id="ascus-navbar">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item"><a class="nav-link" href="{% url 'platformu:admin_dashboard' %}">Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'platformu:admin' %}">My organisations</a></li>
+          <li class="nav-item"><a class="nav-link {% if page == 'dashboard' %}active{% endif %}" href="{% url 'platformu:admin_dashboard' %}">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link {% if page == 'organisations' %}active{% endif %}" href="{% url 'platformu:admin' %}">My organisations</a></li>
+          <li class="nav-item"><a class="nav-link {% if page == 'area' %}active{% endif %}" href="{% url 'platformu:admin_area' %}">My area</a></li>
         </ul>
-        <ul class="navbar-nav ml-aut">
-          <li class="nav-item"><a class="nav-link" href="{% url 'platformu:volunteer_forum' %}">Forum</a></li>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item"><a class="nav-link {% if page == 'forum' %}active{% endif %}" href="{% url 'platformu:volunteer_forum' %}">Forum</a></li>
           <li class="nav-item"><a class="nav-link" href="/accounts/logout/"><i class="fa fa-sign-out"></i></a></li>
         </ul>
       </div>

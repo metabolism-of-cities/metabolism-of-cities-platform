@@ -1,7 +1,39 @@
 {% extends "_base.html" %}
 
 {% block title %}Metabolism Manager{% endblock %}
-{% block page_name %}entity form{% endblock %}
+
+{% block css %}
+<style>
+  label {
+    font-weight: bold;
+    margin-bottom: 0;
+  }
+
+  .select2-selection__rendered,
+  .select2-results__option {
+    padding-left: .75rem !important;
+  }
+
+  hr {
+    margin: 2rem 0 2rem -1.25rem;
+    width: calc(100% + 2.5rem);
+  }
+
+  #links .single-link:not(:first-of-type) label {
+    display: none;
+  }
+
+  .col-delete {
+    max-width: 50px;
+  }
+
+  .delete-link {
+    height: 38px;
+    line-height: 26px;
+    width: 38px;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
 
@@ -21,6 +53,7 @@
             <label for="name">Company name</label>
             <input type="text" required class="form-control" id="name" name="name" value="{% if info.name %}{{ info.name }}{% endif %}">
           </div>
+
           <div class="form-group">
             <label for="logo">Logo</label>
             <div class="custom-file">
@@ -28,15 +61,68 @@
               <label class="custom-file-label" for="logo">Choose file</label>
             </div>
           </div>
+
           <div class="form-group">
             <label for="description">Description</label>
-            <textarea id="description" class="form-control" rows="5" name="description"
+            <textarea id="description" class="form-control" rows="2" name="description"
              >{% if info.description %}{{ info.description }}{% endif %}</textarea>
           </div>
+
+          <div class="form-group form-row">
+            <div class="col">
+              <label for="email">Email</label>
+              <input type="email" id="email" class="form-control" name="email" value="{% if info.email %}{{ info.email }}{% endif %}">
+            </div>
+
+            <div class="col">
+              <label for="url">Website</label>
+              <input type="url" id="url" class="form-control" name="url" value="{% if info.url %}{{ info.url }}{% endif %}" placeholder="Make sure to include the https:// part of the URL">
+            </div>
+          </div>
+
+          <div class="form-group form-row">
+            <div class="col">
+              <label for="phone">Phone number</label>
+              <input type="tel" class="form-control" id="phone" name="phone" value="{{ info.meta_data.phone }}">
+            </div>
+
+            <div class="col">
+              <label for="year">Founding year</label>
+              <input type="number" class="form-control" id="year" name="year" min="1000" max="2030" value="{{ info.meta_data.year }}">
+            </div>
+
+          </div>
+
+          <div class="form-group form-row">
+            <div class="col">
+              <label>Sector</label>
+              <select class="custom-select" class="form-control" name="sector">
+                <option hidden disabled selected value>Select an option</option>
+                {% for each in sectors %}
+                  <option {% if each in info.sectors.all %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col">
+              <label for="nace">NACE code</label>
+              <select class="custom-select select2" id="nace" name="nace" value="{{ info.meta_data.nace }}">
+                <option value="1">A1.11 - Growing of cereals (except rice), leguminous crops and oil seeds</option>
+                <option value="2">A1.12 - Growing of rice</option>
+                <option value="3">A1.13 - Growing of vegetables and melons, roots and tubers</option>
+                <option value="4">A1.14 - Growing of sugar cane</option>
+                <option value="5">A1.15 - Growing of tobacco</option>
+                <option value="6">A1.16 - Growing of fibre crops</option>
+                <option value="7">A1.19 - Growing of other non-perennial crops</option>
+              </select>
+            </div>
+          </div>
+
           <div class="form-group">
             <label for="employees">Employees</label>
             <input min="0" type="number" class="form-control" id="employees" name="employees" value="{{ info.meta_data.employees }}">
           </div>
+
           <div class="form-group">
             <label for="location">Address</label>
             <input type="text" class="form-control" id="autocomplete-search" name="autocomplete-search" value="{{ info.meta_data.address }}">
@@ -46,36 +132,119 @@
 
           <input id="formatted" type="hidden" name="address" value="{{ info.meta_data.address }}">
 
-          <div class="form-group">
-            <label for="lat">Latitude</label>
-            <input type="text" class="form-control" id="lat" name="lat" value="{{ info.meta_data.lat }}">
+          <div class="form-group form-row">
+            <div class="col">
+              <label for="lat">Latitude</label>
+              <input type="text" class="form-control" id="lat" name="lat" value="{{ info.meta_data.lat }}">
+            </div>
+
+            <div class="col">
+              <label for="lng">Longitude</label>
+              <input type="text" class="form-control" id="lng" name="lng" value="{{ info.meta_data.lng }}">
+            </div>
           </div>
-          <div class="form-group">
-            <label for="lng">Longitude</label>
-            <input type="text" class="form-control" id="lng" name="lng" value="{{ info.meta_data.lng }}">
+
+          <hr>
+
+          <h3>Market information</h3>
+
+          <p class="mb-1">Some explanation of what this is and what it's used for. Each needs to add up to 100%</p>
+          <ul class="pl-4">
+            <li>Local: linked to the city</li>
+            <li>Regional: linked to the official regional level or within a 100km radius</li>
+            <li>Export: beyond a 100km radius</li>
+          </ul>
+
+          <div class="form-group pb-2">
+            <h5 class="font-weight-normal">Purchasing expenditures</h5>
+
+            <div class="form-group form-row">
+              <div class="col">
+                <label for="purchasing-local">Local</label>
+                <div class="input-group">
+                  <input type="number" max="100" class="form-control" id="purchasing-local" name="purchasing-local">
+                  <div class="input-group-append">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col">
+                <label for="purchasing-regional">Regional</label>
+                <div class="input-group">
+                  <input type="number" max="100" class="form-control" id="purchasing-regional" name="purchasing-regional">
+                  <div class="input-group-append">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col">
+                <label for="purchasing-export">Export</label>
+                <div class="input-group">
+                  <input type="number" max="100" class="form-control" id="purchasing-export" name="purchasing-export">
+                  <div class="input-group-append">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="form-group">
-            <label>Sector</label>
-            <select class="custom-select" class="form-control" name="sector">
-              <option hidden disabled selected value>Select an option</option>
-              {% for each in sectors %}
-                <option {% if each in info.sectors.all %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
-              {% endfor %}
-            </select>
+            <h5 class="font-weight-normal">Sales revenue</h5>
+
+            <div class="form-group form-row">
+              <div class="col">
+                <label for="sales-local">Local</label>
+                <div class="input-group">
+                  <input type="number" max="100" class="form-control" id="sales-local" name="sales-local">
+                  <div class="input-group-append">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col">
+                <label for="sales-regional">Regional</label>
+                <div class="input-group">
+                  <input type="number" max="100" class="form-control" id="sales-regional" name="sales-regional">
+                  <div class="input-group-append">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col">
+                <label for="sales-export">Export</label>
+                <div class="input-group">
+                  <input type="number" max="100" class="form-control" id="sales-export" name="sales-export">
+                  <div class="input-group-append">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" class="form-control" name="email" value="{% if info.email %}{{ info.email }}{% endif %}">
+
+          <hr>
+
+          <h3>Links with local businesses</h3>
+
+          <p>Some explanation of what this is and what it's used for.</p>
+
+          <div class="form-group" id="links"></div>
+
+          <div class="btn btn-sm btn-primary" id="add-link">
+            <i class="fa fa-plus"></i> Add link
           </div>
-          <div class="form-group">
-            <label for="url">Website</label>
-            <input type="url" id="url" class="form-control" name="url" value="{% if info.url %}{{ info.url }}{% endif %}" placeholder="Make sure to include the https:// part of the URL">
-          </div>
+
+          <hr>
+
           <div class="form-group">
             <label for="active">Active</label>
             <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="active" name="status" {% if not info.is_deleted %} checked {% endif %}>
+              <input type="checkbox" class="custom-control-input" id="active" name="status" {% if not info.is_deleted %}checked{% endif %}>
               <label class="custom-control-label" for="active"></label>
             </div>
           </div>
@@ -161,6 +330,34 @@
     </form>
   </section>
 
+  <!-- html of a link that is used to add a new one -->
+  <div id="link-wrapper" hidden>
+    <div class="form-row single-link mb-2">
+      <div class="col">
+        <label>Business name</label>
+        <select class="custom-select business-name" name="link_business_0">
+          <option selected disabled>Type to search existing business, hit enter to create new option</option>
+          {% for each in organization_list %}
+            <option value="{{ each.id }}">{{ each }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col">
+        <label for="url">Dependence</label>
+        <select class="custom-select" name="link_dependence_0">
+          <option value="1">Low dependence</option>
+          <option value="2">Medium</option>
+          <option value="3">Interdependence</option>
+        </select>
+      </div>
+      <div class="col col-delete">
+        <label>&nbsp;</label>
+        <div class="btn btn-danger btn-sm delete-link">
+          <i class="far fa-trash-alt m-0"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
 
 {% block footer %}
@@ -175,6 +372,7 @@
     const priorityLat = "50.8435";
     const priorityLon = "4.3688";
 
+    // function to autocomplete the address search
     function autoComplete(term) {
       $("#autocomplete-results").html("<i class='fad fa-spinner-third fa-spin'></i>")
       $.get("https://api.geoapify.com/v1/geocode/autocomplete?text=" + term + "&lat=" + priorityLat + "&lon=" + priorityLon + "&apiKey={{ geoapify_api }}")
@@ -190,6 +388,7 @@
       })
     };
 
+    // run autocomplete function when typing, but only if more than 4 characters are typed to prevent loads of useless searches
     $("#autocomplete-search").keyup(function() {
       let searchTerm = $("#autocomplete-search").val()
       searchTerm = searchTerm.trim().replace(/\s/g,"+")
@@ -203,6 +402,7 @@
       $("#submit-coordinates").attr("hidden", "hidden");
     })
 
+    // function to take the results from the api and present them to the user
     function showAutocompleteResults(results) {
       $("#autocomplete-results").html("");
       $(results.features).each(function() {
@@ -212,6 +412,7 @@
       enableResultFunction()
     };
 
+    // when clicking on an autocomplete result, get latitude and longitude and enter it in the lat and lon fields
     function enableResultFunction() {
       $(".single-autocomplete-result").click(function() {
         $("input#lat").val( $(this).data("lat") );
@@ -223,6 +424,43 @@
         $("#submit-coordinates").removeAttr("hidden");
       })
     }
+
+    // add a single new link to a local business
+    // each link needs a unique number
+    let linkCount = 0
+
+    // function to add a new row with link fields
+    function addLink() {
+      // update name attributes to match number
+      $("#link-wrapper select[name^='link_business']").attr({
+        name: "link_business_" + linkCount,
+      })
+
+      $("#link-wrapper select[name^='link_dependence']").attr({
+        name: "link_dependence_" + linkCount,
+      })
+
+      let linkHTML = $("#link-wrapper").html();
+
+      $("#links").append(linkHTML);
+
+      $("#links .single-link:last-of-type select.business-name").select2({
+        theme: "bootstrap4",
+        tags: true,
+      });
+
+      linkCount++;
+    }
+
+    // add link when clicing button
+    $("#add-link").click(function() {
+      addLink()
+    });
+
+    // remove link
+    $("body").on("click", ".delete-link", function() {
+      $(this).closest(".single-link").remove()
+    });
   </script>
 
 {% endblock %}

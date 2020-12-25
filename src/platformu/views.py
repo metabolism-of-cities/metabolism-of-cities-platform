@@ -101,6 +101,7 @@ def clusters(request, organization):
             belongs_to = my_organization,
         )
     context = {
+        "page": "organisations",
         "info": my_organization,
         "tags": Tag.objects.filter(belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"]).order_by("id"),
         "my_organization": my_organization,
@@ -136,6 +137,7 @@ def admin_dashboard(request, organization=None):
             "Resources": MaterialDemand.objects.filter(owner__in=organization_list).exclude(material_type__parent_id__in=[31621,31620]),
             "Space": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31621),
             "Technology": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31620),
+            "Staff": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31620),
         }
 
         gps = organization_list[0].meta_data
@@ -259,6 +261,7 @@ def admin_data(request, organization=None):
             "Resources": MaterialDemand.objects.filter(owner__in=organization_list).exclude(material_type__parent_id__in=[31621,31620]),
             "Space": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31621),
             "Technology": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31620),
+            "Staff": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31620),
         }
 
     context = {
@@ -299,6 +302,12 @@ def admin_entity(request, organization, id):
 @login_required
 def admin_entity_form(request, organization, id=None):
     my_organization = my_organizations(request, organization)
+
+    organization_list = Organization.objects_include_private.filter(
+        tags__parent_tag_id = TAG_ID["platformu_segments"],
+        tags__belongs_to = my_organization,
+    )
+
     edit = False
     if id:
         info = get_entity_record(request, my_organization, id)
@@ -339,9 +348,11 @@ def admin_entity_form(request, organization, id=None):
     context = {
         "page": "entity_form",
         "my_organization": my_organization,
+        "organization_list": organization_list,
         "info": info,
         "sectors": Sector.objects.all(),
         "geoapify_api": settings.GEOAPIFY_API,
+        "load_select2": True,
     }
     return render(request, "metabolism_manager/admin/entity.form.html", context)
 
@@ -369,6 +380,9 @@ def admin_entity_materials(request, organization, id, slug=None):
         main_groups = None
         materials = Material.objects.filter(parent_id=31620)
     elif slug == "space":
+        main_groups = None
+        materials = Material.objects.filter(parent_id=31621)
+    elif slug == "staff":
         main_groups = None
         materials = Material.objects.filter(parent_id=31621)
     context = {
@@ -483,6 +497,13 @@ def admin_entity_user(request, organization, id, user=None):
         "info": info,
     }
     return render(request, "metabolism_manager/admin/entity.user.html", context)
+
+@login_required
+def admin_area(request):
+    context = {
+        "page": "area",
+    }
+    return render(request, "metabolism_manager/admin/area.html", context)
 
 @login_required
 def dashboard(request):
