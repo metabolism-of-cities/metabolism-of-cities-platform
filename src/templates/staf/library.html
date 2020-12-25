@@ -36,6 +36,20 @@
     {% endif %}
   </ul>
 
+{% elif type == "datasets" %}
+
+  <ul class="nav nav-pills mb-3">
+    <li class="nav-item">
+      <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Display mode:</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {% if not request.GET.dataviz %}active{% endif %}" href="./"><i class="fa fa-list"></i> All documents</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {% if request.GET.dataviz %}active{% endif %}" href="./?dataviz=true"><i class="fa fa-chart-bar"></i> Datasets with visualisations</a>
+    </li>
+  </ul>
+
 {% elif type == "infrastructure" or type == "boundaries" %}
 
   <ol class="breadcrumb">
@@ -49,6 +63,8 @@
 
 {% if request.GET.shapefiles %}
   {% include "_library.shapefiles.html" %}
+{% elif request.GET.dataviz and False %}
+  {% include "_library.dataviz.html" %}
 {% elif type == "multimedia" %}
   {% include "_library.multimedia.html" %}
 {% else %}

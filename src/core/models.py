@@ -295,9 +295,6 @@ class Record(models.Model):
                 # For data articles we have a special syntax that converts things like [@3893] to a link, or [#3983] to an iframe
 
                 p = re.compile("\[#(\d*)\]")
-                # For local testing, add /data/ to src=
-                # ---- AND BE SURE TO REMOVE WHEN DEPLOYING IN PRODUCTION! ---
-                # (yeah we should fine a better solution)
                 self.description_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.description_html)
 
                 p = re.compile("\[@(\d*)\]")

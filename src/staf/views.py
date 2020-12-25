@@ -213,6 +213,8 @@ def library_overview(request, type, space=None):
     title = None
     if type == "datasets":
         list = list.filter(type__id=10)
+        if "dataviz" in request.GET:
+            list = list.filter(meta_data__processed=True)
     elif type == "maps" or type == "infrastructure" or type == "boundaries":
         list = list.filter(type__id__in=[40,41,20])
         if type == "infrastructure":
@@ -2811,6 +2813,7 @@ def libraryframe(request, id):
             return render(request, "library/map.iframe.html", {**context, **context_add})
         else:
             context["load_highcharts"] = True
+            context["properties"] = info.get_dataviz_properties
             return render(request, "library/chart.iframe.html", context)
     else:
         return render(request, "library/item.iframe.html", context)

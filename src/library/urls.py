@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from core import views as core
 from community import views as community
+from staf import views as staf
 from ie.urls_baseline import baseline_urlpatterns
 from ie.urls_library_baseline import baseline_library_urlpatterns
 
@@ -29,5 +30,6 @@ urlpatterns = baseline_urlpatterns + baseline_library_urlpatterns + [
     path("search/ajax/", views.search_ajax, name="search_ajax"),
 
     path("search/ajax/tags/", views.search_tags_ajax, name="search_tags_ajax"),
+    path("preview/<int:id>/", staf.libraryframe, name="libraryframe"),
     
 ]

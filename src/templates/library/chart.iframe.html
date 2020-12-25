@@ -34,11 +34,7 @@
 {% endblock %}
 
 {% block footer %}
-  <script type="text/javascript">
-  let json_url = "/library/{{ info.id }}/data/json/";
-  {% if info.get_dataviz_properties %}
-    properties = {{ info.get_dataviz_properties|safe }};
+  {% if info.data.all %}
+    {% include "_chart.footer.html" %}
   {% endif %}
-  </script>
-  <script src="{% static 'js/data.js' %}?rl=c"></script>
 {% endblock %}

@@ -58,6 +58,11 @@
       </div>
     </div>
     <div id="table" role="tabpanel" class="table tab-pane">
+      {% if info.data.all.count > 100 %}
+        <div class="alert alert-warning">
+          We are showing the first 100 records. 
+        </div>
+      {% endif %}
       <table class="table datatable datatable-card">
         <thead>
           <tr>

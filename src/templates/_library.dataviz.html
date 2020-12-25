@@ -1,0 +1,23 @@
+{% load moc_extras %}
+
+<div class="library-dataviz-list">
+
+  <div class="alert alert-info">{{ items.count }} items found.</div>
+
+  <div class="row">
+    {% for each in items %}
+      <div class="col-lg-4 col-md-6 col-sm-8 mb-3">
+        <a class="card btn-card" href="{% if relative_url %}{{ each.id }}/{% else %}{% url URLS.LIBRARY_ITEM each.id %}{% endif %}">
+          {% if False %}
+            <img src="{{ each.get_shapefile_plot }}" class="card-img-top" alt="">
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title">{{ each }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ each.get_author_citation }}</h6>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
