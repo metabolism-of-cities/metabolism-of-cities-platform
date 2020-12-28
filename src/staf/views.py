@@ -1892,7 +1892,22 @@ def hub_processing_dataset_classify(request, id, space=None):
     if request.method == "POST" and "source" in request.POST:
         info.meta_data["processing"]["source"] = request.POST.get("source")
         info.save()
-        return redirect("../save/")
+        completed = False
+        try:
+            info.convert_stocks_flows_data()
+            if info.meta_data["processed"]:
+                completed = True
+        except:
+            completd = False
+        if completed:
+            return redirect("../save/")
+        else:
+            error_message = "Not all of your data could be properly processed. Please review the error below and upload a new file. ERROR: "
+            if "processing_error" in info.meta_data:
+                error_message += info.meta_data["processing_error"]
+            else:
+                error_message += "Could not load the spreadsheet data."
+            messages.error(request, error_message)
 
     try:
         file_id = info.meta_data["processing"]["file"]
@@ -2068,14 +2083,7 @@ def hub_processing_dataset_save(request, id, space=None):
              "limitations": request.POST.get("limitations"),
         }
         info.save()
-        if True:
-            info.meta_data["ready_for_processing"] = True
-            info.save()
-            messages.success(request, "The file was processed! We run the data conversion once a day, so please wait for up to 24 hours for the data to become available.")
-        else:
-            info.meta_data["ready_for_processing"] = True
-            info.save()
-            messages.success(request, "The file was processed! However, because more than 1,000 items are included in this layer it will take some time to complete the processing. It can take up to 6 hours for processing to complete.")
+        messages.success(request, "The file was processed! Please see the visualisations below and use the chart editor for further customisation.")
 
         message_description = "Status change: " + work.get_status_display() + " → "
         work.status = Work.WorkStatus.COMPLETED
