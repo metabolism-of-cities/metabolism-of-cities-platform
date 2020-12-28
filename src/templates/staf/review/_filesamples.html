@@ -1,4 +1,4 @@
-{% if type == "demographics" or type == "datasets" %}
+{% if type == "demographics" or type == "flows" or type == "stock" %}
 <div class="card instructions mb-4">
   <div class="card-body">
     <h4>Sample files <i class="fal fa-file float-right"></i></h4>
@@ -18,23 +18,37 @@
         <i class="fal fa-fw fa-video"></i>
         Instructions
       </a>
-    {% elif type == "datasets" %}
+    {% elif type == "flows" %}
       <a class="badge badge-secondary mb-md-2" href="/media/files/format.flows.ods">
         <i class="fa fa-fw fa-download"></i>
-        Flows - OpenDocument (ods) format
+        OpenDocument (ods) format
       </a>
       <a class="badge badge-secondary mb-md-2" href="/media/files/format.flows.xls">
         <i class="fa fa-fw fa-download"></i>
-        Flows - Excel (xls) format
+        Excel (xls) format
       </a>
+      <br>
+      {% with link=PROJECT.slug|add:":materials" %}
+        <a class="badge badge-primary mb-md-2" href="{% url link 25935 %}">
+          <i class="fa fa-fw fa-link"></i>
+          Materials catalog
+        </a>
+      {% endwith %}
+    {% elif type == "stock" %}
       <a class="badge badge-secondary mb-md-2" href="/media/files/format.stocks.ods">
         <i class="fa fa-fw fa-download"></i>
-        Stocks - OpenDocument (ods) format
+        OpenDocument (ods) format
       </a>
       <a class="badge badge-secondary mb-md-2" href="/media/files/format.stocks.xls">
         <i class="fa fa-fw fa-download"></i>
-        Stocks - Excel (xls) format
+        Excel (xls) format
       </a>
+      {% with link=PROJECT.slug|add:":materials" %}
+        <a class="badge badge-primary mb-md-2" href="{% url link 25935 %}">
+          <i class="fa fa-fw fa-link"></i>
+          Materials catalog
+        </a>
+      {% endwith %}
     {% elif type == "demographics" %}
       <a class="badge badge-secondary mb-md-2" href="/media/files/format.population.ods">
         <i class="fa fa-fw fa-download"></i>

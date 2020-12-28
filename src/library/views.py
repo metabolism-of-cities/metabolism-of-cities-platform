@@ -414,7 +414,7 @@ def data_json(request, id):
     else:
         for each in data:
             x_axis_field = each.timeframe.name
-            if each.segment_name:
+            if each.segment_name and number_of_segments > 1:
                 stacked_field = each.segment_name
             elif number_of_materials > 1 and number_of_origins < 2:
                 stacked_field = each.material_name
@@ -446,7 +446,7 @@ def data_json(request, id):
                     v = stacked_field_values[each][axis]
                     check = float(v)
                     if math.isnan(check):
-                        this_series.append(0) # What to add if NaN? 
+                        this_series.append(None) # What to add if NaN? 
                     else:
                         this_series.append(v)
                 except:
