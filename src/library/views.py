@@ -235,17 +235,22 @@ def journal(request, slug):
 
 def item(request, id, show_export=True, space=None, layer=None, data_section_type=None, json=False):
 
+    project = get_project(request)
+    if project.slug == "cityloops":
+        tag_id = 971
+    else:
+        tag_id = 845
     submenu = None
     # These settings are used when opening the URL from one of the data sites,
     # for example from http://0.0.0.0:8000/data/dashboards/barcelona/infrastructure/
+
     if space:
         space = get_space(request, space)
     if layer:
-        layer = Tag.objects.get(parent_tag_id=845, slug=layer)
+        layer = Tag.objects.get(parent_tag_id=tag_id, slug=layer)
     if data_section_type:
         submenu = "library"
 
-    project = get_object_or_404(Project, pk=request.project)
     info = get_object_or_404(LibraryItem, pk=id)
     section = "library"
     url_processing = None
@@ -516,7 +521,11 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     # - When users in a data hub use this form to fill up the data objects, ?inventory=true will be set
     # - When the same users decide to upload an MFA record, ?mfa=true will also be set
 
-    project = Project.objects.get(pk=request.project)
+    project = get_project(request)
+    if project.slug == "cityloops":
+        tag_id = 971
+    else:
+        tag_id = 845
 
     journals = None # Whether or not we show a JOURNAL field in the form
     publishers = None # Whether or not we show a PUBLISHER field in the form
@@ -786,12 +795,12 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     elif "inventory" in request.GET or project.slug == "data" or project.slug == "islands":
         if "tags" in form.fields:
             if info:
-                form.fields["tags"].queryset = Tag.objects.filter(Q(parent_tag__parent_tag_id=845)|Q(id__in=info.tags.all()))
+                form.fields["tags"].queryset = Tag.objects.filter(Q(parent_tag__parent_tag_id=tag_id)|Q(id__in=info.tags.all()))
             else:
                 if curator:
-                    form.fields["tags"].queryset = Tag.objects.filter(Q(parent_tag__parent_tag_id=845)|Q(pk=936))
+                    form.fields["tags"].queryset = Tag.objects.filter(Q(parent_tag__parent_tag_id=tag_id)|Q(pk=936))
                 else:
-                    form.fields["tags"].queryset = Tag.objects.filter(parent_tag__parent_tag_id=845)
+                    form.fields["tags"].queryset = Tag.objects.filter(parent_tag__parent_tag_id=tag_id)
 
     if type.name == "Shapefile" or type.name == "Dataset" or type.name == "GPS Coordinates":
         files = True

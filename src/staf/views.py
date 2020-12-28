@@ -140,12 +140,18 @@ def layer(request, slug, id=None):
 
     filter_types = None
 
+    project = get_project(request)
+    if project.slug == "cityloops":
+        tag_id = 971
+    else:
+        tag_id = 845
+
     spaces = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)
     if id:
-        layer = Tag.objects.get(parent_tag__parent_tag_id=845, pk=id)
+        layer = Tag.objects.get(parent_tag__parent_tag_id=tag_id, pk=id)
         list = LibraryItem.objects.filter(spaces__in=spaces, tags=layer).distinct()
     else:
-        layer = Tag.objects.get(parent_tag__id=845, slug=slug)
+        layer = Tag.objects.get(parent_tag__id=tag_id, slug=slug)
         list = LibraryItem.objects.filter(spaces__in=spaces, tags__parent_tag=layer).distinct()
 
     if request.GET.get("types"):
@@ -178,7 +184,13 @@ def layer(request, slug, id=None):
 def layer_overview(request, layer, space=None):
     if space:
         space = get_space(request, space)
-    layer = Tag.objects.get(parent_tag_id=845, slug=layer)
+    project = get_project(request)
+    if project.slug == "cityloops":
+        tag_id = 971
+    else:
+        tag_id = 845
+
+    layer = Tag.objects.get(parent_tag_id=tag_id, slug=layer)
     children = Tag.objects.filter(parent_tag=layer)
     list = {}
     empty_page = True
@@ -269,10 +281,15 @@ def space_map(request, space):
         boundaries = None
         boundaries_source = None
 
+    if project.slug == "cityloops":
+        tag_id = 971
+    else:
+        tag_id = 845
+
     for each in list:
         if each.imported_spaces.count() < 1000:
             dataviz = each.get_dataviz_properties
-            for tag in each.tags.filter(parent_tag__parent_tag_id=845):
+            for tag in each.tags.filter(parent_tag__parent_tag_id=tag_id):
                 if not tag in parents:
                     parents.append(tag)
                     hits[tag.id] = []
@@ -1223,8 +1240,13 @@ def hub_harvesting(request):
     return render(request, "hub/harvesting.html", context)
 
 def hub_harvesting_space(request, space):
+    project = get_project(request)
     info = get_space(request, space)
-    layers = Tag.objects.filter(parent_tag_id=845)
+    if project.slug == "cityloops":
+        tag_id = 971
+    else:
+        tag_id = 845
+    layers = Tag.objects.filter(parent_tag_id=tag_id)
     counter = {}
     list_messages = None
 
@@ -1243,7 +1265,6 @@ def hub_harvesting_space(request, space):
     if forum_topic:
         list_messages = Message.objects.filter(parent=forum_topic[0])
 
-    project = get_object_or_404(Project, pk=request.project)
     context = {
         "info": info,
         "space": info,
@@ -1263,7 +1284,7 @@ def hub_harvesting_space(request, space):
         "menu": "harvesting",
         "hide_space_menu": True,
         "all_link": project.slug + ":hub_harvesting",
-        "photos": Photo.objects.filter(spaces=info, is_deleted=False).exclude(tags__parent_tag__parent_tag_id=845).order_by("position"),
+        "photos": Photo.objects.filter(spaces=info, is_deleted=False).exclude(tags__parent_tag__parent_tag_id=tag_id).order_by("position"),
         "load_lightbox": True,
     }
     return render(request, "hub/harvesting.space.html", context)
@@ -1339,9 +1360,14 @@ def hub_harvesting_tag(request, space, tag):
     return render(request, "hub/harvesting.tag.html", context)
 
 def hub_harvesting_worksheet(request, space=None):
+    project = get_project(request)
+    if project.slug == "cityloops":
+        tag_id = 971
+    else:
+        tag_id = 845
 
     context = {
-        "layers": Tag.objects.filter(parent_tag_id=845),
+        "layers": Tag.objects.filter(parent_tag_id=tag_id),
     }
     return render(request, "hub/harvesting.worksheet.html", context)
 
@@ -1965,11 +1991,15 @@ def hub_processing_dataset_classify(request, id, space=None):
 def hub_processing_record_save(request, id, type, space=None):
     info = get_object_or_404(LibraryItem, pk=id)
 
-    project = get_object_or_404(Project, pk=request.project)
+    project = get_project(request)
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         unauthorized_access(request)
 
     work = get_work(request, info, 14)
+    if project.slug == "cityloops":
+        tag_id = 971
+    else:
+        tag_id = 845
 
     if request.method == "POST":
         info.name = request.POST.get("name")
@@ -2005,7 +2035,7 @@ def hub_processing_record_save(request, id, type, space=None):
         "menu": "processing",
         "step": 3,
         "load_select2": True,
-        "tags": Tag.objects.filter(Q(parent_tag__parent_tag_id=845)|Q(id__in=info.tags.all())),
+        "tags": Tag.objects.filter(Q(parent_tag__parent_tag_id=tag_id)|Q(id__in=info.tags.all())),
         "type": type,
     }
     return render(request, "hub/processing.dataset.save.html", context)
@@ -2013,9 +2043,13 @@ def hub_processing_record_save(request, id, type, space=None):
 def hub_processing_dataset_save(request, id, space=None):
     info = get_object_or_404(LibraryItem, pk=id)
 
-    project = get_object_or_404(Project, pk=request.project)
+    project = get_project(request)
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         unauthorized_access(request)
+    if project.slug == "cityloops":
+        tag_id = 971
+    else:
+        tag_id = 845
 
     try:
         work_id = 30
@@ -2082,7 +2116,7 @@ def hub_processing_dataset_save(request, id, space=None):
         "menu": "processing",
         "step": 3,
         "load_select2": True,
-        "tags": Tag.objects.filter(Q(parent_tag__parent_tag_id=845)|Q(id__in=info.tags.all())),
+        "tags": Tag.objects.filter(Q(parent_tag__parent_tag_id=tag_id)|Q(id__in=info.tags.all())),
     }
     return render(request, "hub/processing.dataset.save.html", context)
 
@@ -2444,9 +2478,13 @@ def hub_processing_gis_save(request, id, space=None):
     if document.type.name != "Shapefile":
         geospreadsheet = document.get_spreadsheet()
 
-    project = get_object_or_404(Project, pk=request.project)
+    project = get_project(request)
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         unauthorized_access(request)
+    if project.slug == "cityloops":
+        tag_id = 971
+    else:
+        tag_id = 845
 
     try:
         work_id = 14 if geospreadsheet else 2
@@ -2524,7 +2562,7 @@ def hub_processing_gis_save(request, id, space=None):
         "menu": "processing",
         "step": 3,
         "load_select2": True,
-        "tags": Tag.objects.filter(Q(parent_tag__parent_tag_id=845)|Q(id__in=document.tags.all())),
+        "tags": Tag.objects.filter(Q(parent_tag__parent_tag_id=tag_id)|Q(id__in=document.tags.all())),
         "geocodes": Geocode.objects.all(),
         "geospreadsheet": geospreadsheet,
         "spreadsheet": spreadsheet,
