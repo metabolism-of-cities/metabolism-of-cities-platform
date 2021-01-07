@@ -70,7 +70,7 @@
               </td>
             {% endif %}
             <td>
-              {{ each.start_date }} - {{ each.end_date }}
+              {{ each.start_date }} {% if each.end_date %}- {{ each.end_date }} {% endif %}
             </td>
             <td class="text-right has-button"><a class="btn btn-primary btn-sm" href="edit/{{ each.id }}/?prev={{ request.get_full_path }}"><i class="fal fa-pencil"></i></a></td>
           </tr>
