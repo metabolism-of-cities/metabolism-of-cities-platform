@@ -28,6 +28,9 @@
             <th class="border-0">Quantity</th>
           {% endif %}
           <th class="border-0">Type</th>
+          {% if slug == "space" %}
+            <th class="border-0">Availability</th>
+          {% endif %}
           <th class="border-0">Date</th>
           <th class="border-0"></th>
         </tr>
@@ -61,6 +64,11 @@
             </span>
             {% endif %}
             </td>
+            {% if slug == "space" %}
+              <td>
+                {{ each.get_availability_display }}
+              </td>
+            {% endif %}
             <td>
               {{ each.start_date }} - {{ each.end_date }}
             </td>
