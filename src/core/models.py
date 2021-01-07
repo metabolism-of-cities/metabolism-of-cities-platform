@@ -512,6 +512,15 @@ class Blog(Record):
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
 
+class NaceCode(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ["id"]
+
 class Organization(Record):
     url = models.CharField(max_length=255, null=True, blank=True)
     twitter = models.CharField(max_length=255, null=True, blank=True)
@@ -535,6 +544,8 @@ class Organization(Record):
         ("other", "Other"),
     )
     type = models.CharField(max_length=20, choices=ORG_TYPE)
+    nace_code = models.ForeignKey(NaceCode, on_delete=models.SET_NULL, null=True, blank=True)
+    updated_at = models.DateField(null=True, auto_now=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(unidecode(self.name))
@@ -2532,3 +2543,17 @@ class Milestone(Record):
 #    )
 #    info = models.CharField(max_length=100)
 
+class LocalBusinessDependency(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ["id"]
+        verbose_name_plural = "Local Business Dependencies"
+
+class LocalBusinessLink(models.Model):
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True, blank=True, related_name='organization')
+    dependence = models.ForeignKey(LocalBusinessDependency, on_delete=models.CASCADE, null=True, blank=True)
+    business= models.ForeignKey(Organization, on_delete=models.CASCADE, null=True, blank=True)

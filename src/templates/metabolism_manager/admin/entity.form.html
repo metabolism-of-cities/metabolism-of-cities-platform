@@ -83,12 +83,12 @@
           <div class="form-group form-row">
             <div class="col">
               <label for="phone">Phone number</label>
-              <input type="tel" class="form-control" id="phone" name="phone" value="{{ info.meta_data.phone }}">
+              <input type="tel" class="form-control" id="phone" name="phone" value="{% if info.meta_data.phone %}{{ info.meta_data.phone }}{% endif %}">
             </div>
 
             <div class="col">
               <label for="year">Founding year</label>
-              <input type="number" class="form-control" id="year" name="year" min="1000" max="2030" value="{{ info.meta_data.year }}">
+              <input type="number" class="form-control" id="year" name="year" min="1000" max="2030" value="{% if info.meta_data.founding_year %}{{ info.meta_data.founding_year }}{% endif %}">
             </div>
 
           </div>
@@ -106,14 +106,10 @@
 
             <div class="col">
               <label for="nace">NACE code</label>
-              <select class="custom-select select2" id="nace" name="nace" value="{{ info.meta_data.nace }}">
-                <option value="1">A1.11 - Growing of cereals (except rice), leguminous crops and oil seeds</option>
-                <option value="2">A1.12 - Growing of rice</option>
-                <option value="3">A1.13 - Growing of vegetables and melons, roots and tubers</option>
-                <option value="4">A1.14 - Growing of sugar cane</option>
-                <option value="5">A1.15 - Growing of tobacco</option>
-                <option value="6">A1.16 - Growing of fibre crops</option>
-                <option value="7">A1.19 - Growing of other non-perennial crops</option>
+              <select class="custom-select select2" id="nace" name="nace" required>
+              {% for each in nace_codes %}
+                <option {% if each.id == info.nace_code.id %}selected{% endif %} value="{{ each.id }}">{{ each.name }}</option>
+              {% endfor %}
               </select>
             </div>
           </div>
@@ -162,7 +158,7 @@
               <div class="col">
                 <label for="purchasing-local">Local</label>
                 <div class="input-group">
-                  <input type="number" max="100" class="form-control" id="purchasing-local" name="purchasing-local">
+                  <input type="number" max="100" class="form-control" id="purchasing-local" name="purchasing-local" value="{{ info.meta_data.purchasing_local }}">
                   <div class="input-group-append">
                     <span class="input-group-text">%</span>
                   </div>
@@ -172,7 +168,7 @@
               <div class="col">
                 <label for="purchasing-regional">Regional</label>
                 <div class="input-group">
-                  <input type="number" max="100" class="form-control" id="purchasing-regional" name="purchasing-regional">
+                  <input type="number" max="100" class="form-control" id="purchasing-regional" name="purchasing-regional" value="{{ info.meta_data.purchasing_regional }}">
                   <div class="input-group-append">
                     <span class="input-group-text">%</span>
                   </div>
@@ -182,7 +178,7 @@
               <div class="col">
                 <label for="purchasing-export">Export</label>
                 <div class="input-group">
-                  <input type="number" max="100" class="form-control" id="purchasing-export" name="purchasing-export">
+                  <input type="number" max="100" class="form-control" id="purchasing-export" name="purchasing-export" value="{{ info.meta_data.purchasing_export}}">
                   <div class="input-group-append">
                     <span class="input-group-text">%</span>
                   </div>
@@ -198,7 +194,7 @@
               <div class="col">
                 <label for="sales-local">Local</label>
                 <div class="input-group">
-                  <input type="number" max="100" class="form-control" id="sales-local" name="sales-local">
+                  <input type="number" max="100" class="form-control" id="sales-local" name="sales-local" value="{{ info.meta_data.sales_local }}">
                   <div class="input-group-append">
                     <span class="input-group-text">%</span>
                   </div>
@@ -208,7 +204,7 @@
               <div class="col">
                 <label for="sales-regional">Regional</label>
                 <div class="input-group">
-                  <input type="number" max="100" class="form-control" id="sales-regional" name="sales-regional">
+                  <input type="number" max="100" class="form-control" id="sales-regional" name="sales-regional" value="{{ info.meta_data.sales_regional }}">
                   <div class="input-group-append">
                     <span class="input-group-text">%</span>
                   </div>
@@ -218,7 +214,7 @@
               <div class="col">
                 <label for="sales-export">Export</label>
                 <div class="input-group">
-                  <input type="number" max="100" class="form-control" id="sales-export" name="sales-export">
+                  <input type="number" max="100" class="form-control" id="sales-export" name="sales-export" value="{{ info.meta_data.sales_export }}">
                   <div class="input-group-append">
                     <span class="input-group-text">%</span>
                   </div>
@@ -345,9 +341,9 @@
       <div class="col">
         <label for="url">Dependence</label>
         <select class="custom-select" name="link_dependence_0">
-          <option value="1">Low dependence</option>
-          <option value="2">Medium</option>
-          <option value="3">Interdependence</option>
+          {% for each in dependency_list %}
+            <option value="{{ each.id }}">{{ each }}</option>
+          {% endfor %}
         </select>
       </div>
       <div class="col col-delete">

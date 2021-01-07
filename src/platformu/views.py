@@ -302,7 +302,6 @@ def admin_entity(request, organization, id):
 @login_required
 def admin_entity_form(request, organization, id=None):
     my_organization = my_organizations(request, organization)
-
     organization_list = Organization.objects_include_private.filter(
         tags__parent_tag_id = TAG_ID["platformu_segments"],
         tags__belongs_to = my_organization,
@@ -334,7 +333,18 @@ def admin_entity_form(request, organization, id=None):
             "lat": request.POST.get("lat"),
             "lng": request.POST.get("lng"),
             "sector": request.POST.get("sector"),
+            "phone": request.POST["phone"],
+            "founding_year": request.POST["year"],
+            "purchasing_local": request.POST["purchasing-local"],
+            "purchasing_regional": request.POST["purchasing-regional"],
+            "purchasing_export": request.POST["purchasing-export"],
+            "sales_local": request.POST["sales-local"],
+            "sales_regional": request.POST["sales-regional"],
+            "sales_export": request.POST["sales-export"],
+
         }
+        if request.POST["nace"]:
+            info.nace_code = NaceCode.objects.get(pk=request.POST["nace"])
         info.save()
         info.sectors.clear()
         if "sector" in request.POST:
@@ -342,6 +352,34 @@ def admin_entity_form(request, organization, id=None):
         if "tag" in request.GET:
             tag = Tag.objects.get(pk=request.GET["tag"])
             info.tags.add(tag)
+
+        #Let remove all business links when the form is submitted    
+        LocalBusinessLink.objects.filter(organization=info).delete()
+
+        for count in range(30):
+            business = "link_business_" + str(count)
+            dependence = "link_dependence_" + str(count)
+            if business in request.POST and dependence in request.POST :
+                info_local_business = LocalBusinessLink()
+                info_local_business.organization = info
+                #We need to check if the organization exist in the system
+                #otherewise we record if new one 
+                check = None
+                try:
+                    check = Organization.objects.get(pk=request.POST[business])
+                except:
+                    p("Id not found")
+                if check:
+                    info_local_business.business = check
+                else:
+                    new_organization = Organization()
+                    new_organization.name = request.POST[business]
+                    new_organization.is_deleted = True
+                    new_organization.save()
+                    info_local_business.business = new_organization
+
+                info_local_business.dependence = LocalBusinessDependency.objects.get(pk=request.POST[dependence])
+                info_local_business.save()
         messages.success(request, "The information was saved.")
         return redirect(reverse("platformu:admin_entity", args=[my_organization.id, info.id]))
 
@@ -353,6 +391,9 @@ def admin_entity_form(request, organization, id=None):
         "sectors": Sector.objects.all(),
         "geoapify_api": settings.GEOAPIFY_API,
         "load_select2": True,
+        "nace_codes": NaceCode.objects.all(),
+        "dependency_list": LocalBusinessDependency.objects.all(),
+        "local_businesses": LocalBusinessLink.objects.filter(organization=info)
     }
     return render(request, "metabolism_manager/admin/entity.form.html", context)
 

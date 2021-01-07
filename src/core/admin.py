@@ -313,6 +313,12 @@ class CronJobLogAdmin(admin.ModelAdmin):
     humanize_duration.short_description = "Duration"
     humanize_duration.admin_order_field = 'duration'
 
+class NaceCodeAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
+
+# class LocalBusinessDependency(admin.ModelAdmin):
+#     search_fields = ["name"]
+
 admin_site.register(Tag, TagAdmin)
 admin_site.register(Record, SearchCompleteAdmin)
 admin_site.register(Message, MessageAdmin)
@@ -375,6 +381,9 @@ admin_site.register(Material, MaterialAdmin)
 admin_site.register(ZoteroCollection, SearchAdmin)
 admin_site.register(ZoteroItem, SearchAdmin)
 admin_site.register(Language, SearchAdmin)
+
+admin_site.register(NaceCode, NaceCodeAdmin)
+admin_site.register(LocalBusinessDependency)
 
 class EurostatAdmin(admin.ModelAdmin):
     form = EurostatForm
