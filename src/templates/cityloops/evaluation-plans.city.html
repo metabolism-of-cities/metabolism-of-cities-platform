@@ -142,5 +142,69 @@
     <a href="{% url 'cityloops:city_evaluation_plan_form' 'bodo' 1 %}" class="btn btn-primary">
       <i class="fa fa-save"></i> Save
     </a>
+
   </form>
+
+  <div class="mt-4">
+    <div class="btn btn-primary download-pdf">
+      <i class="fa fa-file-pdf"></i> Download .pdf
+    </div>
+
+    <div class="btn btn-primary download-word">
+      <i class="fa fa-file-word"></i> Download .docx
+    </div>
+  </div>
+{% endblock %}
+
+{% block footer %}
+  <!-- library for exporting to pdf -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.2.0/jspdf.umd.min.js"></script>
+
+  <!-- library for exporting to docx -->
+  <script src="https://unpkg.com/docx@5.0.2/build/index.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+
+  <script>
+    window.jsPDF = window.jspdf.jsPDF;
+
+    /* global jsPDF */
+    function downloadPDF() {
+      var pdf = new jsPDF();
+      pdf.text(20, 20, "Metabolism of Cities!");
+      pdf.text(20, 30, "etc etc etc.");
+
+      // Save the PDF
+      pdf.save("report.pdf");
+    }
+
+    $(".download-pdf").click(function() {
+      downloadPDF()
+    });
+
+    function downloadWord() {
+      var word = new docx.Document();
+
+      word.addSection({
+        properties: {},
+        children: [
+          new docx.Paragraph({
+            children: [
+              new docx.TextRun("Metabolism of Cities!"),
+              new docx.TextRun({
+                text: "Etc etc etc",
+              }),
+            ],
+          }),
+        ],
+      });
+
+      docx.Packer.toBlob(word).then(blob => {
+        saveAs(blob, "report.docx");
+      });
+    }
+
+    $(".download-word").click(function() {
+      downloadWord()
+    });
+  </script>
 {% endblock %}
