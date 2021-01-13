@@ -11,148 +11,220 @@
     .form-text {
       margin-top: 0;
     }
+
+    .overview-table td {
+      padding-top: .5rem;
+      padding-bottom: .5rem;
+    }
+
+    .overview-table .badge {
+      vertical-align: text-top;
+      height: 20px;
+    }
+
+    tr.selected {
+      background-color: #efefef;
+    }
+
+    td.scale {
+      text-align: right;
+      padding-right: .5rem;
+    }
+
+    td.status {
+      text-align: right;
+      padding-left: 0;
+    }
+
+    .overview-table tbody tr:first-of-type td {
+      border-top: none;
+    }
+
+    td.indicator {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      width: 250px;
+      max-width: 250px;
+    }
   </style>
 {% endblock %}
 
 {% block content %}
-  {% include "_plans-breadcrumbs-cityloops.html" %}
+  <h1>Edit indicator</h1>
 
-  <form class="form">
-    <div class="form-row">
-      <div class="col-md">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-transparent p-0">
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}">{{ info }}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_evaluation_plan' 'bodo' %}">Evaluation plan</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_evaluation_plan_form' 'bodo' %}">Indicators</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">15. Circular Material Use Rate</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Edit</li>
+    </ol>
+  </nav>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <h5 class="mb-4">
+        15. Circular Material Use Rate
+        <span class="float-right badge badge-secondary">Demonstration action</span>
+      </h5>
+      <form class="form">
         <div class="form-group">
-          <label for="indicator-number">Indicator number</label>
-          <input type="email" class="form-control" id="indicator-number">
-          <small class="form-text text-muted">Refer to number in D6.1</small>
+          <label for="definition">Definition / description of indicator</label>
+          <textarea id="definition" class="form-control" rows="2"></textarea>
         </div>
-      </div>
 
-      <div class="col-md">
         <div class="form-group">
-          <label for="indicator-name">Indicator name</label>
-          <input type="email" class="form-control" id="indicator-name">
-          <small class="form-text text-muted">Refer to name in D6.1</small>
+          <label for="rationale">Rationale</label>
+          <textarea id="rationale" class="form-control" rows="2"></textarea>
+          <small class="form-text text-muted">Description of the why the inclusion of the indicator contributes to making the city more circular. It could e.g. its importance in relation to strategy/communication/circularity objectives</small>
         </div>
-      </div>
-    </div>
 
-    <div class="form-row">
-      <div class="col-md">
         <div class="form-group">
-          <label for="vision-element">Vision element</label>
-          <select class="form-control custom-select" id="vision-element">
-            <option value="0" selected disabled>Select an option</option>
-            <option value="1">Local stakeholder actions</option>
-            <option value="2">Circular business models and behavioural patterns</option>
-            <option value="3">Closing material loops and reducing harmful resource use</option>
-            <option value="4">Improving human well-being and reducing environmental impacts</option>
-          </select>
+          <label for="methodology">Methodology</label>
+          <textarea id="methodology" class="form-control" rows="2"></textarea>
+          <small class="form-text text-muted">Description of matematical calculation procedure/equations</small>
         </div>
-      </div>
 
-      <div class="col-md">
         <div class="form-group">
-          <label for="category">Category</label>
-          <select class="form-control custom-select" id="category">
-            <option value="0" selected disabled>Select an option</option>
-            <option value="1">Engagement and capacity building</option>
-            <option value="2">Regulation and incentives</option>
-            <option value="3">Vision and urban management</option>
-            <option value="4">Circular design and business models</option>
-            <option value="5">Circular value chains and infrastructure</option>
-            <option value="6">Private investments, jobs and gross value added</option>
-            <option value="7">Material/energy flow</option>
-            <option value="8">Re-use and recycling</option>
-            <option value="9">Waste generation/management</option>
-            <option value="10">Well-being</option>
-            <option value="11">Environment impacts (global)</option>
-            <option value="12">Environment impacts (local)</option>
-            <option value="13">Economic impacts</option>
-            <option value="14">Impacts on urban resilience</option>
-          </select>
+          <label for="unit">Unit</label>
+          <input type="text" id="unit" class="form-control"></input>
         </div>
-      </div>
-    </div>
 
-    <div class="form-group">
-      <label for="definition">Definition / description of indicator</label>
-      <textarea id="definition" class="form-control" rows="2"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label for="rationale">Rationale</label>
-      <textarea id="rationale" class="form-control" rows="2"></textarea>
-      <small class="form-text text-muted">Description of the why the inclusion of the indicator contributes to making the city more circular. It could e.g. its importance in relation to strategy/communication/circularity objectives</small>
-    </div>
-
-    <div class="form-group">
-      <label for="methodology">Methodology</label>
-      <textarea id="methodology" class="form-control" rows="2"></textarea>
-      <small class="form-text text-muted">Description of matematical calculation procedure/equations</small>
-    </div>
-
-    <div class="form-group">
-      <label for="unit">Unit</label>
-      <input type="text" id="unit" class="form-control"></input>
-    </div>
-
-    <div class="form-group">
-      <label for="baseline">Baseline data / definition</label>
-      <textarea id="baseline" class="form-control" rows="2"></textarea>
-      <small class="form-text text-muted">Description of how baseline values for the indicators will be established (e.g. give reference to methods given in D6.1, CH 5.3)</small>
-    </div>
-
-    <div class="form-group">
-      <label for="sources">Data sources / relevant databases</label>
-      <textarea id="sources" class="form-control" rows="2"></textarea>
-      <small class="form-text text-muted">Reference to reports, websites, institutions etc that collect, analyse, publish the data</small>
-    </div>
-
-    <div class="form-group">
-      <label for="accuracy">Overall accuracy</label>
-      <textarea id="accuracy" class="form-control" rows="2"></textarea>
-      <small class="form-text text-muted">Assessment of accuracy, linked to a certain data set or domain, which is summarising the various components on uncertainty (data coverage, value uncertainty, representativity etc)</small>
-    </div>
-
-    <div class="form-group">
-      <label for="coverage">Sector coverage</label>
-      <textarea id="coverage" class="form-control" rows="2"></textarea>
-      <small class="form-text text-muted">Main economic or other sectors covered by the data. Is the indicator for CDW/BW/other sector of sector independent</small>
-    </div>
-
-    <div class="form-group">
-      <label for="area">Reference area / spatial implementation scale</label>
-      <input type="text" id="area" class="form-control"></input>
-      <small class="form-text text-muted">The country or geographic area to which the measured statistical phenomenon relates. Is the indicator evaluated at demonstration/sector or city scale</small>
-    </div>
-
-    <div class="form-row">
-      <div class="col-md">
         <div class="form-group">
-          <label for="period-from">Reference period, from</label>
-          <input type="date" class="form-control" id="period-from">
-          <small class="form-text text-muted">The period of time or point in time to which the measured observation is intended to refer</small>
+          <label for="baseline">Baseline data / definition</label>
+          <textarea id="baseline" class="form-control" rows="2"></textarea>
+          <small class="form-text text-muted">Description of how baseline values for the indicators will be established (e.g. give reference to methods given in D6.1, CH 5.3)</small>
         </div>
-      </div>
 
-      <div class="col-md">
         <div class="form-group">
-          <label for="period-to">Until</label>
-          <input type="date" class="form-control" id="period-to">
+          <label for="sources">Data sources / relevant databases</label>
+          <textarea id="sources" class="form-control" rows="2"></textarea>
+          <small class="form-text text-muted">Reference to reports, websites, institutions etc that collect, analyse, publish the data</small>
         </div>
+
+        <div class="form-group">
+          <label for="accuracy">Overall accuracy</label>
+          <textarea id="accuracy" class="form-control" rows="2"></textarea>
+          <small class="form-text text-muted">Assessment of accuracy, linked to a certain data set or domain, which is summarising the various components on uncertainty (data coverage, value uncertainty, representativity etc)</small>
+        </div>
+
+        <div class="form-group">
+          <label for="coverage">Sector coverage</label>
+          <textarea id="coverage" class="form-control" rows="2"></textarea>
+          <small class="form-text text-muted">Main economic or other sectors covered by the data. Is the indicator for CDW/BW/other sector of sector independent</small>
+        </div>
+
+        <div class="form-group">
+          <label for="area">Reference area / spatial implementation scale</label>
+          <input type="text" id="area" class="form-control"></input>
+          <small class="form-text text-muted">The country or geographic area to which the measured statistical phenomenon relates. Is the indicator evaluated at demonstration/sector or city scale</small>
+        </div>
+
+        <div class="form-row">
+          <div class="col-md">
+            <div class="form-group">
+              <label for="period-from">Reference period, from</label>
+              <input type="date" class="form-control" id="period-from">
+              <small class="form-text text-muted">The period of time or point in time to which the measured observation is intended to refer</small>
+            </div>
+          </div>
+
+          <div class="col-md">
+            <div class="form-group">
+              <label for="period-to">Until</label>
+              <input type="date" class="form-control" id="period-to">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="Reference">SDG Reference</label>
+          <input type="text" id="Reference" class="form-control"></input>
+          <small class="form-text text-muted">Link to SDG objective, target and indicator</small>
+        </div>
+
+        <div class="form-group">
+          <label for="comments">Comments</label>
+          <textarea id="comments" class="form-control" rows="2"></textarea>
+          <small class="form-text text-muted">Supplementary descriptive text which can be attached to indicator, data or metadata</small>
+        </div>
+
+        <div class="form-group">
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="finished">
+            <label class="custom-control-label font-weight-normal" for="finished">Indicator completed</label>
+          </div>
+        </div>
+
+        <button class="btn btn-primary">
+          <i class="fa fa-save"></i> Save
+        </button>
+      </form>
+    </div>
+    <div class="col-lg-4">
+      <div class="card card-table mb-4">
+        <table class="table overview-table">
+          <tbody>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">02. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-dark">S</span></td>
+              <td class="status"><i class="fa fa-fw fa-check text-success"></i></td>
+            </tr>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">03. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-info">C</span></td>
+              <td class="status"><i class="fa fa-fw fa-check text-success"></i></td>
+            </tr>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">07. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-dark">S</span></td>
+              <td class="status"><a href="{% url 'cityloops:city_evaluation_plan_indicator_form' 'bodo' 1 %}"><i class="fa fa-fw fa-marker"></i></a></td>
+            </tr>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">11. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-secondary">DA</span></td>
+              <td class="status"><i class="fa fa-fw fa-check text-success"></i></td>
+            </tr>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">14. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-dark">S</span></td>
+              <td class="status"><i class="fa fa-fw fa-check text-success"></i></td>
+            </tr>
+            <tr class="selected">
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">15. Circular Material Use Rate</td>
+              <td class="scale"><span class="badge badge-secondary">DA</span></td>
+              <td class="status"><a href="{% url 'cityloops:city_evaluation_plan_indicator_form' 'bodo' 1 %}"><i class="fa fa-fw fa-marker"></i></a></td>
+            </tr>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">17. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-dark">S</span></td>
+              <td class="status"><a href="{% url 'cityloops:city_evaluation_plan_indicator_form' 'bodo' 1 %}"><i class="fa fa-fw fa-marker"></i></a></td>
+            </tr>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">21. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-secondary">DA</span></td>
+              <td class="status"><i class="fa fa-fw fa-check text-success"></i></td>
+            </tr>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">27. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-info">C</span></td>
+              <td class="status"><a href="{% url 'cityloops:city_evaluation_plan_indicator_form' 'bodo' 1 %}"><i class="fa fa-fw fa-marker"></i></a></td>
+            </tr>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">37. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-secondary">DA</span></td>
+              <td class="status"><i class="fa fa-fw fa-check text-success"></i></td>
+            </tr>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">65. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-dark">S</span></td>
+              <td class="status"><a href="{% url 'cityloops:city_evaluation_plan_indicator_form' 'bodo' 1 %}"><i class="fa fa-fw fa-marker"></i></a></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-
-    <div class="form-group">
-      <label for="Reference">SDG Reference</label>
-      <input type="text" id="Reference" class="form-control"></input>
-      <small class="form-text text-muted">Link to SDG objective, target and indicator</small>
-    </div>
-
-    <div class="form-group">
-      <label for="comments">Comments</label>
-      <textarea id="comments" class="form-control" rows="2"></textarea>
-      <small class="form-text text-muted">Supplementary descriptive text which can be attached to indicator, data or metadata</small>
-    </div>
-  </form>
+  </div>
 {% endblock %}
