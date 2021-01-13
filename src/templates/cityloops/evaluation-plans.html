@@ -2,10 +2,91 @@
 {% load static %}
 
 {% block css %}
+  <style>
+    td.number {
+      width: 48px;
+      padding-right: 0;
+    }
+
+    .indicator-number {
+      background-color: #144d58;
+      color: #fff !important;
+      padding: 0 .5rem;
+      border-radius: .25rem;
+      display: inline-block;
+      font-weight: bold;
+    }
+
+    thead th:not(:last-of-type),
+    tbody td:not(:last-of-type) {
+      border-right: solid 1px #dee2e6;
+    }
+
+    tbody td:first-of-type {
+      border-right: none;
+    }
+
+    th.city {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      width: 120px;
+      max-width:120px;
+    }
+
+    td.indicator-text {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      width: 200px;
+      max-width: 200px;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
   <h1>Evaluation plans</h1>
 
-  - list of cities
+  <div class="card card-table mb-4">
+    <table class="table">
+      <thead>
+        <tr>
+          <th colspan="2">Indicator</th>
+          <th class="city">Apeldoorn</th>
+          <th class="city">Bodø</th>
+          <th class="city">Høje-Taastrup</th>
+          <th class="city">Mikkeli</th>
+          <th class="city">Porto</th>
+          <th class="city">Roskilde</th>
+          <th class="city">Sevilla</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">01</a></td>
+          <td class="indicator-text">{% lorem 4 w random %}</td>
+          <td>
+            <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection">DA</a>
+          </td>
+          <td>
+            <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-success selection">S</a>
+          </td>
+          <td>
+            <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-info selection">C</a>
+          </td>
+          <td>
+          </td>
+          <td>
+            <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-success selection">S</a>
+          </td>
+          <td>
+            <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-success selection">S</a>
+          </td>
+          <td>
+            <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-info selection">C</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 {% endblock %}

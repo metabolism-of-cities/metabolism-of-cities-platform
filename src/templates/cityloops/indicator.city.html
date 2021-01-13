@@ -1,0 +1,158 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block css %}
+  <style>
+    form label {
+      margin-bottom: 0;
+      font-weight: bold;
+    }
+
+    .form-text {
+      margin-top: 0;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  {% include "_plans-breadcrumbs-cityloops.html" %}
+
+  <form class="form">
+    <div class="form-row">
+      <div class="col-md">
+        <div class="form-group">
+          <label for="indicator-number">Indicator number</label>
+          <input type="email" class="form-control" id="indicator-number">
+          <small class="form-text text-muted">Refer to number in D6.1</small>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <div class="form-group">
+          <label for="indicator-name">Indicator name</label>
+          <input type="email" class="form-control" id="indicator-name">
+          <small class="form-text text-muted">Refer to name in D6.1</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="col-md">
+        <div class="form-group">
+          <label for="vision-element">Vision element</label>
+          <select class="form-control custom-select" id="vision-element">
+            <option value="0" selected disabled>Select an option</option>
+            <option value="1">Local stakeholder actions</option>
+            <option value="2">Circular business models and behavioural patterns</option>
+            <option value="3">Closing material loops and reducing harmful resource use</option>
+            <option value="4">Improving human well-being and reducing environmental impacts</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select class="form-control custom-select" id="category">
+            <option value="0" selected disabled>Select an option</option>
+            <option value="1">Engagement and capacity building</option>
+            <option value="2">Regulation and incentives</option>
+            <option value="3">Vision and urban management</option>
+            <option value="4">Circular design and business models</option>
+            <option value="5">Circular value chains and infrastructure</option>
+            <option value="6">Private investments, jobs and gross value added</option>
+            <option value="7">Material/energy flow</option>
+            <option value="8">Re-use and recycling</option>
+            <option value="9">Waste generation/management</option>
+            <option value="10">Well-being</option>
+            <option value="11">Environment impacts (global)</option>
+            <option value="12">Environment impacts (local)</option>
+            <option value="13">Economic impacts</option>
+            <option value="14">Impacts on urban resilience</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="definition">Definition / description of indicator</label>
+      <textarea id="definition" class="form-control" rows="2"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="rationale">Rationale</label>
+      <textarea id="rationale" class="form-control" rows="2"></textarea>
+      <small class="form-text text-muted">Description of the why the inclusion of the indicator contributes to making the city more circular. It could e.g. its importance in relation to strategy/communication/circularity objectives</small>
+    </div>
+
+    <div class="form-group">
+      <label for="methodology">Methodology</label>
+      <textarea id="methodology" class="form-control" rows="2"></textarea>
+      <small class="form-text text-muted">Description of matematical calculation procedure/equations</small>
+    </div>
+
+    <div class="form-group">
+      <label for="unit">Unit</label>
+      <input type="text" id="unit" class="form-control"></input>
+    </div>
+
+    <div class="form-group">
+      <label for="baseline">Baseline data / definition</label>
+      <textarea id="baseline" class="form-control" rows="2"></textarea>
+      <small class="form-text text-muted">Description of how baseline values for the indicators will be established (e.g. give reference to methods given in D6.1, CH 5.3)</small>
+    </div>
+
+    <div class="form-group">
+      <label for="sources">Data sources / relevant databases</label>
+      <textarea id="sources" class="form-control" rows="2"></textarea>
+      <small class="form-text text-muted">Reference to reports, websites, institutions etc that collect, analyse, publish the data</small>
+    </div>
+
+    <div class="form-group">
+      <label for="accuracy">Overall accuracy</label>
+      <textarea id="accuracy" class="form-control" rows="2"></textarea>
+      <small class="form-text text-muted">Assessment of accuracy, linked to a certain data set or domain, which is summarising the various components on uncertainty (data coverage, value uncertainty, representativity etc)</small>
+    </div>
+
+    <div class="form-group">
+      <label for="coverage">Sector coverage</label>
+      <textarea id="coverage" class="form-control" rows="2"></textarea>
+      <small class="form-text text-muted">Main economic or other sectors covered by the data. Is the indicator for CDW/BW/other sector of sector independent</small>
+    </div>
+
+    <div class="form-group">
+      <label for="area">Reference area / spatial implementation scale</label>
+      <input type="text" id="area" class="form-control"></input>
+      <small class="form-text text-muted">The country or geographic area to which the measured statistical phenomenon relates. Is the indicator evaluated at demonstration/sector or city scale</small>
+    </div>
+
+    <div class="form-row">
+      <div class="col-md">
+        <div class="form-group">
+          <label for="period-from">Reference period, from</label>
+          <input type="date" class="form-control" id="period-from">
+          <small class="form-text text-muted">The period of time or point in time to which the measured observation is intended to refer</small>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <div class="form-group">
+          <label for="period-to">Until</label>
+          <input type="date" class="form-control" id="period-to">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="Reference">SDG Reference</label>
+      <input type="text" id="Reference" class="form-control"></input>
+      <small class="form-text text-muted">Link to SDG objective, target and indicator</small>
+    </div>
+
+    <div class="form-group">
+      <label for="comments">Comments</label>
+      <textarea id="comments" class="form-control" rows="2"></textarea>
+      <small class="form-text text-muted">Supplementary descriptive text which can be attached to indicator, data or metadata</small>
+    </div>
+  </form>
+{% endblock %}

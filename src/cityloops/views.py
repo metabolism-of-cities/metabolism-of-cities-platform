@@ -168,26 +168,34 @@ def evaluation_plans(request):
     }
     return render(request, "cityloops/evaluation-plans.html", context)
 
-def city_evaluation_plans(request, slug):
+def city_evaluation_plan(request, slug):
     info = get_space(request, slug)
     context = {
         "title": "Evaluation plans",
         "info": info,
     }
-    return render(request, "cityloops/evaluation-plans.city.html", context)
-
-def city_evaluation_plan(request, slug, id):
-    info = get_space(request, slug)
-    context = {
-        "title": "Evaluation plan",
-        "info": info,
-    }
     return render(request, "cityloops/evaluation-plan.city.html", context)
 
-def city_evaluation_plan_form(request, slug, id):
+def city_evaluation_plan_form(request, slug):
     info = get_space(request, slug)
     context = {
-        "title": "Evaluation plan",
+        "title": "Indicator selection",
         "info": info,
     }
     return render(request, "cityloops/evaluation-plan.city.form.html", context)
+
+def city_evaluation_plan_indicator(request, slug, id):
+    info = get_space(request, slug)
+    context = {
+        "title": "Evaluation plan",
+        "info": info,
+    }
+    return render(request, "cityloops/indicator.city.html", context)
+
+def city_evaluation_plan_indicator_form(request, slug, id):
+    info = get_space(request, slug)
+    context = {
+        "title": "Evaluation plan",
+        "info": info,
+    }
+    return render(request, "cityloops/indicator.city.form.html", context)
