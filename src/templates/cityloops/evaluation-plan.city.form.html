@@ -8,33 +8,23 @@
       padding: 1rem .75rem;
     }
 
+    tr.disabled .indicator-name,
+    tr.disabled .number {
+      opacity: .5;
+    }
+
+    td.indicator-switch {
+      width: 50px;
+    }
+
     td.number {
       width: 48px;
       padding-right: 0;
     }
 
     td.checkbox {
-      width: 48px;
+      width: 200px;
       border-left: 1px solid #dee2e6
-    }
-
-    td.status {
-      width: 150px;
-      text-align: right;
-    }
-
-    .status .badge {
-      padding: 0 0 0 .4rem;
-    }
-
-    .status .edit {
-      height: 100%;
-      padding: 6px .4em;
-      margin-left: .4rem;
-      display: inline-block;
-      background-color: rgba(0,0,0,.5);
-      border-top-right-radius: .25rem;
-      border-bottom-right-radius: .25rem;
     }
 
     .indicator-number {
@@ -50,161 +40,168 @@
 
 {% block content %}
 
-  {% include "_plans-breadcrumbs-cityloops.html" %}
+  <h1>Evaluation plan</h1>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-transparent p-0">
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}">{{ info }}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_evaluation_plan' 'bodo' %}">Evaluation plan</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Select indicators</li>
+    </ol>
+  </nav>
 
   <form>
     <div class="card card-table mb-4">
       <table class="table">
         <thead>
           <tr>
-            <th colspan="2">Indicator</th>
-            <th colspan="2" class="border-left">DA</th>
-            <th colspan="2" class="border-left">Sector</th>
-            <th colspan="2" class="border-left">City</th>
+            <th colspan="3">Indicator</th>
+            <th class="border-left">Demonstration action</th>
+            <th class="border-left">City</th>
+            <th class="border-left text-muted">Sector <small>(disabled)</small></th>
           </tr>
         </thead>
         <tbody>
           <tr>
+            <td class="indicator-switch">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="1-indicator" checked>
+                <label class="custom-control-label" for="1-indicator"></label>
+              </div>
+            </td>
             <td class="number"><span class="indicator-number">01</span></td>
-            <td>{% lorem 4 w random %}</td>
-            <td class="checkbox">
+            <td class="indicator-name">{% lorem 4 w random %}</td>
+            <td class="checkbox da">
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="1-da" checked>
                 <label class="custom-control-label" for="1-da"></label>
               </div>
             </td>
-            <td class="status">
-              <a href="#" class="badge badge-lg badge-success">
-                <i class="fa fa-check"></i> Completed <span class="edit"><i class="fa fa-fw fa-pencil-alt"></i></span>
-              </a>
-            </td>
-            <td class="checkbox">
+            <td class="checkbox city">
               <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="1-sector">
-                <label class="custom-control-label" for="1-sector"></label>
-              </div>
-            </td>
-            <td class="status"></td>
-
-            <td class="checkbox">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="1-city" checked>
+                <input type="checkbox" class="custom-control-input" id="1-city">
                 <label class="custom-control-label" for="1-city"></label>
               </div>
             </td>
-            <td class="status">
-              <a href="#" class="badge badge-lg badge-danger">
-                <i class="fa fa-exclamation-triangle"></i> Unstarted <span class="edit"><i class="fa fa-fw fa-pencil-alt"></i></span>
-              </a>
+            <td class="checkbox sector">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="1-sector" disabled>
+                <label class="custom-control-label" for="1-sector"></label>
+              </div>
             </td>
           </tr>
 
           <tr>
-            <td class="number"><span class="indicator-number">02</span></td>
-            <td>{% lorem 5 w random %}</td>
-            <td class="checkbox">
+            <td class="indicator-switch">
               <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="2-da">
-                <label class="custom-control-label" for="2-da"></label>
+                <input type="checkbox" class="custom-control-input" id="6-indicator" checked>
+                <label class="custom-control-label" for="6-indicator"></label>
               </div>
             </td>
-            <td class="status">
+            <td class="number"><span class="indicator-number">06</span></td>
+            <td class="indicator-name">{% lorem 4 w random %}</td>
+            <td class="checkbox da">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="6-da">
+                <label class="custom-control-label" for="6-da"></label>
+              </div>
+            </td>
+            <td class="checkbox city">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="6-city" checked>
+                <label class="custom-control-label" for="6-city"></label>
+              </div>
+            </td>
+            <td class="checkbox sector">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="6-sector" disabled>
+                <label class="custom-control-label" for="6-sector"></label>
+              </div>
+            </td>
+          </tr>
 
-            </td>
-            <td class="checkbox">
+          <tr>
+            <td class="indicator-switch">
               <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="2-sector" checked>
-                <label class="custom-control-label" for="2-sector"></label>
+                <input type="checkbox" class="custom-control-input" id="9-indicator">
+                <label class="custom-control-label" for="9-indicator"></label>
               </div>
             </td>
-            <td class="status">
-              <a href="#" class="badge badge-lg badge-warning">
-                <i class="fa fa-clock"></i> Unfinished <span class="edit"><i class="fa fa-fw fa-pencil-alt text-light"></i></span>
-              </a>
+            <td class="number"><span class="indicator-number">09</span></td>
+            <td class="indicator-name">{% lorem 4 w random %}</td>
+            <td class="checkbox da">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="9-da" disabled>
+                <label class="custom-control-label" for="9-da"></label>
+              </div>
             </td>
+            <td class="checkbox city">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="9-city" disabled>
+                <label class="custom-control-label" for="9-city"></label>
+              </div>
+            </td>
+            <td class="checkbox sector">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="9-sector" disabled>
+                <label class="custom-control-label" for="9-sector"></label>
+              </div>
+            </td>
+          </tr>
 
-            <td class="checkbox">
+
+          <tr>
+            <td class="indicator-switch">
               <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="2-city" checked>
-                <label class="custom-control-label" for="2-city"></label>
+                <input type="checkbox" class="custom-control-input" id="15-indicator" checked>
+                <label class="custom-control-label" for="15-indicator"></label>
               </div>
             </td>
-            <td class="status">
-              <a href="#" class="badge badge-lg badge-success">
-                <i class="fa fa-check"></i> Completed <span class="edit"><i class="fa fa-fw fa-pencil-alt"></i></span>
-              </a>
+            <td class="number"><span class="indicator-number">15</span></td>
+            <td class="indicator-name">Circular Material Use Rate</td>
+            <td class="checkbox da">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="15-da" checked>
+                <label class="custom-control-label" for="15-da"></label>
+              </div>
+            </td>
+            <td class="checkbox city">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="15-city">
+                <label class="custom-control-label" for="15-city"></label>
+              </div>
+            </td>
+            <td class="checkbox sector">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="15-sector" disabled>
+                <label class="custom-control-label" for="15-sector"></label>
+              </div>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <a href="#" class="btn btn-primary">
+    <button class="btn btn-primary">
       <i class="fa fa-save"></i> Save
-    </a>
+    </button>
 
   </form>
-
-  <div class="mt-4">
-    <div class="btn btn-primary download-pdf">
-      <i class="fa fa-file-pdf"></i> Download .pdf
-    </div>
-
-    <div class="btn btn-primary download-word">
-      <i class="fa fa-file-word"></i> Download .docx
-    </div>
-  </div>
 {% endblock %}
 
 {% block footer %}
-  <!-- library for exporting to pdf -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.2.0/jspdf.umd.min.js"></script>
-
-  <!-- library for exporting to docx -->
-  <script src="https://unpkg.com/docx@5.0.2/build/index.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
-
   <script>
-    window.jsPDF = window.jspdf.jsPDF;
+    $(".indicator-switch input").change(function() {
+      let indicatorSwitch = $(this);
+      let row = indicatorSwitch.closest("tr");
 
-    /* global jsPDF */
-    function downloadPDF() {
-      var pdf = new jsPDF();
-      pdf.text(20, 20, "Metabolism of Cities!");
-      pdf.text(20, 30, "etc etc etc.");
-
-      // Save the PDF
-      pdf.save("report.pdf");
-    }
-
-    $(".download-pdf").click(function() {
-      downloadPDF()
-    });
-
-    function downloadWord() {
-      var word = new docx.Document();
-
-      word.addSection({
-        properties: {},
-        children: [
-          new docx.Paragraph({
-            children: [
-              new docx.TextRun("Metabolism of Cities!"),
-              new docx.TextRun({
-                text: "Etc etc etc",
-              }),
-            ],
-          }),
-        ],
-      });
-
-      docx.Packer.toBlob(word).then(blob => {
-        saveAs(blob, "report.docx");
-      });
-    }
-
-    $(".download-word").click(function() {
-      downloadWord()
-    });
+      if (indicatorSwitch.prop("checked")) {
+        row.removeClass("disabled")
+        row.find(".checkbox:not(.sector) input").removeAttr("disabled");
+      } else {
+        row.addClass("disabled")
+        row.find(".checkbox:not(.sector) input").attr("disabled", "disabled").prop("checked", false);
+      }
+    })
   </script>
 {% endblock %}
