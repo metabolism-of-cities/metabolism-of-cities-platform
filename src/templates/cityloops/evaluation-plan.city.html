@@ -49,6 +49,10 @@
     .custom-switch .custom-control-input:disabled:checked ~ .custom-control-label::before {
       background-color: #144d58;
     }
+
+    .indicator-table tbody tr:first-of-type td {
+      border-top: none;
+    }
   </style>
 {% endblock %}
 
@@ -64,108 +68,41 @@
   </nav>
 
   <form class="mt-4">
-    <div class="card card-table mb-4">
-      <table class="table">
-        <thead>
-          <tr>
-            <th colspan="2">Indicator</th>
-            <th colspan="2" class="border-left">Demonstration action</th>
-            <th colspan="2" class="border-left">City</th>
-            <th colspan="2" class="border-left text-muted">
-              Sector <small>(disabled)</small>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="number"><span class="indicator-number">01</span></td>
-            <td>{% lorem 4 w random %}</td>
-            <td class="checkbox">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="1-da" checked disabled>
-                <label class="custom-control-label" for="1-da"></label>
-              </div>
-            </td>
-            <td class="status has-button">
-              <i class="fa fa-check text-success mr-2"></i>
-              <a class="btn btn-sm btn-primary-light" href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}"><i class="fa fa-info-circle"></i> View</a>
-            </td>
-            <td class="checkbox">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="1-city" disabled>
-                <label class="custom-control-label" for="1-city"></label>
-              </div>
-            </td>
-            <td class="status">
-            </td>
-            <td class="checkbox">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="1-sector" disabled>
-                <label class="custom-control-label" for="1-sector"></label>
-              </div>
-            </td>
-            <td class="status"></td>
-          </tr>
-          <tr>
-            <td class="number"><span class="indicator-number">06</span></td>
-            <td>{% lorem 4 w random %}</td>
-            <td class="checkbox">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="1-da" disabled>
-                <label class="custom-control-label" for="1-da"></label>
-              </div>
-            </td>
-            <td class="status">
-            </td>
-            <td class="checkbox">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="1-city" checked disabled>
-                <label class="custom-control-label" for="1-city"></label>
-              </div>
-            </td>
-            <td class="status has-button">
-              <a class="btn btn-sm btn-primary-light" href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}"><i class="fa fa-info-circle"></i> View</a>
-            </td>
-            <td class="checkbox">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="1-sector" disabled>
-                <label class="custom-control-label" for="1-sector"></label>
-              </div>
-            </td>
-            <td class="status"></td>
-          </tr>
-          <tr>
-            <td class="number"><span class="indicator-number">15</span></td>
-            <td>Circular Material Use Rate </td>
-            <td class="checkbox">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="1-da" checked disabled>
-                <label class="custom-control-label" for="1-da"></label>
-              </div>
-            </td>
-            <td class="status has-button">
-              <i class="fa fa-check text-success mr-2"></i>
-              <a class="btn btn-sm btn-primary-light" href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}"><i class="fa fa-info-circle"></i> View</a>
-            </td>
-            <td class="checkbox">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="1-city" disabled>
-                <label class="custom-control-label" for="1-city"></label>
-              </div>
-            </td>
-            <td class="status">
-            </td>
-            <td class="checkbox">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="1-sector" disabled>
-                <label class="custom-control-label" for="1-sector"></label>
-              </div>
-            </td>
-            <td class="status"></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <table class="table indicator-table">
+      <tbody>
+        <tr>
+          <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">01</a></td>
+          <td class="indicator-text">{% lorem 7 w random %}</td>
+          <td class="has-button text-right">
+            <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="btn btn-dark btn-sm">
+              <i class="far fa-fw fa-chart-pie"></i> Sector <i class="fa fa-fw fa-check-circle mr-0 ml-2"></i>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">05</a></td>
+          <td class="indicator-text">{% lorem 7 w random %}</td>
+          <td class="has-button text-right">
+            <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="btn btn-info btn-sm">
+              <i class="far fa-fw fa-city"></i> City
+            </a>
+            <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="btn btn-secondary btn-sm">
+              <i class="far fa-fw fa-random"></i> Demonstration action <i class="fa fa-fw fa-check-circle mr-0 ml-2"></i>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">15</a></td>
+          <td class="indicator-text">Circular Material Use Rate </td>
+          <td class="has-button text-right">
+            <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="btn btn-secondary btn-sm">
+              <i class="far fa-fw fa-random"></i> Demonstration action
+            </a>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
   </form>
 
   <div class="mt-4">
