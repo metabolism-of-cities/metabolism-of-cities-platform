@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% load static %}
 
 {% block css %}
 <style>
@@ -14,12 +15,18 @@
 
   #indicator-menu .nav-link.active {
     background-color: #b6ced2;
+  }
+
+  #indicator-menu .nav-link.group {
     font-weight: bold;
+  }
+
+  #indicator-menu .nav-link.group:not(:first-of-type) {
+    border-top: 1px solid #dee2e6;
   }
 
   #indicator-menu .nav-link.group.active {
     background-color: #9cb7bb;
-    font-weight: bold;
   }
 
   .indicator-group {
@@ -28,10 +35,9 @@
 
   .indicator {
     margin-top: 3rem;
-    padding-top: 3rem;
     border: 1px solid #dee2e6;
     border-radius: .25rem;
-    padding: 1.5rem 1rem 1rem;
+    padding: 1.5rem 1rem 0 1rem;
     position: relative;
   }
 
@@ -53,6 +59,42 @@
     font-size: 1rem;
     font-weight: bold;
   }
+
+  .indicator hr,
+  .list-group {
+    margin-left: -1rem;
+    width: calc(100% + 2rem);
+  }
+
+  .indicator .list-group-item {
+    border-bottom: none;
+    border-radius: 0;
+    text-align: center;
+  }
+
+  .indicator .list-group .list-group-item:first-of-type {
+    border-left: none;
+    border-top-left-radius: 0;
+  }
+
+  .indicator .list-group .list-group-item:last-of-type {
+    border-right: none;
+    border-top-right-radius: 0;
+  }
+
+  .indicator .unit {
+    font-weight: 300;
+    font-size: 2rem;
+    height: 32px;
+    line-height: 1;
+    display: inline-block;
+  }
+
+  .indicator img.sdg {
+    height: 58.5px;
+    border-radius: 2px;
+  }
+
 
   .copy-link {
     opacity: 0;
@@ -85,12 +127,12 @@
 
   <h1>Indicators</h1>
 
-  {% lorem 2 p %}
+  {% lorem 1 p %}
 
   <div class="row">
     <div class="col-lg-9 pt-3" data-spy="scroll" id="indicators" data-target="#indicator-menu">
       <div class="indicator-group">
-        <h4 id="group-1">Closing material loops and reducing harmful resource use</h4>
+        <h4 id="group-1">Local stakeholder actions</h4>
 
         <div class="indicator">
           <div class="title" id="indicator-41">
@@ -98,8 +140,6 @@
             Circular Material Use Rate
           </div>
 
-          <div class="strategic-objective"></div>
-
           <div class="description">
             <p>
               The circular material use rate, also called Circularity rate measures, in percentage, the share of material recovered and fed back into the economy - thus saving extraction of primary raw materials - in overall material use. The Circularity rate is thus defined as the ratio of the circular use of materials (U) to the overall material use (M).
@@ -107,234 +147,108 @@
             <p>
               The overall material use is measured by summing up the aggregate domestic material consumption (DMC) and the circular use of materials (M = DMC + U). DMC is defined in economy-wide material flow accounts.
             </p>
-            <p>
-              The circular use of materials is approximated by the amount of waste recycled in domestic recovery plants (RCV_R), minus imported waste destined for recovery (IMPw), plus exported waste destined for recovery abroad (EXPw). Waste recycled in domestic recovery plants comprises the recovery operations R2 to R11 as defined in the Waste Framework Directive 75/442/EEC. European statistics on international trade in goods (ITGS) are used to approximate the imports and exports of waste destined for recycling, i.e. the amount of imported waste bound for recovery (IMPw), and the amount of exported waste bound for recovery (EXPw).
-            </p>
-            <p>
-              Then, the Circularity rate is formalised as following:
-            </p>
-            <img src="https://i.imgur.com/C7RhSO6.png">
-            <p>
-              A higher Circularitity rate value indicates more secondary materials substituting for primary raw materials i.e. avoiding the environmental impacts of extracting primary material.
-            </p>
-            <p>
-              Source: <a href="https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm">https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm</a>
-            </p>
           </div>
+
+          <hr>
+
+          <dl>
+            <dt>Methodology</dt>
+            <dd>
+              <p>
+                The circular use of materials is approximated by the amount of waste recycled in domestic recovery plants (RCV_R), minus imported waste destined for recovery (IMPw), plus exported waste destined for recovery abroad (EXPw). Waste recycled in domestic recovery plants comprises the recovery operations R2 to R11 as defined in the Waste Framework Directive 75/442/EEC. European statistics on international trade in goods (ITGS) are used to approximate the imports and exports of waste destined for recycling, i.e. the amount of imported waste bound for recovery (IMPw), and the amount of exported waste bound for recovery (EXPw).
+              </p>
+              <p>
+                Then, the Circularity rate is formalised as following:
+              </p>
+              <img src="https://i.imgur.com/C7RhSO6.png">
+              <p>
+                A higher Circularitity rate value indicates more secondary materials substituting for primary raw materials i.e. avoiding the environmental impacts of extracting primary material.
+              </p>
+            </dd  >
+          </dl>
+
+          <hr>
+
+          <dl>
+            <dt>Vision element</dt>
+            <dd>Closing material loops and reducing harmful resource use</dd>
+
+            <dt>Category</dt>
+            <dd>
+              Circular design and business models, <br>
+              Private investments, jobs and gross value added
+            </dd>
+          </dl>
+
+
+          <div class="list-group list-group-horizontal">
+            <a class="list-group-item list-group-item-action" href="https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm">
+              <i class="fal fa-fw fa-2x fa-link"></i> <br>
+              <span>Source</span>
+            </a>
+            <a class="list-group-item list-group-item-action">
+              <div class="unit">ℓ</div><br>
+              <span>Unit</span>
+            </a>
+            <a class="list-group-item list-group-item-action" href="https://www.un.org/sustainabledevelopment/energy/">
+              <img class="sdg" src="{% static 'img/sdg/sdg-12.png' %}">
+            </a>
+          </div>
+
+          <div class="strategic-objective"></div>
+
 
           <a class="copy-link text-dark" href="#indicator-41">
             <i class="far fa-fw fa-link"></i> <span class="link-copied pr-1" hidden>Link copied</span>
           </a>
         </div>
-
-        <div class="indicator">
-          <div class="title" id="indicator-42">
-            <span class="number">42</span>
-            Circular Material Use Rate 42
-          </div>
-
-          <div class="strategic-objective"></div>
-
-          <div class="description">
-            <p>
-              The overall material use is measured by summing up the aggregate domestic material consumption (DMC) and the circular use of materials (M = DMC + U). DMC is defined in economy-wide material flow accounts.
-            </p>
-            <p>
-              The circular use of materials is approximated by the amount of waste recycled in domestic recovery plants (RCV_R), minus imported waste destined for recovery (IMPw), plus exported waste destined for recovery abroad (EXPw). Waste recycled in domestic recovery plants comprises the recovery operations R2 to R11 as defined in the Waste Framework Directive 75/442/EEC. European statistics on international trade in goods (ITGS) are used to approximate the imports and exports of waste destined for recycling, i.e. the amount of imported waste bound for recovery (IMPw), and the amount of exported waste bound for recovery (EXPw).
-            </p>
-            <p>
-              Then, the Circularity rate is formalised as following:
-            </p>
-            <p>
-              A higher Circularitity rate value indicates more secondary materials substituting for primary raw materials i.e. avoiding the environmental impacts of extracting primary material.
-            </p>
-          </div>
-        </div>
-
-        <div class="indicator">
-          <div class="title" id="indicator-43">
-            <span class="number">43</span>
-            Circular Material Use Rate 53
-          </div>
-
-          <div class="strategic-objective"></div>
-
-          <div class="description">
-            <p>
-              The circular material use rate, also called Circularity rate measures, in percentage, the share of material recovered and fed back into the economy - thus saving extraction of primary raw materials - in overall material use. The Circularity rate is thus defined as the ratio of the circular use of materials (U) to the overall material use (M).
-            </p>
-            <p>
-              The overall material use is measured by summing up the aggregate domestic material consumption (DMC) and the circular use of materials (M = DMC + U). DMC is defined in economy-wide material flow accounts.
-            </p>
-            <p>
-              Then, the Circularity rate is formalised as following:
-            </p>
-            <p>
-              A higher Circularitity rate value indicates more secondary materials substituting for primary raw materials i.e. avoiding the environmental impacts of extracting primary material.
-            </p>
-            <p>
-              Source: <a href="https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm">https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm</a>
-            </p>
-          </div>
-        </div>
-
-        <div class="indicator">
-          <div class="title" id="indicator-44">
-            <span class="number">44</span>
-            Circular Material Use Rate
-          </div>
-
-          <div class="strategic-objective"></div>
-
-          <div class="description">
-            <p>
-              The circular material use rate, also called Circularity rate measures, in percentage, the share of material recovered and fed back into the economy - thus saving extraction of primary raw materials - in overall material use. The Circularity rate is thus defined as the ratio of the circular use of materials (U) to the overall material use (M).
-            </p>
-            <p>
-              The overall material use is measured by summing up the aggregate domestic material consumption (DMC) and the circular use of materials (M = DMC + U). DMC is defined in economy-wide material flow accounts.
-            </p>
-            <p>
-              The circular use of materials is approximated by the amount of waste recycled in domestic recovery plants (RCV_R), minus imported waste destined for recovery (IMPw), plus exported waste destined for recovery abroad (EXPw). Waste recycled in domestic recovery plants comprises the recovery operations R2 to R11 as defined in the Waste Framework Directive 75/442/EEC. European statistics on international trade in goods (ITGS) are used to approximate the imports and exports of waste destined for recycling, i.e. the amount of imported waste bound for recovery (IMPw), and the amount of exported waste bound for recovery (EXPw).
-            </p>
-            <p>
-              Then, the Circularity rate is formalised as following:
-            </p>
-            <p>
-              A higher Circularitity rate value indicates more secondary materials substituting for primary raw materials i.e. avoiding the environmental impacts of extracting primary material.
-            </p>
-            <p>
-              Source: <a href="https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm">https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm</a>
-            </p>
-          </div>
-        </div>
       </div>
 
       <div class="indicator-group">
-        <h4 id="group-2">Group of indicators 2</h4>
-
-        <div class="indicator">
-          <div class="title" id="indicator-45">
-            <span class="number">45</span>
-            Circular Material Use Rate 45
-          </div>
-
-          <div class="strategic-objective"></div>
-
-          <div class="description">
-            <p>
-              The overall material use is measured by summing up the aggregate domestic material consumption (DMC) and the circular use of materials (M = DMC + U). DMC is defined in economy-wide material flow accounts.
-            </p>
-            <p>
-              Then, the Circularity rate is formalised as following:
-            </p>
-            <p>
-              A higher Circularitity rate value indicates more secondary materials substituting for primary raw materials i.e. avoiding the environmental impacts of extracting primary material.
-            </p>
-            <p>
-              Source: <a href="https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm">https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm</a>
-            </p>
-          </div>
-        </div>
-
-        <div class="indicator">
-          <div class="title" id="indicator-46">
-            <span class="number">46</span>
-            Circular Material Use Rate
-          </div>
-
-          <div class="strategic-objective"></div>
-
-          <div class="description">
-            <p>
-              The circular material use rate, also called Circularity rate measures, in percentage, the share of material recovered and fed back into the economy - thus saving extraction of primary raw materials - in overall material use. The Circularity rate is thus defined as the ratio of the circular use of materials (U) to the overall material use (M).
-            </p>
-            <p>
-              The overall material use is measured by summing up the aggregate domestic material consumption (DMC) and the circular use of materials (M = DMC + U). DMC is defined in economy-wide material flow accounts.
-            </p>
-            <p>
-              The circular use of materials is approximated by the amount of waste recycled in domestic recovery plants (RCV_R), minus imported waste destined for recovery (IMPw), plus exported waste destined for recovery abroad (EXPw). Waste recycled in domestic recovery plants comprises the recovery operations R2 to R11 as defined in the Waste Framework Directive 75/442/EEC. European statistics on international trade in goods (ITGS) are used to approximate the imports and exports of waste destined for recycling, i.e. the amount of imported waste bound for recovery (IMPw), and the amount of exported waste bound for recovery (EXPw).
-            </p>
-            <p>
-              Then, the Circularity rate is formalised as following:
-            </p>
-            <p>
-              A higher Circularitity rate value indicates more secondary materials substituting for primary raw materials i.e. avoiding the environmental impacts of extracting primary material.
-            </p>
-            <p>
-              Source: <a href="https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm">https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm</a>
-            </p>
-          </div>
-        </div>
-
-        <div class="indicator">
-          <div class="title" id="indicator-47">
-            <span class="number">47</span>
-            Circular Material Use Rate
-          </div>
-
-          <div class="strategic-objective"></div>
-
-          <div class="description">
-            <p>
-              The circular material use rate, also called Circularity rate measures, in percentage, the share of material recovered and fed back into the economy - thus saving extraction of primary raw materials - in overall material use. The Circularity rate is thus defined as the ratio of the circular use of materials (U) to the overall material use (M).
-            </p>
-            <p>
-              The overall material use is measured by summing up the aggregate domestic material consumption (DMC) and the circular use of materials (M = DMC + U). DMC is defined in economy-wide material flow accounts.
-            </p>
-            <p>
-              A higher Circularitity rate value indicates more secondary materials substituting for primary raw materials i.e. avoiding the environmental impacts of extracting primary material.
-            </p>
-            <p>
-              Source: <a href="https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm">https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm</a>
-            </p>
-          </div>
-        </div>
-
-        <div class="indicator">
-          <div class="title" id="indicator-48">
-            <span class="number">48</span>
-            Circular Material Use Rate 48
-          </div>
-
-          <div class="strategic-objective"></div>
-
-          <div class="description">
-            <p>
-              The overall material use is measured by summing up the aggregate domestic material consumption (DMC) and the circular use of materials (M = DMC + U). DMC is defined in economy-wide material flow accounts.
-            </p>
-            <p>
-              The circular use of materials is approximated by the amount of waste recycled in domestic recovery plants (RCV_R), minus imported waste destined for recovery (IMPw), plus exported waste destined for recovery abroad (EXPw). Waste recycled in domestic recovery plants comprises the recovery operations R2 to R11 as defined in the Waste Framework Directive 75/442/EEC. European statistics on international trade in goods (ITGS) are used to approximate the imports and exports of waste destined for recycling, i.e. the amount of imported waste bound for recovery (IMPw), and the amount of exported waste bound for recovery (EXPw).
-            </p>
-            <p>
-              Then, the Circularity rate is formalised as following:
-            </p>
-            <p>
-              A higher Circularitity rate value indicates more secondary materials substituting for primary raw materials i.e. avoiding the environmental impacts of extracting primary material.
-            </p>
-            <p>
-              Source: <a href="https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm">https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm</a>
-            </p>
-          </div>
-        </div>
+        <h4 id="group-2">Circular business models and behavioural patterns</h4>
       </div>
+
+      <div class="indicator-group">
+        <h4 id="group-3">Closing material loops and reducing harmful resource use</h4>
+
+      </div>
+
+      <div class="indicator-group">
+        <h4 id="group-4">Improving human well-being and reducing environmental impacts</h4>
+      </div>
+
     </div>
     <div class="col-lg-3 pt-3">
       <h4 class="mb-5">&nbsp;</h4>
       <nav class="navbar navbar-light border rounded sticky-top p-0" id="indicator-menu">
         <nav class="nav flex-column">
-          <a class="nav-link group" href="#group-1">Group 1</a>
+          <a class="nav-link group" href="#group-1">Local stakeholder actions</a>
           <nav class="nav flex-column">
             <a class="nav-link pl-3" href="#indicator-41">Circular Material Use Rate</a>
             <a class="nav-link pl-3" href="#indicator-42">Indicator 42</a>
             <a class="nav-link pl-3" href="#indicator-43">Indicator 43</a>
             <a class="nav-link pl-3" href="#indicator-44">Indicator 44</a>
           </nav>
-          <a class="nav-link group" href="#group-2">Group 2</a>
+          <a class="nav-link group" href="#group-2">Circular business models and behavioural patterns</a>
           <nav class="nav flex-column">
             <a class="nav-link pl-3" href="#indicator-45">Indicator 45</a>
             <a class="nav-link pl-3" href="#indicator-46">Indicator 46</a>
             <a class="nav-link pl-3" href="#indicator-47">Indicator 47</a>
             <a class="nav-link pl-3" href="#indicator-48">Indicator 48</a>
+          </nav>
+          <a class="nav-link group" href="#group-3">Closing material loops and reducing harmful resource use</a>
+          <nav class="nav flex-column">
+            <a class="nav-link pl-3" href="#indicator-49">Indicator 49</a>
+            <a class="nav-link pl-3" href="#indicator-50">Indicator 50</a>
+            <a class="nav-link pl-3" href="#indicator-51">Indicator 51</a>
+            <a class="nav-link pl-3" href="#indicator-52">Indicator 52</a>
+          </nav>
+          <a class="nav-link group" href="#group-4">Improving human well-being and reducing environmental impacts</a>
+          <nav class="nav flex-column">
+            <a class="nav-link pl-3" href="#indicator-53">Indicator 53</a>
+            <a class="nav-link pl-3" href="#indicator-54">Indicator 54</a>
+            <a class="nav-link pl-3" href="#indicator-55">Indicator 55</a>
+            <a class="nav-link pl-3" href="#indicator-56">Indicator 56</a>
           </nav>
         </nav>
       </nav>
