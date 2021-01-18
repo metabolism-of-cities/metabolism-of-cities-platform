@@ -925,9 +925,9 @@ table thead th {
   background-color: #efefef; }
 
 td.has-button {
-  padding-top: 0;
-  padding-bottom: 0;
-  vertical-align: middle; }
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  vertical-align: middle !important; }
 
 @media (min-width: 992px) {
   table .narrow-cell {

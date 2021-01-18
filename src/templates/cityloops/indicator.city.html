@@ -1,0 +1,171 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block css %}
+  <style>
+    .overview-table td {
+      padding-top: .5rem;
+      padding-bottom: .5rem;
+    }
+
+    .overview-table .badge {
+      vertical-align: text-top;
+      height: 20px;
+    }
+
+    tr.selected {
+      background-color: #efefef;
+    }
+
+    td.scale {
+      text-align: right;
+      padding-right: .5rem;
+    }
+
+    td.status {
+      text-align: right;
+      padding-left: 0;
+    }
+
+    .overview-table tbody tr:first-of-type td {
+      border-top: none;
+    }
+
+    td.indicator {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      width: 250px;
+      max-width: 250px;
+    }
+
+    dl.indicator-metadata dd {
+      margin-bottom: 2rem;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <h1>Indicators</h1>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-transparent p-0">
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}">{{ info }}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_evaluation_plan' 'bodo' %}">Evaluation plan</a></li>
+      <li class="breadcrumb-item active" aria-current="page">15. Circular Material Use Rate</li>
+    </ol>
+  </nav>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <h5 class="mb-0">
+        15. Circular Material Use Rate
+        <span class="float-right badge badge-secondary">Demonstration action</span>
+      </h5>
+
+      <small class="text-muted">
+        Last edited 6 days ago by Fulano de Tal
+      </small>
+
+      <dl class="indicator-metadata mt-4">
+        <dt>Rationale</dt>
+        <dd>{% lorem 40 w random %}</dd>
+
+        <dt>Baseline data / definition</dt>
+        <dd>{% lorem 30 w random %}</dd>
+
+        <dt>Data Sources / Relevant Databases</dt>
+        <dd>{% lorem 20 w random %}</dd>
+
+        <dt>Overall accuracy</dt>
+        <dd>{% lorem 20 w random %}</dd>
+
+        <dt>Sector coverage</dt>
+        <dd>{% lorem 15 w random %}</dd>
+
+        <dt>Reference area / Spatial implementation scale</dt>
+        <dd>{% lorem 6 w random %}</dd>
+
+        <dt>Reference period</dt>
+        <dd>14 January 2021 - 14 January 2022</dd>
+
+        <dt>Comments</dt>
+        <dd>{% lorem 15 w random %}</dd>
+      </dl>
+
+      <div class="border rounded p-3 bg-light">
+        The information above is specific to {{ info }}'s evaluation plan. For general information on this indicator, please refer to <a href="{% url 'cityloops:indicators' %}#indicator-43">its entry in the list of indicators</a>.
+      </div>
+
+      <div class="mt-4">
+        <a class="btn btn-primary" href="{% url 'cityloops:city_evaluation_plan_indicator_form' 'bodo' 1 %}">
+          <i class="fa fa-marker"></i> Edit
+        </a>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card card-table mb-4">
+        <table class="table overview-table">
+          <tbody>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">02. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-dark">S</span></td>
+              <td class="status"><i class="fa fa-fw fa-check-circle text-success"></i></td>
+            </tr>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">03. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-info">C</span></td>
+              <td class="status"><i class="fa fa-fw fa-check-circle text-success"></i></td>
+            </tr>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">07. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-dark">S</span></td>
+              <td class="status"><a href="{% url 'cityloops:city_evaluation_plan_indicator_form' 'bodo' 1 %}"><i class="fa fa-fw fa-marker"></i></a></td>
+            </tr>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">11. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-secondary">DA</span></td>
+              <td class="status"><i class="fa fa-fw fa-check-circle text-success"></i></td>
+            </tr>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">14. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-dark">S</span></td>
+              <td class="status"><i class="fa fa-fw fa-check-circle text-success"></i></td>
+            </tr>
+            <tr class="selected">
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">15. Circular Material Use Rate</td>
+              <td class="scale"><span class="badge badge-secondary">DA</span></td>
+              <td class="status"><a href="{% url 'cityloops:city_evaluation_plan_indicator_form' 'bodo' 1 %}"><i class="fa fa-fw fa-marker"></i></a></td>
+            </tr>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">17. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-dark">S</span></td>
+              <td class="status"><a href="{% url 'cityloops:city_evaluation_plan_indicator_form' 'bodo' 1 %}"><i class="fa fa-fw fa-marker"></i></a></td>
+            </tr>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">21. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-secondary">DA</span></td>
+              <td class="status"><i class="fa fa-fw fa-check-circle text-success"></i></td>
+            </tr>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">27. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-info">C</span></td>
+              <td class="status"><a href="{% url 'cityloops:city_evaluation_plan_indicator_form' 'bodo' 1 %}"><i class="fa fa-fw fa-marker"></i></a></td>
+            </tr>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">37. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-secondary">DA</span></td>
+              <td class="status"><i class="fa fa-fw fa-check-circle text-success"></i></td>
+            </tr>
+            <tr>
+              <td class="indicator"><a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}">65. {% lorem 3 w random %}</td>
+              <td class="scale"><span class="badge badge-dark">S</span></td>
+              <td class="status"><a href="{% url 'cityloops:city_evaluation_plan_indicator_form' 'bodo' 1 %}"><i class="fa fa-fw fa-marker"></i></a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

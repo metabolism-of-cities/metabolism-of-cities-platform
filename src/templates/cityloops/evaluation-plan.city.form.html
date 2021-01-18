@@ -3,156 +3,205 @@
 
 {% block css %}
   <style>
-    form label {
-      margin-bottom: 0;
-      font-weight: bold;
+    .table td {
+      vertical-align: middle;
+      padding: 1rem .75rem;
     }
 
-    .form-text {
-      margin-top: 0;
+    tr.disabled .indicator-name,
+    tr.disabled .number {
+      opacity: .5;
+    }
+
+    td.indicator-switch {
+      width: 50px;
+    }
+
+    td.number {
+      width: 48px;
+      padding-right: 0;
+    }
+
+    td.checkbox {
+      width: 200px;
+      border-left: 1px solid #dee2e6
+    }
+
+    .indicator-number {
+      background-color: #144d58;
+      color: #fff;
+      padding: 0 .5rem;
+      border-radius: .25rem;
+      display: inline-block;
+      font-weight: bold;
     }
   </style>
 {% endblock %}
 
 {% block content %}
-  {% include "_plans-menu-cityloops.html" %}
 
-  <form class="form">
-    <div class="form-row">
-      <div class="col-md">
-        <div class="form-group">
-          <label for="indicator-number">Indicator number</label>
-          <input type="email" class="form-control" id="indicator-number">
-          <small class="form-text text-muted">Refer to number in D6.1</small>
-        </div>
-      </div>
+  <h1>Evaluation plan</h1>
 
-      <div class="col-md">
-        <div class="form-group">
-          <label for="indicator-name">Indicator name</label>
-          <input type="email" class="form-control" id="indicator-name">
-          <small class="form-text text-muted">Refer to name in D6.1</small>
-        </div>
-      </div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-transparent p-0">
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}">{{ info }}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_evaluation_plan' 'bodo' %}">Evaluation plan</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Select indicators</li>
+    </ol>
+  </nav>
+
+  <form>
+    <div class="card card-table mb-4">
+      <table class="table">
+        <thead>
+          <tr>
+            <th colspan="3">Indicator</th>
+            <th class="border-left">Demonstration action</th>
+            <th class="border-left">City</th>
+            <th class="border-left text-muted">Sector <small>(disabled)</small></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="indicator-switch">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="1-indicator" checked>
+                <label class="custom-control-label" for="1-indicator"></label>
+              </div>
+            </td>
+            <td class="number"><span class="indicator-number">01</span></td>
+            <td class="indicator-name">{% lorem 4 w random %}</td>
+            <td class="checkbox da">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="1-da" checked>
+                <label class="custom-control-label" for="1-da"></label>
+              </div>
+            </td>
+            <td class="checkbox city">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="1-city">
+                <label class="custom-control-label" for="1-city"></label>
+              </div>
+            </td>
+            <td class="checkbox sector">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="1-sector" disabled>
+                <label class="custom-control-label" for="1-sector"></label>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="indicator-switch">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="6-indicator" checked>
+                <label class="custom-control-label" for="6-indicator"></label>
+              </div>
+            </td>
+            <td class="number"><span class="indicator-number">06</span></td>
+            <td class="indicator-name">{% lorem 4 w random %}</td>
+            <td class="checkbox da">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="6-da">
+                <label class="custom-control-label" for="6-da"></label>
+              </div>
+            </td>
+            <td class="checkbox city">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="6-city" checked>
+                <label class="custom-control-label" for="6-city"></label>
+              </div>
+            </td>
+            <td class="checkbox sector">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="6-sector" disabled>
+                <label class="custom-control-label" for="6-sector"></label>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="indicator-switch">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="9-indicator">
+                <label class="custom-control-label" for="9-indicator"></label>
+              </div>
+            </td>
+            <td class="number"><span class="indicator-number">09</span></td>
+            <td class="indicator-name">{% lorem 4 w random %}</td>
+            <td class="checkbox da">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="9-da" disabled>
+                <label class="custom-control-label" for="9-da"></label>
+              </div>
+            </td>
+            <td class="checkbox city">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="9-city" disabled>
+                <label class="custom-control-label" for="9-city"></label>
+              </div>
+            </td>
+            <td class="checkbox sector">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="9-sector" disabled>
+                <label class="custom-control-label" for="9-sector"></label>
+              </div>
+            </td>
+          </tr>
+
+
+          <tr>
+            <td class="indicator-switch">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="15-indicator" checked>
+                <label class="custom-control-label" for="15-indicator"></label>
+              </div>
+            </td>
+            <td class="number"><span class="indicator-number">15</span></td>
+            <td class="indicator-name">Circular Material Use Rate</td>
+            <td class="checkbox da">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="15-da" checked>
+                <label class="custom-control-label" for="15-da"></label>
+              </div>
+            </td>
+            <td class="checkbox city">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="15-city">
+                <label class="custom-control-label" for="15-city"></label>
+              </div>
+            </td>
+            <td class="checkbox sector">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="15-sector" disabled>
+                <label class="custom-control-label" for="15-sector"></label>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-    <div class="form-row">
-      <div class="col-md">
-        <div class="form-group">
-          <label for="vision-element">Vision element</label>
-          <select class="form-control custom-select" id="vision-element">
-            <option value="0" selected disabled>Select an option</option>
-            <option value="1">Local stakeholder actions</option>
-            <option value="2">Circular business models and behavioural patterns</option>
-            <option value="3">Closing material loops and reducing harmful resource use</option>
-            <option value="4">Improving human well-being and reducing environmental impacts</option>
-          </select>
-        </div>
-      </div>
+    <button class="btn btn-primary">
+      <i class="fa fa-save"></i> Save
+    </button>
 
-      <div class="col-md">
-        <div class="form-group">
-          <label for="category">Category</label>
-          <select class="form-control custom-select" id="category">
-            <option value="0" selected disabled>Select an option</option>
-            <option value="1">Engagement and capacity building</option>
-            <option value="2">Regulation and incentives</option>
-            <option value="3">Vision and urban management</option>
-            <option value="4">Circular design and business models</option>
-            <option value="5">Circular value chains and infrastructure</option>
-            <option value="6">Private investments, jobs and gross value added</option>
-            <option value="7">Material/energy flow</option>
-            <option value="8">Re-use and recycling</option>
-            <option value="9">Waste generation/management</option>
-            <option value="10">Well-being</option>
-            <option value="11">Environment impacts (global)</option>
-            <option value="12">Environment impacts (local)</option>
-            <option value="13">Economic impacts</option>
-            <option value="14">Impacts on urban resilience</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="definition">Definition / description of indicator</label>
-      <textarea id="definition" class="form-control" rows="2"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label for="rationale">Rationale</label>
-      <textarea id="rationale" class="form-control" rows="2"></textarea>
-      <small class="form-text text-muted">Description of the why the inclusion of the indicator contributes to making the city more circular. It could e.g. its importance in relation to strategy/communication/circularity objectives</small>
-    </div>
-
-    <div class="form-group">
-      <label for="methodology">Methodology</label>
-      <textarea id="methodology" class="form-control" rows="2"></textarea>
-      <small class="form-text text-muted">Description of matematical calculation procedure/equations</small>
-    </div>
-
-    <div class="form-group">
-      <label for="unit">Unit</label>
-      <input type="text" id="unit" class="form-control"></input>
-    </div>
-
-    <div class="form-group">
-      <label for="baseline">Baseline data / definition</label>
-      <textarea id="baseline" class="form-control" rows="2"></textarea>
-      <small class="form-text text-muted">Description of how baseline values for the indicators will be established (e.g. give reference to methods given in D6.1, CH 5.3)</small>
-    </div>
-
-    <div class="form-group">
-      <label for="sources">Data sources / relevant databases</label>
-      <textarea id="sources" class="form-control" rows="2"></textarea>
-      <small class="form-text text-muted">Reference to reports, websites, institutions etc that collect, analyse, publish the data</small>
-    </div>
-
-    <div class="form-group">
-      <label for="accuracy">Overall accuracy</label>
-      <textarea id="accuracy" class="form-control" rows="2"></textarea>
-      <small class="form-text text-muted">Assessment of accuracy, linked to a certain data set or domain, which is summarising the various components on uncertainty (data coverage, value uncertainty, representativity etc)</small>
-    </div>
-
-    <div class="form-group">
-      <label for="coverage">Sector coverage</label>
-      <textarea id="coverage" class="form-control" rows="2"></textarea>
-      <small class="form-text text-muted">Main economic or other sectors covered by the data. Is the indicator for CDW/BW/other sector of sector independent</small>
-    </div>
-
-    <div class="form-group">
-      <label for="area">Reference area / spatial implementation scale</label>
-      <input type="text" id="area" class="form-control"></input>
-      <small class="form-text text-muted">The country or geographic area to which the measured statistical phenomenon relates. Is the indicator evaluated at demonstration/sector or city scale</small>
-    </div>
-
-    <div class="form-row">
-      <div class="col-md">
-        <div class="form-group">
-          <label for="period-from">Reference period, from</label>
-          <input type="date" class="form-control" id="period-from">
-          <small class="form-text text-muted">The period of time or point in time to which the measured observation is intended to refer</small>
-        </div>
-      </div>
-
-      <div class="col-md">
-        <div class="form-group">
-          <label for="period-to">Until</label>
-          <input type="date" class="form-control" id="period-to">
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="Reference">SDG Reference</label>
-      <input type="text" id="Reference" class="form-control"></input>
-      <small class="form-text text-muted">Link to SDG objective, target and indicator</small>
-    </div>
-
-    <div class="form-group">
-      <label for="comments">Comments</label>
-      <textarea id="comments" class="form-control" rows="2"></textarea>
-      <small class="form-text text-muted">Supplementary descriptive text which can be attached to indicator, data or metadata</small>
-    </div>
   </form>
+{% endblock %}
+
+{% block footer %}
+  <script>
+    $(".indicator-switch input").change(function() {
+      let indicatorSwitch = $(this);
+      let row = indicatorSwitch.closest("tr");
+
+      if (indicatorSwitch.prop("checked")) {
+        row.removeClass("disabled")
+        row.find(".checkbox:not(.sector) input").removeAttr("disabled");
+      } else {
+        row.addClass("disabled")
+        row.find(".checkbox:not(.sector) input").attr("disabled", "disabled").prop("checked", false);
+      }
+    })
+  </script>
 {% endblock %}

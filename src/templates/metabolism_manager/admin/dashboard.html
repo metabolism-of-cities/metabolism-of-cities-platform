@@ -5,6 +5,7 @@
 {% block title %}Metabolism Manager dashboard{% endblock %}
 
 {% block head %}
+  <link rel="stylesheet" href="{% static 'css/leaflet.awesome-markers.css' %}">
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
   <style>
@@ -14,18 +15,17 @@
 
     .leaflet-map {
       box-shadow: none;
-    }
-
-    .leaflet-map,
-    .map-listing {
       height: 700px;
       max-height: 90vh;
+      position: sticky !important;
     }
 
     .map-listing {
-      overflow: hidden;
-      overflow-y: auto;
       font-size: .75rem;
+    }
+
+    .map-listing table {
+      margin-bottom: 0;
     }
 
     .map-listing tbody tr:hover {
@@ -33,8 +33,8 @@
       cursor: pointer;
     }
 
-    .map-listing tbody tr:first-of-type td {
-      border-top: none;
+    .map-listing thead th {
+      text-align: center;
     }
 
     .leaflet-popup-content {
@@ -49,6 +49,11 @@
 
     #latest .card-img-top {
       object-fit: contain;
+    }
+
+    .awesome-marker i {
+      margin-top: 12px;
+      font-size: 13px;
     }
   </style>
 {% endblock %}
@@ -129,10 +134,15 @@
 
       <section class="row">
         <div class="col-lg-9">
-          <div id="map" class="leaflet-map border rounded-0"></div>
+          <div id="map" class="leaflet-map border rounded-0 sticky-top"></div>
         </div>
         <div class="col-lg-3 map-listing">
           <table class="table table-sm">
+            <thead>
+              <tr>
+                <th colspan="3"><span id="listing-count"></span> listing(s) found</th>
+              </tr>
+            </thead>
             <tbody>
             </tbody>
           </table>
@@ -201,7 +211,7 @@
                 {% endif %}
                 <li class="list-group-item"><i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-2"></i>{{ each.material_type }}</li>
                 <li class="list-group-item"><i class="fal fa-fw fa-balance-scale mr-2"></i>{{ each.absolute_quantity }} {{ each.unit.symbol }}</li>
-                <li class="list-group-item text-{% if each.type == 'supply' %}success{% else %}danger{% endif %}">
+                <li class="list-group-item text-{% if each.type == 'supply' %}primary{% else %}secondary{% endif %}">
                   <i class="fal fa-fw fa-{% if each.type == 'supply' %}sign-out{% else %}sign-in{% endif %} mr-2"></i>
                   {% if each.type == "supply" %}Supply{% else %}Demand{% endif %}
                 </li>
@@ -232,7 +242,7 @@
                 {% endif %}
                 <li class="list-group-item"><i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-2"></i>{{ each.material_type }}</li>
                 <li class="list-group-item"><i class="fal fa-fw fa-balance-scale mr-2"></i>{{ each.absolute_quantity }} {{ each.unit.symbol }}</li>
-                <li class="list-group-item text-{% if each.type == 'supply' %}success{% else %}danger{% endif %}">
+                <li class="list-group-item text-{% if each.type == 'supply' %}primary{% else %}secondary{% endif %}">
                   <i class="fal fa-fw fa-{% if each.type == 'supply' %}sign-out{% else %}sign-in{% endif %} mr-2"></i>
                   {% if each.type == "supply" %}Supply{% else %}Demand{% endif %}
                 </li>
@@ -252,7 +262,8 @@
 {% endblock %}
 
 {% block footer %}
-  <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+  <script src="{% static 'js/leaflet.awesome-markers.min.js' %}"></script>
+  <script src="{% static 'js/leaflet.markercluster.js' %}"></script>
   <script>
     // a list of all the offers and requests for materials
     const allListings = [
@@ -266,9 +277,10 @@
           "material": "{{ each.material_type }}",
           "icon": "{{ each.material_type.parent.icon }}",
           "quantity": "{{ each.absolute_quantity }} {{ each.unit }}",
-          "status": "{% if each.type == "supply" %}Supply{% else %}Demand{% endif %}",
-          "status_icon": "{% if each.type == "supply" %}sign-out{% else %}sign-in{% endif %}",
-          "status_color": "{% if each.type == "supply" %}success{% else %}danger{% endif %}",
+          "status": "{% if each.type == 'supply' %}Supply{% else %}Demand{% endif %}",
+          "status_icon": "{% if each.type == 'supply' %}sign-out{% else %}sign-in{% endif %}",
+          "status_color": "{% if each.type == 'supply' %}primary{% else %}secondary{% endif %}",
+          "marker_color": "{% if each.type == 'supply' %}cadetblue{% else %}darkred{% endif %}",
           "start_date": {{ each.start_date|date:"U" }},
           "end_date": {{ each.end_date|date:"U" }},
         },
@@ -278,6 +290,21 @@
     // creating layer variable, useful so that we can check its existence and manipulate it later
     var filteredLayer = false;
 
+    // function to update the map listing
+    function refreshListing() {
+      // remove existing entries in list
+      $(".map-listing tbody").html("");
+
+      // add listings
+      $(filteredLayer.getLayers()).each(function() {
+        $(".map-listing tbody").append("<tr data-id='" + this.options.id + "'><td class='text-center'><i class='fal fa-fw fa-" + this.options.status_icon + " text-" + this.options.color + "'></i></td><td>" + this.options.material + "</td><td>" + this.options.quantity + "</td></tr>")
+      })
+
+      // add count to header
+      $("#listing-count").text(filteredLayer.getLayers().length);
+    }
+
+    // date options to show in popup
     var dateOptions = {year: 'numeric', month: 'long', day: 'numeric'};
 
     // function to show filtered items on the map
@@ -331,7 +358,12 @@
       }
 
       // create the cluster group
-      filteredLayer = L.markerClusterGroup();
+      filteredLayer = L.markerClusterGroup({
+        spiderfyOnEveryZoom: true,
+        zoomToBoundsOnClick: false,
+        showCoverageOnHover: false,
+        removeOutsideVisibleBounds: false
+      });
 
       // take the listings and add them to the cluster group
       // enable popups so na user can click on an object on the map and see extra information
@@ -346,12 +378,19 @@
 
         var popupContent = "<div class='popup-title'>" + listing.name + "</div><div class='popup-content'><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + listing.address + "</li><li class='list-group-item'><i class='far fa-fw fa-" + listing.icon + " mr-2'></i>" + listing.material + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + listing.quantity + "</li><li class='list-group-item text-" + listing.status_color + "'><i class='far fa-fw fa-" + listing.status_icon + " mr-2'></i>" + listing.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a class='btn btn-sm btn-primary' href='../data/" + listing.id + "/'>More details</a></li></ul></div>"
 
+        var iconMarker = L.AwesomeMarkers.icon({
+          icon: listing.icon,
+          markerColor: listing.marker_color
+        });
+
         var marker = L.marker(new L.LatLng(filteredListings[i].lat, filteredListings[i].lng), {
+          "id": listing.id,
           "name": listing.name,
-          "status_icon": listing.status_icon,
+          "status_icon": listing.icon,
           "color": listing.status_color,
           "material": listing.material,
           "quantity": listing.quantity,
+          "icon": iconMarker,
         }).bindPopup(popupContent);
 
         filteredLayer.addLayer(marker);
@@ -360,21 +399,7 @@
       // add the cluster group to the map
       map.addLayer(filteredLayer).fitBounds(filteredLayer.getBounds())
 
-      // add listings to the card overview
-      $(".map-listing tbody").html("");
-
-      // date options
-      $.each(filteredLayer._featureGroup._layers, function() {
-        if (this._childCount > 0) {
-          let leafletID = this._leaflet_id;
-          let children = this.getAllChildMarkers();
-          $.each(children, function() {
-            $(".map-listing tbody").append("<tr data-parent='" + leafletID + "' data-id='" + this._leaflet_id + "'><td class='text-center'><i class='fal fa-fw fa-" + this.options.status_icon + " text-" + this.options.color + "'></i></td><td>" + this.options.material + "</td><td>" + this.options.quantity + "</td></tr>")
-          })
-        } else {
-          $(".map-listing tbody").append("<tr data-parent='false' data-id='" + this._leaflet_id + "'><td class='text-center'><i class='fal fa-fw fa-" + this.options.status_icon + " text-" + this.options.color + "'></i></td><td>" + this.options.material + "</td><td>" + this.options.quantity + "</td></tr>")
-        }
-      });
+      refreshListing()
     }
 
     // run filter whenever one of the filters changes
@@ -382,38 +407,19 @@
       filterListings()
     })
 
-    // supply and demand icons, green and red to match other icons
-    var supplyIcon = new L.Icon({
-      iconUrl: "{% static 'img/leaflet-markers/marker-icon-2x-green.png' %}",
-      shadowUrl: "{% static 'img/leaflet-markers/marker-shadow.png' %}",
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      shadowSize: [41, 41]
-    });
-
-    var demandIcon = new L.Icon({
-      iconUrl: "{% static 'img/leaflet-markers/marker-icon-2x-red.png' %}",
-      shadowUrl: "{% static 'img/leaflet-markers/marker-shadow.png' %}",
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      shadowSize: [41, 41]
-    });
-
-    // reset filters and show listings on load
+    // reset filters, show listings on load
     filterListings();
 
-    $("body").on("click", ".map-listing tr", function() {
-      let parent = $(this).data("parent");
-      let id = $(this).data("id");
+    $("body").on("click", ".map-listing tr:not(.header)", function() {
+      let id = $(this).attr("data-id");
 
-      if (parent != false) {
-        filteredLayer._featureGroup._layers[parent].spiderfy()
-      }
+      let selectedMarker = filteredLayer.getLayers().find(x => x.options.id === id);
 
-      filteredLayer._featureGroup._layers[id].openPopup();
-      map.setView(filteredLayer._featureGroup._layers[id]._latlng);
+      filteredLayer.zoomToShowLayer(selectedMarker, function() {
+        selectedMarker.openPopup();
+        map.setView(selectedMarker.getLatLng());
+      })
+
     })
   </script>
 {% endblock %}
