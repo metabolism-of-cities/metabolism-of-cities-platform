@@ -134,10 +134,10 @@ def admin_dashboard(request, organization=None):
         messages.error(request, "Please enter data first.")
     else:
         types = {
-            "Resources": MaterialDemand.objects.filter(owner__in=organization_list).exclude(material_type__parent_id__in=[31621,31620]),
+            "Resources": MaterialDemand.objects.filter(owner__in=organization_list).exclude(material_type__parent_id__in=[31621,31620,584734]),
             "Space": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31621),
             "Technology": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31620),
-            "Staff": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31620),
+            "Staff": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=584734),
         }
 
         gps = organization_list[0].meta_data
@@ -258,10 +258,10 @@ def admin_data(request, organization=None):
         messages.error(request, "Please enter data first.")
     else:
         types = {
-            "Resources": MaterialDemand.objects.filter(owner__in=organization_list).exclude(material_type__parent_id__in=[31621,31620]),
+            "Resources": MaterialDemand.objects.filter(owner__in=organization_list).exclude(material_type__parent_id__in=[31621,31620,584734]),
             "Space": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31621),
             "Technology": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31620),
-            "Staff": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31620),
+            "Staff": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=584734),
         }
 
     context = {
@@ -374,7 +374,7 @@ def admin_entity_materials(request, organization, id, slug=None):
     main_groups = materials = None
 
     if slug == "resources":
-        main_groups = Material.objects.filter(parent__isnull=True, catalog_id=31594).exclude(pk__in=[31621,31620])
+        main_groups = Material.objects.filter(parent__isnull=True, catalog_id=31594).exclude(pk__in=[31621,31620,584734])
         materials = Material.objects.filter(parent__in=main_groups)
     elif slug == "technology":
         main_groups = None
@@ -384,7 +384,7 @@ def admin_entity_materials(request, organization, id, slug=None):
         materials = Material.objects.filter(parent_id=31621)
     elif slug == "staff":
         main_groups = None
-        materials = Material.objects.filter(parent_id=31621)
+        materials = Material.objects.filter(parent_id=584734)
     context = {
         "my_organization": my_organization,
         "info": info,
