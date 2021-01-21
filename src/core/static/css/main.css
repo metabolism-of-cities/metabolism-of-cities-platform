@@ -440,6 +440,28 @@ footer {
     border-color: transparent;
     color: #efefef; }
 
+.btn-cityloops-primary {
+  background-color: #004d76;
+  border-color: #004d76;
+  color: #fff !important; }
+  .btn-cityloops-primary:hover {
+    border-color: #003c5d;
+    background-color: #003c5d; }
+  .btn-cityloops-primary:active, .btn-cityloops-primary:focus {
+    border-color: #003c5d !important;
+    background-color: #003c5d !important; }
+
+.btn-cityloops-secondary {
+  background-color: #00b6ed;
+  border-color: #00b6ed;
+  color: #fff !important; }
+  .btn-cityloops-secondary:hover {
+    border-color: #00a2d4;
+    background-color: #00a2d4; }
+  .btn-cityloops-secondary:active, .btn-cityloops-secondary:focus {
+    border-color: #00a2d4 !important;
+    background-color: #00a2d4 !important; }
+
 img.card-img-top {
   object-fit: cover;
   height: 200px; }
@@ -716,6 +738,28 @@ a.badge-secondary:focus {
 
 a.badge-secondary:focus {
   box-shadow: 0 0 0 0.2rem rgba(207, 72, 3, 0.16); }
+
+.badge-cityloops-primary {
+  background-color: #004d76;
+  color: #fff !important; }
+
+a.badge-cityloops-primary:hover,
+a.badge-cityloops-primary:focus {
+  background-color: #002c43; }
+
+a.badge-cityloops-primary:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 77, 118, 0.25); }
+
+.badge-cityloops-secondary {
+  background-color: #00b6ed;
+  color: #fff !important; }
+
+a.badge-cityloops-secondary:hover,
+a.badge-cityloops-secondary:focus {
+  background-color: #008fba; }
+
+a.badge-cityloops-secondary:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 182, 237, 0.15); }
 
 .leaflet-map {
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);

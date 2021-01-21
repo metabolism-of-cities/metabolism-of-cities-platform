@@ -10,6 +10,10 @@ $light: #efefef;
 $very-light: #fbfbfb;
 $basic-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
 
+// CITYLOOPS COLOURS
+$cityloops-primary: #004d76;
+$cityloops-secondary: #00b6ed;
+
 // EXTENSIONS
 %raised-hover {
   transition: all .3s;
@@ -662,6 +666,40 @@ footer {
   }
 }
 
+// CITYLOOPS BUTTONS
+.btn-cityloops-primary {
+  background-color: $cityloops-primary;
+  border-color: $cityloops-primary;
+  color: $white !important;
+
+  &:hover {
+    border-color: darken($cityloops-primary, 5%);
+    background-color: darken($cityloops-primary, 5%);
+  }
+
+  &:active, &:focus {
+    border-color: darken($cityloops-primary, 5%) !important;
+    background-color: darken($cityloops-primary, 5%) !important;
+  }
+}
+
+.btn-cityloops-secondary {
+  background-color: $cityloops-secondary;
+  border-color: $cityloops-secondary;
+  color: $white !important;
+
+  &:hover {
+    border-color: darken($cityloops-secondary, 5%);
+    background-color: darken($cityloops-secondary, 5%);
+  }
+
+  &:active, &:focus {
+    border-color: darken($cityloops-secondary, 5%) !important;
+    background-color: darken($cityloops-secondary, 5%) !important;
+  }
+}
+
+
 img.card-img-top {
   object-fit: cover;
   height: 200px;
@@ -1071,6 +1109,36 @@ a.badge-secondary:focus {
 a.badge-secondary:focus {
   box-shadow: 0 0 0 .2rem rgba($secondary, 0.16);
 }
+
+// CITYLOOPS BADGES
+.badge-cityloops-primary {
+  background-color: $cityloops-primary;
+  color: $white !important;
+}
+
+a.badge-cityloops-primary:hover,
+a.badge-cityloops-primary:focus {
+  background-color: darken($cityloops-primary, 10%);
+}
+
+a.badge-cityloops-primary:focus {
+  box-shadow: 0 0 0 .2rem rgba($cityloops-primary, .25);
+}
+
+.badge-cityloops-secondary {
+  background-color: $cityloops-secondary;
+  color: $white !important;
+}
+
+a.badge-cityloops-secondary:hover,
+a.badge-cityloops-secondary:focus {
+  background-color: darken($cityloops-secondary, 10%);
+}
+
+a.badge-cityloops-secondary:focus {
+  box-shadow: 0 0 0 .2rem rgba($cityloops-secondary, .15);
+}
+
 
 // LEAFLET MAP
 .leaflet-map {
