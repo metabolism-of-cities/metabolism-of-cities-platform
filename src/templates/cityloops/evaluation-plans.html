@@ -45,24 +45,57 @@
     th.sticky-top {
       top: 0;
     }
+
+    .filters label {
+      margin-bottom: 0;
+      font-weight: bold;
+    }
   </style>
 {% endblock %}
 
 {% block content %}
   <h1>Evaluation plans</h1>
 
+  <div class="filters row">
+    <div class="col-md-3">
+      <div class="form-group">
+        <label for="scales">Scales</label>
+        <select id="scales" class="custom-select">
+          <option value="all">Show all</option>
+          <option value="c">City</option>
+          <option value="da">Demonstration action</option>
+          <option value="s">Sector</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <div class="form-group">
+        <label for="cities">Cities</label>
+        <select id="cities" class="custom-select" multiple>
+          <option selected value="apeldoorn">Apeldoorn</option>
+          <option selected value="bodo">Bodø</option>
+          <option selected value="hoje">Høje-Taastrup</option>
+          <option selected value="mikkeli">Mikkeli</option>
+          <option selected value="porto">Porto</option>
+          <option selected value="roskilde">Roskilde</option>
+          <option selected value="sevilla">Sevilla</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
   <div class="card card-table mb-4">
     <table class="table">
       <thead>
         <tr>
           <th class="sticky-top" colspan="2">Indicator</th>
-          <th class="sticky-top city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Apeldoorn</a></th>
-          <th class="sticky-top city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Bodø</a></th>
-          <th class="sticky-top city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Høje-Taastrup</a></th>
-          <th class="sticky-top city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Mikkeli</a></th>
-          <th class="sticky-top city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Porto</a></th>
-          <th class="sticky-top city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Roskilde</a></th>
-          <th class="sticky-top city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Sevilla</a></th>
+          <th class="sticky-top city" data-city="apeldoorn"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Apeldoorn</a></th>
+          <th class="sticky-top city" data-city="bodo"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Bodø</a></th>
+          <th class="sticky-top city" data-city="hoje"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Høje-Taastrup</a></th>
+          <th class="sticky-top city" data-city="mikkeli"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Mikkeli</a></th>
+          <th class="sticky-top city" data-city="porto"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Porto</a></th>
+          <th class="sticky-top city" data-city="roskilde"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Roskilde</a></th>
+          <th class="sticky-top city" data-city="sevilla"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Sevilla</a></th>
         </tr>
       </thead>
       <tbody>
@@ -75,25 +108,25 @@
         <tr>
           <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">01</a></td>
           <td class="indicator-text">{% lorem 4 w random %}</td>
-          <td>
+          <td data-city="apeldoorn">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-secondary selection">DA</a>
           </td>
-          <td>
+          <td data-city="bodo">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
           </td>
-          <td>
+          <td data-city="hoje">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection">C</a>
           </td>
-          <td>
+          <td data-city="mikkeli">
           </td>
-          <td>
+          <td data-city="porto">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
           </td>
-          <td>
+          <td data-city="roskilde">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
           </td>
-          <td>
+          <td data-city="sevilla">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection">C</a>
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
           </td>
@@ -108,25 +141,25 @@
         <tr>
           <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">02</a></td>
           <td class="indicator-text">{% lorem 4 w random %}</td>
-          <td>
+          <td data-city="apeldoorn">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection">C</a>
           </td>
-          <td>
+          <td data-city="bodo">
           </td>
-          <td>
+          <td data-city="hoje">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection">C</a>
           </td>
-          <td>
+          <td data-city="mikkeli">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
           </td>
-          <td>
+          <td data-city="porto">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-secondary selection">DA</a>
           </td>
-          <td>
+          <td data-city="roskilde">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
           </td>
-          <td>
+          <td data-city="sevilla">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-secondary selection">DA</a>
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection">C</a>
           </td>
@@ -141,27 +174,27 @@
         <tr>
           <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">03</a></td>
           <td class="indicator-text">{% lorem 4 w random %}</td>
-          <td>
+          <td data-city="apeldoorn">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection">C</a>
           </td>
-          <td>
+          <td data-city="bodo">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
           </td>
-          <td>
+          <td data-city="hoje">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-secondary selection">DA</a>
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
           </td>
-          <td>
+          <td data-city="mikkeli">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
           </td>
-          <td>
+          <td data-city="porto">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection">C</a>
           </td>
-          <td>
+          <td data-city="roskilde">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection">C</a>
           </td>
-          <td>
+          <td data-city="sevilla">
           </td>
         </tr>
 
@@ -174,30 +207,52 @@
         <tr>
           <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">04</a></td>
           <td class="indicator-text">{% lorem 4 w random %}</td>
-          <td>
+          <td data-city="apeldoorn">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection">C</a>
           </td>
-          <td>
+          <td data-city="bodo">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
           </td>
-          <td>
+          <td data-city="hoje">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-secondary selection">DA</a>
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
           </td>
-          <td>
+          <td data-city="mikkeli">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
           </td>
-          <td>
+          <td data-city="porto">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection">C</a>
           </td>
-          <td>
+          <td data-city="roskilde">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection">C</a>
           </td>
-          <td>
+          <td data-city="sevilla">
           </td>
         </tr>
       </tbody>
     </table>
   </div>
+{% endblock %}
+
+{% block footer %}
+  <script>
+    // filter by scale
+
+
+    // filter cities
+    $("select#cities").select2({
+      closeOnSelect: false
+    })
+
+    $("select#cities").change(function() {
+      let cities = $("select#cities").val();
+
+      $("table [data-city]").attr("hidden", "hidden");
+
+      $(cities).each(function() {
+        $("table [data-city='" + this + "']").removeAttr("hidden");
+      })
+    })
+  </script>
 {% endblock %}

@@ -165,6 +165,7 @@ def indicators(request):
 def evaluation_plans(request):
     context = {
         "title": "Evaluation plans",
+        "load_select2": True,
     }
     return render(request, "cityloops/evaluation-plans.html", context)
 
