@@ -110,8 +110,8 @@ textarea.form-control:focus, input.form-control:focus, select.custom-select:focu
   opacity: .25 !important; }
 
 .custom-control-input:checked ~ .custom-control-label::before {
-  border-color: #144d58;
-  background-color: #144d58; }
+  border-color: #144d58 !important;
+  background-color: #144d58 !important; }
 
 .custom-control-input:not(:disabled):active ~ .custom-control-label::before {
   background-color: rgba(20, 77, 88, 0.25);

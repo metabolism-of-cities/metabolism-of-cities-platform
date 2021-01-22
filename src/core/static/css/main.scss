@@ -173,8 +173,8 @@ textarea.form-control:focus, input.form-control:focus, select.custom-select:focu
 }
 
 .custom-control-input:checked ~ .custom-control-label::before {
-  border-color: $primary;
-  background-color: $primary;
+  border-color: $primary !important;
+  background-color: $primary !important;
 }
 
 .custom-control-input:not(:disabled):active ~ .custom-control-label::before {

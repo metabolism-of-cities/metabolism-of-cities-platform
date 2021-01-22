@@ -3,47 +3,34 @@
 
 {% block css %}
   <style>
-    td.number {
-      width: 48px;
-      padding-right: 0;
+    table.indicators-table {
+      overflow-x: auto;
     }
 
-    .indicator-number {
-      background-color: #144d58;
-      color: #fff !important;
-      padding: 0 .5rem;
-      border-radius: .25rem;
-      display: inline-block;
-      font-weight: bold;
-    }
-
-    thead th:not(:last-of-type),
-    tbody td:not(:last-of-type) {
-      border-right: solid 1px #dee2e6;
-    }
-
-    tbody td:first-of-type {
-      border-right: none;
+    tbody td:not(:first-of-type) {
+      border-left: solid 1px #dee2e6;
     }
 
     th.city {
-      text-overflow: ellipsis;
-      overflow: hidden;
       white-space: nowrap;
-      width: 120px;
-      max-width:120px;
     }
 
     td.indicator-text {
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
-      width: 200px;
-      max-width: 200px;
+    }
+
+    th.indicator-text {
+      width: 300px;
     }
 
     th.sticky-top {
       top: 0;
+    }
+
+    td[data-city] {
+      min-width: 110px;
     }
 
     .filters label {
@@ -52,7 +39,11 @@
     }
 
     .badge.faded {
-      opacity: .2;
+      opacity: .1;
+    }
+
+    .select2-container--bootstrap4 .select2-results > .select2-results__options {
+      max-height: 300px;
     }
   </style>
 {% endblock %}
@@ -89,10 +80,10 @@
   </div>
 
   <div class="card card-table mb-4">
-    <table class="table">
+    <table class="table indicators-table">
       <thead>
         <tr>
-          <th class="sticky-top" colspan="2">Indicator</th>
+          <th class="sticky-top indicator-text">Indicator</th>
           <th class="sticky-top city" data-city="apeldoorn"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Apeldoorn</a></th>
           <th class="sticky-top city" data-city="bodo"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Bodø</a></th>
           <th class="sticky-top city" data-city="hoje"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Høje-Taastrup</a></th>
@@ -104,14 +95,13 @@
       </thead>
       <tbody>
         <tr>
-          <td colspan="9" class="ve bg-light font-weight-bold">
+          <td colspan="8" class="ve bg-light font-weight-bold">
             1. Local stakeholder actions
           </td>
         </tr>
 
         <tr>
-          <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">01</a></td>
-          <td class="indicator-text">{% lorem 4 w random %}</td>
+          <td class="indicator-text"><a href="{% url 'cityloops:indicators' %}">1. {% lorem 4 w random %}</a></td>
           <td data-city="apeldoorn">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection" data-scale="s">S</a>
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-secondary selection" data-scale="da">DA</a>
@@ -137,14 +127,13 @@
         </tr>
 
         <tr>
-          <td colspan="9" class="ve bg-light font-weight-bold">
+          <td colspan="8" class="ve bg-light font-weight-bold">
             2. Circular business models and behavioural patterns
           </td>
         </tr>
 
         <tr>
-          <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">02</a></td>
-          <td class="indicator-text">{% lorem 4 w random %}</td>
+          <td class="indicator-text"><a href="{% url 'cityloops:indicators' %}">2. {% lorem 4 w random %}</a></td>
           <td data-city="apeldoorn">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection" data-scale="c">C</a>
           </td>
@@ -170,14 +159,13 @@
         </tr>
 
         <tr>
-          <td colspan="9" class="ve bg-light font-weight-bold">
+          <td colspan="8" class="ve bg-light font-weight-bold">
             3. Closing material loops and reducing harmful resource use
           </td>
         </tr>
 
         <tr>
-          <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">03</a></td>
-          <td class="indicator-text">{% lorem 4 w random %}</td>
+          <td class="indicator-text"><a href="{% url 'cityloops:indicators' %}">3. {% lorem 4 w random %}</a></td>
           <td data-city="apeldoorn">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection" data-scale="c">C</a>
           </td>
@@ -203,14 +191,13 @@
         </tr>
 
         <tr>
-          <td colspan="9" class="ve bg-light font-weight-bold">
+          <td colspan="8" class="ve bg-light font-weight-bold">
             4. Improving human well-being and reducing environmental impacts
           </td>
         </tr>
 
         <tr>
-          <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">04</a></td>
-          <td class="indicator-text">{% lorem 4 w random %}</td>
+          <td class="indicator-text"><a href="{% url 'cityloops:indicators' %}">4. {% lorem 4 w random %}</a></td>
           <td data-city="apeldoorn">
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection" data-scale="c">C</a>
           </td>
@@ -256,8 +243,17 @@
 
     // filter cities
     $("select#cities").select2({
-      closeOnSelect: false
-    })
+      closeOnSelect: false,
+      theme: "bootstrap4",
+    }).on("select2:unselecting", function() {
+        $(this).data("unselecting", true);
+    }).on("select2:opening", function(e) {
+      if ($(this).data("unselecting")) {
+        $(this).removeData("unselecting");
+        e.preventDefault();
+      }
+    });
+
 
     $("select#cities").change(function() {
       let cities = $("select#cities").val();
