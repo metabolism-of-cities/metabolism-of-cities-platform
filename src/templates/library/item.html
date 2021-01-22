@@ -86,13 +86,24 @@
         <ul class="list-group list-group-flush">
 
           <li class="list-group-item table-item">
+            <div><i class="far fa-fw fa-fingerprint mr-1"></i> ID</div>
+            <div class="text-monospace"><code>{{ info.id }}</code></div>
+          </li>
+
+          <li class="list-group-item table-item">
             <div><i class="far fa-fw fa-{{ info.type.icon }} mr-1"></i>Type</div>
             <div>{{ info.type }}</div>
           </li>
 
           {% if info.publisher %}
             <li class="list-group-item table-item">
-              <div><i class="far fa-fw fa-building mr-1"></i> Publisher</div>
+              <div><i class="far fa-fw fa-building mr-1"></i> 
+                {% if info.type.name == "Journal Article" %}
+                  Published in
+                {% else %}
+                  Publisher
+                {% endif %}
+              </div>
               <div><a href="{{ info.publisher.get_absolute_url }}">{{ info.publisher }}</a></div>
             </li>
           {% endif %}
@@ -103,12 +114,6 @@
               <div>{{ info.year }}</div>
             </li>
           {% endif %}
-
-
-          <li class="list-group-item table-item">
-            <div><i class="far fa-fw fa-fingerprint mr-1"></i> ID</div>
-            <div class="text-monospace">{{ info.id }}</div>
-          </li>
 
           {% if info.author_list %}
             <li class="list-group-item">

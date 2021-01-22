@@ -950,7 +950,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                         document = Document.objects.create(name=str(each), file=each, attached_to=info)
 
             if info:
-                msg = "The information was saved."
+                msg = f"The information was saved. <a href='/library/{info.id}'>View item</a>."
             elif view_processing and "process" in request.POST:
                 msg = "The item was saved - you can now process it."
             elif curator:
