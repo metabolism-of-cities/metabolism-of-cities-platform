@@ -1553,7 +1553,7 @@ def process_work(request, info):
                         parent = work,
                         posted_by = request.user.people,
                     )
-                    set_autor(request.user.people.id, message.id)
+                    set_author(request.user.people.id, message.id)
 
                     if not info.meta_data:
                         info.meta_data = {}
@@ -1577,7 +1577,7 @@ def process_work(request, info):
                     parent = work,
                     posted_by = request.user.people,
                 )
-                set_autor(request.user.people.id, message.id)
+                set_author(request.user.people.id, message.id)
 
                 if not info.meta_data:
                     info.meta_data = {}
@@ -1598,7 +1598,7 @@ def process_work(request, info):
                     parent = work,
                     posted_by = request.user.people,
                 )
-                set_autor(request.user.people.id, message.id)
+                set_author(request.user.people.id, message.id)
                 work.subscribers.add(request.user.people)
 
                 try:
@@ -1795,7 +1795,7 @@ def hub_processing_dataset(request, id, space=None):
             parent = work,
             posted_by = request.user.people,
         )
-        set_autor(request.user.people.id, message.id)
+        set_author(request.user.people.id, message.id)
 
         if not info.meta_data:
             info.meta_data = {}
@@ -1825,7 +1825,7 @@ def hub_processing_dataset(request, id, space=None):
                 parent = work,
                 posted_by = request.user.people,
             )
-            set_autor(request.user.people.id, message.id)
+            set_author(request.user.people.id, message.id)
 
             for each in work.subscribers.all():
                 if each.people != request.user.people:
@@ -2098,7 +2098,7 @@ def hub_processing_dataset_save(request, id, space=None):
             parent = work,
             posted_by = request.user.people,
         )
-        set_autor(request.user.people.id, message.id)
+        set_author(request.user.people.id, message.id)
         work.subscribers.add(request.user.people)
 
         try:
@@ -2172,7 +2172,7 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
             parent = work,
             posted_by = request.user.people,
         )
-        set_autor(request.user.people.id, message.id)
+        set_author(request.user.people.id, message.id)
         work.subscribers.add(request.user.people)
 
         if "delete_document" in request.GET:
@@ -2202,7 +2202,7 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
             parent = work,
             posted_by = request.user.people,
         )
-        set_autor(request.user.people.id, message.id)
+        set_author(request.user.people.id, message.id)
 
         for each in work.subscribers.all():
             if each.people != request.user.people:
@@ -2236,7 +2236,7 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
                     parent = work,
                     posted_by = request.user.people,
                 )
-                set_autor(request.user.people.id, message.id)
+                set_author(request.user.people.id, message.id)
 
                 for each in work.subscribers.all():
                     if each.people != request.user.people:
@@ -2544,7 +2544,7 @@ def hub_processing_gis_save(request, id, space=None):
             parent = work,
             posted_by = request.user.people,
         )
-        set_autor(request.user.people.id, message.id)
+        set_author(request.user.people.id, message.id)
         work.subscribers.add(request.user.people)
 
         try:

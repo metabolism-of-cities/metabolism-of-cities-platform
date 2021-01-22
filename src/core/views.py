@@ -1231,7 +1231,7 @@ def work_form(request, id=None, sprint=None):
                     parent = info,
                     posted_by = request.user.people,
                 )
-                set_autor(request.user.people.id, message.id)
+                set_author(request.user.people.id, message.id)
                 info.subscribers.add(request.user.people)
 
             if request.FILES:
@@ -1414,7 +1414,7 @@ def work_item(request, id, sprint=None):
                 parent = info,
                 posted_by = request.user.people,
             )
-            set_autor(request.user.people.id, message.id)
+            set_author(request.user.people.id, message.id)
             messages.success(request, message_success)
 
             for each in info.subscribers.all():

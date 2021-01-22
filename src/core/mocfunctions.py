@@ -45,15 +45,6 @@ OPEN_WORK_PROJECTS = [1,2,3,4,32018,16,18]
 
 # Authentication of users
 
-# Quick function to make someone the author of something
-# Version 1.0
-def set_autor(author, item):
-    RecordRelationship.objects.create(
-        relationship_id = RELATIONSHIP_ID["author"],
-        record_parent_id = author,
-        record_child_id = item,
-    )
-
 def get_space(request, slug):
     # Here we can build an expansion if we want particular people to see dashboards that are under construction
     check = get_object_or_404(ActivatedSpace, slug=slug, part_of_project_id=request.project)
@@ -122,6 +113,8 @@ def get_space(request, slug):
     check = get_object_or_404(ActivatedSpace, slug=slug, part_of_project_id=request.project)
     return check.space
 
+# Quick function to make someone the author of something
+# Version 1.0
 def set_author(author, item):
     RecordRelationship.objects.create(
         relationship_id = RELATIONSHIP_ID["author"],
