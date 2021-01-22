@@ -19,10 +19,7 @@
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
-    }
-
-    th.indicator-text {
-      width: 300px;
+      max-width: 300px;
     }
 
     th.sticky-top {
@@ -84,13 +81,13 @@
       <thead>
         <tr>
           <th class="sticky-top indicator-text">Indicator</th>
-          <th class="sticky-top city" data-city="apeldoorn"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Apeldoorn</a></th>
-          <th class="sticky-top city" data-city="bodo"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Bodø</a></th>
-          <th class="sticky-top city" data-city="hoje"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Høje-Taastrup</a></th>
-          <th class="sticky-top city" data-city="mikkeli"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Mikkeli</a></th>
-          <th class="sticky-top city" data-city="porto"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Porto</a></th>
-          <th class="sticky-top city" data-city="roskilde"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Roskilde</a></th>
-          <th class="sticky-top city" data-city="sevilla"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Sevilla</a></th>
+          <th class="sticky-top city" data-city="apeldoorn"><a href="{% url 'cityloops:city_evaluation_plan' 'bodo' %}">Apeldoorn</a></th>
+          <th class="sticky-top city" data-city="bodo"><a href="{% url 'cityloops:city_evaluation_plan' 'bodo' %}">Bodø</a></th>
+          <th class="sticky-top city" data-city="hoje"><a href="{% url 'cityloops:city_evaluation_plan' 'bodo' %}">Høje-Taastrup</a></th>
+          <th class="sticky-top city" data-city="mikkeli"><a href="{% url 'cityloops:city_evaluation_plan' 'bodo' %}">Mikkeli</a></th>
+          <th class="sticky-top city" data-city="porto"><a href="{% url 'cityloops:city_evaluation_plan' 'bodo' %}">Porto</a></th>
+          <th class="sticky-top city" data-city="roskilde"><a href="{% url 'cityloops:city_evaluation_plan' 'bodo' %}">Roskilde</a></th>
+          <th class="sticky-top city" data-city="sevilla"><a href="{% url 'cityloops:city_evaluation_plan' 'bodo' %}">Sevilla</a></th>
         </tr>
       </thead>
       <tbody>
