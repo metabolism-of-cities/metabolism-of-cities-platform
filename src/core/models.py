@@ -206,9 +206,11 @@ class Record(models.Model):
 
     spaces = models.ManyToManyField("ReferenceSpace", blank=True)
     sectors = models.ManyToManyField("Sector", blank=True)
-    subscribers = models.ManyToManyField("People", blank=True)
     materials = models.ManyToManyField("Material", blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
+
+    # We should migrate this to become a relationship instead
+    subscribers = models.ManyToManyField("People", blank=True)
 
     # We use soft deleted
     is_deleted = models.BooleanField(default=False, db_index=True)
@@ -252,23 +254,34 @@ class Record(models.Model):
             url = url[1:]
         return url
 
-    def get_methodologies(self):
-        self.tags.filter(parent_tag__id=318)
+    def get_description(self):
+        # The description_html field is already sanitized, according to the settings (see the save() function below)
+        # So when we retrieve the html description we can trust this is safe, and will mark it as such
+        # We avoid using |safe in templates -- to centralize the effort to sanitize input
+        if self.description:
+            return mark_safe(self.description_html)
+        else:
+            return ""
 
     def get_markdown_description(self):
         return markdown(self.description) if self.description else None
 
+    # Below follows a list of properties that can be used to get specific relationships
+    # that are defined in the RecordRelationship table but that can be queried using
+    # more natural language ("authors", "uploader", etc) using these properties below.
+
     def authors(self):
         return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)
 
-    def funders(self):
-        return Record.objects.filter(parent_list__record_child=self, parent_list__relationship__id=5)
-
+    # Return a single author -- only use if you know the record has a single author, otherwise use 'authors'
     def author(self):
         try:
             return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)[0]
         except:
             return None
+
+    def funders(self):
+        return Record.objects.filter(parent_list__record_child=self, parent_list__relationship__id=5)
 
     def publisher(self):
         list = Organization.objects.filter(parent_list__record_child=self, parent_list__relationship__id=2)
@@ -285,15 +298,6 @@ class Record(models.Model):
     def processor(self):
         list = People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=34)
         return list[0] if list else None
-
-    def get_description(self):
-        # The description_html field is already sanitized, according to the settings (see the save() function below)
-        # So when we retrieve the html description we can trust this is safe, and will mark it as such
-        # We avoid using |safe in templates -- to centralize the effort to sanitize input
-        if self.description:
-            return mark_safe(self.description_html)
-        else:
-            return ""
 
     def save(self, *args, **kwargs):
         if not self.description:
