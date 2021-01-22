@@ -41,6 +41,10 @@
       width: 200px;
       max-width: 200px;
     }
+
+    th.sticky-top {
+      top: 0;
+    }
   </style>
 {% endblock %}
 
@@ -51,17 +55,23 @@
     <table class="table">
       <thead>
         <tr>
-          <th colspan="2">Indicator</th>
-          <th class="city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Apeldoorn</a></th>
-          <th class="city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Bodø</a></th>
-          <th class="city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Høje-Taastrup</a></th>
-          <th class="city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Mikkeli</a></th>
-          <th class="city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Porto</a></th>
-          <th class="city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Roskilde</a></th>
-          <th class="city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Sevilla</a></th>
+          <th class="sticky-top" colspan="2">Indicator</th>
+          <th class="sticky-top city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Apeldoorn</a></th>
+          <th class="sticky-top city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Bodø</a></th>
+          <th class="sticky-top city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Høje-Taastrup</a></th>
+          <th class="sticky-top city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Mikkeli</a></th>
+          <th class="sticky-top city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Porto</a></th>
+          <th class="sticky-top city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Roskilde</a></th>
+          <th class="sticky-top city"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}#evaluation-plan">Sevilla</a></th>
         </tr>
       </thead>
       <tbody>
+        <tr>
+          <td colspan="9" class="ve bg-light font-weight-bold">
+            1. Local stakeholder actions
+          </td>
+        </tr>
+
         <tr>
           <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">01</a></td>
           <td class="indicator-text">{% lorem 4 w random %}</td>
@@ -88,6 +98,13 @@
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
           </td>
         </tr>
+
+        <tr>
+          <td colspan="9" class="ve bg-light font-weight-bold">
+            2. Circular business models and behavioural patterns
+          </td>
+        </tr>
+
         <tr>
           <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">02</a></td>
           <td class="indicator-text">{% lorem 4 w random %}</td>
@@ -114,8 +131,48 @@
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection">C</a>
           </td>
         </tr>
+
+        <tr>
+          <td colspan="9" class="ve bg-light font-weight-bold">
+            3. Closing material loops and reducing harmful resource use
+          </td>
+        </tr>
+
         <tr>
           <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">03</a></td>
+          <td class="indicator-text">{% lorem 4 w random %}</td>
+          <td>
+            <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection">C</a>
+          </td>
+          <td>
+            <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
+          </td>
+          <td>
+            <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-secondary selection">DA</a>
+            <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
+          </td>
+          <td>
+            <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
+          </td>
+          <td>
+            <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection">C</a>
+          </td>
+          <td>
+            <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-cityloops-primary selection">S</a>
+            <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection">C</a>
+          </td>
+          <td>
+          </td>
+        </tr>
+
+        <tr>
+          <td colspan="9" class="ve bg-light font-weight-bold">
+            4. Improving human well-being and reducing environmental impacts
+          </td>
+        </tr>
+
+        <tr>
+          <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">04</a></td>
           <td class="indicator-text">{% lorem 4 w random %}</td>
           <td>
             <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="badge badge-secondary selection">C</a>

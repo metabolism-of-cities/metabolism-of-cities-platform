@@ -35,6 +35,10 @@
       display: inline-block;
       font-weight: bold;
     }
+
+    th.sticky-top {
+      top: 0;
+    }
   </style>
 {% endblock %}
 
@@ -55,13 +59,19 @@
       <table class="table">
         <thead>
           <tr>
-            <th colspan="3">Indicator</th>
-            <th class="border-left">Demonstration action</th>
-            <th class="border-left">City</th>
-            <th class="border-left text-muted">Sector <small>(disabled)</small></th>
+            <th class="sticky-top" colspan="3">Indicator</th>
+            <th class="sticky-top border-left">Demonstration action</th>
+            <th class="sticky-top border-left">City</th>
+            <th class="sticky-top border-left text-muted">Sector <small>(disabled)</small></th>
           </tr>
         </thead>
         <tbody>
+          <tr>
+            <td colspan="6" class="ve bg-light font-weight-bold">
+              1. Local stakeholder actions
+            </td>
+          </tr>
+
           <tr>
             <td class="indicator-switch">
               <div class="custom-control custom-switch">
@@ -88,6 +98,12 @@
                 <input type="checkbox" class="custom-control-input" id="1-sector" disabled>
                 <label class="custom-control-label" for="1-sector"></label>
               </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="6" class="ve bg-light font-weight-bold">
+              2. Circular business models and behavioural patterns
             </td>
           </tr>
 
@@ -121,6 +137,12 @@
           </tr>
 
           <tr>
+            <td colspan="6" class="ve bg-light font-weight-bold">
+              3. Closing material loops and reducing harmful resource use
+            </td>
+          </tr>
+
+          <tr>
             <td class="indicator-switch">
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="9-indicator">
@@ -149,6 +171,11 @@
             </td>
           </tr>
 
+          <tr>
+            <td colspan="6" class="ve bg-light font-weight-bold">
+              4. Improving human well-being and reducing environmental impacts
+            </td>
+          </tr>
 
           <tr>
             <td class="indicator-switch">
