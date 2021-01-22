@@ -162,41 +162,41 @@ def indicators(request):
     }
     return render(request, "cityloops/indicators.html", context)
 
-def evaluation_plans(request):
+def indicators_cities(request):
     context = {
-        "title": "Evaluation plans",
+        "title": "Indicators",
         "load_select2": True,
     }
-    return render(request, "cityloops/evaluation-plans.html", context)
+    return render(request, "cityloops/indicators.cities.html", context)
 
-def city_evaluation_plan(request, slug):
+def city_indicators(request, slug):
     info = get_space(request, slug)
     context = {
-        "title": "Evaluation plans",
+        "title": "Indicators",
         "info": info,
     }
-    return render(request, "cityloops/evaluation-plan.city.html", context)
+    return render(request, "cityloops/indicators.city.html", context)
 
-def city_evaluation_plan_form(request, slug):
+def city_indicators_form(request, slug):
     info = get_space(request, slug)
     context = {
         "title": "Indicator selection",
         "info": info,
     }
-    return render(request, "cityloops/evaluation-plan.city.form.html", context)
+    return render(request, "cityloops/indicators.city.form.html", context)
 
-def city_evaluation_plan_indicator(request, slug, id):
+def city_indicator(request, slug, id):
     info = get_space(request, slug)
     context = {
-        "title": "Evaluation plan",
+        "title": "Indicators",
         "info": info,
     }
     return render(request, "cityloops/indicator.city.html", context)
 
-def city_evaluation_plan_indicator_form(request, slug, id):
+def city_indicator_form(request, slug, id):
     info = get_space(request, slug)
     context = {
-        "title": "Evaluation plan",
+        "title": "Indicators",
         "info": info,
     }
     return render(request, "cityloops/indicator.city.form.html", context)
