@@ -75,6 +75,16 @@
 
       <form class="form mt-4">
         <div class="form-group">
+          <label for="description">Description</label>
+          <p id="description">{% lorem 40 w random %}</p>
+        </div>
+
+        <div class="form-group">
+          <label for="methodology">Methodology</label>
+          <p id="methodology">{% lorem 50 w random %}</p>
+        </div>
+
+        <div class="form-group">
           <label for="rationale">Rationale</label>
           <textarea id="rationale" class="form-control" rows="2"></textarea>
           <small class="form-text text-muted">Description of the why the inclusion of the indicator contributes to making the city more circular. It could e.g. its importance in relation to strategy/communication/circularity objectives</small>
