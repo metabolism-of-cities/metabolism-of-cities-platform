@@ -333,14 +333,14 @@ def admin_entity_form(request, organization, id=None):
             "lat": request.POST.get("lat"),
             "lng": request.POST.get("lng"),
             "sector": request.POST.get("sector"),
-            "phone": request.POST["phone"],
-            "founding_year": request.POST["year"],
-            "purchasing_local": request.POST["purchasing-local"],
-            "purchasing_regional": request.POST["purchasing-regional"],
-            "purchasing_export": request.POST["purchasing-export"],
-            "sales_local": request.POST["sales-local"],
-            "sales_regional": request.POST["sales-regional"],
-            "sales_export": request.POST["sales-export"],
+            "phone": request.POST.get("phone"),
+            "founding_year": request.POST.get("year"),
+            "purchasing_local": request.POST.get("purchasing-local"),
+            "purchasing_regional": request.POST.get("purchasing-regional"),
+            "purchasing_export": request.POST.get("purchasing-export"),
+            "sales_local": request.POST.get("sales-local"),
+            "sales_regional": request.POST.get("sales-regional"),
+            "sales_export": request.POST.get("sales-export"),
 
         }
         if request.POST["nace"]:
@@ -355,7 +355,6 @@ def admin_entity_form(request, organization, id=None):
 
         #Let remove all business links when the form is submitted    
         LocalBusinessLink.objects.filter(organization=info).delete()
-
         for count in range(30):
             business = "link_business_" + str(count)
             dependence = "link_dependence_" + str(count)
@@ -374,9 +373,10 @@ def admin_entity_form(request, organization, id=None):
                 else:
                     new_organization = Organization()
                     new_organization.name = request.POST[business]
-                    new_organization.is_deleted = True
+                    new_organization.is_public = False
                     new_organization.save()
                     info_local_business.business = new_organization
+
 
                 info_local_business.dependence = LocalBusinessDependency.objects.get(pk=request.POST[dependence])
                 info_local_business.save()

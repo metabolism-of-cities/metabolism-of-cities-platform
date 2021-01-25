@@ -229,6 +229,36 @@
 
           <p>Some explanation of what this is and what it's used for.</p>
 
+          {% if local_businesses %}
+            {% for each in local_businesses %}
+              <div class="form-row single-link mb-2">
+                <div class="col">
+                  <label>{% if forloop.counter0 == 0 %}Business name {%endif %}</label>
+                  <select class="custom-select business-name" name="link_business_{{ forloop.counter0 }}">
+                    <option disabled>Type to search existing business, hit enter to create new option</option>
+                      {% for details in organization_list %}
+                        <option  {% if each.business.id == details.id %}selected{% endif %} value="{{ details.id }}">{{ details }}</option>
+                      {% endfor %}
+                  </select>
+                </div>
+                <div class="col">
+                  <label for="url">{% if forloop.counter0 == 0 %}Dependence{%endif %}</label>
+                  <select class="custom-select" name="link_dependence_{{ forloop.counter0 }}">
+                      {% for details in dependency_list %}
+                        <option {% if each.dependence.id == details.id %}selected{% endif %} value="{{ details.id }}">{{ details }}</option>
+                      {% endfor %}
+                  </select>
+                </div>
+                <div class="col col-delete">
+                  <label>&nbsp;</label>
+                  <div class="btn btn-danger btn-sm delete-link">
+                    <i class="far fa-trash-alt m-0"></i>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+          {% endif %}
+
           <div class="form-group" id="links"></div>
 
           <div class="btn btn-sm btn-primary" id="add-link">
@@ -330,7 +360,9 @@
   <div id="link-wrapper" hidden>
     <div class="form-row single-link mb-2">
       <div class="col">
-        <label>Business name</label>
+        {% if local_businesses|length == 0 %}
+          <label>Business name</label>
+        {% endif %}
         <select class="custom-select business-name" name="link_business_0">
           <option selected disabled>Type to search existing business, hit enter to create new option</option>
           {% for each in organization_list %}
@@ -339,7 +371,9 @@
         </select>
       </div>
       <div class="col">
-        <label for="url">Dependence</label>
+        {% if local_businesses|length == 0 %}
+          <label for="url">Dependence</label>
+        {% endif %}
         <select class="custom-select" name="link_dependence_0">
           {% for each in dependency_list %}
             <option value="{{ each.id }}">{{ each }}</option>
@@ -423,7 +457,7 @@
 
     // add a single new link to a local business
     // each link needs a unique number
-    let linkCount = 0
+    let linkCount = "{{ local_businesses|length }}";
 
     // function to add a new row with link fields
     function addLink() {
