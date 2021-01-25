@@ -428,6 +428,14 @@ class Project(Record):
         else:
             return reverse("core:project", args=[self.slug])
 
+    @property
+    def get_website_without_trailing_slash(self):
+        try:
+            url = self.url
+            return url[:-1]
+        except:
+            return None
+
     def get_content(self):
         return markdown(self.description) if self.type == "markdown" else self.description
 
@@ -498,9 +506,9 @@ class News(Record):
             if p.has_subsite:
                 return p.get_website() + "news/" + self.slug + "/"
             else:
-                return reverse("community:news", args=[self.slug])
+                return "https://community.metabolismofcities.org/news/" + self.slug + "/"
         else:
-            return reverse("community:news", args=[self.slug])
+            return "https://community.metabolismofcities.org/news/" + self.slug + "/"
 
     def authors(self):
         return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)
