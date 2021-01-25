@@ -12,9 +12,10 @@ from django.utils.safestring import mark_safe
 from django.forms import modelform_factory
 
 def index(request):
+    project = get_project(request)
     context = {
         "show_project_design": True,
-        "list": Course.objects.all(),
+        "list": Course.objects.filter(projects=project),
     }
     return render(request, "education/index.html", context)
 
