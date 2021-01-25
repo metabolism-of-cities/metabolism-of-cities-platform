@@ -74,10 +74,10 @@ def get_date_range(start, end, months_only=False):
 
     if start and not end and months_only:
         return "Since " + start.strftime("%b %Y")
-        
+
     elif start and not end:
         return "Start date: " + start.strftime("%b %d, %Y")
-        
+
     if not start or not end:
         return None
 
@@ -215,11 +215,11 @@ class Record(models.Model):
     # We use soft deleted
     is_deleted = models.BooleanField(default=False, db_index=True)
 
-    # Only public records are shown; non-public records are used for instance to manage records 
+    # Only public records are shown; non-public records are used for instance to manage records
     # belonging to logged-in users only
     is_public = models.BooleanField(default=True, db_index=True)
 
-    # These relationships are managed through separate tables, but they allow for prefetching to make 
+    # These relationships are managed through separate tables, but they allow for prefetching to make
     # the queries run much more efficiently
     child_of = models.ManyToManyField("self", through="RecordRelationship", through_fields=("record_child", "record_parent"), symmetrical=False, related_name="parent_of_child")
     parent_to = models.ManyToManyField("self", through="RecordRelationship", through_fields=("record_parent", "record_child"), symmetrical=False, related_name="child_of_parent")
@@ -324,7 +324,7 @@ class Record(models.Model):
             else:
                 # In normal Markdown convention, a single newline will NOT be converted to <br>
                 # However this is not how regular textareas work, and people are expecting this to work
-                # so we add these <br>s. Ideally we would avoid <p>hello</p><br><p>newline</p> but 
+                # so we add these <br>s. Ideally we would avoid <p>hello</p><br><p>newline</p> but
                 # for now that's the additional consequence -- doesn't seem to be a really visible impact anyways
                 self.description_html = self.description_html.replace("\n", "<br>")
         super().save(*args, **kwargs)
@@ -452,7 +452,7 @@ class Project(Record):
 
     def get_dates(self):
         return get_date_range(self.start_date, self.end_date)
-    
+
     def get_dates_months(self):
         return get_date_range(self.start_date, self.end_date, True)
 
@@ -483,7 +483,7 @@ class PublicProject(Record):
 
     def get_dates(self):
         return get_date_range(self.start_date, self.end_date)
-    
+
     def get_dates_months(self):
         return get_date_range(self.start_date, self.end_date, True)
 
@@ -609,7 +609,7 @@ class Relationship(models.Model):
 # For instance: Record 100 (company AA) has the relationship "Funder" of Record 104 (Project BB)
 # It will always be in the form of RECORD_PARENT is RELATIONSHIP of RECORD_CHILD
 # Wiley is the publisher of the JIE. Wiley = record_parent; JIE = record_child
-# Fulano is the author of Paper A. Fulano = record_parent; Paper A = record_child 
+# Fulano is the author of Paper A. Fulano = record_parent; Paper A = record_child
 class RecordRelationship(models.Model):
     record_parent = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="parent_list")
     relationship = models.ForeignKey(Relationship, on_delete=models.CASCADE)
@@ -771,7 +771,7 @@ class People(Record):
     objects_include_private = PrivateRecordManager()
 
 # We use this to keep a version history of records (which is done for some, not all)
-# We save the record name/title and the description, which allows us to go 
+# We save the record name/title and the description, which allows us to go
 # back in time when needed / see a revision history
 # It also allows for people to draft a NEW version and review this first before going live
 class RecordHistory(models.Model):
@@ -885,9 +885,9 @@ class ForumTopic(Record):
             return reverse("core:forum", args=[self.id])
 
     def get_full_url(self):
-        # Sometimes we want to create a full URL, combining the 
+        # Sometimes we want to create a full URL, combining the
         # project website with a path that /starts/with/a/slash
-        # so in that case we want to ensure the https://project.com/ 
+        # so in that case we want to ensure the https://project.com/
         # website doesn't end with a slash
         if self.parent_url:
             if not self.part_of_project:
@@ -946,7 +946,7 @@ class Message(Record):
 class License(models.Model):
     name = models.CharField(max_length=255)
     url = models.CharField(max_length=255, null=True, blank=True)
-    
+
     def __str__(self):
         return self.name
 
@@ -1043,7 +1043,7 @@ class LibraryItem(Record):
 
     def get_full_url(self):
         # Depending on which subsite we are on, the absolute url may
-        # already or may not yet include the HTTP part, so here we try to 
+        # already or may not yet include the HTTP part, so here we try to
         # make sure we always have the full URL
         url = self.get_absolute_url()
         first_chars = url[:4]
@@ -1061,11 +1061,11 @@ class LibraryItem(Record):
         else:
             return "/admin/core/libraryitem/" + str(self.id) + "/change/"
 
-    # The 'author_list' part will be highly varied... some contain Firstname Lastname, Firstname Lastname 
+    # The 'author_list' part will be highly varied... some contain Firstname Lastname, Firstname Lastname
     # others contain Lastname, Firstname and Lastname, Firstname
     # others contain Firstname Lastname; Firstname Lastname; etc.
-    # This script tries to get the author_list ready for in-text citation (up to two authors; adding et al 
-    # if there are more). 
+    # This script tries to get the author_list ready for in-text citation (up to two authors; adding et al
+    # if there are more).
     def get_author_citation(self):
         if self.author_citation:
             return self.author_citation
@@ -1094,8 +1094,8 @@ class LibraryItem(Record):
                     lastname = each.rpartition(" ")[2]
                     author_array.append(lastname)
             else:
-                # One option is to show JUST the lastname, but in practice it's more likely 
-                # that this is the name of an entity like "City of Cape Town", so let's do the 
+                # One option is to show JUST the lastname, but in practice it's more likely
+                # that this is the name of an entity like "City of Cape Town", so let's do the
                 # whole name instead
                 # lastname = author_list.rpartition(" ")[2]
                 author_array.append(author_list)
@@ -1112,7 +1112,7 @@ class LibraryItem(Record):
 
     def get_full_citation(self):
         return mark_safe("<em>" + self.name + "</em>, " + self.get_author_citation() + ", " + str(self.year))
-        
+
     def embed(self):
         if "ted" in self.url:
             try:
@@ -1180,9 +1180,9 @@ class LibraryItem(Record):
                 return "polygon"
         except:
             return "unknown"
-        
+
     # This takes the stocks or flows file and records it in the Data table
-    # Note that I feel this 'try except' fest may be a bit of a loose canon and I am 
+    # Note that I feel this 'try except' fest may be a bit of a loose canon and I am
     # very open to people with better ideas on how to structure this and properly catch
     # errors.
     def convert_stocks_flows_data(self):
@@ -1268,7 +1268,7 @@ class LibraryItem(Record):
                                 segment = None
                     except Exception as e:
                         error = f"We could not properly interpret all of the columns. Are you sure this is formatted correctly and contains the right data? This is the technical error that was returned by the system: {e}"
-                        
+
                     if material_code not in materials:
                         try:
                             m = Material.objects.get(catalog_id=18998, code=material_code)
@@ -1372,7 +1372,7 @@ class LibraryItem(Record):
                 for each in layer:
                     count += 1
                     meta_data = {}
-                    
+
                     # We'll get all the properties and we store this in the meta data of the new object
                     for f in fields:
                         # We can't save datetime objects in json, so if it's a datetime then we convert to string
@@ -1765,7 +1765,7 @@ class CourseModule(Record):
     class Meta:
         ordering = ["name"]
 
-    # Important to note! The unfiltered objects come first, unlike other tables where 
+    # Important to note! The unfiltered objects come first, unlike other tables where
     # the regular objects manager comes first. The reason is that we recurringly want to show
     # all modules, but we mark out those that are not yet published (not active).
     objects_unfiltered = models.Manager()
@@ -1915,9 +1915,9 @@ class Badge(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     projects = models.ManyToManyField(Project, blank=True)
-    worktype = models.ManyToManyField(WorkActivity, blank=True) 
+    worktype = models.ManyToManyField(WorkActivity, blank=True)
     required_quantity = models.PositiveSmallIntegerField(null=True, blank=True)
-   
+
     def __str__(self):
         return self.name
 
@@ -1960,7 +1960,7 @@ class GeocodeScheme(Record):
         db_table = "stafdb_geocode_scheme"
         ordering = ["name"]
 
-# Lists all the different levels within the system. Could be a single level (e.g. Postal Code), but it 
+# Lists all the different levels within the system. Could be a single level (e.g. Postal Code), but it
 # could also include various levels, e.g.: Country > Province > City
 # Depth should start at 0 and go up from there
 class Geocode(Record):
@@ -2030,9 +2030,9 @@ class ReferenceSpace(Record):
             return None
 
     # So this was what we used before, but it means a db query every time we pull this field in
-    # Not efficient. We now have a signal (update_referencespace_photo) that simply checks if 
+    # Not efficient. We now have a signal (update_referencespace_photo) that simply checks if
     # photos are being changed and then adds it to the IMAGE field in the reference space, allowing
-    # us to pull in the photo using the get_thumbnail or get_large_photo properties instead, which 
+    # us to pull in the photo using the get_thumbnail or get_large_photo properties instead, which
     # don't need any additional db query. This photo field needs to be phased out but I want to see
     # exactly where it lives on the site. Let's try to phase out no later than March 2021...
 
@@ -2126,7 +2126,7 @@ class Activity(Record):
         db_table = "stafdb_activity"
         verbose_name_plural = "activities"
 
-# The Flow Diagram describes a system (e.g. the Water sector) and describes the life-cycle based on 
+# The Flow Diagram describes a system (e.g. the Water sector) and describes the life-cycle based on
 # the processes that take place within it (e.g. Water collection > Water treatment > Use > Wastewater treatment)
 class FlowDiagram(Record):
     icon = models.CharField(max_length=50, null=True, blank=True, help_text="Only include the icon name, not fa- classes --- see https://fontawesome.com/icons?d=gallery")
@@ -2374,7 +2374,7 @@ class ZoteroItem(models.Model):
 
     def get_year(self):
         # Returns the year of publication, which is part of the date field
-        # which is a string and can be formatted in any possible way, so we just 
+        # which is a string and can be formatted in any possible way, so we just
         # look for four digits, starting with 1 or 2
         #hit = re.search(r'.*([1-2][0-9]{3})', self.data.get("date"))
         try:
@@ -2429,7 +2429,7 @@ class ZoteroItem(models.Model):
             tags = self.data["tags"]
             all = []
             for each in tags:
-                all.append(each["tag"])                
+                all.append(each["tag"])
             return all
         else:
             return None
@@ -2527,6 +2527,76 @@ class Milestone(Record):
 
     class Meta:
         ordering = ["year", "position"]
+
+
+# CityLoops
+class CityLoopsIndicator(models.Model):
+    number = models.PositiveSmallIntegerField()
+    name = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+    description_html = models.TextField(null=True, blank=True, help_text="Do not edit... auto-generated by the system")
+    methodology = models.TextField(null=True, blank=True)
+    unit = models.CharField(max_length=255)
+    relevant_construction = models.BooleanField(default=False)
+    relevant_biomass = models.BooleanField(default=False)
+
+    class VisionElement(models.IntegerChoices):
+        LOCAL = 1, "Local stakeholder actions"
+        CIRCULAR = 2, "Circular business models and behavioural patterns"
+        CLOSING = 3, "Closing material loops and reducing harmful resource use"
+        IMPROVING = 4, "Improving human well-being and reducing environmental impacts"
+
+    vision_element = models.IntegerField(choices=VisionElement.choices, db_index=True)
+
+    def __str__(self):
+        return self.number + " - " + self.name
+
+    def get_description(self):
+        # The description_html field is already sanitized, according to the settings (see the save() function below)
+        # So when we retrieve the html description we can trust this is safe, and will mark it as such
+        # We avoid using |safe in templates -- to centralize the effort to sanitize input
+        if self.description:
+            return mark_safe(self.description_html)
+        else:
+            return ""
+
+    class Meta:
+        ordering = ["number"]
+
+    def save(self, *args, **kwargs):
+        if not self.description:
+            self.description_html = None
+        else:
+            self.description_html = markdown(self.description)
+        super().save(*args, **kwargs)
+
+# this is for later - it is not yet clear exactly what type of data will be entered for each
+# for example, period might be a year or maybe a range, I don't know. Source might be links or some text, etc.
+class CityLoopsIndicatorValue(models.Model):
+    city = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE)
+    indicator = models.ForeignKey(CityLoopsIndicator, on_delete=models.CASCADE)
+
+    class Sector(models.IntegerChoices):
+        CONSTRUCTION = 1, "Construction and demolition waste"
+        BIOMASS = 2, "Biomass waste"
+
+    sector = models.IntegerField(choices=Sector.choices, db_index=True)
+
+    class Scale(models.IntegerChoices):
+        CITY = 1, "City"
+        DA = 2, "Demonstration action"
+        SECTOR = 3, "Sector"
+
+    scale = models.IntegerField(choices=Scale.choices, db_index=True)
+
+    rationale = models.TextField(null=True, blank=True)
+    baseline = models.TextField(null=True, blank=True)
+    sources = models.TextField(null=True, blank=True)
+    accuracy = models.TextField(null=True, blank=True)
+    coverage = models.TextField(null=True, blank=True)
+    reference = models.TextField(null=True, blank=True)
+    period = models.TextField(null=True, blank=True)
+    comments = models.TextField(null=True, blank=True)
 
 # This is the format to use from now on
 # Note that there is a uid primary key, separate from the record_id
