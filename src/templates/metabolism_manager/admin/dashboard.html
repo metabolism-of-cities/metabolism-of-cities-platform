@@ -93,48 +93,50 @@
         </div>
       {% endif %}
 
-      <form class="row filters mb-2">
-        <div class="col-md-6 col-lg-6 mb-2">
-          <label class="sr-only" for="material">Layer</label>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <div class="input-group-text">Layer</div>
-            </div>
-            <select class="custom-select material filter">
-              <option value="all">All layers</option>
-              {% for each in material_list %}
-                <option value="{{ each.material_type__name }}">{{ each.material_type__parent__name }} - {{ each.material_type__name }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-2">
-          <label class="sr-only" for="status">Type</label>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <div class="input-group-text">Type</div>
-            </div>
-            <select class="custom-select status filter">
-              <option value="all" selected>Any</option>
-              <option value="Supply">Supply</option>
-              <option value="Demand">Demand</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-2">
-          <label class="sr-only" for="from">Date</label>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <div class="input-group-text">Date</div>
-            </div>
-            <input type="date" class="form-control from filter" id="from">
-          </div>
-        </div>
-      </form>
-
       <section class="row">
         <div class="col-lg-9">
-          <div id="map" class="leaflet-map border rounded-0 sticky-top"></div>
+          <div class="sticky-top">
+            <form class="row filters mb-2">
+              <div class="col-md-6 col-lg-4 mb-2">
+                <label class="sr-only" for="material">Layer</label>
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">Layer</div>
+                  </div>
+                  <select class="custom-select material filter">
+                    <option value="all">All layers</option>
+                    {% for each in material_list %}
+                      <option value="{{ each.material_type__name }}">{{ each.material_type__parent__name }} - {{ each.material_type__name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4 mb-2">
+                <label class="sr-only" for="status">Type</label>
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">Type</div>
+                  </div>
+                  <select class="custom-select status filter">
+                    <option value="all" selected>Any</option>
+                    <option value="Supply">Supply</option>
+                    <option value="Demand">Demand</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4 mb-2">
+                <label class="sr-only" for="from">Date</label>
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">Date</div>
+                  </div>
+                  <input type="date" class="form-control from filter" id="from">
+                </div>
+              </div>
+            </form>
+
+            <div id="map" class="leaflet-map border rounded-0"></div>
+          </div>
         </div>
         <div class="col-lg-3 map-listing">
           <table class="table table-sm">
