@@ -195,6 +195,24 @@ def city_indicator(request, slug, id):
 
 def city_indicator_form(request, slug, id):
     info = get_space(request, slug)
+    try:
+        indicators = info.meta_data["cityloops"]["indicators"]["biomass"]
+    except:
+        indicators = None
+        if not info.meta_data:
+            info.meta_data = {}
+        info.meta_data["cityloops"] = {
+            "indicators":
+                {
+                    "biomass": [],
+                    "construction": [],
+                }
+            }
+        info.save()
+
+    if request.method == "POST":
+        info.meta_data["cityloops"]["indicators"]["biomass"] = request.POST.getlist("indicators")
+            
     context = {
         "title": "Indicators",
         "info": info,
