@@ -236,5 +236,10 @@
     $(".btn-to-top").click(function() {
       scrollToID("add-material");
     })
+
+    // if add parameter is added to URL, click the add new entry button
+    {% if request.GET.action == "add" %}
+    $(".add-existing").click();
+    {% endif %}
   </script>
 {% endblock %}
