@@ -55,6 +55,11 @@
       margin-top: 12px;
       font-size: 13px;
     }
+
+    .reset-outside {
+      margin-top: -1px;
+      font-size: .75rem;
+    }
   </style>
 {% endblock %}
 
@@ -146,13 +151,29 @@
           <table class="table table-sm">
             <thead>
               <tr>
-                <th colspan="3"><span id="listing-count"></span> listing(s) found</th>
+                <th colspan="3"><span id="listing-count"></span></th>
+              </tr>
+              <tr class="no-results" hidden>
+                <th colspan="3" class="text-center">
+                  <i class="fal fa-empty-set fa-2x my-2"></i>
+                  <div>
+                    Your current filter has produced no results
+                  </div>
+                  <div class="btn btn-primary btn-sm my-2 reset-filter">
+                    <i class="fa fa-filter"></i> Reset filter
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody>
             </tbody>
           </table>
+
+          <div class="btn btn-primary btn-block btn-sm reset-filter reset-outside">
+            <i class="fa fa-filter"></i> Reset filter
+          </div>
         </div>
+
 
       </section>
     </div>
@@ -346,7 +367,15 @@
       })
 
       // add count to header
-      $("#listing-count").text(filteredLayer.getLayers().length);
+      let layerCount = filteredLayer.getLayers().length;
+      let layerCountText = " entries found"
+
+      if (layerCount == 1) {
+        layerCountText = " entry found"
+      };
+
+      $("#listing-count").text(layerCount + layerCountText);
+
     }
 
     // date options to show in popup
@@ -412,37 +441,51 @@
 
       // take the listings and add them to the cluster group
       // enable popups so na user can click on an object on the map and see extra information
-      for (var i = 0; i < filteredListings.length; i++) {
-        let listing = filteredListings[i];
+      if (filteredListings.length == 0) {
+        $(".map-listing tr.no-results").removeAttr("hidden")
+        $(".reset-outside").attr("hidden", "hidden");
+      } else {
+        $(".map-listing tr.no-results").attr("hidden", "hidden")
 
-        var uglyFrom = new Date(listing.start_date * 1000);
-        var prettyFrom = uglyFrom.toLocaleDateString('en-GB', dateOptions);
+        if (filteredListings.length == allListings.length) {
+          $(".reset-outside").attr("hidden", "hidden");
+        } else {
+          $(".reset-outside").removeAttr("hidden");
+        };
 
-        var uglyTo = new Date(listing.end_date * 1000);
-        var prettyTo = uglyTo.toLocaleDateString('en-GB', dateOptions);
+        for (var i = 0; i < filteredListings.length; i++) {
+          let listing = filteredListings[i];
 
-        var popupContent = "<div class='popup-title'>" + listing.name + "</div><div class='popup-content'><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + listing.address + "</li><li class='list-group-item'><i class='far fa-fw fa-" + listing.icon + " mr-2'></i>" + listing.material + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + listing.quantity + "</li><li class='list-group-item text-" + listing.status_color + "'><i class='far fa-fw fa-" + listing.status_icon + " mr-2'></i>" + listing.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a class='btn btn-sm btn-primary' href='../data/" + listing.id + "/'>More details</a></li></ul></div>"
+          var uglyFrom = new Date(listing.start_date * 1000);
+          var prettyFrom = uglyFrom.toLocaleDateString('en-GB', dateOptions);
 
-        var iconMarker = L.AwesomeMarkers.icon({
-          icon: listing.icon,
-          markerColor: listing.marker_color
-        });
+          var uglyTo = new Date(listing.end_date * 1000);
+          var prettyTo = uglyTo.toLocaleDateString('en-GB', dateOptions);
 
-        var marker = L.marker(new L.LatLng(filteredListings[i].lat, filteredListings[i].lng), {
-          "id": listing.id,
-          "name": listing.name,
-          "status_icon": listing.icon,
-          "color": listing.status_color,
-          "material": listing.material,
-          "quantity": listing.quantity,
-          "icon": iconMarker,
-        }).bindPopup(popupContent);
+          var popupContent = "<div class='popup-title'>" + listing.name + "</div><div class='popup-content'><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + listing.address + "</li><li class='list-group-item'><i class='far fa-fw fa-" + listing.icon + " mr-2'></i>" + listing.material + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + listing.quantity + "</li><li class='list-group-item text-" + listing.status_color + "'><i class='far fa-fw fa-" + listing.status_icon + " mr-2'></i>" + listing.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a class='btn btn-sm btn-primary' href='../data/" + listing.id + "/'>More details</a></li></ul></div>"
 
-        filteredLayer.addLayer(marker);
+          var iconMarker = L.AwesomeMarkers.icon({
+            icon: listing.icon,
+            markerColor: listing.marker_color
+          });
+
+          var marker = L.marker(new L.LatLng(filteredListings[i].lat, filteredListings[i].lng), {
+            "id": listing.id,
+            "name": listing.name,
+            "status_icon": listing.icon,
+            "color": listing.status_color,
+            "material": listing.material,
+            "quantity": listing.quantity,
+            "icon": iconMarker,
+          }).bindPopup(popupContent);
+
+          filteredLayer.addLayer(marker);
+        }
+
+        // add the cluster group to the map
+        map.addLayer(filteredLayer).fitBounds(filteredLayer.getBounds())
       }
 
-      // add the cluster group to the map
-      map.addLayer(filteredLayer).fitBounds(filteredLayer.getBounds())
 
       refreshListing()
     }
@@ -453,6 +496,7 @@
     })
 
     // reset filters, show listings on load
+    resetFilter()
     filterListings();
 
     $("body").on("click", ".map-listing tr:not(.header)", function() {
@@ -464,7 +508,17 @@
         selectedMarker.openPopup();
         map.setView(selectedMarker.getLatLng());
       })
+    })
 
+    function resetFilter() {
+      $(".material.filter, .status.filter").val("all")
+      $(".from.filter").val("")
+    }
+
+    // reset filter when no results foud
+    $(".reset-filter").click(function() {
+      resetFilter()
+      filterListings();
     })
 
     // submit modal and go to right URL to add entry
