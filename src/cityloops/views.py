@@ -210,9 +210,12 @@ def city_indicator_form(request, slug, id):
             }
         info.save()
 
+    # input name = indicators, value = number
+
     if request.method == "POST":
         info.meta_data["cityloops"]["indicators"]["biomass"] = request.POST.getlist("indicators")
-            
+        info.save()
+
     context = {
         "title": "Indicators",
         "info": info,
