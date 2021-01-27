@@ -55,6 +55,11 @@
       margin-top: 12px;
       font-size: 13px;
     }
+
+    .reset-outside {
+      margin-top: -1px;
+      font-size: .75rem;
+    }
   </style>
 {% endblock %}
 
@@ -85,7 +90,7 @@
     </li>
   </ul>
 
-  <div class="tab-content" id="myTabContent">
+  <div class="tab-content" id="tabs">
     <div class="tab-pane show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
       {% if not gps.lat or not gps.lng %}
         <div class="alert alert-danger">
@@ -93,60 +98,82 @@
         </div>
       {% endif %}
 
-      <form class="row filters mb-2">
-        <div class="col-md-6 col-lg-6 mb-2">
-          <label class="sr-only" for="material">Layer</label>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <div class="input-group-text">Layer</div>
-            </div>
-            <select class="custom-select material filter">
-              <option value="all">All layers</option>
-              {% for each in material_list %}
-                <option value="{{ each.material_type__name }}">{{ each.material_type__parent__name }} - {{ each.material_type__name }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-2">
-          <label class="sr-only" for="status">Type</label>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <div class="input-group-text">Type</div>
-            </div>
-            <select class="custom-select status filter">
-              <option value="all" selected>Any</option>
-              <option value="Supply">Supply</option>
-              <option value="Demand">Demand</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-2">
-          <label class="sr-only" for="from">Date</label>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <div class="input-group-text">Date</div>
-            </div>
-            <input type="date" class="form-control from filter" id="from">
-          </div>
-        </div>
-      </form>
-
       <section class="row">
         <div class="col-lg-9">
-          <div id="map" class="leaflet-map border rounded-0 sticky-top"></div>
+          <div class="sticky-top">
+            <form class="row filters mb-2">
+              <div class="col-md-6 col-lg-4 mb-2">
+                <label class="sr-only" for="material">Layer</label>
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">Layer</div>
+                  </div>
+                  <select class="custom-select material filter">
+                    <option value="all">All layers</option>
+                    {% for each in material_list %}
+                      <option value="{{ each.material_type__name }}">{{ each.material_type__parent__name }} - {{ each.material_type__name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4 mb-2">
+                <label class="sr-only" for="status">Type</label>
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">Type</div>
+                  </div>
+                  <select class="custom-select status filter">
+                    <option value="all" selected>Any</option>
+                    <option value="Supply">Supply</option>
+                    <option value="Demand">Demand</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4 mb-2">
+                <label class="sr-only" for="from">Date</label>
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">Date</div>
+                  </div>
+                  <input type="date" class="form-control from filter" id="from">
+                </div>
+              </div>
+            </form>
+
+            <div id="map" class="leaflet-map border rounded-0"></div>
+          </div>
         </div>
         <div class="col-lg-3 map-listing">
+          <div class="btn btn-primary btn-block mb-4" data-toggle="modal" data-target="#add-entry-modal">
+            <i class="fa fa-plus mr-2"></i> Add entry
+          </div>
+
           <table class="table table-sm">
             <thead>
               <tr>
-                <th colspan="3"><span id="listing-count"></span> listing(s) found</th>
+                <th colspan="3"><span id="listing-count"></span></th>
+              </tr>
+              <tr class="no-results" hidden>
+                <th colspan="3" class="text-center">
+                  <i class="fal fa-empty-set fa-2x my-2"></i>
+                  <div>
+                    Your current filter has produced no results
+                  </div>
+                  <div class="btn btn-primary btn-sm my-2 reset-filter">
+                    <i class="fa fa-filter"></i> Reset filter
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody>
             </tbody>
           </table>
+
+          <div class="btn btn-primary btn-block btn-sm reset-filter reset-outside">
+            <i class="fa fa-filter"></i> Reset filter
+          </div>
         </div>
+
 
       </section>
     </div>
@@ -259,6 +286,45 @@
     </div>
   </div>
 
+  <!-- add entry modal -->
+  <div class="modal fade" id="add-entry-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="add-entry" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="add-entry">Add entry</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="mb-0 font-weight-bold" for="modal-organisation">Organisation</label>
+            <select class="form-control custom-select select2" id="modal-organisation">
+              {% for each in organization_list %}
+                <option value="{{ each.id }}">{{ each }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-0 font-weight-bold" for="modal-organisation">Organisation</label>
+            <select class="form-control custom-select select2" id="modal-type">
+              <option value="resources">Resources</option>
+              <option value="space">Space</option>
+              <option value="technology">Technology</option>
+              <option value="staff">Staff</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary submit-modal">Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 {% endblock %}
 
 {% block footer %}
@@ -301,7 +367,15 @@
       })
 
       // add count to header
-      $("#listing-count").text(filteredLayer.getLayers().length);
+      let layerCount = filteredLayer.getLayers().length;
+      let layerCountText = " entries found"
+
+      if (layerCount == 1) {
+        layerCountText = " entry found"
+      };
+
+      $("#listing-count").text(layerCount + layerCountText);
+
     }
 
     // date options to show in popup
@@ -367,37 +441,51 @@
 
       // take the listings and add them to the cluster group
       // enable popups so na user can click on an object on the map and see extra information
-      for (var i = 0; i < filteredListings.length; i++) {
-        let listing = filteredListings[i];
+      if (filteredListings.length == 0) {
+        $(".map-listing tr.no-results").removeAttr("hidden")
+        $(".reset-outside").attr("hidden", "hidden");
+      } else {
+        $(".map-listing tr.no-results").attr("hidden", "hidden")
 
-        var uglyFrom = new Date(listing.start_date * 1000);
-        var prettyFrom = uglyFrom.toLocaleDateString('en-GB', dateOptions);
+        if (filteredListings.length == allListings.length) {
+          $(".reset-outside").attr("hidden", "hidden");
+        } else {
+          $(".reset-outside").removeAttr("hidden");
+        };
 
-        var uglyTo = new Date(listing.end_date * 1000);
-        var prettyTo = uglyTo.toLocaleDateString('en-GB', dateOptions);
+        for (var i = 0; i < filteredListings.length; i++) {
+          let listing = filteredListings[i];
 
-        var popupContent = "<div class='popup-title'>" + listing.name + "</div><div class='popup-content'><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + listing.address + "</li><li class='list-group-item'><i class='far fa-fw fa-" + listing.icon + " mr-2'></i>" + listing.material + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + listing.quantity + "</li><li class='list-group-item text-" + listing.status_color + "'><i class='far fa-fw fa-" + listing.status_icon + " mr-2'></i>" + listing.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a class='btn btn-sm btn-primary' href='../data/" + listing.id + "/'>More details</a></li></ul></div>"
+          var uglyFrom = new Date(listing.start_date * 1000);
+          var prettyFrom = uglyFrom.toLocaleDateString('en-GB', dateOptions);
 
-        var iconMarker = L.AwesomeMarkers.icon({
-          icon: listing.icon,
-          markerColor: listing.marker_color
-        });
+          var uglyTo = new Date(listing.end_date * 1000);
+          var prettyTo = uglyTo.toLocaleDateString('en-GB', dateOptions);
 
-        var marker = L.marker(new L.LatLng(filteredListings[i].lat, filteredListings[i].lng), {
-          "id": listing.id,
-          "name": listing.name,
-          "status_icon": listing.icon,
-          "color": listing.status_color,
-          "material": listing.material,
-          "quantity": listing.quantity,
-          "icon": iconMarker,
-        }).bindPopup(popupContent);
+          var popupContent = "<div class='popup-title'>" + listing.name + "</div><div class='popup-content'><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + listing.address + "</li><li class='list-group-item'><i class='far fa-fw fa-" + listing.icon + " mr-2'></i>" + listing.material + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + listing.quantity + "</li><li class='list-group-item text-" + listing.status_color + "'><i class='far fa-fw fa-" + listing.status_icon + " mr-2'></i>" + listing.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a class='btn btn-sm btn-primary' href='../data/" + listing.id + "/'>More details</a></li></ul></div>"
 
-        filteredLayer.addLayer(marker);
+          var iconMarker = L.AwesomeMarkers.icon({
+            icon: listing.icon,
+            markerColor: listing.marker_color
+          });
+
+          var marker = L.marker(new L.LatLng(filteredListings[i].lat, filteredListings[i].lng), {
+            "id": listing.id,
+            "name": listing.name,
+            "status_icon": listing.icon,
+            "color": listing.status_color,
+            "material": listing.material,
+            "quantity": listing.quantity,
+            "icon": iconMarker,
+          }).bindPopup(popupContent);
+
+          filteredLayer.addLayer(marker);
+        }
+
+        // add the cluster group to the map
+        map.addLayer(filteredLayer).fitBounds(filteredLayer.getBounds())
       }
 
-      // add the cluster group to the map
-      map.addLayer(filteredLayer).fitBounds(filteredLayer.getBounds())
 
       refreshListing()
     }
@@ -408,6 +496,7 @@
     })
 
     // reset filters, show listings on load
+    resetFilter()
     filterListings();
 
     $("body").on("click", ".map-listing tr:not(.header)", function() {
@@ -419,7 +508,27 @@
         selectedMarker.openPopup();
         map.setView(selectedMarker.getLatLng());
       })
+    })
 
+    function resetFilter() {
+      $(".material.filter, .status.filter").val("all")
+      $(".from.filter").val("")
+    }
+
+    // reset filter when no results foud
+    $(".reset-filter").click(function() {
+      resetFilter()
+      filterListings();
+    })
+
+    // submit modal and go to right URL to add entry
+    $(".submit-modal").click(function() {
+      let organisation = $("#modal-organisation").val();
+      let type = $("#modal-type").val();
+
+      let url = "../{{ my_organization.id }}/entities/" + organisation + "/" + type + "/?action=add"
+
+      window.location.href = url;
     })
   </script>
 {% endblock %}

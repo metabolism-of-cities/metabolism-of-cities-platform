@@ -169,6 +169,7 @@ def admin_dashboard(request, organization=None):
     context = {
         "page": "dashboard",
         "my_organization": my_organization,
+        "organization_list": organization_list,
         "data": data,
         "current": current,
         "latest": latest,
@@ -176,6 +177,7 @@ def admin_dashboard(request, organization=None):
         "material_list": material_list,
         "gps": gps,
         "min_values": min_values,
+        "load_select2": True,
         "load_datatables": True,
         "load_leaflet": True,
         "types": types,
@@ -385,6 +387,7 @@ def admin_entity_materials(request, organization, id, slug=None):
     elif slug == "staff":
         main_groups = None
         materials = Material.objects.filter(parent_id=584734)
+
     context = {
         "my_organization": my_organization,
         "info": info,
