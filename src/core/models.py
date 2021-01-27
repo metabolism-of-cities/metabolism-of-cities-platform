@@ -2550,7 +2550,7 @@ class CityLoopsIndicator(models.Model):
     vision_element = models.IntegerField(choices=VisionElement.choices, db_index=True)
 
     def __str__(self):
-        return f"{self.number} - {self.name}"
+        return f"{self.number}. {self.name}"
 
     def get_description(self):
         # The description_html field is already sanitized, according to the settings (see the save() function below)

@@ -211,8 +211,8 @@
         <nav class="nav flex-column">
           <a class="nav-link group" href="#group-1">1. Local stakeholder actions</a>
           <nav class="nav flex-column">
-            {% for each in indicators %}
-              <a class="nav-link pl-3" href="#indicator-{{ each.number }}">{{ each.number }}. {{ each.name }}</a>
+            {% for each in indicator_list %}
+              <a class="nav-link pl-3" href="#indicator-{{ each.number }}">{{ each }}</a>
             {% endfor %}
           </nav>
         </nav>

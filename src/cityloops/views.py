@@ -162,7 +162,7 @@ def indicators(request):
 
     context = {
         "title": "Indicators",
-        "indicators": indicators,
+        "indicator_list": indicator_list,
     }
     return render(request, "cityloops/indicators.html", context)
 
@@ -224,19 +224,24 @@ def city_indicators_form(request, slug, sector):
 
 def city_indicator(request, slug, sector, id):
     info = get_space(request, slug)
+    indicator = CityLoopsIndicator.objects.filter(number=id)
+
     context = {
         "title": "Indicators",
         "sector": sector,
+        "indicator": indicator,
         "info": info,
     }
     return render(request, "cityloops/indicator.city.html", context)
 
 def city_indicator_form(request, slug, sector, id):
     info = get_space(request, slug)
+    indicator = CityLoopsIndicator.objects.filter(number=id)
 
     context = {
         "title": "Indicators",
         "sector": sector,
+        "indicator": indicator,
         "info": info,
     }
     return render(request, "cityloops/indicator.city.form.html", context)

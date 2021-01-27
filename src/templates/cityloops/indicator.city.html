@@ -53,14 +53,14 @@
       <li class="breadcrumb-item"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}">{{ info }}</a></li>
       <li class="breadcrumb-item"><a href="{% url 'cityloops:city_sectors' 'bodo' %}">Indicators</a></li>
       <li class="breadcrumb-item"><a href="{% url 'cityloops:city_indicators' 'bodo' sector %}">{{ sector|title }}</a></li>
-      <li class="breadcrumb-item active" aria-current="page">15. Circular Material Use Rate</li>
+      <li class="breadcrumb-item active" aria-current="page">{{ indicator.first }}</li>
     </ol>
   </nav>
 
   <div class="row">
     <div class="col-lg-8">
       <h5 class="mb-0">
-        15. Circular Material Use Rate
+        {{ indicator.first }}
         <span class="float-right badge badge-cityloops-secondary">Demonstration action</span>
       </h5>
 

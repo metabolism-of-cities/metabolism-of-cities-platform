@@ -58,7 +58,7 @@
       <li class="breadcrumb-item"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}">{{ info }}</a></li>
       <li class="breadcrumb-item"><a href="{% url 'cityloops:city_sectors' 'bodo' %}">Indicators</a></li>
       <li class="breadcrumb-item"><a href="{% url 'cityloops:city_indicators' 'bodo' sector %}">{{ sector|title }}</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_indicator' 'bodo' sector 1 %}">15. Circular Material Use Rate</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_indicator' 'bodo' sector 1 %}">{{ indicator.first }}</a></li>
       <li class="breadcrumb-item active" aria-current="page">Edit</li>
     </ol>
   </nav>
@@ -66,7 +66,7 @@
   <div class="row">
     <div class="col-lg-8">
       <h5 class="mb-0">
-        15. Circular Material Use Rate
+        {{ indicator.first }}
         <span class="float-right badge badge-cityloops-secondary">Demonstration action</span>
       </h5>
 
@@ -77,12 +77,12 @@
       <form class="form mt-4">
         <div class="form-group">
           <label for="description">Description</label>
-          <p id="description">{% lorem 40 w random %}</p>
+          <p id="description">{{ indicator.first.description }}</p>
         </div>
 
         <div class="form-group">
           <label for="methodology">Methodology</label>
-          <p id="methodology">{% lorem 50 w random %}</p>
+          <p id="methodology">{{ indicator.first.methodology }}</p>
         </div>
 
         <div class="form-group">
