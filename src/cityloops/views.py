@@ -1,5 +1,5 @@
 from core.models import *
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.admin.views.decorators import staff_member_required
 from core.mocfunctions import *
 from django.contrib import messages
@@ -194,31 +194,82 @@ def city_indicators(request, slug, sector):
 def city_indicators_form(request, slug, sector):
     info = get_space(request, slug)
     indicator_list = CityLoopsIndicator.objects.order_by("number")
+    sector_id = 1 if sector == "construction" else 2
+    city_values = CityLoopsIndicatorValue.objects.filter(city=info, sector=sector_id)
+    check = {
+        1: {},
+        2: {},
+        3: {},
+    }
+    for each in city_values:
+        check[each.scale][each.indicator.id] = True if each.is_enabled else False
 
     try:
-        indicators = info.meta_data["cityloops"]["indicator"][sector]
+        indicators = info.meta_data["cityloops"]["indicators"][sector]
     except:
         indicators = None
-        if not info.meta_data:
-            info.meta_data = {}
-        info.meta_data["cityloops"] = {
-            "indicators":
-                {
-                    "biomass": [],
-                    "construction": [],
-                }
-            }
-        info.save()
 
     if request.method == "POST":
+        # If the meta data isn't yet set, then let's create empty lists first
+        if not info.meta_data:
+            info.meta_data = {}
+        if not indicators:
+            info.meta_data["cityloops"] = {
+                "indicators":
+                    {
+                        "biomass": [],
+                        "construction": [],
+                    }
+                }
+        # Let's record the biomass/construction main toggles (whether or not they are activated)
         info.meta_data["cityloops"]["indicators"][sector] = request.POST.getlist("indicators")
+        indicators = info.meta_data["cityloops"]["indicators"][sector]
         info.save()
+
+        # And let's now save the individual indicators. 
+        items = []
+        city_enabled = request.POST.getlist("city")
+
+        # Brute force delete -- change later to update them properly!
+        city_values.delete()
+
+        for each in indicator_list:
+            items.append(CityLoopsIndicatorValue(
+                city = info,
+                indicator = each,
+                is_enabled = True if str(each.id) in city_enabled else False,
+                sector = sector_id,
+                scale = 1, # City
+            ))
+        da_enabled = request.POST.getlist("da")
+        for each in indicator_list:
+            items.append(CityLoopsIndicatorValue(
+                city = info,
+                indicator = each,
+                is_enabled = True if str(each.id) in da_enabled else False,
+                sector = sector_id,
+                scale = 2, # Demonstration action
+            ))
+        sector_enabled = request.POST.getlist("sector")
+        for each in indicator_list:
+            items.append(CityLoopsIndicatorValue(
+                city = info,
+                indicator = each,
+                is_enabled = True if str(each.id) in sector_enabled else False,
+                sector = sector_id,
+                scale = 3, # Sector
+            ))
+        CityLoopsIndicatorValue.objects.bulk_create(items)
+        messages.success(request, "Saved")
+        return redirect(request.get_full_path())
 
     context = {
         "title": "Indicator selection",
         "indicator_list": indicator_list,
         "sector": sector,
         "info": info,
+        "indicators": indicators,
+        "check": check,
     }
     return render(request, "cityloops/indicators.city.form.html", context)
 

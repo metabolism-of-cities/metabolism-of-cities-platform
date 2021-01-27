@@ -1,5 +1,5 @@
 {% extends "_base.html" %}
-{% load static %}
+{% load moc_extras %}
 
 {% block css %}
   <style>
@@ -77,28 +77,45 @@
             <tr>
               <td class="indicator-switch">
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="indicator-{{ each.number }}" name="indicators" value="{{ each.number }}" checked>
-                  <label class="custom-control-label" for="indicator-{{ each.number }}"></label>
+                  <input type="checkbox" class="custom-control-input" id="indicator-{{ each.id }}" name="indicators" value="{{ each.id }}" 
+                  {% if each.id|stringformat:"i" in indicators or not indicators %}
+                    checked
+                  {% endif %}
+                  >
+                  <label class="custom-control-label" for="indicator-{{ each.id }}"></label>
                 </div>
               </td>
               <td class="number"><span class="indicator-number">{{ each.number }}</span></td>
               <td class="indicator-name">{{ each.name }}</td>
               <td class="checkbox da">
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="da-{{ each.number }}" name="da" value="{{ each.number }}">
-                  <label class="custom-control-label" for="da-{{ each.number }}"></label>
+                  <input type="checkbox" class="custom-control-input" id="da-{{ each.id }}" name="da" value="{{ each.id }}"
+                    {% if check|get_item:1|get_item:each.id %}
+                    checked
+                    {% endif %}
+                  >
+                  <label class="custom-control-label" for="da-{{ each.id }}"></label>
                 </div>
               </td>
               <td class="checkbox city">
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="city-{{ each.number }}" name="city" value="{{ each.number }}">
-                  <label class="custom-control-label" for="city-{{ each.number }}"></label>
+                  <input type="checkbox" class="custom-control-input" id="city-{{ each.id }}" name="city" value="{{ each.id }}"
+                    {% if check|get_item:2|get_item:each.id %}
+                    checked
+                    {% endif %}
+                  >
+                  <label class="custom-control-label" for="city-{{ each.id }}"></label>
                 </div>
               </td>
               <td class="checkbox sector">
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="sector-{{ each.number }}" name="sector" value="{{ each.number }}" disabled>
-                  <label class="custom-control-label" for="sector-{{ each.number }}"></label>
+                  <input type="checkbox" class="custom-control-input" id="sector-{{ each.id }}" name="sector" value="{{ each.id }}" disabled
+                    {% if check|get_item:3|get_item:each.id %}
+                    checked
+                    {% endif %}
+
+                  >
+                  <label class="custom-control-label" for="sector-{{ each.id }}"></label>
                 </div>
               </td>
             </tr>
