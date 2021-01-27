@@ -158,7 +158,7 @@ def circular_city(request):
     return render(request, "cityloops/circular-city.html", context)
 
 def indicators(request):
-    indicators = CityLoopsIndicator.objects.order_by("number")
+    indicator_list = CityLoopsIndicator.objects.order_by("number")
 
     context = {
         "title": "Indicators",
@@ -183,22 +183,8 @@ def city_indicators(request, slug):
 
 def city_indicators_form(request, slug):
     info = get_space(request, slug)
-    context = {
-        "title": "Indicator selection",
-        "info": info,
-    }
-    return render(request, "cityloops/indicators.city.form.html", context)
+    indicator_list = CityLoopsIndicator.objects.order_by("number")
 
-def city_indicator(request, slug, id):
-    info = get_space(request, slug)
-    context = {
-        "title": "Indicators",
-        "info": info,
-    }
-    return render(request, "cityloops/indicator.city.html", context)
-
-def city_indicator_form(request, slug, id):
-    info = get_space(request, slug)
     try:
         indicators = info.meta_data["cityloops"]["indicator"]["biomass"]
     except:
@@ -219,6 +205,24 @@ def city_indicator_form(request, slug, id):
     if request.method == "POST":
         info.meta_data["cityloops"]["indicators"]["biomass"] = request.POST.getlist("indicators")
         info.save()
+
+    context = {
+        "title": "Indicator selection",
+        "indicator_list": indicator_list,
+        "info": info,
+    }
+    return render(request, "cityloops/indicators.city.form.html", context)
+
+def city_indicator(request, slug, id):
+    info = get_space(request, slug)
+    context = {
+        "title": "Indicators",
+        "info": info,
+    }
+    return render(request, "cityloops/indicator.city.html", context)
+
+def city_indicator_form(request, slug, id):
+    info = get_space(request, slug)
 
     context = {
         "title": "Indicators",

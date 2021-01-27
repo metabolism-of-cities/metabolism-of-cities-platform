@@ -54,7 +54,7 @@
     </ol>
   </nav>
 
-  <form>
+  <form method="post">
     <div class="card card-table mb-4">
       <table class="table">
         <thead>
@@ -72,147 +72,45 @@
             </td>
           </tr>
 
-          <tr>
-            <td class="indicator-switch">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="1-indicator" checked>
-                <label class="custom-control-label" for="1-indicator"></label>
-              </div>
-            </td>
-            <td class="number"><span class="indicator-number">01</span></td>
-            <td class="indicator-name">{% lorem 4 w random %}</td>
-            <td class="checkbox da">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="1-da" checked>
-                <label class="custom-control-label" for="1-da"></label>
-              </div>
-            </td>
-            <td class="checkbox city">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="1-city">
-                <label class="custom-control-label" for="1-city"></label>
-              </div>
-            </td>
-            <td class="checkbox sector">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="1-sector" disabled>
-                <label class="custom-control-label" for="1-sector"></label>
-              </div>
-            </td>
-          </tr>
-
-          <tr>
-            <td colspan="6" class="ve bg-light font-weight-bold">
-              2. Circular business models and behavioural patterns
-            </td>
-          </tr>
-
-          <tr>
-            <td class="indicator-switch">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="6-indicator" checked>
-                <label class="custom-control-label" for="6-indicator"></label>
-              </div>
-            </td>
-            <td class="number"><span class="indicator-number">06</span></td>
-            <td class="indicator-name">{% lorem 4 w random %}</td>
-            <td class="checkbox da">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="6-da">
-                <label class="custom-control-label" for="6-da"></label>
-              </div>
-            </td>
-            <td class="checkbox city">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="6-city" checked>
-                <label class="custom-control-label" for="6-city"></label>
-              </div>
-            </td>
-            <td class="checkbox sector">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="6-sector" disabled>
-                <label class="custom-control-label" for="6-sector"></label>
-              </div>
-            </td>
-          </tr>
-
-          <tr>
-            <td colspan="6" class="ve bg-light font-weight-bold">
-              3. Closing material loops and reducing harmful resource use
-            </td>
-          </tr>
-
-          <tr>
-            <td class="indicator-switch">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="9-indicator">
-                <label class="custom-control-label" for="9-indicator"></label>
-              </div>
-            </td>
-            <td class="number"><span class="indicator-number">09</span></td>
-            <td class="indicator-name">{% lorem 4 w random %}</td>
-            <td class="checkbox da">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="9-da" disabled>
-                <label class="custom-control-label" for="9-da"></label>
-              </div>
-            </td>
-            <td class="checkbox city">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="9-city" disabled>
-                <label class="custom-control-label" for="9-city"></label>
-              </div>
-            </td>
-            <td class="checkbox sector">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="9-sector" disabled>
-                <label class="custom-control-label" for="9-sector"></label>
-              </div>
-            </td>
-          </tr>
-
-          <tr>
-            <td colspan="6" class="ve bg-light font-weight-bold">
-              4. Improving human well-being and reducing environmental impacts
-            </td>
-          </tr>
-
-          <tr>
-            <td class="indicator-switch">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="15-indicator" checked>
-                <label class="custom-control-label" for="15-indicator"></label>
-              </div>
-            </td>
-            <td class="number"><span class="indicator-number">15</span></td>
-            <td class="indicator-name">Circular Material Use Rate</td>
-            <td class="checkbox da">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="15-da" checked>
-                <label class="custom-control-label" for="15-da"></label>
-              </div>
-            </td>
-            <td class="checkbox city">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="15-city">
-                <label class="custom-control-label" for="15-city"></label>
-              </div>
-            </td>
-            <td class="checkbox sector">
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="15-sector" disabled>
-                <label class="custom-control-label" for="15-sector"></label>
-              </div>
-            </td>
-          </tr>
+          {% for each in indicator_list %}
+            <tr>
+              <td class="indicator-switch">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="indicator-{{ each.number }}" name="indicator" value="{{ each.number }}" checked>
+                  <label class="custom-control-label" for="indicator-{{ each.number }}"></label>
+                </div>
+              </td>
+              <td class="number"><span class="indicator-number">{{ each.number }}</span></td>
+              <td class="indicator-name">{{ each.name }}</td>
+              <td class="checkbox da">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="da-{{ each.number }}" name="da" value="{{ each.number }}">
+                  <label class="custom-control-label" for="da-{{ each.number }}"></label>
+                </div>
+              </td>
+              <td class="checkbox city">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="city-{{ each.number }}" name="city" value="{{ each.number }}">
+                  <label class="custom-control-label" for="city-{{ each.number }}"></label>
+                </div>
+              </td>
+              <td class="checkbox sector">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="sector-{{ each.number }}" name="sector" value="{{ each.number }}" disabled>
+                  <label class="custom-control-label" for="sector-{{ each.number }}"></label>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>
 
-    <button class="btn btn-primary">
+    {% csrf_token %}
+
+    <button class="btn btn-primary" type="submit">
       <i class="fa fa-save"></i> Save
     </button>
-
   </form>
 {% endblock %}
 
