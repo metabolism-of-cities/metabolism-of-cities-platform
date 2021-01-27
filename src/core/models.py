@@ -2578,11 +2578,11 @@ class CityLoopsIndicatorValue(models.Model):
     indicator = models.ForeignKey(CityLoopsIndicator, on_delete=models.CASCADE)
     enabled = models.BooleanField(db_index=True, default=False)
 
-    class Sector(models.IntegerChoices):
+    class Waste(models.IntegerChoices):
         CONSTRUCTION = 1, "Construction and demolition waste"
         BIOMASS = 2, "Biomass waste"
 
-    sector = models.IntegerField(choices=Sector.choices, db_index=True)
+    sector = models.IntegerField(choices=Waste.choices, db_index=True)
 
     class Scale(models.IntegerChoices):
         CITY = 1, "City"

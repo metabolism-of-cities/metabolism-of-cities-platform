@@ -2,6 +2,7 @@ from core.models import *
 from django.shortcuts import render
 from django.contrib.admin.views.decorators import staff_member_required
 from core.mocfunctions import *
+import csv
 
 def index(request):
     context = {
@@ -196,7 +197,7 @@ def city_indicator(request, slug, id):
 def city_indicator_form(request, slug, id):
     info = get_space(request, slug)
     try:
-        indicators = info.meta_data["cityloops"]["indicators"]["biomass"]
+        indicators = info.meta_data["cityloops"]["indicator"]["biomass"]
     except:
         indicators = None
         if not info.meta_data:
@@ -221,3 +222,39 @@ def city_indicator_form(request, slug, id):
         "info": info,
     }
     return render(request, "cityloops/indicator.city.form.html", context)
+
+# TEMPORARY
+def cityloop_indicator_import(request):
+    import csv
+    error = False
+
+    if request.user.id != 1:
+        return redirect("/")
+
+    if "table" in request.GET:
+        messages.warning(request, "Trying to import " + request.GET["table"])
+        file = settings.MEDIA_ROOT + "/import/" + request.GET["table"] + ".csv"
+        messages.warning(request, "Using file: " + file)
+
+        import csv
+        with open(file, "r") as csvfile:
+            contents = csv.DictReader(csvfile)
+            for row in contents:
+                CityLoopsIndicator.objects.create(
+                    number = row["number"],
+                    name = row["name"],
+                    description = row["description"],
+                    methodology = row["methodology"],
+                    unit = row["unit"],
+                    vision_element = row["ve"],
+                )
+
+        if error:
+            messages.error(request, "We could not import your data")
+        else:
+            messages.success(request, "Data was imported")
+
+    context = {
+    }
+
+    return render(request, "cityloops/temp.import.html", context)
