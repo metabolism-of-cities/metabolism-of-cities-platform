@@ -26,7 +26,6 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + baseline_educat
     path("eurostat/grid/", views.eurostat_grid, name="eurostat_grid"),
     path("circular-city/", views.circular_city, name="circular_city"),
     path("indicators/", views.indicators, name="indicators"),
-    path("<slug:slug>/", core.article, name="article"),
     path("city/<slug:slug>/", views.city, name="city"),
     path("city/<slug:slug>/mockup/", views.dashboard_mockup, name="dashboard_mockup"),
     path("city/<slug:slug>/indicators/", views.city_indicators, name="city_indicators"),
@@ -35,5 +34,7 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + baseline_educat
     path("city/<slug:slug>/indicators/<int:id>/form/", views.city_indicator_form, name="city_indicator_form"),
 
     # Temporary
-    path("dataimport/", views.cityloop_indicator_import),
+    path("import/", views.cityloop_indicator_import),
+
+    path("<slug:slug>/", core.article, name="article"),
 ]

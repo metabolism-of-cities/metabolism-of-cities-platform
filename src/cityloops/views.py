@@ -2,7 +2,7 @@ from core.models import *
 from django.shortcuts import render
 from django.contrib.admin.views.decorators import staff_member_required
 from core.mocfunctions import *
-import csv
+from django.contrib import messages
 
 def index(request):
     context = {
@@ -231,30 +231,27 @@ def cityloop_indicator_import(request):
     if request.user.id != 1:
         return redirect("/")
 
-    if "table" in request.GET:
-        messages.warning(request, "Trying to import " + request.GET["table"])
-        file = settings.MEDIA_ROOT + "/import/" + request.GET["table"] + ".csv"
-        messages.warning(request, "Using file: " + file)
+    messages.warning(request, "Trying to import cityloops-indicators")
+    file = settings.MEDIA_ROOT + "/import/indicators.csv"
+    messages.warning(request, "Using file: " + file)
 
-        import csv
-        with open(file, "r") as csvfile:
-            contents = csv.DictReader(csvfile)
-            for row in contents:
-                CityLoopsIndicator.objects.create(
-                    number = row["number"],
-                    name = row["name"],
-                    description = row["description"],
-                    methodology = row["methodology"],
-                    unit = row["unit"],
-                    vision_element = row["ve"],
-                )
+    with open(file, "r") as csvfile:
+        contents = csv.DictReader(csvfile)
+        for row in contents:
+            v = row["ve"]
+            v = v[:1]
+            CityLoopsIndicator.objects.create(
+                number = row["number"],
+                name = row["name"],
+                description = row["description"],
+                methodology = row["methodology"],
+                unit = row["Unit"],
+                vision_element = v,
+            )
 
-        if error:
-            messages.error(request, "We could not import your data")
-        else:
-            messages.success(request, "Data was imported")
+    if error:
+        messages.error(request, "We could not import your data")
+    else:
+        messages.success(request, "Data was imported")
 
-    context = {
-    }
-
-    return render(request, "cityloops/temp.import.html", context)
+    return render(request, "cityloops/temp.import.html")

@@ -2550,7 +2550,7 @@ class CityLoopsIndicator(models.Model):
     vision_element = models.IntegerField(choices=VisionElement.choices, db_index=True)
 
     def __str__(self):
-        return self.number + " - " + self.name
+        return f"{self.number} - {self.name}"
 
     def get_description(self):
         # The description_html field is already sanitized, according to the settings (see the save() function below)
@@ -2576,7 +2576,7 @@ class CityLoopsIndicator(models.Model):
 class CityLoopsIndicatorValue(models.Model):
     city = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE)
     indicator = models.ForeignKey(CityLoopsIndicator, on_delete=models.CASCADE)
-    enabled = models.BooleanField(db_index=True, default=False)
+    is_enabled = models.BooleanField(db_index=True, default=False)
 
     class Waste(models.IntegerChoices):
         CONSTRUCTION = 1, "Construction and demolition waste"
@@ -2599,6 +2599,9 @@ class CityLoopsIndicatorValue(models.Model):
     reference = models.TextField(null=True, blank=True)
     period = models.TextField(null=True, blank=True)
     comments = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.indicator.name} for {self.city.name} ({self.get_scale_display()})"
 
 # This is the format to use from now on
 # Note that there is a uid primary key, separate from the record_id
