@@ -158,8 +158,11 @@ def circular_city(request):
     return render(request, "cityloops/circular-city.html", context)
 
 def indicators(request):
+    indicators = CityLoopsIndicator.objects.order_by("number")
+
     context = {
         "title": "Indicators",
+        "indicators": indicators,
     }
     return render(request, "cityloops/indicators.html", context)
 

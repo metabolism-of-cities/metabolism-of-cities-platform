@@ -47,7 +47,6 @@
     background: #fcfcfc;
     padding: 0 1rem;
     font-weight: bold;
-    font-size: 1.25rem;
   }
 
   .indicator .number {
@@ -134,74 +133,62 @@
       <div class="indicator-group">
         <h4 id="group-1">Local stakeholder actions</h4>
 
-        <div class="indicator">
-          <div class="title" id="indicator-41">
-            <span class="number">41</span>
-            Circular Material Use Rate
-          </div>
+        {% for each in indicators %}
+          <div class="indicator">
+            <div class="title" id="indicator-{{ each.number }}">
+              <span class="number">{{ each.number }}</span>
+              {{ each.name }}
+            </div>
 
-          <div class="description">
-            <p>
-              The circular material use rate, also called Circularity rate measures, in percentage, the share of material recovered and fed back into the economy - thus saving extraction of primary raw materials - in overall material use. The Circularity rate is thus defined as the ratio of the circular use of materials (U) to the overall material use (M).
-            </p>
-            <p>
-              The overall material use is measured by summing up the aggregate domestic material consumption (DMC) and the circular use of materials (M = DMC + U). DMC is defined in economy-wide material flow accounts.
-            </p>
-          </div>
+            <div class="description">
+              {{ each.description|safe }}
+            </div>
 
-          <hr>
+            <hr>
 
-          <dl>
-            <dt>Methodology</dt>
-            <dd>
-              <p>
-                The circular use of materials is approximated by the amount of waste recycled in domestic recovery plants (RCV_R), minus imported waste destined for recovery (IMPw), plus exported waste destined for recovery abroad (EXPw). Waste recycled in domestic recovery plants comprises the recovery operations R2 to R11 as defined in the Waste Framework Directive 75/442/EEC. European statistics on international trade in goods (ITGS) are used to approximate the imports and exports of waste destined for recycling, i.e. the amount of imported waste bound for recovery (IMPw), and the amount of exported waste bound for recovery (EXPw).
-              </p>
-              <p>
-                Then, the Circularity rate is formalised as following:
-              </p>
-              <img src="https://i.imgur.com/C7RhSO6.png">
-              <p>
-                A higher Circularitity rate value indicates more secondary materials substituting for primary raw materials i.e. avoiding the environmental impacts of extracting primary material.
-              </p>
-            </dd  >
-          </dl>
+            <dl>
+              <dt>Methodology</dt>
+              <dd>
+                {{ each.methodology }}
+              </dd>
+            </dl>
 
-          <hr>
+            <hr>
 
-          <dl>
-            <dt>Vision element</dt>
-            <dd>Closing material loops and reducing harmful resource use</dd>
+            <dl>
+              <dt>Vision element</dt>
+              <dd>{{ each.vision_element }}</dd>
 
-            <dt>Category</dt>
-            <dd>
-              Circular design and business models, <br>
-              Private investments, jobs and gross value added
-            </dd>
-          </dl>
+              <dt>Category</dt>
+              <dd>
+                {{ each.category }}
+              </dd>
+            </dl>
 
 
-          <div class="list-group list-group-horizontal">
-            <a class="list-group-item list-group-item-action" href="https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm">
-              <i class="fal fa-fw fa-2x fa-link"></i> <br>
-              <span>Source</span>
-            </a>
-            <a class="list-group-item list-group-item-action">
-              <div class="unit">ℓ</div><br>
-              <span>Unit</span>
-            </a>
-            <a class="list-group-item list-group-item-action" href="https://www.un.org/sustainabledevelopment/energy/">
-              <img class="sdg" src="{% static 'img/sdg/sdg-12.png' %}">
+            <div class="list-group list-group-horizontal">
+              <a class="list-group-item list-group-item-action" href="https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm">
+                <i class="fal fa-fw fa-2x fa-link"></i> <br>
+                <span>Source</span>
+              </a>
+              <a class="list-group-item list-group-item-action">
+                <div>{{ each.unit }}</div><br>
+                <span>Unit</span>
+              </a>
+              <a class="list-group-item list-group-item-action" href="https://www.un.org/sustainabledevelopment/energy/">
+                <img class="sdg" src="{% static 'img/sdg/sdg-12.png' %}">
+              </a>
+            </div>
+
+            <div class="strategic-objective"></div>
+
+
+            <a class="copy-link text-dark" href="#indicator-41">
+              <i class="far fa-fw fa-link"></i> <span class="link-copied pr-1" hidden>Link copied</span>
             </a>
           </div>
+        {% endfor %}
 
-          <div class="strategic-objective"></div>
-
-
-          <a class="copy-link text-dark" href="#indicator-41">
-            <i class="far fa-fw fa-link"></i> <span class="link-copied pr-1" hidden>Link copied</span>
-          </a>
-        </div>
       </div>
 
       <div class="indicator-group">
@@ -224,31 +211,9 @@
         <nav class="nav flex-column">
           <a class="nav-link group" href="#group-1">1. Local stakeholder actions</a>
           <nav class="nav flex-column">
-            <a class="nav-link pl-3" href="#indicator-41">41. Circular Material Use Rate</a>
-            <a class="nav-link pl-3" href="#indicator-42">42. {% lorem 4 w random %}</a>
-            <a class="nav-link pl-3" href="#indicator-43">43. {% lorem 4 w random %}</a>
-            <a class="nav-link pl-3" href="#indicator-44">44. {% lorem 4 w random %}</a>
-          </nav>
-          <a class="nav-link group" href="#group-2">2. Circular business models and behavioural patterns</a>
-          <nav class="nav flex-column">
-            <a class="nav-link pl-3" href="#indicator-45">45. {% lorem 4 w random %}</a>
-            <a class="nav-link pl-3" href="#indicator-46">46. {% lorem 4 w random %}</a>
-            <a class="nav-link pl-3" href="#indicator-47">47. {% lorem 4 w random %}</a>
-            <a class="nav-link pl-3" href="#indicator-48">48. {% lorem 4 w random %}</a>
-          </nav>
-          <a class="nav-link group" href="#group-3">3. Closing material loops and reducing harmful resource use</a>
-          <nav class="nav flex-column">
-            <a class="nav-link pl-3" href="#indicator-49">49. {% lorem 4 w random %}</a>
-            <a class="nav-link pl-3" href="#indicator-50">50. {% lorem 4 w random %}</a>
-            <a class="nav-link pl-3" href="#indicator-51">51. {% lorem 4 w random %}</a>
-            <a class="nav-link pl-3" href="#indicator-52">52. {% lorem 4 w random %}</a>
-          </nav>
-          <a class="nav-link group" href="#group-4">4. Improving human well-being and reducing environmental impacts</a>
-          <nav class="nav flex-column">
-            <a class="nav-link pl-3" href="#indicator-53">53. {% lorem 4 w random %}</a>
-            <a class="nav-link pl-3" href="#indicator-54">54. {% lorem 4 w random %}</a>
-            <a class="nav-link pl-3" href="#indicator-55">55. {% lorem 4 w random %}</a>
-            <a class="nav-link pl-3" href="#indicator-56">56. {% lorem 4 w random %}</a>
+            {% for each in indicators %}
+              <a class="nav-link pl-3" href="#indicator-{{ each.number }}">{{ each.number }}. {{ each.name }}</a>
+            {% endfor %}
           </nav>
         </nav>
       </nav>
