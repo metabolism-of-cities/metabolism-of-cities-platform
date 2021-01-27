@@ -196,7 +196,7 @@ def city_indicators_form(request, slug, sector):
     indicator_list = CityLoopsIndicator.objects.order_by("number")
 
     try:
-        indicators = info.meta_data["cityloops"]["indicator"]["biomass"]
+        indicators = info.meta_data["cityloops"]["indicator"][sector]
     except:
         indicators = None
         if not info.meta_data:
@@ -210,10 +210,8 @@ def city_indicators_form(request, slug, sector):
             }
         info.save()
 
-    # input name = indicators, value = number
-
     if request.method == "POST":
-        info.meta_data["cityloops"]["indicators"]["biomass"] = request.POST.getlist("indicators")
+        info.meta_data["cityloops"]["indicators"][sector] = request.POST.getlist("indicators")
         info.save()
 
     context = {
