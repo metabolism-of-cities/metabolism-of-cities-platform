@@ -166,22 +166,32 @@ def indicators(request):
     }
     return render(request, "cityloops/indicators.html", context)
 
-def indicators_cities(request):
+def indicators_cities(request, sector):
     context = {
         "title": "Indicators",
         "load_select2": True,
+        "sector": sector,
     }
     return render(request, "cityloops/indicators.cities.html", context)
 
-def city_indicators(request, slug):
+def city_sectors(request, slug):
+    info = get_space(request, slug)
+    context = {
+        "title": "City sectors",
+        "info": info,
+    }
+    return render(request, "cityloops/sectors.city.html", context)
+
+def city_indicators(request, slug, sector):
     info = get_space(request, slug)
     context = {
         "title": "Indicators",
         "info": info,
+        "sector": sector,
     }
     return render(request, "cityloops/indicators.city.html", context)
 
-def city_indicators_form(request, slug):
+def city_indicators_form(request, slug, sector):
     info = get_space(request, slug)
     indicator_list = CityLoopsIndicator.objects.order_by("number")
 
@@ -209,23 +219,26 @@ def city_indicators_form(request, slug):
     context = {
         "title": "Indicator selection",
         "indicator_list": indicator_list,
+        "sector": sector,
         "info": info,
     }
     return render(request, "cityloops/indicators.city.form.html", context)
 
-def city_indicator(request, slug, id):
+def city_indicator(request, slug, sector, id):
     info = get_space(request, slug)
     context = {
         "title": "Indicators",
+        "sector": sector,
         "info": info,
     }
     return render(request, "cityloops/indicator.city.html", context)
 
-def city_indicator_form(request, slug, id):
+def city_indicator_form(request, slug, sector, id):
     info = get_space(request, slug)
 
     context = {
         "title": "Indicators",
+        "sector": sector,
         "info": info,
     }
     return render(request, "cityloops/indicator.city.form.html", context)

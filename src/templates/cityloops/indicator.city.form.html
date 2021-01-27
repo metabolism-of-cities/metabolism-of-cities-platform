@@ -56,8 +56,9 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-transparent p-0">
       <li class="breadcrumb-item"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}">{{ info }}</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_indicators' 'bodo' %}">Indicators</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_indicator' 'bodo' 1 %}">15. Circular Material Use Rate</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_sectors' 'bodo' %}">Indicators</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_indicators' 'bodo' sector %}">{{ sector|title }}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_indicator' 'bodo' sector 1 %}">15. Circular Material Use Rate</a></li>
       <li class="breadcrumb-item active" aria-current="page">Edit</li>
     </ol>
   </nav>

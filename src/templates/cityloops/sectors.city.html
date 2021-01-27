@@ -1,0 +1,63 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <h1>Indicators</h1>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-transparent p-0">
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}">{{ info }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Indicators</li>
+    </ol>
+  </nav>
+
+  {% lorem 1 p %}
+
+  <div class="row dual-iconbox">
+    <div class="col-lg-4 col-md-6 mb-4">
+      <a href="{% url 'cityloops:city_indicators' 'bodo' 'biomass' %}" class="card btn-card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col icon">
+              <i class="fal fa-fw fa-wheat" aria-hidden="true"></i>
+            </div>
+            <div class="col">
+              <strong>Biomass</strong>
+              <br>
+              <small>{% lorem 5 w random %}</small>
+              <br>
+              <span class="badge badge-light">
+                83 indicators
+              </span>
+              <span class="badge badge-primary">
+                18 selected
+              </span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="col-lg-4 col-md-6 mb-4">
+      <a href="{% url 'cityloops:city_indicators' 'bodo' 'construction' %}" class="card btn-card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col icon">
+              <i class="fal fa-fw fa-digging" aria-hidden="true"></i>
+            </div>
+            <div class="col">
+              <strong>Construction</strong>
+              <br>
+              <small>{% lorem 5 w random %}</small>
+              <br>
+              <span class="badge badge-light">
+                85 indicators
+              </span>
+              <span class="badge badge-primary">
+                41 selected
+              </span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+{% endblock %}

@@ -28,10 +28,11 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + baseline_educat
     path("indicators/", views.indicators, name="indicators"),
     path("city/<slug:slug>/", views.city, name="city"),
     path("city/<slug:slug>/mockup/", views.dashboard_mockup, name="dashboard_mockup"),
-    path("city/<slug:slug>/indicators/", views.city_indicators, name="city_indicators"),
-    path("city/<slug:slug>/indicators/form/", views.city_indicators_form, name="city_indicators_form"),
-    path("city/<slug:slug>/indicators/<int:id>/", views.city_indicator, name="city_indicator"),
-    path("city/<slug:slug>/indicators/<int:id>/form/", views.city_indicator_form, name="city_indicator_form"),
+    path("city/<slug:slug>/indicators/", views.city_sectors, name="city_sectors"),
+    path("city/<slug:slug>/indicators/<slug:sector>/", views.city_indicators, name="city_indicators"),
+    path("city/<slug:slug>/indicators/<slug:sector>/form/", views.city_indicators_form, name="city_indicators_form"),
+    path("city/<slug:slug>/indicators/<slug:sector>/<int:id>/", views.city_indicator, name="city_indicator"),
+    path("city/<slug:slug>/indicators/<slug:sector>/<int:id>/form/", views.city_indicator_form, name="city_indicator_form"),
 
     # Temporary
     path("import/", views.cityloop_indicator_import),
