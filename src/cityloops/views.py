@@ -184,10 +184,14 @@ def city_sectors(request, slug):
 
 def city_indicators(request, slug, sector):
     info = get_space(request, slug)
+    indicator_list = CityLoopsIndicator.objects.order_by("number")
+    indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, city_id=info.id).order_by("indicator_id")
     context = {
         "title": "Indicators",
         "info": info,
         "sector": sector,
+        "indicator_list": indicator_list,
+        "indicator_scale_list": indicator_scale_list,
     }
     return render(request, "cityloops/indicators.city.html", context)
 
@@ -226,7 +230,7 @@ def city_indicators_form(request, slug, sector):
         indicators = info.meta_data["cityloops"]["indicators"][sector]
         info.save()
 
-        # And let's now save the individual indicators. 
+        # And let's now save the individual indicators.
         items = []
         city_enabled = request.POST.getlist("city")
 
@@ -275,25 +279,29 @@ def city_indicators_form(request, slug, sector):
 
 def city_indicator(request, slug, sector, id):
     info = get_space(request, slug)
-    indicator = CityLoopsIndicator.objects.filter(number=id)
+    value = CityLoopsIndicatorValue.objects.filter(id=id)
+    indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, city_id=info.id).order_by("indicator_id")
 
     context = {
         "title": "Indicators",
         "sector": sector,
-        "indicator": indicator,
+        "value": value,
         "info": info,
+        "indicator_scale_list": indicator_scale_list,
     }
     return render(request, "cityloops/indicator.city.html", context)
 
 def city_indicator_form(request, slug, sector, id):
     info = get_space(request, slug)
-    indicator = CityLoopsIndicator.objects.filter(number=id)
+    value = CityLoopsIndicatorValue.objects.filter(id=id)
+    indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, city_id=info.id).order_by("indicator_id")
 
     context = {
         "title": "Indicators",
         "sector": sector,
-        "indicator": indicator,
+        "value": value,
         "info": info,
+        "indicator_scale_list": indicator_scale_list,
     }
     return render(request, "cityloops/indicator.city.form.html", context)
 

@@ -77,7 +77,7 @@
             <tr>
               <td class="indicator-switch">
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="indicator-{{ each.id }}" name="indicators" value="{{ each.id }}" 
+                  <input type="checkbox" class="custom-control-input" id="indicator-{{ each.id }}" name="indicators" value="{{ each.id }}"
                   {% if each.id|stringformat:"i" in indicators or not indicators %}
                     checked
                   {% endif %}
@@ -113,7 +113,6 @@
                     {% if check|get_item:3|get_item:each.id %}
                     checked
                     {% endif %}
-
                   >
                   <label class="custom-control-label" for="sector-{{ each.id }}"></label>
                 </div>
@@ -146,5 +145,13 @@
         row.find(".checkbox:not(.sector) input").attr("disabled", "disabled").prop("checked", false);
       }
     })
+
+    // disable whole indicator if indicator switch is turned off
+    $(".indicator-switch input").each(function() {
+      if ($(this).prop("checked") == false) {
+        $(this).closest("tr").addClass("disabled").find(".checkbox:not(.sector) input").attr("disabled", "disabled").prop("checked", false);
+      }
+    })
+
   </script>
 {% endblock %}

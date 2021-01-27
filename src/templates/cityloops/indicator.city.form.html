@@ -58,7 +58,7 @@
       <li class="breadcrumb-item"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}">{{ info }}</a></li>
       <li class="breadcrumb-item"><a href="{% url 'cityloops:city_sectors' 'bodo' %}">Indicators</a></li>
       <li class="breadcrumb-item"><a href="{% url 'cityloops:city_indicators' 'bodo' sector %}">{{ sector|title }}</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_indicator' 'bodo' sector 1 %}">{{ indicator.first }}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_indicator' 'bodo' sector 1 %}">{{ value.first.indicator }}</a></li>
       <li class="breadcrumb-item active" aria-current="page">Edit</li>
     </ol>
   </nav>
@@ -66,9 +66,14 @@
   <div class="row">
     <div class="col-lg-8">
       <h5 class="mb-0">
-        {{ indicator.first }}
-        <span class="float-right badge badge-cityloops-secondary">Demonstration action</span>
+        {{ value.first.indicator }}
       </h5>
+
+      <div>
+        {% if value.first.scale == 1 %}<span class="badge badge-cityloops-secondary">Demonstration action</span>
+        {% elif value.first.scale == 2 %}<span class="badge badge-secondary">City</span>
+        {% elif value.first.scale == 3 %}<span class="badge badge-cityloops-primary">Sector</span>{% endif %}
+      </div>
 
       <small class="text-muted">
         Last edited 6 days ago by Fulano de Tal
@@ -77,12 +82,12 @@
       <form class="form mt-4">
         <div class="form-group">
           <label for="description">Description</label>
-          <p id="description">{{ indicator.first.description }}</p>
+          <p id="description">{{ value.first.indicator.description }}</p>
         </div>
 
         <div class="form-group">
           <label for="methodology">Methodology</label>
-          <p id="methodology">{{ indicator.first.methodology }}</p>
+          <p id="methodology">{{ value.first.indicator.methodology }}</p>
         </div>
 
         <div class="form-group">

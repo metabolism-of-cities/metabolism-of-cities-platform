@@ -71,16 +71,27 @@
   <form class="mt-4">
     <table class="table indicator-table">
       <tbody>
-        <tr>
-          <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">01</a></td>
-          <td class="indicator-text">{% lorem 7 w random %}</td>
-          <td class="has-button text-right">
-            <a href="{% url 'cityloops:city_indicator' 'bodo' sector 1 %}" class="btn btn-cityloops-primary btn-sm">
-              <i class="far fa-fw fa-chart-pie"></i> Sector <i class="fa fa-fw fa-check-circle mr-0 ml-2"></i>
-            </a>
-          </td>
-        </tr>
-
+        {% for each in indicator_scale_list %}
+          <tr>
+            <td class="number"><a href="{% url 'cityloops:indicators' %}#indicator-{{ each.indicator.number }}" class="indicator-number">{{ each.indicator.number }}</a></td>
+            <td class="indicator-text">{{ each }}</td>
+            <td class="has-button text-right">
+              {% if each.scale == 1 %}
+                <a href="{% url 'cityloops:city_indicator' 'bodo' sector each.id %}" class="btn btn-cityloops-secondary btn-sm">
+                  <i class="far fa-fw fa-random"></i> Demonstration action
+                </a>
+              {% elif each.scale == 2 %}
+                <a href="{% url 'cityloops:city_indicator' 'bodo' sector each.id %}" class="btn btn-secondary btn-sm">
+                  <i class="far fa-fw fa-city"></i> City
+                </a>
+              {% elif each.scale == 3 %}
+                <a href="{% url 'cityloops:city_indicator' 'bodo' sector each.id %}" class="btn btn-cityloops-primary btn-sm">
+                  <i class="far fa-fw fa-chart-pie"></i> Sector
+                </a>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
       </tbody>
     </table>
   </form>
