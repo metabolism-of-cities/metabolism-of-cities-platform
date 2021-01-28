@@ -180,6 +180,7 @@ def admin_dashboard(request, organization=None):
         "load_lightbox": True,
         "load_select2": True,
         "load_datatables": True,
+        "load_highcharts": True,
         "load_leaflet": True,
         "types": types,
     }

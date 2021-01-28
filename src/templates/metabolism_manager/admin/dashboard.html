@@ -237,6 +237,8 @@
         <div class="btn btn-primary mt-3" data-toggle="modal" data-entry="{{ key|lower }}" data-target="#add-entry-modal">
           <i class="fa fa-plus mr-2"></i> Add {{ key|lower }}
         </div>
+
+        <div class="mt-4" id="tetris-{{ key }}"></div>
       </div>
     {% endfor %}
 
@@ -355,6 +357,8 @@
 {% block footer %}
   <script src="{% static 'js/leaflet.awesome-markers.min.js' %}"></script>
   <script src="{% static 'js/leaflet.markercluster.js' %}"></script>
+  <script src="https://code.highcharts.com/modules/treemap.js"></script>
+
   <script>
     // a list of all the offers and requests for materials
     const allListings = [
@@ -562,5 +566,68 @@
 
       window.location.href = url;
     })
+
+    // tetris graphs
+    Highcharts.chart("tetris-Space", {
+      chart: {
+        backgroundColor: "#fcfcfc",
+        margin: 0,
+        opacity: 1,
+        animation: false,
+      },
+      plotOptions: {
+        series: {
+          states: {
+            hover: {
+              animation: {
+                duration: 0,
+              },
+              lineWidthPlus: 0,
+              opacity: 1,
+            }
+          }
+        }
+      },
+      series: [{
+          opacity: 1,
+          type: "treemap",
+          layoutAlgorithm: "stripes",
+          alternateStartingDirection: true,
+          levels: [{
+            level: 1,
+            layoutAlgorithm: 'sliceAndDice',
+            dataLabels: {
+              enabled: true,
+              align: 'left',
+              verticalAlign: 'top',
+              style: {
+                fontSize: '15px',
+                fontWeight: 'bold'
+              }
+            }
+          }],
+          data: [
+            {% for key,data in types.items %}
+              {% if key == "Space" %}
+                {% for each in data %}
+                  {
+                    name: "{{ each.material_type }} - {{ each.owner }}",
+                    value: {{ each.absolute_quantity }},
+                    symbol: "{{ each.unit.symbol }}",
+                    color: "#28a745",
+                  },
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+          ]
+      }],
+      title: false,
+      credits: {
+        enabled: false
+      },
+      exporting: {
+        enabled: false
+      },
+    });
   </script>
 {% endblock %}
