@@ -3,6 +3,11 @@
 
 {% block css %}
 <style>
+  #indicator-menu {
+    max-height: calc(100vh - 2rem);
+    overflow: auto;
+  }
+
   #indicator-menu nav {
     width: 100%;
   }
@@ -21,6 +26,10 @@
     font-weight: bold;
   }
 
+  #indicator-menu .ve-collection.collapsed a:not(:first-of-type) {
+    display: none;
+  }
+
   #indicator-menu .nav-link.group:not(:first-of-type) {
     border-top: 1px solid #dee2e6;
   }
@@ -29,7 +38,11 @@
     background-color: #9cb7bb;
   }
 
-  .indicator-group {
+  .ve-header:not(:first-of-type) {
+    margin-top: 3rem;
+  }
+
+  .vision-element {
     margin-bottom: 3rem;
   }
 
@@ -130,10 +143,13 @@
 
   <div class="row">
     <div class="col-lg-9 pt-3" data-spy="scroll" id="indicators" data-target="#indicator-menu">
-      <div class="indicator-group">
-        <h4 id="group-1">Local stakeholder actions</h4>
-
+      <div class="vision-element">
         {% for each in indicator_list %}
+
+          {% ifchanged each.vision_element %}
+            <h4 class="ve-header" id="ve-{{ each.vision_element }}">{{ each.vision_element }}. {{ each.get_vision_element_display }}</h4>
+          {% endifchanged %}
+
           <div class="indicator">
             <div class="title" id="indicator-{{ each.number }}">
               <span class="number">{{ each.number }}</span>
@@ -190,33 +206,26 @@
         {% endfor %}
 
       </div>
-
-      <div class="indicator-group">
-        <h4 id="group-2">Circular business models and behavioural patterns</h4>
-      </div>
-
-      <div class="indicator-group">
-        <h4 id="group-3">Closing material loops and reducing harmful resource use</h4>
-
-      </div>
-
-      <div class="indicator-group">
-        <h4 id="group-4">Improving human well-being and reducing environmental impacts</h4>
-      </div>
-
     </div>
     <div class="col-lg-3 pt-3">
       <h4 class="mb-5">&nbsp;</h4>
-      <nav class="navbar navbar-light border rounded sticky-top p-0" id="indicator-menu">
-        <nav class="nav flex-column">
-          <a class="nav-link group" href="#group-1">1. Local stakeholder actions</a>
+      <div class="sticky-top">
+        <nav class="navbar navbar-light border rounded p-0" id="indicator-menu">
           <nav class="nav flex-column">
             {% for each in indicator_list %}
+              {% ifchanged each.vision_element %}
+                {% if not forloop.first %}
+                </div>
+                {% endif %}
+                <div class="ve-collection" data-ve="{{ each.vision_element }}">
+                <a class="nav-link group" href="#ve-{{ each.vision_element }}">{{ each.vision_element }}. {{ each.get_vision_element_display }}</a>
+              {% endifchanged %}
               <a class="nav-link pl-3" href="#indicator-{{ each.number }}">{{ each }}</a>
             {% endfor %}
+            </div>
           </nav>
         </nav>
-      </nav>
+      </div>
     </div>
   </div>
 
@@ -224,7 +233,25 @@
 
 {% block footer %}
   <script>
-    $("body").scrollspy({ target: "#indicator-menu"})
+    $("body").scrollspy({
+      target: "#indicator-menu"
+    })
+
+    const indicatorMenu = document.getElementById("indicator-menu");
+    let selectedIndicator;
+
+    // function when scrollspy switches focus
+    $(window).on("activate.bs.scrollspy", function (event) {
+      $(".ve-collection").addClass("collapsed");
+
+      selectedIndicator = $("#indicator-menu .nav-link.active");
+
+      selectedIndicator.parent().removeClass("collapsed");
+
+      let indicatorPosition = selectedIndicator.position().top;
+
+      indicatorMenu.scrollTop = indicatorPosition;
+    })
 
     // copy url
     function copyToClipboard(element) {
