@@ -47,8 +47,21 @@
       padding: .75rem 1.25rem;
     }
 
-    #latest .card-img-top {
+    #latest .lightbox,
+    #current .lightbox {
+      height: 200px;
+    }
+
+    .lightbox a {
+      cursor: zoom-in;
+    }
+
+
+    #latest .card-img-top,
+    #current .card-img-top {
       object-fit: contain;
+      height: 200px;
+      background-position: center;
     }
 
     .awesome-marker i {
@@ -220,6 +233,10 @@
           {% endfor %}
           </tbody>
         </table>
+
+        <div class="btn btn-primary mt-3" data-toggle="modal" data-entry="{{ key|lower }}" data-target="#add-entry-modal">
+          <i class="fa fa-plus mr-2"></i> Add {{ key|lower }}
+        </div>
       </div>
     {% endfor %}
 
@@ -229,14 +246,18 @@
           <div class="col-md-6 col-lg-4 mb-4">
             <div class="card">
               <div class="card-header">{{ each.owner }}</div>
-              {% if each.owner.image %}
+              {% if each.image %}
+                <div class="lightbox">
+                  <a href="{{ each.image.large.url }}" style="background-image: url('{{ each.image.large.url }}');" data-caption="{{ each.owner }}" class="card-img-top d-block"></a>
+                </div>
+              {% elif each.owner.image %}
                 <img src="{{ each.owner.image.url }}" class="card-img-top p-3" alt="{{ each.owner }}">
               {% endif %}
               <ul class="list-group list-group-flush">
                 {% if each.owner.meta_data.address %}
                   <li class="list-group-item"><i class="fal fa-fw fa-map-marker-alt mr-2"></i> {{ each.owner.meta_data.address }}</li>
                 {% endif %}
-                <li class="list-group-item"><i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-2"></i>{{ each.material_type }}</li>
+                <li class="list-group-item"><i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-2"></i>{{ each.material_type.parent }}: {{ each.material_type }}</li>
                 <li class="list-group-item"><i class="fal fa-fw fa-balance-scale mr-2"></i>{{ each.absolute_quantity }} {{ each.unit.symbol }}</li>
                 <li class="list-group-item text-{% if each.type == 'supply' %}primary{% else %}secondary{% endif %}">
                   <i class="fal fa-fw fa-{% if each.type == 'supply' %}sign-out{% else %}sign-in{% endif %} mr-2"></i>
@@ -260,14 +281,18 @@
           <div class="col-md-6 col-lg-4 mb-4">
             <div class="card">
               <div class="card-header">{{ each.owner }}</div>
-              {% if each.owner.image %}
-                <img src="{{ each.owner.image.url }}" class="card-img-top p-3" alt="{{ each.owner }}">
+              {% if each.image %}
+                <div class="lightbox">
+                  <a href="{{ each.image.large.url }}" style="background-image: url('{{ each.image.large.url }}');" data-caption="{{ each.owner }}" class="card-img-top d-block"></a>
+                </div>
+              {% elif each.owner.image %}
+                <img src="https://platformu.org/{{ each.owner.image.url }}" class="card-img-top p-3" alt="{{ each.owner }}">
               {% endif %}
               <ul class="list-group list-group-flush">
                 {% if each.owner.meta_data.address %}
                   <li class="list-group-item"><i class="fal fa-fw fa-map-marker-alt mr-2"></i> {{ each.owner.meta_data.address }}</li>
                 {% endif %}
-                <li class="list-group-item"><i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-2"></i>{{ each.material_type }}</li>
+                <li class="list-group-item"><i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-2"></i>{{ each.material_type.parent }}: {{ each.material_type }}</li>
                 <li class="list-group-item"><i class="fal fa-fw fa-balance-scale mr-2"></i>{{ each.absolute_quantity }} {{ each.unit.symbol }}</li>
                 <li class="list-group-item text-{% if each.type == 'supply' %}primary{% else %}secondary{% endif %}">
                   <i class="fal fa-fw fa-{% if each.type == 'supply' %}sign-out{% else %}sign-in{% endif %} mr-2"></i>
@@ -307,7 +332,7 @@
           </div>
 
           <div class="form-group">
-            <label class="mb-0 font-weight-bold" for="modal-organisation">Organisation</label>
+            <label class="mb-0 font-weight-bold" for="modal-organisation">Type</label>
             <select class="form-control custom-select select2" id="modal-type">
               <option value="resources">Resources</option>
               <option value="space">Space</option>
@@ -521,9 +546,16 @@
       filterListings();
     })
 
+    // select right dropdown in modal from sections
+    $(".btn[data-entry]").click(function() {
+      let type = $(this).data("entry");
+      $("#modal-type").val(type).trigger("change.select2")
+    })
+
     // submit modal and go to right URL to add entry
     $(".submit-modal").click(function() {
       let organisation = $("#modal-organisation").val();
+
       let type = $("#modal-type").val();
 
       let url = "../{{ my_organization.id }}/entities/" + organisation + "/" + type + "/?action=add"

@@ -177,6 +177,7 @@ def admin_dashboard(request, organization=None):
         "material_list": material_list,
         "gps": gps,
         "min_values": min_values,
+        "load_lightbox": True,
         "load_select2": True,
         "load_datatables": True,
         "load_leaflet": True,
