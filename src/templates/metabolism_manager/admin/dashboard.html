@@ -73,6 +73,10 @@
       margin-top: -1px;
       font-size: .75rem;
     }
+
+    .highcharts-point {
+      cursor: pointer;
+    }
   </style>
 {% endblock %}
 
@@ -575,6 +579,9 @@
         opacity: 1,
         animation: false,
       },
+      tooltip: {
+        enabled: false
+      },
       plotOptions: {
         series: {
           states: {
@@ -584,6 +591,13 @@
               },
               lineWidthPlus: 0,
               opacity: 1,
+            }
+          },
+          point: {
+            events: {
+              click: function() {
+                window.location.href = "../data/" + this.id + "/";
+              }
             }
           }
         }
@@ -595,14 +609,16 @@
           alternateStartingDirection: true,
           levels: [{
             level: 1,
-            layoutAlgorithm: 'sliceAndDice',
+            borderColor: "#fcfcfc",
+            borderWidth: 4,
+            layoutAlgorithm: "sliceAndDice",
             dataLabels: {
               enabled: true,
-              align: 'left',
-              verticalAlign: 'top',
+              format: "{point.name}<br>{point.value}{point.symbol}",
+              align: "left",
+              verticalAlign: "top",
               style: {
-                fontSize: '15px',
-                fontWeight: 'bold'
+                fontSize: "13px",
               }
             }
           }],
@@ -611,10 +627,11 @@
               {% if key == "Space" %}
                 {% for each in data %}
                   {
-                    name: "{{ each.material_type }} - {{ each.owner }}",
+                    name: "{{ each.material_type }} - {{ each.owner|safe|escape }}",
                     value: {{ each.absolute_quantity }},
                     symbol: "{{ each.unit.symbol }}",
                     color: "#28a745",
+                    id: {{ each.id }},
                   },
                 {% endfor %}
               {% endif %}
