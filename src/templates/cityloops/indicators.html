@@ -30,12 +30,18 @@
     display: none;
   }
 
+
   #indicator-menu .nav-link.group:not(:first-of-type) {
     border-top: 1px solid #dee2e6;
   }
 
+  #indicator-menu .ve-collection:not(.collapsed) .nav-link.group,
   #indicator-menu .nav-link.group.active {
     background-color: #9cb7bb;
+    opacity: 1 !important;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
   }
 
   .ve-header:not(:first-of-type) {
@@ -211,19 +217,17 @@
       <h4 class="mb-5">&nbsp;</h4>
       <div class="sticky-top">
         <nav class="navbar navbar-light border rounded p-0" id="indicator-menu">
-          <nav class="nav flex-column">
-            {% for each in indicator_list %}
-              {% ifchanged each.vision_element %}
-                {% if not forloop.first %}
-                </div>
-                {% endif %}
-                <div class="ve-collection" data-ve="{{ each.vision_element }}">
-                <a class="nav-link group" href="#ve-{{ each.vision_element }}">{{ each.vision_element }}. {{ each.get_vision_element_display }}</a>
-              {% endifchanged %}
-              <a class="nav-link pl-3" href="#indicator-{{ each.number }}">{{ each }}</a>
-            {% endfor %}
-            </div>
-          </nav>
+          {% for each in indicator_list %}
+            {% ifchanged each.vision_element %}
+              {% if not forloop.first %}
+              </div>
+              {% endif %}
+              <div class="ve-collection collapsed" data-ve="{{ each.vision_element }}">
+              <a class="nav-link group" href="#ve-{{ each.vision_element }}">{{ each.vision_element }}. {{ each.get_vision_element_display }}</a>
+            {% endifchanged %}
+            <a class="nav-link pl-3" href="#indicator-{{ each.number }}">{{ each }}</a>
+          {% endfor %}
+          </div>
         </nav>
       </div>
     </div>
@@ -248,9 +252,7 @@
 
       selectedIndicator.parent().removeClass("collapsed");
 
-      let indicatorPosition = selectedIndicator.position().top;
 
-      indicatorMenu.scrollTop = indicatorPosition;
     })
 
     // copy url
