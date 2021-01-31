@@ -396,6 +396,7 @@ def account_discussion_attendance(request, id):
         .filter(child_list__record_parent=request.user.people, child_list__relationship__id=14) \
         .filter(tags__id=770)[0]
     list = info.child_list.filter(relationship_id=12).order_by("record_parent__name")
+
     context = {
         "header_title": "Attendance register",
         "header_subtitle": get_subtitle(request),
