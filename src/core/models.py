@@ -324,9 +324,23 @@ class Record(models.Model):
             else:
                 # In normal Markdown convention, a single newline will NOT be converted to <br>
                 # However this is not how regular textareas work, and people are expecting this to work
-                # so we add these <br>s. Ideally we would avoid <p>hello</p><br><p>newline</p> but
-                # for now that's the additional consequence -- doesn't seem to be a really visible impact anyways
+                # so we add these <br>s.
                 self.description_html = self.description_html.replace("\n", "<br>")
+
+                # This creates all kinds of additional <br>s in between paragraphs, headers, lists, etc
+                # This code removes that. It's ugly and inefficient. Any takers to make this more efficient??
+                self.description_html = self.description_html.replace("</p><br><p>", "</p><p>")
+                self.description_html = self.description_html.replace("</p><br><ul>", "</p><ul>")
+                self.description_html = self.description_html.replace("</li><br><li>", "</li><li>")
+                self.description_html = self.description_html.replace("</ul><br><p>", "</ul><p>")
+                self.description_html = self.description_html.replace("<ul><br><li>", "<ul><li>")
+                self.description_html = self.description_html.replace("</li><br></ul>", "</li></ul>")
+                self.description_html = self.description_html.replace("<br><h", "<h")
+                self.description_html = self.description_html.replace("</h1><br>", "</h1>")
+                self.description_html = self.description_html.replace("</h2><br>", "</h2>")
+                self.description_html = self.description_html.replace("</h3><br>", "</h3>")
+                self.description_html = self.description_html.replace("</h4><br>", "</h4>")
+
         super().save(*args, **kwargs)
 
     objects = PublicActiveRecordManager()
