@@ -25,7 +25,16 @@
     <div class="dark-cover"></div>
   {% endif %}
 
-  {% if DESIGN.back_link or PERMISSIONS or request.user.is_staff or NOTIFICATIONS %}
+  {% if PROJECT.slug == "ascus" %}
+    <div class="return-bar">
+      <div class="container">
+        <a href="https://ascus2021.metabolismofcities.org/">
+          AScUS 2021 is here! Go to the AScUS 2021 website.
+          <i class="fad fa-arrow-circle-right"></i>
+        </a>
+      </div>
+    </div>
+  {% elif DESIGN.back_link or PERMISSIONS or request.user.is_staff or NOTIFICATIONS %}
     <div class="return-bar">
       <div class="container">
         {% if DESIGN.back_link %}

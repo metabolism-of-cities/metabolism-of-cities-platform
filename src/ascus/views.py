@@ -79,6 +79,7 @@ def ascus(request):
         "header_title": "AScUS Unconference",
         "header_subtitle": get_subtitle(request),
         "edit_link": "/admin/core/project/" + str(request.project) + "/change/",
+        "title": "Homepage",
         "info": project,
         "show_relationship": request.project,
     }
