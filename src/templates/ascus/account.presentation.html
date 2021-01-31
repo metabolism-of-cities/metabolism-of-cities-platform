@@ -12,7 +12,7 @@
 {% block content %}
 
   {% if list and not request.GET.type %}
-    <p>You are the author of the following presentation(s):</p>
+    <p>You are the author of the following item(s):</p>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -49,7 +49,7 @@
     </form>
   {% else %}
 
-    {{ info.description|safe }}
+    {{ webpage.get_description }}
 
     <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=video">Upload video</a>
     <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=poster">Upload poster</a>
