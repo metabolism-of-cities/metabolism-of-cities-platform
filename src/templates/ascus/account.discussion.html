@@ -23,18 +23,30 @@
         <tr>
           <td>{{ each }}</td>
           <td>
-            <a href="{% url "ascus:account_discussion" each.id %}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
-            <a href="{% url "ascus:account_discussion_attendance" each.id %}" class="btn btn-primary"><i class="fa fa-users"></i> Attendance list</a>
+            <a href="{% url "ascus2021:account_discussion" each.id %}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
+            <a hidden href="{% url "ascus2021:account_discussion_attendance" each.id %}" class="btn btn-primary"><i class="fa fa-users"></i> Attendance list</a>
           </td>
         </tr>
       {% endfor %}
       </tbody>
     </table>
+  {% endif %}
 
-    <p><a href="/wow-room-hosts/" class="btn btn-primary">Guidelines for hosting sessions</a></p>
-
-  {% if request.user.id == 1 %}
   <form method="post" class="form form-horizontal" enctype="multipart/form-data">
+    <h2>Submit new discussion topic</h2>
+
+    <p>
+    Everyone can submit a discussion topic proposal even if they have not submitted
+    an abstract. Proposals should include a brief synopsis of the discussion topic,
+    a list of activities that are planned, and a general idea of the type of the
+    path-to-action contribution that is expected (e.g., white paper, podcast,
+    website, performance). We encourage participants to actively suggest discussion
+    topics, being the interdisciplinary exchange of ideas and knowledge one of the
+    key objectives of AScUS. Make sure to list the names of the organizer(s) of this 
+    discussion topic in the description as well.
+    </p>
+
+
     {% csrf_token %}
 
     {% bootstrap_form form %}
@@ -49,9 +61,6 @@
       <button type="submit" class="btn btn-primary">Save</button>
     {% endbuttons %}
   </form>
-  {% endif %}
-
-  {% endif %}
 
 {% else %}
   <h3>Edit topic</h3>

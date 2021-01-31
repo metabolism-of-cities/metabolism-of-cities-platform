@@ -7,6 +7,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.forms import modelform_factory
 from django.contrib.auth import authenticate, login, logout
 from markdown import markdown
+from django.contrib.auth.decorators import login_required
 
 from django.utils import timezone
 import pytz
@@ -14,6 +15,7 @@ from functools import wraps
 
 from django.core.mail import send_mail
 from django.template.loader import render_to_string, get_template
+from core.mocfunctions import *
 
 TAG_ID = settings.TAG_ID_LIST
 PAGE_ID = settings.PAGE_ID_LIST
@@ -64,14 +66,21 @@ def check_ascus_admin_access(function):
             return function(request, *args, **kwargs)
     return wrap
 
+def get_subtitle(request):
+    if request.project == 8:
+        return "Actionable Science for Urban Sustainability · 3-5 June 2020"
+    else:
+        return "Actionable Science for Urban Sustainability · 1-4 June 2021"
+
 def ascus(request):
+    project = get_project(request)
     context = {
         "show_project_design": True,
         "header_title": "AScUS Unconference",
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
-        "edit_link": "/admin/core/project/" + str(PAGE_ID["ascus"]) + "/change/",
-        "info": get_object_or_404(Project, pk=PAGE_ID["ascus"]),
-        "show_relationship": PAGE_ID["ascus"],
+        "header_subtitle": get_subtitle(request),
+        "edit_link": "/admin/core/project/" + str(request.project) + "/change/",
+        "info": project,
+        "show_relationship": request.project,
     }
     return render(request, "article.html", context)
 
@@ -94,7 +103,7 @@ def overview(request, preconf=False):
             .filter(tags__id=770)
     context = {
         "header_title": title,
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "header_subtitle": get_subtitle(request),
         "discussions": discussions,
         "my_topic_registrations": my_topic_registrations,
         "preconf": preconf,
@@ -112,7 +121,7 @@ def participants(request):
     ).order_by("record_parent__name")
     context = {
         "header_title": "Participant list",
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "header_subtitle": get_subtitle(request),
         "list": list,
     }
     return render(request, "ascus/participants.html", context)
@@ -125,7 +134,7 @@ def introvideos(request):
         .order_by("name")
     context = {
         "header_title": "Introduction videos",
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "header_subtitle": get_subtitle(request),
         "list": list,
     }
     return render(request, "ascus/introvideos.html", context)
@@ -161,7 +170,7 @@ def participant(request, id):
         .order_by("start_date")
     context = {
         "header_title": info.name,
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "header_subtitle": get_subtitle(request),
         "info": info,
         "video": video,
         "presentations": presentations,
@@ -245,7 +254,7 @@ def ascus_account(request):
 
     context = {
         "header_title": "My Account",
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "header_subtitle": get_subtitle(request),
         "edit_link": "/admin/core/project/" + str(PAGE_ID["ascus"]) + "/change/",
         "info": get_object_or_404(Project, pk=PAGE_ID["ascus"]),
         "my_discussions": my_discussions,
@@ -293,13 +302,15 @@ def forum(request):
     context = {
         "list": list,
         "header_title": "Forum",
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "header_subtitle": get_subtitle(request),
     }
     return render(request, "forum.list.html", context)
 
 def ascus_register(request):
-    # Disabling registration
-    return redirect("/")
+
+    # Disabling registration for ASCUS 2020:
+    if request.project == 8:
+        return redirect("/")
 
     people = user = is_logged_in = None
     if request.user.is_authenticated:
@@ -312,86 +323,26 @@ def ascus_register(request):
         if people:
             check_participant = RecordRelationship.objects.filter(
                 record_parent = people,
-                record_child_id = PAGE_ID["ascus"],
+                record_child_id = request.project,
                 relationship__name = "Participant",
             )
             if check_participant:
                 return redirect("ascus:account")
     if request.method == "POST":
         error = None
-        if not user:
-            password = request.POST.get("password")
-            email = request.POST.get("email")
-            name = request.POST.get("name")
-            if not password:
-                messages.error(request, "You did not enter a password.")
-                error = True
-            check = User.objects.filter(email=email)
-            if check:
-                messages.error(request, "A Metabolism of Cities account already exists with this e-mail address. Please <a href='/login/'>log in first</a> and then register for the AScUS unconference.")
-                error = True
         if not error:
-            if not user:
-                user = User.objects.create_user(email, email, password)
-                user.first_name = name
-                user.is_superuser = False
-                user.is_staff = False
-                user.save()
-                login(request, user)
-                check = People.objects.filter(name=name)
-                if check:
-                    check_people = check[0]
-                    if not check_people.user:
-                        people = check_people
-            if not people:
-                people = People.objects.create(name=name, is_public=False, email=user.email)
-            people.user = user
-            people.save()
             RecordRelationship.objects.create(
                 record_parent = people,
-                record_child_id = 8,
+                record_child_id = request.project,
                 relationship_id = 12,
             )
-            if request.POST.get("abstract") == "yes":
-                RecordRelationship.objects.create(
-                    record_parent = people,
-                    record_child_id = 8,
-                    relationship_id = 15,
-                )
-            if request.POST.get("discussion") == "yes":
-                RecordRelationship.objects.create(
-                    record_parent = people,
-                    record_child_id = 8,
-                    relationship_id = 16,
-                )
-            if not is_logged_in:
-                Work.objects.create(
-                    name = "Link city and organization of participant",
-                    description = "Affiliation: " + request.POST.get("organization") + " -- City: " + request.POST.get("city"),
-                    part_of_project_id = 8,
-                    related_to = people,
-                    workactivity_id = 14,
-                )
             location = request.POST.get("city", "not set")
-            Work.objects.create(
-                name = "Monitor for payment",
-                description = "Price should be based on their location: location = " + location,
-                part_of_project_id = 8,
-                related_to = people,
-                workactivity_id = 13,
-            )
             messages.success(request, "You are successfully registered for the AScUS Unconference.")
-
-            tags = request.POST.getlist("tags")
-            for each in tags:
-                tag = Tag.objects.get(pk=each, parent_tag__id=757)
-                people.tags.add(tag)
-
             return redirect("ascus:article", slug="payment")
 
     context = {
         "header_title": "Register now",
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "header_subtitle": get_subtitle(request),
         "tags": Tag.objects.filter(parent_tag__id=757)
     }
     return render(request, "ascus/register.html", context)
@@ -416,7 +367,7 @@ def ascus_account_edit(request):
             messages.error(request, "We could not save your form, please fill out all fields")
     context = {
         "header_title": "Edit profile",
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "header_subtitle": get_subtitle(request),
         "edit_link": "/admin/core/webpage/" + str(info.id) + "/change/",
         "info": info,
         "form": form,
@@ -430,7 +381,7 @@ def account_outputs(request):
         .filter(tags__id=919)
     context = {
         "header_title": "Path-to-Action documents",
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "header_subtitle": get_subtitle(request),
         "webpage": webpage,
         "outputs": outputs,
         "menu": "outputs",
@@ -447,26 +398,27 @@ def account_discussion_attendance(request, id):
     list = info.child_list.filter(relationship_id=12).order_by("record_parent__name")
     context = {
         "header_title": "Attendance register",
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "header_subtitle": get_subtitle(request),
         "info": info,
         "list": list,
         "hide_mail": True,
     }
     return render(request, "ascus/admin.attendance.html", context)
 
-@check_ascus_access
+#@check_ascus_access
+@login_required
 def ascus_account_discussion(request, id=None):
     organizer_editing = False
     info = get_object_or_404(Webpage, slug="/ascus/account/discussion/")
     my_discussions = Event.objects_include_private \
-        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(parent_list__record_child__id=request.project) \
         .filter(child_list__record_parent=request.user.people, child_list__relationship__id=14) \
         .filter(tags__id=770).distinct()
     event = None
     if id and "org_mode" in request.GET:
         check_organizer = RecordRelationship.objects.filter(
             record_parent = request.user.people,
-            record_child_id = PAGE_ID["ascus"],
+            record_child_id = request.project,
             relationship__name = "Organizer",
         )
         if check_organizer.exists():
@@ -474,14 +426,14 @@ def ascus_account_discussion(request, id=None):
             organizer_editing = True
             event = Event.objects_include_private \
                 .filter(pk=id) \
-                .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+                .filter(parent_list__record_child__id=request.project) \
                 .filter(tags__id=770)
             event = event[0] if event else None
     elif id:
         event = Event.objects_include_private \
             .filter(pk=id) \
             .filter(child_list__record_parent=request.user.people) \
-            .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+            .filter(parent_list__record_child__id=request.project) \
             .filter(tags__id=770)
         event = event[0] if event else None
     if not organizer_editing:
@@ -503,18 +455,19 @@ def ascus_account_discussion(request, id=None):
                 info = form.save(commit=False)
                 info.description = request.POST.get("text")
                 info.save()
+                messages.success(request, "The changes were saved.")
             else:
                 info = form.save(commit=False)
                 info.description = request.POST.get("text")
-                info.site = request.site
                 info.is_public = False
                 info.type = "other"
                 info.save()
                 info.tags.add(Tag.objects.get(pk=770))
+                info.projects.add(get_project(request))
                 messages.success(request, "Your discussion topic was saved.")
                 RecordRelationship.objects.create(
                     record_parent = info,
-                    record_child_id = PAGE_ID["ascus"],
+                    record_child_id = request.project,
                     relationship = Relationship.objects.get(name="Presentation"),
                 )
                 RecordRelationship.objects.create(
@@ -522,29 +475,23 @@ def ascus_account_discussion(request, id=None):
                     record_child = info,
                     relationship = Relationship.objects.get(name="Organizer"),
                 )
-                Work.objects.create(
-                    name = "Review discussion topic",
-                    description = "Please check to see if this looks good. If all is well, then please add any additional organizers to this record (as per the description).",
-                    part_of_project_id = 8,
-                    related_to = info,
-                    workactivity_id = 14,
-                )
             if organizer_editing:
                 messages.success(request, "The changes were saved.")
-                return redirect("ascus:admin_documents", type="topics")
+                return redirect("ascus2021:admin_documents", type="topics")
             else:
-                return redirect("ascus:account")
+                return redirect("ascus2021:account_discussion")
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
     context = {
         "header_title": "Discussion topic",
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "header_subtitle": get_subtitle(request),
         "edit_link": "/admin/core/webpage/" + str(info.id) + "/change/",
         "info": info,
         "form": form,
         "list": my_discussions,
         "event": event,
-    }
+        "load_markdown": True,
+   }
     return render(request, "ascus/account.discussion.html", context)
 
 @check_ascus_access
@@ -593,21 +540,22 @@ def account_output(request):
             messages.error(request, "We could not save your form, please fill out all fields")
     context = {
         "header_title": "My Path to Action",
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "header_subtitle": get_subtitle(request),
         "edit_link": "/admin/core/webpage/" + str(info.id) + "/change/",
         "info": info,
         "form": form,
     }
     return render(request, html_page, context)
 
-@check_ascus_access
+#@check_ascus_access
+@login_required
 def ascus_account_presentation(request, introvideo=False):
     form = None
     if introvideo:
         info = get_object_or_404(Webpage, slug="/ascus/account/introvideo/")
         my_documents = LibraryItem.objects_include_private \
             .filter(child_list__record_parent=request.user.people) \
-            .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+            .filter(parent_list__record_child__id=request.project) \
             .filter(tags__id=769)
         ModelForm = modelform_factory(
             Video, 
@@ -619,7 +567,7 @@ def ascus_account_presentation(request, introvideo=False):
         info = get_object_or_404(Webpage, slug="/ascus/account/presentation/")
         my_documents = LibraryItem.objects_include_private \
             .filter(child_list__record_parent=request.user.people) \
-            .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+            .filter(parent_list__record_child__id=request.project) \
             .filter(tags__id=771)
         html_page = "ascus/account.presentation.html"
 
@@ -649,7 +597,7 @@ def ascus_account_presentation(request, introvideo=False):
         if form.is_valid():
             info = form.save(commit=False)
             info.status = "active"
-            info.year = 2020
+            info.year = 2021
             if type == "video":
                 info.type = LibraryItemType.objects.get(name="Video Recording")
             elif type == "poster":
@@ -673,7 +621,7 @@ def ascus_account_presentation(request, introvideo=False):
                 review_title = "Review uploaded presentation"
             RecordRelationship.objects.create(
                 record_parent = info,
-                record_child_id = PAGE_ID["ascus"],
+                record_child_id = request.project,
                 relationship = Relationship.objects.get(name="Presentation"),
             )
             RecordRelationship.objects.create(
@@ -684,16 +632,16 @@ def ascus_account_presentation(request, introvideo=False):
             Work.objects.create(
                 name = review_title,
                 description = "Please check to see if this looks good. If it's a video, audio schould be of decent quality. Make sure there are no glaring problems with this submission. If there are, contact the submitter and discuss. If all looks good, then please look at the co-authors and connect this (create new relationships) to the other authors as well.",
-                part_of_project_id = 8,
+                part_of_project_id = request.project,
                 related_to = info,
                 workactivity_id = 14,
             )
-            return redirect("ascus:account")
+            return redirect("ascus2021:account_presentation")
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
     context = {
-        "header_title": "My Presentation",
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "header_title": "My Abstract",
+        "header_subtitle": get_subtitle(request),
         "edit_link": "/admin/core/webpage/" + str(info.id) + "/change/",
         "info": info,
         "form": form,
@@ -711,7 +659,7 @@ def presentations(request):
         .order_by("name")
     context = {
         "header_title": info.name,
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "header_subtitle": get_subtitle(request),
         "items": list,
         "webpage": info,
     }
@@ -730,7 +678,7 @@ def ascus_admin(request):
             voting[each.name] = RecordRelationship.objects.filter(relationship=each).values("record_child__name").annotate(total=Count("record_child__name")).order_by("-total")
     context = {
         "header_title": "AScUS Admin",
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "header_subtitle": get_subtitle(request),
         "voting": voting,
     }
     return render(request, "ascus/admin.html", context)
@@ -750,7 +698,7 @@ def ascus_admin_list(request, type="participant"):
     ).order_by("record_parent__name")
     context = {
         "header_title": "AScUS Admin",
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "header_subtitle": get_subtitle(request),
         "list": list,
         "load_datatables": True,
         "types": types,
@@ -767,7 +715,7 @@ def admin_discussion_attendance(request, id):
     list = info.child_list.filter(relationship_id=12).order_by("record_parent__name")
     context = {
         "header_title": "Attendance register",
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "header_subtitle": get_subtitle(request),
         "info": info,
         "list": list,
     }
@@ -798,7 +746,7 @@ def ascus_admin_documents(request, type="introvideos"):
 
     context = {
         "header_title": "AScUS Admin",
-        "header_subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020",
+        "header_subtitle": get_subtitle(request),
         "list": list,
         "load_datatables": True,
         "types": types,

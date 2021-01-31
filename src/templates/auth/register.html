@@ -19,7 +19,9 @@
       <hr>
       <form method="post" action="" enctype="multipart/form-data">
         {% csrf_token %}
-        {% if PROJECT.id == 16 %}
+        {% if PROJECT.slug == "ascus2021" %}
+          <p>Do you already have a Metabolism of Cities account? <a href="../login/">Log in here.</a></p>
+        {% elif PROJECT.id == 16 %}
           <div class="form-group">
             <label for="org">Organisation</label>
             <input type="text" class="form-control" id="org" name="organization">
