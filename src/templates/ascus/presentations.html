@@ -14,7 +14,9 @@
 
 {% block content %}
  
-  {{ webpage.description|safe }}
+  <div>
+    {{ webpage.get_description }}
+  </div>
 
   <div class="row row-cols-1 row-cols-md-3">
     {% for each in items %}
