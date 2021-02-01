@@ -940,23 +940,30 @@ def material(request, catalog, id):
 
 @login_required
 def material_form(request, catalog=None, id=None, parent=None, project_name=None):
-    ModelForm = modelform_factory(Material, fields=("name", "code", "measurement_type", "description", "icon", "parent", "is_deleted"))
+    fields = ["name", "code", "measurement_type", "description", "icon", "is_deleted"]
+    if id:
+        fields.append("parent")
+    ModelForm = modelform_factory(Material, fields=fields)
     info = None
     if id:
         info = get_object_or_404(Material, pk=id)
         form = ModelForm(request.POST or None, instance=info)
     else:
         form = ModelForm(request.POST or None)
+        parent = Material.objects.get(pk=parent)
     if info:
         catalog = info.catalog.id
         form.fields["parent"].queryset = Material.objects.filter(catalog_id=catalog)
+        parent = info.parent
     if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)
             if not id:
-                info.catalog_id = catalog
+                if catalog:
+                    info.catalog_id = catalog
                 if parent:
-                    info.parent_id = parent
+                    info.parent = parent
+                    info.catalog = parent.catalog
             info.save()
             messages.success(request, "Information was saved.")
             return redirect(request.GET["next"])
@@ -966,6 +973,7 @@ def material_form(request, catalog=None, id=None, parent=None, project_name=None
     context = {
         "form": form,
         "title": info if info else "Create material",
+        "parent": parent,
     }
     return render(request, "staf/material.form.html", context)
 
