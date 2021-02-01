@@ -580,13 +580,25 @@ def ascus_account_presentation(request, introvideo=False):
             ModelForm = modelform_factory(
                 Video, 
                 fields = ("name", "description", "author_list", "url", "is_public"), 
-                labels = { "description": "Abstract", "name": "Title", "url": "URL", "author_list": "Author(s)", "is_public": "After the unconference, make my contribution publicly available through the Metabolism of Cities digital library." }
+                labels = { "description": "Description", "name": "Title", "url": "URL", "author_list": "Author(s)", "is_public": "After the unconference, make my contribution publicly available through the Metabolism of Cities digital library." }
             )
-        elif type == "poster" or type == "paper":
+        elif type == "text":
+            ModelForm = modelform_factory(
+                LibraryItem, 
+                fields = ("name", "description", "author_list", "is_public"), 
+                labels = { "description": "Description", "name": "Title", "author_list": "Author(s)", "is_public": "After the unconference, make my contribution publicly available through the Metabolism of Cities digital library." }
+            )
+        elif type == "audio":
             ModelForm = modelform_factory(
                 LibraryItem, 
                 fields = ("name", "file", "description", "author_list", "is_public"), 
-                labels = { "description": "Abstract", "name": "Title", "author_list": "Author(s)", "is_public": "After the unconference, make my contribution publicly available through the Metabolism of Cities digital library." }
+                labels = { "description": "Description", "name": "Title", "author_list": "Author(s)", "is_public": "After the unconference, make my contribution publicly available through the Metabolism of Cities digital library." }
+            )
+        elif type == "image":
+            ModelForm = modelform_factory(
+                LibraryItem, 
+                fields = ("name", "file", "description", "author_list", "is_public"), 
+                labels = { "description": "Description", "name": "Title", "author_list": "Author(s)", "is_public": "After the unconference, make my contribution publicly available through the Metabolism of Cities digital library." }
             )
         elif type == "other":
             ModelForm = modelform_factory(
@@ -602,10 +614,12 @@ def ascus_account_presentation(request, introvideo=False):
             info.year = 2021
             if type == "video":
                 info.type = LibraryItemType.objects.get(name="Video Recording")
-            elif type == "poster":
-                info.type = LibraryItemType.objects.get(name="Poster")
-            elif type == "paper":
+            elif type == "text":
                 info.type = LibraryItemType.objects.get(name="Conference Paper")
+            elif type == "image":
+                info.type = LibraryItemType.objects.get(name="Image")
+            elif type == "audio":
+                info.type = LibraryItemType.objects.get(name="Audio Recording")
             elif introvideo:
                 info.type = LibraryItemType.objects.get(name="Video Recording")
                 info.name = "Introduction video: " + str(request.user.people)

@@ -51,10 +51,11 @@
 
     {{ info.get_description }}
 
-    <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=video">Upload video</a>
-    <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=poster">Upload poster</a>
-    <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=paper">Upload paper</a>
-    <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=other">Upload other document</a>
+    <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=text">Text</a>
+    <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=video">Video</a>
+    <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=image">Image</a>
+    <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=audio">Audio</a>
+    <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=other">Other format</a>
 
   {% endif %}
 
