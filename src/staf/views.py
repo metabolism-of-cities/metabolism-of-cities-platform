@@ -2696,6 +2696,10 @@ def data(request):
     start = request.GET.get("date_start")
     end = request.GET.get("date_end")
     material = request.GET.get("material")
+    source = request.GET.get("source")
+
+    if source:
+        data = data.filter(source_id=source)
 
     if start and end:
         data = data.filter(timeframe__start__range=[start, end])

@@ -1260,9 +1260,9 @@ class LibraryItem(Record):
                             unit = row[5]
                             space = str(row[6])
                             space = space.strip()
-                            comment = row[8]
+                            comment = row[7]
                             try:
-                                segment = row[9]
+                                segment = row[8]
                             except:
                                 segment = None
                         elif type == "population":

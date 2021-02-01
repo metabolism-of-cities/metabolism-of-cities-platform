@@ -62,6 +62,9 @@
         <div class="alert alert-warning">
           We are showing the first 100 records. 
         </div>
+        {% if request.user.id == 1 %}
+          <a href="{% if DEBUG %}/data{% endif %}/data/?source={{ info.id }}" class="btn btn-primary mb-3">View data details</a>
+        {% endif %}
       {% endif %}
       <table class="table datatable datatable-card">
         <thead>
