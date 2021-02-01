@@ -176,4 +176,7 @@ baseline_staf_urlpatterns = [
     path("units/conversion/", staf.units_conversion, name="units_conversion"),
     path("units/<int:id>/", staf.unit, name="unit"),
     path("units/create/", staf.unit, name="unit"),
+
+    path("data/", staf.data, name="data"),
+
 ]

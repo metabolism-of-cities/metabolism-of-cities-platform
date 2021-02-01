@@ -2690,6 +2690,40 @@ def shapefile_json(request, id, download=False):
         response["Content-Disposition"] = f"attachment; filename=\"{info.name}.geojson\""
     return response
 
+def data(request):
+    data = Data.objects.all()
+
+    start = request.GET.get("date_start")
+    end = request.GET.get("date_end")
+    material = request.GET.get("material")
+
+    if start and end:
+        data = data.filter(timeframe__start__range=[start, end])
+    elif start:
+        data = data.filter(timeframe__end__gte=start)
+    elif end:
+        data = data.filter(timeframe__end__lte=end)
+
+    if material:
+        m = Material.objects.filter(code=material.strip())
+        if m:
+            data = data.filter(material__in=m)
+        else:
+            messages.error(request, "We could not find this material")
+
+    if data.count() > 200:
+        total = data.count()
+        data = data[:200]
+    else:
+        total = data.count()
+
+    context = {
+        "data": data,
+        "total": total,
+    }
+    return render(request, "staf/data.html", context)
+
+
 @login_required
 def dataset_editor(request, id):
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):

@@ -1,0 +1,49 @@
+{% extends "_base.html" %}
+
+{% block page_name %}{% endblock %}
+
+{% block title %}Data{% endblock %}
+
+{% block content %}
+  <h1>Data</h1>
+
+  <form>
+    <p>
+      From: <input type="date" name="date_start" value="{{ request.GET.date_start }}">
+      until: <input type="date" name="date_end" value="{{ request.GET.date_end }}">
+    </p>
+    <p>Material: <input type="text" name="material" value="{{ request.GET.material }}" placeholder="Enter material code, e.g. EMP1.3" /></p>
+    <button type="submit">Search</button>
+  </form>
+
+  <div class="alert alert-warning">
+    <strong>{{ total }}</strong> records found.
+    {% if total == 200 %}Showing 200 records only.{% endif %}
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Source</th>
+        <th>Material</th>
+        <th>Quantity</th>
+        <th colspan="2">Dates</th>
+        <th>From</th>
+        <th>To</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in data %}
+      <tr>
+        <td><a href="{% url URLS.LIBRARY_ITEM each.source.id %}">{{ each.source }}</a></td>
+        <td>{{ each.material }}</td>
+        <td>{{ each.quantity }} {{ each.unit.symbol }}</td>
+        <td>{{ each.timeframe.start }}</td>
+        <td>{{ each.timeframe.end }}</td>
+        <td>{{ each.origin_space }}</td>
+        <td>{{ each.destination_space }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
