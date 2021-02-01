@@ -59,7 +59,7 @@
   {% endif %}
 
   {% if edit_mode %}
-    <a class="btn btn-default-basic" href="create/?next={{ request.get_full_path }}"><i class="fal fa-plus"></i> Add material</a>
+    <a class="btn btn-default-basic" href="create/?{% if not material %}catalog={{ catalog }}&amp;{% endif %}next={{ request.get_full_path }}"><i class="fal fa-plus"></i> Add material</a>
   {% endif %}
 
 {% endblock %}

@@ -941,6 +941,8 @@ def material(request, catalog, id):
 @login_required
 def material_form(request, catalog=None, id=None, parent=None, project_name=None):
     fields = ["name", "code", "measurement_type", "description", "icon", "is_deleted"]
+    if not catalog and request.GET.get("catalog"):
+        catalog = request.GET.get("catalog")
     if id:
         fields.append("parent")
     ModelForm = modelform_factory(Material, fields=fields)
@@ -950,17 +952,21 @@ def material_form(request, catalog=None, id=None, parent=None, project_name=None
         form = ModelForm(request.POST or None, instance=info)
     else:
         form = ModelForm(request.POST or None)
-        parent = Material.objects.get(pk=parent)
+        if parent:
+            parent = Material.objects.get(pk=parent)
+            catalog = parent.catalog
+        elif catalog:
+            catalog = MaterialCatalog.objects.get(pk=catalog)
     if info:
-        catalog = info.catalog.id
-        form.fields["parent"].queryset = Material.objects.filter(catalog_id=catalog)
+        catalog = info.catalog
+        form.fields["parent"].queryset = Material.objects.filter(catalog=catalog)
         parent = info.parent
     if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)
             if not id:
                 if catalog:
-                    info.catalog_id = catalog
+                    info.catalog = catalog
                 if parent:
                     info.parent = parent
                     info.catalog = parent.catalog
@@ -974,6 +980,7 @@ def material_form(request, catalog=None, id=None, parent=None, project_name=None
         "form": form,
         "title": info if info else "Create material",
         "parent": parent,
+        "catalog": catalog,
     }
     return render(request, "staf/material.form.html", context)
 
