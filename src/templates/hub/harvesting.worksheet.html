@@ -4,9 +4,13 @@
 
   <h1>Instructions</h1>
 
+  {% if PROJECT.slug == "cityloops" %}
+
   <p>
     Descriptions, instructions and tips&tricks for filling the single layers and sublayers for the <a href="https://cityloops.metabolismofcities.org/library/583948/">Sector-Wide Circularity Assessment (SCA)</a> can be found below. For more detailed instructions on a specific topic, respective videos are in the course modules of <a href="https://cityloops.metabolismofcities.org/courses/course-1a-data-collection-for-circularity-assessment-of-construction-sector-wp2/">Course 1A: Data collection for circularity assessment of construction sector (WP2)</a> and <a href="https://cityloops.metabolismofcities.org/courses/course-1b-data-collection-for-circularity-assessment-of-biomass-sector-wp3/">Course 1B: Data collection for circularity assessment of biomass sector (WP3)</a>.
   </p>
+
+  {% endif %}
 
   {% for each in layers %}
 
