@@ -1274,7 +1274,10 @@ def hub_harvesting_space(request, space):
     untagged_items = LibraryItem.objects.filter(spaces=info).exclude(tags__parent_tag__in=layers).distinct()
     total_tags = Tag.objects.filter(parent_tag__in=layers).count()
     uploaded = len(counter)
-    percentage = (uploaded/total_tags)*100
+    if total_tags:
+        percentage = (uploaded/total_tags)*100
+    else:
+        percentage = 0;
 
     forum_topic = ForumTopic.objects.filter(part_of_project_id=request.project, parent_url=request.get_full_path())
     if forum_topic:
