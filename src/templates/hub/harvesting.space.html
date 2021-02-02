@@ -90,12 +90,12 @@
         <div class="nav flex-column nav-pills mb-3" role="tablist" aria-orientation="vertical">
           {% for each in layers %}
             <a class="nav-link {% if each.id == 846 %}active{% endif %}" data-toggle="pill" href="#tab-{{ each.id }}" role="tab" aria-controls="v-pills-{{ each.id }}" aria-selected="true">
-              <i class="fa fa-{{ each.icon }} fa-fw mr-2"></i> {{ each }}
+              <i class="fal fa-{{ each.icon }} fa-fw mr-2"></i> {{ each }}
             </a>
           {% endfor %}
 
           <a class="nav-link" data-toggle="pill" href="#tab-photos" role="tab">
-            <i class="fa fa-image fa-fw mr-2"></i> Extra: General photos
+            <i class="fal fa-image fa-fw mr-2"></i> Extra: General photos
           </a>
         </div>
 
@@ -122,7 +122,7 @@
                   <tr>
                     <td {% if forloop.first %}class="border-0"{% endif %}>
                       {% if PROJECT.slug == "cityloops" %}
-                        <i class="fa fa-fw mr-2 {{ counter|length }}"></i>
+                        <span class="badge badge-primary mr-3">{{ tag.items|length }}</span>
                       {% else %}
                         <i class="fa fa-fw mr-2 {% if tag.id in counter %}text-success fa-check{% endif %}"></i>
                       {% endif %}
