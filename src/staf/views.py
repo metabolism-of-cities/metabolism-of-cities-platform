@@ -2795,7 +2795,7 @@ def chart_editor(request, id):
         if points:
             context["colors"] = ["blue", "gold", "red", "green", "orange", "yellow", "violet", "grey", "black"]
         else:
-            context["colors"] = ["#144d58","#a6cee3","#33a02c","#b2df8a","#e31a1c","#fb9a99","#ff7f00","#fdbf6f","#6a3d9a","#cab2d6","#b15928","#ffff99"]
+            context["colors"] = ["#144d58","#a6cee3", "#1042DE", "#33a02c","#b2df8a","#e31a1c","#fb9a99","#ff7f00","#fdbf6f","#6a3d9a","#cab2d6", "#DE10C8", "#b15928","#ffff99"]
 
         context["styles"] = ["streets-v11", "outdoors-v11", "light-v10", "dark-v10", "satellite-v9", "satellite-streets-v11"]
         return render(request, "staf/dataset-editor/map.basic.html", context)
