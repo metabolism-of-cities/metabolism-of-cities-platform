@@ -10,7 +10,7 @@ from django.views.generic.base import RedirectView
 app_name = "cityloops"
 
 urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + baseline_education_urlpatterns + [
-    path("", data.progress, { "style": "grid"}, name="index"),
+    path("", data.progress, {"style": "grid"}, name="index"),
     path("about/", views.about, name="about"),
     path("indicators-cities/", views.indicators_cities, name="indicators_cities"),
     path("partners/", views.partners, name="partners"),

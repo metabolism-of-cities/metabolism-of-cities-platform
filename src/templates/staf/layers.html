@@ -9,7 +9,7 @@
         <div class="nav flex-column nav-pills">
           {% for each in layers %}
             <a class="nav-link {% if each.slug == layer %}active{% endif %}" href="../{{ each.slug }}/">
-              <i class="fa fa-{{ each.icon }} fa-fw"></i> {{ each }}
+              <i class="fal fa-{{ each.icon }} fa-fw mr-2"></i> {{ each }}
             </a>
           {% endfor %}
         </div>
