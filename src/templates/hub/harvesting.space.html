@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% load moc_extras %}
 
 {% block css %}
   <style>
@@ -122,7 +123,11 @@
                   <tr>
                     <td {% if forloop.first %}class="border-0"{% endif %}>
                       {% if PROJECT.slug == "cityloops" %}
-                        <!-- <span class="badge badge-primary mr-3">{{ tag.items|length }}</span> -->
+                        {% if counter|get_item:tag.id > 0 %}
+                          <span class="badge badge-cityloops-secondary mr-3">{{ counter|get_item:tag.id }}</span>
+                        {% else %}
+                          <span class="badge badge-cityloops-primary mr-3">0</span>
+                        {% endif %}
                       {% else %}
                         <i class="fa fa-fw mr-2 {% if tag.id in counter %}text-success fa-check{% endif %}"></i>
                       {% endif %}
