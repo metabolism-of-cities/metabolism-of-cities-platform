@@ -45,7 +45,7 @@
       </div>
     {% else %}
       <div class="alert alert-warning">
-        <i class="fa fa-exclamation-triangle"></i> No items uploaded yet.
+        <i class="fa fa-exclamation-triangle mr-2"></i> No items uploaded yet.
       </div>
     {% endif %}
 
@@ -97,12 +97,15 @@
           <a class="nav-link" data-toggle="pill" href="#tab-photos" role="tab">
             <i class="fa fa-image fa-fw mr-2"></i> Extra: General photos
           </a>
-
         </div>
-        <a class="btn btn-primary" href="{% url 'data:hub_harvesting_worksheet' %}">
-          <i class="fa fa-file-alt"></i> View entire worksheet
-        </a>
+
+        {% with link=PROJECT.slug|add:":hub_harvesting_worksheet" %}
+          <a class="btn btn-primary" href="{% url link %}">
+            <i class="fa fa-file-alt"></i> View all instructions
+          </a>
+        {% endwith %}
       </div>
+
       <div class="col-lg-8">
         <div class="tab-content" id="v-pills-tabContent">
           {% for each in layers %}
@@ -117,10 +120,14 @@
                 <tbody>
                   {% for tag in each.children.all %}
                   <tr>
-                    <td{% if forloop.first %} class="border-0"{% endif %}>
-                      <i class="fa fa-fw mr-2 {% if tag.id in counter %}text-success fa-check{% else %}fa-fw{% endif %}"></i>
+                    <td {% if forloop.first %}class="border-0"{% endif %}>
+                      {% if PROJECT.slug == "cityloops" %}
+                        <i class="fa fa-fw mr-2 {{ counter|length }}"></i>
+                      {% else %}
+                        <i class="fa fa-fw mr-2 {% if tag.id in counter %}text-success fa-check{% endif %}"></i>
+                      {% endif %}
                       <a href="{{ tag.id }}/">{{ tag }}</a>
-                      {% if tag.icon %}<i class="float-right fa fa-{{ tag.icon }}"></i>{% endif %}
+                      {% if tag.icon %}<i class="float-right mt-1 fal fa-fw fa-{{ tag.icon }}"></i>{% endif %}
                     </td>
                   </tr>
                   {% endfor %}
@@ -160,14 +167,20 @@
     </div>
   </section>
 
-  <div class="alert alert-warning">
+  <div class="border rounded p-3 bg-light">
     <h4>Do an online course</h4>
     <p>
       Are you not yet familiar with data collection? We have a course for you! It's open, it's free,
       and it's fun!
     </p>
-    <a class="badge badge-primary" href="https://education.metabolismofcities.org/courses/data-and-urban-metabolism-data-collection/">English course: Data collection</a>
-    <a class="badge badge-primary" href="https://education.metabolismofcities.org/courses/metabolismo-urbano-y-manejo-de-datos-recopilacion-de-datos/">Spanish course: Recopilación de datos</a>
+
+    {% if PROJECT.slug == "cityloops" %}
+      <a class="btn btn-primary btn-sm mb-1" href="https://cityloops.metabolismofcities.org/courses/course-1a-data-collection-for-circularity-assessment-of-construction-sector-wp2/">Data collection for circularity assessment of construction sector (WP2)</a>
+      <a class="btn btn-primary btn-sm mb-1" href="https://cityloops.metabolismofcities.org/courses/course-1b-data-collection-for-circularity-assessment-of-biomass-sector-wp3/">Data collection for circularity assessment of biomass sector (WP3)</a>
+    {% else %}
+      <a class="btn btn-primary btn-sm" href="https://education.metabolismofcities.org/courses/data-and-urban-metabolism-data-collection/">English course: Data collection</a>
+      <a class="btn btn-primary btn-sm" href="https://education.metabolismofcities.org/courses/metabolismo-urbano-y-manejo-de-datos-recopilacion-de-datos/">Spanish course: Recopilación de datos</a>
+    {% endif %}
   </div>
 
   <section>
