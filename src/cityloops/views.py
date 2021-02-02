@@ -166,11 +166,10 @@ def indicators(request):
     }
     return render(request, "cityloops/indicators.html", context)
 
-def indicators_cities(request, sector):
+def indicators_cities(request):
     context = {
         "title": "Indicators",
         "load_select2": True,
-        "sector": sector,
     }
     return render(request, "cityloops/indicators.cities.html", context)
 

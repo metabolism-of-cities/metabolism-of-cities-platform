@@ -381,8 +381,8 @@ def admin_entity_materials(request, organization, id, slug=None):
         main_groups = Material.objects.filter(parent__isnull=True, catalog_id=31594).exclude(pk__in=[31621,31620,584734])
         materials = Material.objects.filter(parent__in=main_groups)
     elif slug == "technology":
-        main_groups = None
-        materials = Material.objects.filter(parent_id=31620)
+        main_groups = Material.objects.filter(parent__isnull=True, catalog_id=31594).filter(pk__in=[583743])
+        materials = Material.objects.filter(parent__in=main_groups)
     elif slug == "space":
         main_groups = None
         materials = Material.objects.filter(parent_id=31621)

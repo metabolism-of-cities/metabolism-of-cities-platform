@@ -81,7 +81,7 @@
 
   <div class="card container mt-4 filter-table" id="add-material">
     <div class="row">
-      {% if slug == "resources" %}
+      {% if slug == "resources" or slug == "technology" %}
         <div class="col-md-6 col-lg-4 py-3 col-filter">
           <div class="form-group">
             <input type="text" class="form-control search" placeholder="Search..." disabled>
@@ -100,7 +100,7 @@
       {% endif %}
       <div class="col-md-6 col-lg-8 p-0 col-results">
         <table class="table table-sm mb-0">
-          <tbody class="list" {% if slug == "resources" %}hidden{% endif %}>
+          <tbody class="list" {% if slug == "resources" or slug == "technology" %}hidden{% endif %}>
             {% for each in materials %}
             <tr>
               <td><span class="material-name">{{ each }}</span><span hidden class="material-tags">item-{{ each.parent.id }} </span></td>
@@ -113,7 +113,7 @@
           </tbody>
         </table>
 
-        {% if slug == "resources" %}
+        {% if slug == "resources" or slug == "technology" %}
           <div class="first-load text-center pt-4">
             <h2 class="my-4"><i class="fad fa-arrow-left mr-2"></i> Please select a category</h2>
           </div>
