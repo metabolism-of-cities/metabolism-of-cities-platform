@@ -1405,6 +1405,46 @@ class LibraryItem(Record):
                     geometry = polygon,
                     source = self,
                 )
+            elif "group_spaces_by_name" in self.meta_data:
+                # EXAMPLE: a shapefile containing land use data, in which there are many polygons indicating 
+                # a few different types (e.g. BUILT ENVIRONMENT, LAKES, AGRICULTURE). These should be saved
+                # as individual reference spaces (so we can differentiate them), grouped by their name
+                spaces = {}
+                for each in layer:
+
+                    if type == "Point25D":
+                        # This type has a "Z" geometry which needs to be changed to a 2-dimensional geometry
+                        # See also https://stackoverflow.com/questions/35851577/strip-z-dimension-on-geodjango-force-2d-geometry
+                        get_clone = each.geom.clone()
+                        get_clone.coord_dim = 2
+                        geo = get_clone
+                    else:
+                        geo = each.geom
+
+                    # We use WGS 84 (4326) as coordinate reference system, so we gotta convert to that
+                    # if it uses something else
+                    if layer.srs.srid != 4326:
+                        ct = CoordTransform(layer.srs, SpatialReference("WGS84"))
+                        geo.transform(ct)
+
+                    name = str(each.get(self.meta_data["columns"]["name"]))
+
+                    # So what we do here is to check if this particular field (based on the name) already exists
+                    # If not, we create a new space in our dictionary with the geometry of this one. 
+                    if name not in spaces:
+                        spaces[name] = geo
+                    else:
+                        # However, if it already exists then we use the union function to merge the geometry of this space
+                        # with the existing info
+                        s = spaces[name]
+                        spaces[name] = s.union(geo)
+
+                for name,geo in spaces.items():
+                    ReferenceSpace.objects.create(
+                        name = name,
+                        geometry = geo.wkt,
+                        source = self,
+                    )
             else:
                 count = 0
                 for each in layer:

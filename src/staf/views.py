@@ -2400,6 +2400,11 @@ def hub_processing_gis_classify(request, id, space=None):
         elif "single_reference_space" in meta_data:
             del meta_data["single_reference_space"]
 
+        if "group_spaces_by_name" in request.POST and request.POST["group_spaces_by_name"]:
+            meta_data["group_spaces_by_name"] = True
+        elif "group_spaces_by_name" in meta_data:
+            del meta_data["group_spaces_by_name"]
+
         document.meta_data = meta_data
         document.save()
         messages.success(request, "The information was saved.")
