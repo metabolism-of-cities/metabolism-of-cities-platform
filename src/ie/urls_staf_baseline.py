@@ -73,7 +73,7 @@ baseline_staf_urlpatterns = [
 
     # Hub
     path("hub/harvesting/", staf.hub_harvesting, name="hub_harvesting"),
-    path("hub/harvesting/worksheet/", staf.hub_harvesting_worksheet, name="hub_harvesting_worksheet"),
+    path("hub/harvesting/instructions/", staf.hub_harvesting_worksheet, name="hub_harvesting_worksheet"),
     path("hub/processing/", staf.hub_processing, name="hub_processing"),
     path("hub/processing/boundaries/", staf.hub_processing_boundaries, name="hub_processing_boundaries"),
     path("hub/processing/<slug:type>/", staf.hub_processing_list, name="hub_processing_list"),

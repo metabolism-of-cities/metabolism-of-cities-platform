@@ -1382,6 +1382,7 @@ def hub_harvesting_worksheet(request, space=None):
         tag_id = 845
 
     context = {
+        "title": "Instructions",
         "layers": Tag.objects.filter(parent_tag_id=tag_id),
     }
     return render(request, "hub/harvesting.worksheet.html", context)
