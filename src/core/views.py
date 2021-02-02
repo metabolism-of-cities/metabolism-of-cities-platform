@@ -1545,7 +1545,10 @@ def work_portal(request, slug, space=None):
     }
 
     if slug == "data":
-        context["layers"] = Tag.objects.filter(parent_tag_id=845)
+        if project.slug == "cityloops":
+            context["layers"] = Tag.objects.filter(parent_tag_id=971)
+        else:
+            context["layers"] = Tag.objects.filter(parent_tag_id=845)
         context["spaces"] = ActivatedSpace.objects.filter(part_of_project_id=request.project)
         context["datalink"] = project.slug + ":hub_harvesting_space"
 
