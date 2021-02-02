@@ -2389,9 +2389,17 @@ def hub_processing_gis_classify(request, id, space=None):
 
     if request.method == "POST" and "next" in request.POST:
         meta_data = document.meta_data
+
         if not "columns" in meta_data:
             meta_data["columns"] = {}
         meta_data["columns"]["name"] = request.POST.get("column")
+
+        if "single_reference_space" in request.POST and request.POST["single_reference_space"]:
+            meta_data["single_reference_space"] = True
+            del meta_data["columns"]
+        elif "single_reference_space" in meta_data:
+            del meta_data["single_reference_space"]
+
         document.meta_data = meta_data
         document.save()
         messages.success(request, "The information was saved.")

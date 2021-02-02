@@ -1381,6 +1381,30 @@ class LibraryItem(Record):
             type = layer.geom_type.name
             if total_count > 1000 and not self.meta_data.get("skip_size_check"):
                 error = "This file has too many objects. It needs to be verified by an administrator in order to be fully loaded into the system."
+            elif "single_reference_space" in self.meta_data:
+                # EXAMPLE: a shapefile containing all the water reticulation (piping) in the city
+                # This is one single space, so we do not loop but instead create a single item
+                # To do that, we get all the geos with get_geoms 
+                # (https://docs.djangoproject.com/en/3.1/ref/contrib/gis/gdal/#django.contrib.gis.gdal.Layer.get_geoms)
+                # and then we loop over THOSE, and combine them, using the union function
+                # (https://docs.djangoproject.com/en/3.1/ref/contrib/gis/geos/#django.contrib.gis.geos.GEOSGeometry.union)
+                polygon = None
+                ct = None
+                if layer.srs.srid != 4326:
+                    # If this isn't WGS 84 then we need to convert the crs to this one
+                    ct = CoordTransform(layer.srs, SpatialReference("WGS84"))
+                for each in layer.get_geoms(True):
+                    if ct:
+                        each.transform(ct)
+                    if not polygon:
+                        polygon = each
+                    else:
+                        polygon = polygon.union(each)
+                space = ReferenceSpace.objects.create(
+                    name = self.meta_data.get("shortname"),
+                    geometry = polygon,
+                    source = self,
+                )
             else:
                 count = 0
                 for each in layer:

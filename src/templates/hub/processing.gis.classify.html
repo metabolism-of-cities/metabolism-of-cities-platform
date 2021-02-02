@@ -20,6 +20,7 @@
   {% include "hub/_nav.html" %}
 
   <section class="row pb-0">
+
     <div class="col-lg-8 mb-2 mb-lg-0">
 
       <div id="contentsection">
@@ -28,12 +29,15 @@
           <i class="fa fa-info-circle"></i>
           Please select the column that contains the name for the different elements in the shapefile. Once the column is selected, click next.
         </div>
+
         {% if layer.num_feat > 20 %}
           <div class="alert alert-primary">
             <i class="fal fa-info-circle mr-1"></i>
             Only the first 20 items are shown. In total, there are <strong>{{ layer.num_feat|floatformat:0 }}</strong> items in your shapefile
           </div>
         {% endif %}
+
+        <span class="btn btn-secondary-outline mb-3" id="single_reference_space">This is a <em>single</em> reference space.</span>
 
         <div class="card card-table overflow-auto">
           <table class="table content-table">
@@ -57,17 +61,21 @@
             </tbody>
           </table>
         </div>
+
       </div>
 
       <form method="post" id="select_column" hidden>
         <input type="text" name="column" value="" />
+        <input type="hidden" name="single_reference_space" />
         {% csrf_token %}
       </form>
+
     </div>
 
     <div class="col-lg-4">
       {% include "hub/_processing.gis.menu.html" %}
     </div>
+
   </section>
 
   <section>
@@ -90,6 +98,25 @@
       $(".select-column[data-field='" + field + "']").addClass("selected");
 
       $(".btn-next").removeClass("disabled").removeAttr("disabled").html("Save and next <i class='fa fa-arrow-right ml-2 mr-0'></i>");
-    })
+    });
+
+    $("#single_reference_space").click(function(){
+      b = $(this);
+      if (b.hasClass("btn-secondary-outline")) {
+        $("input[name=single_reference_space]").val("true");
+        b.removeClass("btn-secondary-outline");
+        b.addClass("btn-secondary");
+        $(".card-table.overflow-auto").hide();
+        $(".btn-next").removeClass("disabled").removeAttr("disabled").html("Save and next <i class='fa fa-arrow-right ml-2 mr-0'></i>");
+        $("#select_column input[name='column']").val(0);
+        $(".select-column").removeClass("selected");
+      } else {
+        $("input[name=single_reference_space]").val("");
+        b.addClass("btn-secondary-outline");
+        b.removeClass("btn-secondary");
+        $(".card-table.overflow-auto").show();
+        $(".btn-next").addClass("disabled").attr("disabled", "disabled").html("Please select a column");
+      }
+    });
   </script>
 {% endblock %}
