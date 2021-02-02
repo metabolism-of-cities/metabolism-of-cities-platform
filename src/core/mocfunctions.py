@@ -108,6 +108,12 @@ LAYERS_COUNT = {}
 for each in LAYERS:
     LAYERS_COUNT[each.id] = each.children.count()
 
+# And this too!
+LAYERS_CL = Tag.objects.filter(parent_tag_id=971)
+LAYERS_CL_COUNT = {}
+for each in LAYERS_CL:
+    LAYERS_CL_COUNT[each.id] = each.children.count()
+
 def get_space(request, slug):
     # Here we can build an expansion if we want particular people to see dashboards that are under construction
     check = get_object_or_404(ActivatedSpace, slug=slug, part_of_project_id=request.project)
