@@ -124,6 +124,7 @@
                       {% if PROJECT.slug == "cityloops" %}
                         <span class="badge badge-primary mr-3">{{ tag.items|length }}</span>
                       {% else %}
+                        <span class="badge badge-primary mr-3">{{ tag.items|length }}</span>
                         <i class="fa fa-fw mr-2 {% if tag.id in counter %}text-success fa-check{% endif %}"></i>
                       {% endif %}
                       <a href="{{ tag.id }}/">{{ tag }}</a>
