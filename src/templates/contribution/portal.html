@@ -84,9 +84,12 @@
               <li>{{ tag }}</li>
             {% endfor %}
           </ul>
-          <a class="btn btn-primary" href="{% url 'data:hub_harvesting_worksheet' %}">
-            <i class="fa fa-file"></i> View entire worksheet
-          </a>
+
+          {% with link=PROJECT.slug|add:":hub_harvesting_worksheet" %}
+            <a class="btn btn-primary" href="{% url link %}">
+              <i class="fa fa-file"></i> View entire worksheet
+            </a>
+          {% endwith %}
         </div>
         {% endfor %}
       </div>

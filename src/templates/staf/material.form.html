@@ -7,7 +7,7 @@
 
   <div class="alert alert-info">
   <p><strong>Parent:</strong> {{ parent }}</p>
-  <p><strong>Catalog:</strong> {{ parent.catalog }}</p>
+  <p><strong>Catalog:</strong> {% if catalog %}{{ catalog }}{% else %}{{ parent.catalog }}{% endif %}</p>
   </div>
 
   <form method="post">
