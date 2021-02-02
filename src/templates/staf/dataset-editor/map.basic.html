@@ -39,6 +39,24 @@
                   <label class="custom-control-label" for="crop_boundaries">Limit display of contents to city boundaries</label>
                 </div>
               </div>
+
+              <div class="form-group mt-4">
+                <label class="category">{% if points %}Marker style{% else %}Colour{% endif %}</label>
+                  {% for color in colors %}
+                  <div>
+                    <label>
+                      <input type="radio" name="color" value="{{ color }}" {% if properties.color == color %}checked{% endif %}>
+                      {% if points %}
+                        <img src="{% get_static_prefix %}img/leaflet-markers/marker-icon-{{ color }}.png" alt="" />
+                      {% else %}
+                        <span class="example" style='background-color:{{ color }}'></span>
+                      {% endif %}
+                      {{ color }}
+                    </label>
+                  </div>
+                  {% endfor %}
+              </div>
+
             </div>
             <div class="col-md-6">
               <div class="form-group">
@@ -52,24 +70,34 @@
                 We use <a href="https://docs.mapbox.com/api/maps/styles/">Mapbox</a> for our maps, and all styles can be previewed on their
                 website.
               </div>
-            </div>
-          </div>
 
-          <div class="form-group mt-4">
-            <label class="category">{% if points %}Marker style{% else %}Colour{% endif %}</label>
-              {% for color in colors %}
-              <div>
-                <label>
-                  <input type="radio" name="color" value="{{ color }}" {% if properties.color == color %}checked{% endif %}>
-                  {% if points %}
-                    <img src="{% get_static_prefix %}img/leaflet-markers/marker-icon-{{ color }}.png" alt="" />
-                  {% else %}
-                    <span class="example" style='background-color:{{ color }}'></span>
-                  {% endif %}
-                  {{ color }}
-                </label>
+              <div class="form-group">
+                <label class="category mt-4">Visibility</label>
+                <p>We can reduce visibility by making the <strong>background colour</strong> more or less transparent. 
+                What visibility level should we use (default = 70%).</p>
+                <div class="input-group">
+                <input class="form-control" type="number" name="fillOpacity" value="{% if properties.fillOpacity %}{{ properties.fillOpacity }}{% else %}70{% endif %}" min="0" max="100" />
+                  <div class="input-group-append">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </div>
+
+                <p class="mt-3">We can reduce visibility by making the <strong>lines</strong> more or less transparent. 
+                What visibility level should we use (default = 100%).</p>
+                <div class="input-group">
+                <input class="form-control" type="number" name="opacity" value="{% if properties.opacity %}{{ properties.opacity }}{% else %}100{% endif %}" min="0" max="100" />
+                  <div class="input-group-append">
+                    <span class="input-group-text">%</span>
+                  </div>
+                </div>
               </div>
-              {% endfor %}
+
+              <div class="form-group">
+                <label class="category mt-4">Border width</label>
+                <p>How wide should the lines be?</p>
+                <input class="form-control" type="number" name="width" value="{% if properties.width %}{{ properties.width }}{% else %}1{% endif %}" min="1" max="6" />
+              </div>
+            </div>
           </div>
 
         </form>

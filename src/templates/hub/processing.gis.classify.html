@@ -20,20 +20,29 @@
   {% include "hub/_nav.html" %}
 
   <section class="row pb-0">
+
     <div class="col-lg-8 mb-2 mb-lg-0">
 
       <div id="contentsection">
         <h3>Select the name column</h3>
         <div class="alert alert-primary">
-          <i class="fa fa-info-circle"></i>
+          <i class="fa fa-fw fa-info-circle"></i>
           Please select the column that contains the name for the different elements in the shapefile. Once the column is selected, click next.
         </div>
+
         {% if layer.num_feat > 20 %}
           <div class="alert alert-primary">
-            <i class="fal fa-info-circle mr-1"></i>
-            Only the first 20 items are shown. In total, there are <strong>{{ layer.num_feat|floatformat:0 }}</strong> items in your shapefile
+            <i class="fa fa-fw fa-info-circle mr-1"></i>
+            Only the first 20 items are shown. In total, there are <strong>{{ layer.num_feat|floatformat:0|intcomma }}</strong> items in your shapefile
           </div>
         {% endif %}
+
+        <section class="process mb-3">
+          <h5>How do we process this?</h5>
+          <button class="btn btn-secondary" data-type="individual_spaces">{{ layer.num_feat|floatformat:0|intcomma }} individual spaces</button>
+          <button class="btn btn-secondary-outline" data-type="group_spaces_by_name">Group spaces by name</button>
+          <button class="btn btn-secondary-outline" data-type="single_reference_space">Group into one single space</button>
+        </section>
 
         <div class="card card-table overflow-auto">
           <table class="table content-table">
@@ -57,17 +66,22 @@
             </tbody>
           </table>
         </div>
+
       </div>
 
       <form method="post" id="select_column" hidden>
         <input type="text" name="column" value="" />
+        <input type="hidden" name="single_reference_space" />
+        <input type="hidden" name="group_spaces_by_name" />
         {% csrf_token %}
       </form>
+
     </div>
 
     <div class="col-lg-4">
       {% include "hub/_processing.gis.menu.html" %}
     </div>
+
   </section>
 
   <section>
@@ -90,6 +104,41 @@
       $(".select-column[data-field='" + field + "']").addClass("selected");
 
       $(".btn-next").removeClass("disabled").removeAttr("disabled").html("Save and next <i class='fa fa-arrow-right ml-2 mr-0'></i>");
-    })
+    });
+
+    $(".process button").click(function(){
+      $(".process button").removeClass("btn-secondary");
+      $(".process button").addClass("btn-secondary-outline");
+      $(this).addClass("btn-secondary");
+      $(this).removeClass("btn-secondary-outline");
+      var type = $(this).data("type");
+      $("#select_column input[name='column']").val(0);
+      $(".select-column").removeClass("selected");
+      if (type == "group_spaces_by_name") {
+        $("input[name=group_spaces_by_name]").val("true");
+        $("input[name=single_reference_space]").val("");
+        $(".card-table.overflow-auto").show();
+        $(".btn-next").addClass("disabled").attr("disabled", "disabled").html("Please select a column");
+      } else if (type == "single_reference_space") {
+        $("input[name=single_reference_space]").val("true");
+        $("input[name=group_spaces_by_name]").val("");
+        $(".card-table.overflow-auto").hide();
+        $(".btn-next").removeClass("disabled").removeAttr("disabled").html("Save and next <i class='fa fa-arrow-right ml-2 mr-0'></i>");
+      } else {
+        $("input[name=single_reference_space]").val("");
+        $("input[name=group_spaces_by_name]").val("");
+        $(".card-table.overflow-auto").show();
+        $(".btn-next").addClass("disabled").attr("disabled", "disabled").html("Please select a column");
+      }
+    });
+
+    {% if document.meta_data.group_spaces_by_name %}
+      $("button[data-type=group_spaces_by_name]").click();
+    {% elif document.meta_data.single_reference_space %}
+      $("button[data-type=single_reference_space]").click();
+    {% endif %}
+    {% if document.meta_data.columns.name %}
+      $(".select-column[data-field={{ document.meta_data.columns.name }}]").click();
+    {% endif %}
   </script>
 {% endblock %}

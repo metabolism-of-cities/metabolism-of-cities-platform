@@ -2393,9 +2393,22 @@ def hub_processing_gis_classify(request, id, space=None):
 
     if request.method == "POST" and "next" in request.POST:
         meta_data = document.meta_data
+
         if not "columns" in meta_data:
             meta_data["columns"] = {}
         meta_data["columns"]["name"] = request.POST.get("column")
+
+        if "single_reference_space" in request.POST and request.POST["single_reference_space"]:
+            meta_data["single_reference_space"] = True
+            del meta_data["columns"]
+        elif "single_reference_space" in meta_data:
+            del meta_data["single_reference_space"]
+
+        if "group_spaces_by_name" in request.POST and request.POST["group_spaces_by_name"]:
+            meta_data["group_spaces_by_name"] = True
+        elif "group_spaces_by_name" in meta_data:
+            del meta_data["group_spaces_by_name"]
+
         document.meta_data = meta_data
         document.save()
         messages.success(request, "The information was saved.")
@@ -2791,7 +2804,7 @@ def chart_editor(request, id):
         if points:
             context["colors"] = ["blue", "gold", "red", "green", "orange", "yellow", "violet", "grey", "black"]
         else:
-            context["colors"] = ["#144d58","#a6cee3","#33a02c","#b2df8a","#e31a1c","#fb9a99","#ff7f00","#fdbf6f","#6a3d9a","#cab2d6","#b15928","#ffff99"]
+            context["colors"] = ["#144d58","#a6cee3", "#1042DE", "#33a02c","#b2df8a","#e31a1c","#fb9a99","#ff7f00","#fdbf6f","#6a3d9a","#cab2d6", "#DE10C8", "#b15928","#ffff99"]
 
         context["styles"] = ["streets-v11", "outdoors-v11", "light-v10", "dark-v10", "satellite-v9", "satellite-streets-v11"]
         return render(request, "staf/dataset-editor/map.basic.html", context)

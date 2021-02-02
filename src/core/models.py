@@ -1381,6 +1381,70 @@ class LibraryItem(Record):
             type = layer.geom_type.name
             if total_count > 1000 and not self.meta_data.get("skip_size_check"):
                 error = "This file has too many objects. It needs to be verified by an administrator in order to be fully loaded into the system."
+            elif "single_reference_space" in self.meta_data:
+                # EXAMPLE: a shapefile containing all the water reticulation (piping) in the city
+                # This is one single space, so we do not loop but instead create a single item
+                # To do that, we get all the geos with get_geoms 
+                # (https://docs.djangoproject.com/en/3.1/ref/contrib/gis/gdal/#django.contrib.gis.gdal.Layer.get_geoms)
+                # and then we loop over THOSE, and combine them, using the union function
+                # (https://docs.djangoproject.com/en/3.1/ref/contrib/gis/geos/#django.contrib.gis.geos.GEOSGeometry.union)
+                polygon = None
+                ct = None
+                if layer.srs.srid != 4326:
+                    # If this isn't WGS 84 then we need to convert the crs to this one
+                    ct = CoordTransform(layer.srs, SpatialReference("WGS84"))
+                for each in layer.get_geoms(True):
+                    if ct:
+                        each.transform(ct)
+                    if not polygon:
+                        polygon = each
+                    else:
+                        polygon = polygon.union(each)
+                space = ReferenceSpace.objects.create(
+                    name = self.meta_data.get("shortname"),
+                    geometry = polygon,
+                    source = self,
+                )
+            elif "group_spaces_by_name" in self.meta_data:
+                # EXAMPLE: a shapefile containing land use data, in which there are many polygons indicating 
+                # a few different types (e.g. BUILT ENVIRONMENT, LAKES, AGRICULTURE). These should be saved
+                # as individual reference spaces (so we can differentiate them), grouped by their name
+                spaces = {}
+                for each in layer:
+
+                    if type == "Point25D":
+                        # This type has a "Z" geometry which needs to be changed to a 2-dimensional geometry
+                        # See also https://stackoverflow.com/questions/35851577/strip-z-dimension-on-geodjango-force-2d-geometry
+                        get_clone = each.geom.clone()
+                        get_clone.coord_dim = 2
+                        geo = get_clone
+                    else:
+                        geo = each.geom
+
+                    # We use WGS 84 (4326) as coordinate reference system, so we gotta convert to that
+                    # if it uses something else
+                    if layer.srs.srid != 4326:
+                        ct = CoordTransform(layer.srs, SpatialReference("WGS84"))
+                        geo.transform(ct)
+
+                    name = str(each.get(self.meta_data["columns"]["name"]))
+
+                    # So what we do here is to check if this particular field (based on the name) already exists
+                    # If not, we create a new space in our dictionary with the geometry of this one. 
+                    if name not in spaces:
+                        spaces[name] = geo
+                    else:
+                        # However, if it already exists then we use the union function to merge the geometry of this space
+                        # with the existing info
+                        s = spaces[name]
+                        spaces[name] = s.union(geo)
+
+                for name,geo in spaces.items():
+                    ReferenceSpace.objects.create(
+                        name = name,
+                        geometry = geo.wkt,
+                        source = self,
+                    )
             else:
                 count = 0
                 for each in layer:
