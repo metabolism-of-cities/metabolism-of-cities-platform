@@ -123,7 +123,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'tinymce',
     'anymail',
-    'debug_toolbar',
+    #'debug_toolbar',
     'django.contrib.humanize',
     'channels',
     'bleach',

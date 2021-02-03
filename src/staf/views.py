@@ -1398,14 +1398,14 @@ def hub_processing(request, space=None):
 
     title = "Data processing"
     stocks_tags = [903,904,905,906]
-    gis = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).exclude(meta_data__processed__isnull=False).distinct()
-    spreadsheet = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project).exclude(meta_data__processed__isnull=False).distinct()
-    datasets_flows = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).exclude(meta_data__processed__isnull=False).exclude(tags__id__in=stocks_tags).distinct()
-    datasets_stock = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__id__in=stocks_tags).exclude(meta_data__processed__isnull=False).distinct()
-    demographics = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=855).exclude(meta_data__processed__isnull=False).distinct()
-    economy = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=854).exclude(meta_data__processed__isnull=False).distinct()
-    climate = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[861,862]).exclude(meta_data__processed__isnull=False).distinct()
-    biophysical = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[857,859,863,864]).exclude(meta_data__processed__isnull=False).distinct()
+    gis = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
+    spreadsheet = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project).exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
+    datasets_flows = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).exclude(meta_data__processed__isnull=False).exclude(tags__id__in=stocks_tags).exclude(meta_data__ready_for_processing__isnull=False).distinct()
+    datasets_stock = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__id__in=stocks_tags).exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
+    demographics = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=855).exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
+    economy = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=854).exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
+    climate = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[861,862]).exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
+    biophysical = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[857,859,863,864]).exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
 
     if space:
         space = get_space(request, space)
@@ -1451,58 +1451,58 @@ def hub_processing_list(request, space=None, type=None):
 
     if type == "gis":
         title = "GIS data processing"
-        list = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        list = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
-        processed = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct()
+        processed = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
 
     elif type == "geospreadsheet":
         title = "Geospatial spreadsheets"
-        list = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        list = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
-        processed = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct()
+        processed = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
 
     elif type == "datasets":
         # We will phase this out, no more active link to this section
         # remove this block in March 2021
-        list = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        list = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
-        processed = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849, meta_data__processed__isnull=False).distinct()
+        processed = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
         title = "Stocks and flows data processing"
 
     elif type == "flows":
-        list = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(tags__id__in=stocks_tags).distinct()
+        list = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(tags__id__in=stocks_tags).exclude(meta_data__ready_for_processing__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
-        processed = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849, meta_data__processed__isnull=False).exclude(tags__id__in=stocks_tags).distinct()
+        processed = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).exclude(tags__id__in=stocks_tags).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
         title = "Material flows data processing"
 
     elif type == "stock":
-        list = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__id__in=stocks_tags).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        list = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__id__in=stocks_tags).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
-        processed = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__id__in=stocks_tags, meta_data__processed__isnull=False).distinct()
+        processed = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__id__in=stocks_tags).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
         title = "Stocks data processing"
 
     elif type == "demographics":
-        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=855).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=855).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
-        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=855, meta_data__processed__isnull=False).distinct()
+        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=855).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
         title = "Demographic data"
 
     elif type == "climate":
-        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[861,862]).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[861,862]).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
-        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[861,862], meta_data__processed__isnull=False).distinct()
+        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[861,862]).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
         title = "Climatological data"
 
     elif type == "economy":
-        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=854).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=854).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
-        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=854, meta_data__processed__isnull=False).distinct()
+        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=854).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
         title = "Economic data"
 
     elif type == "biophysical":
-        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[857,859,863,864]).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[857,859,863,864]).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
-        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[857,859,863,864], meta_data__processed__isnull=False).distinct()
+        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[857,859,863,864]).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
         title = "Economic data"
 
     if space:
@@ -1700,9 +1700,12 @@ def hub_processing_completed(request, space=None, type=None):
     related_tags = {
         "demographics": [855],
         "stock": stocks_tags,
+        "biophysical": [857,859,863,864],
+        "economy": [854],
+        "climate": [861,862],
     }
 
-    list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct()
+    list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
 
     if type == "flows":
         list = list.filter(tags__parent_tag_id=849).exclude(tags__id__in=stocks_tags)

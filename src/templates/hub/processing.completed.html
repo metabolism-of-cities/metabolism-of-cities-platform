@@ -38,6 +38,8 @@
       <td>
         {% if each.meta_data.processing_error %}
           <span class="text-danger">{{ each.meta_data.processing_error }}</span>
+        {% elif each.meta_data.ready_for_processing %}
+          <span class="text-warning">Scheduled for processing</span>
         {% else %}
           <span class="text-success">OK</span>
         {% endif %}
