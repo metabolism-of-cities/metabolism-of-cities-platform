@@ -290,7 +290,10 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         messages.success(request, "We have tried generating the plot. If no image appears, there is an issue with the shapefile.")
 
     if "reset_processing" in request.GET and curator:
-        info.meta_data.pop("processed")
+        if "processed" in info.meta_data:
+            info.meta_data.pop("processed")
+        if "ready_for_processing" in info.meta_data:
+            info.meta_data.pop("ready_for_processing")
         info.meta_data["allow_deletion_spaces"] = True
         info.save()
         messages.success(request, "File processing options were reset - it will now appear in the list again.")
