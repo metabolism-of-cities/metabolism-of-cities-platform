@@ -4,53 +4,54 @@
 
   {% include "hub/_nav.html" %}
 
-  <a href="../" class="btn btn-primary-basic float-right">
-    <i class="fal fa-angle-left"></i>
-    Back
-  </a>
+  <section>
+    <a href="../" class="btn btn-primary-basic float-right">
+      <i class="fal fa-angle-left"></i>
+      Back
+    </a>
 
-  <h1>
-    <i class="fa fa-fw fa-{{ tag.parent_tag.icon }}"></i>
-    {{ tag.parent_tag }}
-  </h1>
+    <h3 class="mb-4">
+      <i class="fal fa-fw fa-{{ tag.parent_tag.icon }}"></i>
+      {{ tag.parent_tag }}
+    </h3>
 
-  <h2>{{ tag }}</h2>
+    <h4>{{ tag }}</h4>
 
-  {{ tag.get_description }}
+    {{ tag.get_description }}
+  </section>
 
-  <section class="mt-5">
-    <h2 class="h3">Inventory</h2>
+  <section>
+    <h4>Inventory</h4>
     {% if items %}
       {% include "_library.list.html" %}
     {% else %}
-      <div class="alert alert-warning">
-        <i class="fa fa-exclamation-triangle"></i> No items uploaded yet.
+      <div class="alert alert-light d-inline-block">
+        <i class="fa fa-exclamation-triangle mr-2"></i> No items uploaded yet
       </div>
     {% endif %}
   </section>
 
-  <h2 class="h3 mt-5">Upload new item</h2>
-  <div class="list-group">
-  {% for each in types %}
-    <a href="form/?inventory=true&amp;type={{ each.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" class="list-group-item list-group-item-action">
-      <i class="fa fa-fw fa-{{ each.icon }}"></i>
-      {{ each }}
-    </a>
-  {% endfor %}
-  </div>
+  <section>
+    <h4>Upload new item</h4>
+    <div class="add-options row">
+      {% for each in types %}
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <a class="btn btn-block btn-primary-basic text-left" href="form/?inventory=true&amp;type={{ each.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" class="list-group-item list-group-item-action">
+            <i class="fal fa-fw fa-{{ each.icon }} mr-2"></i>
+            {{ each }}
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
 
-  <h2 class="h3 mt-5">Discussion and questions</h2>
-  {% include "_messages.html" %}
+  <section>
+    <h4>Discussion and questions</h2>
+    {% include "_messages.html" %}
 
-  {% if not request.user.is_authenticated %}
-    {% include "_notauthenticated.html" %}
-  {% endif %}
-
-  <p class="mb-4">
-  <a href="../" class="btn btn-primary-basic float-right">
-    <i class="fal fa-angle-left"></i>
-    Back
-  </a>
-  </p>
+    {% if not request.user.is_authenticated %}
+      {% include "_notauthenticated.html" %}
+    {% endif %}
+  </section>
 
 {% endblock %}

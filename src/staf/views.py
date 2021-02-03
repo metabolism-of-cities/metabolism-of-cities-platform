@@ -1326,7 +1326,7 @@ def hub_harvesting_tag(request, space, tag):
     gps = [41]
 
     if tag.parent_tag.id == 847:
-        # Layer two
+        # Layer 2
         types = shapefile + written + dataset + visual
     elif tag.parent_tag.id == 850:
         # Layer 5
@@ -1334,23 +1334,23 @@ def hub_harvesting_tag(request, space, tag):
     elif tag.parent_tag.id == 849:
         # Layer 4
         types = written + dataset
-    elif tag.parent_tag.id == 848:
-        # Layer 3
+    elif tag.parent_tag.id == 848 or tag.id == 996:
+        # Layer 3 and land use
         types = shapefile + written + dataset + visual + gps
-    elif tag.id == 914:
+    elif tag.id == [914, 995]:
         # Policy documents
         types = document
-    elif tag.id == 852:
+    elif tag.id in [852, 975, 976, 977, 978, 979]:
         types = shapefile
     elif tag.id == 851:
         # Actors
         types = document
-    elif tag.id == 853:
+    elif tag.id in [853, 985]:
         # Econ descriptions
         types = report + website
-    elif tag.id == 854:
+    elif tag.id == [854, 986, 987, 988, 989, 990, 991, 992, 993, 994]:
         types = written + dataset
-    elif tag.id == 855:
+    elif tag.id in [855, 980, 981, 982, 983, 984]:
         # Population
         types = dataset + report + website
     elif tag.id == 916:
