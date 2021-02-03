@@ -1284,6 +1284,8 @@ def hub_harvesting_space(request, space):
     if forum_topic:
         list_messages = Message.objects.filter(parent=forum_topic[0])
 
+    optional_list = [985, 995, 1017, 1018, 1019, 1020, 1021, 1026, 1027, 1028, 1029, 1030, 1035, 1036, 1037, 1038, 1039, 1040, 1044, 1045, 1046, 1047, 1056, 1057, 1058, 1059, 1060, 1061, 1062, 1067, 1068, 1069, 1070, 1071]
+
     context = {
         "info": info,
         "space": info,
@@ -1291,6 +1293,7 @@ def hub_harvesting_space(request, space):
         "items": items,
         "counter": counter,
         "title": "Inventory",
+        "optional_list": optional_list,
         "percentage": percentage,
         "total_tags": total_tags,
         "uploaded": uploaded,
@@ -1324,8 +1327,6 @@ def hub_harvesting_tag(request, space, tag):
     report = [27]
     website = [32]
     gps = [41]
-
-
 
 
     if tag.parent_tag.id == 847:
