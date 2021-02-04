@@ -62,7 +62,7 @@
       {% if info.publisher.image %}
         <div class="text-center">
           <a href="{{ info.publisher.get_absolute_url }}">
-            <img src="{{ info.publisher.image.url }}" class="journal rounded mt-4">
+            <img src="{{ info.publisher.image.thumbnail.url }}" class="journal rounded mt-4">
           </a>
         </div>
       {% else %}
