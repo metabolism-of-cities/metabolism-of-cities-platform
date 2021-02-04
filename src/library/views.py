@@ -804,7 +804,8 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     if project.slug == "untraceable":
         form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id=828)
     elif project.slug == "cityloops":
-        form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id__in=[972, 973, 974, 664, 323]).filter(tag_id=934)
+        form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id=971)
+        # form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id__in=[972, 973, 974, 664, 323]).filter(tag_id=934)
     elif "mfa" in request.GET:
         if "tags" in form.fields:
             form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id=849)
