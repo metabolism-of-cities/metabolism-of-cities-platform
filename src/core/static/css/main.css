@@ -1977,7 +1977,8 @@ body.volunteer.portal.latest th.date {
 
 .resource-list th.title,
 .resource-list td.title {
-  width: 200px !important; }
+  width: 200px !important;
+  max-width: 250px; }
 
 .resource-list th:not(.title),
 .resource-list td:not(.title) {
@@ -1985,7 +1986,8 @@ body.volunteer.portal.latest th.date {
 
 .resource-list th.author,
 .resource-list td.author {
-  width: 200px; }
+  width: 200px;
+  max-width: 250px; }
 
 .item-visualisations #column,
 .item-visualisations #bar {

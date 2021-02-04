@@ -3048,6 +3048,7 @@ body.volunteer.portal.latest {
   th.title,
   td.title {
     width: 200px !important;
+    max-width: 250px;
   }
 
   th:not(.title),
@@ -3058,6 +3059,7 @@ body.volunteer.portal.latest {
   th.author,
   td.author {
     width: 200px;
+    max-width: 250px;
   }
 }
 
