@@ -1278,6 +1278,8 @@ def work_grid(request, sprint=None):
     else:
         list = Work.objects.all()
 
+    list = list.exclude(workactivity_id=2)
+
     if "entry" in request.GET:
         list = list.filter(tags=810)
 
