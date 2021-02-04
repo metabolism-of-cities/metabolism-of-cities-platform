@@ -147,14 +147,18 @@
   <h2>Progress</h2>
   <div class="row">
     {% for each in layers %}
-    <div class="col-md-6 col-lg-3 context mb-4">
+    <div class="{% if PROJECT.slug == 'cityloops' %}col-md-4{% else %}col-md-6 col-lg-3{% endif %} context mb-4">
       <a class="btn-icon" href="{{ each.slug }}/">
         <h5 class="text-truncate"><i class="fal mr-2 fa-{{ each.icon }} fa-fw"></i> {{ each.get_name_after_colon }}</h5>
         <div class="progress">
           <div
             class="progress-bar bg-success"
             role="progressbar"
-            style="width: calc({% if space.get_counter %}{{ space.get_counter|get_item:each.id }}{% else %}0{% endif %}/{{ layers_count|get_item:each.id }}*100%)"
+            {% if PROJECT.slug == "cityloops" %}
+              style="width: calc({% if space.get_counter_cityloops %}{{ space.get_counter_cityloops|get_item:each.id }}{% else %}0{% endif %}/{{ layers_count|get_item:each.id }}*100%)"
+            {% else %}
+              style="width: calc({% if space.get_counter %}{{ space.get_counter|get_item:each.id }}{% else %}0{% endif %}/{{ layers_count|get_item:each.id }}*100%)"
+            {% endif %}
             aria-valuenow="{% if space.get_counter %}{{ space.get_counter|get_item:each.id }}{% else %}0{% endif %}"
             aria-valuemin="0"
             aria-valuemax="6">
