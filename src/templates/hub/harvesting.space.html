@@ -136,7 +136,16 @@
                         <i class="fa fa-fw mr-2 {% if tag.id in counter %}text-success fa-check{% endif %}"></i>
                       {% endif %}
                       <a href="{{ tag.id }}/">{{ tag }}</a>
-                      {% if tag.icon %}<i class="float-right mt-1 fal fa-fw fa-{{ tag.icon }}"></i>{% endif %}
+                      {% if counter|get_item:tag.id > 0 %}
+                        <span class="badge badge-cityloops-secondary float-right mt-1">
+                          {{ counter|get_item:tag.id }}
+                        </span>
+                      {% else %}
+                        <span class="badge badge-cityloops-primary float-right mt-1">
+                          0
+                        </span>
+                      {% endif %}
+                      {% if tag.icon %}<i class="float-right mt-1 mr-3 fal fa-fw fa-{{ tag.icon }}"></i>{% endif %}
                     </td>
                   </tr>
                   {% endfor %}
