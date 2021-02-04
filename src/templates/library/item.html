@@ -312,7 +312,7 @@
       <h1>{{ info }}</h1>
 
       {% if info.image and info.type.name != "Video Recording" %}
-        <img src="{{ info.image.url }}" class="img-fluid img-thumbnail rounded" alt="" />
+        <img src="{{ info.image.large.url }}" class="img-fluid img-thumbnail rounded" alt="" />
       {% endif %}
 
       <!-- show media or export options -->
