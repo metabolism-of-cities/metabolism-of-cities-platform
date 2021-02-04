@@ -2,8 +2,17 @@
 {% load bootstrap4 %}
 
 {% block css %}
-<style type="text/css">
-textarea#id_author_list{height:100px}
+<style>
+  textarea#id_author_list {
+    height:100px
+  }
+
+  form label {
+    font-weight: bold;
+    margin-bottom: 0;
+  }
+
+
 </style>
 {% endblock %}
 
@@ -20,7 +29,7 @@ textarea#id_author_list{height:100px}
 
   {% if type.name == "Shapefile" %}
     <div class="alert alert-warning">
-      <i class="fa fa-fw fa-info-circle"></i> Instructions: make sure you attach all the required files 
+      <i class="fa fa-fw fa-info-circle"></i> Instructions: make sure you attach all the required files
       (do not zip them!). You should have <em>at least</em> these four file types:
       <code>.shp</code>, <code>.shx</code>, <code>.dbf</code>, <code>.prj</code>.
       <br>
@@ -51,7 +60,7 @@ textarea#id_author_list{height:100px}
         {{ _("You are adding a screenshot or image to an existing document.") }}
       </div>
     {% endif %}
-    
+
     {% csrf_token %}
     {% bootstrap_form form %}
 
@@ -177,5 +186,7 @@ textarea#id_author_list{height:100px}
       $("#id_image").attr("required", "required");
     {% endif %}
 
+
+    $("select").addClass("custom-select");
   </script>
 {% endblock %}

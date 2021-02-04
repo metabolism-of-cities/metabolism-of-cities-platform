@@ -1969,14 +1969,16 @@ body.volunteer.portal.latest th.date {
 .progress-list .progress {
   height: .5rem; }
 
-.resource-list table {
-  table-layout: fixed; }
-
 .resource-list td,
 .resource-list th {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; }
+
+.resource-list th.title,
+.resource-list td.title {
+  width: 200px !important;
+  max-width: 250px; }
 
 .resource-list th:not(.title),
 .resource-list td:not(.title) {
@@ -1984,7 +1986,8 @@ body.volunteer.portal.latest th.date {
 
 .resource-list th.author,
 .resource-list td.author {
-  width: 200px; }
+  width: 200px;
+  max-width: 250px; }
 
 .item-visualisations #column,
 .item-visualisations #bar {

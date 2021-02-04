@@ -3038,15 +3038,17 @@ body.volunteer.portal.latest {
 }
 
 .resource-list {
-  table {
-    table-layout: fixed;
-  }
-
   td,
   th {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  th.title,
+  td.title {
+    width: 200px !important;
+    max-width: 250px;
   }
 
   th:not(.title),
@@ -3057,6 +3059,7 @@ body.volunteer.portal.latest {
   th.author,
   td.author {
     width: 200px;
+    max-width: 250px;
   }
 }
 

@@ -1260,8 +1260,10 @@ def hub_harvesting_space(request, space):
     info = get_space(request, space)
     if project.slug == "cityloops":
         tag_id = 971
+        optional_list = [985, 995, 1017, 1018, 1019, 1020, 1021, 1026, 1027, 1028, 1029, 1030, 1035, 1036, 1037, 1038, 1039, 1040, 1044, 1045, 1046, 1047, 1056, 1057, 1058, 1059, 1060, 1061, 1062, 1067, 1068, 1069, 1070, 1071]
     else:
         tag_id = 845
+        optional_list = None
     layers = Tag.objects.filter(parent_tag_id=tag_id)
     counter = {}
     list_messages = None
@@ -1270,7 +1272,7 @@ def hub_harvesting_space(request, space):
     for each in items:
         for tag in each.tags.all():
             if tag.parent_tag in layers:
-                counter[tag.id] = True
+                counter[tag.id] = counter[tag.id] + 1 if tag.id in counter else 1
 
     untagged_items = LibraryItem.objects.filter(spaces=info).exclude(tags__parent_tag__in=layers).distinct()
     total_tags = Tag.objects.filter(parent_tag__in=layers).count()
@@ -1283,8 +1285,6 @@ def hub_harvesting_space(request, space):
     forum_topic = ForumTopic.objects.filter(part_of_project_id=request.project, parent_url=request.get_full_path())
     if forum_topic:
         list_messages = Message.objects.filter(parent=forum_topic[0])
-
-    optional_list = [985, 995, 1017, 1018, 1019, 1020, 1021, 1026, 1027, 1028, 1029, 1030, 1035, 1036, 1037, 1038, 1039, 1040, 1044, 1045, 1046, 1047, 1056, 1057, 1058, 1059, 1060, 1061, 1062, 1067, 1068, 1069, 1070, 1071]
 
     context = {
         "info": info,

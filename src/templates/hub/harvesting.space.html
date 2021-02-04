@@ -46,15 +46,17 @@
         {% include "_library.list.html" %}
       </div>
     {% else %}
-      <div class="alert alert-warning">
-        <i class="fa fa-exclamation-triangle mr-2"></i> No items uploaded yet.
+      <div class="my-4">
+        <div class="alert alert-light d-inline-block">
+          <i class="fa fa-exclamation-triangle mr-2"></i> No tagged items uploaded yet
+        </div>
       </div>
     {% endif %}
 
     {% if untagged_items %}
       <div id="untagged-table" class="mt-4">
         <h2>Untagged items</h2>
-        <p><em>These items were uploaded but not (yet) linked to a specific layer.</em></p>
+        <p>These items were uploaded but not (yet) linked to a specific layer</p>
         <table class="table datatable datatable-card">
           <thead>
             <tr>
@@ -69,13 +71,14 @@
             <tr>
               <td>
                 <a href="{% url 'data:library_item' each.id %}">{{ each }}</a>
-                <a href="{% url 'data:library_item' each.id %}?edit=true&amp;next={{ request.get_full_path }}&amp;update_tags=true"><i class="fa fa-pencil-alt"></i></a>
                 <br>
-                <i class="fa fa-fw fa-{{ each.type.icon }}"></i> <em>{{ each.type }}</em>
+                <i class="fal fa-fw fa-{{ each.type.icon }}"></i> {{ each.type }}
+                |
+                <a href="{% url 'data:library_item' each.id %}?edit=true&amp;next={{ request.get_full_path }}&amp;update_tags=true">Edit</a>
               </td>
               <td>{{ each.get_author_citation }}</td>
               <td>{{ each.year }}</td>
-              <td>{% for tag in each.tags.all %}<span class="badge">{{ tag }}</span>{% endfor %}</td>
+              <td>{% for tag in each.tags.all %}<span class="badge badge-light mr-1">{{ tag }}</span>{% endfor %}</td>
             </tr>
           {% endfor %}
           </tbody>
@@ -136,7 +139,16 @@
                         <i class="fa fa-fw mr-2 {% if tag.id in counter %}text-success fa-check{% endif %}"></i>
                       {% endif %}
                       <a href="{{ tag.id }}/">{{ tag }}</a>
-                      {% if tag.icon %}<i class="float-right mt-1 fal fa-fw fa-{{ tag.icon }}"></i>{% endif %}
+                      {% if counter|get_item:tag.id > 0 %}
+                        <span class="badge badge-cityloops-secondary float-right mt-1">
+                          {{ counter|get_item:tag.id }}
+                        </span>
+                      {% else %}
+                        <span class="badge badge-cityloops-primary float-right mt-1">
+                          0
+                        </span>
+                      {% endif %}
+                      {% if tag.icon %}<i class="float-right mt-1 mr-3 fal fa-fw fa-{{ tag.icon }}"></i>{% endif %}
                     </td>
                   </tr>
                   {% endfor %}
