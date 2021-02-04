@@ -20,7 +20,7 @@ textarea#id_author_list{height:100px}
 
   {% if type.name == "Shapefile" %}
     <div class="alert alert-warning">
-      <i class="fa fa-fw fa-info-circle"></i> Instructions: make sure you attach all the required files 
+      <i class="fa fa-fw fa-info-circle"></i> Instructions: make sure you attach all the required files
       (do not zip them!). You should have <em>at least</em> these four file types:
       <code>.shp</code>, <code>.shx</code>, <code>.dbf</code>, <code>.prj</code>.
       <br>
@@ -51,7 +51,7 @@ textarea#id_author_list{height:100px}
         {{ _("You are adding a screenshot or image to an existing document.") }}
       </div>
     {% endif %}
-    
+
     {% csrf_token %}
     {% bootstrap_form form %}
 

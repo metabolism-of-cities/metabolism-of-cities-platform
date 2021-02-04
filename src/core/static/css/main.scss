@@ -3038,15 +3038,16 @@ body.volunteer.portal.latest {
 }
 
 .resource-list {
-  table {
-    table-layout: fixed;
-  }
-
   td,
   th {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  th.title,
+  td.title {
+    width: 200px !important;
   }
 
   th:not(.title),
