@@ -449,7 +449,7 @@ def data_json(request, id):
                     v = stacked_field_values[each][axis]
                     check = float(v)
                     if math.isnan(check):
-                        this_series.append(None) # What to add if NaN? 
+                        this_series.append(None) # What to add if NaN?
                     else:
                         this_series.append(v)
                 except:
@@ -792,6 +792,8 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
     if project.slug == "untraceable":
         form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id=828)
+    elif project.slug == "cityloops":
+        form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id=971)
     elif "mfa" in request.GET:
         if "tags" in form.fields:
             form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id=849)
@@ -841,7 +843,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             if type.name == "Image":
                 info.save()
                 # We run this AGAIN because we want to trigger the update_referencespace_photo
-                # function to run. When we first run this a few lines up, the spaces have not 
+                # function to run. When we first run this a few lines up, the spaces have not
                 # yet been added so it can't update the photo
 
             if request.POST.get("publisher") or request.POST.get("journal"):

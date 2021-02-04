@@ -2,8 +2,17 @@
 {% load bootstrap4 %}
 
 {% block css %}
-<style type="text/css">
-textarea#id_author_list{height:100px}
+<style>
+  textarea#id_author_list {
+    height:100px
+  }
+
+  form label {
+    font-weight: bold;
+    margin-bottom: 0;
+  }
+
+
 </style>
 {% endblock %}
 
@@ -177,5 +186,7 @@ textarea#id_author_list{height:100px}
       $("#id_image").attr("required", "required");
     {% endif %}
 
+
+    $("select").addClass("custom-select");
   </script>
 {% endblock %}
