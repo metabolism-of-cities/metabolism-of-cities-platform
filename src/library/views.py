@@ -43,17 +43,6 @@ def index(request):
     else:
         title = "Library"
 
-    if "reload" in request.GET and request.user.is_superuser:
-        # Temporary solution to re-resize the thumbnails that are too small
-        from django.core.files.uploadedfile import UploadedFile
-        for info in Organization.objects.filter(image__isnull=False):
-            try:
-                info.image = UploadedFile(file=open(info.image.path, "rb"))
-                info.save()
-                messages.success(request, "Image re-saved... " + info.image.path)
-            except Exception as e:
-                messages.error(request, str(e))
-
     if request.project == 17:
         # The islands use a 'Themes' subset of tags, which we need to add to the list
         tags.append(944)
