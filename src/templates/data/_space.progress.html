@@ -13,7 +13,13 @@
             </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item">
-                <i class="fal fa-fw fa-dot-circle mr-1"></i> {{ each.get_document_counter }} documents
+                <i class="fal fa-fw fa-dot-circle mr-1"></i> 
+                {% if PROJECT.slug == "cityloops" %}
+                  {{ each.get_document_counter_cityloops }}
+                {% else %}
+                  {{ each.get_document_counter }} 
+                {% endif %}
+                documents
               </li>
               {% if False %}
                 <li class="list-group-item">
@@ -34,14 +40,19 @@
                         <div class="progress-bar bg-secondary" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
                       {% endif %}
 
-                      <div class="progress-bar bg-success" role="progressbar" style="width: calc({% if each.get_counter %}{{ each.get_counter|get_item:layer.id }}{% else %}0{% endif %}/{{ layers_count|get_item:layer.id }}*100%)" aria-valuenow="{% if each.get_counter %}{{ each.get_counter|get_item:layer.id }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="{{ layers_count|get_item:layer.id }}"></div>
+                      {% if PROJECT.slug == "cityloops" %}
+                        <div class="progress-bar bg-success" role="progressbar" style="width: calc({% if each.get_counter_cityloops %}{{ each.get_counter_cityloops|get_item:layer.id }}{% else %}0{% endif %}/{{ layers_count|get_item:layer.id }}*100%)" aria-valuenow="{% if each.get_counter_cityloops %}{{ each.get_counter_cityloops|get_item:layer.id }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="{{ layers_count|get_item:layer.id }}"></div>
+                      {% else %}
+                        <div class="progress-bar bg-success" role="progressbar" style="width: calc({% if each.get_counter %}{{ each.get_counter|get_item:layer.id }}{% else %}0{% endif %}/{{ layers_count|get_item:layer.id }}*100%)" aria-valuenow="{% if each.get_counter %}{{ each.get_counter|get_item:layer.id }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="{{ layers_count|get_item:layer.id }}"></div>
+                      {% endif %}
 
                     </div>
                   </div>
                 </li>
               {% endfor %}
               <li class="list-group-item">
-                <i class="fal fa-fw fa-check mr-1"></i> {% widthratio each.get_completion 63 100 %}% data collection completion
+                <i class="fal fa-fw fa-check mr-1"></i> 
+                {% widthratio each.get_completion 63 100 %}% data collection completion
               </li>
             </ul>
             <div class="card-body">

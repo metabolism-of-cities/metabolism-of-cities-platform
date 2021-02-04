@@ -2144,21 +2144,47 @@ class ReferenceSpace(Record):
         else:
             return "/media/records/placeholder.png"
 
+    @property
     def get_completion(self):
         try:
             return self.meta_data["progress"]["completion"]
         except:
             None
 
+    @property
     def get_counter(self):
         try:
             return self.meta_data["progress"]["counter"]
         except:
             None
 
+    @property
     def get_document_counter(self):
         try:
             return self.meta_data["progress"]["document_counter"]
+        except:
+            None
+
+    # These 3 _cityloops properties are not elegant and I like to remove 
+    # them when CL comes to an end. For now, it's a means to an end.
+    @property
+    def get_completion_cityloops(self):
+        try:
+            return self.meta_data["progress_cityloops"]["completion"]
+        except:
+            None
+
+    @property
+    def get_counter_cityloops(self):
+        try:
+            return self.meta_data["progress_cityloops"]["counter"]
+        except:
+            None
+
+    @property
+    def get_document_counter_cityloops(self):
+        try:
+            return self.meta_data["progress_cityloops"]["document_counter"]
         except:
             None
 

@@ -102,17 +102,24 @@ def p(text):
     print(text)
     print("----------------------")
 
-# We should cache this baby!! 
-LAYERS = Tag.objects.filter(parent_tag_id=845)
-LAYERS_COUNT = {}
-for each in LAYERS:
-    LAYERS_COUNT[each.id] = each.children.count()
+# We should cache these layers for a while!
+def get_layers(request):
+    if request.project == 6:
+        tag_id = 971 # CityLoops
+    else:
+        tag_id = 845
+    return Tag.objects.filter(parent_tag_id=tag_id)
 
-# And this too!
-LAYERS_CL = Tag.objects.filter(parent_tag_id=971)
-LAYERS_CL_COUNT = {}
-for each in LAYERS_CL:
-    LAYERS_CL_COUNT[each.id] = each.children.count()
+# We should cache these layers for a while!
+def get_layers_count(request):
+    if request.project == 6:
+        tag_id = 971 # CityLoops
+    else:
+        tag_id = 845
+    l = {}
+    for each in Tag.objects.filter(parent_tag_id=tag_id):
+        l[each.id] = each.children.count()
+    return l
 
 def get_space(request, slug):
     # Here we can build an expansion if we want particular people to see dashboards that are under construction

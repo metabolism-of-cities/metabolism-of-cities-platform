@@ -115,7 +115,7 @@ def space_maps(request, space):
 
 def layers(request, id=None, layer=None):
     project = get_project(request)
-    layers = LAYERS_CL if project.slug == "cityloops" else LAYERS
+    layers = get_layers(request)
     if layer:
         layers = layers.filter(slug=layer)
     spaces = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)
@@ -130,7 +130,7 @@ def layers(request, id=None, layer=None):
                     counter[tag.id] += 1
 
     context = {
-        "layers": LAYERS_CL if project.slug == "cityloops" else LAYERS,
+        "layers": get_layers(request),
         "layer": layer,
         "counter": counter,
         "title": "Data inventory: layer overview",
