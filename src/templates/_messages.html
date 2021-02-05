@@ -8,7 +8,13 @@
               {{ each.posted_by.avatar }}
               <a href="/hub/users/{{ each.posted_by.id }}/">
                 {{ each.posted_by }}
-              </a>
+              </a><br>
+              {% if each.posted_by.points %}
+                {{ each.posted_by.points }} points
+              {% endif %}
+              {% if each.posted_by.get_my_space %}
+                <span class="badge badge-warning">{{ each.posted_by.get_my_space }}</span>
+              {% endif %}
             </div>
             <div class="col-6 text-muted text-right avatar-line-height" title="{{ each.date_created|date:'l j F Y, H:i e' }}">
               <!-- {% if each.author == request.user.people %} -->

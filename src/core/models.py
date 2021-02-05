@@ -745,22 +745,32 @@ class People(Record):
     def get_absolute_url(self):
         return reverse("community:person", args=[self.id])
 
+    @property
     def points(self):
         points = Work.objects_unfiltered.filter(assigned_to=self, status=Work.WorkStatus.COMPLETED).aggregate(total=Sum("workactivity__points"))
         return points["total"]
 
+    @property
     def avatar(self):
         if self.image and self.image != "":
             return mark_safe('<img class="avatar" src="' + self.image.thumbnail.url + '" alt="' + self.name + '" title="' + self.name + '">')
         else:
             return mark_safe('<div title="' + self.name + '" class="avatar letter">' + self.name[:1] + '</div>')
 
+    @property
     def get_photo(self):
         if self.image:
             return self.image
         else:
             photo = Photo.objects.get(pk=33476)
             return photo.image
+
+    @property
+    def get_my_space(self):
+        if self.spaces.all():
+            return self.spaces.all()[0]
+        else:
+            return None
 
     class Meta:
         verbose_name_plural = "people"
@@ -1375,7 +1385,6 @@ class LibraryItem(Record):
 
         if self.type.id == 40 and not error: # Type = shapefile
 
-            print(self.name)
             layer = self.get_gis_layer()
             fields = layer.fields
             total_count = layer.num_feat
@@ -1408,12 +1417,16 @@ class LibraryItem(Record):
                     if not polygon:
                         polygon = each
                     else:
-                        polygon = polygon.union(each)
-                space = ReferenceSpace.objects.create(
-                    name = self.meta_data.get("shortname"),
-                    geometry = polygon,
-                    source = self,
-                )
+                        try:
+                            polygon = polygon.union(each)
+                        except Exception as e:
+                            error = "The following error occurred when trying to merge geometries: " + str(e)
+                if not error:
+                    space = ReferenceSpace.objects.create(
+                        name = self.meta_data.get("shortname"),
+                        geometry = polygon,
+                        source = self,
+                    )
             elif "group_spaces_by_name" in self.meta_data:
                 # EXAMPLE: a shapefile containing land use data, in which there are many polygons indicating 
                 # a few different types (e.g. BUILT ENVIRONMENT, LAKES, AGRICULTURE). These should be saved
@@ -1445,15 +1458,19 @@ class LibraryItem(Record):
                     else:
                         # However, if it already exists then we use the union function to merge the geometry of this space
                         # with the existing info
-                        s = spaces[name]
-                        spaces[name] = s.union(geo)
+                        try:
+                            s = spaces[name]
+                            spaces[name] = s.union(geo)
+                        except Exception as e:
+                            error = "The following error occurred when trying to merge geometries: " + str(e)
 
-                for name,geo in spaces.items():
-                    ReferenceSpace.objects.create(
-                        name = name,
-                        geometry = geo.wkt,
-                        source = self,
-                    )
+                if not error:
+                    for name,geo in spaces.items():
+                        ReferenceSpace.objects.create(
+                            name = name,
+                            geometry = geo.wkt,
+                            source = self,
+                        )
             else:
                 count = 0
                 for each in layer:

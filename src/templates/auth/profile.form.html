@@ -16,6 +16,19 @@
     </div>
 
     <div class="form-group row">
+      <label class="col-sm-3 col-form-label">My place</label>
+      <div class="col-sm-9">
+        <select name="space" class="form-control">
+            <option value=""></option>
+          {% for each in spaces %}
+            <option {% if each in request.user.people.spaces.all %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
+          {% endfor %}
+        </select>
+        <small class="form-text text-muted">Which is your primary data dashboard on the website?</small>
+      </div>
+    </div>
+
+    <div class="form-group row">
       <label class="col-md-3 col-form-label">
         Notifications
       </label>

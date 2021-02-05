@@ -286,6 +286,10 @@ def user_profile_form(request):
             people.meta_data = meta_data
             people.save()
 
+            people.spaces.clear()
+            if "space" in request.POST and request.POST["space"]:
+                people.spaces.add(ReferenceSpace.objects.get(pk=request.POST["space"]))
+
             messages.success(request, "Your profile information was saved.")
             return redirect(request.GET["return"])
         else:
@@ -294,6 +298,7 @@ def user_profile_form(request):
         "menu": "profile",
         "form": form,
         "title": "Edit profile",
+        "spaces": ReferenceSpace.objects.filter(activated__isnull=False).distinct(),
     }
     return render(request, "auth/profile.form.html", context)
 
