@@ -1446,8 +1446,11 @@ class LibraryItem(Record):
                     # We use WGS 84 (4326) as coordinate reference system, so we gotta convert to that
                     # if it uses something else
                     if layer.srs.srid != 4326:
-                        ct = CoordTransform(layer.srs, SpatialReference("WGS84"))
-                        geo.transform(ct)
+                        try:
+                            ct = CoordTransform(layer.srs, SpatialReference("WGS84"))
+                            geo.transform(ct)
+                        except Exception as e:
+                            error = "The following error occurred when trying to change the coordinate reference system: " + str(e)
 
                     name = str(each.get(self.meta_data["columns"]["name"]))
 
