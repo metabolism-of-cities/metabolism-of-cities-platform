@@ -1375,6 +1375,7 @@ class LibraryItem(Record):
 
         if self.type.id == 40 and not error: # Type = shapefile
 
+            print(self.name)
             layer = self.get_gis_layer()
             fields = layer.fields
             total_count = layer.num_feat
@@ -2530,10 +2531,11 @@ class ZoteroItem(models.Model):
     def get_authors(self):
         all = self.data.get("creators")
         text = ""
-        for each in all:
-            if text != "":
-                text += " and "
-            text += each.get("lastName", "") + ", " + each.get("firstName", "")
+        if all:
+            for each in all:
+                if text != "":
+                    text += " and "
+                text += each.get("lastName", "") + ", " + each.get("firstName", "")
         return text
 
     def get_tags(self):
