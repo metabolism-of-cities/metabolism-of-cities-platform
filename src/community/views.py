@@ -103,8 +103,13 @@ def organization(request, slug, id):
 
 def forum_list(request, parent=None, section=None):
     list = ForumTopic.objects.all()
-    if request.project != 1:
-        project = get_object_or_404(Project, pk=request.project)
+    project = get_project(request)
+    forum_is_only_for_project = False
+
+    if project.meta_data and "forum_is_only_for_project" in project.meta_data:
+        list = list.filter(part_of_project=project)
+        forum_is_only_for_project = True
+    elif request.project != 1:
         list = list.filter(part_of_project_id__in=[project.id, 1])
     else:
         project = None
@@ -122,6 +127,7 @@ def forum_list(request, parent=None, section=None):
         "menu": "forum",
         "projects": projects,
         "project": project,
+        "forum_is_only_for_project": forum_is_only_for_project,
     }
     return render(request, "forum.list.html", context)
 
