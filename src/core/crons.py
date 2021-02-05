@@ -86,7 +86,7 @@ class CheckDataProgress(CronJobBase):
 class CheckDataProgressCityLoops(CronJobBase):
     RUN_EVERY_MINS = 200
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
-    code = "core.checkdataprogress" # Unique code for logging purposes
+    code = "core.checkdataprogresscityloops" # Unique code for logging purposes
 
     def do(self):
         list = ReferenceSpace.objects.filter(activated__part_of_project_id=6)
