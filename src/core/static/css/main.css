@@ -2025,3 +2025,24 @@ body.volunteer.portal.latest th.date {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap; }
+
+.space-layers .layer-name {
+  width: calc(100% - 25px); }
+
+.space-layers .progress-donuts svg {
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+  width: 20px;
+  margin-top: -4px; }
+
+.space-layers .progress-donuts circle {
+  stroke-width: 20;
+  fill: none; }
+
+.space-layers .progress-donuts .background-donut {
+  stroke-dasharray: 0;
+  stroke: #efefef; }
+
+.space-layers .progress-donuts .actual-progress {
+  stroke-dasharray: 250;
+  stroke: #28a745; }

@@ -3111,3 +3111,36 @@ body.volunteer.portal.latest {
     white-space: nowrap;
   }
 }
+
+
+// space layers
+.space-layers {
+  .layer-name {
+    width: calc(100% - 25px)
+  }
+
+  .progress-donuts {
+    svg {
+     -webkit-transform: rotate(-90deg);
+      transform: rotate(-90deg);
+      width: 20px;
+      margin-top: -4px;
+    }
+
+    circle {
+      stroke-width: 20;
+      fill: none;
+    }
+
+    .background-donut {
+      stroke-dasharray: 0;
+      stroke: $light;
+    }
+
+    .actual-progress {
+      stroke-dasharray: 250;
+      stroke: #28a745;
+    }
+  }
+}
+
