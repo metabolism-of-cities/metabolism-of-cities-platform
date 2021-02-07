@@ -2,52 +2,53 @@
 {% load moc_extras %}
 
 {% block content %}
-  <section>
-    <h2>Data inventory: layer overview</h2>
-    <div class="row">
-      <div class="col-4">
-        <div class="nav flex-column nav-pills">
-          {% for each in layers %}
-            <a class="nav-link {% if each.slug == layer %}active{% endif %}" href="../{{ each.slug }}/">
-              <i class="fal fa-{{ each.icon }} fa-fw mr-2"></i> {{ each }}
-            </a>
-          {% endfor %}
-        </div>
-      </div>
-      <div class="col-8">
-        <div class="tab-content">
-          {% for each in layers %}
-            {% if each.slug == layer %}
-              <div class="tab-pane fade show active">
+  <h2>Data inventory: layer overview</h2>
 
-                <ul class="list-group mb-4">
-                  {% for tag in each.children.all %}
-                    <li class="list-group-item">
-                      <a href="{{ tag.id }}/">
-                        {{ tag }}
-                        {% if counter|get_item:tag.id > 0 %}
-                          <span class="badge badge-success float-right">
-                            {{ counter|get_item:tag.id }}
-                          </span>
-                        {% else %}
-                          <span class="badge badge-dark float-right">
-                            0
-                          </span>
-                        {% endif %}
-                      </a>
-                    </li>
-                  {% endfor %}
-                </ul>
-
-                <p><a href="all/">View all</a></p>
-
-              </div>
-
-            {% endif %}
-          {% endfor %}
-
-        </div>
+  <div class="row mt-4">
+    <div class="col-4">
+      <div class="nav flex-column nav-pills">
+        {% for each in layers %}
+          <a class="nav-link {% if each.slug == layer %}active{% endif %}" href="../{{ each.slug }}/">
+            <i class="fal fa-{{ each.icon }} fa-fw mr-2"></i> {{ each }}
+          </a>
+        {% endfor %}
       </div>
     </div>
-  </section>
+    <div class="col-8">
+      <div class="tab-content">
+        {% for each in layers %}
+          {% if each.slug == layer %}
+            <div class="tab-pane fade show active">
+
+              <ul class="list-group mb-4">
+                {% for tag in each.children.all %}
+                  <li class="list-group-item">
+                    <a href="{{ tag.id }}/">
+                      {{ tag }}
+                      {% if counter|get_item:tag.id > 0 %}
+                        <span class="badge {% if PROJECT.slug == 'cityloops' %}badge-cityloops-secondary{% else %}badge-primary{% endif %} mt-1 float-right">
+                          {{ counter|get_item:tag.id }}
+                        </span>
+                      {% else %}
+                        <span class="badge {% if PROJECT.slug == 'cityloops' %}badge-cityloops-primary{% else %}badge-secondary{% endif %} mt-1 float-right">
+                          0
+                        </span>
+                      {% endif %}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+
+              <a class="btn btn-primary" href="all/">
+                <i class="fa fa-list"></i> View all
+              </a>
+
+            </div>
+
+          {% endif %}
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
 {% endblock %}
