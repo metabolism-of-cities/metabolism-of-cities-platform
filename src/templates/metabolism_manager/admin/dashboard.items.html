@@ -1,0 +1,193 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load moc_extras %}
+
+{% block title %}Metabolism Manager dashboard{% endblock %}
+
+{% block head %}
+  <style>
+    svg {
+      width: 100%;
+      height: 250px;
+    }
+
+    svg text {
+      font-size: 3.5rem;
+      fill: white;
+      pointer-events: none;
+    }
+
+    rect:hover {
+      opacity: .85;
+      cursor: pointer;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  <h3>Dashboard</h3>
+
+  {% include "metabolism_manager/admin/_dashboard.menu.html" %}
+
+  <section>
+    <table class="table datatable">
+      <thead>
+        <tr>
+          <th>Available from</th>
+          <th>Until</th>
+          <th>Type</th>
+          {% if slug == "resources" %}
+            <th>Name</th>
+          {% endif %}
+          <th>Quantity</th>
+          <th>Organisation</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in items %}
+        <tr>
+          <td class="text-nowrap">
+            {{ each.start_date|date:'d N Y' }}
+          </td>
+          <td class="text-nowrap">
+            {{ each.end_date|date:'d N Y' }}
+          </td>
+          {% if slug == "resources" %}
+            <td class="text-nowrap">{{ each.material_type.parent }}</td>
+          {% endif %}
+          <td class="text-nowrap">
+          {% if each.name %}
+            {{ each.name }}<br>
+          {% endif %}
+          {{ each.material_type }}</td>
+          <td class="text-nowrap">{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
+          <td class="text-nowrap">{{ each.owner }}</td>
+          <td class="has-button text-right">
+            <a class="btn btn-primary btn-sm" href="{% url 'platformu:admin_datapoint' each.id %}"><i class="far mr-0 fa-info-circle"></i></a>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="btn btn-primary mt-3" data-toggle="modal" data-entry="{{ slug }}" data-target="#add-entry-modal">
+      <i class="fa fa-plus mr-2"></i> Add {{ slug }}
+    </div>
+  </section>
+
+  {% if slug == "space" %}
+    {% for each in material_list %}
+    <section class="treemap" data-material="{{ each.material_type__name }}">
+      <h5>{{ each.material_type__name }}</h5>
+      <div class="row">
+        <div class="col-md-6 supply">
+          <strong>Supply</strong>
+          <svg>
+            <svg class="boxes" viewBox="0 0 100 1000" preserveAspectRatio="none" shape-rendering="crispEdges"></svg>
+            <svg class="text" viewBox="0 0 100 1000" preserveAspectRatio="xMinYMin"></svg>
+          </svg>
+        </div>
+        <div class="col-md-6 demand">
+          <strong>Demand</strong>
+          <svg>
+            <svg class="boxes" viewBox="0 0 100 1000" preserveAspectRatio="none" shape-rendering="crispEdges"></svg>
+            <svg class="text" viewBox="0 0 100 1000" preserveAspectRatio="xMinYMin"></svg>
+          </svg>
+        </div>
+      </div>
+    </section>
+    {% endfor %}
+  {% endif %}
+
+  <!-- add entry modal -->
+  <div class="modal fade" id="add-entry-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="add-entry" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="add-entry">Add entry</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="mb-0 font-weight-bold" for="modal-organisation">Organisation</label>
+            <select class="form-control custom-select select2" id="modal-organisation">
+              {% for each in organization_list %}
+                <option value="{{ each.id }}">{{ each }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-0 font-weight-bold" for="modal-organisation">Type</label>
+            <select class="form-control custom-select select2" id="modal-type">
+              <option value="resources">Resources</option>
+              <option value="space">Space</option>
+              <option value="technology">Technology</option>
+              <option value="staff">Staff</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary submit-modal">Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}
+
+{% block footer %}
+  <script>
+    // select right dropdown in modal from sections
+    $(".btn[data-entry]").click(function() {
+      let type = $(this).data("entry");
+      $("#modal-type").val(type).trigger("change.select2")
+    })
+
+    // submit modal and go to right URL to add entry
+    $(".submit-modal").click(function() {
+      let organisation = $("#modal-organisation").val();
+      let type = $("#modal-type").val();
+      let url = "../../../{{ my_organization.id }}/entities/" + organisation + "/" + type + "/?action=add"
+      window.location.href = url;
+    })
+
+    // tree maps
+    // array of all the items
+    const allItems = [
+      {% for each in items %}
+      {
+        "name": "{{ each.name }}",
+        "status": "{{ each.type }}",
+        "material": "{{ each.material_type }}",
+        "owner": "{{ each.owner }}",
+        "quantity": {{ each.absolute_quantity }},
+        "symbol": "{{ each.unit.symbol }}",
+        "id": {{ each.id }},
+      },
+      {% endfor %}
+    ]
+
+    // add boxes for each item
+    $(allItems).each(function() {
+      let colour = (this.status == "demand" ? "#CF4803" : "#144d58");
+
+      let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      $(rect).attr({
+        "width": 100,
+        "height": this.quantity,
+        "x": 0,
+        "y": 0,
+        "fill": colour,
+      })
+
+      $(".treemap[data-material='" + this.material + "'] ." + this.status + " .boxes").append(rect);
+    })
+  </script>
+{% endblock %}

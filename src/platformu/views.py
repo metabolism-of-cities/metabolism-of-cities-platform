@@ -133,19 +133,10 @@ def admin_dashboard(request, organization=None):
     if not organization_list:
         messages.error(request, "Please enter data first.")
     else:
-        types = {
-            "Resources": MaterialDemand.objects.filter(owner__in=organization_list).exclude(material_type__parent_id__in=[31621,31620,584734]),
-            "Space": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31621),
-            "Technology": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31620),
-            "Staff": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=584734),
-        }
-
         gps = organization_list[0].meta_data
         if not "lat" in gps:
             messages.error(request, "Please ensure that you enter the address/GPS details first.")
-        data = MaterialDemand.objects.filter(owner__in=organization_list)
-        current = data.filter(start_date__lte=date.today(), end_date__gte=date.today())
-        latest = data.order_by('-id')[:10]
+        data = MaterialDemand.objects.filter(owner__in=organization_list).filter(start_date__lte=date.today(), end_date__gte=date.today())
         material_list = MaterialDemand.objects.filter(owner__in=organization_list).values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
 
         # We need to make each bubble relative to the smallest value in that group
@@ -168,11 +159,10 @@ def admin_dashboard(request, organization=None):
 
     context = {
         "page": "dashboard",
+        "tab": "map",
         "my_organization": my_organization,
         "organization_list": organization_list,
         "data": data,
-        "current": current,
-        "latest": latest,
         "today": date.today(),
         "material_list": material_list,
         "gps": gps,
@@ -186,6 +176,106 @@ def admin_dashboard(request, organization=None):
     }
 
     return render(request, "metabolism_manager/admin/dashboard.html", context)
+
+@login_required
+def admin_dashboard_items(request, slug, organization=None):
+    items = None
+
+    data = gps = material_list = None
+    min_values = {}
+
+    if organization:
+        my_organization = my_organizations(request, organization)
+    else:
+        my_organization = my_organizations(request)
+        if my_organization:
+            my_organization = my_organization[0]
+        else:
+            return redirect("platformu:create_my_organization")
+
+    organization_list = Organization.objects_include_private.filter(
+            tags__parent_tag_id = TAG_ID["platformu_segments"],
+            tags__belongs_to = my_organization,
+    )
+
+    if not organization_list:
+        messages.error(request, "Please enter data first.")
+    else:
+        if slug == "resources":
+            items = MaterialDemand.objects.filter(owner__in=organization_list).exclude(material_type__parent_id__in=[31621,31620,584734]).filter(start_date__lte=date.today(), end_date__gte=date.today())
+        elif slug == "space":
+            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31621).filter(start_date__lte=date.today(), end_date__gte=date.today())
+            material_list = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent__name="Space").values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
+        elif slug == "technology":
+            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31620).filter(start_date__lte=date.today(), end_date__gte=date.today())
+        elif slug == "staff":
+            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=584734).filter(start_date__lte=date.today(), end_date__gte=date.today())
+
+
+    context = {
+        "page": "dashboard",
+        "my_organization": my_organization,
+        "organization_list": organization_list,
+        "data": data,
+        "today": date.today(),
+        "material_list": material_list,
+        "gps": gps,
+        "min_values": min_values,
+        "load_lightbox": True,
+        "load_select2": True,
+        "load_datatables": True,
+        "load_highcharts": True,
+        "items": items,
+        "slug": slug,
+    }
+
+    return render(request, "metabolism_manager/admin/dashboard.items.html", context)
+
+@login_required
+def admin_dashboard_latest(request, organization=None):
+    types = None
+
+    data = gps = material_list = None
+    min_values = {}
+
+    if organization:
+        my_organization = my_organizations(request, organization)
+    else:
+        my_organization = my_organizations(request)
+        if my_organization:
+            my_organization = my_organization[0]
+        else:
+            return redirect("platformu:create_my_organization")
+
+    organization_list = Organization.objects_include_private.filter(
+            tags__parent_tag_id = TAG_ID["platformu_segments"],
+            tags__belongs_to = my_organization,
+    )
+
+    if not organization_list:
+        messages.error(request, "Please enter data first.")
+    else:
+        items = MaterialDemand.objects.filter(owner__in=organization_list).filter(start_date__lte=date.today(), end_date__gte=date.today()).order_by('-id')[:10]
+        material_list = MaterialDemand.objects.filter(owner__in=organization_list).values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
+
+
+    context = {
+        "page": "dashboard",
+        "tab": "latest",
+        "my_organization": my_organization,
+        "organization_list": organization_list,
+        "items": items,
+        "today": date.today(),
+        "material_list": material_list,
+        "min_values": min_values,
+        "load_lightbox": True,
+        "load_select2": True,
+        "load_datatables": True,
+        "slug": "latest",
+    }
+
+    return render(request, "metabolism_manager/admin/dashboard.items.html", context)
+
 
 @login_required
 def admin_map(request, organization=None):
