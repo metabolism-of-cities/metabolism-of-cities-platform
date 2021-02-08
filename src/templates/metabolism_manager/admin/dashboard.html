@@ -243,7 +243,10 @@
           <i class="fa fa-plus mr-2"></i> Add {{ key|lower }}
         </div>
 
-        <div class="mt-4" id="tetris-{{ key }}"></div>
+        {% if key == "Space" %}
+        <h5 class="mt-4">Events space</h5>
+        <div class="treemap" data-treemap="events-space"></div>
+        {% endif %}
       </div>
     {% endfor %}
 
@@ -370,7 +373,6 @@
 {% block footer %}
   <script src="{% static 'js/leaflet.awesome-markers.min.js' %}"></script>
   <script src="{% static 'js/leaflet.markercluster.js' %}"></script>
-  <script src="https://code.highcharts.com/modules/treemap.js"></script>
 
   <script>
     // a list of all the offers and requests for materials
@@ -580,80 +582,6 @@
       window.location.href = url;
     })
 
-    // tetris graphs
-    Highcharts.chart("tetris-Space", {
-      chart: {
-        backgroundColor: "#fcfcfc",
-        margin: 0,
-        opacity: 1,
-        animation: false,
-      },
-      tooltip: {
-        enabled: false
-      },
-      plotOptions: {
-        series: {
-          states: {
-            hover: {
-              animation: {
-                duration: 0,
-              },
-              lineWidthPlus: 0,
-              opacity: 1,
-            }
-          },
-          point: {
-            events: {
-              click: function() {
-                window.location.href = "../data/" + this.id + "/";
-              }
-            }
-          }
-        }
-      },
-      series: [{
-          opacity: 1,
-          type: "treemap",
-          layoutAlgorithm: "stripes",
-          alternateStartingDirection: true,
-          levels: [{
-            level: 1,
-            borderColor: "#fcfcfc",
-            borderWidth: 4,
-            layoutAlgorithm: "sliceAndDice",
-            dataLabels: {
-              enabled: true,
-              format: "{point.name}<br>{point.value}{point.symbol}",
-              align: "left",
-              verticalAlign: "top",
-              style: {
-                fontSize: "13px",
-              }
-            }
-          }],
-          data: [
-            {% for key,data in types.items %}
-              {% if key == "Space" %}
-                {% for each in data %}
-                  {
-                    name: "{{ each.material_type }} - {{ each.owner|safe|escape }}",
-                    value: {{ each.absolute_quantity }},
-                    symbol: "{{ each.unit.symbol }}",
-                    color: "#28a745",
-                    id: {{ each.id }},
-                  },
-                {% endfor %}
-              {% endif %}
-            {% endfor %}
-          ]
-      }],
-      title: false,
-      credits: {
-        enabled: false
-      },
-      exporting: {
-        enabled: false
-      },
-    });
+    // tree maps
   </script>
 {% endblock %}

@@ -1569,6 +1569,10 @@ td.has-button {
   .badge i {
     font-size: 10px;
   }
+
+  .badge {
+    line-height: 16px;
+  }
 }
 
 .sprint-bar {
@@ -3010,6 +3014,7 @@ body.volunteer.portal.latest {
     height: 2.5rem;
     width: 2.5rem;
     margin-right: .5rem;
+    line-height: 2.5rem;
   }
 
   th.user,
