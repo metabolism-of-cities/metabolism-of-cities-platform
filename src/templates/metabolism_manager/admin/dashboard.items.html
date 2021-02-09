@@ -50,50 +50,88 @@
   {% include "metabolism_manager/admin/_dashboard.menu.html" %}
 
   <section>
-    <table class="table datatable">
-      <thead>
-        <tr>
-          <th>Available from</th>
-          <th>Until</th>
-          <th>Type</th>
-          {% if slug == "resources" %}
-            <th>Name</th>
-          {% endif %}
-          <th>Quantity</th>
-          <th>Organisation</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for each in items %}
-        <tr>
-          <td class="text-nowrap">
-            {{ each.start_date|date:'d N Y' }}
-          </td>
-          <td class="text-nowrap">
-            {{ each.end_date|date:'d N Y' }}
-          </td>
-          {% if slug == "resources" %}
-            <td class="text-nowrap">{{ each.material_type.parent }}</td>
-          {% endif %}
-          <td class="text-nowrap">
-          {% if each.name %}
-            {{ each.name }}<br>
-          {% endif %}
-          {{ each.material_type }}</td>
-          <td class="text-nowrap">{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
-          <td class="text-nowrap">{{ each.owner }}</td>
-          <td class="has-button text-right">
-            <a class="btn btn-primary btn-sm" href="{% url 'platformu:admin_datapoint' each.id %}"><i class="far mr-0 fa-info-circle"></i></a>
-          </td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
+    {% if slug == "latest" %}
+      <div class="row">
+        {% for each in items %}
+          <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card">
+              <div class="card-header">{{ each.owner }}</div>
+              {% if each.image %}
+                <div class="lightbox">
+                  <a href="{{ each.image.large.url }}" style="background-image: url('{{ each.image.large.url }}');" data-caption="{{ each.owner }}" class="card-img-top d-block"></a>
+                </div>
+              {% elif each.owner.image %}
+                <img src="{{ each.owner.image.url }}" class="card-img-top p-3" alt="{{ each.owner }}">
+              {% endif %}
+              <ul class="list-group list-group-flush">
+                {% if each.owner.meta_data.address %}
+                  <li class="list-group-item"><i class="fal fa-fw fa-map-marker-alt mr-2"></i> {{ each.owner.meta_data.address }}</li>
+                {% endif %}
+                <li class="list-group-item"><i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-2"></i>{{ each.material_type.parent }}: {{ each.material_type }}</li>
+                <li class="list-group-item"><i class="fal fa-fw fa-balance-scale mr-2"></i>{{ each.absolute_quantity }} {{ each.unit.symbol }}</li>
+                <li class="list-group-item text-{% if each.type == 'supply' %}primary{% else %}secondary{% endif %}">
+                  <i class="fal fa-fw fa-{% if each.type == 'supply' %}sign-out{% else %}sign-in{% endif %} mr-2"></i>
+                  {% if each.type == "supply" %}Supply{% else %}Demand{% endif %}
+                </li>
+                <li class="list-group-item"><i class="fal fa-fw fa-calendar mr-2"></i>{{ each.start_date|date:'d N Y' }} - {{ each.end_date|date:'d N Y' }}</li>
+                <li class="list-group-item"><i class="fal fa-fw fa-calendar-plus mr-2"></i> Added on {{ each.date_created|date:'d F' }}</li>
+                <li class="list-group-item text-center">
+                  <a class="btn btn-primary" href="{% url 'platformu:admin_datapoint' each.id %}">More details</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <table class="table datatable">
+        <thead>
+          <tr>
+            <th>From</th>
+            <th>Until</th>
+            <th>Type</th>
+            {% if slug == "resources" or slug == "technology" %}
+              <th>Name</th>
+            {% endif %}
+            <th>Quantity</th>
+            <th>Organisation</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for each in items %}
+          <tr>
+            <td class="text-nowrap">
+              {{ each.start_date|date:'d N Y' }}
+            </td>
+            <td class="text-nowrap">
+              {{ each.end_date|date:'d N Y' }}
+            </td>
+            {% if slug == "resources" or slug == "technology" %}
+              <td class="text-nowrap">{{ each.material_type.parent }}</td>
+            {% endif %}
+            <td class="text-nowrap">
+            {% if each.name %}
+              {{ each.name }}<br>
+            {% endif %}
+            {{ each.material_type }}</td>
+            <td class="text-nowrap">{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
+            <td class="text-nowrap">
+              <a href="{% url 'platformu:admin_entity' my_organization.id each.owner.id %}">{{ each.owner }}</a>
+            </td>
+            <td class="has-button text-right">
+              <a class="btn btn-primary btn-sm" href="{% url 'platformu:admin_datapoint' each.id %}"><i class="far mr-0 fa-info-circle"></i></a>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
 
-    <div class="btn btn-primary mt-3" data-toggle="modal" data-entry="{{ slug }}" data-target="#add-entry-modal">
-      <i class="fa fa-plus mr-2"></i> Add {{ slug }}
-    </div>
+      <div class="btn btn-primary mt-3" data-toggle="modal" data-entry="{{ slug }}" data-target="#add-entry-modal">
+        <i class="fa fa-plus mr-2"></i> Add {{ slug }}
+      </div>
+    {% endif %}
+
   </section>
 
   {% if slug == "space" %}
