@@ -1031,15 +1031,17 @@ td.has-button {
   .return-bar .badge i,
   .sprint-bar .badge i {
     font-size: 10px; }
+  .return-bar .quick-links,
   .return-bar .badge,
+  .sprint-bar .quick-links,
   .sprint-bar .badge {
     line-height: 16px; }
   .return-bar #admin-dropdown,
   .sprint-bar #admin-dropdown {
     height: 24px; }
-    .return-bar #admin-dropdown .dropdown-item,
-    .sprint-bar #admin-dropdown .dropdown-item {
-      line-height: 1.5; }
+  .return-bar .dropdown-item,
+  .sprint-bar .dropdown-item {
+    line-height: 1.5 !important; }
 
 .sprint-bar {
   background-color: #96bac8; }

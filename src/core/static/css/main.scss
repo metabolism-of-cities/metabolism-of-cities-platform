@@ -1570,16 +1570,17 @@ td.has-button {
     font-size: 10px;
   }
 
+  .quick-links,
   .badge {
     line-height: 16px;
   }
 
-  #admin-dropdown {
+  #admin-dropdown  {
     height: 24px;
+  }
 
-    .dropdown-item {
-      line-height: 1.5
-    }
+  .dropdown-item {
+    line-height: 1.5 !important;
   }
 }
 
@@ -2874,11 +2875,6 @@ body.work.item {
       }
     }
   }
-}
-
-// MATERIAL STOCKS PAGES
-body.material-stocks {
-
 }
 
 // MATERIAL STOCKS LANDING PAGE
