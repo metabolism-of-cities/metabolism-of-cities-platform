@@ -17,36 +17,36 @@
   {% endif %}
 
   {% if list %}
-    <table class="table table-striped datatable mt-4">
+    <table class="table border rounded datatable mt-4">
       <thead>
         <tr>
-          <th>Code</th>
           <th>Name</th>
+          <th>Code</th>
           {% if edit_mode %}
-            <th>Options</th>
+            <th></th>
           {% endif %}
         </tr>
       </thead>
       <tbody>
       {% for each in list %}
         <tr>
-          <td width="100">
-            {% if each.icon %}<i class="fa fa-fw fa-{{ each.icon }}"></i>{% endif %}
-            {% if each.code %}{{ each.code }}{% endif %}
-          </td>
           <td>
+            {% if each.icon %}<i class="fal fa-fw fa-{{ each.icon }} mr-2"></i>{% endif %}
             {% if edit_mode or each.children.all %}
               <a href="{% if not catalog %}../{% endif %}{{ each.id }}/">{{ each.name }}</a>
             {% else %}
               {{ each.name }}
             {% endif %}
           </td>
+          <td width="100">
+            {% if each.code %}{{ each.code }}{% endif %}
+          </td>
           {% if edit_mode %}
-          <td>
+          <td class="has-button text-right">
           {% if edit_mode %}
-              <a class="btn btn-info" href="{% if not catalog %}../{% endif %}{{ each.id }}/edit/?next={{ request.get_full_path }}"><i class="fa fa-pencil"></i> Edit</a>
+              <a class="btn btn-sm btn-primary-basic" href="{% if not catalog %}../{% endif %}{{ each.id }}/edit/?next={{ request.get_full_path }}"><i class="fa fa-pencil"></i> Edit</a>
             {% else %}
-              <a hidden class="btn btn-info" href="{% url "staf:material" each.id %}"><i class="fa fa-eye"></i> View</a>
+              <a hidden class="btn btn-sm btn-primary-basic" href="{% url 'staf:material' each.id %}"><i class="fa fa-eye"></i> View</a>
             {% endif %}
           </td>
           {% endif %}

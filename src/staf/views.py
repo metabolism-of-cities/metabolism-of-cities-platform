@@ -928,6 +928,7 @@ def materials(request, id=None, catalog=None, project_name=None, edit_mode=False
         "edit_mode": edit_mode,
         "info": info,
         "catalog": catalog,
+        "load_datatables": True,
     }
 
     return render(request, "staf/materials.html", context)

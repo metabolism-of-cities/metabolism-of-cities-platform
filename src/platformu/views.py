@@ -202,14 +202,14 @@ def admin_dashboard_items(request, slug, organization=None):
         messages.error(request, "Please enter data first.")
     else:
         if slug == "resources":
-            items = MaterialDemand.objects.filter(owner__in=organization_list).exclude(material_type__parent_id__in=[31621,31620,584734]).filter(start_date__lte=date.today(), end_date__gte=date.today())
+            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id__in=[31603,31604,31605,31606,31607,31608,31609,31610,31611,31612,31613,31614,31615,31616,31617,31618], start_date__lte=date.today(), end_date__gte=date.today())
         elif slug == "space":
-            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31621).filter(start_date__lte=date.today(), end_date__gte=date.today())
+            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31621, start_date__lte=date.today(), end_date__gte=date.today())
             material_list = MaterialDemand.objects.filter(owner__in=organization_list, start_date__lte=date.today(), end_date__gte=date.today(), material_type__parent__name="Space").values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
         elif slug == "technology":
-            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31620).filter(start_date__lte=date.today(), end_date__gte=date.today())
+            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id__in=[752967,752973,752980,752994], start_date__lte=date.today(), end_date__gte=date.today())
         elif slug == "staff":
-            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=584734).filter(start_date__lte=date.today(), end_date__gte=date.today())
+            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=584734, start_date__lte=date.today(), end_date__gte=date.today())
 
 
     context = {
@@ -352,9 +352,9 @@ def admin_data(request, organization=None):
         messages.error(request, "Please enter data first.")
     else:
         types = {
-            "Resources": MaterialDemand.objects.filter(owner__in=organization_list).exclude(material_type__parent_id__in=[31621,31620,584734]),
+            "Resources": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id__in=[31603,31604,31605,31606,31607,31608,31609,31610,31611,31612,31613,31614,31615,31616,31617,31618]),
             "Space": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31621),
-            "Technology": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31620),
+            "Technology": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id__in=[752967,752973,752980,752994]),
             "Staff": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=584734),
         }
 
@@ -468,10 +468,10 @@ def admin_entity_materials(request, organization, id, slug=None):
     main_groups = materials = None
 
     if slug == "resources":
-        main_groups = Material.objects.filter(parent__isnull=True, catalog_id=31594).exclude(pk__in=[31621,31620,584734])
+        main_groups = Material.objects.filter(parent__isnull=True, catalog_id=31594, pk__in=[31603,31604,31605,31606,31607,31608,31609,31610,31611,31612,31613,31614,31615,31616,31617,31618])
         materials = Material.objects.filter(parent__in=main_groups)
     elif slug == "technology":
-        main_groups = Material.objects.filter(parent__isnull=True, catalog_id=31594).filter(pk__in=[583743])
+        main_groups = Material.objects.filter(parent__isnull=True, catalog_id=31594, pk__in=[752967,752973,752980,752994])
         materials = Material.objects.filter(parent__in=main_groups)
     elif slug == "space":
         main_groups = None
