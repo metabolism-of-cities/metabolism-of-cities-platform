@@ -25,6 +25,21 @@
       opacity: .85;
       cursor: pointer;
     }
+
+    .single-item {
+      display: block;
+      border: 1px solid;
+      margin-bottom: 5px;
+      width: 100%;
+      opacity: .8;
+      color: #000;
+      padding: .5rem;
+      min-height: 44px;
+    }
+
+    .single-item:hover {
+      opacity: 1;
+    }
   </style>
 {% endblock %}
 
@@ -88,17 +103,9 @@
       <div class="row">
         <div class="col-md-6 supply no-results">
           <strong>Supply</strong>
-          <svg>
-            <svg class="boxes" preserveAspectRatio="none" shape-rendering="crispEdges"></svg>
-            <svg class="text" preserveAspectRatio="xMinYMin"></svg>
-          </svg>
         </div>
         <div class="col-md-6 demand no-results">
           <strong>Demand</strong>
-          <svg>
-            <svg class="boxes" preserveAspectRatio="none" shape-rendering="crispEdges"></svg>
-            <svg class="text" preserveAspectRatio="xMinYMin"></svg>
-          </svg>
         </div>
       </div>
     </section>
@@ -183,50 +190,39 @@
     var {{ each.material_type__name|cut:" " }}supply = 0
     {% endfor %}
 
-    let viewBoxHeight = 0;
+    let maxHeight = 0;
 
     // add boxes for each item
     $(allItems).each(function() {
       let colour = (this.status == "demand" ? "#CF4803" : "#144d58");
       var countVar = this.material.replace(/\s+/g, '');
 
-      let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-      $(rect).attr({
-        "data-id": this.id,
-        "width": "100%",
+      let rect = document.createElement("a");
+      $(rect).css({
         "height": this.quantity,
-        "x": 0,
-        "y": window[countVar + this.status],
-        "fill": colour,
-      })
-
-      let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-      $(text).attr({
-        "dominant-baseline": "hanging",
-        "x": 10,
-        "y": window[countVar + this.status] + 10,
+        "background-color": colour + "25",
+        "border-color": colour,
       }).text(this.quantity + " " + this.symbol + " - " + this.owner)
+        .addClass("single-item")
+        .attr("href", "../../../data/" + this.id)
 
-      $(".treemap[data-material='" + this.material + "'] ." + this.status + " .boxes").append(rect);
-      $(".treemap[data-material='" + this.material + "'] ." + this.status + " .text").append(text);
+      $(".treemap[data-material='" + this.material + "'] ." + this.status).removeClass("no-results").append(rect);
 
-      $(".treemap[data-material='" + this.material + "'] ." + this.status).removeClass("no-results");
+      window[countVar + this.status] = window[countVar + this.status] + this.quantity;
 
-      window[countVar + this.status] = window[countVar + this.status] + this.quantity + 5;
-
-      if (window[countVar + this.status] > viewBoxHeight) {
-        viewBoxHeight = window[countVar + this.status]
+      if (window[countVar + this.status] > maxHeight) {
+        maxHeight = window[countVar + this.status]
       }
     })
 
-    $("svg.boxes, svg.text").attr("viewBox", "0 0 100 " + viewBoxHeight);
-
-    $(".no-results svg").remove()
     $(".no-results").append("<div class='border bg-light text-center p-3'><i class='fal fa-2x fa-empty-set mb-2'></i><br>No results for this category</div>")
 
-    $("svg rect").click(function() {
-      let id = $(this).data("id");
-      window.location.href = "../../../data/" + id;
-    })
+    if (maxHeight > 700) {
+      $(".single-item").each(function() {
+        let ratio = 700 / maxHeight;
+        let newHeight = $(this).height() * ratio;
+        $(this).height(newHeight)
+      })
+    }
   </script>
 {% endblock %}
