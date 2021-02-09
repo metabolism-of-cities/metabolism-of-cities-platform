@@ -359,7 +359,7 @@ def admin_data(request, organization=None):
         }
 
     context = {
-        "page": "full_overview",
+        "page": "log",
         "my_organization": my_organization,
         "load_datatables": True,
         "types": types,
