@@ -205,7 +205,7 @@ def admin_dashboard_items(request, slug, organization=None):
             items = MaterialDemand.objects.filter(owner__in=organization_list).exclude(material_type__parent_id__in=[31621,31620,584734]).filter(start_date__lte=date.today(), end_date__gte=date.today())
         elif slug == "space":
             items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31621).filter(start_date__lte=date.today(), end_date__gte=date.today())
-            material_list = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent__name="Space").values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
+            material_list = MaterialDemand.objects.filter(owner__in=organization_list, start_date__lte=date.today(), end_date__gte=date.today(), material_type__parent__name="Space").values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
         elif slug == "technology":
             items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31620).filter(start_date__lte=date.today(), end_date__gte=date.today())
         elif slug == "staff":

@@ -8,16 +8,20 @@
   <style>
     svg {
       width: 100%;
-      height: 250px;
+      height: 400px;
     }
 
     svg text {
-      font-size: 3.5rem;
+      font-size: 1rem;
       fill: white;
       pointer-events: none;
     }
 
-    rect:hover {
+    svg text.no-results {
+      fill: black;
+    }
+
+    rect:not(.no-results):hover {
       opacity: .85;
       cursor: pointer;
     }
@@ -82,18 +86,18 @@
     <section class="treemap" data-material="{{ each.material_type__name }}">
       <h5>{{ each.material_type__name }}</h5>
       <div class="row">
-        <div class="col-md-6 supply">
+        <div class="col-md-6 supply no-results">
           <strong>Supply</strong>
           <svg>
-            <svg class="boxes" viewBox="0 0 100 1000" preserveAspectRatio="none" shape-rendering="crispEdges"></svg>
-            <svg class="text" viewBox="0 0 100 1000" preserveAspectRatio="xMinYMin"></svg>
+            <svg class="boxes" preserveAspectRatio="none" shape-rendering="crispEdges"></svg>
+            <svg class="text" preserveAspectRatio="xMinYMin"></svg>
           </svg>
         </div>
-        <div class="col-md-6 demand">
+        <div class="col-md-6 demand no-results">
           <strong>Demand</strong>
           <svg>
-            <svg class="boxes" viewBox="0 0 100 1000" preserveAspectRatio="none" shape-rendering="crispEdges"></svg>
-            <svg class="text" viewBox="0 0 100 1000" preserveAspectRatio="xMinYMin"></svg>
+            <svg class="boxes" preserveAspectRatio="none" shape-rendering="crispEdges"></svg>
+            <svg class="text" preserveAspectRatio="xMinYMin"></svg>
           </svg>
         </div>
       </div>
@@ -174,20 +178,49 @@
       {% endfor %}
     ]
 
+    {% for each in material_list %}
+    var {{ each.material_type__name|cut:" " }}demand = 0
+    var {{ each.material_type__name|cut:" " }}supply = 0
+    {% endfor %}
+
+    let viewBoxHeight = 0;
+
     // add boxes for each item
     $(allItems).each(function() {
       let colour = (this.status == "demand" ? "#CF4803" : "#144d58");
+      var countVar = this.material.replace(/\s+/g, '');
 
       let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
       $(rect).attr({
-        "width": 100,
+        "width": "100%",
         "height": this.quantity,
         "x": 0,
-        "y": 0,
+        "y": window[countVar + this.status],
         "fill": colour,
       })
 
+      let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      $(text).attr({
+        "dominant-baseline": "hanging",
+        "x": 10,
+        "y": window[countVar + this.status] + 10,
+      }).text(this.quantity + " " + this.symbol + " - " + this.owner)
+
       $(".treemap[data-material='" + this.material + "'] ." + this.status + " .boxes").append(rect);
+      $(".treemap[data-material='" + this.material + "'] ." + this.status + " .text").append(text);
+
+      $(".treemap[data-material='" + this.material + "'] ." + this.status).removeClass("no-results");
+
+      window[countVar + this.status] = window[countVar + this.status] + this.quantity + 5;
+
+      if (window[countVar + this.status] > viewBoxHeight) {
+        viewBoxHeight = window[countVar + this.status]
+      }
     })
+
+    $("svg.boxes, svg.text").attr("viewBox", "0 0 100 " + viewBoxHeight);
+
+    $(".no-results svg").remove()
+    $(".no-results").append("<div class='border bg-light text-center p-3'><i class='fal fa-2x fa-empty-set mb-2'></i><br>No results for this category</div>")
   </script>
 {% endblock %}
