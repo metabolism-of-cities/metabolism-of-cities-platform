@@ -1034,6 +1034,12 @@ td.has-button {
   .return-bar .badge,
   .sprint-bar .badge {
     line-height: 16px; }
+  .return-bar #admin-dropdown,
+  .sprint-bar #admin-dropdown {
+    height: 24px; }
+    .return-bar #admin-dropdown .dropdown-item,
+    .sprint-bar #admin-dropdown .dropdown-item {
+      line-height: 1.5; }
 
 .sprint-bar {
   background-color: #96bac8; }

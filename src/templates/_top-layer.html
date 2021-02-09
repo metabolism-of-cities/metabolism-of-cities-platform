@@ -34,7 +34,7 @@
         </a>
       </div>
     </div>
-  {% elif DESIGN.back_link or PERMISSIONS or request.user.is_staff or NOTIFICATIONS %}
+  {% elif DESIGN.back_link or PERMISSIONS or request.user.is_staff or request.user.is_superuser or NOTIFICATIONS %}
     <div class="return-bar">
       <div class="container">
         <div class="row">
@@ -56,7 +56,7 @@
                 <span class="badge badge-light">{{ each.relationship.name }}</span>
               {% endfor %}
 
-              <a class="badge badge-light" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/hub/profile/">
+              <a class="badge badge-light ml-1" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/hub/profile/">
                 <i class="fa fa-user mr-1"></i> {{ request.user }} |
                 {% if request.user.is_superuser %}
                   Super user
@@ -68,12 +68,12 @@
               </a>
 
               {% if request.user.is_superuser %}
-                <a class="badge badge-light" href="{% url 'core:network_activity' %}">
+                <a class="badge badge-light ml-1" href="{% url 'core:network_activity' %}">
                   <i class="fa fa-heart-rate"></i> Network activity
                 </a>
               {% endif %}
 
-              <a href="/notifications/" class="badge badge-{% if NOTIFICATIONS %}dark{% else %}light{% endif %}">
+              <a href="/notifications/" class="badge badge-{% if NOTIFICATIONS %}dark{% else %}light{% endif %} ml-1">
                 {% if NOTIFICATIONS %}
                   <i class="fa fa-bell text-danger mr-1"></i>
                   {{ NOTIFICATIONS.count }} notification{% if NOTIFICATIONS.count > 1 %}s{% endif %}
@@ -84,7 +84,7 @@
               </a>
 
               {% if request.user.is_staff %}
-                <div class="dropdown d-inline">
+                <div class="dropdown ml-1">
                   <div class="badge badge-secondary dropdown-toggle" type="button" id="admin-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-lock mr-1"></i> Quick links
                   </div>

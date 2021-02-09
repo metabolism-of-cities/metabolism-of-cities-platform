@@ -1573,6 +1573,14 @@ td.has-button {
   .badge {
     line-height: 16px;
   }
+
+  #admin-dropdown {
+    height: 24px;
+
+    .dropdown-item {
+      line-height: 1.5
+    }
+  }
 }
 
 .sprint-bar {

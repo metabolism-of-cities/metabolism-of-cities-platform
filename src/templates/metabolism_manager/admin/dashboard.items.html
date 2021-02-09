@@ -192,6 +192,7 @@
 
       let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
       $(rect).attr({
+        "data-id": this.id,
         "width": "100%",
         "height": this.quantity,
         "x": 0,
@@ -222,5 +223,10 @@
 
     $(".no-results svg").remove()
     $(".no-results").append("<div class='border bg-light text-center p-3'><i class='fal fa-2x fa-empty-set mb-2'></i><br>No results for this category</div>")
+
+    $("svg rect").click(function() {
+      let id = $(this).data("id");
+      window.location.href = "../../../data/" + id;
+    })
   </script>
 {% endblock %}
