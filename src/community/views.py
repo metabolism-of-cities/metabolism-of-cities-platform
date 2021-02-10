@@ -46,19 +46,19 @@ def projects(request, project_name="core", type="research"):
     # Currently all projects are tagged as MoC, so we must link to that project instead of the Community Portal
 
     project = 1 if request.project == 18 else request.project
+    project = get_project(request)
     list = PublicProject.objects.filter(part_of_project_id=project, type=type)
 
-    if "update" in request.GET:
-        for each in list:
-            if not each.meta_data:
-                each.meta_data = {}
-            each.meta_data["format"] = "html"
-            each.save()
-            p(each.meta_data)
+    title = "Projects"
+    if type == "thesis" and project.slug == "islands":
+        title = "Thesis projects"
+    elif project.slug == "islands":
+        title = "Research projects"
 
     context = {
         "list": list,
         "load_datatables": True,
+        "title": title,
     }
     return render(request, "community/projects.html", context)
 
