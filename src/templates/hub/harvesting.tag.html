@@ -26,22 +26,24 @@
       {% include "_library.list.html" %}
     {% else %}
       <div class="alert alert-light d-inline-block">
-        <i class="fa fa-exclamation-triangle mr-2"></i> No items uploaded yet
+        <i class="fal fa-empty-set mr-2"></i> No items uploaded yet
       </div>
     {% endif %}
   </section>
 
   <section>
     <h4>Upload new item</h4>
-    <div class="add-options row">
-      {% for each in types %}
-        <div class="col-sm-6 col-md-4 col-lg-3">
-          <a class="btn btn-block btn-primary-basic text-left" href="form/?inventory=true&amp;type={{ each.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" class="list-group-item list-group-item-action">
-            <i class="fal fa-fw fa-{{ each.icon }} mr-2"></i>
-            {{ each }}
-          </a>
-        </div>
-      {% endfor %}
+    <div class="border rounded p-2">
+      <div class="add-options row">
+        {% for each in types %}
+          <div class="col-sm-6 col-md-4 col-lg-3">
+              <a class="btn btn-block btn-primary-basic text-left" href="form/?inventory=true&amp;type={{ each.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" class="list-group-item list-group-item-action">
+                <i class="fal fa-fw fa-{{ each.icon }} mr-2"></i>
+                {{ each }}
+              </a>
+          </div>
+        {% endfor %}
+      </div>
     </div>
   </section>
 

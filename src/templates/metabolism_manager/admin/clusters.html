@@ -28,7 +28,7 @@
             <tbody>
               {% for details in each.record_set.all %}
                 <tr>
-                  <td><a href="../entities/{{ details.id }}/">{{ details }}</a></td>
+                  <td><a href="{% url 'platformu:admin_entity' my_organization.id details.id %}">{{ details }}</a></td>
                   <td>
                     {% for sector in details.sectors.all %}
                       {{ sector }}
@@ -48,8 +48,9 @@
           </table>
         </div>
       {% endif %}
-      <a class="btn btn-primary" href="../entities/create/?tag={{ each.id }}"><i class="fas fa-plus"></i> Add new organisation</a>
-      <a style="display:none" class="btn btn-primary-basic" href="configure/"><i class="far fa-cog"></i> Cluster configuration</a>
+      <a class="btn btn-primary" href="{% url 'platformu:admin_entity_form' my_organization.id %}?tag={{ each.id }}"><i class="fas fa-plus"></i> Add new organisation</a>
+
+      <!-- <a class="btn btn-primary-basic" href="configure/"><i class="far fa-cog"></i> Cluster configuration</a> -->
     </section>
   {% endfor %}
   <section>
@@ -58,7 +59,7 @@
       {% csrf_token %}
       <div class="form-group mb-2 mr-2">
         <label for="name" class="sr-only">Name</label>
-        <input type="text" name="name" class="form-control" id="name" placeholder="Name">
+        <input type="text" name="name" class="form-control" id="name" placeholder="Name" required>
       </div>
       <button type="submit" class="btn btn-primary mb-2"><i class="fas fa-plus"></i> Add cluster</button>
     </form>

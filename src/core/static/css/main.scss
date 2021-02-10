@@ -1569,6 +1569,19 @@ td.has-button {
   .badge i {
     font-size: 10px;
   }
+
+  .quick-links,
+  .badge {
+    line-height: 16px;
+  }
+
+  #admin-dropdown  {
+    height: 24px;
+  }
+
+  .dropdown-item {
+    line-height: 1.5 !important;
+  }
 }
 
 .sprint-bar {
@@ -2864,11 +2877,6 @@ body.work.item {
   }
 }
 
-// MATERIAL STOCKS PAGES
-body.material-stocks {
-
-}
-
 // MATERIAL STOCKS LANDING PAGE
 body.material-stocks.landing {
   .container.main-content {
@@ -3010,6 +3018,7 @@ body.volunteer.portal.latest {
     height: 2.5rem;
     width: 2.5rem;
     margin-right: .5rem;
+    line-height: 2.5rem;
   }
 
   th.user,

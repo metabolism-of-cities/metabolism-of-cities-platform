@@ -1,0 +1,266 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load moc_extras %}
+
+{% block title %}Metabolism Manager dashboard{% endblock %}
+
+{% block head %}
+  <style>
+    svg {
+      width: 100%;
+      height: 400px;
+    }
+
+    svg text {
+      font-size: 1rem;
+      fill: white;
+      pointer-events: none;
+    }
+
+    svg text.no-results {
+      fill: black;
+    }
+
+    rect:not(.no-results):hover {
+      opacity: .85;
+      cursor: pointer;
+    }
+
+    .single-item {
+      display: block;
+      border: 1px solid;
+      margin-bottom: 5px;
+      width: 100%;
+      opacity: .8;
+      color: #000;
+      padding: .5rem;
+      min-height: 44px;
+    }
+
+    .single-item:hover {
+      opacity: 1;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  <h3>Dashboard</h3>
+
+  {% include "metabolism_manager/admin/_dashboard.menu.html" %}
+
+  <section>
+    {% if slug == "latest" %}
+      <div class="row">
+        {% for each in items %}
+          <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card">
+              <div class="card-header">{{ each.owner }}</div>
+              {% if each.image %}
+                <div class="lightbox">
+                  <a href="{{ each.image.large.url }}" style="background-image: url('{{ each.image.large.url }}');" data-caption="{{ each.owner }}" class="card-img-top d-block"></a>
+                </div>
+              {% elif each.owner.image %}
+                <img src="{{ each.owner.image.url }}" class="card-img-top p-3" alt="{{ each.owner }}">
+              {% endif %}
+              <ul class="list-group list-group-flush">
+                {% if each.owner.meta_data.address %}
+                  <li class="list-group-item"><i class="fal fa-fw fa-map-marker-alt mr-2"></i> {{ each.owner.meta_data.address }}</li>
+                {% endif %}
+                <li class="list-group-item"><i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-2"></i>{{ each.material_type.parent }}: {{ each.material_type }}</li>
+                <li class="list-group-item"><i class="fal fa-fw fa-balance-scale mr-2"></i>{{ each.absolute_quantity }} {{ each.unit.symbol }}</li>
+                <li class="list-group-item text-{% if each.type == 'supply' %}primary{% else %}secondary{% endif %}">
+                  <i class="fal fa-fw fa-{% if each.type == 'supply' %}sign-out{% else %}sign-in{% endif %} mr-2"></i>
+                  {% if each.type == "supply" %}Supply{% else %}Demand{% endif %}
+                </li>
+                <li class="list-group-item"><i class="fal fa-fw fa-calendar mr-2"></i>{{ each.start_date|date:'d N Y' }} - {{ each.end_date|date:'d N Y' }}</li>
+                <li class="list-group-item"><i class="fal fa-fw fa-calendar-plus mr-2"></i> Added on {{ each.date_created|date:'d F' }}</li>
+                <li class="list-group-item text-center">
+                  <a class="btn btn-primary" href="{% url 'platformu:admin_datapoint' each.id %}">More details</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <table class="table datatable">
+        <thead>
+          <tr>
+            <th>From</th>
+            <th>Until</th>
+            <th>Type</th>
+            {% if slug == "resources" or slug == "technology" %}
+              <th>Name</th>
+            {% endif %}
+            <th>Quantity</th>
+            <th>Organisation</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for each in items %}
+          <tr>
+            <td class="text-nowrap">
+              {{ each.start_date|date:'d N Y' }}
+            </td>
+            <td class="text-nowrap">
+              {{ each.end_date|date:'d N Y' }}
+            </td>
+            {% if slug == "resources" or slug == "technology" %}
+              <td class="text-nowrap">{{ each.material_type.parent }}</td>
+            {% endif %}
+            <td class="text-nowrap">
+            {% if each.name %}
+              {{ each.name }}<br>
+            {% endif %}
+            {{ each.material_type }}</td>
+            <td class="text-nowrap">{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
+            <td class="text-nowrap">
+              <a href="{% url 'platformu:admin_entity' my_organization.id each.owner.id %}">{{ each.owner }}</a>
+            </td>
+            <td class="has-button text-right">
+              <a class="btn btn-primary btn-sm" href="{% url 'platformu:admin_datapoint' each.id %}"><i class="far mr-0 fa-info-circle"></i></a>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="btn btn-primary mt-3" data-toggle="modal" data-entry="{{ slug }}" data-target="#add-entry-modal">
+        <i class="fa fa-plus mr-2"></i> Add {{ slug }}
+      </div>
+    {% endif %}
+
+  </section>
+
+  {% if slug == "space" %}
+    {% for each in material_list %}
+    <section class="treemap" data-material="{{ each.material_type__name }}">
+      <h5>{{ each.material_type__name }}</h5>
+      <div class="row">
+        <div class="col-md-6 supply no-results">
+          <strong>Supply</strong>
+        </div>
+        <div class="col-md-6 demand no-results">
+          <strong>Demand</strong>
+        </div>
+      </div>
+    </section>
+    {% endfor %}
+  {% endif %}
+
+  <!-- add entry modal -->
+  <div class="modal fade" id="add-entry-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="add-entry" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="add-entry">Add entry</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="mb-0 font-weight-bold" for="modal-organisation">Organisation</label>
+            <select class="form-control custom-select select2" id="modal-organisation">
+              {% for each in organization_list %}
+                <option value="{{ each.id }}">{{ each }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-0 font-weight-bold" for="modal-organisation">Type</label>
+            <select class="form-control custom-select select2" id="modal-type">
+              <option value="resources">Resources</option>
+              <option value="space">Space</option>
+              <option value="technology">Technology</option>
+              <option value="staff">Staff</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary submit-modal">Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}
+
+{% block footer %}
+  <script>
+    // select right dropdown in modal from sections
+    $(".btn[data-entry]").click(function() {
+      let type = $(this).data("entry");
+      $("#modal-type").val(type).trigger("change.select2")
+    })
+
+    // submit modal and go to right URL to add entry
+    $(".submit-modal").click(function() {
+      let organisation = $("#modal-organisation").val();
+      let type = $("#modal-type").val();
+      let url = "../../../{{ my_organization.id }}/entities/" + organisation + "/" + type + "/?action=add"
+      window.location.href = url;
+    })
+
+    // tree maps
+    // array of all the items
+    const allItems = [
+      {% for each in items %}
+      {
+        "name": "{{ each.name }}",
+        "status": "{{ each.type }}",
+        "material": "{{ each.material_type }}",
+        "owner": "{{ each.owner }}",
+        "quantity": {{ each.absolute_quantity }},
+        "symbol": "{{ each.unit.symbol }}",
+        "id": {{ each.id }},
+      },
+      {% endfor %}
+    ]
+
+    {% for each in material_list %}
+    var {{ each.material_type__name|cut:" " }}demand = 0
+    var {{ each.material_type__name|cut:" " }}supply = 0
+    {% endfor %}
+
+    let maxHeight = 0;
+
+    // add boxes for each item
+    $(allItems).each(function() {
+      let colour = (this.status == "demand" ? "#CF4803" : "#144d58");
+      var countVar = this.material.replace(/\s+/g, '');
+
+      let rect = document.createElement("a");
+      $(rect).css({
+        "height": this.quantity,
+        "background-color": colour + "25",
+        "border-color": colour,
+      }).text(this.quantity + " " + this.symbol + " - " + this.owner)
+        .addClass("single-item")
+        .attr("href", "../../../data/" + this.id)
+
+      $(".treemap[data-material='" + this.material + "'] ." + this.status).removeClass("no-results").append(rect);
+
+      window[countVar + this.status] = window[countVar + this.status] + this.quantity;
+
+      if (window[countVar + this.status] > maxHeight) {
+        maxHeight = window[countVar + this.status]
+      }
+    })
+
+    $(".no-results").append("<div class='border bg-light text-center p-3'><i class='fal fa-2x fa-empty-set mb-2'></i><br>No results for this category</div>")
+
+    if (maxHeight > 700) {
+      $(".single-item").each(function() {
+        let ratio = 700 / maxHeight;
+        let newHeight = $(this).height() * ratio;
+        $(this).height(newHeight)
+      })
+    }
+  </script>
+{% endblock %}
