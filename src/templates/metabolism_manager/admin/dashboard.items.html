@@ -224,8 +224,8 @@
     ]
 
     {% for each in material_list %}
-    var {{ each.material_type__name|cut:" " }}demand = 0
-    var {{ each.material_type__name|cut:" " }}supply = 0
+    var {{ each.material_type__name|cut:" "|cut:"-" }}demand = 0
+    var {{ each.material_type__name|cut:" "|cut:"-" }}supply = 0
     {% endfor %}
 
     let maxHeight = 0;
