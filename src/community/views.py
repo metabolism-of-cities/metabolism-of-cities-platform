@@ -527,7 +527,12 @@ def controlpanel_project_form(request, slug=None, id=None):
         info = None
 
     if request.method == "POST":
-        if form.is_valid():
+        if "delete" in request.POST:
+            info.is_deleted = True
+            info.save()
+            messages.success(request, "The project was deleted.")
+            return redirect(request.GET.get("next"))
+        elif form.is_valid():
             info = form.save(commit=False)
             info.description = request.POST.get("description")
             info.save()

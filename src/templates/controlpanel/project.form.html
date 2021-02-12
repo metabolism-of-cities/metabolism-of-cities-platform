@@ -33,13 +33,19 @@
 
     {% buttons %}
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-6">
           <button type="submit" class="btn btn-success">
             <i class="fa fa-fw fa-save"></i>
             Save
          </button>
         </div>
+        <div class="col-md-6">
+          <button type="submit" name="delete" value="true" class="btn btn-danger float-right" onclick="javascript:return confirm('Are you sure?')">
+            <i class="fas fa-trash "></i> Delete
+          </button>
+        </div>
       </div>
+
     {% endbuttons %}
 
     {% csrf_token %}

@@ -83,6 +83,12 @@
                 {% endif %}
               </a>
 
+              {% if PERMISSIONS or request.user.is_staff %}
+                <a title="Control panel" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}/{% elif PROJECT.id == 1 %}/{% else %}{{ PROJECT.get_website }}{% endif %}controlpanel/">
+                  <i class="fa fa-cog"></i>
+                </a>
+              {% endif %}
+
               {% if request.user.is_staff %}
                 <div class="quick-links dropdown ml-1">
                   <div class="badge badge-secondary dropdown-toggle" type="button" id="admin-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
