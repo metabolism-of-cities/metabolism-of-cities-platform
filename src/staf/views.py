@@ -1051,7 +1051,7 @@ def flowdiagram(request, id, show_form=False):
     form = None
     flowblock = None
 
-    if has_permission(request, request.project, ["curator", "admin"]):
+    if has_permission(request, request.project, ["dataprocessor"]):
         curator = True
     else:
         show_form = False
@@ -1062,27 +1062,32 @@ def flowdiagram(request, id, show_form=False):
     if show_form:
         ModelForm = modelform_factory(FlowBlocks, exclude=["diagram"])
         form = ModelForm(request.POST or None, instance=flowblock)
-        if request.method == "POST":
+
+    if request.method == "POST" and curator:
+        if "delete" in request.POST:
+            item = FlowBlocks.objects.filter(diagram=info, pk=request.POST["delete"])
+            if item:
+                item.delete()
+                messages.success(request, "This block was removed.")
+            return redirect(request.get_full_path())
+        elif "main_form" in request.POST:
             if form.is_valid():
                 b = form.save(commit=False)
                 if not flowblock:
                     b.diagram = info
                 b.save()
-
                 messages.success(request, "Information was saved.")
+                if "next" in request.GET:
+                    return redirect(request.GET["next"])
+                else:
+                    return redirect(request.get_full_path())
             else:
                 messages.error(request, "We could not save your form, please fill out all fields")
-            if "next" in request.GET:
-                return redirect(request.GET["next"])
-
-    if request.method == "POST" and "delete" in request.POST and curator:
-        item = FlowBlocks.objects.filter(diagram=info, pk=request.POST["delete"])
-        if item:
-            item.delete()
-            messages.success(request, "This block was removed.")
 
     blocks = info.blocks.all()
     activities = Activity.objects.all()
+
+    data_processing_permission = Relationship.objects.get(pk=33)
 
     context = {
         "activities": activities,
@@ -1093,18 +1098,23 @@ def flowdiagram(request, id, show_form=False):
         "title": info.name if info else "Create new flow diagram",
         "flowblock": flowblock,
         "form": form,
+        "data_processing_permission": data_processing_permission,
     }
     return render(request, "staf/flowdiagram.html", context)
 
-@staff_member_required
+@login_required
 def flowdiagram_meta(request, id=None):
-    ModelForm = modelform_factory(FlowDiagram, fields=("name", "description", "icon", "is_public"))
+    if not has_permission(request, request.project, ["dataprocessor"]):
+        unauthorized_access(request)
+
+    ModelForm = modelform_factory(FlowDiagram, fields=("name", "description", "icon"))
     if id:
         info = FlowDiagram.objects.get(pk=id)
         form = ModelForm(request.POST or None, instance=info)
     else:
         info = None
         form = ModelForm(request.POST or None)
+
     if request.method == "POST":
 
         if form.is_valid():

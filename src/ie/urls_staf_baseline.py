@@ -177,6 +177,13 @@ baseline_staf_urlpatterns = [
     path("units/<int:id>/", staf.unit, name="unit"),
     path("units/create/", staf.unit, name="unit"),
 
+    path("flowdiagrams/", staf.flowdiagrams, name="flowdiagrams"),
+    path("flowdiagrams/<int:id>/", staf.flowdiagram, name="flowdiagram"),
+    path("flowdiagrams/create/", staf.flowdiagram, { "show_form": True }, name="flowdiagram"),
+    path("flowdiagrams/meta/", staf.flowdiagram_meta, name="flowdiagram_meta"),
+    path("flowdiagrams/<int:id>/meta/", staf.flowdiagram_meta, name="flowdiagram_meta"),
+    path("flowdiagrams/<int:id>/edit/", staf.flowdiagram, {"show_form": True}, name="flowdiagram_form"),
+
     path("data/", staf.data, name="data"),
 
 ]

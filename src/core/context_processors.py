@@ -1,7 +1,7 @@
 from django.utils import timezone
 import pytz
 
-from core.models import RecordRelationship, Project, ProjectDesign, Work, WorkSprint, Notification
+from core.models import Relationship, Project, ProjectDesign, Work, WorkSprint, Notification
 from django.conf import settings
 
 def site(request):
@@ -54,11 +54,11 @@ def site(request):
 
     if request.user.is_authenticated and request.user.people:
         people = request.user.people
-        permissions = RecordRelationship.objects.filter(
-            record_parent_id = request.user.people.id, 
-            record_child = project, 
-            relationship__is_permission = True
-        )
+        permissions = Relationship.objects.filter(
+            records__record_parent_id = request.user.people.id, 
+            records__record_child = project, 
+            is_permission = True
+        ).values_list("slug", flat=True)
         open = Work.objects.filter(part_of_project=project, status=1, assigned_to__isnull=True).count()
         sprints = WorkSprint.objects.filter(projects=project, start_date__lte=timezone.now(), end_date__gte=timezone.now())
         notifications = Notification.objects.filter(people=request.user.people, is_read=False)

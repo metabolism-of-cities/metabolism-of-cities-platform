@@ -8,25 +8,31 @@
       <tr>
         <th>Name</th>
         <th>Description</th>
-        <th>Options</th>
+        {% if 'dataprocessor' in PERMISSIONS %}
+          <th>Options</th>
+        {% endif %}
       </tr>
     </thead>
     <tbody>
     {% for each in list %}
       <tr>
         <td>
-        <i class="fal fa-{{ each.icon }} fa-fw"></i>
-        <a href="{% url "staf:flowdiagram" each.id %}">{{ each.name }}</a></td>
-        <td>{{ each.description|truncatechars_html:100 }}</td>
-        <td>
-          <a class="btn btn-default-basic" href="{% url "staf:flowdiagram_meta" each.id %}"><i class="fal fa-edit"></i> Edit</a>
-          <a class="btn btn-default-basic" href="{% url "staf:flowdiagram_form" each.id %}"><i class="fal fa-th"></i> Manage blocks</a>
-        </td>
+          <i class="fal fa-{{ each.icon }} fa-fw"></i>
+          <a href="{% url "staf:flowdiagram" each.id %}">{{ each.name }}</a></td>
+        <td>{{ each.get_description|truncatechars_html:100 }}</td>
+        {% if 'dataprocessor' in PERMISSIONS %}
+          <td>
+              <a class="btn btn-default-basic" href="{% url "staf:flowdiagram_meta" each.id %}"><i class="fal fa-edit"></i> Edit</a>
+              <a class="btn btn-default-basic" href="{% url "staf:flowdiagram_form" each.id %}"><i class="fal fa-th"></i> Manage blocks</a>
+          </td>
+        {% endif %}
       </tr>
     {% endfor %}
     </tbody>
   </table>
 
-  <a class="btn btn-default-basic" href="{% url "staf:flowdiagram_meta" %}"><i class="fal fa-plus"></i> Add new flow diagram</a>
+  {% if 'dataprocessor' in PERMISSIONS %}
+    <a class="btn btn-default-basic" href="{% url "staf:flowdiagram_meta" %}"><i class="fal fa-plus"></i> Add new flow diagram</a>
+  {% endif %}
 
 {% endblock %}

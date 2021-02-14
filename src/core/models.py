@@ -269,6 +269,7 @@ class Record(models.Model):
     # Below follows a list of properties that can be used to get specific relationships
     # that are defined in the RecordRelationship table but that can be queried using
     # more natural language ("authors", "uploader", etc) using these properties below.
+    # These can likely be changed to @property but should be verified
 
     def authors(self):
         return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)
@@ -282,6 +283,10 @@ class Record(models.Model):
 
     def funders(self):
         return Record.objects.filter(parent_list__record_child=self, parent_list__relationship__id=5)
+
+    @property
+    def curators(self):
+        return Record.objects.filter(parent_list__record_child=self, parent_list__relationship__id=20)
 
     def publisher(self):
         list = Organization.objects.filter(parent_list__record_child=self, parent_list__relationship__id=2)
@@ -626,7 +631,7 @@ class Relationship(models.Model):
 # Fulano is the author of Paper A. Fulano = record_parent; Paper A = record_child
 class RecordRelationship(models.Model):
     record_parent = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="parent_list")
-    relationship = models.ForeignKey(Relationship, on_delete=models.CASCADE)
+    relationship = models.ForeignKey(Relationship, on_delete=models.CASCADE, related_name="records")
     record_child = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="child_list")
     date_created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
@@ -2272,6 +2277,7 @@ class FlowDiagram(Record):
 
     class Meta:
         db_table = "stafdb_flowdiagram"
+        ordering = ["name"]
 
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()

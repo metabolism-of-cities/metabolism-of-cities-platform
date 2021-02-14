@@ -52,19 +52,9 @@
 
           <div class="col-lg-8 d-flex align-middle justify-content-end">
             {% if PERMISSIONS or request.user.is_staff or request.user.is_superuser or request.user.is_authenticated or NOTIFICATIONS %}
-              {% for each in PERMISSIONS %}
-                <span class="badge badge-light">{{ each.relationship.name }}</span>
-              {% endfor %}
 
               <a class="badge badge-light ml-1" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/hub/profile/">
-                <i class="fa fa-user mr-1"></i> {{ request.user }} |
-                {% if request.user.is_superuser %}
-                  Super user
-                {% elif request.user.is_staff %}
-                  MoC team member
-                {% else %}
-                  MoC community member
-                {% endif %}
+                <i class="fa fa-user mr-1"></i> {{ request.user.people }}
               </a>
 
               {% if request.user.is_superuser %}
