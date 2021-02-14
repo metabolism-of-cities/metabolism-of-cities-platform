@@ -736,21 +736,19 @@ def hub_latest(request, network_wide=False):
     else:
         generate_date = datetime.now() - timedelta(hours=24)
 
-    if network_wide:
+    if network_wide and not "project_only" in request.GET:
         # The network-wide update page shows updates from ALL the projects,
         # plus it shows both task updates (work) and forum updates (forumtopic)
         updates = Message.objects.filter(
             date_created__gte=generate_date,
         )
         updates = updates.filter(Q(parent__work__isnull=False)|Q(parent__forumtopic__isnull=False)).order_by("-date_created")
-        menu = "network_log"
     else:
         updates = Message.objects.filter(
             date_created__gte=generate_date,
             parent__work__isnull=False,
             parent__work__part_of_project_id=project
         ).order_by("-date_created")
-        menu = "log"
 
     if not "include_bot" in request.GET:
         updates = updates.exclude(posted_by_id=32070)
@@ -758,8 +756,9 @@ def hub_latest(request, network_wide=False):
     context = {
         "updates": updates,
         "load_datatables": True,
-        "menu": menu,
+        "menu": "latest",
         "days": int(days),
+        "project_only": True if "project_only" in request.GET else False,
     }
     return render(request, "hub/latest.html", context)
 

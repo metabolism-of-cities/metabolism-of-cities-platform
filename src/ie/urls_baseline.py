@@ -141,6 +141,8 @@ baseline_urlpatterns = [
     path("hub/forum/create/", community.forum_form, { "parent": 31993, "section": "volunteer_hub" }),
     path("hub/forum/<int:id>/", community.forum, { "section": "volunteer_hub" }, name="volunteer_forum"),
     path("hub/forum/<int:id>/edit/<int:edit>/", community.forum_edit, { "section": "volunteer_hub" }, name="volunteer_forum_edit"),
+    path("hub/network/", core.hub_latest, { "network_wide": True }, name="network_activity"),
+
 
     path("newsletter/", core.newsletter, name="newsletter"),
 
