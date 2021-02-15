@@ -70,7 +70,7 @@ def project(request, id):
         "header_title": info.name,
         "title": info.name,
         "header_subtitle": "Projects",
-        "edit_link": f"/controlpanel/projects/{str(info.id)}/",
+        "edit_link": f"/controlpanel/projects/{str(info.id)}/?next={request.get_full_path()}",
         "add_link": "/controlpanel/projects/create/",
         "show_relationship": info.id,
         "relationships": info.child_list.exclude(relationship__name="Uploader"),
@@ -538,7 +538,17 @@ def controlpanel_project_form(request, slug=None, id=None):
         elif form.is_valid():
             info = form.save(commit=False)
             info.description = request.POST.get("description")
+
+            if not info.meta_data:
+                info.meta_data = {}
+
+            info.meta_data["supervisor"] = request.POST.get("supervisor")
+            info.meta_data["project_leader"] = request.POST.get("project_leader")
+            info.meta_data["research_team"] = request.POST.get("research_team")
+            info.meta_data["researcher"] = request.POST.get("researcher")
+            info.meta_data["institution"] = request.POST.get("institution")
             info.save()
+
             messages.success(request, "The information was saved.")
 
             if not id:

@@ -73,6 +73,22 @@
               </li>
             {% endif %}
 
+            {% if info.meta_data.research_team %}
+              <li class="list-group-item">
+                <i class="far fa-fw fa-user mb-1 mr-1" aria-hidden="true"></i> 
+                <strong>Research team</strong><br>
+                {{ info.meta_data.research_team }}
+              </li>
+            {% endif %}
+
+            {% if info.meta_data.project_leader %}
+              <li class="list-group-item">
+                <i class="far fa-fw fa-user mb-1 mr-1" aria-hidden="true"></i> 
+                <strong>Project leader</strong><br>
+                {{ info.meta_data.project_leader }}
+              </li>
+            {% endif %}
+
             {% if info.email %}
               <li class="list-group-item">
                 <i class="far fa-fw fa-envelope mb-1 mr-1" aria-hidden="true"></i> 
