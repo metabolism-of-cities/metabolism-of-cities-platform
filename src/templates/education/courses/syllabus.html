@@ -39,11 +39,17 @@
               {% for content in each.content.all %}
                 <tr>
                   <td>
-                    <a href="{% url "education:module" course.slug each.id %}?open={{ content.id }}" {% if not each.is_public %}class="disabled"{% endif %}>
-                    {{ forloop.counter }}: 
-                    {{ content.get_type_display }} - 
-                    {{ content }}
+                    {% if not each.is_public %}
+                      {{ forloop.counter }}: 
+                      {{ content.get_type_display }} - 
+                      {{ content }}
+                    {% else %}
+                    <a href="{% url "education:module" course.slug each.id %}?open={{ content.id }}">
+                      {{ forloop.counter }}: 
+                      {{ content.get_type_display }} - 
+                      {{ content }}
                     </a>
+                    {% endif %}
                   </td>
                   <td>
                     {% if content.video.duration %}

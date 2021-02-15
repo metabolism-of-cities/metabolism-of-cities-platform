@@ -72,7 +72,7 @@
                 {% endif %}
               </a>
 
-              {% if 'curator' in PERMISSIONS or request.user.is_staff %}
+              {% if "curator" in PERMISSIONS or request.user.is_staff %}
                 <a title="Control panel" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}/{% elif PROJECT.id == 1 %}/{% else %}{{ PROJECT.get_website }}{% endif %}controlpanel/">
                   <i class="fa fa-cog"></i>
                 </a>
