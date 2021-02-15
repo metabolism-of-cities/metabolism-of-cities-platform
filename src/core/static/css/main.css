@@ -877,6 +877,9 @@ td.has-button {
   .return-bar #admin-dropdown,
   .sprint-bar #admin-dropdown {
     height: 24px; }
+  .return-bar .dropdown-toggle::after,
+  .sprint-bar .dropdown-toggle::after {
+    vertical-align: .15em; }
   .return-bar .dropdown-item,
   .sprint-bar .dropdown-item {
     line-height: 1.5 !important; }
