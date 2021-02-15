@@ -818,7 +818,6 @@ def controlpanel_relationships(request, id):
 def controlpanel_stats(request):
     if not has_permission(request, request.project, ["admin"]):
         unauthorized_access(request)
-    from django.http import HttpResponse
     f = open("templates/stats/metabolismofislands.html")
     return HttpResponse(f)
 
