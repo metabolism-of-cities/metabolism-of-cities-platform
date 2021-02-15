@@ -171,7 +171,7 @@
             <dl>
               <dt>Methodology</dt>
               <dd>
-                {{ each.methodology }}
+                {{ each.methodology_html|safe }}
               </dd>
             </dl>
 
@@ -183,7 +183,9 @@
 
               <dt>Category</dt>
               <dd>
-                {{ each.category }}
+                {% for category in each.category.items %}
+                  {{ category }}
+                {% endfor %}
               </dd>
             </dl>
 
