@@ -112,7 +112,7 @@
                     {% endif %}
 
                     {% if request.user.is_authenticated and request.user.is_staff and show_relationship %}
-                      <a class="dropdown-item" href="/admin/core/recordrelationship/?record_child_id__exact={{ show_relationship }}"><i class="fal mr-2 fa-project-diagram fa-fw"></i> Relationships</a>
+                      <a class="dropdown-item" href="/controlpanel/relationship/list/{{ show_relationship }}/"><i class="fal mr-2 fa-project-diagram fa-fw"></i> Relationships</a>
                       <a class="dropdown-item" href="/admin/core/recordrelationship/add/?record_child={{ show_relationship }}"><i class="fal mr-2 fa-project-diagram fa-fw"></i> Add relationship</a>
                       <a class="dropdown-item" href="/admin/core/recordrelationship/add/?record_child={{ show_relationship }}&amp;relationship=4"><i class="fal mr-2 fa-project-diagram fa-fw"></i> Add author</a>
                     {% endif %}

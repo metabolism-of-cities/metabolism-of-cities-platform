@@ -5,6 +5,10 @@
 
   <h1 class="mb-4">{{ title }}</h1>
 
+  {% with link=PROJECT.slug|add:":controlpanel_relationships" %}
+    <a class="nav-link" href="{% url link info.id %}">Edit relationships</a>
+  {% endwith %}
+
   <form method="post" enctype="multipart/form-data">
     {% bootstrap_form form layout="horizontal" %}
 

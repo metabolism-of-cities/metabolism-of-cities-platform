@@ -1,0 +1,45 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1 class="mb-0">{% block title %}Relationships{% endblock %}</h1>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Type</th>
+        <th>Since</th>
+        {% if show_child %}
+          <th>Signed up to</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in users %}
+      <tr>
+        <td><a href="{{ each.id }}/">{{ each.record_parent }}</a></td>
+        <td>{{ each.relationship.name }}</td>
+        <td>{{ each.date_created|date:"M d, Y" }}</td>
+        {% if show_child %}
+          <td>{{ each.record_child }}</td>
+        {% endif %}
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <a class="mt-4 btn btn-default-outline" href="create/?next={{ request.get_full_path }}"><i class="fal fa-plus"></i> Add</a>
+
+  <div>
+    <a href="../" class="btn btn-primary-basic mt-4">
+      <i class="fal fa-angle-left"></i>
+      Back to control panel
+    </a>
+  </div>
+
+{% endblock %}

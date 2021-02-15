@@ -805,6 +805,16 @@ def controlpanel_users(request):
     return render(request, "controlpanel/users.html", context)
 
 @login_required
+def controlpanel_relationships(request, id):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+    context = {
+        "users": RecordRelationship.objects.filter(record_child_id=id),
+        "load_datatables": True,
+    }
+    return render(request, "controlpanel/relationships.html", context)
+
+@login_required
 def controlpanel_spaces(request):
     if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)

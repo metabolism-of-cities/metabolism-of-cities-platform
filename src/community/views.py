@@ -59,6 +59,7 @@ def projects(request, project_name="core", type="research"):
         "list": list,
         "load_datatables": True,
         "title": title,
+        "add_link": "/controlpanel/projects/create/",
     }
     return render(request, "community/projects.html", context)
 
@@ -67,10 +68,12 @@ def project(request, id):
     context = {
         "info": info,
         "header_title": info.name,
+        "title": info.name,
         "header_subtitle": "Projects",
-        "edit_link": "/admin/core/publicproject/" + str(info.id) + "/change/",
+        "edit_link": f"/controlpanel/projects/{str(info.id)}/",
+        "add_link": "/controlpanel/projects/create/",
         "show_relationship": info.id,
-        "relationships": info.child_list.all(),
+        "relationships": info.child_list.exclude(relationship__name="Uploader"),
     }
     return render(request, "community/project.html", context)
 
@@ -555,13 +558,16 @@ def controlpanel_project_form(request, slug=None, id=None):
                 )
                 message = Message.objects.create(posted_by=request.user.people, parent=work, name="Status change", description="Task was completed")
 
-            return redirect(request.GET.get("next"))
+            if "next" in request.GET:
+                return redirect(request.GET.get("next"))
+            else:
+                return redirect(project.slug + ":controlpanel_projects")
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
 
     context = {
         "form": form,
-        "title": "Add project",
+        "title": "Add project" if not id else "Edit project",
         "load_markdown": True,
         "curator": curator,
         "info": info,

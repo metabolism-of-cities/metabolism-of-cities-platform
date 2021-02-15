@@ -38,7 +38,7 @@ urlpatterns = baseline_urlpatterns + baseline_library_urlpatterns + baseline_sta
     path("controlpanel/organisations/<int:id>/", community.organization_form),
     path("controlpanel/organisations/create/", community.organization_form),
 
-    path("controlpanel/projects/", community.controlpanel_projects),
+    path("controlpanel/projects/", community.controlpanel_projects, name="controlpanel_projects"),
     path("controlpanel/projects/<int:id>/", community.controlpanel_project_form),
     path("controlpanel/projects/create/", community.controlpanel_project_form),
 ]

@@ -38,7 +38,7 @@ def index(request):
         "news": News.objects.filter(projects=request.project).distinct()[:3],
         "header_subtitle": blurb,
         "header_overwrite": "full",
-        "title": "Homepage"
+        "title": "Homepage",
     }
     return render(request, "islands/index.html", context)
 
