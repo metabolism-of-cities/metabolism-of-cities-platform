@@ -107,6 +107,7 @@ baseline_urlpatterns = [
     # Control panel URLS
     path("controlpanel/", core.controlpanel, name="controlpanel"),
     path("controlpanel/project/", core.controlpanel_project, name="controlpanel_project"),
+    path("controlpanel/stats/", core.controlpanel_stats, name="controlpanel_stats"),
     path("controlpanel/users/", core.controlpanel_users, name="controlpanel_users"),
     path("controlpanel/users/create/", core.controlpanel_relationship_form),
     path("controlpanel/users/<int:id>/", core.controlpanel_relationship_form),

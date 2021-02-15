@@ -815,6 +815,14 @@ def controlpanel_relationships(request, id):
     return render(request, "controlpanel/relationships.html", context)
 
 @login_required
+def controlpanel_stats(request):
+    if not has_permission(request, request.project, ["admin"]):
+        unauthorized_access(request)
+    from django.http import HttpResponse
+    f = open("templates/stats/metabolismofislands.html")
+    return HttpResponse(f)
+
+@login_required
 def controlpanel_spaces(request):
     if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
