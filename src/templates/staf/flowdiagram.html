@@ -30,7 +30,7 @@
         <div class="card-body mermaid text-center">
           flowchart TB
             {% for each in blocks %}
-            block{{ each.origin.id }}{{ each.get_origin_slug }}["{{ each.get_origin|escapejs|convert_dash }}"] --> block{{ each.destination.id }}{{ each.get_destination_slug }}["{{ each.get_destination|escapejs|convert_dash }}"]
+            block{{ each.origin.id }}{{ each.get_origin_slug }}["{{ each.get_origin }}"] --> block{{ each.destination.id }}{{ each.get_destination_slug }}["{{ each.get_destination }}"]
             {% endfor %}
         </div>
       </div>
@@ -108,9 +108,8 @@
 
 {% endif %}
 
-<a href="{% url 'staf:flowdiagrams' %}" class="btn btn-primary-basic">
-  <i class="fal fa-angle-left"></i>
-  Back to list
+<a href="{% url 'staf:flowdiagrams' %}" class="btn btn-primary-basic mt-4">
+  <i class="fal fa-angle-left"></i> Back to list
 </a>
 
 {% endblock %}
