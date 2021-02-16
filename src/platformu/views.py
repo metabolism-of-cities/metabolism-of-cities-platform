@@ -556,6 +556,7 @@ def admin_entity_material(request, organization, id, slug, material=None, edit=N
         "material": material,
         "units": units,
         "slug": slug,
+        "type": type,
         "demand": demand,
     }
     return render(request, "metabolism_manager/admin/entity.material.html", context)

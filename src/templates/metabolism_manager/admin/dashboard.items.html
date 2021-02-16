@@ -40,6 +40,10 @@
     .single-item:hover {
       opacity: 1;
     }
+
+    .demand a.single-item:hover {
+      color: #af316a !important;
+    }
   </style>
 {% endblock %}
 
@@ -232,7 +236,7 @@
 
     // add boxes for each item
     $(allItems).each(function() {
-      let colour = (this.status == "demand" ? "#CF4803" : "#144d58");
+      let colour = (this.status == "demand" ? "#AF316A" : "#016FB9");
       var countVar = this.material.replace(/\s+/g, '');
 
       let rect = document.createElement("a");

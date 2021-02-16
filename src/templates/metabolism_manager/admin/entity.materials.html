@@ -109,8 +109,8 @@
             <tr>
               <td><span class="material-name">{{ each }}</span><span hidden class="material-tags">item-{{ each.parent.id }} </span></td>
               <td class="text-right">
-                <a class="btn btn-sm btn-primary-basic float-right" href="demand/{{ each.id }}/?prev={{ request.get_full_path }}"><i class="fas mr-1 fa-plus"></i> Log demand</a>
-                <a class="btn btn-sm btn-primary-basic float-right" href="supply/{{ each.id }}/?prev={{ request.get_full_path }}"><i class="fas mr-1 fa-plus"></i> Log supply</a>
+                <a class="btn btn-sm btn-secondary-basic float-right" href="demand/{{ each.id }}/?prev={{ request.get_full_path }}"><i class="fal mr-1 fa-sign-in"></i> Log demand</a>
+                <a class="btn btn-sm btn-primary-basic float-right" href="supply/{{ each.id }}/?prev={{ request.get_full_path }}"><i class="fal mr-1 fa-sign-out"></i> Log supply</a>
               </td>
             </tr>
             {% endfor %}
