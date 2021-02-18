@@ -2755,9 +2755,13 @@ class CityLoopsIndicatorValue(models.Model):
     sources = models.TextField(null=True, blank=True)
     accuracy = models.TextField(null=True, blank=True)
     coverage = models.TextField(null=True, blank=True)
-    reference = models.TextField(null=True, blank=True)
-    period = models.TextField(null=True, blank=True)
+    area = models.TextField(null=True, blank=True)
+    period_from = models.DateField(default=None, null=True, blank=True)
+    period_to = models.DateField(default=None, null=True, blank=True)
     comments = models.TextField(null=True, blank=True)
+    completed = models.BooleanField(null=True, default=False)
+
+    last_update = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.indicator.name} for {self.city.name} ({self.get_scale_display()})"

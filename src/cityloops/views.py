@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.admin.views.decorators import staff_member_required
 from core.mocfunctions import *
 from django.contrib import messages
+from datetime import datetime
 
 def index(request):
     context = {
@@ -167,8 +168,11 @@ def indicators(request):
     return render(request, "cityloops/indicators.html", context)
 
 def indicators_cities(request):
+    indicator_list = CityLoopsIndicator.objects.order_by("number")
+
     context = {
-        "title": "Indicators",
+        "title": "Indicators: cities' selection",
+        "indicator_list": indicator_list,
         "load_select2": True,
     }
     return render(request, "cityloops/indicators.cities.html", context)
@@ -184,20 +188,30 @@ def city_sectors(request, slug):
 def city_indicators(request, slug, sector):
     info = get_space(request, slug)
     indicator_list = CityLoopsIndicator.objects.order_by("number")
-    indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, city_id=info.id).order_by("indicator_id")
+    sector_id = 1 if sector == "construction" else 2
+    indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, city_id=info.id, sector=sector_id).order_by("indicator_id")
+    user_can_edit = False
+    if request.user.is_authenticated and has_permission(request, request.project, ["admin", "dataprocessor"]) and info in request.user.people.spaces.all():
+        user_can_edit = True
     context = {
         "title": "Indicators",
         "info": info,
         "sector": sector,
         "indicator_list": indicator_list,
         "indicator_scale_list": indicator_scale_list,
+        "user_can_edit": user_can_edit,
     }
     return render(request, "cityloops/indicators.city.html", context)
 
 def city_indicators_form(request, slug, sector):
     info = get_space(request, slug)
-    indicator_list = CityLoopsIndicator.objects.order_by("number")
     sector_id = 1 if sector == "construction" else 2
+    if sector == "construction":
+        indicator_list = CityLoopsIndicator.objects.filter(relevant_construction=True).order_by("number")
+        mandatory_list = [34,39,48,55,57,58,59,61]
+    elif sector == "biomass":
+        indicator_list = CityLoopsIndicator.objects.filter(relevant_biomass=True).order_by("number")
+        mandatory_list = [34,41,48,53,56,57,58,59,61]
     city_values = CityLoopsIndicatorValue.objects.filter(city=info, sector=sector_id)
     check = {
         1: {},
@@ -264,11 +278,12 @@ def city_indicators_form(request, slug, sector):
             ))
         CityLoopsIndicatorValue.objects.bulk_create(items)
         messages.success(request, "Saved")
-        return redirect(request.get_full_path())
+        return redirect("cityloops:city_indicators", sector=sector, slug=slug)
 
     context = {
         "title": "Indicator selection",
         "indicator_list": indicator_list,
+        "mandatory_list": mandatory_list,
         "sector": sector,
         "info": info,
         "indicators": indicators,
@@ -278,8 +293,12 @@ def city_indicators_form(request, slug, sector):
 
 def city_indicator(request, slug, sector, id):
     info = get_space(request, slug)
-    value = CityLoopsIndicatorValue.objects.filter(id=id)
-    indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, city_id=info.id).order_by("indicator_id")
+    value = CityLoopsIndicatorValue.objects.get(pk=id)
+    sector_id = 1 if sector == "construction" else 2
+    indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, city_id=info.id, sector=sector_id).order_by("indicator_id")
+    user_can_edit = False
+    if request.user.is_authenticated and has_permission(request, request.project, ["admin", "dataprocessor"]) and info in request.user.people.spaces.all():
+        user_can_edit = True
 
     context = {
         "title": "Indicators",
@@ -287,13 +306,44 @@ def city_indicator(request, slug, sector, id):
         "value": value,
         "info": info,
         "indicator_scale_list": indicator_scale_list,
+        "user_can_edit": user_can_edit,
     }
     return render(request, "cityloops/indicator.city.html", context)
 
 def city_indicator_form(request, slug, sector, id):
     info = get_space(request, slug)
-    value = CityLoopsIndicatorValue.objects.filter(id=id)
-    indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, city_id=info.id).order_by("indicator_id")
+    value = CityLoopsIndicatorValue.objects.get(pk=id)
+    sector_id = 1 if sector == "construction" else 2
+    indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, city_id=info.id, sector=sector_id).order_by("indicator_id")
+
+    if request.method == "POST":
+        value.rationale = request.POST.get("rationale")
+        value.baseline = request.POST.get("baseline")
+        value.sources = request.POST.get("sources")
+        value.accuracy = request.POST.get("accuracy")
+        value.coverage = request.POST.get("coverage")
+        value.area = request.POST.get("area")
+
+        if request.POST.get("period_from") == "":
+            value.period_from = None
+        else:
+            value.period_from = request.POST.get("period_from")
+
+        if request.POST.get("period_to") == "":
+            value.period_to = None
+        else:
+            value.period_to = request.POST.get("period_to")
+
+        value.comments = request.POST.get("comments")
+
+        if request.POST.get("completed"):
+            value.completed = True
+        else:
+            value.completed = False
+
+        value.last_update = datetime.now()
+        value.save()
+        return redirect("cityloops:city_indicator", sector=sector, slug=slug, id=id)
 
     context = {
         "title": "Indicators",
@@ -323,9 +373,7 @@ def cityloop_indicator_import(request):
             v = v[:1]
             CityLoopsIndicator.objects.create(
                 relevant_construction = row["relevantconstruction"],
-                mandatory_construction = row["mandatoryconstruction"],
                 relevant_biomass = row["relevantbiomass"],
-                mandatory_biomass = row["mandatorybiomass"],
                 category= row["category"],
                 number = row["number"],
                 name = row["name"],

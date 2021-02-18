@@ -1,20 +1,31 @@
 {% extends "_base.html" %}
 
 {% block title %}Metabolism Manager{% endblock %}
-{% block page_name %}entity details{% endblock %}
+
+{% block head %}
+<style>
+  .leaflet-map {
+    height: 200px;
+    box-shadow: none;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
   {% include "metabolism_manager/admin/_entity.menu.html" %}
 
 <div class="row">
-  {% if info.image %}
-    <div class="col-md-4 mb-4">
+  <div class="col-md-4 mb-4">
+    {% if info.image %}
       <img class="mb-2" src="{{ info.image.url }}">
-      <p>
-        {{ info.content }}
-      </p>
+    {% endif %}
+    <div>
+      {{ info.description|linebreaksbr }}
     </div>
-  {% endif %}
+    {% if info.meta_data.lat and info.meta_data.lng %}
+      <div class="leaflet-map border mt-4" id="map"></div>
+    {% endif %}
+  </div>
   <div class="col-md-{% if info.image %}8{% else %}12{% endif %}">
     <table class="table mb-0">
       <tbody>
@@ -36,16 +47,6 @@
             <td> {{ info.meta_data.address }}</td>
           </tr>
         {% endif %}
-          <tr>
-            <th>GPS coordinates</th>
-            <td> {{ info.meta_data.lat }}, {{ info.meta_data.lng }}</td>
-          </tr>
-        {% if info.description %}
-          <tr>
-            <th>Description</th>
-            <td> {{ info.description|linebreaksbr }}</td>
-          </tr>
-        {% endif %}
         <tr>
           <th>Email</th>
           <td><a href="mailto:{{ info.email }}">{{ info.email }}</a></td>
@@ -64,4 +65,37 @@
     </table>
   </div>
 </div>
+{% endblock %}
+
+{% block footer %}
+<script>
+  {% if info.meta_data.lat and info.meta_data.lng %}
+    // create leaflet map - https://leafletjs.com/reference-1.6.0.html
+    var map = L.map("map", {
+      center: [{{ info.meta_data.lat }}, {{ info.meta_data.lng }}],
+      zoom: 13,
+      scrollWheelZoom: false,
+      fullscreenControl: true,
+      renderer: L.canvas(),
+      dragging: false,
+      boxZoom: false,
+      doubleClickZoom: false,
+
+    });
+
+    // add tile layer
+    var tileLayer = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={{ MAPBOX_API_KEY }}", {
+      attribution: "Map data &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='https://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>",
+      id: "{% if leaflet.style %}{{ leaflet.style }}{% elif properties.map_layer_style %}mapbox/{{ properties.map_layer_style }}{% else %}mapbox/streets-v11{% endif %}",
+      tileSize: 512,
+      zoomOffset: -1,
+      // this "layer" option must be kept, as it prevents the tiles from disappearing when removing all other layers from the map
+      layer: "tiles",
+    })
+
+    tileLayer.addTo(map);
+
+    L.marker([{{ info.meta_data.lat }}, {{ info.meta_data.lng }}]).addTo(map);
+  {% endif %}
+</script>
 {% endblock %}
