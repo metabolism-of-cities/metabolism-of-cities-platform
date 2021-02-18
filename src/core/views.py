@@ -188,7 +188,7 @@ def user_register(request, project="core", section=None):
     return render(request, "auth/register.html", context)
 
 def user_login(request, project=None):
-    project = get_object_or_404(Project, pk=request.project)
+    project = get_project(request)
     slug = project.slug if project.slug else "core"
     redirect_url = project.get_website()
     if request.GET.get("next"):
@@ -549,7 +549,7 @@ def template_folium(request):
 def projects(request):
     article = get_object_or_404(Webpage, pk=PAGE_ID["projects"])
     context = {
-        "list": Project.objects.all().exclude(id=1).order_by("name"),
+        "list": Project.objects.all().exclude(id__in=[1,51458]).order_by("name"),
         "article": article,
         "types": ProjectType.objects.all().order_by("name"),
         "header_title": "Projects",
