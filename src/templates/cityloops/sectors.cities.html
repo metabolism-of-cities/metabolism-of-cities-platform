@@ -5,16 +5,14 @@
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-transparent p-0">
-      <li class="breadcrumb-item"><a href="{% url 'cityloops:dashboard_mockup' info.slug %}">{{ info }}</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Indicators</li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:indicators' %}">Indicators</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Cities' selection</li>
     </ol>
   </nav>
 
-  {% lorem 1 p %}
-
   <div class="row dual-iconbox">
     <div class="col-lg-4 col-md-6 mb-4">
-      <a href="{% url 'cityloops:city_indicators' info.slug 'biomass' %}" class="card btn-card">
+      <a href="{% url 'cityloops:cities_indicators' 'biomass' %}" class="card btn-card">
         <div class="card-body">
           <div class="row">
             <div class="col icon">
@@ -39,7 +37,7 @@
       </a>
     </div>
     <div class="col-lg-4 col-md-6 mb-4">
-      <a href="{% url 'cityloops:city_indicators' info.slug 'construction' %}" class="card btn-card">
+      <a href="{% url 'cityloops:cities_indicators' 'construction' %}" class="card btn-card">
         <div class="card-body">
           <div class="row">
             <div class="col icon">

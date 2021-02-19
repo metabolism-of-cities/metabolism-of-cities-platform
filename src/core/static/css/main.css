@@ -1915,6 +1915,12 @@ a {
 .bg-secondary {
   background-color: #CF4803 !important; }
 
+.bg-primary-opaque {
+  background-color: rgba(20, 77, 88, 0.1) !important; }
+
+.bg-secondary-opaque {
+  background-color: rgba(207, 72, 3, 0.1) !important; }
+
 .text-primary {
   color: #144d58 !important; }
 

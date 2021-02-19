@@ -32,62 +32,59 @@
 
   {% if indicator_scale_list %}
 
-  {% for each in indicator_scale_list %}
-    {% ifchanged each.indicator.vision_element %}
-    {% if not forloop.first %}
-    </tbody>
-  </table>
+    {% if user_can_edit %}
+      <a class="btn btn-primary mb-4" href="{% url 'cityloops:city_indicators_form' info.slug sector %}">
+        <i class="fa fa-tasks"></i> Select indicators
+      </a>
     {% endif %}
 
-  <h4>{{ each.indicator.vision_element }}. {{ each.indicator.get_vision_element_display }}</h4>
-  <table class="table indicator-table">
-    <tbody>
-    {% endifchanged %}
-      <tr>
-        <td class="indicator-text">
-          <a href="{% url 'cityloops:indicators' %}#indicator-{{ each.indicator.number }}">{{ each.indicator }}</a></td>
-        <td class="has-button status">
-          {% if each.scale == 1 %}
-            <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-cityloops-secondary btn-sm">
-              <i class="far fa-fw fa-random"></i> Demonstration action
-            </a>
-          {% elif each.scale == 2 %}
-            <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-secondary btn-sm">
-              <i class="far fa-fw fa-city"></i> City
-            </a>
-          {% elif each.scale == 3 %}
-            <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-cityloops-primary btn-sm">
-              <i class="far fa-fw fa-chart-pie"></i> Sector
-            </a>
-          {% endif %}
-        </td>
-      </tr>
-  {% endfor %}
-    </tbody>
-  </table>
+    {% for each in indicator_scale_list %}
+      {% ifchanged each.indicator.vision_element %}
+      {% if not forloop.first %}
+      </tbody>
+    </table>
+      {% endif %}
 
-  <div class="mt-4">
-    <div class="btn btn-primary download-word">
-      <i class="fa fa-file-word"></i> Export
-    </div>
-
-    <a class="btn btn-primary" href="{% url 'cityloops:city_indicators_form' info.slug sector %}">
-      <i class="fa fa-tasks"></i> Select indicators
-    </a>
-  </div>
+    <h4>{{ each.indicator.vision_element }}. {{ each.indicator.get_vision_element_display }}</h4>
+    <table class="table indicator-table">
+      <tbody>
+      {% endifchanged %}
+        <tr>
+          <td class="indicator-text">
+            <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}">{{ each.indicator }}</a></td>
+          <td class="has-button status">
+            {% if each.scale == 1 %}
+              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-cityloops-secondary btn-sm">
+                <i class="far fa-fw fa-random"></i> Demonstration action
+              </a>
+            {% elif each.scale == 2 %}
+              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-secondary btn-sm">
+                <i class="far fa-fw fa-city"></i> City
+              </a>
+            {% elif each.scale == 3 %}
+              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-cityloops-primary btn-sm">
+                <i class="far fa-fw fa-chart-pie"></i> Sector
+              </a>
+            {% endif %}
+          </td>
+        </tr>
+    {% endfor %}
+      </tbody>
+    </table>
 
   {% else %}
 
-  <div class="border rounded p-3 bg-light text-center">
-    <div class="mt-4"><i class="fal fa-empty-set fa-fw mr-2 fa-3x"></i></div>
+    <div class="border rounded p-3 bg-light text-center">
+      <div class="mt-4"><i class="fal fa-empty-set fa-fw mr-2 fa-3x"></i></div>
 
-    <h4 class="my-4">{{ info }} has not selected any indicators yet</h4>
+      <h4 class="my-4">{{ info }} has not selected any indicators yet</h4>
 
-    <a class="btn btn-primary btn-lg mb-4" href="{% url 'cityloops:city_indicators_form' info.slug sector %}">
-      <i class="fa fa-tasks"></i> Select indicators
-    </a>
-  </div>
-
+      {% if user_can_edit %}
+        <a class="btn btn-primary btn-lg mb-4" href="{% url 'cityloops:city_indicators_form' info.slug sector %}">
+          <i class="fa fa-tasks"></i> Select indicators
+        </a>
+      {% endif %}
+    </div>
 
   {% endif %}
 {% endblock %}

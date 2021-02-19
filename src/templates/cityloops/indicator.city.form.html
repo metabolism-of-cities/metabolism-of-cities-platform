@@ -55,74 +55,72 @@
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-transparent p-0">
-      <li class="breadcrumb-item"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}">{{ info }}</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_sectors' 'bodo' %}">Indicators</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_indicators' 'bodo' sector %}">{{ sector|title }}</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_indicator' 'bodo' sector 1 %}">{{ value.first.indicator }}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:dashboard_mockup' info.slug %}">{{ info }}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_sectors' info.slug %}">Indicators</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_indicators' info.slug sector %}">{{ sector|title }}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_indicator' info.slug sector value.id %}">{{ value.indicator }}</a></li>
       <li class="breadcrumb-item active" aria-current="page">Edit</li>
     </ol>
   </nav>
 
   <div class="row">
     <div class="col-lg-8">
-      <h5 class="mb-0">
-        {{ value.first.indicator }}
-      </h5>
+      <h5 class="mb-0">{{ value.indicator }}</h5>
 
-      <div>
-        {% if value.first.scale == 1 %}<span class="badge badge-cityloops-secondary">Demonstration action</span>
-        {% elif value.first.scale == 2 %}<span class="badge badge-secondary">City</span>
-        {% elif value.first.scale == 3 %}<span class="badge badge-cityloops-primary">Sector</span>{% endif %}
-      </div>
+      {% if value.scale == 1 %}<span class="badge badge-cityloops-secondary">Demonstration action</span>
+      {% elif value.scale == 2 %}<span class="badge badge-secondary">City</span>
+      {% elif value.scale == 3 %}<span class="badge badge-cityloops-primary">Sector</span>{% endif %}
 
-      <small class="text-muted">
-        Last edited 6 days ago by Fulano de Tal
-      </small>
+      {% if value.last_update %}
+        <small class="text-muted">
+          Last edited {{ value.last_update|date:"l d F Y, H:i e" }}
+        </small>
+      {% endif %}
 
-      <form class="form mt-4">
+      <form class="form mt-4" method="post">
         <div class="form-group">
           <label for="description">Description</label>
-          <p id="description">{{ value.first.indicator.description }}</p>
+          <div id="description">{{ value.indicator.description_html|safe }}</div>
         </div>
 
         <div class="form-group">
           <label for="methodology">Methodology</label>
-          <p id="methodology">{{ value.first.indicator.methodology }}</p>
+          <div id="methodology">{{ value.indicator.methodology_html|safe }}</div>
         </div>
 
         <div class="form-group">
           <label for="rationale">Rationale</label>
-          <textarea id="rationale" class="form-control" rows="2"></textarea>
+          <textarea id="rationale" class="form-control" rows="2" name="rationale">{{ value.rationale|default_if_none:"" }}</textarea>
           <small class="form-text text-muted">Description of the why the inclusion of the indicator contributes to making the city more circular. It could e.g. its importance in relation to strategy/communication/circularity objectives</small>
         </div>
 
         <div class="form-group">
           <label for="baseline">Baseline data / definition</label>
-          <textarea id="baseline" class="form-control" rows="2"></textarea>
+          <textarea id="baseline" class="form-control" rows="2" name="baseline">{{ value.baseline|default_if_none:"" }}</textarea>
           <small class="form-text text-muted">Description of how baseline values for the indicators will be established (e.g. give reference to methods given in D6.1, CH 5.3)</small>
         </div>
 
         <div class="form-group">
           <label for="sources">Data sources / relevant databases</label>
-          <textarea id="sources" class="form-control" rows="2"></textarea>
+          <textarea id="sources" class="form-control" rows="2" name="sources">{{ value.sources|default_if_none:"" }}</textarea>
           <small class="form-text text-muted">Reference to reports, websites, institutions etc that collect, analyse, publish the data</small>
         </div>
 
         <div class="form-group">
           <label for="accuracy">Overall accuracy</label>
-          <textarea id="accuracy" class="form-control" rows="2"></textarea>
+          <textarea id="accuracy" class="form-control" rows="2" name="accuracy">{{ value.accuracy|default_if_none:"" }}</textarea>
           <small class="form-text text-muted">Assessment of accuracy, linked to a certain data set or domain, which is summarising the various components on uncertainty (data coverage, value uncertainty, representativity etc)</small>
         </div>
 
         <div class="form-group">
           <label for="coverage">Sector coverage</label>
-          <textarea id="coverage" class="form-control" rows="2"></textarea>
+          <textarea id="coverage" class="form-control" rows="2" name="coverage">{{ value.coverage|default_if_none:"" }}</textarea>
           <small class="form-text text-muted">Main economic or other sectors covered by the data. Is the indicator for CDW/BW/other sector of sector independent</small>
         </div>
 
         <div class="form-group">
           <label for="area">Reference area / spatial implementation scale</label>
-          <input type="text" id="area" class="form-control"></input>
+          <input type="text" id="area" class="form-control" name="area" value="{{ value.area|default_if_none:'' }}"></input>
           <small class="form-text text-muted">The country or geographic area to which the measured statistical phenomenon relates. Is the indicator evaluated at demonstration/sector or city scale</small>
         </div>
 
@@ -130,14 +128,14 @@
           <div class="col-md">
             <div class="form-group mb-0">
               <label for="period-from">Reference period, from</label>
-              <input type="date" class="form-control" id="period-from">
+              <input type="date" class="form-control" id="period-from" name="period_from" {% if value.period_from %}value="{{ value.period_from|date:'Y-m-d' }}"{% endif %}>
             </div>
           </div>
 
           <div class="col-md">
             <div class="form-group mb-0">
               <label for="period-to">Until</label>
-              <input type="date" class="form-control" id="period-to">
+              <input type="date" class="form-control" id="period-to" name="period_to" {% if value.period_to %}value="{{ value.period_to|date:'Y-m-d' }}"{% endif %}>
             </div>
           </div>
         </div>
@@ -145,18 +143,19 @@
 
         <div class="form-group">
           <label for="comments">Comments</label>
-          <textarea id="comments" class="form-control" rows="2"></textarea>
+          <textarea id="comments" class="form-control" rows="2" name="comments">{{ value.comments|default_if_none:'' }}</textarea>
           <small class="form-text text-muted">Supplementary descriptive text which can be attached to indicator, data or metadata</small>
         </div>
 
         <div class="form-group">
           <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" id="finished">
-            <label class="custom-control-label font-weight-normal" for="finished">Indicator completed</label>
+            <input type="checkbox" class="custom-control-input" id="completed" name="completed" value="true" {% if value.completed %}checked{% endif %}>
+            <label class="custom-control-label font-weight-normal" for="completed">Indicator completed</label>
           </div>
         </div>
 
-        <button class="btn btn-primary">
+        {% csrf_token %}
+        <button class="btn btn-primary" >
           <i class="fa fa-save"></i> Save
         </button>
       </form>

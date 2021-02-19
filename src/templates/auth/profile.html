@@ -20,29 +20,29 @@
           <ul class="list-group list-group-flush">
             {% if request.user.people == info %}
             <li class="list-group-item">
-              <i class="far fa-fw fa-at mr-1" aria-hidden="true"></i> <a href="mailto:{{ info.email }}">{{ info.email }}</a>
+              <i class="fal fa-fw fa-at mr-2" aria-hidden="true"></i> <a href="mailto:{{ info.email }}">{{ info.email }}</a>
               <span class="badge badge-warning">Only visible to you</span>
             </li>
             {% endif %}
             {% if info.twitter %}
               <li class="list-group-item">
-                <i class="fab fa-fw fa-twitter mr-1" aria-hidden="true"></i> <a href="https://twitter.com/{{ info.twitter }}">{{ info.twitter }}</a>
+                <i class="fab fa-fw fa-twitter mr-2" aria-hidden="true"></i> <a href="https://twitter.com/{{ info.twitter }}">{{ info.twitter }}</a>
               </li>
             {% endif %}
             {% if info.affiliation %}
               <li class="list-group-item">
-                <i class="far fa-fw fa-university mr-1" aria-hidden="true"></i> {{ info.affiliation }}
+                <i class="fal fa-fw fa-university mr-2" aria-hidden="true"></i> {{ info.affiliation }}
               </li>
             {% endif %}
             <li class="list-group-item">
-              <i class="far fa-fw fa-user-plus mr-1" aria-hidden="true"></i> Signed up {{ info.user.date_joined|naturaltime }}
+              <i class="fal fa-fw fa-user-plus mr-2" aria-hidden="true"></i> Signed up {{ info.user.date_joined|naturaltime }}
             </li>
             <li class="list-group-item">
-              <i class="far fa-fw fa-history mr-1" aria-hidden="true"></i> Last seen {{ info.user.last_login|naturaltime }}
+              <i class="fal fa-fw fa-history mr-2" aria-hidden="true"></i> Last seen {{ info.user.last_login|naturaltime }}
             </li>
             {% if info.get_my_space %}
             <li class="list-group-item">
-              <i class="far fa-fw fa-map mr-1" aria-hidden="true"></i> {{ info.get_my_space }}
+              <i class="fal fa-fw fa-map-marker-alt mr-2" aria-hidden="true"></i> {{ info.get_my_space }}
             </li>
             {% endif %}
           </ul>
@@ -81,7 +81,7 @@
         <tbody>
         {% for each in completed %}
           <tr>
-            <td data-sort="-{{ each.date_created|date:"U" }}">{{ each.date_created|date:"M d, Y" }}</td>
+            <td class="text-nowrap" data-sort="-{{ each.date_created|date:'U' }}">{{ each.date_created|date:"M d, Y" }}</td>
             <td>
               <a href="{{ each.part_of_project.get_website }}tasks/{{ each.id }}">{{ each }}</a>
               <br>
@@ -94,9 +94,7 @@
         </tbody>
         <tfoot>
           <tr>
-            <th>Total</th>
-            <th></th>
-            <th></th>
+            <th colspan="3">Total</th>
             <th>{{ info.points }}</th>
           </tr>
         </tfoot>
@@ -120,8 +118,10 @@
           <tr>
             <td>
               <a href="{{ each.part_of_project.get_website }}tasks/{{ each.id }}">{{ each }}</a>
-              <br>
-              {{ each.related_to }}
+              {% if each.related_to %}
+                <br>
+                {{ each.related_to }}
+              {% endif %}
             </td>
             <td>{{ each.part_of_project }}</td>
             <td>{{ each.get_status_display }}</td>

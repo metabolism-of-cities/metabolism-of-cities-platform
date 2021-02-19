@@ -34,8 +34,8 @@
     }
 
     .indicator-number {
-      background-color: #144d58;
-      color: #fff;
+      background-color: #144d5825;
+      color: #144d58;
       padding: 0 .5rem;
       border-radius: .25rem;
       display: inline-block;
@@ -86,8 +86,13 @@
               </tr>
             {% endifchanged %}
             <tr>
-              <td class="indicator-switch">
-                <div class="custom-control custom-switch">
+              <td class="indicator-switch text-center">
+                {% if each.number in mandatory_list %}
+                  <i class="fal fa-asterisk"></i>
+                  <div class="custom-control custom-switch" hidden>
+                {% else %}
+                  <div class="custom-control custom-switch">
+                {% endif %}
                   <input type="checkbox" class="custom-control-input" id="indicator-{{ each.id }}" name="indicators" value="{{ each.id }}"
                   {% if each.id|stringformat:"i" in indicators or not indicators %}
                     checked
@@ -97,7 +102,9 @@
                 </div>
               </td>
               <td class="number"><span class="indicator-number">{{ each.number }}</span></td>
-              <td class="indicator-name">{{ each.name }}</td>
+              <td class="indicator-name">
+                {{ each.name }}
+              </td>
               <td class="checkbox da">
                 <div class="custom-control custom-switch">
                   <input type="checkbox" class="custom-control-input" id="da-{{ each.id }}" name="da" value="{{ each.id }}"

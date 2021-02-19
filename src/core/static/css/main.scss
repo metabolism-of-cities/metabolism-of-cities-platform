@@ -2959,6 +2959,14 @@ a {
   background-color: $secondary !important;
 }
 
+.bg-primary-opaque {
+  background-color: transparentize($primary, .9) !important;
+}
+
+.bg-secondary-opaque {
+  background-color: transparentize($secondary, .9) !important;
+}
+
 .text-primary {
   color: $primary !important;
 }

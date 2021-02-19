@@ -390,6 +390,7 @@ def admin_entity(request, organization, id):
         "page": "entity",
         "my_organization": my_organization,
         "info": get_entity_record(request, my_organization, id),
+        "load_leaflet_basics": True,
     }
     return render(request, "metabolism_manager/admin/entity.html", context)
 

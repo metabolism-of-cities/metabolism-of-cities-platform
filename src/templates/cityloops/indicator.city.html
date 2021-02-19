@@ -50,63 +50,83 @@
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb bg-transparent p-0">
-      <li class="breadcrumb-item"><a href="{% url 'cityloops:dashboard_mockup' 'bodo' %}">{{ info }}</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_sectors' 'bodo' %}">Indicators</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_indicators' 'bodo' sector %}">{{ sector|title }}</a></li>
-      <li class="breadcrumb-item active" aria-current="page">{{ value.first.indicator }}</li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:dashboard_mockup' info.slug %}">{{ info }}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_sectors' info.slug %}">Indicators</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_indicators' info.slug sector %}">{{ sector|title }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ value.indicator }}</li>
     </ol>
   </nav>
 
   <div class="row">
     <div class="col-lg-8">
-      <h5 class="mb-0">
-        {{ value.first.indicator }}
-      </h5>
+      <h5 class="mb-0">{{ value.indicator }}</h5>
 
-      <div>
-        {% if value.first.scale == 1 %}<span class="badge badge-cityloops-secondary">Demonstration action</span>
-        {% elif value.first.scale == 2 %}<span class="badge badge-secondary">City</span>
-        {% elif value.first.scale == 3 %}<span class="badge badge-cityloops-primary">Sector</span>{% endif %}
-      </div>
 
-      <small class="text-muted">
-        Last edited 6 days ago by Fulano de Tal
-      </small>
+      {% if value.scale == 1 %}<span class="badge badge-cityloops-secondary">Demonstration action</span>
+      {% elif value.scale == 2 %}<span class="badge badge-secondary">City</span>
+      {% elif value.scale == 3 %}<span class="badge badge-cityloops-primary">Sector</span>{% endif %}
+
+      {% if value.last_update %}
+        <small class="text-muted">
+          Last edited {{ value.last_update|date:"l d F Y, H:i e" }}
+        </small>
+      {% endif %}
+
+
+      {% if value.completed %}<span class="badge badge-success ml-1"><i class="fa fa-check"></i> Completed</span>{% endif %}
 
       <dl class="indicator-metadata mt-4">
-        <dt>Rationale</dt>
-        <dd>{% lorem 40 w random %}</dd>
+        {% if value.rationale %}
+          <dt>Rationale</dt>
+          <dd>{{ value.rationale|linebreaks }}</dd>
+        {% endif %}
 
-        <dt>Baseline data / definition</dt>
-        <dd>{% lorem 30 w random %}</dd>
+        {% if value.baseline %}
+          <dt>Baseline data / definition</dt>
+          <dd>{{ value.baseline|linebreaks }}</dd>
+        {% endif %}
 
-        <dt>Data Sources / Relevant Databases</dt>
-        <dd>{% lorem 20 w random %}</dd>
+        {% if value.sources %}
+          <dt>Data sources / relevant databases</dt>
+          <dd>{{ value.sources|linebreaks }}</dd>
+        {% endif %}
 
-        <dt>Overall accuracy</dt>
-        <dd>{% lorem 20 w random %}</dd>
+        {% if value.accuracy %}
+          <dt>Overall accuracy</dt>
+          <dd>{{ value.accuracy|linebreaks }}</dd>
+        {% endif %}
 
-        <dt>Sector coverage</dt>
-        <dd>{% lorem 15 w random %}</dd>
+        {% if value.coverage %}
+          <dt>Sector coverage</dt>
+          <dd>{{ value.coverage|linebreaks }}</dd>
+        {% endif %}
 
-        <dt>Reference area / Spatial implementation scale</dt>
-        <dd>{% lorem 6 w random %}</dd>
+        {% if value.area %}
+          <dt>Reference area / Spatial implementation scale</dt>
+          <dd>{{ value.area|linebreaks }}</dd>
+        {% endif %}
 
-        <dt>Reference period</dt>
-        <dd>14 January 2021 - 14 January 2022</dd>
+        {% if value.period_from and value.period_to %}
+          <dt>Reference period</dt>
+          <dd>{{ value.period_from|date:"d F Y" }} until {{ value.period_to|date:"d F Y" }}</dd>
+        {% endif %}
 
-        <dt>Comments</dt>
-        <dd>{% lorem 15 w random %}</dd>
+        {% if value.comments %}
+          <dt>Comments</dt>
+          <dd>{{ value.comments|linebreaks }}</dd>
+        {% endif %}
       </dl>
 
-      <div class="border rounded p-3 bg-light">
-        The information above is specific to {{ info }}'s evaluation plan. For general information on this indicator, please refer to <a href="{% url 'cityloops:indicators' %}#indicator-{{ value.first.indicator.number }}">its entry in the list of indicators</a>.
-      </div>
+      {% if user_can_edit %}
+        <div class="my-4">
+          <a class="btn btn-primary" href="{% url 'cityloops:city_indicator_form' info.slug sector value.id %}">
+            <i class="fa fa-marker"></i> Edit entry
+          </a>
+        </div>
+      {% endif %}
 
-      <div class="mt-4">
-        <a class="btn btn-primary" href="{% url 'cityloops:city_indicator_form' 'bodo' sector value.first.id %}">
-          <i class="fa fa-marker"></i> Edit
-        </a>
+      <div class="border rounded p-3 bg-light">
+        The information above is specific to {{ info }}'s evaluation plan. For general information on this indicator, please refer to <a href="{% url 'cityloops:indicators' %}#indicator-{{ value.indicator.number }}">its entry in the list of indicators</a>.
       </div>
     </div>
     <div class="col-lg-4">
