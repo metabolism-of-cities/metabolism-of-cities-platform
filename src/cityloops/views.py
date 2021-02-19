@@ -159,7 +159,7 @@ def circular_city(request):
     return render(request, "cityloops/circular-city.html", context)
 
 def indicators(request):
-    indicator_list = CityLoopsIndicator.objects.order_by("number")
+    indicator_list = CityLoopsIndicator.objects.all()
 
     context = {
         "title": "Indicators",
@@ -167,12 +167,29 @@ def indicators(request):
     }
     return render(request, "cityloops/indicators.html", context)
 
-def indicators_cities(request):
-    indicator_list = CityLoopsIndicator.objects.order_by("number")
+def cities_sectors(request):
+    context = {
+        "title": "Indicators: cities' selection",
+    }
+    return render(request, "cityloops/sectors.cities.html", context)
+
+def cities_indicators(request, sector):
+    cities_list = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)
+
+    sector_id = 1 if sector == "construction" else 2
+    if sector == "construction":
+        indicator_list = CityLoopsIndicator.objects.filter(relevant_construction=True)
+    elif sector == "biomass":
+        indicator_list = CityLoopsIndicator.objects.filter(relevant_biomass=True)
+
+    indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, sector=sector_id).order_by("indicator_id")
 
     context = {
         "title": "Indicators: cities' selection",
         "indicator_list": indicator_list,
+        "indicator_scale_list": indicator_scale_list,
+        "sector": sector,
+        "cities_list": cities_list,
         "load_select2": True,
     }
     return render(request, "cityloops/indicators.cities.html", context)
@@ -187,7 +204,7 @@ def city_sectors(request, slug):
 
 def city_indicators(request, slug, sector):
     info = get_space(request, slug)
-    indicator_list = CityLoopsIndicator.objects.order_by("number")
+    indicator_list = CityLoopsIndicator.objects.all()
     sector_id = 1 if sector == "construction" else 2
     indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, city_id=info.id, sector=sector_id).order_by("indicator_id")
     user_can_edit = False
@@ -207,11 +224,11 @@ def city_indicators_form(request, slug, sector):
     info = get_space(request, slug)
     sector_id = 1 if sector == "construction" else 2
     if sector == "construction":
-        indicator_list = CityLoopsIndicator.objects.filter(relevant_construction=True).order_by("number")
-        mandatory_list = [34,39,48,55,57,58,59,61]
+        indicator_list = CityLoopsIndicator.objects.filter(relevant_construction=True)
+        mandatory_list = indicator_list.filter(mandatory_construction=True)
     elif sector == "biomass":
-        indicator_list = CityLoopsIndicator.objects.filter(relevant_biomass=True).order_by("number")
-        mandatory_list = [34,41,48,53,56,57,58,59,61]
+        indicator_list = CityLoopsIndicator.objects.filter(relevant_biomass=True)
+        mandatory_list = indicator_list.filter(mandatory_biomass=True)
     city_values = CityLoopsIndicatorValue.objects.filter(city=info, sector=sector_id)
     check = {
         1: {},
@@ -317,29 +334,18 @@ def city_indicator_form(request, slug, sector, id):
     indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, city_id=info.id, sector=sector_id).order_by("indicator_id")
 
     if request.method == "POST":
-        value.rationale = request.POST.get("rationale")
-        value.baseline = request.POST.get("baseline")
-        value.sources = request.POST.get("sources")
-        value.accuracy = request.POST.get("accuracy")
-        value.coverage = request.POST.get("coverage")
-        value.area = request.POST.get("area")
+        value.rationale = request.POST["rationale"]
+        value.baseline = request.POST["baseline"]
+        value.sources = request.POST["sources"]
+        value.accuracy = request.POST["accuracy"]
+        value.coverage = request.POST["coverage"]
+        value.area = request.POST["area"]
+        value.comments = request.POST["comments"]
 
-        if request.POST.get("period_from") == "":
-            value.period_from = None
-        else:
-            value.period_from = request.POST.get("period_from")
+        value.period_from = None if not request.POST.get("period_from") else request.POST.get("period_from")
+        value.period_to = None if not request.POST.get("period_to") else request.POST.get("period_to")
 
-        if request.POST.get("period_to") == "":
-            value.period_to = None
-        else:
-            value.period_to = request.POST.get("period_to")
-
-        value.comments = request.POST.get("comments")
-
-        if request.POST.get("completed"):
-            value.completed = True
-        else:
-            value.completed = False
+        value.completed = True if request.POST.get("completed") else False
 
         value.last_update = datetime.now()
         value.save()

@@ -61,6 +61,7 @@
     <div class="col-lg-8">
       <h5 class="mb-0">{{ value.indicator }}</h5>
 
+
       {% if value.scale == 1 %}<span class="badge badge-cityloops-secondary">Demonstration action</span>
       {% elif value.scale == 2 %}<span class="badge badge-secondary">City</span>
       {% elif value.scale == 3 %}<span class="badge badge-cityloops-primary">Sector</span>{% endif %}
@@ -70,6 +71,9 @@
           Last edited {{ value.last_update|date:"l d F Y, H:i e" }}
         </small>
       {% endif %}
+
+
+      {% if value.completed %}<span class="badge badge-success ml-1"><i class="fa fa-check"></i> Completed</span>{% endif %}
 
       <dl class="indicator-metadata mt-4">
         {% if value.rationale %}
@@ -113,6 +117,14 @@
         {% endif %}
       </dl>
 
+      {% if user_can_edit %}
+        <div class="my-4">
+          <a class="btn btn-primary" href="{% url 'cityloops:city_indicator_form' info.slug sector value.id %}">
+            <i class="fa fa-marker"></i> Edit entry
+          </a>
+        </div>
+      {% endif %}
+
       <div class="border rounded p-3 bg-light">
         The information above is specific to {{ info }}'s evaluation plan. For general information on this indicator, please refer to <a href="{% url 'cityloops:indicators' %}#indicator-{{ value.indicator.number }}">its entry in the list of indicators</a>.
       </div>
@@ -121,14 +133,6 @@
       <div class="card card-table mb-4">
         {% include "cityloops/_indicator-status-table.html" %}
       </div>
-
-      {% if user_can_edit %}
-        <div class="mt-4">
-          <a class="btn btn-primary" href="{% url 'cityloops:city_indicator_form' info.slug sector value.id %}">
-            <i class="fa fa-marker"></i> Edit entry
-          </a>
-        </div>
-      {% endif %}
     </div>
   </div>
 

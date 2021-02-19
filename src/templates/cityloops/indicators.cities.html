@@ -46,17 +46,25 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Indicators: cities' selections</h1>
+  <h1>Indicators: cities' {{ sector }} selections</h1>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-transparent p-0">
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:indicators' %}">Indicators</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:cities_sectors' %}">Cities' selection</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ sector|title }}</li>
+    </ol>
+  </nav>
 
   <div class="filters row">
     <div class="col-md-3">
       <div class="form-group">
         <label for="scales">Scales</label>
         <select id="scales" class="custom-select">
-          <option value="all">Show all</option>
-          <option value="c">City</option>
-          <option value="da">Demonstration action</option>
-          <option value="s">Sector</option>
+          <option value="all" selected>Show all</option>
+          <option value="1">City</option>
+          <option value="2">Demonstration action</option>
+          <option value="3">Sector</option>
         </select>
       </div>
     </div>
@@ -64,13 +72,9 @@
       <div class="form-group">
         <label for="cities">Cities</label>
         <select id="cities" class="custom-select" multiple>
-          <option selected value="apeldoorn">Apeldoorn</option>
-          <option selected value="bodo">Bodø</option>
-          <option selected value="hoje">Høje-Taastrup</option>
-          <option selected value="mikkeli">Mikkeli</option>
-          <option selected value="porto">Porto</option>
-          <option selected value="roskilde">Roskilde</option>
-          <option selected value="sevilla">Sevilla</option>
+          {% for each in cities_list %}
+            <option selected value="{{ each.slug }}">{{ each }}</th>
+          {% endfor %}
         </select>
       </div>
     </div>
@@ -81,28 +85,55 @@
       <thead>
         <tr>
           <th class="sticky-top indicator-text">Indicator</th>
+          {% for each in cities_list %}
+            <th class="sticky-top" data-city="{{ each.slug }}">{{ each }}</th>
+          {% endfor %}
         </tr>
       </thead>
       <tbody>
         {% for each in indicator_list %}
           {% ifchanged each.vision_element %}
             <tr>
-              <td colspan="6" class="ve bg-light font-weight-bold">
+              <td colspan="8" class="ve bg-light font-weight-bold">
                 {{ each.vision_element }}. {{ each.get_vision_element_display }}
               </td>
             </tr>
           {% endifchanged %}
-          <tr>
-            <td>{{ each }}</td>
+          <tr data-indicator="{{ each.number }}">
+            <td class="indicator-text" title="{{ each }}"><a href="{% url 'cityloops:indicators' %}#indicator-{{ each.number }}">{{ each }}</a></td>
+            {% for each in cities_list %}
+              <td data-city="{{ each.slug }}"></td>
+            {% endfor %}
           </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
+
+  <div id="scale-list" hidden>
+    {% for each in indicator_scale_list %}
+      <a
+         href="{% url 'cityloops:city_indicator' each.city.slug sector each.id %}"
+         data-scale="{{ each.scale }}"
+         data-city="{{ each.city.slug }}"
+         data-indicator="{{ each.indicator.number }}"
+         class="badge mr-1 badge-{% if each.scale == 1 %}secondary">C{% elif each.scale == 2 %}cityloops-secondary">DA{% else %}cityloops-primary">S{% endif %}
+      </a>
+    {% endfor %}
+  </div>
 {% endblock %}
 
 {% block footer %}
   <script>
+    // move all scale items into correct place
+    $("#scale-list a").each(function() {
+      let item = $(this);
+      let indicator = item.data("indicator")
+      let city = item.data("city")
+
+      item.appendTo($("tr[data-indicator='" + indicator + "'] td[data-city='" + city + "']"));
+    })
+
     // filter by scale
     $("select#scales").change(function() {
       let scale = $("select#scales").val();
@@ -113,7 +144,6 @@
         $("table [data-scale]").addClass("faded");
         $("table [data-scale='" + scale + "']").removeClass("faded");
       }
-
     })
 
     // filter cities
@@ -128,7 +158,6 @@
         e.preventDefault();
       }
     });
-
 
     $("select#cities").change(function() {
       let cities = $("select#cities").val();
