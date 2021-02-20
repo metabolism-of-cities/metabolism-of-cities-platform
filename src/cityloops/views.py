@@ -174,7 +174,7 @@ def cities_sectors(request):
     return render(request, "cityloops/sectors.cities.html", context)
 
 def cities_indicators(request, sector):
-    cities_list = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)
+    cities_list = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project).exclude(name="Vallès Occidental")
 
     sector_id = 1 if sector == "construction" else 2
     if sector == "construction":
