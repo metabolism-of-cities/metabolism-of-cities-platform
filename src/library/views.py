@@ -581,48 +581,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         # and only when we add, not when we edit items.
         view_processing = True
 
-    if type.name == "Dataset":
-
-        labels = {
-            "year": "Year created",
-            "spaces": "Physical location(s)",
-            "author_list": "Author(s)",
-            "comments": "Internal comments/notes",
-        }
-
-        if curator and False:
-            fields=["name", "author_list", "description", "url", "size", "spaces", "sectors", "activities", "materials", "tags", "year", "language", "license", "data_year_start", "data_year_end", "update_frequency", "data_interval", "data_formats", "has_api", "comments"]
-        else:
-            fields=["name", "author_list", "description", "url", "size", "spaces", "year", "language", "license", "update_frequency", "comments"]
-
-        if space:
-            initial["spaces"] = space.id
-
-        if "inventory" in request.GET or project.slug == "data" or project.slug == "islands":
-            fields.remove("size")
-            fields.remove("update_frequency")
-            fields.append("tags")
-            if tag:
-                initial["tags"] = tag
-
-        if "mfa" in request.GET:
-            # We expect the file itself and we will activate all regular flows
-            fields.remove("url")
-            initial["tags"] = [896,897,898,899,907,908,909,910,911,912,913]
-            files = True
-
-        if "update_tags" in request.GET:
-            fields = ["name", "tags", "description"]
-
-        if info and hasattr(info, "dataset"):
-            info = info.dataset
-
-        ModelForm = modelform_factory(
-            Dataset,
-            fields = fields,
-            labels = labels,
-        )
-    elif type == "dataportal":
+    if type == "dataportal":
 
         if info:
             info = info.dataportal
@@ -775,7 +734,6 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             model = LibraryItem
 
         ModelForm = modelform_factory(model, fields=fields, labels = labels)
-
 
     if info:
         form = ModelForm(request.POST or None, request.FILES or None, instance=info)

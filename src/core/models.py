@@ -1012,6 +1012,8 @@ class LibraryItem(Record):
         ("NL", "Dutch"),
         ("PT", "Portuguese"),
         ("CT", "Catalan"),
+        ("FI", "Finnish"),
+        ("DN", "Danish"),
         ("OT", "Other"),
     )
     language = models.CharField(max_length=2, choices=LANGUAGES, default="EN", null=True, blank=True)
