@@ -545,7 +545,7 @@ class Organization(Record):
     )
     type = models.CharField(max_length=20, choices=ORG_TYPE)
     nace_code = models.ForeignKey(NaceCode, on_delete=models.SET_NULL, null=True, blank=True)
-    updated_at = models.DateField(null=True, auto_now=True)
+    updated_at = models.DateTimeField(null=True, auto_now=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(unidecode(self.name))
