@@ -674,7 +674,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             "spaces": "Physical location(s)",
         }
 
-        fields = ["name", "language", "title_original_language", "abstract_original_language", "description", "year", "author_list", "url", "license", "spaces"]
+        fields = ["name", "language", "title_original_language", "abstract_original_language", "description", "year", "author_list", "url", "license", "spaces", "sectors"]
 
         if request.GET.get("next") == "https://education.metabolismofcities.org/courses/metabolismo-urbano-y-manejo-de-datos-recopilacion-de-datos/34487/":
             fields = ["name", "author_list", "license", "spaces"]

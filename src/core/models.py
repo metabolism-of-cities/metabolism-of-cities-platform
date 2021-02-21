@@ -2389,6 +2389,7 @@ class Sector(Record):
 
     class Meta:
         db_table = "stafdb_sector"
+        ordering = ["name"]
 
     #def spaces(self):
     #    return ReferenceSpaceType.objects.filter(processes__in=self.processes.all())
