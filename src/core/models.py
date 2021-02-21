@@ -2350,6 +2350,7 @@ class Material(Record):
 
     class Meta:
         db_table = "stafdb_material"
+        ordering = ["code", "name"]
 
 class Unit(models.Model):
     name = models.CharField(max_length=255)

@@ -674,7 +674,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             "spaces": "Physical location(s)",
         }
 
-        fields = ["name", "language", "title_original_language", "abstract_original_language", "description", "year", "author_list", "url", "license", "spaces", "sectors"]
+        fields = ["name", "language", "title_original_language", "abstract_original_language", "description", "year", "author_list", "url", "license", "spaces", "sectors", "materials"]
 
         if request.GET.get("next") == "https://education.metabolismofcities.org/courses/metabolismo-urbano-y-manejo-de-datos-recopilacion-de-datos/34487/":
             fields = ["name", "author_list", "license", "spaces"]
@@ -785,6 +785,9 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         form = ModelForm(request.POST or None, request.FILES or None, initial=initial)
         if "spaces" in fields:
             form.fields["spaces"].queryset = ReferenceSpace.objects.filter(activated__isnull=False).distinct()
+
+    if "materials" in fields:
+        form.fields["materials"].queryset = Material.objects.filter(catalog_id=18998, parent__isnull=False)
 
     if type.name == "Dataset" and curator and False:
         form.fields["activities"].queryset = Activity.objects.filter(catalog_id=3655)
