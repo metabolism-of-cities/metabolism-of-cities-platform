@@ -86,7 +86,7 @@
         <tr>
           <th class="sticky-top indicator-text">Indicator</th>
           {% for each in cities_list %}
-            <th class="sticky-top" data-city="{{ each.slug }}">{{ each }}</th>
+            <th class="sticky-top" data-city="{{ each.slug }}"><a href="{% url 'cityloops:city_indicators' each.slug sector %}">{{ each }}</a></th>
           {% endfor %}
         </tr>
       </thead>
