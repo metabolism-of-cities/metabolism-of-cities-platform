@@ -68,7 +68,8 @@
           <th>Origin</th>
           <th>Destination</th>
           {% if form %}
-            <th>Options</th>
+            <th></th>
+            <th></th>
           {% endif %}
         </tr>
       </thead>
@@ -88,16 +89,18 @@
             {{ each.destination }}
           </td>
           {% if form %}
-            <td>
-              <form method="post" class="form form-horizontal">
-                <button type="submit" class="btn btn-danger">
+            <td class="text-nowrap has-button">
+              <a class="btn btn-sm btn-default-basic" href="?edit={{ each.id }}&amp;next={{ request.get_full_path }}"><i class="fal fa-edit"></i> Edit</a>
+            </td>
+            <td class="text-nowrap has-button">
+              <form method="post">
+                <button type="submit" class="btn btn-sm btn-danger">
                   <i class="fas fa-trash-alt"></i>
                   Delete
                 </button>
                 {% csrf_token %}
                 <input type="hidden" name="delete" value="{{ each.id }}" />
               </form>
-              <a class="btn btn-default-basic" href="?edit={{ each.id }}&amp;next={{ request.get_full_path }}"><i class="fal fa-edit"></i> Edit</a>
             </td>
           {% endif %}
         </tr>
@@ -108,9 +111,23 @@
 
 {% endif %}
 
-<a href="{% url 'staf:flowdiagrams' %}" class="btn btn-primary-basic mt-4">
-  <i class="fal fa-angle-left"></i> Back to list
-</a>
+<div class="row">
+  <div class="col-sm-6">
+    <a href="{% url 'staf:flowdiagrams' %}" class="btn btn-primary-basic mt-4">
+      <i class="fal fa-angle-left"></i> Back to list
+    </a>
+  </div>
+  {% if not form %}
+  <div class="col-sm-6 text-sm-right">
+    <a href="{% url 'staf:flowdiagram_form' info.id %}" class="btn btn-primary mt-4">
+      <i class="far fa-cube"></i> Manage blocks
+    </a>
+  </div>
+  {% endif %}
+</div>
+
+
+
 
 {% endblock %}
 
