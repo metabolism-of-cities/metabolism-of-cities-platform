@@ -104,7 +104,7 @@ a.disabled:hover {
         </a>
       </div>
       <div class="col-md-6 mb-4">
-        <a href="javascript:alert('Not yet available')" class="card btn-card disabled">
+        <a href="{% url 'cityloops:city_sectors' space.slug %}" class="card btn-card">
           <div class="card-body">
             <div class="row">
               <div class="col icon">
