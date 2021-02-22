@@ -174,12 +174,13 @@ def cities_sectors(request):
     return render(request, "cityloops/sectors.cities.html", context)
 
 def cities_indicators(request, sector):
-    cities_list = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project).exclude(name="Vallès Occidental")
 
     sector_id = 1 if sector == "construction" else 2
     if sector == "construction":
+        cities_list = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project).exclude(name__in=["Vallès Occidental", "Porto"])
         indicator_list = CityLoopsIndicator.objects.filter(relevant_construction=True)
     elif sector == "biomass":
+        cities_list = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project).exclude(name__in=["Vallès Occidental", "Bodø", "Roskilde", "Høje-Taastrup"])
         indicator_list = CityLoopsIndicator.objects.filter(relevant_biomass=True)
 
     indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, sector=sector_id).order_by("indicator_id")
@@ -199,6 +200,8 @@ def city_sectors(request, slug):
     context = {
         "title": "City sectors",
         "info": info,
+        "excluded_construction": ["Porto"],
+        "excluded_biomass": ["Bodø", "Roskilde", "Høje-Taastrup"],
     }
     return render(request, "cityloops/sectors.city.html", context)
 
