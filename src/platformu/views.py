@@ -401,7 +401,7 @@ def admin_entity_form(request, organization, id=None):
         tags__parent_tag_id = TAG_ID["platformu_segments"],
         tags__belongs_to = my_organization,
     )
-
+    list_dependency = ["Low dependence", "Medium", "Interdependence"]
     edit = False
     if id:
         info = get_entity_record(request, my_organization, id)
@@ -447,32 +447,33 @@ def admin_entity_form(request, organization, id=None):
             info.tags.add(tag)
 
         #Let remove all business links when the form is submitted    
-        LocalBusinessLink.objects.filter(organization=info).delete()
+        RecordRelationship.objects.filter(record_parent=my_organization, relationship_id=35).delete()
         for count in range(30):
-            business = "link_business_" + str(count)
-            dependence = "link_dependence_" + str(count)
-            if business in request.POST and dependence in request.POST :
-                info_local_business = LocalBusinessLink()
-                info_local_business.organization = info
+            business_name = "link_business_" + str(count)
+            dependency = "link_dependence_" + str(count)
+            if business_name in request.POST and dependency in request.POST :
                 #We need to check if the organization exist in the system
-                #otherewise we record if new one 
+                #If it doesn't exist we record a new one
                 check = None
                 try:
-                    check = Organization.objects.get(pk=request.POST[business])
+                    check = Organization.objects.get(pk=request.POST[business_name])
                 except:
                     p("Id not found")
                 if check:
-                    info_local_business.business = check
+                    business = check
                 else:
                     new_organization = Organization()
-                    new_organization.name = request.POST[business]
+                    new_organization.name = request.POST[business_name]
                     new_organization.is_public = False
                     new_organization.save()
-                    info_local_business.business = new_organization
+                    business = new_organization
 
-
-                info_local_business.dependence = LocalBusinessDependency.objects.get(pk=request.POST[dependence])
-                info_local_business.save()
+                RecordRelationship.objects.create(
+                    record_parent = my_organization,
+                    record_child = business,
+                    relationship_id = 35,
+                    meta_data = {"dependency": request.POST.get(dependency)} 
+                )
         messages.success(request, "The information was saved.")
         return redirect(reverse("platformu:admin_entity", args=[my_organization.id, info.id]))
 
@@ -485,8 +486,8 @@ def admin_entity_form(request, organization, id=None):
         "geoapify_api": settings.GEOAPIFY_API,
         "load_select2": True,
         "nace_codes": Activity.objects.filter(catalog_id=3655, parent__isnull=True),
-        "dependency_list": LocalBusinessDependency.objects.all(),
-        "local_businesses": LocalBusinessLink.objects.filter(organization=info)
+        "local_businesses": RecordRelationship.objects.filter(record_parent_id=my_organization, relationship_id=35),
+        "list_dependency": list_dependency,
     }
     return render(request, "metabolism_manager/admin/entity.form.html", context)
 

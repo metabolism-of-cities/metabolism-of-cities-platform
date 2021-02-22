@@ -2799,18 +2799,3 @@ class CityLoopsIndicatorValue(models.Model):
 #        primary_key=False,
 #    )
 #    info = models.CharField(max_length=100)
-
-class LocalBusinessDependency(models.Model):
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ["id"]
-        verbose_name_plural = "Local Business Dependencies"
-
-class LocalBusinessLink(models.Model):
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True, blank=True, related_name='organization')
-    dependence = models.ForeignKey(LocalBusinessDependency, on_delete=models.CASCADE, null=True, blank=True)
-    business= models.ForeignKey(Organization, on_delete=models.CASCADE, null=True, blank=True)
