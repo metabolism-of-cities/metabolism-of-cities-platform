@@ -7,6 +7,11 @@
   svg * {
     font-family: "Lato" !important;
   }
+
+  rect {
+    fill: #144d5825 !important;
+    stroke: #144d58 !important;
+  }
 </style>
 {% endblock %}
 {% block content %}
@@ -14,6 +19,7 @@
 <h1>{{ info }}</h1>
 
 {% if not "edit" in request.GET %}
+  {{ info.get_description }}
 
   <div class="row mb-4">
     <div class="col-lg-12">
@@ -21,10 +27,10 @@
         <div class="card-header">
           Flow diagram
         </div>
-        <div class="card-body mermaid">
-          graph TB
+        <div class="card-body mermaid text-center">
+          flowchart TB
             {% for each in blocks %}
-            block{{ each.origin.id }}{{ each.get_origin_slug }}[{{ each.get_origin|escapejs|convert_dash }}] --> block{{ each.destination.id }}{{ each.get_destination_slug }}[{{ each.get_destination|escapejs|convert_dash }}]
+            block{{ each.origin.id }}{{ each.get_origin_slug }}["{{ each.get_origin }}"] --> block{{ each.destination.id }}{{ each.get_destination_slug }}["{{ each.get_destination }}"]
             {% endfor %}
         </div>
       </div>
@@ -35,11 +41,15 @@
 
 {% if form %}
 
+  {% if not "edit" in request.GET %}
+  <h2>Add new block</h2>
+  {% endif %}
+
   <form method="post" class="form form-horizontal boxit pad-all" enctype="multipart/form-data">
     {% bootstrap_form form layout="horizontal" %}
     {% buttons %}
       <div class="col-md-offset-3 col-md-9">
-        <button type="submit" class="btn btn-success">Save</button>
+        <button type="submit" class="btn btn-success" name="main_form" value="true">Save</button>
       </div>
     {% endbuttons %}
     {% csrf_token %}
@@ -51,55 +61,73 @@
 
   <h2 class="mt-4">List</h2>
 
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Origin</th>
-        <th>Destination</th>
-        {% if form %}
-          <th>Options</th>
-        {% endif %}
-      </tr>
-    </thead>
-    <tbody>
-    {% for each in blocks %}
-      <tr>
-        <td>
-          {% if each.origin_label %}
-            <strong>{{ each.origin_label }}</strong><br>
+  <div class="card card-table">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Origin</th>
+          <th>Destination</th>
+          {% if form %}
+            <th></th>
+            <th></th>
           {% endif %}
-          {{ each.origin }}
-        </td>
-        <td>
-          {% if each.destination_label %}
-            <strong>{{ each.destination_label }}</strong><br>
-          {% endif %}
-          {{ each.destination }}
-        </td>
-        {% if form %}
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in blocks %}
+        <tr>
           <td>
-            <form method="post" class="form form-horizontal">
-              <button type="submit" class="btn btn-danger">
-                <i class="fas fa-trash-alt"></i> 
-                Delete
-              </button>
-              {% csrf_token %}
-              <input type="hidden" name="delete" value="{{ each.id }}" />
-            </form>
-            <a class="btn btn-default-basic" href="?edit={{ each.id }}&amp;next={{ request.get_full_path }}"><i class="fal fa-edit"></i> Edit</a>
+            {% if each.origin_label %}
+              <strong>{{ each.origin_label }}</strong><br>
+            {% endif %}
+            {{ each.origin }}
           </td>
-        {% endif %}
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
+          <td>
+            {% if each.destination_label %}
+              <strong>{{ each.destination_label }}</strong><br>
+            {% endif %}
+            {{ each.destination }}
+          </td>
+          {% if form %}
+            <td class="text-nowrap has-button">
+              <a class="btn btn-sm btn-default-basic" href="?edit={{ each.id }}&amp;next={{ request.get_full_path }}"><i class="fal fa-edit"></i> Edit</a>
+            </td>
+            <td class="text-nowrap has-button">
+              <form method="post">
+                <button type="submit" class="btn btn-sm btn-danger">
+                  <i class="fas fa-trash-alt"></i>
+                  Delete
+                </button>
+                {% csrf_token %}
+                <input type="hidden" name="delete" value="{{ each.id }}" />
+              </form>
+            </td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
 {% endif %}
 
-<a href="{% url "staf:flowdiagrams" %}" class="btn btn-primary-basic">
-  <i class="fal fa-angle-left"></i>
-  Back to list
-</a>
+<div class="row">
+  <div class="col-sm-6">
+    <a href="{% url 'staf:flowdiagrams' %}" class="btn btn-primary-basic mt-4">
+      <i class="fal fa-angle-left"></i> Back to list
+    </a>
+  </div>
+  {% if not form %}
+  <div class="col-sm-6 text-sm-right">
+    <a href="{% url 'staf:flowdiagram_form' info.id %}" class="btn btn-primary mt-4">
+      <i class="far fa-cube"></i> Manage blocks
+    </a>
+  </div>
+  {% endif %}
+</div>
+
+
+
 
 {% endblock %}
 

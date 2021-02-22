@@ -83,11 +83,7 @@
     <div class="description mb-4">
       <h3>Description</h3>
 
-      {% if info.meta_data.format == "markdown" %}
       {{ info.get_description }}
-      {% elif info.description %}
-        {{ info.description|safe }}
-      {% endif %}
 
       {% if info.url %}
         <a href="{{ info.url }}" class="btn btn-primary-outline">

@@ -2,21 +2,33 @@
 
 {% block content %}
 
+  <h1>Instructions</h1>
+
+  {% if PROJECT.slug == "cityloops" %}
+
+  <p>
+    Descriptions, instructions and tips & tricks for filling the single layers and sublayers for the <a href="https://cityloops.metabolismofcities.org/library/583948/">Sector-Wide Circularity Assessment (SCA)</a> can be found below. For more detailed instructions on a specific topic, respective videos are in the course modules of <a href="https://cityloops.metabolismofcities.org/courses/course-1a-data-collection-for-circularity-assessment-of-construction-sector-wp2/">Course 1A: Data collection for circularity assessment of construction sector (WP2)</a> and <a href="https://cityloops.metabolismofcities.org/courses/course-1b-data-collection-for-circularity-assessment-of-biomass-sector-wp3/">Course 1B: Data collection for circularity assessment of biomass sector (WP3)</a>.
+  </p>
+
+  {% endif %}
+
   {% for each in layers %}
 
-    <h2>
-      <i class="fa fa-{{ each.icon }} fa-fw"></i>
-      {{ each }}
-    </h2>
+    <div class="p-3 border rounded mb-4">
+      <h4>
+        <i class="fal fa-{{ each.icon }} fa-fw mr-2"></i>
+        {{ each }}
+      </h4>
 
-    {{ each.get_description }}
+      {{ each.get_description }}
 
-    {% for tag in each.children.all %}
-
-      <h3 class="h5">{{ tag }}</h3>
-      {{ tag.get_description }}
-
-    {% endfor %}
+      <dl>
+        {% for tag in each.children.all %}
+          <dt>{{ tag }}</dt>
+          <dd>{{ tag.get_description }}</dd>
+        {% endfor %}
+      </dl>
+    </div>
 
   {% endfor %}
 

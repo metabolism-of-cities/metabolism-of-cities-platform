@@ -49,13 +49,23 @@
       },
     })
   } else {
+    {% if properties.opacity %}
+      opacity = {{ properties.opacity }}/100;
+    {% else %}
+      opacity = 1;
+    {% endif %}
+    {% if properties.fillOpacity %}
+      fillOpacity = {{ properties.fillOpacity }}/100;
+    {% else %}
+      fillOpacity = 0.7;
+    {% endif %}
     dataLayer = L.geoJson(mapData, {
       style: {
         fillColor: "{% if properties.color %}{{ properties.color }}{% else %}#144d58{% endif %}",
-        fillOpacity: 0.7,
-        weight: 1,
-        opacity: 1,
-        color: "{% if properties.color %}{{ properties.color }}{% else %}white{% endif %}",
+        fillOpacity: fillOpacity,
+        opacity: opacity,
+        weight: {% if properties.width %}{{ properties.width }}{% else %}1{% endif %},
+        color: "{% if properties.color %}{{ properties.color }}{% else %}black{% endif %}",
       },
       onEachFeature: onEachFeature,
     })

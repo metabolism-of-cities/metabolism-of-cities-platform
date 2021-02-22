@@ -84,8 +84,8 @@ def index(request):
     context = {
         "show_project_design": True,
         "list": objects,
-        "layers": LAYERS,
-        "layers_count": LAYERS_COUNT,
+        "layers": get_layers(request),
+        "layers_count": get_layers_count(request),
         "webpage": Webpage.objects.get(pk=37077),
         "dashboard_link": project.slug + ":dashboard",
         "harvesting_link": project.slug + ":hub_harvesting_space",
@@ -114,8 +114,8 @@ def progress(request, style="list"):
         "dashboard_link": project.slug + ":dashboard",
         "harvesting_link": project.slug + ":hub_harvesting_space",
         "list": list,
-        "layers": LAYERS,
-        "layers_count": LAYERS_COUNT,
+        "layers": get_layers(request),
+        "layers_count": get_layers_count(request),
     }
 
     if style == "list":
@@ -130,7 +130,7 @@ def dashboard(request, space):
     project = get_object_or_404(Project, pk=request.project)
 
     list = LibraryItem.objects.filter(spaces=space)
-    layers = LAYERS
+    layers = get_layers(request)
 
     highscore = Work.objects.filter(related_to__spaces=space, status=Work.WorkStatus.COMPLETED) \
         .values("assigned_to__name") \
@@ -157,7 +157,7 @@ def dashboard(request, space):
         "header_image": space.photo,
         "dashboard": True,
         "layers": layers,
-        "layers_count": LAYERS_COUNT,
+        "layers_count": get_layers_count(request),
         "done": ["collected", "processed", ""],
         "highscore": highscore[0] if highscore else None,
         "added": added,

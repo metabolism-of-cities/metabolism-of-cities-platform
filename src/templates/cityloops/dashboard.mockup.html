@@ -109,7 +109,7 @@
         <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">01</a></td>
         <td class="indicator-text">{% lorem 7 w random %}</td>
         <td class="has-button text-right">
-          <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="btn btn-dark btn-sm">
+          <a href="{% url 'cityloops:city_indicator' info.slug 1 %}" class="btn btn-cityloops-primary btn-sm">
             <i class="far fa-fw fa-chart-pie"></i> Sector <i class="fa fa-fw fa-check-circle mr-0 ml-2"></i>
           </a>
         </td>
@@ -118,10 +118,10 @@
         <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">05</a></td>
         <td class="indicator-text">{% lorem 7 w random %}</td>
         <td class="has-button text-right">
-          <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="btn btn-info btn-sm">
+          <a href="{% url 'cityloops:city_indicator' info.slug 1 %}" class="btn btn-secondary btn-sm">
             <i class="far fa-fw fa-city"></i> City
           </a>
-          <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="btn btn-secondary btn-sm">
+          <a href="{% url 'cityloops:city_indicator' info.slug 1 %}" class="btn btn-cityloops-secondary btn-sm">
             <i class="far fa-fw fa-random"></i> Demonstration action <i class="fa fa-fw fa-check-circle mr-0 ml-2"></i>
           </a>
         </td>
@@ -130,7 +130,7 @@
         <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">15</a></td>
         <td class="indicator-text">Circular Material Use Rate </td>
         <td class="has-button text-right">
-          <a href="{% url 'cityloops:city_evaluation_plan_indicator' 'bodo' 1 %}" class="btn btn-secondary btn-sm">
+          <a href="{% url 'cityloops:city_indicator' info.slug 1 %}" class="btn btn-cityloops-secondary btn-sm">
             <i class="far fa-fw fa-random"></i> Demonstration action
           </a>
         </td>
@@ -139,7 +139,7 @@
     </tbody>
   </table>
 
-  <a class="btn btn-primary" href="{% url 'cityloops:city_evaluation_plan' 'bodo' %}">
+  <a class="btn btn-primary" href="{% url 'cityloops:city_indicators' info.slug sector %}">
     <i class="fa fa-ruler"></i> Explore evaluation plan
   </a>
 </section>

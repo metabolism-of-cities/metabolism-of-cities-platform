@@ -1,59 +1,83 @@
 {% load moc_extras %}
 
-  <div class="row progress-list">
-    {% for each in list %}
-      {% if each.get_counter or PROJECT.slug == "cityloops" or PROJECT.slug == "islands" or show_all %}
-        <div class="col-md-6 col-lg-{% if request.GET.wide %}2{% else %}4{% endif %} mb-4">
-          <div class="card">
-            <a href="{% url dashboard_link each.slug %}">
-              <img src="{{ each.get_thumbnail }}" class="card-img-top" alt="{{ each }}" style="max-height:200px">
-            </a>
-            <div class="card-body">
-              <h5 class="card-title mb-0"><a href="{% url dashboard_link each.slug %}">{{ each }}</a></h5>
-            </div>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item">
-                <i class="fal fa-fw fa-dot-circle mr-1"></i> {{ each.get_document_counter }} documents
-              </li>
-              {% if False %}
-                <li class="list-group-item">
-                  <i class="fal fa-fw fa-arrow-up mr-1"></i> 15 added this week
-                </li>
-                <li class="list-group-item">
-                  <i class="fal fa-fw fa-star mr-1"></i> Biggest contributer: <a href="#">Jane Doe</a>
-                </li>
+<div class="row progress-list">
+  {% for each in list %}
+    {% if each.get_counter or PROJECT.slug == "cityloops" or PROJECT.slug == "islands" or show_all %}
+      <div class="col-md-6 col-lg-{% if request.GET.wide %}2{% else %}4{% endif %} mb-4">
+        <div class="card">
+          <a href="{% url dashboard_link each.slug %}">
+            <img src="{{ each.get_thumbnail }}" class="card-img-top" alt="{{ each }}" style="max-height:200px">
+          </a>
+          <div class="card-body">
+            <h5 class="card-title mb-0"><a href="{% url dashboard_link each.slug %}">{{ each }}</a></h5>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <i class="fal fa-fw fa-dot-circle mr-2"></i>
+              {% if PROJECT.slug == "cityloops" %}
+                {{ each.get_document_counter_cityloops }}
+              {% else %}
+                {{ each.get_document_counter }}
               {% endif %}
-
-              {% for layer in layers %}
-                <li class="list-group-item table-item">
-                  <div class="text-truncate"><i class="fal mr-2 fa-{{ layer.icon }} fa-fw"></i> {{ layer.get_name_after_colon }}</div>
-                  <div>
-                    <div class="progress">
-                      {% if False %}
-                        <div class="progress-bar bg-primary" role="progressbar" style="width: 21%" aria-valuenow="21" aria-valuemin="0" aria-valuemax="100"></div>
-                        <div class="progress-bar bg-secondary" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                      {% endif %}
-
-                      <div class="progress-bar bg-success" role="progressbar" style="width: calc({% if each.get_counter %}{{ each.get_counter|get_item:layer.id }}{% else %}0{% endif %}/{{ layers_count|get_item:layer.id }}*100%)" aria-valuenow="{% if each.get_counter %}{{ each.get_counter|get_item:layer.id }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="{{ layers_count|get_item:layer.id }}"></div>
-
-                    </div>
-                  </div>
-                </li>
-              {% endfor %}
+              documents
+            </li>
+            {% if False %}
               <li class="list-group-item">
-                <i class="fal fa-fw fa-check mr-1"></i> {% widthratio each.get_completion 63 100 %}% data collection completion
+                <i class="fal fa-fw fa-arrow-up mr-2"></i> 15 added this week
               </li>
-            </ul>
-            <div class="card-body">
-              <a class="btn btn-primary" href="{% url URLS.DASHBOARD each.slug %}">
-                <i class="fad fa-city"></i> Explore {{ SYSTEM_NAME_SINGULAR }}
-              </a>
-              <a class="btn btn-primary-basic" href="/hub/">
-                <i class="fad fa-hands-helping"></i> Contribute
-              </a>
-            </div>
+              <li class="list-group-item">
+                <i class="fal fa-fw fa-star mr-2"></i> Biggest contributer: <a href="#">Jane Doe</a>
+              </li>
+            {% endif %}
+
+            {% for layer in layers %}
+              <li class="list-group-item space-layers">
+                <i class="fal mr-2 fa-{{ layer.icon }} fa-fw"></i> <span class="layer-name text-truncate">{{ layer.get_name_after_colon }}</span>
+
+                <div class="progress-donuts float-right">
+                  {% if False %}
+                    <svg viewBox="0 0 100 100">
+                      <circle class="background-donut" r="40" cy="50" cx="50"/>
+                      <circle class="actual-progress"  r="40" cy="50" cx="50" stroke-dashoffset="140px"/>
+                    </svg>
+                  {% endif %}
+
+                  {% if PROJECT.slug == "cityloops" %}
+                    <svg viewBox="0 0 100 100">
+                      <circle class="background-donut" r="40" cy="50" cx="50"/>
+                      <circle class="actual-progress"  r="40" cy="50" cx="50" stroke-dashoffset="{% if each.get_counter_cityloops %}calc(250px - ({{ each.get_counter_cityloops|get_item:layer.id|default:0 }} / {{ layers_count|get_item:layer.id }}) * 250px{% else %}250px{% endif %}"/>
+                    </svg>
+
+
+                  {% else %}
+                    <svg viewBox="0 0 100 100">
+                      <circle class="background-donut" r="40" cy="50" cx="50"/>
+                      <circle class="actual-progress"  r="40" cy="50" cx="50" stroke-dashoffset="{% if each.get_counter %}calc(250px - ({{ each.get_counter|get_item:layer.id|default:0 }} / {{ layers_count|get_item:layer.id }}) * 250px{% else %}250px{% endif %}"/>
+                    </svg>
+                  {% endif %}
+
+                </div>
+              </li>
+            {% endfor %}
+            <li class="list-group-item">
+              <i class="fal fa-fw fa-check mr-2"></i>
+              {% if PROJECT.slug == "cityloops" %}
+                {% widthratio each.get_completion_cityloops 95 100 %}% data collection completion
+              {% else %}
+                {% widthratio each.get_completion 63 100 %}% data collection completion
+              {% endif %}
+            </li>
+          </ul>
+          <div class="card-body">
+            <a class="btn btn-primary" href="{% url URLS.DASHBOARD each.slug %}">
+              <i class="fad fa-city"></i> Explore {{ SYSTEM_NAME_SINGULAR }}
+            </a>
+            <a class="btn btn-primary-basic" href="/hub/">
+              <i class="fad fa-hands-helping"></i> Contribute
+            </a>
           </div>
         </div>
-      {% endif %}
-    {% endfor %}
-  </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>

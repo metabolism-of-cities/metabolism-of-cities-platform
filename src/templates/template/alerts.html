@@ -1,0 +1,27 @@
+  {% extends '_base.html' %}
+  {% load static %}
+  {% block title %}Cards{% endblock %}
+
+  {% block content %}
+
+    <div class="alert alert-primary">
+      <i class="fa fa-fw fa-info-circle"></i>
+      This is an information box. Nothing dramatic, just for informational purposes.
+    </div>
+
+    <div class="alert alert-warning">
+      <i class="fa fa-fw fa-exclamation-triangle"></i>
+      This is a warning. Something needs urgent attention and must be noted.
+    </div>
+
+    <div class="alert alert-success">
+      <i class="fa fa-fw fa-check"></i>
+      Things went well. This is a confirmation.
+    </div>
+
+    <div class="alert alert-danger">
+      <i class="fa fa-fw fa-times-square"></i>
+      This is an error. Something went horribly wrong.
+    </div>
+
+  {% endblock %}

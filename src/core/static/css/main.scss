@@ -1,6 +1,5 @@
 // VARIABLES
 $primary: #144d58;
-$bg-primary: #1F7A8C;
 $secondary: #CF4803;
 $black: #000;
 $white: #fff;
@@ -9,6 +8,10 @@ $gray: #808080;
 $light: #efefef;
 $very-light: #fbfbfb;
 $basic-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
+
+// CITYLOOPS COLOURS
+$cityloops-primary: #004d76;
+$cityloops-secondary: #00b6ed;
 
 // EXTENSIONS
 %raised-hover {
@@ -70,27 +73,6 @@ form label.category {
   padding-bottom: 36px;
 }
 
-a {
-  color: lighten($primary, 15%);
-
-  &:hover {
-    color: $primary;
-    text-decoration: none;
-  }
-}
-
-.border-primary {
-  border-color: $primary !important;
-}
-
-.bg-primary {
-  background-color: $primary !important;
-}
-
-.bg-secondary {
-  background-color: $secondary !important;
-}
-
 .avatar {
   border-radius: 100%;
   object-fit: cover;
@@ -139,56 +121,19 @@ p a {
   top: 1rem;
 }
 
-.text-primary {
-  color: $primary !important;
-}
-
-.text-secondary {
-  color: $secondary !important;
-}
-
 .cursor-pointer {
   cursor: pointer;
 }
 
 // NORMAL AND SElECT2 INPUTS
-textarea.form-control:focus, input.form-control:focus, select.custom-select:focus,
-.select2-container--bootstrap4.select2-container--focus .select2-selection {
-  border-color: $primary !important;
-  box-shadow: 0 0 0 .2rem rgba($primary, .25) !important;
-}
-
-.select2-container--bootstrap4 .select2-results__option--highlighted, .select2-container--bootstrap4 .select2-results__option--highlighted.select2-results__option[aria-selected="true"] {
-  background-color: $primary !important;
+.custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
+  border-color: $light;
 }
 
 .select2-results__option[aria-disabled="true"],
 *::placeholder {
   color: $black !important;
   opacity: .25 !important;
-}
-
-.custom-control-input:checked ~ .custom-control-label::before {
-  border-color: $primary;
-  background-color: $primary;
-}
-
-.custom-control-input:not(:disabled):active ~ .custom-control-label::before {
-  background-color: transparentize($primary, .75);
-  border-color: transparentize($primary, .75);
-}
-
-.custom-control-input:focus ~ .custom-control-label::before {
-  box-shadow: 0 0 0 .2rem rgba($primary, .25)
-}
-
-.custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
-  border-color: $light;
-}
-
-.custom-file-input:focus ~ .custom-file-label {
-  border-color: $primary;
-  box-shadow: 0 0 0 .2rem rgba($primary, .25)
 }
 
 // hide overflow of multiple file inputs
@@ -262,14 +207,6 @@ nav {
 
   .dropdown.projects-dropdown {
     position: unset;
-
-    .projects-category {
-      font-weight: bold;
-      margin-bottom: .25rem;
-      border-bottom: 1px solid rgba($primary, .25);
-      color: $primary;
-      font-size: 17px;
-    }
 
     .projects-dropdown-menu {
       padding: 15px;
@@ -465,109 +402,6 @@ footer {
   box-shadow: none !important;
 }
 
-.btn-primary {
-  background-color: $primary;
-  border-color: $primary;
-  color: $white;
-
-  &:hover {
-    border-color: darken($primary, 5%);
-    background-color: darken($primary, 5%);
-  }
-
-  &:active, &:focus {
-    border-color: darken($primary, 5%) !important;
-    background-color: darken($primary, 5%) !important;
-  }
-}
-
-.btn-primary-outline {
-  background-color: transparent;
-  border-color: $primary;
-  color: $primary;
-
-  &:hover {
-    border-color: $primary;
-    background-color: transparentize($primary, 0.9);
-    color: $primary;
-  }
-
-  &:active, &:focus {
-    border-color: $primary !important;
-    background-color: transparentize($primary, 0.9) !important;
-    color: $primary;
-  }
-}
-
-.btn-primary-light {
-  background-color: transparentize($primary, 0.9);
-  border-color: transparent;
-  color: $primary;
-
-  &:hover {
-    background-color: transparentize($primary, 0.8);
-    border-color: transparent;
-    color: $primary;
-  }
-}
-
-.btn-primary-basic {
-  background-color: transparent;
-  border-color: transparent;
-  color: $primary;
-
-  &:hover {
-    background-color: transparentize($primary, 0.9);
-    border-color: transparent;
-    color: $primary;
-  }
-}
-
-.btn-secondary {
-  background-color: $secondary;
-  border-color: $secondary;
-
-  &:hover {
-    border-color: darken($secondary, 5%);
-    background-color: darken($secondary, 5%);
-  }
-
-  &:active, &:focus {
-    border-color: darken($secondary, 5%) !important;
-    background-color: darken($secondary, 5%) !important;
-  }
-}
-
-.btn-secondary-outline {
-  background-color: transparent;
-  border-color: $secondary;
-  color: $secondary;
-
-  &:hover {
-    border-color: $secondary;
-    background-color: transparentize($secondary, 0.9);
-    color: $secondary;
-  }
-
-  &:active, &:focus {
-    border-color: $secondary !important;
-    background-color: transparentize($secondary, 0.9) !important;
-    color: $secondary;
-  }
-}
-
-.btn-secondary-basic {
-  background-color: transparent;
-  border-color: transparent;
-  color: $secondary;
-
-  &:hover {
-    background-color: transparentize($secondary, 0.9);
-    border-color: transparent;
-    color: $secondary;
-  }
-}
-
 .btn-default {
   background-color: $dark;
   border-color: $dark;
@@ -659,6 +493,39 @@ footer {
     background-color: transparentize($light, 0.9);
     border-color: transparent;
     color: $light;
+  }
+}
+
+// CITYLOOPS BUTTONS
+.btn-cityloops-primary {
+  background-color: $cityloops-primary;
+  border-color: $cityloops-primary;
+  color: $white !important;
+
+  &:hover {
+    border-color: darken($cityloops-primary, 5%);
+    background-color: darken($cityloops-primary, 5%);
+  }
+
+  &:active, &:focus {
+    border-color: darken($cityloops-primary, 5%) !important;
+    background-color: darken($cityloops-primary, 5%) !important;
+  }
+}
+
+.btn-cityloops-secondary {
+  background-color: $cityloops-secondary;
+  border-color: $cityloops-secondary;
+  color: $white !important;
+
+  &:hover {
+    border-color: darken($cityloops-secondary, 5%);
+    background-color: darken($cityloops-secondary, 5%);
+  }
+
+  &:active, &:focus {
+    border-color: darken($cityloops-secondary, 5%) !important;
+    background-color: darken($cityloops-secondary, 5%) !important;
   }
 }
 
@@ -761,18 +628,10 @@ blockquote {
 }
 
 // BOOTSTRAP ALERT
-.alert {
-  &.alert-primary {
-    color: $dark;
-    background-color: rgba($primary, .2);
-    border-color: rgba($primary, .2);
-  }
-
-  &.alert-light {
-    color: $dark;
-    background-color: $very-light;
-    border-color: $light;
-  }
+.alert-light {
+  color: $dark;
+  background-color: $very-light;
+  border-color: $light;
 }
 
 // SWEET ALERT
@@ -1015,18 +874,6 @@ a.large-icon-box {
   color: $black;
 }
 
-// PILLS
-.nav-pills .nav-link:hover {
-  background-color: transparentize($primary, 0.9);
-  color: $primary;
-}
-
-.nav-pills .nav-link.active,
-.nav-pills .show > .nav-link {
-  background-color: transparentize($primary, 0.75);
-  color: $primary;
-}
-
 // TABS
 .nav-tabs .nav-item.show .nav-link,
 .nav-tabs .nav-link.active {
@@ -1035,42 +882,39 @@ a.large-icon-box {
 }
 
 // DROPDOWNS
-.dropdown-item.active,
-.dropdown-item:active {
-  background-color: $primary;
-}
-
 .dropdown-toggle::after {
   margin-left: .5rem;
 }
 
-
-// BADGES
-.badge-primary {
-  background-color: $primary;
+// CITYLOOPS BADGES
+.badge-cityloops-primary {
+  background-color: $cityloops-primary;
+  color: $white !important;
 }
 
-a.badge-primary:hover,
-a.badge-primary:focus {
-  background-color: darken($primary, 20%);
+a.badge-cityloops-primary:hover,
+a.badge-cityloops-primary:focus {
+  background-color: darken($cityloops-primary, 10%);
 }
 
-a.badge-primary:focus {
-  box-shadow: 0 0 0 .2rem rgba($primary, .25);
+a.badge-cityloops-primary:focus {
+  box-shadow: 0 0 0 .2rem rgba($cityloops-primary, .25);
 }
 
-.badge-secondary {
-  background-color: $secondary;
+.badge-cityloops-secondary {
+  background-color: $cityloops-secondary;
+  color: $white !important;
 }
 
-a.badge-secondary:hover,
-a.badge-secondary:focus {
-  background-color: darken($secondary, 20%);
+a.badge-cityloops-secondary:hover,
+a.badge-cityloops-secondary:focus {
+  background-color: darken($cityloops-secondary, 10%);
 }
 
-a.badge-secondary:focus {
-  box-shadow: 0 0 0 .2rem rgba($secondary, 0.16);
+a.badge-cityloops-secondary:focus {
+  box-shadow: 0 0 0 .2rem rgba($cityloops-secondary, .15);
 }
+
 
 // LEAFLET MAP
 .leaflet-map {
@@ -1500,6 +1344,23 @@ td.has-button {
 
   .badge i {
     font-size: 10px;
+  }
+
+  .quick-links,
+  .badge {
+    line-height: 16px;
+  }
+
+  #admin-dropdown  {
+    height: 24px;
+  }
+
+  .dropdown-toggle::after {
+    vertical-align: .15em;
+  }
+
+  .dropdown-item {
+    line-height: 1.5 !important;
   }
 }
 
@@ -2704,7 +2565,6 @@ body.staf-review {
 }
 
 // DUAL ICONBOX USED IN VARIOUS PLACES
-
 .dual-iconbox .card {
   .col.icon {
     max-width: 60px;
@@ -2795,11 +2655,6 @@ body.work.item {
       }
     }
   }
-}
-
-// MATERIAL STOCKS PAGES
-body.material-stocks {
-
 }
 
 // MATERIAL STOCKS LANDING PAGE
@@ -2943,6 +2798,7 @@ body.volunteer.portal.latest {
     height: 2.5rem;
     width: 2.5rem;
     margin-right: .5rem;
+    line-height: 2.5rem;
   }
 
   th.user,
@@ -2971,15 +2827,17 @@ body.volunteer.portal.latest {
 }
 
 .resource-list {
-  table {
-    table-layout: fixed;
-  }
-
   td,
   th {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  th.title,
+  td.title {
+    width: 200px !important;
+    max-width: 250px;
   }
 
   th:not(.title),
@@ -2990,6 +2848,7 @@ body.volunteer.portal.latest {
   th.author,
   td.author {
     width: 200px;
+    max-width: 250px;
   }
 }
 
@@ -3040,4 +2899,273 @@ body.volunteer.portal.latest {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+}
+
+
+// space layers
+.space-layers {
+  .layer-name {
+    width: calc(100% - 25px)
+  }
+
+  .progress-donuts {
+    svg {
+     -webkit-transform: rotate(-90deg);
+      transform: rotate(-90deg);
+      width: 20px;
+      margin-top: -4px;
+    }
+
+    circle {
+      stroke-width: 20;
+      fill: none;
+    }
+
+    .background-donut {
+      stroke-dasharray: 0;
+      stroke: $light;
+    }
+
+    .actual-progress {
+      stroke-dasharray: 250;
+      stroke: #28a745;
+    }
+  }
+}
+
+// This is a collection of definitions that use primary and secondary
+
+// They're grouped in order to make it easier to change the definition temporarily,
+// generate the css, and then copy/paste the result into a project specific css
+
+a {
+  color: lighten($primary, 15%);
+
+  &:hover {
+    color: $primary;
+    text-decoration: none;
+  }
+}
+
+.border-primary {
+  border-color: $primary !important;
+}
+
+.bg-primary {
+  background-color: $primary !important;
+}
+
+.bg-secondary {
+  background-color: $secondary !important;
+}
+
+.bg-primary-opaque {
+  background-color: transparentize($primary, .9) !important;
+}
+
+.bg-secondary-opaque {
+  background-color: transparentize($secondary, .9) !important;
+}
+
+.text-primary {
+  color: $primary !important;
+}
+
+.text-secondary {
+  color: $secondary !important;
+}
+
+// SELECT2 AND OTHER INPUT
+textarea.form-control:focus, input.form-control:focus, select.custom-select:focus,
+.select2-container--bootstrap4.select2-container--focus .select2-selection {
+  border-color: $primary !important;
+  box-shadow: 0 0 0 .2rem rgba($primary, .25) !important;
+}
+
+.select2-container--bootstrap4 .select2-results__option--highlighted, .select2-container--bootstrap4 .select2-results__option--highlighted.select2-results__option[aria-selected="true"] {
+  background-color: $primary !important;
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+  border-color: $primary !important;
+  background-color: $primary !important;
+}
+
+.custom-control-input:not(:disabled):active ~ .custom-control-label::before {
+  background-color: transparentize($primary, .75);
+  border-color: transparentize($primary, .75);
+}
+
+.custom-control-input:focus ~ .custom-control-label::before {
+  box-shadow: 0 0 0 .2rem rgba($primary, .25)
+}
+
+.custom-file-input:focus ~ .custom-file-label {
+  border-color: $primary;
+  box-shadow: 0 0 0 .2rem rgba($primary, .25)
+}
+
+// BUTTONS
+.btn-primary {
+  background-color: $primary;
+  border-color: $primary;
+  color: $white;
+
+  &:hover {
+    border-color: darken($primary, 5%);
+    background-color: darken($primary, 5%);
+  }
+
+  &:active, &:focus {
+    border-color: darken($primary, 5%) !important;
+    background-color: darken($primary, 5%) !important;
+  }
+}
+
+.btn-primary-outline {
+  background-color: transparent;
+  border-color: $primary;
+  color: $primary;
+
+  &:hover {
+    border-color: $primary;
+    background-color: transparentize($primary, 0.9);
+    color: $primary;
+  }
+
+  &:active, &:focus {
+    border-color: $primary !important;
+    background-color: transparentize($primary, 0.9) !important;
+    color: $primary;
+  }
+}
+
+.btn-primary-light {
+  background-color: transparentize($primary, 0.9);
+  border-color: transparent;
+  color: $primary;
+
+  &:hover {
+    background-color: transparentize($primary, 0.8);
+    border-color: transparent;
+    color: $primary;
+  }
+}
+
+.btn-primary-basic {
+  background-color: transparent;
+  border-color: transparent;
+  color: $primary;
+
+  &:hover {
+    background-color: transparentize($primary, 0.9);
+    border-color: transparent;
+    color: $primary;
+  }
+}
+
+.btn-secondary {
+  background-color: $secondary;
+  border-color: $secondary;
+
+  &:hover {
+    border-color: darken($secondary, 5%);
+    background-color: darken($secondary, 5%);
+  }
+
+  &:active, &:focus {
+    border-color: darken($secondary, 5%) !important;
+    background-color: darken($secondary, 5%) !important;
+  }
+}
+
+.btn-secondary-outline {
+  background-color: transparent;
+  border-color: $secondary;
+  color: $secondary;
+
+  &:hover {
+    border-color: $secondary;
+    background-color: transparentize($secondary, 0.9);
+    color: $secondary;
+  }
+
+  &:active, &:focus {
+    border-color: $secondary !important;
+    background-color: transparentize($secondary, 0.9) !important;
+    color: $secondary;
+  }
+}
+
+.btn-secondary-basic {
+  background-color: transparent;
+  border-color: transparent;
+  color: $secondary;
+
+  &:hover {
+    background-color: transparentize($secondary, 0.9);
+    border-color: transparent;
+    color: $secondary;
+  }
+}
+
+// ALERT
+.alert-primary {
+  color: $dark;
+  background-color: rgba($primary, .2);
+  border-color: rgba($primary, .2);
+}
+
+// BADGES
+.badge-primary {
+  background-color: $primary;
+}
+
+a.badge-primary:hover,
+a.badge-primary:focus {
+  background-color: darken($primary, 20%);
+}
+
+a.badge-primary:focus {
+  box-shadow: 0 0 0 .2rem rgba($primary, .25);
+}
+
+.badge-secondary {
+  background-color: $secondary;
+}
+
+a.badge-secondary:hover,
+a.badge-secondary:focus {
+  background-color: darken($secondary, 20%);
+}
+
+a.badge-secondary:focus {
+  box-shadow: 0 0 0 .2rem rgba($secondary, 0.16);
+}
+
+// PILLS
+.nav-pills .nav-link:hover {
+  background-color: transparentize($primary, 0.9);
+  color: $primary;
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  background-color: transparentize($primary, 0.75);
+  color: $primary;
+}
+
+// DROPDOWNS
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: $primary;
+}
+
+// NAVBAR
+nav.navbar .projects-category {
+  font-weight: bold;
+  margin-bottom: .25rem;
+  border-bottom: 1px solid rgba($primary, .25);
+  color: $primary;
+  font-size: 17px;
 }

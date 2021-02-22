@@ -1,6 +1,12 @@
 {% extends "_base.html" %}
 
-{% block title %}Progress overview{% endblock %}
+{% block title %}
+  {% if PROJECT.slug == "cityloops" %}
+    CityLoops Data Hub
+  {% else %}
+    Progress overview
+  {% endif %}
+{% endblock %}
 
 {% block content %}
 
@@ -24,15 +30,15 @@
 {% if PROJECT.slug == "data" or PROJECT.slug == "islands" %}
 
   <div class="alert alert-dark">
-    Below is an overview of all {{ SYSTEM_NAME_SINGULAR }} that our community are currently working on. 
+    Below is an overview of all {{ SYSTEM_NAME_SINGULAR }} that our community are currently working on.
     The completion rate is an estimate of how many of the layers have <em>at least</em>
-    one document -- this is not an exact indicator as the quality and completeness 
+    one document -- this is not an exact indicator as the quality and completeness
     of these document is only verified once we enter our next phase of data processing.
     Would you like to help? <a href="/hub/">Join our community</a>, connect through
-    <a href="/hub/forum/">our forum</a>, or do our free and open 
+    <a href="/hub/forum/">our forum</a>, or do our free and open
     <a href="https://education.metabolismofcities.org/courses/">online course on data collection</a>.
   </div>
-  
+
 {% endif %}
 
 {% include "data/_space.progress.html" %}

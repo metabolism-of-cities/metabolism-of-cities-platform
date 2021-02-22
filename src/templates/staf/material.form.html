@@ -5,6 +5,11 @@
 
   <h1 class="mb-4">{{ title }}</h1>
 
+  <div class="alert alert-info">
+  <p><strong>Parent:</strong> {{ parent }}</p>
+  <p><strong>Catalog:</strong> {% if catalog %}{{ catalog }}{% else %}{{ parent.catalog }}{% endif %}</p>
+  </div>
+
   <form method="post">
     {% bootstrap_form form layout="horizontal" %}
     {% buttons %}

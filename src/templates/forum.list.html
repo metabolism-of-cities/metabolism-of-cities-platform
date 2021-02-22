@@ -23,22 +23,24 @@
       <div class="col-md-8 mb-2">
         <input class="search form-control" type="text" name="search" placeholder="Search by title">
       </div>
-      <div class="col-md-4 mb-2">
-        {% if project %}
-          Showing: general forum and project forum.<br>
-          <a href="https://metabolismofcities.org/forum/">View the entire forum here.</a>
-        {% else %}
-          <select class="custom-select tag-filter">
-            <option value="all">Filter by project</option>
-            <option value="Project-1-id">General</option>
-            {% for each in projects %}
-              {% if each.id != 1 %}
-                <option value="Project-{{ each.id }}-id">{{ each }}</option>
-              {% endif %}
-            {% endfor %}
-          </select>
-        {% endif %}
-      </div>
+      {% if not forum_is_only_for_project  %}
+        <div class="col-md-4 mb-2">
+          {% if project %}
+            Showing: general forum and project forum.<br>
+            <a href="https://metabolismofcities.org/forum/">View the entire forum here.</a>
+          {% else %}
+            <select class="custom-select tag-filter">
+              <option value="all">Filter by project</option>
+              <option value="Project-1-id">General</option>
+              {% for each in projects %}
+                {% if each.id != 1 %}
+                  <option value="Project-{{ each.id }}-id">{{ each }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          {% endif %}
+        </div>
+      {% endif %}
       <div class="col-md-4 mb-2">
         <a class="btn btn-primary d-block" href="create/"><i class="fas fa-fw fa-comment-alt-plus"></i> Post new topic</a>
       </div>

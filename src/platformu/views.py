@@ -133,19 +133,10 @@ def admin_dashboard(request, organization=None):
     if not organization_list:
         messages.error(request, "Please enter data first.")
     else:
-        types = {
-            "Resources": MaterialDemand.objects.filter(owner__in=organization_list).exclude(material_type__parent_id__in=[31621,31620]),
-            "Space": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31621),
-            "Technology": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31620),
-            "Staff": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31620),
-        }
-
         gps = organization_list[0].meta_data
         if not "lat" in gps:
             messages.error(request, "Please ensure that you enter the address/GPS details first.")
-        data = MaterialDemand.objects.filter(owner__in=organization_list)
-        current = data.filter(start_date__lte=date.today(), end_date__gte=date.today())
-        latest = data.order_by('-id')[:10]
+        data = MaterialDemand.objects.filter(owner__in=organization_list).filter(start_date__lte=date.today(), end_date__gte=date.today())
         material_list = MaterialDemand.objects.filter(owner__in=organization_list).values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
 
         # We need to make each bubble relative to the smallest value in that group
@@ -168,20 +159,123 @@ def admin_dashboard(request, organization=None):
 
     context = {
         "page": "dashboard",
+        "tab": "map",
         "my_organization": my_organization,
+        "organization_list": organization_list,
         "data": data,
-        "current": current,
-        "latest": latest,
         "today": date.today(),
         "material_list": material_list,
         "gps": gps,
         "min_values": min_values,
+        "load_lightbox": True,
+        "load_select2": True,
         "load_datatables": True,
+        "load_highcharts": True,
         "load_leaflet": True,
         "types": types,
     }
 
     return render(request, "metabolism_manager/admin/dashboard.html", context)
+
+@login_required
+def admin_dashboard_items(request, slug, organization=None):
+    items = None
+
+    data = gps = material_list = None
+    min_values = {}
+
+    if organization:
+        my_organization = my_organizations(request, organization)
+    else:
+        my_organization = my_organizations(request)
+        if my_organization:
+            my_organization = my_organization[0]
+        else:
+            return redirect("platformu:create_my_organization")
+
+    organization_list = Organization.objects_include_private.filter(
+            tags__parent_tag_id = TAG_ID["platformu_segments"],
+            tags__belongs_to = my_organization,
+    )
+
+    if not organization_list:
+        messages.error(request, "Please enter data first.")
+    else:
+        if slug == "resources":
+            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id__in=[31603,31604,31605,31606,31607,31608,31609,31610,31611,31612,31613,31614,31615,31616,31617,31618], start_date__lte=date.today(), end_date__gte=date.today())
+        elif slug == "space":
+            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31621, start_date__lte=date.today(), end_date__gte=date.today())
+            material_list = MaterialDemand.objects.filter(owner__in=organization_list, start_date__lte=date.today(), end_date__gte=date.today(), material_type__parent__name="Space").values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
+        elif slug == "technology":
+            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id__in=[752967,752973,752980,752994], start_date__lte=date.today(), end_date__gte=date.today())
+        elif slug == "staff":
+            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=584734, start_date__lte=date.today(), end_date__gte=date.today())
+
+
+    context = {
+        "page": "dashboard",
+        "my_organization": my_organization,
+        "organization_list": organization_list,
+        "data": data,
+        "today": date.today(),
+        "material_list": material_list,
+        "gps": gps,
+        "min_values": min_values,
+        "load_lightbox": True,
+        "load_select2": True,
+        "load_datatables": True,
+        "load_highcharts": True,
+        "items": items,
+        "slug": slug,
+    }
+
+    return render(request, "metabolism_manager/admin/dashboard.items.html", context)
+
+@login_required
+def admin_dashboard_latest(request, organization=None):
+    types = None
+
+    data = gps = material_list = None
+    min_values = {}
+
+    if organization:
+        my_organization = my_organizations(request, organization)
+    else:
+        my_organization = my_organizations(request)
+        if my_organization:
+            my_organization = my_organization[0]
+        else:
+            return redirect("platformu:create_my_organization")
+
+    organization_list = Organization.objects_include_private.filter(
+            tags__parent_tag_id = TAG_ID["platformu_segments"],
+            tags__belongs_to = my_organization,
+    )
+
+    if not organization_list:
+        messages.error(request, "Please enter data first.")
+    else:
+        items = MaterialDemand.objects.filter(owner__in=organization_list).filter(start_date__lte=date.today(), end_date__gte=date.today()).order_by('-id')[:10]
+        material_list = MaterialDemand.objects.filter(owner__in=organization_list).values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
+
+
+    context = {
+        "page": "dashboard",
+        "tab": "latest",
+        "my_organization": my_organization,
+        "organization_list": organization_list,
+        "items": items,
+        "today": date.today(),
+        "material_list": material_list,
+        "min_values": min_values,
+        "load_lightbox": True,
+        "load_select2": True,
+        "load_datatables": True,
+        "slug": "latest",
+    }
+
+    return render(request, "metabolism_manager/admin/dashboard.items.html", context)
+
 
 @login_required
 def admin_map(request, organization=None):
@@ -258,14 +352,14 @@ def admin_data(request, organization=None):
         messages.error(request, "Please enter data first.")
     else:
         types = {
-            "Resources": MaterialDemand.objects.filter(owner__in=organization_list).exclude(material_type__parent_id__in=[31621,31620]),
+            "Resources": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id__in=[31603,31604,31605,31606,31607,31608,31609,31610,31611,31612,31613,31614,31615,31616,31617,31618]),
             "Space": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31621),
-            "Technology": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31620),
-            "Staff": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31620),
+            "Technology": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id__in=[752967,752973,752980,752994]),
+            "Staff": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=584734),
         }
 
     context = {
-        "page": "full_overview",
+        "page": "log",
         "my_organization": my_organization,
         "load_datatables": True,
         "types": types,
@@ -296,6 +390,7 @@ def admin_entity(request, organization, id):
         "page": "entity",
         "my_organization": my_organization,
         "info": get_entity_record(request, my_organization, id),
+        "load_leaflet_basics": True,
     }
     return render(request, "metabolism_manager/admin/entity.html", context)
 
@@ -413,17 +508,18 @@ def admin_entity_materials(request, organization, id, slug=None):
     main_groups = materials = None
 
     if slug == "resources":
-        main_groups = Material.objects.filter(parent__isnull=True, catalog_id=31594).exclude(pk__in=[31621,31620])
+        main_groups = Material.objects.filter(parent__isnull=True, catalog_id=31594, pk__in=[31603,31604,31605,31606,31607,31608,31609,31610,31611,31612,31613,31614,31615,31616,31617,31618])
         materials = Material.objects.filter(parent__in=main_groups)
     elif slug == "technology":
-        main_groups = None
-        materials = Material.objects.filter(parent_id=31620)
+        main_groups = Material.objects.filter(parent__isnull=True, catalog_id=31594, pk__in=[752967,752973,752980,752994])
+        materials = Material.objects.filter(parent__in=main_groups)
     elif slug == "space":
         main_groups = None
         materials = Material.objects.filter(parent_id=31621)
     elif slug == "staff":
         main_groups = None
-        materials = Material.objects.filter(parent_id=31621)
+        materials = Material.objects.filter(parent_id=584734)
+
     context = {
         "my_organization": my_organization,
         "info": info,
@@ -500,6 +596,7 @@ def admin_entity_material(request, organization, id, slug, material=None, edit=N
         "material": material,
         "units": units,
         "slug": slug,
+        "type": type,
         "demand": demand,
     }
     return render(request, "metabolism_manager/admin/entity.material.html", context)

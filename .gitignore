@@ -10,6 +10,7 @@ src/media/*
 src/logs/*
 src/multiplicity/static/moc/css-preprocessors/*
 src/ie/settings.py
+src/templates/stats/*
 config/*production*
 .idea/*
 sync*

@@ -15,16 +15,17 @@
 {% block content %}
   {% include "metabolism_manager/admin/_entity.menu.html" %}
 
-  <h2 class="mb-4">{{ material.parent }}: {{ material }}</h2>
+  <h3 class="mb-4">Add {{ type }} for {{ material.parent|lower }} ({{ material|lower }})</h3>
+
   <form method="post" enctype="multipart/form-data">
 
     {% if slug != "technology" %}
       <div class="form-group row">
         <label class="col-md-3 col-form-label" for="id_quantity">Quantity</label>
-        <div class="col-md-5">
+        <div class="col">
           <input type="number" name="quantity" step="any" class="form-control" placeholder="Quantity"  required id="id_quantity" value="{{ demand.absolute_quantity }}">
         </div>
-        <div class="col-md-4">
+        <div class="col">
           <select class="form-control" name="unit">
             {% for unit in units %}
               <option {% if demand.unit == unit %}selected{% endif %} value="{{ unit.id }}">{{ unit.name }} ({{ unit.symbol }})</option>
@@ -34,7 +35,39 @@
       </div>
     {% endif %}
 
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="days">Days</label>
+      <div class="col-md-9">
+        <select class="form-control custom-select" name="days" id="days">
+          <option value="always">Every day</option>
+          <option value="weekdays">Weekdays</option>
+          <option value="weekends">Weekends</option>
+          <option value="sporadically">Sporadically</option>
+          <option value="never">Never</option>
+          <option value="other">Other</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="time">Time</label>
+      <div class="col-md-9">
+        <select class="form-control custom-select" name="time" id="time">
+          <option value="always">Any time</option>
+          <option value="weekdays">During working hours</option>
+          <option value="weekends">Outside working hours</option>
+          <option value="sporadically">Sporadically</option>
+          <option value="never">Never</option>
+          <option value="other">Other</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </div>
+    </div>
+
     {% bootstrap_form form layout="horizontal" %}
+
+
     {% buttons %}
       <div class="row">
         <div class="offset-md-3 col-md-9">
@@ -45,7 +78,7 @@
 
         {% if demand %}
         <button name="delete" value="true" type="submit" class="btn btn-danger" onclick="javascript:return confirm('Are you sure you want to delete this record?')">
-          <i class="fas fa-trash-alt"></i> 
+          <i class="fas fa-trash-alt"></i>
           Delete
         </button>
         {% endif %}
@@ -62,6 +95,8 @@
   <script>
     $("#id_start_date").attr("type", "date");
     $("#id_end_date").attr("type", "date");
+
+    $("select").addClass("custom-select");
   </script>
   {% if slug != "space" %}
     <script>

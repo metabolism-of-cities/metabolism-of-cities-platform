@@ -114,7 +114,8 @@ def space_maps(request, space):
     return render(request, "staf/maps.html", context)
 
 def layers(request, id=None, layer=None):
-    layers = LAYERS
+    project = get_project(request)
+    layers = get_layers(request)
     if layer:
         layers = layers.filter(slug=layer)
     spaces = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)
@@ -129,7 +130,7 @@ def layers(request, id=None, layer=None):
                     counter[tag.id] += 1
 
     context = {
-        "layers": LAYERS,
+        "layers": get_layers(request),
         "layer": layer,
         "counter": counter,
         "title": "Data inventory: layer overview",
@@ -927,6 +928,7 @@ def materials(request, id=None, catalog=None, project_name=None, edit_mode=False
         "edit_mode": edit_mode,
         "info": info,
         "catalog": catalog,
+        "load_datatables": True,
     }
 
     return render(request, "staf/materials.html", context)
@@ -940,23 +942,36 @@ def material(request, catalog, id):
 
 @login_required
 def material_form(request, catalog=None, id=None, parent=None, project_name=None):
-    ModelForm = modelform_factory(Material, fields=("name", "code", "measurement_type", "description", "icon", "parent", "is_deleted"))
+    fields = ["name", "code", "measurement_type", "description", "icon", "is_deleted"]
+    if not catalog and request.GET.get("catalog"):
+        catalog = request.GET.get("catalog")
+    if id:
+        fields.append("parent")
+    ModelForm = modelform_factory(Material, fields=fields)
     info = None
     if id:
         info = get_object_or_404(Material, pk=id)
         form = ModelForm(request.POST or None, instance=info)
     else:
         form = ModelForm(request.POST or None)
+        if parent:
+            parent = Material.objects.get(pk=parent)
+            catalog = parent.catalog
+        elif catalog:
+            catalog = MaterialCatalog.objects.get(pk=catalog)
     if info:
-        catalog = info.catalog.id
-        form.fields["parent"].queryset = Material.objects.filter(catalog_id=catalog)
+        catalog = info.catalog
+        form.fields["parent"].queryset = Material.objects.filter(catalog=catalog)
+        parent = info.parent
     if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)
             if not id:
-                info.catalog_id = catalog
+                if catalog:
+                    info.catalog = catalog
                 if parent:
-                    info.parent_id = parent
+                    info.parent = parent
+                    info.catalog = parent.catalog
             info.save()
             messages.success(request, "Information was saved.")
             return redirect(request.GET["next"])
@@ -966,6 +981,8 @@ def material_form(request, catalog=None, id=None, parent=None, project_name=None
     context = {
         "form": form,
         "title": info if info else "Create material",
+        "parent": parent,
+        "catalog": catalog,
     }
     return render(request, "staf/material.form.html", context)
 
@@ -1034,7 +1051,7 @@ def flowdiagram(request, id, show_form=False):
     form = None
     flowblock = None
 
-    if has_permission(request, request.project, ["curator", "admin"]):
+    if has_permission(request, request.project, ["dataprocessor"]):
         curator = True
     else:
         show_form = False
@@ -1045,27 +1062,32 @@ def flowdiagram(request, id, show_form=False):
     if show_form:
         ModelForm = modelform_factory(FlowBlocks, exclude=["diagram"])
         form = ModelForm(request.POST or None, instance=flowblock)
-        if request.method == "POST":
+
+    if request.method == "POST" and curator:
+        if "delete" in request.POST:
+            item = FlowBlocks.objects.filter(diagram=info, pk=request.POST["delete"])
+            if item:
+                item.delete()
+                messages.success(request, "This block was removed.")
+            return redirect(request.get_full_path())
+        elif "main_form" in request.POST:
             if form.is_valid():
                 b = form.save(commit=False)
                 if not flowblock:
                     b.diagram = info
                 b.save()
-
                 messages.success(request, "Information was saved.")
+                if "next" in request.GET:
+                    return redirect(request.GET["next"])
+                else:
+                    return redirect(request.get_full_path())
             else:
                 messages.error(request, "We could not save your form, please fill out all fields")
-            if "next" in request.GET:
-                return redirect(request.GET["next"])
-
-    if request.method == "POST" and "delete" in request.POST and curator:
-        item = FlowBlocks.objects.filter(diagram=info, pk=request.POST["delete"])
-        if item:
-            item.delete()
-            messages.success(request, "This block was removed.")
 
     blocks = info.blocks.all()
     activities = Activity.objects.all()
+
+    data_processing_permission = Relationship.objects.get(pk=33)
 
     context = {
         "activities": activities,
@@ -1076,18 +1098,23 @@ def flowdiagram(request, id, show_form=False):
         "title": info.name if info else "Create new flow diagram",
         "flowblock": flowblock,
         "form": form,
+        "data_processing_permission": data_processing_permission,
     }
     return render(request, "staf/flowdiagram.html", context)
 
-@staff_member_required
+@login_required
 def flowdiagram_meta(request, id=None):
-    ModelForm = modelform_factory(FlowDiagram, fields=("name", "description", "icon", "is_public"))
+    if not has_permission(request, request.project, ["dataprocessor"]):
+        unauthorized_access(request)
+
+    ModelForm = modelform_factory(FlowDiagram, fields=("name", "description", "icon"))
     if id:
         info = FlowDiagram.objects.get(pk=id)
         form = ModelForm(request.POST or None, instance=info)
     else:
         info = None
         form = ModelForm(request.POST or None)
+
     if request.method == "POST":
 
         if form.is_valid():
@@ -1244,8 +1271,10 @@ def hub_harvesting_space(request, space):
     info = get_space(request, space)
     if project.slug == "cityloops":
         tag_id = 971
+        optional_list = [985, 995, 1017, 1018, 1019, 1020, 1021, 1026, 1027, 1028, 1029, 1030, 1035, 1036, 1037, 1038, 1039, 1040, 1044, 1045, 1046, 1047, 1056, 1057, 1058, 1059, 1060, 1061, 1062, 1067, 1068, 1069, 1070, 1071]
     else:
         tag_id = 845
+        optional_list = None
     layers = Tag.objects.filter(parent_tag_id=tag_id)
     counter = {}
     list_messages = None
@@ -1254,12 +1283,15 @@ def hub_harvesting_space(request, space):
     for each in items:
         for tag in each.tags.all():
             if tag.parent_tag in layers:
-                counter[tag.id] = True
+                counter[tag.id] = counter[tag.id] + 1 if tag.id in counter else 1
 
     untagged_items = LibraryItem.objects.filter(spaces=info).exclude(tags__parent_tag__in=layers).distinct()
     total_tags = Tag.objects.filter(parent_tag__in=layers).count()
     uploaded = len(counter)
-    percentage = (uploaded/total_tags)*100
+    if total_tags:
+        percentage = (uploaded/total_tags)*100
+    else:
+        percentage = 0;
 
     forum_topic = ForumTopic.objects.filter(part_of_project_id=request.project, parent_url=request.get_full_path())
     if forum_topic:
@@ -1272,6 +1304,7 @@ def hub_harvesting_space(request, space):
         "items": items,
         "counter": counter,
         "title": "Inventory",
+        "optional_list": optional_list,
         "percentage": percentage,
         "total_tags": total_tags,
         "uploaded": uploaded,
@@ -1306,8 +1339,9 @@ def hub_harvesting_tag(request, space, tag):
     website = [32]
     gps = [41]
 
+
     if tag.parent_tag.id == 847:
-        # Layer two
+        # Layer 2
         types = shapefile + written + dataset + visual
     elif tag.parent_tag.id == 850:
         # Layer 5
@@ -1315,23 +1349,23 @@ def hub_harvesting_tag(request, space, tag):
     elif tag.parent_tag.id == 849:
         # Layer 4
         types = written + dataset
-    elif tag.parent_tag.id == 848:
-        # Layer 3
+    elif tag.parent_tag.id == 848 or tag.id in [996, 997, 998, 999, 1000, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011, 1012]:
+        # Layer 3 and land use
         types = shapefile + written + dataset + visual + gps
-    elif tag.id == 914:
+    elif tag.id == [914, 995]:
         # Policy documents
         types = document
-    elif tag.id == 852:
+    elif tag.id in [852, 975, 976, 977, 978, 979]:
         types = shapefile
     elif tag.id == 851:
         # Actors
         types = document
-    elif tag.id == 853:
+    elif tag.id in [853, 985]:
         # Econ descriptions
         types = report + website
-    elif tag.id == 854:
+    elif tag.id in [854, 986, 987, 988, 989, 990, 991, 992, 993, 994]:
         types = written + dataset
-    elif tag.id == 855:
+    elif tag.id in [855, 980, 981, 982, 983, 984]:
         # Population
         types = dataset + report + website
     elif tag.id == 916:
@@ -1367,6 +1401,7 @@ def hub_harvesting_worksheet(request, space=None):
         tag_id = 845
 
     context = {
+        "title": "Instructions",
         "layers": Tag.objects.filter(parent_tag_id=tag_id),
     }
     return render(request, "hub/harvesting.worksheet.html", context)
@@ -1378,14 +1413,14 @@ def hub_processing(request, space=None):
 
     title = "Data processing"
     stocks_tags = [903,904,905,906]
-    gis = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).exclude(meta_data__processed__isnull=False).distinct()
-    spreadsheet = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project).exclude(meta_data__processed__isnull=False).distinct()
-    datasets_flows = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).exclude(meta_data__processed__isnull=False).exclude(tags__id__in=stocks_tags).distinct()
-    datasets_stock = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__id__in=stocks_tags).exclude(meta_data__processed__isnull=False).distinct()
-    demographics = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=855).exclude(meta_data__processed__isnull=False).distinct()
-    economy = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=854).exclude(meta_data__processed__isnull=False).distinct()
-    climate = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[861,862]).exclude(meta_data__processed__isnull=False).distinct()
-    biophysical = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[857,859,863,864]).exclude(meta_data__processed__isnull=False).distinct()
+    gis = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
+    spreadsheet = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project).exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
+    datasets_flows = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).exclude(meta_data__processed__isnull=False).exclude(tags__id__in=stocks_tags).exclude(meta_data__ready_for_processing__isnull=False).distinct()
+    datasets_stock = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__id__in=stocks_tags).exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
+    demographics = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=855).exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
+    economy = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=854).exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
+    climate = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[861,862]).exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
+    biophysical = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[857,859,863,864]).exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
 
     if space:
         space = get_space(request, space)
@@ -1431,58 +1466,58 @@ def hub_processing_list(request, space=None, type=None):
 
     if type == "gis":
         title = "GIS data processing"
-        list = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        list = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
-        processed = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct()
+        processed = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
 
     elif type == "geospreadsheet":
         title = "Geospatial spreadsheets"
-        list = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        list = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
-        processed = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct()
+        processed = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
 
     elif type == "datasets":
         # We will phase this out, no more active link to this section
         # remove this block in March 2021
-        list = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        list = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
-        processed = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849, meta_data__processed__isnull=False).distinct()
+        processed = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
         title = "Stocks and flows data processing"
 
     elif type == "flows":
-        list = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(tags__id__in=stocks_tags).distinct()
+        list = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(tags__id__in=stocks_tags).exclude(meta_data__ready_for_processing__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
-        processed = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849, meta_data__processed__isnull=False).exclude(tags__id__in=stocks_tags).distinct()
+        processed = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=849).exclude(tags__id__in=stocks_tags).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
         title = "Material flows data processing"
 
     elif type == "stock":
-        list = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__id__in=stocks_tags).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        list = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__id__in=stocks_tags).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
-        processed = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__id__in=stocks_tags, meta_data__processed__isnull=False).distinct()
+        processed = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__id__in=stocks_tags).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
         title = "Stocks data processing"
 
     elif type == "demographics":
-        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=855).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=855).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
-        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=855, meta_data__processed__isnull=False).distinct()
+        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=855).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
         title = "Demographic data"
 
     elif type == "climate":
-        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[861,862]).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[861,862]).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
-        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[861,862], meta_data__processed__isnull=False).distinct()
+        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[861,862]).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
         title = "Climatological data"
 
     elif type == "economy":
-        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=854).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=854).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
-        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=854, meta_data__processed__isnull=False).distinct()
+        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id=854).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
         title = "Economic data"
 
     elif type == "biophysical":
-        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[857,859,863,864]).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).distinct()
+        list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[857,859,863,864]).prefetch_related("spaces").exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
         unassigned = list.exclude(meta_data__assigned_to__isnull=False)
-        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[857,859,863,864], meta_data__processed__isnull=False).distinct()
+        processed = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, tags__id__in=[857,859,863,864]).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
         title = "Economic data"
 
     if space:
@@ -1553,7 +1588,7 @@ def process_work(request, info):
                         parent = work,
                         posted_by = request.user.people,
                     )
-                    set_autor(request.user.people.id, message.id)
+                    set_author(request.user.people.id, message.id)
 
                     if not info.meta_data:
                         info.meta_data = {}
@@ -1577,7 +1612,7 @@ def process_work(request, info):
                     parent = work,
                     posted_by = request.user.people,
                 )
-                set_autor(request.user.people.id, message.id)
+                set_author(request.user.people.id, message.id)
 
                 if not info.meta_data:
                     info.meta_data = {}
@@ -1598,7 +1633,7 @@ def process_work(request, info):
                     parent = work,
                     posted_by = request.user.people,
                 )
-                set_autor(request.user.people.id, message.id)
+                set_author(request.user.people.id, message.id)
                 work.subscribers.add(request.user.people)
 
                 try:
@@ -1680,9 +1715,12 @@ def hub_processing_completed(request, space=None, type=None):
     related_tags = {
         "demographics": [855],
         "stock": stocks_tags,
+        "biophysical": [857,859,863,864],
+        "economy": [854],
+        "climate": [861,862],
     }
 
-    list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project, meta_data__processed__isnull=False).distinct()
+    list = LibraryItem.objects.filter(spaces__activated__part_of_project_id=request.project).filter(Q(meta_data__processed__isnull=False)|Q(meta_data__ready_for_processing__isnull=False)).distinct()
 
     if type == "flows":
         list = list.filter(tags__parent_tag_id=849).exclude(tags__id__in=stocks_tags)
@@ -1795,7 +1833,7 @@ def hub_processing_dataset(request, id, space=None):
             parent = work,
             posted_by = request.user.people,
         )
-        set_autor(request.user.people.id, message.id)
+        set_author(request.user.people.id, message.id)
 
         if not info.meta_data:
             info.meta_data = {}
@@ -1825,7 +1863,7 @@ def hub_processing_dataset(request, id, space=None):
                 parent = work,
                 posted_by = request.user.people,
             )
-            set_autor(request.user.people.id, message.id)
+            set_author(request.user.people.id, message.id)
 
             for each in work.subscribers.all():
                 if each.people != request.user.people:
@@ -2098,7 +2136,7 @@ def hub_processing_dataset_save(request, id, space=None):
             parent = work,
             posted_by = request.user.people,
         )
-        set_autor(request.user.people.id, message.id)
+        set_author(request.user.people.id, message.id)
         work.subscribers.add(request.user.people)
 
         try:
@@ -2172,7 +2210,7 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
             parent = work,
             posted_by = request.user.people,
         )
-        set_autor(request.user.people.id, message.id)
+        set_author(request.user.people.id, message.id)
         work.subscribers.add(request.user.people)
 
         if "delete_document" in request.GET:
@@ -2202,7 +2240,7 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
             parent = work,
             posted_by = request.user.people,
         )
-        set_autor(request.user.people.id, message.id)
+        set_author(request.user.people.id, message.id)
 
         for each in work.subscribers.all():
             if each.people != request.user.people:
@@ -2236,7 +2274,7 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
                     parent = work,
                     posted_by = request.user.people,
                 )
-                set_autor(request.user.people.id, message.id)
+                set_author(request.user.people.id, message.id)
 
                 for each in work.subscribers.all():
                     if each.people != request.user.people:
@@ -2374,9 +2412,22 @@ def hub_processing_gis_classify(request, id, space=None):
 
     if request.method == "POST" and "next" in request.POST:
         meta_data = document.meta_data
+
         if not "columns" in meta_data:
             meta_data["columns"] = {}
         meta_data["columns"]["name"] = request.POST.get("column")
+
+        if "single_reference_space" in request.POST and request.POST["single_reference_space"]:
+            meta_data["single_reference_space"] = True
+            del meta_data["columns"]
+        elif "single_reference_space" in meta_data:
+            del meta_data["single_reference_space"]
+
+        if "group_spaces_by_name" in request.POST and request.POST["group_spaces_by_name"]:
+            meta_data["group_spaces_by_name"] = True
+        elif "group_spaces_by_name" in meta_data:
+            del meta_data["group_spaces_by_name"]
+
         document.meta_data = meta_data
         document.save()
         messages.success(request, "The information was saved.")
@@ -2544,7 +2595,7 @@ def hub_processing_gis_save(request, id, space=None):
             parent = work,
             posted_by = request.user.people,
         )
-        set_autor(request.user.people.id, message.id)
+        set_author(request.user.people.id, message.id)
         work.subscribers.add(request.user.people)
 
         try:
@@ -2682,6 +2733,44 @@ def shapefile_json(request, id, download=False):
         response["Content-Disposition"] = f"attachment; filename=\"{info.name}.geojson\""
     return response
 
+def data(request):
+    data = Data.objects.all()
+
+    start = request.GET.get("date_start")
+    end = request.GET.get("date_end")
+    material = request.GET.get("material")
+    source = request.GET.get("source")
+
+    if source:
+        data = data.filter(source_id=source)
+
+    if start and end:
+        data = data.filter(timeframe__start__range=[start, end])
+    elif start:
+        data = data.filter(timeframe__end__gte=start)
+    elif end:
+        data = data.filter(timeframe__end__lte=end)
+
+    if material:
+        m = Material.objects.filter(code=material.strip())
+        if m:
+            data = data.filter(material__in=m)
+        else:
+            messages.error(request, "We could not find this material")
+
+    if data.count() > 200:
+        total = data.count()
+        data = data[:200]
+    else:
+        total = data.count()
+
+    context = {
+        "data": data,
+        "total": total,
+    }
+    return render(request, "staf/data.html", context)
+
+
 @login_required
 def dataset_editor(request, id):
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
@@ -2734,7 +2823,7 @@ def chart_editor(request, id):
         if points:
             context["colors"] = ["blue", "gold", "red", "green", "orange", "yellow", "violet", "grey", "black"]
         else:
-            context["colors"] = ["#144d58","#a6cee3","#33a02c","#b2df8a","#e31a1c","#fb9a99","#ff7f00","#fdbf6f","#6a3d9a","#cab2d6","#b15928","#ffff99"]
+            context["colors"] = ["#144d58","#a6cee3", "#1042DE", "#33a02c","#b2df8a","#e31a1c","#fb9a99","#ff7f00","#fdbf6f","#6a3d9a","#cab2d6", "#DE10C8", "#b15928","#ffff99"]
 
         context["styles"] = ["streets-v11", "outdoors-v11", "light-v10", "dark-v10", "satellite-v9", "satellite-streets-v11"]
         return render(request, "staf/dataset-editor/map.basic.html", context)

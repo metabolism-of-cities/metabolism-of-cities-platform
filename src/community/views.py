@@ -46,19 +46,20 @@ def projects(request, project_name="core", type="research"):
     # Currently all projects are tagged as MoC, so we must link to that project instead of the Community Portal
 
     project = 1 if request.project == 18 else request.project
+    project = get_project(request)
     list = PublicProject.objects.filter(part_of_project_id=project, type=type)
 
-    if "update" in request.GET:
-        for each in list:
-            if not each.meta_data:
-                each.meta_data = {}
-            each.meta_data["format"] = "html"
-            each.save()
-            p(each.meta_data)
+    title = "Projects"
+    if type == "thesis" and project.slug == "islands":
+        title = "Thesis projects"
+    elif project.slug == "islands":
+        title = "Research projects"
 
     context = {
         "list": list,
         "load_datatables": True,
+        "title": title,
+        "add_link": "/controlpanel/projects/create/",
     }
     return render(request, "community/projects.html", context)
 
@@ -67,10 +68,12 @@ def project(request, id):
     context = {
         "info": info,
         "header_title": info.name,
+        "title": info.name,
         "header_subtitle": "Projects",
-        "edit_link": "/admin/core/publicproject/" + str(info.id) + "/change/",
+        "edit_link": f"/controlpanel/projects/{str(info.id)}/?next={request.get_full_path()}",
+        "add_link": "/controlpanel/projects/create/",
         "show_relationship": info.id,
-        "relationships": info.child_list.all(),
+        "relationships": info.child_list.exclude(relationship__name="Uploader"),
     }
     return render(request, "community/project.html", context)
 
@@ -103,8 +106,13 @@ def organization(request, slug, id):
 
 def forum_list(request, parent=None, section=None):
     list = ForumTopic.objects.all()
-    if request.project != 1:
-        project = get_object_or_404(Project, pk=request.project)
+    project = get_project(request)
+    forum_is_only_for_project = False
+
+    if project.meta_data and "forum_is_only_for_project" in project.meta_data:
+        list = list.filter(part_of_project=project)
+        forum_is_only_for_project = True
+    elif request.project != 1:
         list = list.filter(part_of_project_id__in=[project.id, 1])
     else:
         project = None
@@ -122,6 +130,7 @@ def forum_list(request, parent=None, section=None):
         "menu": "forum",
         "projects": projects,
         "project": project,
+        "forum_is_only_for_project": forum_is_only_for_project,
     }
     return render(request, "forum.list.html", context)
 
@@ -521,10 +530,25 @@ def controlpanel_project_form(request, slug=None, id=None):
         info = None
 
     if request.method == "POST":
-        if form.is_valid():
+        if "delete" in request.POST:
+            info.is_deleted = True
+            info.save()
+            messages.success(request, "The project was deleted.")
+            return redirect(request.GET.get("next"))
+        elif form.is_valid():
             info = form.save(commit=False)
             info.description = request.POST.get("description")
+
+            if not info.meta_data:
+                info.meta_data = {}
+
+            info.meta_data["supervisor"] = request.POST.get("supervisor")
+            info.meta_data["project_leader"] = request.POST.get("project_leader")
+            info.meta_data["research_team"] = request.POST.get("research_team")
+            info.meta_data["researcher"] = request.POST.get("researcher")
+            info.meta_data["institution"] = request.POST.get("institution")
             info.save()
+
             messages.success(request, "The information was saved.")
 
             if not id:
@@ -544,13 +568,16 @@ def controlpanel_project_form(request, slug=None, id=None):
                 )
                 message = Message.objects.create(posted_by=request.user.people, parent=work, name="Status change", description="Task was completed")
 
-            return redirect(request.GET.get("next"))
+            if "next" in request.GET:
+                return redirect(request.GET.get("next"))
+            else:
+                return redirect(project.slug + ":controlpanel_projects")
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
 
     context = {
         "form": form,
-        "title": "Add project",
+        "title": "Add project" if not id else "Edit project",
         "load_markdown": True,
         "curator": curator,
         "info": info,

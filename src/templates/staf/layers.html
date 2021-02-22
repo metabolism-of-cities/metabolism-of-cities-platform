@@ -1,54 +1,70 @@
 {% extends "_base.html" %}
 {% load moc_extras %}
 
+
 {% block content %}
-<section>
-    <h2>Data inventory: layer overview</h2>
-    <div class="row">
-      <div class="col-4">
-        <div class="nav flex-column nav-pills">
-          {% for each in layers %}
-            <a class="nav-link {% if each.slug == layer %}active{% endif %}" href="../{{ each.slug }}/">
-              <i class="fa fa-{{ each.icon }} fa-fw"></i> {{ each }}
-            </a>
-          {% endfor %}
+  <h2>Data inventory: layer overview</h2>
 
-        </div>
-      </div>
-      <div class="col-8">
-        <div class="tab-content">
-          {% for each in layers %}
-            {% if each.slug == layer %}
-              <div class="tab-pane fade show active">
+  {% if PROJECT.slug == 'cityloops' %}
+    <div class="intro-text">
+      <p>
+        Are you curious to see the inventory of data items of all <a href="https://cityloops.metabolismofcities.org/">seven CityLoops cities</a>? This page lets you see the number of data items that the cities have collected per (sub)layer. When you click on a sublayer then you can explore the data items that have been added so far.
+      </p>
 
-                <ul class="list-group mb-4">
-                  {% for tag in each.children.all %}
-                    <li class="list-group-item">
-                      <a href="{{ tag.id }}/">
-                        {{ tag }}
-                        {% if counter|get_item:tag.id > 0 %}
-                          <span class="badge badge-success float-right">
-                            {{ counter|get_item:tag.id }}
-                          </span>
-                        {% else %}
-                          <span class="badge badge-dark float-right">
-                            0
-                          </span>
-                        {% endif %}
-                      </a>
-                    </li>
-                  {% endfor %}
-                </ul>
+      <p>
+        You can also view <strong>all items of a layer</strong>:
+        {% for each in layers %}
+          <a href="../{{ each.slug }}/all/">{{ each }}</a>{% if not forloop.last %} | {% endif %}
+        {% endfor %}
+      </p>
+    </div>
+  {% endif %}
 
-                <p><a href="all/">View all</a></p>
-
-              </div>
-
-            {% endif %}
-          {% endfor %}
-
-        </div>
+  <div class="row mt-4">
+    <div class="col-4">
+      <div class="nav flex-column nav-pills sticky-top">
+        {% for each in layers %}
+          <a class="nav-link {% if each.slug == layer %}active{% endif %}" href="../{{ each.slug }}/">
+            <i class="fal fa-{{ each.icon }} fa-fw mr-2"></i> {{ each }}
+          </a>
+        {% endfor %}
       </div>
     </div>
-  </section>
+    <div class="col-8">
+      <div class="tab-content">
+        {% for each in layers %}
+          {% if each.slug == layer %}
+            <div class="tab-pane fade show active">
+
+              <ul class="list-group mb-4">
+                {% for tag in each.children.all %}
+                  <li class="list-group-item">
+                    <a href="{{ tag.id }}/">
+                      {{ tag }}
+                      {% if counter|get_item:tag.id > 0 %}
+                        <span class="badge {% if PROJECT.slug == 'cityloops' %}badge-cityloops-secondary{% else %}badge-primary{% endif %} mt-1 float-right">
+                          {{ counter|get_item:tag.id }}
+                        </span>
+                      {% else %}
+                        <span class="badge {% if PROJECT.slug == 'cityloops' %}badge-cityloops-primary{% else %}badge-secondary{% endif %} mt-1 float-right">
+                          0
+                        </span>
+                      {% endif %}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+
+              <a class="btn btn-primary" href="all/">
+                <i class="fa fa-list"></i> View all
+              </a>
+
+            </div>
+
+          {% endif %}
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
 {% endblock %}

@@ -1,0 +1,34 @@
+<ul class="nav nav-tabs mb-4" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link {% if tab == 'map' %}active{% endif %}" href="{% url 'platformu:admin_dashboard' %}">Map</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if slug == 'resources' %}active{% endif %}" href="{% url 'platformu:admin_dashboard_items' 'resources' %}">
+      Resources
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if slug == 'space' %}active{% endif %}" href="{% url 'platformu:admin_dashboard_items' 'space' %}">
+      Space
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if slug == 'staff' %}active{% endif %}" href="{% url 'platformu:admin_dashboard_items' 'staff' %}">
+      Staff
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if slug == 'technology' %}active{% endif %}" href="{% url 'platformu:admin_dashboard_items' 'technology' %}">
+      Technology
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if tab == 'latest' %}active{% endif %}" href="{% url 'platformu:admin_dashboard_latest' %}">
+      Latest
+    </a>
+  </li>
+</ul>
+
+
+
+

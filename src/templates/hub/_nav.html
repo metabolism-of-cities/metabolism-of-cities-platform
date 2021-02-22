@@ -10,7 +10,7 @@
     {% if PROJECT.is_data_project %}
       <li class="nav-item">
         <a class="nav-link {% if menu == 'home' %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}{% if space %}/dashboards/{{ space.slug }}{% endif %}/hub/">
-          <i class="fa fa-home fa-fw"></i>
+          <i class="fal fa-home fa-fw"></i>
         </a>
       </li>
       <li class="nav-item">
@@ -30,15 +30,16 @@
       </li>
 
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle {% if menu == 'forum' or menu == 'profile' %}active{% endif %}" href="#" id="about-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fa fa-users"></i>
+        <a class="nav-link dropdown-toggle {% if menu == 'forum' or menu == 'profile' or menu == 'latest' %}active{% endif %}" href="#" id="community-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fal fa-users mr-2"></i>
           Community
         </a>
-        <div class="dropdown-menu" aria-labelledby="about-dropdown">
+        <div class="dropdown-menu" aria-labelledby="community-dropdown">
           <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/hub/forum/">Forum</a>
           <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/hub/work/">Tasks</a>
-          <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/hub/people/">People</a>
+          <!-- <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/hub/people/">People</a> -->
           <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/hub/scoreboard/">Scoreboard</a>
+          <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/hub/latest/?project_only=true">Activity log</a>
           <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/hub/profile/">My Profile</a>
         </div>
       </li>

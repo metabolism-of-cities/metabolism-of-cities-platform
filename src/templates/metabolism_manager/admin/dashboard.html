@@ -47,13 +47,36 @@
       padding: .75rem 1.25rem;
     }
 
-    #latest .card-img-top {
+    #latest .lightbox,
+    #current .lightbox {
+      height: 200px;
+    }
+
+    .lightbox a {
+      cursor: zoom-in;
+    }
+
+
+    #latest .card-img-top,
+    #current .card-img-top {
+      height: 200px;
+      background-position: center;
       object-fit: contain;
+      background-size: cover;
     }
 
     .awesome-marker i {
       margin-top: 12px;
       font-size: 13px;
+    }
+
+    .reset-outside {
+      margin-top: -1px;
+      font-size: .75rem;
+    }
+
+    .highcharts-point {
+      cursor: pointer;
     }
   </style>
 {% endblock %}
@@ -62,30 +85,9 @@
 
   <h3>Dashboard</h3>
 
-  <ul class="nav nav-tabs mb-4" role="tablist">
-    <li class="nav-item">
-      <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Map</a>
-    </li>
-    {% for key,data in types.items %}
-      <li class="nav-item">
-        <a class="nav-link" id="{{ key }}-tab" data-toggle="tab" href="#{{ key }}" role="tab" aria-controls="{{ key }}" aria-selected="false">
-          {{ key }} <span class="badge badge-dark ml-2">{{ data|length }}</span>
-        </a>
-      </li>
-    {% endfor %}
-    <li class="nav-item">
-      <a class="nav-link" id="latest-tab" data-toggle="tab" href="#latest" role="tab" aria-controls="latest" aria-selected="false">
-        Latest <span class="badge badge-dark ml-2">{{ latest|length }}</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="current-tab" data-toggle="tab" href="#current" role="tab" aria-controls="current" aria-selected="false">
-        Current demand / supply <span class="badge badge-dark ml-2">{{ current|length }}</span>
-      </a>
-    </li>
-  </ul>
+  {% include "metabolism_manager/admin/_dashboard.menu.html" %}
 
-  <div class="tab-content" id="myTabContent">
+  <div class="tab-content" id="tabs">
     <div class="tab-pane show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
       {% if not gps.lat or not gps.lng %}
         <div class="alert alert-danger">
@@ -93,177 +95,130 @@
         </div>
       {% endif %}
 
-      <form class="row filters mb-2">
-        <div class="col-md-6 col-lg-6 mb-2">
-          <label class="sr-only" for="material">Layer</label>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <div class="input-group-text">Layer</div>
-            </div>
-            <select class="custom-select material filter">
-              <option value="all">All layers</option>
-              {% for each in material_list %}
-                <option value="{{ each.material_type__name }}">{{ each.material_type__parent__name }} - {{ each.material_type__name }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-2">
-          <label class="sr-only" for="status">Type</label>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <div class="input-group-text">Type</div>
-            </div>
-            <select class="custom-select status filter">
-              <option value="all" selected>Any</option>
-              <option value="Supply">Supply</option>
-              <option value="Demand">Demand</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-2">
-          <label class="sr-only" for="from">Date</label>
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <div class="input-group-text">Date</div>
-            </div>
-            <input type="date" class="form-control from filter" id="from">
-          </div>
-        </div>
-      </form>
-
       <section class="row">
         <div class="col-lg-9">
-          <div id="map" class="leaflet-map border rounded-0 sticky-top"></div>
+          <div class="sticky-top">
+            <form class="row filters mb-2">
+              <div class="col-md-6 col-lg-4 mb-2">
+                <label class="sr-only" for="material">Layer</label>
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">Layer</div>
+                  </div>
+                  <select class="custom-select material filter">
+                    <option value="all">All layers</option>
+                    {% for each in material_list %}
+                      <option value="{{ each.material_type__name }}">{{ each.material_type__parent__name }} - {{ each.material_type__name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4 mb-2">
+                <label class="sr-only" for="status">Type</label>
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">Type</div>
+                  </div>
+                  <select class="custom-select status filter">
+                    <option value="all" selected>Any</option>
+                    <option value="Supply">Supply</option>
+                    <option value="Demand">Demand</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4 mb-2">
+                <label class="sr-only" for="from">Date</label>
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">Date</div>
+                  </div>
+                  <input type="date" class="form-control from filter" min="{{ today|date:'Y-m-d' }}" id="from">
+                </div>
+              </div>
+            </form>
+
+            <div id="map" class="leaflet-map border rounded-0"></div>
+          </div>
         </div>
         <div class="col-lg-3 map-listing">
+          <div class="btn btn-primary btn-block mb-4" data-toggle="modal" data-target="#add-entry-modal">
+            <i class="fa fa-plus mr-2"></i> Add entry
+          </div>
+
           <table class="table table-sm">
             <thead>
               <tr>
-                <th colspan="3"><span id="listing-count"></span> listing(s) found</th>
+                <th colspan="3"><span id="listing-count"></span></th>
+              </tr>
+              <tr class="no-results" hidden>
+                <th colspan="3" class="text-center">
+                  <i class="fal fa-empty-set fa-2x my-2"></i>
+                  <div>
+                    Your current filter has produced no results
+                  </div>
+                  <div class="btn btn-primary btn-sm my-2 reset-filter">
+                    <i class="fa fa-filter"></i> Reset filter
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody>
             </tbody>
           </table>
-        </div>
 
+          <div class="btn btn-primary btn-block btn-sm reset-filter reset-outside">
+            <i class="fa fa-filter"></i> Reset filter
+          </div>
+        </div>
       </section>
     </div>
+  </div>
 
-    {% for key,data in types.items %}
-      <div class="tab-pane" id="{{ key }}" role="tabpanel" aria-labelledby="{{ key }}-tab">
-        <table class="table datatable">
-          <thead>
-            <tr>
-              <th>Available from</th>
-              <th>Until</th>
-              <th>Type</th>
-              {% if key == "Resources" %}
-                <th>Name</th>
-              {% endif %}
-              <th>Quantity</th>
-              <th>Organisation</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-          {% for each in data %}
-            <tr>
-              <td class="text-nowrap">
-                {{ each.start_date|date:'d N Y' }}
-              </td>
-              <td class="text-nowrap">
-                {{ each.end_date|date:'d N Y' }}
-              </td>
-              {% if key == "Resources" %}
-                <td class="text-nowrap">{{ each.material_type.parent }}</td>
-              {% endif %}
-              <td class="text-nowrap">
-              {% if each.name %}
-                {{ each.name }}<br>
-              {% endif %}
-              {{ each.material_type }}</td>
-              <td class="text-nowrap">{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
-              <td class="text-nowrap">{{ each.owner }}</td>
-              <td class="has-button text-right">
-                <a class="btn btn-primary btn-sm" href="{% url 'platformu:admin_datapoint' each.id %}"><i class="far mr-0 fa-info-circle"></i></a>
-              </td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    {% endfor %}
-
-    <div class="tab-pane" id="latest" role="tabpanel" aria-labelledby="latest-tab">
-      <div class="row">
-        {% for each in latest %}
-          <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card">
-              <div class="card-header">{{ each.owner }}</div>
-              {% if each.owner.image %}
-                <img src="{{ each.owner.image.url }}" class="card-img-top p-3" alt="{{ each.owner }}">
-              {% endif %}
-              <ul class="list-group list-group-flush">
-                {% if each.owner.meta_data.address %}
-                  <li class="list-group-item"><i class="fal fa-fw fa-map-marker-alt mr-2"></i> {{ each.owner.meta_data.address }}</li>
-                {% endif %}
-                <li class="list-group-item"><i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-2"></i>{{ each.material_type }}</li>
-                <li class="list-group-item"><i class="fal fa-fw fa-balance-scale mr-2"></i>{{ each.absolute_quantity }} {{ each.unit.symbol }}</li>
-                <li class="list-group-item text-{% if each.type == 'supply' %}primary{% else %}secondary{% endif %}">
-                  <i class="fal fa-fw fa-{% if each.type == 'supply' %}sign-out{% else %}sign-in{% endif %} mr-2"></i>
-                  {% if each.type == "supply" %}Supply{% else %}Demand{% endif %}
-                </li>
-                <li class="list-group-item"><i class="fal fa-fw fa-calendar mr-2"></i>{{ each.start_date|date:'d N Y' }} - {{ each.end_date|date:'d N Y' }}</li>
-                <li class="list-group-item"><i class="fal fa-fw fa-calendar-plus mr-2"></i> Added on {{ each.date_created|date:'d F' }}</li>
-                <li class="list-group-item text-center">
-                  <a class="btn btn-primary" href="{% url 'platformu:admin_datapoint' each.id %}">More details</a>
-                </li>
-              </ul>
-            </div>
+  <!-- add entry modal -->
+  <div class="modal fade" id="add-entry-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="add-entry" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="add-entry">Add entry</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="mb-0 font-weight-bold" for="modal-organisation">Organisation</label>
+            <select class="form-control custom-select select2" id="modal-organisation">
+              {% for each in organization_list %}
+                <option value="{{ each.id }}">{{ each }}</option>
+              {% endfor %}
+            </select>
           </div>
-        {% endfor %}
-      </div>
-    </div>
 
-    <div class="tab-pane" id="current" role="tabpanel" aria-labelledby="current-tab">
-      <div class="row">
-        {% for each in current %}
-          <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card">
-              <div class="card-header">{{ each.owner }}</div>
-              {% if each.owner.image %}
-                <img src="{{ each.owner.image.url }}" class="card-img-top p-3" alt="{{ each.owner }}">
-              {% endif %}
-              <ul class="list-group list-group-flush">
-                {% if each.owner.meta_data.address %}
-                  <li class="list-group-item"><i class="fal fa-fw fa-map-marker-alt mr-2"></i> {{ each.owner.meta_data.address }}</li>
-                {% endif %}
-                <li class="list-group-item"><i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-2"></i>{{ each.material_type }}</li>
-                <li class="list-group-item"><i class="fal fa-fw fa-balance-scale mr-2"></i>{{ each.absolute_quantity }} {{ each.unit.symbol }}</li>
-                <li class="list-group-item text-{% if each.type == 'supply' %}primary{% else %}secondary{% endif %}">
-                  <i class="fal fa-fw fa-{% if each.type == 'supply' %}sign-out{% else %}sign-in{% endif %} mr-2"></i>
-                  {% if each.type == "supply" %}Supply{% else %}Demand{% endif %}
-                </li>
-                <li class="list-group-item"><i class="fal fa-fw fa-calendar mr-2"></i>{{ each.start_date|date:'d N Y' }} - {{ each.end_date|date:'d N Y' }}</li>
-                <li class="list-group-item"><i class="fal fa-fw fa-clock mr-2"></i> Available for  {{ each.end_date|timeuntil:today }}</li>
-                <li class="list-group-item text-center">
-                  <a class="btn btn-primary" href="{% url 'platformu:admin_datapoint' each.id %}">More details</a>
-                </li>
-              </ul>
-            </div>
+          <div class="form-group">
+            <label class="mb-0 font-weight-bold" for="modal-organisation">Type</label>
+            <select class="form-control custom-select select2" id="modal-type">
+              <option value="resources">Resources</option>
+              <option value="space">Space</option>
+              <option value="technology">Technology</option>
+              <option value="staff">Staff</option>
+            </select>
           </div>
-        {% endfor %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary submit-modal">Continue</button>
+        </div>
       </div>
     </div>
   </div>
+
 
 {% endblock %}
 
 {% block footer %}
   <script src="{% static 'js/leaflet.awesome-markers.min.js' %}"></script>
   <script src="{% static 'js/leaflet.markercluster.js' %}"></script>
+
   <script>
     // a list of all the offers and requests for materials
     const allListings = [
@@ -301,7 +256,15 @@
       })
 
       // add count to header
-      $("#listing-count").text(filteredLayer.getLayers().length);
+      let layerCount = filteredLayer.getLayers().length;
+      let layerCountText = " entries found"
+
+      if (layerCount == 1) {
+        layerCountText = " entry found"
+      };
+
+      $("#listing-count").text(layerCount + layerCountText);
+
     }
 
     // date options to show in popup
@@ -367,37 +330,51 @@
 
       // take the listings and add them to the cluster group
       // enable popups so na user can click on an object on the map and see extra information
-      for (var i = 0; i < filteredListings.length; i++) {
-        let listing = filteredListings[i];
+      if (filteredListings.length == 0) {
+        $(".map-listing tr.no-results").removeAttr("hidden")
+        $(".reset-outside").attr("hidden", "hidden");
+      } else {
+        $(".map-listing tr.no-results").attr("hidden", "hidden")
 
-        var uglyFrom = new Date(listing.start_date * 1000);
-        var prettyFrom = uglyFrom.toLocaleDateString('en-GB', dateOptions);
+        if (filteredListings.length == allListings.length) {
+          $(".reset-outside").attr("hidden", "hidden");
+        } else {
+          $(".reset-outside").removeAttr("hidden");
+        };
 
-        var uglyTo = new Date(listing.end_date * 1000);
-        var prettyTo = uglyTo.toLocaleDateString('en-GB', dateOptions);
+        for (var i = 0; i < filteredListings.length; i++) {
+          let listing = filteredListings[i];
 
-        var popupContent = "<div class='popup-title'>" + listing.name + "</div><div class='popup-content'><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + listing.address + "</li><li class='list-group-item'><i class='far fa-fw fa-" + listing.icon + " mr-2'></i>" + listing.material + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + listing.quantity + "</li><li class='list-group-item text-" + listing.status_color + "'><i class='far fa-fw fa-" + listing.status_icon + " mr-2'></i>" + listing.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a class='btn btn-sm btn-primary' href='../data/" + listing.id + "/'>More details</a></li></ul></div>"
+          var uglyFrom = new Date(listing.start_date * 1000);
+          var prettyFrom = uglyFrom.toLocaleDateString('en-GB', dateOptions);
 
-        var iconMarker = L.AwesomeMarkers.icon({
-          icon: listing.icon,
-          markerColor: listing.marker_color
-        });
+          var uglyTo = new Date(listing.end_date * 1000);
+          var prettyTo = uglyTo.toLocaleDateString('en-GB', dateOptions);
 
-        var marker = L.marker(new L.LatLng(filteredListings[i].lat, filteredListings[i].lng), {
-          "id": listing.id,
-          "name": listing.name,
-          "status_icon": listing.icon,
-          "color": listing.status_color,
-          "material": listing.material,
-          "quantity": listing.quantity,
-          "icon": iconMarker,
-        }).bindPopup(popupContent);
+          var popupContent = "<div class='popup-title'>" + listing.name + "</div><div class='popup-content'><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + listing.address + "</li><li class='list-group-item'><i class='far fa-fw fa-" + listing.icon + " mr-2'></i>" + listing.material + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + listing.quantity + "</li><li class='list-group-item text-" + listing.status_color + "'><i class='far fa-fw fa-" + listing.status_icon + " mr-2'></i>" + listing.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a class='btn btn-sm btn-primary' href='../data/" + listing.id + "/'>More details</a></li></ul></div>"
 
-        filteredLayer.addLayer(marker);
+          var iconMarker = L.AwesomeMarkers.icon({
+            icon: listing.icon,
+            markerColor: listing.marker_color
+          });
+
+          var marker = L.marker(new L.LatLng(filteredListings[i].lat, filteredListings[i].lng), {
+            "id": listing.id,
+            "name": listing.name,
+            "status_icon": listing.icon,
+            "color": listing.status_color,
+            "material": listing.material,
+            "quantity": listing.quantity,
+            "icon": iconMarker,
+          }).bindPopup(popupContent);
+
+          filteredLayer.addLayer(marker);
+        }
+
+        // add the cluster group to the map
+        map.addLayer(filteredLayer).fitBounds(filteredLayer.getBounds())
       }
 
-      // add the cluster group to the map
-      map.addLayer(filteredLayer).fitBounds(filteredLayer.getBounds())
 
       refreshListing()
     }
@@ -408,6 +385,7 @@
     })
 
     // reset filters, show listings on load
+    resetFilter()
     filterListings();
 
     $("body").on("click", ".map-listing tr:not(.header)", function() {
@@ -419,7 +397,36 @@
         selectedMarker.openPopup();
         map.setView(selectedMarker.getLatLng());
       })
-
     })
+
+    function resetFilter() {
+      $(".material.filter, .status.filter").val("all")
+      $(".from.filter").val("")
+    }
+
+    // reset filter when no results foud
+    $(".reset-filter").click(function() {
+      resetFilter()
+      filterListings();
+    })
+
+    // select right dropdown in modal from sections
+    $(".btn[data-entry]").click(function() {
+      let type = $(this).data("entry");
+      $("#modal-type").val(type).trigger("change.select2")
+    })
+
+    // submit modal and go to right URL to add entry
+    $(".submit-modal").click(function() {
+      let organisation = $("#modal-organisation").val();
+
+      let type = $("#modal-type").val();
+
+      let url = "../{{ my_organization.id }}/entities/" + organisation + "/" + type + "/?action=add"
+
+      window.location.href = url;
+    })
+
+    // tree maps
   </script>
 {% endblock %}

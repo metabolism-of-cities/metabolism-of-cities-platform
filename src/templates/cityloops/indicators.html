@@ -3,6 +3,11 @@
 
 {% block css %}
 <style>
+  #indicator-menu {
+    max-height: calc(100vh - 2rem);
+    overflow: auto;
+  }
+
   #indicator-menu nav {
     width: 100%;
   }
@@ -21,15 +26,29 @@
     font-weight: bold;
   }
 
+  #indicator-menu .ve-collection.collapsed a:not(:first-of-type) {
+    display: none;
+  }
+
+
   #indicator-menu .nav-link.group:not(:first-of-type) {
     border-top: 1px solid #dee2e6;
   }
 
+  #indicator-menu .ve-collection:not(.collapsed) .nav-link.group,
   #indicator-menu .nav-link.group.active {
     background-color: #9cb7bb;
+    opacity: 1 !important;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
   }
 
-  .indicator-group {
+  .ve-header:not(:first-of-type) {
+    margin-top: 3rem;
+  }
+
+  .vision-element {
     margin-bottom: 3rem;
   }
 
@@ -47,7 +66,6 @@
     background: #fcfcfc;
     padding: 0 1rem;
     font-weight: bold;
-    font-size: 1.25rem;
   }
 
   .indicator .number {
@@ -125,133 +143,93 @@
 
 {% block content %}
 
-  <h1>Indicators</h1>
-
-  {% lorem 1 p %}
+  <h1>Indicators metadata</h1>
 
   <div class="row">
     <div class="col-lg-9 pt-3" data-spy="scroll" id="indicators" data-target="#indicator-menu">
-      <div class="indicator-group">
-        <h4 id="group-1">Local stakeholder actions</h4>
+      <div class="vision-element">
+        {% for each in indicator_list %}
 
-        <div class="indicator">
-          <div class="title" id="indicator-41">
-            <span class="number">41</span>
-            Circular Material Use Rate
-          </div>
+          {% ifchanged each.vision_element %}
+            <h4 class="ve-header" id="ve-{{ each.vision_element }}">{{ each.vision_element }}. {{ each.get_vision_element_display }}</h4>
+          {% endifchanged %}
 
-          <div class="description">
-            <p>
-              The circular material use rate, also called Circularity rate measures, in percentage, the share of material recovered and fed back into the economy - thus saving extraction of primary raw materials - in overall material use. The Circularity rate is thus defined as the ratio of the circular use of materials (U) to the overall material use (M).
-            </p>
-            <p>
-              The overall material use is measured by summing up the aggregate domestic material consumption (DMC) and the circular use of materials (M = DMC + U). DMC is defined in economy-wide material flow accounts.
-            </p>
-          </div>
+          <div class="indicator">
+            <div class="title" id="indicator-{{ each.number }}">
+              <span class="number">{{ each.number }}</span>
+              {{ each.name }}
+            </div>
 
-          <hr>
+            <div class="description">
+              {{ each.description_html|safe }}
+            </div>
 
-          <dl>
-            <dt>Methodology</dt>
-            <dd>
-              <p>
-                The circular use of materials is approximated by the amount of waste recycled in domestic recovery plants (RCV_R), minus imported waste destined for recovery (IMPw), plus exported waste destined for recovery abroad (EXPw). Waste recycled in domestic recovery plants comprises the recovery operations R2 to R11 as defined in the Waste Framework Directive 75/442/EEC. European statistics on international trade in goods (ITGS) are used to approximate the imports and exports of waste destined for recycling, i.e. the amount of imported waste bound for recovery (IMPw), and the amount of exported waste bound for recovery (EXPw).
-              </p>
-              <p>
-                Then, the Circularity rate is formalised as following:
-              </p>
-              <img src="https://i.imgur.com/C7RhSO6.png">
-              <p>
-                A higher Circularitity rate value indicates more secondary materials substituting for primary raw materials i.e. avoiding the environmental impacts of extracting primary material.
-              </p>
-            </dd  >
-          </dl>
+            <hr>
 
-          <hr>
+            <dl>
+              <dt>Methodology</dt>
+              <dd>
+                {{ each.methodology_html|safe }}
+              </dd>
+            </dl>
 
-          <dl>
-            <dt>Vision element</dt>
-            <dd>Closing material loops and reducing harmful resource use</dd>
+            <hr>
 
-            <dt>Category</dt>
-            <dd>
-              Circular design and business models, <br>
-              Private investments, jobs and gross value added
-            </dd>
-          </dl>
+            <dl>
+              <dt>Vision element</dt>
+              <dd>{{ each.vision_element }}</dd>
+
+              <dt>Category</dt>
+              <dd>
+                {% for category in each.category.items %}
+                  {{ category }}
+                {% endfor %}
+              </dd>
+            </dl>
 
 
-          <div class="list-group list-group-horizontal">
-            <a class="list-group-item list-group-item-action" href="https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm">
-              <i class="fal fa-fw fa-2x fa-link"></i> <br>
-              <span>Source</span>
+            <div class="list-group list-group-horizontal">
+              <a class="list-group-item list-group-item-action" href="https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm">
+                <i class="fal fa-fw fa-2x fa-link"></i> <br>
+                <span>Source</span>
+              </a>
+              <a class="list-group-item list-group-item-action">
+                <div>{{ each.unit }}</div><br>
+                <span>Unit</span>
+              </a>
+              <a class="list-group-item list-group-item-action" href="https://www.un.org/sustainabledevelopment/energy/">
+                <img class="sdg" src="{% static 'img/sdg/sdg-12.png' %}">
+              </a>
+            </div>
+
+            <div class="strategic-objective"></div>
+
+
+            <a class="copy-link text-dark" href="#indicator-{{ each.number }}">
+              <i class="far fa-fw fa-link"></i> <span class="link-copied pr-1" hidden>Link copied</span>
             </a>
-            <a class="list-group-item list-group-item-action">
-              <div class="unit">ℓ</div><br>
-              <span>Unit</span>
-            </a>
-            <a class="list-group-item list-group-item-action" href="https://www.un.org/sustainabledevelopment/energy/">
-              <img class="sdg" src="{% static 'img/sdg/sdg-12.png' %}">
-            </a>
           </div>
-
-          <div class="strategic-objective"></div>
-
-
-          <a class="copy-link text-dark" href="#indicator-41">
-            <i class="far fa-fw fa-link"></i> <span class="link-copied pr-1" hidden>Link copied</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="indicator-group">
-        <h4 id="group-2">Circular business models and behavioural patterns</h4>
-      </div>
-
-      <div class="indicator-group">
-        <h4 id="group-3">Closing material loops and reducing harmful resource use</h4>
+        {% endfor %}
 
       </div>
-
-      <div class="indicator-group">
-        <h4 id="group-4">Improving human well-being and reducing environmental impacts</h4>
-      </div>
-
     </div>
     <div class="col-lg-3 pt-3">
       <h4 class="mb-5">&nbsp;</h4>
-      <nav class="navbar navbar-light border rounded sticky-top p-0" id="indicator-menu">
-        <nav class="nav flex-column">
-          <a class="nav-link group" href="#group-1">Local stakeholder actions</a>
-          <nav class="nav flex-column">
-            <a class="nav-link pl-3" href="#indicator-41">Circular Material Use Rate</a>
-            <a class="nav-link pl-3" href="#indicator-42">Indicator 42</a>
-            <a class="nav-link pl-3" href="#indicator-43">Indicator 43</a>
-            <a class="nav-link pl-3" href="#indicator-44">Indicator 44</a>
-          </nav>
-          <a class="nav-link group" href="#group-2">Circular business models and behavioural patterns</a>
-          <nav class="nav flex-column">
-            <a class="nav-link pl-3" href="#indicator-45">Indicator 45</a>
-            <a class="nav-link pl-3" href="#indicator-46">Indicator 46</a>
-            <a class="nav-link pl-3" href="#indicator-47">Indicator 47</a>
-            <a class="nav-link pl-3" href="#indicator-48">Indicator 48</a>
-          </nav>
-          <a class="nav-link group" href="#group-3">Closing material loops and reducing harmful resource use</a>
-          <nav class="nav flex-column">
-            <a class="nav-link pl-3" href="#indicator-49">Indicator 49</a>
-            <a class="nav-link pl-3" href="#indicator-50">Indicator 50</a>
-            <a class="nav-link pl-3" href="#indicator-51">Indicator 51</a>
-            <a class="nav-link pl-3" href="#indicator-52">Indicator 52</a>
-          </nav>
-          <a class="nav-link group" href="#group-4">Improving human well-being and reducing environmental impacts</a>
-          <nav class="nav flex-column">
-            <a class="nav-link pl-3" href="#indicator-53">Indicator 53</a>
-            <a class="nav-link pl-3" href="#indicator-54">Indicator 54</a>
-            <a class="nav-link pl-3" href="#indicator-55">Indicator 55</a>
-            <a class="nav-link pl-3" href="#indicator-56">Indicator 56</a>
-          </nav>
+      <div class="sticky-top">
+        <nav class="navbar navbar-light border rounded p-0" id="indicator-menu">
+          {% for each in indicator_list %}
+            {% ifchanged each.vision_element %}
+              {% if not forloop.first %}
+              </div>
+              {% endif %}
+              <div class="ve-collection collapsed" data-ve="{{ each.vision_element }}">
+              <a class="nav-link group" href="#ve-{{ each.vision_element }}">{{ each.vision_element }}. {{ each.get_vision_element_display }}</a>
+            {% endifchanged %}
+            <a class="nav-link pl-3" href="#indicator-{{ each.number }}">{{ each }}</a>
+          {% endfor %}
+          </div>
         </nav>
-      </nav>
+      </div>
     </div>
   </div>
 
@@ -259,7 +237,23 @@
 
 {% block footer %}
   <script>
-    $("body").scrollspy({ target: "#indicator-menu"})
+    $("body").scrollspy({
+      target: "#indicator-menu"
+    })
+
+    const indicatorMenu = document.getElementById("indicator-menu");
+    let selectedIndicator;
+
+    // function when scrollspy switches focus
+    $(window).on("activate.bs.scrollspy", function (event) {
+      $(".ve-collection").addClass("collapsed");
+
+      selectedIndicator = $("#indicator-menu .nav-link.active");
+
+      selectedIndicator.parent().removeClass("collapsed");
+
+
+    })
 
     // copy url
     function copyToClipboard(element) {

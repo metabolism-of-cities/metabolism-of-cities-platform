@@ -1,0 +1,30 @@
+<table class="table overview-table">
+  <tbody>
+    {% for each in indicator_scale_list %}
+      {% ifchanged each.indicator.vision_element %}
+        <tr>
+          <td class="bg-primary-opaque text-primary font-weight-bold {% if forloop.first %}rounded-top{% endif %}" colspan="3">
+            {{ each.indicator.vision_element }}. {{ each.indicator.get_vision_element_display }}
+          </td>
+        </tr>
+      {% endifchanged %}
+      <tr {% if each.id == value.id %}class="selected"{% endif %}>
+        <td class="indicator"><a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}">{{ each.indicator }}</td>
+        <td class="scale">
+          <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}"
+            {% if each.scale == 1 %} class="badge badge-cityloops-secondary">DA
+            {% elif each.scale == 2 %} class="badge badge-secondary">C
+            {% elif each.scale == 3 %} class="badge badge-cityloops-primary">S{% endif %}
+          </a>
+        </td>
+        <td class="status">
+          {% if each.completed %}
+            <i class="fa fa-fw fa-check-circle text-success" title="Completed"></i>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    <tr>
+    </tr>
+  </tbody>
+</table>

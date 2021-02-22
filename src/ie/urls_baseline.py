@@ -107,9 +107,13 @@ baseline_urlpatterns = [
     # Control panel URLS
     path("controlpanel/", core.controlpanel, name="controlpanel"),
     path("controlpanel/project/", core.controlpanel_project, name="controlpanel_project"),
+    path("controlpanel/stats/", core.controlpanel_stats, name="controlpanel_stats"),
     path("controlpanel/users/", core.controlpanel_users, name="controlpanel_users"),
     path("controlpanel/users/create/", core.controlpanel_relationship_form),
     path("controlpanel/users/<int:id>/", core.controlpanel_relationship_form),
+    path("controlpanel/relationship/list/<int:id>/", core.controlpanel_relationships, name="controlpanel_relationships"),
+    path("controlpanel/relationship/create/", core.controlpanel_relationship_form, name="controlpanel_relationship"),
+    path("controlpanel/relationship/<int:id>/", core.controlpanel_relationship_form, name="controlpanel_relationship"),
     path("controlpanel/design/", core.controlpanel_design, name="controlpanel_design"),
     path("controlpanel/content/", core.controlpanel_content, name="controlpanel_content"),
     path("controlpanel/content/create/", core.controlpanel_content_form, name="controlpanel_content_form"),
@@ -141,6 +145,8 @@ baseline_urlpatterns = [
     path("hub/forum/create/", community.forum_form, { "parent": 31993, "section": "volunteer_hub" }),
     path("hub/forum/<int:id>/", community.forum, { "section": "volunteer_hub" }, name="volunteer_forum"),
     path("hub/forum/<int:id>/edit/<int:edit>/", community.forum_edit, { "section": "volunteer_hub" }, name="volunteer_forum_edit"),
+    path("hub/network/", core.hub_latest, { "network_wide": True }, name="network_activity"),
+
 
     path("newsletter/", core.newsletter, name="newsletter"),
 

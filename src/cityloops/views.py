@@ -1,7 +1,9 @@
 from core.models import *
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.admin.views.decorators import staff_member_required
 from core.mocfunctions import *
+from django.contrib import messages
+from datetime import datetime
 
 def index(request):
     context = {
@@ -157,45 +159,244 @@ def circular_city(request):
     return render(request, "cityloops/circular-city.html", context)
 
 def indicators(request):
+    indicator_list = CityLoopsIndicator.objects.all()
+
     context = {
         "title": "Indicators",
+        "indicator_list": indicator_list,
     }
     return render(request, "cityloops/indicators.html", context)
 
-def evaluation_plans(request):
+def cities_sectors(request):
     context = {
-        "title": "Evaluation plans",
+        "title": "Indicators: cities' selection",
     }
-    return render(request, "cityloops/evaluation-plans.html", context)
+    return render(request, "cityloops/sectors.cities.html", context)
 
-def city_evaluation_plan(request, slug):
+def cities_indicators(request, sector):
+
+    sector_id = 1 if sector == "construction" else 2
+    if sector == "construction":
+        cities_list = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project).exclude(name__in=["Vallès Occidental", "Porto"])
+        indicator_list = CityLoopsIndicator.objects.filter(relevant_construction=True)
+    elif sector == "biomass":
+        cities_list = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project).exclude(name__in=["Vallès Occidental", "Bodø", "Roskilde", "Høje-Taastrup"])
+        indicator_list = CityLoopsIndicator.objects.filter(relevant_biomass=True)
+
+    indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, sector=sector_id).order_by("indicator_id")
+
+    context = {
+        "title": "Indicators: cities' selection",
+        "indicator_list": indicator_list,
+        "indicator_scale_list": indicator_scale_list,
+        "sector": sector,
+        "cities_list": cities_list,
+        "load_select2": True,
+    }
+    return render(request, "cityloops/indicators.cities.html", context)
+
+def city_sectors(request, slug):
     info = get_space(request, slug)
     context = {
-        "title": "Evaluation plans",
+        "title": "City sectors",
         "info": info,
+        "excluded_construction": ["Porto"],
+        "excluded_biomass": ["Bodø", "Roskilde", "Høje-Taastrup"],
     }
-    return render(request, "cityloops/evaluation-plan.city.html", context)
+    return render(request, "cityloops/sectors.city.html", context)
 
-def city_evaluation_plan_form(request, slug):
+def city_indicators(request, slug, sector):
     info = get_space(request, slug)
+    indicator_list = CityLoopsIndicator.objects.all()
+    sector_id = 1 if sector == "construction" else 2
+    indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, city_id=info.id, sector=sector_id).order_by("indicator_id")
+    user_can_edit = False
+    if request.user.is_authenticated and has_permission(request, request.project, ["admin", "dataprocessor"]) and info in request.user.people.spaces.all():
+        user_can_edit = True
+    context = {
+        "title": "Indicators",
+        "info": info,
+        "sector": sector,
+        "indicator_list": indicator_list,
+        "indicator_scale_list": indicator_scale_list,
+        "user_can_edit": user_can_edit,
+    }
+    return render(request, "cityloops/indicators.city.html", context)
+
+def city_indicators_form(request, slug, sector):
+    info = get_space(request, slug)
+    sector_id = 1 if sector == "construction" else 2
+    if sector == "construction":
+        indicator_list = CityLoopsIndicator.objects.filter(relevant_construction=True)
+        mandatory_list = indicator_list.filter(mandatory_construction=True)
+    elif sector == "biomass":
+        indicator_list = CityLoopsIndicator.objects.filter(relevant_biomass=True)
+        mandatory_list = indicator_list.filter(mandatory_biomass=True)
+    city_values = CityLoopsIndicatorValue.objects.filter(city=info, sector=sector_id)
+    check = {
+        1: {},
+        2: {},
+        3: {},
+    }
+    for each in city_values:
+        check[each.scale][each.indicator.id] = True if each.is_enabled else False
+
+    try:
+        indicators = info.meta_data["cityloops"]["indicators"][sector]
+    except:
+        indicators = None
+
+    if request.method == "POST":
+        # If the meta data isn't yet set, then let's create empty lists first
+        if not info.meta_data:
+            info.meta_data = {}
+        if not indicators:
+            info.meta_data["cityloops"] = {
+                "indicators":
+                    {
+                        "biomass": [],
+                        "construction": [],
+                    }
+                }
+        # Let's record the biomass/construction main toggles (whether or not they are activated)
+        info.meta_data["cityloops"]["indicators"][sector] = request.POST.getlist("indicators")
+        indicators = info.meta_data["cityloops"]["indicators"][sector]
+        info.save()
+
+        # And let's now save the individual indicators.
+        items = []
+        city_enabled = request.POST.getlist("city")
+
+        # Brute force delete -- change later to update them properly!
+        city_values.delete()
+
+        for each in indicator_list:
+            items.append(CityLoopsIndicatorValue(
+                city = info,
+                indicator = each,
+                is_enabled = True if str(each.id) in city_enabled else False,
+                sector = sector_id,
+                scale = 1, # City
+            ))
+        da_enabled = request.POST.getlist("da")
+        for each in indicator_list:
+            items.append(CityLoopsIndicatorValue(
+                city = info,
+                indicator = each,
+                is_enabled = True if str(each.id) in da_enabled else False,
+                sector = sector_id,
+                scale = 2, # Demonstration action
+            ))
+        sector_enabled = request.POST.getlist("sector")
+        for each in indicator_list:
+            items.append(CityLoopsIndicatorValue(
+                city = info,
+                indicator = each,
+                is_enabled = True if str(each.id) in sector_enabled else False,
+                sector = sector_id,
+                scale = 3, # Sector
+            ))
+        CityLoopsIndicatorValue.objects.bulk_create(items)
+        messages.success(request, "Saved")
+        return redirect("cityloops:city_indicators", sector=sector, slug=slug)
+
     context = {
         "title": "Indicator selection",
+        "indicator_list": indicator_list,
+        "mandatory_list": mandatory_list,
+        "sector": sector,
         "info": info,
+        "indicators": indicators,
+        "check": check,
     }
-    return render(request, "cityloops/evaluation-plan.city.form.html", context)
+    return render(request, "cityloops/indicators.city.form.html", context)
 
-def city_evaluation_plan_indicator(request, slug, id):
+def city_indicator(request, slug, sector, id):
     info = get_space(request, slug)
+    value = CityLoopsIndicatorValue.objects.get(pk=id)
+    sector_id = 1 if sector == "construction" else 2
+    indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, city_id=info.id, sector=sector_id).order_by("indicator_id")
+    user_can_edit = False
+    if request.user.is_authenticated and has_permission(request, request.project, ["admin", "dataprocessor"]) and info in request.user.people.spaces.all():
+        user_can_edit = True
+
     context = {
-        "title": "Evaluation plan",
+        "title": "Indicators",
+        "sector": sector,
+        "value": value,
         "info": info,
+        "indicator_scale_list": indicator_scale_list,
+        "user_can_edit": user_can_edit,
     }
     return render(request, "cityloops/indicator.city.html", context)
 
-def city_evaluation_plan_indicator_form(request, slug, id):
+def city_indicator_form(request, slug, sector, id):
     info = get_space(request, slug)
+    value = CityLoopsIndicatorValue.objects.get(pk=id)
+    sector_id = 1 if sector == "construction" else 2
+    indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, city_id=info.id, sector=sector_id).order_by("indicator_id")
+
+    if request.method == "POST":
+        value.rationale = request.POST["rationale"]
+        value.baseline = request.POST["baseline"]
+        value.sources = request.POST["sources"]
+        value.accuracy = request.POST["accuracy"]
+        value.coverage = request.POST["coverage"]
+        value.area = request.POST["area"]
+        value.comments = request.POST["comments"]
+
+        value.period_from = None if not request.POST.get("period_from") else request.POST.get("period_from")
+        value.period_to = None if not request.POST.get("period_to") else request.POST.get("period_to")
+
+        value.completed = True if request.POST.get("completed") else False
+
+        value.last_update = datetime.now()
+        value.save()
+        return redirect("cityloops:city_indicator", sector=sector, slug=slug, id=id)
+
     context = {
-        "title": "Evaluation plan",
+        "title": "Indicators",
+        "sector": sector,
+        "value": value,
         "info": info,
+        "indicator_scale_list": indicator_scale_list,
     }
     return render(request, "cityloops/indicator.city.form.html", context)
+
+# TEMPORARY
+def cityloop_indicator_import(request):
+    import csv
+    error = False
+
+    if request.user.id != 1:
+        return redirect("/")
+
+    messages.warning(request, "Trying to import cityloops-indicators")
+    file = settings.MEDIA_ROOT + "/import/indicators.csv"
+    messages.warning(request, "Using file: " + file)
+
+    with open(file, "r") as csvfile:
+        contents = csv.DictReader(csvfile)
+        for row in contents:
+            v = row["ve"]
+            v = v[:1]
+            CityLoopsIndicator.objects.create(
+                relevant_construction = row["relevant_construction"],
+                relevant_biomass = row["relevant_biomass"],
+                mandatory_construction = row["mandatory_construction"],
+                mandatory_biomass = row["mandatory_biomass"],
+                number = row["number"],
+                name = row["name"],
+                category= row["category"],
+                description = row["description"],
+                methodology = row["methodology"],
+                unit = row["unit"],
+                vision_element = v,
+            )
+
+    if error:
+        messages.error(request, "We could not import your data")
+    else:
+        messages.success(request, "Data was imported")
+
+    return render(request, "cityloops/temp.import.html")

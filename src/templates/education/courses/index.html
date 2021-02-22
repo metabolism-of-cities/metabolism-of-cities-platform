@@ -3,8 +3,8 @@
 
 {% block content %}
   <h1>{{ webpage }}</h1>
-  
-  {{ webpage.get_description }}  
+
+  {{ webpage.get_description }}
 
   <div class="row mb-4">
     {% for each in list %}
@@ -20,6 +20,32 @@
         </a>
       </div>
     {% endfor %}
+
+    {% if webpage.id == 49333 %}
+      <div class="col-lg-4 col-md-6 col-sm-8 mb-3">
+        <a class="card btn-card" href="{% url 'cityloops:library_item' 583948 %}">
+          <div class="bg-light text-center p-4">
+            <i class="fal fa-chart-network fa-5x"></i>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Deliverable 4.3</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Sector-Wide Circularity Assessment Method</h6>
+          </div>
+        </a>
+      </div>
+      <div class="col-lg-4 col-md-6 col-sm-8 mb-3">
+        <a class="card btn-card" href="{% url 'cityloops:hub_harvesting_worksheet' %}">
+          <div class="bg-light text-center p-4">
+            <i class="fal fa-tasks fa-5x"></i>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Instruction sheet</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Descriptions, instructions, and tips & tricks for filling the single layers and sublayers</h6>
+          </div>
+        </a>
+      </div>
+
+    {% endif %}
   </div>
 
 {% endblock %}

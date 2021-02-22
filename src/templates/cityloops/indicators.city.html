@@ -1,0 +1,124 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block css %}
+  <style>
+    td.status {
+      min-width: 230px;
+      text-align: right;
+    }
+
+    .indicator-table {
+      margin-bottom: 3rem;
+    }
+
+    .indicator-table tbody tr:first-of-type td {
+      border-top: none;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  <h1>{{ sector|title }} indicators</h1>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-transparent p-0">
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:dashboard_mockup' info.slug %}">{{ info }}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_sectors' info.slug %}">Indicators</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ sector|title }}</li>
+    </ol>
+  </nav>
+
+  {% if indicator_scale_list %}
+
+    {% if user_can_edit %}
+      <a class="btn btn-primary mb-4" href="{% url 'cityloops:city_indicators_form' info.slug sector %}">
+        <i class="fa fa-tasks"></i> Select indicators
+      </a>
+    {% endif %}
+
+    {% for each in indicator_scale_list %}
+      {% ifchanged each.indicator.vision_element %}
+      {% if not forloop.first %}
+      </tbody>
+    </table>
+      {% endif %}
+
+    <h4>{{ each.indicator.vision_element }}. {{ each.indicator.get_vision_element_display }}</h4>
+    <table class="table indicator-table">
+      <tbody>
+      {% endifchanged %}
+        <tr>
+          <td class="indicator-text">
+            <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}">{{ each.indicator }}</a></td>
+          <td class="has-button status">
+            {% if each.scale == 1 %}
+              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-cityloops-secondary btn-sm">
+                <i class="far fa-fw fa-random"></i> Demonstration action
+              </a>
+            {% elif each.scale == 2 %}
+              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-secondary btn-sm">
+                <i class="far fa-fw fa-city"></i> City
+              </a>
+            {% elif each.scale == 3 %}
+              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-cityloops-primary btn-sm">
+                <i class="far fa-fw fa-chart-pie"></i> Sector
+              </a>
+            {% endif %}
+          </td>
+        </tr>
+    {% endfor %}
+      </tbody>
+    </table>
+
+  {% else %}
+
+    <div class="border rounded p-3 bg-light text-center">
+      <div class="mt-4"><i class="fal fa-empty-set fa-fw mr-2 fa-3x"></i></div>
+
+      <h4 class="my-4">{{ info }} has not selected any indicators yet</h4>
+
+      {% if user_can_edit %}
+        <a class="btn btn-primary btn-lg mb-4" href="{% url 'cityloops:city_indicators_form' info.slug sector %}">
+          <i class="fa fa-tasks"></i> Select indicators
+        </a>
+      {% endif %}
+    </div>
+
+  {% endif %}
+{% endblock %}
+
+{% block footer %}
+  <!-- library for exporting to docx -->
+  <script src="https://unpkg.com/docx@5.0.2/build/index.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+
+  <script>
+    function downloadWord() {
+      var word = new docx.Document();
+
+      word.addSection({
+        properties: {},
+        children: [
+          new docx.Paragraph({
+            children: [
+              new docx.TextRun("Metabolism of Cities!"),
+              new docx.TextRun({
+                text: "Etc etc etc",
+              }),
+            ],
+          }),
+        ],
+      });
+
+      docx.Packer.toBlob(word).then(blob => {
+        saveAs(blob, "report.docx");
+      });
+    }
+
+    $(".download-word").click(function() {
+      downloadWord()
+    });
+  </script>
+{% endblock %}

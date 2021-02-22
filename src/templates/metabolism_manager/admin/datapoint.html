@@ -23,14 +23,7 @@
   <a class="btn btn-sm btn-primary-basic" href="javascript:history.back()"><i class="fas fa-angle-left"></i> Back</a>
   <a class="btn btn-sm btn-primary-basic float-right" href="{% url 'platformu:admin_entity_material' my_organization.id info.id 'data' data.id %}"><i class="fas fa-pencil"></i> Edit</a>
 
-  {% if data.description %}
-    <div class="mb-4 mt-3">
-      {{ data.description|linebreaksbr }}
-    </div>
-  {% endif %}
-
   <div class="card-deck mt-3">
-
     <div class="card details">
       <div class="card-header">
         Details
@@ -44,18 +37,18 @@
 
         <li class="list-group-item">
         {% if data.quantity > 0 %}
-          <i class="far fa-fw mr-2 fa-sign-in"></i>
-          Demand
+          <span class="text-secondary">
+            <i class="fal fa-fw mr-2 fa-sign-in"></i> Demand
+          </span>
         {% else %}
-          <span class="text-success">
-            <i class="far fa-fw mr-2 fa-sign-out"></i>
-            Supply
+          <span class="text-primary">
+            <i class="fal fa-fw mr-2 fa-sign-out"></i> Supply
           </span>
         {% endif %}
         </li>
 
         <li class="list-group-item">
-          <i class="far fa-fw mr-2 fa-{{ data.material_type.parent.icon }}"></i>
+          <i class="fal fa-fw mr-2 fa-{{ data.material_type.parent.icon }}"></i>
           {{ data.material_type.parent }}: {{ data.material_type }}
         </li>
 
@@ -63,8 +56,19 @@
           <li class="list-group-item">{{ data.name }}</li>
         {% endif %}
 
-        <li class="list-group-item"><i class="far fa-fw fa-balance-scale mr-2" aria-hidden="true"></i> {{ data.absolute_quantity }} {{ data.unit }}</li>
-        <li class="list-group-item"><i class="far fa-fw fa-calendar mr-2"></i>{{ data.start_date }} - {{ data.end_date }}</li>
+        <li class="list-group-item">
+          <i class="fal fa-fw fa-balance-scale mr-2" aria-hidden="true"></i> {{ data.absolute_quantity }} {{ data.unit }}
+        </li>
+
+        <li class="list-group-item">
+          <i class="fal fa-fw fa-calendar mr-2"></i>{{ data.start_date }} - {{ data.end_date }}
+        </li>
+
+        {% if data.description %}
+          <li class="list-group-item">
+            {{ data.description|linebreaksbr }}
+          </li>
+        {% endif %}
       </ul>
     </div>
 
@@ -76,25 +80,26 @@
         <img src="{{ data.owner.image.large.url }}" class="card-img-top py-3">
       {% endif %}
       <ul class="list-group list-group-flush">
-        <li class="list-group-item"><strong>{{ data.owner }}</strong></li>
+        <li class="list-group-item">
+          <strong>{{ data.owner }}</strong>
+        </li>
         {% if data.owner.organization.url %}
           <li class="list-group-item">
-            <i class="far fa-fw fa-link mr-2" aria-hidden="true"></i>
-            {{ data.owner.organization.url }}
+            <i class="fal fa-fw fa-link mr-2" aria-hidden="true"></i> {{ data.owner.organization.url }}
           </li>
         {% endif %}
         {% if data.owner.organization.email %}
           <li class="list-group-item">
-            <i class="far fa-fw fa-envelope mr-2" aria-hidden="true"></i>
-            {{ data.owner.organization.email }}
+            <i class="fal fa-fw fa-envelope mr-2" aria-hidden="true"></i> {{ data.owner.organization.email }}
           </li>
         {% endif %}
-        <li class="list-group-item">
-        <i class="far fa-fw fa-map-marker-alt mr-2" aria-hidden="true"></i>
-        {{ data.owner.meta_data.address }}</li>
+        {% if data.owner.meta_data.address %}
+          <li class="list-group-item">
+            <i class="fal fa-fw fa-map-marker mr-2" aria-hidden="true"></i> {{ data.owner.meta_data.address }}
+          </li>
+        {% endif %}
       </ul>
     </div>
-
   </div>
 
 {% endblock %}

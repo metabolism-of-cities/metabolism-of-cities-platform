@@ -32,25 +32,22 @@
   </a>
   <div class="dropdown-menu projects-dropdown-menu p-0" aria-labelledby="projects-dropdown">
     <div class="row mx-0">
-      <div class="col-md-6 col-lg-4 mb-4 mb-lg-0 p-2 align-items-center rounded-left bg-light border-right">
-        <div class="projects-category text-secondary text-right px-2 pb-1">How does this work? <i class="ml-2 far fa-fw fa-arrow-right"></i></div>
-        <div class="text-center pt-4">
-          <div class="my-4"><i class="fal fa-home fa-3x"></i></div>
-          <h3 class="text-center">Data collection partners, this is your workspace</h3>
-        </div>
+      <div class="col-md-6 col-lg-4 mb-4 mb-lg-0 p-2 rounded-left bg-light border-right">
+        <div class="projects-category px-2 pb-1"><i class="mr-2 fal fa-fw fa-info-circle"></i>Getting started</div>
+        <a class="px-2" href="{% url 'cityloops:article' 'instructions' %}">Instructions and courses</a>
+        <a class="px-2" href="{% url 'cityloops:volunteer_forum' %}">Forum</a>
+        <a class="px-2" href="{% url 'cityloops:layer_overview' 'urban-context' %}">Data inventory</a>
+        <a class="px-2" href="{% url 'cityloops:eurostat_grid' %}">Eurostat grid</a>
       </div>
       <div class="col-md-6 col-lg-4 mb-4 mb-lg-0 p-2">
-        <div class="projects-category px-2 pb-1"><i class="mr-2 fal fa-fw fa-info-circle"></i>Getting started</div>
-        <a class="px-2" href="{% url 'cityloops:article' 'instructions' %}">Instructions</a>
-        <a class="px-2" href="{% url 'cityloops:layer_overview' 'context' %}">Data inventory</a>
+        <div class="projects-category px-2 pb-1"><i class="mr-2 fal fa-fw fa-tools"></i>Tools</div>
+        <a class="px-2" href="{% url 'cityloops:flowdiagrams' %}">Flow diagram builder</a>
         <a class="px-2" href="{% url 'cityloops:eurostat' %}">Eurostat manager</a>
-        <a class="px-2" href="{% url 'cityloops:eurostat_grid' %}">Eurostat grid</a>
 
         <div class="projects-category mt-4 px-2 pb-1"><i class="mr-2 fal fa-fw fa-clipboard-list"></i>Evaluation</div>
         <a class="px-2" href="{% url 'cityloops:circular_city' %}">Circular city</a>
-
-        <!-- <a class="px-2" href="{% url 'cityloops:indicators' %}">Indicators</a> -->
-        <!-- <a class="px-2" href="{% url 'cityloops:evaluation_plans' %}">Cities' evaluation plans</a> -->
+        <a class="px-2" href="{% url 'cityloops:indicators' %}">Indicators metadata</a>
+        <a class="px-2" href="{% url 'cityloops:cities_sectors' %}">Cities' indicator selection</a>
 
       </div>
       <div class="col-md-6 col-lg-4 mb-4 mb-lg-0 p-2">

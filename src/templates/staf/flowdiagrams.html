@@ -1,32 +1,48 @@
 {% extends "_base.html" %}
 
+{% block head %}
+<style>
+  table p {
+    margin-bottom: 0;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 
-  <h1>Flow diagrams</h1>
-  <table class="table table-striped">
+<h1>Flow diagrams</h1>
+<div class="card card-table">
+  <table class="table">
     <thead>
       <tr>
-        <th>Name</th>
+        <th><i class="fal fa-fw mr-2"></i> Name</th>
         <th>Description</th>
-        <th>Options</th>
+        {% if 'dataprocessor' in PERMISSIONS %}
+          <th>Options</th>
+        {% endif %}
       </tr>
     </thead>
     <tbody>
     {% for each in list %}
       <tr>
-        <td>
-        <i class="fal fa-{{ each.icon }} fa-fw"></i>
-        <a href="{% url "staf:flowdiagram" each.id %}">{{ each.name }}</a></td>
-        <td>{{ each.description|truncatechars_html:100 }}</td>
-        <td>
-          <a class="btn btn-default-basic" href="{% url "staf:flowdiagram_meta" each.id %}"><i class="fal fa-edit"></i> Edit</a>
-          <a class="btn btn-default-basic" href="{% url "staf:flowdiagram_form" each.id %}"><i class="fal fa-th"></i> Manage blocks</a>
-        </td>
+        <td class="text-nowrap">
+          <i class="fal fa-{{ each.icon }} fa-fw mr-2"></i>
+          <a href="{% url 'staf:flowdiagram' each.id %}">{{ each.name }}</a></td>
+        <td>{{ each.get_description|truncatechars_html:100 }}</td>
+        {% if 'dataprocessor' in PERMISSIONS %}
+          <td class="has-button">
+            <a class="btn btn-sm btn-default-basic" href="{% url 'staf:flowdiagram_meta' each.id %}"><i class="fal fa-edit"></i> Edit</a>
+            <a class="btn btn-sm btn-default-basic" href="{% url 'staf:flowdiagram_form' each.id %}"><i class="fal fa-th"></i> Manage blocks</a>
+          </td>
+        {% endif %}
       </tr>
     {% endfor %}
     </tbody>
   </table>
+</div>
 
-  <a class="btn btn-default-basic" href="{% url "staf:flowdiagram_meta" %}"><i class="fal fa-plus"></i> Add new flow diagram</a>
+{% if 'dataprocessor' in PERMISSIONS %}
+  <a class="btn btn-default-basic" href="{% url 'staf:flowdiagram_meta' %}"><i class="fal fa-plus"></i> Add new flow diagram</a>
+{% endif %}
 
 {% endblock %}

@@ -10,9 +10,8 @@ from django.views.generic.base import RedirectView
 app_name = "cityloops"
 
 urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + baseline_education_urlpatterns + [
-    path("", data.progress, { "style": "grid"}, name="index"),
+    path("", data.progress, {"style": "grid"}, name="index"),
     path("about/", views.about, name="about"),
-    path("evaluation-plans/", views.evaluation_plans, name="evaluation_plans"),
     path("partners/", views.partners, name="partners"),
     path("team/", views.team, name="team"),
     path("projects/", views.projects, name="projects"),
@@ -26,11 +25,18 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + baseline_educat
     path("eurostat/grid/", views.eurostat_grid, name="eurostat_grid"),
     path("circular-city/", views.circular_city, name="circular_city"),
     path("indicators/", views.indicators, name="indicators"),
-    path("<slug:slug>/", core.article, name="article"),
+    path("cities-indicators/", views.cities_sectors, name="cities_sectors"),
+    path("cities-indicators/<slug:sector>/", views.cities_indicators, name="cities_indicators"),
     path("city/<slug:slug>/", views.city, name="city"),
     path("city/<slug:slug>/mockup/", views.dashboard_mockup, name="dashboard_mockup"),
-    path("city/<slug:slug>/evaluation-plan/", views.city_evaluation_plan, name="city_evaluation_plan"),
-    path("city/<slug:slug>/evaluation-plan/form/", views.city_evaluation_plan_form, name="city_evaluation_plan_form"),
-    path("city/<slug:slug>/evaluation-plan/<int:id>/", views.city_evaluation_plan_indicator, name="city_evaluation_plan_indicator"),
-    path("city/<slug:slug>/evaluation-plan/<int:id>/form/", views.city_evaluation_plan_indicator_form, name="city_evaluation_plan_indicator_form"),
+    path("city/<slug:slug>/indicators/", views.city_sectors, name="city_sectors"),
+    path("city/<slug:slug>/indicators/<slug:sector>/", views.city_indicators, name="city_indicators"),
+    path("city/<slug:slug>/indicators/<slug:sector>/form/", views.city_indicators_form, name="city_indicators_form"),
+    path("city/<slug:slug>/indicators/<slug:sector>/<int:id>/", views.city_indicator, name="city_indicator"),
+    path("city/<slug:slug>/indicators/<slug:sector>/<int:id>/form/", views.city_indicator_form, name="city_indicator_form"),
+
+    # Temporary
+    path("import/", views.cityloop_indicator_import),
+
+    path("<slug:slug>/", core.article, name="article"),
 ]

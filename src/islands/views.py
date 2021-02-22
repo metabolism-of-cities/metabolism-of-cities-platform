@@ -32,12 +32,13 @@ def index(request):
         "list": list,
         "dashboard_link": project.slug + ":dashboard",
         "harvesting_link": project.slug + ":hub_harvesting_space",
-        "layers": LAYERS,
-        "layers_count": LAYERS_COUNT,
+        "layers": get_layers(request),
+        "layers_count": get_layers_count(request),
         "posts": ForumTopic.objects.filter(part_of_project=request.project).order_by("-last_update__date_created")[:3],
         "news": News.objects.filter(projects=request.project).distinct()[:3],
         "header_subtitle": blurb,
         "header_overwrite": "full",
+        "title": "Homepage",
     }
     return render(request, "islands/index.html", context)
 

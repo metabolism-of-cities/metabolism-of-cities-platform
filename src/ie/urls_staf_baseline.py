@@ -54,14 +54,14 @@ baseline_staf_urlpatterns = [
     path("library/maps/<int:id>/view/", staf.map_item, name="map_item"),
     path("dashboards/<slug:space>/maps/<int:id>/view/", staf.map_item, name="map_item"),
 
-    re_path(r'dashboards/(?P<space>[-\w]+)/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/$', staf.layer_overview, name="layer_overview"),
-    re_path(r'dashboards/(?P<space>[-\w]+)/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/instructionvideos/$', data.instructionvideos),
-    re_path(r'dashboards/(?P<space>[-\w]+)/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/(?P<id>[0-9]+)/$', library.item),
+    re_path(r'dashboards/(?P<space>[-\w]+)/(?P<layer>context|infrastructure|biophysical|stocks-and-flows|urban-context|economic-activities|flows-stocks)/$', staf.layer_overview, name="layer_overview"),
+    re_path(r'dashboards/(?P<space>[-\w]+)/(?P<layer>context|infrastructure|biophysical|stocks-and-flows|urban-context|economic-activities|flows-stocks)/instructionvideos/$', data.instructionvideos),
+    re_path(r'dashboards/(?P<space>[-\w]+)/(?P<layer>context|infrastructure|biophysical|stocks-and-flows|urban-context|economic-activities|flows-stocks)/(?P<id>[0-9]+)/$', library.item),
     re_path(r'dashboards/(?P<space>[-\w]+)/(?P<type>datasets|publications|maps|multimedia|recent)/$', staf.library_overview, name="library_overview"),
     re_path(r'dashboards/(?P<space>[-\w]+)/(?P<data_section_type>datasets|publications|maps|multimedia|recent)/(?P<id>[0-9]+)/$', library.item),
 
-    re_path(r'layers/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/$', staf.layers, name="layer_overview"),
-    re_path(r'layers/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/instructionvideos/$', data.instructionvideos),
+    re_path(r'layers/(?P<layer>context|infrastructure|biophysical|stocks-and-flows|urban-context|economic-activities|flows-stocks)/$', staf.layers, name="layer_overview"),
+    re_path(r'layers/(?P<layer>context|infrastructure|biophysical|stocks-and-flows|urban-context|economic-activities|flows-stocks)/instructionvideos/$', data.instructionvideos),
     #re_path(r'layers/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/(?P<id>[0-9]+)/$', library.item),
     re_path(r'library/(?P<type>datasets|publications|maps|multimedia|recent)/$', staf.library_overview, name="library_overview"),
     re_path(r'library/(?P<data_section_type>datasets|publications|maps|multimedia|recent)/(?P<id>[0-9]+)/$', library.item),
@@ -73,7 +73,7 @@ baseline_staf_urlpatterns = [
 
     # Hub
     path("hub/harvesting/", staf.hub_harvesting, name="hub_harvesting"),
-    path("hub/harvesting/worksheet/", staf.hub_harvesting_worksheet, name="hub_harvesting_worksheet"),
+    path("hub/harvesting/instructions/", staf.hub_harvesting_worksheet, name="hub_harvesting_worksheet"),
     path("hub/processing/", staf.hub_processing, name="hub_processing"),
     path("hub/processing/boundaries/", staf.hub_processing_boundaries, name="hub_processing_boundaries"),
     path("hub/processing/<slug:type>/", staf.hub_processing_list, name="hub_processing_list"),
@@ -176,4 +176,14 @@ baseline_staf_urlpatterns = [
     path("units/conversion/", staf.units_conversion, name="units_conversion"),
     path("units/<int:id>/", staf.unit, name="unit"),
     path("units/create/", staf.unit, name="unit"),
+
+    path("flowdiagrams/", staf.flowdiagrams, name="flowdiagrams"),
+    path("flowdiagrams/<int:id>/", staf.flowdiagram, name="flowdiagram"),
+    path("flowdiagrams/create/", staf.flowdiagram, { "show_form": True }, name="flowdiagram"),
+    path("flowdiagrams/meta/", staf.flowdiagram_meta, name="flowdiagram_meta"),
+    path("flowdiagrams/<int:id>/meta/", staf.flowdiagram_meta, name="flowdiagram_meta"),
+    path("flowdiagrams/<int:id>/edit/", staf.flowdiagram, {"show_form": True}, name="flowdiagram_form"),
+
+    path("data/", staf.data, name="data"),
+
 ]

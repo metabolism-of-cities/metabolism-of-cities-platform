@@ -188,7 +188,7 @@ def user_register(request, project="core", section=None):
     return render(request, "auth/register.html", context)
 
 def user_login(request, project=None):
-    project = get_object_or_404(Project, pk=request.project)
+    project = get_project(request)
     slug = project.slug if project.slug else "core"
     redirect_url = project.get_website()
     if request.GET.get("next"):
@@ -286,6 +286,10 @@ def user_profile_form(request):
             people.meta_data = meta_data
             people.save()
 
+            people.spaces.clear()
+            if "space" in request.POST and request.POST["space"]:
+                people.spaces.add(ReferenceSpace.objects.get(pk=request.POST["space"]))
+
             messages.success(request, "Your profile information was saved.")
             return redirect(request.GET["return"])
         else:
@@ -294,6 +298,7 @@ def user_profile_form(request):
         "menu": "profile",
         "form": form,
         "title": "Edit profile",
+        "spaces": ReferenceSpace.objects.filter(activated__isnull=False).distinct(),
     }
     return render(request, "auth/profile.form.html", context)
 
@@ -544,7 +549,7 @@ def template_folium(request):
 def projects(request):
     article = get_object_or_404(Webpage, pk=PAGE_ID["projects"])
     context = {
-        "list": Project.objects.all().exclude(id=1).order_by("name"),
+        "list": Project.objects.all().exclude(id__in=[1,51458]).order_by("name"),
         "article": article,
         "types": ProjectType.objects.all().order_by("name"),
         "header_title": "Projects",
@@ -731,21 +736,19 @@ def hub_latest(request, network_wide=False):
     else:
         generate_date = datetime.now() - timedelta(hours=24)
 
-    if network_wide:
+    if network_wide and not "project_only" in request.GET:
         # The network-wide update page shows updates from ALL the projects,
         # plus it shows both task updates (work) and forum updates (forumtopic)
         updates = Message.objects.filter(
             date_created__gte=generate_date,
         )
         updates = updates.filter(Q(parent__work__isnull=False)|Q(parent__forumtopic__isnull=False)).order_by("-date_created")
-        menu = "network_log"
     else:
         updates = Message.objects.filter(
             date_created__gte=generate_date,
             parent__work__isnull=False,
             parent__work__part_of_project_id=project
         ).order_by("-date_created")
-        menu = "log"
 
     if not "include_bot" in request.GET:
         updates = updates.exclude(posted_by_id=32070)
@@ -753,8 +756,9 @@ def hub_latest(request, network_wide=False):
     context = {
         "updates": updates,
         "load_datatables": True,
-        "menu": menu,
+        "menu": "latest",
         "days": int(days),
+        "project_only": True if "project_only" in request.GET else False,
     }
     return render(request, "hub/latest.html", context)
 
@@ -799,6 +803,23 @@ def controlpanel_users(request):
         "load_datatables": True,
     }
     return render(request, "controlpanel/users.html", context)
+
+@login_required
+def controlpanel_relationships(request, id):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+    context = {
+        "users": RecordRelationship.objects.filter(record_child_id=id),
+        "load_datatables": True,
+    }
+    return render(request, "controlpanel/relationships.html", context)
+
+@login_required
+def controlpanel_stats(request):
+    if not has_permission(request, request.project, ["admin"]):
+        unauthorized_access(request)
+    f = open("templates/stats/metabolismofislands.html")
+    return HttpResponse(f)
 
 @login_required
 def controlpanel_spaces(request):
@@ -1231,7 +1252,7 @@ def work_form(request, id=None, sprint=None):
                     parent = info,
                     posted_by = request.user.people,
                 )
-                set_autor(request.user.people.id, message.id)
+                set_author(request.user.people.id, message.id)
                 info.subscribers.add(request.user.people)
 
             if request.FILES:
@@ -1277,6 +1298,8 @@ def work_grid(request, sprint=None):
         list = Work.objects_include_private.all()
     else:
         list = Work.objects.all()
+
+    list = list.exclude(workactivity_id=2)
 
     if "entry" in request.GET:
         list = list.filter(tags=810)
@@ -1414,7 +1437,7 @@ def work_item(request, id, sprint=None):
                 parent = info,
                 posted_by = request.user.people,
             )
-            set_autor(request.user.people.id, message.id)
+            set_author(request.user.people.id, message.id)
             messages.success(request, message_success)
 
             for each in info.subscribers.all():
@@ -1545,7 +1568,10 @@ def work_portal(request, slug, space=None):
     }
 
     if slug == "data":
-        context["layers"] = Tag.objects.filter(parent_tag_id=845)
+        if project.slug == "cityloops":
+            context["layers"] = Tag.objects.filter(parent_tag_id=971)
+        else:
+            context["layers"] = Tag.objects.filter(parent_tag_id=845)
         context["spaces"] = ActivatedSpace.objects.filter(part_of_project_id=request.project)
         context["datalink"] = project.slug + ":hub_harvesting_space"
 

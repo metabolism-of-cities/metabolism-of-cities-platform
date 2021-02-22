@@ -1,0 +1,177 @@
+{% extends "_base.html" %}
+{% load moc_extras %}
+
+{% block css %}
+  <style>
+    .table td {
+      vertical-align: middle;
+      padding: 1rem .75rem;
+    }
+
+    tr.disabled .indicator-name,
+    tr.disabled .number {
+      opacity: .5;
+    }
+
+    td.indicator-switch {
+      width: 50px;
+    }
+
+    td.number {
+      width: 48px;
+      padding-right: 0;
+    }
+
+    td.ve {
+      position: sticky;
+      top: 47px;
+      z-index: 1000;
+    }
+
+    td.checkbox {
+      width: 200px;
+      border-left: 1px solid #dee2e6
+    }
+
+    .indicator-number {
+      background-color: #144d5825;
+      color: #144d58;
+      padding: 0 .5rem;
+      border-radius: .25rem;
+      display: inline-block;
+      font-weight: bold;
+    }
+
+    th.sticky-top {
+      top: 0;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  <h1>{{ sector|title }} indicators</h1>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-transparent p-0">
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:dashboard_mockup' info.slug %}">{{ info }}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_sectors' info.slug %}">Indicators</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'cityloops:city_indicators' info.slug sector %}">{{ sector|title }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Select indicators</li>
+    </ol>
+  </nav>
+
+  <p>
+    A little introduction on what this is and what it's used for. Some instructions perhaps? <strong>Make sure to save when you've finished selecting your indicators!</strong>. Sector only for vision element 3.
+  </p>
+
+  <form method="post">
+    <div class="card card-table mb-4">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="sticky-top" colspan="3">Indicator</th>
+            <th class="sticky-top border-left">Demonstration action</th>
+            <th class="sticky-top border-left">City</th>
+            <th class="sticky-top border-left">Sector</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for each in indicator_list %}
+            {% ifchanged each.vision_element %}
+              <tr>
+                <td colspan="6" class="ve bg-light font-weight-bold">
+                  {{ each.vision_element }}. {{ each.get_vision_element_display }}
+                </td>
+              </tr>
+            {% endifchanged %}
+            <tr>
+              <td class="indicator-switch text-center">
+                {% if each.number in mandatory_list %}
+                  <i class="fal fa-asterisk"></i>
+                  <div class="custom-control custom-switch" hidden>
+                {% else %}
+                  <div class="custom-control custom-switch">
+                {% endif %}
+                  <input type="checkbox" class="custom-control-input" id="indicator-{{ each.id }}" name="indicators" value="{{ each.id }}"
+                  {% if each.id|stringformat:"i" in indicators or not indicators %}
+                    checked
+                  {% endif %}
+                  >
+                  <label class="custom-control-label" for="indicator-{{ each.id }}"></label>
+                </div>
+              </td>
+              <td class="number"><span class="indicator-number">{{ each.number }}</span></td>
+              <td class="indicator-name">
+                {{ each.name }}
+              </td>
+              <td class="checkbox da">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="da-{{ each.id }}" name="da" value="{{ each.id }}"
+                    {% if check|get_item:1|get_item:each.id %}
+                    checked
+                    {% endif %}
+                  >
+                  <label class="custom-control-label" for="da-{{ each.id }}"></label>
+                </div>
+              </td>
+              <td class="checkbox city">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="city-{{ each.id }}" name="city" value="{{ each.id }}"
+                    {% if check|get_item:2|get_item:each.id %}
+                    checked
+                    {% endif %}
+                  >
+                  <label class="custom-control-label" for="city-{{ each.id }}"></label>
+                </div>
+              </td>
+              <td class="checkbox sector">
+                {% if each.vision_element is 3 %}
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="sector-{{ each.id }}" name="sector" value="{{ each.id }}"
+                    {% if check|get_item:3|get_item:each.id %}
+                    checked
+                    {% endif %}
+                  >
+                  <label class="custom-control-label" for="sector-{{ each.id }}"></label>
+                </div>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% csrf_token %}
+
+    <button class="btn btn-primary" type="submit">
+      <i class="fa fa-save"></i> Save
+    </button>
+  </form>
+{% endblock %}
+
+{% block footer %}
+  <script>
+    $(".indicator-switch input").change(function() {
+      let indicatorSwitch = $(this);
+      let row = indicatorSwitch.closest("tr");
+
+      if (indicatorSwitch.prop("checked")) {
+        row.removeClass("disabled")
+        row.find(".checkbox input").removeAttr("disabled");
+      } else {
+        row.addClass("disabled")
+        row.find(".checkbox input").attr("disabled", "disabled").prop("checked", false);
+      }
+    })
+
+    // disable whole indicator if indicator switch is turned off
+    $(".indicator-switch input").each(function() {
+      if ($(this).prop("checked") == false) {
+        $(this).closest("tr").addClass("disabled").find(".checkbox input").attr("disabled", "disabled").prop("checked", false);
+      }
+    })
+
+  </script>
+{% endblock %}

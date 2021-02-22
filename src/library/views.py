@@ -290,7 +290,10 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         messages.success(request, "We have tried generating the plot. If no image appears, there is an issue with the shapefile.")
 
     if "reset_processing" in request.GET and curator:
-        info.meta_data.pop("processed")
+        if "processed" in info.meta_data:
+            info.meta_data.pop("processed")
+        if "ready_for_processing" in info.meta_data:
+            info.meta_data.pop("ready_for_processing")
         info.meta_data["allow_deletion_spaces"] = True
         info.save()
         messages.success(request, "File processing options were reset - it will now appear in the list again.")
@@ -324,7 +327,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         for each in info.attachments.all():
             zip_file.write(each.file.path, os.path.basename(each.file.name))
         zip_file.close()
-        response["Content-Disposition"] = "attachment; filename={}.zip".format(info.name)
+        response["Content-Disposition"] = 'attachment; filename="{}".zip'.format(info.name)
         return response
 
     spaces = info.imported_spaces.all()
@@ -446,7 +449,7 @@ def data_json(request, id):
                     v = stacked_field_values[each][axis]
                     check = float(v)
                     if math.isnan(check):
-                        this_series.append(None) # What to add if NaN? 
+                        this_series.append(None) # What to add if NaN?
                     else:
                         this_series.append(v)
                 except:
@@ -578,48 +581,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         # and only when we add, not when we edit items.
         view_processing = True
 
-    if type.name == "Dataset":
-
-        labels = {
-            "year": "Year created",
-            "spaces": "Physical location(s)",
-            "author_list": "Author(s)",
-            "comments": "Internal comments/notes",
-        }
-
-        if curator and False:
-            fields=["name", "author_list", "description", "url", "size", "spaces", "sectors", "activities", "materials", "tags", "year", "language", "license", "data_year_start", "data_year_end", "update_frequency", "data_interval", "data_formats", "has_api", "comments"]
-        else:
-            fields=["name", "author_list", "description", "url", "size", "spaces", "year", "language", "license", "update_frequency", "comments"]
-
-        if space:
-            initial["spaces"] = space.id
-
-        if "inventory" in request.GET or project.slug == "data" or project.slug == "islands":
-            fields.remove("size")
-            fields.remove("update_frequency")
-            fields.append("tags")
-            if tag:
-                initial["tags"] = tag
-
-        if "mfa" in request.GET:
-            # We expect the file itself and we will activate all regular flows
-            fields.remove("url")
-            initial["tags"] = [896,897,898,899,907,908,909,910,911,912,913]
-            files = True
-
-        if "update_tags" in request.GET:
-            fields = ["name", "tags", "description"]
-
-        if info and hasattr(info, "dataset"):
-            info = info.dataset
-
-        ModelForm = modelform_factory(
-            Dataset,
-            fields = fields,
-            labels = labels,
-        )
-    elif type == "dataportal":
+    if type == "dataportal":
 
         if info:
             info = info.dataportal
@@ -671,7 +633,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             "spaces": "Physical location(s)",
         }
 
-        fields = ["name", "language", "title_original_language", "abstract_original_language", "description", "year", "author_list", "url", "license", "spaces"]
+        fields = ["name", "language", "title_original_language", "abstract_original_language", "description", "year", "author_list", "url", "license", "spaces", "sectors", "materials"]
 
         if request.GET.get("next") == "https://education.metabolismofcities.org/courses/metabolismo-urbano-y-manejo-de-datos-recopilacion-de-datos/34487/":
             fields = ["name", "author_list", "license", "spaces"]
@@ -773,7 +735,6 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
         ModelForm = modelform_factory(model, fields=fields, labels = labels)
 
-
     if info:
         form = ModelForm(request.POST or None, request.FILES or None, instance=info)
         if "spaces" in fields:
@@ -783,12 +744,17 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         if "spaces" in fields:
             form.fields["spaces"].queryset = ReferenceSpace.objects.filter(activated__isnull=False).distinct()
 
+    if "materials" in fields:
+        form.fields["materials"].queryset = Material.objects.filter(catalog_id=18998, parent__isnull=False)
+
     if type.name == "Dataset" and curator and False:
         form.fields["activities"].queryset = Activity.objects.filter(catalog_id=3655)
         form.fields["materials"].queryset = Material.objects.filter(Q(catalog_id=19001)|Q(catalog_id=18998)|Q(catalog_id=32553))
 
     if project.slug == "untraceable":
         form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id=828)
+    elif project.slug == "cityloops" and "tags" in form.fields:
+        form.fields["tags"].queryset = Tag.objects.filter(Q(parent_tag__parent_tag_id=971)|Q(parent_tag=1077))
     elif "mfa" in request.GET:
         if "tags" in form.fields:
             form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id=849)
@@ -838,7 +804,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             if type.name == "Image":
                 info.save()
                 # We run this AGAIN because we want to trigger the update_referencespace_photo
-                # function to run. When we first run this a few lines up, the spaces have not 
+                # function to run. When we first run this a few lines up, the spaces have not
                 # yet been added so it can't update the photo
 
             if request.POST.get("publisher") or request.POST.get("journal"):
@@ -950,7 +916,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                         document = Document.objects.create(name=str(each), file=each, attached_to=info)
 
             if info:
-                msg = "The information was saved."
+                msg = f"The information was saved. <a href='/library/{info.id}'>View item</a>."
             elif view_processing and "process" in request.POST:
                 msg = "The item was saved - you can now process it."
             elif curator:

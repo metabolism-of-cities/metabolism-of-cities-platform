@@ -31,13 +31,13 @@
             </a>
             {% if show_image_upload_link and each.type.name != "Image" %}
               <a href="form/?inventory=true&amp;type=38&amp;parent={{ each.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" title="Upload an image from this document" class="ml-2">
-                <i class="fa fa-image"></i>
+                <i class="fal fa-image fa-fw mr-1"></i>
               </a>
             {% endif %}
           </td>
           <td class="type">
             {% if each.meta_data.processed %}
-              <i class="fa fa-{% if each.type.id == 10 %}chart-bar{% else %}map{% endif %} fa-fw"></i>
+              <i class="fal fa-{% if each.type.id == 10 %}chart-bar{% else %}map{% endif %} fa-fw mr-1"></i>
             {% endif %}
             {{ each.type }}
             {% if show_publisher and each.publisher %}

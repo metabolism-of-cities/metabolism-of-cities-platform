@@ -4,6 +4,12 @@
 
 {% block head %}
   <link rel="canonical" href="{{ info.get_absolute_url }}" />
+  <meta property="og:title" content="{{ info }}">
+  <meta property="og:description" content="{{ info.get_description|striptags|truncatechars:200 }}">
+  {% if info.image %}
+    <meta property="og:image" content="{{ PROJECT.get_website_without_trailing_slash }}{{ info.image.url }}">
+  {% endif %}
+  <meta property="og:url" content="{{ PROJECT.get_website_without_trailing_slash }}{{ request.get_full_path }}">
 {% endblock %}
 
 {% block content %}

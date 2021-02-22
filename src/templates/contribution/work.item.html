@@ -42,6 +42,10 @@
               <div> {{ info.id }}</div>
             </li>
             <li class="list-group-item table-item">
+              <div><i class="fal fa-fw fa-info-circle mr-2"></i>Project</div>
+              <div> {{ info.part_of_project }}</div>
+            </li>
+            <li class="list-group-item table-item">
               <div><i class="fal fa-fw fa-play mr-2"></i>Status</div>
               <div class="text-{% if info.get_status_display == 'In Progress' %}info{% elif info.get_status_display == 'Completed' %}success{% elif info.get_status_display == 'Discarded' %}danger{% else %}dark{% endif %}"> {{ info.get_status_display }}</div>
             </li>

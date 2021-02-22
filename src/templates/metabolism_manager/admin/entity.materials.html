@@ -22,15 +22,15 @@
     <table class="table">
       <thead>
         <tr>
-          <th class="border-0">Type</th>
-          <th class="border-0">Name</th>
-          {% if slug != "technology" %}
-            <th class="border-0">Quantity</th>
+          <th class="border-0">Status</th>
+          {% if slug == "resources" or slug == "technology" %}
+            <th class="border-0">Type</th>
           {% endif %}
-          <th class="border-0">Type</th>
+          <th class="border-0">Name</th>
           {% if slug == "space" %}
             <th class="border-0">Availability</th>
           {% endif %}
+          <th class="border-0">Quantity</th>
           <th class="border-0">Date</th>
           <th class="border-0"></th>
         </tr>
@@ -39,40 +39,42 @@
         {% for each in data %}
           <tr>
             <td>
-            <i class="fal fa-fw fa-{{ each.material_type.parent.icon }}"></i>
-            {{ each.material_type.parent }}</td>
+              {% if each.quantity > 0 %}
+                <span class="text-secondary">
+                  <i class="fal fa-sign-in"></i> Demand
+                </span>
+              {% else %}
+                <span class="text-primary">
+                  <i class="fal fa-sign-out"></i> Supply
+                </span>
+              {% endif %}
+            </td>
+            {% if slug == "resources" or slug == "technology" %}
+              <td>
+                <i class="fal fa-fw fa-{{ each.material_type.parent.icon }}"></i>
+                {{ each.material_type.parent }}
+              </td>
+            {% endif %}
             <td>
-              <a href="{% url 'platformu:admin_datapoint' each.id %}">
               {% if each.name %}
                 {{ each.name }}
               {% else %}
                 {{ each.material_type }}
               {% endif %}
-              </a>
-            </td>
-            {% if slug != "technology" %}
-              <td>{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
-            {% endif %}
-            <td>
-            {% if each.quantity > 0 %}
-            <i class="fal fa-sign-in-alt"></i>
-            Demand
-            {% else %}
-            <span class="text-success">
-            <i class="fal fa-sign-out-alt"></i>
-            Supply
-            </span>
-            {% endif %}
             </td>
             {% if slug == "space" %}
               <td>
                 {{ each.get_availability_display }}
               </td>
             {% endif %}
+            <td>{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
             <td>
               {{ each.start_date }} {% if each.end_date %}- {{ each.end_date }} {% endif %}
             </td>
-            <td class="text-right has-button"><a class="btn btn-primary btn-sm" href="edit/{{ each.id }}/?prev={{ request.get_full_path }}"><i class="fal fa-pencil"></i></a></td>
+            <td class="text-right has-button">
+              <a class="btn btn-primary-basic btn-sm" href="edit/{{ each.id }}/?prev={{ request.get_full_path }}"><i class="fal fa-pencil mr-0"></i></a>
+              <a class="btn btn-primary btn-sm" href="{% url 'platformu:admin_datapoint' each.id %}"><i class="fa fa-info-circle mr-0"></i></a>
+            </td>
           </tr>
         {% endfor %}
       </tbody>
@@ -80,8 +82,10 @@
   </div>
 
   {% else %}
-    <div class="alert alert-warning">
-      You have no data in this category yet. Use the option below to add data.
+    <div class="mt-3">
+      <div class="alert alert-light d-inline-block">
+        <i class="fal fa-empty-set mr-2"></i> You have no data in this category yet. Use the option below to add data
+      </div>
     </div>
   {% endif %}
 
@@ -89,7 +93,7 @@
 
   <div class="card container mt-4 filter-table" id="add-material">
     <div class="row">
-      {% if slug == "resources" %}
+      {% if slug == "resources" or slug == "technology" %}
         <div class="col-md-6 col-lg-4 py-3 col-filter">
           <div class="form-group">
             <input type="text" class="form-control search" placeholder="Search..." disabled>
@@ -108,20 +112,20 @@
       {% endif %}
       <div class="col-md-6 col-lg-8 p-0 col-results">
         <table class="table table-sm mb-0">
-          <tbody class="list" {% if slug == "resources" %}hidden{% endif %}>
+          <tbody class="list" {% if slug == "resources" or slug == "technology" %}hidden{% endif %}>
             {% for each in materials %}
             <tr>
               <td><span class="material-name">{{ each }}</span><span hidden class="material-tags">item-{{ each.parent.id }} </span></td>
               <td class="text-right">
-                <a class="btn btn-sm btn-primary-basic float-right" href="demand/{{ each.id }}/?prev={{ request.get_full_path }}"><i class="fas mr-1 fa-plus"></i> Log demand</a>
-                <a class="btn btn-sm btn-primary-basic float-right" href="supply/{{ each.id }}/?prev={{ request.get_full_path }}"><i class="fas mr-1 fa-plus"></i> Log supply</a>
+                <a class="btn btn-sm btn-secondary-basic float-right" href="demand/{{ each.id }}/?prev={{ request.get_full_path }}"><i class="fal mr-1 fa-sign-in"></i> Log demand</a>
+                <a class="btn btn-sm btn-primary-basic float-right" href="supply/{{ each.id }}/?prev={{ request.get_full_path }}"><i class="fal mr-1 fa-sign-out"></i> Log supply</a>
               </td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
 
-        {% if slug == "resources" %}
+        {% if slug == "resources" or slug == "technology" %}
           <div class="first-load text-center pt-4">
             <h2 class="my-4"><i class="fad fa-arrow-left mr-2"></i> Please select a category</h2>
           </div>
@@ -244,5 +248,10 @@
     $(".btn-to-top").click(function() {
       scrollToID("add-material");
     })
+
+    // if add parameter is added to URL, click the add new entry button
+    {% if request.GET.action == "add" %}
+    $(".add-existing").click();
+    {% endif %}
   </script>
 {% endblock %}
