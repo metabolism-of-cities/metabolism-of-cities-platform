@@ -341,10 +341,8 @@ def admin_entity_form(request, organization, id=None):
             "sales_local": request.POST.get("sales-local"),
             "sales_regional": request.POST.get("sales-regional"),
             "sales_export": request.POST.get("sales-export"),
-
+            "nace_code": request.POST.get("nace_code"),
         }
-        if request.POST["nace"]:
-            info.nace_code = NaceCode.objects.get(pk=request.POST["nace"])
         info.save()
         info.sectors.clear()
         if "sector" in request.POST:
@@ -391,7 +389,7 @@ def admin_entity_form(request, organization, id=None):
         "sectors": Sector.objects.all(),
         "geoapify_api": settings.GEOAPIFY_API,
         "load_select2": True,
-        "nace_codes": NaceCode.objects.all(),
+        "nace_codes": Activity.objects.filter(catalog_id=3655, parent__isnull=True),
         "dependency_list": LocalBusinessDependency.objects.all(),
         "local_businesses": LocalBusinessLink.objects.filter(organization=info)
     }

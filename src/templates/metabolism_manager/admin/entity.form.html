@@ -106,9 +106,9 @@
 
             <div class="col">
               <label for="nace">NACE code</label>
-              <select class="custom-select select2" id="nace" name="nace" required>
+              <select class="custom-select select2" id="nace" name="nace_code" required>
               {% for each in nace_codes %}
-                <option {% if each.id == info.nace_code.id %}selected{% endif %} value="{{ each.id }}">{{ each.name }}</option>
+                <option {% if each.name == info.meta_data.nace_code %}selected{% endif %} value="{{ each.name }}">{{ each.name }}</option>
               {% endfor %}
               </select>
             </div>
