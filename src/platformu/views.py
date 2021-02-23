@@ -397,12 +397,11 @@ def admin_entity(request, organization, id):
 @login_required
 def admin_entity_form(request, organization, id=None):
     my_organization = my_organizations(request, organization)
-
     organization_list = Organization.objects_include_private.filter(
         tags__parent_tag_id = TAG_ID["platformu_segments"],
         tags__belongs_to = my_organization,
     )
-
+    list_dependency = ["Low dependence", "Medium", "Interdependence"]
     edit = False
     if id:
         info = get_entity_record(request, my_organization, id)
@@ -423,12 +422,23 @@ def admin_entity_form(request, organization, id=None):
             info.is_deleted = True
         if "image" in request.FILES:
             info.image = request.FILES["image"]
+        date_now = datetime.datetime.now()
         info.meta_data = {
             "address": request.POST.get("address"),
             "employees": request.POST.get("employees"),
             "lat": request.POST.get("lat"),
             "lng": request.POST.get("lng"),
             "sector": request.POST.get("sector"),
+            "phone": request.POST.get("phone"),
+            "founding_year": request.POST.get("year"),
+            "purchasing_local": request.POST.get("purchasing-local"),
+            "purchasing_regional": request.POST.get("purchasing-regional"),
+            "purchasing_export": request.POST.get("purchasing-export"),
+            "sales_local": request.POST.get("sales-local"),
+            "sales_regional": request.POST.get("sales-regional"),
+            "sales_export": request.POST.get("sales-export"),
+            "nace_code": request.POST.get("nace_code"),
+            "updated_at": date_now.strftime("%Y-%m-%d %H:%M:%S"),
         }
         info.save()
         info.sectors.clear()
@@ -437,6 +447,38 @@ def admin_entity_form(request, organization, id=None):
         if "tag" in request.GET:
             tag = Tag.objects.get(pk=request.GET["tag"])
             info.tags.add(tag)
+
+        #Let remove all business links when the form is submitted    
+        RecordRelationship.objects.filter(record_parent=my_organization, relationship_id=35).delete()
+        for count in range(30):
+            business_name = "link_business_" + str(count)
+            dependency = "link_dependence_" + str(count)
+            if business_name in request.POST and dependency in request.POST :
+                #We need to check if the organization exist in the system
+                #If it doesn't exist we record a new one
+                check = None
+                try:
+                    check = Organization.objects.get(pk=request.POST[business_name])
+                except:
+                    p("Id not found")
+                if check:
+                    business = check
+                else:
+                    new_organization = Organization()
+                    new_organization.name = request.POST[business_name]
+                    new_organization.is_public = False
+                    new_organization.save()
+                    business = new_organization
+                    if "tag" in request.GET:
+                        tag = Tag.objects.get(pk=request.GET["tag"])
+                        new_organization.tags.add(tag)
+
+                RecordRelationship.objects.create(
+                    record_parent = my_organization,
+                    record_child = business,
+                    relationship_id = 35,
+                    meta_data = {"dependency": request.POST.get(dependency)} 
+                )
         messages.success(request, "The information was saved.")
         return redirect(reverse("platformu:admin_entity", args=[my_organization.id, info.id]))
 
@@ -448,6 +490,9 @@ def admin_entity_form(request, organization, id=None):
         "sectors": Sector.objects.all(),
         "geoapify_api": settings.GEOAPIFY_API,
         "load_select2": True,
+        "nace_codes": Activity.objects.filter(catalog_id=3655, parent__isnull=True),
+        "local_businesses": RecordRelationship.objects.filter(record_parent_id=my_organization, relationship_id=35),
+        "list_dependency": list_dependency,
     }
     return render(request, "metabolism_manager/admin/entity.form.html", context)
 
@@ -514,7 +559,7 @@ def admin_entity_material(request, organization, id, slug, material=None, edit=N
         if material_name.lower() == "other":
             add_name_field = True
 
-    fields = ["start_date", "end_date", "description", "image"]
+    fields = ["start_date", "end_date", "description","availability", "image"]
     if slug == "technology" or add_name_field:
         fields = ["name"] + fields
     ModelForm = modelform_factory(MaterialDemand, fields=fields)

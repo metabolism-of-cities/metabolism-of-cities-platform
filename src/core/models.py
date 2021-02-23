@@ -2374,6 +2374,13 @@ class MaterialDemand(Record):
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True, help_text="The end date is optional, leave blank if it's open ended")
     owner = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="demand")
+    AVAILABILITY = [
+        ('Unavailable', 'Unavailable'),
+        ('Occasionally', 'Occasionally available'),
+        ('Short_term_use', 'Available short-term use'),
+        ('Long_term_use', 'Available for long-term use'),
+    ]
+    availability = models.CharField(max_length=50, null=True,  blank=True, choices=AVAILABILITY)
 
     def __str__(self):
         return self.material_type.name
@@ -2791,4 +2798,3 @@ class CityLoopsIndicatorValue(models.Model):
 #        primary_key=False,
 #    )
 #    info = models.CharField(max_length=100)
-

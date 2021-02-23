@@ -37,336 +37,366 @@
 
 {% block content %}
 
-  {% if info %}
-    {% include "metabolism_manager/admin/_entity.menu.html" %}
-  {% endif %}
+{% if info %}
+{% include "metabolism_manager/admin/_entity.menu.html" %}
+{% endif %}
 
-  <section>
-    <form method="post" enctype="multipart/form-data" class="address-search">
-      {% csrf_token %}
-      <div class="card mb-4">
-        <div class="card-header">
-          General information
-        </div>
-        <div class="card-body">
-          <div class="form-group">
-            <label for="name">Company name</label>
-            <input type="text" required class="form-control" id="name" name="name" value="{% if info.name %}{{ info.name }}{% endif %}">
-          </div>
-
-          <div class="form-group">
-            <label for="logo">Logo</label>
-            <div class="custom-file">
-              <input type="file" class="custom-file-input" id="logo" name="image">
-              <label class="custom-file-label" for="logo">Choose file</label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="description">Description</label>
-            <textarea id="description" class="form-control" rows="2" name="description"
-             >{% if info.description %}{{ info.description }}{% endif %}</textarea>
-          </div>
-
-          <div class="form-group form-row">
-            <div class="col">
-              <label for="email">Email</label>
-              <input type="email" id="email" class="form-control" name="email" value="{% if info.email %}{{ info.email }}{% endif %}">
-            </div>
-
-            <div class="col">
-              <label for="url">Website</label>
-              <input type="url" id="url" class="form-control" name="url" value="{% if info.url %}{{ info.url }}{% endif %}" placeholder="Make sure to include the https:// part of the URL">
-            </div>
-          </div>
-
-          <div class="form-group form-row">
-            <div class="col">
-              <label for="phone">Phone number</label>
-              <input type="tel" class="form-control" id="phone" name="phone" value="{{ info.meta_data.phone }}">
-            </div>
-
-            <div class="col">
-              <label for="year">Founding year</label>
-              <input type="number" class="form-control" id="year" name="year" min="1000" max="2030" value="{{ info.meta_data.year }}">
-            </div>
-
-          </div>
-
-          <div class="form-group form-row">
-            <div class="col">
-              <label>Sector</label>
-              <select class="custom-select" class="form-control" name="sector">
-                <option hidden disabled selected value>Select an option</option>
-                {% for each in sectors %}
-                  <option {% if each in info.sectors.all %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
-                {% endfor %}
-              </select>
-            </div>
-
-            <div class="col">
-              <label for="nace">NACE code</label>
-              <select class="custom-select select2" id="nace" name="nace" value="{{ info.meta_data.nace }}">
-                <option value="1">A1.11 - Growing of cereals (except rice), leguminous crops and oil seeds</option>
-                <option value="2">A1.12 - Growing of rice</option>
-                <option value="3">A1.13 - Growing of vegetables and melons, roots and tubers</option>
-                <option value="4">A1.14 - Growing of sugar cane</option>
-                <option value="5">A1.15 - Growing of tobacco</option>
-                <option value="6">A1.16 - Growing of fibre crops</option>
-                <option value="7">A1.19 - Growing of other non-perennial crops</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="employees">Employees</label>
-            <input min="0" type="number" class="form-control" id="employees" name="employees" value="{{ info.meta_data.employees }}">
-          </div>
-
-          <div class="form-group">
-            <label for="location">Address</label>
-            <input type="text" class="form-control" id="autocomplete-search" name="autocomplete-search" value="{{ info.meta_data.address }}">
-          </div>
-
-          <div id="autocomplete-results" class="mt-3"></div>
-
-          <input id="formatted" type="hidden" name="address" value="{{ info.meta_data.address }}">
-
-          <div class="form-group form-row">
-            <div class="col">
-              <label for="lat">Latitude</label>
-              <input type="text" class="form-control" id="lat" name="lat" value="{{ info.meta_data.lat }}">
-            </div>
-
-            <div class="col">
-              <label for="lng">Longitude</label>
-              <input type="text" class="form-control" id="lng" name="lng" value="{{ info.meta_data.lng }}">
-            </div>
-          </div>
-
-          <hr>
-
-          <h3>Market information</h3>
-
-          <p class="mb-1">Some explanation of what this is and what it's used for. Each needs to add up to 100%</p>
-          <ul class="pl-4">
-            <li>Local: linked to the city</li>
-            <li>Regional: linked to the official regional level or within a 100km radius</li>
-            <li>Export: beyond a 100km radius</li>
-          </ul>
-
-          <div class="form-group pb-2">
-            <h5 class="font-weight-normal">Purchasing expenditures</h5>
-
-            <div class="form-group form-row">
-              <div class="col">
-                <label for="purchasing-local">Local</label>
-                <div class="input-group">
-                  <input type="number" max="100" class="form-control" id="purchasing-local" name="purchasing-local">
-                  <div class="input-group-append">
-                    <span class="input-group-text">%</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col">
-                <label for="purchasing-regional">Regional</label>
-                <div class="input-group">
-                  <input type="number" max="100" class="form-control" id="purchasing-regional" name="purchasing-regional">
-                  <div class="input-group-append">
-                    <span class="input-group-text">%</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col">
-                <label for="purchasing-export">Export</label>
-                <div class="input-group">
-                  <input type="number" max="100" class="form-control" id="purchasing-export" name="purchasing-export">
-                  <div class="input-group-append">
-                    <span class="input-group-text">%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <h5 class="font-weight-normal">Sales revenue</h5>
-
-            <div class="form-group form-row">
-              <div class="col">
-                <label for="sales-local">Local</label>
-                <div class="input-group">
-                  <input type="number" max="100" class="form-control" id="sales-local" name="sales-local">
-                  <div class="input-group-append">
-                    <span class="input-group-text">%</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col">
-                <label for="sales-regional">Regional</label>
-                <div class="input-group">
-                  <input type="number" max="100" class="form-control" id="sales-regional" name="sales-regional">
-                  <div class="input-group-append">
-                    <span class="input-group-text">%</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col">
-                <label for="sales-export">Export</label>
-                <div class="input-group">
-                  <input type="number" max="100" class="form-control" id="sales-export" name="sales-export">
-                  <div class="input-group-append">
-                    <span class="input-group-text">%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <hr>
-
-          <h3>Links with local businesses</h3>
-
-          <p>Some explanation of what this is and what it's used for.</p>
-
-          <div class="form-group" id="links"></div>
-
-          <div class="btn btn-sm btn-primary" id="add-link">
-            <i class="fa fa-plus"></i> Add link
-          </div>
-
-          <hr>
-
-          <div class="form-group">
-            <label for="active">Active</label>
-            <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="active" name="status" {% if not info.is_deleted %}checked{% endif %}>
-              <label class="custom-control-label" for="active"></label>
-            </div>
-          </div>
-        </div>
+<section>
+  <form method="post" enctype="multipart/form-data" class="address-search">
+    {% csrf_token %}
+    <div class="card mb-4">
+      <div class="card-header">
+        General information
       </div>
-      {% if False %}
-        <div class="card">
-          <div class="card-header">
-            Settings
+      <div class="card-body">
+        <div class="form-group">
+          <label for="name">Company name</label>
+          <input type="text" required class="form-control" id="name" name="name" value="{% if info.name %}{{ info.name }}{% endif %}">
+        </div>
+
+        <div class="form-group">
+          <label for="logo">Logo</label>
+          <div class="custom-file">
+            <input type="file" class="custom-file-input" id="logo" name="image">
+            <label class="custom-file-label" for="logo">Choose file</label>
           </div>
-          <div class="card-body">
-            <div class="form-group">
-              <label for="name">Data sharing</label>
-              <div class="custom-control custom-radio">
-                <input type="radio" id="public" name="data-sharing" class="custom-control-input">
-                <label class="custom-control-label" for="public">Public</label>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" class="form-control" rows="2" name="description"
+          >{% if info.description %}{{ info.description }}{% endif %}</textarea>
+        </div>
+
+        <div class="form-group form-row">
+          <div class="col">
+            <label for="email">Email</label>
+            <input type="email" id="email" class="form-control" name="email" value="{% if info.email %}{{ info.email }}{% endif %}">
+          </div>
+
+          <div class="col">
+            <label for="url">Website</label>
+            <input type="url" id="url" class="form-control" name="url" value="{% if info.url %}{{ info.url }}{% endif %}" placeholder="Make sure to include the https:// part of the URL">
+          </div>
+        </div>
+
+        <div class="form-group form-row">
+          <div class="col">
+            <label for="phone">Phone number</label>
+            <input type="tel" class="form-control" id="phone" name="phone" value="{% if info.meta_data.phone %}{{ info.meta_data.phone }}{% endif %}">
+          </div>
+
+          <div class="col">
+            <label for="year">Founding year</label>
+            <input type="number" class="form-control" id="year" name="year" min="1000" max="2030" value="{% if info.meta_data.founding_year %}{{ info.meta_data.founding_year }}{% endif %}">
+          </div>
+
+        </div>
+
+        <div class="form-group form-row">
+          <div class="col">
+            <label>Sector</label>
+            <select class="custom-select" class="form-control" name="sector">
+              <option hidden disabled selected value>Select an option</option>
+              {% for each in sectors %}
+              <option {% if each in info.sectors.all %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col">
+            <label for="nace">NACE code</label>
+            <select class="custom-select select2" id="nace" name="nace_code" required>
+              {% for each in nace_codes %}
+              <option {% if each.name == info.meta_data.nace_code %}selected{% endif %} value="{{ each.name }}">{{ each.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="employees">Employees</label>
+          <input min="0" type="number" class="form-control" id="employees" name="employees" value="{{ info.meta_data.employees }}">
+        </div>
+
+        <div class="form-group">
+          <label for="location">Address</label>
+          <input type="text" class="form-control" id="autocomplete-search" name="autocomplete-search" value="{{ info.meta_data.address }}">
+        </div>
+
+        <div id="autocomplete-results" class="mt-3"></div>
+
+        <input id="formatted" type="hidden" name="address" value="{{ info.meta_data.address }}">
+
+        <div class="form-group form-row">
+          <div class="col">
+            <label for="lat">Latitude</label>
+            <input type="text" class="form-control" id="lat" name="lat" value="{{ info.meta_data.lat }}">
+          </div>
+
+          <div class="col">
+            <label for="lng">Longitude</label>
+            <input type="text" class="form-control" id="lng" name="lng" value="{{ info.meta_data.lng }}">
+          </div>
+        </div>
+
+        <hr>
+
+        <h3>Market information</h3>
+
+        <p class="mb-1">Some explanation of what this is and what it's used for. Each needs to add up to 100%</p>
+        <ul class="pl-4">
+          <li>Local: linked to the city</li>
+          <li>Regional: linked to the official regional level or within a 100km radius</li>
+          <li>Export: beyond a 100km radius</li>
+        </ul>
+
+        <div class="form-group pb-2">
+          <h5 class="font-weight-normal">Purchasing expenditures</h5>
+
+          <div class="form-group form-row">
+            <div class="col">
+              <label for="purchasing-local">Local</label>
+              <div class="input-group">
+                <input type="number" max="100" class="form-control" id="purchasing-local" name="purchasing-local" value="{{ info.meta_data.purchasing_local }}">
+                <div class="input-group-append">
+                  <span class="input-group-text">%</span>
+                </div>
               </div>
-              <div class="custom-control custom-radio">
-                <input type="radio" id="anonymized" name="data-sharing" class="custom-control-input">
-                <label class="custom-control-label" for="anonymized">Public, but anonymized</label>
-              </div>
-              <div class="custom-control custom-radio">
-                <input type="radio" id="private" name="data-sharing" class="custom-control-input">
-                <label class="custom-control-label" for="private">Private</label>
-              </div>
-              <small class="form-text text-muted">
-                Delectus non quia recusandae vitae. Sed quam nihil quasi repellat ut voluptatem eius. Voluptas est aliquam hic voluptatem et eveniet dolorem expedita. Blanditiis fugiat sit quae ut et est cumque optio. Molestiae sit asperiores qui et iusto vel. Voluptate laudantium assumenda deleniti vel ullam dolorum.
-              </small>
             </div>
-            <div class="form-group">
-              <label for="name">Data delay</label>
-              <div class="custom-control custom-radio">
-                <input type="radio" id="none" name="data-delay" class="custom-control-input">
-                <label class="custom-control-label" for="none">No delay</label>
-              </div>
-              <div class="custom-control custom-radio">
-                <input type="radio" id="1-year" name="data-delay" class="custom-control-input">
-                <label class="custom-control-label" for="1-year">1 year old data only</label>
-              </div>
-              <div class="custom-control custom-radio">
-                <input type="radio" id="2-years" name="data-delay" class="custom-control-input">
-                <label class="custom-control-label" for="2-years">2 year old data only</label>
+
+            <div class="col">
+              <label for="purchasing-regional">Regional</label>
+              <div class="input-group">
+                <input type="number" max="100" class="form-control" id="purchasing-regional" name="purchasing-regional" value="{{ info.meta_data.purchasing_regional }}">
+                <div class="input-group-append">
+                  <span class="input-group-text">%</span>
+                </div>
               </div>
             </div>
-            <div class="form-group">
-              <label for="name">Reporting</label>
-              <div class="custom-control custom-radio">
-                <input type="radio" id="monthly" name="reporting" class="custom-control-input">
-                <label class="custom-control-label" for="monthly">Monthly</label>
-              </div>
-              <div class="custom-control custom-radio">
-                <input type="radio" id="quarterly" name="reporting" class="custom-control-input">
-                <label class="custom-control-label" for="quarterly">Quarterly</label>
-              </div>
-              <div class="custom-control custom-radio">
-                <input type="radio" id="annual" name="reporting" class="custom-control-input">
-                <label class="custom-control-label" for="annual">Annual</label>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="name">Modules</label>
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="mfa">
-                <label class="custom-control-label" for="mfa">Corporate MFA</label>
-              </div>
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="matchmaking">
-                <label class="custom-control-label" for="matchmaking">Matchmaking platform</label>
-              </div>
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="tips">
-                <label class="custom-control-label" for="tips">Tips and advice service</label>
-              </div>
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="report">
-                <label class="custom-control-label" for="report">Annual sustainability report</label>
+
+            <div class="col">
+              <label for="purchasing-export">Export</label>
+              <div class="input-group">
+                <input type="number" max="100" class="form-control" id="purchasing-export" name="purchasing-export" value="{{ info.meta_data.purchasing_export}}">
+                <div class="input-group-append">
+                  <span class="input-group-text">%</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      {% endif %}
-      <button class="btn btn-lg btn-primary my-4" type="submit"><i class="fas fa-save"></i> Save</button>
-    </form>
-  </section>
 
-  <!-- html of a link that is used to add a new one -->
-  <div id="link-wrapper" hidden>
-    <div class="form-row single-link mb-2">
-      <div class="col">
-        <label>Business name</label>
-        <select class="custom-select business-name" name="link_business_0">
-          <option selected disabled>Type to search existing business, hit enter to create new option</option>
-          {% for each in organization_list %}
-            <option value="{{ each.id }}">{{ each }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="col">
-        <label for="url">Dependence</label>
-        <select class="custom-select" name="link_dependence_0">
-          <option value="1">Low dependence</option>
-          <option value="2">Medium</option>
-          <option value="3">Interdependence</option>
-        </select>
-      </div>
-      <div class="col col-delete">
-        <label>&nbsp;</label>
-        <div class="btn btn-danger btn-sm delete-link">
-          <i class="far fa-trash-alt m-0"></i>
+        <div class="form-group">
+          <h5 class="font-weight-normal">Sales revenue</h5>
+
+          <div class="form-group form-row">
+            <div class="col">
+              <label for="sales-local">Local</label>
+              <div class="input-group">
+                <input type="number" max="100" class="form-control" id="sales-local" name="sales-local" value="{{ info.meta_data.sales_local }}">
+                <div class="input-group-append">
+                  <span class="input-group-text">%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <label for="sales-regional">Regional</label>
+              <div class="input-group">
+                <input type="number" max="100" class="form-control" id="sales-regional" name="sales-regional" value="{{ info.meta_data.sales_regional }}">
+                <div class="input-group-append">
+                  <span class="input-group-text">%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <label for="sales-export">Export</label>
+              <div class="input-group">
+                <input type="number" max="100" class="form-control" id="sales-export" name="sales-export" value="{{ info.meta_data.sales_export }}">
+                <div class="input-group-append">
+                  <span class="input-group-text">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+
+        <h3>Links with local businesses</h3>
+
+        <p>Some explanation of what this is and what it's used for.</p>
+
+        {% if local_businesses %}
+        {% for each in local_businesses %}
+        <div class="form-row single-link mb-2">
+          <div class="col">
+            <label>{% if forloop.counter0 == 0 %}Business name {%endif %}</label>
+            <select class="custom-select business-name" name="link_business_{{ forloop.counter0 }}">
+              <option disabled>Type to search existing business, hit enter to create new option</option>
+              {% for details in organization_list %}
+              <option  {% if each.record_child.id == details.id %}selected{% endif %} value="{{ details.id }}">{{ details }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col">
+            <label for="url">{% if forloop.counter0 == 0 %}Dependence{%endif %}</label>
+            <select class="custom-select" name="link_dependence_{{ forloop.counter0 }}">
+              {% for dependency in list_dependency %}
+              <option value="{{ dependency }}" {% if dependency == each.meta_data.dependency %}selected{% endif %}> {{ dependency }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col col-delete">
+            <label>&nbsp;</label>
+            <div class="btn btn-danger btn-sm delete-link">
+              <i class="far fa-trash-alt m-0"></i>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <div class="form-group" id="links"></div>
+
+        <div class="btn btn-sm btn-primary" id="add-link">
+          <i class="fa fa-plus"></i> Add link
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+          <label for="active">Active</label>
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="active" name="status" {% if not info.is_deleted %}checked{% endif %}>
+            <label class="custom-control-label" for="active"></label>
+          </div>
         </div>
       </div>
     </div>
+    {% if False %}
+    <div class="card">
+      <div class="card-header">
+        Settings
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label for="name">Data sharing</label>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="public" name="data-sharing" class="custom-control-input">
+            <label class="custom-control-label" for="public">Public</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="anonymized" name="data-sharing" class="custom-control-input">
+            <label class="custom-control-label" for="anonymized">Public, but anonymized</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="private" name="data-sharing" class="custom-control-input">
+            <label class="custom-control-label" for="private">Private</label>
+          </div>
+          <small class="form-text text-muted">
+            Delectus non quia recusandae vitae. Sed quam nihil quasi repellat ut voluptatem eius. Voluptas est aliquam hic voluptatem et eveniet dolorem expedita. Blanditiis fugiat sit quae ut et est cumque optio. Molestiae sit asperiores qui et iusto vel. Voluptate laudantium assumenda deleniti vel ullam dolorum.
+          </small>
+        </div>
+        <div class="form-group">
+          <label for="name">Data delay</label>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="none" name="data-delay" class="custom-control-input">
+            <label class="custom-control-label" for="none">No delay</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="1-year" name="data-delay" class="custom-control-input">
+            <label class="custom-control-label" for="1-year">1 year old data only</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="2-years" name="data-delay" class="custom-control-input">
+            <label class="custom-control-label" for="2-years">2 year old data only</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="name">Reporting</label>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="monthly" name="reporting" class="custom-control-input">
+            <label class="custom-control-label" for="monthly">Monthly</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="quarterly" name="reporting" class="custom-control-input">
+            <label class="custom-control-label" for="quarterly">Quarterly</label>
+          </div>
+          <div class="custom-control custom-radio">
+            <input type="radio" id="annual" name="reporting" class="custom-control-input">
+            <label class="custom-control-label" for="annual">Annual</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="name">Modules</label>
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="mfa">
+            <label class="custom-control-label" for="mfa">Corporate MFA</label>
+          </div>
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="matchmaking">
+            <label class="custom-control-label" for="matchmaking">Matchmaking platform</label>
+          </div>
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="tips">
+            <label class="custom-control-label" for="tips">Tips and advice service</label>
+          </div>
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="report">
+            <label class="custom-control-label" for="report">Annual sustainability report</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    <button class="btn btn-lg btn-primary my-4" type="submit"><i class="fas fa-save"></i> Save</button>
+  </form>
+</section>
+
+<!-- html of a link that is used to add a new one -->
+<div id="link-wrapper" hidden>
+  <div class="form-row single-link mb-2">
+    <div class="col">
+      {% if local_businesses|length == 0 %}
+      <label>Business name</label>
+      {% endif %}
+      <select class="custom-select business-name" name="link_business_0">
+        <option selected disabled>Type to search existing business, hit enter to create new option</option>
+        {% for each in organization_list %}
+        <option value="{{ each.id }}">{{ each }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col">
+      {% if local_businesses|length == 0 %}
+      <label for="url">Dependence</label>
+      {% endif %}
+      <select class="custom-select" name="link_dependence_0">
+        {% for each in list_dependency %}
+        <option value="{{ each }}">{{ each }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col col-delete">
+      <label>&nbsp;</label>
+      <div class="btn btn-danger btn-sm delete-link">
+        <i class="far fa-trash-alt m-0"></i>
+      </div>
+    </div>
   </div>
+</div>
 {% endblock %}
 
 {% block footer %}
-  <!-- making the browse for file input look good and work well - https://www.npmjs.com/package/bs-custom-file-input -->
-  <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
-  <script>
-    $(document).ready(function () {
-      bsCustomFileInput.init()
-    })
+<!-- making the browse for file input look good and work well - https://www.npmjs.com/package/bs-custom-file-input -->
+<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+<script>
+  $(document).ready(function () {
+    bsCustomFileInput.init()
+  })
 
     // these coordinates indicate where the search should prioritise, making the search more relevant
     const priorityLat = "50.8435";
@@ -427,7 +457,7 @@
 
     // add a single new link to a local business
     // each link needs a unique number
-    let linkCount = 0
+    let linkCount = "{{ local_businesses|length }}";
 
     // function to add a new row with link fields
     function addLink() {
@@ -463,4 +493,4 @@
     });
   </script>
 
-{% endblock %}
+  {% endblock %}

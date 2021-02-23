@@ -3,6 +3,15 @@
 
 {% block title %}Metabolism Manager{% endblock %}
 
+{% block css %}
+   {% if slug != "space" %}
+    <style>
+        #id_availability, label[for="id_availability"] {display: none}
+    </style>
+   {% endif %}
+
+{% endblock %}
+
 {% block content %}
   {% include "metabolism_manager/admin/_entity.menu.html" %}
 
@@ -89,4 +98,13 @@
 
     $("select").addClass("custom-select");
   </script>
+  {% if slug != "space" %}
+    <script>
+      $("#id_start_date").attr("required",true);
+    </script>
+  {% else %}
+    <script>
+      $("#id_availability").attr("required", true);
+    </script>
+  {% endif %}
 {% endblock %}
