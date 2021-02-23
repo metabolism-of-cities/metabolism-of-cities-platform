@@ -140,6 +140,17 @@
           </div>
         </div>
 
+
+        <div class="form-group form-row">
+          <label for="location">Clusters</label>
+          <select id="tags" class="form-control" name="tags" multiple required>
+            {% for each in list_tag %}
+              <option value="{{ each.id }}" {% if each in entity_tags  %}selected{% endif %}>{{ each.name }}</option>
+            {% endfor %}
+          </select>
+          <p>Hold down the Ctrl (windows) or Command (Mac) button to select multiple options.</p>
+        </div>
+
         <hr>
 
         <h3>Market information</h3>
@@ -491,6 +502,11 @@
     $("body").on("click", ".delete-link", function() {
       $(this).closest(".single-link").remove()
     });
+
+    {% if request.GET.tag %}
+    var tag = "{{ request.GET.tag }}";
+      $("#tags").val(tag);
+    {% endif %}
   </script>
 
   {% endblock %}

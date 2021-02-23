@@ -35,11 +35,13 @@ def my_organizations(request, id=None):
 # the tag associated with this organization
 def get_entity_record(request, my_organization, entity):
     try:
-        return Organization.objects_unfiltered.get(
+        check = Organization.objects_unfiltered.filter(
             pk = entity,
             tags__parent_tag_id = TAG_ID["platformu_segments"],
             tags__belongs_to = my_organization,
         )
+        return check[0]
+
     except:
         unauthorized_access(request)
 
@@ -406,8 +408,11 @@ def admin_entity_form(request, organization, id=None):
     if id:
         info = get_entity_record(request, my_organization, id)
         edit = True
+        entity_tags = info.tags.all()
     else:
         info = None
+        entity_tags = None
+    p(entity_tags)
 
     if request.method == "POST":
         if not edit:
@@ -444,10 +449,17 @@ def admin_entity_form(request, organization, id=None):
         info.sectors.clear()
         if "sector" in request.POST:
             info.sectors.add(Sector.objects.get(pk=request.POST["sector"]))
-        if "tag" in request.GET:
-            tag = Tag.objects.get(pk=request.GET["tag"])
-            info.tags.add(tag)
 
+
+        if "tags" in request.POST and request.POST.getlist("tags"):
+            info.tags.clear()
+            for tag_id in request.POST.getlist("tags"):
+                try:
+                    tag = Tag.objects.get(pk=tag_id)
+                    info.tags.add(tag)
+                except Exception as e:
+                    p(e)
+            
         #Let remove all business links when the form is submitted    
         RecordRelationship.objects.filter(record_parent=my_organization, relationship_id=35).delete()
         for count in range(30):
@@ -479,6 +491,7 @@ def admin_entity_form(request, organization, id=None):
                     relationship_id = 35,
                     meta_data = {"dependency": request.POST.get(dependency)} 
                 )
+
         messages.success(request, "The information was saved.")
         return redirect(reverse("platformu:admin_entity", args=[my_organization.id, info.id]))
 
@@ -493,6 +506,8 @@ def admin_entity_form(request, organization, id=None):
         "nace_codes": Activity.objects.filter(catalog_id=3655, parent__isnull=True),
         "local_businesses": RecordRelationship.objects.filter(record_parent_id=my_organization, relationship_id=35),
         "list_dependency": list_dependency,
+        "list_tag": Tag.objects.filter(belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"]).order_by("id"),
+        "entity_tags": entity_tags,
     }
     return render(request, "metabolism_manager/admin/entity.form.html", context)
 
