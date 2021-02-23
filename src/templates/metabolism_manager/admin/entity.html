@@ -26,8 +26,8 @@
       <div class="leaflet-map border mt-4" id="map"></div>
     {% endif %}
   </div>
-  <div class="col-md-{% if info.image %}8{% else %}12{% endif %}">
-    <table class="table mb-0">
+  <div class="col-md-{% if info.image or info.meta_data.lat %}8{% else %}12{% endif %}">
+    <table class="table">
       <tbody>
         {% if info.meta_data.employees %}
           <tr>
@@ -63,6 +63,8 @@
         </tr>
       </tbody>
     </table>
+
+    <h4>Current supply and demand</h4>
   </div>
 </div>
 {% endblock %}
