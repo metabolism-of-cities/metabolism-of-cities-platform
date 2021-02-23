@@ -17,8 +17,7 @@
 <div class="row">
   <div class="col-md-4 mb-4">
     {% if info.image %}
-      <!-- <img class="img-fluid border" src="{{ info.image.url }}"> -->
-      <img class="img-fluid border" src="https://platformu.org/media/records/SUmGuFjU_400x400_ZMaxXMR.jpg">
+      <img class="img-fluid border" src="{{ info.image.url }}">
     {% endif %}
     {% if info.meta_data.lat and info.meta_data.lng %}
       <div class="leaflet-map border mt-3" id="map"></div>
