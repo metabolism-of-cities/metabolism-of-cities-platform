@@ -467,6 +467,9 @@ def admin_entity_form(request, organization, id=None):
                     new_organization.is_public = False
                     new_organization.save()
                     business = new_organization
+                    if "tag" in request.GET:
+                        tag = Tag.objects.get(pk=request.GET["tag"])
+                        new_organization.tags.add(tag)
 
                 RecordRelationship.objects.create(
                     record_parent = my_organization,
