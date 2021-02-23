@@ -241,33 +241,33 @@
         <p>Some explanation of what this is and what it's used for.</p>
 
         {% if local_businesses %}
-        {% for each in local_businesses %}
-        <div class="form-row single-link mb-2">
-          <div class="col">
-            <label>{% if forloop.counter0 == 0 %}Business name {%endif %}</label>
-            <select class="custom-select business-name" name="link_business_{{ forloop.counter0 }}">
-              <option disabled>Type to search existing business, hit enter to create new option</option>
-              {% for details in organization_list %}
-              <option  {% if each.record_child.id == details.id %}selected{% endif %} value="{{ details.id }}">{{ details }}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="col">
-            <label for="url">{% if forloop.counter0 == 0 %}Dependence{%endif %}</label>
-            <select class="custom-select" name="link_dependence_{{ forloop.counter0 }}">
-              {% for dependency in list_dependency %}
-              <option value="{{ dependency }}" {% if dependency == each.meta_data.dependency %}selected{% endif %}> {{ dependency }}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="col col-delete">
-            <label>&nbsp;</label>
-            <div class="btn btn-danger btn-sm delete-link">
-              <i class="far fa-trash-alt m-0"></i>
+          {% for each in local_businesses %}
+            <div class="form-row single-link mb-2">
+              <div class="col">
+                <label>{% if forloop.counter0 == 0 %}Business name {%endif %}</label>
+                <select class="custom-select business-name" name="link_business_{{ forloop.counter0 }}">
+                  <option disabled>Type to search existing business, hit enter to create new option</option>
+                  {% for details in organization_list %}
+                  <option  value="{{ details.id }}" {% if each.record_child.id == details.id  %}selected{% endif %}>{{ details.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col">
+                <label for="url">{% if forloop.counter0 == 0 %}Dependence{%endif %}</label>
+                <select class="custom-select" name="link_dependence_{{ forloop.counter0 }}">
+                  {% for dependency in list_dependency %}
+                  <option value="{{ dependency }}" {% if dependency == each.meta_data.dependency %}selected{% endif %}> {{ dependency }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col col-delete">
+                <label>&nbsp;</label>
+                <div class="btn btn-danger btn-sm delete-link">
+                  <i class="far fa-trash-alt m-0"></i>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        {% endfor %}
+          {% endfor %}
         {% endif %}
 
         <div class="form-group" id="links"></div>

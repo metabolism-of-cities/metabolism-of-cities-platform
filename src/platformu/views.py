@@ -395,10 +395,11 @@ def admin_entity_form(request, organization, id=None):
         info = get_entity_record(request, my_organization, id)
         edit = True
         entity_tags = info.tags.all()
+        local_businesses = RecordRelationship.objects.filter(record_parent_id=id, relationship_id=35)
     else:
         info = None
         entity_tags = None
-    p(entity_tags)
+        local_businesses = None
 
     if request.method == "POST":
         if not edit:
@@ -447,7 +448,7 @@ def admin_entity_form(request, organization, id=None):
             
         #Let remove all business links when the form is submitted    
 
-        RecordRelationship.objects.filter(record_parent=my_organization, relationship_id=35).delete()
+        RecordRelationship.objects.filter(record_parent=info, relationship_id=35).delete()
         for count in range(30):
             business_name = "link_business_" + str(count)
             dependency = "link_dependence_" + str(count)
@@ -470,9 +471,11 @@ def admin_entity_form(request, organization, id=None):
                     if "tag" in request.GET:
                         tag = Tag.objects.get(pk=request.GET["tag"])
                         new_organization.tags.add(tag)
+                    else:
+                        new_organization.tags.add(entity_tags[0])
 
                 RecordRelationship.objects.create(
-                    record_parent = my_organization,
+                    record_parent = info,
                     record_child = business,
                     relationship_id = 35,
                     meta_data = {"dependency": request.POST.get(dependency)}
@@ -490,7 +493,7 @@ def admin_entity_form(request, organization, id=None):
         "geoapify_api": settings.GEOAPIFY_API,
         "load_select2": True,
         "nace_codes": Activity.objects.filter(catalog_id=3655, parent__isnull=True),
-        "local_businesses": RecordRelationship.objects.filter(record_parent_id=my_organization, relationship_id=35),
+        "local_businesses": local_businesses,
         "list_dependency": list_dependency,
         "list_tag": Tag.objects.filter(belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"]).order_by("id"),
         "entity_tags": entity_tags,
