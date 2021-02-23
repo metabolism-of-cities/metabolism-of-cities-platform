@@ -17,52 +17,117 @@
 <div class="row">
   <div class="col-md-4 mb-4">
     {% if info.image %}
-      <img class="mb-2" src="{{ info.image.url }}">
+      <img class="img-fluid border" src="{{ info.image.url }}">
     {% endif %}
-    <div>
-      {{ info.description|linebreaksbr }}
-    </div>
     {% if info.meta_data.lat and info.meta_data.lng %}
-      <div class="leaflet-map border mt-4" id="map"></div>
+      <div class="leaflet-map border mt-3" id="map"></div>
     {% endif %}
   </div>
-  <div class="col-md-{% if info.image %}8{% else %}12{% endif %}">
-    <table class="table mb-0">
+  <div class="col-md-{% if info.image or info.meta_data.lat %}8{% else %}12{% endif %}">
+    <table class="table bg-white mb-4">
       <tbody>
+        {% if info.description %}
+          <tr>
+            <td colspan="2">{{ info.description }}</td>
+          </tr>
+        {% endif %}
         {% if info.meta_data.employees %}
           <tr>
-            <th>Employees</th>
+            <th class="text-nowrap">Employees</th>
             <td> {{ info.meta_data.employees }}</td>
           </tr>
         {% endif %}
         {% if info.sectors.all %}
           <tr>
-            <th>Sector</th>
+            <th class="text-nowrap">Sector</th>
             <td> {% for each in info.sectors.all %}{{ each }}{% endfor %}</td>
           </tr>
         {% endif %}
         {% if info.meta_data.address %}
           <tr>
-            <th>Address</th>
+            <th class="text-nowrap">Address</th>
             <td> {{ info.meta_data.address }}</td>
           </tr>
         {% endif %}
-        <tr>
-          <th>Email</th>
-          <td><a href="mailto:{{ info.email }}">{{ info.email }}</a></td>
-        </tr>
         {% if info.url %}
-        <tr>
-          <th>Website</th>
-          <td><a href="{{ info.url }}">{{ info.url }}</a></td>
-        </tr>
+          <tr>
+            <th class="text-nowrap">Website</th>
+            <td><a href="{{ info.url }}">{{ info.url }}</a></td>
+          </tr>
+        {% endif %}
+        {% if info.email %}
+          <tr>
+            <th class="text-nowrap">Email</th>
+            <td><a href="mailto:{{ info.email }}">{{ info.email }}</a></td>
+          </tr>
         {% endif %}
         <tr>
-          <th>Status</th>
+          <th class="text-nowrap">Status</th>
           <td>{% if info.is_deleted %} Inactive {% else %} Active {% endif %}</td>
         </tr>
       </tbody>
     </table>
+
+    {% if materials %}
+      <h4>Current supply and demand</h4>
+      <table class="table bg-white">
+        <thead>
+          <tr>
+            <th class="border-0">Status</th>
+            {% if slug == "resources" or slug == "technology" %}
+              <th class="border-0">Type</th>
+            {% endif %}
+            <th class="border-0">Name</th>
+            {% if slug == "space" %}
+              <th class="border-0">Availability</th>
+            {% endif %}
+            <th class="border-0">Quantity</th>
+            <th class="border-0">Date</th>
+            <th class="border-0"></th>
+          </tr>
+        </thead>
+        {% for each in materials %}
+          <tr>
+            <td>
+              {% if each.quantity > 0 %}
+                <span class="text-secondary">
+                  <i class="fal fa-sign-in mr-2"></i> Demand
+                </span>
+              {% else %}
+                <span class="text-primary">
+                  <i class="fal fa-sign-out mr-2"></i> Supply
+                </span>
+              {% endif %}
+            </td>
+            {% if slug == "resources" or slug == "technology" %}
+              <td>
+                <i class="fal fa-fw fa-{{ each.material_type.parent.icon }}"></i>
+                {{ each.material_type.parent }}
+              </td>
+            {% endif %}
+            <td>
+              {% if each.name %}
+                {{ each.name }}
+              {% else %}
+                {{ each.material_type }}
+              {% endif %}
+            </td>
+            {% if slug == "space" %}
+              <td>
+                {{ each.get_availability_display }}
+              </td>
+            {% endif %}
+            <td>{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
+            <td>
+              {{ each.start_date|date:"d M Y" }} - {% if each.end_date %}{{ each.end_date|date:"d M Y" }}{% else %}open ended{% endif %}
+            </td>
+            <td class="text-right has-button">
+              <a class="btn btn-primary btn-sm" href="{% url 'platformu:admin_datapoint' each.id %}"><i class="fa fa-info-circle mr-0"></i></a>
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

@@ -61,7 +61,7 @@
         </li>
 
         <li class="list-group-item">
-          <i class="fal fa-fw fa-calendar mr-2"></i>{{ data.start_date }} - {{ data.end_date }}
+          <i class="fal fa-fw fa-calendar mr-2"></i>{{ data.start_date|date:"d M Y" }} - {{ data.end_date|date:"d M Y" }}
         </li>
 
         {% if data.description %}
@@ -81,16 +81,16 @@
       {% endif %}
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          <strong>{{ data.owner }}</strong>
+          <i class="fal fa-fw fa-info-circle mr-2" aria-hidden="true"></i> <a href="{% url 'platformu:admin_entity' my_organization.id data.owner.organization.id %}">{{ data.owner }}</a>
         </li>
         {% if data.owner.organization.url %}
           <li class="list-group-item">
-            <i class="fal fa-fw fa-link mr-2" aria-hidden="true"></i> {{ data.owner.organization.url }}
+            <i class="fal fa-fw fa-link mr-2" aria-hidden="true"></i> <a href="{{ data.owner.organization.url }}">{{ data.owner.organization.url }}</a>
           </li>
         {% endif %}
         {% if data.owner.organization.email %}
           <li class="list-group-item">
-            <i class="fal fa-fw fa-envelope mr-2" aria-hidden="true"></i> {{ data.owner.organization.email }}
+            <i class="fal fa-fw fa-envelope mr-2" aria-hidden="true"></i> <a href="mailto:{{ data.owner.organization.email }}">{{ data.owner.organization.email }}</a>
           </li>
         {% endif %}
         {% if data.owner.meta_data.address %}

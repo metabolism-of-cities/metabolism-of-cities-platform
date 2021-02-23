@@ -138,26 +138,8 @@ def admin_dashboard(request, organization=None):
         gps = organization_list[0].meta_data
         if not "lat" in gps:
             messages.error(request, "Please ensure that you enter the address/GPS details first.")
-        data = MaterialDemand.objects.filter(owner__in=organization_list).filter(start_date__lte=date.today(), end_date__gte=date.today())
+        data = MaterialDemand.objects.filter(owner__in=organization_list, start_date__lte=date.today(), end_date__gte=date.today())
         material_list = MaterialDemand.objects.filter(owner__in=organization_list).values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
-
-        # We need to make each bubble relative to the smallest value in that group
-        # We can improve efficiency... starting with a single query to obtain only largest values
-        # But for now efficiency is not that big a deal
-
-        # Message from Guus: we're not using bubbles anymore, so this is no longer necessary
-        # Keeping it just in case
-
-        # for each in data:
-        #     material = each.material_type
-        #     if each.unit.multiplication_factor:
-        #         # We always need to convert to a standard unit
-        #         multiplied = each.unit.multiplication_factor * each.absolute_quantity()
-        #         if material.name in min_values:
-        #             current = min_values[material.name]
-        #             min_values[material.name] = min([multiplied, current])
-        #         else:
-        #             min_values[material.name] = multiplied
 
     context = {
         "page": "dashboard",
@@ -388,9 +370,13 @@ def admin_datapoint(request, id):
 @login_required
 def admin_entity(request, organization, id):
     my_organization = my_organizations(request, organization)
+
+    materials = MaterialDemand.objects.filter(owner_id=id, start_date__lte=date.today()).exclude(end_date__lt=date.today())
+
     context = {
         "page": "entity",
         "my_organization": my_organization,
+        "materials": materials,
         "info": get_entity_record(request, my_organization, id),
         "load_leaflet_basics": True,
     }
@@ -450,7 +436,6 @@ def admin_entity_form(request, organization, id=None):
         if "sector" in request.POST:
             info.sectors.add(Sector.objects.get(pk=request.POST["sector"]))
 
-
         if "tags" in request.POST and request.POST.getlist("tags"):
             info.tags.clear()
             for tag_id in request.POST.getlist("tags"):
@@ -461,6 +446,7 @@ def admin_entity_form(request, organization, id=None):
                     p(e)
             
         #Let remove all business links when the form is submitted    
+
         RecordRelationship.objects.filter(record_parent=my_organization, relationship_id=35).delete()
         for count in range(30):
             business_name = "link_business_" + str(count)
@@ -489,7 +475,7 @@ def admin_entity_form(request, organization, id=None):
                     record_parent = my_organization,
                     record_child = business,
                     relationship_id = 35,
-                    meta_data = {"dependency": request.POST.get(dependency)} 
+                    meta_data = {"dependency": request.POST.get(dependency)}
                 )
 
         messages.success(request, "The information was saved.")
