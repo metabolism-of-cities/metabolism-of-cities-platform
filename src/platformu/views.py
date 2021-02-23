@@ -447,7 +447,6 @@ def admin_entity_form(request, organization, id=None):
                     p(e)
             
         #Let remove all business links when the form is submitted    
-
         RecordRelationship.objects.filter(record_parent=info, relationship_id=35).delete()
         for count in range(30):
             business_name = "link_business_" + str(count)
@@ -457,7 +456,7 @@ def admin_entity_form(request, organization, id=None):
                 #If it doesn't exist we record a new one
                 check = None
                 try:
-                    check = Organization.objects.get(pk=request.POST[business_name])
+                    check = Organization.objects_unfiltered.get(pk=request.POST[business_name])
                 except:
                     p("Id not found")
                 if check:
