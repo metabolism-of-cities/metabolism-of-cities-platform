@@ -586,7 +586,6 @@ class Organization(Record):
         ("other", "Other"),
     )
     type = models.CharField(max_length=20, choices=ORG_TYPE)
-    updated_at = models.DateTimeField(null=True, auto_now=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(unidecode(self.name))

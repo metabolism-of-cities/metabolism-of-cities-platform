@@ -422,6 +422,7 @@ def admin_entity_form(request, organization, id=None):
             info.is_deleted = True
         if "image" in request.FILES:
             info.image = request.FILES["image"]
+        date_now = datetime.datetime.now()
         info.meta_data = {
             "address": request.POST.get("address"),
             "employees": request.POST.get("employees"),
@@ -437,6 +438,7 @@ def admin_entity_form(request, organization, id=None):
             "sales_regional": request.POST.get("sales-regional"),
             "sales_export": request.POST.get("sales-export"),
             "nace_code": request.POST.get("nace_code"),
+            "updated_at": date_now.strftime("%Y-%m-%d %H:%M:%S"),
         }
         info.save()
         info.sectors.clear()
