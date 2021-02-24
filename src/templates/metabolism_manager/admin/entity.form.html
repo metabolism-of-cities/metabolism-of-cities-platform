@@ -140,15 +140,13 @@
           </div>
         </div>
 
-
         <div class="form-group form-row">
-          <label for="location">Clusters</label>
-          <select id="tags" class="form-control" name="tags" multiple required>
+          <label for="tags">Clusters</label>
+          <select id="tags" class="form-control select2" name="tags" multiple required>
             {% for each in list_tag %}
               <option value="{{ each.id }}" {% if each in entity_tags  %}selected{% endif %}>{{ each.name }}</option>
             {% endfor %}
           </select>
-          <p>Hold down the Ctrl (windows) or Command (Mac) button to select multiple options.</p>
         </div>
 
         <hr>
