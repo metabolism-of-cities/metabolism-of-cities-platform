@@ -39,13 +39,13 @@
       <label class="col-md-3 col-form-label" for="days">Days</label>
       <div class="col-md-9">
         <select class="form-control custom-select" name="days" id="days">
-          <option value="always">Every day</option>
-          <option value="weekdays">Weekdays</option>
-          <option value="weekends">Weekends</option>
-          <option value="sporadically">Sporadically</option>
-          <option value="never">Never</option>
-          <option value="other">Other</option>
-          <option value="unknown">Unknown</option>
+          <option value="always" {% if demand.days == "always" %}selected{% endif %}>Every day</option>
+          <option value="weekdays" {% if demand.days == "weekdays" %}selected{% endif %}>Weekdays</option>
+          <option value="weekends" {% if demand.days == "weekends" %}selected{% endif %}>Weekends</option>
+          <option value="sporadically" {% if demand.days == "sporadically" %}selected{% endif %}>Sporadically</option>
+          <option value="never" {% if demand.days == "never" %}selected{% endif %}>Never</option>
+          <option value="other" {% if demand.days == "other" %}selected{% endif %}>Other</option>
+          <option value="unknown" {% if demand.days == "unknown" %}selected{% endif %}>Unknown</option>
         </select>
       </div>
     </div>
@@ -54,13 +54,13 @@
       <label class="col-md-3 col-form-label" for="time">Time</label>
       <div class="col-md-9">
         <select class="form-control custom-select" name="time" id="time">
-          <option value="always">Any time</option>
-          <option value="during-work">During working hours</option>
-          <option value="outside-work">Outside working hours</option>
-          <option value="sporadically">Sporadically</option>
-          <option value="never">Never</option>
-          <option value="other">Other</option>
-          <option value="unknown">Unknown</option>
+          <option value="always" {% if demand.time == "always" %}selected{% endif %}>Any time</option>
+          <option value="during-work" {% if demand.time == "during-work" %}selected{% endif %}>During working hours</option>
+          <option value="outside-work" {% if demand.time == "outside-work" %}selected{% endif %}>Outside working hours</option>
+          <option value="sporadically" {% if demand.time == "sporadically" %}selected{% endif %}>Sporadically</option>
+          <option value="never" {% if demand.time == "never" %}selected{% endif %}>Never</option>
+          <option value="other" {% if demand.time == "other" %}selected{% endif %}>Other</option>
+          <option value="unknown" {% if demand.time == "unknown" %}selected{% endif %}>Unknown</option>
         </select>
       </div>
     </div>

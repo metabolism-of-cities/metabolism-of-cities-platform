@@ -2381,6 +2381,8 @@ class MaterialDemand(Record):
         ('Long_term_use', 'Available for long-term use'),
     ]
     availability = models.CharField(max_length=50, null=True,  blank=True, choices=AVAILABILITY)
+    days = models.CharField(max_length=255, null=True)
+    time = models.CharField(max_length=255, null=True)
 
     def __str__(self):
         return self.material_type.name

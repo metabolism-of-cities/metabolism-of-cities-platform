@@ -591,6 +591,8 @@ def admin_entity_material(request, organization, id, slug, material=None, edit=N
             demand.quantity = quantity*-1 if type == "supply" else quantity
             demand.material_type = material
             demand.owner = info
+            demand.days = request.POST.get("days")
+            demand.time = request.POST.get("time")
             demand.save()
             messages.success(request, "Information was saved.")
             return redirect(request.GET.get("prev"))
