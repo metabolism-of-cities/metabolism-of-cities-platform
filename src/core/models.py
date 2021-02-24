@@ -573,6 +573,7 @@ class Organization(Record):
     ORG_TYPE = (
         ("academic", "Research Institution"),
         ("universities", "Universities"),
+        ("university_dep", "University department/school/unit"),
         ("city_government", "City Government"),
         ("regional_government", "Regional Government"),
         ("national_government", "National Government"),
