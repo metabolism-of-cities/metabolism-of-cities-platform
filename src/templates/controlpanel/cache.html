@@ -8,28 +8,6 @@
     Back to control panel
   </a>
 
-  aa
-  <table class="table table-striped datatable">
-    <thead>
-      <tr>
-        <th>Course</th>
-        <th>Modules</th>
-        <th>Students (all)</th>
-        <th>Students (last 90 days)</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for each in list %}
-      <tr>
-        <td><a href="{{ each.id }}/">{{ each }}</a></td>
-        <td>{{ each.modules.count }}</td>
-        <td>{{ each.students.count }}</td>
-        <td>{{ each.recent_students.count }}</td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-
   <form method="post">
     <button type="submit" name="delete" value="true" class="btn btn-danger"><i class="fa fa-trash-alt"></i> Clear all cache</button>
     {% csrf_token %}

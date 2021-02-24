@@ -11,7 +11,7 @@
 
   {% else %}
 
-    <h2>Presentation review queue</h2>
+    <h2>Abstract review queue</h2>
     <table class="table table-striped datatable">
       <thead>
         <tr>
@@ -26,7 +26,7 @@
             <td>
               <a href="{% url "ascus:admin_document" each.id %}">
                 {{ each.related_to|truncatewords:13 }}<br>
-                <em>{{ each.related_to.uploader }}</em>
+                <em>{{ each.related_to.author }}</em>
               </a>
             </td>
             <td data-sort="{{ each.date_created|date:"U" }}">{{ each.date_created|date:"M d, Y" }}</td>

@@ -15,7 +15,7 @@
         <strong>{{ each|truncatewords:10 }}</strong><br>
         <em>{{ each.start_date|date:"l M d, Y H:i" }}-{{ each.end_date|date:"H:i" }}</em>
       </td>
-      <td>
+      <td hidden>
         <a href="{% url "ascus:account_discussion" each.id %}?org_mode=true" class="btn btn-default-outline"><i class="fa fa-pencil"></i> Edit</a>
         <a href="{% url "ascus:admin_discussion_attendance" each.id %}" class="btn btn-default-outline"><i class="fa fa-users"></i> Attendance</a>
       </td>
@@ -23,6 +23,6 @@
   {% endfor %}
   </table>
 
-  <p class="mt-5"><a href="/account/admin/" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a></p>
+  <p class="mt-5"><a href="/controlpanel/" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a></p>
 
 {% endblock %}

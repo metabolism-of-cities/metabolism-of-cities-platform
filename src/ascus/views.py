@@ -709,7 +709,7 @@ def ascus_admin_list(request, type="participant"):
     }
     get_type = types[type]
     list = RecordRelationship.objects.filter(
-        record_child = Project.objects.get(pk=PAGE_ID["ascus"]),
+        record_child = get_project(request),
         relationship = Relationship.objects.get(name=get_type),
     ).order_by("record_parent__name")
     context = {
@@ -721,6 +721,23 @@ def ascus_admin_list(request, type="participant"):
         "type": type,
     }
     return render(request, "ascus/admin.list.html", context)
+
+@check_ascus_admin_access
+def ascus_admin_documentsz(request):
+    list = RecordRelationship.objects.filter(
+        record_child = get_project(request),
+        relationship = Relationship.objects.get(name=get_type),
+    ).order_by("record_parent__name")
+    context = {
+        "header_title": "AScUS Admin",
+        "header_subtitle": get_subtitle(request),
+        "list": list,
+        "load_datatables": True,
+        "types": types,
+        "type": type,
+    }
+    return render(request, "ascus/admin.list.html", context)
+
 
 @check_ascus_admin_access
 def admin_discussion_attendance(request, id):
@@ -740,16 +757,18 @@ def admin_discussion_attendance(request, id):
 
 @check_ascus_admin_access
 def ascus_admin_documents(request, type="introvideos"):
+    project = get_project(request)
     types = {
         "introvideos": "Introduction videos", 
         "topics": "Discussion topics", 
         "presentations": "Presentations", 
+        "abstracts": "Abstracts",
     }
     get_type = types[type]
 
     if type == "topics":
         list = Event.objects_include_private \
-            .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+            .filter(parent_list__record_child=project) \
             .filter(tags__id=770).order_by("start_date")
     elif type == "presentations":
         list = Work.objects_include_private \
@@ -759,6 +778,10 @@ def ascus_admin_documents(request, type="introvideos"):
         list = LibraryItem.objects_include_private \
             .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
             .filter(tags__id=769)
+    elif type == "abstracts":
+        list = Work.objects_include_private \
+            .filter(related_to__parent_list__record_child=project) \
+            .filter(related_to__tags__id=771)
 
     context = {
         "header_title": "AScUS Admin",

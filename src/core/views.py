@@ -799,7 +799,8 @@ def controlpanel_users(request):
     if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
     context = {
-        "users": RecordRelationship.objects.filter(record_child_id=request.project),
+        # Filter our "presentation" as most of AScUS records are in that form and should be relabeled to Presenters
+        "users": RecordRelationship.objects.filter(record_child_id=request.project).exclude(relationship_id=13),
         "load_datatables": True,
     }
     return render(request, "controlpanel/users.html", context)
@@ -906,7 +907,7 @@ def controlpanel_relationship_form(request, id=None):
         except Exception as e:
             messages.error(request, mark_safe(f"We could not save the information. Maybe this relationship already exists? <br><br>Error message: <br><strong>{e}</strong>"))
 
-    relationships = [7,6,31]
+    relationships = [7,6,31,21]
     if project.is_data_project:
         # We add DATA PROCESSOR PERMISSIONS if this is a data site
         relationships.append(33)

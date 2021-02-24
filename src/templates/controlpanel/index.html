@@ -28,7 +28,7 @@
           <div class="icon">
             <i class="fal fa-fw fa-users-medical"></i>
           </div>
-          <div class="card-header">Contributors</div>
+          <div class="card-header">Team</div>
         </a>
       </div>
 
@@ -209,6 +209,38 @@
               <i class="fal fa-fw fa-file-import"></i>
             </div>
             <div class="card-header">Zotero</div>
+          </a>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if PROJECT.slug == "ascus2021" %}
+    <section>
+      <h2>(Un)conference management</h2>
+      <div class="row">
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="../account/admin/participant/">
+            <div class="icon">
+              <i class="fal fa-fw fa-users"></i>
+            </div>
+            <div class="card-header">People</div>
+          </a>
+        </div>
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="../account/admin/documents/abstracts/">
+            <div class="icon">
+              <i class="fal fa-fw fa-presentation"></i>
+            </div>
+            <div class="card-header">Abstracts</div>
+          </a>
+        </div>
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="../account/admin/documents/topics/">
+            <div class="icon">
+              <i class="fal fa-fw fa-comments-alt"></i>
+            </div>
+            <div class="card-header">Discussion topics</div>
           </a>
         </div>
       </div>
