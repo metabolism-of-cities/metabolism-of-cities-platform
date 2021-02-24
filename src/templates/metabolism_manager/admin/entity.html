@@ -65,6 +65,12 @@
           <th class="text-nowrap">Status</th>
           <td>{% if info.is_deleted %} Inactive {% else %} Active {% endif %}</td>
         </tr>
+        {% if info.meta_data.updated_at %}
+          <tr>
+            <th class="text-nowrap">Last updated</th>
+            <td>{{ info.meta_data.updated_at }}</td>
+          </tr>
+        {% endif %}
       </tbody>
     </table>
 

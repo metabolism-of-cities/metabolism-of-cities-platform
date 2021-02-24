@@ -19,10 +19,11 @@
           <table class="table mb-0">
             <thead>
               <tr>
-                <th class="border-0">Name</th>
-                <th class="border-0 medium-cell">Sector</th>
-                <th class="border-0 medium-cell">Employees</th>
-                <th class="border-0 narrow-cell">Active</th>
+                <th>Name</th>
+                <th>Sector</th>
+                <th>Employees</th>
+                <th>Last updated</th>
+                <th>Active</th>
               </tr>
             </thead>
             <tbody>
@@ -35,6 +36,7 @@
                     {% endfor %}
                   </td>
                   <td>{{ details.meta_data.employees }}</td>
+                  <td>{{ details.meta_data.updated_at }}</td>
                   <td>
                     {% if details.is_deleted %}
                       <i class="far fa-times-circle text-danger"></i>

@@ -3169,3 +3169,33 @@ nav.navbar .projects-category {
   color: $primary;
   font-size: 17px;
 }
+
+// DATATABLES
+.dataTables_wrapper input.form-control:focus, .dataTables_wrapper select.custom-select:focus {
+  border-color: $primary;
+  box-shadow: 0 0 0 .2rem rgba($primary, 0.16);
+}
+
+.dataTables_wrapper .paginate_button.page-item .page-link:focus {
+  box-shadow: none !important;
+}
+
+.dataTables_wrapper .paginate_button.page-item:not(.disabled) .page-link {
+  color: $dark;
+}
+
+.dataTables_wrapper .paginate_button.page-item.active .page-link {
+  background-color: $primary;
+  border-color: $primary;
+  color: $white;
+
+  &:hover {
+    border-color: darken($primary, 5%);
+    background-color: darken($primary, 5%);
+  }
+
+  &:active, &:focus {
+    border-color: darken($primary, 5%) !important;
+    background-color: darken($primary, 5%) !important;
+  }
+}

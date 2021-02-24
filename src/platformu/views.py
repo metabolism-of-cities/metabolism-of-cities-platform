@@ -102,8 +102,12 @@ def clusters(request, organization):
             parent_tag = Tag.objects.get(pk=TAG_ID["platformu_segments"]),
             belongs_to = my_organization,
         )
+
+    organization_list = Organization.objects_include_private.filter(tags__belongs_to = my_organization)
+
     context = {
         "page": "organisations",
+        "organization_list": organization_list,
         "info": my_organization,
         "tags": Tag.objects.filter(belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"]).order_by("id"),
         "my_organization": my_organization,
@@ -445,8 +449,8 @@ def admin_entity_form(request, organization, id=None):
                     info.tags.add(tag)
                 except Exception as e:
                     p(e)
-            
-        #Let remove all business links when the form is submitted    
+
+        #Let remove all business links when the form is submitted
         RecordRelationship.objects.filter(record_parent=info, relationship_id=35).delete()
         for count in range(30):
             business_name = "link_business_" + str(count)
