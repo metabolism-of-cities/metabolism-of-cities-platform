@@ -1341,15 +1341,15 @@ def work_grid(request, sprint=None):
     counter_open = {}
 
     if not request.GET:
-        total_list = list.values("workactivity__type").annotate(total=Count("workactivity__type")).order_by("total")
-        completed_list = list.filter(status=2).values("workactivity__type").annotate(total=Count("workactivity__type")).order_by("total")
-        open_list = list.filter(status=1).values("workactivity__type").annotate(total=Count("workactivity__type")).order_by("total")
+        total_list = list.values("workactivity__category__id").annotate(total=Count("workactivity__category__id")).order_by("total")
+        completed_list = list.filter(status=2).values("workactivity__category__id").annotate(total=Count("workactivity__category__id")).order_by("total")
+        open_list = list.filter(status=1).values("workactivity__category__id").annotate(total=Count("workactivity__category__id")).order_by("total")
         for each in total_list:
-            counter[each["workactivity__type"]] = each["total"]
+            counter[each["workactivity__category__id"]] = each["total"]
         for each in completed_list:
-            counter_completed[each["workactivity__type"]] = each["total"]
+            counter_completed[each["workactivity__category__id"]] = each["total"]
         for each in open_list:
-            counter_open[each["workactivity__type"]] = each["total"]
+            counter_open[each["workactivity__category__id"]] = each["total"]
 
     if list.count() > 200:
         list = list[:200]
@@ -1362,6 +1362,7 @@ def work_grid(request, sprint=None):
         "priorities": Work.WorkPriority.choices,
         "title": "Work grid",
         "types": WorkActivity.WorkType,
+        "categories": WorkCategory.objects.all(),
         "status": status,
         "type": int(type) if type else None,
         "priority": int(priority) if priority else None,

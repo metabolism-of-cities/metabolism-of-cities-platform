@@ -137,13 +137,13 @@
   {% if counter and DEBUG %}
 
     <div class="row btn-cards">
-      {% for each in types %}
+      {% for each in categories %}
         <div class="col-md-3 mb-3">
-          <a class="card icon-card btn-card" href="?type={{ each }}">
-            <div class="card-header">{{ each.label }} 
+          <a class="card icon-card btn-card" href="?category={{ each.id }}">
+            <div class="card-header">{{ each }} 
             </div>
           <div class="card-footer">
-            total: {{ counter|get_item:each }}<br>open: {{ counter_open|get_item:each }}<br>completed: {{ counter_completed|get_item:each }}
+            total: {{ counter|get_item:each.id }}<br>open: {{ counter_open|get_item:each.id }}<br>completed: {{ counter_completed|get_item:each.id }}
 
           </div>
           </a>
