@@ -1,4 +1,6 @@
 {% extends "_base.html" %}
+{% load moc_extras %}
+
 {% block page_name %}stafcp workgrid{% endblock %}
 
 {% block css %}
@@ -132,49 +134,70 @@
     </div>
   </form>
 
-  <table class="table datatable datatable-card">
-    <thead>
-      <tr>
-        <th>Task</th>
-        <th>Details</th>
-        <th>Points</th>
-        <th>Last update</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for each in task_list %}
-      <tr>
-        <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
-          <a href="{{ each.id }}/">
-            {{ each }}
-            {% if each.related_to %}
-              <br>
-              <em>{{ each.related_to }}</em>
-            {% endif %}
+  {% if counter and DEBUG %}
+
+    <div class="row btn-cards">
+      {% for each in types %}
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="?type={{ each }}">
+            <div class="card-header">{{ each.label }} 
+            </div>
+          <div class="card-footer">
+            total: {{ counter|get_item:each }}<br>open: {{ counter_open|get_item:each }}<br>completed: {{ counter_completed|get_item:each }}
+
+          </div>
           </a>
-            <br>
-            <em>
-              {{ each.part_of_project }}
-            </em>
-        </td>
-        <td>
-          {{ each.workactivity }}<br>
-          <em>{{ each.get_status }} | {{ each.get_priority_display }} priority</em>
-        </td>
-        
-        <td>
-          {{ each.workactivity.points }}
-        </td>
-        <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
-          {% if each.last_update %}
-            {{ each.last_update.date_created|timesince }} ago 
-            <br><span class="faded">by {{ each.last_update.posted_by }}</span>
-          {% endif %}
-        </td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
+        </div>
+      {% endfor %}
+    </div>
+
+  {% else %}
+
+    <table class="table datatable datatable-card">
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Details</th>
+          <th>Points</th>
+          <th>Last update</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in task_list %}
+        <tr>
+          <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
+            <a href="{{ each.id }}/">
+              {{ each }}
+              {% if each.related_to %}
+                <br>
+                <em>{{ each.related_to }}</em>
+              {% endif %}
+            </a>
+              <br>
+              <em>
+                {{ each.part_of_project }}
+              </em>
+          </td>
+          <td>
+            {{ each.workactivity }}<br>
+            <em>{{ each.get_status }} | {{ each.get_priority_display }} priority</em>
+          </td>
+          
+          <td>
+            {{ each.workactivity.points }}
+          </td>
+          <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
+            {% if each.last_update %}
+              {{ each.last_update.date_created|timesince }} ago 
+              <br><span class="faded">by {{ each.last_update.posted_by }}</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+  {% endif %}
 
   {% if PERMISSIONS %}
     <a href="../controlpanel" class="btn btn-primary-basic mt-4">
