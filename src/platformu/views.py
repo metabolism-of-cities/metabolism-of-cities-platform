@@ -429,7 +429,7 @@ def admin_entity_form(request, organization, id=None):
             "founding_year": request.POST.get("year"),
             "purchasing_local": request.POST.get("purchasing-local"),
             "purchasing_regional": request.POST.get("purchasing-regional"),
-            "purchasing_export": request.POST.get("purchasing-export"),
+            "purchasing_import": request.POST.get("purchasing-import"),
             "sales_local": request.POST.get("sales-local"),
             "sales_regional": request.POST.get("sales-regional"),
             "sales_export": request.POST.get("sales-export"),
