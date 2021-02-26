@@ -237,7 +237,7 @@
           "status_color": "{% if each.type == 'supply' %}primary{% else %}secondary{% endif %}",
           "marker_color": "{% if each.type == 'supply' %}cadetblue{% else %}darkred{% endif %}",
           "start_date": {{ each.start_date|date:"U" }},
-          "end_date": {{ each.end_date|date:"U" }},
+          "end_date": {{ each.end_date|date:"U"|default:"9556582400" }},
         },
       {% endfor %}
     ]

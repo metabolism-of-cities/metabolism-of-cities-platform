@@ -142,7 +142,7 @@ def admin_dashboard(request, organization=None):
         gps = organization_list[0].meta_data
         if not "lat" in gps:
             messages.error(request, "Please ensure that you enter the address/GPS details first.")
-        data = MaterialDemand.objects.filter(owner__in=organization_list, start_date__lte=date.today(), end_date__gte=date.today())
+        data = MaterialDemand.objects.filter(owner__in=organization_list, start_date__lte=date.today())
         material_list = MaterialDemand.objects.filter(owner__in=organization_list).values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
 
     properties = {
