@@ -145,6 +145,10 @@ def admin_dashboard(request, organization=None):
         data = MaterialDemand.objects.filter(owner__in=organization_list, start_date__lte=date.today(), end_date__gte=date.today())
         material_list = MaterialDemand.objects.filter(owner__in=organization_list).values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
 
+    properties = {
+        "map_layer_style": "light-v8"
+    }
+
     context = {
         "page": "dashboard",
         "tab": "map",
@@ -161,6 +165,7 @@ def admin_dashboard(request, organization=None):
         "load_highcharts": True,
         "load_leaflet": True,
         "types": types,
+        "properties": properties,
     }
 
     return render(request, "metabolism_manager/admin/dashboard.html", context)
@@ -660,10 +665,12 @@ def admin_area(request):
 def dashboard(request):
     my_organization = my_organizations(request, organization)
     info = get_entity_record(request, my_organization, id)
+
     context = {
         "page": "dashboard",
         "my_organization": my_organization,
         "info": info,
+        "properties": properties,
     }
     return render(request, "metabolism_manager/dashboard.html", context)
 
