@@ -7,6 +7,11 @@
   .text-truncate {
     max-width: 200px;
   }
+
+  div.dt-buttons {
+    position: relative;
+    float: left;
+  }
 </style>
 {% endblock %}
 
@@ -18,7 +23,7 @@
 
   {% for key,data in types.items %}
     <h2 class="mt-5">{{ key }}</h2>
-    <table class="table datatable">
+    <table class="table log-table">
       <thead>
         <tr>
           <th>Status</th>
@@ -63,5 +68,41 @@
       </tbody>
     </table>
   {% endfor %}
+
+{% endblock %}
+
+{% block footer %}
+  <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+  <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+  <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+  <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+  <script>
+    $(".log-table").DataTable( {
+        dom: "Bfrtip",
+        buttons: [
+          {
+            extend: "copy",
+            text: "<i class='fal fa-copy'></i> Copy table",
+            className: "btn btn-primary-basic"
+          },
+          {
+            extend: "csv",
+            text: "<i class='fal fa-file-spreadsheet'></i> CSV",
+            className: "btn btn-primary-basic"
+          },
+          {
+            extend: "excel",
+            text: "<i class='fal fa-file-excel'></i> Excel",
+            className: "btn btn-primary-basic"
+          },
+          {
+            extend: "pdf",
+            text: "<i class='fal fa-file-pdf'></i> PDF",
+            className: "btn btn-primary-basic"
+          },
+        ]
+    } );
+  </script>
 
 {% endblock %}
