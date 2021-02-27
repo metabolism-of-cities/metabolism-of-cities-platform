@@ -128,18 +128,10 @@ def clusters(request, organization):
                             tag = None
 
                         if tag:
-                            
-                            if previous_org == current_org:
-                                info = Organization.objects_unfiltered.filter(name=previous_org)
-                                info = info[0]
-                            else:
-                                info = Organization()
-                                info.name = organization_name
-                                info.is_public = True
-                                info.save()
-                            current_org = info
-                            previous_org = current_org
-
+                            info = Organization()
+                            info.name = organization_name
+                            info.is_public = True
+                            info.save()
                             info.tags.add(tag)
                             p("inserted tag " + str(tag.id) + " for organization " + organization_name)
 
