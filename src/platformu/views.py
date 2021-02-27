@@ -97,11 +97,53 @@ def create_my_organization(request):
 def clusters(request, organization):
     my_organization = my_organizations(request, organization)
     if request.method == "POST":
-        Tag.objects.create(
-            name = request.POST["name"],
-            parent_tag = Tag.objects.get(pk=TAG_ID["platformu_segments"]),
-            belongs_to = my_organization,
-        )
+        if "name" in request.POST:
+            Tag.objects.create(
+                name = request.POST["name"],
+                parent_tag = Tag.objects.get(pk=TAG_ID["platformu_segments"]),
+                belongs_to = my_organization,
+            )
+
+        if "import" in request.FILES:
+            import csv
+            file = request.FILES["import"]
+            if not file.name.endswith('.csv'):
+                messages.error(request,'File must be CSV type')
+                return  redirect("platformu:admin_clusters",organization)
+            decoded_file = file.read().decode('utf-8').splitlines()
+            reader = csv.DictReader(decoded_file)
+            previous_org = None
+            old_org = None
+            for row in reader:
+                organization_name = row["name"]
+                cluster_id = row["cluster"]
+                if organization_name and cluster_id:
+                    cluster_list = cluster_id.split(",")
+                    for cluster in cluster_list:
+                        ##We need to check if the tag exist 
+                        ##then we save the organization
+                        try:
+                            tag = Tag.objects.get(pk=int(cluster))
+                        except Exception as e:
+                            tag = None
+
+                        if tag:
+                            
+                            if previous_org == current_org:
+                                info = Organization.objects_unfiltered.filter(name=previous_org)
+                                info = info[0]
+                            else:
+                                info = Organization()
+                                info.name = organization_name
+                                info.is_public = True
+                                info.save()
+                            current_org = info
+                            previous_org = current_org
+
+                            info.tags.add(tag)
+                            p("inserted tag " + str(tag.id) + " for organization " + organization_name)
+
+
 
     organization_list = Organization.objects_include_private.filter(tags__belongs_to = my_organization)
 
