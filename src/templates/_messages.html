@@ -88,7 +88,7 @@
 
     {% if forum_topic_title %}
       <input type="hidden" name="title" value="{{ forum_topic_title }}" />
-      <input type="hidden" name="parent_url" value="{{ request.get_full_path }}" />
+      <input type="hidden" name="parent_url" value="{% if forum_url %}{{ forum_url }}{% else %}{{ request.get_full_path }}{% endif %}" />
       <input type="hidden" name="project" value="{{ request.project }}" />
       <!-- We need to put this parent ID in so that this topic will appear in the volunteer hub as well -->
       <input type="hidden" name="parent" value="31993" />

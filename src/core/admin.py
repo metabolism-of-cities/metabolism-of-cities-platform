@@ -356,7 +356,7 @@ admin_site.register(LogEntry, LogEntryAdmin)
 admin_site.register(CronJobLog, CronJobLogAdmin)
 
 admin_site.register(GeocodeScheme)
-admin_site.register(WorkCategory)
+admin_site.register(WorkCategory, WebpageDesignAdmin)
 admin_site.register(Geocode, GeocodeAdmin)
 admin_site.register(ReferenceSpace, ReferenceSpaceAdmin)
 admin_site.register(ReferenceSpaceGeocode)

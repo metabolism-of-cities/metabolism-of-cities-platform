@@ -12,14 +12,14 @@
   <h2>{{ info }}</h2>
   <p><small class="text-muted">Created on {{ info.date_created|date:"l j F Y, H:i" }}</small></p>
   {% if not sprint %}
-    <a href="../" class="btn btn-primary-basic mb-4">
+    <a href="../?category={{ info.workactivity.category.id }}" class="btn btn-primary-basic mb-4">
       <i class="fal fa-angle-left"></i>
-      Back to work list
+      Back to task list
     </a>
   {% else %}
     <a href="../?tag={{ sprint.work_tag.id }}" class="btn btn-primary-basic mb-4">
       <i class="fal fa-angle-left"></i>
-      Back to sprint work list
+      Back to sprint task list
     </a>
   {% endif %}
 

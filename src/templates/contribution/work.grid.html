@@ -21,15 +21,6 @@
       </a>
     </div>
   {% else %}
-    {% if PERMISSIONS %}
-      <div>
-        <a href="../controlpanel" class="btn btn-primary-basic mb-4">
-          <i class="fal fa-angle-left"></i>
-          Back to control panel
-        </a>
-      </div>
-    {% endif %}
-
     {% if not request.user.is_authenticated %}
       <div class="alert alert-primary alert-dismissible mb-4">
         <p>
@@ -42,11 +33,19 @@
           <i class="fas fa-user-plus"></i>
           Sign up now
         </a>
+        <a class="btn btn-primary" rel="nofollow" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/accounts/login/?next={{ request.get_full_path }}" href="/accounts/login/?"><i class="fa fa-sign-in" aria-hidden="true"></i> Log In</a>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <i class="far fa-times"></i>
         </button>
       </div>
     {% endif %}
+  {% endif %}
+
+  {% if webpage %}
+    <h2>{{ webpage }}</h2>
+    {{ webpage.get_description }}
+    <hr>
+    <h2 class="mb-4">Task list</h2>
   {% endif %}
 
   {% if request.user.is_authenticated %}
@@ -64,11 +63,11 @@
   <form class="mb-4" id="filters">
     <div class="form-row">
       <div class="col-lg mb-2">
-        <select name="type" class="custom-select">
-          <option value="">Any type</option>
-          {% for each in types %}
-            <option value="{{ each }}" {% if each == type %}selected{% endif %}>
-              {{ each.label }}
+        <select name="category" class="custom-select">
+          <option value="">Any category</option>
+          {% for each in categories %}
+            <option value="{{ each.id }}" {% if each == category %}selected{% endif %}>
+              {{ each }}
             </option>
           {% endfor %}
         </select>
@@ -116,14 +115,6 @@
           <label class="custom-control-label" for="entry">Only entry tasks</label>
         </div>
       </div>
-      {% if request.user.is_superuser %}
-        <div class="col-3">
-          <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" id="bot" name="bot_hide" value="true" {% if request.GET.bot_hide %}checked{% endif %}>
-            <label class="custom-control-label" for="bot">Hide MoC bot tasks</label>
-          </div>
-        </div>
-      {% endif %}
       <div class="col-5 text-right d-lg-none">
         <button class="btn btn-primary btn-filter ml-2" form="filters" type="submit">
           <i class="fas fa-filter"></i>
@@ -136,16 +127,38 @@
 
   {% if counter and DEBUG %}
 
-    <div class="row btn-cards">
+    <div class="row dual-iconbox">
       {% for each in categories %}
-        <div class="col-md-3 mb-3">
-          <a class="card icon-card btn-card" href="?category={{ each.id }}">
-            <div class="card-header">{{ each }} 
+        <div class="col-md-6 col-lg-4 mb-4">
+          <a href="?category={{ each.id }}" class="card btn-card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col icon">
+                  <i class="fal fa-fw fa-{{ each.icon }}" aria-hidden="true"></i>
+                </div>
+                <div class="col">
+                  <strong>{{ each }}</strong>
+                  <br>
+                  {% if counter|get_item:each.id %}
+                    <span class="badge badge-light">
+                      {{ counter|get_item:each.id }} task{% if counter|get_item:each.id > 1 %}s{% endif %}
+                    </span>
+                    {% if counter_unassigned|get_item:each.id %}
+                      <span class="badge badge-warning">
+                        {{ counter_unassigned|get_item:each.id }} unassigned
+                      </span>
+                    {% endif %}
+                    {% if counter_completed|get_item:each.id %}
+                      <span class="badge badge-success">
+                        {{ counter_completed|get_item:each.id }} completed
+                      </span>
+                    {% endif %}
+                  {% else %}
+                    <small><em>No tasks yet</em></small>
+                  {% endif %}
+                </div>
+              </div>
             </div>
-          <div class="card-footer">
-            total: {{ counter|get_item:each.id }}<br>open: {{ counter_open|get_item:each.id }}<br>completed: {{ counter_completed|get_item:each.id }}
-
-          </div>
           </a>
         </div>
       {% endfor %}
@@ -197,14 +210,15 @@
       </tbody>
     </table>
 
+    {% if load_messaging %}
+      <h2 class="mt-4">Messages</h2>
+      <section class="messages">
+        {% include "_messages.html" %}
+      </section>
+    {% endif %}
+
   {% endif %}
 
-  {% if PERMISSIONS %}
-    <a href="../controlpanel" class="btn btn-primary-basic mt-4">
-      <i class="fal fa-angle-left"></i>
-      Back to control panel
-    </a>
-  {% endif %}
 {% endblock %}
 
 {% block footer %}

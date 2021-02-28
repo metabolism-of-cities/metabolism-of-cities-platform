@@ -1930,9 +1930,13 @@ class WorkCategory(models.Model):
     name = models.CharField(max_length=255)
     show_in_tasklist = models.BooleanField(default=True, db_index=True)
     icon = models.CharField(max_length=50, null=True, blank=True, help_text="Only include the icon name, not fa- classes --- see https://fontawesome.com/icons?d=gallery")
+    webpage = models.ForeignKey(Webpage, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ["id"]
 
 class WorkActivity(models.Model):
 

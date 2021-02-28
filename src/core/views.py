@@ -1232,6 +1232,7 @@ def work_form(request, id=None, sprint=None):
         form = ModelForm(request.POST or None, instance=info)
     else:
         form = ModelForm(request.POST or None, initial={"part_of_project": project})
+    form.fields["workactivity"].queryset = WorkActivity.objects.filter(category__show_in_tasklist=True)
     if "tags" in fields:
         form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id=809)
     if request.method == "POST":
@@ -1269,9 +1270,8 @@ def work_form(request, id=None, sprint=None):
                     attachment.save()
                     message.attachments.add(attachment)
 
-
             messages.success(request, "Information was saved.")
-            return redirect(request.GET["return"])
+            return redirect("/hub/work/" + str(info.id))
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
 
@@ -1289,9 +1289,9 @@ def work_form(request, id=None, sprint=None):
 
 def work_grid(request, sprint=None):
 
-    project = request.project
+    project = get_project(request)
     status = request.GET.get("status")
-    type = request.GET.get("type")
+    category = request.GET.get("category")
     priority = request.GET.get("priority")
     selected_project = None
 
@@ -1300,7 +1300,7 @@ def work_grid(request, sprint=None):
     else:
         list = Work.objects.all()
 
-    list = list.exclude(workactivity_id=2)
+    list = list.filter(workactivity__category__show_in_tasklist=True)
 
     if "entry" in request.GET:
         list = list.filter(tags=810)
@@ -1311,9 +1311,9 @@ def work_grid(request, sprint=None):
     elif "project" in request.GET and request.GET["project"]:
         selected_project = request.GET.get("project")
         list = list.filter(part_of_project_id=selected_project)
-    elif project != 1:
+    elif project.id != 1:
         list = list.filter(part_of_project_id=project)
-        selected_project = project
+        selected_project = project.id
 
     if "tag" in request.GET and request.GET["tag"]:
         list = list.filter(tags=get_object_or_404(Tag, pk=request.GET["tag"]))
@@ -1331,29 +1331,40 @@ def work_grid(request, sprint=None):
     if priority:
         list = list.filter(priority=priority)
 
-    if type:
-        list = list.filter(workactivity__type=type)
+    webpage = None
+    if category:
+        list = list.filter(workactivity__category_id=category)
+        category = WorkCategory.objects.get(pk=category)
+        webpage = category.webpage
 
     list = list.order_by("-last_update__date_created")
     projects = Project.objects.filter(pk__in=OPEN_WORK_PROJECTS).order_by("name")
     counter = {}
     counter_completed = {}
-    counter_open = {}
+    counter_unassigned = {}
 
     if not request.GET:
         total_list = list.values("workactivity__category__id").annotate(total=Count("workactivity__category__id")).order_by("total")
         completed_list = list.filter(status=2).values("workactivity__category__id").annotate(total=Count("workactivity__category__id")).order_by("total")
-        open_list = list.filter(status=1).values("workactivity__category__id").annotate(total=Count("workactivity__category__id")).order_by("total")
+        unassigned_list = list.filter(status=1, assigned_to__isnull=True).values("workactivity__category__id").annotate(total=Count("workactivity__category__id")).order_by("total")
         for each in total_list:
             counter[each["workactivity__category__id"]] = each["total"]
         for each in completed_list:
             counter_completed[each["workactivity__category__id"]] = each["total"]
-        for each in open_list:
-            counter_open[each["workactivity__category__id"]] = each["total"]
-
-    if list.count() > 200:
+        for each in unassigned_list:
+            counter_unassigned[each["workactivity__category__id"]] = each["total"]
+    elif list.count() > 200:
         list = list[:200]
         messages.warning(request, "There are more than 200 tasks found. We only show the first 200 tasks. Use the filters to find the right tasks.")
+
+    list_messages = None
+    forum_url = None
+    forum_topic = None
+    if webpage:
+        forum_url = project.get_website() + webpage.slug
+        forum_topic = ForumTopic.objects.filter(part_of_project_id=request.project, parent_url=forum_url)
+        if forum_topic:
+            list_messages = Message.objects.filter(parent=forum_topic[0])
 
     context = {
         "task_list": list,
@@ -1362,19 +1373,25 @@ def work_grid(request, sprint=None):
         "priorities": Work.WorkPriority.choices,
         "title": "Work grid",
         "types": WorkActivity.WorkType,
-        "categories": WorkCategory.objects.all(),
+        "categories": WorkCategory.objects.filter(show_in_tasklist=True),
         "status": status,
-        "type": int(type) if type else None,
+        "category": category,
         "priority": int(priority) if priority else None,
         "sprint": sprint,
         "menu": "work",
         "projects": projects,
         "counter": counter,
         "counter_completed": counter_completed,
-        "counter_open": counter_open,
+        "counter_unassigned": counter_unassigned,
         "selected_project": int(selected_project) if selected_project else None,
         "header_title": "Tasks",
         "header_subtitle": "Let's build things together, one item at a time!",
+        "webpage": webpage,
+        "load_messaging": True if webpage else False,
+        "forum_id": forum_topic[0].id if forum_topic else "create",
+        "forum_url": forum_url,
+        "forum_topic_title": "Community hub - " + webpage.name if webpage else None,
+        "list_messages": list_messages,
     }
     return render(request, "contribution/work.grid.html", context)
 
