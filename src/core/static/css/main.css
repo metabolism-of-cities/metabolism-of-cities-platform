@@ -2068,3 +2068,24 @@ nav.navbar .projects-category {
   border-bottom: 1px solid rgba(20, 77, 88, 0.25);
   color: #144d58;
   font-size: 17px; }
+
+.dataTables_wrapper input.form-control:focus, .dataTables_wrapper select.custom-select:focus {
+  border-color: #144d58;
+  box-shadow: 0 0 0 0.2rem rgba(20, 77, 88, 0.16); }
+
+.dataTables_wrapper .paginate_button.page-item .page-link:focus {
+  box-shadow: none !important; }
+
+.dataTables_wrapper .paginate_button.page-item:not(.disabled) .page-link {
+  color: #212529; }
+
+.dataTables_wrapper .paginate_button.page-item.active .page-link {
+  background-color: #144d58;
+  border-color: #144d58;
+  color: #fff; }
+  .dataTables_wrapper .paginate_button.page-item.active .page-link:hover {
+    border-color: #0f3b43;
+    background-color: #0f3b43; }
+  .dataTables_wrapper .paginate_button.page-item.active .page-link:active, .dataTables_wrapper .paginate_button.page-item.active .page-link:focus {
+    border-color: #0f3b43 !important;
+    background-color: #0f3b43 !important; }

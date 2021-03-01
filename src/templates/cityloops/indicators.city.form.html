@@ -87,14 +87,14 @@
             {% endifchanged %}
             <tr>
               <td class="indicator-switch text-center">
-                {% if each.number in mandatory_list %}
+                {% if each in mandatory_list %}
                   <i class="fal fa-asterisk"></i>
                   <div class="custom-control custom-switch" hidden>
                 {% else %}
                   <div class="custom-control custom-switch">
                 {% endif %}
                   <input type="checkbox" class="custom-control-input" id="indicator-{{ each.id }}" name="indicators" value="{{ each.id }}"
-                  {% if each.id|stringformat:"i" in indicators or not indicators %}
+                  {% if each.id|stringformat:"i" in indicators or not indicators or each in mandatory_list %}
                     checked
                   {% endif %}
                   >

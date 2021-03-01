@@ -247,7 +247,7 @@
                   <select class="custom-select business-name" name="link_business_{{ forloop.counter0 }}">
                     <option disabled>Type to search existing business, hit enter to create new option</option>
                     {% for details in organization_list %}
-                    <option  value="{{ details.id }}" {% if each.record_child.id == details.id  %}selected{% endif %}>{{ details.name }}</option>
+                    <option value="{{ details.id }}" {% if each.record_child.id == details.id  %}selected{% endif %}>{{ details.name }}</option>
                     {% endfor %}
                   </select>
                 </div>

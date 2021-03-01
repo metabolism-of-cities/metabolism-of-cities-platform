@@ -19,6 +19,7 @@ urlpatterns = baseline_urlpatterns + [
     path("manager/dashboard/items/<slug:slug>/", views.admin_dashboard_items, name="admin_dashboard_items"),
     path("manager/dashboard/latest/", views.admin_dashboard_latest, name="admin_dashboard_latest"),
     path("manager/area/", views.admin_area, name="admin_area"),
+    path("manager/connections/", views.admin_connections, name="admin_connections"),
     path("manager/data/", views.admin_data, name="admin_data"),
     path("manager/data/<int:id>/", views.admin_datapoint, name="admin_datapoint"),
     path("manager/<int:organization>/entities/<int:id>/", views.admin_entity, name="admin_entity"),
