@@ -15,6 +15,9 @@
             <a class="nav-link {% if page == 'organisations' %}active{% endif %}" href="{% url 'platformu:admin' %}">My organisations</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link {% if page == 'connections' %}active{% endif %}" href="{% url 'platformu:admin_connections' %}">Connections</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link {% if page == 'area' %}active{% endif %}" href="{% url 'platformu:admin_area' %}">My area</a>
           </li>
           <li class="nav-item">

@@ -670,6 +670,43 @@ def admin_area(request):
     return render(request, "metabolism_manager/admin/area.html", context)
 
 @login_required
+def admin_connections(request, organization=None):
+
+    if organization:
+        my_organization = my_organizations(request, organization)
+    else:
+        my_organization = my_organizations(request)
+        if my_organization:
+            my_organization = my_organization[0]
+        else:
+            return redirect("platformu:create_my_organization")
+
+    organization_list = Organization.objects_include_private.filter(
+            tags__parent_tag_id = TAG_ID["platformu_segments"],
+            tags__belongs_to = my_organization,
+    )
+
+    if not organization_list:
+        messages.error(request, "Please enter data first.")
+    else:
+        gps = organization_list[0].meta_data
+        if not "lat" in gps:
+            messages.error(request, "Please ensure that you enter the address/GPS details first.")
+        data = MaterialDemand.objects.filter(owner__in=organization_list, start_date__lte=date.today())
+        material_list = MaterialDemand.objects.filter(owner__in=organization_list).values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
+
+    connections = RecordRelationship.objects.filter(record_parent_id__in=organization_list, relationship_id=35)
+
+    context = {
+        "page": "connections",
+        "load_highcharts": True,
+        "load_datatables": True,
+        "connections": connections,
+        "organization_list": organization_list,
+    }
+    return render(request, "metabolism_manager/admin/connections.html", context)
+
+@login_required
 def dashboard(request):
     my_organization = my_organizations(request, organization)
     info = get_entity_record(request, my_organization, id)
