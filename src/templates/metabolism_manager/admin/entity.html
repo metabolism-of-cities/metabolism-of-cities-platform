@@ -19,11 +19,7 @@
     {% if info.image %}
       <img class="img-fluid border" src="{{ info.image.url }}">
     {% endif %}
-    {% if info.meta_data.lat and info.meta_data.lng %}
-      <div class="leaflet-map border mt-3" id="map"></div>
-    {% endif %}
-  </div>
-  <div class="col-md-{% if info.image or info.meta_data.lat %}8{% else %}12{% endif %}">
+
     <table class="table bg-white mb-4">
       <tbody>
         {% if info.description %}
@@ -73,85 +69,115 @@
         {% endif %}
       </tbody>
     </table>
+  </div>
+  <div class="col-md-{% if info.image or info.meta_data.lat %}8{% else %}12{% endif %}">
+      <section>
+        <h4>Current supply and demand</h4>
+        {% if materials %}
+          <table class="table bg-white">
+            <thead>
+              <tr>
+                <th class="border-0">Status</th>
+                {% if slug == "resources" or slug == "technology" %}
+                  <th class="border-0">Type</th>
+                {% endif %}
+                <th class="border-0">Name</th>
+                {% if slug == "space" %}
+                  <th class="border-0">Availability</th>
+                {% endif %}
+                <th class="border-0">Quantity</th>
+                <th class="border-0">Date</th>
+                <th class="border-0"></th>
+              </tr>
+            </thead>
+            {% for each in materials %}
+              <tr>
+                <td>
+                  {% if each.quantity > 0 %}
+                    <span class="text-secondary">
+                      <i class="fal fa-sign-in mr-2"></i> Demand
+                    </span>
+                  {% else %}
+                    <span class="text-primary">
+                      <i class="fal fa-sign-out mr-2"></i> Supply
+                    </span>
+                  {% endif %}
+                </td>
+                {% if slug == "resources" or slug == "technology" %}
+                  <td>
+                    <i class="fal fa-fw fa-{{ each.material_type.parent.icon }}"></i>
+                    {{ each.material_type.parent }}
+                  </td>
+                {% endif %}
+                <td>
+                  {% if each.name %}
+                    {{ each.name }}
+                  {% else %}
+                    {{ each.material_type }}
+                  {% endif %}
+                </td>
+                {% if slug == "space" %}
+                  <td>
+                    {{ each.get_availability_display }}
+                  </td>
+                {% endif %}
+                <td>{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
+                <td>
+                  {{ each.start_date|date:"d M Y" }} - {% if each.end_date %}{{ each.end_date|date:"d M Y" }}{% else %}open ended{% endif %}
+                </td>
+                <td class="text-right has-button">
+                  <a class="btn btn-primary btn-sm" href="{% url 'platformu:admin_datapoint' each.id %}"><i class="fa fa-info-circle mr-0"></i></a>
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
+        {% else %}
+        <div class="border bg-white p-3">
+          <i class="fal fa-info-circle mr-2"></i> No current supply or demand. Check the resources, space, technology, and staff tabs for historical data.
+        </div>
+        {% endif %}
+      </section>
 
-    {% if materials %}
-      <h4>Current supply and demand</h4>
-      <table class="table bg-white">
-        <thead>
-          <tr>
-            <th class="border-0">Status</th>
-            {% if slug == "resources" or slug == "technology" %}
-              <th class="border-0">Type</th>
-            {% endif %}
-            <th class="border-0">Name</th>
-            {% if slug == "space" %}
-              <th class="border-0">Availability</th>
-            {% endif %}
-            <th class="border-0">Quantity</th>
-            <th class="border-0">Date</th>
-            <th class="border-0"></th>
-          </tr>
-        </thead>
-        {% for each in materials %}
-          <tr>
-            <td>
-              {% if each.quantity > 0 %}
-                <span class="text-secondary">
-                  <i class="fal fa-sign-in mr-2"></i> Demand
-                </span>
-              {% else %}
-                <span class="text-primary">
-                  <i class="fal fa-sign-out mr-2"></i> Supply
-                </span>
-              {% endif %}
-            </td>
-            {% if slug == "resources" or slug == "technology" %}
-              <td>
-                <i class="fal fa-fw fa-{{ each.material_type.parent.icon }}"></i>
-                {{ each.material_type.parent }}
-              </td>
-            {% endif %}
-            <td>
-              {% if each.name %}
-                {{ each.name }}
-              {% else %}
-                {{ each.material_type }}
-              {% endif %}
-            </td>
-            {% if slug == "space" %}
-              <td>
-                {{ each.get_availability_display }}
-              </td>
-            {% endif %}
-            <td>{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
-            <td>
-              {{ each.start_date|date:"d M Y" }} - {% if each.end_date %}{{ each.end_date|date:"d M Y" }}{% else %}open ended{% endif %}
-            </td>
-            <td class="text-right has-button">
-              <a class="btn btn-primary btn-sm" href="{% url 'platformu:admin_datapoint' each.id %}"><i class="fa fa-info-circle mr-0"></i></a>
-            </td>
-          </tr>
-        {% endfor %}
-      </table>
+    {% if local_businesses and info.meta_data.lat and info.meta_data.lng %}
+      <section>
+        <h4>Links with local businesses</h4>
+        <div class="leaflet-map border mb-4" id="map"></div>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Business</th>
+              <th>Connection</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for each in local_businesses %}
+              <tr>
+                <td><a href="{% url 'platformu:admin_entity' my_organization.id each.record_child.id %}">{{ each.record_child }}</a></td>
+                <td>{{ each.meta_data.dependency }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
     {% endif %}
   </div>
 </div>
+
+
+
 {% endblock %}
 
 {% block footer %}
+<script src="https://code.highcharts.com/modules/networkgraph.js"></script>
 <script>
+  // show entity on map
   {% if info.meta_data.lat and info.meta_data.lng %}
     // create leaflet map - https://leafletjs.com/reference-1.6.0.html
     var map = L.map("map", {
       center: [{{ info.meta_data.lat }}, {{ info.meta_data.lng }}],
-      zoom: 13,
+      zoom: 12,
       scrollWheelZoom: false,
-      fullscreenControl: true,
-      renderer: L.canvas(),
-      dragging: false,
-      boxZoom: false,
-      doubleClickZoom: false,
-
     });
 
     // add tile layer
@@ -167,6 +193,49 @@
     tileLayer.addTo(map);
 
     L.marker([{{ info.meta_data.lat }}, {{ info.meta_data.lng }}]).addTo(map);
+
+    {% for each in local_businesses %}
+      L.marker([{{ each.record_child.meta_data.lat }}, {{ each.record_child.meta_data.lng }}]).addTo(map);
+
+      var latlngs = [
+          [{{ info.meta_data.lat }}, {{ info.meta_data.lng }}],
+          [{{ each.record_child.meta_data.lat }}, {{ each.record_child.meta_data.lng }}],
+      ];
+
+      L.polyline(latlngs, {color: getConnection("{{ each.meta_data.dependency }}")}).addTo(map);
+    {% endfor %}
+
+    function getConnection(connection) {
+      if (connection == "Low dependence") {
+        return "green"
+      } else if (connection == "Medium") {
+        return "red"
+      } else {
+        return "blue"
+      }
+    }
   {% endif %}
+
+  // show linked businesses
+  Highcharts.chart('network', {
+    chart: {
+      type: 'networkgraph',
+      plotBorderWidth: 1
+    },
+    title: false,
+    plotOptions: {
+      networkgraph: {
+        keys: ['from', 'to']
+      }
+    },
+    series: [{
+      name: 'K8',
+      data: [
+        {% for each in local_businesses %}
+          ["{{ info.name }}", "{{ each.record_child }}"],
+        {% endfor %}
+      ]
+    }]
+  });
 </script>
 {% endblock %}

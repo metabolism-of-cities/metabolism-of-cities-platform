@@ -379,14 +379,22 @@ def admin_datapoint(request, id):
 @login_required
 def admin_entity(request, organization, id):
     my_organization = my_organizations(request, organization)
+    local_businesses = RecordRelationship.objects.filter(record_parent_id=id, relationship_id=35)
 
     materials = MaterialDemand.objects.filter(owner_id=id, start_date__lte=date.today()).exclude(end_date__lt=date.today())
+
+    properties = {
+        "map_layer_style": "light-v8"
+    }
 
     context = {
         "page": "entity",
         "my_organization": my_organization,
         "materials": materials,
+        "local_businesses": local_businesses,
         "info": get_entity_record(request, my_organization, id),
+        "properties": properties,
+        "load_highcharts": True,
         "load_leaflet_basics": True,
     }
     return render(request, "metabolism_manager/admin/entity.html", context)
