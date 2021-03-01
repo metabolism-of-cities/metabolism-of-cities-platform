@@ -246,8 +246,8 @@ class WorkAdmin(admin.ModelAdmin):
     
 class WorkActivityAdmin(admin.ModelAdmin):
     search_fields = ["name"]
-    list_display = ["name", "type", "points"]
-    list_filter = ["default_project", "type"]
+    list_display = ["name", "type", "category", "points"]
+    list_filter = ["default_project", "category", "type"]
 
 class LogEntryAdmin(admin.ModelAdmin):
     # to have a date-based drilldown navigation in the admin page
@@ -356,6 +356,7 @@ admin_site.register(LogEntry, LogEntryAdmin)
 admin_site.register(CronJobLog, CronJobLogAdmin)
 
 admin_site.register(GeocodeScheme)
+admin_site.register(WorkCategory)
 admin_site.register(Geocode, GeocodeAdmin)
 admin_site.register(ReferenceSpace, ReferenceSpaceAdmin)
 admin_site.register(ReferenceSpaceGeocode)

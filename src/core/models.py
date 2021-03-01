@@ -1926,6 +1926,14 @@ class CourseContent(Record):
     class Meta:
         ordering = ["position"]
 
+class WorkCategory(models.Model):
+    name = models.CharField(max_length=255)
+    show_in_tasklist = models.BooleanField(default=True, db_index=True)
+    icon = models.CharField(max_length=50, null=True, blank=True, help_text="Only include the icon name, not fa- classes --- see https://fontawesome.com/icons?d=gallery")
+
+    def __str__(self):
+        return self.name
+
 class WorkActivity(models.Model):
 
     class WorkType(models.IntegerChoices):
@@ -1945,6 +1953,7 @@ class WorkActivity(models.Model):
     name = models.CharField(max_length=255)
     instructions = models.TextField(null=True, blank=True)
     default_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
+    category = models.ForeignKey(WorkCategory, on_delete=models.CASCADE, null=True, blank=True)
     points = models.PositiveSmallIntegerField(null=True, blank=True)
     url = models.URLField(null=True, blank=True, help_text="Is there a specific link a user could go to in order to work on this task? If so, put it here")
 

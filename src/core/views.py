@@ -1336,6 +1336,20 @@ def work_grid(request, sprint=None):
 
     list = list.order_by("-last_update__date_created")
     projects = Project.objects.filter(pk__in=OPEN_WORK_PROJECTS).order_by("name")
+    counter = {}
+    counter_completed = {}
+    counter_open = {}
+
+    if not request.GET:
+        total_list = list.values("workactivity__type").annotate(total=Count("workactivity__type")).order_by("total")
+        completed_list = list.filter(status=2).values("workactivity__type").annotate(total=Count("workactivity__type")).order_by("total")
+        open_list = list.filter(status=1).values("workactivity__type").annotate(total=Count("workactivity__type")).order_by("total")
+        for each in total_list:
+            counter[each["workactivity__type"]] = each["total"]
+        for each in completed_list:
+            counter_completed[each["workactivity__type"]] = each["total"]
+        for each in open_list:
+            counter_open[each["workactivity__type"]] = each["total"]
 
     if list.count() > 200:
         list = list[:200]
@@ -1354,6 +1368,9 @@ def work_grid(request, sprint=None):
         "sprint": sprint,
         "menu": "work",
         "projects": projects,
+        "counter": counter,
+        "counter_completed": counter_completed,
+        "counter_open": counter_open,
         "selected_project": int(selected_project) if selected_project else None,
         "header_title": "Tasks",
         "header_subtitle": "Let's build things together, one item at a time!",
