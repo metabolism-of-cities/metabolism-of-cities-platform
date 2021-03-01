@@ -119,23 +119,19 @@ def clusters(request, organization):
                 cluster_id = row["cluster"]
                 if organization_name and cluster_id:
                     cluster_list = cluster_id.split(",")
+                    info = Organization()
+                    info.name = organization_name
+                    info.is_public = False
+                    info.save()
                     for cluster in cluster_list:
-                        ##We need to check if the tag exist 
-                        ##then we save the organization
                         try:
                             tag = Tag.objects.get(pk=int(cluster))
                         except Exception as e:
                             tag = None
 
                         if tag:
-                            info = Organization()
-                            info.name = organization_name
-                            info.is_public = True
-                            info.save()
                             info.tags.add(tag)
-                            p("inserted tag " + str(tag.id) + " for organization " + organization_name)
-
-
+            messages.success(request,'CSV file imported!')
 
     organization_list = Organization.objects_include_private.filter(tags__belongs_to = my_organization)
 
