@@ -33,17 +33,13 @@ def check_ascus_access(function):
                 record_child_id = PAGE_ID["ascus"],
                 relationship__name = "Participant",
             )
-        if not check_participant or not check_participant.exists():
-            return redirect("ascus:register")
+        if check_participant.exists():
+            request.user.is_ascus_participant = True
+        elif has_permission(request, request.project, ["admin"]):
+            request.user.is_ascus_organizer = True
         else:
-            check_organizer = RecordRelationship.objects.filter(
-                record_parent = request.user.people,
-                record_child_id = PAGE_ID["ascus"],
-                relationship__name = "Organizer",
-            )
-            if check_organizer.exists():
-                request.user.is_ascus_organizer = True
-            return function(request, *args, **kwargs)
+            return redirect("ascus:register")
+        return function(request, *args, **kwargs)
     return wrap
 
 def check_ascus_admin_access(function):
@@ -53,17 +49,19 @@ def check_ascus_admin_access(function):
         check_organizer = None
         if not request.user.is_authenticated:
             return redirect("ascus:login")
+        # This is what we did for AScUS 2020
         if request.user.is_authenticated and hasattr(request.user, "people"):
             check_organizer = RecordRelationship.objects.filter(
                 record_parent = request.user.people,
                 record_child_id = PAGE_ID["ascus"],
                 relationship__name = "Organizer",
             )
-        if not check_organizer.exists():
-            return redirect("ascus:register")
-        else:
+        # And for 2021 we use has_permissions
+        if check_organizer.exists() or has_permission(request, request.project, ["admin"]):
             request.user.is_ascus_organizer = True
             return function(request, *args, **kwargs)
+        else:
+            return redirect("ascus:register")
     return wrap
 
 def get_subtitle(request):
