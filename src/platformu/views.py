@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 from django.forms import modelform_factory
 
 from core.mocfunctions import *
+import csv
 
 # my_organizations returns the list of organizations that this user
 # is the admin for -- this is normally one, but could be several
@@ -105,12 +106,11 @@ def clusters(request, organization):
             )
 
         if "import" in request.FILES:
-            import csv
             file = request.FILES["import"]
-            if not file.name.endswith('.csv'):
-                messages.error(request,'File must be CSV type')
+            if not file.name.endswith(".csv"):
+                messages.error(request, "File must be CSV type")
                 return  redirect("platformu:admin_clusters",organization)
-            decoded_file = file.read().decode('utf-8').splitlines()
+            decoded_file = file.read().decode("utf-8").splitlines()
             reader = csv.DictReader(decoded_file)
             previous_org = None
             old_org = None
@@ -128,12 +128,11 @@ def clusters(request, organization):
                             tag = Tag.objects.get(pk=int(cluster))
                         except Exception as e:
                             tag = None
-
                         if tag:
                             info.tags.add(tag)
-            messages.success(request,'CSV file imported!')
+            messages.success(request, "CSV file imported!")
 
-    organization_list = Organization.objects_include_private.filter(tags__belongs_to = my_organization)
+    organization_list = Organization.objects_include_private.filter(tags__belongs_to=my_organization)
 
     context = {
         "page": "organisations",
