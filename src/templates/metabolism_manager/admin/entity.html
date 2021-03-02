@@ -25,7 +25,7 @@
 <div class="row">
   <div class="col-md-4 mb-4">
     {% if info.image %}
-      <img class="img-fluid border" src="{{ info.image.url }}">
+      <img class="img-fluid border border-bottom-0" src="{{ info.image.url }}">
     {% endif %}
 
     <table class="table bg-white mb-4 metadata">
@@ -233,7 +233,7 @@
   {% endif %}
 
   Highcharts.setOptions({
-      colors: ["#016FB9", "000", "#AF316A"]
+    colors: ["#016FB9", "000", "#AF316A"]
   });
 
   const defaultFont = "Lato, Helvetica Neue, Arial, Helvetica, sans-serif";
@@ -311,15 +311,15 @@
         data: [
           {
             name: "Local",
-            y: {{ info.meta_data.sales_local }}
+            y: {{ info.meta_data.sales_local|default:0 }}
           },
           {
             name: "Regional",
-            y: {{ info.meta_data.sales_regional }}
+            y: {{ info.meta_data.sales_regional|default:0 }}
           },
           {
             name: "Export",
-            y: {{ info.meta_data.sales_export }}
+            y: {{ info.meta_data.sales_export|default:0 }}
           },
         ]
       }]
@@ -367,15 +367,15 @@
         data: [
           {
             name: "Local",
-            y: {{ info.meta_data.purchasing_local }}
+            y: {{ info.meta_data.purchasing_local|default:0 }}
           },
           {
             name: "Regional",
-            y: {{ info.meta_data.purchasing_regional }}
+            y: {{ info.meta_data.purchasing_regional|default:0 }}
           },
           {
             name: "Import",
-            y: {{ info.meta_data.purchasing_import }}
+            y: {{ info.meta_data.purchasing_import|default:0 }}
           },
         ]
       }]

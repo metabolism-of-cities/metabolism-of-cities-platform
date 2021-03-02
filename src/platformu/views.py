@@ -723,6 +723,7 @@ def admin_connections(request, organization=None):
 
     context = {
         "page": "connections",
+        "my_organization": my_organization,
         "load_highcharts": True,
         "load_datatables": True,
         "connections": connections,
