@@ -66,4 +66,12 @@
       <button type="submit" class="btn btn-primary mb-2"><i class="fas fa-plus"></i> Add cluster</button>
     </form>
   </section>
+
+  <form method="post" enctype="multipart/form-data" class="form-inline">
+    {% csrf_token %}
+    <input type="file" name="import">
+    <button type="submit" class="btn btn-success mb-2">Import</button>
+  </form>
+
+
 {% endblock %}
