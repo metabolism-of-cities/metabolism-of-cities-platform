@@ -1513,16 +1513,20 @@ class LibraryItem(Record):
                     # We use WGS 84 (4326) as coordinate reference system, so we gotta convert to that
                     # if it uses something else
                     if layer.srs.srid != 4326:
-                        ct = CoordTransform(layer.srs, SpatialReference("WGS84"))
-                        geo.transform(ct)
+                        try:
+                            ct = CoordTransform(layer.srs, SpatialReference("WGS84"))
+                            geo.transform(ct)
+                        except Exception as e:
+                            error = "The following error occurred when trying to merge convert the coordinate reference system to WGS84: " + str(e)
                     geo = geo.wkt
 
-                    space = ReferenceSpace.objects.create(
-                        name = name,
-                        geometry = geo,
-                        source = self,
-                        meta_data = {"features": meta_data},
-                    )
+                    if not error:
+                        space = ReferenceSpace.objects.create(
+                            name = name,
+                            geometry = geo,
+                            source = self,
+                            meta_data = {"features": meta_data},
+                        )
 
         elif self.type.id == 41 and not error: # Type = GPS coordinate spreadsheet
 
