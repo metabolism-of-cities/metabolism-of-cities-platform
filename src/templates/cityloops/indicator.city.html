@@ -106,9 +106,9 @@
           <dd>{{ value.area|linebreaks }}</dd>
         {% endif %}
 
-        {% if value.period_from and value.period_to %}
+        {% if value.period %}
           <dt>Reference period</dt>
-          <dd>{{ value.period_from|date:"d F Y" }} until {{ value.period_to|date:"d F Y" }}</dd>
+          <dd>{{ value.period }}</dd>
         {% endif %}
 
         {% if value.comments %}
