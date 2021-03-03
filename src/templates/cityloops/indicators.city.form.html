@@ -93,7 +93,7 @@
               <td class="indicator-switch text-center">
                 <div class="custom-control custom-switch">
                   <input type="checkbox" class="custom-control-input" id="indicator-{{ each.id }}" name="indicators" value="{{ each.id }}"
-                  {% if each.id|stringformat:"i" in indicators or not indicators or each in mandatory_list %}
+                  {% if each.id|stringformat:"i" in indicators or not indicators %}
                     checked
                   {% endif %}
                   >
