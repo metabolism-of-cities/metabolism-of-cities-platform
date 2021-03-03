@@ -117,7 +117,7 @@ def clusters(request, organization):
                 total_rows = sum(1 for x in file) -1
                 num_rows = total_rows
                 if num_rows > 100:
-                    messages.error(request, "Sorry! The file couldn't be imported.")
+                    messages.error(request, "Sorry! We couldn't import more than 100 rows in the CSV file.")
                     return redirect("platformu:admin_clusters", organization)
                 else: 
                     for row in reader:
@@ -134,7 +134,7 @@ def clusters(request, organization):
                                     info.save()
                                     info.tags.add(tag)
                                 except Exception as e:
-                                    p(cluster + " Doesn't exist")         
+                                    p("No found cluster "+ cluster)         
             messages.success(request, "CSV file imported!")
 
 
