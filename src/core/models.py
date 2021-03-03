@@ -2789,8 +2789,7 @@ class CityLoopsIndicatorValue(models.Model):
     accuracy = models.TextField(null=True, blank=True)
     coverage = models.TextField(null=True, blank=True)
     area = models.TextField(null=True, blank=True)
-    period_from = models.DateField(default=None, null=True, blank=True)
-    period_to = models.DateField(default=None, null=True, blank=True)
+    period = models.TextField(null=True, blank=True)
     comments = models.TextField(null=True, blank=True)
     completed = models.BooleanField(null=True, default=False)
 
