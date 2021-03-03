@@ -45,6 +45,10 @@
     th.sticky-top {
       top: 0;
     }
+
+    input.mandatory {
+      pointer-events: none;
+    }
   </style>
 {% endblock %}
 
@@ -122,12 +126,11 @@
               </td>
               <td class="checkbox sector">
                 {% if each.vision_element is 3 %}
-                  <div class="custom-control custom-switch d-inline-block">
+                  <div class="custom-control custom-switch" {% if each in mandatory_list %}hidden{% endif %}>
                     <input type="checkbox" class="custom-control-input {% if each in mandatory_list %}mandatory{% endif %}" id="sector-{{ each.id }}" name="sector" value="{{ each.id }}"
-                      {% if check|get_item:3|get_item:each.id %}
+                      {% if check|get_item:3|get_item:each.id or each in mandatory_list %}
                       checked
-                      {% endif %}
-                      {% if each in mandatory_list %} checked disabled{% endif %}>
+                      {% endif %}>
                     <label class="custom-control-label" for="sector-{{ each.id }}"></label>
                   </div>
                   {% if each in mandatory_list %}<span class="badge badge-primary d-inline-block">Mandatory</span>{% endif %}
