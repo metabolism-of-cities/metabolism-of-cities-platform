@@ -4,6 +4,11 @@
 
   <h1>Discussion topic overview</h1>
 
+  {% for each in list %}
+    <h2>{{ each }}</h2>
+    <div class="">{{ each.get_description }}</div>
+    <p><em>{{ each.get_author }}</em></p>
+  {% endfor %}
   <table class="table table-striped">
     <tr>
       <th>Topic</th>
@@ -12,9 +17,11 @@
   {% for each in list %}
     <tr>
       <td data-sort="{{ each.start_date|date:"U" }}">
-        <strong>{{ each|truncatewords:10 }}</strong><br>
+        <strong>{{ each|truncatewords:10 }}</strong>
+        <br>
         <em>{{ each.start_date|date:"l M d, Y H:i" }}-{{ each.end_date|date:"H:i" }}</em>
       </td>
+      <td><a href="{% url URLS.LIBRARY_ITEM each.id %}">View</a></td>
       <td hidden>
         <a href="{% url "ascus:account_discussion" each.id %}?org_mode=true" class="btn btn-default-outline"><i class="fa fa-pencil"></i> Edit</a>
         <a href="{% url "ascus:admin_discussion_attendance" each.id %}" class="btn btn-default-outline"><i class="fa fa-users"></i> Attendance</a>

@@ -12,6 +12,13 @@
   {% else %}
 
     <h2>Abstract review queue</h2>
+
+  {% for each in list %}
+    <h2>{{ each.related_to }}</h2>
+    <div class="">{{ each.related_to.get_description }}</div>
+    <p><em>{{ each.related_to.author }}</em></p>
+  {% endfor %}
+
     <table class="table table-striped datatable">
       <thead>
         <tr>
