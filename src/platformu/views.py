@@ -135,7 +135,7 @@ def clusters(request, organization):
                                     info.tags.add(tag)
                                 except Exception as e:
                                     p("No found cluster "+ cluster)         
-            messages.success(request, "CSV file imported!")
+                    messages.success(request, "CSV file imported!")
 
 
     organization_list = Organization.objects_include_private.filter(tags__belongs_to=my_organization)
