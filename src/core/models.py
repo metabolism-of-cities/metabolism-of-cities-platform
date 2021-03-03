@@ -1517,7 +1517,7 @@ class LibraryItem(Record):
                             ct = CoordTransform(layer.srs, SpatialReference("WGS84"))
                             geo.transform(ct)
                         except Exception as e:
-                            error = "The following error occurred when trying to merge convert the coordinate reference system to WGS84: " + str(e)
+                            error = "The following error occurred when trying to convert the coordinate reference system to WGS84: " + str(e)
                     geo = geo.wkt
 
                     if not error:
