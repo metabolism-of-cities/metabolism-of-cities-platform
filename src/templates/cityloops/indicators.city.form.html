@@ -45,6 +45,10 @@
     th.sticky-top {
       top: 0;
     }
+
+    input.mandatory {
+      pointer-events: none;
+    }
   </style>
 {% endblock %}
 
@@ -87,14 +91,9 @@
             {% endifchanged %}
             <tr>
               <td class="indicator-switch text-center">
-                {% if each in mandatory_list %}
-                  <i class="fal fa-asterisk"></i>
-                  <div class="custom-control custom-switch" hidden>
-                {% else %}
-                  <div class="custom-control custom-switch">
-                {% endif %}
+                <div class="custom-control custom-switch">
                   <input type="checkbox" class="custom-control-input" id="indicator-{{ each.id }}" name="indicators" value="{{ each.id }}"
-                  {% if each.id|stringformat:"i" in indicators or not indicators or each in mandatory_list %}
+                  {% if each.id|stringformat:"i" in indicators or not indicators %}
                     checked
                   {% endif %}
                   >
@@ -127,14 +126,14 @@
               </td>
               <td class="checkbox sector">
                 {% if each.vision_element is 3 %}
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="sector-{{ each.id }}" name="sector" value="{{ each.id }}"
-                    {% if check|get_item:3|get_item:each.id %}
-                    checked
-                    {% endif %}
-                  >
-                  <label class="custom-control-label" for="sector-{{ each.id }}"></label>
-                </div>
+                  <div class="custom-control custom-switch" {% if each in mandatory_list %}hidden{% endif %}>
+                    <input type="checkbox" class="custom-control-input {% if each in mandatory_list %}mandatory{% endif %}" id="sector-{{ each.id }}" name="sector" value="{{ each.id }}"
+                      {% if check|get_item:3|get_item:each.id or each in mandatory_list %}
+                      checked
+                      {% endif %}>
+                    <label class="custom-control-label" for="sector-{{ each.id }}"></label>
+                  </div>
+                  {% if each in mandatory_list %}<span class="badge badge-primary d-inline-block">Mandatory</span>{% endif %}
                 {% endif %}
               </td>
             </tr>
@@ -159,17 +158,17 @@
 
       if (indicatorSwitch.prop("checked")) {
         row.removeClass("disabled")
-        row.find(".checkbox input").removeAttr("disabled");
+        row.find(".checkbox input:not(.mandatory)").removeAttr("disabled");
       } else {
         row.addClass("disabled")
-        row.find(".checkbox input").attr("disabled", "disabled").prop("checked", false);
+        row.find(".checkbox input:not(.mandatory)").attr("disabled", "disabled").prop("checked", false);
       }
     })
 
     // disable whole indicator if indicator switch is turned off
     $(".indicator-switch input").each(function() {
       if ($(this).prop("checked") == false) {
-        $(this).closest("tr").addClass("disabled").find(".checkbox input").attr("disabled", "disabled").prop("checked", false);
+        $(this).closest("tr").addClass("disabled").find(".checkbox input:not(.mandatory)").attr("disabled", "disabled").prop("checked", false);
       }
     })
 
