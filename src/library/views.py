@@ -327,7 +327,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         for each in info.attachments.all():
             zip_file.write(each.file.path, os.path.basename(each.file.name))
         zip_file.close()
-        response["Content-Disposition"] = 'attachment; filename="{}".zip'.format(info.name)
+        response["Content-Disposition"] = 'attachment; filename="{}.zip"'.format(info.name)
         return response
 
     spaces = info.imported_spaces.all()
