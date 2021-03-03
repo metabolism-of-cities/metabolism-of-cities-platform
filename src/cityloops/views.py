@@ -344,9 +344,7 @@ def city_indicator_form(request, slug, sector, id):
         value.coverage = request.POST["coverage"]
         value.area = request.POST["area"]
         value.comments = request.POST["comments"]
-
-        value.period_from = None if not request.POST.get("period_from") else request.POST.get("period_from")
-        value.period_to = None if not request.POST.get("period_to") else request.POST.get("period_to")
+        value.period = request.POST["period"]
 
         value.completed = True if request.POST.get("completed") else False
 
