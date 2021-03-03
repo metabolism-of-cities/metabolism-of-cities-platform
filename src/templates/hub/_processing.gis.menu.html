@@ -124,7 +124,18 @@
       {% if work.assigned_to %}
         <li class="list-group-item table-item">
           <div><i class="far fa-fw fa-user-check mr-1"></i> Assigned to</div>
-          <div>{{ work.assigned_to }}</div>
+          <div>
+            {{ work.assigned_to }}
+            {% if request.user.is_staff %}
+              <form method="post" class="mt-4">
+                {% csrf_token %}
+                <button type="submit" name="stop_work" value="true" class="btn btn-warning btn-sm">
+                  <i class="fas fa-user-times"></i>
+                  Unassign
+                </button>
+              </form>
+            {% endif %}
+          </div>
         </li>
       {% endif %}
     </ul>
