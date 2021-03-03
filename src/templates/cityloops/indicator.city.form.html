@@ -124,22 +124,11 @@
           <small class="form-text text-muted">The country or geographic area to which the measured statistical phenomenon relates. Is the indicator evaluated at demonstration/sector or city scale</small>
         </div>
 
-        <div class="form-row">
-          <div class="col-md">
-            <div class="form-group mb-0">
-              <label for="period-from">Reference period, from</label>
-              <input type="date" class="form-control" id="period-from" name="period_from" {% if value.period_from %}value="{{ value.period_from|date:'Y-m-d' }}"{% endif %}>
-            </div>
-          </div>
-
-          <div class="col-md">
-            <div class="form-group mb-0">
-              <label for="period-to">Until</label>
-              <input type="date" class="form-control" id="period-to" name="period_to" {% if value.period_to %}value="{{ value.period_to|date:'Y-m-d' }}"{% endif %}>
-            </div>
-          </div>
+        <div class="form-group">
+          <label for="period">Reference period</label>
+          <input type="text" id="area" class="form-control" name="period" value="{{ value.period|default_if_none:'' }}"></input>
+          <small class="form-text text-muted d-block mb-3">The period of time or point in time to which the measured observation is intended to refer</small>
         </div>
-        <small class="form-text text-muted d-block mb-3">The period of time or point in time to which the measured observation is intended to refer</small>
 
         <div class="form-group">
           <label for="comments">Comments</label>

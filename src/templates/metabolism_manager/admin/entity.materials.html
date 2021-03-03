@@ -19,7 +19,7 @@
 
   {% if data %}
   <div class="table-responsive mb-4">
-    <table class="table">
+    <table class="table bg-white">
       <thead>
         <tr>
           <th class="border-0">Status</th>
@@ -111,7 +111,7 @@
         </div>
       {% endif %}
       <div class="col-md-6 col-lg-8 p-0 col-results">
-        <table class="table table-sm mb-0">
+        <table class="table bg-white table-sm mb-0">
           <tbody class="list" {% if slug == "resources" or slug == "technology" %}hidden{% endif %}>
             {% for each in materials %}
             <tr>
