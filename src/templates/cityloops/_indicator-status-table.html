@@ -1,7 +1,7 @@
 <table class="table overview-table">
   <tbody>
     {% for each in indicator_scale_list %}
-      {% if each.indicator not in mandatory_list %}
+      {% if each.scale != 3 %}
         {% ifchanged each.indicator.vision_element %}
           <tr>
             <td class="bg-primary-opaque text-primary font-weight-bold {% if forloop.first %}rounded-top{% endif %}" colspan="3">
@@ -14,8 +14,7 @@
           <td class="scale">
             <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}"
               {% if each.scale == 1 %} class="badge badge-cityloops-secondary">DA
-              {% elif each.scale == 2 %} class="badge badge-secondary">C
-              {% elif each.scale == 3 %} class="badge badge-cityloops-primary">S{% endif %}
+              {% else %} class="badge badge-secondary">C{% endif %}
             </a>
           </td>
           <td class="status">
@@ -24,7 +23,7 @@
             {% endif %}
           </td>
         </tr>
-        {% endif %}
+      {% endif %}
     {% endfor %}
     <tr>
     </tr>
