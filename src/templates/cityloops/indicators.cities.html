@@ -60,7 +60,7 @@
     </ol>
   </nav>
 
-  <p>Selections marked with an <strong>asterisk*</strong> are mandatory and cannot be edited.</p>
+  <p>Selections marked with an <strong>asterisk*</strong> are mandatory. Entires on the sector scale cannot be edited.</p>
 
   <div class="filters row">
     <div class="col-md-3">
@@ -125,7 +125,7 @@
          data-scale="{{ each.scale }}"
          data-city="{{ each.city.slug }}"
          data-indicator="{{ each.indicator.number }}"
-         class="{% if each.indicator in mandatory_list %}disabled{% endif %} badge mr-1 badge-{% if each.scale == 1 %}secondary">C{% elif each.scale == 2 %}cityloops-secondary">DA{% else %}cityloops-primary">S{% endif %}{% if each.indicator in mandatory_list %}*{% endif %}
+         class="badge mr-1 badge-{% if each.scale == 1 %}secondary">C{% elif each.scale == 2 %}cityloops-secondary">DA{% else %}cityloops-primary disabled">S{% endif %}{% if each.indicator in mandatory_list %}*{% endif %}
       </a>
     {% endfor %}
   </div>
