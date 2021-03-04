@@ -39,7 +39,7 @@
   const defaultFont = "Lato, Helvetica Neue, Arial, Helvetica, sans-serif";
 
   Highcharts.setOptions({
-    colors: ["#016FB9", "000", "#AF316A"]
+    colors: ["#016FB9"]
   });
 
   Highcharts.chart("connections", {
@@ -54,10 +54,21 @@
     plotOptions: {
       networkgraph: {
         layoutAlgorithm: {
-          integration: 'verlet',
+          integration: "verlet",
+        }
+      },
+      series: {
+        cursor: 'pointer',
+        point: {
+          events: {
+            click: function () {
+              location.href = 'https://en.wikipedia.org/wiki/' + this.options.key;
+            }
+          }
         }
       }
     },
+    tooltip: false,
     exporting: {
       scale: 4,
     },
@@ -75,7 +86,13 @@
       },
       data: [
         {% for each in connections %}
-          ["{{ each.record_parent }}", "{{ each.record_child }}"],
+          {
+            from: "{{ each.record_parent }}",
+            to: "{{ each.record_child }}",
+            className: "test",
+            color: "green",
+            custom: "{% if each.meta_data.dependency == 'Low dependence' %}low{% elif each.meta_data.dependency == 'Medium' %}medium{% else %}high{% endif %}",
+          },
         {% endfor %}
       ]
     }]
