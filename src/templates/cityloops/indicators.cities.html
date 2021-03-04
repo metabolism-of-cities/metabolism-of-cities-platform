@@ -42,6 +42,10 @@
     .select2-container--bootstrap4 .select2-results > .select2-results__options {
       max-height: 300px;
     }
+
+    .disabled {
+      pointer-events: none;
+    }
   </style>
 {% endblock %}
 
@@ -55,6 +59,8 @@
       <li class="breadcrumb-item active" aria-current="page">{{ sector|title }}</li>
     </ol>
   </nav>
+
+  <p>Selections marked with an <strong>asterisk*</strong> are mandatory and cannot be edited.</p>
 
   <div class="filters row">
     <div class="col-md-3">
@@ -110,6 +116,8 @@
     </table>
   </div>
 
+
+
   <div id="scale-list" hidden>
     {% for each in indicator_scale_list %}
       <a
@@ -117,7 +125,7 @@
          data-scale="{{ each.scale }}"
          data-city="{{ each.city.slug }}"
          data-indicator="{{ each.indicator.number }}"
-         class="badge mr-1 badge-{% if each.scale == 1 %}secondary">C{% elif each.scale == 2 %}cityloops-secondary">DA{% else %}cityloops-primary">S{% endif %}
+         class="{% if each.indicator in mandatory_list %}disabled{% endif %} badge mr-1 badge-{% if each.scale == 1 %}secondary">C{% elif each.scale == 2 %}cityloops-secondary">DA{% else %}cityloops-primary">S{% endif %}{% if each.indicator in mandatory_list %}*{% endif %}
       </a>
     {% endfor %}
   </div>
@@ -167,6 +175,23 @@
       $(cities).each(function() {
         $("table [data-city='" + this + "']").removeAttr("hidden");
       })
+    })
+
+    // remove rows without any indicators
+    $(".indicators-table tbody tr[data-indicator]").each(function() {
+      let row = $(this)
+
+      let empty = true;
+
+      row.find("td[data-city]").each(function() {
+        if ($(this).text() != false) {
+          empty = false
+        }
+      })
+
+      if (empty == true) {
+        row.remove()
+      }
     })
   </script>
 {% endblock %}
