@@ -1596,7 +1596,7 @@ def process_work(request, info):
                     info.save()
 
             elif "stop_work" in request.POST:
-                message_description = "Task was no longer assigned to " + str(request.user.people) + " and status was changed: " + work.get_status_display() + " → "
+                message_description = "Task was no longer assigned to " + str(work.assigned_to) + " and status was changed: " + work.get_status_display() + " → "
                 work.status = Work.WorkStatus.ONHOLD
                 work.assigned_to = None
                 work.save()
@@ -1817,7 +1817,7 @@ def hub_processing_dataset(request, id, space=None):
         info.save()
         return redirect("classify/")
     if "stop_work" in request.POST:
-        message_description = "Task was no longer assigned to " + str(request.user.people) + " and status was changed: " + work.get_status_display() + " → "
+        message_description = "Task was no longer assigned to " + str(work.assigned_to) + " and status was changed: " + work.get_status_display() + " → "
         work.status = Work.WorkStatus.ONHOLD
         work.assigned_to = None
         work.save()
