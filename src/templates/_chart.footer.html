@@ -3,6 +3,9 @@
     const json_url = "/library/{{ info.id }}/data/json/";
     {% if info.get_dataviz_properties %}
       const properties = {{ info.get_dataviz_properties|safe }};
+    {% else %}
+      const properties = {}
+    {% endif %}
 
       var defaultFont = "Lato, Helvetica Neue, Arial, Helvetica, sans-serif";
       var moc = ["#144d58","#a6cee3","#33a02c","#b2df8a","#e31a1c","#fb9a99","#ff7f00","#fdbf6f","#6a3d9a","#cab2d6","#b15928","#ffff99"];
@@ -13,6 +16,7 @@
       var dozen = ["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"];
 
       Highcharts.setOptions({
+        {% if info.get_dataviz_properties %}
         colors: window["{{ info.get_dataviz_properties.scheme }}"],
         fontFamily: defaultFont,
         chart: {
@@ -26,6 +30,11 @@
         subtitle: {
           text: "{{ info.get_dataviz_properties.subtitle }}"
         },
+        {% else %}
+        title: {
+          text: "{{ info }}",
+        },
+        {% endif %}
         legend: {
           {% if info.get_dataviz_properties.show_xaxis_label is not "true" %}
             enabled: false,
@@ -82,9 +91,6 @@
           },
         },
       });
-    {% else %}
-      const properties = {}
-    {% endif %}
   </script>
   <script src="{% static 'js/data.js' %}?refresh=1333"></script>
   <script>
