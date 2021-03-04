@@ -320,12 +320,18 @@ def city_indicator(request, slug, sector, id):
     if request.user.is_authenticated and has_permission(request, request.project, ["admin", "dataprocessor"]) and info in request.user.people.spaces.all():
         user_can_edit = True
 
+    if sector == "construction":
+        mandatory_list = CityLoopsIndicator.objects.filter(mandatory_construction=True)
+    elif sector == "biomass":
+        mandatory_list = CityLoopsIndicator.objects.filter(mandatory_biomass=True)
+
     context = {
         "title": "Indicators",
         "sector": sector,
         "value": value,
         "info": info,
         "indicator_scale_list": indicator_scale_list,
+        "mandatory_list": mandatory_list,
         "user_can_edit": user_can_edit,
     }
     return render(request, "cityloops/indicator.city.html", context)
@@ -335,6 +341,12 @@ def city_indicator_form(request, slug, sector, id):
     value = CityLoopsIndicatorValue.objects.get(pk=id)
     sector_id = 1 if sector == "construction" else 2
     indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, city_id=info.id, sector=sector_id).order_by("indicator_id")
+
+    if sector == "construction":
+        mandatory_list = CityLoopsIndicator.objects.filter(mandatory_construction=True)
+    elif sector == "biomass":
+        mandatory_list = CityLoopsIndicator.objects.filter(mandatory_biomass=True)
+
 
     if request.method == "POST":
         value.rationale = request.POST["rationale"]
@@ -358,6 +370,7 @@ def city_indicator_form(request, slug, sector, id):
         "value": value,
         "info": info,
         "indicator_scale_list": indicator_scale_list,
+        "mandatory_list": mandatory_list,
     }
     return render(request, "cityloops/indicator.city.form.html", context)
 
