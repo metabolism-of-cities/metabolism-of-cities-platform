@@ -51,18 +51,23 @@
       {% endifchanged %}
         <tr>
           <td class="indicator-text">
+            {% if each.indicator in mandatory_list %}
+            {{ each.indicator }}
+            {% else %}
             <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}">{{ each.indicator }}</a></td>
+            {% endif %}
           <td class="has-button status">
+            {% if each.indicator in mandatory_list %}<span class="badge badge-light">Mandatory, cannot be edited</span>{% endif %}
             {% if each.scale == 1 %}
-              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-cityloops-secondary btn-sm">
+              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-cityloops-secondary btn-sm {% if each.indicator in mandatory_list %}disabled{% endif %}">
                 <i class="far fa-fw fa-random"></i> Demonstration action
               </a>
             {% elif each.scale == 2 %}
-              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-secondary btn-sm">
+              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-secondary btn-sm {% if each.indicator in mandatory_list %}disabled{% endif %}">
                 <i class="far fa-fw fa-city"></i> City
               </a>
             {% elif each.scale == 3 %}
-              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-cityloops-primary btn-sm">
+              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-cityloops-primary btn-sm {% if each.indicator in mandatory_list %}disabled{% endif %}">
                 <i class="far fa-fw fa-chart-pie"></i> Sector
               </a>
             {% endif %}
