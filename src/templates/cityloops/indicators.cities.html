@@ -176,5 +176,22 @@
         $("table [data-city='" + this + "']").removeAttr("hidden");
       })
     })
+
+    // remove rows without any indicators
+    $(".indicators-table tbody tr[data-indicator]").each(function() {
+      let row = $(this)
+
+      let empty = true;
+
+      row.find("td[data-city]").each(function() {
+        if ($(this).text() != false) {
+          empty = false
+        }
+      })
+
+      if (empty == true) {
+        row.remove()
+      }
+    })
   </script>
 {% endblock %}
