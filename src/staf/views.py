@@ -356,6 +356,11 @@ def map_item(request, id, space=None):
         elif "geojson" in request.POST:
             return shapefile_json(request, info.id, True)
 
+        elif "delete_spaces" in request.POST and request.user.id == 1:
+            all_spaces = info.imported_spaces.all()
+            all_spaces.delete()
+            messages.success(request, "The reference spaces were removed.")
+
     if space:
         space = get_space(request, space)
     elif info.spaces.all().count() == 1:
@@ -2072,6 +2077,7 @@ def hub_processing_record_save(request, id, type, space=None):
             info.meta_data["dqi"] = {
                  "completeness": request.POST.get("completeness"),
                  "update_required": request.POST.get("update_required"),
+                 "processing_comments": request.POST.get("processing_comments"),
                  "limitations": request.POST.get("limitations"),
             }
         info.save()

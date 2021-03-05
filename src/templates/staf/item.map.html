@@ -1,5 +1,6 @@
 {% extends '_base.html' %}
 {% load moc_extras %}
+{% load humanize %}
 
 {% block head %}
   <style>
@@ -54,11 +55,11 @@
       {% if space_count %}
         <div class="alert alert-warning">
           <i class="fa fa-exclamation-circle"></i>
-          The map contains a total of {{ space_count }} items. Due to this large number of elements, we are
+          The map contains a total of {{ space_count|intcomma }} items. Due to this large number of elements, we are
           only showing a partial map below.
           {% if simplify_factor %} The map is furthermore simplified to make it easier to render.{% endif %}
           We recommend you download the original shapefile if you would like
-          to view the entire mape.
+          to view the entire map.
         </div>
       {% elif simplify_factor %}
         <div class="alert alert-warning">
@@ -205,6 +206,15 @@
     </div>
 
   </section>
+
+  {% if request.user.id == 1 and info.imported_spaces.count %}
+    <section>
+      <h2><i class="fa fa-lock fa-fw"></i> Admin options</h2>
+      <form method="post">
+        <button name="delete_spaces" value="true" class="btn btn-danger" onclick="javascript:return confirm('Are you sure you want to delete all {{ space_count }} reference spaces? All associated data and details will be lost.')">Delete all reference spaces</button>
+        {% csrf_token %}
+      </form>
+  {% endif %}
 
 {% endif %}
 
