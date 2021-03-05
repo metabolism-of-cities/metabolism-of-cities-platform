@@ -402,6 +402,8 @@ def cityloop_indicator_import(request):
         for row in contents:
             v = row["ve"]
             v = v[:1]
+            category = row["category"]
+            category = category.split("$")
             CityLoopsIndicator.objects.create(
                 relevant_construction = row["relevant_construction"],
                 relevant_biomass = row["relevant_biomass"],
@@ -409,7 +411,7 @@ def cityloop_indicator_import(request):
                 mandatory_biomass = row["mandatory_biomass"],
                 number = row["number"],
                 name = row["name"],
-                category= row["category"],
+                category = category,
                 description = row["description"],
                 methodology = row["methodology"],
                 unit = row["unit"],
