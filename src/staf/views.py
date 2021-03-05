@@ -2134,6 +2134,7 @@ def hub_processing_dataset_save(request, id, space=None):
         info.meta_data["dqi"] = {
              "completeness": request.POST.get("completeness"),
              "update_required": request.POST.get("update_required"),
+             "processing_comments": request.POST.get("processing_comments"),
              "limitations": request.POST.get("limitations"),
         }
         info.save()
@@ -2588,6 +2589,7 @@ def hub_processing_gis_save(request, id, space=None):
         document.meta_data["dqi"] = {
              "completeness": request.POST.get("completeness"),
              "update_required": request.POST.get("update_required"),
+             "processing_comments": request.POST.get("processing_comments"),
              "limitations": request.POST.get("limitations"),
         }
         document.save()
