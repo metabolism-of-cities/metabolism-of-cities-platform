@@ -362,7 +362,7 @@ def map_item(request, id, space=None):
                 all_spaces = all_spaces.order_by("id")
                 # We have many spaces, takes ages to remove, creating timeout
                 # We can't slice when using delete() so we need to get creative
-                g = all_spaces[1000:10001]
+                g = all_spaces[10000:10001]
                 g = g[0]
                 id = g.id
                 all_spaces = info.imported_spaces.filter(id__lte=id)
