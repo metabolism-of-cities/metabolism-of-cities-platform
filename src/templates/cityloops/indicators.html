@@ -175,16 +175,17 @@
 
             <dl>
               <dt>Vision element</dt>
-              <dd>{{ each.vision_element }}</dd>
+              <dd>{{ each.vision_element }}. {{ each.get_vision_element_display }}</dd>
 
               <hr>
 
               <dt>Category</dt>
               <dd>
-                {{each.category}}
-                {% for category in each.category.items %}
-                  {{ category }}
+                <ul>
+                {% for category in each.category %}
+                  <li>{{ category }}</li>
                 {% endfor %}
+                </ul>
               </dd>
 
               <hr>
