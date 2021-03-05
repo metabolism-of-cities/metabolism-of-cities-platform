@@ -2018,6 +2018,16 @@ def hub_processing_dataset_classify(request, id, space=None):
 
     list_messages = work.messages.all()
 
+    if request.method == "POST" and "delete_file" in request.POST:
+        document = info.attachments.get(pk=file_id)
+        try:
+            os.remove(document.file.path)
+            document.delete()
+            messages.success(request, "The file was deleted. Please select/upload a new file below.")
+            return redirect("..")
+        except Exception as e:
+            messages.error(request, "Sorry, we could not remove a file.<br><strong>Error code: " + str(e) + "</strong>")
+
     context = {
         "menu": "processing",
         "space": space,

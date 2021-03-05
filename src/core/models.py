@@ -296,6 +296,7 @@ class Record(models.Model):
         list = Organization.objects.filter(parent_list__record_child=self, parent_list__relationship__id=3)
         return list[0] if list else None
 
+    @property
     def uploader(self):
         list = People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=11)
         return list[0] if list else None
