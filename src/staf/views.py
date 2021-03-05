@@ -358,15 +358,15 @@ def map_item(request, id, space=None):
 
         elif "delete_spaces" in request.POST and request.user.id == 1:
             all_spaces = info.imported_spaces.all()
-            if all_spaces.count() > 3000:
+            if all_spaces.count() > 10000:
                 all_spaces = all_spaces.order_by("id")
                 # We have many spaces, takes ages to remove, creating timeout
                 # We can't slice when using delete() so we need to get creative
-                g = all_spaces[3000:3001]
+                g = all_spaces[1000:10001]
                 g = g[0]
                 id = g.id
                 all_spaces = info.imported_spaces.filter(id__lte=id)
-                messages.success(request, "NOTE: we deleted the first batch of 3,000 items - please repeat.")
+                messages.success(request, "NOTE: we deleted the first batch of 10,000 items - please repeat.")
             all_spaces.delete()
             messages.success(request, "The reference spaces were removed.")
 

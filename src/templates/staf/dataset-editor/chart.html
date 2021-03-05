@@ -1,7 +1,7 @@
 {% extends "_base.html" %}
 {% load static %}
 {% block page_name %}fullwidth{% endblock %}
-{% block title %}Dataset editor for Cape Town fish catch in 2013{% endblock %}
+{% block title %}Chart editor - {{ info }}{% endblock %}
 
 {% block css %}
   <style>
@@ -41,7 +41,7 @@
 
 {% block content %}
   <div class="px-4">
-    <h1 class="mb-0">Graph editor</h1>
+    <h1 class="mb-0">Chart editor</h1>
     <a href="{% if request.GET.next %}{{ request.GET.next }}{% else %}javascript:history.back(){% endif %}" class="btn btn-primary-basic mb-4">
       <i class="fal fa-angle-left"></i>
       Back
@@ -87,6 +87,10 @@
                 <div class="custom-control custom-switch">
                   <input type="checkbox" class="custom-control-input" name="show_area" value="true" id="show_area" data-chart="area" {% if properties.show_area %}checked{% endif %}>
                   <label class="custom-control-label" for="show_area">Area</label>
+                </div>
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" name="show_map" value="true" id="show_map" data-chart="area" {% if properties.show_map %}checked{% endif %}>
+                  <label class="custom-control-label" for="show_map">Map</label>
                 </div>
               </div>
             </div>

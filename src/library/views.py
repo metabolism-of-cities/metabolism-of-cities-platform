@@ -255,6 +255,10 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     section = "library"
     url_processing = None
     curator = False
+    load_leaflet = False
+    load_leaflet_time = False
+    load_highcharts = False
+    properties = None
 
     if not space and info.spaces.count() > 0:
         # If this document is linked to a space, then we can load that space here
@@ -336,6 +340,14 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         spaces_message = f"This shapefile contains {spaces.count()} items - we are only displaying the first 20 below"
         spaces = spaces[:20]
 
+    if info.data.all():
+        properties = info.get_dataviz_properties
+        load_datatables = True
+        if "show_map" in properties:
+            load_leaflet = True
+            load_leaflet_time = True
+            load_highcharts = True
+
     context = {
         "info": info,
         "spaces": spaces,
@@ -344,10 +356,10 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         "show_relationship": info.id,
         "authors": People.objects_unfiltered.filter(parent_list__record_child=info, parent_list__relationship__id=4),
         "load_messaging": True,
-        "load_datatables": True,
-        "load_leaflet": True,
-        "load_leaflet_time": True,
-        "load_highcharts": True,
+        "load_datatables": False,
+        "load_leaflet": load_leaflet,
+        "load_leaflet_time": load_leaflet_time,
+        "load_highcharts": load_highcharts,
         "list_messages": Message.objects.filter(parent=info),
         "curator": curator,
         "space": space,
@@ -355,7 +367,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         "submenu": submenu,
         "url_processing": url_processing,
         "spaces_message": spaces_message,
-        "properties": info.get_dataviz_properties,
+        "properties": properties,
 
         # The following we'll only have during the AScUS voting round; remove afterwards
         #"best_vote": RecordRelationship.objects.filter(relationship_id=32, record_parent=request.user.people) if request.user.is_authenticated else None,
