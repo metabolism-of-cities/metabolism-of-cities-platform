@@ -1508,7 +1508,10 @@ class LibraryItem(Record):
                         get_clone.coord_dim = 2
                         geo = get_clone
                     else:
-                        geo = each.geom
+                        try:
+                            geo = each.geom
+                        except Exception as e:
+                            error = "The following error occurred when trying to obtain the shapefile geometry: " + str(e)
 
                     # We use WGS 84 (4326) as coordinate reference system, so we gotta convert to that
                     # if it uses something else
