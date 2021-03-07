@@ -244,6 +244,8 @@ def library_overview(request, type, space=None):
             days = int(request.GET.get("days"))
         date = datetime.datetime.now() - datetime.timedelta(days=days)
         list = list.filter(date_created__gte=date)
+    elif type == "eurostat":
+        list = list.filter(tags__id=7)
 
     list = list.prefetch_related("tags")
     context = {
@@ -825,6 +827,7 @@ def referencespace(request, id=None, space=None, slug=None):
         "curator": curator,
         "multimedia_list": photos,
         "load_lightbox": True if photos else False,
+        "items": LibraryItem.objects.filter(spaces=info),
     }
     return render(request, "staf/referencespace.html", context)
 

@@ -63,8 +63,8 @@ baseline_staf_urlpatterns = [
     re_path(r'layers/(?P<layer>context|infrastructure|biophysical|stocks-and-flows|urban-context|economic-activities|flows-stocks)/$', staf.layers, name="layer_overview"),
     re_path(r'layers/(?P<layer>context|infrastructure|biophysical|stocks-and-flows|urban-context|economic-activities|flows-stocks)/instructionvideos/$', data.instructionvideos),
     #re_path(r'layers/(?P<layer>context|infrastructure|biophysical|stocks-and-flows)/(?P<id>[0-9]+)/$', library.item),
-    re_path(r'library/(?P<type>datasets|publications|maps|multimedia|recent)/$', staf.library_overview, name="library_overview"),
-    re_path(r'library/(?P<data_section_type>datasets|publications|maps|multimedia|recent)/(?P<id>[0-9]+)/$', library.item),
+    re_path(r'library/(?P<type>datasets|publications|maps|multimedia|recent|eurostat)/$', staf.library_overview, name="library_overview"),
+    re_path(r'library/(?P<data_section_type>datasets|publications|maps|multimedia|recent|eurostat)/(?P<id>[0-9]+)/$', library.item),
 
     path("dashboards/<slug:space>/maps/<slug:type>/", staf.library_overview),
     path("dashboards/<slug:space>/maps/infrastructure/<int:id>/", library.item),
