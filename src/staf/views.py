@@ -931,14 +931,6 @@ def materials(request, id=None, catalog=None, project_name=None, edit_mode=False
 
     list = list.order_by("code", "name")
 
-    if "update" in request.GET:
-        all = Material.objects.filter(catalog_id=18998)
-        for each in all:
-            if not each.meta_data:
-                each.meta_data = {}
-            each.meta_data["old_code"] = each.code
-            each.save()
-
     context = {
         "list": list,
         "title": "Materials",
