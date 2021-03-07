@@ -994,9 +994,10 @@ class LibraryItemType(models.Model):
     icon = models.CharField(max_length=255, null=True, blank=True)
     GROUP = (
         ("academic", "Academic"),
-        ("theses", "Theses"),
         ("reports", "Reports"),
+        ("data", "Data"),
         ("multimedia", "Multimedia"),
+        ("other", "Other"),
     )
     group = models.CharField(max_length=20, choices=GROUP, null=True, blank=True)
 

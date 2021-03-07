@@ -54,7 +54,7 @@
     <div class="mt-2 alert alert-dark text-center">
       <i class="fa fa-map-marker-alt"></i>
       Coordinates: {{ info.get_lat }}, {{ info.get_lng }}<br>
-      <a href="http://www.openstreetmap.org/?mlat={{ info.get_lat }} }}&amp;mlon={{ info.get_lng }}&amp;zoom=12">View on OpenStreetMap</a> | 
+      <a href="http://www.openstreetmap.org/?mlat={{ info.get_lat }}&amp;mlon={{ info.get_lng }}&amp;zoom=12">View on OpenStreetMap</a> | 
       <a href="https://www.google.com/maps/search/?api=1&query={{ info.get_lat }},{{ info.get_lng }}">View on Google Maps</a>
     </div>
 
@@ -164,7 +164,7 @@
       {% if items %}
         <h2 class="mt-4">Related documents</h2>
         {% include "_library.list.html" %}
-        <a class="mt-3 btn btn-primary" href="{% url URLS.LIBRARY %}?find=true&amp;all=true&amp;space={{ info.id }}"><i class="fa fa-books"></i> View all in the library</a>
+        <a class="mt-3 btn btn-primary" href="{% url URLS.LIBRARY %}?find=true&amp;types=all&amp;hide_year=true&amp;space={{ info.id }}"><i class="fa fa-books"></i> View all in the library</a>
       {% endif %}
 
     </div>

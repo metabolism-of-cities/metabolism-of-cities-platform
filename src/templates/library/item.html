@@ -486,14 +486,17 @@
 
       {% if info.spaces.all %}
         <section class="associated-spaces">
-          <h3>Associated space{{ info.spaces|pluralize }}</h3>
+          <h3>Associated space{{ info.spaces.count|pluralize }}</h3>
             {% for each in info.spaces.all %}
-              {% if URLS.SPACE %}
-                <a href="{% url URLS.SPACE each.id %}">{{ each }}</a>
-              {% else %}
-                {{ each }}
+              {% if forloop.counter < 10 or "allspaces" in request.GET %}
+                {% if URLS.SPACE %}
+                  <a href="{% url URLS.SPACE each.id %}">{{ each }}</a>
+                {% else %}
+                  {{ each }}
+                {% endif %}
+                {% if not forloop.last %},{% endif %}
               {% endif %}
-              {% if not forloop.last %},{% endif %}
+              {% if forloop.last and forloop.counter > 10 and not "allspaces" in request.GET %}... <a class="badge badge-dark" href="?allspaces=true">view all ({{ info.spaces.count }})</a>{% endif %}
             {% endfor %}
         </section>
       {% endif %}

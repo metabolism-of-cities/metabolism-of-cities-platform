@@ -378,7 +378,7 @@ def map_item(request, id, space=None):
         # If this is only associated to a single space then we show that one
         space = info.spaces.all()[0]
 
-    if spaces.count() > 500:
+    if spaces.count() > 500 and "show_all_spaces" not in request.GET:
         space_count = spaces.count()
         spaces = spaces[:500]
 

@@ -38,6 +38,7 @@ def index(request):
     tag = list = search_tag = None
     urban_only = True
     core_filter = get_site_tag(request)
+    space = None
     if request.project == THIS_PROJECT:
         title = "Homepage"
     else:
@@ -51,12 +52,17 @@ def index(request):
         show_results = True
         if "types" in request.GET and request.GET["types"] == "all":
             list = LibraryItem.objects.all()
+        elif "type" in request.GET:
+            list = LibraryItem.objects.filter(type__group__in=request.GET.getlist("type"))
         else:
             list = LibraryItem.objects.filter(type__group="academic")
         if not request.GET.get("urban_only"):
             urban_only = False
         if urban_only:
             list = list.filter(tags__id=core_filter)
+        if "space" in request.GET and request.GET["space"]:
+            space = ReferenceSpace.objects.get(pk=request.GET["space"])
+            list = list.filter(spaces=space)
 
     if "search" in request.GET:
         q = request.GET.get("search")
@@ -80,7 +86,11 @@ def index(request):
         "show_project_design": True,
         "tag": tag,
         "tags": Tag.objects_unfiltered.filter(parent_tag__id__in=tags),
+        "types": LibraryItemType.GROUP,
+        "active_types": request.GET.getlist("type"),
         "items": list,
+        "search_space": space,
+        "show_tags": True if space else False,
         "show_results": show_results,
         "load_datatables": True if show_results else False,
         "urban_only": urban_only,

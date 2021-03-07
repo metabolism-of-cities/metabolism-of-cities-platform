@@ -101,8 +101,8 @@
         </ul>
       {% endif %}
 
-      {% if info.imported_spaces.count > 500 %}
-        <div class="alert alert-warning">NOTE: the table is restricted to the first 500 items</div>
+      {% if info.imported_spaces.count > 500 and not "show_all_spaces" in request.GET %}
+        <div class="alert alert-warning">NOTE: the table is restricted to the first 500 items. <a href="?show_all_spaces=true">View all</a></div>
       {% endif %}
 
       {% if show_grid %}

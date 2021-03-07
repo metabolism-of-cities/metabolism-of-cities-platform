@@ -14,7 +14,9 @@
           <th class="tags">Tag(s)</th>
         {% endif %}
         <th class="author">Author(s)</th>
-        <th class="year">Year</th>
+        {% if not "hide_year" in request.GET %}
+          <th class="year">Year</th>
+        {% endif %}
       </tr>
     </thead>
     <tbody>
@@ -64,7 +66,9 @@
             <span class="text-truncate">{{ each.get_author_citation|safe }}</span>
             <span hidden>{{ each.author_list }}</span>
           </td>
-          <td class="year">{{ each.year|default_if_none:"" }}</td>
+          {% if not "hide_year" in request.GET %}
+            <td class="year">{{ each.year|default_if_none:"" }}</td>
+          {% endif %}
         </tr>
       {% endfor %}
     </tbody>
