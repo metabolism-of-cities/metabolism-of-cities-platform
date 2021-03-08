@@ -15,25 +15,30 @@
 
 <h1>Organistations' interconnectedness</h1>
 
-<div id="connections" class="border"></div>
+<section>
+  <div id="connections" class="border"></div>
+</section>
 
-<table class="table bg-white mt-4">
-  <thead>
-    <tr>
-      <th colspan="2">Between</th>
-      <th>Connection</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for each in connections %}
+<section>
+  <table class="table datatable bg-white">
+    <thead>
       <tr>
-        <td><a href="{% url 'platformu:admin_entity' my_organization.id each.record_parent.id %}">{{ each.record_parent }}</a></td>
-        <td><a href="{% url 'platformu:admin_entity' my_organization.id each.record_child.id %}">{{ each.record_child }}</a></td>
-        <td>{{ each.meta_data.dependency }}</td>
+        <th>Organisation A</th>
+        <th>Organisation B</th>
+        <th>Connection</th>
       </tr>
-    {% endfor %}
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      {% for each in connections %}
+        <tr>
+          <td><a href="{% url 'platformu:admin_entity' my_organization.id each.record_parent.id %}">{{ each.record_parent }}</a></td>
+          <td><a href="{% url 'platformu:admin_entity' my_organization.id each.record_child.id %}">{{ each.record_child }}</a></td>
+          <td>{{ each.meta_data.dependency }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
 
 {% endblock %}
 
