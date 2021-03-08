@@ -13,6 +13,8 @@
     stroke: #144d58 !important;
   }
 
+  .mermaid
+
   .diagram-container {
     margin-top: -1rem;
     margin-bottom: 4rem;
@@ -43,11 +45,13 @@
       </div>
     </div>
 
-    <div class="mermaid card card-body text-center">
-      flowchart TB
-        {% for each in blocks %}
-        block{{ each.origin.id }}{{ each.get_origin_slug }}["{{ each.get_origin }}"] --> block{{ each.destination.id }}{{ each.get_destination_slug }}["{{ each.get_destination }}"]
-        {% endfor %}
+    <div class="card card-body text-center">
+      <div class="mermaid">
+        flowchart TB
+          {% for each in blocks %}
+          block{{ each.origin.id }}{{ each.get_origin_slug }}["{{ each.get_origin }}"] --> block{{ each.destination.id }}{{ each.get_destination_slug }}["{{ each.get_destination }}"]
+          {% endfor %}
+      </div>
     </div>
   </div>
 
