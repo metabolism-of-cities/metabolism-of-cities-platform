@@ -178,12 +178,15 @@
   {% endif %}
 
   {% if load_mermaid %}
-    <script src="https://unpkg.com/mermaid@8.5.0/dist/mermaid.min.js"></script>
+    <script src="https://unpkg.com/mermaid@8.9.1/dist/mermaid.min.js"></script>
     <script>
       var mermaidConfig = {
         flowchart:{
-          useMaxWidth: true,
-          htmlLabels: true
+          "useMaxWidth": true,
+          "htmlLabels": true,
+          "nodeSpacing": 10,
+          "rankSpacing": 100,
+          "curve": "basis"
         }
       };
 
