@@ -418,6 +418,7 @@ def admin_entity(request, organization, id):
         "materials": materials,
         "local_businesses": local_businesses,
         "info": get_entity_record(request, my_organization, id),
+        "load_datatables": True,
         "load_highcharts": True,
         "load_leaflet_basics": True,
     }

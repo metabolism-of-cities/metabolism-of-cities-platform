@@ -16,6 +16,10 @@
   table.metadata td {
     max-width: 0;
   }
+
+  td.name {
+    max-width: 250px;
+  }
 </style>
 {% endblock %}
 
@@ -124,7 +128,7 @@
                   {{ each.material_type.parent }}
                 </td>
               {% endif %}
-              <td>
+              <td class="text-nowrap text-truncate name">
                 {% if each.name %}
                   {{ each.name }}
                 {% else %}
@@ -182,7 +186,7 @@
         <h4>Links with local businesses</h4>
         <div class="border mb-4" id="network"></div>
 
-        <table class="table bg-white">
+        <table class="table datatable bg-white">
           <thead>
             <tr>
               <th>Business</th>
@@ -249,6 +253,7 @@
           cursor: "default",
         },
       },
+      tooltip: false,
       chart: {
         type: "networkgraph",
         style: {
@@ -259,7 +264,16 @@
       series: [{
         dataLabels: {
           enabled: true,
-          linkFormat: '',
+          linkFormat: "",
+          padding: 10,
+          style: {
+            fontSize: "14px",
+          },
+        },
+        marker: {
+          radius: 10,
+          lineWidth: 2,
+          lineColor: "#016FB9",
         },
         data: [
           {% for each in local_businesses %}
