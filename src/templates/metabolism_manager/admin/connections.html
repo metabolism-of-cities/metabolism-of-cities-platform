@@ -62,14 +62,20 @@
         }
       },
       series: {
-        cursor: 'pointer',
-        point: {
-          events: {
-            click: function () {
-              location.href = 'https://en.wikipedia.org/wiki/' + this.options.key;
-            }
+        states: {
+          inactive: {
+            linkOpacity: 0,
+            opacity: 0,
           }
         },
+        // cursor: "pointer",
+        // point: {
+        //   events: {
+        //     click: function () {
+        //       location.href = 'https://en.wikipedia.org/wiki/' + this.options.key;
+        //     }
+        //   }
+        // },
       }
     },
     tooltip: false,
@@ -90,12 +96,24 @@
         padding: 10,
         style: {
           fontSize: "14px",
+        },
+      },
+      states: {
+        inactive: {
+          linkOpacity: 0.01,
+          opacity: 0.01,
         }
       },
       marker: {
         radius: 10,
         lineWidth: 2,
-        lineColor: "#016FB9"
+        lineColor: "#016FB9",
+        states: {
+          inactive: {
+            linkOpacity: 0.01,
+            opacity: 0.01,
+          }
+        },
       },
       data: [
         {% for each in connections %}
