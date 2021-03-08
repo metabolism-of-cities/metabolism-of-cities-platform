@@ -34,6 +34,14 @@
           and it will instead be scheduled for processing later today (within 6 hours from now).
         </div>
 
+      {% elif document.get_shapefile_size > 7340032 %}
+
+        <div class="alert alert-warning">
+          <i class="fa fa-exclamation-triangle"></i>
+          Shapefiles larger than 7 MB are not processed instantly but 
+          will instead be scheduled for processing later today (within 6 hours from now).
+        </div>
+
       {% endif %}
 
 
