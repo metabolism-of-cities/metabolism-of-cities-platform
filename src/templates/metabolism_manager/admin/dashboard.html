@@ -348,8 +348,12 @@
           var uglyFrom = new Date(listing.start_date * 1000);
           var prettyFrom = uglyFrom.toLocaleDateString('en-GB', dateOptions);
 
-          var uglyTo = new Date(listing.end_date * 1000);
-          var prettyTo = uglyTo.toLocaleDateString('en-GB', dateOptions);
+          if (listing.end_date == 9556582400) {
+            var prettyTo = "Open ended"
+          } else {
+            var uglyTo = new Date(listing.end_date * 1000);
+            var prettyTo = uglyTo.toLocaleDateString('en-GB', dateOptions);
+          }
 
           var popupContent = "<div class='popup-title'>" + listing.name + "</div><div class='popup-content'><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + listing.address + "</li><li class='list-group-item'><i class='far fa-fw fa-" + listing.icon + " mr-2'></i>" + listing.material + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + listing.quantity + "</li><li class='list-group-item text-" + listing.status_color + "'><i class='far fa-fw fa-" + listing.status_icon + " mr-2'></i>" + listing.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a class='btn btn-sm btn-primary' href='../data/" + listing.id + "/'>More details</a></li></ul></div>"
 
