@@ -113,13 +113,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
 
   <script>
-
     function downloadWord(){
       let doc = new docx.Document()
 
       {% for each in indicator_scale_list %}
         {% if each.scale != 3 %}
-
           const title_{{ each.id }} = new docx.Paragraph("{{ each }}")
 
           const table_{{ each.id }} = new docx.Table({
@@ -300,14 +298,11 @@
             layout: docx.TableLayoutType.FIXED
           })
 
-
           doc.addSection({
              children: [title_{{ each.id }}, table_{{ each.id }}],
           });
-
         {% endif %}
       {% endfor %}
-
 
       docx.Packer.toBlob(doc).then(blob => {
         saveAs(blob, "evaluation-plan.docx");
