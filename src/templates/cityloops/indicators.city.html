@@ -15,6 +15,10 @@
     .indicator-table tbody tr:first-of-type td {
       border-top: none;
     }
+
+    .indicator-text i.text-muted {
+      opacity: .15;
+    }
   </style>
 {% endblock %}
 
@@ -54,6 +58,11 @@
             {% if each.scale == 3 %}
             {{ each.indicator }}
             {% else %}
+              {% if each.completed %}
+                <i class="fa fa-check-circle text-success mr-2"></i>
+              {% else %}
+                <i class="fa fa-check-circle text-muted mr-2"></i>
+              {% endif %}
             <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}">{{ each.indicator }}</a></td>
             {% endif %}
           <td class="has-button status">
