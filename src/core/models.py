@@ -301,6 +301,11 @@ class Record(models.Model):
         list = People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=11)
         return list[0] if list else None
 
+    @property
+    def organizer(self):
+        list = People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=14)
+        return list[0] if list else None
+
     def processor(self):
         list = People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=34)
         return list[0] if list else None

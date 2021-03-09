@@ -344,7 +344,7 @@ def ascus_register(request):
         "header_subtitle": get_subtitle(request),
         "tags": Tag.objects.filter(parent_tag__id=757)
     }
-    return render(request, "ascus/register.html", context)
+    return render(request, "auth/register.html", context)
 
 @check_ascus_access
 def ascus_account_edit(request):
@@ -682,6 +682,7 @@ def presentations(request):
 # AScUS admin section
 @check_ascus_admin_access
 def ascus_admin(request):
+    return redirect("/controlpanel/")
     voting = True
     if voting:
     # List all the voting IDs
@@ -842,7 +843,7 @@ def ascus_admin_introvideo(request, id):
 
 @check_ascus_admin_access
 def ascus_admin_document(request, id):
-    work = Work.objects.get(related_to__parent_list__record_child__id=PAGE_ID["ascus"], related_to__tags__id=771, pk=id)
+    work = Work.objects.get(related_to__parent_list__record_child__id=request.project, related_to__tags__id=771, pk=id)
     info = work.related_to
     info = LibraryItem.objects_unfiltered.get(pk=info.id)
 
@@ -852,7 +853,7 @@ def ascus_admin_document(request, id):
         work.save()
 
         messages.success(request, "The document was approved")
-        return redirect("ascus:admin_documents", type="presentations")
+        return redirect("ascus2021:admin_documents", type="abstracts")
 
     if "discard" in request.POST:
         info.is_deleted = True
@@ -863,7 +864,7 @@ def ascus_admin_document(request, id):
         work.save()
 
         messages.success(request, "The document was discarded")
-        return redirect("ascus:admin_documents", type="presentations")
+        return redirect("ascus2021:admin_documents", type="abstracts")
 
     context = {
         "info": info,

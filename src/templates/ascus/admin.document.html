@@ -4,24 +4,9 @@
 
   <h1>{{ info }}</h1>
 
-  <div class="alert alert-secondary">
-    <h3>Instructions</h3>
-    <p>
-      Please review this document to see if it seems to be all in order. 
-      Make sure there is either a URL to download it or an attached file. 
-      Make sure the document is legible. If it's a video, make sure it's audible. 
-      If the video is ATTACHED and NOT already uploaded to Youtube, then please
-      upload it to our channel (follow the same instructions as for the intro
-      videos).
-      If the authors uploaded a presentation (powerpoint slides), then please reach
-      out to them to make sure they are fully aware that they will NOT be able
-      to present this unless they record a video.
-    </p>
-  </div>
-
   <h2>Details</h2>
   <p><strong>Abstract</strong></p>
-  <p>{{ info.description|linebreaksbr }}</p>
+  <p>{{ info.get_description }}</p>
 
   <p><strong>Uploaded file</strong></p>
   {% if info.file %}
@@ -37,6 +22,11 @@
   <p>{{ info.author_list }}</p>
 
   <p>
+    <strong>Uploader</strong>
+    </p>
+    <p>
+    {{ info.author }}
+    &laquo;<a href="mailto:{{ info.author.email }}">{{ info.author.email }}</a>&raquo;
   </p>
 
   <form method="post">
@@ -55,8 +45,8 @@
   </form>
 
   <p class="mt-5">
-    <a href="{% url "ascus:admin" %}" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a>
-    <a href="{% url "ascus:admin_documents" "presentations" %}" class="btn btn-info"><i class="fa fa-file"></i> Back to presentation list</a>
+    <a href="{% url "ascus2021:admin" %}" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a>
+    <a href="{% url "ascus2021:admin_documents" "abstracts" %}" class="btn btn-info"><i class="fa fa-file"></i> Back to presentation list</a>
   </p>
 
 {% endblock %}

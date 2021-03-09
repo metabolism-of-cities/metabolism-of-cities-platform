@@ -21,6 +21,7 @@ urlpatterns = baseline_urlpatterns + [
 
     path("", views.ascus, name="index"),
 
+    path("register/", views.ascus_register, name="register"),
     path("login/", core.user_login, name="login"),
     path("logout/", core.user_logout, name="logout"),
     path("overview/", views.overview, name="overview"),
