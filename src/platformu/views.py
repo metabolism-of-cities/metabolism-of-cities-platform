@@ -114,12 +114,14 @@ def clusters(request, organization):
                 decoded_file = file.read().decode("utf-8").splitlines()
                 reader = csv.DictReader(decoded_file)
                 #Let get the total number of rows in CSV file, minus the header
-                total_rows = sum(1 for x in file) -1
+                total_rows = sum(1 for x in file) - 1
                 num_rows = total_rows
                 if num_rows > 100:
                     messages.error(request, "Sorry! We couldn't import more than 100 rows in the CSV file.")
                     return redirect("platformu:admin_clusters", organization)
                 else: 
+                    cluster_no_found = [] 
+                    has_cluster = False
                     for row in reader:
                         organization_name = row["name"]
                         cluster_id = row["cluster"]
@@ -133,10 +135,18 @@ def clusters(request, organization):
                                     tag = Tag.objects.get(pk=int(cluster), belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"])
                                     info.save()
                                     info.tags.add(tag)
+                                    has_cluster = True
                                 except Exception as e:
-                                    p("No found cluster "+ cluster)         
-                    messages.success(request, "CSV file imported!")
+                                    cluster_no_found.append(cluster)
 
+                    if has_cluster:                
+                        messages.success(request, "CSV file imported!")
+            
+                    if cluster_no_found:
+                        # Here we remove duplicated keys
+                        cluster_no_found = list(dict.fromkeys(cluster_no_found))
+                        messages.error(request, "We could not find the following cluster: " + str(cluster_no_found))      
+                    
 
     organization_list = Organization.objects_include_private.filter(tags__belongs_to=my_organization)
 
