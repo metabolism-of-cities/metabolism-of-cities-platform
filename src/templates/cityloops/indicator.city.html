@@ -75,6 +75,18 @@
       {% if value.completed %}<span class="badge badge-success ml-1"><i class="fa fa-check"></i> Completed</span>{% endif %}
 
       <dl class="indicator-metadata mt-4">
+        <div class="border rounded bg-white mb-3">
+          <dt class="px-3 pt-3">Description</dt>
+          <dd class="px-3">{{ value.indicator.description }}</dd>
+
+          <dt class="px-3">Methodology</dt>
+          <dd class="px-3 mb-0">{{ value.indicator.get_methodology }}</dd>
+
+          <div class="border-top rounded-bottom p-3 bg-light">
+            The information above is specific to {{ info }}'s evaluation plan. For general information on this indicator, please refer to <a href="{% url 'cityloops:indicators' %}#indicator-{{ value.indicator.number }}">its entry in the list of indicators</a>. What follows below is what has been filled out by the city.
+          </div>
+        </div>
+
         {% if value.rationale %}
           <dt>Rationale</dt>
           <dd>{{ value.rationale|linebreaks }}</dd>
@@ -123,10 +135,6 @@
           </a>
         </div>
       {% endif %}
-
-      <div class="border rounded p-3 bg-light">
-        The information above is specific to {{ info }}'s evaluation plan. For general information on this indicator, please refer to <a href="{% url 'cityloops:indicators' %}#indicator-{{ value.indicator.number }}">its entry in the list of indicators</a>.
-      </div>
     </div>
     <div class="col-lg-4">
       <div class="card card-table mb-4">
