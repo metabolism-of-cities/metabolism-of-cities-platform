@@ -157,9 +157,11 @@
 
     // disable sorting on last two columns
     $(".flows-table").DataTable( {
+      {% if form %}
       columnDefs: [
         {orderable: false, targets: [2,3]}
       ],
+      {% endif %}
       order: [[0, 'asc']]
     } );
 
