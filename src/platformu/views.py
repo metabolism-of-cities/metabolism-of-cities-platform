@@ -107,30 +107,46 @@ def clusters(request, organization):
 
         if "import" in request.FILES:
             file = request.FILES["import"]
-            if not file.name.endswith(".csv"):
+            if not file.name.lower().endswith(".csv"):
                 messages.error(request, "File must be CSV type")
-                return  redirect("platformu:admin_clusters",organization)
-            decoded_file = file.read().decode("utf-8").splitlines()
-            reader = csv.DictReader(decoded_file)
-            previous_org = None
-            old_org = None
-            for row in reader:
-                organization_name = row["name"]
-                cluster_id = row["cluster"]
-                if organization_name and cluster_id:
-                    cluster_list = cluster_id.split(",")
-                    info = Organization()
-                    info.name = organization_name
-                    info.is_public = False
-                    info.save()
-                    for cluster in cluster_list:
-                        try:
-                            tag = Tag.objects.get(pk=int(cluster))
-                        except Exception as e:
-                            tag = None
-                        if tag:
-                            info.tags.add(tag)
-            messages.success(request, "CSV file imported!")
+                return redirect("platformu:admin_clusters", organization)
+            else:
+                decoded_file = file.read().decode("utf-8").splitlines()
+                reader = csv.DictReader(decoded_file)
+                #Let get the total number of rows in CSV file, minus the header
+                total_rows = sum(1 for x in file) - 1
+                num_rows = total_rows
+                if num_rows > 100:
+                    messages.error(request, "Sorry! We couldn't import more than 100 rows in the CSV file.")
+                    return redirect("platformu:admin_clusters", organization)
+                else: 
+                    cluster_no_found = [] 
+                    has_cluster = False
+                    for row in reader:
+                        organization_name = row["name"]
+                        cluster_id = row["cluster"]
+                        if organization_name and cluster_id:
+                            cluster_list = cluster_id.split(",")
+                            info = Organization()
+                            info.name = organization_name
+                            info.is_public = False
+                            for cluster in cluster_list:
+                                try:
+                                    tag = Tag.objects.get(pk=int(cluster), belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"])
+                                    info.save()
+                                    info.tags.add(tag)
+                                    has_cluster = True
+                                except Exception as e:
+                                    cluster_no_found.append(cluster)
+
+                    if has_cluster:                
+                        messages.success(request, "CSV file imported!")
+            
+                    if cluster_no_found:
+                        # Here we remove duplicated keys
+                        cluster_no_found = list(dict.fromkeys(cluster_no_found))
+                        messages.error(request, "We could not find the following cluster: " + str(cluster_no_found))      
+                    
 
     organization_list = Organization.objects_include_private.filter(tags__belongs_to=my_organization)
 
