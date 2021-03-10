@@ -67,11 +67,51 @@
     </form>
   </section>
 
-  <form method="post" enctype="multipart/form-data" class="form-inline">
-    {% csrf_token %}
-    <input type="file" name="import">
-    <button type="submit" class="btn btn-success mb-2">Import</button>
-  </form>
+  <section>
+    <h3>Import organisations</h3>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="border bg-white p-3 mb-4">
+          <p class="mb-4">
+            <i class="fal fa-exclamation-circle mr-2"></i> It's important to use the right format when importing organizations. Please save your spreadsheet as a .csv file and use the column headers <code>name</code> and <code>cluster</code> as shown in the table.
+          </p>
 
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" accept=".csv" name="import">
+            <br>
+            <button type="submit" class="btn btn-primary mt-4">
+              <i class="fa fa-file-import mr-2"></i> Import
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <table class="table bg-white">
+          <thead>
+            <tr>
+              <th class="text-monospace">name</th>
+              <th class="text-monospace">cluster</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Business, Inc.</td>
+              <td>3</td>
+            </tr>
+            <tr>
+              <td>Kramerica Industries</td>
+              <td>14</td>
+            </tr>
+          </tbody>
+        </table>
 
+        <div class="border bg-white p-3 mb-4">
+          <p class="mb-0">
+            <i class="fal fa-info-circle mr-2"></i> At the moment it's only possible to import organisations' names and clusters. We're working on importing more organisational information as well as importing resource data.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock %}
