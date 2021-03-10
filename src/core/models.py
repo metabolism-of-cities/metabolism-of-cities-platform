@@ -1423,25 +1423,35 @@ class LibraryItem(Record):
                 ct = None
                 if layer.srs.srid != 4326:
                     # If this isn't WGS 84 then we need to convert the crs to this one
-                    ct = CoordTransform(layer.srs, SpatialReference("WGS84"))
-                for each in layer.get_geoms(True):
-                    if ct:
-                        each.transform(ct)
+                    try:
+                        ct = CoordTransform(layer.srs, SpatialReference("WGS84"))
+                    except Exception as e:
+                        error = "The following error occurred when trying to change the coordinate reference system: " + str(e)
 
-                    if type == "Point25D" or type == "LineString25D":
-                        # This type has a "Z" geometry which needs to be changed to a 2-dimensional geometry
-                        # See also https://stackoverflow.com/questions/35851577/strip-z-dimension-on-geodjango-force-2d-geometry
-                        get_clone = each.clone()
-                        each.coord_dim = 2
-                        each = get_clone
+                if not error:
+                    for each in layer.get_geoms(True):
 
-                    if not polygon:
-                        polygon = each
-                    else:
                         try:
-                            polygon = polygon.union(each)
+                            if ct:
+                                each.transform(ct)
+
+                            if type == "Point25D" or type == "LineString25D":
+                                # This type has a "Z" geometry which needs to be changed to a 2-dimensional geometry
+                                # See also https://stackoverflow.com/questions/35851577/strip-z-dimension-on-geodjango-force-2d-geometry
+                                get_clone = each.clone()
+                                each.coord_dim = 2
+                                each = get_clone
+
                         except Exception as e:
-                            error = "The following error occurred when trying to merge geometries: " + str(e)
+                            error = "The following error occurred when trying to fetch the shapefile info: " + str(e)
+
+                        if not polygon:
+                            polygon = each
+                        else:
+                            try:
+                                polygon = polygon.union(each)
+                            except Exception as e:
+                                error = "The following error occurred when trying to merge geometries: " + str(e)
                 if not error:
                     space = ReferenceSpace.objects.create(
                         name = self.meta_data.get("shortname"),
@@ -1455,14 +1465,17 @@ class LibraryItem(Record):
                 spaces = {}
                 for each in layer:
 
-                    if type == "Point25D" or type == "LineString25D":
-                        # This type has a "Z" geometry which needs to be changed to a 2-dimensional geometry
-                        # See also https://stackoverflow.com/questions/35851577/strip-z-dimension-on-geodjango-force-2d-geometry
-                        get_clone = each.geom.clone()
-                        get_clone.coord_dim = 2
-                        geo = get_clone
-                    else:
-                        geo = each.geom
+                    try:
+                        if type == "Point25D" or type == "LineString25D":
+                            # This type has a "Z" geometry which needs to be changed to a 2-dimensional geometry
+                            # See also https://stackoverflow.com/questions/35851577/strip-z-dimension-on-geodjango-force-2d-geometry
+                            get_clone = each.geom.clone()
+                            get_clone.coord_dim = 2
+                            geo = get_clone
+                        else:
+                            geo = each.geom
+                    except Exception as e:
+                        error = "The following error occurred when trying to prepare the shapefile element: " + str(e)
 
                     # We use WGS 84 (4326) as coordinate reference system, so we gotta convert to that
                     # if it uses something else
@@ -1508,17 +1521,17 @@ class LibraryItem(Record):
 
                     name = str(each.get(self.meta_data["columns"]["name"]))
 
-                    if type == "Point25D":
-                        # This type has a "Z" geometry which needs to be changed to a 2-dimensional geometry
-                        # See also https://stackoverflow.com/questions/35851577/strip-z-dimension-on-geodjango-force-2d-geometry
-                        get_clone = each.geom.clone()
-                        get_clone.coord_dim = 2
-                        geo = get_clone
-                    else:
-                        try:
+                    try:
+                        if type == "Point25D":
+                            # This type has a "Z" geometry which needs to be changed to a 2-dimensional geometry
+                            # See also https://stackoverflow.com/questions/35851577/strip-z-dimension-on-geodjango-force-2d-geometry
+                            get_clone = each.geom.clone()
+                            get_clone.coord_dim = 2
+                            geo = get_clone
+                        else:
                             geo = each.geom
-                        except Exception as e:
-                            error = "The following error occurred when trying to obtain the shapefile geometry: " + str(e)
+                    except Exception as e:
+                        error = "The following error occurred when trying to obtain the shapefile geometry: " + str(e)
 
                     # We use WGS 84 (4326) as coordinate reference system, so we gotta convert to that
                     # if it uses something else
