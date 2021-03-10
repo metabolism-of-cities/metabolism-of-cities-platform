@@ -125,7 +125,7 @@
          data-scale="{{ each.scale }}"
          data-city="{{ each.city.slug }}"
          data-indicator="{{ each.indicator.number }}"
-         class="badge mr-1 badge-{% if each.scale == 1 %}secondary">C{% elif each.scale == 2 %}cityloops-secondary">DA{% else %}cityloops-primary disabled">S{% endif %}{% if each.indicator in mandatory_list %}*{% endif %}
+         class="badge mr-1 badge-{% if each.scale == 1 %}secondary">C{% elif each.scale == 2 %}cityloops-secondary">DA{% else %}cityloops-primary disabled">S{% if each.indicator in mandatory_list %}*{% endif %}{% endif %}
       </a>
     {% endfor %}
   </div>
