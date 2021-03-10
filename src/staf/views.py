@@ -428,6 +428,8 @@ def map_item(request, id, space=None):
     }
 
     properties = info.get_dataviz_properties
+    legend = False
+
     context = {
         "info": info,
         "submenu": "library",
@@ -435,6 +437,7 @@ def map_item(request, id, space=None):
         "load_leaflet": True,
         "load_leaflet_item": True,
         "load_datatables": True,
+        "load_leaflet_legend": legend,
         "size": filesizeformat(size),
         "simplify_factor": simplify_factor,
         "space_count": space_count,
@@ -2381,8 +2384,11 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
 def hub_processing_files(request, id, gis=False, geospreadsheet=False, space=None):
     document = get_object_or_404(LibraryItem, pk=id)
     project = get_object_or_404(Project, pk=request.project)
+    curator = False
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         unauthorized_access(request)
+    else:
+        curator = True
 
     try:
         work_id = 14 if geospreadsheet else 2
@@ -2417,6 +2423,7 @@ def hub_processing_files(request, id, gis=False, geospreadsheet=False, space=Non
         "work": work,
         "title": document,
         "step": 1,
+        "curator": curator,
     }
     return render(request, "hub/processing.files.html", context)
 
