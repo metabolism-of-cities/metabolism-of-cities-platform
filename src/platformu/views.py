@@ -119,8 +119,8 @@ def clusters(request, organization):
                 if num_rows > 100:
                     messages.error(request, "Sorry! We couldn't import more than 100 rows in the CSV file.")
                     return redirect("platformu:admin_clusters", organization)
-                else: 
-                    cluster_no_found = [] 
+                else:
+                    cluster_no_found = []
                     has_cluster = False
                     for row in reader:
                         organization_name = row["name"]
@@ -139,14 +139,14 @@ def clusters(request, organization):
                                 except Exception as e:
                                     cluster_no_found.append(cluster)
 
-                    if has_cluster:                
+                    if has_cluster:
                         messages.success(request, "CSV file imported!")
-            
+
                     if cluster_no_found:
                         # Here we remove duplicated keys
                         cluster_no_found = list(dict.fromkeys(cluster_no_found))
-                        messages.error(request, "We could not find the following cluster: " + str(cluster_no_found))      
-                    
+                        messages.error(request, "We could not find the following cluster: " + str(cluster_no_found))
+
 
     organization_list = Organization.objects_include_private.filter(tags__belongs_to=my_organization)
 
@@ -447,7 +447,7 @@ def admin_entity_form(request, organization, id=None):
         tags__parent_tag_id = TAG_ID["platformu_segments"],
         tags__belongs_to = my_organization,
     )
-    list_dependency = ["Low dependence", "Medium", "Interdependence"]
+    list_dependency = ["Low", "Medium", "High"]
     edit = False
     if id:
         info = get_entity_record(request, my_organization, id)
