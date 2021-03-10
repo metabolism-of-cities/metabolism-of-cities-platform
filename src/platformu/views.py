@@ -129,7 +129,6 @@ def clusters(request, organization):
                             cluster_list = cluster_id.split(",")
                             info = Organization()
                             info.name = organization_name
-                            info.is_public = False
                             for cluster in cluster_list:
                                 try:
                                     tag = Tag.objects.get(pk=int(cluster), belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"])
