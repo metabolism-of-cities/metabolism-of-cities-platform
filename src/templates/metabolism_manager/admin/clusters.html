@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% load moc_extras %}
 
 {% block title %}Metabolism Manager{% endblock %}
 
@@ -14,7 +15,7 @@
   {% for each in tags %}
     <section>
       <h3>Cluster {{ forloop.counter }}: {{ each.name }}</h3>
-      {% if each.record_set.all %}
+      {% if each.id in organizations %}
         <div class="mb-4 table-responsive">
           <table class="table mb-0">
             <thead>
@@ -27,7 +28,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for details in each.record_set.all %}
+              {% for details in organizations|get_item:each.id %}
                 <tr>
                   <td><a href="{% url 'platformu:admin_entity' my_organization.id details.id %}">{{ details }}</a></td>
                   <td>

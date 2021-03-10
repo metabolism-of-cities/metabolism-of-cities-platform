@@ -123,20 +123,24 @@ def clusters(request, organization):
                     cluster_no_found = [] 
                     has_cluster = False
                     for row in reader:
-                        organization_name = row["name"]
-                        cluster_id = row["cluster"]
-                        if organization_name and cluster_id:
-                            cluster_list = cluster_id.split(",")
-                            info = Organization()
-                            info.name = organization_name
-                            for cluster in cluster_list:
-                                try:
-                                    tag = Tag.objects.get(pk=int(cluster), belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"])
-                                    info.save()
-                                    info.tags.add(tag)
-                                    has_cluster = True
-                                except Exception as e:
-                                    cluster_no_found.append(cluster)
+                        try:
+                            organization_name = row["name"]
+                            cluster_id = row["cluster"]
+                            if organization_name and cluster_id:
+                                cluster_list = cluster_id.split(",")
+                                info = Organization()
+                                info.is_public = False
+                                info.name = organization_name
+                                for cluster in cluster_list:
+                                    try:
+                                        tag = Tag.objects.get(pk=int(cluster), belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"])
+                                        info.save()
+                                        info.tags.add(tag)
+                                        has_cluster = True
+                                    except:
+                                        cluster_no_found.append(cluster)
+                        except:
+                            messages.error(request, "Invalid CSV format, please ensure you use the right format")      
 
                     if has_cluster:                
                         messages.success(request, "CSV file imported!")
@@ -148,10 +152,18 @@ def clusters(request, organization):
                     
 
     organization_list = Organization.objects_include_private.filter(tags__belongs_to=my_organization)
+    organizations = {}
+    # We need to create a list of all organizations per tag, this is how we do it:
+    for each in organization_list:
+        for tag in each.tags.all():
+            if not tag.id in organizations:
+                organizations[tag.id] = []
+            organizations[tag.id].append(each)
 
     context = {
         "page": "organisations",
         "organization_list": organization_list,
+        "organizations": organizations,
         "info": my_organization,
         "tags": Tag.objects.filter(belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"]).order_by("id"),
         "my_organization": my_organization,
