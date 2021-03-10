@@ -4,20 +4,20 @@
 {% block title %}Metabolism Manager{% endblock %}
 
 {% block css %}
-   {% if slug != "space" %}
+  {% if material.parent|lower != "space" %}
     <style>
-        #id_availability, label[for="id_availability"] {display: none}
+      #id_availability, label[for="id_availability"] {
+        display: none;
+      }
     </style>
-   {% endif %}
-
+  {% endif %}
 {% endblock %}
 
 {% block content %}
-  {% include "metabolism_manager/admin/_entity.menu.html" %}
+  <h1>Add {{ type }} for {{ material.parent|lower }} ({{ material|lower }})</h3>
+  <a class="btn btn-sm btn-primary-basic" href="javascript:history.back()"><i class="fas fa-angle-left"></i> Back</a>
 
-  <h3 class="mb-4">Add {{ type }} for {{ material.parent|lower }} ({{ material|lower }})</h3>
-
-  <form method="post" enctype="multipart/form-data">
+  <form class="mt-4" method="post" enctype="multipart/form-data">
 
     {% if slug != "technology" %}
       <div class="form-group row">
@@ -66,7 +66,6 @@
     </div>
 
     {% bootstrap_form form layout="horizontal" %}
-
 
     {% buttons %}
       <div class="row">

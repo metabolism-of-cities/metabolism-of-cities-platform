@@ -15,6 +15,10 @@
     .indicator-table tbody tr:first-of-type td {
       border-top: none;
     }
+
+    .indicator-text i.text-muted {
+      opacity: .15;
+    }
   </style>
 {% endblock %}
 
@@ -38,6 +42,10 @@
       </a>
     {% endif %}
 
+    <div class="btn btn-primary mb-4 download-word">
+      <i class="fa fa-file-word"></i> Export to Word
+    </div>
+
     {% for each in indicator_scale_list %}
       {% ifchanged each.indicator.vision_element %}
       {% if not forloop.first %}
@@ -54,6 +62,11 @@
             {% if each.scale == 3 %}
             {{ each.indicator }}
             {% else %}
+              {% if each.completed %}
+                <i class="fa fa-check-circle text-success mr-2"></i>
+              {% else %}
+                <i class="fa fa-check-circle text-muted mr-2"></i>
+              {% endif %}
             <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}">{{ each.indicator }}</a></td>
             {% endif %}
           <td class="has-button status">
@@ -96,29 +109,203 @@
 
 {% block footer %}
   <!-- library for exporting to docx -->
-  <script src="https://unpkg.com/docx@5.0.2/build/index.js"></script>
+  <script src="https://unpkg.com/docx@5.5.0/build/index.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
 
   <script>
-    function downloadWord() {
-      var word = new docx.Document();
+    function downloadWord(){
+      let doc = new docx.Document()
 
-      word.addSection({
-        properties: {},
-        children: [
-          new docx.Paragraph({
-            children: [
-              new docx.TextRun("Metabolism of Cities!"),
-              new docx.TextRun({
-                text: "Etc etc etc",
+      {% for each in indicator_scale_list %}
+        {% if each.scale != 3 %}
+          const title_{{ each.id }} = new docx.Paragraph("{{ each }}")
+
+          const table_{{ each.id }} = new docx.Table({
+            rows: [
+              // Rationale
+              new docx.TableRow({
+                children: [new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "Rationale"
+                  })],
+                  width: {
+                    size: 30,
+                    type: docx.WidthType.PERCENTAGE
+                  },
+                }), new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "{{ each.rationale|default:'' }}"
+                  })],
+                  width: {
+                    size: 70,
+                    type: docx.WidthType.PERCENTAGE
+                  }
+                })]
+              }),
+
+              // Baseline data / definition
+              new docx.TableRow({
+                children: [new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "Baseline data / definition"
+                  })],
+                  width: {
+                    size: 30,
+                    type: docx.WidthType.PERCENTAGE
+                  },
+                }), new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "{{ each.baseline|default:'' }}"
+                  })],
+                  width: {
+                    size: 70,
+                    type: docx.WidthType.PERCENTAGE
+                  }
+                })]
+              }),
+
+              // Data sources / relevant databases
+              new docx.TableRow({
+                children: [new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "Data sources / relevant databases"
+                  })],
+                  width: {
+                    size: 30,
+                    type: docx.WidthType.PERCENTAGE
+                  },
+                }), new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "{{ each.sources|default:'' }}"
+                  })],
+                  width: {
+                    size: 70,
+                    type: docx.WidthType.PERCENTAGE
+                  }
+                })]
+              }),
+
+              // Overall accuracy
+              new docx.TableRow({
+                children: [new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "Overall accuracy"
+                  })],
+                  width: {
+                    size: 30,
+                    type: docx.WidthType.PERCENTAGE
+                  },
+                }), new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "{{ each.accuracy|default:'' }}"
+                  })],
+                  width: {
+                    size: 70,
+                    type: docx.WidthType.PERCENTAGE
+                  }
+                })]
+              }),
+
+              // Sector coverage
+              new docx.TableRow({
+                children: [new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "Sector coverage"
+                  })],
+                  width: {
+                    size: 30,
+                    type: docx.WidthType.PERCENTAGE
+                  },
+                }), new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "{{ each.coverage|default:'' }}"
+                  })],
+                  width: {
+                    size: 70,
+                    type: docx.WidthType.PERCENTAGE
+                  }
+                })]
+              }),
+
+              // Reference area / Spatial implementation scale
+              new docx.TableRow({
+                children: [new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "Reference area / spatial implementation scale"
+                  })],
+                  width: {
+                    size: 30,
+                    type: docx.WidthType.PERCENTAGE
+                  },
+                }), new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "{{ each.area|default:'' }}"
+                  })],
+                  width: {
+                    size: 70,
+                    type: docx.WidthType.PERCENTAGE
+                  }
+                })]
+              }),
+
+              // Reference period
+              new docx.TableRow({
+                children: [new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "Reference period"
+                  })],
+                  width: {
+                    size: 30,
+                    type: docx.WidthType.PERCENTAGE
+                  },
+                }), new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "{{ each.period|default:'' }}"
+                  })],
+                  width: {
+                    size: 70,
+                    type: docx.WidthType.PERCENTAGE
+                  }
+                })]
+              }),
+
+              // Comments
+              new docx.TableRow({
+                children: [new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "Comments"
+                  })],
+                  width: {
+                    size: 30,
+                    type: docx.WidthType.PERCENTAGE
+                  },
+                }), new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "{{ each.comments|default:'' }}"
+                  })],
+                  width: {
+                    size: 70,
+                    type: docx.WidthType.PERCENTAGE
+                  }
+                })]
               }),
             ],
-          }),
-        ],
-      });
+            width: {
+              size: 100,
+              type: docx.WidthType.PERCENTAGE
+            },
+            columnWidths: [30, 70],
+            layout: docx.TableLayoutType.FIXED
+          })
 
-      docx.Packer.toBlob(word).then(blob => {
-        saveAs(blob, "report.docx");
+          doc.addSection({
+             children: [title_{{ each.id }}, table_{{ each.id }}],
+          });
+        {% endif %}
+      {% endfor %}
+
+      docx.Packer.toBlob(doc).then(blob => {
+        saveAs(blob, "evaluation-plan.docx");
       });
     }
 

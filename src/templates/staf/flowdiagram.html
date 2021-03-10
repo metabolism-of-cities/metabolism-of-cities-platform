@@ -23,6 +23,10 @@
   .diagram-container.full-width {
     max-width: unset !important;
   }
+
+  .select2-container {
+    display: inline-block;
+  }
 </style>
 {% endblock %}
 {% block content %}
@@ -56,7 +60,7 @@
   </div>
 
   <!-- opening container we close earlier -->
-  <div class="container">
+  <div class="container py-4">
 {% endif %}
 
 {% if form %}
@@ -68,8 +72,8 @@
   <form method="post" class="form form-horizontal boxit pad-all" enctype="multipart/form-data">
     {% bootstrap_form form layout="horizontal" %}
     {% buttons %}
-      <div class="col-md-offset-3 col-md-9">
-        <button type="submit" class="btn btn-success" name="main_form" value="true">Save</button>
+      <div class="offset-md-3 col-md-9 pl-2">
+        <button type="submit" class="btn btn-success" name="main_form" value="true"><i class="fa fa-save"></i> Save</button>
       </div>
     {% endbuttons %}
     {% csrf_token %}
@@ -81,63 +85,61 @@
 
   <h4 class="mt-4">List</h4>
 
-  <div class="card card-table">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Origin</th>
-          <th>Destination</th>
-          {% if form %}
-            <th></th>
-            <th></th>
+  <table class="table flows-table datatable-card bg-white">
+    <thead>
+      <tr>
+        <th>Origin</th>
+        <th>Destination</th>
+        {% if form %}
+          <th></th>
+          <th></th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in blocks %}
+      <tr>
+        <td>
+          {% if each.origin_label %}
+            <strong>{{ each.origin_label }}</strong><br>
           {% endif %}
-        </tr>
-      </thead>
-      <tbody>
-      {% for each in blocks %}
-        <tr>
-          <td>
-            {% if each.origin_label %}
-              <strong>{{ each.origin_label }}</strong><br>
-            {% endif %}
-            {{ each.origin }}
-          </td>
-          <td>
-            {% if each.destination_label %}
-              <strong>{{ each.destination_label }}</strong><br>
-            {% endif %}
-            {{ each.destination }}
-          </td>
-          {% if form %}
-            <td class="text-nowrap has-button">
-              <a class="btn btn-sm btn-default-basic" href="?edit={{ each.id }}&amp;next={{ request.get_full_path }}"><i class="fal fa-edit"></i> Edit</a>
-            </td>
-            <td class="text-nowrap has-button">
-              <form method="post">
-                <button type="submit" class="btn btn-sm btn-danger">
-                  <i class="fas fa-trash-alt"></i>
-                  Delete
-                </button>
-                {% csrf_token %}
-                <input type="hidden" name="delete" value="{{ each.id }}" />
-              </form>
-            </td>
+          {{ each.origin }}
+        </td>
+        <td>
+          {% if each.destination_label %}
+            <strong>{{ each.destination_label }}</strong><br>
           {% endif %}
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-  </div>
+          {{ each.destination }}
+        </td>
+        {% if form %}
+          <td class="text-nowrap has-button">
+            <a class="btn btn-sm btn-default-basic" href="?edit={{ each.id }}&amp;next={{ request.get_full_path }}"><i class="fal fa-edit"></i> Edit</a>
+          </td>
+          <td class="text-nowrap has-button">
+            <form method="post">
+              <button type="submit" class="btn btn-sm btn-danger">
+                <i class="fas fa-trash-alt"></i>
+                Delete
+              </button>
+              {% csrf_token %}
+              <input type="hidden" name="delete" value="{{ each.id }}" />
+            </form>
+          </td>
+        {% endif %}
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
 
 {% endif %}
 
-<div class="row">
+<div class="row my-4">
   <div class="col-sm-6">
     <a href="{% url 'staf:flowdiagrams' %}" class="btn btn-primary-basic mt-4">
       <i class="fal fa-angle-left"></i> Back to list
     </a>
   </div>
-  {% if not form %}
+  {% if not form and curator %}
   <div class="col-sm-6 text-sm-right">
     <a href="{% url 'staf:flowdiagram_form' info.id %}" class="btn btn-primary mt-4">
       <i class="far fa-cube"></i> Manage blocks
@@ -152,6 +154,16 @@
     $("select").select2({
       theme: "bootstrap4",
     });
+
+    // disable sorting on last two columns
+    $(".flows-table").DataTable( {
+      {% if form %}
+      columnDefs: [
+        {orderable: false, targets: [2,3]}
+      ],
+      {% endif %}
+      order: [[0, 'asc']]
+    } );
 
     let fullWidth = false;
 

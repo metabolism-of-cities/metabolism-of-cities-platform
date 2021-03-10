@@ -1101,8 +1101,10 @@ def flowdiagram(request, id, show_form=False):
     context = {
         "activities": activities,
         "load_select2": True,
+        "load_datatables": True,
         "load_mermaid": True,
         "info": info,
+        "curator": curator,
         "blocks": blocks,
         "title": info.name if info else "Create new flow diagram",
         "flowblock": flowblock,

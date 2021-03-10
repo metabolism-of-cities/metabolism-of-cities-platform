@@ -26,7 +26,11 @@
   <div class="card-deck mt-3">
     <div class="card details">
       <div class="card-header">
-        Details
+        {% if data.name %}
+          {{ data.name }}
+        {% else %}
+          Details
+        {% endif %}
       </div>
       {% if data.image %}
         <div class="lightbox">
@@ -52,16 +56,16 @@
           {{ data.material_type.parent }}: {{ data.material_type }}
         </li>
 
-        {% if data.name %}
-          <li class="list-group-item">{{ data.name }}</li>
-        {% endif %}
-
         <li class="list-group-item">
           <i class="fal fa-fw fa-balance-scale mr-2" aria-hidden="true"></i> {{ data.absolute_quantity }} {{ data.unit }}
         </li>
 
         <li class="list-group-item">
-          <i class="fal fa-fw fa-calendar mr-2"></i>{{ data.start_date|date:"d M Y" }} - {{ data.end_date|date:"d M Y" }}
+          <i class="fal fa-fw fa-calendar mr-2"></i>{{ data.start_date|date:"d M Y" }} - {{ data.end_date|date:"d M Y"|default:"Open ended" }}
+        </li>
+
+        <li class="list-group-item">
+          <i class="fal fa-fw fa-balance-scale mr-2" aria-hidden="true"></i> {{ data.get_availability_display }}
         </li>
 
         {% if data.description %}

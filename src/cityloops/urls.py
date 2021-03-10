@@ -35,8 +35,5 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + baseline_educat
     path("city/<slug:slug>/indicators/<slug:sector>/<int:id>/", views.city_indicator, name="city_indicator"),
     path("city/<slug:slug>/indicators/<slug:sector>/<int:id>/form/", views.city_indicator_form, name="city_indicator_form"),
 
-    # Temporary
-    path("import/", views.cityloop_indicator_import),
-
     path("<slug:slug>/", core.article, name="article"),
 ]
