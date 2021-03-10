@@ -13,10 +13,16 @@
     }
   }
 
+  {% if not show_individual_colors %}
   // function when hovering out of an area
   function resetHover(e) {
     dataLayer.resetStyle(e.target);
   }
+  {% else %}
+    // Check with Guus how to reset for multiple layers
+  function resetHover(e) {
+  }
+  {% endif %}
 
   // function when clicking on an area
   function selectArea(e) {
@@ -40,7 +46,8 @@
   // variable for the data, add it to the map
   let dataLayer;
 
-  {% if legend %}
+  {% if show_individual_colors %}
+    var allLayers = new L.FeatureGroup;
     {% for each in features %}
       let mapData_{{ forloop.counter }} = {{ each|safe|escape }};
       {% if properties.opacity %}
@@ -63,8 +70,9 @@
         },
         onEachFeature: onEachFeature,
       })
-      map.addLayer(dataLayer_{{ forloop.counter }}).fitBounds(dataLayer_{{ forloop.counter }}.getBounds())
+      allLayers.addLayer(dataLayer_{{ forloop.counter }})
     {% endfor %}
+    map.addLayer(allLayers).fitBounds((allLayers).getBounds())
   {% else %}
       let mapData = {{ data|safe|escape }};
       if (mapData.geom_type == "Point") {

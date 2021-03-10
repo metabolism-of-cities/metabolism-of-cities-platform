@@ -168,104 +168,7 @@
           -->
 
           <div class="form-group mt-4">
-            <label class="category">Color scheme</label>
-            <input type="hidden" name="scheme" value="{% if properties.scheme %}{{ properties.scheme }}{% else %}moc{% endif %}" id="scheme" />
-            <div id="color-schemes" class="row">
-              <div class="col-md-6 mb-3">
-                <div class="single-scheme {% if properties.scheme == 'moc' or not properties.scheme %}active{% endif %}" data-scheme="moc">
-                  <div class='row no-gutters'>
-                    <div class="col single-color" style="background-color: #144d58">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #a6cee3">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #33a02c">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #b2df8a">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #e31a1c">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #fb9a99">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #ff7f00">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #fdbf6f">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #6a3d9a">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #cab2d6">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #b15928">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #ffff99">&nbsp;</div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="single-scheme {% if properties.scheme == 'dozen' %}active{% endif %}" data-scheme="dozen">
-                  <div class='row no-gutters'>
-                    <div class="col single-color" style="background-color: #8dd3c7">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #ffffb3">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #bebada">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #fb8072">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #80b1d3">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #fdb462">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #b3de69">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #fccde5">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #d9d9d9">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #bc80bd">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #ccebc5">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #ffed6f">&nbsp;</div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="single-scheme {% if properties.scheme == 'pastel' %}active{% endif %}" data-scheme="pastel">
-                  <div class='row no-gutters'>
-                    <div class="col single-color" style="background-color: #fbb4ae">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #b3cde3">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #ccebc5">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #decbe4">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #fed9a6">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #ffffcc">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #e5d8bd">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #fddaec">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #f2f2f2">&nbsp;</div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="single-scheme {% if properties.scheme == 'set' %}active{% endif %}" data-scheme="set">
-                  <div class='row no-gutters'>
-                    <div class="col single-color" style="background-color: #e41a1c">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #377eb8">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #4daf4a">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #984ea3">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #ff7f00">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #ffff33">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #a65628">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #f781bf">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #999999">&nbsp;</div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="single-scheme {% if properties.scheme == 'accent' %}active{% endif %}" data-scheme="accent">
-                  <div class='row no-gutters'>
-                    <div class="col single-color" style="background-color: #7fc97f">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #beaed4">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #fdc086">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #ffff99">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #386cb0">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #f0027f">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #bf5b17">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #666666">&nbsp;</div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="single-scheme {% if properties.scheme == 'dark' %}active{% endif %}" data-scheme="dark">
-                  <div class='row no-gutters'>
-                    <div class="col single-color" style="background-color: #1b9e77">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #d95f02">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #7570b3">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #e7298a">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #66a61e">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #e6ab02">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #a6761d">&nbsp;</div>
-                    <div class="col single-color" style="background-color: #666666">&nbsp;</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            {% include "staf/dataset-editor/_scheme.html" %}
           </div>
 
           <div class="form-group mt-4">
@@ -423,12 +326,16 @@
     {% endif %}
 
     // color scheme definitions from colorbrewer2.org combined with default MoC colours
+    // We copy these to mocfunctions - although we should likely just have it in a single place TODO
     var moc = ["#144d58","#a6cee3","#33a02c","#b2df8a","#e31a1c","#fb9a99","#ff7f00","#fdbf6f","#6a3d9a","#cab2d6","#b15928","#ffff99"];
     var accent = ["#7fc97f","#beaed4","#fdc086","#ffff99","#386cb0","#f0027f","#bf5b17","#666666"];
     var dark = ["#1b9e77","#d95f02","#7570b3","#e7298a","#66a61e","#e6ab02","#a6761d","#666666"];
     var pastel = ["#fbb4ae","#b3cde3","#ccebc5","#decbe4","#fed9a6","#ffffcc","#e5d8bd","#fddaec","#f2f2f2"];
     var set = ["#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00","#ffff33","#a65628","#f781bf","#999999"];
     var dozen = ["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"];
+    var green = ["#f7fcfd", "#e5f5f9", "#ccece6", "#99d8c9", "#66c2a4", "#41ae76", "#238b45", "#005824"];
+    var blue = ["#f7fbff", "#deebf7", "#c6dbef", "#9ecae1", "#6baed6", "#4292c6", "#2171b5", "#084594"];
+    var purple = ["#3f007d", "#54278f", "#6a51a3", "#807dba", "#9e9ac8", "#bcbddc", "#dadaeb", "#efedf5", "fcfbfd"];
 
     // user settings
     // titles
@@ -644,12 +551,6 @@
 
     // highchart defaults
     var defaultFont = "Lato, Helvetica Neue, Arial, Helvetica, sans-serif";
-    var moc = ["#144d58","#a6cee3","#33a02c","#b2df8a","#e31a1c","#fb9a99","#ff7f00","#fdbf6f","#6a3d9a","#cab2d6","#b15928","#ffff99"];
-    var accent = ["#7fc97f","#beaed4","#fdc086","#ffff99","#386cb0","#f0027f","#bf5b17","#666666"];
-    var dark = ["#1b9e77","#d95f02","#7570b3","#e7298a","#66a61e","#e6ab02","#a6761d","#666666"];
-    var pastel = ["#fbb4ae","#b3cde3","#ccebc5","#decbe4","#fed9a6","#ffffcc","#e5d8bd","#fddaec","#f2f2f2"];
-    var set = ["#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00","#ffff33","#a65628","#f781bf","#999999"];
-    var dozen = ["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"];
 
     Highcharts.setOptions({
       colors: {% if properties.scheme %}window["{{ properties.scheme }}"]{% else %}moc{% endif %},

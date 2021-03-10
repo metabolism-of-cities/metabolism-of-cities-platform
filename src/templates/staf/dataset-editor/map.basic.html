@@ -9,12 +9,43 @@
       height:30px;
       display: inline-block;
     }
+    .preview-wrap {
+      padding: 1rem;
+      border: 1px solid #808080;
+      border-radius: .25rem; }
+
+    #color-schemes .single-scheme {
+      padding: .5rem;
+      cursor: pointer;
+      border-radius: .25rem;
+      border: 1px solid #efefef;
+    }
+
+    #color-schemes .single-scheme.active {
+      background-color: #efefef;
+      border-color: #ced4da;
+    }
+
+    #color-schemes .single-color {
+      height: 2rem;
+    }
+
+    #color-schemes .single-color:first-child {
+      border-top-left-radius: .25rem;
+      border-bottom-left-radius: .25rem;
+    }
+
+    #color-schemes .single-color:last-child {
+      border-top-right-radius: .25rem;
+      border-bottom-right-radius: .25rem;
+    }
   </style>
+
 {% endblock %}
 
 {% block content %}
   <div class="px-4">
-    <h1 class="mb-0">Visualizations editor</h1>
+    <h1 class="mb-0">Map editor</h1>
     <a href="{% if request.GET.next %}{{ request.GET.next }}{% else %}javascript:history.back(){% endif %}" class="btn btn-primary-basic mb-4">
       <i class="fal fa-angle-left"></i>
       Back
@@ -41,20 +72,36 @@
               </div>
 
               <div class="form-group mt-4">
-                <label class="category">{% if points %}Marker style{% else %}Colour{% endif %}</label>
-                  {% for color in colors %}
-                  <div>
-                    <label>
-                      <input type="radio" name="color" value="{{ color }}" {% if properties.color == color %}checked{% endif %}>
-                      {% if points %}
-                        <img src="{% get_static_prefix %}img/leaflet-markers/marker-icon-{{ color }}.png" alt="" />
-                      {% else %}
-                        <span class="example" style='background-color:{{ color }}'></span>
-                      {% endif %}
-                      {{ color }}
-                    </label>
-                  </div>
-                  {% endfor %}
+                <label class="category">
+                  {% if points %}Marker style{% else %}Colour{% endif %}
+                  <i class="fa fa-question-circle" title="You can choose to show a single colour, or multiple colours, one for each space, but only if you have between 2 and 12 reference spaces on this map"></i>
+                </label>
+
+                  <select class="custom-select mb-3" name="color_type">
+                    <option {% if properties.color_type == "single" %}selected{% endif %} value="single">Single colour</option>
+                    <option {% if properties.color_type == "multiple" %}selected{% endif %} value="multiple" {% if source.imported_spaces.count == 1 or source.imported_spaces.count > 12 %}disabled{% endif %}>Multiple colours</option>
+                  </select>
+
+                  <section id="multiple_colors">
+                    {% include "staf/dataset-editor/_scheme.html" %}
+                  </section>
+
+                  <section id="single_colors">
+                    {% for color in colors %}
+                    <div>
+                      <label>
+                        <input type="radio" name="color" value="{{ color }}" {% if properties.color == color %}checked{% endif %}>
+                        {% if points %}
+                          <img src="{% get_static_prefix %}img/leaflet-markers/marker-icon-{{ color }}.png" alt="" />
+                        {% else %}
+                          <span class="example" style='background-color:{{ color }}'></span>
+                        {% endif %}
+                        {{ color }}
+                      </label>
+                    </div>
+                    {% endfor %}
+                  </section>
+
               </div>
 
             </div>
@@ -109,4 +156,31 @@
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+    // pick color scheme
+    $(".single-scheme").click(function() {
+      $(".single-scheme").removeClass("active")
+      $(this).addClass("active");
+
+      let scheme = $(this).data("scheme");
+      $("#scheme").val(scheme);
+      colorScheme = window[scheme]
+    })
+
+
+    $("select[name=color_type]").change(function(){
+      t = $(this).val()
+      if (t == "single") {
+        $("#single_colors").show();
+        $("#multiple_colors").hide();
+      } else {
+        $("#single_colors").hide();
+        $("#multiple_colors").show();
+      }
+    });
+    $("select[name=color_type]").change();
+</script>
 {% endblock %}

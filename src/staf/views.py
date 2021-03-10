@@ -400,6 +400,22 @@ def map_item(request, id, space=None):
 
     count = 0
     legend = {}
+    show_individual_colors = False
+    properties = info.get_dataviz_properties
+    if "color_type" in properties:
+        if properties["color_type"] == "single":
+            # One single color for everything on the map
+            show_individual_colors = False
+        else:
+            # Each space has an individual color
+            show_individual_colors = True
+    elif "group_spaces_by_name" in info.meta_data:
+        show_individual_colors = True
+
+    if show_individual_colors and "scheme" in properties:
+        s = properties["scheme"]
+        colors = COLOR_SCHEMES[s]
+
     for each in spaces:
         geom_type = each.geometry.geom_type
         if simplify_factor:
@@ -410,13 +426,16 @@ def map_item(request, id, space=None):
         url = reverse(project.slug + ":referencespace", args=[each.id])
 
         # If we need separate colors we'll itinerate over them one by one
-        try:
-            color = colors[count]
-            count += 1
-        except:
-            color = colors[0]
-            count = 0
-        legend[color] = each.name
+        if show_individual_colors:
+            try:
+                color = colors[count]
+                count += 1
+            except:
+                color = colors[0]
+                count = 0
+            legend[color] = each.name
+        else:
+            color = None
 
         content = ""
         if each.image:
@@ -430,7 +449,7 @@ def map_item(request, id, space=None):
                 "name": each.name,
                 "id": each.id,
                 "content": content,
-                "color": color,
+                "color": color if color else "",
             },
         })
 
@@ -438,10 +457,7 @@ def map_item(request, id, space=None):
         "type":"FeatureCollection",
         "features": features,
         "geom_type": geom_type,
-        "group_by_color": "true" if legend else "false",
     }
-
-    properties = info.get_dataviz_properties
 
     context = {
         "info": info,
@@ -450,7 +466,7 @@ def map_item(request, id, space=None):
         "load_leaflet": True,
         "load_leaflet_item": True,
         "load_datatables": True,
-        "load_leaflet_legend": legend,
+        "load_leaflet_legend": True if show_individual_colors else False,
         "size": filesizeformat(size),
         "simplify_factor": simplify_factor,
         "space_count": space_count,
@@ -461,6 +477,7 @@ def map_item(request, id, space=None):
         "curator": curator,
         "features": features,
         "legend": legend,
+        "show_individual_colors": show_individual_colors,
     }
     return render(request, "staf/item.map.html", context)
 
@@ -2860,6 +2877,7 @@ def chart_editor(request, id):
     context = {
         "info": info,
         "properties": info.meta_data.get("properties") if info.meta_data else None,
+        "source": source,
     }
     if info.source.is_map:
         try:

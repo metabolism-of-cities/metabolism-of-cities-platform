@@ -1,0 +1,142 @@
+
+            <label class="category">Color scheme</label>
+            <input type="hidden" name="scheme" value="{% if properties.scheme %}{{ properties.scheme }}{% else %}moc{% endif %}" id="scheme" />
+            <div id="color-schemes" class="row">
+              <div class="col-md-6 mb-3">
+                <div class="single-scheme {% if properties.scheme == 'moc' or not properties.scheme %}active{% endif %}" data-scheme="moc">
+                  <div class='row no-gutters'>
+                    <div class="col single-color" style="background-color: #144d58">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #a6cee3">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #33a02c">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #b2df8a">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #e31a1c">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #fb9a99">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #ff7f00">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #fdbf6f">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #6a3d9a">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #cab2d6">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #b15928">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #ffff99">&nbsp;</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="single-scheme {% if properties.scheme == 'dozen' %}active{% endif %}" data-scheme="dozen">
+                  <div class='row no-gutters'>
+                    <div class="col single-color" style="background-color: #8dd3c7">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #ffffb3">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #bebada">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #fb8072">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #80b1d3">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #fdb462">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #b3de69">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #fccde5">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #d9d9d9">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #bc80bd">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #ccebc5">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #ffed6f">&nbsp;</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="single-scheme {% if properties.scheme == 'pastel' %}active{% endif %}" data-scheme="pastel">
+                  <div class='row no-gutters'>
+                    <div class="col single-color" style="background-color: #fbb4ae">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #b3cde3">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #ccebc5">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #decbe4">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #fed9a6">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #ffffcc">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #e5d8bd">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #fddaec">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #f2f2f2">&nbsp;</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="single-scheme {% if properties.scheme == 'set' %}active{% endif %}" data-scheme="set">
+                  <div class='row no-gutters'>
+                    <div class="col single-color" style="background-color: #e41a1c">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #377eb8">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #4daf4a">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #984ea3">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #ff7f00">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #ffff33">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #a65628">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #f781bf">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #999999">&nbsp;</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="single-scheme {% if properties.scheme == 'accent' %}active{% endif %}" data-scheme="accent">
+                  <div class='row no-gutters'>
+                    <div class="col single-color" style="background-color: #7fc97f">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #beaed4">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #fdc086">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #ffff99">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #386cb0">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #f0027f">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #bf5b17">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #666666">&nbsp;</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="single-scheme {% if properties.scheme == 'dark' %}active{% endif %}" data-scheme="dark">
+                  <div class='row no-gutters'>
+                    <div class="col single-color" style="background-color: #1b9e77">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #d95f02">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #7570b3">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #e7298a">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #66a61e">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #e6ab02">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #a6761d">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #666666">&nbsp;</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="single-scheme {% if properties.scheme == 'green' %}active{% endif %}" data-scheme="green">
+                  <div class='row no-gutters'>
+                    <div class="col single-color" style="background-color: #f7fcfd">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #e5f5f9">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #ccece6">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #99d8c9">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #66c2a4">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #41ae76">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #238b45">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #005824">&nbsp;</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="single-scheme {% if properties.scheme == 'blue' %}active{% endif %}" data-scheme="blue">
+                  <div class='row no-gutters'>
+                    <div class="col single-color" style="background-color: #f7fbff">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #deebf7">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #c6dbef">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #9ecae1">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #6baed6">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #4292c6">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #2171b5">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #084594">&nbsp;</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="single-scheme {% if properties.scheme == 'purple' %}active{% endif %}" data-scheme="purple">
+                  <div class='row no-gutters'>
+                    <div class="col single-color" style="background-color: #3f007d">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #54278f">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #6a51a3">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #807dba">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #9e9ac8">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #bcbddc">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #dadaeb">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #efedf5">&nbsp;</div>
+                    <div class="col single-color" style="background-color: #fcfbfd">&nbsp;</div>
+                  </div>
+                </div>
+              </div>
+            </div>
