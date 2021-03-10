@@ -1393,6 +1393,7 @@ class LibraryItem(Record):
 
     # This function converts the shapefile into ReferenceSpaces
     def convert_shapefile(self):
+        print(self)
 
         check = ReferenceSpace.objects.filter(source=self)
         error = False
@@ -1429,29 +1430,32 @@ class LibraryItem(Record):
                         error = "The following error occurred when trying to change the coordinate reference system: " + str(e)
 
                 if not error:
-                    for each in layer.get_geoms(True):
-
-                        try:
-                            if ct:
-                                each.transform(ct)
-
-                            if type == "Point25D" or type == "LineString25D":
-                                # This type has a "Z" geometry which needs to be changed to a 2-dimensional geometry
-                                # See also https://stackoverflow.com/questions/35851577/strip-z-dimension-on-geodjango-force-2d-geometry
-                                get_clone = each.clone()
-                                each.coord_dim = 2
-                                each = get_clone
-
-                        except Exception as e:
-                            error = "The following error occurred when trying to fetch the shapefile info: " + str(e)
-
-                        if not polygon:
-                            polygon = each
-                        else:
+                    try:
+                        for each in layer.get_geoms(True):
                             try:
-                                polygon = polygon.union(each)
+                                if ct:
+                                    each.transform(ct)
+
+                                if type == "Point25D" or type == "LineString25D":
+                                    # This type has a "Z" geometry which needs to be changed to a 2-dimensional geometry
+                                    # See also https://stackoverflow.com/questions/35851577/strip-z-dimension-on-geodjango-force-2d-geometry
+                                    get_clone = each.clone()
+                                    each.coord_dim = 2
+                                    each = get_clone
+
                             except Exception as e:
-                                error = "The following error occurred when trying to merge geometries: " + str(e)
+                                error = "The following error occurred when trying to fetch the shapefile info: " + str(e)
+
+                            if not polygon:
+                                polygon = each
+                            else:
+                                try:
+                                    polygon = polygon.union(each)
+                                except Exception as e:
+                                    error = "The following error occurred when trying to merge geometries: " + str(e)
+                    except Exception as e:
+                        error = "The following error occurred when trying to get all the geometries: " + str(e)
+
                 if not error:
                     space = ReferenceSpace.objects.create(
                         name = self.meta_data.get("shortname"),
