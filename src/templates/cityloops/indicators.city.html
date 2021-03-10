@@ -60,23 +60,24 @@
         <tr>
           <td class="indicator-text">
             {% if each.scale == 3 %}
-            {{ each.indicator }}
+              {{ each.indicator }}
             {% else %}
               {% if each.completed %}
                 <i class="fa fa-check-circle text-success mr-2"></i>
               {% else %}
                 <i class="fa fa-check-circle text-muted mr-2"></i>
               {% endif %}
-            <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}">{{ each.indicator }}</a></td>
+              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}">{{ each.indicator }}</a>
             {% endif %}
+          </td>
           <td class="has-button status">
-            {% if each.indicator in mandatory_list %}<i class="fal fa-asterisk mr-2"></i>{% endif %}
+            {% if each.indicator in mandatory_list and each.scale == 3 %}<i class="fal fa-asterisk mr-2"></i>{% endif %}
             {% if each.scale == 1 %}
-              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-cityloops-secondary btn-sm {% if each.indicator in mandatory_list %}disabled{% endif %}">
+              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-cityloops-secondary btn-sm">
                 <i class="far fa-fw fa-random"></i> Demonstration action
               </a>
             {% elif each.scale == 2 %}
-              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-secondary btn-sm {% if each.indicator in mandatory_list %}disabled{% endif %}">
+              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-secondary btn-sm">
                 <i class="far fa-fw fa-city"></i> City
               </a>
             {% elif each.scale == 3 %}
@@ -122,6 +123,111 @@
 
           const table_{{ each.id }} = new docx.Table({
             rows: [
+              // Indicator number
+              new docx.TableRow({
+                children: [new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "Indicator number"
+                  })],
+                  width: {
+                    size: 30,
+                    type: docx.WidthType.PERCENTAGE
+                  },
+                }), new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "{{ each.indicator.number|escapejs|default:'' }}"
+                  })],
+                  width: {
+                    size: 70,
+                    type: docx.WidthType.PERCENTAGE
+                  }
+                })]
+              }),
+
+              // Indicator name
+              new docx.TableRow({
+                children: [new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "Indicator number"
+                  })],
+                  width: {
+                    size: 30,
+                    type: docx.WidthType.PERCENTAGE
+                  },
+                }), new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "{{ each.indicator.name|escapejs|default:'' }}"
+                  })],
+                  width: {
+                    size: 70,
+                    type: docx.WidthType.PERCENTAGE
+                  }
+                })]
+              }),
+
+              // Vision element
+              new docx.TableRow({
+                children: [new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "Vision element"
+                  })],
+                  width: {
+                    size: 30,
+                    type: docx.WidthType.PERCENTAGE
+                  },
+                }), new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "{{ each.indicator.get_vision_element_display|escapejs|default:'' }}"
+                  })],
+                  width: {
+                    size: 70,
+                    type: docx.WidthType.PERCENTAGE
+                  }
+                })]
+              }),
+
+              // Category
+              new docx.TableRow({
+                children: [new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "Category"
+                  })],
+                  width: {
+                    size: 30,
+                    type: docx.WidthType.PERCENTAGE
+                  },
+                }), new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "{% for category in each.indicator.category %}{{ category }}{% if not forloop.last %}, {% endif %}{% endfor %}"
+                  })],
+                  width: {
+                    size: 70,
+                    type: docx.WidthType.PERCENTAGE
+                  }
+                })]
+              }),
+
+              // Definition / description of indicator
+              new docx.TableRow({
+                children: [new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "Definition / description of indicator"
+                  })],
+                  width: {
+                    size: 30,
+                    type: docx.WidthType.PERCENTAGE
+                  },
+                }), new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "sometext\n\n{{ each.indicator.description|escapejs|default:'' }}"
+                  })],
+                  width: {
+                    size: 70,
+                    type: docx.WidthType.PERCENTAGE
+                  }
+                })]
+              }),
+
               // Rationale
               new docx.TableRow({
                 children: [new docx.TableCell({
@@ -134,7 +240,49 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.rationale|default:'' }}"
+                    text: "{{ each.rationale|escapejs|default:'' }}"
+                  })],
+                  width: {
+                    size: 70,
+                    type: docx.WidthType.PERCENTAGE
+                  }
+                })]
+              }),
+
+              // Methodology
+              new docx.TableRow({
+                children: [new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "Methodology"
+                  })],
+                  width: {
+                    size: 30,
+                    type: docx.WidthType.PERCENTAGE
+                  },
+                }), new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "{{ each.indicator.methodology|escapejs|default:'' }}"
+                  })],
+                  width: {
+                    size: 70,
+                    type: docx.WidthType.PERCENTAGE
+                  }
+                })]
+              }),
+
+              // Unit
+              new docx.TableRow({
+                children: [new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "Unit"
+                  })],
+                  width: {
+                    size: 30,
+                    type: docx.WidthType.PERCENTAGE
+                  },
+                }), new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "{{ each.indicator.unit|escapejs|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -155,7 +303,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.baseline|default:'' }}"
+                    text: "{{ each.baseline|escapejs|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -176,7 +324,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.sources|default:'' }}"
+                    text: "{{ each.sources|escapejs|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -197,7 +345,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.accuracy|default:'' }}"
+                    text: "{{ each.accuracy|escapejs|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -218,7 +366,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.coverage|default:'' }}"
+                    text: "{{ each.coverage|escapejs|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -227,7 +375,7 @@
                 })]
               }),
 
-              // Reference area / Spatial implementation scale
+              // Reference area / spatial implementation scale
               new docx.TableRow({
                 children: [new docx.TableCell({
                   children: [new docx.Paragraph({
@@ -239,7 +387,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.area|default:'' }}"
+                    text: "{{ each.area|escapejs|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -260,7 +408,28 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.period|default:'' }}"
+                    text: "{{ each.period|escapejs|default:'' }}"
+                  })],
+                  width: {
+                    size: 70,
+                    type: docx.WidthType.PERCENTAGE
+                  }
+                })]
+              }),
+
+              // SDG reference
+              new docx.TableRow({
+                children: [new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "SDG reference"
+                  })],
+                  width: {
+                    size: 30,
+                    type: docx.WidthType.PERCENTAGE
+                  },
+                }), new docx.TableCell({
+                  children: [new docx.Paragraph({
+                    text: "{{ each.indicator.sdg|escapejs|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -281,7 +450,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.comments|default:'' }}"
+                    text: "{{ each.comments|escapejs|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -305,7 +474,7 @@
       {% endfor %}
 
       docx.Packer.toBlob(doc).then(blob => {
-        saveAs(blob, "evaluation-plan.docx");
+        saveAs(blob, "Evaluation plan for {{ info }} - {{ sector }}.docx");
       });
     }
 
