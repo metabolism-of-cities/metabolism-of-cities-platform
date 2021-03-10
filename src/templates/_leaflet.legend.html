@@ -1,0 +1,14 @@
+{% load static %}
+<script src="{% static 'js/leaflet.legend.js' %}"></script>
+<script type="text/javascript">
+L.control.Legend({
+    position: "bottomleft",
+    collapsed: "True",
+    legends: [{% for key,value in legend.items %}{
+        label: "{{ value }}",
+        type: "circle",
+        fillColor: "{{ key }}",
+        color: "#fff",
+    },{% endfor %}]
+}).addTo(map);
+</script>

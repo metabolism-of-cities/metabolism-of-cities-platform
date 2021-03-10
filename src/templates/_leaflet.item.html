@@ -38,40 +38,67 @@
   }
 
   // variable for the data, add it to the map
-  let mapData = {{ data|safe|escape }};
   let dataLayer;
 
-  if (mapData.geom_type == "Point") {
-    {% include "_leaflet.markers.html" %}
-    dataLayer = L.geoJson(mapData, {
-      pointToLayer: function (feature, latlng) {
-        return L.marker(latlng{% if info.get_map_type == "point" %}, { icon: {% if properties.color %}{{ properties.color }}{% else %}blue{% endif %}Icon }{% endif %}).bindPopup("<div class='title'>" + feature.properties.name + "</div><hr><div class='content'>" + feature.properties.content + "</div>")
-      },
-    })
-  } else {
-    {% if properties.opacity %}
-      opacity = {{ properties.opacity }}/100;
-    {% else %}
-      opacity = 1;
-    {% endif %}
-    {% if properties.fillOpacity %}
-      fillOpacity = {{ properties.fillOpacity }}/100;
-    {% else %}
-      fillOpacity = 0.7;
-    {% endif %}
-    dataLayer = L.geoJson(mapData, {
-      style: {
-        fillColor: "{% if properties.color %}{{ properties.color }}{% else %}#144d58{% endif %}",
-        fillOpacity: fillOpacity,
-        opacity: opacity,
-        weight: {% if properties.width %}{{ properties.width }}{% else %}1{% endif %},
-        color: "{% if properties.color %}{{ properties.color }}{% else %}black{% endif %}",
-      },
-      onEachFeature: onEachFeature,
-    })
-  }
+  {% if legend %}
+    {% for each in features %}
+      let mapData_{{ forloop.counter }} = {{ each|safe|escape }};
+      {% if properties.opacity %}
+        opacity = {{ properties.opacity }}/100;
+      {% else %}
+        opacity = 1;
+      {% endif %}
+      {% if properties.fillOpacity %}
+        fillOpacity = {{ properties.fillOpacity }}/100;
+      {% else %}
+        fillOpacity = 0.7;
+      {% endif %}
+      dataLayer_{{ forloop.counter }} = L.geoJson(mapData_{{ forloop.counter }}, {
+        style: {
+          fillColor: "{% if each.properties.color %}{{ each.properties.color }}{% else %}#144d58{% endif %}",
+          fillOpacity: fillOpacity,
+          opacity: opacity,
+          weight: {% if properties.width %}{{ properties.width }}{% else %}1{% endif %},
+          color: "{% if each.properties.color %}{{ each.properties.color }}{% elif properties.color %}{{ properties.color }}{% else %}black{% endif %}",
+        },
+        onEachFeature: onEachFeature,
+      })
+      map.addLayer(dataLayer_{{ forloop.counter }}).fitBounds(dataLayer_{{ forloop.counter }}.getBounds())
+    {% endfor %}
+  {% else %}
+      let mapData = {{ data|safe|escape }};
+      if (mapData.geom_type == "Point") {
+        {% include "_leaflet.markers.html" %}
+        dataLayer = L.geoJson(mapData, {
+          pointToLayer: function (feature, latlng) {
+            return L.marker(latlng{% if info.get_map_type == "point" %}, { icon: {% if properties.color %}{{ properties.color }}{% else %}blue{% endif %}Icon }{% endif %}).bindPopup("<div class='title'>" + feature.properties.name + "</div><hr><div class='content'>" + feature.properties.content + "</div>")
+          },
+        })
+      } else {
+        {% if properties.opacity %}
+          opacity = {{ properties.opacity }}/100;
+        {% else %}
+          opacity = 1;
+        {% endif %}
+        {% if properties.fillOpacity %}
+          fillOpacity = {{ properties.fillOpacity }}/100;
+        {% else %}
+          fillOpacity = 0.7;
+        {% endif %}
+        dataLayer = L.geoJson(mapData, {
+          style: {
+            fillColor: "{% if properties.color %}{{ properties.color }}{% else %}#144d58{% endif %}",
+            fillOpacity: fillOpacity,
+            opacity: opacity,
+            weight: {% if properties.width %}{{ properties.width }}{% else %}1{% endif %},
+            color: "{% if properties.color %}{{ properties.color }}{% else %}black{% endif %}",
+          },
+          onEachFeature: onEachFeature,
+        })
+      }
 
-  map.addLayer(dataLayer).fitBounds(dataLayer.getBounds())
+      map.addLayer(dataLayer).fitBounds(dataLayer.getBounds())
+  {% endif %}
 
 
 </script>

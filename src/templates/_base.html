@@ -178,21 +178,10 @@
     {% include "_leaflet.space.html" %}
   {% endif %}
   {% if load_leaflet_time %}
-      {% include "_leaflet.time.html" %}
+    {% include "_leaflet.time.html" %}
   {% endif %}
   {% if load_leaflet_legend %}
-    <script src="{% static 'js/leaflet.legend.js' %}"></script>
-    <script type="text/javascript">
-    L.control.Legend({
-        position: "bottomleft",
-        legends: [{
-            label: "Marker1",
-            type: "circle",
-            fillColor: "#ff3300",
-            color: "#fff",
-        }]
-    }).addTo(map);
-    </script>
+    {% include "_leaflet.legend.html" %}
   {% endif %}
 
   {% if load_mermaid %}

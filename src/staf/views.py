@@ -396,8 +396,11 @@ def map_item(request, id, space=None):
         elif size > 1024*1024*5:
             simplify_factor = 0.001
 
-    for each in spaces:
+    colors = ["green", "blue", "red", "orange", "brown", "navy", "teal", "purple", "pink", "maroon", "chocolate", "gold", "ivory", "snow"]
 
+    count = 0
+    legend = {}
+    for each in spaces:
         geom_type = each.geometry.geom_type
         if simplify_factor:
             geo = each.geometry.simplify(simplify_factor)
@@ -405,6 +408,15 @@ def map_item(request, id, space=None):
             geo = each.geometry
 
         url = reverse(project.slug + ":referencespace", args=[each.id])
+
+        # If we need separate colors we'll itinerate over them one by one
+        try:
+            color = colors[count]
+            count += 1
+        except:
+            color = colors[0]
+            count = 0
+        legend[color] = each.name
 
         content = ""
         if each.image:
@@ -418,6 +430,7 @@ def map_item(request, id, space=None):
                 "name": each.name,
                 "id": each.id,
                 "content": content,
+                "color": color,
             },
         })
 
@@ -425,10 +438,10 @@ def map_item(request, id, space=None):
         "type":"FeatureCollection",
         "features": features,
         "geom_type": geom_type,
+        "group_by_color": "true" if legend else "false",
     }
 
     properties = info.get_dataviz_properties
-    legend = False
 
     context = {
         "info": info,
@@ -446,6 +459,8 @@ def map_item(request, id, space=None):
         "show_grid": True if info.imported_spaces.count() < 50 else False,
         "properties": properties,
         "curator": curator,
+        "features": features,
+        "legend": legend,
     }
     return render(request, "staf/item.map.html", context)
 
