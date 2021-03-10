@@ -2603,10 +2603,14 @@ def hub_processing_gis_save(request, id, space=None):
             document.meta_data["ready_for_processing"] = True
             document.save()
             messages.success(request, "The file was processed! However, because more than 1,000 items are included in this layer it will take some time to complete the processing. It can take up to 6 hours for processing to complete.")
-        elif document.get_shapefile_size > 7340032:
+        elif total_objects > 300 and "group_spaces_by_name" in document.meta_data:
             document.meta_data["ready_for_processing"] = True
             document.save()
-            messages.success(request, "The file was processed! However, because the file is larger than 7 MB it will take some time to complete the processing. It can take up to 6 hours for processing to complete.")
+            messages.success(request, "The file was processed! However, we need to merge many different elements in order to group them in the final shapefile. This will take some time. We will do this on the server and you can visit this page again in 6 hours to review if everything went well.")
+        elif document.get_shapefile_size > 10*1024*1024:
+            document.meta_data["ready_for_processing"] = True
+            document.save()
+            messages.success(request, "The file was processed! However, because the file is larger than 10 MB it will take some time to complete the processing. It can take up to 6 hours for processing to complete.")
         else:
             document.convert_shapefile()
 
