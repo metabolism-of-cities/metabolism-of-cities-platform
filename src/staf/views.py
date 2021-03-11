@@ -2878,6 +2878,7 @@ def chart_editor(request, id):
         "info": info,
         "properties": info.meta_data.get("properties") if info.meta_data else None,
         "source": source,
+        "schemes": COLOR_SCHEMES,
     }
     if info.source.is_map:
         try:
