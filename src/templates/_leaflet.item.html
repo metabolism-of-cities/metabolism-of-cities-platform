@@ -4,7 +4,7 @@
     var layer = e.target;
 
     layer.setStyle({
-      weight: 2,
+      weight: 5,
       color: "gold",
     });
 
@@ -13,15 +13,17 @@
     }
   }
 
-  {% if not show_individual_colors %}
   // function when hovering out of an area
-  function resetHover(e) {
-    dataLayer.resetStyle(e.target);
-  }
+  {% if not show_individual_colors %}
+    function resetHover(e) {
+      dataLayer.resetStyle(e.target);
+    }
   {% else %}
-    // Check with Guus how to reset for multiple layers
-  function resetHover(e) {
-  }
+    function resetHover(e) {
+      allLayers.eachLayer(function(layer) {
+        layer.resetStyle();
+      });
+    };
   {% endif %}
 
   // function when clicking on an area
