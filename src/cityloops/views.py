@@ -249,8 +249,14 @@ def city_indicators_form(request, slug, sector):
         2: {},
         3: {},
     }
+    get_id = {
+        1: {},
+        2: {},
+        3: {},
+    }
     for each in city_values:
         check[each.scale][each.indicator.id] = True if each.is_enabled else False
+        get_id[each.scale][each.indicator.id] = each.id
 
     try:
         indicators = info.meta_data["cityloops"]["indicators"][sector]
@@ -276,38 +282,47 @@ def city_indicators_form(request, slug, sector):
 
         # And let's now save the individual indicators.
         items = []
-        city_enabled = request.POST.getlist("city")
 
-        # Brute force delete -- change later to update them properly!
-        city_values.delete()
+        if not city_values:
+            city_enabled = request.POST.getlist("city")
+            # No data was saved yet, so we insert new items. 
+            # This is only done the first time around.
+            for each in indicator_list:
+                items.append(CityLoopsIndicatorValue(
+                    city = info,
+                    indicator = each,
+                    is_enabled = True if str(each.id) in city_enabled else False,
+                    sector = sector_id,
+                    scale = 1, # City
+                ))
+            da_enabled = request.POST.getlist("da")
+            for each in indicator_list:
+                items.append(CityLoopsIndicatorValue(
+                    city = info,
+                    indicator = each,
+                    is_enabled = True if str(each.id) in da_enabled else False,
+                    sector = sector_id,
+                    scale = 2, # Demonstration action
+                ))
+            sector_enabled = request.POST.getlist("sector")
+            for each in indicator_list:
+                items.append(CityLoopsIndicatorValue(
+                    city = info,
+                    indicator = each,
+                    is_enabled = True if str(each.id) in sector_enabled else False,
+                    sector = sector_id,
+                    scale = 3, # Sector
+                ))
+            CityLoopsIndicatorValue.objects.bulk_create(items)
+        else:
+            # If existing values are being edited then we need to simply loop through the items
+            # and get the new value, and then save them. In this case the form fields have different
+            # names - names which contain the ID of the value.
+            for each in city_values:
+                form_field_name = f"indicator_{each.id}"
+                each.is_enabled = True if request.POST.get(form_field_name) else False
+                each.save()
 
-        for each in indicator_list:
-            items.append(CityLoopsIndicatorValue(
-                city = info,
-                indicator = each,
-                is_enabled = True if str(each.id) in city_enabled else False,
-                sector = sector_id,
-                scale = 1, # City
-            ))
-        da_enabled = request.POST.getlist("da")
-        for each in indicator_list:
-            items.append(CityLoopsIndicatorValue(
-                city = info,
-                indicator = each,
-                is_enabled = True if str(each.id) in da_enabled else False,
-                sector = sector_id,
-                scale = 2, # Demonstration action
-            ))
-        sector_enabled = request.POST.getlist("sector")
-        for each in indicator_list:
-            items.append(CityLoopsIndicatorValue(
-                city = info,
-                indicator = each,
-                is_enabled = True if str(each.id) in sector_enabled else False,
-                sector = sector_id,
-                scale = 3, # Sector
-            ))
-        CityLoopsIndicatorValue.objects.bulk_create(items)
         messages.success(request, "Saved")
         return redirect("cityloops:city_indicators", sector=sector, slug=slug)
 
@@ -319,6 +334,8 @@ def city_indicators_form(request, slug, sector):
         "info": info,
         "indicators": indicators,
         "check": check,
+        "update_values": True if city_values else False,
+        "get_id": get_id,
     }
     return render(request, "cityloops/indicators.city.form.html", context)
 
