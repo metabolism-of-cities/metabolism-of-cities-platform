@@ -353,10 +353,10 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     if info.data.all():
         properties = info.get_dataviz_properties
         load_datatables = True
+        load_highcharts = True
         if "show_map" in properties:
             load_leaflet = True
             load_leaflet_time = True
-            load_highcharts = True
 
     context = {
         "info": info,
