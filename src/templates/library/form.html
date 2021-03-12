@@ -21,10 +21,10 @@
   {% if PROJECT.slug == "data" or PROJECT.slug == "islands" %}
     {% include "hub/_nav.html" %}
     {% if not request.GET.parent and not info %}
-      <h1 class="h5">Adding: {{ type }}</h1>
+      <h1 class="h5">{{ type }}</h1>
     {% endif %}
   {% else %}
-    <h1>Adding: {{ type }}</h1>
+    <h1>{{ type }}</h1>
   {% endif %}
 
   {% if type.name == "Shapefile" %}

@@ -262,42 +262,48 @@
       {% else %}
 
         {% if request.user.is_authenticated %}
-          {% if curator %}
+
+          {% if curator or request.user.people == info.uploader %}
             <a href="?edit&amp;return={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
           {% endif %}
-          {% if curator or "datacollector" in PERMISSIONS %}
-            {% if IS_DATA_PORTAL and url_processing %}
 
-              {% if not info.meta_data.processed %}
-                <a href="{% url url_processing info.id %}" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> Process this file</a>
-              {% endif %}
+          {% if curator and IS_DATA_PORTAL and url_processing %}
 
-                {% with link=PROJECT.slug|add:":chart_editor" %}
-                  <a href="{% url link info.id %}?next={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-{% if info.is_map %}map-marker-edit{% else %}chart-pie{% endif %}"></i> {% if info.is_map %}Map{% else %}Chart{% endif %} editor</a>
-                {% endwith %}
+            {% if not info.meta_data.processed %}
+              <a href="{% url url_processing info.id %}" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> Process this file</a>
+            {% endif %}
 
-              {% if request.user.is_staff and info.meta_data.processed %}
+            {% with link=PROJECT.slug|add:":chart_editor" %}
+              <a href="{% url link info.id %}?next={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-{% if info.is_map %}map-marker-edit{% else %}chart-pie{% endif %}"></i> {% if info.is_map %}Map{% else %}Chart{% endif %} editor</a>
+            {% endwith %}
 
-                <a href="?reset_processing=true" class="btn btn-primary mt-2"><i class="fa fa-fw fa-layer-group"></i> RESET processing</a>
-                <small class="d-block my-3">
-                  This means that the file can be processed again. <strong>Existing reference spaces and associated info will be lost!</strong>
-                </small>
+            {% if request.user.is_staff and info.meta_data.processed %}
 
-              {% endif %}
-
-              {% if request.user.is_staff and info.meta_data.processing_error %}
-                <a href="?skip_size_check=true" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> Overwrite large-file block</a>
-                <small class="d-block my-3">
-                  If you mark this, it means that all reference spaces will be imported, even if this is too large. We also mark this as
-                  'ready for processing'. Only mark this if someone has finished the processing workflow and it's now in limbo until
-                  this restriction is lifted.
-                </small>
-              {% endif %}
+              <a href="?reset_processing=true" class="btn btn-primary mt-2"><i class="fa fa-fw fa-layer-group"></i> RESET processing</a>
+              <small class="d-block my-3">
+                This means that the file can be processed again. <strong>Existing reference spaces and associated info will be lost!</strong>
+              </small>
 
             {% endif %}
-              <br>
-              <a onclick="javascript:return confirm('Are you sure?')" href="?delete&amp;return={{ request.get_full_path }}" class="btn btn-danger mt-3"><i class="fa fa-trash-alt"></i> Delete</a>
+
+            {% if request.user.is_staff and info.meta_data.processing_error %}
+              <a href="?skip_size_check=true" class="btn btn-primary"><i class="fa fa-fw fa-layer-group"></i> Overwrite large-file block</a>
+              <small class="d-block my-3">
+                If you mark this, it means that all reference spaces will be imported, even if this is too large. We also mark this as
+                'ready for processing'. Only mark this if someone has finished the processing workflow and it's now in limbo until
+                this restriction is lifted.
+              </small>
+            {% endif %}
+
           {% endif %}
+
+          {% if curator or request.user.people == info.uploader %}
+              <br>
+                <a onclick="javascript:return confirm('Are you sure?')" href="?delete&amp;return={{ request.get_full_path }}" class="btn btn-danger mt-3"><i class="fa fa-trash-alt"></i>
+                Delete
+              </a>
+          {% endif %}
+
         {% endif %}
 
       {% endif %}
