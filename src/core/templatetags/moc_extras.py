@@ -24,10 +24,15 @@ def convert_quotes(string):
     return string.replace(r'"', "'")
 
 @register.filter
+def convert_newline(string):
+    return string.replace(r'\u000A', " \\n \\n")
+
+@register.filter
 def strip_first_slash(string):
     if string[0:5] == "/http":
-        # We have an issue with links to subsites being prefaced with a slash, 
+        # We have an issue with links to subsites being prefaced with a slash,
         # and we use this hack to remove them. Not pretty but what can we do?!
         return string[1:]
     else:
         return string
+

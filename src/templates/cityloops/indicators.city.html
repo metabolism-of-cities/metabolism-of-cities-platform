@@ -1,5 +1,6 @@
 {% extends "_base.html" %}
 {% load static %}
+{% load moc_extras %}
 
 {% block css %}
   <style>
@@ -135,7 +136,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.indicator.number|escapejs|default:'' }}"
+                    text: "{{ each.indicator.number|escapejs|convert_newline|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -156,7 +157,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.indicator.name|escapejs|default:'' }}"
+                    text: "{{ each.indicator.name|escapejs|convert_newline|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -177,7 +178,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.indicator.get_vision_element_display|escapejs|default:'' }}"
+                    text: "{{ each.indicator.get_vision_element_display|escapejs|convert_newline|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -219,7 +220,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "sometext\n\n{{ each.indicator.description|escapejs|default:'' }}"
+                    text: "{{ each.indicator.description|escapejs|convert_newline|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -240,7 +241,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.rationale|escapejs|default:'' }}"
+                    text: "{{ each.rationale|escapejs|convert_newline|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -261,7 +262,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.indicator.methodology|escapejs|default:'' }}"
+                    text: "{{ each.indicator.methodology|escapejs|convert_newline|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -282,7 +283,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.indicator.unit|escapejs|default:'' }}"
+                    text: "{{ each.indicator.unit|escapejs|convert_newline|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -303,7 +304,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.baseline|escapejs|default:'' }}"
+                    text: "{{ each.baseline|escapejs|convert_newline|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -324,7 +325,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.sources|escapejs|default:'' }}"
+                    text: "{{ each.sources|escapejs|convert_newline|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -345,7 +346,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.accuracy|escapejs|default:'' }}"
+                    text: "{{ each.accuracy|escapejs|convert_newline|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -366,7 +367,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.coverage|escapejs|default:'' }}"
+                    text: "{{ each.coverage|escapejs|convert_newline|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -387,7 +388,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.area|escapejs|default:'' }}"
+                    text: "{{ each.area|escapejs|convert_newline|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -408,7 +409,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.period|escapejs|default:'' }}"
+                    text: "{{ each.period|escapejs|convert_newline|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -429,7 +430,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.indicator.sdg|escapejs|default:'' }}"
+                    text: "{{ each.indicator.sdg|escapejs|convert_newline|default:'' }}"
                   })],
                   width: {
                     size: 70,
@@ -450,7 +451,7 @@
                   },
                 }), new docx.TableCell({
                   children: [new docx.Paragraph({
-                    text: "{{ each.comments|escapejs|default:'' }}"
+                    text: "{{ each.comments|escapejs|convert_newline|default:'' }}"
                   })],
                   width: {
                     size: 70,
