@@ -26,11 +26,11 @@ def check_ascus_access(function):
         global PAGE_ID
         check_participant = None
         if not request.user.is_authenticated:
-            return redirect("ascus:login")
+            return redirect("ascus2021:login")
         if request.user.is_authenticated and hasattr(request.user, "people"):
             check_participant = RecordRelationship.objects.filter(
                 record_parent = request.user.people,
-                record_child_id = PAGE_ID["ascus"],
+                record_child_id = request.project,
                 relationship__name = "Participant",
             )
         if check_participant.exists():
@@ -38,7 +38,7 @@ def check_ascus_access(function):
         elif has_permission(request, request.project, ["admin"]):
             request.user.is_ascus_organizer = True
         else:
-            return redirect("ascus:register")
+            return redirect("ascus2021:signup")
         return function(request, *args, **kwargs)
     return wrap
 
@@ -48,12 +48,12 @@ def check_ascus_admin_access(function):
         global PAGE_ID
         check_organizer = None
         if not request.user.is_authenticated:
-            return redirect("ascus:login")
+            return redirect("ascus2021:login")
         # This is what we did for AScUS 2020
         if request.user.is_authenticated and hasattr(request.user, "people"):
             check_organizer = RecordRelationship.objects.filter(
                 record_parent = request.user.people,
-                record_child_id = PAGE_ID["ascus"],
+                record_child_id = request.project,
                 relationship__name = "Organizer",
             )
         # And for 2021 we use has_permissions
@@ -61,7 +61,7 @@ def check_ascus_admin_access(function):
             request.user.is_ascus_organizer = True
             return function(request, *args, **kwargs)
         else:
-            return redirect("ascus:register")
+            return redirect("ascus2021:signup")
     return wrap
 
 def get_subtitle(request):
