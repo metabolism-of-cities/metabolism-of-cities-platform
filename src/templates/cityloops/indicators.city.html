@@ -108,7 +108,7 @@
 
   {% endif %}
 
-  <div id="docx-source">
+  <div id="doc-source">
     {% for each in indicator_scale_list %}
       {% if each.scale != 3 %}
         <h3>{{ each }}</h3>
@@ -185,28 +185,21 @@
 
 {% block footer %}
   <script>
-    let css = (
-     '<style>' +
-     '@page WordSection1{size: 841.95pt 595.35pt;mso-page-orientation: landscape;}' +
-     'div.WordSection1 {page: WordSection1;}' +
-     '</style>'
-   );
-
     function exportWord(){
-       var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
-            "xmlns:w='urn:schemas-microsoft-com:office:word' " +
-            "xmlns='http://www.w3.org/TR/REC-html40'>" +
-            "<head><meta charset='utf-8'></head><body>";
-       var footer = "</body></html>";
-       var sourceHTML = header+document.getElementById("docx-source").innerHTML + footer;
+      var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
+           "xmlns:w='urn:schemas-microsoft-com:office:word' "+
+           "xmlns='http://www.w3.org/TR/REC-html40'>"+
+           "<head><meta charset='utf-8'><style type='text/css'>h3{margin-top:50px}th{width:30%; padding: 5px; text-align:left}td{width:70%; padding: 5px; text-align:left;}</style></head><body>";
+      var footer = "</body></html>";
+      var sourceHTML = header+document.getElementById("doc-source").innerHTML+footer;
 
-       var source = "data:application/vnd.ms-word;charset=utf-8," + encodeURIComponent(sourceHTML);
-       var fileDownload = document.createElement("a");
-       document.body.appendChild(fileDownload);
-       fileDownload.href = source;
-       fileDownload.download = "Evaluation plan for {{ info }} - {{ sector }}.docx";
-       fileDownload.click();
-       document.body.removeChild(fileDownload);
+      var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+      var fileDownload = document.createElement("a");
+      document.body.appendChild(fileDownload);
+      fileDownload.href = source;
+      fileDownload.download = 'Evaluation plan for {{ info }} - {{ sector }}.doc';
+      fileDownload.click();
+      document.body.removeChild(fileDownload);
     }
 
     $(".download-word").click(function() {
