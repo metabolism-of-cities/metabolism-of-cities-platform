@@ -107,380 +107,110 @@
     </div>
 
   {% endif %}
+
+  <div id="docx-source">
+    {% for each in indicator_scale_list %}
+      {% if each.scale != 3 %}
+        <h3>{{ each }}</h3>
+        <table class="table mb-4">
+          <tr>
+            <th>Indicator number</th>
+            <td>{{ each.indicator.number|default:'' }}</td>
+          </tr>
+          <tr>
+            <th>Indicator number</th>
+            <td>{{ each.indicator.name|default:'' }}</td>
+          </tr>
+          <tr>
+            <th>Vision element</th>
+            <td>{{ each.indicator.get_vision_element_display|default:'' }}</td>
+          </tr>
+          <tr>
+            <th>Category</th>
+            <td><ul>{% for category in each.indicator.category %}<li>{{ category }}</li>{% endfor %}</ul></td>
+          </tr>
+          <tr>
+            <th>Definition / description of indicator</th>
+            <td>{{ each.indicator.get_description|default:'' }}</td>
+          </tr>
+          <tr>
+            <th>Rationale</th>
+            <td>{{ each.rationale|default:'' }}</td>
+          </tr>
+          <tr>
+            <th>Methodology</th>
+            <td>{{ each.indicator.get_methodology|default:'' }}</td>
+          </tr>
+          <tr>
+            <th>Unit</th>
+            <td>{{ each.indicator.unit|default:'' }}</td>
+          </tr>
+          <tr>
+            <th>Baseline data / definition</th>
+            <td>{{ each.baseline|default:'' }}</td>
+          </tr>
+          <tr>
+            <th>Data sources / relevant databases</th>
+            <td>{{ each.sources|default:'' }}</td>
+          </tr>
+          <tr>
+            <th>Overall accuracy</th>
+            <td>{{ each.accuracy|default:'' }}</td>
+          </tr>
+          <tr>
+            <th>Sector coverage</th>
+            <td>{{ each.coverage|default:'' }}</td>
+          </tr>
+          <tr>
+            <th>Reference area / spatial implementation scale</th>
+            <td>{{ each.area|default:'' }}</td>
+          </tr>
+          <tr>
+            <th>Reference period</th>
+            <td>{{ each.period|default:'' }}</td>
+          </tr>
+          <tr>
+            <th>SDG reference</th>
+            <td>{{ each.indicator.sdg|default:'' }}</td>
+          </tr>
+          <tr>
+            <th>Comments</th>
+            <td>{{ each.comments|default:'' }}</td>
+          </tr>
+        </table>
+      {% endif %}
+    {% endfor %}
+  </div>
 {% endblock %}
 
 {% block footer %}
-  <!-- library for exporting to docx -->
-  <script src="https://unpkg.com/docx@5.5.0/build/index.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
-
   <script>
-    function downloadWord(){
-      let doc = new docx.Document()
+    let css = (
+     '<style>' +
+     '@page WordSection1{size: 841.95pt 595.35pt;mso-page-orientation: landscape;}' +
+     'div.WordSection1 {page: WordSection1;}' +
+     '</style>'
+   );
 
-      {% for each in indicator_scale_list %}
-        {% if each.scale != 3 %}
-          const title_{{ each.id }} = new docx.Paragraph("{{ each }}")
+    function exportWord(){
+       var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
+            "xmlns:w='urn:schemas-microsoft-com:office:word' " +
+            "xmlns='http://www.w3.org/TR/REC-html40'>" +
+            "<head><meta charset='utf-8'></head><body>";
+       var footer = "</body></html>";
+       var sourceHTML = header+document.getElementById("docx-source").innerHTML + footer;
 
-          const table_{{ each.id }} = new docx.Table({
-            rows: [
-              // Indicator number
-              new docx.TableRow({
-                children: [new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "Indicator number"
-                  })],
-                  width: {
-                    size: 30,
-                    type: docx.WidthType.PERCENTAGE
-                  },
-                }), new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "{{ each.indicator.number|escapejs|convert_newline|default:'' }}"
-                  })],
-                  width: {
-                    size: 70,
-                    type: docx.WidthType.PERCENTAGE
-                  }
-                })]
-              }),
-
-              // Indicator name
-              new docx.TableRow({
-                children: [new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "Indicator number"
-                  })],
-                  width: {
-                    size: 30,
-                    type: docx.WidthType.PERCENTAGE
-                  },
-                }), new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "{{ each.indicator.name|escapejs|convert_newline|default:'' }}"
-                  })],
-                  width: {
-                    size: 70,
-                    type: docx.WidthType.PERCENTAGE
-                  }
-                })]
-              }),
-
-              // Vision element
-              new docx.TableRow({
-                children: [new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "Vision element"
-                  })],
-                  width: {
-                    size: 30,
-                    type: docx.WidthType.PERCENTAGE
-                  },
-                }), new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "{{ each.indicator.get_vision_element_display|escapejs|convert_newline|default:'' }}"
-                  })],
-                  width: {
-                    size: 70,
-                    type: docx.WidthType.PERCENTAGE
-                  }
-                })]
-              }),
-
-              // Category
-              new docx.TableRow({
-                children: [new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "Category"
-                  })],
-                  width: {
-                    size: 30,
-                    type: docx.WidthType.PERCENTAGE
-                  },
-                }), new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "{% for category in each.indicator.category %}{{ category }}{% if not forloop.last %}, {% endif %}{% endfor %}"
-                  })],
-                  width: {
-                    size: 70,
-                    type: docx.WidthType.PERCENTAGE
-                  }
-                })]
-              }),
-
-              // Definition / description of indicator
-              new docx.TableRow({
-                children: [new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "Definition / description of indicator"
-                  })],
-                  width: {
-                    size: 30,
-                    type: docx.WidthType.PERCENTAGE
-                  },
-                }), new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "{{ each.indicator.description|escapejs|convert_newline|default:'' }}"
-                  })],
-                  width: {
-                    size: 70,
-                    type: docx.WidthType.PERCENTAGE
-                  }
-                })]
-              }),
-
-              // Rationale
-              new docx.TableRow({
-                children: [new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "Rationale"
-                  })],
-                  width: {
-                    size: 30,
-                    type: docx.WidthType.PERCENTAGE
-                  },
-                }), new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "{{ each.rationale|escapejs|convert_newline|default:'' }}"
-                  })],
-                  width: {
-                    size: 70,
-                    type: docx.WidthType.PERCENTAGE
-                  }
-                })]
-              }),
-
-              // Methodology
-              new docx.TableRow({
-                children: [new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "Methodology"
-                  })],
-                  width: {
-                    size: 30,
-                    type: docx.WidthType.PERCENTAGE
-                  },
-                }), new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "{{ each.indicator.methodology|escapejs|convert_newline|default:'' }}"
-                  })],
-                  width: {
-                    size: 70,
-                    type: docx.WidthType.PERCENTAGE
-                  }
-                })]
-              }),
-
-              // Unit
-              new docx.TableRow({
-                children: [new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "Unit"
-                  })],
-                  width: {
-                    size: 30,
-                    type: docx.WidthType.PERCENTAGE
-                  },
-                }), new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "{{ each.indicator.unit|escapejs|convert_newline|default:'' }}"
-                  })],
-                  width: {
-                    size: 70,
-                    type: docx.WidthType.PERCENTAGE
-                  }
-                })]
-              }),
-
-              // Baseline data / definition
-              new docx.TableRow({
-                children: [new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "Baseline data / definition"
-                  })],
-                  width: {
-                    size: 30,
-                    type: docx.WidthType.PERCENTAGE
-                  },
-                }), new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "{{ each.baseline|escapejs|convert_newline|default:'' }}"
-                  })],
-                  width: {
-                    size: 70,
-                    type: docx.WidthType.PERCENTAGE
-                  }
-                })]
-              }),
-
-              // Data sources / relevant databases
-              new docx.TableRow({
-                children: [new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "Data sources / relevant databases"
-                  })],
-                  width: {
-                    size: 30,
-                    type: docx.WidthType.PERCENTAGE
-                  },
-                }), new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "{{ each.sources|escapejs|convert_newline|default:'' }}"
-                  })],
-                  width: {
-                    size: 70,
-                    type: docx.WidthType.PERCENTAGE
-                  }
-                })]
-              }),
-
-              // Overall accuracy
-              new docx.TableRow({
-                children: [new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "Overall accuracy"
-                  })],
-                  width: {
-                    size: 30,
-                    type: docx.WidthType.PERCENTAGE
-                  },
-                }), new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "{{ each.accuracy|escapejs|convert_newline|default:'' }}"
-                  })],
-                  width: {
-                    size: 70,
-                    type: docx.WidthType.PERCENTAGE
-                  }
-                })]
-              }),
-
-              // Sector coverage
-              new docx.TableRow({
-                children: [new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "Sector coverage"
-                  })],
-                  width: {
-                    size: 30,
-                    type: docx.WidthType.PERCENTAGE
-                  },
-                }), new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "{{ each.coverage|escapejs|convert_newline|default:'' }}"
-                  })],
-                  width: {
-                    size: 70,
-                    type: docx.WidthType.PERCENTAGE
-                  }
-                })]
-              }),
-
-              // Reference area / spatial implementation scale
-              new docx.TableRow({
-                children: [new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "Reference area / spatial implementation scale"
-                  })],
-                  width: {
-                    size: 30,
-                    type: docx.WidthType.PERCENTAGE
-                  },
-                }), new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "{{ each.area|escapejs|convert_newline|default:'' }}"
-                  })],
-                  width: {
-                    size: 70,
-                    type: docx.WidthType.PERCENTAGE
-                  }
-                })]
-              }),
-
-              // Reference period
-              new docx.TableRow({
-                children: [new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "Reference period"
-                  })],
-                  width: {
-                    size: 30,
-                    type: docx.WidthType.PERCENTAGE
-                  },
-                }), new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "{{ each.period|escapejs|convert_newline|default:'' }}"
-                  })],
-                  width: {
-                    size: 70,
-                    type: docx.WidthType.PERCENTAGE
-                  }
-                })]
-              }),
-
-              // SDG reference
-              new docx.TableRow({
-                children: [new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "SDG reference"
-                  })],
-                  width: {
-                    size: 30,
-                    type: docx.WidthType.PERCENTAGE
-                  },
-                }), new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "{{ each.indicator.sdg|escapejs|convert_newline|default:'' }}"
-                  })],
-                  width: {
-                    size: 70,
-                    type: docx.WidthType.PERCENTAGE
-                  }
-                })]
-              }),
-
-              // Comments
-              new docx.TableRow({
-                children: [new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "Comments"
-                  })],
-                  width: {
-                    size: 30,
-                    type: docx.WidthType.PERCENTAGE
-                  },
-                }), new docx.TableCell({
-                  children: [new docx.Paragraph({
-                    text: "{{ each.comments|escapejs|convert_newline|default:'' }}"
-                  })],
-                  width: {
-                    size: 70,
-                    type: docx.WidthType.PERCENTAGE
-                  }
-                })]
-              }),
-            ],
-            width: {
-              size: 100,
-              type: docx.WidthType.PERCENTAGE
-            },
-            columnWidths: [30, 70],
-            layout: docx.TableLayoutType.FIXED
-          })
-
-          doc.addSection({
-             children: [title_{{ each.id }}, table_{{ each.id }}],
-          });
-        {% endif %}
-      {% endfor %}
-
-      docx.Packer.toBlob(doc).then(blob => {
-        saveAs(blob, "Evaluation plan for {{ info }} - {{ sector }}.docx");
-      });
+       var source = "data:application/vnd.ms-word;charset=utf-8," + encodeURIComponent(sourceHTML);
+       var fileDownload = document.createElement("a");
+       document.body.appendChild(fileDownload);
+       fileDownload.href = source;
+       fileDownload.download = "Evaluation plan for {{ info }} - {{ sector }}.docx";
+       fileDownload.click();
+       document.body.removeChild(fileDownload);
     }
 
     $(".download-word").click(function() {
-      downloadWord()
+      exportWord()
     });
   </script>
 {% endblock %}

@@ -25,7 +25,7 @@ def convert_quotes(string):
 
 @register.filter
 def convert_newline(string):
-    return string.replace(r'\u000A', " \\n \\n")
+    return string.replace(r'\u000A', "<br>")
 
 @register.filter
 def strip_first_slash(string):
