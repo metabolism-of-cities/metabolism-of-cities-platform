@@ -113,67 +113,67 @@
         <h3>{{ each.indicator }} | {% if each.scale == 1 %}Demonstration action{% else %}City{% endif %}</h3>
         <table class="table mb-4">
           <tr>
-            <th>Indicator number</th>
-            <td>{{ each.indicator.number|default:'' }}</td>
+            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Indicator number</th>
+            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.indicator.number|default:'' }}</td>
           </tr>
           <tr>
-            <th>Indicator number</th>
-            <td>{{ each.indicator.name|default:'' }}</td>
+            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Indicator name</th>
+            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.indicator.name|default:'' }}</td>
           </tr>
           <tr>
-            <th>Vision element</th>
-            <td>{{ each.indicator.get_vision_element_display|default:'' }}</td>
+            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Vision element</th>
+            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.indicator.get_vision_element_display|default:'' }}</td>
           </tr>
           <tr>
-            <th>Category</th>
-            <td><ul>{% for category in each.indicator.category %}<li>{{ category }}</li>{% endfor %}</ul></td>
+            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Category</th>
+            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;"><ul>{% for category in each.indicator.category %}<li>{{ category }}</li>{% endfor %}</ul></td>
           </tr>
           <tr>
-            <th>Definition / description of indicator</th>
-            <td>{{ each.indicator.get_description|default:'' }}</td>
+            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Definition / description of indicator</th>
+            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.indicator.get_description|default:'' }}</td>
           </tr>
           <tr>
-            <th>Rationale</th>
-            <td>{{ each.rationale|default:'' }}</td>
+            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Rationale</th>
+            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.rationale|default:'' }}</td>
           </tr>
           <tr>
-            <th>Methodology</th>
-            <td>{{ each.indicator.get_methodology|default:'' }}</td>
+            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Methodology</th>
+            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.indicator.get_methodology|default:'' }}</td>
           </tr>
           <tr>
-            <th>Unit</th>
-            <td>{{ each.indicator.unit|default:'' }}</td>
+            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Unit</th>
+            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.indicator.unit|default:'' }}</td>
           </tr>
           <tr>
-            <th>Baseline data / definition</th>
-            <td>{{ each.baseline|default:'' }}</td>
+            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Baseline data / definition</th>
+            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.baseline|default:'' }}</td>
           </tr>
           <tr>
-            <th>Data sources / relevant databases</th>
-            <td>{{ each.sources|default:'' }}</td>
+            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Data sources / relevant databases</th>
+            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.sources|default:'' }}</td>
           </tr>
           <tr>
-            <th>Overall accuracy</th>
-            <td>{{ each.accuracy|default:'' }}</td>
+            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Overall accuracy</th>
+            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.accuracy|default:'' }}</td>
           </tr>
           <tr>
-            <th>Sector coverage</th>
-            <td>{{ each.coverage|default:'' }}</td>
+            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Sector coverage</th>
+            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.coverage|default:'' }}</td>
           </tr>
           <tr>
-            <th>Reference area / spatial implementation scale</th>
-            <td>{{ each.area|default:'' }}</td>
+            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Reference area / spatial implementation scale</th>
+            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.area|default:'' }}</td>
           </tr>
           <tr>
-            <th>Reference period</th>
-            <td>{{ each.period|default:'' }}</td>
+            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Reference period</th>
+            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.period|default:'' }}</td>
           </tr>
           <tr>
-            <th>SDG reference</th>
-            <td>{{ each.indicator.sdg|default:'' }}</td>
+            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">SDG reference</th>
+            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.indicator.sdg|default:'' }}</td>
           </tr>
           <tr>
-            <th>Comments</th>
+            <th style="border-right: 1px solid #000000">Comments</th>
             <td>{{ each.comments|default:'' }}</td>
           </tr>
         </table>
