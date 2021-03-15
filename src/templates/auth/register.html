@@ -24,26 +24,26 @@
         {% elif PROJECT.id == 16 %}
           <div class="form-group">
             <label for="org">Organisation</label>
-            <input type="text" class="form-control" id="org" name="organization">
+            <input type="text" class="form-control" id="org" name="organization" value="{{ request.POST.organization }}">
           </div>
         {% endif %}
         <div class="form-group">
           <label for="name">Your name</label>
-          <input type="name" class="form-control" id="name" name="name" required>
+          <input type="name" class="form-control" id="name" name="name" required value="{{ request.POST.name }}">
         </div>
         {% if request.GET.course_signup == "331733" %}
           <div class="form-group">
             <label for="city">City</label>
-            <input type="name" class="form-control" id="city" name="city" required>
+            <input type="name" class="form-control" id="city" name="city" required value="{{ request.POST.city }}">
           </div>
         {% endif %}
         <div class="form-group">
           <label for="email">E-mail</label>
-          <input type="email" class="form-control" id="email" name="email" required>
+          <input type="email" class="form-control" id="email" name="email" required value="{{ request.POST.email }}">
         </div>
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" class="form-control" id="password" name="password" required>
+          <input type="password" class="form-control" id="password" name="password" required value="{{ request.POST.password }}">
         </div>
         {% if request.GET.course_signup == "331733" %}
           <div class="alert alert-warning">
@@ -76,11 +76,11 @@
         </div>
         <div class="form-group">
           <label>Background/interests <code class="ml-4">optional</code></label>
-          <textarea name="background" class="form-control" rows="5" placeholder="Please let us know a bit about your background and interests"></textarea>
+          <textarea name="background" class="form-control" rows="5" placeholder="Please let us know a bit about your background and interests">{{ request.POST.background }}</textarea>
         </div>
         <div class="form-group">
           <label for="tw">Prove you are human: please write <strong>hello</strong> in the box below</label>
-          <input type="tw" class="form-control" id="tw" name="tw" required>
+          <input type="tw" class="form-control" id="tw" name="tw" required value="{{ request.POST.tw }}">
         </div>
         <button type="submit" class="btn btn-primary"><i class="fas fa-fw fa-user-plus"></i> Register</button>
       </form>

@@ -305,46 +305,36 @@ def forum(request):
     }
     return render(request, "forum.list.html", context)
 
-def ascus_register(request):
+def signup(request):
 
-    # Disabling registration for ASCUS 2020:
-    if request.project == 8:
-        return redirect("/")
+    is_registered = False
 
-    people = user = is_logged_in = None
-    if request.user.is_authenticated:
-        is_logged_in = True
-        check = People.objects.filter(user=request.user)
-        name = str(request.user)
-        user = request.user
-        if check:
-            people = check[0]
-        if people:
-            check_participant = RecordRelationship.objects.filter(
-                record_parent = people,
-                record_child_id = request.project,
-                relationship__name = "Participant",
-            )
-            if check_participant:
-                return redirect("ascus:account")
+    if not request.user.is_authenticated:
+        return redirect("ascus2021:register")
+    else:
+        check_participant = RecordRelationship.objects.filter(
+            record_parent = request.user.people,
+            record_child_id = request.project,
+            relationship__name = "Participant",
+        )
+        if check_participant:
+            is_registered = True
+
     if request.method == "POST":
-        error = None
-        if not error:
-            RecordRelationship.objects.create(
-                record_parent = people,
-                record_child_id = request.project,
-                relationship_id = 12,
-            )
-            location = request.POST.get("city", "not set")
-            messages.success(request, "You are successfully registered for the AScUS Unconference.")
-            return redirect("ascus:article", slug="payment")
+        RecordRelationship.objects.create(
+            record_parent = request.user.people,
+            record_child_id = request.project,
+            relationship_id = 12,
+        )
+        messages.success(request, "You are successfully registered for the AScUS Unconference.")
+        return redirect("ascus2021:article", slug="payment")
 
     context = {
         "header_title": "Register now",
         "header_subtitle": get_subtitle(request),
-        "tags": Tag.objects.filter(parent_tag__id=757)
+        "is_registered": is_registered,
     }
-    return render(request, "auth/register.html", context)
+    return render(request, "ascus/signup.html", context)
 
 @check_ascus_access
 def ascus_account_edit(request):

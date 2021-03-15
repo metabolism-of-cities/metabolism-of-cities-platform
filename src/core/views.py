@@ -58,7 +58,7 @@ THIS_PROJECT = PROJECT_ID["core"]
 
 def user_register(request, project="core", section=None):
     people = user = is_logged_in = None
-    project = get_object_or_404(Project, pk=request.project)
+    project = get_project(request)
 
     if request.GET.get("next"):
         redirect_url = request.GET.get("next")
@@ -135,14 +135,14 @@ def user_register(request, project="core", section=None):
                         relationship_id = 27,
                     )
 
-            #Work.objects.create(
-            #    name = "Welcome new user",
-            #    description = "A new user has signed up for the website! Have a look at their profile, and consider welcoming them. The user has entered the following background information:\n\n" + request.POST.get("background"),
-            #    part_of_project = project,
-            #    related_to = people,
-            #    workactivity_id = 18,
-            #    is_public = False,
-            #)
+            if project.slug == "ascus2021":
+                RecordRelationship.objects.create(
+                    record_parent = people,
+                    record_child_id = request.project,
+                    relationship_id = 12,
+                )
+                messages.success(request, "You have been registered for the unconference.")
+                return redirect("ascus2021:article", slug="payment")
 
             messages.success(request, "You are successfully registered.")
 

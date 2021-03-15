@@ -1,0 +1,23 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1>Your AScUS registration</h1>
+  {% if is_registered %}
+    <div class="alert alert-success">You are already registered for the unconference.</div>
+    <p>
+      <a class="btn btn-primary" href="{% url "ascus2021:article" "payment" %}">View payment details</a>
+    </p>
+    <p>Are you unable to attend? Questions? Please let us know at ascus@metabolismofcities.org</p>
+  {% else %}
+    <form method="post">
+      <p>
+        Your registration for the AScUS unconference is not yet complete. To confirm your registration, 
+        click the button below and follow the instructions to complete your payment.
+      </p>
+      <button class="btn btn-success" type="submit">Complete registration</button>
+      {% csrf_token %}
+    </form>
+  {% endif %}
+
+{% endblock %}

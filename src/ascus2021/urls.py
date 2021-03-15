@@ -21,7 +21,7 @@ urlpatterns = baseline_urlpatterns + [
 
     path("", views.ascus, name="index"),
 
-    #path("register/", views.ascus_register, name="register"),
+    path("signup/", views.signup, name="signup"),
     path("login/", core.user_login, name="login"),
     path("logout/", core.user_logout, name="logout"),
     path("overview/", views.overview, name="overview"),
@@ -97,6 +97,6 @@ urlpatterns = baseline_urlpatterns + [
         name="password_reset_complete",
     ),
 
-    path("<slug:slug>/", core.article, { "prefix": "/ascus2021/", "subtitle": "2nd Actionable Science for Urban Sustainability · 1-4 June 2021", "project": 586773}, name="article"),
+    path("<slug:slug>/", core.article, { "subtitle": "2nd Actionable Science for Urban Sustainability · 1-4 June 2021", "project": 586773}, name="article"),
 
 ]
