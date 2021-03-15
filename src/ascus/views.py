@@ -183,33 +183,33 @@ def ascus_account(request):
     my_discussions = Event.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
         .filter(child_list__record_parent=request.user.people, child_list__relationship__id=14) \
-        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(parent_list__record_child__id=request.project) \
         .filter(tags__id=770)
     my_outputs = LibraryItem.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
-        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(parent_list__record_child__id=request.project) \
         .filter(tags__id=919)
     my_presentations = LibraryItem.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
-        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(parent_list__record_child__id=request.project) \
         .filter(tags__id=771)
     my_intro = LibraryItem.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
-        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(parent_list__record_child__id=request.project) \
         .filter(tags__id=769)
     my_roles = RecordRelationship.objects.filter(
         record_parent = request.user.people, 
-        record_child__id = PAGE_ID["ascus"],
+        record_child__id = request.project,
     )
     show_discussion = show_abstract = False
 
     my_topic_registrations = Event.objects_include_private \
         .filter(child_list__record_parent=request.user.people, child_list__relationship__id=12) \
-        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(parent_list__record_child__id=request.project) \
         .filter(tags__id=770)
 
     topics = Event.objects_include_private \
-        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(parent_list__record_child__id=request.project) \
         .filter(start_date__gte=timezone.now().date()) \
         .filter(tags__id=770).order_by("start_date")
 
@@ -219,12 +219,19 @@ def ascus_account(request):
         elif each.relationship.name == "Presenter":
             show_abstract = True
 
+    abstracts = LibraryItem.objects_include_private \
+        .filter(parent_list__record_child__id=request.project) \
+        .filter(tags__id=771)
+
+    if "approve" in request.POST:
+        work.status = Work.WorkStatus.COMPLETED
+
     if request.method == "POST":
         if "register" in request.POST:
             try:
                 topic = Event.objects_include_private \
                     .filter(pk=request.POST["register"]) \
-                    .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+                    .filter(parent_list__record_child__id=request.project) \
                     .filter(tags__id=770)[0]
                 session = request.POST["register"]
                 RecordRelationship.objects.create(
@@ -239,7 +246,7 @@ def ascus_account(request):
             try:
                 topic = Event.objects_include_private \
                     .filter(pk=request.POST["unregister"]) \
-                    .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+                    .filter(parent_list__record_child__id=request.project) \
                     .filter(tags__id=770)[0]
                 registration = RecordRelationship.objects.get(
                     record_parent = request.user.people,
@@ -254,8 +261,8 @@ def ascus_account(request):
     context = {
         "header_title": "My Account",
         "header_subtitle": get_subtitle(request),
-        "edit_link": "/admin/core/project/" + str(PAGE_ID["ascus"]) + "/change/",
-        "info": get_object_or_404(Project, pk=PAGE_ID["ascus"]),
+        "edit_link": "/admin/core/project/" + str(request.project) + "/change/",
+        "info": get_object_or_404(Project, pk=request.project),
         "my_discussions": my_discussions,
         "my_outputs": my_outputs,
         "my_presentations": my_presentations,
@@ -264,6 +271,7 @@ def ascus_account(request):
         "show_abstract": show_abstract,
         "topics": topics,
         "my_topic_registrations": my_topic_registrations,
+        "abstracts": abstracts,
     }
     return render(request, "ascus/account.html", context)
 

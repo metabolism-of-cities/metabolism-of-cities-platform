@@ -1,11 +1,14 @@
 <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:index" %}"><i class="fa fa-home fa-fw"></i></a></li>
 
 {% if not request.user.is_authenticated %}
+  <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:article" "rates" %}">Rates</a></li>
   <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:article" "login" %}">Login</a></li>
   <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:register" %}">Register</a></li>
 {% else %}
   <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:signup" %}">Register</a></li>
+  <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:article" "rates" %}">Rates</a></li>
   <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:account_presentation" %}">Submit abstract</a></li>
   <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:account_discussion" %}">Submit discussion topic</a></li>
+  <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:account" %}">Abstracts</a></li>
   <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:logout" %}">Logout</a></li>
 {% endif %}

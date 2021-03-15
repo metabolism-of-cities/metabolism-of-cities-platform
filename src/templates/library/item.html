@@ -108,49 +108,53 @@
             </li>
           {% endif %}
 
-          {% if info.year %}
-            <li class="list-group-item table-item">
-              <div><i class="fal fa-fw fa-calendar mr-1"></i> Year</div>
-              <div>{{ info.year }}</div>
-            </li>
-          {% endif %}
+          {% if PROJECT.slug != "ascus2021" %}
 
-          {% if info.author_list %}
-            <li class="list-group-item">
-              <i class="fal fa-fw fa-user-edit mb-1 mr-1" aria-hidden="true"></i> Author(s)
-              <br>
-              {% if info.authors.all %}
-                {% for each in info.authors %}
-                  <a class="btn btn-sm btn-primary-outline mt-1" href="">{{ each }}</a>
+            {% if info.year %}
+              <li class="list-group-item table-item">
+                <div><i class="fal fa-fw fa-calendar mr-1"></i> Year</div>
+                <div>{{ info.year }}</div>
+              </li>
+            {% endif %}
+
+            {% if info.author_list %}
+              <li class="list-group-item">
+                <i class="fal fa-fw fa-user-edit mb-1 mr-1" aria-hidden="true"></i> Author(s)
+                <br>
+                {% if info.authors.all %}
+                  {% for each in info.authors %}
+                    <a class="btn btn-sm btn-primary-outline mt-1" href="">{{ each }}</a>
+                  {% endfor %}
+                {% else %}
+                  {{ info.get_author_citation }}
+                {% endif %}
+              </li>
+            {% endif %}
+
+            {% if info.tags.all %}
+              <li class="list-group-item">
+                <i class="fal fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Tags
+                <br>
+                {% for each in info.tags.all %}
+                  <a class="btn btn-sm btn-primary-outline mt-1" href="{% url URLS.LIBRARY %}?find=true&amp;search={{ each.id }}&amp;types=all">{{ each }}</a>
                 {% endfor %}
-              {% else %}
-                {{ info.get_author_citation }}
-              {% endif %}
-            </li>
-          {% endif %}
+              </li>
+            {% endif %}
 
-          {% if info.tags.all %}
-            <li class="list-group-item">
-              <i class="fal fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Tags
-              <br>
-              {% for each in info.tags.all %}
-                <a class="btn btn-sm btn-primary-outline mt-1" href="{% url URLS.LIBRARY %}?find=true&amp;search={{ each.id }}&amp;types=all">{{ each }}</a>
-              {% endfor %}
-            </li>
-          {% endif %}
-
-          {% if info.language and not info.type.name == "Image" %}
-          <li class="list-group-item table-item">
-            <div><i class="fal fa-fw fa-language mr-1"></i> Language</div>
-            <div>{{ info.get_language_display }}</div>
-          </li>
-          {% endif %}
-
-          {% if info.license %}
+            {% if info.language and not info.type.name == "Image" %}
             <li class="list-group-item table-item">
-              <div><i class="fal fa-fw fa-universal-access mr-1"></i> License</div>
-              <div>{{ info.license }}</div>
+              <div><i class="fal fa-fw fa-language mr-1"></i> Language</div>
+              <div>{{ info.get_language_display }}</div>
             </li>
+            {% endif %}
+
+            {% if info.license %}
+              <li class="list-group-item table-item">
+                <div><i class="fal fa-fw fa-universal-access mr-1"></i> License</div>
+                <div>{{ info.license }}</div>
+              </li>
+            {% endif %}
+
           {% endif %}
 
           {% if info.url %}
@@ -184,7 +188,7 @@
             </li>
           {% endif %}
 
-          {% if info.type.group == "academic" %}
+          {% if info.type.group == "academic" and PROJECT.slug != "ascus2021" %}
           <li class="list-group-item">
             <i class="fal fa-fw fa-search mb-1 mr-1" aria-hidden="true"></i> Search
             <br>
@@ -213,7 +217,7 @@
         </ul>
       </div>
 
-      {% if PROJECT.id == 8 %}
+      {% if PROJECT.slug == "ascus" or PROJECT.slug == "ascus2021" %}
 
         {% if info.author_list %}
           <div class="card">
@@ -579,7 +583,7 @@
         </section>
       {% endif %}
 
-      {% if PROJECT.slug == "ascus" %}
+      {% if PROJECT.slug == "ascus" or PROJECT.slug == "ascus2021" %}
         <section class="messages">
           {% include "_messages.html" %}
         </section>

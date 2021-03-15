@@ -135,8 +135,10 @@ def forum_list(request, parent=None, section=None):
     return render(request, "forum.list.html", context)
 
 def forum(request, id, section=None):
-    info = get_object_or_404(Record, pk=id)
+    info = Record.objects_include_private.get(pk=id)
+    #get_object_or_404(Record, pk=id) Reactivate after ascus
     list = Message.objects.filter(parent=id)
+    project = get_project(request)
 
     context = {
         "info": info,
@@ -177,21 +179,18 @@ def forum(request, id, section=None):
                 if each not in recipients:
                     recipients.append(each)
 
-            if request.project != 1:
-                project = get_object_or_404(Project, pk=request.project)
-
             # If the forum function becomes more popular, this will get out of hand quickly
             # In that case we should write a separate cron that runs every 5-10 min to send
             # out these notifications instead. But to get us started, this should do.
 
-            if False:
+            if project.slug == "ascus2021":
                 try:
                     mailcontext = {
                         "message": markdown(text),
                         "text": text,
                         "project": project,
                         "info": info,
-                        "url": "https://ascus.metabolismofcities.org" + request.POST["return"] if "return" in request.POST else reverse(project_name + ":forum", info.id),
+                        "url": "https://ascus2021.metabolismofcities.org" + request.POST["return"] if "return" in request.POST else reverse(project_name + ":forum", info.id),
                     }
 
                     msg_html = render_to_string("mailbody/message.notification.html", mailcontext)

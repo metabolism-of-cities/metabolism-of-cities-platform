@@ -261,7 +261,15 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     if data_section_type:
         submenu = "library"
 
-    info = get_object_or_404(LibraryItem, pk=id)
+    if project.slug == "ascus2021":
+        info = LibraryItem.objects_include_private \
+            .filter(pk=id) \
+            .filter(parent_list__record_child__id=request.project) \
+            .filter(tags__id=771)
+        info = info[0]
+    else:
+        info = get_object_or_404(LibraryItem, pk=id)
+
     section = "library"
     url_processing = None
     curator = False
@@ -365,12 +373,16 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         "show_export": show_export,
         "show_relationship": info.id,
         "authors": People.objects_unfiltered.filter(parent_list__record_child=info, parent_list__relationship__id=4),
+
         "load_messaging": True,
+        "list_messages": Message.objects.filter(parent=info),
+        "forum_id": info.id,
+        "show_subscribe": True,
+
         "load_datatables": False,
         "load_leaflet": load_leaflet,
         "load_leaflet_time": load_leaflet_time,
         "load_highcharts": load_highcharts,
-        "list_messages": Message.objects.filter(parent=info),
         "curator": curator,
         "space": space,
         "layer": layer,
