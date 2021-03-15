@@ -1,6 +1,5 @@
 {% extends "_base.html" %}
 {% load static %}
-{% load moc_extras %}
 
 {% block css %}
   <style>
@@ -111,7 +110,7 @@
   <div id="doc-source" hidden>
     {% for each in indicator_scale_list %}
       {% if each.scale != 3 %}
-        <h3>{{ each }}</h3>
+        <h3>{{ each.indicator }} | {% if each.scale == 1 %}Demonstration action{% else %}City{% endif %}</h3>
         <table class="table mb-4">
           <tr>
             <th>Indicator number</th>

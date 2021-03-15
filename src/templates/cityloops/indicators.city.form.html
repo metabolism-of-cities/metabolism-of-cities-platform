@@ -106,7 +106,7 @@
               </td>
               <td class="checkbox da">
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="da-{{ each.id }}" 
+                  <input type="checkbox" class="custom-control-input" id="da-{{ each.id }}"
                     name="{% if update_values %}indicator_{{ get_id|get_item:1|get_item:each.id }}{% else %}da{% endif %}" value="{{ each.id }}"
                     {% if check|get_item:1|get_item:each.id %}
                     checked
@@ -117,7 +117,7 @@
               </td>
               <td class="checkbox city">
                 <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="city-{{ each.id }}" 
+                  <input type="checkbox" class="custom-control-input" id="city-{{ each.id }}"
                     name="{% if update_values %}indicator_{{ get_id|get_item:2|get_item:each.id }}{% else %}city{% endif %}" value="{{ each.id }}"
                     {% if check|get_item:2|get_item:each.id %}
                     checked
