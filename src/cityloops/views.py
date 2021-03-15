@@ -170,17 +170,19 @@ def indicators(request):
 def cities_sectors(request):
     context = {
         "title": "Indicators: cities' selection",
+        "webpage": get_object_or_404(Webpage, pk=976544),
     }
     return render(request, "cityloops/sectors.cities.html", context)
 
 def cities_indicators(request, sector):
-
     sector_id = 1 if sector == "construction" else 2
     if sector == "construction":
+        webpage_id = 976547,
         cities_list = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project).exclude(name__in=["Vallès Occidental", "Porto"])
         indicator_list = CityLoopsIndicator.objects.filter(relevant_construction=True)
         mandatory_list = indicator_list.filter(mandatory_construction=True)
     elif sector == "biomass":
+        webpage_id = 976546,
         cities_list = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project).exclude(name__in=["Vallès Occidental", "Bodø", "Roskilde", "Høje-Taastrup"])
         indicator_list = CityLoopsIndicator.objects.filter(relevant_biomass=True)
         mandatory_list = indicator_list.filter(mandatory_biomass=True)
@@ -195,6 +197,7 @@ def cities_indicators(request, sector):
         "sector": sector,
         "cities_list": cities_list,
         "load_select2": True,
+        "webpage": get_object_or_404(Webpage, pk=webpage_id),
     }
     return render(request, "cityloops/indicators.cities.html", context)
 
@@ -285,7 +288,7 @@ def city_indicators_form(request, slug, sector):
 
         if not city_values:
             city_enabled = request.POST.getlist("city")
-            # No data was saved yet, so we insert new items. 
+            # No data was saved yet, so we insert new items.
             # This is only done the first time around.
             for each in indicator_list:
                 items.append(CityLoopsIndicatorValue(
