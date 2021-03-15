@@ -107,74 +107,74 @@
 
   {% endif %}
 
-  <div id="doc-source" hidden>
+  <div id="doc-source">
     {% for each in indicator_scale_list %}
       {% if each.scale != 3 %}
         <h3>{{ each.indicator }} | {% if each.scale == 1 %}Demonstration action{% else %}City{% endif %}</h3>
         <table class="table mb-4">
           <tr>
-            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Indicator number</th>
-            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.indicator.number|default:'' }}</td>
+            <th style="border: 1px solid #000000; padding: 0.15cm">Indicator number</th>
+            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.number|default:'' }}</td>
           </tr>
           <tr>
-            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Indicator name</th>
-            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.indicator.name|default:'' }}</td>
+            <th style="border: 1px solid #000000; padding: 0.15cm">Indicator name</th>
+            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.name|default:'' }}</td>
           </tr>
           <tr>
-            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Vision element</th>
-            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.indicator.get_vision_element_display|default:'' }}</td>
+            <th style="border: 1px solid #000000; padding: 0.15cm">Vision element</th>
+            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.get_vision_element_display|default:'' }}</td>
           </tr>
           <tr>
-            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Category</th>
-            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;"><ul>{% for category in each.indicator.category %}<li>{{ category }}</li>{% endfor %}</ul></td>
+            <th style="border: 1px solid #000000; padding: 0.15cm">Category</th>
+            <td style="border: 1px solid #000000; padding: 0.15cm"><ul>{% for category in each.indicator.category %}<li>{{ category }}</li>{% endfor %}</ul></td>
           </tr>
           <tr>
-            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Definition / description of indicator</th>
-            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.indicator.get_description|default:'' }}</td>
+            <th style="border: 1px solid #000000; padding: 0.15cm">Definition / description of indicator</th>
+            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.get_description|default:'' }}</td>
           </tr>
           <tr>
-            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Rationale</th>
-            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.rationale|default:'' }}</td>
+            <th style="border: 1px solid #000000; padding: 0.15cm">Rationale</th>
+            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.rationale|default:'' }}</td>
           </tr>
           <tr>
-            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Methodology</th>
-            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.indicator.get_methodology|default:'' }}</td>
+            <th style="border: 1px solid #000000; padding: 0.15cm">Methodology</th>
+            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.get_methodology|default:'' }}</td>
           </tr>
           <tr>
-            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Unit</th>
-            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.indicator.unit|default:'' }}</td>
+            <th style="border: 1px solid #000000; padding: 0.15cm">Unit</th>
+            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.unit|default:'' }}</td>
           </tr>
           <tr>
-            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Baseline data / definition</th>
-            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.baseline|default:'' }}</td>
+            <th style="border: 1px solid #000000; padding: 0.15cm">Baseline data / definition</th>
+            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.baseline|default:'' }}</td>
           </tr>
           <tr>
-            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Data sources / relevant databases</th>
-            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.sources|default:'' }}</td>
+            <th style="border: 1px solid #000000; padding: 0.15cm">Data sources / relevant databases</th>
+            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.sources|default:'' }}</td>
           </tr>
           <tr>
-            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Overall accuracy</th>
-            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.accuracy|default:'' }}</td>
+            <th style="border: 1px solid #000000; padding: 0.15cm">Overall accuracy</th>
+            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.accuracy|default:'' }}</td>
           </tr>
           <tr>
-            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Sector coverage</th>
-            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.coverage|default:'' }}</td>
+            <th style="border: 1px solid #000000; padding: 0.15cm">Sector coverage</th>
+            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.coverage|default:'' }}</td>
           </tr>
           <tr>
-            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Reference area / spatial implementation scale</th>
-            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.area|default:'' }}</td>
+            <th style="border: 1px solid #000000; padding: 0.15cm">Reference area / spatial implementation scale</th>
+            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.area|default:'' }}</td>
           </tr>
           <tr>
-            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">Reference period</th>
-            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.period|default:'' }}</td>
+            <th style="border: 1px solid #000000; padding: 0.15cm">Reference period</th>
+            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.period|default:'' }}</td>
           </tr>
           <tr>
-            <th style="border-bottom: 1px solid #000000; padding: 0.05cm; border-right: 1px solid #000000">SDG reference</th>
-            <td style="border-bottom: 1px solid #000000; padding: 0.05cm;">{{ each.indicator.sdg|default:'' }}</td>
+            <th style="border: 1px solid #000000; padding: 0.15cm">SDG reference</th>
+            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.sdg|default:'' }}</td>
           </tr>
           <tr>
-            <th style="border-right: 1px solid #000000">Comments</th>
-            <td>{{ each.comments|default:'' }}</td>
+            <th style="border: 1px solid #000000; padding: 0.15cm">Comments</th>
+            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.comments|default:'' }}</td>
           </tr>
         </table>
       {% endif %}
@@ -188,7 +188,7 @@
       var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
            "xmlns:w='urn:schemas-microsoft-com:office:word' "+
            "xmlns='http://www.w3.org/TR/REC-html40'>"+
-           "<head><meta charset='utf-8'><style type='text/css'>h3{margin-top:50px}th{width:30%; padding: 5px; text-align:left}td{width:70%; padding: 5px; text-align:left;}</style></head><body>";
+           "<head><meta charset='utf-8'><style type='text/css'>h3{margin-top:50px}th{width:30%; text-align:left;}td{width:70%; text-align:left;}</style></head><body>";
       var footer = "</body></html>";
       var sourceHTML = header+document.getElementById("doc-source").innerHTML+footer;
 
@@ -196,7 +196,7 @@
       var fileDownload = document.createElement("a");
       document.body.appendChild(fileDownload);
       fileDownload.href = source;
-      fileDownload.download = 'Evaluation plan for {{ info }} - {{ sector }}.doc';
+      fileDownload.download = 'Evaluation plan for {{ info }} - {{ sector }}.docx';
       fileDownload.click();
       document.body.removeChild(fileDownload);
     }
