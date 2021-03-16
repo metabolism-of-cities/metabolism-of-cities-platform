@@ -19,6 +19,27 @@
     .indicator-text i.text-muted {
       opacity: .15;
     }
+
+    #doc-source table.table td,
+    #doc-source table.table th {
+      padding: .75rem !important;
+      vertical-align: top !important;
+      border: none !important;
+      border-top: 1px solid #dee2e6 !important;
+    }
+
+    #doc-source table.table tr:first-of-type th,
+    #doc-source table.table tr:first-of-type td {
+      border-top: none !important;
+    }
+
+    #doc-source table.table th {
+      width: 30%;
+    }
+
+    #doc-source table.table td {
+      width: 70%;
+    }
   </style>
 {% endblock %}
 
@@ -46,50 +67,134 @@
       <i class="fa fa-file-word"></i> Export to Word
     </div>
 
-    {% for each in indicator_scale_list %}
-      {% ifchanged each.indicator.vision_element %}
-      {% if not forloop.first %}
-      </tbody>
-    </table>
-      {% endif %}
+    <section>
+      {% for each in indicator_scale_list %}
+        {% ifchanged each.indicator.vision_element %}
+        {% if not forloop.first %}
+        </tbody>
+      </table>
+        {% endif %}
 
-    <h4>{{ each.indicator.vision_element }}. {{ each.indicator.get_vision_element_display }}</h4>
-    <table class="table indicator-table">
-      <tbody>
-      {% endifchanged %}
-        <tr>
-          <td class="indicator-text">
-            {% if each.scale == 3 %}
-              {{ each.indicator }}
-            {% else %}
-              {% if each.completed %}
-                <i class="fa fa-check-circle text-success mr-2"></i>
+      <h4>{{ each.indicator.vision_element }}. {{ each.indicator.get_vision_element_display }}</h4>
+      <table class="table indicator-table">
+        <tbody>
+        {% endifchanged %}
+          <tr>
+            <td class="indicator-text">
+              {% if each.scale == 3 %}
+                {{ each.indicator }}
               {% else %}
-                <i class="fa fa-check-circle text-muted mr-2"></i>
+                {% if each.completed %}
+                  <i class="fa fa-check-circle text-success mr-2"></i>
+                {% else %}
+                  <i class="fa fa-check-circle text-muted mr-2"></i>
+                {% endif %}
+                <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}">{{ each.indicator }}</a>
               {% endif %}
-              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}">{{ each.indicator }}</a>
-            {% endif %}
-          </td>
-          <td class="has-button status">
-            {% if each.indicator in mandatory_list and each.scale == 3 %}<i class="fal fa-asterisk mr-2"></i>{% endif %}
-            {% if each.scale == 1 %}
-              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-cityloops-secondary btn-sm">
-                <i class="far fa-fw fa-random"></i> Demonstration action
-              </a>
-            {% elif each.scale == 2 %}
-              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-secondary btn-sm">
-                <i class="far fa-fw fa-city"></i> City
-              </a>
-            {% elif each.scale == 3 %}
-              <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-cityloops-primary btn-sm disabled">
-                <i class="far fa-fw fa-chart-pie"></i> Sector
-              </a>
-            {% endif %}
-          </td>
-        </tr>
-    {% endfor %}
-      </tbody>
-    </table>
+            </td>
+            <td class="has-button status">
+              {% if each.indicator in mandatory_list and each.scale == 3 %}<i class="fal fa-asterisk mr-2"></i>{% endif %}
+              {% if each.scale == 1 %}
+                <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-cityloops-secondary btn-sm">
+                  <i class="far fa-fw fa-random"></i> Demonstration action
+                </a>
+              {% elif each.scale == 2 %}
+                <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-secondary btn-sm">
+                  <i class="far fa-fw fa-city"></i> City
+                </a>
+              {% elif each.scale == 3 %}
+                <a href="{% url 'cityloops:city_indicator' info.slug sector each.id %}" class="btn btn-cityloops-primary btn-sm disabled">
+                  <i class="far fa-fw fa-chart-pie"></i> Sector
+                </a>
+              {% endif %}
+            </td>
+          </tr>
+      {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <div class="btn btn-primary show-tables">
+      Show metadata tables <i class="fa fa-caret-down ml-2 mr-0"></i>
+    </div>
+
+    <section id="doc-source" hidden>
+      {% for each in indicator_scale_list %}
+        {% if each.scale != 3 %}
+          <h3>{{ each.indicator }} | {% if each.scale == 1 %}Demonstration action{% else %}City{% endif %}</h3>
+          <table class="table mb-5">
+            <tr>
+              <th style="border: 1px solid #000000; padding: 0.15cm">Indicator number</th>
+              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.number|default:'' }}</td>
+            </tr>
+            <tr>
+              <th style="border: 1px solid #000000; padding: 0.15cm">Indicator name</th>
+              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.name|default:'' }}</td>
+            </tr>
+            <tr>
+              <th style="border: 1px solid #000000; padding: 0.15cm">Vision element</th>
+              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.get_vision_element_display|default:'' }}</td>
+            </tr>
+            <tr>
+              <th style="border: 1px solid #000000; padding: 0.15cm">Category</th>
+              <td style="border: 1px solid #000000; padding: 0.15cm"><ul>{% for category in each.indicator.category %}<li>{{ category }}</li>{% endfor %}</ul></td>
+            </tr>
+            <tr>
+              <th style="border: 1px solid #000000; padding: 0.15cm">Definition / description of indicator</th>
+              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.get_description|default:'' }}</td>
+            </tr>
+            <tr>
+              <th style="border: 1px solid #000000; padding: 0.15cm">Rationale</th>
+              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.rationale|default:'' }}</td>
+            </tr>
+            <tr>
+              <th style="border: 1px solid #000000; padding: 0.15cm">Methodology</th>
+              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.get_methodology|default:'' }}</td>
+            </tr>
+            <tr>
+              <th style="border: 1px solid #000000; padding: 0.15cm">Unit</th>
+              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.unit|default:'' }}</td>
+            </tr>
+            <tr>
+              <th style="border: 1px solid #000000; padding: 0.15cm">Baseline data / definition</th>
+              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.baseline|default:'' }}</td>
+            </tr>
+            <tr>
+              <th style="border: 1px solid #000000; padding: 0.15cm">Data sources / relevant databases</th>
+              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.sources|default:'' }}</td>
+            </tr>
+            <tr>
+              <th style="border: 1px solid #000000; padding: 0.15cm">Overall accuracy</th>
+              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.accuracy|default:'' }}</td>
+            </tr>
+            <tr>
+              <th style="border: 1px solid #000000; padding: 0.15cm">Sector coverage</th>
+              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.coverage|default:'' }}</td>
+            </tr>
+            <tr>
+              <th style="border: 1px solid #000000; padding: 0.15cm">Reference area / spatial implementation scale</th>
+              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.area|default:'' }}</td>
+            </tr>
+            <tr>
+              <th style="border: 1px solid #000000; padding: 0.15cm">Reference period</th>
+              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.period|default:'' }}</td>
+            </tr>
+            <tr>
+              <th style="border: 1px solid #000000; padding: 0.15cm">SDG reference</th>
+              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.sdg|default:'' }}</td>
+            </tr>
+            <tr>
+              <th style="border: 1px solid #000000; padding: 0.15cm">Comments</th>
+              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.comments|default:'' }}</td>
+            </tr>
+          </table>
+
+          <!-- some spaces so the table can be copied easily -->
+          &nbsp; &nbsp; &nbsp;
+        {% endif %}
+      {% endfor %}
+    </section>
+
 
   {% else %}
 
@@ -106,91 +211,14 @@
     </div>
 
   {% endif %}
-
-  <div id="doc-source">
-    {% for each in indicator_scale_list %}
-      {% if each.scale != 3 %}
-        <h3>{{ each.indicator }} | {% if each.scale == 1 %}Demonstration action{% else %}City{% endif %}</h3>
-        <table class="table mb-4">
-          <tr>
-            <th style="border: 1px solid #000000; padding: 0.15cm">Indicator number</th>
-            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.number|default:'' }}</td>
-          </tr>
-          <tr>
-            <th style="border: 1px solid #000000; padding: 0.15cm">Indicator name</th>
-            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.name|default:'' }}</td>
-          </tr>
-          <tr>
-            <th style="border: 1px solid #000000; padding: 0.15cm">Vision element</th>
-            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.get_vision_element_display|default:'' }}</td>
-          </tr>
-          <tr>
-            <th style="border: 1px solid #000000; padding: 0.15cm">Category</th>
-            <td style="border: 1px solid #000000; padding: 0.15cm"><ul>{% for category in each.indicator.category %}<li>{{ category }}</li>{% endfor %}</ul></td>
-          </tr>
-          <tr>
-            <th style="border: 1px solid #000000; padding: 0.15cm">Definition / description of indicator</th>
-            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.get_description|default:'' }}</td>
-          </tr>
-          <tr>
-            <th style="border: 1px solid #000000; padding: 0.15cm">Rationale</th>
-            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.rationale|default:'' }}</td>
-          </tr>
-          <tr>
-            <th style="border: 1px solid #000000; padding: 0.15cm">Methodology</th>
-            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.get_methodology|default:'' }}</td>
-          </tr>
-          <tr>
-            <th style="border: 1px solid #000000; padding: 0.15cm">Unit</th>
-            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.unit|default:'' }}</td>
-          </tr>
-          <tr>
-            <th style="border: 1px solid #000000; padding: 0.15cm">Baseline data / definition</th>
-            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.baseline|default:'' }}</td>
-          </tr>
-          <tr>
-            <th style="border: 1px solid #000000; padding: 0.15cm">Data sources / relevant databases</th>
-            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.sources|default:'' }}</td>
-          </tr>
-          <tr>
-            <th style="border: 1px solid #000000; padding: 0.15cm">Overall accuracy</th>
-            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.accuracy|default:'' }}</td>
-          </tr>
-          <tr>
-            <th style="border: 1px solid #000000; padding: 0.15cm">Sector coverage</th>
-            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.coverage|default:'' }}</td>
-          </tr>
-          <tr>
-            <th style="border: 1px solid #000000; padding: 0.15cm">Reference area / spatial implementation scale</th>
-            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.area|default:'' }}</td>
-          </tr>
-          <tr>
-            <th style="border: 1px solid #000000; padding: 0.15cm">Reference period</th>
-            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.period|default:'' }}</td>
-          </tr>
-          <tr>
-            <th style="border: 1px solid #000000; padding: 0.15cm">SDG reference</th>
-            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.sdg|default:'' }}</td>
-          </tr>
-          <tr>
-            <th style="border: 1px solid #000000; padding: 0.15cm">Comments</th>
-            <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.comments|default:'' }}</td>
-          </tr>
-        </table>
-      {% endif %}
-    {% endfor %}
-  </div>
 {% endblock %}
 
 {% block footer %}
   <script>
-    function exportWord(){
-      var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
-           "xmlns:w='urn:schemas-microsoft-com:office:word' "+
-           "xmlns='http://www.w3.org/TR/REC-html40'>"+
-           "<head><meta charset='utf-8'><style type='text/css'>h3{margin-top:50px}th{width:30%; text-align:left;}td{width:70%; text-align:left;}</style></head><body>";
+    function exportWord() {
+      var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><style type='text/css'>h3{margin-top:50px}th{width:30%; text-align:left;}td{width:70%; text-align:left;}</style></head><body>";
       var footer = "</body></html>";
-      var sourceHTML = header+document.getElementById("doc-source").innerHTML+footer;
+      var sourceHTML = header + document.getElementById("doc-source").innerHTML + footer;
 
       var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
       var fileDownload = document.createElement("a");
@@ -204,5 +232,10 @@
     $(".download-word").click(function() {
       exportWord()
     });
+
+    $(".show-tables").click(function() {
+      $(".show-tables").hide()
+      $("#doc-source").removeAttr("hidden");
+    })
   </script>
 {% endblock %}
