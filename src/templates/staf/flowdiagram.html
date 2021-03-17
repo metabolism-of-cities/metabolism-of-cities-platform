@@ -13,8 +13,6 @@
     stroke: #144d58 !important;
   }
 
-  .mermaid
-
   .diagram-container {
     margin-top: -1rem;
     margin-bottom: 4rem;
@@ -26,6 +24,10 @@
 
   .select2-container {
     display: inline-block;
+  }
+
+  .hover-info {
+    cursor: help;
   }
 </style>
 {% endblock %}
@@ -94,28 +96,29 @@
           <th></th>
           <th></th>
         {% endif %}
+        <th></th>
       </tr>
     </thead>
     <tbody>
     {% for each in blocks %}
       <tr>
-        <td>
+        <td class="align-middle">
           {% if each.origin_label %}
             <strong>{{ each.origin_label }}</strong><br>
           {% endif %}
           {{ each.origin }}
         </td>
-        <td>
+        <td class="align-middle">
           {% if each.destination_label %}
             <strong>{{ each.destination_label }}</strong><br>
           {% endif %}
           {{ each.destination }}
         </td>
         {% if form %}
-          <td class="text-nowrap has-button">
+          <td class="text-nowrap has-button align-middle">
             <a class="btn btn-sm btn-default-basic" href="?edit={{ each.id }}&amp;next={{ request.get_full_path }}"><i class="fal fa-edit"></i> Edit</a>
           </td>
-          <td class="text-nowrap has-button">
+          <td class="text-nowrap has-button align-middle">
             <form method="post">
               <button type="submit" class="btn btn-sm btn-danger">
                 <i class="fas fa-trash-alt"></i>
@@ -126,6 +129,11 @@
             </form>
           </td>
         {% endif %}
+        <td class="align-middle">
+          {% if each.description %}
+            <i class="fal fa-info-circle hover-info" title="{{ each.description }}"></i>
+          {% endif %}
+        </td>
       </tr>
     {% endfor %}
     </tbody>
@@ -157,11 +165,9 @@
 
     // disable sorting on last two columns
     $(".flows-table").DataTable( {
-      {% if form %}
       columnDefs: [
-        {orderable: false, targets: [2,3]}
+        {orderable: false, targets: [2{% if form %},3,4{% endif %}]}
       ],
-      {% endif %}
       order: [[0, 'asc']]
     } );
 
