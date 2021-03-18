@@ -118,7 +118,7 @@
       Show metadata tables <i class="fa fa-caret-down ml-2 mr-0"></i>
     </div>
 
-    <section id="doc-source">
+    <section id="doc-source" hidden>
       {% for each in indicator_scale_list %}
         {% if each.scale != 3 %}
           <h3>{{ each.indicator }} | {% if each.scale == 1 %}Demonstration action{% else %}City{% endif %}</h3>
