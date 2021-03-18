@@ -122,13 +122,13 @@
       {% for each in indicator_scale_list %}
         {% if each.scale != 3 %}
           <h3>{{ each.indicator }} | {% if each.scale == 1 %}Demonstration action{% else %}City{% endif %}</h3>
-          <table class="table border mb-5" style="border-collapse: collapse;">
+          <table class="table border mb-5" style="table-layout: fixed; border-collapse: collapse; width: 100%;">
             <thead>
               <tr>
-                <th style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'; color: #ffffff; background-color: #004d76;">Metadata group</th>
-                <th style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'; color: #ffffff; background-color: #004d76;">#</th>
-                <th style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'; color: #ffffff; background-color: #004d76;">Metadata category</th>
-                <th style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'; color: #ffffff; background-color: #004d76;">Description / comments</th>
+                <th style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'; color: #ffffff; background-color: #004d76; width: 20%">Metadata group</th>
+                <th style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'; color: #ffffff; background-color: #004d76; width: 10%">#</th>
+                <th style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'; color: #ffffff; background-color: #004d76; width: 20%">Metadata category</th>
+                <th style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'; color: #ffffff; background-color: #004d76; width: 50%">Description / comments</th>
               </tr>
             </thead>
             <tbody>
