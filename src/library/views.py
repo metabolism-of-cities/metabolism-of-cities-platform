@@ -463,7 +463,10 @@ def data_json(request, id):
                 lat_lng[stacked_field] = each.destination_space.get_centroids
 
             if not unit:
-                unit = each.unit.name
+                if each.unit:
+                    unit = each.unit.name
+                else:
+                    unit = ""
 
             if x_axis_field not in x_axis:
                 x_axis.append(x_axis_field)
