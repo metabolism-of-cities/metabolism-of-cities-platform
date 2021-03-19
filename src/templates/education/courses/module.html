@@ -40,7 +40,9 @@ video,iframe {
       {% else %}
 
       <h1>{{ info }}</h1>
-      {{ info.get_description }}
+      {% if not request.POST.questions %}
+        {{ info.get_description }}
+      {% endif %}
 
       <ul class="nav nav-tabs" id="course" role="tablist">
         {% for each in info.content.all %}
@@ -93,23 +95,48 @@ video,iframe {
         {% if info.questions.all %}
           <div class="tab-pane fade show" id="tabcontent-questions" role="tabpanel" aria-labelledby="tab-questions">
             <h2>Questions</h2>
-            {% for each in info.questions.all %}
+            <form method="post">
+              
+              {% for each in info.questions.all %}
 
-              <div class="form-group">
-                <p><strong>{{ each }}</strong></p>
+                <div class="form-group">
+                  <p><strong>{{ each }}</strong></p>
 
-                {% for answer in each.answers.all %}
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="question_{{ each.id }}" id="a_{{ answer.id }}" value="{{ answer.id }}">
-                  <label class="form-check-label" for="a_{{ answer.id }}">
-                    {{ answer }}
-                  </label>
+                  {% for answer in each.answers.all %}
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="question_{{ each.id }}" id="a_{{ answer.id }}" value="{{ answer.id }}" required
+                      {% if answer.id in answers %}
+                      checked
+                      {% endif %}
+                      {% if request.POST.questions %}
+                      disabled
+                      {% endif %}
+                    >
+                    <label class="form-check-label" for="a_{{ answer.id }}">
+                      {{ answer }}
+                      {% if request.POST.questions and each not in correct and answer.id in answers %}
+                          <span class="text-danger">Incorrect</span>
+                      {% endif %}
+                      {% if request.POST.questions and each.answer == answer %}
+                        {% if each in correct %}
+                          <span class="text-success">Correct answer</span>
+                        {% else %}
+                          <span class="text-success">This was the correct answer</span>
+                        {% endif %}
+                      {% endif %}
+                    </label>
+                  </div>
+                  {% endfor %}
+
                 </div>
-                {% endfor %}
 
-              </div>
+              {% endfor %}
 
-            {% endfor %}
+              <button type="submit" {% if request.POST.questions %}disabled{% endif %} class="btn btn-primary">Submit</button>
+              <input type="hidden" name="questions" value="true" />
+
+              {% csrf_token %}
+            </form>
           </div>
         {% endif %}
       </div>
@@ -142,6 +169,9 @@ video,iframe {
   });
   {% if request.GET.open %}
     $("#tab-{{ request.GET.open }}").click();
+  {% endif %}
+  {% if request.POST.questions %}
+    $("#tab-questions").click();
   {% endif %}
 </script>
 {% endblock %}

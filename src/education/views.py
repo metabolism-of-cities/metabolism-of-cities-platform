@@ -96,6 +96,19 @@ def module(request, slug, id):
     if forum_topic:
         list_messages = Message.objects.filter(parent=forum_topic[0])
 
+    answers = []
+    correct = []
+    if request.method == "POST" and "questions" in request.POST:
+        for each in info.questions.all():
+            l = f"question_{each.id}"
+            try:
+                answer = int(request.POST[l])
+                answers.append(answer)
+                if each.answer.id == answer:
+                    correct.append(each)
+            except:
+                pass
+
     context = {
         "title": info,
         "info": info,
@@ -106,6 +119,8 @@ def module(request, slug, id):
         "forum_topic_title": "Module - " + str(info),
         "list_messages": list_messages,
         "load_messaging": True,
+        "answers": answers,
+        "correct": correct,
     }
     return render(request, "education/courses/module.html", context)
 
