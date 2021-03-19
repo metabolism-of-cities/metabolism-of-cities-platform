@@ -122,71 +122,103 @@
       {% for each in indicator_scale_list %}
         {% if each.scale != 3 %}
           <h3>{{ each.indicator }} | {% if each.scale == 1 %}Demonstration action{% else %}City{% endif %}</h3>
-          <table class="table mb-5">
-            <tr>
-              <th style="border: 1px solid #000000; padding: 0.15cm">Indicator number</th>
-              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.number|default:'' }}</td>
-            </tr>
-            <tr>
-              <th style="border: 1px solid #000000; padding: 0.15cm">Indicator name</th>
-              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.name|default:'' }}</td>
-            </tr>
-            <tr>
-              <th style="border: 1px solid #000000; padding: 0.15cm">Vision element</th>
-              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.get_vision_element_display|default:'' }}</td>
-            </tr>
-            <tr>
-              <th style="border: 1px solid #000000; padding: 0.15cm">Category</th>
-              <td style="border: 1px solid #000000; padding: 0.15cm"><ul>{% for category in each.indicator.category %}<li>{{ category }}</li>{% endfor %}</ul></td>
-            </tr>
-            <tr>
-              <th style="border: 1px solid #000000; padding: 0.15cm">Definition / description of indicator</th>
-              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.get_description|default:'' }}</td>
-            </tr>
-            <tr>
-              <th style="border: 1px solid #000000; padding: 0.15cm">Rationale</th>
-              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.rationale|default:'' }}</td>
-            </tr>
-            <tr>
-              <th style="border: 1px solid #000000; padding: 0.15cm">Methodology</th>
-              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.get_methodology|default:'' }}</td>
-            </tr>
-            <tr>
-              <th style="border: 1px solid #000000; padding: 0.15cm">Unit</th>
-              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.unit|default:'' }}</td>
-            </tr>
-            <tr>
-              <th style="border: 1px solid #000000; padding: 0.15cm">Baseline data / definition</th>
-              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.baseline|default:'' }}</td>
-            </tr>
-            <tr>
-              <th style="border: 1px solid #000000; padding: 0.15cm">Data sources / relevant databases</th>
-              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.sources|default:'' }}</td>
-            </tr>
-            <tr>
-              <th style="border: 1px solid #000000; padding: 0.15cm">Overall accuracy</th>
-              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.accuracy|default:'' }}</td>
-            </tr>
-            <tr>
-              <th style="border: 1px solid #000000; padding: 0.15cm">Sector coverage</th>
-              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.coverage|default:'' }}</td>
-            </tr>
-            <tr>
-              <th style="border: 1px solid #000000; padding: 0.15cm">Reference area / spatial implementation scale</th>
-              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.area|default:'' }}</td>
-            </tr>
-            <tr>
-              <th style="border: 1px solid #000000; padding: 0.15cm">Reference period</th>
-              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.period|default:'' }}</td>
-            </tr>
-            <tr>
-              <th style="border: 1px solid #000000; padding: 0.15cm">SDG reference</th>
-              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.indicator.sdg|default:'' }}</td>
-            </tr>
-            <tr>
-              <th style="border: 1px solid #000000; padding: 0.15cm">Comments</th>
-              <td style="border: 1px solid #000000; padding: 0.15cm">{{ each.comments|default:'' }}</td>
-            </tr>
+          <table class="table border mb-5" style="table-layout: fixed; border-collapse: collapse; width: 100%;">
+            <thead>
+              <tr>
+                <th style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'; color: #ffffff; background-color: #004d76; width: 20%">Metadata group</th>
+                <th style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'; color: #ffffff; background-color: #004d76; width: 10%">#</th>
+                <th style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'; color: #ffffff; background-color: #004d76; width: 20%">Metadata category</th>
+                <th style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'; color: #ffffff; background-color: #004d76; width: 50%">Description / comments</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'" rowspan="2">Identifier</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">1</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">Indicator number</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">{{ each.indicator.number|default:'' }}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">2</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">Indicator name</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">{{ each.indicator.name|default:'' }}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'" rowspan="2">Link to Circular City Definition</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">3</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">Vision element</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">{{ each.indicator.get_vision_element_display|default:'' }}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">4</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">Category</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'"><ul>{% for category in each.indicator.category %}<li>{{ category }}</li>{% endfor %}</ul></td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'" rowspan="4">Indicator definition and description</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">5</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">Definition / description of indicator</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">{{ each.indicator.get_description|default:'' }}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">6</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">Rationale</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">{{ each.rationale|default:'' }}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">7</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">Methodology</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">{{ each.indicator.get_methodology|default:'' }}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">8</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">Unit</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">{{ each.indicator.unit|default:'' }}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'" rowspan="3">Data</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">9</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">Baseline data / definition</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">{{ each.baseline|default:'' }}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">10</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">Data sources / relevant databases</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">{{ each.sources|default:'' }}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">11</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">Overall accuracy</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">{{ each.accuracy|default:'' }}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'" rowspan="4">Context</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">12</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">Sector coverage</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">{{ each.coverage|default:'' }}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">13</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">Reference area / spatial implementation scale</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">{{ each.area|default:'' }}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">14</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">Reference period</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">{{ each.period|default:'' }}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">15</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">SDG reference</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">{{ each.indicator.sdg|default:'' }}</td>
+              </tr>
+              <tr>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">Other</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">16</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">Comments</td>
+                <td style="border: 1px solid #000000; padding: 0.15cm; font: 9pt 'Arial'">{{ each.comments|default:'' }}</td>
+              </tr>
+            </tbody>
           </table>
 
           <!-- some spaces so the table can be copied easily -->
@@ -194,7 +226,6 @@
         {% endif %}
       {% endfor %}
     </section>
-
 
   {% else %}
 
@@ -216,7 +247,7 @@
 {% block footer %}
   <script>
     function exportWord() {
-      var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><style type='text/css'>h3{margin-top:50px}th{width:30%; text-align:left;}td{width:70%; text-align:left;}</style></head><body>";
+      var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><style type='text/css'>h3{margin-top:50px; font-family:'Arial'; font-size:15pt;}th{text-align:left;}td{text-align:left;}</style></head><body>";
       var footer = "</body></html>";
       var sourceHTML = header + document.getElementById("doc-source").innerHTML + footer;
 
