@@ -58,9 +58,11 @@
                 <i class="fa fa-user mr-1"></i> {{ request.user.people }}
               </a>
 
-              <a class="badge badge-light ml-1" href="{% if DEBUG and PROJECT.slug %}/{{ PROJECT.slug }}{% endif %}/hub/network/">
-                <i class="fa fa-heart-rate"></i> Network activity
-              </a>
+              {% if DESIGN.back_link %}
+                <a class="badge badge-light ml-1" href="{% if DEBUG and PROJECT.slug %}/{{ PROJECT.slug }}{% endif %}/hub/network/">
+                  <i class="fa fa-heart-rate"></i> Network activity
+                </a>
+              {% endif %}
 
               <a href="/notifications/" class="badge badge-{% if NOTIFICATIONS %}dark{% else %}light{% endif %} ml-1">
                 {% if NOTIFICATIONS %}
