@@ -240,6 +240,7 @@ def city_indicators(request, slug, sector):
 def city_indicators_form(request, slug, sector):
     info = get_space(request, slug)
     sector_id = 1 if sector == "construction" else 2
+    webpage_id = 980365,
     if sector == "construction":
         indicator_list = CityLoopsIndicator.objects.filter(relevant_construction=True)
         mandatory_list = indicator_list.filter(mandatory_construction=True)
@@ -336,6 +337,7 @@ def city_indicators_form(request, slug, sector):
         "sector": sector,
         "info": info,
         "indicators": indicators,
+        "webpage": get_object_or_404(Webpage, pk=webpage_id),
         "check": check,
         "update_values": True if city_values else False,
         "get_id": get_id,
