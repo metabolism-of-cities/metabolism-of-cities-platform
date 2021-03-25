@@ -100,9 +100,9 @@ def module(request, slug, id):
     correct = []
     if request.method == "POST" and "questions" in request.POST:
         for each in info.questions.all():
-            l = f"question_{each.id}"
+            question_label = f"question_{each.id}"
             try:
-                answer = int(request.POST[l])
+                answer = int(request.POST[question_label])
                 answers.append(answer)
                 if each.answer.id == answer:
                     correct.append(each)
