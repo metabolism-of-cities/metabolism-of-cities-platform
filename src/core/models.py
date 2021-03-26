@@ -821,10 +821,12 @@ class RecordHistory(models.Model):
         HISTORIC = 1, "Historic version"
         DRAFT = 2, "New draft version (unapproved)"
         REJECTED = 3, "Rejected version"
+        CURRENT = 4, "Current version"
 
     status = models.IntegerField(choices=Status.choices, db_index=True)
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
+    comments = models.TextField(null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     record = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="history")
     people = models.ForeignKey(People, on_delete=models.CASCADE, related_name="record_history")

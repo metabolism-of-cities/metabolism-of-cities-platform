@@ -149,3 +149,22 @@ COLOR_SCHEMES = {
     "red": ["#7f0000", "#b30000", "#d7301f", "#ef6548", "#fc8d59", "#fdbb84", "#fdd49e", "#fee8c8", "#fff7ec"],
 }
 
+
+# This function records a copy of the information in the record table (title + description)
+# in a table that maintains a historic record.
+def save_record_history(info, people, comments, date=None):
+    # First we update the current record and mark it as a historic record
+    current_list = RecordHistory.objects.filter(record=info, status=RecordHistory.Status.CURRENT)
+    current_list.update(status=RecordHistory.Status.HISTORIC)
+    # And then we add the current record
+    history = RecordHistory.objects.create(
+        record=info,
+        name=info.name,
+        description=info.description,
+        status=RecordHistory.Status.CURRENT,
+        people=people,
+        comments=comments,
+    )
+    if date:
+        history.date_created = date
+        history.save()

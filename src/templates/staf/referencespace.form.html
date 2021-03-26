@@ -1,0 +1,75 @@
+{% extends "_base.html" %}
+
+{% block title %}{{info }}{% endblock %}
+
+{% block content %}
+
+  <h1 class="mb-4">Edit reference space</h1>
+
+  <form method="post">
+
+      <div class="form-group row">
+        <label class="col-md-3 col-form-label" for="id_name">Name</label>
+        <div class="col-md-9">
+          <input type="text" name="name" value="{{ info }}" class="form-control" disabled />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-md-3 col-form-label" for="id_type">Type of changes</label>
+        <div class="col-md-9">
+          <select name="type" class="form-control" id="id_type" required>
+            <option value=""></option>
+            {% for key,value in types.items %}
+              <option value="{{ key }}">{{ value }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-md-3 col-form-label" for="id_describe">Describe changes/sources</label>
+        <div class="col-md-9">
+          <input type="text" name="changes" class="form-control" required />
+          <small>For instance: 'Adding core features based on official website: https://...'</small>
+        </div>
+      </div>
+
+      <div class="form-group markdown-textarea">
+        {% include "_markdown.html" %}
+        <textarea class="form-control mb-4" id="text" rows="30" name="description">{{ info.description|default_if_none:"" }}</textarea>
+      </div>
+
+      <div class="row">
+        <div class="offset-md-3 col-md-9">
+          <button type="submit" class="btn btn-success">
+            <i class="fa fa-fw fa-save"></i>
+            Save
+         </button>
+        </div>
+      </div>
+    {% csrf_token %}
+  </form>
+
+  <a href="javascript:history.back()" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    Back
+  </a>
+
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+$(function(){
+  $("#id_type").change(function(){
+    if ($(this).val() == "name") {
+      $("input[name='name']").removeAttr("disabled");
+      $(".markdown-textarea").hide();
+    } else {
+      $("input[name='name']").attr("disabled", "disabled");
+      $(".markdown-textarea").show();
+    }
+  });
+});
+</script>
+{% endblock %}

@@ -9,14 +9,14 @@
     {% bootstrap_form form layout="horizontal" %}
 
     <div class="form-group row">
-    <label class="col-md-3 col-form-label" for="id_type">Type</label>
-    <div class="col-md-9">
-    <select name="format" class="form-control" id="id_type">
-      <option value="markdown">Markdown</option>
-      <option value="html" {% if info.meta_data.format == "html" %}selected{% endif %}>HTML</option>
-      <option value="markdown_html" {% if info.meta_data.format == "markdown_html" %}selected{% endif %}>Markdown and HTML</option>
-    </select>
-    </div>
+      <label class="col-md-3 col-form-label" for="id_type">Type</label>
+      <div class="col-md-9">
+        <select name="format" class="form-control" id="id_type">
+          <option value="markdown">Markdown</option>
+          <option value="html" {% if info.meta_data.format == "html" %}selected{% endif %}>HTML</option>
+          <option value="markdown_html" {% if info.meta_data.format == "markdown_html" %}selected{% endif %}>Markdown and HTML</option>
+        </select>
+      </div>
     </div>
 
     {% if tinymce %}

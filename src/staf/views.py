@@ -866,6 +866,43 @@ def referencespace(request, id=None, space=None, slug=None):
     }
     return render(request, "staf/referencespace.html", context)
 
+@login_required
+def referencespace_form(request, id):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
+        unauthorized_access(request)
+
+    info = ReferenceSpace.objects.get(pk=id)
+
+    types = {
+        "cosmetic": "Small cosmetic changes in the description",
+        "own": "Description changes based on own knowledge",
+        "external": "Description changes based on external source(s)",
+        "name": "Name change",
+    }
+
+    if request.method == "POST":
+        if not info.history.count():
+            # We do not have any historic record yet, so we create one
+            original_uploader = info.source.uploader
+            save_record_history(info, original_uploader, "Reference space create from source document", info.source.date_created)
+        if request.POST["type"] == "name":
+            info.name = request.POST["name"]
+        else:
+            info.description = request.POST.get("description")
+        info.save()
+        comments = types[request.POST["type"]] + "\n" + request.POST.get("changes")
+        save_record_history(info, request.user.people, comments)
+        messages.success(request, "Information was saved.")
+        return redirect(request.GET.get("next"))
+
+    context = {
+        "info": info,
+        "load_markdown": True,
+        "types": types,
+    }
+    return render(request, "staf/referencespace.form.html", context)
+
+
 def activities_catalogs(request):
     context = {
         "list": ActivityCatalog.objects.all(),
