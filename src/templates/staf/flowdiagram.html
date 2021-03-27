@@ -131,6 +131,7 @@
         {% endif %}
         <td class="align-middle">
           {% if each.description %}
+            <span hidden>{{ each.description }}</span>
             <i class="fal fa-info-circle hover-info" title="{{ each.description }}"></i>
           {% endif %}
         </td>

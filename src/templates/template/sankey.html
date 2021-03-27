@@ -254,6 +254,28 @@
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="{% static 'js/d3-sankey-circular.js' %}"></script>
 <script>
+  let dataOld = {
+    "nodes": [
+      {"name": "Imports of waste for recovery - recycling", "order": 0, "id": 0},
+      {"name": "Imports excluding imports of waste for recovery - recycling", "order": 0, "id": 0},
+      {"name": "Exports of waste for recovery - recycling", "order": 0, "id": 0},
+      {"name": "Exports excluding exports of waste for recovery - recycling", "order": 0, "id": 0},
+      {"name": "Processed material - direct material inputs and recovery - recycling and backfilling", "order": 0, "id": 0},
+      {"name": "Net additions to stock", "order": 0, "id": 0},
+      {"name": "Material accumulation", "order": 0, "id": 0},
+      {"name": "Emissions", "order": 0, "id": 0},
+      {"name": "Emissions excluding emissions from incineration of waste", "order": 0, "id": 0},
+      {"name": "Emissions to air - net of balancing items", "order": 0, "id": 0},
+      {"name": "Emissions to water", "order": 0, "id": 0},
+      {"name": "Dissipative flows", "order": 0, "id": 0},
+      {"name": "Material use", "order": 0, "id": 0},
+      {"name": "Net reductions in stock", "order": 0, "id": 0},
+    ],
+    "links" : [
+      {"source":"Imports", "target": "Direct material inputs", "value": 0.2, "color": "green", "id": 1},
+    ]
+  }
+
   let data = {
     "nodes": [
       {"name": "Imports", "order": 0, "id": 1},

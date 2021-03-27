@@ -791,6 +791,8 @@ table.datatable-card {
   border-radius: .25rem;
   margin-bottom: 1rem !important;
   margin-top: 1rem !important; }
+  table.datatable-card thead tr th:first-of-type {
+    border-top-left-radius: .25rem; }
 
 #timeline {
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);

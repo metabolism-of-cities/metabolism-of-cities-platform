@@ -2,15 +2,15 @@
 
   <div class="mb-3">
     <ul class="list-group list-group-horizontal">
-      <li class="list-group-item text-center {% if step == 1 %}bg-light{% endif %}">
+      <li class="list-group-item text-center {% if step == 1 %}bg-light{% else %}bg-white{% endif %}">
         <i class="far fa-fw fa-2x {% if step == 1 %}fa-info-circle{% else %}fa-check text-success{% endif %}"></i>
         <small class="d-block mt-2">Check general info</small>
       </li>
-      <li class="list-group-item text-center {% if step == 2 %}bg-light{% endif %}">
+      <li class="list-group-item text-center {% if step == 2 %}bg-light{% else %}bg-white{% endif %}">
         <i class="far fa-fw fa-2x {% if step < 3 %}fa-columns{% else %}fa-check text-success{% endif %}"></i>
         <small class="d-block mt-2">Classify columns</small>
       </li>
-      <li class="list-group-item text-center {% if step == 3 %}bg-light{% endif %}">
+      <li class="list-group-item text-center {% if step == 3 %}bg-light{% else %}bg-white{% endif %}">
         <i class="far fa-fw fa-2x fa-clipboard-list"></i>
         <small class="d-block mt-2">Verify metadata</small>
       </li>
