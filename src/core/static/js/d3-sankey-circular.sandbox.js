@@ -184,7 +184,6 @@
 
         sortSourceLinks(graph, y1, id);
         sortTargetLinks(graph, y1, id);
-        // resolveNodeLinkOverlaps(graph, y0, y1, id);
         sortSourceLinks(graph, y1, id);
         sortTargetLinks(graph, y1, id);
       }
@@ -501,6 +500,11 @@
         columns.forEach(function (nodes) {
           var nodesLength = nodes.length;
           nodes.forEach(function (node, i) {
+
+            if (node.name == "Exports") {
+              console.log(node.value)
+            }
+
             if (node.depth == columns.length - 1 && nodesLength == 1) {
               node.y0 = y1 / 2 - node.value * ky;
               node.y1 = node.y0 + node.value * ky;
@@ -587,7 +591,7 @@
               i;
 
           // Push any overlapping nodes down.
-          nodes.sort(ascendingBreadth);
+          nodes.sort();
 
           for (i = 0; i < n; ++i) {
             node = nodes[i];

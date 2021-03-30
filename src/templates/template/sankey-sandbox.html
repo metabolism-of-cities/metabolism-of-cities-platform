@@ -252,7 +252,7 @@
 {% block footer %}
 <!-- d3 -->
 <script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="{% static 'js/d3-sankey-circular.js' %}"></script>
+<script src="{% static 'js/d3-sankey-circular.sandbox.js' %}"></script>
 <script>
   let data = {
     "nodes": [
@@ -260,18 +260,18 @@
       {"name": "Imports", "order": 0, "id": 1},
       {"name": "Direct material inputs", "order": 1, "id": 3},
       {"name": "Processed material", "order": 2, "id": 4},
-      {"name": "Material use", "order": 3, "id": 5},
-      {"name": "Material accumulation", "order": 4, "id": 6},
-      {"name": "Waste treatment", "order": 4, "id": 7},
-      {"name": "Recycling", "order": 5, "id": 8},
-      {"name": "Backfilling", "order": 5, "id": 9},
-      {"name": "Incineration", "order": 6, "id": 10},
-      {"name": "Total emissions", "order": 7, "id": 11},
       {"name": "Exports", "order": 8, "id": 12},
       {"name": "Dissipative flows", "order": 8, "id": 13},
+      {"name": "Material accumulation", "order": 4, "id": 6},
+      {"name": "Material use", "order": 3, "id": 5},
+      {"name": "Incineration", "order": 6, "id": 10},
+      {"name": "Total emissions", "order": 7, "id": 11},
       {"name": "Waste landfilled", "order": 8, "id": 14},
       {"name": "Emissions to water", "order": 8, "id": 15},
       {"name": "Emissions to air", "order": 8, "id": 16},
+      {"name": "Waste treatment", "order": 4, "id": 7},
+      {"name": "Recycling", "order": 5, "id": 8},
+      {"name": "Backfilling", "order": 5, "id": 9},
     ],
     "links": [
       {"source":"Imports", "target": "Direct material inputs", "value": 0.2, "color": "green", "id": 1},
@@ -344,7 +344,7 @@
     })
     .nodeAlign(d3.sankeyRight)
     .iterations(6)
-    .circularLinkGap(0);
+    .circularLinkGap(0)
     .sortNodes("order");
 
   var svg = d3.select("#chart").append("svg")
