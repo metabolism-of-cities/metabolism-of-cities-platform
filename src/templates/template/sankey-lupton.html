@@ -1,0 +1,239 @@
+  {% extends "_base.html" %}
+
+{% load static %}
+
+{% block title %}Sankey{% endblock %}
+
+{% block css %}
+<style>
+  svg .link {
+    opacity: 0.8;
+    fill: steelblue;
+  }
+
+  svg .link:hover {
+    opacity: 1;
+  }
+
+  svg g.sankey {
+    font-size: 10pt;
+  }
+  svg .node line {
+    stroke-width: 1px;
+    stroke: #000;
+  }
+  svg .node-type-process line {
+    stroke-width: 4px;
+    stroke: #888;
+  }
+
+  svg .group rect {
+    fill: #eee;
+    stroke: #bbb;
+    stroke-width: 0.5px;
+  }
+
+  svg .group text {
+    fill: #999;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="sankey" id="demo-return-loops">
+  <svg width="100%" height="600" ></svg>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<!-- d3 -->
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="{% static 'js/d3-sankey-diagram-lupton.js' %}"></script>
+<script>
+  var data = {
+    "nodes": [
+      {"direction": "r", "id": "Imports"},
+      {"direction": "r", "id": "Natural resources extracted"},
+      {"direction": "r", "id": "Direct material inputs"},
+      {"direction": "r", "id": "Processed material"},
+      {"direction": "r", "id": "Material use"},
+      {"direction": "r", "id": "Material accumulation"},
+      {"direction": "r", "id": "Waste treatment"},
+      {"direction": "l", "id": "Recycling"},
+      {"direction": "l", "id": "Backfilling"},
+      {"direction": "r", "id": "Incineration"},
+      {"direction": "r", "id": "Total emissions"},
+      {"direction": "r", "id": "Dissipative flows"},
+      {"direction": "r", "id": "Waste landfilled"},
+      {"direction": "r", "id": "Exports"},
+      {"direction": "r", "id": "Emissions to water"},
+      {"direction": "r", "id": "Emissions to air"},
+    ],
+    "links": [
+      {
+       "source": "Imports",
+       "target": "Direct material inputs",
+       "value": 2,
+       "color": "red"
+      },
+      {
+       "source": "Natural resources extracted",
+       "target": "Direct material inputs",
+       "value": 7,
+       "color": "green"
+      },
+      {
+       "source": "Direct material inputs",
+       "target": "Processed material",
+       "value": 9,
+       "color": "blue"
+      },
+      {
+       "source": "Processed material",
+       "target": "Exports",
+       "value": 2,
+       "color": "red"
+      },
+      {
+       "source": "Processed material",
+       "target": "Dissipative flows",
+       "value": 1.5,
+       "color": "green"
+      },
+      {
+       "source": "Processed material",
+       "target": "Total emissions",
+       "value": 1.5,
+       "color": "blue"
+      },
+      {
+       "source": "Processed material",
+       "target": "Material use",
+       "value": 5,
+       "color": "gold"
+      },
+      {
+       "source": "Total emissions",
+       "target": "Emissions to air",
+       "value": 1,
+       "color": "green"
+      },
+      {
+       "source": "Total emissions",
+       "target": "Emissions to water",
+       "value": 1,
+       "color": "green"
+      },
+      {
+       "source": "Material use",
+       "target": "Material accumulation",
+       "value": 3,
+       "color": "green"
+      },
+      {
+       "source": "Material use",
+       "target": "Waste treatment",
+       "value": 2,
+       "color": "green"
+      },
+      {
+       "source": "Waste treatment",
+       "target": "Waste landfilled",
+       "value": 0.5,
+       "color": "green"
+      },
+      {
+       "source": "Waste treatment",
+       "target": "Incineration",
+       "value": 0.5,
+       "color": "green"
+      },
+      {
+       "source": "Incineration",
+       "target": "Total emissions",
+       "value": 0.5,
+       "color": "green"
+      },
+      {
+       "source": "Waste treatment",
+       "target": "Backfilling",
+       "value": 0.5,
+       "color": "green"
+      },
+      {
+       "source": "Waste treatment",
+       "target": "Recycling",
+       "value": 0.5,
+       "color": "green"
+      },
+      {
+       "source": "Recycling",
+       "target": "Processed material",
+       "value": 0.5,
+       "color": "green"
+      },
+      {
+       "source": "Backfilling",
+       "target": "Processed material",
+       "value": 0.5,
+       "color": "green"
+      }
+    ],
+    "order": [
+      [["Imports"], ["Natural resources extracted"]],
+      [["Direct material inputs"], ["Processed Material"]],
+      [["Material use"]],
+      [["Total emissions"], ["Incineration"], ["Waste treatment"], ["Material accumulation"]],
+      [["Exports"], ["Dissipative flows"], ["Emissions to air"], ["Emissions to water"], ["Waste landfilled"]],
+    ],
+    "groups": [
+      {
+        "id": "Group of nodes in top band",
+        "nodes": [
+          "Imports",
+          "Natural resources extracted"
+        ],
+        "title": "Group of nodes in top band"
+      },
+      {
+        "id": "Direct material inputs group",
+        "nodes": [
+          "Direct material inputs"
+        ],
+        "title": "Direct material inputs group"
+      },
+    ],
+    "rankSets": [{
+      "type": "same",
+      "nodes": ["Dissipative flows", "Emissions to air", "Emissions to water", "Waste landfilled", "Exports"]
+    }],
+    "alignLinkTypes": false
+  };
+
+
+
+  var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+  var diagram = d3.sankeyDiagram()
+                  .linkTitle(d3.sankeyLinkTitle(function (d) { return d.id; },
+                                                function(d) { return d.id; },
+                                                d3.format('.3s')))
+                  .linkColor(function(d) { return d.color; });
+
+  function alignLinkTypes(layout, align) {
+    return layout
+      .sourceId(function(d) { return { id: typeof d.source === "object" ? d.source.id : d.source,
+                                       port: align ? d.type : null }; })
+      .targetId(function(d) { return { id: typeof d.target === "object" ? d.target.id : d.target,
+                                       port: align ? d.type : null }; });
+  }
+
+  var layout = d3.sankey().extent([[100, 50], [600, 400]]).rankSets(data.rankSets);
+  // layout.ordering(data.order)
+
+  d3.select("#demo-return-loops svg")
+    .datum(layout(data))
+    .call(diagram.groups(data.groups));
+</script>
+{% endblock %}
