@@ -296,6 +296,12 @@ def datasets(request, space):
     }
     return render(request, "data/datasets.html", context)
 
+def plan2021(request):
+    context = {
+        "webpage": Webpage.objects.get(slug="/plan2021/"),
+    }
+    return render(request, "data/plan2021.html", context)
+
 def eurostat(request):
 
     from django.core.paginator import Paginator
