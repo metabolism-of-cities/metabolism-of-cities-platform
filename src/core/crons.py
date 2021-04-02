@@ -30,6 +30,19 @@ class ProcessShapefile(CronJobBase):
             each.meta_data["ready_for_processing"] = False
             each.save()
 
+class ProcessDataset(CronJobBase):
+    RUN_EVERY_MINS = 60*7
+    schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
+    code = "core.process_dataset" # Unique code for logging purposes
+
+    def do(self):
+        list = LibraryItem.objects.filter(type__name="Dataset", meta_data__ready_for_processing=True)
+        for each in list:
+            each.convert_stocks_flows_data()
+            each.meta_data["processed"] = True
+            each.meta_data["ready_for_processing"] = False
+            each.save()
+
 class CheckDataProgress(CronJobBase):
     RUN_EVERY_MINS = 85
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)

@@ -2014,12 +2014,22 @@ def hub_processing_dataset_classify(request, id, space=None):
         info.meta_data["processing"]["source"] = request.POST.get("source")
         info.save()
         completed = False
+        if "large_file" in request.POST:
+            info.meta_data["ready_for_processing"] = True
+            if "processing_error" in info.meta_data:
+                del info.meta_data["processing_error"]
+            info.save()
+            completed = True
+            return redirect("../save/")
         try:
             info.convert_stocks_flows_data()
+            if "processing_error" in info.meta_data:
+                del info.meta_data["processing_error"]
+                info.save()
             if info.meta_data["processed"]:
                 completed = True
         except:
-            completd = False
+            completed = False
         if completed:
             return redirect("../save/")
         else:
@@ -2216,7 +2226,10 @@ def hub_processing_dataset_save(request, id, space=None):
              "limitations": request.POST.get("limitations"),
         }
         info.save()
-        messages.success(request, "The file was processed! Please see the visualisations below and use the chart editor for further customisation.")
+        if "processed" in info.meta_data:
+            messages.success(request, "The file was processed! Please see the visualisations below and use the chart editor for further customisation.")
+        else:
+            messages.success(request, "The file was processed! However, due to the file size this will take some time. We will do this on the server and you can visit this page again in 6 hours to review if everything went well.")
 
         message_description = "Status change: " + work.get_status_display() + " → "
         work.status = Work.WorkStatus.COMPLETED

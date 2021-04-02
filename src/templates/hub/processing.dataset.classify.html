@@ -51,6 +51,10 @@
 
       <form id="next_step" method="post" enctype="multipart/form-data" class="mt-4">
 
+        {% if spreadsheet.rowcount > 1000 %}
+          <input type="hidden" name="large_file" value="true" />
+        {% endif %}
+
         {% if show_materials %}
           <div class="card mb-3">
             <div class="card-header"><i class="fa fa-list fa-fw"></i> 

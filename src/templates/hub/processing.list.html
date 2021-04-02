@@ -34,7 +34,11 @@
       {% for each in list %}
         <tr>
           <td>
-            <a href="{{ each.id }}/">{{ each }}</a>
+            {% if request.user.is_authenticated %}
+              <a href="{{ each.id }}/">{{ each }}</a>
+            {% else %}
+              <em>{{ each }}</em>
+            {% endif %}
             <br>{% for space in each.spaces.all %}{{ space }}{% if not forloop.last %}, {% endif %}{% endfor %}
             {% if each.meta_data.beginner_friendly %}
               <br>
@@ -55,7 +59,11 @@
 
   </div>
   <div class="col-lg-4 sidebar">
-    {% include "staf/review/_badge-progress.html" %}
+    {% if request.user.is_authenticated %}
+      {% include "staf/review/_badge-progress.html" %}
+    {% else %}
+      {% include "_notauthenticated.html" %}
+    {% endif %}
     {% include "staf/review/_instructions.html" %}
     {% include "staf/review/_filesamples.html" %}
   </div>
