@@ -1,13 +1,87 @@
 {% extends "_base.html" %}
 
+{% block page_name %}work sprint{% endblock %}
+
 {% block content %}
 
-<h1>{{ webpage }}</h1>
+<h1 class="mt-4">{{ webpage }}</h1>
 
-<section class="videoblock">
-  <iframe style="width:100%;height:50vh" class="video-embed youtube-video" src="https://www.youtube.com/embed/_-rJ1x9KnAI?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</section>
+<div class="row">
+  <div class="col-lg-8">
 
-{{ webpage.get_description }}
-  
+    <section class="videoblock">
+      <iframe style="width:100%;height:30vh" class="video-embed youtube-video" src="https://www.youtube.com/embed/_-rJ1x9KnAI?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </section>
+
+    {{ webpage.get_description }}
+
+  </div>
+
+  <div class="col-lg-4">
+
+    <div id="updates-wrap">
+      <div id="updates">
+        <h2>Latest updates</h2>
+        {% include "_work-updates.html" %}
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+
+    <h2>Task list</h2>
+
+    <table class="table datatable datatable-card">
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Details</th>
+          <th>Points</th>
+          <th>Last update</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in task_list %}
+        <tr>
+          <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
+            <a href="{{ each.id }}/">
+              {{ each }}
+              {% if each.related_to %}
+                <br>
+                <em>{{ each.related_to }}</em>
+              {% endif %}
+            </a>
+              <br>
+              <em>
+                {{ each.part_of_project }}
+              </em>
+          </td>
+          <td>
+            {{ each.workactivity }}<br>
+            <em>{{ each.get_status }} | {{ each.get_priority_display }} priority</em>
+          </td>
+          
+          <td>
+            {{ each.workactivity.points }}
+          </td>
+          <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
+            {% if each.last_update %}
+              {{ each.last_update.date_created|timesince }} ago 
+              <br><span class="faded">by {{ each.last_update.posted_by }}</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+    {% if load_messaging %}
+      <h2 class="mt-4">Messages</h2>
+      <section class="messages">
+        {% include "_messages.html" %}
+      </section>
+    {% endif %}
+
 {% endblock %}

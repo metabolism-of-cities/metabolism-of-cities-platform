@@ -297,8 +297,30 @@ def datasets(request, space):
     return render(request, "data/datasets.html", context)
 
 def plan2021(request):
+    project = get_project(request)
+    tag_id = 1084
+    updates = Message.objects.filter(parent__work__tags__id=tag_id).order_by("-date_created")
+    if updates:
+        updates = updates[:15]
+
+    webpage = Webpage.objects.get(slug="/plan2021/")
+    list_messages = None
+    forum_url = None
+    forum_topic = None
+    forum_url = project.get_website() + webpage.slug
+    forum_topic = ForumTopic.objects.filter(part_of_project_id=request.project, parent_url=forum_url)
+    if forum_topic:
+        list_messages = Message.objects.filter(parent=forum_topic[0])
     context = {
-        "webpage": Webpage.objects.get(slug="/plan2021/"),
+        "webpage": webpage,
+        "task_list": Work.objects.filter(tags__id=tag_id),
+        "updates": updates,
+        "load_messaging": True,
+        "forum_id": forum_topic[0].id if forum_topic else "create",
+        "forum_url": forum_url,
+        "forum_topic_title": "Data Hub Priority Plan 2021",
+        "list_messages": list_messages,
+        "load_datatables": True,
     }
     return render(request, "data/plan2021.html", context)
 
