@@ -18,70 +18,81 @@
   </div>
 
   <div class="col-lg-4">
-
-    <div id="updates-wrap">
-      <div id="updates">
-        <h2>Latest updates</h2>
-        {% include "_work-updates.html" %}
-      </div>
+    <div id="updates">
+      <h2>Latest updates</h2>
+      {% include "_work-updates.html" %}
     </div>
-
+    <div class="alert alert-warning mt-4">
+      <h2>Help us out!</h2>
+      <p>
+        We invite everyone to join in our Data Hub Priority Plan for 2021. 
+        Our entire project is an open-source, community-led effort, and 
+        you can help in small or large ways. Take on a specific task in our 
+        task list, add your comments and feedback to the ongoing work, 
+        or join our team on an ongoing basis to build our new tools.
+      </p>
+      {% if not request.user.is_authenticated %}
+        <a class="btn btn-primary mr-3 mb-2" href="/accounts/register/?next={{ request.get_full_path }}"><i class="fa fa-user-plus" aria-hidden="true"></i> Sign Up</a>
+        <a class="btn btn-primary mr-3 mb-2" href="/accounts/login/?next={{ request.get_full_path }}"><i class="fa fa-sign-in" aria-hidden="true"></i> Log In</a>
+      {% endif %}
+    </div>
   </div>
 
 </div>
 
+<h2>Task list</h2>
 
-    <h2>Task list</h2>
+<table class="table datatable datatable-card">
+  <thead>
+    <tr>
+      <th>Task</th>
+      <th>Details</th>
+      <th>Points</th>
+      <th>Last update</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for each in task_list %}
+    <tr>
+      <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
+        {% with link=PROJECT.slug|add:":work_item" %}
+          <a href="{% url link each.id %}">
+        {% endwith %}
+          {{ each }}
+          {% if each.related_to %}
+            <br>
+            <em>{{ each.related_to }}</em>
+          {% endif %}
+        </a>
+          <br>
+          <em>
+            {{ each.part_of_project }}
+          </em>
+      </td>
+      <td>
+        {{ each.workactivity }}<br>
+        <em>{{ each.get_status }} | {{ each.get_priority_display }} priority</em>
+      </td>
+      
+      <td>
+        {{ each.workactivity.points }}
+      </td>
+      <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
+        {% if each.last_update %}
+          {{ each.last_update.date_created|timesince }} ago 
+          <br><span class="faded">by {{ each.last_update.posted_by }}</span>
+        {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
 
-    <table class="table datatable datatable-card">
-      <thead>
-        <tr>
-          <th>Task</th>
-          <th>Details</th>
-          <th>Points</th>
-          <th>Last update</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for each in task_list %}
-        <tr>
-          <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
-            <a href="{{ each.id }}/">
-              {{ each }}
-              {% if each.related_to %}
-                <br>
-                <em>{{ each.related_to }}</em>
-              {% endif %}
-            </a>
-              <br>
-              <em>
-                {{ each.part_of_project }}
-              </em>
-          </td>
-          <td>
-            {{ each.workactivity }}<br>
-            <em>{{ each.get_status }} | {{ each.get_priority_display }} priority</em>
-          </td>
-          
-          <td>
-            {{ each.workactivity.points }}
-          </td>
-          <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
-            {% if each.last_update %}
-              {{ each.last_update.date_created|timesince }} ago 
-              <br><span class="faded">by {{ each.last_update.posted_by }}</span>
-            {% endif %}
-          </td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-
-    {% if load_messaging %}
-      <h2 class="mt-4">Messages</h2>
-      <section class="messages">
-        {% include "_messages.html" %}
-      </section>
-    {% endif %}
+{% if load_messaging %}
+  <h2 class="mt-4">Messages</h2>
+  <section class="messages">
+    {% include "_messages.html" %}
+  </section>
+{% endif %}
 
 {% endblock %}
