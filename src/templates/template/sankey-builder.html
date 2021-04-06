@@ -49,6 +49,16 @@
   #grid .row:last-of-type .col {
     border-bottom: none !important;
   }
+
+  #data label,
+  #groups label {
+    margin-bottom: 0;
+    font-weight: bold;
+  }
+
+  #groups > div:not(:first-of-type) label {
+    display: none;
+  }
 </style>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"/>
@@ -60,12 +70,164 @@
 
 <ul class="nav nav-tabs mb-4">
   <li class="nav-item">
-    <a class="nav-link active" href="#">Link colours</a>
+    <a class="nav-link active" href="#">Introduction</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Data</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="#">Links</a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Nodes</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Groups</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Graph options</a>
+  </li>
 </ul>
+
+<section>
+  <h3>Introduction</h3>
+
+  <p>Sankey diagrams are generated using ... bla bla bla.</p>
+
+  <ul>
+    <li>Define nodes</li>
+    <li>Define links</li>
+    <li>Explain categories</li>
+    <li>What to do with colours</li>
+  </ul>
+</section>
+
+<section id="data">
+  <h3>Data</h3>
+  <p>In order to create the sankey, you'll first need to identify the columns that correspond to the required parts of the sankey. The source, target, and value columns are mandatory. Category and colour are not, and can still be defined later.</p>
+
+  <form class="mt-4">
+    <div class="form-row">
+      <div class="col-lg">
+        <div class="form-group">
+          <label>Source*</label>
+          <select class="custom-select">
+            <option value="from">from</option>
+            <option value="to">to</option>
+            <option value="value">value</option>
+            <option value="color">color</option>
+            <option value="blu">blu</option>
+            <option value="blee">blee</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-lg">
+        <div class="form-group">
+          <label>Target*</label>
+          <select class="custom-select">
+            <option value="from">from</option>
+            <option value="to">to</option>
+            <option value="value">value</option>
+            <option value="color">color</option>
+            <option value="blu">blu</option>
+            <option value="blee">blee</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-lg">
+        <div class="form-group">
+          <label>Value*</label>
+          <select class="custom-select">
+            <option value="from">from</option>
+            <option value="to">to</option>
+            <option value="value">value</option>
+            <option value="color">color</option>
+            <option value="blu">blu</option>
+            <option value="blee">blee</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-lg">
+        <div class="form-group">
+          <label>Category</label>
+          <select class="custom-select">
+            <option value="from">from</option>
+            <option value="to">to</option>
+            <option value="value">value</option>
+            <option value="color">color</option>
+            <option value="blu">blu</option>
+            <option value="blee">blee</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-lg">
+        <div class="form-group">
+          <label>Colour</label>
+          <select class="custom-select">
+            <option value="from">from</option>
+            <option value="to">to</option>
+            <option value="value">value</option>
+            <option value="color">color</option>
+            <option value="blu">blu</option>
+            <option value="blee">blee</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="card card-table">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>from</th>
+          <th>to</th>
+          <th>value</th>
+          <th>color</th>
+          <th>blu</th>
+          <th>blee</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>H</td>
+          <td>O</td>
+          <td>816</td>
+          <td>blue</td>
+          <td>sqhJSp</td>
+          <td>lDlscc</td>
+        <tr>
+          <td>X</td>
+          <td>B</td>
+          <td>056</td>
+          <td>red</td>
+          <td>zZidiK</td>
+          <td>aNaLXY</td>
+        <tr>
+          <td>Z</td>
+          <td>D</td>
+          <td>191</td>
+          <td>blue</td>
+          <td>Qckjbp</td>
+          <td>sVKCSC</td>
+        <tr>
+          <td>K</td>
+          <td>W</td>
+          <td>572</td>
+          <td>green</td>
+          <td>gsgaws</td>
+          <td>vdWuLb</td>
+        <tr>
+          <td>N</td>
+          <td>S</td>
+          <td>396</td>
+          <td>red</td>
+          <td>ycmdSa</td>
+          <td>DiLjli</td>
+      </tbody>
+    </table>
+  </div>
+</section>
 
 <section id="link-colours">
   <h3>Links</h3>
@@ -85,72 +247,113 @@
     </div>
   </div>
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th>From</th>
-        <th>To</th>
-        <th>Value</th>
-        <th>Colour</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>A</td>
-        <td>D</td>
-        <td>1</td>
-        <td><input type="color" name="" value="green"></td>
-      </tr>
-      <tr>
-        <td>B</td>
-        <td>D</td>
-        <td>2</td>
-        <td><input type="color" name="" value="red"></td>
-      </tr>
-      <tr>
-        <td>C</td>
-        <td>D</td>
-        <td>1</td>
-        <td><input type="color" name="" value="blue"></td>
-      </tr>
-      <tr>
-        <td>D</td>
-        <td>E</td>
-        <td>2</td>
-        <td><input type="color" name="" value="pink"></td>
-      </tr>
-      <tr>
-        <td>D</td>
-        <td>F</td>
-        <td>2</td>
-        <td><input type="color" name="" value="orange"></td>
-      </tr>
-      <tr>
-        <td>F</td>
-        <td>H</td>
-        <td>1</td>
-        <td><input type="color" name="" value="#CF4803"></td>
-      </tr>
-      <tr>
-        <td>F</td>
-        <td>I</td>
-        <td>1</td>
-        <td><input type="color" name="" value="gold"></td>
-      </tr>
-      <tr>
-        <td>E</td>
-        <td>I</td>
-        <td>2</td>
-        <td><input type="color" name="" value="brown"></td>
-      </tr>
-      <tr>
-        <td>I</td>
-        <td>J</td>
-        <td>3</td>
-        <td><input type="color" name="" value="grey"></td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="card card-table">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>From</th>
+          <th>To</th>
+          <th>Value</th>
+          <th>Colour</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>A</td>
+          <td>D</td>
+          <td>1</td>
+          <td><input type="color" name="" value="green"></td>
+        </tr>
+        <tr>
+          <td>B</td>
+          <td>D</td>
+          <td>2</td>
+          <td><input type="color" name="" value="red"></td>
+        </tr>
+        <tr>
+          <td>C</td>
+          <td>D</td>
+          <td>1</td>
+          <td><input type="color" name="" value="blue"></td>
+        </tr>
+        <tr>
+          <td>D</td>
+          <td>E</td>
+          <td>2</td>
+          <td><input type="color" name="" value="pink"></td>
+        </tr>
+        <tr>
+          <td>D</td>
+          <td>F</td>
+          <td>2</td>
+          <td><input type="color" name="" value="orange"></td>
+        </tr>
+        <tr>
+          <td>F</td>
+          <td>H</td>
+          <td>1</td>
+          <td><input type="color" name="" value="#CF4803"></td>
+        </tr>
+        <tr>
+          <td>F</td>
+          <td>I</td>
+          <td>1</td>
+          <td><input type="color" name="" value="gold"></td>
+        </tr>
+        <tr>
+          <td>E</td>
+          <td>I</td>
+          <td>2</td>
+          <td><input type="color" name="" value="brown"></td>
+        </tr>
+        <tr>
+          <td>I</td>
+          <td>J</td>
+          <td>3</td>
+          <td><input type="color" name="" value="grey"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="groups-section">
+  <h3>Groups</h3>
+
+  <div class="row explainer mb-4">
+    <div class="col-lg-6">
+      <div class="border rounded p-3 bg-light">
+        <p><i class="fal fa-info-circle mr-2"></i> Nodes can be grouped together in order to emphasise their relationship. The node titles will be put into a gray box and a label is added above this box.</p>
+        <p class="mb-0">Groups can be buggy. In the example on the right, the group actually only includes nodes A and C. However, node B is also included because it's located between A and C. These kinds of errors can potentially be fixed by defining the order of all the nodes, though this does not always work properly.</p>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="border rounded p-1">
+        <img class="img-fluid" src="https://i.imgur.com/JD6Y1AX.png">
+      </div>
+    </div>
+  </div>
+
+
+  <div id="groups">
+    <div class="row mb-2">
+      <div class="col-4">
+        <label>Label</label>
+        <input type="text" name="label" class="form-control">
+      </div>
+      <div class="col-7">
+        <label>Nodes</label>
+        <select class='custom-select select2' multiple><option value='A'>A</option><option value='B'>B</option><option value='C'>C</option><option value='D'>D</option><option value='E'>E</option><option value='F'>F</option><option value='G'>G</option><option value='H'>H</option><option value='I'>I</option><option value='J'>J</option></select>
+      </div>
+      <div class="col-1">
+        <label>&nbsp;</label><br>
+        <div class="btn btn-danger delete-group"><i class="fa fa-trash-alt m-0"></i></div>
+      </div>
+    </div>
+  </div>
+  <div class="btn btn-primary add-group">
+    <i class="fa fa-plus"></i> Add group
+  </div>
 </section>
 
 <section>
@@ -176,7 +379,7 @@
         </div>
       </div>
       <div class="col-12 col-lg-3 col-xl-2">
-        <label> </label><br>
+        <label>&nbsp;</label><br>
         <div class="btn btn-primary create-grid"><i class="fal fa-table mr-2"></i> Create grid</div>
       </div>
     </div>
@@ -186,43 +389,10 @@
   </div>
 </section>
 
-<section>
-  <h3>Groups</h3>
-
-  <div class="row explainer mb-4">
-    <div class="col-lg-6">
-      <div class="border rounded p-3 bg-light">
-        <p><i class="fal fa-info-circle mr-2"></i> Nodes can be grouped together in order to emphasise their relationship. The node titles will be put into a gray box and a label is added above this box.</p>
-        <p class="mb-0">You might </p>
-      </div>
-    </div>
-    <div class="col-lg-6">
-      <div class="border rounded p-1">
-        <img class="img-fluid" src="https://i.imgur.com/OJVjCRZ.png">
-      </div>
-    </div>
-  </div>
+<section id="options">
+  <h3>Other options</h3>
 
 
-  <div id="groups">
-    <div class="row">
-      <div class="col-4">
-        <label>Label</label>
-        <input type="text" name="label" class="form-control">
-      </div>
-      <div class="col-7">
-        <label>Nodes</label>
-        <select class='custom-select select2' multiple><option value='A'>A</option><option value='B'>B</option><option value='C'>C</option><option value='D'>D</option><option value='E'>E</option><option value='F'>F</option><option value='G'>G</option><option value='H'>H</option><option value='I'>I</option><option value='J'>J</option></select>
-      </div>
-      <div class="col-1">
-        <label>.</label><br>
-        <div class="btn btn-sm btn-danger delete-group"><i class="fa fa-trash-alt m-0"></i></div>
-      </div>
-    </div>
-  </div>
-  <div class="btn btn-primary add-group">
-    <i class="fa fa-plus"></i> Add group
-  </div>
 </section>
 
 {% endblock %}
@@ -301,16 +471,6 @@
        "color": "grey"
       },
     ],
-    "groups": [
-      {
-        "id": "Example group",
-        "nodes": [
-          "A",
-          "B"
-        ],
-        "title": "Example group"
-      }
-    ],
     "order": [
       [["C"],["A"],["B"]],
       [["D"],[   ],[   ]],
@@ -318,6 +478,15 @@
       [["I"],[   ],["H"]],
       [["J"],[   ],[   ]],
     ],
+    "rankSets": [
+      {
+        "type": "same",
+        "nodes": [
+          "H",
+          "J"
+        ]
+      }
+    ]
   };
 
   var color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -362,9 +531,17 @@
 
   // create a new group
   $(".add-group").click(function() {
-    $("#groups").append("")
+    $("#groups").append("<div class='row mb-2'><div class='col-4'><label>Label</label><input type='text' name='label' class='form-control'></div><div class='col-7'><label>Nodes</label><select class='custom-select select2' multiple><option value='A'>A</option><option value='B'>B</option><option value='C'>C</option><option value='D'>D</option><option value='E'>E</option><option value='F'>F</option><option value='G'>G</option><option value='H'>H</option><option value='I'>I</option><option value='J'>J</option></select></div><div class='col-1'><label>&nbsp;</label><div class='btn btn-danger delete-group'><i class='fa fa-trash-alt m-0'></i></div></div></div>")
+
+    $("#groups select").last().select2({
+      theme: "bootstrap4",
+    });
   })
 
+  // delete group
+  $("body").on("click", ".delete-group", function() {
+    $(this).closest(".row").remove()
+  });
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
