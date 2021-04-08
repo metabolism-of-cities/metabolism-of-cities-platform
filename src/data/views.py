@@ -321,6 +321,7 @@ def plan2021(request):
         "forum_topic_title": "Data Hub Priority Plan 2021",
         "list_messages": list_messages,
         "load_datatables": True,
+        "show_subscribe": True,
     }
     return render(request, "data/plan2021.html", context)
 

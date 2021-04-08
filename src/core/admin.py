@@ -85,6 +85,15 @@ class SearchCompleteAdmin(admin.ModelAdmin):
     autocomplete_fields = ["spaces", "tags"]
     exclude = DEFAULT_EXCLUDE
 
+class RecordAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
+    autocomplete_fields = ["spaces", "tags"]
+    exclude = DEFAULT_EXCLUDE
+
+    # For records we want to show ALL items, not just active ones
+    def get_queryset(self, request):
+        return self.model.objects_unfiltered.all()
+
 class MessageAdmin(admin.ModelAdmin):
     list_display = ["date_created", "name", "posted_by"]
     search_fields = ["name", "posted_by__name"]
@@ -317,7 +326,7 @@ class CityLoopsIndicatorAdmin(admin.ModelAdmin):
     autocomplete_fields = ["city"]
 
 admin_site.register(Tag, TagAdmin)
-admin_site.register(Record, SearchCompleteAdmin)
+admin_site.register(Record, RecordAdmin)
 admin_site.register(Message, MessageAdmin)
 admin_site.register(ForumTopic, ForumTopicAdmin)
 admin_site.register(Work, SearchCompleteAdmin)
