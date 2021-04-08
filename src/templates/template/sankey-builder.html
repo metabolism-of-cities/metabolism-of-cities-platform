@@ -37,11 +37,6 @@
     fill: #999;
   }
 
-  #grid-generator label {
-    margin-bottom: 0;
-    font-weight: bold;
-  }
-
   #grid .row .col:last-of-type {
     border-right: none !important;
   }
@@ -50,12 +45,32 @@
     border-bottom: none !important;
   }
 
+  #example-grid tr:first-of-type td {
+    border-top: none !important;
+  }
+
+  #example-grid tr:last-of-type td {
+    border-bottom: none !important;
+  }
+
+  #example-grid tr td:first-of-type {
+    border-left: none !important;
+  }
+
+  #example-grid tr td:last-of-type {
+    border-right: none !important;
+  }
+
+  #alignments label,
+  #grid-generator label,
   #data label,
   #groups label {
     margin-bottom: 0;
     font-weight: bold;
+    display: block;
   }
 
+  #alignments > div:not(:first-of-type) label,
   #groups > div:not(:first-of-type) label {
     display: none;
   }
@@ -79,13 +94,19 @@
     <a class="nav-link" href="#">Links</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="#">Nodes</a>
+    <a class="nav-link" href="#">Node grid</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Node alignment</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="#">Groups</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="#">Graph options</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Review</a>
   </li>
 </ul>
 
@@ -229,7 +250,7 @@
   </div>
 </section>
 
-<section id="link-colours">
+<section id="links-colour-direction">
   <h3>Links</h3>
 
   <div class="row explainer mb-4">
@@ -254,6 +275,7 @@
           <th>From</th>
           <th>To</th>
           <th>Value</th>
+          <th>Direction</th>
           <th>Colour</th>
         </tr>
       </thead>
@@ -262,54 +284,108 @@
           <td>A</td>
           <td>D</td>
           <td>1</td>
+          <td>
+            <select class="custom-select">
+              <option value="right">Right</option>
+              <option value="left">Left</option>
+            </select>
+          </td>
           <td><input type="color" name="" value="green"></td>
         </tr>
         <tr>
           <td>B</td>
           <td>D</td>
           <td>2</td>
+          <td>
+            <select class="custom-select">
+              <option value="right">Right</option>
+              <option value="left">Left</option>
+            </select>
+          </td>
           <td><input type="color" name="" value="red"></td>
         </tr>
         <tr>
           <td>C</td>
           <td>D</td>
           <td>1</td>
+          <td>
+            <select class="custom-select">
+              <option value="right">Right</option>
+              <option value="left">Left</option>
+            </select>
+          </td>
           <td><input type="color" name="" value="blue"></td>
         </tr>
         <tr>
           <td>D</td>
           <td>E</td>
           <td>2</td>
+          <td>
+            <select class="custom-select">
+              <option value="right">Right</option>
+              <option value="left">Left</option>
+            </select>
+          </td>
           <td><input type="color" name="" value="pink"></td>
         </tr>
         <tr>
           <td>D</td>
           <td>F</td>
           <td>2</td>
+          <td>
+            <select class="custom-select">
+              <option value="right">Right</option>
+              <option value="left">Left</option>
+            </select>
+          </td>
           <td><input type="color" name="" value="orange"></td>
         </tr>
         <tr>
           <td>F</td>
           <td>H</td>
           <td>1</td>
+          <td>
+            <select class="custom-select">
+              <option value="right">Right</option>
+              <option value="left">Left</option>
+            </select>
+          </td>
           <td><input type="color" name="" value="#CF4803"></td>
         </tr>
         <tr>
           <td>F</td>
           <td>I</td>
           <td>1</td>
+          <td>
+            <select class="custom-select">
+              <option value="right">Right</option>
+              <option value="left">Left</option>
+            </select>
+          </td>
           <td><input type="color" name="" value="gold"></td>
         </tr>
         <tr>
           <td>E</td>
           <td>I</td>
           <td>2</td>
+          <td>
+            <select class="custom-select">
+              <option value="right">Right</option>
+              <option value="left">Left</option>
+            </select>
+          </td>
           <td><input type="color" name="" value="brown"></td>
         </tr>
         <tr>
           <td>I</td>
           <td>J</td>
           <td>3</td>
+          <td>
+            <select class="custom-select">
+              <option value="right">Right</option>
+              <option value="left">Left</option>
+            </select>
+          </td>
           <td><input type="color" name="" value="grey"></td>
         </tr>
       </tbody>
@@ -334,36 +410,98 @@
     </div>
   </div>
 
+  <div id="groups"></div>
 
-  <div id="groups">
-    <div class="row mb-2">
-      <div class="col-4">
-        <label>Label</label>
-        <input type="text" name="label" class="form-control">
-      </div>
-      <div class="col-7">
-        <label>Nodes</label>
-        <select class='custom-select select2' multiple><option value='A'>A</option><option value='B'>B</option><option value='C'>C</option><option value='D'>D</option><option value='E'>E</option><option value='F'>F</option><option value='G'>G</option><option value='H'>H</option><option value='I'>I</option><option value='J'>J</option></select>
-      </div>
-      <div class="col-1">
-        <label>&nbsp;</label><br>
-        <div class="btn btn-danger delete-group"><i class="fa fa-trash-alt m-0"></i></div>
-      </div>
-    </div>
-  </div>
   <div class="btn btn-primary add-group">
     <i class="fa fa-plus"></i> Add group
   </div>
 </section>
 
-<section>
-  <div class="sankey" id="sankey">
-    <svg width="100%" height="400" ></svg>
+<section id="node-alignment">
+  <h3>Node alignment</h3>
+
+  <div class="row explainer mb-4">
+    <div class="col-lg-6">
+      <div class="border rounded p-3 bg-light">
+        <p><i class="fal fa-info-circle mr-2"></i> Nodes can be aligned so that they are positioned in the same column. This can be especially useful for ending nodes, but can be used in various situations.</p>
+
+        <p>The example shows two diagrams. The first has no alignment; node J ends at the far right (column 5) and H ends one column before that, at column 4. The second diagram shows what happens when H and J are set to align with one another. H is extended to the last column so that it lines up with node J.</p>
+
+        <p class="mb-0">Note that aligning nodes will not work if the nodes in question have a link connecting them, as this removes the horizontal space the link needs in order to flow properly.</p>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="border rounded p-1">
+        <img class="img-fluid" src="https://i.imgur.com/X92AB3q.png">
+        <hr>
+        <img class="img-fluid" src="https://i.imgur.com/FtnfJI3.png">
+      </div>
+    </div>
+  </div>
+
+  <div id="alignments"></div>
+
+  <div class="btn btn-primary add-alignment">
+    <i class="fa fa-plus"></i> Add alignment
   </div>
 </section>
 
 <section>
   <h3>Grid</h3>
+
+  <div class="row explainer mb-4">
+    <div class="col-lg-6">
+      <div class="alert-warning alert">
+        <i class="fal fa-exclamation-triangle mr-2"></i> <strong>Manually creating a grid is discouraged</strong> if there are no obvious problems. Please check the preview below. If the layout of the diagram looks good, there's no need to make any changes here and you can move on to the next section.
+      </div>
+      <div class="border rounded p-3 bg-light">
+        <p><i class="fal fa-info-circle mr-2"></i> You might encounter a situation in which the layout or order of the nodes is illogical. In that case, manually creating the grid might help.</p>
+
+        <p>The example shows the Sankey diagram as well as the grid that produces it. Notice the changes in order in the first column (C, A, B rather than A, B, C) and the vertical positions of various nodes that differ from the default layout.</p>
+
+        <p class="mb-0">This manual creation might not always work properly. The more complicated the diagram the higher the chance of odd flowing links. Perhaps most importantly: <strong>reversing links will almost never work properly</strong> when using a manually created grid.</p>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="p-2 border rounded">
+        <table class="table text-center table-bordered border-0 mb-0" id="example-grid">
+          <tbody>
+            <tr>
+              <td>C</td>
+              <td>D</td>
+              <td></td>
+              <td>I</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>A</td>
+              <td></td>
+              <td>E</td>
+              <td></td>
+              <td>J</td>
+            </tr>
+            <tr>
+              <td>B</td>
+              <td></td>
+              <td>F</td>
+              <td>H</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="text-center my-4">
+        <i class="fal fa-arrow-down fa-2x"></i>
+      </div>
+
+      <div class="border rounded p-1">
+        <img class="img-fluid" src="https://i.imgur.com/AOPf8pX.png">
+      </div>
+    </div>
+  </div>
+
+
   <div id="grid-generator">
     <div class="row">
       <div class="col-6 col-lg-3 col-xl-2">
@@ -379,7 +517,7 @@
         </div>
       </div>
       <div class="col-12 col-lg-3 col-xl-2">
-        <label>&nbsp;</label><br>
+        <label>&nbsp;</label>
         <div class="btn btn-primary create-grid"><i class="fal fa-table mr-2"></i> Create grid</div>
       </div>
     </div>
@@ -391,8 +529,12 @@
 
 <section id="options">
   <h3>Other options</h3>
+</section>
 
-
+<section id="review">
+  <div class="sankey" id="sankey-wrapper">
+    <svg width="100%" height="400" id="sankey"></svg>
+  </div>
 </section>
 
 {% endblock %}
@@ -420,7 +562,7 @@
        "source": "A",
        "target": "D",
        "value": 1,
-       "color": "green"
+       "color": "thistle"
       },
       {
        "source": "B",
@@ -432,51 +574,51 @@
        "source": "C",
        "target": "D",
        "value": 1,
-       "color": "bisque"
+       "color": "thistle"
       },
       {
        "source": "D",
        "target": "E",
        "value": 2,
-       "color": "pink"
+       "color": "thistle"
       },
       {
        "source": "D",
        "target": "F",
        "value": 2,
-       "color": "orange"
+       "color": "thistle"
       },
       {
        "source": "F",
        "target": "H",
        "value": 1,
-       "color": "#CF4803"
+       "color": "thistle"
       },
       {
        "source": "F",
        "target": "I",
        "value": 1,
-       "color": "gold"
+       "color": "thistle"
       },
       {
        "source": "E",
        "target": "I",
        "value": 2,
-       "color": "brown"
+       "color": "thistle"
       },
       {
        "source": "I",
        "target": "J",
        "value": 3,
-       "color": "grey"
+       "color": "thistle"
       },
     ],
     "order": [
       [["C"],["A"],["B"]],
       [["D"],[   ],[   ]],
-      [["E"],[   ],["F"]],
+      [[   ],["E"],["F"]],
       [["I"],[   ],["H"]],
-      [["J"],[   ],[   ]],
+      [[   ],["J"],[   ]],
     ],
     "rankSets": [
       {
@@ -500,7 +642,7 @@
   var layout = d3.sankey().extent([[150, 50], [1000, 400]]).rankSets(data.rankSets);
   // layout.ordering(data.order)
 
-  d3.select("#sankey svg")
+  d3.select("#sankey")
     .datum(layout(data))
     .call(diagram.groups(data.groups));
 </script>
@@ -526,23 +668,30 @@
     createGrid()
   })
 
-  // create grid if none is saved yet
-  createGrid();
-
   // create a new group
   $(".add-group").click(function() {
-    $("#groups").append("<div class='row mb-2'><div class='col-4'><label>Label</label><input type='text' name='label' class='form-control'></div><div class='col-7'><label>Nodes</label><select class='custom-select select2' multiple><option value='A'>A</option><option value='B'>B</option><option value='C'>C</option><option value='D'>D</option><option value='E'>E</option><option value='F'>F</option><option value='G'>G</option><option value='H'>H</option><option value='I'>I</option><option value='J'>J</option></select></div><div class='col-1'><label>&nbsp;</label><div class='btn btn-danger delete-group'><i class='fa fa-trash-alt m-0'></i></div></div></div>")
+    $("#groups").append("<div class='row mb-2'><div class='col-4'><label>Label</label><input type='text' name='label' class='form-control'></div><div class='col-7'><label>Nodes</label><select class='custom-select select2' multiple><option value='A'>A</option><option value='B'>B</option><option value='C'>C</option><option value='D'>D</option><option value='E'>E</option><option value='F'>F</option><option value='G'>G</option><option value='H'>H</option><option value='I'>I</option><option value='J'>J</option></select></div><div class='col-1'><label>&nbsp;</label><div class='btn btn-danger delete-row'><i class='fa fa-trash-alt m-0'></i></div></div></div>")
 
     $("#groups select").last().select2({
       theme: "bootstrap4",
     });
   })
 
-  // delete group
-  $("body").on("click", ".delete-group", function() {
+  // create a new alignment
+  $(".add-alignment").click(function() {
+    $("#alignments").append("<div class='row mb-2'><div class='col-11'><label>Nodes</label><select class='custom-select select2' multiple><option value='A'>A</option><option value='B'>B</option><option value='C'>C</option><option value='D'>D</option><option value='E'>E</option><option value='F'>F</option><option value='G'>G</option><option value='H'>H</option><option value='I'>I</option><option value='J'>J</option></select></div><div class='col-1'><label>&nbsp;</label><div class='btn btn-danger delete-row'><i class='fa fa-trash-alt m-0'></i></div></div></div>")
+
+    $("#alignments select").last().select2({
+      theme: "bootstrap4",
+    });
+  })
+
+  // delete group or alignment
+  $("body").on("click", ".delete-row", function() {
     $(this).closest(".row").remove()
   });
 
+  // save sankey to png
 </script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 <script>
