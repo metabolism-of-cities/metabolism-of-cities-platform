@@ -1,19 +1,15 @@
 <li class="nav-item">
-  <a class="nav-link" href="{% url "peeide:index" %}"><i class="fa fa-home"></i></a>
+  <a class="nav-link" href="{% url 'peeide:page' 'pilots' %}">People and projects</a>
 </li>
-
+<div class="nav-divider"></div>
 <li class="nav-item">
-  <a class="nav-link" href="{% url "peeide:page" "pilots" %}">Pilot Initiatives</a>
+  <a class="nav-link" href="{% url 'peeide:page' 'resources' %}">Our research</a>
 </li>
-
+<div class="nav-divider"></div>
 <li class="nav-item">
-  <a class="nav-link" href="{% url "peeide:page" "library" %}">Library</a>
+  <a class="nav-link" href="{% url 'peeide:page' 'library' %}">Library</a>
 </li>
-
+<div class="nav-divider"></div>
 <li class="nav-item">
-  <a class="nav-link" href="{% url "peeide:page" "resources" %}">Additional Resources</a>
-</li>
-
-<li class="nav-item">
-  <a class="nav-link" href="{% url "peeide:page" "about" %}">About Us</a>
+  <a class="nav-link" href="{% url 'peeide:page' 'about' %}">Resources and community</a>
 </li>
