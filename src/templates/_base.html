@@ -64,6 +64,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.css">
   {% endif %}
 
+  {% if PROJECT.slug == "peeide" %}
+    <link href="{% sass_src 'css/ndee.scss' %}?refresh14-apr" rel="stylesheet" type="text/css" />
+  {% endif %}
+
   <script>
     // function to make iframe the same size as its content
     function resizeIframe(obj) {
