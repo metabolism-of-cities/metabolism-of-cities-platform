@@ -1,11 +1,30 @@
 // VARIABLES
-$ndee-primary: #144d58;
-$ndee-secondary: #C766A0;
+$ndee-primary: #008dac;
+$ndee-secondary: #00d7e4;
+$ndee-purple: #b451bc;
+$ndee-blue-accent: #61e0e8;
+$ndee-light-blue: #edfcff;
 
 @import url('https://rsms.me/inter/inter.css');
 
 body {
   font-family: Inter, Lato, Helvetica Neue, Arial, Helvetica, sans-serif
+}
+
+.text-ndee-primary {
+  color: $ndee-primary !important;
+}
+
+.text-ndee-secondary {
+  color: $ndee-secondary !important;
+}
+
+.text-ndee-purple {
+  color: $ndee-purple !important;
+}
+
+.bg-ndee-light-blue {
+  background-color: $ndee-light-blue !important;
 }
 
 .top-layer {
@@ -37,7 +56,7 @@ nav li.nav-item:not(:last-of-type) {
 }
 
 #footer-ndee {
-  background-color: #2A6CD8;
+  background-color: $ndee-primary;
 
   img {
     max-height: 130px;
@@ -54,3 +73,4 @@ nav li.nav-item:not(:last-of-type) {
     margin: .5rem 0 1rem 0;
   }
 }
+

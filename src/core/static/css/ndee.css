@@ -2,6 +2,18 @@
 body {
   font-family: Inter, Lato, Helvetica Neue, Arial, Helvetica, sans-serif; }
 
+.text-ndee-primary {
+  color: #008dac !important; }
+
+.text-ndee-secondary {
+  color: #00d7e4 !important; }
+
+.text-ndee-purple {
+  color: #b451bc !important; }
+
+.bg-ndee-light-blue {
+  background-color: #edfcff !important; }
+
 .top-layer {
   background-color: #fff;
   box-shadow: none;
@@ -25,7 +37,7 @@ nav li.nav-item:not(:last-of-type) {
   margin-right: .5rem; }
 
 #footer-ndee {
-  background-color: #2A6CD8; }
+  background-color: #008dac; }
   #footer-ndee img {
     max-height: 130px; }
   #footer-ndee .meta {
