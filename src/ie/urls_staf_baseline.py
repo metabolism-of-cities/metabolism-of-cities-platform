@@ -186,5 +186,6 @@ baseline_staf_urlpatterns = [
     path("flowdiagrams/<int:id>/edit/", staf.flowdiagram, {"show_form": True}, name="flowdiagram_form"),
 
     path("data/", staf.data, name="data"),
+    path("data/json/", staf.data, {"json": True}, name="data_json"),
 
 ]

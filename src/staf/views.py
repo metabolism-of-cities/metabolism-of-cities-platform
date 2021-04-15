@@ -2862,6 +2862,7 @@ def data(request, json=False):
     material = request.GET.get("material")
     source = request.GET.get("source")
     origin_space = request.GET.get("origin_space")
+    within = request.GET.get("within")
 
     if source:
         data = data.filter(source_id=source)
@@ -2876,6 +2877,10 @@ def data(request, json=False):
     if origin_space:
         data = data.filter(origin_space_id=origin_space)
 
+    if within:
+        within = ReferenceSpace.objects.get(pk=within)
+        data = data.filter(origin_space__geometry__within=within.geometry)
+
     # https://docs.djangoproject.com/en/3.2/ref/contrib/gis/db-api/#compatibility-tables
 
     if material:
@@ -2886,7 +2891,11 @@ def data(request, json=False):
             messages.error(request, "We could not find this material")
 
     if json:
-        return JsonResponse(data)
+        j = []
+        j.append(["Start", "End", "Origin Place", "Destination Place", "Material", "Quantity", "Unit"])
+        for each in data:
+            j.append([each.timeframe.start, each.timeframe.end, str(each.origin_space), str(each.destination_space), each.material.name, each.quantity, each.unit.name])
+        return JsonResponse({"data": j})
     else:
         if data.count() > 200:
             total = data.count()
