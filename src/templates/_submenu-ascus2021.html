@@ -1,0 +1,53 @@
+<div id="subnav-ascus">
+  <nav class="navbar navbar-expand-md">
+    <div class="container">
+
+      <button class="navbar-toggler ml-3" type="button" data-toggle="collapse" data-target="#ascus-navbar" aria-controls="ascus-navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="ascus-navbar">
+        <ul class="navbar-nav mr-auto ml-3 ml-md-0">
+
+          <li class="nav-item">
+            <a class="nav-link{% if dashboard %} active{% endif %}" href="{% url "ascus2021:account" %}"><i class="fa fa-fw fa-user-lock"></i>
+              My account
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link{% if dashboard %} active{% endif %}" href="{% url "ascus2021:account" %}?abstracts=true">
+              Abstracts
+            </a>
+          </li>
+
+          <li class="nav-item" hidden>
+            <a class="nav-link{% if dashboard %} active{% endif %}" href="{% url "ascus2021:participants" %}">
+              Participants
+            </a>
+          </li>
+
+          <li class="nav-item" hidden>
+            <a class="nav-link{% if dashboard %} active{% endif %}" href="{% url "ascus2021:introvideos" %}">
+              Intro videos
+            </a>
+          </li>
+
+          <li class="nav-item" hidden>
+            <a class="nav-link{% if dashboard %} active{% endif %}" href="{% url "ascus2021:presentations" %}">
+              Presentations
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link{% if dashboard %} active{% endif %}" href="{% url "ascus2021:forum" %}">
+              Forum
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+    </div>
+  </nav>
+</div>

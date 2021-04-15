@@ -192,7 +192,8 @@ def ascus_account(request):
     my_presentations = LibraryItem.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
         .filter(parent_list__record_child__id=request.project) \
-        .filter(tags__id=771)
+        .filter(tags__id=771) \
+        .filter(url__isnull=False)
     my_intro = LibraryItem.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
         .filter(parent_list__record_child__id=request.project) \
@@ -222,6 +223,9 @@ def ascus_account(request):
     abstracts = LibraryItem.objects_include_private \
         .filter(parent_list__record_child__id=request.project) \
         .filter(tags__id=771)
+
+    if abstracts:
+        show_abstract = True
 
     if "approve" in request.POST:
         work.status = Work.WorkStatus.COMPLETED
@@ -305,7 +309,8 @@ def account_vote(request):
 
 @check_ascus_access
 def forum(request):
-    list = ForumTopic.objects_include_private.filter(part_of_project_id=8).order_by("-last_update")
+    project = get_project(request)
+    list = ForumTopic.objects_include_private.filter(part_of_project=project).order_by("-last_update")
     context = {
         "list": list,
         "header_title": "Forum",

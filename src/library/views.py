@@ -633,7 +633,13 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         )
     elif type.name == "Video Recording":
         fields = ["name", "description", "url", "video_site", "author_list", "duration", "spaces", "year", "language", "license", "comments"]
-
+        labels = {
+            "year": "Year created",
+            "author_list": "Author(s)",
+            "image": "Thumbnail",
+            "comments": "Internal comments/notes",
+            "url": "URL",
+        }
         if info:
             info = info.video
 
@@ -650,15 +656,36 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             if tag:
                 initial["tags"] = tag
 
+        if project.slug == "ascus2021":
+            if "license" in fields:
+                fields.remove("license")
+            if "spaces" in fields:
+                fields.remove("spaces")
+            if "sectors" in fields:
+                fields.remove("sectors")
+            if "materials" in fields:
+                fields.remove("materials")
+            if "comments" in fields:
+                fields.remove("comments")
+            if "year" in fields:
+                fields.remove("year")
+            if "language" in fields:
+                fields.remove("language")
+            if "tags" in fields:
+                fields.remove("tags")
+            if "duration" in fields:
+                fields.remove("duration")
+            if "image" in fields:
+                fields.remove("image")
+            if "video_site" in fields:
+                fields.remove("video_site")
+            labels["url"] = "Youtube video URL"
+            files = False
+
         ModelForm = modelform_factory(
             Video,
             fields=fields,
-            labels = {
-                "year": "Year created",
-                "author_list": "Author(s)",
-                "image": "Thumbnail",
-                "comments": "Internal comments/notes",
-            }
+            labels = labels
         )
     else:
         labels = {
@@ -769,6 +796,25 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                     fields.append("position")
         else:
             model = LibraryItem
+
+        if project.slug == "ascus2021":
+            if "license" in fields:
+                fields.remove("license")
+            if "spaces" in fields:
+                fields.remove("spaces")
+            if "sectors" in fields:
+                fields.remove("sectors")
+            if "materials" in fields:
+                fields.remove("materials")
+            if "comments" in fields:
+                fields.remove("comments")
+            if "year" in fields:
+                fields.remove("year")
+            if "language" in fields:
+                fields.remove("language")
+            if "tags" in fields:
+                fields.remove("tags")
+            labels["url"] = "Youtube video URL"
 
         ModelForm = modelform_factory(model, fields=fields, labels = labels)
 

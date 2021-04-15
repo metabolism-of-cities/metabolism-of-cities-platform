@@ -2854,13 +2854,14 @@ def shapefile_json(request, id, download=False):
         response["Content-Disposition"] = f"attachment; filename=\"{info.name}.geojson\""
     return response
 
-def data(request):
+def data(request, json=False):
     data = Data.objects.all()
 
     start = request.GET.get("date_start")
     end = request.GET.get("date_end")
     material = request.GET.get("material")
     source = request.GET.get("source")
+    origin_space = request.GET.get("origin_space")
 
     if source:
         data = data.filter(source_id=source)
@@ -2872,6 +2873,11 @@ def data(request):
     elif end:
         data = data.filter(timeframe__end__lte=end)
 
+    if origin_space:
+        data = data.filter(origin_space_id=origin_space)
+
+    # https://docs.djangoproject.com/en/3.2/ref/contrib/gis/db-api/#compatibility-tables
+
     if material:
         m = Material.objects.filter(code=material.strip())
         if m:
@@ -2879,18 +2885,19 @@ def data(request):
         else:
             messages.error(request, "We could not find this material")
 
-    if data.count() > 200:
-        total = data.count()
-        data = data[:200]
+    if json:
+        return JsonResponse(data)
     else:
-        total = data.count()
-
-    context = {
-        "data": data,
-        "total": total,
-    }
-    return render(request, "staf/data.html", context)
-
+        if data.count() > 200:
+            total = data.count()
+            data = data[:200]
+        else:
+            total = data.count()
+        context = {
+            "data": data,
+            "total": total,
+        }
+        return render(request, "staf/data.html", context)
 
 @login_required
 def dataset_editor(request, id):

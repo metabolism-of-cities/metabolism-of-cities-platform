@@ -24,7 +24,7 @@
       <tbody>
       {% for each in list %}
         <tr>
-          <td>{{ each }}</td>
+          <td><a href="{% url "ascus2021:edit_presentation" each.id %}?next={{ request.get_full_path }}">{{ each }}</a></td>
           <td>{{ each.author_list }}</td>
           <td>{{ each.type }}</td>
         </tr>
@@ -49,13 +49,17 @@
     </form>
   {% else %}
 
-    {{ info.get_description }}
+    {% if allow_new_submissions %}
 
-    <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=text">Text</a>
-    <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=video">Video</a>
-    <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=image">Image</a>
-    <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=audio">Audio</a>
-    <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=other">Other format</a>
+      {{ info.get_description }}
+
+      <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=text">Text</a>
+      <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=video">Video</a>
+      <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=image">Image</a>
+      <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=audio">Audio</a>
+      <a class="btn btn-inverse mt-2 mr-3" href="{% url "ascus2021:account_presentation" %}?type=other">Other format</a>
+
+    {% endif %}
 
   {% endif %}
 
