@@ -11,6 +11,46 @@ body {
   font-family: Inter, Lato, Helvetica Neue, Arial, Helvetica, sans-serif
 }
 
+.btn-ndee {
+  padding: 1rem 2.5rem;
+
+  &.btn-ndee-sm {
+    padding: .25rem 1.5rem;
+  }
+}
+
+.btn-ndee-primary {
+  background-color: $ndee-primary;
+  border-color: $ndee-primary;
+  color: white !important;
+
+  &:hover {
+    background-color: darken($ndee-primary, 10%);
+    border-color: darken($ndee-primary, 10%);
+  }
+}
+
+.btn-ndee-primary-outline {
+  background-color: transparent !important;
+  border-color: $ndee-primary;
+  color: $ndee-primary;
+
+  &:hover {
+    border-color: darken($ndee-primary, 10%);
+    color: darken($ndee-primary, 10%);
+  }
+}
+
+.btn-ndee-white-outline {
+  background-color: transparent;
+  border-color: white !important;
+  color: white !important;
+
+  &:hover {
+    background-color: rgba(255,255,255,.25);
+  }
+}
+
 .text-ndee-primary {
   color: $ndee-primary !important;
 }
@@ -74,3 +114,6 @@ nav li.nav-item:not(:last-of-type) {
   }
 }
 
+.rotate-45 {
+  transform: rotate(-45deg);
+}

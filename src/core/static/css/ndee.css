@@ -2,6 +2,34 @@
 body {
   font-family: Inter, Lato, Helvetica Neue, Arial, Helvetica, sans-serif; }
 
+.btn-ndee {
+  padding: 1rem 2.5rem; }
+  .btn-ndee.btn-ndee-sm {
+    padding: .25rem 1.5rem; }
+
+.btn-ndee-primary {
+  background-color: #008dac;
+  border-color: #008dac;
+  color: white !important; }
+  .btn-ndee-primary:hover {
+    background-color: #006379;
+    border-color: #006379; }
+
+.btn-ndee-primary-outline {
+  background-color: transparent !important;
+  border-color: #008dac;
+  color: #008dac; }
+  .btn-ndee-primary-outline:hover {
+    border-color: #006379;
+    color: #006379; }
+
+.btn-ndee-white-outline {
+  background-color: transparent;
+  border-color: white !important;
+  color: white !important; }
+  .btn-ndee-white-outline:hover {
+    background-color: rgba(255, 255, 255, 0.25); }
+
 .text-ndee-primary {
   color: #008dac !important; }
 
@@ -47,3 +75,6 @@ nav li.nav-item:not(:last-of-type) {
     height: 1px;
     background-color: #37C1FF;
     margin: .5rem 0 1rem 0; }
+
+.rotate-45 {
+  transform: rotate(-45deg); }
