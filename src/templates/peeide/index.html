@@ -1,5 +1,77 @@
 {% extends "_base.html" %}
 
+{% block head %}
+<style>
+  .container.main-content {
+    display: none;
+  }
+
+  #ndee-hero {
+    background-image: url("https://i.imgur.com/bF4qdQq.jpg");
+    background-size: cover;
+    background-position: center 60%;
+  }
+
+  #ndee-hero .row {
+    height: 60vh;
+    min-height: 400px;
+  }
+
+  .col-text {
+    background-color: #008DACE6;
+  }
+
+  .hero-header {
+    color: #A8FBFF;
+    font-weight: bold;
+    letter-spacing: -1px;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-  Content goes here
+
+<!-- closing container so we can have a full width hero -->
+</div>
+
+<section id="ndee-hero" class="pb-0">
+  <div class="container">
+    <div class="row justify-content-md-end">
+      <div class="col-md-6 col-lg-4 col-text">
+        <div class="py-5 px-3">
+          <h2 class="hero-header">Collaboratively researching the impacts of the digital economy</h2>
+          <p class="text-white">
+            The rapid adoption and acceleration of the use of digital technologies has important environmental and energy implications. This initiative seeks leverages academic research across disciplines to provide guidance on  high-priority issues at the intersection of energy environment and digital platforms.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pb-4">
+  <div class="container">
+    <h4>Some title</h4>
+    {% lorem 1 p %}
+
+    <div class="row">
+      <div class="col-md-6 col-lg-4">
+        <div class="p-3 bg-ndee-light-blue rounded">
+          <div class="text-uppercase font-weight-bold">
+            <span class="text-ndee-primary"></span>March 21st <span class="d-inline-block mx-2 font-weight-normal text-ndee-secondary">|</span><span class="text-ndee-purple">Podcast</span>
+          </div>
+
+          <h5 class="text-ndee-primary my-4">A{% lorem 3 w random %}</h5>
+          {% lorem 1 p %}
+        </div>
+      </div>
+    </div>
+
+    {% lorem 1 p %}
+  </div>
+</section>
+
+<div>
+<!-- no need to close this container since we closed the previous one already -->
+
 {% endblock %}

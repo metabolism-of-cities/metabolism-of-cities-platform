@@ -1,0 +1,76 @@
+// VARIABLES
+$ndee-primary: #008dac;
+$ndee-secondary: #00d7e4;
+$ndee-purple: #b451bc;
+$ndee-blue-accent: #61e0e8;
+$ndee-light-blue: #edfcff;
+
+@import url('https://rsms.me/inter/inter.css');
+
+body {
+  font-family: Inter, Lato, Helvetica Neue, Arial, Helvetica, sans-serif
+}
+
+.text-ndee-primary {
+  color: $ndee-primary !important;
+}
+
+.text-ndee-secondary {
+  color: $ndee-secondary !important;
+}
+
+.text-ndee-purple {
+  color: $ndee-purple !important;
+}
+
+.bg-ndee-light-blue {
+  background-color: $ndee-light-blue !important;
+}
+
+.top-layer {
+  background-color: #fff;
+  box-shadow: none;
+  background-image: none;
+}
+
+nav a.nav-link {
+  color: #000 !important;
+  opacity: 0.85 !important;
+  font-size: 14px;
+
+  &:hover {
+    opacity: 1 !important;
+  }
+}
+
+.nav-divider {
+  margin-right: .5rem;
+  height: 1rem;
+  width: 1px;
+  background-color: #61E0E8;
+  margin-top: .75rem;
+}
+
+nav li.nav-item:not(:last-of-type) {
+  margin-right: .5rem;
+}
+
+#footer-ndee {
+  background-color: $ndee-primary;
+
+  img {
+    max-height: 130px;
+  }
+
+  .meta {
+    font-size: 14px;
+  }
+
+  .divider {
+    width: 150px;
+    height: 1px;
+    background-color: #37C1FF;
+    margin: .5rem 0 1rem 0;
+  }
+}
+
