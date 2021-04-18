@@ -88,6 +88,13 @@
                     <i class="fas fa-fw fa-arrow-right mr-0 ml-1"></i>
                   </button>
 
+                  <p class="mt-4"><a id="somethingwrong" href="#wrongoptions">Something wrong with this entire entry?</a></p>
+                  <div id="wrongoptions" class="hide">
+                    <h4>What is wrong?</h4>
+                    <button class="btn btn-warning sweetalert change-record"><i class="fa fa-exchange"></i> Item is not a {{ info.type|lower }} but something else</button>
+                    <button class="btn btn-danger mb-2 sweetalert delete-record mt-3"><i class="fas fa-trash"></i> This entry should be deleted</button>
+                  </div>
+
                 {% endif %}
 
               {% endif %}
