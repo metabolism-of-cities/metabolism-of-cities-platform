@@ -1,0 +1,797 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block title %}Sankey{% endblock %}
+
+{% block css %}
+  <style>
+    svg .link {
+      opacity: 0.8;
+      fill: steel#b55dab;
+    }
+
+    svg .link:hover {
+      opacity: 1;
+    }
+
+    svg g.sankey {
+      font-size: 10pt;
+    }
+    svg .node line {
+      stroke-width: 1px;
+      stroke: #000;
+    }
+    svg .node-type-process line {
+      stroke-width: 4px;
+      stroke: #888;
+    }
+
+    svg .group rect {
+      fill: #eee;
+      stroke: #bbb;
+      stroke-width: 0.5px;
+    }
+
+    svg .group text {
+      fill: #999;
+    }
+
+    #grid .row .col:last-of-type {
+      border-right: none !important;
+    }
+
+    #grid .row:last-of-type .col {
+      border-bottom: none !important;
+    }
+
+    #example-grid tr:first-of-type td {
+      border-top: none !important;
+    }
+
+    #example-grid tr:last-of-type td {
+      border-bottom: none !important;
+    }
+
+    #example-grid tr td:first-of-type {
+      border-left: none !important;
+    }
+
+    #example-grid tr td:last-of-type {
+      border-right: none !important;
+    }
+
+    #alignments label,
+    #grid-generator label,
+    #data label,
+    #groups label {
+      margin-bottom: 0;
+      font-weight: bold;
+      display: block;
+    }
+
+    #alignments > div:not(:first-of-type) label,
+    #groups > div:not(:first-of-type) label {
+      display: none;
+    }
+  </style>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.3.2/dist/select2-bootstrap4.min.css"/>
+{% endblock %}
+
+{% block content %}
+
+<ul class="nav nav-tabs mb-4">
+  <li class="nav-item">
+    <a class="nav-link {% if request.GET.step == 'introduction' %}active{% endif %}" href="?step=introduction">Introduction</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if request.GET.step == 'data' %}active{% endif %}" href="?step=data">Data</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if request.GET.step == 'links' %}active{% endif %}" href="?step=links">Links</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if request.GET.step == 'grid' %}active{% endif %}" href="?step=grid">Node grid</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if request.GET.step == 'alignment' %}active{% endif %}" href="?step=alignment">Node alignment</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if request.GET.step == 'groups' %}active{% endif %}" href="?step=groups">Groups</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if request.GET.step == 'options' %}active{% endif %}" href="?step=options">Graph options</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if request.GET.step == 'review' %}active{% endif %}" href="?step=review">Review</a>
+  </li>
+</ul>
+
+{% if request.GET.step == "introduction" %}
+
+  <h3>Introduction</h3>
+
+  <p>Sankey diagrams are generated using ... bla bla bla.</p>
+
+  <ul>
+    <li>Define nodes</li>
+    <li>Define links</li>
+    <li>Explain categories</li>
+    <li>What to do with colours</li>
+  </ul>
+
+  <a class="btn btn-primary" href="?step=data">
+    Get started <i class="fal fa-arrow-right ml-2 mr-0"></i>
+  </a>
+
+{% elif request.GET.step == "data" %}
+
+  <form id="data" method="post" action="?step=links">
+    <h3>Data</h3>
+    <p>In order to create the sankey, you'll first need to identify the columns that correspond to the required parts of the sankey. The source, target, and value columns are mandatory. Category and colour are not, and can still be defined later.</p>
+
+    <div class="mt-4">
+      <div class="form-row">
+        <div class="col-lg">
+          <div class="form-group">
+            <label>Source*</label>
+            <select class="custom-select" required>
+              <option value="from">from</option>
+              <option value="to">to</option>
+              <option value="value">value</option>
+              <option value="color">color</option>
+              <option value="blu">blu</option>
+              <option value="blee">blee</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-lg">
+          <div class="form-group">
+            <label>Target*</label>
+            <select class="custom-select" required>
+              <option value="from">from</option>
+              <option value="to">to</option>
+              <option value="value">value</option>
+              <option value="color">color</option>
+              <option value="blu">blu</option>
+              <option value="blee">blee</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-lg">
+          <div class="form-group">
+            <label>Value*</label>
+            <select class="custom-select" required>
+              <option value="from">from</option>
+              <option value="to">to</option>
+              <option value="value">value</option>
+              <option value="color">color</option>
+              <option value="blu">blu</option>
+              <option value="blee">blee</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-lg">
+          <div class="form-group">
+            <label>Category</label>
+            <select class="custom-select">
+              <option value="from">from</option>
+              <option value="to">to</option>
+              <option value="value">value</option>
+              <option value="color">color</option>
+              <option value="blu">blu</option>
+              <option value="blee">blee</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-lg">
+          <div class="form-group">
+            <label>Colour</label>
+            <select class="custom-select">
+              <option value="from">from</option>
+              <option value="to">to</option>
+              <option value="value">value</option>
+              <option value="color">color</option>
+              <option value="blu">blu</option>
+              <option value="blee">blee</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-table mb-4">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>from</th>
+            <th>to</th>
+            <th>value</th>
+            <th>color</th>
+            <th>blu</th>
+            <th>blee</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>H</td>
+            <td>O</td>
+            <td>816</td>
+            <td>blue</td>
+            <td>sqhJSp</td>
+            <td>lDlscc</td>
+          <tr>
+            <td>X</td>
+            <td>B</td>
+            <td>056</td>
+            <td>red</td>
+            <td>zZidiK</td>
+            <td>aNaLXY</td>
+          <tr>
+            <td>Z</td>
+            <td>D</td>
+            <td>191</td>
+            <td>blue</td>
+            <td>Qckjbp</td>
+            <td>sVKCSC</td>
+          <tr>
+            <td>K</td>
+            <td>W</td>
+            <td>572</td>
+            <td>green</td>
+            <td>gsgaws</td>
+            <td>vdWuLb</td>
+          <tr>
+            <td>N</td>
+            <td>S</td>
+            <td>396</td>
+            <td>red</td>
+            <td>ycmdSa</td>
+            <td>DiLjli</td>
+        </tbody>
+      </table>
+    </div>
+
+    {% csrf_token %}
+    <button class="btn btn-primary">
+      Save and continue <i class="fal fa-arrow-right ml-2 mr-0"></i>
+    </button>
+  </form>
+
+{% elif request.GET.step == "links" %}
+
+  <form id="links-colour-direction" method="post" action="?step=grid">
+    <h3>Links</h3>
+
+    <div class="row explainer mb-4">
+      <div class="col-lg-6">
+        <div class="border rounded p-3 bg-light">
+          <p><i class="fal fa-info-circle mr-2"></i> Every link can (but is not required to) have its own colour. Colours can be used to group links into categories and help make the diagram easier to read.</p>
+
+          <p class="mb-0">The example shows a situation in which every link has its own colour.</p>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="border rounded p-1">
+          <img class="img-fluid" src="https://i.imgur.com/vou8X3Z.png">
+        </div>
+      </div>
+    </div>
+
+    <div class="card card-table mb-4">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>From</th>
+            <th>To</th>
+            <th>Value</th>
+            <th>Direction</th>
+            <th>Colour</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>A</td>
+            <td>D</td>
+            <td>1</td>
+            <td>
+              <select class="custom-select">
+                <option value="right">Right</option>
+                <option value="left">Left</option>
+              </select>
+            </td>
+            <td><input type="color" name="" value="green"></td>
+          </tr>
+          <tr>
+            <td>B</td>
+            <td>D</td>
+            <td>2</td>
+            <td>
+              <select class="custom-select">
+                <option value="right">Right</option>
+                <option value="left">Left</option>
+              </select>
+            </td>
+            <td><input type="color" name="" value="red"></td>
+          </tr>
+          <tr>
+            <td>C</td>
+            <td>D</td>
+            <td>1</td>
+            <td>
+              <select class="custom-select">
+                <option value="right">Right</option>
+                <option value="left">Left</option>
+              </select>
+            </td>
+            <td><input type="color" name="" value="blue"></td>
+          </tr>
+          <tr>
+            <td>D</td>
+            <td>E</td>
+            <td>2</td>
+            <td>
+              <select class="custom-select">
+                <option value="right">Right</option>
+                <option value="left">Left</option>
+              </select>
+            </td>
+            <td><input type="color" name="" value="pink"></td>
+          </tr>
+          <tr>
+            <td>D</td>
+            <td>F</td>
+            <td>2</td>
+            <td>
+              <select class="custom-select">
+                <option value="right">Right</option>
+                <option value="left">Left</option>
+              </select>
+            </td>
+            <td><input type="color" name="" value="orange"></td>
+          </tr>
+          <tr>
+            <td>F</td>
+            <td>H</td>
+            <td>1</td>
+            <td>
+              <select class="custom-select">
+                <option value="right">Right</option>
+                <option value="left">Left</option>
+              </select>
+            </td>
+            <td><input type="color" name="" value="#CF4803"></td>
+          </tr>
+          <tr>
+            <td>F</td>
+            <td>I</td>
+            <td>1</td>
+            <td>
+              <select class="custom-select">
+                <option value="right">Right</option>
+                <option value="left">Left</option>
+              </select>
+            </td>
+            <td><input type="color" name="" value="gold"></td>
+          </tr>
+          <tr>
+            <td>E</td>
+            <td>I</td>
+            <td>2</td>
+            <td>
+              <select class="custom-select">
+                <option value="right">Right</option>
+                <option value="left">Left</option>
+              </select>
+            </td>
+            <td><input type="color" name="" value="brown"></td>
+          </tr>
+          <tr>
+            <td>I</td>
+            <td>J</td>
+            <td>3</td>
+            <td>
+              <select class="custom-select">
+                <option value="right">Right</option>
+                <option value="left">Left</option>
+              </select>
+            </td>
+            <td><input type="color" name="" value="grey"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    {% csrf_token %}
+
+    <a class="btn btn-primary-outline" href="?step=data">
+      <i class="fal fa-arrow-left"></i> Back
+    </a>
+    <button class="btn btn-primary">
+      Save and continue <i class="fal fa-arrow-right ml-2 mr-0"></i>
+    </button>
+  </form>
+
+{% elif request.GET.step == "grid" %}
+
+  <form method="post" action="?step=alignment">
+    <h3>Grid</h3>
+
+    <div class="row explainer mb-4">
+      <div class="col-lg-6">
+        <div class="alert-warning alert">
+          <div class="mb-3">
+            <i class="fal fa-exclamation-triangle mr-2"></i> <strong>Manually creating a grid is discouraged</strong> if there are no obvious problems.
+            Please check the preview below. If the layout of the diagram looks good, there's no need to make any changes here and you can move on to the next section.
+          </div>
+
+          <a class="btn btn-primary" href="?step=alignment">
+            Skip this step <i class="fal fa-arrow-right ml-2 mr-0"></i>
+          </a>
+
+        </div>
+        <div class="border rounded p-3 bg-light">
+          <p><i class="fal fa-info-circle mr-2"></i> You might encounter a situation in which the layout or order of the nodes is illogical. In that case, manually creating the grid might help.</p>
+
+          <p>The example shows the Sankey diagram as well as the grid that produces it. Notice the changes in order in the first column (C, A, B rather than A, B, C) and the vertical positions of various nodes that differ from the default layout.</p>
+
+          <p class="mb-0">This manual creation might not always work properly. The more complicated the diagram the higher the chance of odd flowing links. Perhaps most importantly: <strong>reversing links will almost never work properly</strong> when using a manually created grid.</p>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="p-2 border rounded">
+          <table class="table text-center table-bordered border-0 mb-0" id="example-grid">
+            <tbody>
+              <tr>
+                <td>C</td>
+                <td>D</td>
+                <td></td>
+                <td>I</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>A</td>
+                <td></td>
+                <td>E</td>
+                <td></td>
+                <td>J</td>
+              </tr>
+              <tr>
+                <td>B</td>
+                <td></td>
+                <td>F</td>
+                <td>H</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="text-center my-4">
+          <i class="fal fa-arrow-down fa-2x"></i>
+        </div>
+
+        <div class="border rounded p-1">
+          <img class="img-fluid" src="https://i.imgur.com/AOPf8pX.png">
+        </div>
+      </div>
+    </div>
+
+    <div id="grid-generator">
+      <div class="row">
+        <div class="col-6 col-lg-3 col-xl-2">
+          <div class="form-group">
+            <label for="rows">Rows</label>
+            <input type="number" min="1" value="3" name="rows" class="form-control">
+          </div>
+        </div>
+        <div class="col-6 col-lg-3 col-xl-2">
+          <div class="form-group">
+            <label for="cols">Columns</label>
+            <input type="number" min="1" max="12" value="5" name="cols" class="form-control">
+          </div>
+        </div>
+        <div class="col-12 col-lg-3 col-xl-2">
+          <label>&nbsp;</label>
+          <div class="btn btn-primary create-grid"><i class="fal fa-table mr-2"></i> Create grid</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="grid" class="text-center mb-4">
+    </div>
+
+    {% csrf_token %}
+
+    <a class="btn btn-primary-outline" href="?step=links">
+      <i class="fal fa-arrow-left"></i> Back
+    </a>
+    <a class="btn btn-primary" href="?step=alignment">
+      Skip <i class="fal fa-arrow-right ml-2 mr-0"></i>
+    </a>
+    <button class="btn btn-primary">
+      Save and continue <i class="fal fa-arrow-right ml-2 mr-0"></i>
+    </button>
+  </form>
+
+{% elif request.GET.step == "alignment" %}
+
+  <form id="node-alignment" method="post" action="?step=groups">
+    <h3>Node alignment</h3>
+
+    <div class="row explainer mb-4">
+      <div class="col-lg-6">
+        <div class="border rounded p-3 bg-light">
+          <p><i class="fal fa-info-circle mr-2"></i> Nodes can be aligned so that they are positioned in the same column. This can be especially useful for ending nodes, but can be used in various situations.</p>
+
+          <p>The example shows two diagrams. The first has no alignment; node J ends at the far right (column 5) and H ends one column before that, at column 4. The second diagram shows what happens when H and J are set to align with one another. H is extended to the last column so that it lines up with node J.</p>
+
+          <p class="mb-0">Note that aligning nodes will not work if the nodes in question have a link connecting them, as this removes the horizontal space the link needs in order to flow properly.</p>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="border rounded p-1">
+          <img class="img-fluid" src="https://i.imgur.com/X92AB3q.png">
+          <hr>
+          <img class="img-fluid" src="https://i.imgur.com/FtnfJI3.png">
+        </div>
+      </div>
+    </div>
+
+    <div id="alignments"></div>
+
+    <div class="btn btn-primary add-alignment">
+      <i class="fa fa-plus"></i> Add alignment
+    </div>
+
+    {% csrf_token %}
+
+    <div class="mt-4">
+      <a class="btn btn-primary-outline" href="?step=grid">
+        <i class="fal fa-arrow-left"></i> Back
+      </a>
+      <a class="btn btn-primary" href="?step=groups">
+        Skip <i class="fal fa-arrow-right ml-2 mr-0"></i>
+      </a>
+      <button class="btn btn-primary">
+        Save and continue <i class="fal fa-arrow-right ml-2 mr-0"></i>
+      </button>
+    </div>
+  </form>
+
+{% elif request.GET.step == "groups" %}
+
+  <form id="groups-section" method="post" action="?step=options">
+    <h3>Groups</h3>
+
+    <div class="row explainer mb-4">
+      <div class="col-lg-6">
+        <div class="border rounded p-3 bg-light">
+          <p><i class="fal fa-info-circle mr-2"></i> Nodes can be grouped together in order to emphasise their relationship. The node titles will be put into a gray box and a label is added above this box.</p>
+          <p class="mb-0">Groups can be buggy. In the example on the right, the group actually only includes nodes A and C. However, node B is also included because it's located between A and C. These kinds of errors can potentially be fixed by defining the order of all the nodes, though this does not always work properly.</p>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="border rounded p-1">
+          <img class="img-fluid" src="https://i.imgur.com/JD6Y1AX.png">
+        </div>
+      </div>
+    </div>
+
+    <div id="groups"></div>
+
+    <div class="btn btn-primary add-group">
+      <i class="fa fa-plus"></i> Add group
+    </div>
+
+    {% csrf_token %}
+
+    <div class="mt-4">
+      <a class="btn btn-primary-outline" href="?step=alignment">
+        <i class="fal fa-arrow-left"></i> Back
+      </a>
+      <a class="btn btn-primary" href="?step=options">
+        Skip <i class="fal fa-arrow-right ml-2 mr-0"></i>
+      </a>
+      <button class="btn btn-primary">
+        Save and continue <i class="fal fa-arrow-right ml-2 mr-0"></i>
+      </button>
+    </div>
+  </form>
+
+{% elif request.GET.step == "options" %}
+
+  <form id="options" method="post" action="?step=review">
+    <h3>Other options</h3>
+
+    <a class="btn btn-primary-outline" href="?step=groups">
+      <i class="fal fa-arrow-left"></i> Back
+    </a>
+    <button class="btn btn-primary">
+      Save and continue <i class="fal fa-arrow-right ml-2 mr-0"></i>
+    </button>
+  </form>
+
+{% elif request.GET.step == "review" %}
+
+  <div class="sankey" id="sankey-wrapper">
+    <svg width="100%" height="400" id="sankey"></svg>
+  </div>
+
+  <form id="review" method="post">
+    {% csrf_token %}
+
+    <a class="btn btn-primary-outline" href="?step=options">
+      <i class="fal fa-arrow-left"></i> Back
+    </a>
+    <button class="btn btn-primary">
+      <i class="fas fa-save"></i> Looks good, save sankey
+    </button>
+  </form>
+
+{% endif %}
+
+{% endblock %}
+
+{% block footer %}
+<!-- d3 -->
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="{% static 'js/d3-sankey-diagram-lupton.js' %}"></script>
+<script>
+  var data = {
+    "nodes": [
+      {"direction": "r", "id": "A"},
+      {"direction": "r", "id": "B"},
+      {"direction": "r", "id": "C"},
+      {"direction": "r", "id": "D"},
+      {"direction": "r", "id": "E"},
+      {"direction": "r", "id": "F"},
+      {"direction": "r", "id": "G"},
+      {"direction": "r", "id": "H"},
+      {"direction": "r", "id": "I"},
+      {"direction": "r", "id": "J"},
+    ],
+    "links": [
+      {
+       "source": "A",
+       "target": "D",
+       "value": 1,
+       "color": "thistle"
+      },
+      {
+       "source": "B",
+       "target": "D",
+       "value": 2,
+       "color": "thistle"
+      },
+      {
+       "source": "C",
+       "target": "D",
+       "value": 1,
+       "color": "thistle"
+      },
+      {
+       "source": "D",
+       "target": "E",
+       "value": 2,
+       "color": "thistle"
+      },
+      {
+       "source": "D",
+       "target": "F",
+       "value": 2,
+       "color": "thistle"
+      },
+      {
+       "source": "F",
+       "target": "H",
+       "value": 1,
+       "color": "thistle"
+      },
+      {
+       "source": "F",
+       "target": "I",
+       "value": 1,
+       "color": "thistle"
+      },
+      {
+       "source": "E",
+       "target": "I",
+       "value": 2,
+       "color": "thistle"
+      },
+      {
+       "source": "I",
+       "target": "J",
+       "value": 3,
+       "color": "thistle"
+      },
+    ],
+    "order": [
+      [["C"],["A"],["B"]],
+      [["D"],[   ],[   ]],
+      [[   ],["E"],["F"]],
+      [["I"],[   ],["H"]],
+      [[   ],["J"],[   ]],
+    ],
+    "rankSets": [
+      {
+        "type": "same",
+        "nodes": [
+          "H",
+          "J"
+        ]
+      }
+    ]
+  };
+
+  var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+  var diagram = d3.sankeyDiagram()
+                  .linkTitle(d3.sankeyLinkTitle(function (d) { return d.id; },
+                                                function(d) { return d.id; },
+                                                d3.format(".3s")))
+                  .linkColor(function(d) { return d.color; });
+
+  var layout = d3.sankey().extent([[150, 50], [1000, 400]]).rankSets(data.rankSets);
+  // layout.ordering(data.order)
+
+  d3.select("#sankey")
+    .datum(layout(data))
+    .call(diagram.groups(data.groups));
+</script>
+<script>
+  function createGrid() {
+    // clear existing grid (not ideal, but ok for now)
+    $("#grid").html("");
+
+    // get number of rows and columns
+    let rows = $("input[name='rows']").val();
+    let cols = $("input[name='cols']").val();
+
+    for (let i = 0; i < rows; i++) {
+      $("#grid").append("<div class='row' data-row='" + i + "'></div>")
+    }
+
+    for (let i = 0; i < cols; i++) {
+      $("#grid .row").append("<div class='col border-bottom border-right' data-col='" + i + "'><div class='py-3'><select class='custom-select'><option value='0' selected>-</option><option value='A'>A</option><option value='B'>B</option><option value='C'>C</option><option value='D'>D</option><option value='E'>E</option><option value='F'>F</option><option value='G'>G</option><option value='H'>H</option><option value='I'>I</option><option value='J'>J</option></select></div></div>")
+    }
+  };
+
+  $(".create-grid").click(function(){
+    createGrid()
+  })
+
+  // create a new group
+  $(".add-group").click(function() {
+    $("#groups").append("<div class='row mb-2'><div class='col-4'><label>Label</label><input type='text' name='label' class='form-control'></div><div class='col-7'><label>Nodes</label><select class='custom-select select2' multiple><option value='A'>A</option><option value='B'>B</option><option value='C'>C</option><option value='D'>D</option><option value='E'>E</option><option value='F'>F</option><option value='G'>G</option><option value='H'>H</option><option value='I'>I</option><option value='J'>J</option></select></div><div class='col-1'><label>&nbsp;</label><div class='btn btn-danger delete-row'><i class='fa fa-trash-alt m-0'></i></div></div></div>")
+
+    $("#groups select").last().select2({
+      theme: "bootstrap4",
+    });
+  })
+
+  // create a new alignment
+  $(".add-alignment").click(function() {
+    $("#alignments").append("<div class='row mb-2'><div class='col-11'><label>Nodes</label><select class='custom-select select2' multiple><option value='A'>A</option><option value='B'>B</option><option value='C'>C</option><option value='D'>D</option><option value='E'>E</option><option value='F'>F</option><option value='G'>G</option><option value='H'>H</option><option value='I'>I</option><option value='J'>J</option></select></div><div class='col-1'><label>&nbsp;</label><div class='btn btn-danger delete-row'><i class='fa fa-trash-alt m-0'></i></div></div></div>")
+
+    $("#alignments select").last().select2({
+      theme: "bootstrap4",
+    });
+  })
+
+  // delete group or alignment
+  $("body").on("click", ".delete-row", function() {
+    $(this).closest(".row").remove()
+  });
+
+  // save sankey to png
+</script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+<script>
+  $(".select2").select2({
+    theme: "bootstrap4",
+  });
+</script>
+{% endblock %}

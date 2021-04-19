@@ -1518,7 +1518,7 @@ def hub_processing(request, space=None):
     project = get_project(request)
     title = "Data processing"
     stocks_tags = get_tags("stocks", project.slug)
-    
+
     gis = LibraryItem.objects.filter(type__id=40, spaces__activated__part_of_project_id=request.project).exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
     spreadsheet = LibraryItem.objects.filter(type__id=41, spaces__activated__part_of_project_id=request.project).exclude(meta_data__processed__isnull=False).exclude(meta_data__ready_for_processing__isnull=False).distinct()
     datasets_flows = LibraryItem.objects.filter(type__id=10, spaces__activated__part_of_project_id=request.project, tags__parent_tag_id=get_tags("flows", project.slug)).exclude(meta_data__processed__isnull=False).exclude(tags__id__in=stocks_tags).exclude(meta_data__ready_for_processing__isnull=False).distinct()
@@ -3154,15 +3154,8 @@ def libraryframe(request, id):
     else:
         return render(request, "library/item.iframe.html", context)
 
-def sankeybuilder(request, id):
-    info = get_object_or_404(LibraryItem, pk=id)
-    project = get_object_or_404(Project, pk=request.project)
+def sankeybuilder(request):
     context = {
-        "info": info,
-        "iframe": True,
-        "spaces": info.imported_spaces.all,
-        "first_view": "map",
-        "show_map": True,
-        "library_item": project.get_slug() + ":library_item",
     }
-    return render(request, "data/dataset.html", context)
+
+    return render(request, "staf/sankey-builder.html", context)
