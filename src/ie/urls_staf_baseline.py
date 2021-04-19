@@ -188,4 +188,5 @@ baseline_staf_urlpatterns = [
     path("data/", staf.data, name="data"),
     path("data/json/", staf.data, {"json": True}, name="data_json"),
 
+    path("sankeybuilder/", staf.sankeybuilder, name="sankeybuilder"),
 ]

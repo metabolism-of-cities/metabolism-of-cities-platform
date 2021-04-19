@@ -1,6 +1,5 @@
 {% extends "_base.html" %}
 {% load static %}
-{% block leaflet.style %}light-v10{% endblock %}
 
 {% block title %}Material Stocks{% endblock %}
 {% block page_name %}material-stocks map{% endblock %}
@@ -73,6 +72,8 @@
 {% block content %}
   {% include "_submenu-stocks.html" %}
 
+  <!-- http://0.0.0.0:8000/stocks/data/json/?date_start=&date_end=&material=866044&source=33971&within=56102 -->
+
   <section>
     {% if box %}
       <nav aria-label="breadcrumb">
@@ -89,9 +90,9 @@
 
     <div class="form-row mb-4">
       <div class="col-md mb-3 mb-md-0">
-        <label class="font-weight-bold m-0">Dataset</label>
+        <label class="font-weight-bold m-0">Material</label>
         <select class="custom-select select2">
-          <option value="0" selected>Wood stock</option>
+          <option value="866044">Concrete</option>
         </select>
       </div>
       <div class="col-md mb-3 mb-md-0">

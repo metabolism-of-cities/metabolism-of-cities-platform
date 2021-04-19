@@ -2892,9 +2892,8 @@ def data(request, json=False):
 
     if json:
         j = []
-        j.append(["Start", "End", "Origin Place", "Destination Place", "Material", "Quantity", "Unit"])
-        for each in data:
-            j.append([each.timeframe.start, each.timeframe.end, str(each.origin_space), str(each.destination_space), each.material.name, each.quantity, each.unit.name])
+        for each in data[:20]:
+            j.append({"start": each.timeframe.start, "end": each.timeframe.end, "origin": str(each.origin_space), "destination": str(each.destination_space), "material": each.material.name, "quantity": each.quantity, "unit": each.unit.name})
         return JsonResponse({"data": j})
     else:
         if data.count() > 200:
@@ -3092,3 +3091,15 @@ def libraryframe(request, id):
     else:
         return render(request, "library/item.iframe.html", context)
 
+def sankeybuilder(request, id):
+    info = get_object_or_404(LibraryItem, pk=id)
+    project = get_object_or_404(Project, pk=request.project)
+    context = {
+        "info": info,
+        "iframe": True,
+        "spaces": info.imported_spaces.all,
+        "first_view": "map",
+        "show_map": True,
+        "library_item": project.get_slug() + ":library_item",
+    }
+    return render(request, "data/dataset.html", context)

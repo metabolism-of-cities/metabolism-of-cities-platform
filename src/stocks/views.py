@@ -95,7 +95,7 @@ def map(request, space, id, box=None):
     links = {
         # Melbourne
         33931: 33962,
-        33962: 33940,
+        33962: 924024,
 
         # Brussels
         33886: 33895,
@@ -103,7 +103,7 @@ def map(request, space, id, box=None):
         33904: 33913,
     }
 
-    melbourne = [33931,33962,33940]
+    melbourne = [33931,33962,924024]
     brussels = [33886,33895,33904,33913]
 
     if space.name == "Melbourne":
@@ -155,6 +155,10 @@ def map(request, space, id, box=None):
         "features": features,
     }
 
+    properties = {
+        "map_layer_style": "light-v8"
+    }
+
     context = {
         "info": info,
         "spaces": spaces,
@@ -167,6 +171,7 @@ def map(request, space, id, box=None):
         "load_datatables": True,
         "load_leaflet": True,
         "load_select2": True,
+        "properties": properties,
         "menu": "maps",
         "doc_list": doc_list,
     }
