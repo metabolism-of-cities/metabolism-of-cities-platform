@@ -4,6 +4,14 @@
 {% load bootstrap4 %}
 {% block page_name %}staf verify{% endblock %}
 
+{% block css %}
+<style type="text/css">
+    #wrongoptions {
+      display: none;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 
 {% include "hub/_nav.html" %}
@@ -135,5 +143,93 @@
       $("#uploadnewfile").addClass("d-none");
     }
   });
+
+  $("#somethingwrong").click(function(e){
+    e.preventDefault();
+    $(this).hide()
+    $("#wrongoptions").show();
+  });
+
+  // two buttons, one to cancel, the other to confirm the action
+  // note the dangerMode setting; set this to true to make the confirmation button red rather than the default colour
+  // https://sweetalert.js.org/docs/#buttons
+  $(".sweetalert.delete-record").click(function(e){
+    e.preventDefault();
+    var form = this;
+    swal({
+      title: "Delete file",
+      text: "Are you sure you want to delete '{{ document }}'?",
+      icon: "warning",
+      closeOnClickOutside: true,
+      closeOnEsc: true,
+      dangerMode: true,
+      buttons: {
+        cancel: true,
+        confirm: {
+          text: "Delete",
+          value: true,
+          visible: true,
+          closeModal: true
+        }
+      }
+    }).then(function(isConfirm) {
+    if (isConfirm) {
+      swal({
+        title: "Record deleted!",
+        text: "We have deleted '{{ info }}'",
+        icon: "success"
+      }).then(function() {
+        //form.submit(); // <--- submit form programmatically
+        window.location = "{{ request.get_full_path }}?delete_document=true";
+      });
+    } else {
+      swal("Cancelled", "We have kept the document, no changes made", "error");
+    }
+  })
+    ;
+  });
+
+  $(".sweetalert.change-record").click(function(e){
+    e.preventDefault();
+    swal({
+      title: "Select type of record",
+      text: "What kind of document is this?",
+      icon: "info",
+      closeOnClickOutside: true,
+      closeOnEsc: true,
+      buttons: {
+        shapefile: {
+          text: "Shapefile",
+          value: "40",
+        },
+        gps: {
+          text: "Geospatial spreadsheet",
+          value: "41",
+        },
+        map: {
+          text: "Map (image)",
+          value: "20",
+        },
+        journalarticle: {
+          text: "Journal article",
+          value: "16",
+        },
+        {% if info.type.id != 10 %}
+        dataset: {
+          text: "Dataset",
+          value: "10",
+        },
+        {% endif %}
+        report: {
+          text: "Report",
+          value: "27",
+        }
+      },
+    })
+    .then((value) => {
+      window.location = "{{ request.get_full_path }}?new_type="+value;
+    });
+  });
+
 </script>
 {% endblock %}
