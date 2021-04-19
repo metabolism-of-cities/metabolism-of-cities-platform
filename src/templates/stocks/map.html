@@ -72,8 +72,6 @@
 {% block content %}
   {% include "_submenu-stocks.html" %}
 
-  <!-- http://0.0.0.0:8000/stocks/data/json/?date_start=&date_end=&material=866044&source=33971&within=56102 -->
-
   <section>
     {% if box %}
       <nav aria-label="breadcrumb">
@@ -203,7 +201,7 @@
   // BOUNDING BOX END
 
   // DATA LAYER START
-  // set the color based on a value
+  // function to set the color based on a value
   function getColor(n) {
     return n > 150 ? "#144d58" :
            n > 100 ? "#4b8793" :
@@ -214,7 +212,7 @@
   // apply style to each feature
   function dataStyle(feature) {
     return {
-      fillColor: getColor(feature.properties.quantity),
+      fillColor: getColor(mapData.data[feature.properties.id]),
       weight: 1,
       opacity: 1,
       color: "white",
@@ -270,12 +268,22 @@
   }
 
   // variable for the data, add it to the map
-  let mapData = {{ data|safe|escape }};
-  let dataLayer = L.geoJson(mapData, {
-    style: dataStyle,
-    onEachFeature: onEachFeature,
-  })
-  map.addLayer(dataLayer);
+  let mapShapes = {{ data|safe|escape }};
+
+  // get data from server
+  let mapData;
+  let dataLayer;
+
+  $.get("/stocks/data/json/?source=33971&within={{ request.GET.source_box }}", function(data) {
+    mapData = data;
+
+    dataLayer = L.geoJson(mapShapes, {
+      style: dataStyle,
+      onEachFeature: onEachFeature,
+    })
+    map.addLayer(dataLayer);
+  });
+
   // DATA LAYER END
 
   // set bounds of map to bounding box if it exists, otherwise to data layer

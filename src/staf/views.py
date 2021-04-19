@@ -2954,10 +2954,23 @@ def data(request, json=False):
             messages.error(request, "We could not find this material")
 
     if json:
-        j = []
+        j = {}
         for each in data[:20]:
-            j.append({"start": each.timeframe.start, "end": each.timeframe.end, "origin": str(each.origin_space), "destination": str(each.destination_space), "material": each.material.name, "quantity": each.quantity, "unit": each.unit.name})
-        return JsonResponse({"data": j})
+            j.update({
+                # "start": each.timeframe.start,
+                # "end": each.timeframe.end,
+                # "origin": str(each.origin_space),
+                # "destination": str(each.destination_space),
+                # "material": each.material.name,
+                # "quantity": each.quantity,
+                # "unit": each.unit.name,
+                str(each.origin_space): each.quantity,
+            })
+        return JsonResponse({
+            "material": data[0].material.name,
+            "unit": data[0].unit.name,
+            "data": j
+        })
     else:
         if data.count() > 200:
             total = data.count()
