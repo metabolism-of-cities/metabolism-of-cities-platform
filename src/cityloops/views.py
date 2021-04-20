@@ -406,3 +406,33 @@ def city_indicator_form(request, slug, sector, id):
         "mandatory_list": mandatory_list,
     }
     return render(request, "cityloops/indicator.city.form.html", context)
+
+# this is a copy from staf/views.py
+# rather than adding an exception for cityloops there, this is a whole new entry to keep things organised
+def space_maps(request, space):
+    space = get_space(request, space)
+    all = LibraryItem.objects.filter(spaces=space, type_id__in=[40,41,20]).distinct()
+    master_map = False
+    processed = all.filter(meta_data__processed=True).count()
+    # We only show the master map if we have layers available
+    if processed and space.geometry:
+        master_map = True
+
+    infrastructure = LibraryItem.objects.filter(spaces=space, tags__parent_tag=Tag.objects.get(pk=848), type_id__in=[40,41,20]).distinct()
+    try:
+        # Let's see if one of the infrastructure items has an attached photo so we can show that
+        photo_infrastructure = ReferenceSpace.objects.filter(source__in=infrastructure, image__isnull=False)[0]
+        photo_infrastructure = photo_infrastructure.image.url
+    except:
+        photo_infrastructure = "/media/images/geocode.type.3.jpg"
+
+    context = {
+        "space": space,
+        "boundaries": LibraryItem.objects.filter(spaces=space, tags=Tag.objects.get(pk=852), type_id__in=[40,41,20]).distinct(),
+        "infrastructure": infrastructure,
+        "all": all,
+        "photo_infrastructure": photo_infrastructure,
+        "master_map": master_map,
+        "submenu": "library",
+    }
+    return render(request, "staf/maps.html", context)

@@ -2,8 +2,23 @@
 {% load static %}
 
 {% block css %}
-<style type="text/css">
-  .fade-half{opacity:0.2}
+<style>
+  .fade-half {
+    opacity: .2;
+  }
+
+  .map-list .fa-ul {
+    margin-left: 30px;
+  }
+
+  .map-list .list-group {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+  }
+
+  .view-all {
+    cursor: pointer;
+  }
 </style>
 {% endblock %}
 
@@ -13,103 +28,100 @@
   <p>
     We have a total of <strong>{{ all.count }}</strong> maps in our library for {{ space }}. You can browse these maps below.
   </p>
-  
-  <p class="alert alert-warning">
-    <i class="fa fa-map"></i>
-    Interactive maps are available for documents with this icon.
-  </p>
 
-  <div class="row">
+  <div class="border rounded bg-light p-3 mb-4">
+    <i class="fal fa-map mr-2"></i> Interactive maps are available for documents with this icon.
+  </div>
 
+  <section class="row map-list">
     <div class="col-md-4">
-      <div class="card">
-        <div class="card-header">
-          Infrastructure
-        </div>
-        <a href="infrastructure/">
-          <img src="{{ photo_infrastructure }}" class="card-img-top {% if not infrastructure %}fade-half{% endif %}" alt="">
-        </a>
-        <ul class="list-group list-group-flush">
-          {% for each in infrastructure %}
-            <li class="list-group-item {% if forloop.counter > 5 %}d-none{% endif %} view-infrastructure">
-              <a href="{{ each.id }}/{% if each.meta_data.processed %}view/{% endif %}">
-                {{ each }}
-                {% if each.meta_data.processed %}
-                  <i class="fa fa-map float-right"></i>
-                {% endif %}
-              </a>
-            </li>
-          {% endfor %}
-          {% if infrastructure.count > 5 %}
-            <li class="list-group-item"><a href="#" class="view-all" data-show="infrastructure"><i class="fa fa-arrow-down"></i> <strong>View all</strong> ({{ infrastructure.count }})</a></li>
-          {% endif %}
-          {% if infrastructure %}
-            <li class="list-group-item text-right bg-dark"><a href="infrastructure/" class="text-light"><i class="fa fa-list"></i> <strong>View list</strong></a></li>
-          {% else %}
-            <li class="list-group-item text-right bg-light"><i class="fa fa-minus-circle"></i> No infrastructure maps available yet.</li>
-          {% endif %}
-        </ul>
+      <div class="card shadow-none">
+        <div class="card-header">Infrastructure</div>
+        <img src="{{ photo_infrastructure }}" class="card-img-top rounded-0 {% if not infrastructure %}fade-half{% endif %}" alt="">
       </div>
+      <div class="list-group bg-white">
+        {% for each in infrastructure %}
+          <a href="{{ each.id }}/{% if each.meta_data.processed %}view/{% endif %}" class="list-group-item list-group-item-action {% if forloop.counter > 5 %}d-none{% endif %} view-infrastructure">
+            <ul class="fa-ul mb-0">
+              <li><span class="fa-li"><i class="fal fa-fw {% if each.meta_data.processed %}fa-map{% endif %} mr-2"></i></span>{{ each }}</li>
+            </ul>
+          </a>
+        {% endfor %}
+        {% if infrastructure.count > 5 %}
+          <div class="list-group-item list-group-item-action view-all" data-show="infrastructure">
+            <i class="fal fa-arrow-down fa-fw mr-2"></i> View all ({{ infrastructure.count }})
+          </div>
+        {% endif %}
+      </div>
+
+      {% if infrastructure %}
+        <a href="infrastructure/" class="btn btn-primary mt-4">
+          <i class="fa fa-list mr-2"></i> View as separate list
+        </a>
+      {% else %}
+        <div class="border rounded-bottom border-top-0 bg-light p-3">
+          <i class="fal fa-empty-set mr-2"></i> No infrastructure maps available yet
+        </div>
+      {% endif %}
     </div>
 
     <div class="col-md-4">
-      <div class="card">
-        <div class="card-header">
-          Administrative boundaries
-        </div>
-        <a href="boundaries/">
-          <img src="/media/images/geocode.type.2.jpg" class="card-img-top {% if not boundaries %}fade-half{% endif %}" alt="">
-        </a>
-        <ul class="list-group list-group-flush">
-          {% for each in boundaries %}
-            <li class="list-group-item {% if forloop.counter > 5 %}d-none{% endif %} view-boundaries">
-              <a href="{{ each.id }}/{% if each.meta_data.processed %}view/{% endif %}">
-                {{ each }}
-                {% if each.meta_data.processed %}
-                  <i class="fa fa-map float-right"></i>
-                {% endif %}
-              </a>
-            </li>
-          {% endfor %}
-          {% if boundaries.count > 5 %}
-            <li class="list-group-item"><a href="#" class="view-all" data-show="boundaries"><i class="fa fa-arrow-down"></i> <strong>View all</strong> ({{ boundaries.count }})</a></li>
-          {% endif %}
-          {% if boundaries %}
-            <li class="list-group-item text-right bg-dark"><a href="boundaries/" class="text-light"><i class="fa fa-list"></i> <strong>View list</strong></a></li>
-          {% else %}
-            <li class="list-group-item text-right bg-light"><i class="fa fa-minus-circle"></i> No boundaries available yet.</li>
-          {% endif %}
-        </ul>
+      <div class="card shadow-none">
+        <div class="card-header">Administrative boundaries</div>
+        <img src="/media/images/geocode.type.2.jpg" class="card-img-top rounded-0 {% if not boundaries %}fade-half{% endif %}" alt="">
       </div>
+      <div class="list-group bg-white">
+        {% for each in boundaries %}
+          <a href="{{ each.id }}/{% if each.meta_data.processed %}view/{% endif %}" class="list-group-item list-group-item-action {% if forloop.counter > 5 %}d-none{% endif %} view-boundaries">
+            <ul class="fa-ul mb-0">
+              <li><span class="fa-li"><i class="fal fa-fw {% if each.meta_data.processed %}fa-map{% endif %} mr-2"></i></span>{{ each }}</li>
+            </ul>
+          </a>
+        {% endfor %}
+        {% if boundaries.count > 5 %}
+          <div class="list-group-item list-group-item-action view-all" data-show="boundaries">
+            <i class="fal fa-arrow-down fa-fw mr-2"></i> View all ({{ boundaries.count }})
+          </div>
+        {% endif %}
+      </div>
+
+      {% if infrastructure %}
+        <a href="boundaries/" class="btn btn-primary mt-4">
+          <i class="fa fa-list mr-2"></i> View as separate list
+        </a>
+      {% else %}
+        <div class="border rounded-bottom border-top-0 bg-light p-3">
+          <i class="fal fa-empty-set mr-2"></i> No boundaries available yet
+        </div>
+      {% endif %}
     </div>
 
     <div class="col-md-4">
-      <div class="card">
-        <div class="card-header">
-          Master map
-        </div>
-        <a href="overview/">
-          <img src="{% get_media_prefix %}images/fullmap2.jpg" class="card-img-top {% if not master_map %}fade-half{% endif %}" alt="">
-        </a>
+      <div class="card shadow-none">
+        <div class="card-header">Master map</div>
+        <img src="{% get_media_prefix %}images/fullmap2.jpg" class="card-img-top rounded-0 {% if not master_map %}fade-half{% endif %}" alt="">
         {% if not master_map %}
-          <li class="list-group-item text-right bg-light"><i class="fa fa-minus-circle"></i> Not available yet.</li>
+          <div class="border rounded-bottom border-top-0 bg-light p-3">
+            <i class="fal fa-empty-set mr-2"></i> Not available yet
+          </div>
         {% else %}
-          <div class="card-body">
-            <p class="card-text">
-              All boundaries and infrastructure on a single map.
-            </p>
-            <a href="overview/" class="btn btn-primary"><i class="fa fa-map"></i> View map</a>
+          <div class="list-group">
+            <a href="overview/" class="list-group-item list-group-item-action border-top-0">
+              <i class="fal fa-map fa-fw mr-2"></i> All boundaries and infrastructure on a single map
+            </a>
           </div>
         {% endif %}
       </div>
     </div>
-  </div>
+  </section>
 
-  <section class="mt-3">
-    <div class="alert alert-success text-center">
-      <i class="fa fa-fist-raised"></i>
-      <strong>Please help by collecting and processing maps!</strong><br>
-      <a href="../hub/">Click here to learn more</a>
+  <section>
+    <div class="border border-primary bg-light p-4 rounded text-center d-inline-block">
+      <i class="fal fa-fist-raised fa-3x mb-4"></i><br>
+      <h5 class="mb-4">Please help by collecting and processing maps!</h5>
+      <a class="btn btn-primary" href="../hub/">
+        Learn more <i class="fal fa-arrow-right ml-2 mr-0"></i>
+      </a>
     </div>
   </section>
 
@@ -117,11 +129,11 @@
 
 {% block footer %}
   <script>
-  $("a.view-all").click(function(e){
-    e.preventDefault();
-    $(this).hide();
-    var show = $(this).data("show");
-    $(".view-"+show).removeClass("d-none");
-  });
+    $(".view-all").click(function() {
+      let show = $(this).data("show");
+      $(".view-" + show).removeClass("d-none");
+
+      $(this).remove();
+    });
   </script>
 {% endblock %}
