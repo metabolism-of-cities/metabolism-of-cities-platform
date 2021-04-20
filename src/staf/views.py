@@ -2942,7 +2942,8 @@ def data(request, json=False):
 
     if within:
         within = ReferenceSpace.objects.get(pk=within)
-        data = data.filter(origin_space__geometry__within=within.geometry)
+        spaces_within = ReferenceSpace.objects.filter(geometry__within=within.geometry)
+        data = data.filter(origin_space__in=spaces_within)
 
     # https://docs.djangoproject.com/en/3.2/ref/contrib/gis/db-api/#compatibility-tables
 
@@ -2956,16 +2957,7 @@ def data(request, json=False):
     if json:
         j = {}
         for each in data[:20]:
-            j.update({
-                # "start": each.timeframe.start,
-                # "end": each.timeframe.end,
-                # "origin": str(each.origin_space),
-                # "destination": str(each.destination_space),
-                # "material": each.material.name,
-                # "quantity": each.quantity,
-                # "unit": each.unit.name,
-                str(each.origin_space): each.quantity,
-            })
+            j.update({str(each.origin_space): each.quantity})
         return JsonResponse({
             "material": data[0].material.name,
             "unit": data[0].unit.name,
