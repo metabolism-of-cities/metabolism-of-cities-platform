@@ -274,15 +274,20 @@
   let mapData;
   let dataLayer;
 
-  $.get("/stocks/data/json/?source=33971&within={{ request.GET.source_box }}", function(data) {
-    mapData = data;
+  function gatherData(source, material, within) {
+    $.get("/stocks/data/json/?source=" + source + "&within=" + within, function(data) {
+      mapData = data;
 
-    dataLayer = L.geoJson(mapShapes, {
-      style: dataStyle,
-      onEachFeature: onEachFeature,
-    })
-    map.addLayer(dataLayer);
-  });
+      dataLayer = L.geoJson(mapShapes, {
+        style: dataStyle,
+        onEachFeature: onEachFeature,
+      })
+      map.addLayer(dataLayer);
+    });
+  }
+
+  gatherData("{{ request.GET.source }}", "{{ request.GET.material }}", "{{ request.GET.within }}")
+
 
   // DATA LAYER END
 

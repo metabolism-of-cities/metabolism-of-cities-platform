@@ -2959,7 +2959,7 @@ def data(request, json=False):
         for each in data[:20]:
             j.update({str(each.origin_space): each.quantity})
         return JsonResponse({
-            "material": data[0].material.name,
+            "material": material,
             "unit": data[0].unit.name,
             "data": j
         })
@@ -2972,6 +2972,7 @@ def data(request, json=False):
         context = {
             "data": data,
             "total": total,
+            "load_datatables": True,
         }
         return render(request, "staf/data.html", context)
 
