@@ -7,24 +7,25 @@
   }
 
   #ndee-hero {
-    background-image: url("https://i.imgur.com/bF4qdQq.jpg");
-    background-size: cover;
-    background-position: center 60%;
-  }
-
-  #ndee-hero .row {
-    height: 60vh;
-    min-height: 400px;
-  }
-
-  .col-text {
     background-color: #008DACE6;
+    position: relative;
+    padding: 4rem 2rem;
+  }
+
+  #ndee-hero img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    object-fit: cover;
+    top: 0;
+    left: 0;
+    opacity: .15;
   }
 
   .hero-header {
-    color: #A8FBFF;
     font-weight: bold;
     letter-spacing: -1px;
+    font-size: 3.25rem;
   }
 
 </style>
@@ -35,16 +36,20 @@
 <!-- closing container so we can have a full width hero -->
 </div>
 
-<section id="ndee-hero" class="pb-0">
+<section id="ndee-hero">
+  <img src="https://i.imgur.com/azjasxZ.jpg">
   <div class="container">
-    <div class="row justify-content-md-end">
-      <div class="col-md-6 col-lg-4 col-text">
-        <div class="py-5 px-3">
-          <h2 class="hero-header">Collaboratively researching the impacts of the digital economy</h2>
-          <p class="text-white">
-            The rapid adoption and acceleration of the use of digital technologies has important environmental and energy implications. This initiative seeks leverages academic research across disciplines to provide guidance on  high-priority issues at the intersection of energy environment and digital platforms.
-          </p>
-        </div>
+    <div class="row">
+      <div class="col-lg-6 pr-lg-5">
+        <h1 class="hero-header text-white">Collaboratively researching the impacts of the digital economy</h1>
+      </div>
+      <div class="col-lg-6 pl-lg-5">
+        <p class="text-white">
+          The rapid adoption and acceleration of the use of digital technologies is transforming the way we access and process information, impacting the global economy and our social dynamics. These dramatic technological and social changes also have important environmental and energy implications.
+        </p>
+        <p class="text-white">
+          This initiative seeks to leverage academic research across various disciplines in order to provide guidance on a number of high-priority issue areas at the intersection of energy environment and digital platforms.
+        </p>
       </div>
     </div>
   </div>

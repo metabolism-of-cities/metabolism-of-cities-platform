@@ -37,11 +37,11 @@
       <ul class="list-group list-group-flush">
         {% if info.authors %}
         <li class="list-group-item">
-          <i class="far fa-fw fa-user mr-1" aria-hidden="true"></i> 
+          <i class="fal fa-fw fa-user mr-1" aria-hidden="true"></i>
           {% if info.authors.count == 1 %}
             Author: {{ info.authors.0 }}
           {% else %}
-            Authors:<br> 
+            Authors:<br>
             {% for each in info.authors %}
               {{ each }}<br>
             {% endfor %}
@@ -49,11 +49,11 @@
         </li>
         {% endif %}
         <li class="list-group-item">
-          <i class="far fa-fw fa-calendar mr-1" aria-hidden="true"></i> {{ info.date }}
+          <i class="fal fa-fw fa-calendar mr-1" aria-hidden="true"></i> {{ info.date }}
         </li>
         {% if False %}
         <li class="list-group-item">
-          <i class="far fa-fw fa-share-alt mb-1 mr-1" aria-hidden="true"></i> Share
+          <i class="fal fa-fw fa-share-alt mb-1 mr-1" aria-hidden="true"></i> Share
           <br>
           <div class="btn-group share mt-1" role="group">
             <a class="btn btn-sm btn-primary-outline"><i class="fab fa-fw fa-twitter"></i></a>

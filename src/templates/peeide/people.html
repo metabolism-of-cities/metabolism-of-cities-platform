@@ -1,0 +1,87 @@
+{% extends "_base.html" %}
+
+{% block head %}
+<style>
+  .container.main-content {
+    display: none;
+  }
+
+  img.ndee-banner {
+    object-position: center 70%;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- close container -->
+</div>
+
+<img class="ndee-banner" src="https://i.imgur.com/bF4qdQq.jpg">
+
+<!-- open container -->
+<div class="container">
+  <h1>{{ webpage }}</h1>
+
+  {{ webpage.get_description }}
+
+  <h2>Our team</h2>
+
+  <div class="row mb-4">
+    {% for each in team %}
+      <div class="col-lg-3 col-md-6 col-sm-8 mb-3">
+        <div class="bg-ndee-light-blue rounded">
+          <a href="{% url URLS.PROFILE each.id %}">
+            <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
+          </a>
+          <div class="p-3">
+            <h5 class="mb-0 text-ndee-primary">{{ each }}</h5>
+            <div class="text-ndee-purple mb-2">Role</div>
+            <!-- <p>{{ each.get_description|truncatewords_html:40 }}</p> -->
+            <div>
+              <a href="#" class="mr-2">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a href="#" class="mr-2">
+                <i class="fab fa-linkedin"></i>
+              </a>
+            </div>
+            <!-- <a href="{% url URLS.PROFILE each.id %}" class="btn btn-ndee btn-ndee-sm btn-ndee-primary">View profile</a> -->
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <h2>Our network</h2>
+
+  <div class="row mb-4">
+    {% for each in network %}
+      <div class="col-lg-3 col-md-6 col-sm-8 mb-3">
+        <div class="bg-ndee-light-blue rounded">
+          <a href="{% url URLS.PROFILE each.id %}">
+            <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
+          </a>
+          <div class="p-3">
+            <h5 class="mb-0 text-ndee-primary">{{ each }}</h5>
+            <div class="text-ndee-purple mb-2">Role</div>
+            <!-- <p>{{ each.get_description|truncatewords_html:40 }}</p> -->
+            <div>
+              <a href="#" class="mr-2">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a href="#" class="mr-2">
+                <i class="fab fa-linkedin"></i>
+              </a>
+            </div>
+            <!-- <a href="{% url URLS.PROFILE each.id %}" class="btn btn-ndee btn-ndee-sm btn-ndee-primary">View profile</a> -->
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+
+<!-- </div> no need to close this container, it's already done above -->
+
+{% endblock %}

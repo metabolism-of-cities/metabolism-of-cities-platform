@@ -8,6 +8,8 @@ from ie.urls_library_baseline import baseline_library_urlpatterns
 app_name = "peeide"
 urlpatterns = baseline_urlpatterns + baseline_library_urlpatterns + [
     path("", views.index, name="index"),
+    path("people/", views.people, name="people"),
+    path("research/", views.research, name="research"),
     path("<slug:slug>/", core.article, name="page"),
 
     # not sure if we need this one:

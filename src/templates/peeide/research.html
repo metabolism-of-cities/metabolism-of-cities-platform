@@ -1,0 +1,74 @@
+{% extends "_base.html" %}
+
+{% block head %}
+<style>
+  .container.main-content {
+    display: none;
+  }
+
+  img.ndee-banner {
+    object-position: center 70%;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- close container -->
+</div>
+
+<img class="ndee-banner" src="https://i.imgur.com/bF4qdQq.jpg">
+
+<!-- open container -->
+<div class="container">
+  <h1>{{ webpage }}</h1>
+
+  {{ webpage.get_description }}
+
+  <div class="row mb-4">
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="p-3 bg-ndee-light-blue rounded">
+        <h5 class="text-ndee-primary mb-2">Lettuce</h5>
+        {% lorem 1 p %}
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="p-3 bg-ndee-light-blue rounded">
+        <h5 class="text-ndee-primary mb-2">Croissants</h5>
+        {% lorem 1 p %}
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="p-3 bg-ndee-light-blue rounded">
+        <h5 class="text-ndee-primary mb-2">Bubbles</h5>
+        {% lorem 1 p %}
+      </div>
+    </div>
+  </div>
+
+  <h2>Projects</h2>
+
+  <div class="row mb-4">
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="p-3 bg-ndee-light-blue rounded">
+        <h5 class="text-ndee-primary mb-2">Rabbits in space</h5>
+        {% lorem 1 p %}
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="p-3 bg-ndee-light-blue rounded">
+        <h5 class="text-ndee-primary mb-2">Poached eggs</h5>
+        {% lorem 1 p %}
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="p-3 bg-ndee-light-blue rounded">
+        <h5 class="text-ndee-primary mb-2">Grapes</h5>
+        {% lorem 1 p %}
+      </div>
+    </div>
+  </div>
+
+<!-- </div> no need to close this container, it's already done above -->
+
+{% endblock %}
