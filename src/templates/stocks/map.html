@@ -286,6 +286,8 @@
       })
       map.addLayer(dataLayer);
 
+      table.destroy();
+
       // populate the data tables below and next to the map
       $.each(mapData.data, function(key,value) {
         $("#data-table tr[data-space='" + key + "'] .quantity").text(value);
