@@ -90,7 +90,7 @@
       <div class="col-md mb-3 mb-md-0">
         <label class="font-weight-bold m-0">Material</label>
         <select class="custom-select select2">
-          <option value="866044">Concrete</option>
+          <option value="EMP8.5">Concrete</option>
         </select>
       </div>
       <div class="col-md mb-3 mb-md-0">
@@ -140,8 +140,8 @@
           <table class="table compact-table table-sm mb-0">
             {% for each in data.features %}
             <tr data-space="{{ each.properties.id }}">
-              <th>{{ each.properties.name }}</th>
-              <td>{{ each.properties.quantity }}</td>
+              <th class="name">{{ each.properties.name }}</th>
+              <td class="quantity"></td>
             </tr>
             {% endfor %}
           </table>
@@ -151,24 +151,20 @@
   </section>
 
   <section>
-    <table class="table datatable">
+    <table id="data-table" class="table datatable-card bg-white">
       <thead>
         <tr>
-          <th>Name</th>
           <th>ID</th>
+          <th>Name</th>
           <th>Quantity</th>
         </tr>
       </thead>
       <tbody>
         {% for each in data.features %}
-        <tr>
-          {% if link %}
-            <td><a href="{% url 'stocks:map' space.slug link each.properties.id %}">{{ each.properties.name }}</a></td>
-          {% else %}
-            <td>{{ each.properties.name }}</td>
-          {% endif %}
-            <td>{{ each.properties.id }}</td>
-            <td>{{ each.properties.quantity }}</td>
+        <tr data-space="{{ each.properties.id }}">
+          <td class="text-monospace">{{ each.properties.id }}</td>
+          <td class="name">{{ each.properties.name }}</td>
+          <td class="quantity"></td>
         </tr>
         {% endfor %}
       </tbody>
@@ -203,10 +199,10 @@
   // DATA LAYER START
   // function to set the color based on a value
   function getColor(n) {
-    return n > 150 ? "#144d58" :
-           n > 100 ? "#4b8793" :
-           n > 50  ? "#8bc3ce" :
-                     "#b3dde6";
+    return n > 30 ? "#144d58" :
+           n > 20 ? "#4b8793" :
+           n > 10 ? "#8bc3ce" :
+                    "#b3dde6";
   }
 
   // apply style to each feature
@@ -275,7 +271,13 @@
   let dataLayer;
 
   function gatherData(source, material, within) {
-    $.get("/stocks/data/json/?source=" + source + "&within=" + within, function(data) {
+    // remove datalayer, if it exists
+    if (map.hasLayer(dataLayer)) {
+      map.removeLayer(dataLayer);
+    };
+
+    // request data, add the shapes to the map and fill in areas
+    $.get("/stocks/data/json/?source=" + source + "&material=" + material + "&within=" + within, function(data) {
       mapData = data;
 
       dataLayer = L.geoJson(mapShapes, {
@@ -283,11 +285,23 @@
         onEachFeature: onEachFeature,
       })
       map.addLayer(dataLayer);
+
+      // populate the data tables below and next to the map
+      $.each(mapData.data, function(key,value) {
+        $("#data-table tr[data-space='" + key + "'] .quantity").text(value);
+        $("#compact-table tr[data-space='" + key + "'] .quantity").text(value);
+        $("#chart-bars .bar[data-space='" + key + "']").attr("data-value", value);
+      });
+
+      $("#data-table").dataTable()
+
+      sortBars(chartBars);
     });
+
+
   }
 
   gatherData("{{ request.GET.source }}", "{{ request.GET.material }}", "{{ request.GET.within }}")
-
 
   // DATA LAYER END
 
@@ -356,7 +370,6 @@
   }
 
   var chartBars = document.querySelector("#chart-bars")
-  sortBars(chartBars);
 
   // get median of array
   // https://stackoverflow.com/a/39639518/1685643

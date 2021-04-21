@@ -143,9 +143,6 @@ def map(request, space, id, box=None):
                     "id": each.id,
                     "link": get_link,
                     "name": each.name,
-                    "quantity": random.randint(1,200),
-                    "unit": "kg",
-                    "date": "2011",
                 },
                 "geometry": json.loads(each.geometry.json)
             })

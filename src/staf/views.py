@@ -2956,8 +2956,8 @@ def data(request, json=False):
 
     if json:
         j = {}
-        for each in data[:20]:
-            j.update({str(each.origin_space): each.quantity})
+        for each in data[:200]:
+            j.update({str(each.origin_space.id): each.quantity})
         return JsonResponse({
             "material": material,
             "unit": data[0].unit.name,
