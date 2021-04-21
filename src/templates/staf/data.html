@@ -44,6 +44,17 @@
     </button>
   </form>
 
+  {% if within %}
+    <h2>Geographic restrictions</h2>
+    <p>Must be within the following space:
+      <a href="{% url URLS.SPACE within.id %}">
+      {{ within }}
+      </a>
+    </p>
+    <p>We found <strong>{{ spaces_within.count }}</strong> spaces inside {{ within }}, see map below:</p>
+    {{ map }}
+  {% endif %}
+
   <div class="rounded border bg-light p-3 mb-4">
     <i class="fal fa-list mr-2"></i> {{ total }} records found. {% if total > 200 %}Showing 200 records only{% endif %}
   </div>

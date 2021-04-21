@@ -539,10 +539,10 @@ def template_folium(request):
         "info": info,
         "example": geojson,
         "spaces": spaces,
-        "map": map._repr_html_() if map else None,
+        "map": mark_safe(map._repr_html_()) if map else None,
     }
 
-    return render(request, "stocks/map.html", context)
+    return render(request, "template/folium.html", context)
 
 # The internal projects section
 

@@ -2969,10 +2969,28 @@ def data(request, json=False):
             data = data[:200]
         else:
             total = data.count()
+
+        if within:
+            map = folium.Map(
+                tiles="https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q",
+                attr="Map data &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='https://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>",
+            )
+
+            for each in spaces_within:
+                folium.GeoJson(
+                    each.geometry.geojson,
+                    name="geojson"
+                ).add_to(map)
+
+            map.fit_bounds(map.get_bounds())
+
         context = {
             "data": data,
             "total": total,
             "load_datatables": True,
+            "within": within,
+            "spaces_within": spaces_within if within else None,
+            "map": mark_safe(map._repr_html_()) if within else None,
         }
         return render(request, "staf/data.html", context)
 
