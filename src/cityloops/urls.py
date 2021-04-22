@@ -9,7 +9,7 @@ from django.views.generic.base import RedirectView
 
 app_name = "cityloops"
 
-urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + baseline_education_urlpatterns + [
+urlpatterns = baseline_urlpatterns + baseline_education_urlpatterns + [
     path("", data.progress, {"style": "grid"}, name="index"),
     path("about/", views.about, name="about"),
     path("partners/", views.partners, name="partners"),
@@ -35,7 +35,11 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + baseline_educat
     path("city/<slug:slug>/indicators/<slug:sector>/<int:id>/", views.city_indicator, name="city_indicator"),
     path("city/<slug:slug>/indicators/<slug:sector>/<int:id>/form/", views.city_indicator_form, name="city_indicator_form"),
 
-    path("dashboards/<slug:space>/cityloops-maps/", views.space_maps, name="space_maps"),
+    # copies of staf urls since they use cityloops specific tags
+    path("dashboards/<slug:space>/maps/", views.space_maps, name="space_maps"),
+    path("dashboards/<slug:space>/maps/overview/", views.space_map, name="space_map"),
 
+    # these are loaded after the cityloops maps, so the first URL used is the cityloops one
+] + baseline_staf_urlpatterns + [
     path("<slug:slug>/", core.article, name="article"),
 ]

@@ -215,7 +215,7 @@ def layer_overview(request, layer, space=None):
     return render(request, "staf/layer.overview.html", context)
 
 def library_overview(request, type, space=None):
-
+    project = get_project(request)
     list = LibraryItem.objects.all()
 
     if space:
@@ -231,9 +231,16 @@ def library_overview(request, type, space=None):
     elif type == "maps" or type == "infrastructure" or type == "boundaries":
         list = list.filter(type__id__in=[40,41,20])
         if type == "infrastructure":
-            list = list.filter(tags__parent_tag=Tag.objects.get(pk=848))
+            if project.slug == "cityloops":
+                list = list.filter(tags__parent_tag__in=[997,1080,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1041])
+            else:
+                list = list.filter(tags__parent_tag=Tag.objects.get(pk=848))
         elif type == "boundaries":
-            list = list.filter(tags__id=852)
+            if project.slug == "cityloops":
+                list = list.filter(tags__in=[975, 976, 977, 978, 979, 996])
+            else:
+                list = list.filter(tags__id=852)
+
     elif type == "multimedia":
         list = list.filter(type__group="multimedia")
     elif type == "publications":
@@ -284,15 +291,10 @@ def space_map(request, space):
         boundaries = None
         boundaries_source = None
 
-    if project.slug == "cityloops":
-        tag_id = 971
-    else:
-        tag_id = 845
-
     for each in list:
         if each.imported_spaces.count() < 1000:
             dataviz = each.get_dataviz_properties
-            for tag in each.tags.filter(parent_tag__parent_tag_id=tag_id):
+            for tag in each.tags.filter(parent_tag__parent_tag_id=845):
                 if not tag in parents:
                     parents.append(tag)
                     hits[tag.id] = []

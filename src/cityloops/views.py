@@ -411,7 +411,7 @@ def city_indicator_form(request, slug, sector, id):
 # rather than adding an exception for cityloops there, this is a whole new entry to keep things organised
 def space_maps(request, space):
     space = get_space(request, space)
-    all = LibraryItem.objects.filter(spaces=space, type_id__in=[40,41,20]).distinct()
+    all = LibraryItem.objects.filter(spaces=space,type__in=[20,40,41], tags__in=[975,976,977,978,979,996]).distinct() | LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False, type__in=[20,40,41], tags__parent_tag__in=[997,1080,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1041]).distinct()
     master_map = False
     processed = all.filter(meta_data__processed=True).count()
     # We only show the master map if we have layers available
@@ -428,7 +428,7 @@ def space_maps(request, space):
 
     context = {
         "space": space,
-        "boundaries": LibraryItem.objects.filter(spaces=space, tags__in=[975, 976, 977, 978, 979, 996], type_id__in=[40,41,20]).distinct(),
+        "boundaries": LibraryItem.objects.filter(spaces=space, tags__in=[975,976,977,978,979,996], type_id__in=[40,41,20]).distinct(),
         "infrastructure": infrastructure,
         "all": all,
         "photo_infrastructure": photo_infrastructure,
@@ -436,3 +436,67 @@ def space_maps(request, space):
         "submenu": "library",
     }
     return render(request, "staf/maps.html", context)
+
+def space_map(request, space):
+    space = get_space(request, space)
+    list = LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False, type__in=[20,40,41], tags__in=[975,976,977,978,979,996]) | LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False, type__in=[20,40,41], tags__parent_tag__in=[997,1080,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1041]).order_by("date_created")
+    project = get_project(request)
+    parents = []
+    features = []
+    hits = {}
+    data = {}
+    getcolor = {}
+    colors = ["blue", "gold", "red", "green", "orange", "yellow", "violet", "grey", "black"]
+    boundaries_colors = ["orange", "green", "violet", "red", "DarkGreen", "Sienna", "navy", "black", "maroon"]
+    i = 0
+    boundaries_tag = Tag.objects.get(pk=976)
+    # These are the official boundaries for this space
+    try:
+        boundaries = get_object_or_404(ReferenceSpace, pk=space.meta_data["boundaries_origin"])
+        boundaries_source = boundaries.source
+    except:
+        boundaries = None
+        boundaries_source = None
+
+    for each in list:
+        if each.imported_spaces.count() < 1000:
+            dataviz = each.get_dataviz_properties
+            for tag in each.tags.filter(parent_tag__parent_tag_id=971):
+                if not tag in parents:
+                    parents.append(tag)
+                    hits[tag.id] = []
+                hits[tag.id].append(each)
+                if "color" in dataviz:
+                    getcolor[each.id] = dataviz["color"]
+                elif each == boundaries_source:
+                    getcolor[each.id] = "#126180"
+                elif tag == boundaries_tag:
+                    # For the boundaries we use specific colors
+                    try:
+                        getcolor[each.id] = boundaries_colors[i]
+                    except:
+                        getcolor[each.id] = "purple"
+                        i = 0
+                else:
+                    try:
+                        getcolor[each.id] = colors[i]
+                    except:
+                        getcolor[each.id] = "yellow"
+                        i = 0
+                i += 1
+
+    context = {
+        "space": space,
+        "parents": parents,
+        "hits": hits,
+        "data": data,
+        "getcolors": getcolor,
+        "processing_url": project.slug + ":hub_processing_boundaries",
+        "boundaries": boundaries,
+        "submenu": "library",
+        "load_leaflet": True,
+        "load_leaflet_space": True,
+        "load_datatables": True,
+        "list": list,
+    }
+    return render(request, "staf/space.map.html", context)
