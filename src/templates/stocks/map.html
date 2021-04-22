@@ -17,6 +17,10 @@
       margin-left: -.5rem;
     }
 
+    .chart-wrapper {
+      min-height: 300px;
+    }
+
     .chart .bar {
       height: 5px;
     }
@@ -66,6 +70,43 @@
     .col-submit {
       max-width: 40px;
     }
+
+    .layer-toggles {
+      border: 1px solid #ccc;
+      background-color: #fff;
+      border-radius: .25rem;
+    }
+
+    .layer-toggles .material {
+      cursor: pointer;
+      padding: .5rem;
+      line-height: 14px;
+      border-top: 1px solid #ccc;
+    }
+
+    .layer-toggles .material i {
+      margin-right: .5rem;
+    }
+
+
+    .layer-toggles .material:first-of-type {
+      border-top: none;
+      border-top-left-radius: .25rem;
+      border-top-right-radius: .25rem;
+    }
+
+    .layer-toggles .material:last-of-type {
+      border-bottom-left-radius: .25rem;
+      border-bottom-right-radius: .25rem;
+    }
+
+    .layer-toggles .material:hover {
+      background-color: #f4f4f4;
+    }
+
+    .layer-toggles .material.selected {
+      background-color: #e9ecef;
+    }
   </style>
 {% endblock %}
 
@@ -74,7 +115,7 @@
 
   <section>
     {% if box %}
-      <nav aria-label="breadcrumb">
+      <nav aria-label="breadcrumb" hidden>
         <ol class="breadcrumb">
           {% if request.GET.source_box %}
             <li class="breadcrumb-item"><a href="{% url 'stocks:map' space.slug box.source.id request.GET.source_box %}">{{ box.source }}</a></li>
@@ -87,12 +128,6 @@
     {% endif %}
 
     <div class="form-row mb-4">
-      <div class="col-md mb-3 mb-md-0">
-        <label class="font-weight-bold m-0">Material</label>
-        <select class="custom-select select2">
-          <option value="EMP8.5">Concrete</option>
-        </select>
-      </div>
       <div class="col-md mb-3 mb-md-0">
         <label class="font-weight-bold m-0">Area</label>
         <select class="custom-select select2">
@@ -121,11 +156,7 @@
         <!-- spaces chart -->
         <div class="chart-wrapper mb-4">
           <div class="chart position-relative">
-            <div id="chart-bars" class="bars">
-              {% for each in data.features %}
-                <div class="bar" data-space="{{ each.properties.id }}" data-value="{{ each.properties.quantity }}"></div>
-              {% endfor %}
-            </div>
+            <div id="chart-bars" class="bars"></div>
             <div id="start-line"></div>
             <div id="median-line"></div>
           </div>
@@ -199,10 +230,11 @@
   // DATA LAYER START
   // function to set the color based on a value
   function getColor(n) {
-    return n > 30 ? "#144d58" :
-           n > 20 ? "#4b8793" :
-           n > 10 ? "#8bc3ce" :
-                    "#b3dde6";
+    return n > 500 ? "#144d58" :
+           n > 300 ? "#4b8793" :
+           n > 100 ? "#8bc3ce" :
+           n == 0  ? "#cfdee1" :
+                     "#b3dde6" ;
   }
 
   // apply style to each feature
@@ -270,7 +302,7 @@
   let mapData;
   let dataLayer;
 
-  function gatherData(source, material, within) {
+  function getData(source, material, within) {
     // remove datalayer, if it exists
     if (map.hasLayer(dataLayer)) {
       map.removeLayer(dataLayer);
@@ -286,7 +318,8 @@
       })
       map.addLayer(dataLayer);
 
-      table.destroy();
+      let datatable = $("#data-table").DataTable();
+      datatable.destroy();
 
       // populate the data tables below and next to the map
       $.each(mapData.data, function(key,value) {
@@ -295,15 +328,16 @@
         $("#chart-bars .bar[data-space='" + key + "']").attr("data-value", value);
       });
 
-      $("#data-table").dataTable()
+      $("#data-table").dataTable();
 
-      sortBars(chartBars);
+      generateBarChart();
+      enableHover();
+
+      $(".layer-toggles .material[data-material='" + material + "']").addClass("selected")
     });
-
-
   }
 
-  gatherData("{{ request.GET.source }}", "{{ request.GET.material }}", "{{ request.GET.within }}")
+  getData("{{ request.GET.source }}", "{{ request.GET.material }}", "{{ request.GET.within }}")
 
   // DATA LAYER END
 
@@ -314,85 +348,99 @@
     map.fitBounds(dataLayer.getBounds())
   {% endif %}
 
-  // LEGEND START
-  // create variable for the legend
-  var mapDataLegend = L.control({
-    position: "bottomright"
-  });
 
-  // when the legend is added to the map, build up the contents
-  mapDataLegend.onAdd = function(map) {
-    var div = L.DomUtil.create("div", "legend"),
-        grades = [0, 50, 100, 150],
-        labels = [];
+  // legend
+  function addLegend() {
+    // create variable for the legend
+    var mapDataLegend = L.control({
+      position: "bottomright"
+    });
 
-    div.innerHTML = "<div>Wood stock per building<br>(in tonnes)</div><hr class='my-2'>"
+    // when the legend is added to the map, build up the contents
+    mapDataLegend.onAdd = function(map) {
+      var div = L.DomUtil.create("div", "legend"),
+          grades = [0, 50, 100, 150],
+          labels = [];
 
-    // loop through our schauff intervals and generate a label with a colored square for each interval
-    for (var i = 0; i < grades.length; i++) {
-        div.innerHTML +=
-            "<i style='background:" + getColor(grades[i] + 1) + "'></i> " +
-            grades[i] + (grades[i + 1] ? " – " + grades[i + 1] + "<br>" : "+");
-    }
+      div.innerHTML = "<div>Wood stock per building<br>(in tonnes)</div><hr class='my-2'>"
 
-    return div;
-  };
+      // loop through our schauff intervals and generate a label with a colored square for each interval
+      for (var i = 0; i < grades.length; i++) {
+          div.innerHTML +=
+              "<i style='background:" + getColor(grades[i] + 1) + "'></i> " +
+              grades[i] + (grades[i + 1] ? " – " + grades[i + 1] + "<br>" : "+");
+      }
 
-  // add legend to map
-  map.addControl(mapDataLegend);
-
-  // LEGEND END
-
-  // BAR GRAPH START
-  // get the highest values of the dataset
-  let dataValues = [{% for each in data.features %}{{ each.properties.quantity }}, {% endfor %}]
-  let maxValue = Math.max(...dataValues);
-
-  // set end label to max value
-  $(".end-label").text(maxValue);
-
-  // apply width and color to each bar
-  $(".chart .bar").each(function() {
-    let value = $(this).data("value");
-    let width = value / maxValue * 100;
-    let height = 400 / dataValues.length;
-
-    if (height > 5) {
-      height = 5
+      return div;
     };
 
-    $(this).width(width + "%").height(height).css("background-color", getColor(value));
-  })
-
-  // sort bars by value
-  function sortBars(items) {
-    [...items.children]
-      .sort((a,b)=>Number(a.getAttribute("data-value"))>Number(b.getAttribute("data-value"))?1:-1)
-      .forEach(node=>chartBars.appendChild(node))
+    // add legend to map
+    map.addControl(mapDataLegend);
   }
 
-  var chartBars = document.querySelector("#chart-bars")
+  // bar chart in sidebar
+  function generateBarChart() {
+    // get the highest values of the dataset
+    let dataValues = []
 
-  // get median of array
-  // https://stackoverflow.com/a/39639518/1685643
-  function median(arr){
-    arr.sort(function(a, b){ return a - b; });
-    var i = arr.length / 2;
-    return i % 1 == 0 ? (arr[i - 1] + arr[i]) / 2 : arr[Math.floor(i)];
+    // clear bar chart
+    $("#chart-bars").html("");
+
+    for (key in mapData.data) {
+      dataValues.push(mapData.data[key])
+      $("#chart-bars").append("<div class='bar' data-space='" + key + "' data-value='" + mapData.data[key] + "'></div>")
+    }
+
+    let maxValue = Math.max(...dataValues);
+
+    // set end label to max value
+    $(".end-label").text(maxValue);
+
+    // apply width and color to each bar
+    $(".chart .bar").each(function() {
+      let value = $(this).data("value");
+      let width = value / maxValue * 100;
+      let height = 400 / dataValues.length;
+
+      if (height > 5) {
+        height = 5
+      };
+
+      $(this).width(width + "%").height(height).css("background-color", getColor(value));
+    })
+
+    // sort bars by value
+    function sortBars(items) {
+      [...items.children]
+        .sort((a,b)=>Number(a.getAttribute("data-value"))>Number(b.getAttribute("data-value")) ? 1 : -1)
+        .forEach(node=>chartBars.appendChild(node))
+    }
+
+    var chartBars = document.querySelector("#chart-bars")
+
+    sortBars(chartBars)
+
+    // get median of array
+    // https://stackoverflow.com/a/39639518/1685643
+    function median(arr){
+      arr.sort(function(a, b){ return a - b; });
+      var i = arr.length / 2;
+      return i % 1 == 0 ? (arr[i - 1] + arr[i]) / 2 : arr[Math.floor(i)];
+    }
+
+    var medianValue = median(dataValues);
+
+    // position median line
+    let medianPosition = medianValue / maxValue * 100;
+    $("#median-line").css("left", medianPosition + "%");
+
+    // set median label to median
+    let medianLabel = $(".median-label");
+
+    medianLabel.html("<div>" + Math.round(medianValue) + "</div><div>(median)</div>")
+    let medianLabelWidth = medianLabel.width() / 2;
+    medianLabel.css("left", "calc(" + medianPosition + "% - " + medianLabelWidth + "px)");
   }
-
-  var medianValue = median(dataValues);
-
-  // position median line
-  let medianPosition = medianValue / maxValue * 100;
-  $("#median-line").css("left", medianPosition + "%");
-
-  // set median label to median
-  let medianLabel = $(".median-label");
-
-  medianLabel.html("<div>" + Math.round(medianValue) + "</div><div>(median)</div>")
-  let medianLabelWidth = medianLabel.width() / 2;
-  medianLabel.css("left", "calc(" + medianPosition + "% - " + medianLabelWidth + "px)");
 
   // BAR GRAPH END
   function hoverData(id, source) {
@@ -425,24 +473,62 @@
     $(".chart .bar[data-space='" + id + "'], .compact-table tr[data-space='" + id + "']").removeClass("selected");
   };
 
-  $(".chart .bar").mouseover(function() {
-    let id = $(this).data("space");
+  function enableHover() {
+    $(".chart .bar").mouseover(function() {
+      let id = $(this).data("space");
 
-    hoverData(id)
+      hoverData(id)
 
-    let rowPosition = $(".compact-table tr[data-space='" + id + "']").position().top;
-    compactTable.scrollTop = rowPosition;
+      let rowPosition = $(".compact-table tr[data-space='" + id + "']").position().top;
+      compactTable.scrollTop = rowPosition;
+    });
+
+    $("#compact-table tr").mouseover(function() {
+      let id = $(this).data("space");
+
+      hoverData(id)
+    });
+
+    $(".chart .bar, #compact-table tr").mouseout(function() {
+      let id = $(this).data("space");
+      resetHoverData(id)
+    })
+  }
+
+  // currently selected material, useful when reloading the page and we want to keep the same material selected
+  let selectedMaterial = "{{ request.GET.material }}"
+
+  // add buttons to switch materials
+  L.Control.LayerToggles = L.Control.extend({
+    onAdd: function(map) {
+      var layerTogglesWrapper = L.DomUtil.create("div", "layer-toggles");
+
+      {% for each in materials %}
+        var materialButton = L.DomUtil.create("div", "material");
+        $(materialButton).attr("data-material", "{{ each.code }}");
+        materialButton.innerHTML = "<i class='fal fa-fw fa-{{ each.icon }}'></i> {{ each.name }}";
+        layerTogglesWrapper.appendChild(materialButton);
+      {% endfor %}
+
+      return layerTogglesWrapper;
+    }
   });
 
-  $("#compact-table tr").mouseover(function() {
-    let id = $(this).data("space");
+  // create a new leaflet control and add material buttons
+  L.control.LayerToggles = function(opts) {
+    return new L.Control.LayerToggles(opts);
+  }
 
-    hoverData(id)
-  });
+  // add material buttons to the map
+  L.control.LayerToggles({ position: "topright" }).addTo(map);
 
-  $(".chart .bar, #compact-table tr").mouseout(function() {
-    let id = $(this).data("space");
-    resetHoverData(id)
+  // when clicking on a material, load new data
+  $("body").on("click", ".layer-toggles .material", function() {
+    $(".layer-toggles .material").removeClass("selected")
+    $(this).addClass("selected")
+
+    selectedMaterial = $(this).data("material");
+    getData("{{ request.GET.source }}", selectedMaterial, "{{ request.GET.within }}")
   })
 </script>
 {% endblock %}

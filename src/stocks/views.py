@@ -108,8 +108,36 @@ def map(request, space, id, box=None):
 
     if space.name == "Melbourne":
         doc_list = melbourne
+        materials = [
+            {
+                "name": "Concrete",
+                "code": "EMP8.5",
+                "icon": "road"
+            },
+            {
+                "name": "Glass",
+                "code": "EMP6.1",
+                "icon": "fragile"
+            },
+            {
+                "name": "Iron",
+                "code": "EMP2.1",
+                "icon": "magnet"
+            },
+            {
+                "name": "Wood",
+                "code": "EMP1.3",
+                "icon": "trees"
+            },
+            {
+                "name": "Insulation",
+                "code": "EMP8.6",
+                "icon": "mitten"
+            },
+        ]
     else:
         doc_list = brussels
+        materials = []
 
     doc_list = LibraryItem.objects.filter(pk__in=doc_list)
 
@@ -171,6 +199,7 @@ def map(request, space, id, box=None):
         "properties": properties,
         "menu": "maps",
         "doc_list": doc_list,
+        "materials": materials,
     }
 
     return render(request, "stocks/map.html", context)
