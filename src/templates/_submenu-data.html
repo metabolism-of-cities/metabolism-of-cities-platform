@@ -64,7 +64,11 @@
             <div class="dropdown-menu" aria-labelledby="library-dropdown">
               <a class="dropdown-item" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'datasets' %}">Datasets</a>
               <a class="dropdown-item" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'publications' %}">Publications</a>
-              <a class="dropdown-item" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'maps' %}">Maps</a>
+              {% if PROJECT.slug == "cityloops" %}
+                <a class="dropdown-item" href="{% url 'cityloops:space_maps' space.slug %}">Maps</a>
+              {% else %}
+                <a class="dropdown-item" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'maps' %}">Maps</a>
+              {% endif %}
               <a class="dropdown-item" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'multimedia' %}">Multimedia</a>
               <a class="dropdown-item" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'recent' %}"><em>Recently added</em></a>
             </div>

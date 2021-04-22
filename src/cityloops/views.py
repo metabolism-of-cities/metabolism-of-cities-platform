@@ -418,7 +418,7 @@ def space_maps(request, space):
     if processed and space.geometry:
         master_map = True
 
-    infrastructure = LibraryItem.objects.filter(spaces=space, tags__parent_tag=Tag.objects.get(pk=848), type_id__in=[40,41,20]).distinct()
+    infrastructure = LibraryItem.objects.filter(spaces=space, tags__parent_tag__in=[997,1080,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1041], type_id__in=[40,41,20]).distinct()
     try:
         # Let's see if one of the infrastructure items has an attached photo so we can show that
         photo_infrastructure = ReferenceSpace.objects.filter(source__in=infrastructure, image__isnull=False)[0]
@@ -428,7 +428,7 @@ def space_maps(request, space):
 
     context = {
         "space": space,
-        "boundaries": LibraryItem.objects.filter(spaces=space, tags=Tag.objects.get(pk=852), type_id__in=[40,41,20]).distinct(),
+        "boundaries": LibraryItem.objects.filter(spaces=space, tags__in=[975, 976, 977, 978, 979, 996], type_id__in=[40,41,20]).distinct(),
         "infrastructure": infrastructure,
         "all": all,
         "photo_infrastructure": photo_infrastructure,

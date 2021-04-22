@@ -39,7 +39,7 @@
         <li class="list-group-item">
           <i class="fal fa-fw fa-user mr-1" aria-hidden="true"></i>
           {% if info.authors.count == 1 %}
-            Author: {{ info.authors.0 }}
+            {{ info.authors.0 }}
           {% else %}
             Authors:<br>
             {% for each in info.authors %}

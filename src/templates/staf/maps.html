@@ -3,10 +3,6 @@
 
 {% block css %}
 <style>
-  .fade-half {
-    opacity: .2;
-  }
-
   .map-list .fa-ul {
     margin-left: 30px;
   }
@@ -37,7 +33,7 @@
     <div class="col-md-4">
       <div class="card shadow-none">
         <div class="card-header">Infrastructure</div>
-        <img src="{{ photo_infrastructure }}" class="card-img-top rounded-0 {% if not infrastructure %}fade-half{% endif %}" alt="">
+        <img src="{{ photo_infrastructure }}" class="card-img-top rounded-0" alt="">
       </div>
       <div class="list-group bg-white">
         {% for each in infrastructure %}
@@ -68,7 +64,7 @@
     <div class="col-md-4">
       <div class="card shadow-none">
         <div class="card-header">Administrative boundaries</div>
-        <img src="/media/images/geocode.type.2.jpg" class="card-img-top rounded-0 {% if not boundaries %}fade-half{% endif %}" alt="">
+        <img src="/media/images/geocode.type.2.jpg" class="card-img-top rounded-0" alt="">
       </div>
       <div class="list-group bg-white">
         {% for each in boundaries %}
@@ -85,7 +81,7 @@
         {% endif %}
       </div>
 
-      {% if infrastructure %}
+      {% if boundaries %}
         <a href="boundaries/" class="btn btn-primary mt-4">
           <i class="fa fa-list mr-2"></i> View as separate list
         </a>
@@ -99,7 +95,7 @@
     <div class="col-md-4">
       <div class="card shadow-none">
         <div class="card-header">Master map</div>
-        <img src="{% get_media_prefix %}images/fullmap2.jpg" class="card-img-top rounded-0 {% if not master_map %}fade-half{% endif %}" alt="">
+        <img src="{% get_media_prefix %}images/fullmap2.jpg" class="card-img-top rounded-0" alt="">
         {% if not master_map %}
           <div class="border rounded-bottom border-top-0 bg-light p-3">
             <i class="fal fa-empty-set mr-2"></i> Not available yet
