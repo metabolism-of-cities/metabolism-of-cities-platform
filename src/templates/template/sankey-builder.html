@@ -546,89 +546,190 @@
 <script>
   var data = {
     "nodes": [
-      {"direction": "r", "id": "A"},
-      {"direction": "r", "id": "B"},
-      {"direction": "r", "id": "C"},
-      {"direction": "r", "id": "D"},
-      {"direction": "r", "id": "E"},
-      {"direction": "r", "id": "F"},
-      {"direction": "r", "id": "G"},
-      {"direction": "r", "id": "H"},
-      {"direction": "r", "id": "I"},
-      {"direction": "r", "id": "J"},
+      {"direction": "r", "id": "Anaerobic digestion"},
+      {"direction": "r", "id": "Composting"},
+      {"direction": "r", "id": "Exports"},
+      {"direction": "r", "id": "Extraction"},
+      {"direction": "r", "id": "Harvesting"},
+      {"direction": "r", "id": "Imports"},
+      {"direction": "r", "id": "Incineration"},
+      {"direction": "r", "id": "Landfill"},
+      {"direction": "r", "id": "Manufacturing"},
+      {"direction": "r", "id": "Retail"},
+      {"direction": "r", "id": "Stock"},
+      {"direction": "r", "id": "Use"},
+      {"direction": "r", "id": "Waste collection"},
     ],
     "links": [
       {
-       "source": "A",
-       "target": "D",
-       "value": 1,
-       "color": "thistle"
+        "source": "Extraction",
+        "target": "Manufacturing",
+        "value": 100,
+        "color": "thistle"
       },
       {
-       "source": "B",
-       "target": "D",
-       "value": 2,
-       "color": "thistle"
+        "source": "Extraction",
+        "target": "Retail",
+        "value": 1000,
+        "color": "thistle"
       },
       {
-       "source": "C",
-       "target": "D",
-       "value": 1,
-       "color": "thistle"
+        "source": "Extraction",
+        "target": "Use",
+        "value": 2000,
+        "color": "thistle"
       },
       {
-       "source": "D",
-       "target": "E",
-       "value": 2,
-       "color": "thistle"
+        "source": "Extraction",
+        "target": "Waste collection",
+        "value": 100,
+        "color": "thistle"
       },
       {
-       "source": "D",
-       "target": "F",
-       "value": 2,
-       "color": "thistle"
+        "source": "Manufacturing",
+        "target": "Retail",
+        "value": 0,
+        "color": "thistle"
       },
       {
-       "source": "F",
-       "target": "H",
-       "value": 1,
-       "color": "thistle"
+        "source": "Manufacturing",
+        "target": "Use",
+        "value": 90,
+        "color": "thistle"
       },
       {
-       "source": "F",
-       "target": "I",
-       "value": 1,
-       "color": "thistle"
+        "source": "Manufacturing",
+        "target": "Waste collection",
+        "value": 10,
+        "color": "thistle"
       },
       {
-       "source": "E",
-       "target": "I",
-       "value": 2,
-       "color": "thistle"
+        "source": "Retail",
+        "target": "Use",
+        "value": 750,
+        "color": "thistle"
       },
       {
-       "source": "I",
-       "target": "J",
-       "value": 3,
-       "color": "thistle"
+        "source": "Retail",
+        "target": "Waste collection",
+        "value": 50,
+        "color": "thistle"
+      },
+      {
+        "source": "Retail",
+        "target": "Exports",
+        "value": 200,
+        "color": "thistle"
+      },
+      {
+        "source": "Use",
+        "target": "Waste collection",
+        "value": 800,
+        "color": "thistle"
+      },
+      {
+        "source": "Use",
+        "target": "Retail",
+        "value": 40,
+        "color": "thistle"
+      },
+      {
+        "source": "Use",
+        "target": "Stock",
+        "value": 2000,
+        "color": "thistle"
+      },
+      {
+        "source": "Stock",
+        "target": "Use",
+        "value": 80,
+        "color": "thistle"
+      },
+      {
+        "source": "Stock",
+        "target": "Waste collection",
+        "value": 1000,
+        "color": "thistle"
+      },
+      {
+        "source": "Waste collection",
+        "target": "Landfill",
+        "value": 960,
+        "color": "thistle"
+      },
+      {
+        "source": "Waste collection",
+        "target": "Incineration",
+        "value": 0,
+        "color": "thistle"
+      },
+      {
+        "source": "Waste collection",
+        "target": "Anaerobic digestion",
+        "value": 0,
+        "color": "thistle"
+      },
+      {
+        "source": "Waste collection",
+        "target": "Composting",
+        "value": 0,
+        "color": "thistle"
+      },
+      {
+        "source": "Waste collection",
+        "target": "Manufacturing",
+        "value": 0,
+        "color": "thistle"
+      },
+      {
+        "source": "Waste collection",
+        "target": "Retail",
+        "value": 1000,
+        "color": "thistle"
+      },
+      {
+        "source": "Incineration",
+        "target": "Retail",
+        "value": 0,
+        "color": "thistle"
+      },
+      {
+        "source": "Composting",
+        "target": "Retail",
+        "value": 0,
+        "color": "thistle"
+      },
+      {
+        "source": "Composting",
+        "target": "Harvesting",
+        "value": 0,
+        "color": "thistle"
+      },
+      {
+        "source": "Imports",
+        "target": "Manufacturing",
+        "value": 100,
+        "color": "thistle"
+      },
+      {
+        "source": "Imports",
+        "target": "Retail",
+        "value": 500,
+        "color": "thistle"
+      },
+      {
+        "source": "Imports",
+        "target": "Use",
+        "value": 500,
+        "color": "thistle"
+      },
+      {
+        "source": "Imports",
+        "target": "Waste collection",
+        "value": 100,
+        "color": "thistle"
       },
     ],
-    "order": [
-      [["C"],["A"],["B"]],
-      [["D"],[   ],[   ]],
-      [[   ],["E"],["F"]],
-      [["I"],[   ],["H"]],
-      [[   ],["J"],[   ]],
-    ],
-    "rankSets": [
-      {
-        "type": "same",
-        "nodes": [
-          "H",
-          "J"
-        ]
-      }
-    ]
   };
 
   var color = d3.scaleOrdinal(d3.schemeCategory10);
