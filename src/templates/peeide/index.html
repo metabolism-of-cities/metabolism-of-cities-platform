@@ -28,6 +28,35 @@
     font-size: 3.25rem;
   }
 
+  #carousel {
+    min-height: 400px;
+  }
+
+  .carousel-img {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .carousel-indicators {
+    justify-content: left;
+    margin: 0;
+    left: 3rem;
+    bottom: 3rem;
+  }
+
+  .carousel-indicators li {
+    background-color: #008dac;
+    height: .75rem;
+    width: .75rem;
+    margin-right: 10px;
+    margin-left: 0;
+    border-radius: 100%;
+    border: none;
+  }
+
+  .carousel-indicators li.active {
+    background-color: #fff;
+  }
 </style>
 {% endblock %}
 
@@ -120,6 +149,53 @@
 
           <h5 class="text-ndee-primary my-4">A{% lorem 3 w random %}</h5>
           {% lorem 1 p %}
+        </div>
+      </div>
+    </div>
+
+
+    <div class="rounded" style="background-color: #B0EFF3">
+      <div class="row mb-4">
+        <div class="col-lg-6 pr-lg-0">
+          <div id="carousel" class="carousel slide h-100 p-5" data-ride="carousel">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <strong class="text-ndee-purple d-block text-uppercase mb-3">March 20th | Podcast</strong>
+                <h3 class="text-ndee-primary font-weight-bold">Can peer-to-peer networks reduce food waste?</h3>
+                <p>
+                  In this research, we aim to reveal insights into the nature and dynamics of the sharing economy
+                  through a deep dive into a real-world food sharing network that aims to reduce household food waste.
+                </p>
+                <a class="btn btn-ndee btn-ndee-sm btn-ndee-primary" href="">Read more</a>
+              </div>
+              <div class="carousel-item">
+                <strong class="text-ndee-purple d-block text-uppercase mb-3">March 20th | Podcast</strong>
+                <h3 class="text-ndee-primary font-weight-bold">Some other title of a podcast?</h3>
+                <p>
+                  In this research, we aim to reveal insights into the nature and dynamics of the sharing economy
+                  through a deep dive into a real-world food sharing network that aims to reduce household food waste.
+                </p>
+                <a class="btn btn-ndee btn-ndee-sm btn-ndee-primary" href="">Read more</a>
+              </div>
+              <div class="carousel-item">
+                <strong class="text-ndee-purple d-block text-uppercase mb-3">March 20th | Podcast</strong>
+                <h3 class="text-ndee-primary font-weight-bold">This is the third slide, it'll go back to the first one</h3>
+                <p>
+                  In this research, we aim to reveal insights into the nature and dynamics of the sharing economy
+                  through a deep dive into a real-world food sharing network that aims to reduce household food waste.
+                </p>
+                <a class="btn btn-ndee btn-ndee-sm btn-ndee-primary" href="">Read more</a>
+              </div>
+            </div>
+            <ol class="carousel-indicators">
+              <li data-target="#carousel" data-slide-to="0" class="active"></li>
+              <li data-target="#carousel" data-slide-to="1"></li>
+              <li data-target="#carousel" data-slide-to="2"></li>
+            </ol>
+          </div>
+        </div>
+        <div class="col-lg-6 pl-lg-0">
+          <img src="https://i.imgur.com/bF4qdQq.jpg" class="img-fluid rounded-right carousel-img">
         </div>
       </div>
     </div>
