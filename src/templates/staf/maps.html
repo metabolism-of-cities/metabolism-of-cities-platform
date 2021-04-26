@@ -51,7 +51,7 @@
       </div>
 
       {% if infrastructure %}
-        <a href="infrastructure/" class="btn btn-primary mt-4">
+        <a href="infrastructure/" class="btn btn-primary mt-4" {% if PROJECT.slug == "cityloops" %}hidden{% endif %}>
           <i class="fa fa-list mr-2"></i> View as separate list
         </a>
       {% else %}
@@ -82,7 +82,7 @@
       </div>
 
       {% if boundaries %}
-        <a href="boundaries/" class="btn btn-primary mt-4">
+        <a href="boundaries/" class="btn btn-primary mt-4" {% if PROJECT.slug == "cityloops" %}hidden{% endif %}>
           <i class="fa fa-list mr-2"></i> View as separate list
         </a>
       {% else %}

@@ -407,18 +407,18 @@ def city_indicator_form(request, slug, sector, id):
     }
     return render(request, "cityloops/indicator.city.form.html", context)
 
-# this is a copy from staf/views.py
-# rather than adding an exception for cityloops there, this is a whole new entry to keep things organised
+# space_maps and space_map are copies from staf/views.py
+# rather than adding an exception for cityloops there, these are whole new entries to keep things organised
 def space_maps(request, space):
     space = get_space(request, space)
-    all = LibraryItem.objects.filter(spaces=space,type_id__in=[20,40,41], tags__in=[975,976,977,978,979,996]).distinct() | LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False, type_id__in=[20,40,41], tags__in=[997,1080,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1041]).distinct()
+    all = LibraryItem.objects.filter(spaces=space,type_id__in=[40,41], tags__in=[975,976,977,978,979]).distinct() | LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False, type_id__in=[40,41], tags__in=[996,997,1080,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1041]).distinct()
     master_map = False
     processed = all.filter(meta_data__processed=True).count()
     # We only show the master map if we have layers available
     if processed and space.geometry:
         master_map = True
 
-    infrastructure = LibraryItem.objects.filter(spaces=space, tags__in=[997,1080,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1041], type_id__in=[40,41,20]).distinct()
+    infrastructure = LibraryItem.objects.filter(spaces=space, tags__in=[996,997,1080,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1041], type_id__in=[40,41]).distinct()
     try:
         # Let's see if one of the infrastructure items has an attached photo so we can show that
         photo_infrastructure = ReferenceSpace.objects.filter(source__in=infrastructure, image__isnull=False)[0]
@@ -428,7 +428,7 @@ def space_maps(request, space):
 
     context = {
         "space": space,
-        "boundaries": LibraryItem.objects.filter(spaces=space, tags__in=[975,976,977,978,979,996], type_id__in=[40,41,20]).distinct(),
+        "boundaries": LibraryItem.objects.filter(spaces=space, tags__in=[975,976,977,978,979], type_id__in=[40,41]).distinct(),
         "infrastructure": infrastructure,
         "all": all,
         "photo_infrastructure": photo_infrastructure,
@@ -439,7 +439,7 @@ def space_maps(request, space):
 
 def space_map(request, space):
     space = get_space(request, space)
-    list = LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False, type_id__in=[20,40,41], tags__in=[975,976,977,978,979,996]) | LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False, type_id__in=[20,40,41], tags__in=[997,1080,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1041]).order_by("date_created")
+    list = LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False, type_id__in=[40,41], tags__in=[975,976,977,978,979]) | LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False, type_id__in=[40,41], tags__in=[996,997,1080,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1041]).order_by("date_created")
     project = get_project(request)
     parents = []
     features = []
