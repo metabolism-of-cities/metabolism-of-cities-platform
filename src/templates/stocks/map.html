@@ -198,7 +198,7 @@
         {% for each in data.features %}
         <tr data-space="{{ each.properties.id }}">
           <td class="text-monospace">{{ each.properties.id }}</td>
-          <td class="name">{{ each.properties.name }}</td>
+          <td class="name"><a href="{% url "staf:referencespace" each.properties.id %}">{{ each.properties.name }}</a></td>
           <td class="quantity"></td>
         </tr>
         {% endfor %}
@@ -206,12 +206,21 @@
     </table>
   </section>
 
+  <h2>More from this source</h2>
+  {% if box %}
+    {% for each in box.source.imported_spaces.all %}
+      <li>{{ each }}</li>
+    {% endfor %}
+  {% endif %}
+
   {% if request.user.is_staff %}
     <div class="alert alert-info">
       <h2>Items used to generate this map</h2>
       <p>Library item containing the shapefiles we search for: <a href="{% url URLS.LIBRARY_ITEM info.id %}">{{ info }}</a></p>
       <p>General city/space we are in: <a href="{{ PROJECT.get_website_without_trailing_slash }}{{ space.get_relative_url }}">{{ space }}</a></p>
-      <p>Box to restrict search: <a href="{{ PROJECT.get_website_without_trailing_slash }}{{ box.get_relative_url }}">{{ box }}</a></p>
+      <p>Box to restrict search: <a href="{{ PROJECT.get_website_without_trailing_slash }}{{ box.get_relative_url }}">{{ box }}</a> - 
+      (source: <a href="{% url URLS.LIBRARY_ITEM box.source.id %}">{{ box.source }}</a>)
+      </p>
     </div>
   {% endif %}
 

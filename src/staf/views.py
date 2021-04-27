@@ -851,6 +851,11 @@ def referencespace(request, id=None, space=None, slug=None):
 
     photos = Photo.objects.filter(spaces=info).order_by("position").exclude(pk=info.photo.id)
 
+    data = Data.objects.filter(Q(origin_space=info)|Q(destination_space=info))
+    total = data.count()
+    if data.count() > 200:
+        data = data[:200]
+
     context = {
         "info": info,
         "inside_the_space": inside_the_space[:200] if inside_the_space and inside_the_space.count() > 200 else inside_the_space,
@@ -865,6 +870,8 @@ def referencespace(request, id=None, space=None, slug=None):
         "multimedia_list": photos,
         "load_lightbox": True if photos else False,
         "items": LibraryItem.objects.filter(spaces=info),
+        "data": data,
+        "total": total,
     }
     return render(request, "staf/referencespace.html", context)
 

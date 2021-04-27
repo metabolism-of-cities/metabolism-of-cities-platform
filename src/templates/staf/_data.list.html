@@ -1,0 +1,30 @@
+
+  <div class="rounded border bg-light p-3 mb-4">
+    <i class="fal fa-list mr-2"></i> {{ total }} records found. {% if total > 200 %}Showing 200 records only{% endif %}
+  </div>
+
+  <table class="table datatable datatable-card bg-white">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Source</th>
+        <th>Material</th>
+        <th>Quantity</th>
+        <th>To</th>
+        <th>Segment</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in data %}
+      <tr>
+        <td>{{ each.id }}</td>
+        <td><a href="{% url URLS.LIBRARY_ITEM each.source.id %}">{{ each.source|truncatechars:40 }}</a></td>
+        <td>{{ each.material|truncatechars:50 }}</td>
+        <td>{{ each.quantity }} {{ each.unit.symbol }}</td>
+        <!-- <td>{{ each.origin_space }}</td> -->
+        <td>{{ each.destination_space }}</td>
+        <td>{{ each.segment_name }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>

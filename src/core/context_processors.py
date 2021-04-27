@@ -35,7 +35,7 @@ def site(request):
         "FORUM": slug + ":" + "volunteer_forum",
     }
 
-    if slug == "data" or slug == "cityloops" or slug == "stocks":
+    if slug == "data" or slug == "cityloops" or slug == "stocks" or slug == "staf":
         is_data_portal = True
     elif slug == "islands":
         system_name_singular = "island"
