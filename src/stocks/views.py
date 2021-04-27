@@ -86,11 +86,26 @@ def archetypes(request, space):
     return render(request, "stocks/archetypes.html", context)
 
 def map(request, space, id, box=None):
+
+    #################################################
+    # How to read the URL? 
+    # http://0.0.0.0:8000/stocks/cities/melbourne/924024/55654/?material=EMP8.5
+    # melbourne --> slug of the city, used to get the space that we are in
+    # 924024 --> library item with the underlying shapefile that should be shown
+    # (in this case 'Embodied resource requirements of the City of Melbourne's buildings')
+    # 55654 --> reference space ID of the box that should be used to draw boundaries and limit the number of 
+    # reference spaces shown (in this case zipcode 420)
+    #################################################
+
     info = LibraryItem.objects.get(pk=id)
     space = get_space(request, space)
 
-    if box:
-        box = ReferenceSpace.objects.get(pk=box)
+    # This is used to show the right subdivision for a given layer
+    # Let's say for instance you have a map open with all the zipcodes. Then if you click
+    # an individual zip code, the system needs to know what level to show next within 
+    # the selected zip code. Should it now show individual buildings? Neighborhoods? 
+    # Building blocks? Etc. These 'links' make the connection, by showing which 
+    # main type (key in the dictionary) is linked to which subdivision (value in the dictionary)
 
     links = {
         # Melbourne
@@ -103,6 +118,11 @@ def map(request, space, id, box=None):
         33904: 33913,
     }
 
+    # This is a list that contains all the documents that should be shown in 
+    # the dropdown so that people can select a certain level. We could technically 
+    # also get this from the LINKS dictionary but for convenience a single list 
+    # is created below. So this will contain e.g. the IDs of the documents containing
+    # ZIPCODES OF MELBOURNE | SUBURBS OF MELBOURNE | BUILDINGS OF MELBOURNE, something like that
     melbourne = [33931,33962,924024]
     brussels = [33886,33895,33904,33913]
 
@@ -140,11 +160,15 @@ def map(request, space, id, box=None):
         materials = []
 
     doc_list = LibraryItem.objects.filter(pk__in=doc_list)
-
     link = links.get(id)
-
     spaces = info.imported_spaces.all()
+
+    # A box is used to limit the scope of the search. Let's say we want to view
+    # information at a BUILDING level, but only inside a particular ZIP CODE. In
+    # that case the box parameter is used to indicate that the selected
+    # zip code contains the boundaries that need to be applied to the building search.
     if box:
+        box = ReferenceSpace.objects.get(pk=box)
         spaces = spaces.filter(geometry__within=box.geometry)
 
     if spaces.count() > 100:
@@ -156,11 +180,13 @@ def map(request, space, id, box=None):
 
     if spaces:
 
-        import random
         for each in spaces:
             if link:
                 get_link = reverse("stocks:map", args=[space.slug, link, each.id])
                 if box:
+                    # This allows us to create a breadcrumb and permit the user to go one level up
+                    # for instance to go back to view a map with all zip codes after I have been
+                    # viewing a map with a single zip code
                     get_link += "?source_box=" + str(box.id)
             else:
                 get_link = "javascript:alert('no page yet')"

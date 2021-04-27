@@ -2269,6 +2269,9 @@ class ReferenceSpace(Record):
         except:
             None
 
+    def get_relative_url(self):
+        return f"/referencespaces/view/{self.id}/"
+
     class Meta:
         db_table = "stafdb_referencespace"
         ordering = ["name"]

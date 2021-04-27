@@ -202,6 +202,15 @@
     </table>
   </section>
 
+  {% if request.user.is_staff %}
+    <div class="alert alert-info">
+      <h2>Items used to generate this map</h2>
+      <p>Library item containing the shapefiles we search for: <a href="{% url URLS.LIBRARY_ITEM info.id %}">{{ info }}</a></p>
+      <p>General city/space we are in: <a href="{{ PROJECT.get_website_without_trailing_slash }}{{ space.get_relative_url }}">{{ space }}</a></p>
+      <p>Box to restrict search: <a href="{{ PROJECT.get_website_without_trailing_slash }}{{ box.get_relative_url }}">{{ box }}</a></p>
+    </div>
+  {% endif %}
+
 {% endblock %}
 
 {% block footer %}
@@ -302,14 +311,14 @@
   let mapData;
   let dataLayer;
 
-  function getData(source, material, within) {
+  function getData(material, within) {
     // remove datalayer, if it exists
     if (map.hasLayer(dataLayer)) {
       map.removeLayer(dataLayer);
     };
 
     // request data, add the shapes to the map and fill in areas
-    $.get("/stocks/data/json/?source=" + source + "&material=" + material + "&within=" + within, function(data) {
+    $.get("/stocks/data/json/?material=" + material + "&within=" + within, function(data) {
       mapData = data;
 
       dataLayer = L.geoJson(mapShapes, {
@@ -337,7 +346,7 @@
     });
   }
 
-  getData("{{ request.GET.source }}", "{{ request.GET.material }}", "{{ request.GET.within }}")
+  getData("{{ request.GET.material }}", "{{ box.id }}")
 
   // DATA LAYER END
 
@@ -528,7 +537,7 @@
     $(this).addClass("selected")
 
     selectedMaterial = $(this).data("material");
-    getData("{{ request.GET.source }}", selectedMaterial, "{{ request.GET.within }}")
+    getData(selectedMaterial, "{{ box.id }}")
   })
 </script>
 {% endblock %}
