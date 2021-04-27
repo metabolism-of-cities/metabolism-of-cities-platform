@@ -318,7 +318,7 @@
     };
 
     // request data, add the shapes to the map and fill in areas
-    $.get("/stocks/data/json/?material=" + material + "&within=" + within, function(data) {
+    $.get("/stocks/data/json/?source={{ data_source_document }}&material=" + material + "&within=" + within, function(data) {
       mapData = data;
 
       dataLayer = L.geoJson(mapShapes, {

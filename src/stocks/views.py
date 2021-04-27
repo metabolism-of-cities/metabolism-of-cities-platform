@@ -128,6 +128,7 @@ def map(request, space, id, box=None):
 
     if space.name == "Melbourne":
         doc_list = melbourne
+        data_source_document = 33971 # This is the document that contains the stocks data itself
         materials = [
             {
                 "name": "Concrete",
@@ -157,6 +158,7 @@ def map(request, space, id, box=None):
         ]
     else:
         doc_list = brussels
+        data_source_document = None
         materials = []
 
     doc_list = LibraryItem.objects.filter(pk__in=doc_list)
@@ -222,6 +224,7 @@ def map(request, space, id, box=None):
         "load_datatables": True,
         "load_leaflet": True,
         "load_select2": True,
+        "data_source_document": data_source_document,
         "properties": properties,
         "menu": "maps",
         "doc_list": doc_list,
