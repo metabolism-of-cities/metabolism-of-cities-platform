@@ -6,6 +6,10 @@
 
 {% block head %}
   <style>
+    #map:not(.loading) .loading-message {
+      display: none;
+    }
+
     .leaflet-map {
       min-height: 600px;
       height: 100%;
@@ -125,17 +129,18 @@
 
     <div class="form-row mb-4">
       <div class="col-md mb-3 mb-md-0">
-        <label class="font-weight-bold m-0">Area</label>
-        <select class="custom-select select2" id="area">
+        <label class="font-weight-bold m-0">Shapefile source</label>
+        <select class="custom-select select2" id="shapefile">
           {% for each in doc_list %}
-            <option value="{{ each.id }}">{{ each.get_shortname }}</option>
+            <option value="{{ each.id }}" {% if each.id == info.id %} selected{% endif %}>{{ each.get_shortname }}</option>
           {% endfor %}
         </select>
       </div>
       {% if box %}
       <div class="col-md mb-3 mb-md-0">
-        <label class="font-weight-bold m-0"> </label>
+        <label class="font-weight-bold m-0">Children</label>
         <select class="custom-select select2" id="box">
+          <option value="all">All</option>
           {% for each in box.source.imported_spaces.all %}
             <option value="{{ each.id }}" {% if each.id == box.id %} selected{% endif %}>{{ each }}</option>
           {% endfor %}
@@ -146,7 +151,7 @@
         <label class="font-weight-bold m-0">Detail level</label>
         <select class="custom-select select2" id="detail">
           {% for each in doc_list %}
-            <option value="{{ each.id }}">{{ each.get_shortname }}</option>
+            <option value="{{ each.id }}" {% if each.id == box.id %} selected{% endif %}>{{ each.get_shortname }}</option>
           {% endfor %}
         </select>
       </div>
@@ -320,6 +325,8 @@
   let dataLayer;
 
   function getData(material, within) {
+    $("#map").addClass("loading");
+
     // remove datalayer, if it exists
     if (map.hasLayer(dataLayer)) {
       map.removeLayer(dataLayer);
@@ -351,6 +358,7 @@
       enableHover();
 
       $(".layer-toggles .material[data-material='" + material + "']").addClass("selected")
+      $("#map").removeClass("loading");
     });
   }
 
@@ -549,16 +557,16 @@
   })
 
   // load new page when wanting to explore a new area or detail level
-  function loadPage(area, box) {
-    window.location.href = "{% url 'stocks:city' space.slug %}" + area + "/" + box + "?material=" + selectedMaterial;
+  function loadPage(shapefile, box) {
+    window.location.href = "{% url 'stocks:city' space.slug %}" + shapefile + "/" + box + "?material=" + selectedMaterial;
   }
 
   $(".load-map").click(function() {
-    let area = $("#area").val()
+    let shapefile = $("#shapefile").val()
     let box = $("#box").val()
     let detail = $("#detail").val()
 
-    loadPage(area, box);
+    loadPage(shapefile, box);
   })
 
   $("body").on("click", ".load-from-map", function() {
