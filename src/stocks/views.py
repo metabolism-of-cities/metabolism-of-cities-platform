@@ -52,15 +52,19 @@ def city(request, space):
     if space.name == "Melbourne":
         id = 33931
         link = 33962
+        areas = [33931,33962,924024]
     elif space.name == "Brussels":
         id = 33886
         link = 33962
+        areas = [33886,33895,33904,33913]
 
     info = LibraryItem.objects.get(pk=id)
 
     context = {
         "city": True,
         "load_select2": True,
+        "data_source_document": data_source_document,
+        "areas": areas,
         "space": space,
         "info": info,
         "link": link,
@@ -88,12 +92,12 @@ def archetypes(request, space):
 def map(request, space, id, box=None):
 
     #################################################
-    # How to read the URL? 
+    # How to read the URL?
     # http://0.0.0.0:8000/stocks/cities/melbourne/924024/55654/?material=EMP8.5
     # melbourne --> slug of the city, used to get the space that we are in
     # 924024 --> library item with the underlying shapefile that should be shown
     # (in this case 'Embodied resource requirements of the City of Melbourne's buildings')
-    # 55654 --> reference space ID of the box that should be used to draw boundaries and limit the number of 
+    # 55654 --> reference space ID of the box that should be used to draw boundaries and limit the number of
     # reference spaces shown (in this case zipcode 420)
     #################################################
 
@@ -102,9 +106,9 @@ def map(request, space, id, box=None):
 
     # This is used to show the right subdivision for a given layer
     # Let's say for instance you have a map open with all the zipcodes. Then if you click
-    # an individual zip code, the system needs to know what level to show next within 
-    # the selected zip code. Should it now show individual buildings? Neighborhoods? 
-    # Building blocks? Etc. These 'links' make the connection, by showing which 
+    # an individual zip code, the system needs to know what level to show next within
+    # the selected zip code. Should it now show individual buildings? Neighborhoods?
+    # Building blocks? Etc. These 'links' make the connection, by showing which
     # main type (key in the dictionary) is linked to which subdivision (value in the dictionary)
 
     links = {
@@ -118,9 +122,9 @@ def map(request, space, id, box=None):
         33904: 33913,
     }
 
-    # This is a list that contains all the documents that should be shown in 
-    # the dropdown so that people can select a certain level. We could technically 
-    # also get this from the LINKS dictionary but for convenience a single list 
+    # This is a list that contains all the documents that should be shown in
+    # the dropdown so that people can select a certain level. We could technically
+    # also get this from the LINKS dictionary but for convenience a single list
     # is created below. So this will contain e.g. the IDs of the documents containing
     # ZIPCODES OF MELBOURNE | SUBURBS OF MELBOURNE | BUILDINGS OF MELBOURNE, something like that
     melbourne = [33931,33962,924024]

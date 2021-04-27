@@ -127,10 +127,14 @@
       </nav>
     {% endif %}
 
+    {% for each in siblings %}
+      <a href="{% url URLS.SPACE each.id %}">{{ each }}</a><br>
+    {% endfor %}
+
     <div class="form-row mb-4">
       <div class="col-md mb-3 mb-md-0">
         <label class="font-weight-bold m-0">Area</label>
-        <select class="custom-select select2">
+        <select class="custom-select">
           {% for each in doc_list %}
             <option value="{{ each.id }}">{{ each.get_shortname }}</option>
           {% endfor %}
@@ -144,7 +148,7 @@
       </div>
       <div class="col-md col-submit">
         <label class="font-weight-bold m-0">&nbsp;</label>
-        <button class="btn btn-primary"><i class="fa fa-arrow-right m-0"></i></button>
+        <button class="btn btn-primary load-map"><i class="fa fa-arrow-right m-0"></i></button>
       </div>
     </div>
 
@@ -252,7 +256,7 @@
       fillColor: getColor(mapData.data[feature.properties.id]),
       weight: 1,
       opacity: 1,
-      color: "white",
+      color: "#666",
       fillOpacity: 0.7
     };
   }
@@ -262,7 +266,7 @@
     var layer = e.target;
 
     layer.setStyle({
-      weight: 2,
+      weight: 1.25,
       color: "gold",
     });
 
@@ -290,7 +294,7 @@
     var layer = e.target;
 
     layer.setStyle({
-      weight: 2,
+      weight: 1.25,
       color: "gold",
     });
   }
@@ -538,6 +542,15 @@
 
     selectedMaterial = $(this).data("material");
     getData(selectedMaterial, "{{ box.id }}")
+  })
+
+  // load new page when wanting to explore a new area or detail level
+  function loadPage(area) {
+    window.location.href = "../" + area + "?material=" + selectedMaterial;
+  }
+
+  $(".load-map").click(function() {
+    // let area = $(this).
   })
 </script>
 {% endblock %}
