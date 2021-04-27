@@ -7,7 +7,7 @@
 {% block head %}
   <style>
     .leaflet-map {
-      min-height: 500px;
+      min-height: 600px;
       height: 100%;
       max-height: 90vh;
     }
@@ -15,10 +15,6 @@
     .legend hr {
       width: calc(100% + 1rem);
       margin-left: -.5rem;
-    }
-
-    .chart-wrapper {
-      min-height: 300px;
     }
 
     .chart .bar {
@@ -127,23 +123,31 @@
       </nav>
     {% endif %}
 
-    {% for each in siblings %}
-      <a href="{% url URLS.SPACE each.id %}">{{ each }}</a><br>
-    {% endfor %}
-
     <div class="form-row mb-4">
       <div class="col-md mb-3 mb-md-0">
         <label class="font-weight-bold m-0">Area</label>
-        <select class="custom-select">
+        <select class="custom-select select2" id="area">
           {% for each in doc_list %}
             <option value="{{ each.id }}">{{ each.get_shortname }}</option>
           {% endfor %}
         </select>
       </div>
+      {% if box %}
+      <div class="col-md mb-3 mb-md-0">
+        <label class="font-weight-bold m-0"> </label>
+        <select class="custom-select select2" id="box">
+          {% for each in box.source.imported_spaces.all %}
+            <option value="{{ each.id }}" {% if each.id == box.id %} selected{% endif %}>{{ each }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endif %}
       <div class="col-md mb-3 mb-md-0">
         <label class="font-weight-bold m-0">Detail level</label>
-        <select class="custom-select select2">
-          <option value="0" selected>City-wide</option>
+        <select class="custom-select select2" id="detail">
+          {% for each in doc_list %}
+            <option value="{{ each.id }}">{{ each.get_shortname }}</option>
+          {% endfor %}
         </select>
       </div>
       <div class="col-md col-submit">
@@ -189,7 +193,6 @@
     <table id="data-table" class="table datatable-card bg-white">
       <thead>
         <tr>
-          <th>ID</th>
           <th>Name</th>
           <th>Quantity</th>
         </tr>
@@ -197,8 +200,7 @@
       <tbody>
         {% for each in data.features %}
         <tr data-space="{{ each.properties.id }}">
-          <td class="text-monospace">{{ each.properties.id }}</td>
-          <td class="name"><a href="{% url "staf:referencespace" each.properties.id %}">{{ each.properties.name }}</a></td>
+          <td class="name"><a href="{% url 'staf:referencespace' each.properties.id %}">{{ each.properties.name }}</a></td>
           <td class="quantity"></td>
         </tr>
         {% endfor %}
@@ -206,19 +208,12 @@
     </table>
   </section>
 
-  <h2>More from this source</h2>
-  {% if box %}
-    {% for each in box.source.imported_spaces.all %}
-      <li>{{ each }}</li>
-    {% endfor %}
-  {% endif %}
-
   {% if request.user.is_staff %}
-    <div class="alert alert-info">
-      <h2>Items used to generate this map</h2>
+    <div class="border rounded p-3 bg-light mt-4">
+      <h4>Items used to generate this map</h4>
       <p>Library item containing the shapefiles we search for: <a href="{% url URLS.LIBRARY_ITEM info.id %}">{{ info }}</a></p>
       <p>General city/space we are in: <a href="{{ PROJECT.get_website_without_trailing_slash }}{{ space.get_relative_url }}">{{ space }}</a></p>
-      <p>Box to restrict search: <a href="{{ PROJECT.get_website_without_trailing_slash }}{{ box.get_relative_url }}">{{ box }}</a> - 
+      <p>Box to restrict search: <a href="{{ PROJECT.get_website_without_trailing_slash }}{{ box.get_relative_url }}">{{ box }}</a> -
       (source: <a href="{% url URLS.LIBRARY_ITEM box.source.id %}">{{ box.source }}</a>)
       </p>
     </div>
@@ -314,7 +309,7 @@
       mouseover: hoverArea,
       mouseout: resetHoverArea,
       click: selectArea
-    }){% if link %}.bindPopup("<h5>" + layer.feature.properties.name + "</h5><a class='btn btn-primary' href='" + layer.feature.properties.link + "'><i class='fa fa-search-plus'></i> Explore area</a>");{% endif %}
+    }){% if link %}.bindPopup("<h5>" + layer.feature.properties.name + "</h5><a class='btn btn-primary load-from-map' data-link='" + layer.feature.properties.link + "'><i class='fa fa-search-plus'></i> Explore area</a>");{% endif %}
   }
 
   // variable for the data, add it to the map
@@ -331,7 +326,7 @@
     };
 
     // request data, add the shapes to the map and fill in areas
-    $.get("/stocks/data/json/?source={{ data_source_document }}&material=" + material + "&within=" + within, function(data) {
+    $.get("{% url 'stocks:data_json' %}?source={{ data_source_document }}&material=" + material + "&within=" + within, function(data) {
       mapData = data;
 
       dataLayer = L.geoJson(mapShapes, {
@@ -554,12 +549,22 @@
   })
 
   // load new page when wanting to explore a new area or detail level
-  function loadPage(area) {
-    window.location.href = "../" + area + "?material=" + selectedMaterial;
+  function loadPage(area, box) {
+    window.location.href = "{% url 'stocks:city' space.slug %}" + area + "/" + box + "?material=" + selectedMaterial;
   }
 
   $(".load-map").click(function() {
-    // let area = $(this).
+    let area = $("#area").val()
+    let box = $("#box").val()
+    let detail = $("#detail").val()
+
+    loadPage(area, box);
+  })
+
+  $("body").on("click", ".load-from-map", function() {
+    let url = $(this).data("link");
+
+    window.location.href = url + "?material=" + selectedMaterial;
   })
 </script>
 {% endblock %}

@@ -189,11 +189,6 @@ def map(request, space, id, box=None):
         for each in spaces:
             if link:
                 get_link = reverse("stocks:map", args=[space.slug, link, each.id])
-                if box:
-                    # This allows us to create a breadcrumb and permit the user to go one level up
-                    # for instance to go back to view a map with all zip codes after I have been
-                    # viewing a map with a single zip code
-                    get_link += "?source_box=" + str(box.id)
             else:
                 get_link = "javascript:alert('no page yet')"
 
