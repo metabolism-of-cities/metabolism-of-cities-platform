@@ -148,8 +148,9 @@ baseline_urlpatterns = [
     path("hub/network/", core.hub_latest, { "network_wide": True }, name="network_activity"),
 
 
+    # Various
     path("newsletter/", core.newsletter, name="newsletter"),
-
     path("massmail/", core.massmail, name="massmail"),
+    path("page/<slug:slug>/", core.article, {"prefix": "/page/"}, name="article"),
 
 ]

@@ -22,6 +22,7 @@
     {% if tinymce %}
       {{ tinymce }}
     {% else %}
+      {% if info.meta_data.format == "html" %}<p class="text-right"><a href="?tinymce=true&amp;next={{ request.GET.next }}">Load rich text editor</a></p>{% endif %}
       <div class="form-group markdown-textarea">
         {% include "_markdown.html" %}
         <textarea class="form-control mb-4" id="text" rows="30" name="description">{{ info.description|default_if_none:"" }}</textarea>

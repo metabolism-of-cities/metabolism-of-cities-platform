@@ -13,6 +13,7 @@
     <thead>
       <tr>
         <th>Page title</th>
+        <th>View page</th>
         <th>Creation date</th>
       </tr>
     </thead>
@@ -20,6 +21,7 @@
     {% for each in pages %}
       <tr>
         <td><a href="{{ each.id }}/?next={{ request.get_full_path }}">{{ each }}</a></td>
+        <td><a href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}{{ each.slug }}">View page</a></td>
         <td>{{ each.date_created|date:"M d, Y" }}</td>
       </tr>
     {% endfor %}
