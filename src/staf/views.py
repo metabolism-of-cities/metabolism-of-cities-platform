@@ -1925,17 +1925,19 @@ def hub_processing_dataset(request, id, space=None):
     if "delete_document" in request.GET or "new_type" in request.GET and request.GET.get("new_type").isdigit():
         if "delete_document" in request.GET:
             message_description = "This document was deleted and the task was therefore completed. Status change: " + work.get_status_display() + " → "
+            work.status = Work.WorkStatus.COMPLETED
+            message_title = "Status change"
         else:
             new_type = LibraryItemType.objects.get(pk=request.GET["new_type"])
-            message_description = "This document was converted to a new type (" + str(new_type) + ") and the original task was therefore completed. Status change: " + work.get_status_display() + " → "
-        work.status = Work.WorkStatus.COMPLETED
+            message_description = "This document was converted to a new type (" + str(new_type) + ")."
+            message_title = "Document type change"
         work.save()
         work.refresh_from_db()
         new_status = str(work.get_status_display())
         message_description += new_status
 
         message = Message.objects.create(
-            name = "Status change",
+            name = message_title,
             description = message_description,
             parent = work,
             posted_by = request.user.people,
@@ -2375,17 +2377,19 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
             unauthorized_access(request)
         if "delete_document" in request.GET:
             message_description = "This document was deleted and the task was therefore completed. Status change: " + work.get_status_display() + " → "
+            work.status = Work.WorkStatus.COMPLETED
+            message_title = "Status change"
         else:
             new_type = LibraryItemType.objects.get(pk=request.GET["new_type"])
-            message_description = "This document was converted to a new type (" + str(new_type) + ") and the original task was therefore completed. Status change: " + work.get_status_display() + " → "
-        work.status = Work.WorkStatus.COMPLETED
+            message_description = "This document was converted to a new type (" + str(new_type) + ")."
+            message_title = "Document type change"
         work.save()
         work.refresh_from_db()
         new_status = str(work.get_status_display())
         message_description += new_status
 
         message = Message.objects.create(
-            name = "Status change",
+            name = message_title,
             description = message_description,
             parent = work,
             posted_by = request.user.people,

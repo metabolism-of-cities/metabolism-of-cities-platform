@@ -328,7 +328,8 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         messages.success(request, "File processing was started.")
 
     if "skip_size_check" in request.GET and curator:
-        info.meta_data.pop("processing_error")
+        if "processing_error" in info.meta_data:
+            info.meta_data.pop("processing_error")
         info.meta_data["ready_for_processing"] = True
         info.meta_data["skip_size_check"] = True
         info.save()
