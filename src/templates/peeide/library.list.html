@@ -1,0 +1,82 @@
+{% extends "_base.html" %}
+
+{% block head %}
+<style>
+  .container.main-content {
+    display: none;
+  }
+
+  img.ndee-banner {
+    object-position: center 70%;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- close container -->
+</div>
+
+<img class="ndee-banner" src="https://i.imgur.com/bF4qdQq.jpg">
+
+<!-- open container -->
+<div class="container">
+  <h1>Library</h1>
+
+    <div class="alert alert-warning text-center">
+      <i class="fa fa-search"></i> Your search yielded <strong>{{ items.count }}</strong> results.
+    </div>
+
+    <p>
+      You searched for: <strong>{{ tag }}</strong>
+      {% if additional_tag %}
+      and
+      <strong>{{ additional_tag }}</strong>
+      {% endif %}
+    </p>
+
+    <section class="container pb-5">
+      <h3>Publications</h3>
+      {% include "_library.list.html" %}
+    </section>
+
+    {% if not "tag" in request.GET %}
+
+      <section class="container p5-5">
+        <h3>Narrow down your search</h3>
+        <div class="row">
+          <div class="col">
+            <h2>Sectors</h2>
+            {% for each in sectors %}
+              {% if each.total %}
+                <li>
+                  <a href="?tag={{ each.id }}">{{ each }}</a>
+                  <span class="badge badge-info">{{ each.total }}</span>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          <div class="col">
+            <h2>Technologies</h2>
+            {% for each in technologies %}
+              {% if each.total %}
+                <li>
+                  <a href="?tag={{ each.id }}">{{ each }}</a>
+                  <span class="badge badge-info">{{ each.total }}</span>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </div>
+
+        </div>
+
+      </section>
+
+    {% endif %}
+
+  </div>
+
+<!-- </div> no need to close this container, it's already done above -->
+
+{% endblock %}

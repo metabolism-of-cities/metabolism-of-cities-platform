@@ -1093,7 +1093,14 @@ def controlpanel_zotero_collection(request, id):
     info = ZoteroCollection.objects.get(pk=id, part_of_project=project)
 
     if "import" in request.GET:
-        for each in ZoteroItem.objects.filter(collection=info, library_item=None):
+        # Delete this after tryouts
+        if project.slug == "peeide":
+            sectors = Tag.objects.filter(parent_tag__id=1089)
+            sectors.delete()
+            technologies = Tag.objects.filter(parent_tag__id=1088)
+            technologies.delete()
+        # End delete block
+        for each in ZoteroItem.objects.filter(collection=info):
             each.import_to_library()
         messages.success(request, "Information was synced with the library.")
 

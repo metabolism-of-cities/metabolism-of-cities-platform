@@ -1,11 +1,10 @@
 from core.models import *
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
-from django.db.models import Count
+from django.db.models import Q, Count
 from django.http import Http404, HttpResponseRedirect, JsonResponse, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.admin.views.decorators import staff_member_required
-from django.db.models import Q
 
 from django.utils import timezone
 import pytz
@@ -34,11 +33,43 @@ def people(request):
     return render(request, "peeide/people.html", context)
 
 def library(request):
-    sector_tag = Tag.objects.get(pk=1089)
-    technology_tag = Tag.objects.get(pk=1088)
+    sectors = Tag.objects.filter(parent_tag__id=1089).annotate(total=Count("record"))
+    technologies = Tag.objects.filter(parent_tag__id=1088).annotate(total=Count("record"))
     context = {
-        "webpage": get_object_or_404(Webpage, pk=51471),
+        "sectors": sectors,
+        "technologies": technologies,
     }
 
-    return render(request, "peeide/research.html", context)
+    return render(request, "peeide/library.html", context)
+
+def library_list(request, id):
+    tag = Tag.objects.get(pk=id)
+    items = LibraryItem.objects.filter(tags=tag)
+    sectors = None
+    technologies = None
+    additional_tag = None
+
+    if "tag" in request.GET:
+        # We allow the user to narrow down the results by adding another tag
+        additional_tag = get_object_or_404(Tag, pk=request.GET["tag"])
+        items = items.filter(tags=additional_tag)
+    else:
+        sectors = Tag.objects.filter(parent_tag__id=1089).exclude(id=id).annotate(
+            total=Count("record", filter=Q(record__tags=tag))
+        )
+        technologies = Tag.objects.filter(parent_tag__id=1088).exclude(id=id).annotate(
+            total=Count("record", filter=Q(record__tags=tag))
+        )
+
+    context = {
+        "tag": tag,
+        "items": items,
+        "load_datatables": True,
+        "sectors": sectors,
+        "technologies": technologies,
+        "tag": tag,
+        "additional_tag": additional_tag,
+    }
+
+    return render(request, "peeide/library.list.html", context)
 
