@@ -32,3 +32,13 @@ def people(request):
     }
 
     return render(request, "peeide/people.html", context)
+
+def library(request):
+    sector_tag = Tag.objects.get(pk=1089)
+    technology_tag = Tag.objects.get(pk=1088)
+    context = {
+        "webpage": get_object_or_404(Webpage, pk=51471),
+    }
+
+    return render(request, "peeide/research.html", context)
+

@@ -1092,6 +1092,11 @@ def controlpanel_zotero_collection(request, id):
     project = Project.objects.get(pk=request.project)
     info = ZoteroCollection.objects.get(pk=id, part_of_project=project)
 
+    if "import" in request.GET:
+        for each in ZoteroItem.objects.filter(collection=info, library_item=None):
+            each.import_to_library()
+        messages.success(request, "Information was synced with the library.")
+
     context = {
         "info": info,
         "list": ZoteroItem.objects.filter(collection=info),

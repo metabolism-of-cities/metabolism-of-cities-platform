@@ -2614,11 +2614,30 @@ class ZoteroItem(models.Model):
             # Adding the island tag
             info.tags.add(Tag.objects.get(id=219))
 
-        for each in self.find_tags():
-            info.tags.add(each)
+        if self.collection.uid == 4:
+            # NDEE collection has tags recorded in different fields and we use those instead
+            sector_tag = Tag.objects.get(pk=1089)
+            technology_tag = Tag.objects.get(pk=1088)
+            if self.get_ndee_sectors:
+                for each in self.get_ndee_sectors:
+                    try:
+                        tag = Tag.objects.get(parent_tag=sector_tag, name=each)
+                    except:
+                        tag = Tag.objects.create(name=each, parent_tag=sector_tag)
+                    info.tags.add(tag)
+            if self.get_ndee_technologies:
+                for each in self.get_ndee_technologies:
+                    try:
+                        tag = Tag.objects.get(parent_tag=technology_tag, name=each)
+                    except:
+                        tag = Tag.objects.create(name=each, parent_tag=technology_tag)
+                    info.tags.add(tag)
+        else:
+            for each in self.find_tags():
+                info.tags.add(each)
 
-        for each in self.find_spaces():
-            info.spaces.add(each)
+            for each in self.find_spaces():
+                info.spaces.add(each)
 
         self.library_item = info
         self.save()
@@ -2643,7 +2662,26 @@ class ZoteroItem(models.Model):
         else:
             return None
 
+    @property
+    def get_ndee_sectors(self):
+        # For the NDEE project, the sectors are recorded in the shortTitle field,
+        # and separated by a semi-colon
+        sectors = self.data.get("shortTitle")
+        return sectors.split(";") if sectors else None
+
+    @property
+    def get_ndee_technologies(self):
+        # For the NDEE project, the technologies are recorded in the language field,
+        # and separated by a semi-colon
+        technologies = self.data.get("language")
+        if technologies == "en" or technologies == "English" or technologies == "en-US":
+            # Sometimes the actual language is stored - so ignore that
+            technologies = None
+        return technologies.split(";") if technologies else None
+
     def find_match(self):
+        if self.library_item:
+            return self.library_item
         check = LibraryItem.objects.filter(name=self.title)
         if not check and "doi" in self.data and self.data["doi"]:
             check = LibraryItem.objects.filter(doi=doi)

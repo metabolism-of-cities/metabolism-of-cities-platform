@@ -8,25 +8,35 @@
     Back
   </a>
 
-  {% if not request.GET.match %}
-    <p>
-      <a class="btn btn-warning" href="./?match=true"><i class="fa fa-random"></i> Check for matches</a>
-      <a class="btn btn-default-outline" href="tags/">View all tags</a>
-    </p>
+  {% if PROJECT.slug == "peeide" %}
+  <p>
+    <a class="btn btn-warning" href="./?ndee=true"><i class="fa fa-random"></i> Check matches</a>
+    <a class="btn btn-warning" href="./?import=true"><i class="fa fa-sync"></i> Import pending items</a>
+  </p>
   {% else %}
-    <div class="alert alert-warning">Match check was performed, see results below...</div>
+    {% if not request.GET.match %}
+      <p>
+        <a class="btn btn-warning" href="./?match=true"><i class="fa fa-random"></i> Check for matches</a>
+        <a class="btn btn-default-outline" href="tags/">View all tags</a>
+      </p>
+    {% else %}
+      <div class="alert alert-warning">Match check was performed, see results below...</div>
+    {% endif %}
   {% endif %}
 
   <table class="table table-striped datatable">
     <thead>
       <tr>
-        <th>ID</th>
-        <th>Date</th>
         <th>Title</th>
-        <th>Type</th>
-        {% if request.GET.match %}
+        {% if request.GET.ndee %}
+          <th>Sectors</th>
+          <th>Technologies</th>
+        {% elif request.GET.match %}
           <th>Matches</th>
         {% else %}
+          <th>ID</th>
+          <th>Date</th>
+          <th>Type</th>
           <th>Import date</th>
         {% endif %}
       </tr>
@@ -34,11 +44,11 @@
     <tbody>
     {% for each in list %}
       <tr>
-        <td>{{ each.key }}</td>
-        <td>{{ each.get_year }}</td>
         <td><a href="{{ each.pk }}/">{{ each.title }}</a></td>
-        <td>{{ each.data.itemType }}</td>
-        {% if request.GET.match %}
+        {% if request.GET.ndee %}
+          <td>{{ each.get_ndee_sectors }}</td>
+          <td>{{ each.get_ndee_technologies }}</td>
+        {% elif request.GET.match %}
           <td>
             {% for tag in each.find_tags %}
               <span class="badge badge-info">
@@ -52,6 +62,9 @@
             {% endfor %}
           </td>
         {% else %}
+          <td>{{ each.key }}</td>
+          <td>{{ each.get_year }}</td>
+          <td>{{ each.data.itemType }}</td>
           <td>{{ each.date_created }}</td>
         {% endif %}
       </tr>
