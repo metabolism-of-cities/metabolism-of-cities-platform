@@ -444,16 +444,19 @@ def map_item(request, id, space=None):
             content = f"<a class='d-block' href='{url}'><img alt='{each.name}' src='{each.get_thumbnail}' /></a><hr>"
         content = content + f"<a href='{url}'>View details</a>"
 
-        features.append({
-            "type": "Feature",
-            "geometry": json.loads(geo.json),
-            "properties": {
-                "name": each.name,
-                "id": each.id,
-                "content": content,
-                "color": color if color else "",
-            },
-        })
+        try:
+            features.append({
+                "type": "Feature",
+                "geometry": json.loads(geo.json),
+                "properties": {
+                    "name": each.name,
+                    "id": each.id,
+                    "content": content,
+                    "color": color if color else "",
+                },
+            })
+        except Exception as e:
+            messages.error(request, f"We had an issue reading one of the items which had an invalid geometry ({each}). Error: {str(e)}")
 
     data = {
         "type":"FeatureCollection",
@@ -1927,14 +1930,14 @@ def hub_processing_dataset(request, id, space=None):
             message_description = "This document was deleted and the task was therefore completed. Status change: " + work.get_status_display() + " → "
             work.status = Work.WorkStatus.COMPLETED
             message_title = "Status change"
+            work.save()
+            work.refresh_from_db()
+            new_status = str(work.get_status_display())
+            message_description += new_status
         else:
             new_type = LibraryItemType.objects.get(pk=request.GET["new_type"])
             message_description = "This document was converted to a new type (" + str(new_type) + ")."
             message_title = "Document type change"
-        work.save()
-        work.refresh_from_db()
-        new_status = str(work.get_status_display())
-        message_description += new_status
 
         message = Message.objects.create(
             name = message_title,
@@ -2379,14 +2382,14 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
             message_description = "This document was deleted and the task was therefore completed. Status change: " + work.get_status_display() + " → "
             work.status = Work.WorkStatus.COMPLETED
             message_title = "Status change"
+            work.save()
+            work.refresh_from_db()
+            new_status = str(work.get_status_display())
+            message_description += new_status
         else:
             new_type = LibraryItemType.objects.get(pk=request.GET["new_type"])
             message_description = "This document was converted to a new type (" + str(new_type) + ")."
             message_title = "Document type change"
-        work.save()
-        work.refresh_from_db()
-        new_status = str(work.get_status_display())
-        message_description += new_status
 
         message = Message.objects.create(
             name = message_title,
