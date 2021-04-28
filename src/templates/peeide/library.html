@@ -1,0 +1,64 @@
+{% extends "_base.html" %}
+
+{% block head %}
+<style>
+  .container.main-content {
+    display: none;
+  }
+
+  img.ndee-banner {
+    object-position: center 70%;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- close container -->
+</div>
+
+<img class="ndee-banner" src="https://i.imgur.com/bF4qdQq.jpg">
+
+<!-- open container -->
+<div class="container">
+  <h1>Library</h1>
+
+  <form>
+  
+    <input name="keyword" placeholder="Search by keyword" />
+    <button type="submit">Search</button>
+    <label>
+      <input type="checkbox" name="abstract" checked value="true" /> Search the abstract
+    </label>
+    <label>
+      <input type="checkbox" name="title" checked value="true" /> Search the title
+    </label>
+
+  </form>
+
+  <div class="row">
+    <div class="col">
+      <h2>Sectors</h2>
+      {% for each in sectors %}
+        <li>
+          <a href="{% url "peeide:sector" each.id %}">{{ each }}</a>
+          <span class="badge badge-info">{{ each.total }}</span>
+        </li>
+      {% endfor %}
+    </div>
+
+    <div class="col">
+      <h2>Technologies</h2>
+      {% for each in technologies %}
+        <li>
+          <a href="{% url "peeide:technology" each.id %}">{{ each }}</a>
+          <span class="badge badge-info">{{ each.total }}</span>
+        </li>
+      {% endfor %}
+    </div>
+
+  </div>
+
+<!-- </div> no need to close this container, it's already done above -->
+
+{% endblock %}

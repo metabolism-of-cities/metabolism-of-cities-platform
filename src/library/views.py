@@ -328,7 +328,8 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         messages.success(request, "File processing was started.")
 
     if "skip_size_check" in request.GET and curator:
-        info.meta_data.pop("processing_error")
+        if "processing_error" in info.meta_data:
+            info.meta_data.pop("processing_error")
         info.meta_data["ready_for_processing"] = True
         info.meta_data["skip_size_check"] = True
         info.save()
@@ -1090,6 +1091,18 @@ def controlpanel_zotero_collection(request, id):
 
     project = Project.objects.get(pk=request.project)
     info = ZoteroCollection.objects.get(pk=id, part_of_project=project)
+
+    if "import" in request.GET:
+        # Delete this after tryouts
+        if project.slug == "peeide":
+            sectors = Tag.objects.filter(parent_tag__id=1089)
+            sectors.delete()
+            technologies = Tag.objects.filter(parent_tag__id=1088)
+            technologies.delete()
+        # End delete block
+        for each in ZoteroItem.objects.filter(collection=info):
+            each.import_to_library()
+        messages.success(request, "Information was synced with the library.")
 
     context = {
         "info": info,
