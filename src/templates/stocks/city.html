@@ -5,20 +5,44 @@
 
 {% block head %}
 <style>
-
+  .description p:last-of-type {
+    margin-bottom: 0;
+  }
 </style>
 {% endblock %}
 
 {% block content %}
   {% include "_submenu-stocks.html" %}
 
-  <div>
-    <select class="custom-select">
-      {% for each in areas %}
-      <option value="{{ each.id }}">{{ each }}</option>
+  <section>
+    <p>{% lorem 1 %}</p>
+  </section>
+
+  <section>
+    <h2>Data source</h2>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="border rounded p-3 bg-light">
+          <h5>{{ data_source }}</h5>
+          <div class="description">{{ data_source.get_description }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Detail levels</h2>
+    <div class="row">
+      {% for each in levels %}
+        <div class="col-md-6 col-lg-4">
+          <div class="border rounded p-3 bg-light">
+            <h5>{{ each.get_shortname }}</h5>
+            <div class="description">{{ each.get_description }}</div>
+          </div>
+        </div>
       {% endfor %}
-    </select>
-  </div>
+    </div>
+  </section>
 
 {% endblock %}
 

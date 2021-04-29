@@ -52,22 +52,27 @@ def city(request, space):
     if space.name == "Melbourne":
         id = 33931
         link = 33962
-        areas = [33931,33962,924024]
+        levels = [33962,33931,924024]
+        data_source = 33971
     elif space.name == "Brussels":
         id = 33886
         link = 33962
-        areas = [33886,33895,33904,33913]
+        levels = [33886,33895,33904,33913]
+        data_source = 33971
 
+    levels = LibraryItem.objects.filter(pk__in=levels).order_by("id")
     info = LibraryItem.objects.get(pk=id)
+    data_source = LibraryItem.objects.get(pk=data_source)
 
     context = {
         "city": True,
         "load_select2": True,
-        "data_source_document": data_source_document,
-        "areas": areas,
+        "levels": levels,
+        "data_source": data_source,
         "space": space,
         "info": info,
         "link": link,
+        "menu": "overview",
     }
     return render(request, "stocks/city.html", context)
 

@@ -20,11 +20,20 @@
       and it's fun!
     </p>
 
-    <img src="/media/records/Curso_corto_Metabolismo_Urbano_y_manejo_de_datos.thumbnail.png" alt="" class="img-thumbnail mb-3" />
+    {% if PROJECT.slug == "cityloops" %}
+      <img src="/media/records/Course_2.thumbnail.png" alt="" class="img-thumbnail mb-3" />
 
-    <a class="badge badge-primary" href="https://education.metabolismofcities.org/courses/metabolismo-urbano-y-manejo-de-datos-procesamiento-de-datos/">Full course (in Spanish)</a><br>
-    <a class="badge badge-primary" href="https://education.metabolismofcities.org/courses/data-and-urban-metabolism-data-processing/">Register for upcoming course (in English)</a><br>
-    <a class="badge badge-primary" href="https://multimedia.metabolismofcities.org/videos/collection/966/">View tutorial videos (in English)</a><br>
+      <a class="btn btn-primary" href="https://cityloops.metabolismofcities.org/courses/course-2-data-processing-and-analysis-for-sector-wide-circularity-assessment-wp23/">Data processing and analysis <i class="fal fa-arrow-right mr-0 ml-2"></i></a><br>
+    {% else %}
+      <img src="/media/records/Curso_corto_Metabolismo_Urbano_y_manejo_de_datos.thumbnail.png" alt="" class="img-thumbnail mb-3" />
+
+      <a class="btn btn-sm btn-primary mb-2" href="https://education.metabolismofcities.org/courses/metabolismo-urbano-y-manejo-de-datos-procesamiento-de-datos/">Full course (Español) <i class="fal fa-arrow-right mr-0 ml-2"></i></a>
+
+      <a class="btn btn-sm btn-primary mb-2" href="https://education.metabolismofcities.org/courses/data-and-urban-metabolism-data-processing/">Register for upcoming course (English) <i class="fal fa-arrow-right mr-0 ml-2"></i></a>
+
+      <a class="btn btn-sm btn-primary mb-2" href="https://multimedia.metabolismofcities.org/videos/collection/966/">View tutorial videos (English) <i class="fal fa-arrow-right mr-0 ml-2"></i></a>
+    {% endif %}
+
 
   </div>
 </div>
