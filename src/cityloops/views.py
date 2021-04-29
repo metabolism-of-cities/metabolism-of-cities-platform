@@ -407,11 +407,18 @@ def city_indicator_form(request, slug, sector, id):
     }
     return render(request, "cityloops/indicator.city.form.html", context)
 
-def sca_report(request, space):
-    space = get_space(request, space)
+def sca_report(request, slug, sector):
+    space = get_space(request, slug)
+
+    indicator_list = CityLoopsIndicator.objects.all()
+    sector_id = 1 if sector == "construction" else 2
+    indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, city_id=space.id, sector=sector_id).order_by("indicator_id")
+
     context = {
         "space": space,
+        "sector": sector,
         "title": "SCA report",
+        "indicator_scale_list": indicator_scale_list,
     }
     return render(request, "cityloops/sca-report.html", context)
 

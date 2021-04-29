@@ -35,8 +35,6 @@
       }
 
       .cover-title {
-        width: 100vw;
-        /*background-color: #004d76bf;*/
         color: #fff;
         padding: 90px;
         font-weight: bolder;
@@ -45,16 +43,16 @@
 
       .report-title {
         background-color: #004d76;
-        font-size: 34px;
+        font-size: 3rem;
         padding: 8px;
-        line-height: 2;
+        line-height: 6rem;
       }
 
       .city-title {
         background-color: #00b6ed;
-        font-size: 26px;
+        font-size: 3rem;
         padding: 8px;
-        line-height: 2;
+        line-height: 6rem;
       }
 
       .cover-image {
@@ -68,14 +66,14 @@
       }
 
       .cityloops-logo {
-        width: 100px;
+        width: 15vw;
         position: absolute;
         right: 3vw;
         bottom: 15vw;
       }
 
       .moc-logo {
-        width: 130px;
+        width: 18vw;
         position: absolute;
         right: 10vw;
         bottom: 5vw;
@@ -83,12 +81,12 @@
 
       .cityloops-background {
         background: transparent;
-        width: 300px;
-        height: 300px;
-        border: 150px solid black;
+        width: 30vh;
+        height: 30vh;
+        border: 15vh solid black;
         border-top-color: transparent;
-        border-right-color: #fff;
-        border-bottom-color: #fff;
+        border-right-color: #fffd;
+        border-bottom-color: #fffd;
         border-left-color: transparent;
         position: absolute;
         bottom: 0;
@@ -110,7 +108,7 @@
     <div class="cover-title">
       <span class="report-title">Sector Circularity Assessment</span>
       <br>
-      <span class="report-title">for the construction sector</span>
+      <span class="report-title">for the {{ sector }} sector</span>
       <br>
       <span class="city-title">{{ space }}</span>
     </div>
@@ -124,21 +122,80 @@
   </div>
 
   <div class="p-5">
-    <h1>Introduction</h1>
-    <p>Maybe short section on what the SCA is. How long cities have been working on them with the two courses.</p>
-    <p><a href="https://cityloops.metabolismofcities.org/dashboards/apeldoorn/">URL to City's Data Hub.</a></p>
+    <section id="introduction">
+      <h1>Introduction</h1>
+      <p>Maybe short section on what the SCA is. How long cities have been working on them with the two courses.</p>
+      <p><a href="https://cityloops.metabolismofcities.org/dashboards/apeldoorn/">URL to City's Data Hub.</a></p>
+    </section>
 
-    <div class="row">
-      <div class="col-6"></div>
-    </div>
-    <div class="row">
-      <div class="col-6"><div class="context-map" id="space-map"></div></div>
-      <div class="col-6">
-        <h4>{{ space }}</h4>
-        <div><i class="fal fa-users fa-fw"></i> 162,445</div>
-        <div><i class="fal fa-area fa-fw"></i> 341.15 km<sup>2</sup></div>
+    <section id="urban-context">
+      <h1>Urban context</h1>
+      <div class="row">
+        <div class="col-3">
+          <div class="context-map rounded" id="space-map"></div>
+        </div>
+        <div class="col-3">
+          <img class="img-fluid rounded" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Gelderland_in_the_Netherlands.svg/426px-Gelderland_in_the_Netherlands.svg.png">
+        </div>
+        <div class="col-3">
+          <img class="img-fluid rounded" src="https://upload.wikimedia.org/wikipedia/commons/f/ff/Landsdeel.png">
+        </div>
+        <div class="col-3">
+          <img class="img-fluid rounded" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/EU-Netherlands.svg/571px-EU-Netherlands.svg.png">
+        </div>
       </div>
-    </div>
+      <div class="row">
+        <div class="col-3">
+          <h4>{{ space }}</h4>
+          <div><i class="fal fa-users fa-fw mr-2"></i> 162,445</div>
+          <div><i class="fal fa-ruler-combined fa-fw mr-2"></i> 341.15 km<sup>2</sup></div>
+        </div>
+        <div class="col-3">
+          <h4>Gelderland</h4>
+          <div><i class="fal fa-users fa-fw mr-2"></i> 162,445</div>
+          <div><i class="fal fa-ruler-combined fa-fw mr-2"></i> 341.15 km<sup>2</sup></div>
+        </div>
+        <div class="col-3">
+          <h4>Oost Nederland</h4>
+          <div><i class="fal fa-users fa-fw mr-2"></i> 162,445</div>
+          <div><i class="fal fa-ruler-combined fa-fw mr-2"></i> 341.15 km<sup>2</sup></div>
+        </div>
+        <div class="col-3">
+          <h4>Netherlands</h4>
+          <div><i class="fal fa-users fa-fw mr-2"></i> 162,445</div>
+          <div><i class="fal fa-ruler-combined fa-fw mr-2"></i> 341.15 km<sup>2</sup></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sector-context">
+      <h1>Sector / economic context - biomass / construction</h1>
+    </section>
+
+    <section id="indicators">
+      <h1>Indicators</h1>
+      <ul>
+        {% for each in indicator_scale_list %}
+          <li>{{ each }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section id="visualisations">
+      <h1>Visualisations</h1>
+    </section>
+
+    <section id="matrix">
+      <h1>Data gap analysis (matrix)</h1>
+    </section>
+
+    <section id="analysis">
+      <h1>Data analysis</h1>
+    </section>
+
+    <section id="references">
+      <h1>References</h1>
+    </section>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
@@ -165,7 +222,5 @@
     map.scrollWheelZoom.disable();
     map.fitBounds(geojsonlayer.getBounds());
   </script>
-
 </body>
-
 </html>
