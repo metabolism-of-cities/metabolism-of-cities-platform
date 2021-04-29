@@ -1618,6 +1618,7 @@ class LibraryItem(Record):
                         source = self,
                         meta_data = {"features": meta_data} if len(meta_data) else None,
                     )
+        self.meta_data["processing_date"] = str(timezone.now())
         if error:
             self.meta_data["processing_error"] = error
         else:

@@ -3210,7 +3210,8 @@ def controlpanel_shapefiles(request):
 
     context = {
         "items": LibraryItem.objects.filter(type__name="Shapefile", meta_data__ready_for_processing=True).exclude(meta_data__processing_error__isnull=False),
-        "items_errors": LibraryItem.objects.filter(type__name="Shapefile", meta_data__processing_error__isnull=False)
+        "items_errors": LibraryItem.objects.filter(type__name="Shapefile", meta_data__processing_error__isnull=False),
+        "load_datatables": True,
     }
     return render(request, "controlpanel/shapefiles.html", context)
 

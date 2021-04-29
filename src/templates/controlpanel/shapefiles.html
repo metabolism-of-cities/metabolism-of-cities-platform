@@ -2,7 +2,7 @@
 
 {% block content %}
 
-  <h1 class="mb-0">Pending shapefiles</h1>
+  <h1 class="mb-0">{% block title %}Pending shapefiles{% endblock %}</h1>
   <a href="../" class="btn btn-primary-basic mb-4">
     <i class="fal fa-angle-left"></i>
     Back to control panel
@@ -35,7 +35,7 @@
     </tbody>
   </table>
 
-  <h3>Shapefiles with errors</h3>
+  <h3 class="pt-5">Shapefiles with errors</h3>
 
   <table class="table table-striped datatable table-card">
     <thead>
