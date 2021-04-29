@@ -63,6 +63,22 @@ body {
   color: $ndee-purple !important;
 }
 
+.bg-ndee-primary {
+  background-color: $ndee-primary !important;
+}
+
+.bg-ndee-secondary {
+  background-color: $ndee-secondary !important;
+}
+
+.bg-ndee-purple {
+  background-color: $ndee-purple !important;
+}
+
+.bg-ndee-blue-accent {
+  background-color: $ndee-blue-accent !important;
+}
+
 .bg-ndee-light-blue {
   background-color: $ndee-light-blue !important;
 }
@@ -134,4 +150,11 @@ img.ndee-banner {
   .card-title {
     color: $ndee-primary;
   }
+}
+
+.dataTables_wrapper .paginate_button.page-item.active .page-link,
+.dataTables_wrapper .paginate_button.page-item.active .page-link:hover,
+.custom-control-input:checked ~ .custom-control-label::before {
+  border-color: $ndee-primary !important;
+  background-color: $ndee-primary !important;
 }

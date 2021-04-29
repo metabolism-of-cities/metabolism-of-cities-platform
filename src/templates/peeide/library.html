@@ -9,6 +9,28 @@
   img.ndee-banner {
     object-position: center 70%;
   }
+
+  .search-box-wrapper {
+    max-width: 750px;
+  }
+
+  .search-box {
+    height: 58px;
+    font-size: 20px;
+  }
+
+  #item-lists .badge {
+    width: 30px;
+    display: inline-block;
+  }
+
+  .item-title {
+    max-width: calc(100% - 55px);
+  }
+
+  section:last-of-type {
+    margin-bottom: 2rem;
+  }
 </style>
 {% endblock %}
 
@@ -23,41 +45,56 @@
 <div class="container">
   <h1>Library</h1>
 
-  <form>
-  
-    <input name="keyword" placeholder="Search by keyword" />
-    <button type="submit">Search</button>
-    <label>
-      <input type="checkbox" name="abstract" checked value="true" /> Search the abstract
-    </label>
-    <label>
-      <input type="checkbox" name="title" checked value="true" /> Search the title
-    </label>
+  <section>
+    <form>
+      <div class="search-box-wrapper input-group mb-2 mr-sm-2">
+        <input class="search-box form-control" name="keyword" placeholder="Search by keyword" />
+        <div class="input-group-append">
+          <button class="btn btn-ndee btn-ndee-primary" type="submit">
+            <i class="far fa-search mr-2"></i> Search
+          </button>
+        </div>
+      </div>
 
-  </form>
+      <div class="custom-control custom-switch d-inline-block mr-4">
+        <input type="checkbox" class="custom-control-input" id="search-title" name="title" checked value="true">
+        <label class="custom-control-label" for="search-title">Search through titles</label>
+      </div>
 
-  <div class="row">
-    <div class="col">
-      <h2>Sectors</h2>
-      {% for each in sectors %}
-        <li>
-          <a href="{% url "peeide:sector" each.id %}">{{ each }}</a>
-          <span class="badge badge-info">{{ each.total }}</span>
-        </li>
-      {% endfor %}
+      <div class="custom-control custom-switch d-inline-block">
+        <input type="checkbox" class="custom-control-input" id="search-abstract" name="abstract" checked value="true">
+        <label class="custom-control-label" for="search-abstract">Search through abstracts</label>
+      </div>
+    </form>
+  </section>
+
+  <section id="item-lists">
+    <div class="row">
+      <div class="col">
+        <h2>Sectors</h2>
+        <div class="list-group list-group-flush">
+          {% for each in sectors %}
+            <a href="{% url 'peeide:sector' each.id %}" class="list-group-item list-group-item-action">
+              <span class="badge bg-ndee-primary text-light align-top mr-3 mt-1">{{ each.total }}</span>
+              <span class="d-inline-block item-title">{{ each }}</span>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="col">
+        <h2>Technologies</h2>
+        <div class="list-group list-group-flush">
+          {% for each in technologies %}
+            <a href="{% url 'peeide:sector' each.id %}" class="list-group-item list-group-item-action">
+              <span class="badge bg-ndee-primary text-light align-top mr-3 mt-1">{{ each.total }}</span>
+              <span class="d-inline-block item-title">{{ each }}</span>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
     </div>
-
-    <div class="col">
-      <h2>Technologies</h2>
-      {% for each in technologies %}
-        <li>
-          <a href="{% url "peeide:technology" each.id %}">{{ each }}</a>
-          <span class="badge badge-info">{{ each.total }}</span>
-        </li>
-      {% endfor %}
-    </div>
-
-  </div>
+  </section>
 
 <!-- </div> no need to close this container, it's already done above -->
 
