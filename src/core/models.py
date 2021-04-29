@@ -1437,14 +1437,6 @@ class LibraryItem(Record):
                             try:
                                 if ct:
                                     each.transform(ct)
-
-                                if type == "Point25D" or type == "LineString25D":
-                                    # This type has a "Z" geometry which needs to be changed to a 2-dimensional geometry
-                                    # See also https://stackoverflow.com/questions/35851577/strip-z-dimension-on-geodjango-force-2d-geometry
-                                    get_clone = each.clone()
-                                    each.coord_dim = 2
-                                    each = get_clone
-
                             except Exception as e:
                                 error = "The following error occurred when trying to fetch the shapefile info: " + str(e)
 
@@ -1459,11 +1451,27 @@ class LibraryItem(Record):
                         error = "The following error occurred when trying to get all the geometries: " + str(e)
 
                 if not error:
-                    space = ReferenceSpace.objects.create(
-                        name = self.meta_data.get("shortname"),
-                        geometry = polygon,
-                        source = self,
-                    )
+
+                    if type == "Point25D" or type == "LineString25D":
+                        # This type has a "Z" geometry which needs to be changed to a 2-dimensional geometry
+                        # See also https://stackoverflow.com/questions/35851577/strip-z-dimension-on-geodjango-force-2d-geometry
+                        get_clone = polygon.clone()
+                        polygon.coord_dim = 2
+                        polygon = get_clone
+
+                    if polygon.hasz:
+                        # Oddly enough the code above does not always work. Not yet sure why. I have had lines that were combined, 
+                        # into a multilinestring, and it seems like it is not possible (for Django?) to remove 3D from this 
+                        # kind of object. So we simply do another check to see if it 'has z'. BTW we can likely use hasz
+                        # instead of type == point25d etc but I only now learned about it. Something for later. 
+                        # https://docs.djangoproject.com/en/3.1/ref/contrib/gis/geos/#django.contrib.gis.geos.GEOSGeometry.hasz
+                        error = "This shapefile includes data in 3D. We only store shapefiles with 2D data. Please remove the elevation data (Z coordinates)"
+                    else:
+                        space = ReferenceSpace.objects.create(
+                            name = self.meta_data.get("shortname"),
+                            geometry = polygon,
+                            source = self,
+                        )
             elif "group_spaces_by_name" in self.meta_data:
                 # EXAMPLE: a shapefile containing land use data, in which there are many polygons indicating
                 # a few different types (e.g. BUILT ENVIRONMENT, LAKES, AGRICULTURE). These should be saved
@@ -1614,6 +1622,8 @@ class LibraryItem(Record):
             self.meta_data["processing_error"] = error
         else:
             self.meta_data["processed"] = True
+            if "ready_for_processing" in self.meta_data:
+                self.meta_data.pop("ready_for_processing")
             if "processing_error" in self.meta_data:
                 self.meta_data.pop("processing_error")
             if "allow_deletion_spaces" in self.meta_data:

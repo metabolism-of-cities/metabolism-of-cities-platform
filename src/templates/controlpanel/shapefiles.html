@@ -1,0 +1,77 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1 class="mb-0">Pending shapefiles</h1>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+  <p>
+    On this page you can see which shapefiles are not yet processed. They should
+    be processed by our automated cron script (running every 6h). If they are not, 
+    check the cron log for insights.
+  </p>
+
+  <table class="table table-striped datatable table-card">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Assigned to</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in items %}
+      <tr>
+        <td>
+          <a href="{% url URLS.LIBRARY_ITEM each.id %}">{{ each }}</a>
+        </td>
+        <td>
+          {{ each.meta_data.assigned_to }}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Shapefiles with errors</h3>
+
+  <table class="table table-striped datatable table-card">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Assigned to</th>
+        <th>Error</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in items_errors %}
+      <tr>
+        <td>
+          <a href="{% url URLS.LIBRARY_ITEM each.id %}">{{ each }}</a>
+        </td>
+        <td>
+          {{ each.meta_data.assigned_to }}
+        </td>
+        <td class="text-danger">
+          {{ each.meta_data.processing_error }}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <a class="btn btn-default-basic float-right mt-4" href="create/?next={{ request.get_full_path }}"><i class="fal fa-plus"></i> Add page</a>
+  <a href="../" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+{% endblock %}
+
+{% block footer %}
+<script>
+  datatable.column("1:visible").order("desc").draw();
+</script>
+{% endblock %}

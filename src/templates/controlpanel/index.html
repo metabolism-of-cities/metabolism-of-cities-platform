@@ -167,6 +167,23 @@
     </div>
   </section>
 
+  {% if IS_DATA_PORTAL %}
+    <section>
+      <h2>Data management</h2>
+      <div class="row">
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="shapefiles/">
+            <div class="icon">
+              <i class="fal fa-fw fa-layer-group"></i>
+            </div>
+            <div class="card-header">Pending shapefiles</div>
+          </a>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+
   {% if PROJECT.slug == "library" or PROJECT.slug == "islands" or PROJECT.slug == "peeide" %}
     <section>
       <h2>Library management</h2>

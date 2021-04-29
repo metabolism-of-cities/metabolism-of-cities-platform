@@ -23,12 +23,9 @@ class ProcessShapefile(CronJobBase):
     code = "core.process_shapefile" # Unique code for logging purposes
 
     def do(self):
-        list = LibraryItem.objects.filter(type__name="Shapefile", meta_data__ready_for_processing=True)
+        list = LibraryItem.objects.filter(type__name="Shapefile", meta_data__ready_for_processing=True).exclude(meta_data__processing_error__isnull=False)
         for each in list:
             each.convert_shapefile()
-            each.meta_data["processed"] = True
-            each.meta_data["ready_for_processing"] = False
-            each.save()
 
 class ProcessDataset(CronJobBase):
     RUN_EVERY_MINS = 60*7

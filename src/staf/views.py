@@ -3199,3 +3199,18 @@ def sankeybuilder(request):
     }
 
     return render(request, "staf/sankey-builder.html", context)
+
+# Control panel sections
+# The main control panel views are in the core/views file, but these are STAF-specific
+
+@login_required
+def controlpanel_shapefiles(request):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    context = {
+        "items": LibraryItem.objects.filter(type__name="Shapefile", meta_data__ready_for_processing=True).exclude(meta_data__processing_error__isnull=False),
+        "items_errors": LibraryItem.objects.filter(type__name="Shapefile", meta_data__processing_error__isnull=False)
+    }
+    return render(request, "controlpanel/shapefiles.html", context)
+
