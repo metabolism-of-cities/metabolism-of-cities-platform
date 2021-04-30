@@ -45,28 +45,7 @@
 <div class="container">
   <h1>Library</h1>
 
-  <section>
-    <form>
-      <div class="search-box-wrapper input-group mb-2 mr-sm-2">
-        <input class="search-box form-control" name="keyword" placeholder="Search by keyword" />
-        <div class="input-group-append">
-          <button class="btn btn-ndee btn-ndee-primary" type="submit">
-            <i class="far fa-search mr-2"></i> Search
-          </button>
-        </div>
-      </div>
-
-      <div class="custom-control custom-switch d-inline-block mr-4">
-        <input type="checkbox" class="custom-control-input" id="search-title" name="title" checked value="true">
-        <label class="custom-control-label" for="search-title">Search through titles</label>
-      </div>
-
-      <div class="custom-control custom-switch d-inline-block">
-        <input type="checkbox" class="custom-control-input" id="search-abstract" name="abstract" checked value="true">
-        <label class="custom-control-label" for="search-abstract">Search through abstracts</label>
-      </div>
-    </form>
-  </section>
+  {% include "peeide/_library.search.html" %}
 
   <section id="item-lists">
     <div class="row">

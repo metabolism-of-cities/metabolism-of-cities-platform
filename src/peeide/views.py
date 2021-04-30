@@ -42,9 +42,22 @@ def library(request):
 
     return render(request, "peeide/library.html", context)
 
-def library_list(request, id):
-    tag = Tag.objects.get(pk=id)
-    items = LibraryItem.objects.filter(tags=tag)
+def library_list(request, id=None):
+    keyword = request.GET.get("keyword")
+    tag = None
+    if id:
+        tag = Tag.objects.get(pk=id)
+        items = LibraryItem.objects.filter(tags=tag)
+    elif keyword:
+        items = LibraryItem.objects.filter(tags__parent_tag__parent_tag_id=1086).distinct()
+        abstract_search = request.GET.get("abstract")
+        title_search = request.GET.get("title")
+        if abstract_search and title_search:
+            items = items.filter(Q(name__icontains=keyword)|Q(description__icontains=keyword))
+        elif abstract_search:
+            items = items.filter(description__icontains=keyword)
+        elif title_search:
+            items = items.filter(name__icontains=keyword)
     sectors = None
     technologies = None
     additional_tag = None
@@ -55,10 +68,10 @@ def library_list(request, id):
         items = items.filter(tags=additional_tag)
     else:
         sectors = Tag.objects.filter(parent_tag__id=1089).exclude(id=id).annotate(
-            total=Count("record", filter=Q(record__tags=tag))
+            total=Count("record", filter=Q(record__libraryitem__in=items))
         )
         technologies = Tag.objects.filter(parent_tag__id=1088).exclude(id=id).annotate(
-            total=Count("record", filter=Q(record__tags=tag))
+            total=Count("record", filter=Q(record__libraryitem__in=items))
         )
 
     context = {
@@ -69,6 +82,7 @@ def library_list(request, id):
         "technologies": technologies,
         "tag": tag,
         "additional_tag": additional_tag,
+        "keyword": keyword,
     }
 
     return render(request, "peeide/library.list.html", context)

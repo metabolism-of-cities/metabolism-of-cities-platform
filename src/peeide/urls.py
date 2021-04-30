@@ -12,6 +12,7 @@ urlpatterns =  [
     path("people/", views.people, name="people"),
     path("research/", views.research, name="research"),
     path("library/", views.library),
+    path("library/search/", views.library_list, name="library_search"),
     path("library/sectors/<int:id>/", views.library_list, name="sector"),
     path("library/technologies/<int:id>/", views.library_list, name="technology"),
 

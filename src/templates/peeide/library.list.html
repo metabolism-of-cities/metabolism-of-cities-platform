@@ -31,6 +31,14 @@
   section:last-of-type {
     margin-bottom: 2rem;
   }
+  .search-box-wrapper {
+    max-width: 750px;
+  }
+
+  .search-box {
+    height: 58px;
+    font-size: 20px;
+  }
 </style>
 {% endblock %}
 
@@ -43,10 +51,14 @@
 
 <!-- open container -->
 <div class="container">
-  <h1>Library</h1>
+  <h1>{% block title %}Library{% endblock %}</h1>
+
+    {% if keyword %}
+      {% include "peeide/_library.search.html" %}
+    {% endif %}
 
     <div class="border rounded bg-light p-3 mb-4">
-      <i class="far fa-search mr-2"></i> Your search for <span class="bg-ndee-light-blue text-primary border rounded mx-1 p-1">{{ tag }}</span> {% if additional_tag %}and <span class="bg-ndee-light-blue text-primary border rounded mx-1 p-1">{{ additional_tag }}</span>{% endif %} yielded <strong>{{ items.count }}</strong> result{{ items.count|pluralize }}
+      <i class="far fa-search mr-2"></i> Your search {% if keyword %}{% if additional_tag %}for <span class="bg-ndee-light-blue text-primary border rounded mx-1 p-1">{{ additional_tag }}</span>{% endif %}{% else %}for <span class="bg-ndee-light-blue text-primary border rounded mx-1 p-1">{{ tag }}</span> {% if additional_tag %}and <span class="bg-ndee-light-blue text-primary border rounded mx-1 p-1">{{ additional_tag }}</span>{% endif %}{% endif %} yielded <strong>{{ items.count }}</strong> result{{ items.count|pluralize }}
     </div>
 
     <a class="btn btn-ndee btn-ndee-sm btn-ndee-primary-outline mb-4" href="{% url 'peeide:page' 'library' %}">
@@ -65,7 +77,7 @@
             <div class="list-group list-group-flush">
               {% for each in sectors %}
                 {% if each.total %}
-                  <a href="?tag={{ each.id }}" class="list-group-item list-group-item-action">
+                  <a href="?tag={{ each.id }}{% for key,value in request.GET.items %}&amp;{{ key }}={{ value }}{% endfor %}" class="list-group-item list-group-item-action">
                     <span class="badge bg-ndee-primary text-light align-top mr-3 mt-1">{{ each.total }}</span>
                     <span class="d-inline-block item-title">{{ each }}</span>
                   </a>
@@ -79,7 +91,7 @@
             <div class="list-group list-group-flush">
               {% for each in technologies %}
                 {% if each.total %}
-                  <a href="?tag={{ each.id }}" class="list-group-item list-group-item-action">
+                  <a href="?tag={{ each.id }}{% for key,value in request.GET.items %}&amp;{{ key }}={{ value }}{% endfor %}" class="list-group-item list-group-item-action">
                     <span class="badge bg-ndee-primary text-light align-top mr-3 mt-1">{{ each.total }}</span>
                     <span class="d-inline-block item-title">{{ each }}</span>
                   </a>

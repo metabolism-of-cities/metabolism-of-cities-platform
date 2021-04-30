@@ -1,0 +1,23 @@
+
+  <section>
+    <form action="{% url "peeide:library_search" %}">
+      <div class="search-box-wrapper input-group mb-2 mr-sm-2">
+        <input class="search-box form-control" name="keyword" placeholder="Search by keyword" value="{{ keyword }}" />
+        <div class="input-group-append">
+          <button class="btn btn-ndee btn-ndee-primary" type="submit">
+            <i class="far fa-search mr-2"></i> Search
+          </button>
+        </div>
+      </div>
+
+      <div class="custom-control custom-switch d-inline-block mr-4">
+        <input type="checkbox" class="custom-control-input" id="search-title" name="title" {% if request.GET.title or not keyword %}checked{% endif %} value="true">
+        <label class="custom-control-label" for="search-title">Search through titles</label>
+      </div>
+
+      <div class="custom-control custom-switch d-inline-block">
+        <input type="checkbox" class="custom-control-input" id="search-abstract" name="abstract" {% if request.GET.abstract or not keyword %}checked{% endif %}  value="true">
+        <label class="custom-control-label" for="search-abstract">Search through abstracts</label>
+      </div>
+    </form>
+  </section>
