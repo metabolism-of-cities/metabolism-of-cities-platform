@@ -49,7 +49,7 @@ def library_list(request, id=None):
         tag = Tag.objects.get(pk=id)
         items = LibraryItem.objects.filter(tags=tag)
     elif keyword:
-        items = LibraryItem.objects.filter(tags__parent_tag__parent_tag_id=1086).distinct()
+        items = LibraryItem.objects.filter(tags__parent_tag__parent_tag_id=1087).distinct()
         abstract_search = request.GET.get("abstract")
         title_search = request.GET.get("title")
         if abstract_search and title_search:
