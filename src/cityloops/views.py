@@ -380,7 +380,6 @@ def city_indicator_form(request, slug, sector, id):
     elif sector == "biomass":
         mandatory_list = CityLoopsIndicator.objects.filter(mandatory_biomass=True)
 
-
     if request.method == "POST":
         value.rationale = request.POST["rationale"]
         value.baseline = request.POST["baseline"]
@@ -409,16 +408,47 @@ def city_indicator_form(request, slug, sector, id):
 
 def sca_report(request, slug, sector):
     space = get_space(request, slug)
+    visualisations = LibraryItem.objects.filter(id__in=[49598])
 
     indicator_list = CityLoopsIndicator.objects.all()
     sector_id = 1 if sector == "construction" else 2
-    indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, city_id=space.id, sector=sector_id).order_by("indicator_id")
+    indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, city_id=space.id, scale=3, sector=sector_id).order_by("indicator_id")
+
+    # The lower the NUTS, the larger the area. For example:
+    # NUTS0 = the Netherlands, NUTS1 = West Netherlands, NUTS2 = South Holland, NUTS3 = Greater The Hague
+    # https://en.wikipedia.org/wiki/NUTS_statistical_regions_of_the_Netherlands
+
+    if slug == "apeldoorn":
+        nuts1_id = 328768
+        nuts2_id = 584317
+        nuts3_id = 585874
+        land_use_id = 980702
+    elif slug == "bodo":
+        nuts1_id = 328727
+        nuts2_id = 584307
+        nuts3_id = 585880
+        land_use_id = 980702 # not correct
+    elif slug == "hoje-taastrup":
+        nuts1_id = 328745
+        nuts2_id = 584276
+        nuts3_id = 585721
+        land_use_id = 980702 # not correct
+
+    nuts1 = ReferenceSpace.objects.get(id=nuts1_id)
+    nuts2 = ReferenceSpace.objects.get(id=nuts2_id)
+    nuts3 = ReferenceSpace.objects.get(id=nuts3_id)
+    land_use = LibraryItem.objects.get(id=land_use_id)
 
     context = {
         "space": space,
         "sector": sector,
         "title": "SCA report",
         "indicator_scale_list": indicator_scale_list,
+        "visualisations": visualisations,
+        "nuts1": nuts1,
+        "nuts2": nuts2,
+        "nuts3": nuts3,
+        "land_use": land_use,
     }
     return render(request, "cityloops/sca-report.html", context)
 

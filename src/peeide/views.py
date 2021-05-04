@@ -11,7 +11,10 @@ import pytz
 from core.mocfunctions import *
 
 def index(request):
-    context = {}
+    info = get_object_or_404(Project, pk=request.project)
+    context = {
+        "team": People.objects.filter(parent_list__record_child=info, parent_list__relationship__name="Admin"),
+    }
     return render(request, "peeide/index.html", context)
 
 def research(request):

@@ -57,6 +57,13 @@
   .carousel-indicators li.active {
     background-color: #fff;
   }
+
+  #people img {
+    border-radius: 100%;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+  }
 </style>
 {% endblock %}
 
@@ -84,10 +91,12 @@
   </div>
 </section>
 
-<section class="pb-4">
+<section>
   <div class="container">
     <div class="my-4">
-      <h3 class="text-ndee-primary font-weight-bold">Featured research <a href=""><i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i></a></h3>
+      <h3 class="text-ndee-primary font-weight-bold">
+        Featured research <a href="{% url 'peeide:research' %}"><i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i></a>
+      </h3>
     </div>
 
     <div class="row mb-4">
@@ -153,7 +162,6 @@
       </div>
     </div>
 
-
     <div class="rounded" style="background-color: #B0EFF3">
       <div class="row mb-4">
         <div class="col-lg-6 pr-lg-0">
@@ -200,6 +208,7 @@
       </div>
     </div>
 
+    <!--
     <a class="btn btn-ndee btn-ndee-primary" href="">Read more</a>
     <a class="btn btn-ndee btn-ndee-sm btn-ndee-primary" href="">Read more</a>
 
@@ -210,6 +219,64 @@
 
     <a class="btn btn-ndee btn-ndee-primary-outline" href="">Read more</a>
     <a class="btn btn-ndee btn-ndee-sm btn-ndee-primary-outline" href="">Read more</a>
+    -->
+  </div>
+</section>
+
+<section class="pb-4" id="people">
+  <div class="container">
+    <h3 class="text-ndee-primary font-weight-bold">
+      People <a href="{% url 'peeide:people' %}"><i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i></a>
+    </h3>
+    <div class="row">
+      {% for each in team %}
+        <div class="col-lg-6 mb-2">
+          <div class="row">
+            <div class="col-3">
+              <!-- <img src="{{ each.image.thumbnail.url }}" alt=""> -->
+              <img src="https://metabolismofcities.org/media/records/photo_xXGoMmS.thumbnail.jpg" alt="">
+            </div>
+            <div class="col-9">
+              <div class="p-3">
+                <h5 class="mb-0 text-ndee-primary">{{ each }}</h5>
+                <p>{{ each.get_description|truncatewords_html:40 }}</p>
+                <div class="pt-2">
+                  {% if each.website %}
+                    <a target="_blank" href="{{ each.website }}" class="mr-2">
+                      <i class="far fa-link"></i>
+                    </a>
+                  {% endif %}
+                  {% if each.twitter %}
+                    <a target="_blank" href="{{ each.twitter }}" class="mr-2">
+                      <i class="fab fa-twitter"></i>
+                    </a>
+                  {% endif %}
+                  {% if each.linkedin %}
+                    <a href="{{ each.linkedin }}" class="mr-2">
+                      <i class="fab fa-linkedin"></i>
+                    </a>
+                  {% endif %}
+                  {% if each.researchgate %}
+                    <a href="{{ each.researchgate }}" class="mr-2">
+                      <i class="fab fa-researchgate"></i>
+                    </a>
+                  {% endif %}
+                </div>
+                <!-- <a href="{% url URLS.PROFILE each.id %}" class="btn btn-ndee btn-ndee-sm btn-ndee-primary">View profile</a> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="pb-4">
+  <div class="container">
+    <h3 class="text-ndee-primary font-weight-bold">Projects <a href=""><i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i></a></h3>
+    <div class="row mb-4">
+    </div>
   </div>
 </section>
 
