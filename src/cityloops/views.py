@@ -452,6 +452,36 @@ def sca_report(request, slug, sector):
     }
     return render(request, "cityloops/sca-report.html", context)
 
+def sca_report_form(request, slug, sector):
+    space = get_space(request, slug)
+
+    if slug == "apeldoorn":
+        nuts1_id = 328768
+        nuts2_id = 584317
+        nuts3_id = 585874
+    elif slug == "bodo":
+        nuts1_id = 328727
+        nuts2_id = 584307
+        nuts3_id = 585880
+    elif slug == "hoje-taastrup":
+        nuts1_id = 328745
+        nuts2_id = 584276
+        nuts3_id = 585721
+
+    nuts1 = ReferenceSpace.objects.get(id=nuts1_id)
+    nuts2 = ReferenceSpace.objects.get(id=nuts2_id)
+    nuts3 = ReferenceSpace.objects.get(id=nuts3_id)
+
+    context = {
+        "space": space,
+        "sector": sector,
+        "nuts1": nuts1,
+        "nuts2": nuts2,
+        "nuts3": nuts3,
+    }
+    return render(request, "cityloops/sca-report.form.html", context)
+
+
 
 # space_maps and space_map are copies from staf/views.py
 # rather than adding an exception for cityloops there, these are whole new entries to keep things organised

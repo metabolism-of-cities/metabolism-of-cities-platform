@@ -79,7 +79,7 @@
 
                   <select class="custom-select mb-3" name="color_type">
                     <option {% if properties.color_type == "single" %}selected{% endif %} value="single">Single colour</option>
-                    <option {% if properties.color_type == "multiple" %}selected{% endif %} value="multiple" {% if source.imported_spaces.count == 1 or source.imported_spaces.count > 12 %}disabled{% endif %}>Multiple colours</option>
+                    <option {% if properties.color_type == "multiple" %}selected{% endif %} value="multiple" {% if source.imported_spaces.count == 1 or source.imported_spaces.count > 12 %}{% endif %}>Multiple colours</option>
                   </select>
 
                   <section id="multiple_colors">
@@ -94,7 +94,7 @@
                         {% if points %}
                           <img src="{% get_static_prefix %}img/leaflet-markers/marker-icon-{{ color }}.png" alt="" />
                         {% else %}
-                          <span class="example" style='background-color:{{ color }}'></span>
+                          <span class="example" style="background-color: {{ color }}"></span>
                         {% endif %}
                         {{ color }}
                       </label>
@@ -120,7 +120,7 @@
 
               <div class="form-group">
                 <label class="category mt-4">Visibility</label>
-                <p>We can reduce visibility by making the <strong>background colour</strong> more or less transparent. 
+                <p>We can reduce visibility by making the <strong>background colour</strong> more or less transparent.
                 What visibility level should we use (default = 70%).</p>
                 <div class="input-group">
                 <input class="form-control" type="number" name="fillOpacity" value="{% if properties.fillOpacity %}{{ properties.fillOpacity }}{% else %}70{% endif %}" min="0" max="100" />
@@ -129,7 +129,7 @@
                   </div>
                 </div>
 
-                <p class="mt-3">We can reduce visibility by making the <strong>lines</strong> more or less transparent. 
+                <p class="mt-3">We can reduce visibility by making the <strong>lines</strong> more or less transparent.
                 What visibility level should we use (default = 100%).</p>
                 <div class="input-group">
                 <input class="form-control" type="number" name="opacity" value="{% if properties.opacity %}{{ properties.opacity }}{% else %}100{% endif %}" min="0" max="100" />

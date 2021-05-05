@@ -3,7 +3,7 @@
             <input type="hidden" name="scheme" value="{% if properties.scheme %}{{ properties.scheme }}{% else %}moc{% endif %}" id="scheme" />
             <div id="color-schemes" class="row">
               {% for name,colors in schemes.items %}
-              <div class="col-md-6 mb-3">
+              <div class="{% if name == 'twentyfour' %}col-md-12{% else %}col-md-6{% endif %} mb-3">
                 <div class="single-scheme {% if properties.scheme == name or not properties.scheme and name == 'moc' %}active{% endif %}" data-scheme="{{ name }}">
                   <div class='row no-gutters'>
                     {% for each in colors %}

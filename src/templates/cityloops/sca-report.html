@@ -169,13 +169,18 @@
       </div>
     </section>
 
+    <section id="land-use">
+      <h1>Land use</h1>
+      <img class="img-fluid" src="https://i.imgur.com/NmVgDPI.png">
+    </section>
+
     <section id="sector-context">
       <h1>Sector / economic context - biomass / construction</h1>
     </section>
 
     <section id="indicators">
       <h1>Indicators</h1>
-      <table class="table">
+      <table class="table border">
         <thead>
           <tr>
             <th>Indicator</th>
@@ -186,7 +191,7 @@
         <tbody>
           {% for each in indicator_scale_list %}
             <tr>
-              <td>{{ each }}</td>
+              <td><a href="{% url 'cityloops:indicators' %}#indicator-{{ each.indicator.number }}">{{ each.indicator }}</a></td>
               <td></td>
               <td></td>
             </tr>

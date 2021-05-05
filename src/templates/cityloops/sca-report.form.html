@@ -1,0 +1,99 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load moc_extras %}
+
+{% block head %}
+<style>
+  form#report label {
+    font-weight: bold;
+    margin-bottom: 0;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<form id="report">
+  <div class="form-row">
+    <div class="col-lg">
+      <div class="form-group">
+        <label for="space-population">{{ space }} population</label>
+        <input type="number" class="form-control" id="space-population">
+      </div>
+    </div>
+    <div class="col-lg">
+      <div class="form-group">
+        <label for="space-area">{{ space }} area</label>
+        <div class="input-group mb-2">
+          <input type="number" class="form-control" id="space-area">
+          <div class="input-group-append">
+            <div class="input-group-text">km<sup>2</sup></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-lg">
+      <div class="form-group">
+        <label for="nuts3-population">{{ nuts3 }} population</label>
+        <input type="number" class="form-control" id="nuts3-population">
+      </div>
+    </div>
+    <div class="col-lg">
+      <div class="form-group">
+        <label for="nuts3-area">{{ nuts3 }} area</label>
+        <div class="input-group mb-2">
+          <input type="number" class="form-control" id="nuts3-area">
+          <div class="input-group-append">
+            <div class="input-group-text">km<sup>2</sup></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-lg">
+      <div class="form-group">
+        <label for="nuts2-population">{{ nuts2 }} population</label>
+        <input type="number" class="form-control" id="nuts2-population">
+      </div>
+    </div>
+    <div class="col-lg">
+      <div class="form-group">
+        <label for="nuts2-area">{{ nuts2 }} area</label>
+        <div class="input-group mb-2">
+          <input type="number" class="form-control" id="nuts2-area">
+          <div class="input-group-append">
+            <div class="input-group-text">km<sup>2</sup></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-lg">
+      <div class="form-group">
+        <label for="country-population">{{ nuts1 }} population</label>
+        <input type="number" class="form-control" id="country-population">
+      </div>
+    </div>
+    <div class="col-lg">
+      <div class="form-group">
+        <label for="country-area">{{ nuts1 }} area</label>
+        <div class="input-group mb-2">
+          <input type="number" class="form-control" id="country-area">
+          <div class="input-group-append">
+            <div class="input-group-text">km<sup>2</sup></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">
+    <i class="fa fa-save"></i> Save
+  </button>
+</form>
+
+{% endblock %}
