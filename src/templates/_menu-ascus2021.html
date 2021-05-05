@@ -1,5 +1,6 @@
 <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:index" %}"><i class="fa fa-home fa-fw"></i></a></li>
 
+<li class="nav-item"><a class="nav-link" href="{% url "ascus2021:article" "schedule" %}">Schedule</a></li>
 {% if not request.user.is_authenticated %}
   <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:article" "rates" %}">Rates</a></li>
   <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:article" "login" %}">Login</a></li>

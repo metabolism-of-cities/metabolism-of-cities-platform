@@ -816,6 +816,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             if "tags" in fields:
                 fields.remove("tags")
             labels["url"] = "Youtube video URL"
+            files = True
 
         ModelForm = modelform_factory(model, fields=fields, labels = labels)
 

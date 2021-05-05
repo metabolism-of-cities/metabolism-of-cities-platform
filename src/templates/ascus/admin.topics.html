@@ -8,6 +8,7 @@
     <tr>
       <th>Topic</th>
       <th>E-mail organizer</th>
+      <th></th>
     </tr>
   {% for each in list %}
     <tr>
@@ -19,9 +20,9 @@
       <td>
         {{ each.organizer.email }}
       </td>
-      <td hidden>
+      <td>
         <a href="{% url "ascus2021:account_discussion" each.id %}?org_mode=true" class="btn btn-default-outline"><i class="fa fa-pencil"></i> Edit</a>
-        <a href="{% url "ascus2021:admin_discussion_attendance" each.id %}" class="btn btn-default-outline"><i class="fa fa-users"></i> Attendance</a>
+        <a hidden href="{% url "ascus2021:admin_discussion_attendance" each.id %}" class="btn btn-default-outline"><i class="fa fa-users"></i> Attendance</a>
       </td>
     </tr>
   {% endfor %}
