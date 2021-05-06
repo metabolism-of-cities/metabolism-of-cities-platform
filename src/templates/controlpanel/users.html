@@ -22,7 +22,12 @@
     <tbody>
     {% for each in users %}
       <tr>
-        <td><a href="{{ each.id }}/">{{ each.record_parent }}</a></td>
+        <td>
+          {% with link=PROJECT.slug|add:":user" %}
+            <a href="{% url link each.record_parent.id %}" class="mr-3"><i class="fa fa-user fa-fw"></i></a>
+          {% endwith %}
+          <a href="{{ each.id }}/">{{ each.record_parent }}</a>
+        </td>
         <td>{{ each.relationship.name }}</td>
         <td>{{ each.date_created|date:"M d, Y" }}</td>
         {% if show_child %}

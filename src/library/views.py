@@ -588,7 +588,11 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     curator = False
     if id:
         get_item = get_object_or_404(LibraryItem, pk=id)
+        # If you are the uploader, then you can edit the item
         if request.user.people == get_item.uploader:
+            curator = True
+        # If you are one of the authors, then you can edit this item
+        elif request.user.people in get_item.authors():
             curator = True
     if has_permission(request, project.id, ["curator", "dataprocessor"]):
         curator = True
@@ -816,6 +820,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             if "tags" in fields:
                 fields.remove("tags")
             labels["url"] = "Youtube video URL"
+            files = True
 
         ModelForm = modelform_factory(model, fields=fields, labels = labels)
 

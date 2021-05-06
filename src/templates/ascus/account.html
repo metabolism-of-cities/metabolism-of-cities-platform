@@ -135,7 +135,8 @@
     {% if show_abstract %}
       <div class="card">
         {% if my_presentations %}
-          <h5 class="card-header text-white bg-success"><i class="fa fa-check fa-fw"></i> Submitted</h5>
+          <h5 class="card-header text-white bg-success">Please review</h5>
+          <h5 hidden class="card-header text-white bg-success"><i class="fa fa-check fa-fw"></i> Submitted</h5>
         {% else %}
           <h5 class="card-header text-white bg-danger">Pending</h5>
         {% endif %}
@@ -178,29 +179,32 @@
           {% endif %}
         </div>
       </div>
-      <div class="card">
-        {% if my_outputs %}
-          <h5 class="card-header text-white bg-success"><i class="fa fa-check fa-fw"></i> Submitted</h5>
-        {% else %}
-          <h5 class="card-header text-white bg-danger">Pending</h5>
-        {% endif %}
-        <div class="card-body">
-          <h5 class="card-title">Path to Action</h5>
-          <p class="card-text">
-            {% if my_outputs %}
-            Manage your path to action
-            {% else %}
-            Use this section to update your path to action document. 
-            {% endif %}
-          </p>
+
+      {% if False %}
+        <div class="card">
           {% if my_outputs %}
-            {% for each in my_outputs %}
-              <p><a href="{% url "ascus2021:account_output" %}?type=Path%20to%20Action&amp;id={{ each.id }}" class="btn btn-outline-dark">Edit</a></p>
-            {% endfor %}
+            <h5 class="card-header text-white bg-success"><i class="fa fa-check fa-fw"></i> Submitted</h5>
+          {% else %}
+            <h5 class="card-header text-white bg-danger">Pending</h5>
           {% endif %}
-            <p><a href="{% url "ascus2021:account_output" %}?type=Path%20to%20Action" class="btn btn-outline-dark">Add document</a></p>
+          <div class="card-body">
+            <h5 class="card-title">Path to Action</h5>
+            <p class="card-text">
+              {% if my_outputs %}
+              Manage your path to action
+              {% else %}
+              Use this section to update your path to action document. 
+              {% endif %}
+            </p>
+            {% if my_outputs %}
+              {% for each in my_outputs %}
+                <p><a href="{% url "ascus2021:account_output" %}?type=Path%20to%20Action&amp;id={{ each.id }}" class="btn btn-outline-dark">Edit</a></p>
+              {% endfor %}
+            {% endif %}
+              <p><a href="{% url "ascus2021:account_output" %}?type=Path%20to%20Action" class="btn btn-outline-dark">Add document</a></p>
+          </div>
         </div>
-      </div>
+      {% endif %}
     {% endif %}
 
   </div>

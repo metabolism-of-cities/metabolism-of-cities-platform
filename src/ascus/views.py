@@ -84,8 +84,9 @@ def ascus(request):
     return render(request, "article.html", context)
 
 def overview(request, preconf=False):
+    project = get_project(request)
     discussions = Event.objects_include_private \
-        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(parent_list__record_child=project) \
         .filter(tags__id=770).order_by("name").distinct() \
         .order_by("start_date")
     if preconf:
@@ -98,7 +99,7 @@ def overview(request, preconf=False):
     if request.user.is_authenticated and hasattr(request.user, "people"):
         my_topic_registrations = Event.objects_include_private \
             .filter(child_list__record_parent=request.user.people, child_list__relationship__id=12) \
-            .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+            .filter(parent_list__record_child=project) \
             .filter(tags__id=770)
     context = {
         "header_title": title,
@@ -192,8 +193,7 @@ def ascus_account(request):
     my_presentations = LibraryItem.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
         .filter(parent_list__record_child__id=request.project) \
-        .filter(tags__id=771) \
-        .filter(url__isnull=False)
+        .filter(tags__id=771)
     my_intro = LibraryItem.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
         .filter(parent_list__record_child__id=request.project) \
@@ -202,7 +202,12 @@ def ascus_account(request):
         record_parent = request.user.people, 
         record_child__id = request.project,
     )
-    show_discussion = show_abstract = False
+
+    show_discussion = False
+    show_abstract = False
+
+    if my_discussions:
+        show_discussion = True
 
     my_topic_registrations = Event.objects_include_private \
         .filter(child_list__record_parent=request.user.people, child_list__relationship__id=12) \
@@ -217,14 +222,12 @@ def ascus_account(request):
     for each in my_roles:
         if each.relationship.name == "Session organizer":
             show_discussion = True
-        elif each.relationship.name == "Presenter":
-            show_abstract = True
 
     abstracts = LibraryItem.objects_include_private \
         .filter(parent_list__record_child__id=request.project) \
         .filter(tags__id=771)
 
-    if abstracts:
+    if my_presentations:
         show_abstract = True
 
     if "approve" in request.POST:
@@ -424,7 +427,7 @@ def ascus_account_discussion(request, id=None):
             record_child_id = request.project,
             relationship__name = "Organizer",
         )
-        if check_organizer.exists():
+        if check_organizer.exists() or has_permission(request, request.project, ["admin"]):
             # Organizers can edit any event
             organizer_editing = True
             event = Event.objects_include_private \
@@ -479,7 +482,6 @@ def ascus_account_discussion(request, id=None):
                     relationship = Relationship.objects.get(name="Organizer"),
                 )
             if organizer_editing:
-                messages.success(request, "The changes were saved.")
                 return redirect("ascus2021:admin_documents", type="topics")
             else:
                 return redirect("ascus2021:account_discussion")

@@ -32,18 +32,18 @@
     </table>
   {% endif %}
 
-  <form method="post" class="form form-horizontal" enctype="multipart/form-data">
-    <h2>Submit new discussion topic</h2>
+  <form method="post" class="form form-horizontal" enctype="multipart/form-data" hidden>
+    <h2>Discussion topic form</h2>
 
-    <p>
-    Everyone can submit a discussion topic proposal even if they have not submitted
-    an abstract. Proposals should include a brief synopsis of the discussion topic,
-    a list of activities that are planned, and a general idea of the type of the
-    path-to-action contribution that is expected (e.g., white paper, podcast,
-    website, performance). We encourage participants to actively suggest discussion
-    topics, being the interdisciplinary exchange of ideas and knowledge one of the
-    key objectives of AScUS. Make sure to list the names of the organizer(s) of this 
-    discussion topic in the description as well.
+    <p hidden>
+      Everyone can submit a discussion topic proposal even if they have not submitted
+      an abstract. Proposals should include a brief synopsis of the discussion topic,
+      a list of activities that are planned, and a general idea of the type of the
+      path-to-action contribution that is expected (e.g., white paper, podcast,
+      website, performance). We encourage participants to actively suggest discussion
+      topics, being the interdisciplinary exchange of ideas and knowledge one of the
+      key objectives of AScUS. Make sure to list the names of the organizer(s) of this 
+      discussion topic in the description as well.
     </p>
 
 
@@ -88,4 +88,10 @@
 {% block footer %}
 <!-- markdown toolbar - https://github.com/github/markdown-toolbar-element -->
 <script src="https://unpkg.com/@github/markdown-toolbar-element@latest/dist/index.umd.js"></script>
+<script type="text/javascript">
+$(function(){
+  $("#id_start_date").attr("placeholder", "Format: YYYY-MM-DD HH:MM, e.g. 2021-06-25 10:00");
+  $("#id_end_date").attr("placeholder", "Format: YYYY-MM-DD HH:MM, e.g. 2021-06-25 10:00");
+});
+</script>
 {% endblock %}
