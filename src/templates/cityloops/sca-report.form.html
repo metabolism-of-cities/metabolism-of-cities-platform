@@ -8,22 +8,27 @@
     font-weight: bold;
     margin-bottom: 0;
   }
+
+  .form-group {
+    margin-bottom: 2rem;
+  }
 </style>
 {% endblock %}
 
 {% block content %}
 
 <form id="report">
+  <h2>Urban context</h2>
   <div class="form-row">
     <div class="col-lg">
       <div class="form-group">
-        <label for="space-population">{{ space }} population</label>
+        <label for="space-population"><span class="question-number bg-dark text-light rounded px-2 mr-1">1A</span> {{ space }} population</label>
         <input type="number" class="form-control" id="space-population">
       </div>
     </div>
     <div class="col-lg">
       <div class="form-group">
-        <label for="space-area">{{ space }} area</label>
+        <label for="space-area"><span class="question-number bg-dark text-light rounded px-2 mr-1">1B</span> {{ space }} area</label>
         <div class="input-group mb-2">
           <input type="number" class="form-control" id="space-area">
           <div class="input-group-append">
@@ -36,13 +41,13 @@
   <div class="form-row">
     <div class="col-lg">
       <div class="form-group">
-        <label for="nuts3-population">{{ nuts3 }} population</label>
+        <label for="nuts3-population"><span class="question-number bg-dark text-light rounded px-2 mr-1">2A</span> {{ nuts3 }} population</label>
         <input type="number" class="form-control" id="nuts3-population">
       </div>
     </div>
     <div class="col-lg">
       <div class="form-group">
-        <label for="nuts3-area">{{ nuts3 }} area</label>
+        <label for="nuts3-area"><span class="question-number bg-dark text-light rounded px-2 mr-1">2B</span> {{ nuts3 }} area</label>
         <div class="input-group mb-2">
           <input type="number" class="form-control" id="nuts3-area">
           <div class="input-group-append">
@@ -55,13 +60,13 @@
   <div class="form-row">
     <div class="col-lg">
       <div class="form-group">
-        <label for="nuts2-population">{{ nuts2 }} population</label>
+        <label for="nuts2-population"><span class="question-number bg-dark text-light rounded px-2 mr-1">3A</span> {{ nuts2 }} population</label>
         <input type="number" class="form-control" id="nuts2-population">
       </div>
     </div>
     <div class="col-lg">
       <div class="form-group">
-        <label for="nuts2-area">{{ nuts2 }} area</label>
+        <label for="nuts2-area"><span class="question-number bg-dark text-light rounded px-2 mr-1">3B</span> {{ nuts2 }} area</label>
         <div class="input-group mb-2">
           <input type="number" class="form-control" id="nuts2-area">
           <div class="input-group-append">
@@ -74,13 +79,13 @@
   <div class="form-row">
     <div class="col-lg">
       <div class="form-group">
-        <label for="country-population">{{ nuts1 }} population</label>
+        <label for="country-population"><span class="question-number bg-dark text-light rounded px-2 mr-1">4A</span> {{ nuts1 }} population</label>
         <input type="number" class="form-control" id="country-population">
       </div>
     </div>
     <div class="col-lg">
       <div class="form-group">
-        <label for="country-area">{{ nuts1 }} area</label>
+        <label for="country-area"><span class="question-number bg-dark text-light rounded px-2 mr-1">4B</span> {{ nuts1 }} area</label>
         <div class="input-group mb-2">
           <input type="number" class="form-control" id="country-area">
           <div class="input-group-append">
@@ -89,6 +94,20 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <h2>Data analysis</h2>
+  <div class="form-group">
+    <label><span class="question-number bg-dark text-light rounded px-2 mr-1">5</span> Insights on status quo</label>
+    <textarea class="form-control" rows="2"></textarea>
+  </div>
+  <div class="form-group">
+    <label><span class="question-number bg-dark text-light rounded px-2 mr-1">6</span> Upscaling (or reflect on) DAs</label>
+    <textarea class="form-control" rows="2"></textarea>
+  </div>
+  <div class="form-group">
+    <label><span class="question-number bg-dark text-light rounded px-2 mr-1">7</span> Recommendation for making the sector more circular</label>
+    <textarea class="form-control" rows="2"></textarea>
   </div>
 
   <button type="submit" class="btn btn-primary">

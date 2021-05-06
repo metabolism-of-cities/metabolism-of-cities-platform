@@ -100,6 +100,11 @@
         width: 100%;
         border-radius: .25rem;
       }
+
+      label {
+        font-weight: bold;
+        margin-bottom: 0;
+      }
     }
   </style>
 </head>
@@ -148,23 +153,23 @@
       <div class="row">
         <div class="col-3">
           <h4>{{ space }}</h4>
-          <div><i class="fal fa-users fa-fw mr-2"></i> 162,445</div>
-          <div><i class="fal fa-ruler-combined fa-fw mr-2"></i> 341.15 km<sup>2</sup></div>
+          <div><i class="fal fa-users fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">1A</span></div>
+          <div><i class="fal fa-ruler-combined fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">1B</span> km<sup>2</sup></div>
         </div>
         <div class="col-3">
           <h4>{{ nuts3 }}</h4>
-          <div><i class="fal fa-users fa-fw mr-2"></i> 162,445</div>
-          <div><i class="fal fa-ruler-combined fa-fw mr-2"></i> 341.15 km<sup>2</sup></div>
+          <div><i class="fal fa-users fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">2A</span></div>
+          <div><i class="fal fa-ruler-combined fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">2B</span> km<sup>2</sup></div>
         </div>
         <div class="col-3">
           <h4>{{ nuts2 }}</h4>
-          <div><i class="fal fa-users fa-fw mr-2"></i> 162,445</div>
-          <div><i class="fal fa-ruler-combined fa-fw mr-2"></i> 341.15 km<sup>2</sup></div>
+          <div><i class="fal fa-users fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">3A</span></div>
+          <div><i class="fal fa-ruler-combined fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">3B</span> km<sup>2</sup></div>
         </div>
         <div class="col-3">
           <h4>{{ nuts1 }}</h4>
-          <div><i class="fal fa-users fa-fw mr-2"></i> 162,445</div>
-          <div><i class="fal fa-ruler-combined fa-fw mr-2"></i> 341.15 km<sup>2</sup></div>
+          <div><i class="fal fa-users fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">4A</span></div>
+          <div><i class="fal fa-ruler-combined fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">4B</span> km<sup>2</sup></div>
         </div>
       </div>
     </section>
@@ -202,9 +207,6 @@
 
     <section id="visualisations">
       <h1>Visualisations</h1>
-      {% for each in visualisations %}
-      {{ each.data.all }}
-      {% endfor %}
     </section>
 
     <section id="matrix">
@@ -213,6 +215,26 @@
 
     <section id="analysis">
       <h1>Data analysis</h1>
+      <div class="mb-4">
+        <label>Insights on status quo</label>
+        <div>
+          <span class="question-number bg-dark text-light rounded px-2 mr-1">5</span>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label>Upscaling (or reflect on) DAs</label>
+        <div>
+          <span class="question-number bg-dark text-light rounded px-2 mr-1">6</span>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label>Recommendation for making the sector more circular</label>
+        <div>
+          <span class="question-number bg-dark text-light rounded px-2 mr-1">7</span>
+        </div>
+      </div>
     </section>
 
     <section id="references">

@@ -182,7 +182,7 @@
 
         <div id="compact-table" class="compact-table-wrapper border rounded">
           <table class="table compact-table table-sm mb-0">
-            {% for each in data.features %}
+            {% for each in map_data.features %}
             <tr data-space="{{ each.properties.id }}">
               <th class="name">{{ each.properties.name }}</th>
               <td class="quantity"></td>
@@ -203,7 +203,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for each in data.features %}
+        {% for each in map_data.features %}
         <tr data-space="{{ each.properties.id }}">
           <td class="name"><a href="{% url 'staf:referencespace' each.properties.id %}">{{ each.properties.name }}</a></td>
           <td class="quantity"></td>
@@ -318,7 +318,7 @@
   }
 
   // variable for the data, add it to the map
-  let mapShapes = {{ data|safe|escape }};
+  let mapShapes = {{ map_data|safe|escape }};
 
   // get data from server
   let mapData;

@@ -65,19 +65,23 @@
   <div class="text-center tables">
     <div class="row selects sticky-top py-3">
       <div class="col-md-6">
-        <select name="area" class="custom-select">Schaerbeek
-          <option>Schaerbeek</option>
+        <select name="area" class="custom-select">
+          {% for each in box.source.imported_spaces.all %}
+            <option value="{{ each.id }}" {% if each.id == box.id %} selected{% endif %}>{{ each }}</option>
+          {% endfor %}
         </select>
       </div>
 
       <div class="col-md-6">
-        <select name="area" class="custom-select">Etterbeek
-          <option>Etterbeek</option>
+        <select name="area" class="custom-select">
+          {% for each in box.source.imported_spaces.all %}
+            <option value="{{ each.id }}" {% if each.id == box.id %} selected{% endif %}>{{ each }}</option>
+          {% endfor %}
         </select>
       </div>
     </div>
     <section>
-      <h5 class="mt-4 text-center"><i class="fad fa-fw fa-info-circle mr-1"></i> General info</h5>
+      <h5 class="mt-4 text-center"><i class="fal fa-fw fa-info-circle mr-1"></i> General info</h5>
       <table class="table">
         <tbody>
           <tbody>
@@ -112,7 +116,7 @@
     </section>
 
     <section>
-      <h5 class="mt-4"><i class="fad fa-fw fa-flask mr-1"></i> Materials</h5>
+      <h5 class="mt-4"><i class="fal fa-fw fa-flask mr-1"></i> Materials</h5>
       <table class="table">
         <tbody>
           <tbody>
@@ -147,7 +151,7 @@
     </section>
 
     <section>
-      <h5 class="mt-4"><i class="fad fa-fw fa-building mr-1"></i> Materials per buildings</h5>
+      <h5 class="mt-4"><i class="fal fa-fw fa-building mr-1"></i> Materials per buildings</h5>
       <table class="table">
         <tbody>
           <tbody>

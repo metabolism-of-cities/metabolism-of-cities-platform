@@ -79,7 +79,7 @@
 
                   <select class="custom-select mb-3" name="color_type">
                     <option {% if properties.color_type == "single" %}selected{% endif %} value="single">Single colour</option>
-                    <option {% if properties.color_type == "multiple" %}selected{% endif %} value="multiple" {% if source.imported_spaces.count == 1 or source.imported_spaces.count > 12 %}{% endif %}>Multiple colours</option>
+                    <option {% if properties.color_type == "multiple" %}selected{% endif %} value="multiple" {% if source.imported_spaces.count == 1 or source.imported_spaces.count > 12 %}disabled{% endif %}>Multiple colours</option>
                   </select>
 
                   <section id="multiple_colors">

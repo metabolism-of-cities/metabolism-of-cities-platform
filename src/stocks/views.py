@@ -72,7 +72,6 @@ def city(request, space):
         "space": space,
         "info": info,
         "link": link,
-        "menu": "overview",
     }
     return render(request, "stocks/city.html", context)
 
@@ -93,6 +92,14 @@ def archetypes(request, space):
         "space": space,
     }
     return render(request, "stocks/archetypes.html", context)
+
+def maps(request, space):
+    space = get_space(request, space)
+    context = {
+        "maps": True,
+        "space": space,
+    }
+    return render(request, "stocks/maps.html", context)
 
 def map(request, space, id, box=None):
 
@@ -207,7 +214,7 @@ def map(request, space, id, box=None):
                 "geometry": json.loads(each.geometry.json)
             })
 
-    data = {
+    map_data = {
         "type":"FeatureCollection",
         "features": features,
     }
@@ -217,10 +224,11 @@ def map(request, space, id, box=None):
     }
 
     context = {
+        "maps": True,
         "info": info,
         "spaces": spaces,
         "map": map._repr_html_() if map else None,
-        "data": data,
+        "map_data": map_data,
         "link": link,
         "source_link": links.get(box.source.id) if box else 0,
         "space": space,
@@ -275,6 +283,7 @@ def choropleth(request):
 
 def compare(request, space):
     space = get_space(request, space)
+
     context = {
         "compare": True,
         "load_select2": True,
@@ -304,3 +313,16 @@ def story(request, space, title):
         "stories": True,
     }
     return render(request, "stocks/story.html", context)
+
+def area_children(request, id):
+    info = get_object_or_404(LibraryItem, pk=33971)
+    box = ReferenceSpace.objects.get(pk=52112)
+    spaces = ReferenceSpace.objects.filter(geometry__within=box.geometry)
+
+    children = []
+    for each in spaces:
+        children.append(each.id)
+
+    return JsonResponse({
+        "children": children
+    })

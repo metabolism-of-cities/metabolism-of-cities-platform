@@ -408,7 +408,6 @@ def city_indicator_form(request, slug, sector, id):
 
 def sca_report(request, slug, sector):
     space = get_space(request, slug)
-    visualisations = LibraryItem.objects.filter(id__in=[49598])
 
     indicator_list = CityLoopsIndicator.objects.all()
     sector_id = 1 if sector == "construction" else 2
@@ -444,7 +443,6 @@ def sca_report(request, slug, sector):
         "sector": sector,
         "title": "SCA report",
         "indicator_scale_list": indicator_scale_list,
-        "visualisations": visualisations,
         "nuts1": nuts1,
         "nuts2": nuts2,
         "nuts3": nuts3,
