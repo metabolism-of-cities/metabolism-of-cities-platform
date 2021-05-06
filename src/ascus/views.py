@@ -206,6 +206,9 @@ def ascus_account(request):
     show_discussion = False
     show_abstract = False
 
+    if my_discussions:
+        show_discussion = True
+
     my_topic_registrations = Event.objects_include_private \
         .filter(child_list__record_parent=request.user.people, child_list__relationship__id=12) \
         .filter(parent_list__record_child__id=request.project) \
