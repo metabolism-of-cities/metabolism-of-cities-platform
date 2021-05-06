@@ -25,5 +25,5 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("cities/<slug:space>/stories/", views.stories, name="stories"),
     path("cities/<slug:space>/stories/<slug:title>", views.story, name="story"),
     path("choropleth/", views.choropleth, name="choropleth"),
-    path("children/<int:id>/", views.area_children, name="area_children"),
+    path("children/<int:within>/<int:source>/", views.area_children, name="area_children"),
 ]

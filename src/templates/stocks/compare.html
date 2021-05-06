@@ -65,19 +65,27 @@
   <div class="text-center tables">
     <div class="row selects sticky-top py-3">
       <div class="col-md-6">
-        <select name="area" class="custom-select">
-          {% for each in box.source.imported_spaces.all %}
-            <option value="{{ each.id }}" {% if each.id == box.id %} selected{% endif %}>{{ each }}</option>
-          {% endfor %}
-        </select>
+        {% for each in levels %}
+          <select data-level="{{ each.id }}" class="custom-select" {% if each.id != top_level %}hidden{% endif %}>
+            {% if each.id == top_level %}
+              {% for each in levels %}
+                <option value="{{ each.id }}">{{ each }}</option>
+              {% endfor %}
+            {% endif %}
+          </select>
+        {% endfor %}
       </div>
 
       <div class="col-md-6">
-        <select name="area" class="custom-select">
-          {% for each in box.source.imported_spaces.all %}
-            <option value="{{ each.id }}" {% if each.id == box.id %} selected{% endif %}>{{ each }}</option>
-          {% endfor %}
-        </select>
+        {% for each in levels %}
+          <select data-level="{{ each.id }}" class="custom-select" {% if each.id != top_level %}hidden{% endif %}>
+            {% if each.id == top_level %}
+              {% for each in levels %}
+                <option value="{{ each.id }}">{{ each }}</option>
+              {% endfor %}
+            {% endif %}
+          </select>
+        {% endfor %}
       </div>
     </div>
     <section>
