@@ -4,8 +4,6 @@ from django.contrib.admin.views.decorators import staff_member_required
 from core.mocfunctions import *
 from django.contrib import messages
 from datetime import datetime
-from floweaver import *
-import pandas as pd
 
 def index(request):
     context = {
