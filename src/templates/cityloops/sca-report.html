@@ -147,7 +147,7 @@
           <div class="context-map rounded" id="nuts2-map"></div>
         </div>
         <div class="col-3">
-          <div class="context-map rounded" id="nuts1-map"></div>
+          <div class="context-map rounded" id="country-map"></div>
         </div>
       </div>
       <div class="row">
@@ -167,7 +167,7 @@
           <div><i class="fal fa-ruler-combined fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">3B</span> km<sup>2</sup></div>
         </div>
         <div class="col-3">
-          <h4>{{ nuts1 }}</h4>
+          <h4>{{ country }}</h4>
           <div><i class="fal fa-users fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">4A</span></div>
           <div><i class="fal fa-ruler-combined fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">4B</span> km<sup>2</sup></div>
         </div>
@@ -239,6 +239,12 @@
 
     <section id="references">
       <h1>References</h1>
+      <ul>
+        <li><a href="{% url 'cityloops:referencespace' country.id  %}">{{ country }}</a></li>
+        <li><a href="{% url 'cityloops:referencespace' nuts2.id  %}">{{ nuts2 }}</a></li>
+        <li><a href="{% url 'cityloops:referencespace' nuts3.id  %}">{{ nuts3 }}</a></li>
+        <li><a href="{% url 'library:item' land_use.id  %}">{{ land_use }}</a></li>
+      </ul>
     </section>
   </div>
 
@@ -316,13 +322,13 @@
     nuts_2_map.scrollWheelZoom.disable();
     nuts_2_map.fitBounds(nuts_2_geojsonlayer.getBounds());
 
-    // NUTS0
-    var nuts_1_map = L.map("nuts1-map", {
+    // COUNTRY
+    var country_map = L.map("country-map", {
       attributionControl: false,
       zoomControl: false,
     });
-    var nuts_1_geojson = {{ nuts1.geometry.geojson|safe }};
-    var nuts_1_geojsonlayer = L.geoJSON(nuts_1_geojson).addTo(nuts_1_map);
+    var country_geojson = {{ country.geometry.geojson|safe }};
+    var country_geojsonlayer = L.geoJSON(country_geojson).addTo(country_map);
 
     L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
       attribution: "Map data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors, " +
@@ -334,10 +340,10 @@
       tileSize: 512,
       zoomOffset: -1,
       accessToken: "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q"
-    }).addTo(nuts_1_map);
+    }).addTo(country_map);
 
-    nuts_1_map.scrollWheelZoom.disable();
-    nuts_1_map.fitBounds(nuts_1_geojsonlayer.getBounds());
+    country_map.scrollWheelZoom.disable();
+    country_map.fitBounds(country_geojsonlayer.getBounds());
   </script>
 </body>
 </html>

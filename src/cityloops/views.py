@@ -4,6 +4,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from core.mocfunctions import *
 from django.contrib import messages
 from datetime import datetime
+from floweaver import *
+import pandas as pd
 
 def index(request):
     context = {
@@ -418,22 +420,27 @@ def sca_report(request, slug, sector):
     # https://en.wikipedia.org/wiki/NUTS_statistical_regions_of_the_Netherlands
 
     if slug == "apeldoorn":
-        nuts1_id = 328768
+        country_id = 328768
         nuts2_id = 584317
         nuts3_id = 585874
         land_use_id = 980702
     elif slug == "bodo":
-        nuts1_id = 328727
+        country_id = 328727
         nuts2_id = 584307
         nuts3_id = 585880
         land_use_id = 980702 # not correct
     elif slug == "hoje-taastrup":
-        nuts1_id = 328745
+        country_id = 328745
         nuts2_id = 584276
         nuts3_id = 585721
         land_use_id = 980702 # not correct
+    elif slug == "mikkeli":
+        country_id = 328729
+        nuts2_id = 584282
+        nuts3_id = 983064
+        land_use_id = 980702 # not correct
 
-    nuts1 = ReferenceSpace.objects.get(id=nuts1_id)
+    country = ReferenceSpace.objects.get(id=country_id)
     nuts2 = ReferenceSpace.objects.get(id=nuts2_id)
     nuts3 = ReferenceSpace.objects.get(id=nuts3_id)
     land_use = LibraryItem.objects.get(id=land_use_id)
@@ -443,7 +450,7 @@ def sca_report(request, slug, sector):
         "sector": sector,
         "title": "SCA report",
         "indicator_scale_list": indicator_scale_list,
-        "nuts1": nuts1,
+        "country": country,
         "nuts2": nuts2,
         "nuts3": nuts3,
         "land_use": land_use,
@@ -574,3 +581,19 @@ def space_map(request, space):
         "list": list,
     }
     return render(request, "staf/space.map.html", context)
+
+
+def floweaver(request):
+    flows = pd.read_csv('simple_fruit_sales.csv')
+
+    size = dict(width=570, height=300)
+
+    nodes = {
+        'farms': ProcessGroup(['farm1', 'farm2', 'farm3',
+                               'farm4', 'farm5', 'farm6']),
+        'customers': ProcessGroup(['James', 'Mary', 'Fred', 'Susan']),
+    }
+
+    context = {
+    }
+    return render(request, "cityloops/floweaver.html", context)
