@@ -421,27 +421,27 @@ def sca_report(request, slug, sector):
         country_id = 328768
         nuts2_id = 584317
         nuts3_id = 585874
-        land_use_id = 980702
+        # land_use_id = 980702
     elif slug == "bodo":
         country_id = 328727
         nuts2_id = 584307
         nuts3_id = 585880
-        land_use_id = 980702 # not correct
+        # land_use_id = 980702 # not correct
     elif slug == "hoje-taastrup":
         country_id = 328745
         nuts2_id = 584276
         nuts3_id = 585721
-        land_use_id = 980702 # not correct
+        # land_use_id = 980702 # not correct
     elif slug == "mikkeli":
         country_id = 328729
         nuts2_id = 584282
         nuts3_id = 983064
-        land_use_id = 980702 # not correct
+        # land_use_id = 980702 # not correct
 
     country = ReferenceSpace.objects.get(id=country_id)
     nuts2 = ReferenceSpace.objects.get(id=nuts2_id)
     nuts3 = ReferenceSpace.objects.get(id=nuts3_id)
-    land_use = LibraryItem.objects.get(id=land_use_id)
+    # land_use = LibraryItem.objects.get(id=land_use_id)
 
     context = {
         "space": space,
@@ -451,7 +451,7 @@ def sca_report(request, slug, sector):
         "country": country,
         "nuts2": nuts2,
         "nuts3": nuts3,
-        "land_use": land_use,
+        # "land_use": land_use,
     }
     return render(request, "cityloops/sca-report.html", context)
 
