@@ -1962,6 +1962,8 @@ def hub_processing_dataset(request, id, space=None):
             return redirect(project.slug + ":hub_processing")
 
     if "next_step" in request.POST:
+        if not info.meta_data:
+            info.meta_data = {}
         if not "processing" in info.meta_data:
             info.meta_data["processing"] = {}
         if "new_file" in request.FILES:
