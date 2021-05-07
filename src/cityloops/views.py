@@ -408,7 +408,6 @@ def city_indicator_form(request, slug, sector, id):
 
 def sca_report(request, slug, sector):
     space = get_space(request, slug)
-    visualisations = LibraryItem.objects.filter(id__in=[49598])
 
     indicator_list = CityLoopsIndicator.objects.all()
     sector_id = 1 if sector == "construction" else 2
@@ -419,38 +418,72 @@ def sca_report(request, slug, sector):
     # https://en.wikipedia.org/wiki/NUTS_statistical_regions_of_the_Netherlands
 
     if slug == "apeldoorn":
-        nuts1_id = 328768
+        country_id = 328768
         nuts2_id = 584317
         nuts3_id = 585874
-        land_use_id = 980702
+        # land_use_id = 980702
     elif slug == "bodo":
-        nuts1_id = 328727
+        country_id = 328727
         nuts2_id = 584307
         nuts3_id = 585880
-        land_use_id = 980702 # not correct
+        # land_use_id = 980702 # not correct
     elif slug == "hoje-taastrup":
-        nuts1_id = 328745
+        country_id = 328745
         nuts2_id = 584276
         nuts3_id = 585721
-        land_use_id = 980702 # not correct
+        # land_use_id = 980702 # not correct
+    elif slug == "mikkeli":
+        country_id = 328729
+        nuts2_id = 584282
+        nuts3_id = 983064
+        # land_use_id = 980702 # not correct
 
-    nuts1 = ReferenceSpace.objects.get(id=nuts1_id)
+    country = ReferenceSpace.objects.get(id=country_id)
     nuts2 = ReferenceSpace.objects.get(id=nuts2_id)
     nuts3 = ReferenceSpace.objects.get(id=nuts3_id)
-    land_use = LibraryItem.objects.get(id=land_use_id)
+    # land_use = LibraryItem.objects.get(id=land_use_id)
 
     context = {
         "space": space,
         "sector": sector,
         "title": "SCA report",
         "indicator_scale_list": indicator_scale_list,
-        "visualisations": visualisations,
+        "country": country,
+        "nuts2": nuts2,
+        "nuts3": nuts3,
+        # "land_use": land_use,
+    }
+    return render(request, "cityloops/sca-report.html", context)
+
+def sca_report_form(request, slug, sector):
+    space = get_space(request, slug)
+
+    if slug == "apeldoorn":
+        nuts1_id = 328768
+        nuts2_id = 584317
+        nuts3_id = 585874
+    elif slug == "bodo":
+        nuts1_id = 328727
+        nuts2_id = 584307
+        nuts3_id = 585880
+    elif slug == "hoje-taastrup":
+        nuts1_id = 328745
+        nuts2_id = 584276
+        nuts3_id = 585721
+
+    nuts1 = ReferenceSpace.objects.get(id=nuts1_id)
+    nuts2 = ReferenceSpace.objects.get(id=nuts2_id)
+    nuts3 = ReferenceSpace.objects.get(id=nuts3_id)
+
+    context = {
+        "space": space,
+        "sector": sector,
         "nuts1": nuts1,
         "nuts2": nuts2,
         "nuts3": nuts3,
-        "land_use": land_use,
     }
-    return render(request, "cityloops/sca-report.html", context)
+    return render(request, "cityloops/sca-report.form.html", context)
+
 
 
 # space_maps and space_map are copies from staf/views.py
@@ -546,3 +579,19 @@ def space_map(request, space):
         "list": list,
     }
     return render(request, "staf/space.map.html", context)
+
+
+def floweaver(request):
+    flows = pd.read_csv('simple_fruit_sales.csv')
+
+    size = dict(width=570, height=300)
+
+    nodes = {
+        'farms': ProcessGroup(['farm1', 'farm2', 'farm3',
+                               'farm4', 'farm5', 'farm6']),
+        'customers': ProcessGroup(['James', 'Mary', 'Fred', 'Susan']),
+    }
+
+    context = {
+    }
+    return render(request, "cityloops/floweaver.html", context)

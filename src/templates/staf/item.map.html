@@ -156,7 +156,7 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title"><i class="fa fa-list fa-fw"></i> CSV format</h5>
-            <p class="card-text">This file contains a list of all spaces, and the coordinates of each space (if we have a polygon area for the space, then 
+            <p class="card-text">This file contains a list of all spaces, and the coordinates of each space (if we have a polygon area for the space, then
                 we convert this to the <a href="https://en.wikipedia.org/wiki/Centroid" target="_blank">centroids</a>).</p>
             <form method="post" class="mb-3">
               <button name="csv" value="true" type="submit" class="btn btn-primary"><i class="fa fa-download"></i> Download CSV file</button>
@@ -171,7 +171,7 @@
           <div class="card-body">
             <h5 class="card-title"><i class="fa fa-globe fa-fw"></i> GeoJSON format</h5>
             <p class="card-text">
-              This contains all items in this list with either coordinates or other spatial references (e.g. polygons), in a 
+              This contains all items in this list with either coordinates or other spatial references (e.g. polygons), in a
               <a href="https://en.wikipedia.org/wiki/GeoJSON">GeoJSON</a> format.
             </p>
             <form method="post" class="mb-3">
@@ -214,10 +214,10 @@
         <button name="delete_spaces" value="true" class="btn btn-danger" onclick="javascript:return confirm('Are you sure you want to delete all {{ space_count }} reference spaces? All associated data and details will be lost.')">Delete all reference spaces</button>
         {% csrf_token %}
       </form>
+    </section>
   {% endif %}
 
 {% endif %}
-
 
 {% endblock %}
 

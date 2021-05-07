@@ -23,7 +23,7 @@ STREET_TILES = "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x
 PLACEHOLDER_PHOTO_THUMBNAIL = "/media/records/placeholder.thumbnail.png"
 PLACEHOLDER_PHOTO = "/media/records/placeholder.png"
 
-RELATIONSHIP_ID = { 
+RELATIONSHIP_ID = {
     "author": 4,
     "uploader": 11,
     "participant": 12,
@@ -33,7 +33,7 @@ RELATIONSHIP_ID = {
     "processor": 34,
 }
 
-# If we add any new project, we should add it to this list. 
+# If we add any new project, we should add it to this list.
 # We must make sure to filter like this to exclude non-project news
 # (which we want in the community section but not here), as well as MoI news
 MOC_PROJECTS = [1,2,3,4,6,7,8,9,11,13,14,15,16,18,3458,32018,32542]
@@ -95,7 +95,7 @@ def unauthorized_access(request):
     #)
     raise PermissionDenied
 
-# Quick debugging, sometimes it's tricky to locate the PRINT in all the Django 
+# Quick debugging, sometimes it's tricky to locate the PRINT in all the Django
 # output in the console, so just using a simply function to highlight it better
 def p(text):
     print("----------------------")
@@ -147,6 +147,7 @@ COLOR_SCHEMES = {
     "blue": ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#deebf7","#f7fbff"],
     "purple": ["#3f007d", "#54278f", "#6a51a3", "#807dba", "#9e9ac8", "#bcbddc", "#dadaeb", "#efedf5", "#fcfbfd"],
     "red": ["#7f0000", "#b30000", "#d7301f", "#ef6548", "#fc8d59", "#fdbb84", "#fdd49e", "#fee8c8", "#fff7ec"],
+    "twentyfour": ["#144d58","#a6cee3","#33a02c","#b2df8a","#e31a1c","#fb9a99","#ff7f00","#fdbf6f","#6a3d9a","#cab2d6","#b15928","#ffff99", "#8dd3c7","#bd3e6e","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"]
 }
 
 

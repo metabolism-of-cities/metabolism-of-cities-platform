@@ -60,7 +60,7 @@ def city(request, space):
         levels = [33886,33895,33904,33913]
         data_source = 33971
 
-    levels = LibraryItem.objects.filter(pk__in=levels).order_by("id")
+    levels = LibraryItem.objects.filter(pk__in=levels)
     info = LibraryItem.objects.get(pk=id)
     data_source = LibraryItem.objects.get(pk=data_source)
 
@@ -72,7 +72,6 @@ def city(request, space):
         "space": space,
         "info": info,
         "link": link,
-        "menu": "overview",
     }
     return render(request, "stocks/city.html", context)
 
@@ -93,6 +92,35 @@ def archetypes(request, space):
         "space": space,
     }
     return render(request, "stocks/archetypes.html", context)
+
+def maps(request, space):
+    space = get_space(request, space)
+
+    if space.name == "Melbourne":
+        id = 33931
+        link = 33962
+        levels = [33962,33931,924024]
+        data_source = 33971
+    elif space.name == "Brussels":
+        id = 33886
+        link = 33962
+        levels = [33886,33895,33904,33913]
+        data_source = 33971
+
+    levels = LibraryItem.objects.filter(pk__in=levels)
+    info = LibraryItem.objects.get(pk=id)
+    data_source = LibraryItem.objects.get(pk=data_source)
+
+    context = {
+        "maps": True,
+        "load_select2": True,
+        "levels": levels,
+        "data_source": data_source,
+        "space": space,
+        "info": info,
+        "link": link,
+    }
+    return render(request, "stocks/maps.html", context)
 
 def map(request, space, id, box=None):
 
@@ -207,7 +235,7 @@ def map(request, space, id, box=None):
                 "geometry": json.loads(each.geometry.json)
             })
 
-    data = {
+    map_data = {
         "type":"FeatureCollection",
         "features": features,
     }
@@ -217,10 +245,11 @@ def map(request, space, id, box=None):
     }
 
     context = {
+        "maps": True,
         "info": info,
         "spaces": spaces,
         "map": map._repr_html_() if map else None,
-        "data": data,
+        "map_data": map_data,
         "link": link,
         "source_link": links.get(box.source.id) if box else 0,
         "space": space,
@@ -275,15 +304,34 @@ def choropleth(request):
 
 def compare(request, space):
     space = get_space(request, space)
+
+    if space.name == "Melbourne":
+        levels = [33962,33931,924024]
+        top_level = 33962
+        data_source = 33971
+    elif space.name == "Brussels":
+        levels = [33886,33895,33904,33913]
+        data_source = 33971
+        top_level = 33962
+
+    box = ReferenceSpace.objects.get(pk=top_level)
+    spaces = ReferenceSpace.objects.filter(geometry__within=box.geometry)
+
+    levels = LibraryItem.objects.filter(pk__in=levels)
+
     context = {
         "compare": True,
+        "levels": levels,
+        "top_level": top_level,
         "load_select2": True,
         "space": space,
+        "spaces": spaces,
     }
     return render(request, "stocks/compare.html", context)
 
 def modeller(request, space):
     space = get_space(request, space)
+
     context = {
         "modeller": True,
         "space": space,
@@ -304,3 +352,27 @@ def story(request, space, title):
         "stories": True,
     }
     return render(request, "stocks/story.html", context)
+
+def area_children(request, within, source):
+    info = get_object_or_404(LibraryItem, pk=33971)
+    box = ReferenceSpace.objects.get(pk=within)
+    spaces = ReferenceSpace.objects.filter(geometry__within=box.geometry, source=source)
+
+    links = {
+        # Melbourne
+        33931: 33962,
+        33962: 924024,
+
+        # Brussels
+        33886: 33895,
+        33895: 33904,
+        33904: 33913,
+    }
+
+    children = []
+    for each in spaces:
+        children.append(each.id)
+
+    return JsonResponse({
+        "children": children
+    })

@@ -1,0 +1,26 @@
+{% extends "_base.html" %}
+
+{% block title %}Material Stocks{% endblock %}
+{% block page_name %}material-stocks home{% endblock %}
+
+{% block head %}
+<style>
+  .description p:last-of-type {
+    margin-bottom: 0;
+  }
+</style>
+{% endblock %}
+
+
+{% block content %}
+  {% include "_submenu-stocks.html" %}
+
+  <section>
+    <select class="form-control custom-select">
+      {% for each in levels %}
+        <option value="{{ each.id }}">{{ each.get_shortname }}</option>
+      {% endfor %}
+    </select>
+  </section>
+
+{% endblock %}

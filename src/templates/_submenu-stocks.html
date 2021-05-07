@@ -2,32 +2,37 @@
 
 <ul class="nav nav-tabs mb-4">
   <li class="nav-item">
-    <a class="nav-link{% if menu == 'overview' %} active{% endif %}" href="{% url 'stocks:city' space.slug %}">
+    <a class="nav-link{% if city %} active{% endif %}" href="{% url 'stocks:city' space.slug %}">
       Overview
     </a>
   </li>
   <li class="nav-item">
-    <a class="nav-link{% if menu == 'data' %} active{% endif %}" href="{% url 'stocks:data' space.slug %}">
+    <a class="nav-link{% if maps %} active{% endif %}" href="{% url 'stocks:maps' space.slug %}">
+      Maps
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link{% if data %} active{% endif %}" href="{% url 'stocks:data' space.slug %}">
       Data
     </a>
   </li>
   <li class="nav-item">
-    <a class="nav-link{% if menu == 'comparison' %} active{% endif %}" href="{% url 'stocks:compare' space.slug %}">
+    <a class="nav-link{% if compare %} active{% endif %}" href="{% url 'stocks:compare' space.slug %}">
       Compare areas
     </a>
   </li>
   <li class="nav-item" hidden>
-    <a class="nav-link{% if menu == 'modeller' %} active{% endif %}" href="{% url 'stocks:modeller' space.slug %}">
+    <a class="nav-link{% if modeller %} active{% endif %}" href="{% url 'stocks:modeller' space.slug %}">
       Modeller
     </a>
   </li>
   <li class="nav-item" hidden>
-    <a class="nav-link{% if menu == 'archetypes' %} active{% endif %}" href="{% url 'stocks:archetypes' space.slug %}">
+    <a class="nav-link{% if archetypes %} active{% endif %}" href="{% url 'stocks:archetypes' space.slug %}">
       Archetypes
     </a>
   </li>
   <li class="nav-item">
-    <a class="nav-link{% if menu == 'stories' %} active{% endif %}" href="{% url 'stocks:stories' space.slug %}">
+    <a class="nav-link{% if stories %} active{% endif %}" href="{% url 'stocks:stories' space.slug %}">
       Stories
     </a>
   </li>
