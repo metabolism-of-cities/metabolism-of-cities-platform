@@ -37,6 +37,8 @@ from django.utils.safestring import mark_safe
 import folium
 from folium.plugins import Fullscreen
 
+import floweaver as fw
+
 def index(request):
     context = {
         "show_project_design": True,
@@ -3195,6 +3197,58 @@ def libraryframe(request, id):
             return render(request, "library/chart.iframe.html", context)
     else:
         return render(request, "library/item.iframe.html", context)
+
+def sankey(request, id):
+
+    file = settings.MEDIA_ROOT + "/sankeys/test.csv"
+    flows = pd.read_csv(file)
+
+    size = dict(width=570, height=300)
+
+    nodes = {
+        'farms': fw.ProcessGroup(['farm1', 'farm2', 'farm3',
+                               'farm4', 'farm5', 'farm6']),
+        'customers': fw.ProcessGroup(['James', 'Mary', 'Fred', 'Susan']),
+    }
+
+    ordering = [
+        ['farms'],       # put "farms" on the left...
+        ['customers'],   # ... and "customers" on the right.
+    ]
+
+    bundles = [
+        fw.Bundle('farms', 'customers'),
+    ]
+
+    # The first argument is the dimension name -- for now we're using
+    # "process" to group by process ids. The second argument is a list
+    # of groups.
+    farms_with_other = fw.Partition.Simple('process', [
+        'farm1',  # the groups within the partition can be a single id...
+        'farm2',
+        'farm3',
+        ('other', ['farm4', 'farm5', 'farm6']),   # ... or a group
+    ])
+
+    # This is another partition.
+    customers_by_name = fw.Partition.Simple('process', [
+        'James', 'Mary', 'Fred', 'Susan'
+    ])
+
+    # Update the ProcessGroup nodes to use the partitions
+    nodes['farms'].partition = farms_with_other
+    nodes['customers'].partition = customers_by_name
+
+    sdd = fw.SankeyDefinition(nodes, bundles, ordering)
+
+    # New Sankey!
+    file = settings.MEDIA_ROOT + f"sankeys/{id}.json"
+    sankey = fw.weave(sdd, flows).to_json(file, format="widget")
+
+    context = {
+        "sankey": sankey,
+    }
+    return render(request, "staf/sankey.html", context)
 
 def sankeybuilder(request):
     context = {

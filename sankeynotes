@@ -1,0 +1,37 @@
+Problem:
+Python - TypeError: Object of type 'int64' is not JSON serializable
+
+Why? We are passing a pandas df and "json does not recognize NumPy data types". Ref:
+https://stackoverflow.com/questions/50916422/python-typeerror-object-of-type-int64-is-not-json-serializable
+
+Best solution seems to be to convert numpy datatypes to regular numbers. Note that the SO accepted solutions converts to int but we clearly need int, float, or whatever is in there, so let's take a more structural solution. See this:
+
+https://stackoverflow.com/a/61903895
+
+So we do:
+
+- install numpyencoder
+sankey_date.py -> 
+
+at top
+from numpyencoder import NumpyEncoder 
+
+line 58
+json.dump(data, f, cls=NumpyEncoder)
+
+----
+
+Next problem is converting json
+
+Install this:
+https://github.com/ricklupton/svg-sankey
+
+Install npm on production machine. 
+
+-----
+
+
+
+
+
+
