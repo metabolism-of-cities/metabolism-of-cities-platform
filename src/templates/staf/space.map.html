@@ -95,27 +95,27 @@
     {% endif %}
     <div id="map" class="leaflet-map"></div>
 
-  <h3 class="mt-4">Source files</h3>
-  <table class="table datatable datatable-card">
-    <thead>
-      <tr>
-        <th>File</th>
-        <th>Author</th>
-        <th>Year</th>
-        <th>Items</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for each in list %}
-      <tr>
-        <td><a href="{% url URLS.LIBRARY_ITEM each.id %}">{{ each }}</a></td>
-        <td>{{ each.get_author_citation }}</td>
-        <td>{{ each.year }}</td>
-        <td>{{ each.imported_spaces.count }}</td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
+    <h3 class="mt-4">Source files</h3>
+    <table class="table datatable datatable-card">
+      <thead>
+        <tr>
+          <th>File</th>
+          <th>Author</th>
+          <th>Year</th>
+          <th>Items</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in list %}
+        <tr>
+          <td><a href="{% url URLS.LIBRARY_ITEM each.id %}">{{ each }}</a></td>
+          <td>{{ each.get_author_citation }}</td>
+          <td>{{ each.year }}</td>
+          <td>{{ each.imported_spaces.count }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
 
   {% endif %}
 

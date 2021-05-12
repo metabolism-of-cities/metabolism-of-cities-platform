@@ -21,12 +21,8 @@
 {% block content %}
   <h1>{% block title %}Maps{% endblock %}</h1>
 
-  <p>
-    We have a total of <strong>{{ all.count }}</strong> maps in our library for {{ space }}. You can browse these maps below.
-  </p>
-
   <div class="border rounded bg-light p-3 mb-4">
-    <i class="fal fa-map mr-2"></i> Interactive maps are available for documents with this icon
+    <i class="fal fa-map mr-2"></i> We have a total of <strong>{{ processed }}</strong> interactive maps in our library for {{ space }}. You can browse these maps below.
   </div>
 
   <section class="row map-list">

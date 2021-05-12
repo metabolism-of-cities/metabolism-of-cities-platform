@@ -36,8 +36,8 @@ def people(request):
     return render(request, "peeide/people.html", context)
 
 def library(request):
-    sectors = Tag.objects.filter(parent_tag__id=1089).annotate(total=Count("record"))
-    technologies = Tag.objects.filter(parent_tag__id=1088).annotate(total=Count("record"))
+    sectors = Tag.objects.filter(parent_tag__id=1089).annotate(total=Count("record")).order_by("name")
+    technologies = Tag.objects.filter(parent_tag__id=1088).annotate(total=Count("record")).order_by("name")
     context = {
         "sectors": sectors,
         "technologies": technologies,

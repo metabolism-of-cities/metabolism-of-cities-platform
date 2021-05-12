@@ -437,6 +437,26 @@ def sca_report(request, slug, sector):
         nuts2_id = 584282
         nuts3_id = 983064
         # land_use_id = 980702 # not correct
+    elif slug == "porto":
+        country_id = 328813
+        nuts2_id = 584336
+        nuts3_id = 586124
+        # land_use_id = 980702 # not correct
+    elif slug == "roskilde":
+        country_id = 328745
+        nuts2_id = 584272
+        nuts3_id = 585630
+        # land_use_id = 980702 # not correct
+    elif slug == "sevilla":
+        country_id = 328741
+        nuts2_id = 584286
+        nuts3_id = 585776
+        # land_use_id = 980702 # not correct
+    elif slug == "valles-occidental":
+        country_id = 328741
+        nuts2_id = 584283
+        nuts3_id = 585244
+        # land_use_id = 980702 # not correct
 
     country = ReferenceSpace.objects.get(id=country_id)
     nuts2 = ReferenceSpace.objects.get(id=nuts2_id)
@@ -490,14 +510,15 @@ def sca_report_form(request, slug, sector):
 # rather than adding an exception for cityloops there, these are whole new entries to keep things organised
 def space_maps(request, space):
     space = get_space(request, space)
-    all = LibraryItem.objects.filter(spaces=space,type_id__in=[40,41], tags__in=[975,976,977,978,979]).distinct() | LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False, type_id__in=[40,41], tags__in=[996,997,1080,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1041]).distinct()
+    all = LibraryItem.objects.filter(spaces=space, type_id__in=[40,41], tags__in=[975,976,977,978,979,996,997,1080,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1041]).distinct()
     master_map = False
     processed = all.filter(meta_data__processed=True).count()
     # We only show the master map if we have layers available
     if processed and space.geometry:
         master_map = True
 
-    infrastructure = LibraryItem.objects.filter(spaces=space, tags__in=[996,997,1080,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1041], type_id__in=[40,41]).distinct()
+    infrastructure = all.filter(tags__in=[996,997,1080,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1041])
+    boundaries = all.filter(tags__in=[975,976,977,978,979])
     try:
         # Let's see if one of the infrastructure items has an attached photo so we can show that
         photo_infrastructure = ReferenceSpace.objects.filter(source__in=infrastructure, image__isnull=False)[0]
@@ -507,7 +528,8 @@ def space_maps(request, space):
 
     context = {
         "space": space,
-        "boundaries": LibraryItem.objects.filter(spaces=space, tags__in=[975,976,977,978,979], type_id__in=[40,41]).distinct(),
+        "boundaries": boundaries,
+        "processed": processed,
         "infrastructure": infrastructure,
         "all": all,
         "photo_infrastructure": photo_infrastructure,
@@ -518,7 +540,7 @@ def space_maps(request, space):
 
 def space_map(request, space):
     space = get_space(request, space)
-    list = LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False, type_id__in=[40,41], tags__in=[975,976,977,978,979]) | LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False, type_id__in=[40,41], tags__in=[996,997,1080,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1041]).order_by("date_created")
+    list = LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False, type_id__in=[40,41], tags__in=[975,976,977,978,979,996,997,1080,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1041]).distinct()
     project = get_project(request)
     parents = []
     features = []
