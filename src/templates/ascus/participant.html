@@ -85,7 +85,9 @@ iframe{
       {% for each in presentations %}
         <tr>
           <td>
-            <a href="{% url "ascus:presentation" each.id %}">{{ each }}</a>
+            {% with link=PROJECT.slug|add:":presentation" %}
+            <a href="{% url link each.id %}">{{ each }}</a>
+            {% endwith %}
             {% if each.get_author_citation %}
             <br><em>{{ each.get_author_citation|safe }}</em>
             {% endif %}

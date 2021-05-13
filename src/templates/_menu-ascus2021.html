@@ -1,6 +1,16 @@
 <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:index" %}"><i class="fa fa-home fa-fw"></i></a></li>
 
-<li class="nav-item"><a class="nav-link" href="/page/schedule/">Schedule</a></li>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="program-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Program
+  </a>
+  <div class="dropdown-menu" aria-labelledby="program-dropdown">
+    <a class="dropdown-item" href="/page/schedule/">Schedule</a>
+    <a class="dropdown-item" href="{% url "ascus2021:overview" %}">Discussion sessions</a>
+  </div>
+</li>
+
+
 {% if not request.user.is_authenticated %}
   <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:article" "rates" %}">Rates</a></li>
   <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:article" "login" %}">Login</a></li>

@@ -10,7 +10,7 @@
       There are a number of events that take place in the week leading up to the AScUS 
       unconference. All participants are encouraged to review these events and attend
       those that are of their interest.
-      <a href="{% url "ascus:article" "program" %}">Click here to view our full schedule.</a>
+      <a href="{% url "ascus2021:article" "program" %}">Click here to view our full schedule.</a>
     </p>
   {% else %}
     <p>
@@ -18,7 +18,7 @@
       place throughout the duration of AScUS. Some of these discussion sessions have initial
       homework / exploratory exercises that are part of the pre-conference program. 
       Click on the name of a discussion topic to learn more about its goal, format, and content.
-      <a href="{% url "ascus:article" "program" %}">Click here to view our full schedule.</a>
+      <a href="{% url "ascus2021:article" "program" %}">Click here to view our full schedule.</a>
     </p>
   {% endif %}
 
@@ -48,7 +48,7 @@
       {% if not request.user.is_authenticated %}
         <p><em>You are not logged in. Please log in first and then register for this session.</em></p>
       {% else %}
-        <form method="post" class="form form-horizontal" action="{% url "ascus:account" %}">
+        <form method="post" class="form form-horizontal" action="{% url "ascus2021:account" %}">
           {% csrf_token %}
           {% if each in my_topic_registrations %}
             <div class="alert alert-success">
@@ -65,7 +65,7 @@
 
         {% if activate_voting %}
 
-          <form method="post" class="form form-horizontal" action="{% url "ascus:account_vote" %}">
+          <form method="post" class="form form-horizontal" action="{% url "ascus2021:account_vote" %}">
             {% csrf_token %}
             <div class="alert alert-warning">
               <h3>Most enjoyable session</h3>

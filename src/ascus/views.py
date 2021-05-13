@@ -115,8 +115,9 @@ def overview(request, preconf=False):
 
 @check_ascus_access
 def participants(request):
+    project = get_project(request)
     list = RecordRelationship.objects.filter(
-        record_child = Project.objects.get(pk=PAGE_ID["ascus"]),
+        record_child = project,
         relationship = Relationship.objects.get(name="Participant"),
     ).order_by("record_parent__name")
     context = {
@@ -129,7 +130,7 @@ def participants(request):
 @check_ascus_access
 def introvideos(request):
     list = LibraryItem.objects_include_private \
-        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(parent_list__record_child__id=request.project) \
         .filter(tags__id=769) \
         .order_by("name")
     context = {
@@ -141,15 +142,16 @@ def introvideos(request):
 
 @check_ascus_access
 def participant(request, id):
+    project = get_project(request)
     info = RecordRelationship.objects.get(
-        record_child = Project.objects.get(pk=PAGE_ID["ascus"]),
+        record_child = project,
         relationship = Relationship.objects.get(name="Participant"),
         record_parent_id=id,
     )
     info = info.record_parent.people
     video = Video.objects_include_private \
         .filter(child_list__record_parent=info) \
-        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(parent_list__record_child=project) \
         .filter(tags__id=769)
     if video:
         video = video[0]
@@ -157,15 +159,15 @@ def participant(request, id):
         video = None
     presentations = LibraryItem.objects_include_private \
         .filter(child_list__record_parent=info) \
-        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(parent_list__record_child=project) \
         .filter(tags__id=771)
     discussions = Event.objects_include_private \
         .filter(child_list__record_parent=info, child_list__relationship__id=14) \
-        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(parent_list__record_child=project) \
         .filter(tags__id=770)
     attendance = Event.objects_include_private \
         .filter(child_list__record_parent=info, child_list__relationship__id=12) \
-        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(parent_list__record_child=project) \
         .filter(tags__id=770) \
         .order_by("start_date")
     context = {
@@ -181,6 +183,12 @@ def participant(request, id):
 
 @check_ascus_access
 def ascus_account(request):
+    project = get_project(request)
+
+    registration_is_live = False
+    if project.slug == "ascus2021":
+        registration_is_live = True
+
     my_discussions = Event.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
         .filter(child_list__record_parent=request.user.people, child_list__relationship__id=14) \
@@ -279,6 +287,7 @@ def ascus_account(request):
         "topics": topics,
         "my_topic_registrations": my_topic_registrations,
         "abstracts": abstracts,
+        "registration_is_live": registration_is_live,
     }
     return render(request, "ascus/account.html", context)
 
