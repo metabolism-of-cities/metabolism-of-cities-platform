@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.db.models import Q, Count
 from django.http import Http404, HttpResponseRedirect, JsonResponse, HttpResponse
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.admin.views.decorators import staff_member_required
 from django.forms import modelform_factory
@@ -21,8 +22,12 @@ def index(request):
 
 def research(request):
     info = get_object_or_404(Project, pk=request.project)
+
+    projects = PublicProject.objects.filter(part_of_project=info)
+
     context = {
         "webpage": get_object_or_404(Webpage, pk=51471),
+        "projects": projects,
     }
 
     return render(request, "peeide/research.html", context)

@@ -9,6 +9,13 @@
   img.ndee-banner {
     object-position: center 70%;
   }
+
+  .row-people img {
+    border-radius: 100%;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+  }
 </style>
 {% endblock %}
 
@@ -27,24 +34,38 @@
 
   <h2>Our team</h2>
 
-  <div class="row mb-4">
+  <div class="row row-people mb-4">
     {% for each in team %}
-      <div class="col-lg-3 col-md-6 col-sm-8 mb-3">
-        <div class="bg-ndee-light-blue rounded">
-          <a href="{% url URLS.PROFILE each.id %}">
-            <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
-          </a>
-          <div class="p-3">
-            <h5 class="mb-0 text-ndee-primary">{{ each }}</h5>
-            <div class="text-ndee-purple mb-2">Role</div>
-            <!-- <p>{{ each.get_description|truncatewords_html:40 }}</p> -->
-            <div>
-              <a href="#" class="mr-2">
-                <i class="fab fa-twitter"></i>
-              </a>
-              <a href="#" class="mr-2">
-                <i class="fab fa-linkedin"></i>
-              </a>
+      <div class="col-lg-6 mb-2">
+        <div class="row pb-4">
+          <div class="col-3">
+            <!-- <img src="{{ each.image.thumbnail.url }}" alt=""> -->
+            <img src="https://metabolismofcities.org/media/records/photo_xXGoMmS.thumbnail.jpg" alt="">
+          </div>
+          <div class="col-9">
+            <h5 class="text-ndee-primary">{{ each }}</h5>
+            {{ each.get_description|truncatewords_html:40 }}
+            <div class="pt-2">
+              {% if each.website %}
+                <a target="_blank" href="{{ each.website }}" class="mr-2">
+                  <i class="far fa-link"></i>
+                </a>
+              {% endif %}
+              {% if each.twitter %}
+                <a target="_blank" href="{{ each.twitter }}" class="mr-2">
+                  <i class="fab fa-twitter"></i>
+                </a>
+              {% endif %}
+              {% if each.linkedin %}
+                <a href="{{ each.linkedin }}" class="mr-2">
+                  <i class="fab fa-linkedin"></i>
+                </a>
+              {% endif %}
+              {% if each.researchgate %}
+                <a href="{{ each.researchgate }}" class="mr-2">
+                  <i class="fab fa-researchgate"></i>
+                </a>
+              {% endif %}
             </div>
             <!-- <a href="{% url URLS.PROFILE each.id %}" class="btn btn-ndee btn-ndee-sm btn-ndee-primary">View profile</a> -->
           </div>
@@ -54,33 +75,6 @@
   </div>
 
   <h2>Our network</h2>
-
-  <div class="row mb-4">
-    {% for each in network %}
-      <div class="col-lg-3 col-md-6 col-sm-8 mb-3">
-        <div class="bg-ndee-light-blue rounded">
-          <a href="{% url URLS.PROFILE each.id %}">
-            <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="">
-          </a>
-          <div class="p-3">
-            <h5 class="mb-0 text-ndee-primary">{{ each }}</h5>
-            <div class="text-ndee-purple mb-2">Role</div>
-            <!-- <p>{{ each.get_description|truncatewords_html:40 }}</p> -->
-            <div>
-              <a href="#" class="mr-2">
-                <i class="fab fa-twitter"></i>
-              </a>
-              <a href="#" class="mr-2">
-                <i class="fab fa-linkedin"></i>
-              </a>
-            </div>
-            <!-- <a href="{% url URLS.PROFILE each.id %}" class="btn btn-ndee btn-ndee-sm btn-ndee-primary">View profile</a> -->
-          </div>
-        </div>
-      </div>
-    {% endfor %}
-  </div>
-
 
 <!-- </div> no need to close this container, it's already done above -->
 
