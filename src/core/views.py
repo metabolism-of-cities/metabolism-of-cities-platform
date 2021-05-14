@@ -1133,10 +1133,19 @@ def controlpanel_content(request):
     if not has_permission(request, project.id, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
+    tag = None
+    pages = Webpage.objects.filter(part_of_project=project)
+    if "tag" in request.GET:
+        tag = get_object_or_404(Tag, pk=request.GET["tag"])
+        pages = pages.filter(tags=tag)
+    else:
+        pages = pages.exclude(tags__isnull=False)
+
     context = {
-        "pages": Webpage.objects.filter(part_of_project=project),
+        "pages": pages,
         "load_datatables": True,
-        "title": "Web page content",
+        "tag": tag,
+        "title": tag if tag else "Web page content",
     }
 
     return render(request, "controlpanel/content.html", context)
@@ -1147,6 +1156,8 @@ def controlpanel_content_form(request, id=None):
     project = get_object_or_404(Project, pk=request.project)
     if not has_permission(request, project.id, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
+
+    tag = get_object_or_404(Tag, pk=request.GET["tag"]) if "tag" in request.GET else None
 
     info = None
     tinymce = None
@@ -1176,6 +1187,9 @@ def controlpanel_content_form(request, id=None):
             meta_data["format"] = request.POST.get("format")
             info.meta_data = meta_data
             info.save()
+
+            if tag:
+                info.tags.add(tag)
             # TO DO
             # There is a contraint, for slug + project combined, and we should
             # check for that and properly return an error
@@ -1189,9 +1203,10 @@ def controlpanel_content_form(request, id=None):
         "load_datatables": True,
         "form": form,
         "info": info,
-        "title": info.name if info else "Create webpage",
+        "title": info.name if info else "Add new page",
         "load_markdown": True,
         "tinymce": tinymce,
+        "tag": tag,
     }
     return render(request, "controlpanel/content.form.html", context)
 

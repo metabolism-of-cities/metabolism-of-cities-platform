@@ -48,6 +48,7 @@
   <section>
     <h2>Content</h2>
     <div class="row">
+
       <div class="col-md-3 mb-3">
         <a class="card icon-card btn-card" href="content/">
           <div class="icon">
@@ -134,34 +135,45 @@
         </div>
       {% endif %}
 
-    {% if PROJECT.id == 16 %}
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="materials/">
-          <div class="icon">
-            <i class="fal fa-fw fa-apple-crate"></i>
-          </div>
-          <div class="card-header">Materials</div>
-        </a>
-      </div>
-    {% endif %}
+      {% if PROJECT.id == 16 %}
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="materials/">
+            <div class="icon">
+              <i class="fal fa-fw fa-apple-crate"></i>
+            </div>
+            <div class="card-header">Materials</div>
+          </a>
+        </div>
+      {% endif %}
 
-    {% if PROJECT.slug == "multimedia" %}
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="video-uploader/">
-          <div class="icon">
-            <i class="fab fa-fw fa-youtube"></i>
-          </div>
-          <div class="card-header">Video uploader</div>
-        </a>
-      </div>
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="video-editor/">
-          <div class="icon">
-            <i class="fab fa-fw fa-youtube"></i>
-          </div>
-          <div class="card-header">Video editor</div>
-        </a>
-      </div>
+      {% if PROJECT.slug == "multimedia" %}
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="video-uploader/">
+            <div class="icon">
+              <i class="fab fa-fw fa-youtube"></i>
+            </div>
+            <div class="card-header">Video uploader</div>
+          </a>
+        </div>
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="video-editor/">
+            <div class="icon">
+              <i class="fab fa-fw fa-youtube"></i>
+            </div>
+            <div class="card-header">Video editor</div>
+          </a>
+        </div>
+      {% endif %}
+
+      {% if PROJECT.slug == "peeide" %}
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="content/?tag=1227">
+            <div class="icon">
+              <i class="fal fa-fw fa-file-alt"></i>
+            </div>
+            <div class="card-header">Research topics</div>
+          </a>
+        </div>
     {% endif %}
 
     </div>
