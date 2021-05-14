@@ -990,6 +990,54 @@ def controlpanel_events(request):
     return render(request, "controlpanel/events.html", context)
 
 @login_required
+def controlpanel_people_form(request, id=None):
+
+    project = request.project
+    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    info = None
+    ModelForm = modelform_factory(People, fields=("name", "affiliation", "email", "website", "twitter", "google_scholar", "orcid", "researchgate", "linkedin", "image", "research_interests", "is_deleted"))
+    if id:
+        info = get_object_or_404(People, pk=id)
+    form = ModelForm(request.POST or None, request.FILES or None, instance=info)
+    if request.method == "POST":
+        if form.is_valid():
+            info = form.save(commit=False)
+            info.description = request.POST.get("description")
+            meta_data = info.meta_data if info.meta_data else {}
+            meta_data["format"] = request.POST.get("format")
+            info.meta_data = meta_data
+            info.save()
+            form.save_m2m()
+
+            if not id:
+                # If we create a new user then we need to know the relationship to this project
+                # If the user already exists, then this relationship can be managed separately
+                relationship = RecordRelationship()
+                relationship.record_parent = info
+                relationship.record_child_id = request.project
+                relationship.relationship_id = request.POST.get("relationship")
+                relationship.save()
+
+            messages.success(request, "Information was saved.")
+            if "next" in request.GET:
+                return redirect(request.GET.get("next"))
+            else:
+                return redirect("../")
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+
+    context = {
+        "form": form,
+        "relationships": Relationship.objects.filter(pk__in=[7,6,31]) if not id else None,
+        "info": info,
+        "title": info.name if info else "Add person",
+        "load_markdown": True,
+    }
+    return render(request, "controlpanel/people.form.html", context)
+
+@login_required
 def controlpanel_event_form(request, id=None):
 
     project = request.project

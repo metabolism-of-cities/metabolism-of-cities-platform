@@ -26,6 +26,9 @@
           {% with link=PROJECT.slug|add:":user" %}
             <a href="{% url link each.record_parent.id %}" class="mr-3"><i class="fa fa-user fa-fw"></i></a>
           {% endwith %}
+          {% if not each.record_parent.people.user %}
+            <a href="../people/{{ each.record_parent.id }}/?next={{ request.get_full_path|urlencode }}" class="mr-3"><i class="fa fa-pencil"></i></a>
+          {% endif %}
           <a href="{{ each.id }}/">{{ each.record_parent }}</a>
         </td>
         <td>{{ each.relationship.name }}</td>
@@ -38,7 +41,8 @@
     </tbody>
   </table>
 
-  <a class="mt-4 btn btn-default-outline" href="create/?next={{ request.get_full_path }}"><i class="fal fa-plus"></i> Add</a>
+  <a class="mt-4 btn btn-default-outline" href="create/?next={{ request.get_full_path|urlencode }}"><i class="fal fa-plus"></i> Add existing user to the list</a>
+  <a class="mt-4 btn btn-default-outline" href="new/?next={{ request.get_full_path|urlencode }}"><i class="fal fa-plus"></i> Add external person to list</a>
 
   <div>
     <a href="../" class="btn btn-primary-basic mt-4">

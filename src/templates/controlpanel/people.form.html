@@ -1,0 +1,74 @@
+{% extends "_base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+  <h1 class="mb-4">{{ title }}</h1>
+
+  <p><strong>Instructions:</strong><br>
+  Use this form to add an external person's details to the website. Note: 
+  we assume that this person will <strong>not</strong> create an account
+  and will not need to log in. If they do need to have an account, then
+  they should do so first.
+  </p>
+  {% if info %}
+    <div class="alert alert-warning">
+      <a href="{{ info.get_absolute_url }}">
+        <i class="fa fa-fw fa-link"></i>
+        View person
+      </a>
+    </div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+    {% bootstrap_form form layout="horizontal" %}
+
+    {% if relationships %}
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label">Relationship</label>
+        <div class="col-sm-9">
+          <select class="custom-select" name="relationship" required>
+            <option value=""></option>
+            {% for each in relationships %}
+              <option {% if each == info.relationship %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="form-group row">
+    <label class="col-md-3 col-form-label" for="id_type">Formatting</label>
+    <div class="col-md-9">
+    <select name="format" class="form-control" id="id_type">
+      <option value="markdown">Markdown</option>
+      <option value="html" {% if info.meta_data.format == "html" %}selected{% endif %}>HTML</option>
+      <option value="markdown_html" {% if info.meta_data.format == "markdown_html" %}selected{% endif %}>Markdown and HTML</option>
+    </select>
+    </div>
+    </div>
+
+    <div class="form-group markdown-textarea">
+      {% include "_markdown.html" %}
+      <textarea class="form-control mb-4" id="text" rows="30" name="description">{{ info.description|default_if_none:"" }}</textarea>
+    </div>
+
+    {% buttons %}
+      <div class="row">
+        <div class="col-12">
+          <button type="submit" class="btn btn-success">
+            <i class="fa fa-fw fa-save"></i>
+            Save
+         </button>
+        </div>
+      </div>
+    {% endbuttons %}
+    {% csrf_token %}
+  </form>
+
+  <a href="javascript:history.back()" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    Back
+  </a>
+
+{% endblock %}
