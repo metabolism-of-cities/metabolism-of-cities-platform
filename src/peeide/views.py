@@ -5,6 +5,7 @@ from django.db.models import Q, Count
 from django.http import Http404, HttpResponseRedirect, JsonResponse, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.admin.views.decorators import staff_member_required
+from django.forms import modelform_factory
 from django.contrib.auth.decorators import login_required
 
 from django.utils import timezone

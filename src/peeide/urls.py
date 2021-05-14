@@ -16,6 +16,15 @@ urlpatterns =  [
     path("library/sectors/<int:id>/", views.library_list, name="sector"),
     path("library/technologies/<int:id>/", views.library_list, name="technology"),
 
+    # news
+    path("news/", views.news_list, name="news"),
+    path("news/<slug:slug>/", core.news, name="news"),
+
+    # control panel
+    path("controlpanel/projects/", views.controlpanel_projects),
+    path("controlpanel/projects/<int:id>/", views.controlpanel_project_form),
+    path("controlpanel/projects/create/", views.controlpanel_project_form),
+
     # not sure if we need this one:
     # path("", core.article, {"id": 51471}, name="index"),
 ] + baseline_urlpatterns + baseline_library_urlpatterns + [
