@@ -12,7 +12,14 @@
       by type (e.g. Plumbing cluster), or by any other criteria as you see fit.
    </div>
   {% endif %}
-  {% for each in tags %}
+
+  <section>
+    {% for each in organization_list %}
+      {{ each.meta_data }}
+    {% endfor %}
+  </section>
+
+  {% for each in organization_list %}
     <section>
       <h3>Cluster {{ forloop.counter }}: {{ each.name }}</h3>
       {% if each.id in organizations %}
@@ -21,10 +28,10 @@
             <thead>
               <tr>
                 <th>Name</th>
+                <th>Site</th>
+                <th>Cluster</th>
                 <th>Sector</th>
-                <th>Employees</th>
                 <th>Last updated</th>
-                <th>Active</th>
               </tr>
             </thead>
             <tbody>

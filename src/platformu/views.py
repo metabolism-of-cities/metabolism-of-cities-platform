@@ -140,7 +140,7 @@ def clusters(request, organization):
                                     except:
                                         cluster_no_found.append(cluster)
                         except:
-                            messages.error(request, "Invalid CSV format, please ensure you use the right format")      
+                            messages.error(request, "Invalid CSV format, please ensure you use the right format")
 
                     if has_cluster:
                         messages.success(request, "CSV file imported!")
@@ -149,7 +149,6 @@ def clusters(request, organization):
                         # Here we remove duplicated keys
                         cluster_no_found = list(dict.fromkeys(cluster_no_found))
                         messages.error(request, "We could not find the following cluster: " + str(cluster_no_found))
-
 
     organization_list = Organization.objects_include_private.filter(tags__belongs_to=my_organization)
     organizations = {}
@@ -560,7 +559,7 @@ def admin_entity_form(request, organization, id=None):
         "sectors": Sector.objects.all(),
         "geoapify_api": settings.GEOAPIFY_API,
         "load_select2": True,
-        "nace_codes": Activity.objects.filter(catalog_id=3655, parent__isnull=True),
+        "nace_codes": Activity.objects.filter(catalog_id=3655, parent__isnull=True).order_by("code"),
         "local_businesses": local_businesses,
         "list_dependency": list_dependency,
         "list_tag": Tag.objects.filter(belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"]).order_by("id"),

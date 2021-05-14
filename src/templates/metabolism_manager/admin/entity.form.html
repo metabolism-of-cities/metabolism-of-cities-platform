@@ -108,7 +108,7 @@
             <label for="nace">NACE code</label>
             <select class="custom-select select2" id="nace" name="nace_code" required>
               {% for each in nace_codes %}
-              <option {% if each.name == info.meta_data.nace_code %}selected{% endif %} value="{{ each.name }}">{{ each.name }}</option>
+              <option {% if each.name == info.meta_data.nace_code %}selected{% endif %} value="{{ each.name }}">{{ each.code }} - {{ each.name|title }}</option>
               {% endfor %}
             </select>
           </div>
@@ -140,7 +140,7 @@
           </div>
         </div>
 
-        <div class="form-group form-row">
+        <div class="form-group">
           <label for="tags">Clusters</label>
           <select id="tags" class="form-control select2" name="tags" multiple required>
             {% for each in list_tag %}
