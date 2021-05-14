@@ -76,7 +76,7 @@
         </a>
       </div>
 
-      {% if PROJECT.slug == "islands" or PROJECT.slug == "community" %}
+      {% if PROJECT.slug == "islands" or PROJECT.slug == "community" or PROJECT.slug == "peeide" %}
 
         <div class="col-md-3 mb-3">
           <a class="card icon-card btn-card" href="projects/">
@@ -86,7 +86,9 @@
             <div class="card-header">Projects</div>
           </a>
         </div>
+      {% endif %}
 
+      {% if PROJECT.slug == "islands" or PROJECT.slug == "community" %}
         <div class="col-md-3 mb-3">
           <a class="card icon-card btn-card" href="organisations/">
             <div class="icon">

@@ -1,0 +1,81 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block title %}News{% endblock %}
+
+{% block head %}
+<style>
+  .container.main-content {
+    display: none;
+  }
+
+  img.ndee-banner {
+    object-position: center 70%;
+  }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<!-- close container -->
+</div>
+
+<img class="ndee-banner" src="https://i.imgur.com/bF4qdQq.jpg">
+
+<!-- open container -->
+<div class="container">
+  <h1>News</h1>
+
+  <section>
+    <div class="row">
+      {% for each in shortlist %}
+        <div class="col-lg-4 mb-sm-4 mb-lg-0">
+          <a class="card btn-card" href="{{ each.slug }}/">
+            {% if each.image %}
+              <img src="{{ each.image.url }}" class="card-img-top" alt="">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">
+                {{ each }}
+                <small class="d-inline-block text-muted">{{ each.date }}</small>
+              </h5>
+              <p class="card-text">
+                {{ each.introduction }}
+              </p>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section>
+    <div class="row">
+      {% for each in list %}
+        <div class="col-lg-6 mb-3">
+          <a href="{{ each.slug }}/" class="card btn-card">
+            <div class="card-body media">
+              {% if each.image %}
+                <img class="rounded" src="{{ each.image.url }}" alt="">
+              {% endif %}
+              <div class="media-body pl-3 align-self-center">
+                <h5 class="mb-0">
+                  <span class="mr-1">{{ each }}</span>
+                  <small class="d-inline-block text-muted">{{ each.date }}</small>
+                </h5>
+              </div>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+<!-- </div> no need to close this container, it's already done above -->
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

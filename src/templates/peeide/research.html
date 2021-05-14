@@ -25,48 +25,34 @@
 
   {{ webpage.get_description }}
 
+  <h2>Research</h2>
+
   <div class="row mb-4">
-    <div class="col-md-6 col-lg-4 mb-4">
-      <div class="p-3 bg-ndee-light-blue rounded">
-        <h5 class="text-ndee-primary mb-2">Lettuce</h5>
-        {% lorem 1 p %}
+    {% for each in research %}
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="p-3 bg-ndee-light-blue rounded">
+          <h5 class="text-ndee-primary mb-2">{{ each }}</h5>
+          {{ each.get_description }}
+
+          <a class="btn btn-ndee bg-ndee-primary text-white btn-ndee-sm" href="{{ each.url }}">Read more</a>
+        </div>
       </div>
-    </div>
-    <div class="col-md-6 col-lg-4 mb-4">
-      <div class="p-3 bg-ndee-light-blue rounded">
-        <h5 class="text-ndee-primary mb-2">Croissants</h5>
-        {% lorem 1 p %}
-      </div>
-    </div>
-    <div class="col-md-6 col-lg-4 mb-4">
-      <div class="p-3 bg-ndee-light-blue rounded">
-        <h5 class="text-ndee-primary mb-2">Bubbles</h5>
-        {% lorem 1 p %}
-      </div>
-    </div>
+    {% endfor %}
   </div>
 
   <h2>Projects</h2>
 
   <div class="row mb-4">
-    <div class="col-md-6 col-lg-4 mb-4">
-      <div class="p-3 bg-ndee-light-blue rounded">
-        <h5 class="text-ndee-primary mb-2">Rabbits in space</h5>
-        {% lorem 1 p %}
+    {% for each in projects %}
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="p-3 bg-ndee-light-blue rounded">
+          <h5 class="text-ndee-primary mb-2">{{ each }}</h5>
+          {{ each.get_description }}
+
+          <a class="btn btn-ndee bg-ndee-primary text-white btn-ndee-sm" href="{{ each.url }}">Read more</a>
+        </div>
       </div>
-    </div>
-    <div class="col-md-6 col-lg-4 mb-4">
-      <div class="p-3 bg-ndee-light-blue rounded">
-        <h5 class="text-ndee-primary mb-2">Poached eggs</h5>
-        {% lorem 1 p %}
-      </div>
-    </div>
-    <div class="col-md-6 col-lg-4 mb-4">
-      <div class="p-3 bg-ndee-light-blue rounded">
-        <h5 class="text-ndee-primary mb-2">Grapes</h5>
-        {% lorem 1 p %}
-      </div>
-    </div>
+    {% endfor %}
   </div>
 
 <!-- </div> no need to close this container, it's already done above -->
