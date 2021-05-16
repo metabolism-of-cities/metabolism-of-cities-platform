@@ -150,22 +150,18 @@ def clusters(request, organization):
                         cluster_no_found = list(dict.fromkeys(cluster_no_found))
                         messages.error(request, "We could not find the following cluster: " + str(cluster_no_found))
 
-    organization_list = Organization.objects_include_private.filter(tags__belongs_to=my_organization)
-    organizations = {}
-    # We need to create a list of all organizations per tag, this is how we do it:
-    for each in organization_list:
-        for tag in each.tags.all():
-            if not tag.id in organizations:
-                organizations[tag.id] = []
-            organizations[tag.id].append(each)
+    organization_list = Organization.objects_include_private.filter(tags__belongs_to=my_organization, is_deleted=False).distinct()
+    inactive_organizations = Organization.objects_include_private.filter(is_deleted=True).distinct()
 
     context = {
         "page": "organisations",
         "organization_list": organization_list,
-        "organizations": organizations,
+        "inactive_organizations": inactive_organizations,
+        "clusters": clusters,
         "info": my_organization,
         "tags": Tag.objects.filter(belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"]).order_by("id"),
         "my_organization": my_organization,
+        "load_datatables": True,
     }
     return render(request, "metabolism_manager/admin/clusters.html", context)
 
@@ -486,6 +482,9 @@ def admin_entity_form(request, organization, id=None):
         info.meta_data = {
             "address": request.POST.get("address"),
             "employees": request.POST.get("employees"),
+            "office_space": request.POST.get("office_space"),
+            "operational_space": request.POST.get("operational_space"),
+            "logistics_space": request.POST.get("logistics_space"),
             "lat": request.POST.get("lat"),
             "lng": request.POST.get("lng"),
             "sector": request.POST.get("sector"),
@@ -498,7 +497,7 @@ def admin_entity_form(request, organization, id=None):
             "sales_regional": request.POST.get("sales-regional"),
             "sales_export": request.POST.get("sales-export"),
             "nace_code": request.POST.get("nace_code"),
-            "updated_at": date_now.strftime("%Y-%m-%d %H:%M:%S"),
+            "updated_at": date_now.strftime("%Y-%m-%d"),
         }
         info.save()
         info.sectors.clear()

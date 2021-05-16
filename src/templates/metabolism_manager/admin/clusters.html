@@ -3,68 +3,82 @@
 
 {% block title %}Metabolism Manager{% endblock %}
 
+{% block head %}
+<style>
+  .advanced.hidden {
+    display: none;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
+  <h1 class="mb-4">My organisations</h1>
+
   {% if not tags %}
-    <h2>Organisations</h2>
     <div class="alert alert-warning">
       You don't have any clusters yet. Please set up a cluster to get started.
       A cluster is a way to group the organisations that you manage. You could do this by area (e.g. New York cluster),
       by type (e.g. Plumbing cluster), or by any other criteria as you see fit.
    </div>
+
+   <form method="post" class="form-inline">
+     {% csrf_token %}
+     <div class="form-group mb-2 mr-2">
+       <label for="name" class="sr-only">Name</label>
+       <input type="text" name="name" class="form-control" id="name" placeholder="Name" required>
+     </div>
+     <button type="submit" class="btn btn-primary mb-2"><i class="fas fa-plus"></i> Add cluster</button>
+   </form>
   {% endif %}
 
   <section>
-    {% for each in organization_list %}
-      {{ each.meta_data }}
-    {% endfor %}
+    <table class="table datatable">
+      <thead>
+        <tr>
+          <th>Organisation</th>
+          <th>Site</th>
+          <th>Cluster</th>
+          <th>Sector</th>
+          <th>Employees</th>
+          <th>Last updated</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for each in organization_list %}
+        <tr>
+          <td><a href="{% url 'platformu:admin_entity' my_organization.id each.id %}">{{ each }}</a></td>
+          <td></td>
+          <td>{% for tag in each.tags.all %}{{ tag }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+          <td>
+            {% for sector in each.sectors.all %}
+              {{ sector }}
+            {% endfor %}
+          </td>
+          <td>{{ each.meta_data.employees }}</td>
+          <td>{{ each.meta_data.updated_at }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <a class="btn btn-primary mt-4" href="{% url 'platformu:admin_entity_form' my_organization.id %}">
+      <i class="fas fa-plus"></i> Add new organisation
+    </a>
   </section>
 
-  {% for each in organization_list %}
-    <section>
-      <h3>Cluster {{ forloop.counter }}: {{ each.name }}</h3>
-      {% if each.id in organizations %}
-        <div class="mb-4 table-responsive">
-          <table class="table bg-white mb-0">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Site</th>
-                <th>Cluster</th>
-                <th>Sector</th>
-                <th>Last updated</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for details in organizations|get_item:each.id %}
-                <tr>
-                  <td><a href="{% url 'platformu:admin_entity' my_organization.id details.id %}">{{ details }}</a></td>
-                  <td>
-                    {% for sector in details.sectors.all %}
-                      {{ sector }}
-                    {% endfor %}
-                  </td>
-                  <td>{{ details.meta_data.employees }}</td>
-                  <td>{{ details.meta_data.updated_at }}</td>
-                  <td>
-                    {% if details.is_deleted %}
-                      <i class="far fa-times-circle text-danger"></i>
-                    {% else %}
-                      <i class="far fa-check-circle text-success"></i>
-                    {% endif %}
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      {% endif %}
-      <a class="btn btn-primary" href="{% url 'platformu:admin_entity_form' my_organization.id %}?tag={{ each.id }}"><i class="fas fa-plus"></i> Add new organisation</a>
+  <div class="btn btn-primary-basic toggle-advanced">
+    <i class="fa fa-caret-down"></i> Show advanced options
+  </div>
 
-      <!-- <a class="btn btn-primary-basic" href="configure/"><i class="far fa-cog"></i> Cluster configuration</a> -->
-    </section>
-  {% endfor %}
-  <section>
-    <h3>New cluster</h3>
+  <section class="advanced hidden">
+    <h3>Clusters</h3>
+    <ul class="list-group list-group-flush">
+      {% for each in tags %}
+        <li class="list-group-item">{{ each.id }}</li>
+      {% endfor %}
+    </ul>
+
+    <h4>Add new cluster</h4>
     <form method="post" class="form-inline">
       {% csrf_token %}
       <div class="form-group mb-2 mr-2">
@@ -75,7 +89,7 @@
     </form>
   </section>
 
-  <section>
+  <section class="advanced hidden">
     <h3>Import organisations</h3>
     <div class="row">
       <div class="col-md-6">
@@ -122,4 +136,20 @@
       </div>
     </div>
   </section>
+
+  <section class="advanced hidden">
+    <h3>Inactive organisations</h3>
+    {% for each in inactive_organizations %}
+    {{ each }}
+    {% endfor %}
+  </section>
+{% endblock %}
+
+{% block footer %}
+  <script>
+    $(".toggle-advanced").click(function() {
+      $(".toggle-advanced i").toggleClass("fa-caret-down fa-caret-up")
+      $("section.advanced").toggleClass("hidden")
+    })
+  </script>
 {% endblock %}
