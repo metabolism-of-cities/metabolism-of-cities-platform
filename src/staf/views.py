@@ -1,14 +1,13 @@
 from core.models import *
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
-from django.db.models import Count
 from django.contrib import messages
 from django.http import Http404, HttpResponseRedirect
 from django.forms import modelform_factory
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
-from django.db.models import Q
+from django.db.models import Q, Sum, Count
 
 from django.utils import timezone
 import pytz
@@ -2944,6 +2943,7 @@ def data(request, json=False):
     source = request.GET.get("source")
     origin_space = request.GET.get("origin_space")
     within = request.GET.get("within")
+    aggregation_level = request.GET.get("aggregation_level")
 
     if source:
         data = data.filter(source_id=source)
@@ -2971,6 +2971,45 @@ def data(request, json=False):
             data = data.filter(material__in=m)
         else:
             messages.error(request, "We could not find this material")
+
+    # We will aggregate data at a (possibly higher) level 
+    # The aggregation_level variable contains the library item containing the spaces at which to aggregate
+    # I have not yet found a way to do this directly in Django code. 
+    # It may help to use the Django SQL Utils libary - https://github.com/martsberger/django-sql-utils
+    # which makes annotating using subqueries (which return sums) easier. 
+    # To keep my life simple I have simply made it into a raw query for now and 
+    # made sure to type cast variables to integers to sanitize the query
+
+    # To explain what happens here:
+    # - We aim to get two values: the ID of the reference space, with the sum of the materials
+    # - We do this by doing a subquery that gets the SUM(quantity) from the data table
+    # - And when we do that we make sure that the geometry fits inside the geometry of the parent
+    # - Optionally we limit the total area, by having a within_query that limits which reference
+    #   spaces are returned to begin with.
+
+    if aggregation_level:
+        within_query = ""
+        if within:
+            within_query = f"ST_Within (geometry, (SELECT geometry FROM stafdb_referencespace WHERE record_ptr_id = {within.id})) AND"
+        source = int(source)
+        aggregation_level = int(aggregation_level)
+        data = ReferenceSpace.objects.raw(f"SELECT record_ptr_id, \
+        (SELECT SUM(quantity) FROM stafdb_data d LEFT JOIN stafdb_referencespace s ON d.origin_space_id = s.record_ptr_id WHERE d.source_id = {source} AND ST_Within (s.geometry, r.geometry)) \
+        AS total \
+        FROM stafdb_referencespace r \
+        WHERE \
+        {within_query} \
+        source_id = {aggregation_level}")
+
+        j = {}
+        for each in data:
+            j.update({str(each.record_ptr_id): each.total})
+
+        return JsonResponse({
+            "material": material,
+            "unit": "Kilogram", # Yeah let's fix this please
+            "data": j
+        })
 
     if json:
         j = {}
