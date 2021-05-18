@@ -10,10 +10,25 @@
       display: none;
     }
 
+    #map .leaflet-map-pane {
+      transition: opacity .3s;
+    }
+
+    #map.loading .leaflet-map-pane {
+      opacity: .3;
+    }
+
     .leaflet-map {
       min-height: 600px;
       height: 100%;
       max-height: 90vh;
+    }
+
+    .leaflet-map .loading-message {
+      text-align: center;
+      margin-top: 4rem;
+      position: relative;
+      z-index: 1000000;
     }
 
     .legend hr {
@@ -129,29 +144,27 @@
 
     <div class="form-row mb-4">
       <div class="col-md mb-3 mb-md-0">
-        <label class="font-weight-bold m-0">Shapefile source</label>
-        <select class="custom-select select2" id="shapefile">
+        <label class="font-weight-bold m-0">Area (does nothing at the moment)</label>
+        <select class="custom-select select2" id="box-parent">
           {% for each in doc_list %}
-            <option value="{{ each.id }}" {% if each.id == info.id %} selected{% endif %}>{{ each.get_shortname }}</option>
+            <option value="{{ each.id }}">{{ each.get_shortname }}</option>
           {% endfor %}
         </select>
       </div>
-      {% if box %}
       <div class="col-md mb-3 mb-md-0">
-        <label class="font-weight-bold m-0">Children</label>
+        <label class="font-weight-bold m-0">Siblings of current area</label>
         <select class="custom-select select2" id="box">
-          <option value="all">All</option>
+          <option value="all" {% if not box %}selected{% endif %}>All</option>
           {% for each in box.source.imported_spaces.all %}
             <option value="{{ each.id }}" {% if each.id == box.id %} selected{% endif %}>{{ each }}</option>
           {% endfor %}
         </select>
       </div>
-      {% endif %}
       <div class="col-md mb-3 mb-md-0">
         <label class="font-weight-bold m-0">Detail level</label>
-        <select class="custom-select select2" id="detail">
+        <select class="custom-select select2" id="level">
           {% for each in doc_list %}
-            <option value="{{ each.id }}" {% if each.id == box.id %} selected{% endif %}>{{ each.get_shortname }}</option>
+            <option value="{{ each.id }}" {% if each.id == info.id %} selected{% endif %}>{{ each.get_shortname }}</option>
           {% endfor %}
         </select>
       </div>
@@ -163,7 +176,12 @@
 
     <div class="row">
       <div class="col-lg-8">
-        <div id="map" class="leaflet-map"></div>
+        <div id="map" class="leaflet-map">
+          <div class="loading-message">
+            <h4>Loading map</h4>
+            <i class="fad fa-spinner-third fa-spin fa-3x"></i>
+          </div>
+        </div>
       </div>
       <div class="col-lg-4">
         <!-- spaces chart -->
@@ -361,20 +379,18 @@
 
       $(".layer-toggles .material[data-material='" + material + "']").addClass("selected")
       $("#map").removeClass("loading");
+
+      // set bounds of map to bounding box if it exists, otherwise to data layer
+      {% if box.geometry.geojson %}
+        map.fitBounds(boundingLayer.getBounds())
+      {% else %}
+        map.fitBounds(dataLayer.getBounds())
+      {% endif %}
     });
   }
 
   getData("{{ request.GET.material }}", "{{ box.id }}", "{{ id }}")
-
   // DATA LAYER END
-
-  // set bounds of map to bounding box if it exists, otherwise to data layer
-  {% if box.geometry.geojson %}
-    map.fitBounds(boundingLayer.getBounds())
-  {% else %}
-    map.fitBounds(dataLayer.getBounds())
-  {% endif %}
-
 
   // legend
   function addLegend() {
@@ -555,20 +571,19 @@
     $(this).addClass("selected")
 
     selectedMaterial = $(this).data("material");
-    getData(selectedMaterial, "{{ box.id }}", "{{ request.GET.level }}")
+    getData(selectedMaterial, "{{ box.id }}", "{{ id }}")
   })
 
   // load new page when wanting to explore a new area or detail level
-  function loadPage(shapefile, box) {
-    window.location.href = "{% url 'stocks:city' space.slug %}" + shapefile + "/" + box + "?material=" + selectedMaterial;
+  function loadPage(level, box) {
+    window.location.href = "{% url 'stocks:city' space.slug %}maps/" + level + "/" + box + "?material=" + selectedMaterial;
   }
 
   $(".load-map").click(function() {
-    let shapefile = $("#shapefile").val()
+    let level = $("#level").val()
     let box = $("#box").val()
-    let detail = $("#detail").val()
 
-    loadPage(shapefile, box);
+    loadPage(level, box);
   })
 
   $("body").on("click", ".load-from-map", function() {

@@ -53,146 +53,119 @@
 
 {% block content %}
   {% include "_submenu-stocks.html" %}
+
   <div class="row">
     <div class="col-md-6">
-      <div id="map-a" class="leaflet-map"></div>
+      <div id="map-a" class="leaflet-map mb-1"></div>
     </div>
     <div class="col-md-6">
-      <div id="map-b" class="leaflet-map"></div>
+      <div id="map-b" class="leaflet-map mb-1"></div>
     </div>
   </div>
+
 
   <div class="text-center tables">
     <div class="row selects sticky-top py-3">
       <div class="col-md-6">
-        {% for each in levels %}
-          <select data-level="{{ each.id }}" class="custom-select" {% if each.id != top_level %}hidden{% endif %}>
-            {% if each.id == top_level %}
-              {% for each in levels %}
-                <option value="{{ each.id }}">{{ each }}</option>
-              {% endfor %}
-            {% endif %}
-          </select>
-        {% endfor %}
+        <select data-level="{{ each.id }}" class="custom-select select2" name="space_a">
+          {% for each in buildings %}
+            <option value="{{ each.id }}" {% if each.id == info_a.id %}selected{% endif %}>{{ each }}</option>
+          {% endfor %}
+        </select>
       </div>
 
       <div class="col-md-6">
-        {% for each in levels %}
-          <select data-level="{{ each.id }}" class="custom-select" {% if each.id != top_level %}hidden{% endif %}>
-            {% if each.id == top_level %}
-              {% for each in levels %}
-                <option value="{{ each.id }}">{{ each }}</option>
-              {% endfor %}
-            {% endif %}
-          </select>
-        {% endfor %}
+        <select data-level="{{ each.id }}" class="custom-select select2" name="space_b">
+          {% for each in buildings %}
+            <option value="{{ each.id }}" {% if each.id == info_b.id %}selected{% endif %}>{{ each }}</option>
+          {% endfor %}
+        </select>
       </div>
     </div>
     <section>
+      <h5 class="mt-4 text-center"><i class="fal fa-fw fa-trees mr-1"></i> Materials</h5>
+      <div class="row">
+        <div class="col-4">
+          <table class="table">
+            <tbody>
+              {% for each in data_a %}
+                <tr>
+                  <td>{{ each.quantity }} {{ each.unit.symbol }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="col-4">
+          <table class="table">
+            <tbody>
+              {% for each in data_a %}
+                <tr>
+                  <td>{{ each.material }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="col-4">
+          <table class="table">
+            <tbody>
+              {% for each in data_b %}
+                <tr>
+                  <td>{{ each.quantity }} {{ each.unit.symbol }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <h5 class="mt-4 text-center"><i class="fal fa-fw fa-info-circle mr-1"></i> General info</h5>
+      <div class="row">
+        <div class="col-4">
+          <table class="table">
+            <tbody>
+              {% for key,value in info_a.meta_data.features.items %}
+                <tr>
+                  <td>{{ value }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="col-4">
+          <table class="table">
+            <tbody>
+              {% for key,value in info_a.meta_data.features.items %}
+                <tr>
+                  <th>{{ key }}</th>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="col-4">
+          <table class="table">
+            <tbody>
+              {% for key,value in info_b.meta_data.features.items %}
+                <tr>
+                  <td>{{ value }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!--
       <table class="table">
         <tbody>
           <tbody>
-            <tr>
-              <td>141 km<sup>2</sup></td>
-              <th>Area</th>
-              <td>412 km<sup>2</sup></td>
-            </tr>
-            <tr>
-              <td>4124</td>
-              <th>Number of buildings</th>
-              <td>6132</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
           </tbody>
         </tbody>
       </table>
+       -->
     </section>
-
-    <section>
-      <h5 class="mt-4"><i class="fal fa-fw fa-flask mr-1"></i> Materials</h5>
-      <table class="table">
-        <tbody>
-          <tbody>
-            <tr>
-              <td>142 tonnes</td>
-              <th>Wood</th>
-              <td>312 tonnes</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-          </tbody>
-        </tbody>
-      </table>
-    </section>
-
-    <section>
-      <h5 class="mt-4"><i class="fal fa-fw fa-building mr-1"></i> Materials per buildings</h5>
-      <table class="table">
-        <tbody>
-          <tbody>
-            <tr>
-              <td>142 tonnes</td>
-              <th>Wood</th>
-              <td>312 tonnes</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-            <tr>
-              <td>{% lorem 1 w random %}</td>
-              <th>{% lorem 1 w random %}</th>
-              <td>{% lorem 1 w random %}</td>
-            </tr>
-          </tbody>
-        </tbody>
-      </table>
-    </section>
-
   </div>
   <!-- we can skip the closing tag here because we have an unused container closing tab -->
 {% endblock %}
@@ -243,112 +216,48 @@
     basemapA.addTo(mapA);
     basemapB.addTo(mapB);
 
-    // temporary geojsons
-    const schaerbeek = {
+    // create jsons
+    const area_a = {
       "type": "FeatureCollection",
       "features": [
         {
           "type": "Feature",
           "properties": {},
-          "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-              [
-                [
-                  4.374275207519531,
-                  50.87179060692906
-                ],
-                [
-                  4.367151260375976,
-                  50.870057322647085
-                ],
-                [
-                  4.3636322021484375,
-                  50.86566965874543
-                ],
-                [
-                  4.368867874145508,
-                  50.8622025705097
-                ],
-                [
-                  4.380884170532227,
-                  50.86111905256077
-                ],
-                [
-                  4.38380241394043,
-                  50.86626553857076
-                ],
-                [
-                  4.380626678466797,
-                  50.87081564245129
-                ],
-                [
-                  4.374275207519531,
-                  50.87179060692906
-                ]
-              ]
-            ]
-          }
+          "geometry": {{ info_a.geometry.json|safe }}
         }
       ]
     }
 
-    const etterbeek = {
+    const area_b = {
       "type": "FeatureCollection",
       "features": [
         {
           "type": "Feature",
           "properties": {},
-          "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-              [
-                [
-                  4.385089874267578,
-                  50.84237020615854
-                ],
-                [
-                  4.377021789550781,
-                  50.83662483178993
-                ],
-                [
-                  4.383716583251952,
-                  50.83293874746873
-                ],
-                [
-                  4.4000244140625,
-                  50.83174612844614
-                ],
-                [
-                  4.400539398193359,
-                  50.83900979004339
-                ],
-                [
-                  4.392986297607421,
-                  50.84345415973269
-                ],
-                [
-                  4.385089874267578,
-                  50.84237020615854
-                ]
-              ]
-            ]
-          }
+          "geometry": {{ info_b.geometry.json|safe }}
         }
       ]
     }
 
     // add geojsons
-    let schaerbeekLayer = L.geoJSON(schaerbeek, {style: {color: "#144d58"}}).addTo(mapA);
-    let etterbeekLayer = L.geoJSON(etterbeek, {style: {color: "#144d58"}}).addTo(mapB);
+    let area_a_layer = L.geoJSON(area_a, {style: {color: "#144d58"}}).addTo(mapA);
+    let area_b_layer = L.geoJSON(area_b, {style: {color: "#144d58"}}).addTo(mapB);
 
     // make maps fit the bounds of the geojson layers
-    mapA.fitBounds(schaerbeekLayer.getBounds());
-    mapB.fitBounds(etterbeekLayer.getBounds());
+    mapA.fitBounds(area_a_layer.getBounds());
+    mapB.fitBounds(area_b_layer.getBounds());
 
     // initialise select2
     $("select[name='area']").select2({
       theme: "bootstrap4",
     });
+
+    // load new page when changing areas
+    $(".selects select").change(function() {
+      let a = $("select[name='space_a']").val()
+      let b = $("select[name='space_b']").val()
+
+      window.location.href = "{% url 'stocks:city' space.slug %}compare/" + a + "/" + b;
+    })
   </script>
 {% endblock %}

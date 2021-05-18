@@ -14,64 +14,49 @@
 
   <div class="row mb-4">
     <div class="col-md">
-      <select class="select2 custom-select" name="area">
-        <option value="1">Brussels</option>
-        <option value="2">Anderlecht</option>
-        <option value="3">...</option>
+      <select class="custom-select select2" name="space">
+        {% for each in buildings %}
+          <option value="{{ each.id }}" {% if each.id == info.id %}selected{% endif %}>{{ each }}</option>
+        {% endfor %}
       </select>
     </div>
     <div class="col-md text-md-right">
-      <a class="btn btn-primary-basic" href="#">
-        <i class="fal fa-exclamation-circle"></i> Report an error
+      <a href="{% url 'stocks:referencespace' info.id %}" class="btn btn-primary-basic">
+        <i class="fal fa-info-circle"></i> Explore space on Data Hub
       </a>
       <a class="btn btn-primary download" href="#">
-        <i class="fa fa-download"></i> Download data
+        <i class="fal fa-table"></i> Download data
       </a>
     </div>
   </div>
 
-  <table class="table datatable">
+  <table class="table datatable datatable-card bg-white">
     <thead>
       <tr>
-        <th>Area</th>
-        <th>Number of buildings</th>
-        <th>Wood stock</th>
-        <th>Glass stock</th>
-        <th>...</th>
+        <th>Material</th>
+        <th>Quantity</th>
+        <th>Source</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>{% lorem 1 w random %}</td>
-        <td>{% lorem 1 w random %}</td>
-        <td>{% lorem 1 w random %}</td>
-        <td>{% lorem 1 w random %}</td>
-        <td>{% lorem 1 w random %}</td>
-      </tr>
-      <tr>
-        <td>{% lorem 1 w random %}</td>
-        <td>{% lorem 1 w random %}</td>
-        <td>{% lorem 1 w random %}</td>
-        <td>{% lorem 1 w random %}</td>
-        <td>{% lorem 1 w random %}</td>
-      </tr>
-      <tr>
-        <td>{% lorem 1 w random %}</td>
-        <td>{% lorem 1 w random %}</td>
-        <td>{% lorem 1 w random %}</td>
-        <td>{% lorem 1 w random %}</td>
-        <td>{% lorem 1 w random %}</td>
-      </tr>
-      <tr>
-        <td>{% lorem 1 w random %}</td>
-        <td>{% lorem 1 w random %}</td>
-        <td>{% lorem 1 w random %}</td>
-        <td>{% lorem 1 w random %}</td>
-        <td>{% lorem 1 w random %}</td>
-      </tr>
+      {% for each in data %}
+        <tr>
+          <td>{{ each.material }}</td>
+          <td>{{ each.quantity }} {{ each.unit.symbol }}</td>
+          <td><a href="{% url URLS.LIBRARY_ITEM each.source.id %}">{{ each.source|truncatechars:50 }}</a></td>
+        </tr>
+      {% endfor %}
     </tbody>
   </table>
 {% endblock %}
 
 {% block footer %}
+<script>
+  // load new page when changing area
+  $("select[name='space']").change(function() {
+    let space = $(this).val()
+
+    window.location.href = "{% url 'stocks:city' space.slug %}data/" + space;
+  })
+</script>
 {% endblock %}

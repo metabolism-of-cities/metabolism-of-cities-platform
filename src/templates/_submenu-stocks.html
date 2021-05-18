@@ -12,12 +12,12 @@
     </a>
   </li>
   <li class="nav-item">
-    <a class="nav-link{% if data %} active{% endif %}" href="{% url 'stocks:data' space.slug %}">
+    <a class="nav-link{% if data %} active{% endif %}" href="{% url 'stocks:data' space.slug '973782' %}">
       Data
     </a>
   </li>
   <li class="nav-item">
-    <a class="nav-link{% if compare %} active{% endif %}" href="{% url 'stocks:compare' space.slug %}">
+    <a class="nav-link{% if compare %} active{% endif %}" href="{% url 'stocks:compare' space.slug '973782' '973783' %}">
       Compare areas
     </a>
   </li>

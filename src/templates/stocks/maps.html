@@ -15,12 +15,14 @@
 {% block content %}
   {% include "_submenu-stocks.html" %}
 
-  <section>
-    <select class="form-control custom-select">
-      {% for each in levels %}
-        <option value="{{ each.id }}">{{ each.get_shortname }}</option>
-      {% endfor %}
-    </select>
-  </section>
+  <div class="row">
+    {% for each in levels %}
+      <div class="col-lg-4">
+        <a class="d-block rounded border p-3" href="{% url 'stocks:city' space.slug %}maps/{{ each.id }}/?material=EMP8.5">
+          {{ each.get_shortname }}
+        </a>
+      </div>
+    {% endfor %}
+  </div>
 
 {% endblock %}

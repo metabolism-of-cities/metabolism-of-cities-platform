@@ -75,13 +75,27 @@ def city(request, space):
     }
     return render(request, "stocks/city.html", context)
 
-def data(request, space):
+def data(request, space, id):
     space = get_space(request, space)
+
+    info = ReferenceSpace.objects.get(pk=id)
+
+    buildings_item = LibraryItem.objects.get(pk=924024)
+    buildings = buildings_item.imported_spaces.all()
+    buildings = buildings[:100]
+
+    data = Data.objects.filter(Q(origin_space=info)|Q(destination_space=info))
+    total = data.count()
+    if data.count() > 200:
+        data = data[:200]
+
     context = {
         "data": True,
-        "load_datatables": True,
         "load_select2": True,
         "space": space,
+        "buildings": buildings,
+        "info": info,
+        "data": data,
     }
     return render(request, "stocks/data.html", context)
 
@@ -99,7 +113,7 @@ def maps(request, space):
     if space.name == "Melbourne":
         id = 33931
         link = 33962
-        levels = [33962,33931,924024]
+        levels = [33931,33962,924024]
         data_source = 33971
     elif space.name == "Brussels":
         id = 33886
@@ -303,30 +317,36 @@ def choropleth(request):
 
     return render(request, "stocks/map.html", context)
 
-def compare(request, space):
+def compare(request, space, a, b):
     space = get_space(request, space)
 
-    if space.name == "Melbourne":
-        levels = [33962,33931,924024]
-        top_level = 33962
-        data_source = 33971
-    elif space.name == "Brussels":
-        levels = [33886,33895,33904,33913]
-        data_source = 33971
-        top_level = 33962
+    info_a = ReferenceSpace.objects.get(pk=a)
+    info_b = ReferenceSpace.objects.get(pk=b)
 
-    box = ReferenceSpace.objects.get(pk=top_level)
-    spaces = ReferenceSpace.objects.filter(geometry__within=box.geometry)
+    buildings_item = LibraryItem.objects.get(pk=924024)
+    buildings = buildings_item.imported_spaces.all()
+    buildings = buildings[:100]
 
-    levels = LibraryItem.objects.filter(pk__in=levels)
+    data_a = Data.objects.filter(Q(origin_space=info_a)|Q(destination_space=info_a))
+    total_b = data_a.count()
+    if data_a.count() > 200:
+        data_a = data_a[:200]
+
+    data_b = Data.objects.filter(Q(origin_space=info_b)|Q(destination_space=info_b))
+    total_b = data_b.count()
+    if data_b.count() > 200:
+        data_b = data_b[:200]
+
 
     context = {
         "compare": True,
-        "levels": levels,
-        "top_level": top_level,
         "load_select2": True,
         "space": space,
-        "spaces": spaces,
+        "buildings": buildings,
+        "info_a": info_a,
+        "info_b": info_b,
+        "data_a": data_a,
+        "data_b": data_b,
     }
     return render(request, "stocks/compare.html", context)
 
