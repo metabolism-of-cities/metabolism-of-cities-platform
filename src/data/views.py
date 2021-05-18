@@ -15,67 +15,10 @@ from functools import wraps
 
 from django.views.decorators.clickjacking import xframe_options_exempt
 from core.mocfunctions import *
+import random
 
 def index(request):
  
-    if "import" in request.GET and request.user.id == 1:
-        import csv
-        file = settings.MEDIA_ROOT + "/import/stafdataset.csv"
-        if settings.DEBUG:
-            t = Dataset.objects.filter(old_id__isnull=False)
-            t.delete()
-        with open(file, "r") as csvfile:
-            contents = csv.DictReader(csvfile)
-            for row in contents:
-                info = Dataset.objects.create(
-                    name = row["name"],
-                    old_id = row["id"],
-                    description = row["notes"],
-                    type_id = 10,
-                    meta_data = {
-                        "completeness": row["completeness_id"],
-                        "geographical_correlation": row["geographical_correlation_id"],
-                        "reliability": row["reliability_id"],
-                        "access": row["access_id"],
-                        "completeness": row["completeness_id"],
-                        "replicatoin": row["replication"],
-                        "type": row["type_id"],
-                        "graph": row["graph_id"],
-                        "process": row["process_id"],
-                    }
-                )
-                info.spaces.add(ReferenceSpace.objects.get(old_id=row["primary_space_id"]))
-
-        file = settings.MEDIA_ROOT + "/import/stafcsv.csv"
-        with open(file, "r") as csvfile:
-            contents = csv.DictReader(csvfile)
-            for row in contents:
-
-                if row["dataset_id"] != "" and row["dataset_id"]:
-                    check = Dataset.objects.filter(old_id=row["dataset_id"])
-                    if check:
-                        check = check[0]
-                        name = "Dataset added to the data inventory"
-                        activity_id = 28
-                        work = Work.objects.create(
-                            date_created = row["created_at"],
-                            status = Work.WorkStatus.COMPLETED,
-                            part_of_project_id = request.project,
-                            workactivity_id = activity_id,
-                            related_to = check,
-                            assigned_to = People.objects.get(user_id=row["user_id"]),
-                            name = name,
-                        )
-                        work.date_created = row["created_at"]
-                        work.save()
-                        message = Message.objects.create(date_created=row["created_at"], posted_by=People.objects.get(user_id=row["user_id"]), parent=work, name="Status change", description="Task was completed")
-                        message.date_created = row["created_at"]
-                        message.save()
-                    else:
-                        print("not FOUND!")
-                        print(row)
-
-    import random
     project = get_object_or_404(Project, pk=request.project)
     id_list = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project, image__isnull=False, meta_data__progress__counter__gte=1).values_list("id", flat=True)
     selected = random.sample(list(id_list), 3)
