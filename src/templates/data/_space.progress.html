@@ -10,6 +10,9 @@
           </a>
           <div class="card-body">
             <h5 class="card-title mb-0"><a href="{% url dashboard_link each.slug %}">{{ each }}</a></h5>
+            {% if each.get_country_name and each.get_country_name != each.name %}
+              <h6>{{ each.get_country_name|default_if_none:"" }}</h6>
+            {% endif %}
           </div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item">

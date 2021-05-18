@@ -356,6 +356,16 @@ class Record(models.Model):
                 self.description_html = self.description_html.replace("</h3><br>", "</h3>")
                 self.description_html = self.description_html.replace("</h4><br>", "</h4>")
 
+        # For all the activated spaces, we record the country_name in the meta_data
+        # That way, we can retrieve this without an additional database call
+        if hasattr(self, "activated"):
+            if not self.meta_data:
+                self.meta_data = {}
+            if self.get_country:
+                self.meta_data["country_name"] = str(self.get_country)
+            elif "country_name" in self.meta_data:
+                del(self.meta_data["country_name"])
+
         super().save(*args, **kwargs)
 
     objects = PublicActiveRecordManager()
@@ -2279,6 +2289,25 @@ class ReferenceSpace(Record):
             return self.meta_data["progress_cityloops"]["document_counter"]
         except:
             None
+
+    @property
+    def get_country(self):
+        try:
+            country = ReferenceSpace.objects.filter(source_id=328661, geometry__contains=self.geometry)
+            return country[0]
+        except:
+            return None
+
+    # Once the country has been set, we can call this by simply
+    # retrieving the meta_data information. We should normally use this field as not
+    # to incur an additional db query
+    # The field is automatically set for all activated spaces upon saving
+    @property
+    def get_country_name(self):
+            try:
+                return self.meta_data["country_name"]
+            except:
+                return None
 
     def get_relative_url(self):
         return f"/referencespaces/view/{self.id}/"
