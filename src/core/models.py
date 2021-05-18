@@ -1462,7 +1462,7 @@ class LibraryItem(Record):
 
                 if not error:
 
-                    if type == "Point25D" or type == "LineString25D":
+                    if type == "Point25D" or type == "LineString25D" or type == "Polygon25D":
                         # This type has a "Z" geometry which needs to be changed to a 2-dimensional geometry
                         # See also https://stackoverflow.com/questions/35851577/strip-z-dimension-on-geodjango-force-2d-geometry
                         get_clone = polygon.clone()
@@ -1490,7 +1490,7 @@ class LibraryItem(Record):
                 for each in layer:
 
                     try:
-                        if type == "Point25D" or type == "LineString25D":
+                        if type == "Point25D" or type == "LineString25D" or type == "Polygon25D":
                             # This type has a "Z" geometry which needs to be changed to a 2-dimensional geometry
                             # See also https://stackoverflow.com/questions/35851577/strip-z-dimension-on-geodjango-force-2d-geometry
                             get_clone = each.geom.clone()
@@ -1546,7 +1546,7 @@ class LibraryItem(Record):
                     name = str(each.get(self.meta_data["columns"]["name"]))
 
                     try:
-                        if type == "Point25D":
+                        if type == "Point25D" or type == "LineString25D" or type == "Polygon25D":
                             # This type has a "Z" geometry which needs to be changed to a 2-dimensional geometry
                             # See also https://stackoverflow.com/questions/35851577/strip-z-dimension-on-geodjango-force-2d-geometry
                             get_clone = each.geom.clone()
