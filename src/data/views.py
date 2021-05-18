@@ -27,6 +27,7 @@ def index(request):
     if "set_countries" in request.GET:
         all = ActivatedSpace.objects.exclude(space__meta_data__country_name__isnull=False)
         for each in all:
+            print(each.space.id)
             print(each.space)
             each.space.save()
 

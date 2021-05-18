@@ -2292,7 +2292,12 @@ class ReferenceSpace(Record):
 
     @property
     def get_country(self):
-        if not self.geometry:
+        if not self.geometry or self.id == 15984 or self.id == 12279 or self.id == 14473:
+            # There is a bizarre bug with the Montreal, Singapore, and Samothraki boundaries, which return 
+            # an autocommit error (psycopg2.InterfaceError: connection already closed) followed
+            # by a "FATAL:  the database system is in recovery mode". Not pretty
+            # For now the easiest solution is to skip this item. This should be dug into in more detail.
+            # To do so, remove the exception (locally) and try to run get_country on these files.
             return None
         try:
             country = ReferenceSpace.objects.filter(source_id=328661, geometry__contains=self.geometry)
