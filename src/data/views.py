@@ -24,13 +24,6 @@ def index(request):
     selected = random.sample(list(id_list), 3)
     objects = ReferenceSpace.objects.filter(id__in=selected)
 
-    if "set_countries" in request.GET:
-        all = ActivatedSpace.objects.all()
-        for each in all:
-            print(each.space.id)
-            print(each.space)
-            each.space.save()
-
     context = {
         "show_project_design": True,
         "list": objects,
