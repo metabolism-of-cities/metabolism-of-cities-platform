@@ -899,7 +899,10 @@ def admin_massmail(request):
     except Exception as e:
         messages.error(request, "You did not select any people to send this mail to! <br><strong>Error: " + str(e) + "</strong>")
         list = None
+
+    # Making sure these people are somehow linked to the event, can't be just any people
     list = list.filter(parent_list__record_child_id=request.project).distinct()
+
     if request.method == "POST":
         try:
             message = request.POST["content"]

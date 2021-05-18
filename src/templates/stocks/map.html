@@ -119,7 +119,7 @@
         <ol class="breadcrumb">
           {% if request.GET.source_box %}
             <li class="breadcrumb-item"><a href="{% url 'stocks:map' space.slug box.source.id request.GET.source_box %}">{{ box.source }}</a></li>
-          {% else %}
+          {% elif box.source %}
             <li class="breadcrumb-item"><a href="{% url 'stocks:map' space.slug box.source.id %}">{{ box.source }}</a></li>
           {% endif %}
           <li class="breadcrumb-item active" aria-current="page">{{ box }}</li>
