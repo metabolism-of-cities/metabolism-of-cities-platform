@@ -20,7 +20,9 @@ iframe {
     <div class="card">
       <iframe class="video-embed youtube-video" src="https://www.youtube.com/embed/{{ each.video.get_embed_code }}?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       <div class="card-body">
-        <h5 class="card-title text-center"><a href="{% url "ascus:participant" each.author.id %}">{{ each.author }}</a></h5>
+        {% with link=PROJECT.slug|add:":participant" %}
+          <h5 class="card-title text-center"><a href="{% url link each.author.id %}">{{ each.author }}</a></h5>
+        {% endwith %}
       </div>
     </div>
   </div>
