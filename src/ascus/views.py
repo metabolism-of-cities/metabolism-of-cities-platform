@@ -406,7 +406,7 @@ def account_outputs(request):
 def account_discussion_attendance(request, id):
     info = Event.objects_include_private \
         .filter(pk=id) \
-        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(parent_list__record_child__id=request.project) \
         .filter(child_list__record_parent=request.user.people, child_list__relationship__id=14) \
         .filter(tags__id=770)[0]
     list = info.child_list.filter(relationship_id=12).order_by("record_parent__name")
@@ -416,7 +416,7 @@ def account_discussion_attendance(request, id):
         "header_subtitle": get_subtitle(request),
         "info": info,
         "list": list,
-        "hide_mail": True,
+        "hide_mail": False,
     }
     return render(request, "ascus/admin.attendance.html", context)
 
@@ -886,7 +886,8 @@ def ascus_admin_document(request, id):
     }
     return render(request, "ascus/admin.document.html", context)
 
-@check_ascus_admin_access
+#@check_ascus_admin_access
+@check_ascus_access
 def admin_massmail(request):
     try:
         id_list = request.GET["people"]
@@ -898,6 +899,7 @@ def admin_massmail(request):
     except Exception as e:
         messages.error(request, "You did not select any people to send this mail to! <br><strong>Error: " + str(e) + "</strong>")
         list = None
+    list = list.filter(parent_list__record_child_id=request.project).distinct()
     if request.method == "POST":
         try:
             message = request.POST["content"]

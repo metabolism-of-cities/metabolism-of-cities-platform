@@ -27,7 +27,7 @@
 </table>
 
 {% if not hide_mail %}
-  <p class="mt-5"><a href="{% url "ascus:admin_massmail" %}?people={% for each in list %}{{ each.record_parent.people.id }},{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Send mass mail</a></p>
+  <p class="mt-5"><a href="{% url "ascus2021:admin_massmail" %}?people={% for each in list %}{{ each.record_parent.people.id }},{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Send mass mail</a></p>
 {% endif %}
 
 <p><a href="javascript:history.back()" class="btn btn-primary">&laquo; Back</a></p>

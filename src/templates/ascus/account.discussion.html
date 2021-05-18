@@ -24,7 +24,7 @@
           <td>{{ each }}</td>
           <td>
             <a href="{% url "ascus2021:account_discussion" each.id %}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
-            <a hidden href="{% url "ascus2021:account_discussion_attendance" each.id %}" class="btn btn-primary"><i class="fa fa-users"></i> Attendance list</a>
+            <a href="{% url "ascus2021:account_discussion_attendance" each.id %}" class="btn btn-primary"><i class="fa fa-users"></i> Attendance list</a>
           </td>
         </tr>
       {% endfor %}
