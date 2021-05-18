@@ -2309,9 +2309,7 @@ class ReferenceSpace(Record):
                 # In that case we try again by just taking the centroid of the city and checking in what country they are
                 # This might be troublesome for a city with a very odd shape but I doubt that we have this problem in real life
                 country = ReferenceSpace.objects.filter(source_id=328661, geometry__contains=self.geometry.centroid)
-                return country[0]
-            else:
-                return None
+            return country[0]
         except:
             return None
 

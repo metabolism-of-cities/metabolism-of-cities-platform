@@ -25,7 +25,7 @@ def index(request):
     objects = ReferenceSpace.objects.filter(id__in=selected)
 
     if "set_countries" in request.GET:
-        all = ActivatedSpace.objects.exclude(space__meta_data__country_name__isnull=False)
+        all = ActivatedSpace.objects.all()
         for each in all:
             print(each.space.id)
             print(each.space)
