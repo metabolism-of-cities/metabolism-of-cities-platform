@@ -778,6 +778,7 @@ def ascus_admin_documents(request, type="introvideos"):
         "abstracts": "Abstracts",
     }
     get_type = types[type]
+    p(get_type)
 
     if type == "topics":
         list = Event.objects_include_private \
@@ -785,11 +786,11 @@ def ascus_admin_documents(request, type="introvideos"):
             .filter(tags__id=770).order_by("start_date")
     elif type == "presentations":
         list = Work.objects_include_private \
-            .filter(related_to__parent_list__record_child__id=PAGE_ID["ascus"]) \
+            .filter(related_to__parent_list__record_child=project) \
             .filter(related_to__tags__id=771)
     elif type == "introvideos":
         list = LibraryItem.objects_include_private \
-            .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+            .filter(parent_list__record_child=project) \
             .filter(tags__id=769)
     elif type == "abstracts":
         list = Work.objects_include_private \
@@ -812,7 +813,7 @@ def ascus_admin_documents(request, type="introvideos"):
 @check_ascus_admin_access
 def ascus_admin_introvideos(request):
     list = Work.objects \
-        .filter(related_to__parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(related_to__parent_list__record_child__id=request.project) \
         .filter(related_to__tags__id=769)
 
     context = {
@@ -823,7 +824,8 @@ def ascus_admin_introvideos(request):
 
 @check_ascus_admin_access
 def ascus_admin_introvideo(request, id):
-    work = Work.objects.get(related_to__parent_list__record_child__id=PAGE_ID["ascus"], related_to__tags__id=769, pk=id)
+    project = get_project(request)
+    work = Work.objects.get(related_to__tags__id=769, pk=id)
     info = work.related_to
     info = Video.objects_unfiltered.get(pk=info.id)
 
@@ -836,7 +838,7 @@ def ascus_admin_introvideo(request, id):
         work.save()
 
         messages.success(request, "The Youtube URL was recorded")
-        return redirect("ascus:admin_introvideos")
+        return redirect(f"{project.slug}:admin_introvideos")
 
     if "discard" in request.POST:
         info.is_deleted = True
@@ -847,7 +849,7 @@ def ascus_admin_introvideo(request, id):
         work.save()
 
         messages.success(request, "The video was discarded")
-        return redirect("ascus:admin_introvideos")
+        return redirect(f"{project.slug}:admin_introvideos")
 
     context = {
         "info": info,

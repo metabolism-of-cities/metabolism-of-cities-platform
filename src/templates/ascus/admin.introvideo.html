@@ -55,8 +55,12 @@
   </form>
 
   <p class="mt-5">
-    <a href="{% url "ascus:admin" %}" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a>
-    <a href="{% url "ascus:admin_introvideos" %}" class="btn btn-info"><i class="fa fa-video"></i> Back to video list</a>
+    {% with link=PROJECT.slug|add:":admin" %}
+      <a href="{% url link %}" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a>
+    {% endwith %}
+    {% with link=PROJECT.slug|add:":admin_introvideos" %}
+      <a href="{% url link %}" class="btn btn-info"><i class="fa fa-video"></i> Back to video list</a>
+    {% endwith %}
   </p>
 
 {% endblock %}
