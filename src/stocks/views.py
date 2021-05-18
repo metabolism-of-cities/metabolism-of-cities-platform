@@ -209,6 +209,9 @@ def map(request, space, id, box=None):
     if box:
         box = ReferenceSpace.objects.get(pk=box)
         spaces = spaces.filter(geometry__within=box.geometry)
+    else:
+        box = ReferenceSpace.objects.get(pk=14592)
+        spaces = spaces.filter(geometry__within=box.geometry)
 
     if spaces.count() > 100:
         pass
@@ -249,9 +252,10 @@ def map(request, space, id, box=None):
         "info": info,
         "spaces": spaces,
         "map": map._repr_html_() if map else None,
+        "id": id,
         "map_data": map_data,
         "link": link,
-        "source_link": links.get(box.source.id) if box else 0,
+        # "source_link": links.get(box.source.id) if box else 0,
         "space": space,
         "box": box,
         "load_datatables": True,

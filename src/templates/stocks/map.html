@@ -324,7 +324,7 @@
   let mapData;
   let dataLayer;
 
-  function getData(material, within) {
+  function getData(material, within, level) {
     $("#map").addClass("loading");
 
     // remove datalayer, if it exists
@@ -333,7 +333,7 @@
     };
 
     // request data, add the shapes to the map and fill in areas
-    $.get("{% url 'stocks:data_json' %}?source={{ data_source_document }}&material=" + material + "&within=" + within, function(data) {
+    $.get("{% url 'stocks:data_json' %}?source={{ data_source_document }}&material=" + material + "&within=" + within + "&aggregation_level=" + level, function(data) {
       mapData = data;
 
       dataLayer = L.geoJson(mapShapes, {
@@ -362,7 +362,7 @@
     });
   }
 
-  getData("{{ request.GET.material }}", "{{ box.id }}")
+  getData("{{ request.GET.material }}", "{{ box.id }}", "{{ id }}")
 
   // DATA LAYER END
 
@@ -553,7 +553,7 @@
     $(this).addClass("selected")
 
     selectedMaterial = $(this).data("material");
-    getData(selectedMaterial, "{{ box.id }}")
+    getData(selectedMaterial, "{{ box.id }}", "{{ request.GET.level }}")
   })
 
   // load new page when wanting to explore a new area or detail level
