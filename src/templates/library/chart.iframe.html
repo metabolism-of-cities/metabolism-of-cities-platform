@@ -14,21 +14,34 @@
     .top-message-box .alert {
       text-align: center;
     }
+
+    body {
+      background-color: #fff;
+    }
+
+    @media print {
+      .item-visualisations {
+        width: calc(297mm - 12rem);
+      }
+
+      .highcharts-credits,
+      .highcharts-exporting-group {
+        display: none;
+      }
+    }
   </style>
 {% endblock %}
 
 {% block iframe_content %}
 
-<div class="bar alert alert-dark">
-  <h3 class="h5 text-center"><strong>{{ info }}</strong></h3>
-</div>
+<h5 class="d-print-none">{{ info }}</h5>
 
 {% if info.data.all %}
   {% include "_data.visualizations.html" %}
 {% endif %}
 
 <div class="text-center mt-3 mb-3">
-  <a class="btn btn-lg btn-warning" href="{% url URLS.LIBRARY_ITEM info.id %}" target="_parent">View details <i class="fa fa-arrow-right"></i> </a>
+  <a class="btn btn-lg btn-warning d-print-none" href="{% url URLS.LIBRARY_ITEM info.id %}" target="_parent">View details <i class="fa fa-arrow-right"></i> </a>
 </div>
 
 {% endblock %}

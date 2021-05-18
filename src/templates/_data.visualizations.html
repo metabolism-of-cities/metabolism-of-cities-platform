@@ -1,7 +1,7 @@
 <section class="item-visualisations">
-  <h3>Data</h3>
+  <h3 class="d-print-none">Data</h3>
 
-  <ul class="nav nav-tabs nav-justified mb-4" role="tablist">
+  <ul class="nav nav-tabs nav-justified d-print-none mb-4" role="tablist">
     {% if properties.show_bar or not properties %}
       <li class="nav-item"><a class="nav-link" data-tab="bar" data-viz="bar"><i class="fal fa-fw fa-chart-bar fa-rotate-90"></i> Bar</a></li>
     {% endif %}
@@ -60,7 +60,7 @@
     <div id="table" role="tabpanel" class="table tab-pane">
       {% if info.data.all.count > 100 %}
         <div class="alert alert-warning">
-          We are showing the first 100 records. 
+          We are showing the first 100 records.
         </div>
         {% if request.user.id == 1 %}
           <a href="{% if DEBUG %}/data{% endif %}/data/?source={{ info.id }}" class="btn btn-primary mb-3">View data details</a>

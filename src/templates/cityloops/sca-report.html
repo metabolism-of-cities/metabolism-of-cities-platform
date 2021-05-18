@@ -95,6 +95,10 @@
         z-index: -1;
       }
 
+      .report-content {
+        padding: 5rem;
+      }
+
       .context-map {
         height: 200px;
         width: 100%;
@@ -104,6 +108,11 @@
       label {
         font-weight: bold;
         margin-bottom: 0;
+      }
+
+      iframe {
+        max-width: calc(297mm - 12rem);
+        height: 500px;
       }
     }
   </style>
@@ -127,14 +136,12 @@
     <img class="moc-logo" src="https://metabolismofcities.org/media/logos/Metabolism_of_Cities_full_logo_white.png">
   </div>
 
-  <div class="" style="padding: 8rem">
+  <div class="report-content">
     <section id="introduction">
       <h1>Introduction</h1>
       <p>Maybe short section on what the SCA is. How long cities have been working on them with the two courses.</p>
       <p><a href="https://cityloops.metabolismofcities.org/dashboards/apeldoorn/">URL to City's Data Hub.</a></p>
     </section>
-
-    <iframe class="libraryitem card" src="/library/preview/981856/" onload="resizeIframe(this)"></iframe>
 
     <section id="urban-context">
       <h1>Urban context</h1>
@@ -152,7 +159,7 @@
           <div class="context-map rounded" id="country-map"></div>
         </div>
       </div>
-      <div class="row">
+      <div class="row mb-4">
         <div class="col-3">
           <h4>{{ space }}</h4>
           <div><i class="fal fa-users fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">1A</span></div>
@@ -174,15 +181,13 @@
           <div><i class="fal fa-ruler-combined fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">4B</span> km<sup>2</sup></div>
         </div>
       </div>
-    </section>
 
-    <section id="land-use">
-      <h1>Land use</h1>
+      <h2>Land use</h2>
       <img class="img-fluid" src="https://i.imgur.com/NmVgDPI.png">
     </section>
 
     <section id="sector-context">
-      <h1>Sector / economic context - biomass / construction</h1>
+      <h1>Economic context of {{ sector }} sector</h1>
     </section>
 
     <section id="indicators">
@@ -209,6 +214,8 @@
 
     <section id="visualisations">
       <h1>Visualisations</h1>
+
+      <iframe class="libraryitem mb-4" src="/library/preview/49598/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
     </section>
 
     <section id="matrix">
@@ -345,6 +352,12 @@
 
     country_map.scrollWheelZoom.disable();
     country_map.fitBounds(country_geojsonlayer.getBounds());
+
+    // function to make iframe the same size as its content
+    function resizeIframe(obj) {
+      obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+    }
   </script>
+
 </body>
 </html>
