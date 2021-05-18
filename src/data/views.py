@@ -25,10 +25,10 @@ def index(request):
     objects = ReferenceSpace.objects.filter(id__in=selected)
 
     if "set_countries" in request.GET:
-        all = ActivatedSpace.objects.all()
+        all = ActivatedSpace.objects.exclude(space__meta_data__country_name__isnull=False)
         for each in all:
-            each.space.save()
             print(each.space)
+            each.space.save()
 
     context = {
         "show_project_design": True,

@@ -2292,9 +2292,21 @@ class ReferenceSpace(Record):
 
     @property
     def get_country(self):
+        if not self.geometry:
+            return None
         try:
             country = ReferenceSpace.objects.filter(source_id=328661, geometry__contains=self.geometry)
-            return country[0]
+            if not country:
+                # Sometimes the city boundaries are more exact than the national boundaries, and they 
+                # are at the edge of the national boundaries - making them technically not be fully contained
+                # if one of the borders is just outside of the national boundaries
+                # (note that this is not really outside the country's borders, but merely a difference in GIS accuracy)
+                # In that case we try again by just taking the centroid of the city and checking in what country they are
+                # This might be troublesome for a city with a very odd shape but I doubt that we have this problem in real life
+                country = ReferenceSpace.objects.filter(source_id=328661, geometry__contains=self.geometry.centroid)
+                return country[0]
+            else:
+                return None
         except:
             return None
 
