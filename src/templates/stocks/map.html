@@ -218,9 +218,11 @@
       <h4>Items used to generate this map</h4>
       <p>Library item containing the shapefiles we search for: <a href="{% url URLS.LIBRARY_ITEM info.id %}">{{ info }}</a></p>
       <p>General city/space we are in: <a href="{{ PROJECT.get_website_without_trailing_slash }}{{ space.get_relative_url }}">{{ space }}</a></p>
-      <p>Box to restrict search: <a href="{{ PROJECT.get_website_without_trailing_slash }}{{ box.get_relative_url }}">{{ box }}</a> -
-      (source: <a href="{% url URLS.LIBRARY_ITEM box.source.id %}">{{ box.source }}</a>)
-      </p>
+      {% if box %}
+        <p>Box to restrict search: <a href="{{ PROJECT.get_website_without_trailing_slash }}{{ box.get_relative_url }}">{{ box }}</a> -
+        (source: <a href="{% url URLS.LIBRARY_ITEM box.source.id %}">{{ box.source }}</a>)
+        </p>
+      {% endif %}
     </div>
   {% endif %}
 
