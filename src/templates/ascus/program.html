@@ -10,7 +10,6 @@
       There are a number of events that take place in the week leading up to the AScUS 
       unconference. All participants are encouraged to review these events and attend
       those that are of their interest.
-      <a href="{% url "ascus2021:article" "program" %}">Click here to view our full schedule.</a>
     </p>
   {% else %}
     <p>
@@ -18,11 +17,11 @@
       place throughout the duration of AScUS. Some of these discussion sessions have initial
       homework / exploratory exercises that are part of the pre-conference program. 
       Click on the name of a discussion topic to learn more about its goal, format, and content.
-      <a href="{% url "ascus2021:article" "program" %}">Click here to view our full schedule.</a>
     </p>
   {% endif %}
 
   <p><strong>All times are Central European Summer Time (CEST)</strong> - see our schedule for conversion tables</p>
+
   <ol>
   {% for each in discussions %}
     <li>
