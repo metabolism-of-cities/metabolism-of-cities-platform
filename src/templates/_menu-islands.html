@@ -35,8 +35,14 @@
   </div>
 </li>
 
-<li class="nav-item">
-  <a class="nav-link" href="{% url "islands:overview" %}">Islands</a>
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="data-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Island data hub
+  </a>
+  <div class="dropdown-menu" aria-labelledby="data-dropdown">
+    <a class="dropdown-item" href="{% url "islands:overview" %}">Islands</a>
+    <a class="dropdown-item" href="{% url "islands:plan2021" %}">Priority Plan 2021</a>
+  </div>
 </li>
 
 <li class="nav-item">
