@@ -15,19 +15,26 @@ from core.mocfunctions import *
 
 def index(request):
     info = get_object_or_404(Project, pk=request.project)
+    research = Tag.objects.filter(parent_tag_id=1227, include_in_glossary=True)
+    projects = PublicProject.objects.filter(part_of_project=info).order_by("-start_date")
+
     context = {
         "team": People.objects.filter(parent_list__record_child=info, parent_list__relationship__name="Admin"),
+        "research": research,
+        "projects": projects[:3],
     }
     return render(request, "peeide/index.html", context)
 
 def research(request):
     info = get_object_or_404(Project, pk=request.project)
 
-    projects = PublicProject.objects.filter(part_of_project=info)
+    research = Tag.objects.filter(parent_tag_id=1227).order_by("name")
+    projects = PublicProject.objects.filter(part_of_project=info).order_by("name")
 
     context = {
         "webpage": get_object_or_404(Webpage, pk=51471),
         "projects": projects,
+        "research": research,
     }
 
     return render(request, "peeide/research.html", context)
@@ -42,17 +49,18 @@ def people(request):
 
     return render(request, "peeide/people.html", context)
 
-def library(request):
+def bibliography(request):
     sectors = Tag.objects.filter(parent_tag__id=1089).annotate(total=Count("record")).order_by("name")
     technologies = Tag.objects.filter(parent_tag__id=1088).annotate(total=Count("record")).order_by("name")
     context = {
+        "webpage": get_object_or_404(Webpage, pk=51473),
         "sectors": sectors,
         "technologies": technologies,
     }
 
     return render(request, "peeide/library.html", context)
 
-def library_list(request, id=None):
+def bibliography_list(request, id=None):
     keyword = request.GET.get("keyword")
     tag = None
     if id:

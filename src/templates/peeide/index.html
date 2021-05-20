@@ -64,6 +64,29 @@
     height: 100px;
     object-fit: cover;
   }
+
+  .single-research {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .single-research i {
+    position: absolute;
+    font-size: 5rem;
+    opacity: .25;
+    bottom: -.75rem;
+    right: -.75rem;
+  }
+
+  .single-research .description p:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .project-image {
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
+  }
 </style>
 {% endblock %}
 
@@ -99,69 +122,26 @@
       </h3>
     </div>
 
-    <div class="row mb-4">
-      <div class="col-md-6 col-lg-4 mb-4">
-        <div class="p-3 bg-ndee-light-blue rounded">
-          <div class="text-uppercase font-weight-bold">
-            <span class="text-ndee-primary"></span>March 21st <span class="d-inline-block mx-2 font-weight-normal text-ndee-secondary">|</span><span class="text-ndee-purple">Podcast</span>
+    <div class="row">
+      {% for each in research %}
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="p-3 bg-ndee-light-blue rounded single-research">
+            <h5 class="text-ndee-primary">{{ each }}</h5>
+            <div class="description">{{ each.get_description }}</div>
+            <i class="fal fa-{{ each.icon }} text-ndee-primary"></i>
           </div>
-
-          <h5 class="text-ndee-primary my-4">A{% lorem 3 w random %}</h5>
-          {% lorem 1 p %}
         </div>
-      </div>
-      <div class="col-md-6 col-lg-4 mb-4">
-        <div class="p-3 bg-ndee-light-blue rounded">
-          <div class="text-uppercase font-weight-bold">
-            <span class="text-ndee-primary"></span>March 21st <span class="d-inline-block mx-2 font-weight-normal text-ndee-secondary">|</span><span class="text-ndee-purple">Podcast</span>
-          </div>
-
-          <h5 class="text-ndee-primary my-4">A{% lorem 3 w random %}</h5>
-          {% lorem 1 p %}
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-4 mb-4">
-        <div class="p-3 bg-ndee-light-blue rounded">
-          <div class="text-uppercase font-weight-bold">
-            <span class="text-ndee-primary"></span>March 21st <span class="d-inline-block mx-2 font-weight-normal text-ndee-secondary">|</span><span class="text-ndee-purple">Podcast</span>
-          </div>
-
-          <h5 class="text-ndee-primary my-4">A{% lorem 3 w random %}</h5>
-          {% lorem 1 p %}
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-4 mb-4">
-        <div class="p-3 bg-ndee-light-blue rounded">
-          <div class="text-uppercase font-weight-bold">
-            <span class="text-ndee-primary"></span>March 21st <span class="d-inline-block mx-2 font-weight-normal text-ndee-secondary">|</span><span class="text-ndee-purple">Podcast</span>
-          </div>
-
-          <h5 class="text-ndee-primary my-4">A{% lorem 3 w random %}</h5>
-          {% lorem 1 p %}
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-4 mb-4">
-        <div class="p-3 bg-ndee-light-blue rounded">
-          <div class="text-uppercase font-weight-bold">
-            <span class="text-ndee-primary"></span>March 21st <span class="d-inline-block mx-2 font-weight-normal text-ndee-secondary">|</span><span class="text-ndee-purple">Podcast</span>
-          </div>
-
-          <h5 class="text-ndee-primary my-4">A{% lorem 3 w random %}</h5>
-          {% lorem 1 p %}
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-4 mb-4">
-        <div class="p-3 bg-ndee-light-blue rounded">
-          <div class="text-uppercase font-weight-bold">
-            <span class="text-ndee-primary"></span>March 21st <span class="d-inline-block mx-2 font-weight-normal text-ndee-secondary">|</span><span class="text-ndee-purple">Podcast</span>
-          </div>
-
-          <h5 class="text-ndee-primary my-4">A{% lorem 3 w random %}</h5>
-          {% lorem 1 p %}
-        </div>
-      </div>
+      {% endfor %}
     </div>
 
+    <a href="{% url 'peeide:research' %}" class="btn btn-lg btn-ndee btn-ndee-primary">
+      More about our research <i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i>
+    </a>
+  </div>
+</section>
+
+<section>
+  <div class="container">
     <div class="rounded" style="background-color: #B0EFF3">
       <div class="row mb-4">
         <div class="col-lg-6 pr-lg-0">
@@ -230,11 +210,10 @@
     </h3>
     <div class="row">
       {% for each in team %}
-        <div class="col-lg-6 mb-2">
+        <div class="col-lg-6 mb-4">
           <div class="row">
             <div class="col-3">
-              <!-- <img src="{{ each.image.thumbnail.url }}" alt=""> -->
-              <img src="https://metabolismofcities.org/media/records/photo_xXGoMmS.thumbnail.jpg" alt="">
+              <img src="{{ each.image.thumbnail.url }}" alt="">
             </div>
             <div class="col-9">
               <div class="p-3">
@@ -274,13 +253,31 @@
 
 <section class="pb-4">
   <div class="container">
-    <h3 class="text-ndee-primary font-weight-bold">Projects <a href=""><i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i></a></h3>
-    <div class="row mb-4">
+    <h3 class="text-ndee-primary font-weight-bold">
+      Projects <a href="{% url 'peeide:research' %}"><i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i></a>
+    </h3>
+
+    <div class="row projects">
+      {% for each in projects %}
+        <div class="col-md-6 col-lg-4 mb-4">
+          <img class="rounded-top project-image" src="{{ each.image.thumbnail.url }}" alt="{{ each }} image">
+          <div class="p-3 bg-ndee-light-blue rounded">
+            <h5 class="text-ndee-primary mb-0">{{ each }}</h5>
+            <div class="text-ndee-purple mb-2">{{ each.meta_data.project_leader }}</div>
+            {{ each.get_description }}
+            <a class="btn btn-ndee bg-ndee-primary text-white btn-ndee-sm" href="{{ each.url }}">Read more</a>
+          </div>
+        </div>
+      {% endfor %}
     </div>
+
+    <a href="{% url 'peeide:research' %}" class="btn btn-lg btn-ndee btn-ndee-primary">
+      More projects <i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i>
+    </a>
   </div>
 </section>
 
-<div>
+<!-- <div> -->
 <!-- no need to close this container since we closed the previous one already -->
 
 {% endblock %}

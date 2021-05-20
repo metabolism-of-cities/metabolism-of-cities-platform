@@ -43,7 +43,11 @@
 
 <!-- open container -->
 <div class="container">
-  <h1>Bibliography</h1>
+  <section>
+    <h1>{{ webpage }}</h1>
+
+    {{ webpage.get_description }}
+  </section>
 
   {% include "peeide/_library.search.html" %}
 

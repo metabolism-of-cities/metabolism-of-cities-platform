@@ -5,19 +5,17 @@
 
   <h1 class="mb-4">{{ title }}</h1>
 
-  <p><strong>Instructions:</strong><br>
-  Use this form to add an external person's details to the website. Note: 
-  we assume that this person will <strong>not</strong> create an account
-  and will not need to log in. If they do need to have an account, then
-  they should do so first.
-  </p>
+  <div class="border rounded bg-light p-3 mb-2">
+    Use this form to add an external person's details to the website.
+    We assume that this person will <strong>not</strong> create an account
+    and will not need to log in. If they do need to have an account, then
+    they should do so first.
+  </div>
+
   {% if info %}
-    <div class="alert alert-warning">
-      <a href="{{ info.get_absolute_url }}">
-        <i class="fa fa-fw fa-link"></i>
-        View person
-      </a>
-    </div>
+    <a class="btn btn-primary mb-4" href="{{ info.get_absolute_url }}">
+      <i class="fal fa-fw fa-user"></i> View user profile
+    </a>
   {% endif %}
 
   <form method="post" enctype="multipart/form-data">
