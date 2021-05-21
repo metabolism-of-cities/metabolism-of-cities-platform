@@ -169,14 +169,14 @@
 
       {% if PROJECT.slug == "peeide" %}
         <div class="col-md-3 mb-3">
-          <a class="card icon-card btn-card" href="content/?tag=1227">
+          <a class="card icon-card btn-card" href="{% url 'library:tags' %}?id=1227">
             <div class="icon">
               <i class="fal fa-fw fa-file-search"></i>
             </div>
             <div class="card-header">Research topics</div>
           </a>
         </div>
-    {% endif %}
+      {% endif %}
 
     </div>
   </section>

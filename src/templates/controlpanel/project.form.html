@@ -24,6 +24,8 @@
 
     {% endif %}
 
+    {% if PROJECT.slug != "peeide" %}
+
     <div class="form-group row">
       <label class="col-sm-3 col-form-label">Institution</label>
       <div class="col-sm-9">
@@ -44,6 +46,7 @@
         <input type="text" name="supervisor" value="{{ info.meta_data.supervisor }}" class="form-control" />
       </div>
     </div>
+    {% endif %}
 
     <div class="form-group row">
       <label class="col-sm-3 col-form-label">Project leader</label>
@@ -52,12 +55,14 @@
       </div>
     </div>
 
+    {% if PROJECT.slug != "peeide" %}
     <div class="form-group row">
       <label class="col-sm-3 col-form-label">Research team</label>
       <div class="col-sm-9">
         <input type="text" name="research_team" value="{{ info.meta_data.research_team }}" class="form-control" />
       </div>
     </div>
+    {% endif %}
 
     {% if load_markdown %}
       <div class="form-group markdown-textarea">

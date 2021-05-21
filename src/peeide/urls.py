@@ -11,10 +11,10 @@ urlpatterns =  [
     path("", views.index, name="index"),
     path("people/", views.people, name="people"),
     path("research/", views.research, name="research"),
-    path("library/", views.library),
-    path("library/search/", views.library_list, name="library_search"),
-    path("library/sectors/<int:id>/", views.library_list, name="sector"),
-    path("library/technologies/<int:id>/", views.library_list, name="technology"),
+    path("bibliography/", views.bibliography),
+    path("bibliography/search/", views.bibliography_list, name="library_search"),
+    path("bibliography/sectors/<int:id>/", views.bibliography_list, name="sector"),
+    path("bibliography/technologies/<int:id>/", views.bibliography_list, name="technology"),
 
     # news
     path("news/", views.news_list, name="news"),
