@@ -4,6 +4,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from core.mocfunctions import *
 from django.contrib import messages
 from datetime import datetime
+import plotly.graph_objects as go
 
 def index(request):
     context = {
@@ -72,7 +73,6 @@ def partners(request):
     return render(request, "cityloops/partners.html", context)
 
 def eurostat_grid(request):
-
     layer_list = Tag.objects.filter(parent_tag__parent_tag_id=845).order_by("name")
     full_list = EurostatDB.objects.filter(is_duplicate=False).order_by("id")
     full_list = full_list.exclude(code__startswith="med_")
@@ -635,18 +635,31 @@ def space_map(request, space):
     }
     return render(request, "staf/space.map.html", context)
 
+def sankey(request):
+    fig = go.Figure(data=[go.Sankey(
+        node = dict(
+          thickness = 10,
+          line = dict(width = 0),
+          label = ["Imports", "Natural resources extracted", "Direct material inputs", "Processed material", "Material use", "Material accumulation", "Waste treatment", "Recycling", "Backfilling", "Incineration", "Total emissions", "Dissipative flows", "Waste landfilled", "Exports", "Emissions to water", "Emissions to air"],
+          color = "#4796a6",
+        ),
+        link = dict(
+          source = [0, 1, 2, 3, 3, 3, 3, 10, 10, 4, 4, 6, 6, 9, 6, 6, 7, 8], # indices correspond to labels, "Imports", "Natural resources extracted", "Direct material inputs", etc
+          target = [2, 2, 3, 13, 11, 10, 4, 15, 14, 5, 6, 12, 9, 10, 8, 7, 3, 3],
+          value = [3, 3, 6, 1, 0.5, 0.5, 5, 0.5, 0.5, 3, 2, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+      ))])
 
-def floweaver(request):
-    flows = pd.read_csv('simple_fruit_sales.csv')
 
-    size = dict(width=570, height=300)
+    fig.update_layout(
+        hovermode = 'x',
+        font=dict(size = 14, color = 'black', family = 'Lato'),
+        plot_bgcolor='rgba(255,255,255,0)',
+        paper_bgcolor='rgba(255,255,255,0)',
+    )
 
-    nodes = {
-        'farms': ProcessGroup(['farm1', 'farm2', 'farm3',
-                               'farm4', 'farm5', 'farm6']),
-        'customers': ProcessGroup(['James', 'Mary', 'Fred', 'Susan']),
-    }
+    sankey = fig.to_html(full_html=False)
 
     context = {
+        "sankey": sankey,
     }
-    return render(request, "cityloops/floweaver.html", context)
+    return render(request, "cityloops/sankey.html", context)

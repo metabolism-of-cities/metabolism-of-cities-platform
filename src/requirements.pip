@@ -6,8 +6,8 @@ django_cron
 python-dateutil
 django-stdimage
 requests
-libsass 
-django-compressor 
+libsass
+django-compressor
 django-sass-processor
 django-bootstrap4
 django-tinymce4-lite
@@ -35,3 +35,4 @@ contextily
 pyzotero
 folium
 odfpy
+plotly==4.14.3
