@@ -119,6 +119,11 @@ class PrivateRecordManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_deleted=False)
 
+# This is to filter those that are public (so NOT private), including deleted items
+class PublicRecordManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_public=True)
+
 class Tag(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
@@ -196,6 +201,7 @@ class Tag(models.Model):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
 class Record(models.Model):
     name = models.CharField(max_length=255)
@@ -371,6 +377,7 @@ class Record(models.Model):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
 def upload_directory(instance, filename):
     # file will be uploaded to MEDIA_ROOT/uuid/<filename>
@@ -407,6 +414,7 @@ class Document(Record):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
     def get_size(self):
         file = self.file if self.file else self.image
@@ -498,6 +506,7 @@ class Project(Record):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
 class PublicProject(Record):
     full_name = models.CharField(max_length=255, null=True, blank=True)
@@ -532,6 +541,7 @@ class PublicProject(Record):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
 class News(Record):
     date = models.DateField()
@@ -563,6 +573,7 @@ class News(Record):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
 class Blog(Record):
     date = models.DateField()
@@ -578,6 +589,7 @@ class Blog(Record):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
 class Organization(Record):
     url = models.CharField(max_length=255, null=True, blank=True)
@@ -630,6 +642,7 @@ class Organization(Record):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
     class Meta:
         ordering = ["name"]
@@ -741,6 +754,7 @@ class Event(Record):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
 class People(Record):
     firstname = models.CharField(max_length=255, null=True, blank=True)
@@ -820,6 +834,7 @@ class People(Record):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
 # We use this to keep a version history of records (which is done for some, not all)
 # We save the record name/title and the description, which allows us to go
@@ -857,6 +872,7 @@ class Webpage(Record):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
     def get_absolute_url(self):
         return self.slug
@@ -995,6 +1011,7 @@ class Message(Record):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
 class License(models.Model):
     name = models.CharField(max_length=255)
@@ -1781,6 +1798,7 @@ class LibraryItem(Record):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
 class Video(LibraryItem):
     embed_code = models.CharField(max_length=20, null=True, blank=True)
@@ -1842,6 +1860,7 @@ class Video(LibraryItem):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
 class Photo(LibraryItem):
     position = models.PositiveSmallIntegerField(null=True, blank=True, db_index=True, default=1)
@@ -1849,6 +1868,7 @@ class Photo(LibraryItem):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
 class ActivatedSpace(models.Model):
     space = models.ForeignKey("ReferenceSpace", on_delete=models.CASCADE, related_name="activated")
@@ -1882,6 +1902,7 @@ class Dataset(LibraryItem):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
 class DataPortal(LibraryItem):
 
@@ -1903,6 +1924,7 @@ class DataPortal(LibraryItem):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
 class Course(Record):
     slug = models.CharField(max_length=255, null=True, help_text="Do NOT change this if the course is already published")
@@ -1946,6 +1968,7 @@ class CourseModule(Record):
     objects_unfiltered = models.Manager()
     objects = PublicActiveRecordManager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
 class CourseQuestion(models.Model):
     question = models.CharField(max_length=255)
@@ -2072,6 +2095,7 @@ class WorkSprint(Record):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
     def get_dates(self):
         return get_date_range(self.start_date, self.end_date)
@@ -2137,6 +2161,7 @@ class GeocodeScheme(Record):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
     def __str__(self):
         return self.name
@@ -2158,6 +2183,7 @@ class Geocode(Record):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
     def __str__(self):
         return self.name
@@ -2395,6 +2421,7 @@ class FlowDiagram(Record):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
 class FlowBlocks(models.Model):
     diagram = models.ForeignKey(FlowDiagram, on_delete=models.CASCADE, related_name="blocks")
@@ -2541,6 +2568,7 @@ class DataArticle(Record):
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
+    objects_include_deleted = PublicRecordManager()
 
     def authors(self):
         return People.objects.filter(record_history__record=self).distinct()
@@ -2742,11 +2770,11 @@ class ZoteroItem(models.Model):
     def find_match(self):
         if self.library_item:
             return self.library_item
-        check = LibraryItem.objects.filter(name=self.title)
+        check = LibraryItem.objects_include_deleted.filter(name=self.title)
         if not check and "doi" in self.data and self.data["doi"]:
-            check = LibraryItem.objects.filter(doi=doi)
+            check = LibraryItem.objects_include_deleted.filter(doi=doi)
         if not check and "isbn" in self.data and self.data["isbn"]:
-            check = LibraryItem.objects.filter(isbn=isbn)
+            check = LibraryItem.objects_include_deleted.filter(isbn=isbn)
         if check:
             return check[0]
         else:

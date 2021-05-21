@@ -19,5 +19,17 @@
         <input type="checkbox" class="custom-control-input" id="search-abstract" name="abstract" {% if request.GET.abstract or not keyword %}checked{% endif %}  value="true">
         <label class="custom-control-label" for="search-abstract">Search through abstracts</label>
       </div>
+
+      <br>
+      <input type="text" name="author" placeholder="Author name">
+      <br>
+      Type:
+      <select name="type">
+        <option></option>
+        {% for each in types %}
+          <option value="{{ each.id }}">{{ each }}</option>
+        {% endfor %}
+      </select>
+
     </form>
   </section>

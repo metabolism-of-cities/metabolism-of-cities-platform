@@ -48,18 +48,21 @@ def library(request):
     context = {
         "sectors": sectors,
         "technologies": technologies,
+        "types": LibraryItemType.objects.all(),
     }
 
     return render(request, "peeide/library.html", context)
 
 def library_list(request, id=None):
     keyword = request.GET.get("keyword")
+    author = request.GET.get("author")
+    type = request.GET.get("type")
     tag = None
+    items = LibraryItem.objects.filter(tags__parent_tag__parent_tag_id=1087).distinct()
     if id:
         tag = Tag.objects.get(pk=id)
-        items = LibraryItem.objects.filter(tags=tag)
-    elif keyword:
-        items = LibraryItem.objects.filter(tags__parent_tag__parent_tag_id=1087).distinct()
+        items = items.filter(tags=tag)
+    if keyword:
         abstract_search = request.GET.get("abstract")
         title_search = request.GET.get("title")
         if abstract_search and title_search:
@@ -68,6 +71,11 @@ def library_list(request, id=None):
             items = items.filter(description__icontains=keyword)
         elif title_search:
             items = items.filter(name__icontains=keyword)
+    if author:
+        items = items.filter(Q(author_list__icontains=author))
+    if type:
+        items = items.filter(type_id=type)
+
     sectors = None
     technologies = None
     additional_tag = None
@@ -93,6 +101,9 @@ def library_list(request, id=None):
         "tag": tag,
         "additional_tag": additional_tag,
         "keyword": keyword,
+        "author": author,
+        "type": type,
+        "types": LibraryItemType.objects.all(),
     }
 
     return render(request, "peeide/library.list.html", context)
