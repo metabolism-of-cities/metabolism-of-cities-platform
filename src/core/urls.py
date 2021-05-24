@@ -40,6 +40,7 @@ urlpatterns = baseline_urlpatterns + [
 
     # Shortcut to course
     path('curso/', RedirectView.as_view(url='https://education.metabolismofcities.org/courses/metabolismo-urbano-y-manejo-de-datos-procesamiento-de-datos/', permanent=False)),
+    path('africancities/', RedirectView.as_view(url='https://education.metabolismofcities.org/courses/urban-metabolism-in-african-cities-data-collection/', permanent=False)),
 
     # Homepage
     path("", views.index, name="index"),
