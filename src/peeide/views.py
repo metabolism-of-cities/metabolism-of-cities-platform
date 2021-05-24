@@ -83,6 +83,7 @@ def bibliography_list(request, id=None):
         items = items.filter(Q(author_list__icontains=author))
     if type:
         items = items.filter(type_id=type)
+        type = LibraryItemType.objects.get(id=type)
 
     sectors = None
     technologies = None
@@ -106,7 +107,6 @@ def bibliography_list(request, id=None):
         "load_datatables": True,
         "sectors": sectors,
         "technologies": technologies,
-        "tag": tag,
         "additional_tag": additional_tag,
         "keyword": keyword,
         "author": author,
