@@ -41,8 +41,8 @@ urlpatterns = baseline_urlpatterns + baseline_education_urlpatterns + [
     path("dashboards/<slug:space>/maps/", views.space_maps, name="space_maps"),
     path("dashboards/<slug:space>/maps/overview/", views.space_map, name="space_map"),
 
-    # temporary floweaver testing
-    path("floweaver/", views.floweaver, name="floweaver"),
+    # temporary plotly sankey testing
+    path("sankey/", views.sankey, name="sankey"),
 
     # these are loaded after the cityloops maps, so the first URL used is the cityloops one
 ] + baseline_staf_urlpatterns + [
