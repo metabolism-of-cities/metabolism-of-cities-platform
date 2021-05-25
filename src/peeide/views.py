@@ -17,10 +17,12 @@ def index(request):
     info = get_object_or_404(Project, pk=request.project)
     research = Tag.objects.filter(parent_tag_id=1227, include_in_glossary=True)
     projects = PublicProject.objects.filter(part_of_project=info).order_by("-start_date")
+    carousel = News.objects.filter(projects=info, include_in_timeline=True).distinct().order_by("-date")
 
     context = {
         "team": People.objects.filter(parent_list__record_child=info, parent_list__relationship__name="Admin"),
         "research": research,
+        "carousel": carousel,
         "projects": projects[:3],
     }
     return render(request, "peeide/index.html", context)

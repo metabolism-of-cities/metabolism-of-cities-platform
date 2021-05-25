@@ -68,6 +68,7 @@
   .single-research {
     position: relative;
     overflow: hidden;
+    height: 100%;
   }
 
   .single-research i {
@@ -86,6 +87,14 @@
     height: 200px;
     width: 100%;
     object-fit: cover;
+  }
+
+  .project-text {
+    height: calc(100% - 200px);
+  }
+
+  section:last-of-type {
+    padding-bottom: 2rem !important;
   }
 </style>
 {% endblock %}
@@ -147,38 +156,19 @@
         <div class="col-lg-6 pr-lg-0">
           <div id="carousel" class="carousel slide h-100 p-5" data-ride="carousel">
             <div class="carousel-inner">
-              <div class="carousel-item active">
-                <strong class="text-ndee-purple d-block text-uppercase mb-3">March 20th | Podcast</strong>
-                <h3 class="text-ndee-primary font-weight-bold">Can peer-to-peer networks reduce food waste?</h3>
-                <p>
-                  In this research, we aim to reveal insights into the nature and dynamics of the sharing economy
-                  through a deep dive into a real-world food sharing network that aims to reduce household food waste.
-                </p>
-                <a class="btn btn-ndee btn-ndee-sm btn-ndee-primary" href="">Read more</a>
-              </div>
-              <div class="carousel-item">
-                <strong class="text-ndee-purple d-block text-uppercase mb-3">March 20th | Podcast</strong>
-                <h3 class="text-ndee-primary font-weight-bold">Some other title of a podcast?</h3>
-                <p>
-                  In this research, we aim to reveal insights into the nature and dynamics of the sharing economy
-                  through a deep dive into a real-world food sharing network that aims to reduce household food waste.
-                </p>
-                <a class="btn btn-ndee btn-ndee-sm btn-ndee-primary" href="">Read more</a>
-              </div>
-              <div class="carousel-item">
-                <strong class="text-ndee-purple d-block text-uppercase mb-3">March 20th | Podcast</strong>
-                <h3 class="text-ndee-primary font-weight-bold">This is the third slide, it'll go back to the first one</h3>
-                <p>
-                  In this research, we aim to reveal insights into the nature and dynamics of the sharing economy
-                  through a deep dive into a real-world food sharing network that aims to reduce household food waste.
-                </p>
-                <a class="btn btn-ndee btn-ndee-sm btn-ndee-primary" href="">Read more</a>
-              </div>
+              {% for each in carousel %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                  <strong class="text-ndee-purple d-block text-uppercase mb-3">{{ each.date|date:"d F Y" }}</strong>
+                  <h3 class="text-ndee-primary font-weight-bold">{{ each }}</h3>
+                  {{ each.get_description|truncatewords_html:40 }}
+                  <a class="btn btn-ndee btn-ndee-sm btn-ndee-primary" href="{{ each.get_absolute_url }}">Read more</a>
+                </div>
+              {% endfor %}
             </div>
             <ol class="carousel-indicators">
-              <li data-target="#carousel" data-slide-to="0" class="active"></li>
-              <li data-target="#carousel" data-slide-to="1"></li>
-              <li data-target="#carousel" data-slide-to="2"></li>
+              {% for each in carousel %}
+                <li data-target="#carousel" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
+              {% endfor %}
             </ol>
           </div>
         </div>
@@ -251,7 +241,7 @@
   </div>
 </section>
 
-<section class="pb-4">
+<section>
   <div class="container">
     <h3 class="text-ndee-primary font-weight-bold">
       Projects <a href="{% url 'peeide:research' %}"><i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i></a>
@@ -263,7 +253,7 @@
           {% if each.image %}
             <img class="rounded-top project-image" src="{{ each.image.thumbnail.url }}" alt="{{ each }} image">
           {% endif %}
-          <div class="p-3 bg-ndee-light-blue rounded">
+          <div class="p-3 bg-ndee-light-blue rounded project-text">
             <h5 class="text-ndee-primary mb-0">{{ each }}</h5>
             <div class="text-ndee-purple mb-2">{{ each.meta_data.project_leader }}</div>
             {{ each.get_description }}
@@ -280,6 +270,15 @@
     </a>
   </div>
 </section>
+
+<section class="bg-ndee-light-blue">
+  <div class="container">
+    <h4 class="mb-0">
+      <i class="fal fa-newspaper mr-2"></i> <a target="_blank" href="https://digitalenergyenvironment.groups.io/g/all/promote">Sign up to our newsletter</a> to get our latest news straight to your inbox
+    </h4>
+  </div>
+</section>
+
 
 <!-- <div> -->
 <!-- no need to close this container since we closed the previous one already -->

@@ -70,12 +70,20 @@
     <div class="card">
       <div class="list-group list-group-flush">
         {% for each in latest %}
-        <a href="/news/{{ each.slug }}/" class="list-group-item">
+          {% if PROJECT.slug == "peeide" %}
+            <a href="../{{ each.slug }}/" class="list-group-item">
+          {% else %}
+            <a href="/news/{{ each.slug }}/" class="list-group-item">
+          {% endif %}
           <div>{{ each }}</div>
           <div class="text-muted mb-0">{{ each.date }}</div>
         </a>
         {% endfor %}
-        <a href="/news/" class="list-group-item font-weight-bold">News archive</a>
+        {% if PROJECT.slug == "peeide" %}
+          <a href="../" class="list-group-item font-weight-bold">News archive</a>
+        {% else %}
+          <a href="/news/" class="list-group-item font-weight-bold">News archive</a>
+        {% endif %}
       </div>
     </div>
 
