@@ -230,14 +230,14 @@ class WorkAdmin(admin.ModelAdmin):
 
     def edit(self, obj):
         edit_link = format_html("<a href='/admin/{}/{}/{}/change/?edit=true'>Edit</a>",
-             obj._meta.app_label, 
-             obj._meta.model_name, 
+             obj._meta.app_label,
+             obj._meta.model_name,
              obj.id)
         return edit_link
 
     def view(self, obj):
         return "View"
-    
+
     def related_to_link(self, obj):
         if obj.related_to:
             url = reverse("admin:core_record_change", args=[obj.related_to.id])
@@ -252,7 +252,7 @@ class WorkAdmin(admin.ModelAdmin):
             return["name", "description", "tags", "spaces", "sectors", "is_deleted", "is_public", "old_id", "priority","part_of_project", "workactivity","related_to"]
         else:
             return[]
-    
+
 class WorkActivityAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     list_display = ["name", "type", "category", "points"]
@@ -391,6 +391,8 @@ admin_site.register(Language, SearchAdmin)
 
 admin_site.register(CityLoopsIndicator, SearchAdmin)
 admin_site.register(CityLoopsIndicatorValue, CityLoopsIndicatorAdmin)
+
+admin_site.register(CityLoopsSCAReport, CityLoopsIndicatorAdmin)
 
 class EurostatAdmin(admin.ModelAdmin):
     form = EurostatForm

@@ -162,23 +162,82 @@
       <div class="row mb-4">
         <div class="col-3">
           <h4>{{ space }}</h4>
-          <div><i class="fal fa-users fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">1A</span></div>
-          <div><i class="fal fa-ruler-combined fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">1B</span> km<sup>2</sup></div>
+          <div>
+            <i class="fal fa-users fa-fw mr-2"></i>
+            {% if report.space_population %}
+              {{ report.space_population }}
+            {% else %}
+              <span class="question-number bg-dark text-light rounded px-2 mr-2">1A</span>
+            {% endif %}
+          </div>
+          <div>
+            <i class="fal fa-ruler-combined fa-fw mr-2"></i>
+            {% if report.space_size %}
+              {{ report.space_size }} km<sup>2</sup>
+            {% else %}
+              <span class="question-number bg-dark text-light rounded px-2 mr-2">1B</span>
+            {% endif %}
+          </div>
         </div>
+
         <div class="col-3">
           <h4>{{ nuts3 }}</h4>
-          <div><i class="fal fa-users fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">2A</span></div>
-          <div><i class="fal fa-ruler-combined fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">2B</span> km<sup>2</sup></div>
+          <div>
+            <i class="fal fa-users fa-fw mr-2"></i>
+            {% if report.nuts3_population %}
+              {{ report.nuts3_population }}
+            {% else %}
+              <span class="question-number bg-dark text-light rounded px-2 mr-2">2A</span>
+            {% endif %}
+          </div>
+          <div>
+            <i class="fal fa-ruler-combined fa-fw mr-2"></i>
+            {% if report.nuts3_size %}
+              {{ report.nuts3_size }} km<sup>2</sup>
+            {% else %}
+              <span class="question-number bg-dark text-light rounded px-2 mr-2">2B</span>
+            {% endif %}
+          </div>
         </div>
+
         <div class="col-3">
           <h4>{{ nuts2 }}</h4>
-          <div><i class="fal fa-users fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">3A</span></div>
-          <div><i class="fal fa-ruler-combined fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">3B</span> km<sup>2</sup></div>
+          <div>
+            <i class="fal fa-users fa-fw mr-2"></i>
+            {% if report.nuts2_population %}
+              {{ report.nuts2_population }}
+            {% else %}
+              <span class="question-number bg-dark text-light rounded px-2 mr-2">3A</span>
+            {% endif %}
+          </div>
+          <div>
+            <i class="fal fa-ruler-combined fa-fw mr-2"></i>
+            {% if report.nuts2_size %}
+              {{ report.nuts2_size }} km<sup>2</sup>
+            {% else %}
+              <span class="question-number bg-dark text-light rounded px-2 mr-2">3B</span>
+            {% endif %}
+          </div>
         </div>
+
         <div class="col-3">
           <h4>{{ country }}</h4>
-          <div><i class="fal fa-users fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">4A</span></div>
-          <div><i class="fal fa-ruler-combined fa-fw mr-2"></i> <span class="question-number bg-dark text-light rounded px-2 mr-2">4B</span> km<sup>2</sup></div>
+          <div>
+            <i class="fal fa-users fa-fw mr-2"></i>
+            {% if report.country_population %}
+              {{ report.country_population }}
+            {% else %}
+              <span class="question-number bg-dark text-light rounded px-2 mr-2">4A</span>
+            {% endif %}
+          </div>
+          <div>
+            <i class="fal fa-ruler-combined fa-fw mr-2"></i>
+            {% if report.country_size %}
+              {{ report.country_size }} km<sup>2</sup>
+            {% else %}
+              <span class="question-number bg-dark text-light rounded px-2 mr-2">4B</span>
+            {% endif %}
+          </div>
         </div>
       </div>
 

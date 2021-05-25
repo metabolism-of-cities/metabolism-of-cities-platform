@@ -1487,10 +1487,10 @@ class LibraryItem(Record):
                         polygon = get_clone
 
                     if polygon.hasz:
-                        # Oddly enough the code above does not always work. Not yet sure why. I have had lines that were combined, 
-                        # into a multilinestring, and it seems like it is not possible (for Django?) to remove 3D from this 
+                        # Oddly enough the code above does not always work. Not yet sure why. I have had lines that were combined,
+                        # into a multilinestring, and it seems like it is not possible (for Django?) to remove 3D from this
                         # kind of object. So we simply do another check to see if it 'has z'. BTW we can likely use hasz
-                        # instead of type == point25d etc but I only now learned about it. Something for later. 
+                        # instead of type == point25d etc but I only now learned about it. Something for later.
                         # https://docs.djangoproject.com/en/3.1/ref/contrib/gis/geos/#django.contrib.gis.geos.GEOSGeometry.hasz
                         error = "This shapefile includes data in 3D. We only store shapefiles with 2D data. Please remove the elevation data (Z coordinates)"
                     else:
@@ -2319,7 +2319,7 @@ class ReferenceSpace(Record):
     @property
     def get_country(self):
         if not self.geometry or self.id == 15984 or self.id == 12279 or self.id == 14473:
-            # There is a bizarre bug with the Montreal, Singapore, and Samothraki boundaries, which return 
+            # There is a bizarre bug with the Montreal, Singapore, and Samothraki boundaries, which return
             # an autocommit error (psycopg2.InterfaceError: connection already closed) followed
             # by a "FATAL:  the database system is in recovery mode". Not pretty
             # For now the easiest solution is to skip this item. This should be dug into in more detail.
@@ -2328,7 +2328,7 @@ class ReferenceSpace(Record):
         try:
             country = ReferenceSpace.objects.filter(source_id=328661, geometry__contains=self.geometry)
             if not country:
-                # Sometimes the city boundaries are more exact than the national boundaries, and they 
+                # Sometimes the city boundaries are more exact than the national boundaries, and they
                 # are at the edge of the national boundaries - making them technically not be fully contained
                 # if one of the borders is just outside of the national boundaries
                 # (note that this is not really outside the country's borders, but merely a difference in GIS accuracy)
@@ -2910,7 +2910,6 @@ class CityLoopsIndicator(models.Model):
         else:
             return ""
 
-
     class Meta:
         ordering = ["number"]
 
@@ -2959,6 +2958,42 @@ class CityLoopsIndicatorValue(models.Model):
 
     def __str__(self):
         return f"{self.indicator.name} for {self.city.name} ({self.get_scale_display()})"
+
+# CityLoops SCA report
+class CityLoopsSCAReport(models.Model):
+    city = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE)
+
+    class Sector(models.IntegerChoices):
+        CONSTRUCTION = 1, "Construction"
+        BIOMASS = 2, "Biomass"
+
+    sector = models.IntegerField(choices=Sector.choices, db_index=True)
+
+    space_population = models.IntegerField(null=True, blank=True)
+    space_size = models.IntegerField(null=True, blank=True)
+    space_gdp = models.IntegerField(null=True, blank=True)
+    space_employees = models.IntegerField(null=True, blank=True)
+
+    nuts3_population = models.IntegerField(null=True, blank=True)
+    nuts3_size = models.IntegerField(null=True, blank=True)
+    nuts3_gdp = models.IntegerField(null=True, blank=True)
+    nuts3_employees = models.IntegerField(null=True, blank=True)
+
+    nuts2_population = models.IntegerField(null=True, blank=True)
+    nuts2_size = models.IntegerField(null=True, blank=True)
+    nuts2_gdp = models.IntegerField(null=True, blank=True)
+    nuts2_employees = models.IntegerField(null=True, blank=True)
+
+    country_population = models.IntegerField(null=True, blank=True)
+    country_size = models.IntegerField(null=True, blank=True)
+    country_gdp = models.IntegerField(null=True, blank=True)
+    country_employees = models.IntegerField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["city", "sector"]
+
+    def __str__(self):
+        return f"{self.city} - {self.sector}"
 
 # This is the format to use from now on
 # Note that there is a uid primary key, separate from the record_id
