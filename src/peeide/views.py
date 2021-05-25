@@ -125,9 +125,8 @@ def news_list(request, header_subtitle=None):
     context = {
         "list": list[3:],
         "shortlist": list[:3],
-        "add_link": "/admin/core/news/add/",
-        "header_title": "News",
-        "header_subtitle": header_subtitle,
+        "add_link": "/controlpanel/news/create/?next=/peeide/controlpanel/news/",
+        "title": "Resources and community",
         "menu": "news",
     }
     return render(request, "peeide/news.list.html", context)

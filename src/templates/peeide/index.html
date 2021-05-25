@@ -29,7 +29,7 @@
   }
 
   #carousel {
-    min-height: 400px;
+    min-height: 500px;
   }
 
   .carousel-img {
@@ -91,6 +91,10 @@
 
   .project-text {
     height: calc(100% - 200px);
+  }
+
+  .project-leads {
+    font-size: .75rem;
   }
 
   section:last-of-type {
@@ -255,8 +259,13 @@
           {% endif %}
           <div class="p-3 bg-ndee-light-blue rounded project-text">
             <h5 class="text-ndee-primary mb-0">{{ each }}</h5>
-            <div class="text-ndee-purple mb-2">{{ each.meta_data.project_leader }}</div>
             {{ each.get_description }}
+            {% if each.meta_data.project_leader %}
+              <div class="text-ndee-purple mb-2 project-leads">
+                <div class="text-dark font-weight-bold">Project lead(s)</div>
+                {{ each.meta_data.project_leader }}
+              </div>
+            {% endif %}
             {% if each.url %}
               <a class="btn btn-ndee bg-ndee-primary text-white btn-ndee-sm" href="{{ each.url }}">Read more</a>
             {% endif %}
