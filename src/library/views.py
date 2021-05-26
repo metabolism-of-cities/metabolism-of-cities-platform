@@ -287,7 +287,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         info = info.photo
 
     if request.user.is_authenticated:
-        if has_permission(request, request.project, ["curator", "dataprocessor"]) or request.user.people == info.uploader:
+        if has_permission(request, request.project, ["curator", "dataprocessor"]) or request.user.people == info.uploader or request.user.people == info.author():
             curator = True
             if info.type.id == 40:
                 url_processing = project.slug + ":hub_processing_gis"
