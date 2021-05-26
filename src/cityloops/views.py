@@ -408,9 +408,14 @@ def city_indicator_form(request, slug, sector, id):
 
 def sca_report(request, slug, sector):
     space = get_space(request, slug)
+    sector_id = 1 if sector == "construction" else 2
+
+    try:
+        report = CityLoopsSCAReport.objects.get(city=space, sector=sector_id)
+    except:
+        report = CityLoopsSCAReport.objects.create(city=space, sector=sector_id)
 
     indicator_list = CityLoopsIndicator.objects.all()
-    sector_id = 1 if sector == "construction" else 2
     indicator_scale_list = CityLoopsIndicatorValue.objects.filter(is_enabled=True, city_id=space.id, scale=3, sector=sector_id).order_by("indicator_id")
 
     # The lower the NUTS, the larger the area. For example:
@@ -466,6 +471,7 @@ def sca_report(request, slug, sector):
     context = {
         "space": space,
         "sector": sector,
+        "report": report,
         "title": "SCA report",
         "indicator_scale_list": indicator_scale_list,
         "country_id": country_id,
@@ -480,6 +486,12 @@ def sca_report(request, slug, sector):
 
 def sca_report_form(request, slug, sector):
     space = get_space(request, slug)
+    sector_id = 1 if sector == "construction" else 2
+
+    try:
+        report = CityLoopsSCAReport.objects.get(city=space, sector=sector_id)
+    except:
+        report = CityLoopsSCAReport.objects.create(city=space, sector=sector_id)
 
     if slug == "apeldoorn":
         country_id = 328768
@@ -527,17 +539,56 @@ def sca_report_form(request, slug, sector):
     nuts3 = ReferenceSpace.objects.get(id=nuts3_id)
     # land_use = LibraryItem.objects.get(id=land_use_id)
 
+    if request.method == "POST":
+        report.space_population = request.POST["space-population"] if request.POST["space-population"] else None
+        report.space_size = request.POST["space-size"] if request.POST["space-size"] else None
+        report.nuts3_population = request.POST["nuts3-population"] if request.POST["nuts3-population"] else None
+        report.nuts3_size = request.POST["nuts3-size"] if request.POST["nuts3-size"] else None
+        report.nuts2_population = request.POST["nuts2-population"] if request.POST["nuts2-population"] else None
+        report.nuts2_size = request.POST["nuts2-size"] if request.POST["nuts2-size"] else None
+        report.country_population = request.POST["country-population"] if request.POST["country-population"] else None
+        report.country_size = request.POST["country-size"] if request.POST["country-size"] else None
+
+        report.population_id = request.POST["population-id"] if request.POST["population-id"] else None
+        report.population_description = request.POST["population-description"]
+
+        report.land_use_id = request.POST["land-use-id"] if request.POST["land-use-id"] else None
+        report.land_use_description = request.POST["land-use-description"]
+
+        report.space_gdp = request.POST["space-gdp"] if request.POST["space-gdp"] else None
+        report.space_employees = request.POST["space-employees"] if request.POST["space-employees"] else None
+        report.nuts3_gdp = request.POST["nuts3-gdp"] if request.POST["nuts3-gdp"] else None
+        report.nuts3_employees = request.POST["nuts3-employees"] if request.POST["nuts3-employees"] else None
+        report.nuts2_gdp = request.POST["nuts2-gdp"] if request.POST["nuts2-gdp"] else None
+        report.nuts2_employees = request.POST["nuts2-employees"] if request.POST["nuts2-employees"] else None
+        report.country_gdp = request.POST["country-gdp"] if request.POST["country-gdp"] else None
+        report.country_employees = request.POST["country-employees"] if request.POST["country-employees"] else None
+
+        report.sector_description = request.POST["sector-description"]
+
+        report.actors_id = request.POST["actors-id"] if request.POST["actors-id"] else None
+        report.actors_description = request.POST["actors-description"]
+
+        report.indicators_table = request.POST["indicators-table"]
+
+        report.status_quo = request.POST["status-quo"]
+
+        report.upscaling = request.POST["upscaling"]
+
+        report.recommendations = request.POST["recommendations"]
+
+        report.save()
+
     context = {
         "space": space,
         "sector": sector,
+        "report": report,
         "country": country,
         "nuts2": nuts2,
         "nuts3": nuts3,
         # "land_use": land_use,
     }
     return render(request, "cityloops/sca-report.form.html", context)
-
-
 
 # space_maps and space_map are copies from staf/views.py
 # rather than adding an exception for cityloops there, these are whole new entries to keep things organised
