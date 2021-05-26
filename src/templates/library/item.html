@@ -263,6 +263,10 @@
           </div>
         {% endfor %}
 
+        {% if curator or request.user.people == info.uploader or request.user.people == info.author %}
+          <a href="?edit&amp;return={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
+        {% endif %}
+
       {% else %}
 
         {% if request.user.is_authenticated %}
