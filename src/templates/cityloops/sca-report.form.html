@@ -121,24 +121,24 @@
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">5A</span> ID number of {{ space }}'s population dataset</label>
-      <input class="form-control" type="number" name="dataset_population">
+      <input class="form-control" type="number" name="population-id" value="{{ report.population_id }}">
     </div>
 
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">5B</span> Briefly describe how the population developed over time</label>
-      <textarea class="form-control" rows="2"></textarea>
+      <textarea class="form-control" rows="2" name="population-description"></textarea>
     </div>
   </div>
 
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">6A</span> ID number of {{ space }}'s land use dataset</label>
-      <input class="form-control" type="number" name="dataset_land_use">
+      <input class="form-control" type="number" name="land-use-id">
     </div>
 
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">6B</span> Briefly describe the dominant types of land use of {{ space }}</label>
-      <textarea class="form-control" rows="2"></textarea>
+      <textarea class="form-control" rows="2" name="land-use-description"></textarea>
     </div>
   </div>
 
@@ -223,7 +223,7 @@
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">12A</span> ID number of {{ space }}'s actors dataset</label>
-      <input class="form-control" type="number" name="dataset_actors">
+      <input class="form-control" type="number" name="actors-id">
     </div>
 
     <div class="form-group">
@@ -237,23 +237,31 @@
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">13</span> Describe the indicators that were chosen and their development over time</label>
-      <textarea class="form-control" rows="2"></textarea>
+      <textarea class="form-control" rows="2" name="indicators-table"></textarea>
       <small>There is no need to get into too much depth, as this will be done in the data analysis section</small>
     </div>
   </div>
 
   <h2>Data analysis</h2>
-  <div class="form-group">
-    <label><span class="question-number bg-dark text-light rounded px-2 mr-1">5</span> Insights on status quo</label>
-    <textarea class="form-control" rows="2"></textarea>
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">14</span> Insights on status quo</label>
+      <textarea class="form-control" rows="2" name="status-quo"></textarea>
+    </div>
   </div>
-  <div class="form-group">
-    <label><span class="question-number bg-dark text-light rounded px-2 mr-1">6</span> Upscaling (or reflect on) DAs</label>
-    <textarea class="form-control" rows="2"></textarea>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">15</span> Upscaling (or reflect on) DAs</label>
+      <textarea class="form-control" rows="2" name="upscaling"></textarea>
+    </div>
   </div>
-  <div class="form-group">
-    <label><span class="question-number bg-dark text-light rounded px-2 mr-1">7</span> Recommendation for making the sector more circular</label>
-    <textarea class="form-control" rows="2"></textarea>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">16</span> Recommendation for making the sector more circular</label>
+      <textarea class="form-control" rows="2" name="recommendations"></textarea>
+    </div>
   </div>
 
   {% csrf_token %}

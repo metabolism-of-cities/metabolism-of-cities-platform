@@ -141,6 +141,25 @@
       <h1>Introduction</h1>
       <p>Maybe short section on what the SCA is. How long cities have been working on them with the two courses.</p>
       <p><a href="https://cityloops.metabolismofcities.org/dashboards/apeldoorn/">URL to City's Data Hub.</a></p>
+
+      <div><i class="fal fa-fw mr-2 fa-building"></i> Concrete</div>
+      <div><i class="fal fa-fw mr-2 fa-ball-pile"></i> Sand and gravel</div>
+      <div><i class="fal fa-fw mr-2 fa-layer-group"></i> Soil</div>
+      <div><i class="fal fa-fw mr-2 fa-chimney"></i> Bricks</div>
+      <div><i class="fal fa-fw mr-2 fa-window-frame"></i> Glass</div>
+      <div><i class="fal fa-fw mr-2 fa-grip-lines-vertical"></i> Plasterboard/gypsum</div>
+      <div><i class="fal fa-fw mr-2 fa-stream"></i> Steel</div>
+      <div><i class="fal fa-fw mr-2 fa-cubes"></i> Aluminium</div>
+      <div><i class="fal fa-fw mr-2 fa-road"></i> Bitumen/asphalt</div>
+      <div><i class="fal fa-fw mr-2 fa-igloo"></i> Insulation (plastics based)</div>
+      <div><i class="fal fa-fw mr-2 fa-wheat"></i> Cereals</div>
+      <div><i class="fal fa-fw mr-2 fa-carrot"></i> Vegetables</div>
+      <div><i class="fal fa-fw mr-2 fa-apple-alt"></i> Fruits</div>
+      <div><i class="fal fa-fw mr-2 fa-cow"></i> Live animals</div>
+      <div><i class="fal fa-fw mr-2 fa-fish"></i> Fish</div>
+      <div><i class="fal fa-fw mr-2 fa-cheese-swiss"></i> Dairy products</div>
+      <div><i class="fal fa-fw mr-2 fa-tree-alt"></i> Timber</div>
+      <div><i class="fal fa-fw mr-2 fa-hand-holding-seedling"></i> Horticulture</div>
     </section>
 
     <section id="urban-context">
@@ -240,18 +259,150 @@
           </div>
         </div>
       </div>
+    </section>
 
+    <section>
+      <h2>Population of {{ space }}</h2>
+      {% if report.population_id %}
+        {{ report.population_id }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">5A</span>
+      {% endif %}
+
+      {% if report.population_description_html %}
+        {{ report.population_description_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">5B</span>
+      {% endif %}
+    </section>
+
+    <section>
       <h2>Land use</h2>
-      <img class="img-fluid" src="https://i.imgur.com/NmVgDPI.png">
+      {% if report.land_use_id %}
+        {{ report.land_use_id }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">6A</span>
+      {% endif %}
+
+      {% if report.land_use_description_html %}
+        {{ report.land_use_description_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">6B</span>
+      {% endif %}
     </section>
 
     <section id="sector-context">
       <h1>Economic context of {{ sector }} sector</h1>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>GDP</th>
+            <th>Employees</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>{{ space }}</th>
+            <td>
+              {% if report.space_gdp %}
+                {{ report.space_gdp }}
+              {% else %}
+                <span class="question-number bg-dark text-light rounded px-2 mr-2">7A</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if report.space_employees %}
+                {{ report.space_employees }}
+              {% else %}
+                <span class="question-number bg-dark text-light rounded px-2 mr-2">7B</span>
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <th>{{ nuts3 }}</th>
+            <td>
+              {% if report.nuts3_gdp %}
+                {{ report.nuts3_gdp }}
+              {% else %}
+                <span class="question-number bg-dark text-light rounded px-2 mr-2">8A</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if report.nuts3_employees %}
+                {{ report.nuts3_employees }}
+              {% else %}
+                <span class="question-number bg-dark text-light rounded px-2 mr-2">8B</span>
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <th>{{ nuts2 }}</th>
+            <td>
+              {% if report.nuts2_gdp %}
+                {{ report.nuts2_gdp }}
+              {% else %}
+                <span class="question-number bg-dark text-light rounded px-2 mr-2">9A</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if report.nuts2_employees %}
+                {{ report.nuts2_employees }}
+              {% else %}
+                <span class="question-number bg-dark text-light rounded px-2 mr-2">9B</span>
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <th>{{ country }}</th>
+            <td>
+              {% if report.country_gdp %}
+                {{ report.country_gdp }}
+              {% else %}
+                <span class="question-number bg-dark text-light rounded px-2 mr-2">10A</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if report.country_employees %}
+                {{ report.country_employees }}
+              {% else %}
+                <span class="question-number bg-dark text-light rounded px-2 mr-2">10B</span>
+              {% endif %}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h4>The {{ sector }} sector in {{ space }}</h4>
+      {% if report.sector_description_html %}
+        {{ report.sector_description_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">11</span>
+      {% endif %}
+    </section>
+
+    <section>
+      <h4>The actors of the {{ sector }} sector</h4>
+
+      {% if report.actors_id %}
+        {{ report.actors_id }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">12A</span>
+      {% endif %}
+
+      {% if report.actors_description_html %}
+        {{ report.actors_description_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">12B</span>
+      {% endif %}
     </section>
 
     <section id="indicators">
       <h1>Indicators</h1>
-      <table class="table border">
+      <table class="table border mb-4">
         <thead>
           <tr>
             <th>Indicator</th>
@@ -269,12 +420,18 @@
           {% endfor %}
         </tbody>
       </table>
+
+      {% if report.indicators_table_html %}
+        {{ report.indicators_table_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">13</span>
+      {% endif %}
     </section>
 
     <section id="visualisations">
       <h1>Visualisations</h1>
 
-      <iframe class="libraryitem mb-4" src="/library/preview/49598/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
+      <!-- <iframe class="libraryitem mb-4" src="/library/preview/49598/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe> -->
     </section>
 
     <section id="matrix">
@@ -284,24 +441,30 @@
     <section id="analysis">
       <h1>Data analysis</h1>
       <div class="mb-4">
-        <label>Insights on status quo</label>
-        <div>
-          <span class="question-number bg-dark text-light rounded px-2 mr-1">5</span>
-        </div>
+        <label>Insights on status quo</label><br>
+        {% if report.status_quo_html %}
+          {{ report.status_quo_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">14</span>
+        {% endif %}
       </div>
 
       <div class="mb-4">
-        <label>Upscaling (or reflect on) DAs</label>
-        <div>
-          <span class="question-number bg-dark text-light rounded px-2 mr-1">6</span>
-        </div>
+        <label>Upscaling (or reflect on) DAs</label><br>
+        {% if report.upscaling_html %}
+          {{ report.upscaling_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">15</span>
+        {% endif %}
       </div>
 
       <div class="mb-4">
-        <label>Recommendation for making the sector more circular</label>
-        <div>
-          <span class="question-number bg-dark text-light rounded px-2 mr-1">7</span>
-        </div>
+        <label>Recommendations for making the {{ sector }} sector more circular</label><br>
+        {% if report.recommendations_html %}
+          {{ report.recommendations_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">16</span>
+        {% endif %}
       </div>
     </section>
 
