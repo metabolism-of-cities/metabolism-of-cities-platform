@@ -32,6 +32,10 @@
   {% endif %}
 
   <section>
+    <div id="map" class="leaflet-map shadow-none border"></div>
+  </section>
+
+  <section>
     <table class="table datatable">
       <thead>
         <tr>
@@ -143,6 +147,7 @@
     {{ each }}
     {% endfor %}
   </section>
+
 {% endblock %}
 
 {% block footer %}
@@ -151,5 +156,19 @@
       $(".toggle-advanced i").toggleClass("fa-caret-down fa-caret-up")
       $("section.advanced").toggleClass("hidden")
     })
+
+    // add organisations to map
+    var allOrganisations = L.featureGroup();
+
+    {% for each in organization_list %}
+      var popupContent = "<a class='btn btn-primary' href='{% url 'platformu:admin_entity' my_organization.id each.id %}'>{{ each }}</a>";
+      var marker{{ forloop.counter0 }} = L.marker([{{ each.meta_data.lat }}, {{ each.meta_data.lng }}]).bindPopup(popupContent);
+      allOrganisations.addLayer(marker{{ forloop.counter0 }})
+    {% endfor %}
+
+    allOrganisations.addTo(map);
+
+    var bounds = allOrganisations.getBounds()
+    map.fitBounds(bounds);
   </script>
 {% endblock %}

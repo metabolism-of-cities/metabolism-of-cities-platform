@@ -161,6 +161,7 @@ def clusters(request, organization):
         "info": my_organization,
         "tags": Tag.objects.filter(belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"]).order_by("id"),
         "my_organization": my_organization,
+        "load_leaflet": True,
         "load_datatables": True,
     }
     return render(request, "metabolism_manager/admin/clusters.html", context)
