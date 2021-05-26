@@ -49,11 +49,15 @@
       {% else %}
         <form method="post" class="form form-horizontal" action="{% url "ascus2021:account" %}">
           {% csrf_token %}
-          {% if each in my_topic_registrations %}
+          {% if each in my_topic_registrations or each.id == 987834 or each.id == 987835 or "Pre-conference" in each.name %}
             <div class="alert alert-success">
-              <i class="fa fa-check"></i> You are registered for this session!
+              {% if each in my_topic_registrations %}
+                <span class="mr-3">
+                  <i class="fa fa-check"></i> You are registered for this session!
+                </span>
+              {% endif %}
               {% if each.url %}
-                <a class="ml-4 btn btn-info" href="{{ each.url }}">Open room</a>
+                <a class="btn btn-info" href="{{ each.url }}">Open room</a>
               {% endif %}
             </div>
           {% else %}
