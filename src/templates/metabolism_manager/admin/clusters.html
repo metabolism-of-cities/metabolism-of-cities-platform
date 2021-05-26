@@ -161,9 +161,11 @@
     var allOrganisations = L.featureGroup();
 
     {% for each in organization_list %}
-      var popupContent = "<a class='btn btn-primary' href='{% url 'platformu:admin_entity' my_organization.id each.id %}'>{{ each }}</a>";
-      var marker{{ forloop.counter0 }} = L.marker([{{ each.meta_data.lat }}, {{ each.meta_data.lng }}]).bindPopup(popupContent);
-      allOrganisations.addLayer(marker{{ forloop.counter0 }})
+      {% if each.meta_data.lat and each.meta_data.lng  %}
+        var popupContent = "<a class='btn btn-primary' href='{% url 'platformu:admin_entity' my_organization.id each.id %}'>{{ each }}</a>";
+        var marker{{ forloop.counter0 }} = L.marker([{{ each.meta_data.lat }}, {{ each.meta_data.lng }}]).bindPopup(popupContent);
+        allOrganisations.addLayer(marker{{ forloop.counter0 }})
+      {% endif %}
     {% endfor %}
 
     allOrganisations.addTo(map);
