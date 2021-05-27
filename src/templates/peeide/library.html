@@ -31,6 +31,10 @@
   section:last-of-type {
     margin-bottom: 2rem;
   }
+
+  .list-group.hidden {
+    display: none;
+  }
 </style>
 {% endblock %}
 
@@ -53,9 +57,11 @@
 
   <section id="item-lists">
     <div class="row">
-      <div class="col">
-        <h2>References by economic sector</h2>
-        <div class="list-group list-group-flush">
+      <div class="col-lg-6 text-center">
+        <div class="btn btn-ndee btn-ndee-primary mb-4 show-col">
+          <i class="fal fa-wallet mr-2"></i> Browse by Economic Sector <i class="fa caret fa-caret-down ml-3 mr-0"></i>
+        </div>
+        <div class="list-group list-group-flush text-left hidden">
           {% for each in sectors %}
             <a href="{% url 'peeide:sector' each.id %}" class="list-group-item list-group-item-action">
               <span class="badge bg-ndee-primary text-light align-top mr-3 mt-1">{{ each.total }}</span>
@@ -65,9 +71,11 @@
         </div>
       </div>
 
-      <div class="col">
-        <h2>References by digital technology</h2>
-        <div class="list-group list-group-flush">
+      <div class="col-lg-6 text-center">
+        <div class="btn btn-ndee btn-ndee-primary mb-4 show-col">
+          <i class="fal fa-phone-laptop mr-2"></i> Browse by digital technology <i class="fa caret fa-caret-down ml-3 mr-0"></i>
+        </div>
+        <div class="list-group list-group-flush text-left hidden">
           {% for each in technologies %}
             <a href="{% url 'peeide:sector' each.id %}" class="list-group-item list-group-item-action">
               <span class="badge bg-ndee-primary text-light align-top mr-3 mt-1">{{ each.total }}</span>
@@ -81,4 +89,13 @@
 
 <!-- </div> no need to close this container, it's already done above -->
 
+{% endblock %}
+
+{% block footer %}
+<script>
+  $(".show-col").click(function() {
+    $(this).find("i.caret").toggleClass("fa-caret-down fa-caret-up")
+    $(this).next(".list-group").toggleClass("hidden");
+  })
+</script>
 {% endblock %}
