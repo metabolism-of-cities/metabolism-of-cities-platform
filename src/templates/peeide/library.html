@@ -61,7 +61,7 @@
         <div class="btn btn-ndee btn-ndee-primary mb-4 show-col">
           <i class="fal fa-wallet mr-2"></i> Browse by Economic Sector <i class="fa caret fa-caret-down ml-3 mr-0"></i>
         </div>
-        <div class="list-group list-group-flush text-left hidden">
+        <div class="list-group list-group-flush text-left mb-4 hidden">
           {% for each in sectors %}
             <a href="{% url 'peeide:sector' each.id %}" class="list-group-item list-group-item-action">
               <span class="badge bg-ndee-primary text-light align-top mr-3 mt-1">{{ each.total }}</span>
@@ -75,7 +75,7 @@
         <div class="btn btn-ndee btn-ndee-primary mb-4 show-col">
           <i class="fal fa-phone-laptop mr-2"></i> Browse by digital technology <i class="fa caret fa-caret-down ml-3 mr-0"></i>
         </div>
-        <div class="list-group list-group-flush text-left hidden">
+        <div class="list-group list-group-flush text-left mb-4 hidden">
           {% for each in technologies %}
             <a href="{% url 'peeide:sector' each.id %}" class="list-group-item list-group-item-action">
               <span class="badge bg-ndee-primary text-light align-top mr-3 mt-1">{{ each.total }}</span>
