@@ -263,8 +263,8 @@
 
     <section>
       <h2>Population of {{ space }}</h2>
-      {% if report.population_id %}
-        {{ report.population_id }}
+      {% if report.population_dataset %}
+        {{ report.population_dataset.id }}
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">5A</span>
       {% endif %}
@@ -278,8 +278,8 @@
 
     <section>
       <h2>Land use</h2>
-      {% if report.land_use_id %}
-        {{ report.land_use_id }}
+      {% if report.land_use_dataset %}
+        {{ report.land_use_dataset.id }}
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">6A</span>
       {% endif %}
@@ -294,7 +294,7 @@
     <section id="sector-context">
       <h1>Economic context of {{ sector }} sector</h1>
 
-      <table class="table">
+      <table class="table border">
         <thead>
           <tr>
             <th></th>
@@ -387,8 +387,8 @@
     <section>
       <h4>The actors of the {{ sector }} sector</h4>
 
-      {% if report.actors_id %}
-        {{ report.actors_id }}
+      {% if report.actors_dataset %}
+        {{ report.actors_dataset.id }}
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">12A</span>
       {% endif %}
