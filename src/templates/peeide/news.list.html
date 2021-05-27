@@ -13,6 +13,10 @@
   img.ndee-banner {
     object-position: center 70%;
   }
+
+  #newsletter-form {
+    width: 100%;
+  }
 </style>
 {% endblock %}
 
@@ -29,9 +33,20 @@
   <h1 class="mb-4">Resources and community</h1>
 
   <div class="border rounded p-3 bg-light mb-4 d-inline-block">
-    <h5 class="mb-0">
-      <i class="fal fa-newspaper mr-2"></i> <a target="_blank" href="https://digitalenergyenvironment.groups.io/g/all/promote">Sign up to our newsletter</a> to get our latest news straight to your inbox
+    <h5 class="mb-3">
+      <i class="fal fa-newspaper mr-2"></i> Sign up to the nDEE newsletter to get our latest news straight to your inbox
     </h5>
+
+    <form id="newsletter-form" action="https://digitalenergyenvironment.groups.io/g/all/signup?u=5607149713587679406" method="post" id="groupsio-embedded-subscribe-form" name="groupsio-embedded-subscribe-form" target="_blank">
+      <div class="input-group">
+        <input type="email" value="" name="email" class="form-control" id="email" placeholder="Email address" required>
+        <div class="input-group-append">
+          <button type="submit" value="Subscribe" name="subscribe" id="groupsio-embedded-subscribe" class="btn btn-ndee-primary rounded-right px-4">
+            <i class="fa fa-paper-plane"></i> Subscribe
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
 
   <section>
