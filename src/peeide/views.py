@@ -20,7 +20,7 @@ def index(request):
     carousel = News.objects.filter(projects=info, include_in_timeline=True).distinct().order_by("-date")
 
     context = {
-        "team": People.objects.filter(parent_list__record_child=info).filter(Q(parent_list__relationship__name="Admin") | Q(parent_list__relationship__name="Core Member")),
+        "team": People.objects.filter(parent_list__record_child=info).filter(Q(parent_list__relationship__name="Admin") | Q(parent_list__relationship__name="Core member")),
         "research": research,
         "carousel": carousel,
         "projects": projects[:3],
@@ -45,7 +45,7 @@ def people(request):
     info = get_object_or_404(Project, pk=request.project)
     context = {
         "webpage": get_object_or_404(Webpage, pk=51472),
-        "team": People.objects.filter(parent_list__record_child=info).filter(Q(parent_list__relationship__name="Admin") | Q(parent_list__relationship__name="Core Member")),
+        "team": People.objects.filter(parent_list__record_child=info).filter(Q(parent_list__relationship__name="Admin") | Q(parent_list__relationship__name="Core member")),
         "network": People.objects.filter(parent_list__record_child=info, parent_list__relationship__name="Team member"),
     }
 
