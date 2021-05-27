@@ -1,6 +1,7 @@
 {% load static %}
 {% load moc_extras %}
 {% load sass_tags %}
+{% load humanize %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -184,7 +185,7 @@
           <div>
             <i class="fal fa-users fa-fw mr-2"></i>
             {% if report.space_population %}
-              {{ report.space_population }}
+              {{ report.space_population|intcomma }}
             {% else %}
               <span class="question-number bg-dark text-light rounded px-2 mr-2">1A</span>
             {% endif %}
@@ -192,7 +193,7 @@
           <div>
             <i class="fal fa-ruler-combined fa-fw mr-2"></i>
             {% if report.space_size %}
-              {{ report.space_size }} km<sup>2</sup>
+              {{ report.space_size|intcomma }} km<sup>2</sup>
             {% else %}
               <span class="question-number bg-dark text-light rounded px-2 mr-2">1B</span>
             {% endif %}
@@ -204,7 +205,7 @@
           <div>
             <i class="fal fa-users fa-fw mr-2"></i>
             {% if report.nuts3_population %}
-              {{ report.nuts3_population }}
+              {{ report.nuts3_population|intcomma }}
             {% else %}
               <span class="question-number bg-dark text-light rounded px-2 mr-2">2A</span>
             {% endif %}
@@ -212,7 +213,7 @@
           <div>
             <i class="fal fa-ruler-combined fa-fw mr-2"></i>
             {% if report.nuts3_size %}
-              {{ report.nuts3_size }} km<sup>2</sup>
+              {{ report.nuts3_size|intcomma }} km<sup>2</sup>
             {% else %}
               <span class="question-number bg-dark text-light rounded px-2 mr-2">2B</span>
             {% endif %}
@@ -224,7 +225,7 @@
           <div>
             <i class="fal fa-users fa-fw mr-2"></i>
             {% if report.nuts2_population %}
-              {{ report.nuts2_population }}
+              {{ report.nuts2_population|intcomma }}
             {% else %}
               <span class="question-number bg-dark text-light rounded px-2 mr-2">3A</span>
             {% endif %}
@@ -232,7 +233,7 @@
           <div>
             <i class="fal fa-ruler-combined fa-fw mr-2"></i>
             {% if report.nuts2_size %}
-              {{ report.nuts2_size }} km<sup>2</sup>
+              {{ report.nuts2_size|intcomma }} km<sup>2</sup>
             {% else %}
               <span class="question-number bg-dark text-light rounded px-2 mr-2">3B</span>
             {% endif %}
@@ -244,7 +245,7 @@
           <div>
             <i class="fal fa-users fa-fw mr-2"></i>
             {% if report.country_population %}
-              {{ report.country_population }}
+              {{ report.country_population|intcomma }}
             {% else %}
               <span class="question-number bg-dark text-light rounded px-2 mr-2">4A</span>
             {% endif %}
@@ -252,7 +253,7 @@
           <div>
             <i class="fal fa-ruler-combined fa-fw mr-2"></i>
             {% if report.country_size %}
-              {{ report.country_size }} km<sup>2</sup>
+              {{ report.country_size|intcomma }} km<sup>2</sup>
             {% else %}
               <span class="question-number bg-dark text-light rounded px-2 mr-2">4B</span>
             {% endif %}
@@ -264,7 +265,11 @@
     <section>
       <h2>Population of {{ space }}</h2>
       {% if report.population_dataset %}
-        {{ report.population_dataset.id }}
+        {% if report.population_dataset.type.name == "Image" %}
+          <img src="{{ report.population_dataset.image.url }}" class="img-fluid">
+        {% else %}
+          <iframe class="libraryitem mb-4" src="/library/preview/{{ report.population_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
+        {% endif %}
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">5A</span>
       {% endif %}
@@ -278,8 +283,13 @@
 
     <section>
       <h2>Land use</h2>
+
       {% if report.land_use_dataset %}
-        {{ report.land_use_dataset.id }}
+        {% if report.land_use_dataset.type.name == "Image" %}
+          <img src="{{ report.land_use_dataset.image.url }}" class="img-fluid">
+        {% else %}
+          <iframe class="libraryitem mb-4" src="/library/preview/{{ report.land_use_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
+        {% endif %}
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">6A</span>
       {% endif %}
@@ -307,14 +317,14 @@
             <th>{{ space }}</th>
             <td>
               {% if report.space_gdp %}
-                {{ report.space_gdp }}
+                {{ report.space_gdp|intcomma }}
               {% else %}
                 <span class="question-number bg-dark text-light rounded px-2 mr-2">7A</span>
               {% endif %}
             </td>
             <td>
               {% if report.space_employees %}
-                {{ report.space_employees }}
+                {{ report.space_employees|intcomma }}
               {% else %}
                 <span class="question-number bg-dark text-light rounded px-2 mr-2">7B</span>
               {% endif %}
@@ -324,14 +334,14 @@
             <th>{{ nuts3 }}</th>
             <td>
               {% if report.nuts3_gdp %}
-                {{ report.nuts3_gdp }}
+                {{ report.nuts3_gdp|intcomma }}
               {% else %}
                 <span class="question-number bg-dark text-light rounded px-2 mr-2">8A</span>
               {% endif %}
             </td>
             <td>
               {% if report.nuts3_employees %}
-                {{ report.nuts3_employees }}
+                {{ report.nuts3_employees|intcomma }}
               {% else %}
                 <span class="question-number bg-dark text-light rounded px-2 mr-2">8B</span>
               {% endif %}
@@ -341,14 +351,14 @@
             <th>{{ nuts2 }}</th>
             <td>
               {% if report.nuts2_gdp %}
-                {{ report.nuts2_gdp }}
+                {{ report.nuts2_gdp|intcomma }}
               {% else %}
                 <span class="question-number bg-dark text-light rounded px-2 mr-2">9A</span>
               {% endif %}
             </td>
             <td>
               {% if report.nuts2_employees %}
-                {{ report.nuts2_employees }}
+                {{ report.nuts2_employees|intcomma }}
               {% else %}
                 <span class="question-number bg-dark text-light rounded px-2 mr-2">9B</span>
               {% endif %}
@@ -358,14 +368,14 @@
             <th>{{ country }}</th>
             <td>
               {% if report.country_gdp %}
-                {{ report.country_gdp }}
+                {{ report.country_gdp|intcomma }}
               {% else %}
                 <span class="question-number bg-dark text-light rounded px-2 mr-2">10A</span>
               {% endif %}
             </td>
             <td>
               {% if report.country_employees %}
-                {{ report.country_employees }}
+                {{ report.country_employees|intcomma }}
               {% else %}
                 <span class="question-number bg-dark text-light rounded px-2 mr-2">10B</span>
               {% endif %}
@@ -388,7 +398,11 @@
       <h4>The actors of the {{ sector }} sector</h4>
 
       {% if report.actors_dataset %}
-        {{ report.actors_dataset.id }}
+        {% if report.land_use_dataset.type.name == "Image" %}
+          <img src="{{ report.actors_dataset.image.url }}" class="img-fluid">
+        {% else %}
+          <iframe class="libraryitem mb-4" src="/library/preview/{{ report.actors_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
+        {% endif %}
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">12A</span>
       {% endif %}
@@ -474,6 +488,15 @@
         <li><a href="{% url 'cityloops:referencespace' country.id  %}">{{ country }}</a></li>
         <li><a href="{% url 'cityloops:referencespace' nuts2.id  %}">{{ nuts2 }}</a></li>
         <li><a href="{% url 'cityloops:referencespace' nuts3.id  %}">{{ nuts3 }}</a></li>
+        {% if report.population_dataset %}
+          <li><a href="{% url 'cityloops:library_item' report.population_dataset.id  %}">{{ report.population_dataset }}</a></li>
+        {% endif %}
+        {% if report.land_use_dataset %}
+          <li><a href="{% url 'cityloops:library_item' report.land_use_dataset.id  %}">{{ report.land_use_dataset }}</a></li>
+        {% endif %}
+        {% if report.actors_dataset %}
+          <li><a href="{% url 'cityloops:library_item' report.actors_dataset.id  %}">{{ report.actors_dataset }}</a></li>
+        {% endif %}
       </ul>
     </section>
   </div>

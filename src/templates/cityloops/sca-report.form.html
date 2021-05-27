@@ -120,14 +120,14 @@
       <div class="col-lg">
         <div class="form-group">
           <label for="space-population"><span class="question-number bg-dark text-light rounded px-2 mr-1">1A</span> {{ space }} population</label>
-          <input type="number" class="form-control" name="space-population" value="{{ report.space_population }}">
+          <input type="number" min="0" max="2147483647" class="form-control" name="space-population" value="{{ report.space_population }}">
         </div>
       </div>
       <div class="col-lg">
         <div class="form-group">
           <label for="space-size"><span class="question-number bg-dark text-light rounded px-2 mr-1">1B</span> {{ space }} area</label>
           <div class="input-group mb-2">
-            <input type="number" class="form-control" name="space-size" value="{{ report.space_size }}">
+            <input type="number" min="0" max="2147483647" class="form-control" name="space-size" value="{{ report.space_size }}">
             <div class="input-group-append">
               <div class="input-group-text">km<sup>2</sup></div>
             </div>
@@ -142,14 +142,14 @@
       <div class="col-lg">
         <div class="form-group">
           <label for="nuts3-population"><span class="question-number bg-dark text-light rounded px-2 mr-1">2A</span> {{ nuts3 }} population</label>
-          <input type="number" class="form-control" name="nuts3-population" value="{{ report.nuts3_population }}">
+          <input type="number" min="0" max="2147483647" class="form-control" name="nuts3-population" value="{{ report.nuts3_population }}">
         </div>
       </div>
       <div class="col-lg">
         <div class="form-group">
           <label for="nuts3-size"><span class="question-number bg-dark text-light rounded px-2 mr-1">2B</span> {{ nuts3 }} area</label>
           <div class="input-group mb-2">
-            <input type="number" class="form-control" name="nuts3-size" value="{{ report.nuts3_size }}">
+            <input type="number" min="0" max="2147483647" class="form-control" name="nuts3-size" value="{{ report.nuts3_size }}">
             <div class="input-group-append">
               <div class="input-group-text">km<sup>2</sup></div>
             </div>
@@ -164,14 +164,14 @@
       <div class="col-lg">
         <div class="form-group">
           <label for="nuts2-population"><span class="question-number bg-dark text-light rounded px-2 mr-1">3A</span> {{ nuts2 }} population</label>
-          <input type="number" class="form-control" name="nuts2-population" value="{{ report.nuts2_population }}">
+          <input type="number" min="0" max="2147483647" class="form-control" name="nuts2-population" value="{{ report.nuts2_population }}">
         </div>
       </div>
       <div class="col-lg">
         <div class="form-group">
           <label for="nuts2-size"><span class="question-number bg-dark text-light rounded px-2 mr-1">3B</span> {{ nuts2 }} area</label>
           <div class="input-group mb-2">
-            <input type="number" class="form-control" name="nuts2-size" value="{{ report.nuts2_size }}">
+            <input type="number" min="0" max="2147483647" class="form-control" name="nuts2-size" value="{{ report.nuts2_size }}">
             <div class="input-group-append">
               <div class="input-group-text">km<sup>2</sup></div>
             </div>
@@ -186,14 +186,14 @@
       <div class="col-lg">
         <div class="form-group">
           <label for="country-population"><span class="question-number bg-dark text-light rounded px-2 mr-1">4A</span> {{ country }} population</label>
-          <input type="number" class="form-control" name="country-population" value="{{ report.country_population }}">
+          <input type="number" min="0" max="2147483647" class="form-control" name="country-population" value="{{ report.country_population }}">
         </div>
       </div>
       <div class="col-lg">
         <div class="form-group">
           <label for="country-size"><span class="question-number bg-dark text-light rounded px-2 mr-1">4B</span> {{ country }} area</label>
           <div class="input-group mb-2">
-            <input type="number" class="form-control" name="country-size" value="{{ report.country_size }}">
+            <input type="number" min="0" max="2147483647" class="form-control" name="country-size" value="{{ report.country_size }}">
             <div class="input-group-append">
               <div class="input-group-text">km<sup>2</sup></div>
             </div>
@@ -206,7 +206,7 @@
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">5A</span> ID number of {{ space }}'s population dataset</label>
-      <input class="form-control" type="number" name="population-dataset" value="{{ report.population_dataset.id }}">
+      <input class="form-control" type="number" min="0" max="2147483647" name="population-dataset" value="{{ report.population_dataset.id }}">
     </div>
 
     <div class="form-group">
@@ -218,7 +218,7 @@
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">6A</span> ID number of {{ space }}'s land use dataset</label>
-      <input class="form-control" type="number" name="land-use-dataset" value="{{ report.land_use_dataset.id }}">
+      <input class="form-control" type="number" min="0" max="2147483647" name="land-use-dataset" value="{{ report.land_use_dataset.id }}">
     </div>
 
     <div class="form-group">
@@ -234,13 +234,13 @@
       <div class="col-lg">
         <div class="form-group">
           <label for="space-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">7A</span> {{ sector|title }} GDP of {{ space }}</label>
-          <input type="number" class="form-control" name="space-gdp" value="{{ report.space_gdp }}">
+          <input type="number" min="0" max="2147483647" class="form-control" name="space-gdp" value="{{ report.space_gdp }}">
         </div>
       </div>
       <div class="col-lg">
         <div class="form-group">
           <label for="space-employees"><span class="question-number bg-dark text-light rounded px-2 mr-1">7B</span> {{ sector|title }} employees of {{ space }}</label>
-          <input type="number" class="form-control" name="space-employees" value="{{ report.space_employees }}">
+          <input type="number" min="0" max="2147483647" class="form-control" name="space-employees" value="{{ report.space_employees }}">
         </div>
       </div>
     </div>
@@ -251,13 +251,13 @@
       <div class="col-lg">
         <div class="form-group">
           <label for="nuts3-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">8A</span> {{ sector|title }} GDP of {{ nuts3 }}</label>
-          <input type="number" class="form-control" name="nuts3-gdp" value="{{ report.nuts3_gdp }}">
+          <input type="number" min="0" max="2147483647" class="form-control" name="nuts3-gdp" value="{{ report.nuts3_gdp }}">
         </div>
       </div>
       <div class="col-lg">
         <div class="form-group">
           <label for="nuts3-employees"><span class="question-number bg-dark text-light rounded px-2 mr-1">8B</span> {{ sector|title }} employees of {{ nuts3 }}</label>
-          <input type="number" class="form-control" name="nuts3-employees" value="{{ report.nuts3_employees }}">
+          <input type="number" min="0" max="2147483647" class="form-control" name="nuts3-employees" value="{{ report.nuts3_employees }}">
         </div>
       </div>
     </div>
@@ -268,13 +268,13 @@
       <div class="col-lg">
         <div class="form-group">
           <label for="nuts2-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">9A</span> {{ sector|title }} GDP of {{ nuts2 }}</label>
-          <input type="number" class="form-control" name="nuts2-gdp" value="{{ report.nuts2_gdp }}">
+          <input type="number" min="0" max="2147483647" class="form-control" name="nuts2-gdp" value="{{ report.nuts2_gdp }}">
         </div>
       </div>
       <div class="col-lg">
         <div class="form-group">
           <label for="nuts2-employees"><span class="question-number bg-dark text-light rounded px-2 mr-1">9B</span> {{ sector|title }} employees of {{ nuts2 }}</label>
-          <input type="number" class="form-control" name="nuts2-employees" value="{{ report.nuts2_employees }}">
+          <input type="number" min="0" max="2147483647" class="form-control" name="nuts2-employees" value="{{ report.nuts2_employees }}">
         </div>
       </div>
     </div>
@@ -285,13 +285,13 @@
       <div class="col-lg">
         <div class="form-group">
           <label for="country-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">10A</span> {{ sector|title }} GDP of {{ country }}</label>
-          <input type="number" class="form-control" name="country-gdp" value="{{ report.country_gdp }}">
+          <input type="number" min="0" max="2147483647" class="form-control" name="country-gdp" value="{{ report.country_gdp }}">
         </div>
       </div>
       <div class="col-lg">
         <div class="form-group">
           <label for="country-employees"><span class="question-number bg-dark text-light rounded px-2 mr-1">10B</span> {{ sector|title }} employees of {{ country }}</label>
-          <input type="number" class="form-control" name="country-employees" value="{{ report.country_employees }}">
+          <input type="number" min="0" max="2147483647" class="form-control" name="country-employees" value="{{ report.country_employees }}">
         </div>
       </div>
     </div>
@@ -308,7 +308,7 @@
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">12A</span> ID number of {{ space }}'s actors dataset</label>
-      <input class="form-control" type="number" name="actors-dataset" value="{{ report.actors_dataset.id }}">
+      <input class="form-control" type="number" min="0" max="2147483647" name="actors-dataset" value="{{ report.actors_dataset.id }}">
     </div>
 
     <div class="form-group">
