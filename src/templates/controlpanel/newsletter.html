@@ -1,0 +1,37 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1 class="mb-0">{% block title %}Newsletter{% endblock %}</h1>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>E-mail</th>
+        <th>Since</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in all %}
+      <tr>
+        <td>{{ each.record_parent }}</td>
+        <td>{{ each.record_parent.people.email }}</td>
+        <td>{{ each.date_created|date:"M d, Y" }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div>
+    <a href="../" class="btn btn-primary-basic mt-4">
+      <i class="fal fa-angle-left"></i>
+      Back to control panel
+    </a>
+  </div>
+
+{% endblock %}

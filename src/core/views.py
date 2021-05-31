@@ -947,6 +947,20 @@ def controlpanel_design(request):
     return render(request, "controlpanel/design.html", context)
 
 @login_required
+def controlpanel_newsletter(request):
+
+    project = request.project
+    if not has_permission(request, project, ["curator", "admin"]):
+        unauthorized_access(request)
+
+    all = RecordRelationship.objects.filter(record_child=project, relationship_id=28)
+
+    context = {
+        "all": all,
+    }
+    return render(request, "controlpanel/newsletter.html", context)
+
+@login_required
 def controlpanel_project(request):
 
     project = request.project
