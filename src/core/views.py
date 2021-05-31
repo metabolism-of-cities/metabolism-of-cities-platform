@@ -1625,6 +1625,7 @@ def work_sprint(request, id=None):
         "participants": People.objects.filter(parent_list__record_child=info, parent_list__relationship__id=27),
         "work_list": work_list,
         "task_url": project.get_slug() + ":work_sprint_tasks",
+        "article": get_object_or_404(Webpage, pk=18965),
     }
 
     return render(request, "contribution/work.sprint.html", context)
