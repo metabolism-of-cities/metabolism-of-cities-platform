@@ -2966,10 +2966,11 @@ def data(request, json=False):
     # https://docs.djangoproject.com/en/3.2/ref/contrib/gis/db-api/#compatibility-tables
 
     if material:
-        m = Material.objects.filter(code=material.strip())
-        if m:
-            data = data.filter(material__in=m)
-        else:
+        try:
+            material = Material.objects.get(pk=material)
+            data = data.filter(material=material)
+        except:
+            material = None
             messages.error(request, "We could not find this material")
 
     # We will aggregate data at a (possibly higher) level 
@@ -2989,12 +2990,15 @@ def data(request, json=False):
 
     if aggregation_level:
         within_query = ""
+        material_query = ""
         if within:
             within_query = f"ST_Within (geometry, (SELECT geometry FROM stafdb_referencespace WHERE record_ptr_id = {within.id})) AND"
+        if material:
+            material_query = f" AND material_id = {material.id}"
         source = int(source)
         aggregation_level = int(aggregation_level)
         data = ReferenceSpace.objects.raw(f"SELECT record_ptr_id, \
-        (SELECT SUM(quantity) FROM stafdb_data d LEFT JOIN stafdb_referencespace s ON d.origin_space_id = s.record_ptr_id WHERE d.source_id = {source} AND ST_Within (s.geometry, r.geometry)) \
+        (SELECT SUM(quantity) FROM stafdb_data d LEFT JOIN stafdb_referencespace s ON d.origin_space_id = s.record_ptr_id WHERE d.source_id = {source} AND ST_Within (s.geometry, r.geometry) {material_query}) \
         AS total \
         FROM stafdb_referencespace r \
         WHERE \
@@ -3006,7 +3010,7 @@ def data(request, json=False):
             j.update({str(each.record_ptr_id): each.total})
 
         return JsonResponse({
-            "material": material,
+            "material": material.code if material else None,
             "unit": "Kilogram", # Yeah let's fix this please
             "data": j
         })
@@ -3016,7 +3020,7 @@ def data(request, json=False):
         for each in data:
             j.update({str(each.origin_space.id): each.quantity})
         return JsonResponse({
-            "material": material,
+            "material": material.code if material else None,
             "unit": data[0].unit.name,
             "data": j
         })
