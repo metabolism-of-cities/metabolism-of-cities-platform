@@ -26,7 +26,7 @@
   {% for each in discussions %}
     <li>
         <a href="#topic-{{ each.id }}">{{ each }}</a><br>
-        <em>{{ each.start_date|date:"l d M Y · H:i" }}-{{ each.end_date|date:"H-i" }}</em>
+        <em>{{ each.start_date|date:"l d M Y · H:i" }}-{{ each.end_date|date:"H:i" }}</em>
     </li>
   {% endfor %}
   </ol>

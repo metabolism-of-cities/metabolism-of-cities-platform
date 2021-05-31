@@ -46,19 +46,13 @@
 
 <div class="container pt-4">
 
-  {% if info.description %}
-    <div class="row">
-      {{ info.get_description }}
-    </div>
-  {% endif %}
-
   {% if info.get_status == "upcoming" %}
 
     <div class="jumbotron jumbotron-fluid text-center" style="display:block">
       <div class="container">
         <h1 class="display-4">Sprint has not yet started</h1>
         <div class="lead">
-          {{ info.get_markdown_description|safe }}
+          {{ info.get_description }}
         </div>
         <p class="lead">
           Sign up now to join this sprint!
@@ -66,7 +60,21 @@
       </div>
     </div>
 
+    <div class="row">
+      <div class="alert alert-warning">
+        <h3>What are sprints?</h3>
+        {{ article.get_description }}
+      </div>
+    </div>
+
   {% else %}
+
+  {% if info.description %}
+    <div class="row">
+      {{ info.get_description }}
+    </div>
+  {% endif %}
+
   <div class="row">
     <div class="col-lg-6">
 

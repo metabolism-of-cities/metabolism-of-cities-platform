@@ -154,6 +154,7 @@ class OrgAdmin(SearchCompleteAdmin):
 class SprintAdmin(SearchAdmin):
     list_display = ["name", "start_date", "end_date"]
     list_filter = ["projects"]
+    autocomplete_fields = ["work_tag"]
     exclude = DEFAULT_EXCLUDE + ["meta_data", "image", "is_public"]
 
 class NewsAdmin(SearchCompleteAdmin):
