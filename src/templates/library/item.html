@@ -330,7 +330,7 @@
       {% endif %}
 
       <!-- show media or export options -->
-      {% if info.type.name == "Video Recording" %}
+      {% if info.type.name == "Video Recording" or info.embed %}
         <section class="videoblock">
           {% if info.video %}
             {{ info.video.embed|safe }}

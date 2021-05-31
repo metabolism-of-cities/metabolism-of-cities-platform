@@ -1188,7 +1188,26 @@ class LibraryItem(Record):
         return mark_safe("<em>" + self.name + "</em>, " + self.get_author_citation() + ", " + str(self.year))
 
     def embed(self):
-        if "ted" in self.url:
+        if "youtu" in self.url:
+            url = self.url
+            # Thank you https://stackoverflow.com/questions/4356538/how-can-i-extract-video-id-from-youtubes-link-in-python
+            # Examples:
+            # - http://youtu.be/SA2iWivDJiE
+            # - http://www.youtube.com/watch?v=_oPAwA_Udwc&feature=feedu
+            # - http://www.youtube.com/embed/SA2iWivDJiE
+            # - http://www.youtube.com/v/SA2iWivDJiE?version=3&amp;hl=en_US
+            query = urlparse(url)
+            video = None
+            if query.hostname == "youtu.be": video = query.path[1:]
+            if query.hostname in ("www.youtube.com", "youtube.com"):
+                if query.path == "/watch": video = parse_qs(query.query)["v"][0]
+                if query.path[:7] == "/embed/": video = query.path.split("/")[2]
+                if query.path[:3] == "/v/": video = query.path.split("/")[2]
+            if video:
+                return f'<iframe class="video-embed youtube-video" src="https://www.youtube.com/embed/{video}?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+            else:
+                return None
+        elif "ted" in self.url:
             try:
                 url = self.url
                 url = url.split("/")
@@ -1196,6 +1215,8 @@ class LibraryItem(Record):
                 return f'<iframe class="video-embed video-ted" src="https://embed.ted.com/talks/{url}" frameborder="0" scrolling="no" allowfullscreen></iframe>'
             except:
                 return "<div class='alert alert-warning'>Embedded video unavailable. <a href='" + self.url + "'>Click here to view the video</a></div>"
+        else:
+            return None
 
     def get_size(self):
         try:
@@ -1835,6 +1856,7 @@ class Video(LibraryItem):
                 return None
 
     def embed(self):
+        # Should be properly merged with libraryitem embed stuff
         if self.video_site == "youtube":
             code = self.get_embed_code()
             return f'<iframe class="video-embed youtube-video" src="https://www.youtube.com/embed/{code}?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'

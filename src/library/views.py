@@ -587,7 +587,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
     curator = False
     if id:
-        get_item = get_object_or_404(LibraryItem, pk=id)
+        get_item = LibraryItem.objects_include_private.get(pk=id)
         # If you are the uploader, then you can edit the item
         if request.user.people == get_item.uploader:
             curator = True
@@ -1005,7 +1005,10 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                         document = Document.objects.create(name=str(each), file=each, attached_to=info)
 
             if info:
-                msg = f"The information was saved. <a href='/library/{info.id}'>View item</a>."
+                if info.is_public:
+                    msg = f"The information was saved. <a href='/library/{info.id}'>View item</a>."
+                else:
+                    msg = f"The information was saved."
             elif view_processing and "process" in request.POST:
                 msg = "The item was saved - you can now process it."
             elif curator:
