@@ -20,23 +20,6 @@
       top: 0;
     }
 
-    .tables th {
-      padding-left: 0;
-      padding-right: 0;
-    }
-
-   .tables td {
-      width: 40%;
-    }
-
-    .tables td:first-of-type {
-      padding-right: 0;
-    }
-
-    .tables td:last-of-type {
-      padding-left: 0;
-    }
-
     section {
       padding: 1rem 0;
     }
@@ -56,28 +39,28 @@
 
   <div class="row">
     <div class="col-md-6">
-      <div id="map-a" class="leaflet-map mb-1"></div>
+      <div id="map-x" class="leaflet-map mb-1"></div>
     </div>
     <div class="col-md-6">
-      <div id="map-b" class="leaflet-map mb-1"></div>
+      <div id="map-y" class="leaflet-map mb-1"></div>
     </div>
   </div>
 
-
-  <div class="text-center tables">
+{{comparison_table|safe}}
+  <div class="tables">
     <div class="row selects sticky-top py-3">
       <div class="col-md-6">
-        <select data-level="{{ each.id }}" class="custom-select select2" name="space_a">
+        <select data-level="{{ each.id }}" class="custom-select select2" name="space_x">
           {% for each in buildings %}
-            <option value="{{ each.id }}" {% if each.id == info_a.id %}selected{% endif %}>{{ each }}</option>
+            <option value="{{ each.id }}" {% if each.id == info_x.id %}selected{% endif %}>{{ each }}</option>
           {% endfor %}
         </select>
       </div>
 
       <div class="col-md-6">
-        <select data-level="{{ each.id }}" class="custom-select select2" name="space_b">
+        <select data-level="{{ each.id }}" class="custom-select select2" name="space_y">
           {% for each in buildings %}
-            <option value="{{ each.id }}" {% if each.id == info_b.id %}selected{% endif %}>{{ each }}</option>
+            <option value="{{ each.id }}" {% if each.id == info_y.id %}selected{% endif %}>{{ each }}</option>
           {% endfor %}
         </select>
       </div>
@@ -86,33 +69,33 @@
       <h5 class="mt-4 text-center"><i class="fal fa-fw fa-trees mr-1"></i> Materials</h5>
       <div class="row">
         <div class="col-4">
-          <table class="table">
+          <table class="table bg-white">
             <tbody>
-              {% for each in data_a %}
+              {% for each in data_x %}
                 <tr>
-                  <td>{{ each.quantity }} {{ each.unit.symbol }}</td>
+                  <td>{{ each.material.name }}</td>
                 </tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
         <div class="col-4">
-          <table class="table">
+          <table class="table bg-white">
             <tbody>
-              {% for each in data_a %}
+              {% for each in data_x %}
                 <tr>
-                  <td>{{ each.material }}</td>
+                  <td>{{ each.quantity|floatformat:0 }} {{ each.unit.symbol }}</td>
                 </tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
         <div class="col-4">
-          <table class="table">
+          <table class="table bg-white">
             <tbody>
-              {% for each in data_b %}
+              {% for each in data_y %}
                 <tr>
-                  <td>{{ each.quantity }} {{ each.unit.symbol }}</td>
+                  <td>{{ each.quantity|floatformat:0 }} {{ each.unit.symbol }}</td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -125,7 +108,7 @@
         <div class="col-4">
           <table class="table">
             <tbody>
-              {% for key,value in info_a.meta_data.features.items %}
+              {% for key,value in info_x.meta_data.features.items %}
                 <tr>
                   <td>{{ value }}</td>
                 </tr>
@@ -136,7 +119,7 @@
         <div class="col-4">
           <table class="table">
             <tbody>
-              {% for key,value in info_a.meta_data.features.items %}
+              {% for key,value in info_x.meta_data.features.items %}
                 <tr>
                   <th>{{ key }}</th>
                 </tr>
@@ -147,7 +130,7 @@
         <div class="col-4">
           <table class="table">
             <tbody>
-              {% for key,value in info_b.meta_data.features.items %}
+              {% for key,value in info_y.meta_data.features.items %}
                 <tr>
                   <td>{{ value }}</td>
                 </tr>
@@ -179,19 +162,19 @@
 
   <script>
     // initialise map A
-    let mapA = L.map("map-a", {
+    let mapX = L.map("map-x", {
       scrollWheelZoom: false,
       zoomControl: false,
     });
 
     // initialise map B
-    let mapB = L.map("map-b", {
+    let mapY = L.map("map-y", {
       scrollWheelZoom: false,
       zoomControl: false,
     });
 
     // add baselayers A
-    let basemapA = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+    let basemapX = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
       maxZoom: 18,
       attribution: "Map data &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, " +
         "<a href='https://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, " +
@@ -202,7 +185,7 @@
     })
 
     // add baselayer B
-    let basemapB = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+    let basemapY = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
       maxZoom: 18,
       attribution: "Map data &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, " +
         "<a href='https://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, " +
@@ -213,39 +196,39 @@
     })
 
     // add basemaps
-    basemapA.addTo(mapA);
-    basemapB.addTo(mapB);
+    basemapX.addTo(mapX);
+    basemapY.addTo(mapY);
 
     // create jsons
-    const area_a = {
+    const area_x = {
       "type": "FeatureCollection",
       "features": [
         {
           "type": "Feature",
           "properties": {},
-          "geometry": {{ info_a.geometry.json|safe }}
+          "geometry": {{ info_x.geometry.json|safe }}
         }
       ]
     }
 
-    const area_b = {
+    const area_y = {
       "type": "FeatureCollection",
       "features": [
         {
           "type": "Feature",
           "properties": {},
-          "geometry": {{ info_b.geometry.json|safe }}
+          "geometry": {{ info_y.geometry.json|safe }}
         }
       ]
     }
 
     // add geojsons
-    let area_a_layer = L.geoJSON(area_a, {style: {color: "#144d58"}}).addTo(mapA);
-    let area_b_layer = L.geoJSON(area_b, {style: {color: "#144d58"}}).addTo(mapB);
+    let area_x_layer = L.geoJSON(area_x, {style: {color: "#144d58"}}).addTo(mapX);
+    let area_y_layer = L.geoJSON(area_y, {style: {color: "#144d58"}}).addTo(mapY);
 
     // make maps fit the bounds of the geojson layers
-    mapA.fitBounds(area_a_layer.getBounds());
-    mapB.fitBounds(area_b_layer.getBounds());
+    mapX.fitBounds(area_x_layer.getBounds());
+    mapY.fitBounds(area_y_layer.getBounds());
 
     // initialise select2
     $("select[name='area']").select2({
@@ -254,10 +237,10 @@
 
     // load new page when changing areas
     $(".selects select").change(function() {
-      let a = $("select[name='space_a']").val()
-      let b = $("select[name='space_b']").val()
+      let x = $("select[name='space_x']").val()
+      let y = $("select[name='space_y']").val()
 
-      window.location.href = "{% url 'stocks:city' space.slug %}compare/" + a + "/" + b;
+      window.location.href = "{% url 'stocks:city' space.slug %}compare/" + x + "/" + y;
     })
   </script>
 {% endblock %}

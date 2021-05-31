@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse
 from django.views.decorators.cache import cache_page
+from django.db.models.functions import Round
 
 from django.utils import timezone
 import pytz
@@ -317,36 +318,61 @@ def choropleth(request):
 
     return render(request, "stocks/map.html", context)
 
-def compare(request, space, a, b):
+def compare(request, space, x, y):
     space = get_space(request, space)
-
-    info_a = ReferenceSpace.objects.get(pk=a)
-    info_b = ReferenceSpace.objects.get(pk=b)
 
     buildings_item = LibraryItem.objects.get(pk=924024)
     buildings = buildings_item.imported_spaces.all()
     buildings = buildings[:100]
 
-    data_a = Data.objects.filter(Q(origin_space=info_a)|Q(destination_space=info_a))
-    total_b = data_a.count()
-    if data_a.count() > 200:
-        data_a = data_a[:200]
+    info_x = ReferenceSpace.objects.get(pk=x)
+    info_y = ReferenceSpace.objects.get(pk=y)
 
-    data_b = Data.objects.filter(Q(origin_space=info_b)|Q(destination_space=info_b))
-    total_b = data_b.count()
-    if data_b.count() > 200:
-        data_b = data_b[:200]
+    data_x = Data.objects.filter(Q(origin_space=info_x)|Q(destination_space=info_x))
+    if data_x.count() > 200:
+        data_x = data_x[:200]
 
+    data_y = Data.objects.filter(Q(origin_space=info_y)|Q(destination_space=info_y))
+    if data_y.count() > 200:
+        data_y = data_y[:200]
+
+    materials_x = []
+    quantities_x = []
+    units_x = []
+
+    materials_y = []
+    quantities_y = []
+    units_y = []
+
+    for each in data_x:
+        materials_x.append(each.material.name)
+        quantities_x.append(each.quantity)
+        units_x.append(each.unit.symbol)
+
+    for each in data_y:
+        materials_y.append(each.material.name)
+        quantities_y.append(each.quantity)
+        units_y.append(each.unit.symbol)
+
+    table_x = {"material": materials_x, "unit": units_x, "quantity": quantities_x}
+    table_y = {"material": materials_y, "quantity": quantities_y}
+
+    dataframe_x = pd.DataFrame(data=table_x)
+    dataframe_y = pd.DataFrame(data=table_y)
+
+    comparison_table = pd.merge(dataframe_x, dataframe_y, on=["material", "material"]).to_html(index=False, float_format="{0:.0f}".format, classes=["table", "bg-white", "rounded", "border"], justify="left", border=0)
 
     context = {
         "compare": True,
         "load_select2": True,
         "space": space,
         "buildings": buildings,
-        "info_a": info_a,
-        "info_b": info_b,
-        "data_a": data_a,
-        "data_b": data_b,
+        "dataframe_x": dataframe_x,
+        "info_x": info_x,
+        "info_y": info_y,
+        "data_x": data_x,
+        "data_y": data_y,
+        "comparison_table": comparison_table,
     }
     return render(request, "stocks/compare.html", context)
 

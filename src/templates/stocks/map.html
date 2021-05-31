@@ -367,9 +367,15 @@
 
       // populate the data tables below and next to the map
       $.each(mapData.data, function(key,value) {
+        if (value == null) {
+          value = 0
+        } else {
+          value = Math.round(value)
+        }
+
         $("#data-table tr[data-space='" + key + "'] .quantity").text(value);
         $("#compact-table tr[data-space='" + key + "'] .quantity").text(value);
-        $("#chart-bars .bar[data-space='" + key + "']").attr("data-value", value);
+        // $("#chart-bars .bar[data-space='" + key + "']").attr("data-value", value);
       });
 
       $("#data-table").dataTable();
@@ -430,6 +436,12 @@
     $("#chart-bars").html("");
 
     for (key in mapData.data) {
+      if (mapData.data[key] == null) {
+        mapData.data[key] = 0
+      } else {
+        mapData.data[key] = Math.round(mapData.data[key])
+      }
+
       dataValues.push(mapData.data[key])
       $("#chart-bars").append("<div class='bar' data-space='" + key + "' data-value='" + mapData.data[key] + "'></div>")
     }
@@ -455,7 +467,7 @@
     // sort bars by value
     function sortBars(items) {
       [...items.children]
-        .sort((a,b)=>Number(a.getAttribute("data-value"))>Number(b.getAttribute("data-value")) ? 1 : -1)
+        .sort((a,b)=>Number(a.getAttribute("data-value")) > Number(b.getAttribute("data-value")) ? 1 : -1)
         .forEach(node=>chartBars.appendChild(node))
     }
 
