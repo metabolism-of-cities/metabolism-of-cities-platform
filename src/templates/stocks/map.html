@@ -271,22 +271,23 @@
 
   // DATA LAYER START
   // function to set the color based on a value
-  function getColor(n) {
-    return n > 500 ? "#144d58" :
-           n > 300 ? "#4b8793" :
-           n > 100 ? "#8bc3ce" :
-           n == 0  ? "#cfdee1" :
-                     "#b3dde6" ;
+  function getColor(n, a, b, c, d, e) {
+    return n > e ? "#08519c" :
+           n > d ? "#3182bd" :
+           n > c ? "#6baed6" :
+           n > b ? "#bdd7e7" :
+           n > a ? "#eff3ff" :
+                   "#ffffff" ;
   }
 
   // apply style to each feature
   function dataStyle(feature) {
     return {
-      fillColor: getColor(mapData.data[feature.properties.id]),
+      fillColor: getColor(mapData.data[feature.properties.id], a, b, c, d, e),
       weight: 1,
       opacity: 1,
-      color: "#666",
-      fillOpacity: 0.7
+      color: "#fff",
+      fillOpacity: .95
     };
   }
 
@@ -343,6 +344,16 @@
   // get data from server
   let mapData;
   let dataLayer;
+  let mapDataLegend;
+
+  // variables for value ranges for areas and legend
+  let a = 0;
+  let b;
+  let c;
+  let d;
+  let e;
+  let materialName;
+  let materialUnit;
 
   function getData(material, within, level) {
     $("#map").addClass("loading");
@@ -350,17 +361,25 @@
     // remove datalayer, if it exists
     if (map.hasLayer(dataLayer)) {
       map.removeLayer(dataLayer);
+      map.removeControl(mapDataLegend);
     };
 
     // request data, add the shapes to the map and fill in areas
     $.get("{% url 'stocks:data_json' %}?source={{ data_source_document }}&material=" + material + "&within=" + within + "&aggregation_level=" + level, function(data) {
       mapData = data;
 
+      generateBarChart();
+
       dataLayer = L.geoJson(mapShapes, {
         style: dataStyle,
         onEachFeature: onEachFeature,
       })
       map.addLayer(dataLayer);
+
+      materialName = data.material_name
+      materialUnit = data.unit
+
+      addLegend()
 
       let datatable = $("#data-table").DataTable();
       datatable.destroy();
@@ -380,7 +399,6 @@
 
       $("#data-table").dataTable();
 
-      generateBarChart();
       enableHover();
 
       $(".layer-toggles .material[data-material='" + material + "']").addClass("selected")
@@ -401,22 +419,22 @@
   // legend
   function addLegend() {
     // create variable for the legend
-    var mapDataLegend = L.control({
+    mapDataLegend = L.control({
       position: "bottomright"
     });
 
     // when the legend is added to the map, build up the contents
     mapDataLegend.onAdd = function(map) {
       var div = L.DomUtil.create("div", "legend"),
-          grades = [0, 50, 100, 150],
+          grades = [a, b, c, d, e],
           labels = [];
 
-      div.innerHTML = "<div>Wood stock per building<br>(in tonnes)</div><hr class='my-2'>"
+      div.innerHTML = "<div>" + materialName + " stock per building<br>(in " + materialUnit + ")</div><hr class='my-2'>"
 
       // loop through our schauff intervals and generate a label with a colored square for each interval
       for (var i = 0; i < grades.length; i++) {
           div.innerHTML +=
-              "<i style='background:" + getColor(grades[i] + 1) + "'></i> " +
+              "<i style='background:" + getColor(grades[i] + 1, a, b, c, d, e) + "'></i> " +
               grades[i] + (grades[i + 1] ? " – " + grades[i + 1] + "<br>" : "+");
       }
 
@@ -448,6 +466,14 @@
 
     let maxValue = Math.max(...dataValues);
 
+    e = maxValue
+
+    let legendTranche = e / 5;
+
+    b = Math.round(a + legendTranche);
+    c = Math.round(b + legendTranche);
+    d = Math.round(c + legendTranche);
+
     // set end label to max value
     $(".end-label").text(maxValue);
 
@@ -461,7 +487,7 @@
         height = 5
       };
 
-      $(this).width(width + "%").height(height).css("background-color", getColor(value));
+      $(this).width(width + "%").height(height).css("background-color", getColor(value, a, b, c, d, e));
     })
 
     // sort bars by value
@@ -560,7 +586,7 @@
 
       {% for each in materials %}
         var materialButton = L.DomUtil.create("div", "material");
-        $(materialButton).attr("data-material", "{{ each.code }}");
+        $(materialButton).attr("data-material", "{{ each.id }}");
         materialButton.innerHTML = "<i class='fal fa-fw fa-{{ each.icon }}'></i> {{ each.name }}";
         layerTogglesWrapper.appendChild(materialButton);
       {% endfor %}

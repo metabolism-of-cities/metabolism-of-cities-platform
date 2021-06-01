@@ -3010,7 +3010,8 @@ def data(request, json=False):
             j.update({str(each.record_ptr_id): each.total})
 
         return JsonResponse({
-            "material": material.code if material else None,
+            "material_name": material.name if material else None,
+            "material_code": material.code if material else None,
             "unit": "Kilogram", # Yeah let's fix this please
             "data": j
         })
@@ -3020,7 +3021,8 @@ def data(request, json=False):
         for each in data:
             j.update({str(each.origin_space.id): each.quantity})
         return JsonResponse({
-            "material": material.code if material else None,
+            "material_name": material.name if material else None,
+            "material_code": material.code if material else None,
             "unit": data[0].unit.name,
             "data": j
         })

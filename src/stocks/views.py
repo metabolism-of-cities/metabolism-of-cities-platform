@@ -181,31 +181,37 @@ def map(request, space, id, box=None):
     if space.name == "Melbourne":
         doc_list = melbourne
         data_source_document = 33971 # This is the document that contains the stocks data itself
+
         materials = [
             {
                 "name": "Concrete",
-                "code": "EMP8.5",
+                "id": 866044,
                 "icon": "road"
             },
             {
                 "name": "Glass",
-                "code": "EMP6.1",
+                "id": 568589,
                 "icon": "fragile"
             },
             {
                 "name": "Iron",
-                "code": "EMP2.1",
+                "id": 25969,
                 "icon": "magnet"
             },
             {
                 "name": "Wood",
-                "code": "EMP1.3",
+                "id": 25955,
                 "icon": "trees"
             },
             {
                 "name": "Insulation",
-                "code": "EMP8.6",
+                "id": 866045,
                 "icon": "mitten"
+            },
+            {
+                "name": "Plastics",
+                "id": 568586,
+                "icon": "coffee-togo"
             },
         ]
     else:
