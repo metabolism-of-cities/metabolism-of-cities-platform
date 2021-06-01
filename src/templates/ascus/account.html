@@ -62,7 +62,7 @@
       {% endif %}
 
       </td>
-      <td>{{ each.start_date|date:"l d M Y · H:i" }}-{{ each.end_date|date:"H-i" }}</td>
+      <td>{{ each.start_date|date:"l d M Y · H:i" }}-{{ each.end_date|date:"H:i" }}</td>
       <td>
         <form method="post" class="form form-horizontal">
           {% csrf_token %}
