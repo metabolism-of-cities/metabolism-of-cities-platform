@@ -1005,6 +1005,20 @@ class Message(Record):
         except:
             return None
 
+    @property
+    def get_icon(self):
+        # We should really just store this in the meta data...
+        if self.name == "Task assigned":
+            return "fa-user-check"
+        elif self.name == "Status change":
+            return "fa-retweet"
+        elif self.name == "Task unassigned":
+            return "fa-user-times"
+        elif self.name == "Task created":
+            return "fa-play"
+        else:
+            return None
+
     class Meta:
         ordering = ["date_created"]
 

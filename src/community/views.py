@@ -320,6 +320,46 @@ def forum_form(request, id=False, parent=None, section=None):
     }
     return render(request, "forum.form.html", context)
 
+@login_required
+def message_form(request, id):
+
+    info = get_object_or_404(Message, pk=id)
+    if info.author() != request.user.people:
+        unauthorized_access(request)
+
+    edit_title = False
+    if hasattr(info.parent, "forumtopic"):
+        # The parent item is a forum topic, so we check
+        # if this is the first message. 
+        first_message = info.parent.messages.all()[0]
+        if first_message == info and info.parent.name:
+            # If it is the first message, then this user can edit the title
+            edit_title = info.parent.name
+
+    if request.method == "POST":
+        info.description = request.POST.get("text")
+        if not info.meta_data:
+            info.meta_data = {}
+        info.meta_data["edit_date"] = str(timezone.now())
+        info.save()
+        if edit_title and "title" in request.POST:
+            parent = info.parent
+            parent.name = request.POST.get("title")
+            parent.save()
+        messages.success(request, "Your changes have been saved.")
+
+        if "next" in request.GET:
+            return redirect(request.GET["next"])
+
+    context = {
+        "load_messaging": True,
+        "menu": "forum",
+        "info": info,
+        "edit_message": True,
+        "edit_title": edit_title,
+    }
+    return render(request, "forum.form.html", context)
+
 def event_list(request, header_subtitle=None, project_name=None):
 
     article = get_object_or_404(Webpage, pk=47)

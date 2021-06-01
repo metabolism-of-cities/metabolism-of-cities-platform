@@ -154,6 +154,7 @@ baseline_urlpatterns = [
     # Various
     path("newsletter/", core.newsletter, name="newsletter"),
     path("massmail/", core.massmail, name="massmail"),
+    path("messages/<int:id>/edit/", community.message_form, name="message_form"),
     path("page/<slug:slug>/", core.article, {"prefix": "/page/"}, name="article"),
 
 ]

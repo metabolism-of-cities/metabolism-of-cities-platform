@@ -19,9 +19,9 @@
               {% endif %}
             </div>
             <div class="col-6 text-muted text-right avatar-line-height" title="{{ each.date_created|date:'l j F Y, H:i e' }}">
-              <!-- {% if each.author == request.user.people %} -->
-                <!-- <a href="edit/{{ each.id }}/"><i class="fa fa-pencil"></i></a> -->
-              <!-- {% endif %} -->
+              {% if not each.get_icon and each.author == request.user.people %}
+                <a href="/messages/{{ each.id }}/edit/?next={{ request.get_full_path|urlencode }}"><i class="fa fa-pencil"></i></a>
+              {% endif %}
               {{ each.date_created|timesince }} ago
             </div>
           </div>
@@ -29,17 +29,15 @@
           <hr>
 
           <div class="text">
-            {% if each.name == "Task assigned" %}
-              <i class="far fa-fw fa-user-check mx-1"></i>
-            {% elif each.name == "Status change" %}
-              <i class="far fa-fw fa-retweet mx-1"></i>
-            {% elif each.name == "Task unassigned" %}
-              <i class="far fa-fw fa-user-times mx-1"></i>
-            {% elif each.name == "Task created" %}
-              <i class="far fa-fw fa-play mx-1"></i>
+            {% if each.get_icon %}
+              <i class="far fa-fw {{ each.get_icon }} mx-1"></i>
             {% endif %}
 
             {{ each.get_description }}
+
+            {% if each.meta_data.edit_date %}
+              <p><small class="text-muted"><em>Last edited: {{ each.meta_data.edit_date }}</em></small></p>
+            {% endif %}
           </div>
 
           {% if each.attachments.all %}
