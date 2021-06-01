@@ -2,7 +2,7 @@
 
 {% block page_name %}projects{% endblock %}
 
-{% block title %}Blank page{% endblock %}
+{% block title %}Projects{% endblock %}
 
 {% block subtitle %}{% endblock %}
 
@@ -14,7 +14,7 @@
       <input type="text" class="form-control search" placeholder="Search by project title...">
     </div>
     <div class="col-md-6 mb-2">
-      <select class="type-filter custom-select">
+      <select class="type-filter custom-select" id="category">
         <option value="all" selected>Filter by category</option>
         {% for each in types %}
           <option value="{{ each.id }}">{{ each }}</option>
@@ -23,9 +23,9 @@
     </div>
   </div>
 
-  <div class="row list">
+  <div class="row list projects">
     {% for each in list %}
-      <div class="col-xl-4 col-md-6 mb-4 single-project" data-type="seminar">
+      <div class="col-xl-4 col-md-6 mb-4 single-project" data-type="{{ each.type.id }}">
         <a class="card btn-card contain" href="{{ each.get_absolute_url }}">
           {% if each.get_image %}
             <img class="card-img-top" src="{{ each.get_image.url }}" alt="" />
@@ -155,5 +155,11 @@
 
   // reset all filters on page load
   resetSearchFilters()
+
+  $("#category").change(function(){
+    category = $(this).val();
+    $(".single-project").hide();
+    $(".single-project[data-type=" + category + "]").show();
+  });
 </script>
 {% endblock %}
