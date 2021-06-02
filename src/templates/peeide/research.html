@@ -16,6 +16,14 @@
     object-fit: cover;
   }
 
+  .project-text {
+    height: calc(100% - 200px);
+  }
+
+  .project-leads {
+    font-size: .75rem;
+  }
+
   .single-research {
     position: relative;
     overflow: hidden;
@@ -73,14 +81,21 @@
     <div class="row projects">
       {% for each in projects %}
         <div class="col-md-6 col-lg-4 mb-4">
-          <img class="rounded-top project-image" src="{{ each.image.thumbnail.url }}" alt="{{ each }} image">
-          <div class="p-3 bg-ndee-light-blue rounded">
-            <h5 class="text-ndee-primary mb-0">{{ each }}</h5>
-            <div class="text-ndee-purple mb-2">{{ each.meta_data.project_leader }}</div>
+          {% if each.image %}
+            <img class="rounded-top project-image" src="{{ each.image.thumbnail.url }}" alt="{{ each }} image">
+          {% endif %}
+          <div class="p-3 bg-ndee-light-blue rounded project-text">
+            <h5 class="text-ndee-primary">{{ each }}</h5>
             {{ each.get_description }}
-
-
-            <a class="btn btn-ndee bg-ndee-primary text-white btn-ndee-sm" href="{{ each.url }}">Read more</a>
+            {% if each.meta_data.project_leader %}
+              <div class="text-ndee-purple mb-4 project-leads">
+                <div class="text-dark font-weight-bold">Project lead(s)</div>
+                {{ each.meta_data.project_leader }}
+              </div>
+            {% endif %}
+            {% if each.url %}
+              <a class="btn btn-ndee bg-ndee-primary text-white btn-ndee-sm" href="{{ each.url }}">Read more</a>
+            {% endif %}
           </div>
         </div>
       {% endfor %}
