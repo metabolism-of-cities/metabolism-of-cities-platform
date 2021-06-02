@@ -2727,11 +2727,17 @@ class ZoteroItem(models.Model):
         except:
             info.type_id = 16 # Default to journal article if all else fails
 
-        if self.data.get("rights") == "Yes":
-            # This field is used to indicate that there is a paywall
-            info.open_access = False
-        else:
-            info.open_access = True
+        if self.collection.uid == 4:
+            # NDEE collection uses specific fields for special settings
+            if self.data.get("rights") == "Yes":
+                # This field is used to indicate that there is a paywall
+                info.open_access = False
+            else:
+                info.open_access = True
+            if self.data.get("shortTitle") and "Hide" in self.data.get("shortTitle"):
+                info.is_public = False
+            else:
+                info.is_public = True
 
         info.save()
 
