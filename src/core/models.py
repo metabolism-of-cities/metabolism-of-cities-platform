@@ -2726,6 +2726,13 @@ class ZoteroItem(models.Model):
             info.type = type
         except:
             info.type_id = 16 # Default to journal article if all else fails
+
+        if self.data.get("rights") == "Yes":
+            # This field is used to indicate that there is a paywall
+            info.open_access = False
+        else:
+            info.open_access = True
+
         info.save()
 
         # Let's now add the tags

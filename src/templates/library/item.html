@@ -170,6 +170,24 @@
             </li>
           {% endif %}
 
+          {% if info.open_access == False %}
+            <li class="list-group-item table-item">
+              <div><i class="fal fa-fw fa-lock mr-1"></i> Access</div>
+              <div class="text-truncate">
+                Behind paywall
+              </div>
+            </li>
+          {% endif %}
+
+          {% if info.open_access == True %}
+            <li class="list-group-item table-item">
+              <div><i class="fal fa-fw fa-lock-open mr-1"></i> Access</div>
+              <div class="text-truncate">
+                Open access
+              </div>
+            </li>
+          {% endif %}
+
           {% if info.doi %}
             <li class="list-group-item">
               <i class="fal fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> DOI
