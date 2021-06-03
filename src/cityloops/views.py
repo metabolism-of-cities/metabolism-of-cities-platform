@@ -422,14 +422,18 @@ def sca_report(request, slug, sector):
     # NUTS0 = the Netherlands, NUTS1 = West Netherlands, NUTS2 = South Holland, NUTS3 = Greater The Hague
     # https://en.wikipedia.org/wiki/NUTS_statistical_regions_of_the_Netherlands
 
+    bounding_box = False
+
     if slug == "apeldoorn":
         country_id = 328768
         nuts2_id = 584317
         nuts3_id = 585874
+        bounding_box = [[50.65, 3.28], [53.6, 7.21]]
     elif slug == "bodo":
         country_id = 328727
         nuts2_id = 584307
         nuts3_id = 585880
+        bounding_box = [[57.94,4.83], [71.33,31.55]]
     elif slug == "hoje-taastrup":
         country_id = 328745
         nuts2_id = 584276
@@ -495,6 +499,7 @@ def sca_report(request, slug, sector):
         "country": country,
         "nuts2": nuts2,
         "nuts3": nuts3,
+        "bounding_box": bounding_box,
     }
     return render(request, "cityloops/sca-report.html", context)
 
