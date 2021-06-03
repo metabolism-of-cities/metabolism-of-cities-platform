@@ -212,37 +212,36 @@
     <div class="row">
       {% for each in team %}
         <div class="col-lg-6 mb-4">
-          <div class="row">
+          <div class="row align-items-center">
             <div class="col-3">
               <img src="{{ each.image.thumbnail.url }}" alt="">
             </div>
             <div class="col-9">
-              <div class="p-3">
-                <h5 class="mb-0 text-ndee-primary">{{ each }}</h5>
-                <p>{{ each.get_description|truncatewords_html:40 }}</p>
-                <div class="pt-2">
-                  {% if each.website %}
-                    <a target="_blank" href="{{ each.website }}" class="mr-2">
-                      <i class="far fa-link"></i>
-                    </a>
-                  {% endif %}
-                  {% if each.twitter %}
-                    <a target="_blank" href="https://twitter.com/{{ each.twitter }}" class="mr-2">
-                      <i class="fab fa-twitter"></i>
-                    </a>
-                  {% endif %}
-                  {% if each.linkedin %}
-                    <a href="https://linkedin.com/in/{{ each.linkedin }}" class="mr-2">
-                      <i class="fab fa-linkedin"></i>
-                    </a>
-                  {% endif %}
-                  {% if each.researchgate %}
-                    <a href="{{ each.researchgate }}" class="mr-2">
-                      <i class="fab fa-researchgate"></i>
-                    </a>
-                  {% endif %}
-                </div>
-                <!-- <a href="{% url URLS.PROFILE each.id %}" class="btn btn-ndee btn-ndee-sm btn-ndee-primary">View profile</a> -->
+              <h5 class="mb-0 text-ndee-primary">{{ each }}</h5>
+              {% if each.affiliation %}
+                <div class="text-ndee-purple"><small>{{ each.affiliation }}</small></div>
+              {% endif %}
+              <div class="pt-1">
+                {% if each.website %}
+                  <a target="_blank" href="{{ each.website }}" class="mr-2">
+                    <i class="far fa-link"></i>
+                  </a>
+                {% endif %}
+                {% if each.twitter %}
+                  <a target="_blank" href="https://twitter.com/{{ each.twitter }}" class="mr-2">
+                    <i class="fab fa-twitter"></i>
+                  </a>
+                {% endif %}
+                {% if each.linkedin %}
+                  <a href="https://linkedin.com/in/{{ each.linkedin }}" class="mr-2">
+                    <i class="fab fa-linkedin"></i>
+                  </a>
+                {% endif %}
+                {% if each.researchgate %}
+                  <a href="{{ each.researchgate }}" class="mr-2">
+                    <i class="fab fa-researchgate"></i>
+                  </a>
+                {% endif %}
               </div>
             </div>
           </div>

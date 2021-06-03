@@ -98,6 +98,7 @@
 
       .report-content {
         padding: 5rem;
+        max-width: 297mm;
       }
 
       .context-map {
@@ -114,6 +115,10 @@
       iframe {
         max-width: calc(297mm - 12rem);
         height: 500px;
+      }
+
+      .sankey-link {
+        /*fill-opacity: .5 !important;*/
       }
     }
   </style>
@@ -143,24 +148,35 @@
       <p>Maybe short section on what the SCA is. How long cities have been working on them with the two courses.</p>
       <p><a href="https://cityloops.metabolismofcities.org/dashboards/apeldoorn/">URL to City's Data Hub.</a></p>
 
-      <div><i class="fal fa-fw mr-2 fa-building"></i> Concrete</div>
-      <div><i class="fal fa-fw mr-2 fa-ball-pile"></i> Sand and gravel</div>
-      <div><i class="fal fa-fw mr-2 fa-layer-group"></i> Soil</div>
-      <div><i class="fal fa-fw mr-2 fa-chimney"></i> Bricks</div>
-      <div><i class="fal fa-fw mr-2 fa-window-frame"></i> Glass</div>
-      <div><i class="fal fa-fw mr-2 fa-grip-lines-vertical"></i> Plasterboard/gypsum</div>
-      <div><i class="fal fa-fw mr-2 fa-stream"></i> Steel</div>
-      <div><i class="fal fa-fw mr-2 fa-cubes"></i> Aluminium</div>
-      <div><i class="fal fa-fw mr-2 fa-road"></i> Bitumen/asphalt</div>
-      <div><i class="fal fa-fw mr-2 fa-igloo"></i> Insulation (plastics based)</div>
-      <div><i class="fal fa-fw mr-2 fa-wheat"></i> Cereals</div>
-      <div><i class="fal fa-fw mr-2 fa-carrot"></i> Vegetables</div>
-      <div><i class="fal fa-fw mr-2 fa-apple-alt"></i> Fruits</div>
-      <div><i class="fal fa-fw mr-2 fa-cow"></i> Live animals</div>
-      <div><i class="fal fa-fw mr-2 fa-fish"></i> Fish</div>
-      <div><i class="fal fa-fw mr-2 fa-cheese-swiss"></i> Dairy products</div>
-      <div><i class="fal fa-fw mr-2 fa-tree-alt"></i> Timber</div>
-      <div><i class="fal fa-fw mr-2 fa-hand-holding-seedling"></i> Horticulture</div>
+      <div class="row text-center materials">
+        {% if sector == "construction" %}
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-cubes"></i><div>Aluminium</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-road"></i><div>Bitumen / asphalt</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-chimney"></i><div>Bricks</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-building"></i><div>Concrete</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-window-frame"></i><div>Glass</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-grip-lines-vertical"></i><div>Gypsum</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-igloo"></i><div>Insulation</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-stream"></i><div>Iron (steel)</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-ball-pile"></i><div>Sand and gravel</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-layer-group"></i><div>Soil</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-tree-alt"></i><div>Timber</div></div></div>
+        {% elif sector == "biomass" %}
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-wheat"></i><div>Cereals</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-cheese-swiss"></i><div>Dairy products</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-fish"></i><div>Fish</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-seedling"></i><div>Fodder crops</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-apple-alt"></i><div>Fruits</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-acorn"></i><div>Garden and park materials</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-cow"></i><div>Live animals</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-flower-daffodil"></i><div>Oil-bearing crops</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-carrot"></i><div>Roots, tubers</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-candy-cane"></i><div>Sugar crops</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-tree-alt"></i><div>Timber</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-pepper-hot"></i><div>Vegetables</div></div></div>
+        {% endif%}
+      </div>
+
     </section>
 
     <section id="urban-context">
@@ -445,7 +461,7 @@
     <section id="visualisations">
       <h1>Visualisations</h1>
 
-      <!-- <iframe class="libraryitem mb-4" src="/library/preview/49598/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe> -->
+      {{ sankey|safe }}
     </section>
 
     <section id="matrix">
@@ -596,7 +612,12 @@
     }).addTo(country_map);
 
     country_map.scrollWheelZoom.disable();
-    country_map.fitBounds(country_geojsonlayer.getBounds());
+
+    {% if bounding_box %}
+      country_map.fitBounds({{ bounding_box|safe }})
+    {% else %}
+      country_map.fitBounds(country_geojsonlayer.getBounds());
+    {% endif %}
 
     // function to make iframe the same size as its content
     function resizeIframe(obj) {

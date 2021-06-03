@@ -422,14 +422,18 @@ def sca_report(request, slug, sector):
     # NUTS0 = the Netherlands, NUTS1 = West Netherlands, NUTS2 = South Holland, NUTS3 = Greater The Hague
     # https://en.wikipedia.org/wiki/NUTS_statistical_regions_of_the_Netherlands
 
+    bounding_box = False
+
     if slug == "apeldoorn":
         country_id = 328768
         nuts2_id = 584317
         nuts3_id = 585874
+        bounding_box = [[50.65, 3.28], [53.6, 7.21]]
     elif slug == "bodo":
         country_id = 328727
         nuts2_id = 584307
         nuts3_id = 585880
+        bounding_box = [[57.94,4.83], [71.33,31.55]]
     elif slug == "hoje-taastrup":
         country_id = 328745
         nuts2_id = 584276
@@ -459,9 +463,33 @@ def sca_report(request, slug, sector):
     nuts2 = ReferenceSpace.objects.get(id=nuts2_id)
     nuts3 = ReferenceSpace.objects.get(id=nuts3_id)
 
+    fig = go.Figure(data=[go.Sankey(
+        node = dict(
+          thickness = 10,
+          line = dict(width = 0),
+          label = ["Extraction", "Manufacturing", "Retail", "Use", "Stock", "Waste collection", "Incineration", "Composting", "Imports", "Exports", "Landfill", "Anaerobic digestion", "Harvesting"],
+          color = "#efefef",
+        ),
+        link = dict(
+          source = [0,0,0,0,1,1,1,2,2,2,3,3,3,4,4,5,5,5,5,5,5,6,7,7,8,8,8,8,0,0,0,0,1,1,1,2,2,2,3,3,3,4,4,5,5,5,5,5,5,6,7,7,8,8,8,8,0,0,0,0,1,1,1,2,2,2,3,3,3,4,4,5,5,5,5,5,5,6,7,7,8,8,8,8],
+          target = [1,2,3,5,2,3,5,3,5,9,5,2,4,3,5,10,6,11,7,1,2,2,2,12,1,2,3,5,1,2,3,5,2,3,5,3,5,9,5,2,4,3,5,10,6,11,7,1,2,2,2,12,1,2,3,5,1,2,3,5,2,3,5,3,5,9,5,2,4,3,5,10,6,11,7,1,2,2,2,12,1,2,3,5],
+          value = [100,1000,2000,100,0,90,10,750,50,200,800,40,2000,80,1000,960,0,0,0,0,1000,0,0,0,100,500,500,100,500,0,0,50,500,50,50,950,50,0,100,0,850,0,1000,100,0,0,0,0,1000,0,0,0,100,500,0,0,0,0,0,0,50,0,5,143,2,0,1,0,142,2,40,2,0,0,0,2,44,0,0,0,50,100,0,0],
+          color = ["rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a"]
+    ))])
+
+    fig.update_layout(
+        hovermode = 'x',
+        font=dict(size = 14, color = 'black', family = 'Lato'),
+        plot_bgcolor='rgba(255,255,255,0)',
+        paper_bgcolor='rgba(255,255,255,0)',
+    )
+
+    sankey = fig.to_html(full_html=False)
+
     context = {
         "space": space,
         "sector": sector,
+        "sankey": sankey,
         "report": report,
         "title": "SCA report",
         "indicator_scale_list": indicator_scale_list,
@@ -471,6 +499,7 @@ def sca_report(request, slug, sector):
         "country": country,
         "nuts2": nuts2,
         "nuts3": nuts3,
+        "bounding_box": bounding_box,
     }
     return render(request, "cityloops/sca-report.html", context)
 
