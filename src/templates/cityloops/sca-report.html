@@ -98,6 +98,7 @@
 
       .report-content {
         padding: 5rem;
+        max-width: 297mm;
       }
 
       .context-map {
@@ -114,6 +115,10 @@
       iframe {
         max-width: calc(297mm - 12rem);
         height: 500px;
+      }
+
+      .sankey-link {
+        /*fill-opacity: .5 !important;*/
       }
     }
   </style>
@@ -445,7 +450,7 @@
     <section id="visualisations">
       <h1>Visualisations</h1>
 
-      <!-- <iframe class="libraryitem mb-4" src="/library/preview/49598/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe> -->
+      {{ sankey|safe }}
     </section>
 
     <section id="matrix">
