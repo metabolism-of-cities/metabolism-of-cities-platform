@@ -1,0 +1,164 @@
+{% extends "_base.html" %}
+
+{% block page_name %}work sprint{% endblock %}
+
+{% block head %}
+<style type="text/css">
+.active-card {
+  background:#CF4803;
+  color:#fff;
+}
+.active-card .card-header {
+  background:#CF4803;
+  color:#fff;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-lg-8">
+
+    <h1 class="mt-4">{{ main_tag }}</h1>
+
+    {% if not tag %}
+      {{ main_tag.get_description }}
+    {% endif %}
+
+    <section class="row btn-cards">
+      {% for each in tags %}
+        <div class="col-md-6 mb-4">
+          <a class="card icon-card btn-card {% if each == tag %}active-card{% endif %}" href="?tag={{ each.id }}">
+            <div class="icon">
+              <i class="fal fa-fw fa-{{ each.icon }}"></i>
+            </div>
+            <div class="card-header">{{ each }}</div>
+          </a>
+        </div>
+      {% endfor %}
+    </section>
+
+    {% if tag %}
+      <div class="">
+        {{ tag.get_description }}
+      </div>
+    {% endif %}
+
+
+    <h2 class="mt-4">Tasks</h2>
+    {% if tag %}
+      <p><em>Related to: <strong>{{ tag }}</strong></em>. <a href="./">View all</a></p>
+    {% endif %}
+    {% include "contribution/_workgrid.html" %}
+
+    <h2 class="mt-4">Latest task updates</h2>
+    {% if tag %}
+      <p><em>Related to: <strong>{{ tag }}</strong></em>. <a href="./">View all</a></p>
+    {% endif %}
+    <div class="list-group list-group-flush">
+      {% for each in updates %}
+        <a class="list-group-item list-group-item-action" href="">
+          <div class="d-flex w-100 justify-content-between">
+            <span>
+              <strong>
+                {{ each }}
+              </strong>
+              ·
+              <span class="text-muted">
+                {{ each.last_update.posted_by }}
+              </span>
+            </span>
+            <small>{{ each.last_update.date_created|timesince }} ago</small>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+
+    <p class="mt-3 text-right"><a class="btn btn-primary btn-sm" href="http://">View all updates</a></p>
+
+    <h2 class="mt-4">Latest forum posts</h2>
+    {% if tag %}
+      <p><em>Related to: <strong>{{ tag }}</strong></em>. <a href="./">View all</a></p>
+    {% endif %}
+
+    <div class="list-group list-group-flush">
+      {% for each in updates %}
+        <a class="list-group-item list-group-item-action" href="">
+          <div class="d-flex w-100 justify-content-between">
+            <span>
+              <strong>
+                {{ each }}
+              </strong>
+              ·
+              <span class="text-muted">
+                {{ each.last_update.posted_by }}
+              </span>
+            </span>
+            <small>{{ each.last_update.date_created|timesince }} ago</small>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+
+    <p class="mt-3 text-right"><a class="btn btn-primary btn-sm" href="http://">Go to forum</a></p>
+
+  </div>
+
+  <div class="col-lg-4">
+    <div class="alert alert-secondary mt-4">
+      <h1>Community hub</h1>
+      <h2>Tools and links</h2>
+
+      <h4 class="mt-5">You are here</h4>
+      <p>
+        This is the community hub for the 
+        <strong>Metabolism of Cities Data Hub</strong>.
+      </p>
+
+      <h4 class="mt-5"><a href="">Beginners guide</a></h4>
+      <p>
+        Are you new to our community? Our <a href="http://">beginners guide</a>
+        will get you started.
+      </p>
+
+      <h4 class="mt-5"><a href="">FAQ</a></h4>
+      <p>
+        Learn more about our initiative by browsing
+        the <a href="http://">Frequently Asked Questions (FAQ)</a>.
+      </p>
+
+      <h4 class="mt-5"><a href="">Scoreboard</a></h4>
+      <p>
+        Browse our list with contributors and see how they 
+        are ranked on our 
+        <a href="http://">scoreboard</a>.
+      </p>
+
+      <h4 class="mt-5">Index</h4>
+      <ul>
+        <li><a href="http://">Tasks</a></li>
+        <li><a href="http://">Activity log</a></li>
+        <li><a href="http://">Forum</a></li>
+        <li><a href="http://">Scoreboard</a></li>
+        <li><a href="http://">My profile</a></li>
+      </ul>
+
+      {% if not request.user.is_authenticated %}
+        <a class="btn btn-primary mr-3 mb-2" href="/accounts/register/?next={{ request.get_full_path }}"><i class="fa fa-user-plus" aria-hidden="true"></i> Sign Up</a>
+        <a class="btn btn-primary mr-3 mb-2" href="/accounts/login/?next={{ request.get_full_path }}"><i class="fa fa-sign-in" aria-hidden="true"></i> Log In</a>
+      {% endif %}
+
+    </div>
+  </div>
+
+</div>
+
+{% if load_messaging %}
+  <h2 class="mt-4">Messages</h2>
+  <section class="messages">
+    {% include "_messages.html" %}
+  </section>
+{% endif %}
+
+{% endblock %}

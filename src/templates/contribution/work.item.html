@@ -57,6 +57,16 @@
               <div><i class="fal fa-fw fa-box mr-2"></i>Type</div>
               <div> {{ info.workactivity }}</div>
             </li>
+            {% if info.tags.all %}
+              <li class="list-group-item table-item">
+                <div><i class="fal fa-fw fa-tag mr-2"></i>Tags</div>
+                <div>
+                  {% for each in info.tags.all %}
+                    <span class="badge badge-secondary">{{ each }}</span>
+                  {% endfor %}
+                </div>
+              </li>
+            {% endif %}
             {% if info.related_to %}
               <li class="list-group-item table-item">
                 <div><i class="fal fa-fw fa-link mr-2"></i>Related to</div>

@@ -70,6 +70,7 @@ baseline_urlpatterns = [
     path("hub/work/create/", core.work_form, name="work_form"),
     path("hub/work/<int:id>/", core.work_item, name="work_item"),
     path("hub/work/<int:id>/edit/", core.work_form, name="work_form"),
+    path("hub/work/tags/<slug:slug>/", core.work_collection, name="work_collection"),
     path("notifications/", core.notifications, name="notifications"),
 
     path("tasks/", core.work_grid, name="tasks"),

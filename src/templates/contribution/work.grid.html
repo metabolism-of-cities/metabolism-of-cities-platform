@@ -127,42 +127,7 @@
 
   {% if counter %}
 
-    <div class="row dual-iconbox">
-      {% for each in categories %}
-        <div class="col-md-6 col-lg-4 mb-4">
-          <a href="?category={{ each.id }}" class="card btn-card">
-            <div class="card-body">
-              <div class="row">
-                <div class="col icon">
-                  <i class="fal fa-fw fa-{{ each.icon }}" aria-hidden="true"></i>
-                </div>
-                <div class="col">
-                  <strong>{{ each }}</strong>
-                  <br>
-                  {% if counter|get_item:each.id %}
-                    <span class="badge badge-light">
-                      {{ counter|get_item:each.id }} task{% if counter|get_item:each.id > 1 %}s{% endif %}
-                    </span>
-                    {% if counter_unassigned|get_item:each.id %}
-                      <span class="badge badge-warning">
-                        {{ counter_unassigned|get_item:each.id }} unassigned
-                      </span>
-                    {% endif %}
-                    {% if counter_completed|get_item:each.id %}
-                      <span class="badge badge-success">
-                        {{ counter_completed|get_item:each.id }} completed
-                      </span>
-                    {% endif %}
-                  {% else %}
-                    <small><em>No tasks yet</em></small>
-                  {% endif %}
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-      {% endfor %}
-    </div>
+    {% include "contribution/_workgrid.html" %}
 
   {% else %}
 
