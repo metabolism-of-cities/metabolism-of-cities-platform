@@ -1218,7 +1218,7 @@ def controlpanel_content_form(request, id=None):
     if not has_permission(request, project.id, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
-    tag = get_object_or_404(Tag, pk=request.GET["tag"]) if "tag" in request.GET else None
+    tag = get_object_or_404(Tag, pk=request.GET["tag"]) if request.GET.get("tag") else None
 
     info = None
     tinymce = None
