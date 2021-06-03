@@ -155,6 +155,10 @@
               <em>
                 {{ each.part_of_project }}
               </em>
+              {% if each.meta_data.votes %}
+                <br>
+                <span class="badge badge-info">{{ each.meta_data.votes }} vote{% if each.meta_data.votes > 1 %}s{% endif %}</span>
+              {% endif %}
           </td>
           <td>
             {{ each.workactivity }}<br>

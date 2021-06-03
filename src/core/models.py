@@ -294,6 +294,10 @@ class Record(models.Model):
     def curators(self):
         return Record.objects.filter(parent_list__record_child=self, parent_list__relationship__id=20)
 
+    @property
+    def voters(self):
+        return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=36)
+
     def publisher(self):
         list = Organization.objects.filter(parent_list__record_child=self, parent_list__relationship__id=2)
         return list[0] if list else None
@@ -812,6 +816,14 @@ class People(Record):
             return self.spaces.all()[0]
         else:
             return None
+
+    @property
+    def my_voted_work_items(self):
+        return Work.objects.filter(child_list__record_parent=self, child_list__relationship__id=36, status__in=[1,4,5])
+
+    @property
+    def can_vote(self):
+        return True if self.my_voted_work_items.count() < 10 else False
 
     class Meta:
         verbose_name_plural = "people"
@@ -2107,6 +2119,7 @@ class Work(Record):
     def __str__(self):
         return self.name if self.name else self.workactivity.name
 
+    @property
     def get_status(self):
         css = {
             1: "font-weight-bold",
@@ -2117,6 +2130,10 @@ class Work(Record):
         }
         c = css[self.status]
         return mark_safe("<span class='" + c + "'>" + self.get_status_display() + "</span>")
+
+    @property
+    def allow_voting(self):
+        return True if self.status in [1,4,5] else False
 
     class Meta:
         verbose_name_plural = "work items"

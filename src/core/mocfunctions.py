@@ -150,7 +150,6 @@ COLOR_SCHEMES = {
     "twentyfour": ["#144d58","#a6cee3","#33a02c","#b2df8a","#e31a1c","#fb9a99","#ff7f00","#fdbf6f","#6a3d9a","#cab2d6","#b15928","#ffff99", "#8dd3c7","#bd3e6e","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"]
 }
 
-
 # This function records a copy of the information in the record table (title + description)
 # in a table that maintains a historic record.
 def save_record_history(info, people, comments, date=None):
@@ -169,3 +168,36 @@ def save_record_history(info, people, comments, date=None):
     if date:
         history.date_created = date
         history.save()
+
+# This function is used to record votes for work items
+# We want to store the number of votes cast in each work item
+def work_item_vote(info, people):
+
+    if not people.can_vote:
+        return False
+
+    RecordRelationship.objects.create(
+        record_parent = people,
+        record_child = info,
+        relationship_id = 36,
+    )
+
+    if not info.meta_data:
+        info.meta_data = {}
+
+    info.meta_data["votes"] = info.voters.count()
+    info.save()
+
+    return True
+
+# And here we roll back votes
+def work_item_unvote(info, people):
+
+    vote = RecordRelationship.objects.filter(record_parent=people, record_child=info, relationship_id=36)
+    if vote:
+        vote.delete()
+
+    info.meta_data["votes"] = info.voters.count()
+    info.save()
+
+    return True

@@ -1608,6 +1608,16 @@ def work_item(request, id, sprint=None):
             info.subscribers.remove(request.user.people)
             messages.success(request, "You will no longer receive notifications!")
 
+        if "vote" in request.POST:
+            work_item_vote(info, request.user.people)
+            messages.success(request, "You have now voted for this item")
+            return redirect(request.get_full_path())
+
+        if "unvote" in request.POST:
+            work_item_unvote(info, request.user.people)
+            messages.success(request, "Your vote was removed. You can cast your vote in other items.")
+            return redirect(request.get_full_path())
+
         if message_title and message_description:
             message = Message.objects.create(
                 name = message_title,

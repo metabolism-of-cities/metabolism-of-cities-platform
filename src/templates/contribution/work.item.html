@@ -108,6 +108,13 @@
     </div>
     <div class="col-md-6 pl-md-4">
 
+        {% if info.meta_data.votes %}
+          <div class="alert alert-warning">
+            <i class="fa fa-vote-yea"></i>
+            This item has received {{ info.meta_data.votes }} vote{% if info.meta_data.votes > 1 %}s{% endif %}.
+          </div>
+        {% endif %}
+
         {% if not request.user.is_authenticated %}
           <div class="text-center pt-4 pb-4 alert alert-dark">
             <h2 class="my-4"><i class="fad fa-user-alt-slash"></i> You are not logged in</h2>
@@ -257,7 +264,7 @@
         {% endif %}
 
         {% if request.user.people in info.subscribers.all %}
-          <form method="post">
+          <form method="post" class="text-right">
             {% csrf_token %}
             <input type="hidden" name="unsubscribe" value="true" />
             <div>
@@ -268,6 +275,36 @@
               </button>
             </div>
           </form>
+        {% endif %}
+
+        {% if request.user.is_authenticated %}
+
+          {% if info.allow_voting %}
+
+            {% if request.user.people in info.voters %}
+              <form method="post" class="mt-3 text-right">
+                {% csrf_token %}
+                <input type="hidden" name="unvote" value="true" />
+                <div>
+                  You have voted for this item.
+                  <button class="btn btn-sm btn-outline-danger ml-3" type="submit">
+                    <i class="fal fa-ban"></i>
+                    Remove vote
+                  </button>
+                </div>
+              </form>
+            {% elif not request.user.people.can_vote %}
+              <p class="mt-3 text-right"><em>You have cast all your votes already - voting not allowed.</em></p>
+            {% else %}
+              <form method="post" class="mt-3">
+                <button class="btn btn-primary-basic mt-2" type="submit"><i class="fal fa-vote-yea"></i> Like this item? Vote for it!</button>
+                {% csrf_token %}
+                <input type="hidden" name="vote" value="true" />
+              </form>
+            {% endif %}
+
+          {% endif %}
+
         {% endif %}
 
     </div>
