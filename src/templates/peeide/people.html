@@ -46,7 +46,9 @@
             </div>
             <div class="col-9">
               <h5 class="text-ndee-primary">{{ each }}</h5>
-              {{ each.get_description|truncatewords_html:40 }}
+              {% if each.affiliation %}
+                <div class="text-ndee-purple">{{ each.affiliation }}</div>
+              {% endif %}
               <div class="pt-2">
                 {% if each.website %}
                   <a target="_blank" href="{{ each.website }}" class="mr-2">
