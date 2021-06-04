@@ -3,7 +3,7 @@
 <div class="row dual-iconbox">
   {% for each in categories %}
     <div class="col-md-6 col-lg-6 mb-4">
-      <a href="?category={{ each.id }}" class="card btn-card">
+      <a href="?category={{ each.id }}{% if tag %}&amp;tag={{ tag.id }}{% endif %}" class="card btn-card">
         <div class="card-body">
           <div class="row">
             <div class="col icon">

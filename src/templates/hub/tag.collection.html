@@ -58,7 +58,7 @@
     {% endif %}
     <div class="list-group list-group-flush">
       {% for each in updates %}
-        <a class="list-group-item list-group-item-action" href="">
+        <a class="list-group-item list-group-item-action" href="{% url URLS.TASK each.id %}">
           <div class="d-flex w-100 justify-content-between">
             <span>
               <strong>
@@ -106,50 +106,7 @@
   </div>
 
   <div class="col-lg-4">
-    <div class="alert alert-secondary mt-4">
-      <h1>Community hub</h1>
-      <h2>Tools and links</h2>
-
-      <h4 class="mt-5">You are here</h4>
-      <p>
-        This is the community hub for the 
-        <strong>Metabolism of Cities Data Hub</strong>.
-      </p>
-
-      <h4 class="mt-5"><a href="">Beginners guide</a></h4>
-      <p>
-        Are you new to our community? Our <a href="http://">beginners guide</a>
-        will get you started.
-      </p>
-
-      <h4 class="mt-5"><a href="">FAQ</a></h4>
-      <p>
-        Learn more about our initiative by browsing
-        the <a href="http://">Frequently Asked Questions (FAQ)</a>.
-      </p>
-
-      <h4 class="mt-5"><a href="">Scoreboard</a></h4>
-      <p>
-        Browse our list with contributors and see how they 
-        are ranked on our 
-        <a href="http://">scoreboard</a>.
-      </p>
-
-      <h4 class="mt-5">Index</h4>
-      <ul>
-        <li><a href="http://">Tasks</a></li>
-        <li><a href="http://">Activity log</a></li>
-        <li><a href="http://">Forum</a></li>
-        <li><a href="http://">Scoreboard</a></li>
-        <li><a href="http://">My profile</a></li>
-      </ul>
-
-      {% if not request.user.is_authenticated %}
-        <a class="btn btn-primary mr-3 mb-2" href="/accounts/register/?next={{ request.get_full_path }}"><i class="fa fa-user-plus" aria-hidden="true"></i> Sign Up</a>
-        <a class="btn btn-primary mr-3 mb-2" href="/accounts/login/?next={{ request.get_full_path }}"><i class="fa fa-sign-in" aria-hidden="true"></i> Log In</a>
-      {% endif %}
-
-    </div>
+    {% include "hub/_sidebar.html" %}
   </div>
 
 </div>

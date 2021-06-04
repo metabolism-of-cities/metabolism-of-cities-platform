@@ -33,6 +33,7 @@ def site(request):
         "LIBRARY_ITEM": slug + ":" + "library_item",
         "LIBRARY": slug + ":" + "library",
         "FORUM": slug + ":" + "volunteer_forum",
+        "TASK": slug + ":" + "work_item",
     }
 
     if slug == "data" or slug == "cityloops" or slug == "stocks" or slug == "staf":

@@ -11,7 +11,23 @@
 
 {% block content %}
 
-  {% include "hub/_nav.html" %}
+  {% if not hide_nav %}
+    {% include "hub/_nav.html" %}
+  {% else %}
+    <h2>
+      {% block title %}
+        Task list
+        {% if tag %}
+          - {{ tag }}
+        {% endif %}
+      {% endblock %}
+    </h2>
+  {% endif %}
+
+  {% if show_sidebar %}
+    <div class="row">
+      <div class="col-lg-8">
+  {% endif %}
 
   {% if sprint %}
     <div>
@@ -144,7 +160,7 @@
       {% for each in task_list %}
         <tr>
           <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
-            <a href="{{ each.id }}/">
+            <a href="{% url URLS.TASK each.id %}">
               {{ each }}
               {% if each.related_to %}
                 <br>
@@ -186,6 +202,14 @@
       </section>
     {% endif %}
 
+  {% endif %}
+
+  {% if show_sidebar %}
+      </div>
+      <div class="col-lg-4">
+        {% include "hub/_sidebar.html" %}
+      </div>
+    </div>
   {% endif %}
 
 {% endblock %}
