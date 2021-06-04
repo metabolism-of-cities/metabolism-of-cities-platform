@@ -393,7 +393,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         "properties": properties,
 
         # The following we'll only have during the AScUS voting round; remove afterwards
-        #"best_vote": RecordRelationship.objects.filter(relationship_id=32, record_parent=request.user.people) if request.user.is_authenticated else None,
+        "best_vote": RecordRelationship.objects.filter(relationship_id=39, record_parent=request.user.people) if request.user.is_authenticated else None,
     }
     return render(request, "library/item.html", context)
 

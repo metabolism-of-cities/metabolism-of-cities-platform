@@ -53,6 +53,27 @@ iframe{
               <i class="fa fa-twitter fa-fw"></i>
             {{ info.twitter }}</p>
           {% endif %}
+
+          {% if activate_voting and request.user.is_authenticated %}
+
+            <form method="post" class="form form-horizontal mt-2" action="{% url "ascus2021:account_vote" %}">
+              {% csrf_token %}
+              <div class="alert alert-warning">
+                <h3>Most active participant</h3>
+                <p>
+                {% if most_active %}
+                    You already cast your vote
+                {% else %}
+                  <button type="submit" class="btn btn-success" name="most_active" value="{{ info.id }}"><i class="fa fa-vote-yea"></i> Vote for this participant.</button>
+                  <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                {% endif %}
+                </p>
+              </div>
+            </form>
+
+          {% endif %}
+
+
         </div>
       </div>
 

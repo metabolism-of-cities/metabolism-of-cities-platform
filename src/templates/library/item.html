@@ -281,6 +281,21 @@
           </div>
         {% endfor %}
 
+        <form method="post" class="form form-horizontal mt-2" action="{% url "ascus2021:account_vote" %}">
+          {% csrf_token %}
+          <div class="alert alert-warning">
+            <h3>Best contribution</h3>
+            <p>
+            {% if best_vote %}
+                You already cast your vote
+            {% else %}
+              <button type="submit" class="btn btn-success" name="best_contribution" value="{{ info.id }}"><i class="fa fa-vote-yea"></i> Vote for this contribution.</button>
+              <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+            {% endif %}
+            </p>
+          </div>
+        </form>
+
         {% if curator or request.user.people == info.uploader or request.user.people == info.author %}
           <a href="?edit&amp;return={{ request.get_full_path }}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
         {% endif %}

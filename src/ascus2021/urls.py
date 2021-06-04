@@ -68,6 +68,9 @@ urlpatterns = baseline_urlpatterns + [
     path("forum/<int:id>/", community.forum, name="forum"),
     path("forum/<int:id>/edit/<int:edit>/", community.forum_edit, name="forum_edit"),
 
+    # Votes
+    path("controlpanel/votes/", views.controlpanel_vote),
+
     # Password reset forms
     path(
         "accounts/passwordreset/",

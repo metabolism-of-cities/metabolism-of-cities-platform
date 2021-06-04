@@ -1,0 +1,76 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1 class="mb-0">Voting results</h1>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+  <h2>Best session</h2>
+  <table class="table table-striped datatable table-card">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Votes</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for key,value in best_list.items %}
+      <tr>
+        <td>{{ key }}</td>
+        <td data-sort="{{ value }}">{{ value }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <h2 class="mt-4">Most active participant</h2>
+  <table class="table table-striped datatable table-card">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Votes</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for key,value in most_active_list.items %}
+      <tr>
+        <td>{{ key }}</td>
+        <td>{{ value }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <h2 class="mt-4">Best contribution</h2>
+  <table class="table table-striped datatable table-card">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Votes</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for key,value in best_contribution.items %}
+      <tr>
+        <td>{{ key }}</td>
+        <td>{{ value }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <a href="../" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    Back to control panel
+  </a>
+
+{% endblock %}
+
+{% block footer %}
+<script>
+  datatable.column("1:visible").order("desc").draw();
+</script>
+{% endblock %}

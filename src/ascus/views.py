@@ -107,7 +107,8 @@ def overview(request, preconf=False):
         "discussions": discussions,
         "my_topic_registrations": my_topic_registrations,
         "preconf": preconf,
-        "best_vote": RecordRelationship.objects.filter(relationship_id=22, record_parent=request.user.people) if request.user.is_authenticated else None,
+        "best_vote": RecordRelationship.objects.filter(relationship_id=37, record_parent=request.user.people) if request.user.is_authenticated else None,
+        "activate_voting": True,
     }
     return render(request, "ascus/program.html", context)
 
@@ -178,6 +179,8 @@ def participant(request, id):
         "presentations": presentations,
         "discussions": discussions,
         "attendance": attendance,
+        "most_active": RecordRelationship.objects.filter(relationship_id=38, record_parent=request.user.people) if request.user.is_authenticated else None,
+        "activate_voting": True,
     }
     return render(request, "ascus/participant.html", context)
 
@@ -293,26 +296,40 @@ def ascus_account(request):
 
 @check_ascus_access
 def account_vote(request):
-    creative_vote = RecordRelationship.objects.filter(relationship_id=23, record_parent=request.user.people)
-    if "most_creative" in request.POST:
-        if not creative_vote:
+
+    check_vote = RecordRelationship.objects.filter(relationship_id=37, record_parent=request.user.people)
+    if "best_session" in request.POST:
+        if not check_vote:
             RecordRelationship.objects.create(
                 record_parent = request.user.people,
-                record_child_id = request.POST["most_creative"],
-                relationship_id = 23,
+                record_child_id = request.POST["best_session"],
+                relationship_id = 37,
             )
             messages.success(request, "Thanks for your vote!")
         else:
             messages.error(request, "You have already cast a vote.")
-        return redirect("ascus:overview")
+        return redirect(request.POST["next"])
 
-    check_vote = RecordRelationship.objects.filter(relationship_id=32, record_parent=request.user.people)
-    if "best_pta" in request.POST:
-        if not check_vote or check_vote.count() < 3:
+    check_vote = RecordRelationship.objects.filter(relationship_id=38, record_parent=request.user.people)
+    if "most_active" in request.POST:
+        if not check_vote:
             RecordRelationship.objects.create(
                 record_parent = request.user.people,
-                record_child_id = request.POST["best_pta"],
-                relationship_id = 32,
+                record_child_id = request.POST["most_active"],
+                relationship_id = 38,
+            )
+            messages.success(request, "Thanks for your vote!")
+        else:
+            messages.error(request, "You have already cast a vote.")
+        return redirect(request.POST["next"])
+
+    check_vote = RecordRelationship.objects.filter(relationship_id=39, record_parent=request.user.people)
+    if "best_contribution" in request.POST:
+        if not check_vote:
+            RecordRelationship.objects.create(
+                record_parent = request.user.people,
+                record_child_id = request.POST["best_contribution"],
+                relationship_id = 39,
             )
             messages.success(request, "Thanks for your vote!")
         else:
@@ -983,3 +1000,45 @@ def ascus_admin_work_item(request, id):
         "load_select2": True,
     }
     return render(request, "ascus/admin.work.item.html", context)
+
+@check_ascus_admin_access
+def controlpanel_vote(request):
+
+    # This is all very spaggheti but it works, and will only be opened a few times
+    # In the future we could do a proper COUNT but I am rushing here
+    best = RecordRelationship.objects.filter(relationship__id=37)
+    best_list = {}
+    for each in best:
+        item = each.record_child
+        if item not in best_list:
+            best_list[item] = 1
+        else:
+            best_list[item] += 1
+
+    most_active = RecordRelationship.objects.filter(relationship__id=38)
+    most_active_list = {}
+    for each in most_active:
+        item = each.record_child
+        if item not in most_active_list:
+            most_active_list[item] = 1
+        else:
+            most_active_list[item] += 1
+
+    best = RecordRelationship.objects.filter(relationship__id=39)
+    best_contribution = {}
+    for each in best:
+        item = each.record_child
+        if item not in best_contribution:
+            best_contribution[item] = 1
+        else:
+            best_contribution[item] += 1
+
+
+    context = {
+        "best_list": best_list,
+        "best_contribution": best_contribution,
+        "most_active_list": most_active_list,
+        "load_datatables": True,
+        "title": "Voting results",
+    }
+    return render(request, "controlpanel/votes.html", context)
