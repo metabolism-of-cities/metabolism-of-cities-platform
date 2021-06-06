@@ -1,0 +1,17 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-lg-8">
+    <h1>{% block title %}{{ webpage }}{% endblock %}</h1>
+    {{ webpage.get_description }}
+  </div>
+
+  <div class="col-lg-4">
+    {% include "hub/_sidebar.html" %}
+  </div>
+
+</div>
+
+{% endblock %}

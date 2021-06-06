@@ -87,6 +87,11 @@ baseline_urlpatterns = [
     # Portals
     path("hub/portals/<slug:slug>/", core.work_portal, name="work_portal"),
 
+    # Guides etc
+    path("hub/beginners-guide/", core.work_page, {"slug": "/hub/beginners-guide/"}, name="work_beginners_guide"),
+    path("hub/scoreboard/", core.work_page, {"slug": "/hub/scoreboard/"}, name="work_scoreboard"),
+    path("hub/faq/", core.work_page, {"slug": "/hub/faq/"}, name="work_faq"),
+
     # Users
     path("hub/users/", core.users, name="users"),
     path("hub/users/<int:id>/", core.user_profile, name="user"),

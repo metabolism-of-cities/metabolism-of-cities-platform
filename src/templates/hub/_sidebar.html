@@ -9,24 +9,30 @@
     <strong>Metabolism of Cities Data Hub</strong>.
   </p>
 
-  <h4 class="mt-5"><a href="">Beginners guide</a></h4>
-  <p>
-    Are you new to our community? Our <a href="http://">beginners guide</a>
-    will get you started.
-  </p>
+  {% with link=PROJECT.slug|add:":work_beginners_guide" %}
+    <h4 class="mt-5"><a href="{% url link %}">Beginners guide</a></h4>
+    <p>
+      Are you new to our community? Our <a href="{% url link %}">beginners guide</a>
+      will get you started.
+    </p>
+  {% endwith %}
 
-  <h4 class="mt-5"><a href="">FAQ</a></h4>
-  <p>
-    Learn more about our initiative by browsing
-    the <a href="http://">Frequently Asked Questions (FAQ)</a>.
-  </p>
+  {% with link=PROJECT.slug|add:":work_faq" %}
+    <h4 class="mt-5"><a href="{% url link %}">FAQ</a></h4>
+    <p>
+      Learn more about our initiative by browsing
+      the <a href="http://">Frequently Asked Questions (FAQ)</a>.
+    </p>
+  {% endwith %}
 
-  <h4 class="mt-5"><a href="">Scoreboard</a></h4>
-  <p>
-    Browse our list with contributors and see how they 
-    are ranked on our 
-    <a href="http://">scoreboard</a>.
-  </p>
+  {% with link=PROJECT.slug|add:":work_scoreboard" %}
+    <h4 class="mt-5"><a href="{% url link %}">Scoreboard</a></h4>
+    <p>
+      Browse our list with contributors and see how they 
+      are ranked on our 
+      <a href="{% url link %}">scoreboard</a>.
+    </p>
+  {% endwith %}
 
   <h4 class="mt-5">Index</h4>
   <ul>

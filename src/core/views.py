@@ -1389,6 +1389,7 @@ def work_collection(request, slug):
             "tag": tag,
             "categories": WorkCategory.objects.filter(show_in_tasklist=True),
             "category": category,
+            "webpage": category.webpage,
         }
         return render(request, "contribution/work.grid.html", context)
 
@@ -1427,7 +1428,6 @@ def work_collection(request, slug):
         }
 
     return render(request, "hub/tag.collection.html", context)
-
 
 def work_grid(request, sprint=None):
 
@@ -1651,6 +1651,15 @@ def work_item(request, id, sprint=None):
         context["show_subscribe"] = True
 
     return render(request, "contribution/work.item.html", context)
+
+def work_page(request, slug):
+    project = request.project
+    p(slug)
+    webpage = Webpage.objects.get(slug=slug)
+    context = {
+        "webpage": webpage,
+    }
+    return render(request, "contribution/page.html", context)
 
 def work_sprints(request):
     project = request.project
