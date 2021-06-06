@@ -1,7 +1,7 @@
-<li class="nav-item"><a class="nav-link" href="{% url "data:dashboards" %}">Cities</a></li>
+<li class="nav-item"><a class="nav-link {% if '/dashboards/' in request.get_full_path %}active{% endif %}" href="{% url "data:dashboards" %}">Cities</a></li>
 
 <li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="view-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <a class="nav-link dropdown-toggle {% if '/layers/' in request.get_full_path %}active{% endif %}" href="#" id="view-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
    Data layers
   </a>
   <div class="dropdown-menu" aria-labelledby="view-dropdown">
@@ -15,7 +15,7 @@
 </li>
 
 <li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="view-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <a class="nav-link dropdown-toggle {% if '/library/' in request.get_full_path %}active{% endif %}" href="#" id="view-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
    Library
   </a>
   <div class="dropdown-menu" aria-labelledby="view-dropdown">
@@ -32,16 +32,39 @@
   </div>
 </li>
 
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="upload-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<li class="nav-item dropdown projects-dropdown">
+  <a class="nav-link dropdown-toggle {% if '/hub/' in request.get_full_path or '/tasks/' in request.get_full_path or menu == "community" %}active{% endif %}" href="#" id="projects-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Community
   </a>
-  <div class="dropdown-menu" aria-labelledby="upload-dropdown">
-    <a class="dropdown-item" href="{% url "data:hub" %}">Community hub</a>
-    <a class="dropdown-item" href="{% url "data:hub_harvesting" %}">Data collection</a>
-    <a class="dropdown-item" href="{% url "data:hub_processing" %}">Data processing</a>
-    <a class="dropdown-item" href="{% url "data:hub_analysis" %}">Data analysis</a>
-    <a class="dropdown-item" href="{% url "data:volunteer_forum" %}">Forum</a>
+  <div class="dropdown-menu projects-dropdown-menu p-0" aria-labelledby="projects-dropdown">
+    <div class="row mx-0">
+      <div class="col-md-6 col-lg-4 mb-4 mb-lg-0 p-2 rounded-left bg-light border-right">
+        <div class="projects-category px-2 pb-1"><i class="mr-2 fal fa-fw fa-info-circle"></i>Getting involved
+          <hr>
+          <p class="text-dark">
+            This is an <strong>open source</strong> project and we invite you to join 
+            our initiative! 
+          </p>
+        </div>
+        
+      </div>
+      <div class="col-md-6 col-lg-4 mb-4 mb-lg-0 p-2">
+        <div class="projects-category px-2 pb-1"><i class="mr-2 fal fa-fw fa-upload"></i>Data contribution</div>
+        <a class="dropdown-item" href="{% url "data:hub_data" %}">Home</a>
+        <a class="dropdown-item" href="{% url "data:hub_harvesting" %}">Data collection</a>
+        <a class="dropdown-item" href="{% url "data:hub_processing" %}">Data processing</a>
+        <a class="dropdown-item" href="{% url "data:hub_analysis" %}">Data analysis</a>
+      </div>
+      <div class="col-md-6 col-lg-4 mb-4 mb-lg-0 p-2">
+        <div class="projects-category px-2 pb-1"><i class="mr-2 fal fa-fw fa-construction"></i>Community portal</div>
+        <a class="dropdown-item" href="{% url "data:hub" %}">Home</a>
+        <a class="dropdown-item" href="{% url "data:plan2021" %}">Priority plan 2021</a>
+        <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/hub/work/">Tasks</a>
+        <a class="dropdown-item" href="{% url "data:volunteer_forum" %}">Forum</a>
+        <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/hub/latest/?project_only=true">Latest activity</a>
+
+      </div>
+    </div>
   </div>
 </li>
 

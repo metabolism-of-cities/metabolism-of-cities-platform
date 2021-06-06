@@ -48,60 +48,10 @@
 
     <h2 class="mt-4">Tasks</h2>
     {% if tag %}
-      <p><em>Related to: <strong>{{ tag }}</strong></em>. <a href="./">View all</a></p>
+      <p><em>Related to: <strong>{{ tag }}</strong></em>. </p>
     {% endif %}
+
     {% include "contribution/_workgrid.html" %}
-
-    <h2 class="mt-4">Latest task updates</h2>
-    {% if tag %}
-      <p><em>Related to: <strong>{{ tag }}</strong></em>. <a href="./">View all</a></p>
-    {% endif %}
-    <div class="list-group list-group-flush">
-      {% for each in updates %}
-        <a class="list-group-item list-group-item-action" href="{% url URLS.TASK each.id %}">
-          <div class="d-flex w-100 justify-content-between">
-            <span>
-              <strong>
-                {{ each }}
-              </strong>
-              ·
-              <span class="text-muted">
-                {{ each.last_update.posted_by }}
-              </span>
-            </span>
-            <small>{{ each.last_update.date_created|timesince }} ago</small>
-          </div>
-        </a>
-      {% endfor %}
-    </div>
-
-    <p class="mt-3 text-right"><a class="btn btn-primary btn-sm" href="http://">View all updates</a></p>
-
-    <h2 class="mt-4">Latest forum posts</h2>
-    {% if tag %}
-      <p><em>Related to: <strong>{{ tag }}</strong></em>. <a href="./">View all</a></p>
-    {% endif %}
-
-    <div class="list-group list-group-flush">
-      {% for each in updates %}
-        <a class="list-group-item list-group-item-action" href="">
-          <div class="d-flex w-100 justify-content-between">
-            <span>
-              <strong>
-                {{ each }}
-              </strong>
-              ·
-              <span class="text-muted">
-                {{ each.last_update.posted_by }}
-              </span>
-            </span>
-            <small>{{ each.last_update.date_created|timesince }} ago</small>
-          </div>
-        </a>
-      {% endfor %}
-    </div>
-
-    <p class="mt-3 text-right"><a class="btn btn-primary btn-sm" href="http://">Go to forum</a></p>
 
   </div>
 

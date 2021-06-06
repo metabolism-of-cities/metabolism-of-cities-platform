@@ -1,13 +1,15 @@
 
 <div class="alert alert-secondary mt-4">
-  <h1>Community hub</h1>
-  <h2>Tools and links</h2>
 
-  <h4 class="mt-5">You are here</h4>
-  <p>
-    This is the community hub for the 
-    <strong>Metabolism of Cities Data Hub</strong>.
-  </p>
+  {% if IS_DATA_PORTAL %}
+    {% with link=PROJECT.slug|add:":plan2021" %}
+      <h4 class="mt-2"><a href="{% url link %}">Priority plan</a></h4>
+      <p>
+        We focus most of our attention on the <a href="{% url link %}">2021 priority plan</a>. Learn
+        more and get involved!
+      </p>
+    {% endwith %}
+  {% endif %}
 
   {% with link=PROJECT.slug|add:":work_beginners_guide" %}
     <h4 class="mt-5"><a href="{% url link %}">Beginners guide</a></h4>
@@ -21,7 +23,7 @@
     <h4 class="mt-5"><a href="{% url link %}">FAQ</a></h4>
     <p>
       Learn more about our initiative by browsing
-      the <a href="http://">Frequently Asked Questions (FAQ)</a>.
+      the <a href="{% url link %}">Frequently Asked Questions (FAQ)</a>.
     </p>
   {% endwith %}
 
@@ -34,18 +36,11 @@
     </p>
   {% endwith %}
 
-  <h4 class="mt-5">Index</h4>
-  <ul>
-    <li><a href="http://">Tasks</a></li>
-    <li><a href="http://">Activity log</a></li>
-    <li><a href="http://">Forum</a></li>
-    <li><a href="http://">Scoreboard</a></li>
-    <li><a href="http://">My profile</a></li>
-  </ul>
-
   {% if not request.user.is_authenticated %}
-    <a class="btn btn-primary mr-3 mb-2" href="/accounts/register/?next={{ request.get_full_path }}"><i class="fa fa-user-plus" aria-hidden="true"></i> Sign Up</a>
-    <a class="btn btn-primary mr-3 mb-2" href="/accounts/login/?next={{ request.get_full_path }}"><i class="fa fa-sign-in" aria-hidden="true"></i> Log In</a>
+    <div class="mt-5">
+      <a class="btn btn-primary mr-3 mb-2" href="/accounts/register/?next={{ request.get_full_path }}"><i class="fa fa-user-plus" aria-hidden="true"></i> Sign Up</a>
+      <a class="btn btn-primary mr-3 mb-2" href="/accounts/login/?next={{ request.get_full_path }}"><i class="fa fa-sign-in" aria-hidden="true"></i> Log In</a>
+    </div>
   {% endif %}
 
 </div>

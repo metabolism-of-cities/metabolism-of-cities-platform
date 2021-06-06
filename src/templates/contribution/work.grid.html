@@ -11,22 +11,15 @@
 
 {% block content %}
 
-  {% if not hide_nav %}
-    {% include "hub/_nav.html" %}
-  {% else %}
-    <h2>
-      {% block title %}
-        Task list
-        {% if tag %}
-          - {{ tag }}
-        {% endif %}
-      {% endblock %}
-    </h2>
-  {% endif %}
+  {% include "hub/_nav.html" %}
 
-  {% if show_sidebar %}
-    <div class="row">
-      <div class="col-lg-8">
+  {% if tag %}
+    <div class="mb-3">
+    <a href="./" class="btn badge-warning badge">
+      <i class="fal fa-angle-left"></i>
+      {{ tag }}
+    </a>
+    </div>
   {% endif %}
 
   {% if sprint %}
@@ -39,12 +32,6 @@
   {% else %}
     {% if not request.user.is_authenticated %}
       <div class="alert alert-primary alert-dismissible mb-4">
-        <p>
-          At Metabolism of Cities, we work <strong>together</strong>. We invite you to join
-          us in this project. We try to be open to anyone. Data miners, academics, students,
-          concerned citizens, retirees, designers, programmers, and others. Have a look at
-          what we are doing, and if you are keen to help then sign up today!
-        </p>
         <a href="/accounts/register/" class="btn btn-primary">
           <i class="fas fa-user-plus"></i>
           Sign up now
@@ -57,89 +44,12 @@
     {% endif %}
   {% endif %}
 
-  {% if webpage %}
+
+  {% if webpage and not "filter" in request.GET %}
     <h2>{{ webpage }}</h2>
     {{ webpage.get_description }}
     <hr>
-    <h2 class="mb-4">Task list</h2>
   {% endif %}
-
-  {% if request.user.is_authenticated %}
-    <a href="create/?return={{ request.get_full_path }}" class="btn btn-primary mb-3">
-      <i class="fas fa-plus"></i>
-      Add task
-    </a>
-  {% endif %}
-
-  <div class="btn btn-primary-basic toggle-filters mb-3">
-    <i class="fal fa-angle-down"></i>
-    Filters
-  </div>
-
-  <form class="mb-4" id="filters">
-    <div class="form-row">
-      <div class="col-lg mb-2">
-        <select name="category" class="custom-select">
-          <option value="">Any category</option>
-          {% for each in categories %}
-            <option value="{{ each.id }}" {% if each == category %}selected{% endif %}>
-              {{ each }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="col-lg mb-2">
-        <select name="status" class="custom-select">
-          <option value="">Any status</option>
-          <option value="open_unassigned" {% if request.GET.status == "open_unassigned" %}selected{% endif %}>Open and Unassigned</option>
-          {% for label,name in statuses %}
-            <option value="{{ label }}" {% if label == status %}selected{% endif %}>
-              {{ name }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="col-lg mb-2">
-        <select name="priority" class="custom-select">
-          <option value="">Any priority level</option>
-          {% for label,name in priorities %}
-            <option value="{{ label }}" {% if priority == label %}selected{% endif %}>{{ name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <button class="btn btn-primary btn-filter ml-2 d-none d-lg-block" form="filters" type="submit">
-        <i class="fas fa-filter"></i>
-        Filter list
-      </button>
-    </div>
-
-    <div class="row align-items-center mb-4">
-      <div class="col-4">
-        <select name="project" class="custom-select">
-          <option value="">All projects</option>
-          {% for each in projects %}
-            <option value="{{ each.id }}" {% if each.id == selected_project %}selected{% endif %}>{{ each }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="col-3">
-        <div class="custom-control custom-switch">
-          <input type="checkbox" class="custom-control-input" id="entry" name="entry" value="true" {% if request.GET.entry %}checked{% endif %}>
-          <label class="custom-control-label" for="entry">Only entry tasks</label>
-        </div>
-      </div>
-      <div class="col-5 text-right d-lg-none">
-        <button class="btn btn-primary btn-filter ml-2" form="filters" type="submit">
-          <i class="fas fa-filter"></i>
-          Filter list
-        </button>
-        <input type="hidden" name="tag" value="{{ request.GET.tag }}" />
-      </div>
-    </div>
-  </form>
 
   {% if counter %}
 
@@ -147,26 +57,135 @@
 
   {% else %}
 
-    <table class="table datatable datatable-card">
-      <thead>
-        <tr>
-          <th>Task</th>
-          <th>Details</th>
-          <th>Points</th>
-          <th>Last update</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for each in task_list %}
-        <tr>
-          <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
-            <a href="{% url URLS.TASK each.id %}">
-              {{ each }}
-              {% if each.related_to %}
-                <br>
-                <em>{{ each.related_to }}</em>
-              {% endif %}
-            </a>
+    {% if request.user.is_authenticated and not "filter" in request.GET %}
+      <p class="alert alert-secondary">
+        <a href="create/?return={{ request.get_full_path }}" class="btn btn-primary">
+          <i class="fas fa-plus"></i>
+          Add bug report
+        </a>
+        <a href="create/?return={{ request.get_full_path }}" class="btn btn-primary">
+          <i class="fas fa-plus"></i>
+          Add feature request
+        </a>
+        <a href="create/?return={{ request.get_full_path }}" class="btn btn-primary">
+          <i class="fas fa-plus"></i>
+          Add task
+        </a>
+      </p>
+    {% endif %}
+
+    <h2 class="mb-4">Task list</h2>
+
+    {% if not "filter" in request.GET %}
+      <div class="">Filters
+        <a href="./?category={{ category.id }}&amp;status=open_unassigned&filter=true&amp;tag={{ request.GET.tag }}" class="btn btn-primary-outline">
+          Unassigned, open tasks
+        </a>
+        <a href="./?category={{ category.id }}&amp;status=open_unassigned&filter=true&amp;entry=true&amp;tag={{ request.GET.tag }}" class="btn btn-primary-outline">
+          Available to beginners
+        </a>
+        <a href="" class="btn btn-primary-outline" hidden>
+          My tasks
+        </a>
+        <div class="btn btn-primary-basic toggle-filters">
+          <i class="fal fa-angle-down"></i>
+          More filters
+        </div>
+      </div>
+    {% else %}
+      <div class="btn btn-primary-basic toggle-filters" hidden>
+        <i class="fal fa-angle-down"></i>
+        Filters
+      </div>
+    {% endif %}
+
+    <form class="mb-4 mt-2" id="filters">
+      <div class="form-row">
+        <div class="col-lg mb-2">
+          <select name="category" class="custom-select">
+            <option value="">Any category</option>
+            {% for each in categories %}
+              <option value="{{ each.id }}" {% if each == category %}selected{% endif %}>
+                {{ each }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-lg mb-2">
+          <select name="status" class="custom-select">
+            <option value="">Any status</option>
+            <option value="open_unassigned" {% if request.GET.status == "open_unassigned" %}selected{% endif %}>Open and Unassigned</option>
+            {% for label,name in statuses %}
+              <option value="{{ label }}" {% if label == status %}selected{% endif %}>
+                {{ name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-lg mb-2">
+          <select name="priority" class="custom-select">
+            <option value="">Any priority level</option>
+            {% for label,name in priorities %}
+              <option value="{{ label }}" {% if priority == label %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <button class="btn btn-primary btn-filter ml-2 d-none d-lg-block" form="filters" type="submit">
+          <i class="fas fa-filter"></i>
+          Filter list
+        </button>
+      </div>
+
+      <div class="row align-items-center mb-4">
+        <div class="col-4">
+          <select name="project" class="custom-select">
+            <option value="">All projects</option>
+            {% for each in projects %}
+              <option value="{{ each.id }}" {% if each.id == selected_project %}selected{% endif %}>{{ each }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-3">
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="entry" name="entry" value="true" {% if request.GET.entry %}checked{% endif %}>
+            <label class="custom-control-label" for="entry">'Good for beginners' only</label>
+          </div>
+        </div>
+        <div class="col-5 text-right d-lg-none">
+          <input type="hidden" name="filter" value="true" />
+          <button class="btn btn-primary btn-filter ml-2" form="filters" type="submit">
+            <i class="fas fa-filter"></i>
+            Filter list
+          </button>
+          <input type="hidden" name="tag" value="{{ request.GET.tag }}" />
+        </div>
+      </div>
+    </form>
+
+    <div class="mt-3">
+      <table class="table datatable datatable-card">
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Details</th>
+            <th>Points</th>
+            <th>Last update</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for each in task_list %}
+          <tr>
+            <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
+              <a href="{% url URLS.TASK each.id %}">
+                {{ each }}
+                {% if each.related_to %}
+                  <br>
+                  <em>{{ each.related_to }}</em>
+                {% endif %}
+              </a>
               <br>
               <em>
                 {{ each.part_of_project }}
@@ -175,25 +194,26 @@
                 <br>
                 <span class="badge badge-info">{{ each.meta_data.votes }} vote{% if each.meta_data.votes > 1 %}s{% endif %}</span>
               {% endif %}
-          </td>
-          <td>
-            {{ each.workactivity }}<br>
-            <em>{{ each.get_status }} | {{ each.get_priority_display }} priority</em>
-          </td>
-          
-          <td>
-            {{ each.workactivity.points }}
-          </td>
-          <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
-            {% if each.last_update %}
-              {{ each.last_update.date_created|timesince }} ago 
-              <br><span class="faded">by {{ each.last_update.posted_by }}</span>
-            {% endif %}
-          </td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
+            </td>
+            <td>
+              {{ each.workactivity }}<br>
+              <em>{{ each.get_status }} | {{ each.get_priority_display }} priority</em>
+            </td>
+            
+            <td>
+              {{ each.workactivity.points }}
+            </td>
+            <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
+              {% if each.last_update %}
+                {{ each.last_update.date_created|timesince }} ago 
+                <br><span class="faded">by {{ each.last_update.posted_by }}</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
 
     {% if load_messaging %}
       <h2 class="mt-4">Messages</h2>
@@ -202,14 +222,6 @@
       </section>
     {% endif %}
 
-  {% endif %}
-
-  {% if show_sidebar %}
-      </div>
-      <div class="col-lg-4">
-        {% include "hub/_sidebar.html" %}
-      </div>
-    </div>
   {% endif %}
 
 {% endblock %}

@@ -72,6 +72,7 @@ baseline_staf_urlpatterns = [
     path("dashboards/<slug:space>/infrastructure/<slug:slug>/", staf.referencespace, name="referencespace"),
 
     # Hub
+    path("hub/data/", core.work_portal, {"slug": "data"}, name="hub_data"),
     path("hub/harvesting/", staf.hub_harvesting, name="hub_harvesting"),
     path("hub/harvesting/instructions/", staf.hub_harvesting_worksheet, name="hub_harvesting_worksheet"),
     path("hub/processing/", staf.hub_processing, name="hub_processing"),

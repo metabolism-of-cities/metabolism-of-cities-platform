@@ -31,6 +31,6 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("overview/", views.overview, name="overview"),
     path("dashboards/", views.progress, { "style": "grid"}, name="dashboards"),
     path("progress/", views.progress, name="progress"),
-    path("plan2021/", views.plan2021, name="plan2021"),
+    path("plan2021/", core.work_collection, {"slug": "plan2021"}, name="plan2021"),
 
 ]

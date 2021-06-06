@@ -692,37 +692,82 @@ def rules(request):
     }
     return render(request, "contribution/rules.html", context)
 
-# Volunteer hub
+# Community portal
 
 def hub(request):
     project = request.project
-    if project == 4:
-        return work_portal(request, slug="data")
     if project == 17:
         return work_portal(request, slug="data")
     if project == 6:
         return work_portal(request, slug="data")
 
-    updates = Message.objects.filter(
-        parent__work__isnull=False,
-    ).order_by("-date_created")
+    # NEW BLOCK
 
-    forum = Message.objects.filter(
-        parent__forumtopic__isnull=False,
-        parent__forumtopic__parent_id=31993,
-    ).order_by("-date_created")
+    if "category" in request.GET:
+        project = get_project(request)
+        return redirect(reverse(project.slug + ":work_grid") + "?category=" + str(request.GET["category"]))
 
-    master_list = False
-    if not master_list:
-        updates = updates.filter(parent__work__part_of_project_id=project)
-        forum = forum.filter(parent__forumtopic__part_of_project_id=project)
+    main_tag = get_object_or_404(Tag, slug="plan2021")
+    tags = Tag.objects.filter(parent_tag=main_tag)
+    tag = None
+    list = Work.objects.filter(workactivity__category__show_in_tasklist=True, part_of_project_id=request.project)
+
+    if "tag" in request.GET:
+        tag = get_object_or_404(Tag, pk=request.GET.get("tag"))
+        list = list.filter(tags=tag)
+
+    counter = {}
+    counter_completed = {}
+    counter_unassigned = {}
+
+    updates = list.order_by("-last_update")
+    if updates:
+        updates = updates[:5]
+
+    total_list = list.values("workactivity__category__id").annotate(total=Count("workactivity__category__id")).order_by("total")
+    completed_list = list.filter(status=2).values("workactivity__category__id").annotate(total=Count("workactivity__category__id")).order_by("total")
+    unassigned_list = list.filter(status=1, assigned_to__isnull=True).values("workactivity__category__id").annotate(total=Count("workactivity__category__id")).order_by("total")
+    for each in total_list:
+        counter[each["workactivity__category__id"]] = each["total"]
+    for each in completed_list:
+        counter_completed[each["workactivity__category__id"]] = each["total"]
+    for each in unassigned_list:
+        counter_unassigned[each["workactivity__category__id"]] = each["total"]
+
+    forum = ForumTopic.objects.filter(
+        part_of_project_id=project,
+    ).order_by("-last_update__date")
+
+    context = {
+        "updates": updates,
+        "load_datatables": True,
+
+        "main_tag": main_tag,
+        "tags": tags,
+        "tag": tag if tag else main_tag,
+
+        "categories": WorkCategory.objects.filter(show_in_tasklist=True),
+        "counter": counter,
+        "counter_completed": counter_completed,
+        "counter_unassigned": counter_unassigned,
+        "menu": "community",
+    }
 
     context = {
         "updates": updates[:7] if updates else None,
         "menu": "home",
-        "forum": forum[:7] if forum else None,
     }
-    return render(request, "hub/index.html", context)
+
+    context = {
+        "categories": WorkCategory.objects.filter(show_in_tasklist=True),
+        "counter": counter,
+        "counter_completed": counter_completed,
+        "counter_unassigned": counter_unassigned,
+        "menu": "home",
+        "updates": updates,
+        "forum": forum[:5] if forum else None,
+    }
+    return render(request, "contribution/index.html", context)
 
 def hub_latest(request, network_wide=False):
     project = request.project
@@ -1383,13 +1428,12 @@ def work_collection(request, slug):
         list = list.filter(workactivity__category=category)
         context = {
             "task_list": list,
-            "hide_nav": True,
-            "show_sidebar": True,
             "load_datatables": True,
             "tag": tag,
             "categories": WorkCategory.objects.filter(show_in_tasklist=True),
             "category": category,
             "webpage": category.webpage,
+            "menu": "work",
         }
         return render(request, "contribution/work.grid.html", context)
 
@@ -1413,6 +1457,12 @@ def work_collection(request, slug):
         for each in unassigned_list:
             counter_unassigned[each["workactivity__category__id"]] = each["total"]
 
+        forum_url = project.get_website() + main_tag.slug
+        forum_topic = ForumTopic.objects.filter(part_of_project_id=request.project, parent_url=forum_url)
+        list_messages = None
+        if forum_topic:
+            list_messages = Message.objects.filter(parent=forum_topic[0])
+
         context = {
             "updates": updates,
             "load_datatables": True,
@@ -1425,6 +1475,13 @@ def work_collection(request, slug):
             "counter": counter,
             "counter_completed": counter_completed,
             "counter_unassigned": counter_unassigned,
+            "menu": "community",
+            
+            "load_messaging": True,
+            "forum_id": forum_topic[0].id if forum_topic else "create",
+            "forum_url": forum_url,
+            "forum_topic_title": main_tag.name,
+            "list_messages": list_messages,
         }
 
     return render(request, "hub/tag.collection.html", context)
@@ -1763,6 +1820,7 @@ def work_portal(request, slug, space=None):
         "menu": "home",
         "space": space,
         "hide_space_menu": True,
+        "data_contribution_hub": True,
     }
 
     if slug == "data":

@@ -1,15 +1,19 @@
 {% if PROJECT.id != 1 and PROJECT.slug != "untraceable" %}
 
-  <h1 class="mb-0">Community Portal</h1>
+  {% if menu == "processing" or menu == "analysis" or menu == "harvesting" or data_contribution_hub %}
+    <h1 class="mb-0">Data contribution hub</h1>
+  {% else %}
+    <h1 class="mb-0">Community Portal</h1>
+  {% endif %}
 
   {% if space %}
     <a href="{% url URLS.DASHBOARD space.slug %}" class="btn btn-sm btn-primary-light">{{ space }}</a>
   {% endif %}
 
   <ul class="nav nav-tabs mb-4 mt-3">
-    {% if PROJECT.is_data_project %}
+    {% if menu == "processing" or menu == "analysis" or menu == "harvesting" or data_contribution_hub %}
       <li class="nav-item">
-        <a class="nav-link {% if menu == 'home' %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}{% if space %}/dashboards/{{ space.slug }}{% endif %}/hub/">
+        <a class="nav-link {% if menu == 'home' %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}{% if space %}/dashboards/{{ space.slug }}/hub/{% else %}/hub/data/{% endif %}">
           <i class="fal fa-home fa-fw"></i>
         </a>
       </li>
@@ -29,24 +33,9 @@
         </a>
       </li>
 
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle {% if menu == 'forum' or menu == 'profile' or menu == 'latest' or menu == 'work' %}active{% endif %}" href="#" id="community-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fal fa-users mr-2"></i>
-          Community
-        </a>
-        <div class="dropdown-menu" aria-labelledby="community-dropdown">
-          <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/hub/forum/">Forum</a>
-          <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/hub/work/">Tasks</a>
-          <!-- <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/hub/people/">People</a> -->
-          <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/hub/scoreboard/">Scoreboard</a>
-          <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/hub/latest/?project_only=true">Activity log</a>
-          <a class="dropdown-item" href="{% if DEBUG %}/{{ PROJECT.slug }}{% endif %}/hub/profile/">My Profile</a>
-        </div>
-      </li>
-
     {% else %}
       <li class="nav-item">
-        <a class="nav-link {% if menu == 'home' %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/">Home</a>
+        <a class="nav-link {% if menu == 'home' %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/"><i class="fa fa-home"></i></a>
       </li>
       <li class="nav-item">
         <a class="nav-link {% if menu == 'work' %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/work/">Tasks</a>
@@ -55,7 +44,7 @@
         <a class="nav-link {% if menu == 'forum' %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/forum/">Forum</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if menu == 'log' %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/latest/">Activity log</a>
+        <a class="nav-link {% if menu == 'log' or menu == 'latest' %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/latest/">Activity log</a>
       </li>
       {% if request.user.is_staff and PROJECT.id == 1 %}
         <li class="nav-item">
