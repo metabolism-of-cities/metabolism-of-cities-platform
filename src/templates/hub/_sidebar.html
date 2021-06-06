@@ -2,13 +2,31 @@
 <div class="alert alert-secondary mt-4">
 
   {% if IS_DATA_PORTAL %}
-    {% with link=PROJECT.slug|add:":plan2021" %}
-      <h4 class="mt-2"><a href="{% url link %}">Priority plan</a></h4>
-      <p>
-        We focus most of our attention on the <a href="{% url link %}">2021 priority plan</a>. Learn
-        more and get involved!
-      </p>
-    {% endwith %}
+    {% if tab == "plan2021" %}
+      {% with link=PROJECT.slug|add:":plan2021" %}
+        <h4 class="mt-2">Work sprints</h4>
+        <p>
+          <strong>Join our community.</strong>
+          Help us realise our priority plans for 2021 by joining in one 
+          of our online work sprint sessions! We are holding
+          work sprints every Monday in June. 
+        </p>
+        <ul>
+          <li><a href="https://data.metabolismofcities.org/tasks/sprints/989765/">Monday, June 7, 2021</a></li>
+          <li><a href="https://data.metabolismofcities.org/tasks/sprints/990974/">Monday, June 14, 2021</a></li>
+          <li><a href="https://data.metabolismofcities.org/tasks/sprints/990970/">Monday, June 21, 2021</a></li>
+          <li><a href="https://data.metabolismofcities.org/tasks/sprints/990973/">Monday, June 28, 2021</a></li>
+        </ul>
+      {% endwith %}
+    {% else %}
+      {% with link=PROJECT.slug|add:":plan2021" %}
+        <h4 class="mt-2"><a href="{% url link %}">Priority plan</a></h4>
+        <p>
+          We focus most of our attention on the <a href="{% url link %}">2021 priority plan</a>. Learn
+          more and get involved!
+        </p>
+      {% endwith %}
+    {% endif %}
   {% endif %}
 
   {% with link=PROJECT.slug|add:":work_beginners_guide" %}

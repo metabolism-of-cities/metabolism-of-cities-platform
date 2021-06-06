@@ -1482,6 +1482,7 @@ def work_collection(request, slug):
             "forum_url": forum_url,
             "forum_topic_title": main_tag.name,
             "list_messages": list_messages,
+            "tab": "plan2021",
         }
 
     return render(request, "hub/tag.collection.html", context)

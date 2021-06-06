@@ -1,7 +1,5 @@
 {% extends "_base.html" %}
 
-{% block page_name %}work sprint{% endblock %}
-
 {% block head %}
 <style type="text/css">
 .active-card {
@@ -17,10 +15,12 @@
 
 {% block content %}
 
+{% include "hub/_nav.html" %}
+
 <div class="row">
   <div class="col-lg-8">
 
-    <h1 class="mt-4">{{ main_tag }}</h1>
+    <h3>{{ main_tag }}</h3>
 
     {% if not tag %}
       {{ main_tag.get_description }}

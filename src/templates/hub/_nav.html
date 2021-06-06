@@ -37,6 +37,11 @@
       <li class="nav-item">
         <a class="nav-link {% if menu == 'home' %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/"><i class="fa fa-home"></i></a>
       </li>
+      {% if IS_DATA_PORTAL %}
+        <li class="nav-item">
+          <a class="nav-link {% if tab == 'plan2021' %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/plan2021/">Priority plan</a>
+        </li>
+      {% endif %}
       <li class="nav-item">
         <a class="nav-link {% if menu == 'work' %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/work/">Tasks</a>
       </li>
