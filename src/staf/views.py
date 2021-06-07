@@ -3007,7 +3007,14 @@ def data(request, json=False):
 
         j = {}
         for each in data:
-            j.update({str(each.record_ptr_id): each.total})
+            if each.total:
+                j.update({str(each.record_ptr_id): each.total})
+
+        # I would like to sort j by value. Have tried:
+        j = dict(sorted(j.items(), key=lambda item: item[1]))
+        # when trying that you also need to remove the null values. Did that like so:
+        # for each in data:
+        # https://stackoverflow.com/questions/613183/how-do-i-sort-a-dictionary-by-value
 
         return JsonResponse({
             "material_name": material.name if material else None,
