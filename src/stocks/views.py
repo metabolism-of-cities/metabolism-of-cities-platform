@@ -39,6 +39,7 @@ def index(request):
 
 def contribute(request):
     context = {
+        "webpage": get_object_or_404(Webpage, pk=991261),
     }
     return render(request, "stocks/contribute.html", context)
 
