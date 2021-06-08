@@ -493,6 +493,24 @@
 
     <section id="matrix">
       <h1>Data gap analysis (matrix)</h1>
+
+      <div class="mb-4">
+        <label>Matrix based on the data gap analysis matrix</label><br>
+        {% if report.matrix_html %}
+          {{ report.matrix_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">14</span>
+        {% endif %}
+      </div>
+
+      <div class="mb-4">
+        <label>Couple of paragraphs that explain the gaps and in general how they were closed (sources, assumptions, calculations)</label><br>
+        {% if report.gaps_html %}
+          {{ report.gaps_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">15</span>
+        {% endif %}
+      </div>
     </section>
 
     <section id="analysis">
@@ -502,7 +520,7 @@
         {% if report.status_quo_html %}
           {{ report.status_quo_html|safe }}
         {% else %}
-          <span class="question-number bg-dark text-light rounded px-2 mr-2">14</span>
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">16</span>
         {% endif %}
       </div>
 
@@ -511,7 +529,7 @@
         {% if report.upscaling_html %}
           {{ report.upscaling_html|safe }}
         {% else %}
-          <span class="question-number bg-dark text-light rounded px-2 mr-2">15</span>
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">17</span>
         {% endif %}
       </div>
 
@@ -520,7 +538,7 @@
         {% if report.recommendations_html %}
           {{ report.recommendations_html|safe }}
         {% else %}
-          <span class="question-number bg-dark text-light rounded px-2 mr-2">16</span>
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">18</span>
         {% endif %}
       </div>
     </section>
