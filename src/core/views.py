@@ -1414,7 +1414,7 @@ def work_collection(request, slug):
     main_tag = get_object_or_404(Tag, slug=slug)
     tags = Tag.objects.filter(parent_tag=main_tag)
     tag = None
-    list = Work.objects.filter(workactivity__category__show_in_tasklist=True, part_of_project=project)
+    list = Work.objects.filter(workactivity__category__show_in_tasklist=True)
 
     if "tag" in request.GET:
         tag = get_object_or_404(Tag, pk=request.GET.get("tag"))
@@ -1426,7 +1426,7 @@ def work_collection(request, slug):
 
     if category:
         project = get_project(request)
-        return redirect(reverse(project.slug + ":work_grid") + f"?category={category}&tag={tag.id}")
+        return redirect(reverse(project.slug + ":work_grid") + f"?category={category}&tag={tag.id}&project=")
 
     counter = {}
     counter_completed = {}
@@ -1501,7 +1501,7 @@ def work_grid(request, sprint=None):
     elif "project" in request.GET and request.GET["project"]:
         selected_project = request.GET.get("project")
         list = list.filter(part_of_project_id=selected_project)
-    elif project.id != 1:
+    elif project.id != 1 and not "project" in request.GET:
         list = list.filter(part_of_project_id=project)
         selected_project = project.id
 
