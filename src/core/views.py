@@ -1423,67 +1423,57 @@ def work_collection(request, slug):
         list = list.filter(tags=main_tag)
 
     category = request.GET.get("category")
+
     if category:
-        category = WorkCategory.objects.get(pk=category)
-        list = list.filter(workactivity__category=category)
-        context = {
-            "task_list": list,
-            "load_datatables": True,
-            "tag": tag,
-            "categories": WorkCategory.objects.filter(show_in_tasklist=True),
-            "category": category,
-            "webpage": category.webpage,
-            "menu": "work",
-        }
-        return render(request, "contribution/work.grid.html", context)
+        project = get_project(request)
+        return redirect(reverse(project.slug + ":work_grid") + f"?category={category}&tag={tag.id}&project=")
 
-    else:
+    counter = {}
+    counter_completed = {}
+    counter_unassigned = {}
 
-        counter = {}
-        counter_completed = {}
-        counter_unassigned = {}
+    updates = list.order_by("-last_update")
+    if updates:
+        updates = updates[:5]
 
-        updates = list.order_by("-last_update")
-        if updates:
-            updates = updates[:5]
+    total_list = list.values("workactivity__category__id").annotate(total=Count("workactivity__category__id")).order_by("total")
+    completed_list = list.filter(status=2).values("workactivity__category__id").annotate(total=Count("workactivity__category__id")).order_by("total")
+    unassigned_list = list.filter(status=1, assigned_to__isnull=True).values("workactivity__category__id").annotate(total=Count("workactivity__category__id")).order_by("total")
+    for each in total_list:
+        counter[each["workactivity__category__id"]] = each["total"]
+    for each in completed_list:
+        counter_completed[each["workactivity__category__id"]] = each["total"]
+    for each in unassigned_list:
+        counter_unassigned[each["workactivity__category__id"]] = each["total"]
 
-        total_list = list.values("workactivity__category__id").annotate(total=Count("workactivity__category__id")).order_by("total")
-        completed_list = list.filter(status=2).values("workactivity__category__id").annotate(total=Count("workactivity__category__id")).order_by("total")
-        unassigned_list = list.filter(status=1, assigned_to__isnull=True).values("workactivity__category__id").annotate(total=Count("workactivity__category__id")).order_by("total")
-        for each in total_list:
-            counter[each["workactivity__category__id"]] = each["total"]
-        for each in completed_list:
-            counter_completed[each["workactivity__category__id"]] = each["total"]
-        for each in unassigned_list:
-            counter_unassigned[each["workactivity__category__id"]] = each["total"]
+    forum_url = project.get_website() + main_tag.slug
+    forum_topic = ForumTopic.objects.filter(part_of_project_id=request.project, parent_url=forum_url)
+    list_messages = None
+    if forum_topic:
+        list_messages = Message.objects.filter(parent=forum_topic[0])
 
-        forum_url = project.get_website() + main_tag.slug
-        forum_topic = ForumTopic.objects.filter(part_of_project_id=request.project, parent_url=forum_url)
-        list_messages = None
-        if forum_topic:
-            list_messages = Message.objects.filter(parent=forum_topic[0])
+    context = {
+        "updates": updates,
+        "load_datatables": True,
 
-        context = {
-            "updates": updates,
-            "load_datatables": True,
+        "main_tag": main_tag,
+        "tags": tags,
+        "tag": tag if tag else main_tag,
 
-            "main_tag": main_tag,
-            "tags": tags,
-            "tag": tag if tag else main_tag,
-
-            "categories": WorkCategory.objects.filter(show_in_tasklist=True),
-            "counter": counter,
-            "counter_completed": counter_completed,
-            "counter_unassigned": counter_unassigned,
-            "menu": "community",
-            
-            "load_messaging": True,
-            "forum_id": forum_topic[0].id if forum_topic else "create",
-            "forum_url": forum_url,
-            "forum_topic_title": main_tag.name,
-            "list_messages": list_messages,
-            "tab": "plan2021",
-        }
+        "categories": WorkCategory.objects.filter(show_in_tasklist=True),
+        "counter": counter,
+        "counter_completed": counter_completed,
+        "counter_unassigned": counter_unassigned,
+        "menu": "community",
+        
+        "load_messaging": True,
+        "forum_id": forum_topic[0].id if forum_topic else "create",
+        "forum_url": forum_url,
+        "forum_topic_title": main_tag.name,
+        "list_messages": list_messages,
+        "tab": "plan2021",
+        "title": main_tag.name if not tag else tag.name,
+    }
 
     return render(request, "hub/tag.collection.html", context)
 
@@ -1511,12 +1501,14 @@ def work_grid(request, sprint=None):
     elif "project" in request.GET and request.GET["project"]:
         selected_project = request.GET.get("project")
         list = list.filter(part_of_project_id=selected_project)
-    elif project.id != 1:
+    elif project.id != 1 and not "project" in request.GET:
         list = list.filter(part_of_project_id=project)
         selected_project = project.id
 
+    tag = None
     if "tag" in request.GET and request.GET["tag"]:
-        list = list.filter(tags=get_object_or_404(Tag, pk=request.GET["tag"]))
+        tag = get_object_or_404(Tag, pk=request.GET["tag"])
+        list = list.filter(tags=tag)
 
     if "bot_hide" in request.GET and request.GET["bot_hide"]:
         list = list.exclude(last_update__posted_by_id=32070)
@@ -1592,6 +1584,8 @@ def work_grid(request, sprint=None):
         "forum_url": forum_url,
         "forum_topic_title": "Community hub - " + webpage.name if webpage else None,
         "list_messages": list_messages,
+        "tags": Tag.objects.filter(Q(parent_tag_id=809)|Q(parent_tag__parent_tag_id=809)),
+        "tag": tag,
     }
     return render(request, "contribution/work.grid.html", context)
 

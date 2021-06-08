@@ -22,8 +22,8 @@
 
     <h3>{{ main_tag }}</h3>
 
-    {% if not tag %}
-      {{ main_tag.get_description }}
+    {% if tag != main_tag %}
+      <a class="mb-3 badge badge-warning" href="./"><i class="fa fa-arrow-left"></i> Back to '{{ main_tag }}'</a>
     {% endif %}
 
     <section class="row btn-cards">

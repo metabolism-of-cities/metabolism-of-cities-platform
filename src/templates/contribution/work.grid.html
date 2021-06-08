@@ -13,15 +13,6 @@
 
   {% include "hub/_nav.html" %}
 
-  {% if tag %}
-    <div class="mb-3">
-    <a href="./" class="btn badge-warning badge">
-      <i class="fal fa-angle-left"></i>
-      {{ tag }}
-    </a>
-    </div>
-  {% endif %}
-
   {% if sprint %}
     <div>
       <a href="../" class="btn btn-primary-basic mb-4">
@@ -43,7 +34,6 @@
       </div>
     {% endif %}
   {% endif %}
-
 
   {% if webpage and not "filter" in request.GET %}
     <h2>{{ webpage }}</h2>
@@ -82,7 +72,7 @@
           Unassigned, open tasks
         </a>
         <a href="./?category={{ category.id }}&amp;status=open_unassigned&filter=true&amp;entry=true&amp;tag={{ request.GET.tag }}" class="btn btn-primary-outline">
-          Available to beginners
+          Good for beginners
         </a>
         <a href="" class="btn btn-primary-outline" hidden>
           My tasks
@@ -140,7 +130,7 @@
       </div>
 
       <div class="row align-items-center mb-4">
-        <div class="col-4">
+        <div class="col-lg">
           <select name="project" class="custom-select">
             <option value="">All projects</option>
             {% for each in projects %}
@@ -148,19 +138,26 @@
             {% endfor %}
           </select>
         </div>
-        <div class="col-3">
+        <div class="col-lg">
+          <select name="tag" class="custom-select">
+            <option value="">No tags</option>
+            {% for each in tags %}
+              <option value="{{ each.id }}" {% if each == tag %}selected{% endif %}>{{ each }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-lg">
           <div class="custom-control custom-switch">
             <input type="checkbox" class="custom-control-input" id="entry" name="entry" value="true" {% if request.GET.entry %}checked{% endif %}>
             <label class="custom-control-label" for="entry">'Good for beginners' only</label>
           </div>
         </div>
-        <div class="col-5 text-right d-lg-none">
+        <div class="col-3 text-right d-lg-none">
           <input type="hidden" name="filter" value="true" />
           <button class="btn btn-primary btn-filter ml-2" form="filters" type="submit">
             <i class="fas fa-filter"></i>
             Filter list
           </button>
-          <input type="hidden" name="tag" value="{{ request.GET.tag }}" />
         </div>
       </div>
     </form>
