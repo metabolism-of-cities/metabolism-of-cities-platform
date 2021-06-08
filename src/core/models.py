@@ -3093,31 +3093,31 @@ class CityLoopsSCAReport(models.Model):
         if not self.population_description:
             self.population_description_html = None
         else:
-            self.population_description_html = markdown(self.population_description)
+            self.population_description_html = markdown(self.population_description, extensions=['tables'])
 
 
         if not self.land_use_description:
             self.land_use_description_html = None
         else:
-            self.land_use_description_html = markdown(self.land_use_description)
+            self.land_use_description_html = markdown(self.land_use_description, extensions=['tables'])
 
 
         if not self.actors_description:
             self.actors_description_html = None
         else:
-            self.actors_description_html = markdown(self.actors_description)
+            self.actors_description_html = markdown(self.actors_description, extensions=['tables'])
 
 
         if not self.sector_description:
             self.sector_description_html = None
         else:
-            self.sector_description_html = markdown(self.sector_description)
+            self.sector_description_html = markdown(self.sector_description, extensions=['tables'])
 
 
         if not self.indicators_table:
             self.indicators_table_html = None
         else:
-            self.indicators_table_html = markdown(self.indicators_table)
+            self.indicators_table_html = markdown(self.indicators_table, extensions=['tables'])
             p = re.compile("\[#(\d*)\]")
             self.indicators_table_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.indicators_table_html)
 
@@ -3125,13 +3125,13 @@ class CityLoopsSCAReport(models.Model):
         if not self.status_quo:
             self.status_quo_html = None
         else:
-            self.status_quo_html = markdown(self.status_quo)
+            self.status_quo_html = markdown(self.status_quo, extensions=['tables'])
 
 
         if not self.upscaling:
             self.upscaling_html = None
         else:
-            self.upscaling_html = markdown(self.upscaling)
+            self.upscaling_html = markdown(self.upscaling, extensions=['tables'])
 
 
         if not self.recommendations:

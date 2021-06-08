@@ -280,10 +280,21 @@
                    "#ffffff" ;
   }
 
-  // apply style to each feature
-  function dataStyle(feature) {
+  // apply style to each feature, either by value or by order
+  function styleByValue(feature) {
     return {
       fillColor: getColor(mapData.data[feature.properties.id], a, b, c, d, e),
+      weight: 1,
+      opacity: 1,
+      color: "#fff",
+      fillOpacity: .95
+    };
+  }
+
+  function styleByOrder(feature) {
+    let index = mapData["data"].findIndex(key => key === feature.properties.id);
+    return {
+      fillColor: getColor(index, a, b, c, d, e),
       weight: 1,
       opacity: 1,
       color: "#fff",
@@ -341,10 +352,11 @@
   // variable for the data, add it to the map
   let mapShapes = {{ map_data|safe|escape }};
 
-  // get data from server
+  // variables for data from server to add to map
   let mapData;
   let dataLayer;
   let mapDataLegend;
+  let dataKeys = []
 
   // variables for value ranges for areas and legend
   let a = 0;
@@ -368,12 +380,18 @@
     $.get("{% url 'stocks:data_json' %}?source={{ data_source_document }}&material=" + material + "&within=" + within + "&aggregation_level=" + level, function(data) {
       mapData = data;
 
+      // add keys to array so their order can be defined
+      for (const [key] of Object.entries(mapData.data)) {
+        dataKeys.push(key)
+      }
+
       generateBarChart();
 
       dataLayer = L.geoJson(mapShapes, {
-        style: dataStyle,
+        style: styleByValue,
         onEachFeature: onEachFeature,
       })
+
       map.addLayer(dataLayer);
 
       materialName = data.material_name
