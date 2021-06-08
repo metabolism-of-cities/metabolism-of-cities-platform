@@ -23,6 +23,10 @@
   <style>
     @import url(https://fonts.googleapis.com/css?family=Montserrat:400,700&subset=latin);
 
+    body{
+      -webkit-print-color-adjust:exact;
+    }
+
     @media all {
       body {
         min-width: unset !important;
@@ -120,6 +124,30 @@
       .sankey-link {
         /*fill-opacity: .5 !important;*/
       }
+
+      .table th {
+        background-color: #efefef !important;
+      }
+
+      .table td.bg-red {
+        background-color: red !important;
+      }
+
+      .table td.bg-green {
+        background-color: green !important;
+      }
+
+      .table td.bg-orange {
+        background-color: orange !important;
+      }
+
+      .table td.bg-blue {
+        background-color: blue !important;
+      }
+
+      .table td.bg-yellow {
+        background-color: gold !important;
+      }
     }
   </style>
 </head>
@@ -176,7 +204,6 @@
           <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-salad"></i><div>Vegetables</div></div></div>
         {% endif%}
       </div>
-
     </section>
 
     <section id="urban-context">
@@ -518,7 +545,19 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script>
+    // table tweaks
+    $("table").addClass("table");
+    $("span[data-color]").each(function() {
+      let span = $(this);
+      let color = span.data("color");
+      let cell = span.parent();
+
+      cell.addClass("bg-" + color)
+
+    })
+
     {% if space.geometry %}
       // space
       var space_map = L.map("space-map", {
@@ -624,6 +663,5 @@
       obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
     }
   </script>
-
 </body>
 </html>
