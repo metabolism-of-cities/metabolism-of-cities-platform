@@ -1937,28 +1937,6 @@ class ActivatedSpace(models.Model):
         unique_together = ["slug", "part_of_project"]
         ordering = ["space__name"]
 
-class DataPortal(LibraryItem):
-
-    class Software(models.IntegerChoices):
-        CKAN = 1, "CKAN"
-        DKAN = 2, "DKAN"
-        JUNAR = 3, "Junar"
-        ODS = 4, "OpenDataSoft"
-        SIXCMS = 5, "sixcms"
-        SOCRATA = 6, "Socrata"
-        TERRA = 7, "terraCatalogue"
-        CUSTOM = 8, "Custom / inhouse implementation"
-        OTHER = 9, "Other platform"
-        ARCGIS = 10, "ArcGIS Open Data"
-
-    software = models.IntegerField(choices=Software.choices, null=True, blank=True)
-    has_api = models.BooleanField(default=True, db_index=True)
-
-    objects = PublicActiveRecordManager()
-    objects_unfiltered = models.Manager()
-    objects_include_private = PrivateRecordManager()
-    objects_include_deleted = PublicRecordManager()
-
 class Course(Record):
     slug = models.CharField(max_length=255, null=True, help_text="Do NOT change this if the course is already published")
     faq = models.TextField(null=True, blank=True)

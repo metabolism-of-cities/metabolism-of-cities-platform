@@ -623,20 +623,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         # and only when we add, not when we edit items.
         view_processing = True
 
-    if type == "dataportal":
-
-        if info:
-            info = info.dataportal
-
-        ModelForm = modelform_factory(
-            DataPortal,
-            fields=("name", "description", "url", "tags", "spaces", "year", "language", "license", "software", "has_api", "comments"),
-            labels = {
-                "year": "Year created",
-                "comments": "Internal comments/notes",
-            }
-        )
-    elif type.name == "Video Recording":
+    if type.name == "Video Recording":
         fields = ["name", "description", "url", "video_site", "author_list", "duration", "spaces", "year", "language", "license", "comments"]
         labels = {
             "year": "Year created",
