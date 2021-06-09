@@ -582,10 +582,13 @@ class News(Record):
 class Blog(Record):
     date = models.DateField()
     slug = models.SlugField(max_length=255)
+
     class Meta:
-        ordering = ["-date", "-id"]
+        ordering = ["-date", "name"]
+
     def get_absolute_url(self):
         return reverse("blog", args=[self.id])
+
     def save(self, *args, **kwargs):
         self.slug = slugify(unidecode(self.name))
         super().save(*args, **kwargs)
