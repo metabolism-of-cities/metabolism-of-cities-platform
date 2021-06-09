@@ -111,7 +111,7 @@ def list(request, type):
     if type == "dataportals":
         list = LibraryItem.objects.filter(type__id=39)
     elif type == "datasets":
-        list = Dataset.objects_unfiltered.all()
+        list = LibraryItem.objects_unfiltered.filter(type__name="Dataset")
     elif type == "reviews":
         list = LibraryItem.objects.filter(tags__id=3)
         if request.project == 17:

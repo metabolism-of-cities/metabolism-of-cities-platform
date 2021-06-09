@@ -235,7 +235,7 @@ def datasets(request, space):
         "space": space,
         "header_image": space.photo,
         "menu": "data",
-        "items": Dataset.objects.filter(spaces=space),
+        "items": LibraryItem.objects.filter(type__name="Dataset", spaces=space),
     }
     return render(request, "data/datasets.html", context)
 

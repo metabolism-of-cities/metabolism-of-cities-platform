@@ -1937,21 +1937,6 @@ class ActivatedSpace(models.Model):
         unique_together = ["slug", "part_of_project"]
         ordering = ["space__name"]
 
-class Dataset(LibraryItem):
-    data_formats = models.ManyToManyField(Tag, blank=True, related_name="library_datasets", limit_choices_to={"parent_tag_id": 786})
-    data_year_start = models.IntegerField(null=True, blank=True)
-    data_year_end = models.IntegerField(null=True, blank=True)
-    data_interval = models.CharField(max_length=50, null=True, blank=True)
-    update_frequency = models.CharField(max_length=50, null=True, blank=True)
-    has_api = models.BooleanField(default=True, db_index=True)
-    size = models.IntegerField(null=True, blank=True, help_text="Size in MB")
-    activities = models.ManyToManyField("Activity", blank=True)
-
-    objects = PublicActiveRecordManager()
-    objects_unfiltered = models.Manager()
-    objects_include_private = PrivateRecordManager()
-    objects_include_deleted = PublicRecordManager()
-
 class DataPortal(LibraryItem):
 
     class Software(models.IntegerChoices):
@@ -2596,8 +2581,6 @@ class Sector(Record):
 
     #def spaces(self):
     #    return ReferenceSpaceType.objects.filter(processes__in=self.processes.all())
-    #def datasets(self):
-    #    return DatasetType.objects.filter(Q(origin_process__in=self.processes.all()) | Q(destination_process__in=self.processes.all()))
 
 class DataArticle(Record):
 

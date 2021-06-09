@@ -1973,7 +1973,7 @@ def search_ajax(request, type):
         elif type == "project":
             list = Project.objects.all()
         elif type == "dataset":
-            list = Dataset.objects.all()
+            list = LibraryItem.objects.filter(type__name="Dataset")
         elif type == "video":
             list = Video.objects.all()
         elif type == "course":
