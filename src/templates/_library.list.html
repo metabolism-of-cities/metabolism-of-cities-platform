@@ -1,5 +1,5 @@
 <div class="resource-list">
-  <table class="table border bg-white {% if load_datatables %}datatable datatable-card{% endif %}">
+  <table class="table bg-white {% if load_datatables %}datatable datatable-card{% else %}border{% endif %}">
     <thead>
       <tr>
         {% if show_creation %}
@@ -17,7 +17,9 @@
         {% if not "hide_year" in request.GET %}
           <th class="year">Year</th>
         {% endif %}
-        <th class="add-image"></th>
+        {% if show_image_upload_link %}
+          <th class="add-image"></th>
+        {% endif %}
       </tr>
     </thead>
     <tbody>
@@ -65,13 +67,13 @@
           {% if not "hide_year" in request.GET %}
             <td class="year">{{ each.year|default_if_none:"" }}</td>
           {% endif %}
-          <td class="py-0 align-middle text-right add-image">
-            {% if show_image_upload_link and each.type.name != "Image" %}
+          {% if show_image_upload_link and each.type.name != "Image" %}
+            <td class="py-0 align-middle text-right add-image">
               <a href="form/?inventory=true&amp;type=38&amp;parent={{ each.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" title="Upload an image from this document" class="btn btn-sm btn-primary-basic">
                 <i class="fal fa-plus mr-2"></i> Add image
               </a>
-            {% endif %}
-          </td>
+            </td>
+          {% endif %}
         </tr>
       {% endfor %}
     </tbody>

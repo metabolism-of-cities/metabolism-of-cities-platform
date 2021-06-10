@@ -17,30 +17,30 @@
 
     Highcharts.setOptions({
       {% if info.get_dataviz_properties %}
-      colors: window["{{ info.get_dataviz_properties.scheme }}"],
-      fontFamily: defaultFont,
-      chart: {
-        backgroundColor: "#fcfcfc",
-        animation: false,
-        zoomType: "x",
-      },
-      title: {
-        text: "{{ info.get_dataviz_properties.title }}"
-      },
-      subtitle: {
-        text: "{{ info.get_dataviz_properties.subtitle }}"
-      },
+        colors: window["{{ info.get_dataviz_properties.scheme }}"],
+        fontFamily: defaultFont,
+        chart: {
+          backgroundColor: "transparent",
+          animation: false,
+          zoomType: "x",
+        },
+        title: {
+          text: "{{ info.get_dataviz_properties.title }}"
+        },
+        subtitle: {
+          text: "{{ info.get_dataviz_properties.subtitle }}"
+        },
       {% else %}
-      title: {
-        text: "{{ info }}",
-      },
+        title: {
+          text: "{{ info }}",
+        },
       {% endif %}
       legend: {
         {% if info.get_dataviz_properties.show_xaxis_label is not "true" %}
           enabled: false,
         {% endif %}
         backgroundColor: "#fff",
-        borderColor: "#dee2e6",
+        borderColor: "transparent",
         borderWidth: 1,
       },
       {% if info.get_dataviz_properties.show_xaxis_label == "true" %}
@@ -61,7 +61,7 @@
           softMax: {% if info.get_dataviz_properties.yaxis_max %}{{ info.get_dataviz_properties.yaxis_max }}{% else %}null{% endif %},
         {% endif %}
       },
-      {% if info.get_dataviz_properties.legend == "true" %}
+      {% if info.get_dataviz_properties.legend == "true" or not info.get_dataviz_properties %}
         legend: {
           enabled: true
         },

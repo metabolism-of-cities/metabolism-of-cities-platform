@@ -82,9 +82,8 @@
         {% endif %}
       {% endif %}
 
-      <div class="card my-4">
+      <div class="border rounded bg-white my-4">
         <ul class="list-group list-group-flush">
-
           <li class="list-group-item table-item">
             <div><i class="fal fa-fw fa-fingerprint mr-1"></i> ID</div>
             <div class="text-monospace"><code>{{ info.id }}</code></div>
@@ -604,7 +603,7 @@
           <span class="badge badge-primary mb-4">Available to super user only</span>
 
           {% if info.meta_data %}
-            <div class="card">
+            <div class="bg-white border rounded">
               <ul class="list-group list-group-flush">
               {% for key,value in info.meta_data.items %}
                 <li class="list-group-item table-item">

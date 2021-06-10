@@ -25,11 +25,13 @@ $cityloops-secondary: #00b6ed;
 
 %box-shadow {
   transition: all .3s;
-  box-shadow: $basic-shadow;
+  box-shadow: none;
+  // box-shadow: $basic-shadow;
   text-decoration: none !important;
 
   &:hover {
-    box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.2);
+    // box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: none;
   }
 }
 
@@ -730,12 +732,12 @@ blockquote {
   color: $black;
   cursor: pointer;
   display: block;
-  border: none;
   height: calc(100% - 1rem);
   margin-bottom: 1rem;
   padding: 1rem;
   text-align: left;
   width: 100%;
+  border: 1px solid #00000020;
 
   &:hover {
     color: $black;
@@ -749,9 +751,6 @@ blockquote {
 
 // CARD
 .card {
-  border: none;
-  box-shadow: $basic-shadow;
-
   .card-header {
     background-color: $primary;
     color: $very-light;
@@ -761,21 +760,6 @@ blockquote {
   .list-group-item.active {
     background-color: $primary;
     border-color: $primary;
-  }
-
-  .list-group-item.table-item {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-
-    > div {
-      display: table-cell;
-      vertical-align: middle;
-
-      &:last-of-type {
-        text-align: right;
-      }
-    }
   }
 
   // LARGE ICON CARD
@@ -796,7 +780,6 @@ blockquote {
       text-align: center;
     }
   }
-
 }
 
 // CARD WITH TABLE IN IT
@@ -815,6 +798,26 @@ blockquote {
       border-top-right-radius: .25rem;
     }
   }
+}
+
+// LIST
+.list-group-item.table-item {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+
+  > div {
+    display: table-cell;
+    vertical-align: middle;
+
+    &:last-of-type {
+      text-align: right;
+    }
+  }
+}
+
+.list-group .list-group-item {
+  padding: .75rem 1rem;
 }
 
 // CONTRIBUTE BOX
@@ -2588,10 +2591,6 @@ body.staf-review {
 
 // STAF REVIEW UPLOADED FILES
 body.staf-review.uploaded {
-  .list-group {
-    box-shadow: $basic-shadow;
-  }
-
   .list-group-item {
     width: 100%;
     text-align: center;
