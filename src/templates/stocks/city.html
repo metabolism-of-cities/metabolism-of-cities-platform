@@ -15,34 +15,59 @@
   {% include "_submenu-stocks.html" %}
 
   <section>
-    <p>{% lorem 1 %}</p>
-  </section>
-
-  <section>
-    <h2>Data source</h2>
     <div class="row">
       <div class="col-lg-6">
-        <div class="border rounded p-3 bg-light">
-          <h5>{{ data_source }}</h5>
-          <div class="description">{{ data_source.get_description }}</div>
-        </div>
+        <div class="leaflet-map" id="space-map"></div>
+      </div>
+      <div class="col-lg-6">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item table-item">
+            <div><i class="fal fa-fw fa-users mr-2"></i> Population</div>
+            <div>123123</div>
+          </li>
+          <li class="list-group-item table-item">
+            <div><i class="fal fa-fw fa-building mr-2"></i> Number of buildings</div>
+            <div>{{ data_source.length }}</div>
+          </li>
+          <li class="list-group-item table-item">
+            <div><i class="fal fa-fw fa-archive mr-2"></i> Materials</div>
+            <div>{{ materials|length }}</div>
+          </li>
+          <li class="list-group-item table-item">
+            <div><i class="fal fa-fw fa-clone mr-2"></i> Area</div>
+            <div>123,123 km<sup>2</sup> </div>
+          </li>
+        </ul>
       </div>
     </div>
   </section>
 
   <section>
-    <h2>Detail levels</h2>
     <div class="row">
-      {% for each in levels %}
-        <div class="col-md-6 col-lg-4">
-          <div class="border rounded p-3 bg-light">
-            <h5>{{ each.get_shortname }}</h5>
-            <div class="description">{{ each.get_description }}</div>
-          </div>
-        </div>
-      {% endfor %}
+      <div class="col-lg-4">
+        <h4>Data source</h4>
+        <hr>
+        <h5>{{ data_source }}</h5>
+        <div class="description">{{ data_source.get_description }}</div>
+      </div>
+      <div class="col-lg-4">
+        <h4>Detail levels</h4>
+        {% for each in levels %}
+          <hr>
+          <h5>{{ each.get_shortname }}</h5>
+          <div class="description">{{ each.get_description }}</div>
+        {% endfor %}
+      </div>
+      <div class="col-lg-4">
+        <h4>Materials</h4>
+        {% for each in materials %}
+          <hr>
+          <div><i class="fal fa-tree-alt fa-{{each.material__icon}} fa-fw mr-2"></i> {{ each.material__name }}</div>
+        {% endfor %}
+      </div>
     </div>
   </section>
+
 
 {% endblock %}
 
@@ -57,5 +82,32 @@
     $(".btn[data-type='" + id + "']").attr("href", value);
   })
 </script>
+
+{% if space.geometry %}
+  <script>
+    var map = L.map("space-map");
+    var geojson = {{ space.geometry.geojson|safe }};
+    var geojsonlayer = L.geoJSON(geojson).addTo(map);
+
+    L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+      attribution: "Map data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors, " +
+        "<a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, " +
+        "Imagery © <a href='http://mapbox.com'>Mapbox</a>",
+      id: "mapbox/streets-v11",
+      maxZoom: 18,
+      id: "mapbox/streets-v11",
+      tileSize: 512,
+      zoomOffset: -1,
+      accessToken: "{{ MAPBOX_API_KEY }}"
+    }).addTo(map);
+
+    map.scrollWheelZoom.disable();
+    map.fitBounds(geojsonlayer.getBounds());
+    {% if space.geometry.num_points == 1 %}
+      map.setZoom(6);
+    {% endif %}
+  </script>
+{% endif %}
+
 {% endblock %}
 

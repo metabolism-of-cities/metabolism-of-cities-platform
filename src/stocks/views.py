@@ -71,14 +71,17 @@ def city(request, space):
     levels = LibraryItem.objects.filter(pk__in=levels)
     info = LibraryItem.objects.get(pk=id)
     data_source = LibraryItem.objects.get(pk=data_source)
+    materials = Data.objects.filter(source_id=data_source).order_by().values("material__name", "material__id", "material__icon").distinct()
 
     context = {
         "city": True,
         "load_select2": True,
         "levels": levels,
         "data_source": data_source,
+        "materials": materials,
         "space": space,
         "info": info,
+        "load_leaflet": True,
         "link": link,
     }
     return render(request, "stocks/city.html", context)

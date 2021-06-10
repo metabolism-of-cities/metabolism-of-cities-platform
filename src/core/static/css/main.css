@@ -1,12 +1,12 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin);
 .gallery a, a.large-icon-box, .btn-icon, .btn-thumbnail, .btn-card {
-  transition: all .3s;
+  transition: all .1s;
   text-decoration: none !important; }
   .gallery a:hover, a.large-icon-box:hover, .btn-icon:hover, .btn-thumbnail:hover, .btn-card:hover {
-    transform: translateY(-3px); }
+    margin-top: -3px; }
 
 .gallery a, a.large-icon-box, .btn-icon, .btn-thumbnail, .btn-card {
-  transition: all .3s;
+  transition: all .1s;
   box-shadow: none;
   text-decoration: none !important; }
   .gallery a:hover, a.large-icon-box:hover, .btn-icon:hover, .btn-thumbnail:hover, .btn-card:hover {
