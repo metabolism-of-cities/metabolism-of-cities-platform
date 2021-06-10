@@ -188,39 +188,6 @@ def map(request, space, id, box=None):
     if space.name == "Melbourne":
         doc_list = melbourne
         data_source_document = 33971 # This is the document that contains the stocks data itself
-
-        materials = [
-            {
-                "name": "Concrete",
-                "id": 866044,
-                "icon": "road"
-            },
-            {
-                "name": "Glass",
-                "id": 568589,
-                "icon": "fragile"
-            },
-            {
-                "name": "Iron",
-                "id": 25969,
-                "icon": "magnet"
-            },
-            {
-                "name": "Wood",
-                "id": 25955,
-                "icon": "trees"
-            },
-            {
-                "name": "Insulation",
-                "id": 866045,
-                "icon": "mitten"
-            },
-            {
-                "name": "Plastics",
-                "id": 568586,
-                "icon": "coffee-togo"
-            },
-        ]
     else:
         doc_list = brussels
         data_source_document = None
@@ -271,6 +238,9 @@ def map(request, space, id, box=None):
     properties = {
         "map_layer_style": "light-v8"
     }
+
+    materials = Data.objects.filter(source_id=33971).order_by().values("material__name", "material__id", "material__icon").distinct()
+    # materials = Material.objects.filter(child_of_parent=33971).distinct()
 
     context = {
         "maps": True,

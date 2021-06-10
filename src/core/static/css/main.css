@@ -1840,6 +1840,10 @@ body.volunteer.portal.latest th.date {
 .resource-list td:not(.title) {
   width: 100px; }
 
+.resource-list th.add-image,
+.resource-list td.add-image {
+  width: 0; }
+
 .resource-list th.author,
 .resource-list td.author {
   width: 200px;

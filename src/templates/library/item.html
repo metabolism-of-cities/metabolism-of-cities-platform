@@ -339,10 +339,10 @@
           {% endif %}
 
           {% if curator or request.user.people == info.uploader %}
-              <br>
-                <a onclick="javascript:return confirm('Are you sure?')" href="?delete&amp;return={{ request.get_full_path }}" class="btn btn-danger mt-3"><i class="fa fa-trash-alt"></i>
-                Delete
-              </a>
+            <br>
+              <a onclick="javascript:return confirm('Are you sure?')" href="?delete&amp;return={{ request.get_full_path }}" class="btn btn-danger mt-3"><i class="fa fa-trash-alt"></i>
+              Delete
+            </a>
           {% endif %}
 
         {% endif %}

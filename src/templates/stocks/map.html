@@ -128,6 +128,7 @@
 {% block content %}
   {% include "_submenu-stocks.html" %}
 
+
   <section>
     {% if box %}
       <nav aria-label="breadcrumb" hidden>
@@ -434,6 +435,23 @@
   getData("{{ request.GET.material }}", "{{ box.id }}", "{{ id }}")
   // DATA LAYER END
 
+  function abbreviateNumber(value) {
+      var newValue = value;
+      if (value >= 1000) {
+          var suffixes = ["", "k", "m", "b","t"];
+          var suffixNum = Math.floor( (""+value).length/3 );
+          var shortValue = '';
+          for (var precision = 2; precision >= 1; precision--) {
+              shortValue = parseFloat( (suffixNum != 0 ? (value / Math.pow(1000,suffixNum) ) : value).toPrecision(precision));
+              var dotLessShortValue = (shortValue + '').replace(/[^a-zA-Z 0-9]+/g,'');
+              if (dotLessShortValue.length <= 2) { break; }
+          }
+          if (shortValue % 1 != 0)  shortValue = shortValue.toFixed(1);
+          newValue = shortValue+suffixes[suffixNum];
+      }
+      return newValue;
+  }
+
   // legend
   function addLegend() {
     // create variable for the legend
@@ -449,11 +467,11 @@
 
       div.innerHTML = "<div>" + materialName + " stock per building<br>(in " + materialUnit + ")</div><hr class='my-2'>"
 
-      // loop through our schauff intervals and generate a label with a colored square for each interval
+      // loop through our tranches and generate a label with a colored square for each interval
       for (var i = 0; i < grades.length; i++) {
           div.innerHTML +=
               "<i style='background:" + getColor(grades[i] + 1, a, b, c, d, e) + "'></i> " +
-              grades[i] + (grades[i + 1] ? " – " + grades[i + 1] + "<br>" : "+");
+              abbreviateNumber(grades[i]) + (abbreviateNumber(grades[i + 1]) ? " – " + abbreviateNumber(grades[i + 1]) + "<br>" : "+");
       }
 
       return div;
@@ -484,13 +502,13 @@
 
     let maxValue = Math.max(...dataValues);
 
-    e = maxValue
 
-    let legendTranche = e / 5;
+    let legendTranche = maxValue / 5;
 
     b = Math.round(a + legendTranche);
     c = Math.round(b + legendTranche);
     d = Math.round(c + legendTranche);
+    e = Math.round(d + legendTranche);
 
     // set end label to max value
     $(".end-label").text(maxValue);
@@ -604,8 +622,8 @@
 
       {% for each in materials %}
         var materialButton = L.DomUtil.create("div", "material");
-        $(materialButton).attr("data-material", "{{ each.id }}");
-        materialButton.innerHTML = "<i class='fal fa-fw fa-{{ each.icon }}'></i> {{ each.name }}";
+        $(materialButton).attr("data-material", "{{ each.material__id }}");
+        materialButton.innerHTML = "<i class='fal fa-fw fa-{{ each.material__icon }}'></i> {{ each.material__name }}";
         layerTogglesWrapper.appendChild(materialButton);
       {% endfor %}
 

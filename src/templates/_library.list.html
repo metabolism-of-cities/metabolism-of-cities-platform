@@ -1,5 +1,5 @@
 <div class="resource-list">
-  <table class="table {% if load_datatables %}datatable datatable-card{% endif %}">
+  <table class="table border bg-white {% if load_datatables %}datatable datatable-card{% endif %}">
     <thead>
       <tr>
         {% if show_creation %}
@@ -17,6 +17,7 @@
         {% if not "hide_year" in request.GET %}
           <th class="year">Year</th>
         {% endif %}
+        <th class="add-image"></th>
       </tr>
     </thead>
     <tbody>
@@ -31,11 +32,6 @@
             <a href="{% if relative_url %}{{ each.id }}/{% else %}{% url URLS.LIBRARY_ITEM each.id %}{% endif %}">
               {{ each }}
             </a>
-            {% if show_image_upload_link and each.type.name != "Image" %}
-              <a href="form/?inventory=true&amp;type=38&amp;parent={{ each.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" title="Upload an image from this document" class="ml-2">
-                <i class="fal fa-image fa-fw mr-1"></i>
-              </a>
-            {% endif %}
           </td>
           <td class="type">
             {% if each.meta_data.processed %}
@@ -69,6 +65,13 @@
           {% if not "hide_year" in request.GET %}
             <td class="year">{{ each.year|default_if_none:"" }}</td>
           {% endif %}
+          <td class="py-0 align-middle text-right add-image">
+            {% if show_image_upload_link and each.type.name != "Image" %}
+              <a href="form/?inventory=true&amp;type=38&amp;parent={{ each.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" title="Upload an image from this document" class="btn btn-sm btn-primary-basic">
+                <i class="fal fa-plus mr-2"></i> Add image
+              </a>
+            {% endif %}
+          </td>
         </tr>
       {% endfor %}
     </tbody>
