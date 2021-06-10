@@ -20,7 +20,9 @@
             </div>
             <div class="col-6 text-muted text-right avatar-line-height" title="{{ each.date_created|date:'l j F Y, H:i e' }}">
               {% if not each.get_icon and each.author == request.user.people %}
-                <a href="/messages/{{ each.id }}/edit/?next={{ request.get_full_path|urlencode }}"><i class="fa fa-pencil"></i></a>
+                <a href="/messages/{{ each.id }}/edit/?next={{ request.get_full_path|urlencode }}" class="mr-4">
+                  <i class="fal fa-edit mr-2"></i> Edit message
+                </a>
               {% endif %}
               {{ each.date_created|timesince }} ago
             </div>
