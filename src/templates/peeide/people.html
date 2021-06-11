@@ -29,13 +29,17 @@
 <!-- open container -->
 <div class="container">
   <section>
-    <h1>{{ webpage }}</h1>
+    <h2>{{ webpage }}</h2>
 
-    {{ webpage.get_description }}
+    <div class="row">
+      <div class="col-lg-8">
+        {{ webpage.get_description }}
+      </div>
+    </div>
   </section>
 
   <section>
-    <h2>Our team</h2>
+    <h3 class="mb-4">Our team</h3>
 
     <div class="row row-people">
       {% for each in team %}
@@ -45,9 +49,9 @@
               <img src="{{ each.image.thumbnail.url }}" alt="">
             </div>
             <div class="col-9">
-              <h5 class="mb-0 text-ndee-primary">{{ each }}</h5>
+              <h6 class="mb-0 text-ndee-primary">{{ each }}</h6>
               {% if each.affiliation %}
-                <div class="text-ndee-purple"><small>{{ each.affiliation }}</small></div>
+                <div><small>{{ each.affiliation }}</small></div>
               {% endif %}
               <div class="pt-1">
                 {% if each.website %}
@@ -71,7 +75,6 @@
                   </a>
                 {% endif %}
               </div>
-              <!-- <a href="{% url URLS.PROFILE each.id %}" class="btn btn-ndee btn-ndee-sm btn-ndee-primary">View profile</a> -->
             </div>
           </div>
         </div>
@@ -81,7 +84,7 @@
   </section>
 
   <section>
-    <h2>Our network</h2>
+    <h3 class="mb-4">Our network</h3>
 
     <div class="row row-people">
       {% for each in network %}
@@ -91,7 +94,10 @@
               <img src="{{ each.image.thumbnail.url }}" alt="">
             </div>
             <div class="col-9">
-              <h5 class="text-ndee-primary">{{ each }}</h5>
+              <h6 class="text-ndee-primary">{{ each }}</h6>
+              {% if each.affiliation %}
+                <div><small>{{ each.affiliation }}</small></div>
+              {% endif %}
               {{ each.get_description|truncatewords_html:40 }}
               <div class="pt-2">
                 {% if each.website %}

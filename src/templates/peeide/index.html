@@ -9,7 +9,7 @@
   #ndee-hero {
     background-color: #008DACE6;
     position: relative;
-    padding: 4rem 2rem;
+    padding: 6rem 2rem;
   }
 
   #ndee-hero img {
@@ -138,14 +138,14 @@
   <div class="container">
     <div class="my-4">
       <h3 class="text-ndee-primary font-weight-bold">
-        Featured research <a href="{% url 'peeide:research' %}"><i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i></a>
+        Featured resources <a href="{% url 'peeide:research' %}"><i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i></a>
       </h3>
     </div>
 
     <div class="row">
       {% for each in research %}
         <div class="col-md-6 col-lg-4 mb-4">
-          <div class="p-3 bg-ndee-light-blue rounded single-research">
+          <div class="p-4 bg-ndee-light-blue rounded single-research">
             <h5 class="text-ndee-primary">{{ each }}</h5>
             <div class="description">{{ each.get_description }}</div>
             <i class="fal fa-{{ each.icon }} text-ndee-primary"></i>
@@ -153,10 +153,6 @@
         </div>
       {% endfor %}
     </div>
-
-    <a href="{% url 'peeide:research' %}" class="btn btn-lg btn-ndee btn-ndee-primary">
-      More about our research <i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i>
-    </a>
   </div>
 </section>
 
@@ -172,7 +168,7 @@
                   <strong class="text-ndee-purple d-block text-uppercase mb-3">{{ each.date|date:"d F Y" }}</strong>
                   <h3 class="text-ndee-primary font-weight-bold">{{ each }}</h3>
                   {{ each.get_description|truncatewords_html:40 }}
-                  <a class="btn btn-ndee btn-ndee-sm btn-ndee-primary" href="{{ each.get_absolute_url }}">Read more</a>
+                  <!-- <a class="btn btn-ndee btn-ndee-sm btn-ndee-primary" href="{{ each.get_absolute_url }}">Read more</a> -->
                 </div>
               {% endfor %}
             </div>
@@ -266,44 +262,34 @@
           <div class="p-3 bg-ndee-light-blue rounded project-text">
             <h5 class="text-ndee-primary">{{ each }}</h5>
             {{ each.get_description }}
-            {% if each.meta_data.project_leader %}
-              <div class="text-ndee-purple mb-4 project-leads">
-                <div class="text-dark font-weight-bold">Project lead(s)</div>
-                {{ each.meta_data.project_leader }}
-              </div>
-            {% endif %}
-            {% if each.url %}
-              <a class="btn btn-ndee bg-ndee-primary text-white btn-ndee-sm" href="{{ each.url }}">Read more</a>
-            {% endif %}
           </div>
         </div>
       {% endfor %}
     </div>
-
-    <a href="{% url 'peeide:research' %}" class="btn btn-lg btn-ndee btn-ndee-primary">
-      More projects <i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i>
-    </a>
   </div>
 </section>
 
 <section class="bg-ndee-light-blue text-center py-5">
   <div class="container">
-    <i class="fal fa-newspaper mr-2 fa-4x mb-3"></i>
-    <h4 class="mb-4">
-      Stay connected with nDEE by joining our email list here!<br>
-      We use this list to share publications, research opportunities, and news
-    </h4>
-
-    <form id="newsletter-form" action="https://digitalenergyenvironment.groups.io/g/all/signup?u=5607149713587679406" method="post" id="groupsio-embedded-subscribe-form" name="groupsio-embedded-subscribe-form" target="_blank">
-      <div class="input-group">
-        <input type="email" value="" name="email" class="form-control" id="email" placeholder="Email address" required>
-        <div class="input-group-append">
-          <button type="submit" value="Subscribe" name="subscribe" id="groupsio-embedded-subscribe" class="btn btn-ndee btn-ndee-primary rounded-right">
-            <i class="fa fa-paper-plane"></i> Subscribe
-          </button>
-        </div>
+    <div class="row">
+      <div class="col-lg-5">
+        Stay connected with nDEE by joining our email list here!<br>
+        We use this list to share publications, research opportunities, and news
       </div>
-    </form>
+      <div class="col-lg-7">
+        <form id="newsletter-form" action="https://digitalenergyenvironment.groups.io/g/all/signup?u=5607149713587679406" method="post" id="groupsio-embedded-subscribe-form" name="groupsio-embedded-subscribe-form" target="_blank">
+          <div class="input-group">
+            <input type="email" value="" name="email" class="form-control" id="email" placeholder="Email address" required>
+            <div class="input-group-append">
+              <button type="submit" value="Subscribe" name="subscribe" id="groupsio-embedded-subscribe" class="btn btn-ndee btn-ndee-primary rounded-right">
+                <i class="fa fa-paper-plane"></i> Subscribe
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
   </div>
 </section>
 

@@ -54,13 +54,17 @@
 <!-- open container -->
 <div class="container">
   <section>
-    <h1>{{ webpage }}</h1>
+    <h2>{{ webpage }}</h2>
 
-    {{ webpage.get_description }}
+    <div class="row">
+      <div class="col-lg-8">
+        {{ webpage.get_description }}
+      </div>
+    </div>
   </section>
 
   <section>
-    <h2>Research</h2>
+    <h3 class="mb-4">Research</h4>
 
     <div class="row research">
       {% for each in research %}
@@ -76,7 +80,7 @@
   </section>
 
   <section>
-    <h2>Projects</h2>
+    <h3 class="mb-4">Projects</h3>
 
     <div class="row projects">
       {% for each in projects %}
@@ -84,8 +88,8 @@
           {% if each.image %}
             <img class="rounded-top project-image" src="{{ each.image.thumbnail.url }}" alt="{{ each }} image">
           {% endif %}
-          <div class="p-3 bg-ndee-light-blue rounded project-text">
-            <h5 class="text-ndee-primary">{{ each }}</h5>
+          <div class="p-3 pt-4 rounded project-text">
+            <h5 class="text-ndee-primary mt-4">{{ each }}</h5>
             {{ each.get_description }}
             {% if each.meta_data.project_leader %}
               <div class="text-ndee-purple mb-4 project-leads">

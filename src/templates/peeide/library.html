@@ -48,9 +48,13 @@
 <!-- open container -->
 <div class="container">
   <section>
-    <h1>{{ webpage }}</h1>
+    <h2>{{ webpage }}</h2>
 
-    {{ webpage.get_description }}
+    <div class="row">
+      <div class="col-lg-8">
+        {{ webpage.get_description }}
+      </div>
+    </div>
   </section>
 
   {% include "peeide/_library.search.html" %}
