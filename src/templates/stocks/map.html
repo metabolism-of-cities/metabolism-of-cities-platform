@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block title %}Material Stocks{% endblock %}
-{% block page_name %}material-stocks map{% endblock %}
 
 {% block head %}
   <style>
@@ -90,27 +89,36 @@
       border: 1px solid #ccc;
       background-color: #fff;
       border-radius: .25rem;
+      border: 2px solid #0003;
     }
 
-    .layer-toggles .material {
+    .layer-toggles > div {
       cursor: pointer;
       padding: .5rem;
       line-height: 14px;
       border-top: 1px solid #ccc;
     }
 
-    .layer-toggles .material i {
+    .layer-toggles .toggle-list {
+      background-color: #efefef;
+    }
+
+    .layer-toggles > div i {
       margin-right: .5rem;
     }
 
+    .layer-toggles .toggle-list i.float-right {
+      margin-left: .5rem;
+      margin-right: 0;
+    }
 
-    .layer-toggles .material:first-of-type {
+    .layer-toggles > div:first-of-type {
       border-top: none;
       border-top-left-radius: .25rem;
       border-top-right-radius: .25rem;
     }
 
-    .layer-toggles .material:last-of-type {
+    .layer-toggles > div:last-of-type {
       border-bottom-left-radius: .25rem;
       border-bottom-right-radius: .25rem;
     }
@@ -121,6 +129,10 @@
 
     .layer-toggles .material.selected {
       background-color: #e9ecef;
+    }
+
+    .layer-toggles .material.hidden {
+      display: none;
     }
   </style>
 {% endblock %}
@@ -620,8 +632,12 @@
     onAdd: function(map) {
       var layerTogglesWrapper = L.DomUtil.create("div", "layer-toggles");
 
+      var dropdownButton = L.DomUtil.create("div", "toggle-list");
+      dropdownButton.innerHTML = "<i class='fal fa-fw fa-bars'></i> Materials <i class='fas fa-fw fa-angle-down float-right'></i>";
+      layerTogglesWrapper.appendChild(dropdownButton);
+
       {% for each in materials %}
-        var materialButton = L.DomUtil.create("div", "material");
+        var materialButton = L.DomUtil.create("div", "material hidden");
         $(materialButton).attr("data-material", "{{ each.material__id }}");
         materialButton.innerHTML = "<i class='fal fa-fw fa-{{ each.material__icon }}'></i> {{ each.material__name }}";
         layerTogglesWrapper.appendChild(materialButton);
@@ -646,6 +662,12 @@
 
     selectedMaterial = $(this).data("material");
     getData(selectedMaterial, "{{ box.id }}", "{{ id }}")
+  })
+
+  // toggle visibility of materials in dropdown
+  $("body").on("click", ".layer-toggles .toggle-list", function() {
+    $(".layer-toggles .material").toggleClass("hidden")
+    $(this).find("i.float-right").toggleClass("fa-angle-down fa-angle-up")
   })
 
   // load new page when wanting to explore a new area or detail level

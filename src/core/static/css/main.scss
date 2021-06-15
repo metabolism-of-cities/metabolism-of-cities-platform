@@ -19,7 +19,7 @@ $cityloops-secondary: #00b6ed;
   text-decoration: none !important;
 
   &:hover {
-    margin-top: -3px;
+    transform: translateY(-3px);
   }
 }
 

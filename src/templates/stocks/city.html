@@ -8,6 +8,10 @@
   .description p:last-of-type {
     margin-bottom: 0;
   }
+
+  .btn-icon.level {
+    height: unset;
+  }
 </style>
 {% endblock %}
 
@@ -20,14 +24,14 @@
         <div class="leaflet-map" id="space-map"></div>
       </div>
       <div class="col-lg-6">
-        <ul class="list-group list-group-flush">
+        <ul class="list-group list-group-flush mb-4">
           <li class="list-group-item table-item">
             <div><i class="fal fa-fw fa-users mr-2"></i> Population</div>
-            <div>123123</div>
+            <div>___</div>
           </li>
           <li class="list-group-item table-item">
             <div><i class="fal fa-fw fa-building mr-2"></i> Number of buildings</div>
-            <div>{{ data_source.length }}</div>
+            <div>___</div>
           </li>
           <li class="list-group-item table-item">
             <div><i class="fal fa-fw fa-archive mr-2"></i> Materials</div>
@@ -35,35 +39,34 @@
           </li>
           <li class="list-group-item table-item">
             <div><i class="fal fa-fw fa-clone mr-2"></i> Area</div>
-            <div>123,123 km<sup>2</sup> </div>
+            <div>___ km<sup>2</sup> </div>
           </li>
         </ul>
+
+        <a class="btn btn-primary btn-lg" href="{% url 'stocks:maps' space.slug %}"><i class="fal fa-map"></i> Explore map</a>
+        <a class="btn btn-primary-basic btn-lg" href="{% url URLS.LIBRARY_ITEM data_source.id %}"><i class="fal fa-info-circle"></i> Data source info</a>
       </div>
     </div>
   </section>
 
   <section>
     <div class="row">
-      <div class="col-lg-4">
-        <h4>Data source</h4>
-        <hr>
-        <h5>{{ data_source }}</h5>
-        <div class="description">{{ data_source.get_description }}</div>
-      </div>
-      <div class="col-lg-4">
+      <div class="col-lg-6">
         <h4>Detail levels</h4>
         {% for each in levels %}
-          <hr>
-          <h5>{{ each.get_shortname }}</h5>
-          <div class="description">{{ each.get_description }}</div>
+          <a href="{% url URLS.LIBRARY_ITEM each.id %}" class="btn-icon level border rounded bg-white p-3 mb-4">
+            <h5>{{ each.get_shortname }}</h5>
+            <div class="description">{{ each.get_description }}</div>
+          </a>
         {% endfor %}
       </div>
-      <div class="col-lg-4">
+      <div class="col-lg-6">
         <h4>Materials</h4>
-        {% for each in materials %}
-          <hr>
-          <div><i class="fal fa-tree-alt fa-{{each.material__icon}} fa-fw mr-2"></i> {{ each.material__name }}</div>
-        {% endfor %}
+        <div class="list-group list-group-flush">
+          {% for each in materials %}
+            <div class="list-group-item"><i class="fal fa-{{each.material__icon}} fa-fw mr-2"></i> {{ each.material__name }}</div>
+          {% endfor %}
+        </div>
       </div>
     </div>
   </section>

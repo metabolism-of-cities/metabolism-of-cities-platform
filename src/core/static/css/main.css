@@ -3,7 +3,7 @@
   transition: all .1s;
   text-decoration: none !important; }
   .gallery a:hover, a.large-icon-box:hover, .btn-icon:hover, .btn-thumbnail:hover, .btn-card:hover {
-    margin-top: -3px; }
+    transform: translateY(-3px); }
 
 .gallery a, a.large-icon-box, .btn-icon, .btn-thumbnail, .btn-card {
   transition: all .1s;

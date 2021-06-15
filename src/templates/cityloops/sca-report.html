@@ -459,25 +459,6 @@
 
     <section id="indicators">
       <h1>Indicators</h1>
-      <table class="table border mb-4">
-        <thead>
-          <tr>
-            <th>Indicator</th>
-            <th>?</th>
-            <th>?</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for each in indicator_scale_list %}
-            <tr>
-              <td><a href="{% url 'cityloops:indicators' %}#indicator-{{ each.indicator.number }}">{{ each.indicator }}</a></td>
-              <td></td>
-              <td></td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-
       {% if report.indicators_table_html %}
         {{ report.indicators_table_html|safe }}
       {% else %}
@@ -492,7 +473,7 @@
     </section>
 
     <section id="matrix">
-      <h1>Data gap analysis (matrix)</h1>
+      <h1>Data quality assessment</h1>
 
       <div class="mb-4">
         <label>Matrix based on the data gap analysis matrix</label><br>
