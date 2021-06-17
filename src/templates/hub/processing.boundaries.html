@@ -4,6 +4,12 @@
 
 {% block title %}{{ SYSTEM_NAME_SINGULAR|title }} boundaries{% endblock %}
 
+{% block head %}
+<style type="text/css">
+#gps_form{display:none}
+</style>
+{% endblock %}
+
 {% block content %}
 
 {% include "hub/_nav.html" %}
@@ -53,7 +59,21 @@
             </select>
           </p>
         </div>
-        {% if not curator %}
+        {% if curator and not space.meta_data.boundaries_origin %}
+          <p>No shapefile yet but want to enter GPS coordinates in the meantime? <a href="#" id="gps">Click here</a></p>
+          <form id="gps_form" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+              <label>Latitude</label>
+              <input type="text" class="form-control" name="lat" required>
+            </div>
+            <div class="form-group">
+              <label>Longitude</label>
+              <input type="text" class="form-control" name="lng" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        {% elif not curator %}
           <em>Please log in or obtain the required permissions so that you can work on these files.</em>
         {% endif %}
       </div>
@@ -112,6 +132,11 @@
       $("#existing").on("select2:select", function (e) {
           var data = e.params.data;
           window.location = "{{ request.get_full_path }}?id="+ data.id;
+      });
+
+      $("#gps").click(function(e){
+        e.preventDefault();
+        $("#gps_form").toggle();
       });
 
   </script>

@@ -36,6 +36,8 @@ from django.utils.safestring import mark_safe
 import folium
 from folium.plugins import Fullscreen
 
+from django.contrib.gis import geos
+
 def index(request):
     context = {
         "show_project_design": True,
@@ -1891,6 +1893,11 @@ def hub_processing_boundaries(request, space=None):
         space.save()
         messages.success(request, "The boundaries have been successfully saved. You can see them on the overview map below.")
         return redirect(project.slug + ":space_map", space.slug)
+    elif request.method == "POST" and "lat" in request.POST:
+        space.geometry = geos.Point(float(request.POST["lng"]), float(request.POST["lat"]))
+        space.save()
+        messages.success(request, "The GPS coordinates have been saved - see the map below.")
+        return redirect(project.slug + ":dashboard", space.slug)
 
     context = {
         "menu": "processing",
