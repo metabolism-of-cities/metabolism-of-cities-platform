@@ -271,6 +271,52 @@ def library_overview(request, type, space=None):
     }
     return render(request, "staf/library.html", context)
 
+def map(request):
+    project = get_project(request)
+
+    # Same block is included in data/views (index)
+    spaces = ReferenceSpace.objects.filter(activated__part_of_project=project, geometry__isnull=False)
+    features = []
+
+    # We should cache this block!
+    for each in spaces:
+        geo = each.geometry.centroid
+        url = reverse(project.slug + ":dashboard", args=[each.slug])
+
+        content = ""
+        if each.image:
+            content = f"<a class='d-block' href='{url}'><img alt='{each.name}' src='{each.get_thumbnail}' /></a><hr>"
+        content = content + f"<a href='{url}'>View details</a>"
+
+        try:
+            features.append({
+                "type": "Feature",
+                "geometry": json.loads(geo.json),
+                "properties": {
+                    "name": each.name,
+                    "id": each.id,
+                    "content": content,
+                    "color": "",
+                },
+            })
+        except Exception as e:
+            messages.error(request, f"We had an issue reading one of the items which had an invalid geometry ({each}). Error: {str(e)}")
+
+    data = {
+        "type":"FeatureCollection",
+        "features": features,
+        "geom_type": "Point",
+    }
+
+    context = {
+        "load_leaflet": True,
+        "load_leaflet_item": True,
+        "load_datatables": True,
+        "spaces": spaces,
+        "data": data,
+    }
+    return render(request, "staf/map.html", context)
+
 def space_map(request, space):
     space = get_space(request, space)
     list = LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False, type__in=[20,40,41]).order_by("date_created")

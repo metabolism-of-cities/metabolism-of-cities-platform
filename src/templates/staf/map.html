@@ -1,0 +1,49 @@
+{% extends '_base.html' %}
+{% load moc_extras %}
+{% load humanize %}
+
+{% block head %}
+  <style>
+    .leaflet-map {
+      height: 600px;
+      max-height: 80vh;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  <h1>{% block title %}Our {{ SYSTEM_NAME_PLURAL }}{% endblock %}</h1>
+
+  <div class="alert alert-secondary">{{ spaces.count }} {{ SYSTEM_NAME_PLURAL }} found.</div>
+
+  <section class="mb-3">
+    <div id="map" class="leaflet-map mt-4"></div>
+  </section>
+
+  {% with link=PROJECT.slug|add:":dashboards" %}
+    <a class="btn btn-default-outline" href="{% url link %}">View all {{ SYSTEM_NAME_PLURAL }} in a list <i class="fal fa-arrow-right"></i></a>
+  {% endwith %}
+
+  <p class="mt-3">
+    Is your {{ SYSTEM_NAME_SINGULAR }} missing? Why don't you join our community and help create a data dashboard for your {{ SYSTEM_NAME_SINGULAR }}! 
+    Head over to our 
+    {% with link=PROJECT.slug|add:":hub" %}<a href="{% url link %}">Community Portal</a>{% endwith %}
+    or read our
+    {% with link=PROJECT.slug|add:":work_beginners_guide" %}<a href="{% url link %}">Beginner's Guide</a>{% endwith %}
+  </p>
+
+{% endblock %}
+
+{% block footer %}
+<script>
+  $(".toggle-tabs a").click(function(e){
+    $(".toggle-tabs a").removeClass("active");
+    $(this).addClass("active");
+    e.preventDefault();
+    var show = $(this).data("show");
+    $(".show-element").addClass("d-none");
+    $(".show-"+show).removeClass("d-none");
+  });
+</script>
+{% endblock %}

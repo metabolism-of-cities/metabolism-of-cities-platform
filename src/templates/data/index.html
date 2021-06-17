@@ -9,7 +9,11 @@
 {% block css %}
 <style type="text/css">
 #box2,#box3{display:none}
-</style>
+  .leaflet-map {
+    height: 600px;
+    max-height: 80vh;
+  }
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -17,6 +21,24 @@
 
   <h2>Metabolism of Cities Data Hub</h2>
   {{ webpage.get_description }}
+
+  <div class="text-center alert alert-secondary">{{ spaces.count }} {{ SYSTEM_NAME_PLURAL }} found.</div>
+
+  <section class="mb-3">
+    <div id="map" class="leaflet-map mt-4"></div>
+  </section>
+
+  {% with link=PROJECT.slug|add:":dashboards" %}
+    <a class="btn btn-default-outline" href="{% url link %}">View all {{ SYSTEM_NAME_PLURAL }} in a list <i class="fal fa-arrow-right"></i></a>
+  {% endwith %}
+
+  <p class="mt-3">
+    Is your {{ SYSTEM_NAME_SINGULAR }} missing? Why don't you join our community and help create a data dashboard for your {{ SYSTEM_NAME_SINGULAR }}! 
+    Head over to our 
+    {% with link=PROJECT.slug|add:":hub" %}<a href="{% url link %}">Community Portal</a>{% endwith %}
+    or read our
+    {% with link=PROJECT.slug|add:":work_beginners_guide" %}<a href="{% url link %}">Beginner's Guide</a>{% endwith %}
+  </p>
 
   <h2>Phases</h2>
   <div class="row phases">

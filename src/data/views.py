@@ -16,6 +16,7 @@ from functools import wraps
 from django.views.decorators.clickjacking import xframe_options_exempt
 from core.mocfunctions import *
 import random
+import json
 
 def index(request):
  
@@ -24,7 +25,46 @@ def index(request):
     selected = random.sample(list(id_list), 3)
     objects = ReferenceSpace.objects.filter(id__in=selected)
 
+    # Same block is included in index.html
+    spaces = ReferenceSpace.objects.filter(activated__part_of_project=project, geometry__isnull=False)
+    features = []
+
+    # We should cache this block!
+    for each in spaces:
+        geo = each.geometry.centroid
+        url = reverse(project.slug + ":dashboard", args=[each.slug])
+
+        content = ""
+        if each.image:
+            content = f"<a class='d-block' href='{url}'><img alt='{each.name}' src='{each.get_thumbnail}' /></a><hr>"
+        content = content + f"<a href='{url}'>View details</a>"
+
+        try:
+            features.append({
+                "type": "Feature",
+                "geometry": json.loads(geo.json),
+                "properties": {
+                    "name": each.name,
+                    "id": each.id,
+                    "content": content,
+                    "color": "",
+                },
+            })
+        except Exception as e:
+            messages.error(request, f"We had an issue reading one of the items which had an invalid geometry ({each}). Error: {str(e)}")
+
+    data = {
+        "type":"FeatureCollection",
+        "features": features,
+        "geom_type": "Point",
+    }
+
     context = {
+        "load_leaflet": True,
+        "load_leaflet_item": True,
+        "load_datatables": True,
+        "spaces": spaces,
+        "data": data,
         "show_project_design": True,
         "list": objects,
         "layers": get_layers(request),

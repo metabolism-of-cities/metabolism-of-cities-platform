@@ -191,4 +191,6 @@ baseline_staf_urlpatterns = [
 
     path("sankeybuilder/", staf.sankeybuilder, name="sankeybuilder"),
     path("controlpanel/shapefiles/", staf.controlpanel_shapefiles, name="controlpanel_shapefiles"),
+
+    path("map/", staf.map, name="map"),
 ]
