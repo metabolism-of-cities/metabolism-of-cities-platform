@@ -44,6 +44,15 @@
     .demand a.single-item:hover {
       color: #af316a !important;
     }
+
+    .lightbox a {
+      background-size: cover;
+      background-position: center;
+      cursor: zoom-in;
+      display: block;
+      height: 200px;
+      width: 100%;
+    }
   </style>
 {% endblock %}
 
@@ -72,12 +81,11 @@
                   <li class="list-group-item"><i class="fal fa-fw fa-map-marker-alt mr-2"></i> {{ each.owner.meta_data.address }}</li>
                 {% endif %}
                 <li class="list-group-item"><i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-2"></i>{{ each.material_type.parent }}: {{ each.material_type }}</li>
-                <li class="list-group-item"><i class="fal fa-fw fa-balance-scale mr-2"></i>{{ each.absolute_quantity }} {{ each.unit.symbol }}</li>
+                <li class="list-group-item"><i class="fal fa-fw fa-balance-scale mr-2"></i> {{ each.absolute_quantity|floatformat }} {{ each.unit.symbol }}</li>
                 <li class="list-group-item text-{% if each.type == 'supply' %}primary{% else %}secondary{% endif %}">
-                  <i class="fal fa-fw fa-{% if each.type == 'supply' %}sign-out{% else %}sign-in{% endif %} mr-2"></i>
-                  {% if each.type == "supply" %}Supply{% else %}Demand{% endif %}
+                  <i class="fal fa-fw fa-{% if each.type == 'supply' %}sign-out{% else %}sign-in{% endif %} mr-2"></i> {% if each.type == "supply" %}Supply{% else %}Demand{% endif %}
                 </li>
-                <li class="list-group-item"><i class="fal fa-fw fa-calendar mr-2"></i>{{ each.start_date|date:'d N Y' }} - {{ each.end_date|date:'d N Y' }}</li>
+                <li class="list-group-item"><i class="fal fa-fw fa-calendar mr-2"></i> {{ each.start_date|date:'d N Y' }} - {% if each.end_date %}{{ each.end_date|date:"d M Y" }}{% else %}open ended{% endif %}</li>
                 <li class="list-group-item"><i class="fal fa-fw fa-calendar-plus mr-2"></i> Added on {{ each.date_created|date:'d F' }}</li>
                 <li class="list-group-item text-center">
                   <a class="btn btn-primary" href="{% url 'platformu:admin_datapoint' each.id %}">More details</a>
@@ -119,7 +127,7 @@
               {{ each.name }}<br>
             {% endif %}
             {{ each.material_type }}</td>
-            <td class="text-nowrap">{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
+            <td class="text-nowrap">{{ each.absolute_quantity|floatformat }} {{ each.unit.symbol }}</td>
             <td class="text-nowrap">
               <a href="{% url 'platformu:admin_entity' my_organization.id each.owner.id %}">{{ each.owner }}</a>
             </td>
@@ -220,7 +228,7 @@
         "status": "{{ each.type }}",
         "material": "{{ each.material_type }}",
         "owner": "{{ each.owner }}",
-        "quantity": {{ each.absolute_quantity }},
+        "quantity": {{ each.absolute_quantity|floatformat }},
         "symbol": "{{ each.unit.symbol }}",
         "id": {{ each.id }},
       },

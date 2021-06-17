@@ -608,6 +608,7 @@ def admin_entity_materials(request, organization, id, slug=None):
         "slug": slug,
         "page": "entity_" + slug,
         "data": MaterialDemand.objects.filter(owner=info, material_type__in=materials),
+        "load_lightbox": True,
     }
     return render(request, "metabolism_manager/admin/entity.materials.html", context)
 

@@ -8,6 +8,20 @@
     #add-material table.table {
       border: none !important;
     }
+
+    .lightbox a {
+      background-size: cover;
+      background-position: center;
+      cursor: zoom-in;
+      display: block;
+      height: 200px;
+      width: 100%;
+    }
+
+    #gallery-wrapper.hidden,
+    #table-wrapper.hidden {
+      display: none;
+    }
   </style>
 {% endblock %}
 
@@ -31,49 +45,39 @@
   </div>
 
   {% if data %}
-    <div id="gallery-wrapper" class="row">
+    <div id="gallery-wrapper" class="row hidden">
       {% for each in data %}
-        <div class="col-lg-4 col-md-6">
-          <div class="border bg-white p-3">
-            {% if each.image %}
-              <a href="{{ each.image.large.url }}" style="background-image: url('{{ each.image.large.url }}');" data-caption="{{ each.owner }}" class="card-img-top d-block"></a>
-            {% else %}
-              {% if slug == "resources" or slug == "technology" %}
-                  <i class="fal fa-fw fa-{{ each.material_type.parent.icon }}"></i>
-                  {{ each.material_type.parent }}
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card">
+            <div class="card-header">
+              {% if each.name %}
+                {{ each.name }}
+              {% else %}
+                {{ each.material_type }}
               {% endif %}
-
+            </div>
+            {% if each.image %}
+              <div class="lightbox">
+                <a href="{{ each.image.large.url }}" style="background-image: url('{{ each.image.large.url }}');" data-caption="{% if each.name %}{{ each.name }}{% else %}{{ each.material_type }}{% endif %}" class="card-img-top d-block"></a>
+              </div>
             {% endif %}
-            {% if each.quantity > 0 %}
-              <span class="text-secondary">
-                <i class="fal fa-sign-in"></i> Demand
-              </span>
-            {% else %}
-              <span class="text-primary">
-                <i class="fal fa-sign-out"></i> Supply
-              </span>
-            {% endif %}
-
-            {% if slug == "resources" or slug == "technology" %}
-                <i class="fal fa-fw fa-{{ each.material_type.parent.icon }}"></i>
-                {{ each.material_type.parent }}
-            {% endif %}
-
-            {% if each.name %}
-              {{ each.name }}
-            {% else %}
-              {{ each.material_type }}
-            {% endif %}
-
-            {% if slug == "space" %}
-              {{ each.get_availability_display }}
-            {% endif %}
-
-            {{ each.absolute_quantity }} {{ each.unit.symbol }}
-
-            {{ each.start_date|date:"d M Y" }} - {% if each.end_date %}{{ each.end_date|date:"d M Y" }}{% else %}open ended{% endif %}
-              <a class="btn btn-primary-basic btn-sm" href="edit/{{ each.id }}/?prev={{ request.get_full_path }}"><i class="fal fa-pencil mr-0"></i></a>
-              <a class="btn btn-primary btn-sm" href="{% url 'platformu:admin_datapoint' each.id %}"><i class="fa fa-info-circle mr-0"></i></a>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-2"></i> {{ each.material_type.parent }} - {{ each.material_type }}
+              </li>
+              {% if each.owner.meta_data.address %}
+                <li class="list-group-item"><i class="fal fa-fw fa-map-marker-alt mr-2"></i> {{ each.owner.meta_data.address }}</li>
+              {% endif %}
+              <li class="list-group-item"><i class="fal fa-fw fa-balance-scale mr-2"></i> {{ each.absolute_quantity|floatformat }} {{ each.unit.symbol }}</li>
+              <li class="list-group-item text-{% if each.type == 'supply' %}primary{% else %}secondary{% endif %}">
+                <i class="fal fa-fw fa-{% if each.type == 'supply' %}sign-out{% else %}sign-in{% endif %} mr-2"></i> {% if each.type == "supply" %}Supply{% else %}Demand{% endif %}
+              </li>
+              <li class="list-group-item"><i class="fal fa-fw fa-calendar mr-2"></i> {{ each.start_date|date:'d N Y' }} - {% if each.end_date %}{{ each.end_date|date:"d M Y" }}{% else %}open ended{% endif %}</li>
+              <li class="list-group-item"><i class="fal fa-fw fa-calendar-plus mr-2"></i> Added on {{ each.date_created|date:'d F' }}</li>
+              <li class="list-group-item text-center">
+                <a class="btn btn-primary" href="{% url 'platformu:admin_datapoint' each.id %}">More details</a>
+              </li>
+            </ul>
           </div>
         </div>
       {% endfor %}
@@ -127,7 +131,7 @@
                   {{ each.get_availability_display }}
                 </td>
               {% endif %}
-              <td>{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
+              <td>{{ each.absolute_quantity|floatformat }} {{ each.unit.symbol }}</td>
               <td>
                 {{ each.start_date|date:"d M Y" }} - {% if each.end_date %}{{ each.end_date|date:"d M Y" }}{% else %}open ended{% endif %}
               </td>
@@ -311,7 +315,15 @@
 
     // if add parameter is added to URL, click the add new entry button
     {% if request.GET.action == "add" %}
-    $(".add-existing").click();
+      $(".add-existing").click();
     {% endif %}
+
+    // toggle between list and gallery view
+    $("#gallery").change(function() {
+      $("#gallery-wrapper, #table-wrapper").toggleClass("hidden");
+    })
+
+    // uncheck gallery view on load
+    $("#gallery").prop("checked", false)
   </script>
 {% endblock %}
