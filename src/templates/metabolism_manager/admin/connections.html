@@ -73,14 +73,6 @@
             opacity: 0,
           }
         },
-        // cursor: "pointer",
-        // point: {
-        //   events: {
-        //     click: function () {
-        //       location.href = 'https://en.wikipedia.org/wiki/' + this.options.key;
-        //     }
-        //   }
-        // },
       }
     },
     tooltip: false,
@@ -127,7 +119,8 @@
             to: "{{ each.record_child }}",
             className: "test",
             color: "#000",
-            width: "{% if each.meta_data.dependency == 'Low' %}1{% elif each.meta_data.dependency == 'Medium' %}3{% elif each.meta_data.dependency == 'High' %}7{% endif %}",
+            // width: "{% if each.meta_data.dependency == 'Low' %}1{% elif each.meta_data.dependency == 'Medium' %}3{% elif each.meta_data.dependency == 'High' %}7{% endif %}",
+            width: "2,"
           },
         {% endfor %}
       ]

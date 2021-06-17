@@ -482,7 +482,10 @@ def admin_entity_form(request, organization, id=None):
         date_now = datetime.datetime.now()
         info.meta_data = {
             "address": request.POST.get("address"),
+            "contact": request.POST.get("contact"),
             "employees": request.POST.get("employees"),
+            "workers": request.POST.get("workers"),
+            "volunteers": request.POST.get("volunteers"),
             "office_space": request.POST.get("office_space"),
             "operational_space": request.POST.get("operational_space"),
             "logistics_space": request.POST.get("logistics_space"),

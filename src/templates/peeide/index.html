@@ -96,17 +96,6 @@
   .project-leads {
     font-size: .75rem;
   }
-
-  #newsletter-form {
-    width: 100%;
-    max-width: 600px;
-    margin: auto;
-  }
-
-  #newsletter-form input {
-    height: 58px;
-    font-size: 20px;
-  }
 </style>
 {% endblock %}
 
@@ -269,30 +258,7 @@
   </div>
 </section>
 
-<section class="bg-ndee-light-blue text-center py-5">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-5">
-        Stay connected with nDEE by joining our email list here!<br>
-        We use this list to share publications, research opportunities, and news
-      </div>
-      <div class="col-lg-7">
-        <form id="newsletter-form" action="https://digitalenergyenvironment.groups.io/g/all/signup?u=5607149713587679406" method="post" id="groupsio-embedded-subscribe-form" name="groupsio-embedded-subscribe-form" target="_blank">
-          <div class="input-group">
-            <input type="email" value="" name="email" class="form-control" id="email" placeholder="Email address" required>
-            <div class="input-group-append">
-              <button type="submit" value="Subscribe" name="subscribe" id="groupsio-embedded-subscribe" class="btn btn-ndee btn-ndee-primary rounded-right">
-                <i class="fa fa-paper-plane"></i> Subscribe
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-
-  </div>
-</section>
-
+{% include "peeide/_newsletter-signup.html" %}
 
 <!-- <div> -->
 <!-- no need to close this container since we closed the previous one already -->

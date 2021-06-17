@@ -581,7 +581,11 @@ def sca_report_form(request, slug, sector):
 
         report.indicators_table = request.POST["indicators-table"]
 
+        report.sankey_description = request.POST["sankey-description"]
+
         report.matrix = request.POST["matrix"]
+
+        report.quality = request.POST["quality"]
 
         report.gaps = request.POST["gaps"]
 

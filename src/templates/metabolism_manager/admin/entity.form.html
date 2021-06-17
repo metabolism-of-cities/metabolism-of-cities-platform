@@ -68,6 +68,12 @@
           >{% if info.description %}{{ info.description }}{% endif %}</textarea>
         </div>
 
+        <div class="form-group">
+          <label for="contact">Contact person</label>
+          <input type="text" class="form-control" id="contact" name="contact" value="{% if info.meta_data.contact %}{{ info.meta_data.contact }}{% endif %}">
+        </div>
+
+
         <div class="form-group form-row">
           <div class="col">
             <label for="email">Email</label>
@@ -114,9 +120,21 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="employees">Employees</label>
-          <input min="0" type="number" class="form-control" id="employees" name="employees" value="{{ info.meta_data.employees }}">
+        <div class="form-row">
+          <div class="col-lg-4 form-group">
+            <label for="employees">Employees (FTE)</label>
+            <input min="0" type="number" class="form-control" id="employees" name="employees" value="{{ info.meta_data.employees }}">
+          </div>
+
+          <div class="col-lg-4 form-group">
+            <label for="workers">Active workers</label>
+            <input min="0" type="number" class="form-control" id="workers" name="workers" value="{{ info.meta_data.workers }}">
+          </div>
+
+          <div class="col-lg-4 form-group">
+            <label for="volunteers">Volunteers / members</label>
+            <input min="0" type="number" class="form-control" id="volunteers" name="volunteers" value="{{ info.meta_data.volunteers }}">
+          </div>
         </div>
 
         <div class="form-row">

@@ -30,7 +30,7 @@
     </a>
 
     <div class="btn btn-primary mt-3 show-markdown">
-      <i class="fab fa-markdown"></i> How to use Markdown <i class="fa caret fa-caret-down ml-2 mr-0"></i>
+      <i class="fab fa-markdown"></i> How to use Markdown <i class="far angle fa-angle-down ml-2 mr-0"></i>
     </div>
 
     <div class="markdown-help mt-3 d-none">
@@ -114,6 +114,9 @@
   </div>
 
   <h2>Urban context</h2>
+  <div class="mb-4 border rounded bg-primary-opaque p-3">
+    <i class="fa fa-exclamation-triangle mr-2"></i> For the population and area values, only fill in integers (whole numbers). <strong>Do not add</strong> thousand separators, decimal points, or commas.
+  </div>
 
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="row">
@@ -212,6 +215,7 @@
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">5B</span> <i class="fab fa-markdown"></i> Briefly describe how the population developed over time</label>
       <textarea class="form-control" rows="3" name="population-description">{{ report.population_description }}</textarea>
+      <small>Besides normal Markdown, here you can also add dataset visualisations by adding <code>[#ID]</code>, where <code>ID</code> is the ID number of the dataset.</small>
     </div>
   </div>
 
@@ -228,6 +232,9 @@
   </div>
 
   <h2>Sector economic activities ({{ sector }})</h2>
+  <div class="mb-4 border rounded bg-primary-opaque p-3">
+    <i class="fa fa-exclamation-triangle mr-2"></i> For the GDP and employees values, only fill in integers (whole numbers). <strong>Do not add</strong> thousand separators, decimal points, or commas.
+  </div>
 
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="row">
@@ -302,6 +309,7 @@
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">11</span> <i class="fab fa-markdown"></i> Describe the {{ sector }} sector in {{ space }}</label>
       <textarea class="form-control" rows="3" name="sector-description">{{ report.sector_description }}</textarea>
       <small>Answering these questions might help: How big is it in terms of employees or GDP/GVA? How big or small is it compared to other sectors?</small>
+      <small>Besides normal Markdown, here you can also add dataset visualisations by adding <code>[#ID]</code>, where <code>ID</code> is the ID number of the dataset.</small>
     </div>
   </div>
 
@@ -315,6 +323,7 @@
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">12B</span> <i class="fab fa-markdown"></i> Describe the actors</label>
       <textarea class="form-control" rows="3" name="actors-description">{{ report.actors_description }}</textarea>
       <small>How many are there in total? How many waste companies are there? Are they clustered or far apart? Are they close to the city or outside? What kind of other actors are there? Local mines? Local farms?</small>
+      <small>Besides normal Markdown, here you can also add dataset visualisations by adding <code>[#ID]</code>, where <code>ID</code> is the ID number of the dataset.</small>
     </div>
   </div>
 
@@ -327,17 +336,32 @@
     </div>
   </div>
 
+  <h2>Sankey description</h2>
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">14</span> <i class="fab fa-markdown"></i> Describe the sankey</label>
+      <textarea class="form-control" rows="3" name="sankey-description">{{ report.sankey_description }}</textarea>
+    </div>
+  </div>
+
   <h2>Data quality assessment</h2>
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
-      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">14</span> <i class="fab fa-markdown"></i> Matrix based on the data gap analysis matrix</label>
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">15</span> <i class="fab fa-markdown"></i> Matrix based on the data quality matrix</label>
       <textarea class="form-control" rows="3" name="matrix">{{ report.matrix }}</textarea>
     </div>
   </div>
 
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
-      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">15</span> <i class="fab fa-markdown"></i> Couple of paragraphs that explain the gaps and in general how they were closed (sources, assumptions, calculations)</label>
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">16</span> <i class="fab fa-markdown"></i> Couple of paragraphs that explain the data quality</label>
+      <textarea class="form-control" rows="3" name="quality">{{ report.quality }}</textarea>
+    </div>
+  </div>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">17</span> <i class="fab fa-markdown"></i> Couple of paragraphs that explain the gaps and in general how they were closed (sources, assumptions, calculations)</label>
       <textarea class="form-control" rows="3" name="gaps">{{ report.gaps }}</textarea>
     </div>
   </div>
@@ -345,21 +369,21 @@
   <h2>Data analysis</h2>
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
-      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">16</span> <i class="fab fa-markdown"></i> Insights on status quo</label>
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">18</span> <i class="fab fa-markdown"></i> Insights on status quo</label>
       <textarea class="form-control" rows="3" name="status-quo">{{ report.status_quo }}</textarea>
     </div>
   </div>
 
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
-      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">17</span> <i class="fab fa-markdown"></i> Upscaling (or reflect on) DAs</label>
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">19</span> <i class="fab fa-markdown"></i> Upscaling (or reflect on) DAs</label>
       <textarea class="form-control" rows="3" name="upscaling">{{ report.upscaling }}</textarea>
     </div>
   </div>
 
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
-      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">18</span> Recommendation for making the sector more circular</label>
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">20</span> Recommendation for making the sector more circular</label>
       <textarea class="form-control" rows="2" name="recommendations">{{ report.recommendations }}</textarea>
     </div>
   </div>
@@ -376,7 +400,7 @@
 {% block footer %}
   <script>
     $(".show-markdown").click(function() {
-      $(".show-markdown i.caret").toggleClass("fa-caret-down fa-caret-up")
+      $(".show-markdown i.angle").toggleClass("fa-angle-down fa-angle-up")
       $(".markdown-help").toggleClass("d-none")
     })
   </script>

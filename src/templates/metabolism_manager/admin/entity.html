@@ -29,7 +29,7 @@
 <div class="row">
   <div class="col-md-4 mb-4">
     {% if info.image %}
-      <img class="img-fluid border border-bottom-0" src="{{ info.image.url }}">
+      <img class="img-fluid w-100 border border-bottom-0" src="{{ info.image.url }}">
     {% endif %}
 
     <table class="table bg-white mb-4 metadata">
@@ -66,7 +66,7 @@
         {% if info.email %}
           <tr>
             <th class="text-nowrap">Email</th>
-            <td><a href="mailto:{{ info.email }}">{{ info.email }}</a></td>
+            <td class="text-truncate text-nowrap"><a href="mailto:{{ info.email }}">{{ info.email }}</a></td>
           </tr>
         {% endif %}
         <tr>

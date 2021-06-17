@@ -468,8 +468,13 @@
 
     <section id="visualisations">
       <h1>Visualisations</h1>
+      {% if report.sankey_description_html %}
+        {{ report.sankey_description_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">14</span>
+      {% endif %}
 
-      {{ sankey|safe }}
+      <div>{{ sankey|safe }}</div>
     </section>
 
     <section id="matrix">
@@ -480,7 +485,16 @@
         {% if report.matrix_html %}
           {{ report.matrix_html|safe }}
         {% else %}
-          <span class="question-number bg-dark text-light rounded px-2 mr-2">14</span>
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">15</span>
+        {% endif %}
+      </div>
+
+      <div class="mb-4">
+        <label>Couple of paragraphs that explain the data quality</label><br>
+        {% if report.quality_html %}
+          {{ report.quality_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">16</span>
         {% endif %}
       </div>
 
@@ -489,7 +503,7 @@
         {% if report.gaps_html %}
           {{ report.gaps_html|safe }}
         {% else %}
-          <span class="question-number bg-dark text-light rounded px-2 mr-2">15</span>
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">17</span>
         {% endif %}
       </div>
     </section>
@@ -501,7 +515,7 @@
         {% if report.status_quo_html %}
           {{ report.status_quo_html|safe }}
         {% else %}
-          <span class="question-number bg-dark text-light rounded px-2 mr-2">16</span>
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">18</span>
         {% endif %}
       </div>
 
@@ -510,7 +524,7 @@
         {% if report.upscaling_html %}
           {{ report.upscaling_html|safe }}
         {% else %}
-          <span class="question-number bg-dark text-light rounded px-2 mr-2">17</span>
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">19</span>
         {% endif %}
       </div>
 
@@ -519,7 +533,7 @@
         {% if report.recommendations_html %}
           {{ report.recommendations_html|safe }}
         {% else %}
-          <span class="question-number bg-dark text-light rounded px-2 mr-2">18</span>
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">20</span>
         {% endif %}
       </div>
     </section>

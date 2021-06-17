@@ -9,6 +9,11 @@
       <div class="collapse navbar-collapse" id="ascus-navbar">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
+            <a class="navbar-brand-small" href="{% if DEBUG %}/{% if PROJECT.id != 1 %}{{ PROJECT.slug }}{% endif %}{% else %}{{ PROJECT.get_website }}{% endif %}">
+              <img alt="{{ PROJECT }}" src="{{ LOGO }}?u=true">
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link {% if page == 'dashboard' %}active{% endif %}" href="{% url 'platformu:admin_dashboard' %}">Dashboard</a>
           </li>
           <li class="nav-item">
@@ -25,6 +30,9 @@
           </li>
         </ul>
         <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'platformu:article' 'help' %}">Help</a>
+          </li>
           <li class="nav-item">
             <a class="nav-link {% if page == 'forum' %}active{% endif %}" href="{% url 'platformu:volunteer_forum' %}">Forum</a>
           </li>
