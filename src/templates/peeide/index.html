@@ -73,7 +73,7 @@
 
     .single-research i {
       font-size: 5rem;
-      margin-top: 1rem;
+      margin-bottom: 1rem;
     }
 
     .single-research .description p:last-of-type {
@@ -132,9 +132,9 @@
       {% for each in research %}
         <div class="col-md-6 col-lg-4 mb-4">
           <div class="p-4 bg-ndee-light-blue rounded single-research">
+            <div class="text-center"><i class="fal fa-{{ each.icon }} text-ndee-primary"></i></div>
             <h5 class="text-ndee-primary font-weight-bold">{{ each }}</h5>
             <div class="description text-sm">{{ each.get_description }}</div>
-            <div class="text-center"><i class="fal fa-{{ each.icon }} text-ndee-primary"></i></div>
           </div>
         </div>
       {% endfor %}
