@@ -31,11 +31,8 @@
   }
 
   .single-research i {
-    position: absolute;
     font-size: 5rem;
-    opacity: .25;
-    bottom: -.75rem;
-    right: -.75rem;
+    margin-top: 1rem;
   }
 
   .single-research .description p:last-of-type {
@@ -68,11 +65,11 @@
 
     <div class="row research">
       {% for each in research %}
-        <div class="col-lg-6 mb-4">
-          <div class="p-3 bg-ndee-light-blue rounded single-research">
-            <h5 class="text-ndee-primary mb-2">{{ each }}</h5>
-            <div class="description">{{ each.get_description }}</div>
-            <i class="fal fa-{{ each.icon }} text-ndee-primary"></i>
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="p-4 bg-ndee-light-blue rounded single-research">
+            <h5 class="text-ndee-primary font-weight-bold">{{ each }}</h5>
+            <div class="description text-sm">{{ each.get_description }}</div>
+            <div class="text-center"><i class="fal fa-{{ each.icon }} text-ndee-primary"></i></div>
           </div>
         </div>
       {% endfor %}
@@ -85,22 +82,15 @@
     <div class="row projects">
       {% for each in projects %}
         <div class="col-md-6 col-lg-4 mb-4">
-          {% if each.image %}
-            <img class="rounded-top project-image" src="{{ each.image.thumbnail.url }}" alt="{{ each }} image">
-          {% endif %}
-          <div class="p-3 pt-4 rounded project-text">
-            <h5 class="text-ndee-primary mt-4">{{ each }}</h5>
-            {{ each.get_description }}
-            {% if each.meta_data.project_leader %}
-              <div class="text-ndee-purple mb-4 project-leads">
-                <div class="text-dark font-weight-bold">Project lead(s)</div>
-                {{ each.meta_data.project_leader }}
-              </div>
+          <a class="border rounded btn-card d-block" target="_blank" href="{{ each.url }}">
+            {% if each.image %}
+              <img class="rounded-top project-image" src="{{ each.image.thumbnail.url }}" alt="{{ each }} image">
             {% endif %}
-            {% if each.url %}
-              <a class="btn btn-ndee bg-ndee-primary text-white btn-ndee-sm" href="{{ each.url }}">Read more</a>
-            {% endif %}
-          </div>
+            <div class="p-3 mt-3 rounded project-text">
+              <h5 class="text-ndee-primary font-weight-bold">{{ each }}</h5>
+              <div class="text-dark">{{ each.get_description }}</div>
+            </div>
+          </a>
         </div>
       {% endfor %}
     </div>

@@ -123,8 +123,7 @@ def news_list(request, header_subtitle=None):
     list = News.objects.filter(projects=project).distinct()
 
     context = {
-        "list": list[3:],
-        "shortlist": list[:3],
+        "list": list,
         "add_link": "/controlpanel/news/create/?next=/peeide/controlpanel/news/",
         "title": "Resources and community",
         "menu": "news",

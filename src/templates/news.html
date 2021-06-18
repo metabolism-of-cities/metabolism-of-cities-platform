@@ -23,6 +23,15 @@
 
     <h4>{{ info }}</h4>
 
+    {% if PROJECT.slug == "peeide" %}
+      <div class="mb-3">
+        <strong class="text-uppercase text-sm">{{ info.date|date:"d F Y" }}</strong>
+        {% if info.author %}
+        | {{ info.author }}
+        {% endif %}
+      </div>
+    {% endif %}
+
     {% if info.introduction %}
     <div class="alert alert-warning">
       {{ info.introduction }}
@@ -33,49 +42,47 @@
 
   </article>
   <div class="col-lg-4">
-    <div class="card basic-info">
-      <ul class="list-group list-group-flush">
-        {% if info.authors %}
-        <li class="list-group-item">
-          <i class="fal fa-fw fa-user mr-1" aria-hidden="true"></i>
-          {% if info.authors.count == 1 %}
-            {{ info.authors.0 }}
-          {% else %}
-            Authors:<br>
-            {% for each in info.authors %}
-              {{ each }}<br>
-            {% endfor %}
+    {% if PROJECT.slug != "peeide" %}
+      <div class="card basic-info">
+        <ul class="list-group list-group-flush">
+          {% if info.authors %}
+          <li class="list-group-item">
+            <i class="fal fa-fw fa-user mr-1" aria-hidden="true"></i>
+            {% if info.authors.count == 1 %}
+              {{ info.authors.0 }}
+            {% else %}
+              Authors:<br>
+              {% for each in info.authors %}
+                {{ each }}<br>
+              {% endfor %}
+            {% endif %}
+          </li>
           {% endif %}
-        </li>
-        {% endif %}
-        <li class="list-group-item">
-          <i class="fal fa-fw fa-calendar mr-1" aria-hidden="true"></i> {{ info.date }}
-        </li>
-        {% if False %}
-        <li class="list-group-item">
-          <i class="fal fa-fw fa-share-alt mb-1 mr-1" aria-hidden="true"></i> Share
-          <br>
-          <div class="btn-group share mt-1" role="group">
-            <a class="btn btn-sm btn-primary-outline"><i class="fab fa-fw fa-twitter"></i></a>
-            <a class="btn btn-sm btn-primary-outline"><i class="fab fa-fw fa-linkedin-in"></i></a>
-            <a class="btn btn-sm btn-primary-outline"><i class="fab fa-fw fa-facebook-f"></i></a>
-            <a class="btn btn-sm btn-primary-outline"><i class="fas fa-fw fa-envelope"></i></a>
-          </div>
-        </li>
-        {% endif %}
-      </ul>
-    </div>
+          <li class="list-group-item">
+            <i class="fal fa-fw fa-calendar mr-1" aria-hidden="true"></i> {{ info.date }}
+          </li>
+          {% if False %}
+          <li class="list-group-item">
+            <i class="fal fa-fw fa-share-alt mb-1 mr-1" aria-hidden="true"></i> Share
+            <br>
+            <div class="btn-group share mt-1" role="group">
+              <a class="btn btn-sm btn-primary-outline"><i class="fab fa-fw fa-twitter"></i></a>
+              <a class="btn btn-sm btn-primary-outline"><i class="fab fa-fw fa-linkedin-in"></i></a>
+              <a class="btn btn-sm btn-primary-outline"><i class="fab fa-fw fa-facebook-f"></i></a>
+              <a class="btn btn-sm btn-primary-outline"><i class="fas fa-fw fa-envelope"></i></a>
+            </div>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    {% endif %}
 
     {% if PROJECT.slug != "peeide" %}
       <h5>Latest news</h5>
       <div class="card">
         <div class="list-group list-group-flush">
           {% for each in latest %}
-            {% if PROJECT.slug == "peeide" %}
-              <a href="../{{ each.slug }}/" class="list-group-item">
-            {% else %}
-              <a href="/news/{{ each.slug }}/" class="list-group-item">
-            {% endif %}
+            <a href="/news/{{ each.slug }}/" class="list-group-item">
             <div>{{ each }}</div>
             <div class="text-muted mb-0">{{ each.date }}</div>
           </a>

@@ -5,33 +5,34 @@
 
   <h2>Control Panel</h2>
   <section class="row">
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="project/">
-          <div class="icon">
-            <i class="fal fa-fw fa-sliders-v-square"></i>
-          </div>
-          <div class="card-header">Settings</div>
-        </a>
-      </div>
+    <div class="col-md-3 mb-3">
+      <a class="card icon-card btn-card" href="project/">
+        <div class="icon">
+          <i class="fal fa-fw fa-sliders-v-square"></i>
+        </div>
+        <div class="card-header">Settings</div>
+      </a>
+    </div>
 
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="design/">
-          <div class="icon">
-            <i class="fal fa-fw fa-ruler"></i>
-          </div>
-          <div class="card-header">Website design</div>
-        </a>
-      </div>
+    <div class="col-md-3 mb-3">
+      <a class="card icon-card btn-card" href="design/">
+        <div class="icon">
+          <i class="fal fa-fw fa-ruler"></i>
+        </div>
+        <div class="card-header">Website design</div>
+      </a>
+    </div>
 
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="users/">
-          <div class="icon">
-            <i class="fal fa-fw fa-users-medical"></i>
-          </div>
-          <div class="card-header">Team</div>
-        </a>
-      </div>
+    <div class="col-md-3 mb-3">
+      <a class="card icon-card btn-card" href="users/">
+        <div class="icon">
+          <i class="fal fa-fw fa-users-medical"></i>
+        </div>
+        <div class="card-header">Team</div>
+      </a>
+    </div>
 
+    {% if not PROJECT.slug == "peeide" %}
       <div class="col-md-3 mb-3">
         <a class="card icon-card btn-card" href="newsletter/">
           <div class="icon">
@@ -40,6 +41,7 @@
           <div class="card-header">Newsletter</div>
         </a>
       </div>
+    {% endif %}
 
     {% if request.user.is_superuser %}
       <div class="col-md-3 mb-3">
@@ -76,6 +78,7 @@
         </a>
       </div>
 
+    {% if not PROJECT.slug == "peeide" %}
       <div class="col-md-3 mb-3">
         <a class="card icon-card btn-card" href="events/">
           <div class="icon">
@@ -84,6 +87,7 @@
           <div class="card-header">Events</div>
         </a>
       </div>
+    {% endif %}
 
       {% if PROJECT.slug == "islands" or PROJECT.slug == "community" or PROJECT.slug == "peeide" %}
 
@@ -183,6 +187,15 @@
               <i class="fal fa-fw fa-file-search"></i>
             </div>
             <div class="card-header">Research topics</div>
+          </a>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="{% url 'peeide:upload' %}">
+            <div class="icon">
+              <i class="fal fa-fw fa-upload"></i>
+            </div>
+            <div class="card-header">Upload file</div>
           </a>
         </div>
       {% endif %}

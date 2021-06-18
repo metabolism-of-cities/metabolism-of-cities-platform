@@ -34,42 +34,18 @@
 
   <section>
     <div class="row">
-      {% for each in shortlist %}
-        <div class="col-lg-4 mb-sm-4 mb-lg-0">
-          <a class="card btn-card" href="{{ each.slug }}/">
+      {% for each in list %}
+        <div class="col-lg-4 col-md-6 mb-4">
+          <a class="card btn-card border-0" href="{{ each.slug }}/">
             {% if each.image %}
-              <img src="{{ each.image.url }}" class="card-img-top" alt="">
+              <!-- <img src="{{ each.image.url }}" class="card-img-top" alt=""> -->
             {% endif %}
             <div class="card-body">
-              <h5 class="card-title">
-                {{ each }}
-                <small class="d-inline-block text-muted">{{ each.date }}</small>
-              </h5>
-              <p class="card-text">
-                {{ each.introduction }}
+              <strong class="d-block text-uppercase text-sm mb-3">{{ each.date|date:"d F Y" }}</strong>
+              <h6 class="card-title font-weight-bold">{{ each }}</h6>
+              <p class="text-sm">
+                {{ each.description|truncatewords_html:"20" }}
               </p>
-            </div>
-          </a>
-        </div>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section>
-    <div class="row">
-      {% for each in list %}
-        <div class="col-lg-6 mb-3">
-          <a href="{{ each.slug }}/" class="card btn-card">
-            <div class="card-body media">
-              {% if each.image %}
-                <img class="rounded" src="{{ each.image.url }}" alt="">
-              {% endif %}
-              <div class="media-body pl-3">
-                <h5 class="mb-0">
-                  <span class="mr-1">{{ each }}</span>
-                  <small class="d-inline-block text-muted">{{ each.date }}</small>
-                </h5>
-              </div>
             </div>
           </a>
         </div>
