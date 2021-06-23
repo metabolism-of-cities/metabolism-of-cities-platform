@@ -48,7 +48,7 @@
   {% else %}
 
     {% if request.user.is_authenticated and not "filter" in request.GET %}
-      <p class="alert alert-secondary">
+      <div class="mb-4">
         <a href="create/?return={{ request.get_full_path }}" class="btn btn-primary">
           <i class="fas fa-plus"></i>
           Add bug report
@@ -61,7 +61,7 @@
           <i class="fas fa-plus"></i>
           Add task
         </a>
-      </p>
+      </div>
     {% endif %}
 
     <h2 class="mb-4">Task list</h2>
@@ -163,7 +163,7 @@
     </form>
 
     <div class="mt-3">
-      <table class="table datatable datatable-card">
+      <table class="table datatable border rounded bg-white">
         <thead>
           <tr>
             <th>Task</th>
@@ -175,7 +175,7 @@
         <tbody>
         {% for each in task_list %}
           <tr>
-            <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
+            <td data-sort="-{{ each.last_update.date_created|date:'U' }}">
               <a href="{% url URLS.TASK each.id %}">
                 {{ each }}
                 {% if each.related_to %}
@@ -192,15 +192,18 @@
                 <span class="badge badge-info">{{ each.meta_data.votes }} vote{% if each.meta_data.votes > 1 %}s{% endif %}</span>
               {% endif %}
             </td>
-            <td>
+            <td class="text-nowrap">
               {{ each.workactivity }}<br>
-              <em>{{ each.get_status }} | {{ each.get_priority_display }} priority</em>
+              {{ each.get_status }}
+              <span class="badge border badge-light">
+                <i class="fal mr-1 fa-{% if each.priority == 1 %}arrow-down{% elif each.priority == 2 %}equals{% else %}arrow-up text-danger{% endif %}"></i> {{ each.get_priority_display }} priority
+              </span>
             </td>
             
-            <td>
-              {{ each.workactivity.points }}
+            <td class="align-middle text-center">
+              <span class="border rounded bg-light px-2 py-1">{{ each.workactivity.points }}</span>
             </td>
-            <td data-sort="-{{ each.last_update.date_created|date:"U" }}">
+            <td class="text-nowrap" data-sort="-{{ each.last_update.date_created|date:'U' }}">
               {% if each.last_update %}
                 {{ each.last_update.date_created|timesince }} ago 
                 <br><span class="faded">by {{ each.last_update.posted_by }}</span>

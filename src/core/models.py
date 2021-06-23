@@ -2088,14 +2088,14 @@ class Work(Record):
     @property
     def get_status(self):
         css = {
-            1: "font-weight-bold",
-            2: "text-success",
-            3: "text-muted",
-            4: "text-muted",
-            5: "text-warning",
+            1: "primary",
+            2: "success",
+            3: "secondary",
+            4: "secondary",
+            5: "warning",
         }
         c = css[self.status]
-        return mark_safe("<span class='" + c + "'>" + self.get_status_display() + "</span>")
+        return mark_safe("<span class='badge badge-" + c + "'>" + self.get_status_display() + "</span>")
 
     @property
     def allow_voting(self):
