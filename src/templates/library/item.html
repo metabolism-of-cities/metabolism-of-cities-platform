@@ -452,7 +452,7 @@
             {% if info.meta_data.processed and IS_DATA_PORTAL %}
               <a href="{% url URLS.MAP_ITEM info.id %}"><img src="{{ info.get_shapefile_plot }}" alt="" /></a>
             {% else %}
-              <img src="{{ info.get_shapefile_plot }}" alt="" />
+              <img class="rounded border" src="{{ info.get_shapefile_plot }}" alt="" />
             {% endif %}
           {% elif info.type.name == "Shapefile" %}
             <p><em>There is no preview plot available.</em></p>

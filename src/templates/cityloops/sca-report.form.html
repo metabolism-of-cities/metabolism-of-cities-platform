@@ -241,7 +241,12 @@
       <div class="col-lg">
         <div class="form-group">
           <label for="space-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">7A</span> {{ sector|title }} GDP of {{ space }}</label>
-          <input type="number" min="0" max="2147483647" class="form-control" name="space-gdp" value="{{ report.space_gdp }}">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text">{{ currency }}</div>
+            </div>
+            <input type="number" min="0" max="2147483647" class="form-control" name="space-gdp" value="{{ report.space_gdp }}">
+          </div>
         </div>
       </div>
       <div class="col-lg">
@@ -258,7 +263,12 @@
       <div class="col-lg">
         <div class="form-group">
           <label for="nuts3-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">8A</span> {{ sector|title }} GDP of {{ nuts3 }}</label>
-          <input type="number" min="0" max="2147483647" class="form-control" name="nuts3-gdp" value="{{ report.nuts3_gdp }}">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text">{{ currency }}</div>
+            </div>
+            <input type="number" min="0" max="2147483647" class="form-control" name="nuts3-gdp" value="{{ report.nuts3_gdp }}">
+          </div>
         </div>
       </div>
       <div class="col-lg">
@@ -275,7 +285,12 @@
       <div class="col-lg">
         <div class="form-group">
           <label for="nuts2-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">9A</span> {{ sector|title }} GDP of {{ nuts2 }}</label>
-          <input type="number" min="0" max="2147483647" class="form-control" name="nuts2-gdp" value="{{ report.nuts2_gdp }}">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text">{{ currency }}</div>
+            </div>
+            <input type="number" min="0" max="2147483647" class="form-control" name="nuts2-gdp" value="{{ report.nuts2_gdp }}">
+          </div>
         </div>
       </div>
       <div class="col-lg">
@@ -292,7 +307,12 @@
       <div class="col-lg">
         <div class="form-group">
           <label for="country-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">10A</span> {{ sector|title }} GDP of {{ country }}</label>
-          <input type="number" min="0" max="2147483647" class="form-control" name="country-gdp" value="{{ report.country_gdp }}">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text">{{ currency }}</div>
+            </div>
+            <input type="number" min="0" max="2147483647" class="form-control" name="country-gdp" value="{{ report.country_gdp }}">
+          </div>
         </div>
       </div>
       <div class="col-lg">

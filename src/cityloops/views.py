@@ -429,35 +429,43 @@ def sca_report(request, slug, sector):
         nuts2_id = 584317
         nuts3_id = 585874
         bounding_box = [[50.65, 3.28], [53.6, 7.21]]
+        currency = "€"
     elif slug == "bodo":
         country_id = 328727
         nuts2_id = 584307
         nuts3_id = 585880
         bounding_box = [[57.94,4.83], [71.33,31.55]]
+        currency = "kr"
     elif slug == "hoje-taastrup":
         country_id = 328745
         nuts2_id = 584276
         nuts3_id = 585721
+        currency = "kr."
     elif slug == "mikkeli":
         country_id = 328729
         nuts2_id = 584282
         nuts3_id = 983064
+        currency = "€"
     elif slug == "porto":
         country_id = 328813
         nuts2_id = 584336
         nuts3_id = 586124
+        currency = "€"
     elif slug == "roskilde":
         country_id = 328745
         nuts2_id = 584272
         nuts3_id = 585630
+        currency = "€"
     elif slug == "sevilla":
         country_id = 328741
         nuts2_id = 584286
         nuts3_id = 585776
+        currency = "€"
     elif slug == "valles-occidental":
         country_id = 328741
         nuts2_id = 584283
         nuts3_id = 585244
+        currency = "€"
 
     country = ReferenceSpace.objects.get(id=country_id)
     nuts2 = ReferenceSpace.objects.get(id=nuts2_id)
@@ -499,6 +507,7 @@ def sca_report(request, slug, sector):
         "country": country,
         "nuts2": nuts2,
         "nuts3": nuts3,
+        "currency": currency,
         "bounding_box": bounding_box,
     }
     return render(request, "cityloops/sca-report.html", context)
@@ -516,34 +525,42 @@ def sca_report_form(request, slug, sector):
         country_id = 328768
         nuts2_id = 584317
         nuts3_id = 585874
+        currency = "€"
     elif slug == "bodo":
         country_id = 328727
         nuts2_id = 584307
         nuts3_id = 585880
+        currency = "kr"
     elif slug == "hoje-taastrup":
         country_id = 328745
         nuts2_id = 584276
         nuts3_id = 585721
+        currency = "kr."
     elif slug == "mikkeli":
         country_id = 328729
         nuts2_id = 584282
         nuts3_id = 983064
+        currency = "€"
     elif slug == "porto":
         country_id = 328813
         nuts2_id = 584336
         nuts3_id = 586124
+        currency = "€"
     elif slug == "roskilde":
         country_id = 328745
         nuts2_id = 584272
         nuts3_id = 585630
+        currency = "€"
     elif slug == "sevilla":
         country_id = 328741
         nuts2_id = 584286
         nuts3_id = 585776
+        currency = "€"
     elif slug == "valles-occidental":
         country_id = 328741
         nuts2_id = 584283
         nuts3_id = 585244
+        currency = "€"
 
     country = ReferenceSpace.objects.get(id=country_id)
     nuts2 = ReferenceSpace.objects.get(id=nuts2_id)
@@ -604,6 +621,7 @@ def sca_report_form(request, slug, sector):
         "country": country,
         "nuts2": nuts2,
         "nuts3": nuts3,
+        "currency": currency,
     }
     return render(request, "cityloops/sca-report.form.html", context)
 
