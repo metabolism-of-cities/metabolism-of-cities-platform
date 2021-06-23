@@ -247,15 +247,21 @@
     <div class="row projects">
       {% for each in projects %}
         <div class="col-md-6 col-lg-4 mb-4">
-          <a class="border rounded btn-card d-block" target="_blank" href="{{ each.url }}">
+          <div class="border rounded">
             {% if each.image %}
               <img class="rounded-top project-image" src="{{ each.image.thumbnail.url }}" alt="{{ each }} image">
             {% endif %}
             <div class="p-3 mt-3 rounded project-text">
-              <h5 class="text-ndee-primary">{{ each }}</h5>
+              <h5 class="text-ndee-primary font-weight-bold">
+                {% if each.url %}
+                  <a target="_blank" href="{{ each.url }}">{{ each }}</a>
+                {% else %}
+                  {{ each }}
+                {% endif %}
+              </h5>
               <div class="text-dark">{{ each.get_description }}</div>
             </div>
-          </a>
+          </div>
         </div>
       {% endfor %}
     </div>

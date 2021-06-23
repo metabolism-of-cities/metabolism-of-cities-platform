@@ -104,7 +104,7 @@
       point: {
         events: {
           click: function () {
-            console.log(this)
+            console.log(this.options)
           }
         }
       },
@@ -127,7 +127,10 @@
             className: "test",
             color: "#000",
             // width: "{% if each.meta_data.dependency == 'Low' %}1{% elif each.meta_data.dependency == 'Medium' %}3{% elif each.meta_data.dependency == 'High' %}7{% endif %}",
-            width: "2,"
+            width: "2",
+            custom: {
+              link: "{% url 'platformu:admin_entity' my_organization.id each.id %}",
+            },
           },
         {% endfor %}
       ]
