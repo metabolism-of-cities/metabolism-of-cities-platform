@@ -423,6 +423,7 @@ def sca_report(request, slug, sector):
     # https://en.wikipedia.org/wiki/NUTS_statistical_regions_of_the_Netherlands
 
     bounding_box = False
+    sankey_colour = "#efefef"
 
     if slug == "apeldoorn":
         country_id = 328768
@@ -430,34 +431,25 @@ def sca_report(request, slug, sector):
         nuts3_id = 585874
         bounding_box = [[50.65, 3.28], [53.6, 7.21]]
         currency = "€"
-        if sector == "biomass":
-            sankey_values = [0]
-        elif sector == "construction":
-            sankey_values = [0]
     elif slug == "bodo":
         country_id = 328727
         nuts2_id = 584307
         nuts3_id = 585880
         bounding_box = [[57.94,4.83], [71.33,31.55]]
         currency = "kr"
-        if sector == "biomass":
-            sankey_values = [0]
-        elif sector == "construction":
-            sankey_values = [0]
     elif slug == "hoje-taastrup":
         country_id = 328745
         nuts2_id = 584276
         nuts3_id = 585721
         currency = "kr."
-        if sector == "biomass":
-            sankey_values = [0]
-        elif sector == "construction":
-            sankey_values = [0]
     elif slug == "mikkeli":
         country_id = 328729
         nuts2_id = 584282
         nuts3_id = 983064
         currency = "€"
+        sankey_source = [0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,4,4,5,5,5,5,5,5,5,6,7,8,9,9,10,10,10,10,10,10,10,10,10,11,11,11,11,11]
+        sankey_target = [1,2,3,5,11,2,3,5,11,3,3,5,11,5,2,4,3,5,12,6,7,8,9,1,11,2,1,13,2,13,1,2,3,5,12,6,8,9,7,12,6,8,9,7,4]
+        sankey_colour = ["rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)"]
         if sector == "biomass":
             sankey_values = [745096.8,23579.01,0,43228.19,0,546.32,0,122.68,0,0,146,0,0,27535,0,0,0,0,0,0,7540,0,7469,0,7724,0,0,0,3000,0,83043.68,12035.32,0,0,0,0,0,0,0,0,7724,0,0,0]
         elif sector == "construction":
@@ -468,7 +460,10 @@ def sca_report(request, slug, sector):
         nuts3_id = 586124
         currency = "€"
         if sector == "biomass":
+            sankey_source = [0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,3,4,4,5,5,5,5,5,5,5,6,7,8,9,9,10,10,10,10,10,10,10,10,10,11,11,11,11,11]
+            sankey_target = [1,2,3,5,11,2,3,5,11,3,3,5,11,5,2,4,3,9,3,5,12,6,7,8,9,1,11,2,1,13,2,13,1,2,3,5,12,6,8,9,7,12,6,8,9,7]
             sankey_values = [0,0,247,13,0,19121,0,36074,141934,99789,4,1903,8157,38350,0,0,19,927,8,0,0,0,0,0,0,0,38350,0,0,0,0,0,197794,84768,0,0,0,0,0,0,0,0,26816,0,11534,0]
+            sankey_colour = ["rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)"]
         elif sector == "construction":
             sankey_values = [0]
     elif slug == "roskilde":
@@ -476,35 +471,20 @@ def sca_report(request, slug, sector):
         nuts2_id = 584272
         nuts3_id = 585630
         currency = "€"
-        if sector == "biomass":
-            sankey_values = [0]
-        elif sector == "construction":
-            sankey_values = [0]
     elif slug == "sevilla":
         country_id = 328741
         nuts2_id = 584286
         nuts3_id = 585776
         currency = "€"
-        if sector == "biomass":
-            sankey_values = [0]
-        elif sector == "construction":
-            sankey_values = [0]
     elif slug == "valles-occidental":
         country_id = 328741
         nuts2_id = 584283
         nuts3_id = 585244
         currency = "€"
-        if sector == "biomass":
-            sankey_values = [0]
-        elif sector == "construction":
-            sankey_values = [0]
 
     country = ReferenceSpace.objects.get(id=country_id)
     nuts2 = ReferenceSpace.objects.get(id=nuts2_id)
     nuts3 = ReferenceSpace.objects.get(id=nuts3_id)
-
-    sankey_source = [0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,4,4,5,5,5,5,5,5,5,6,7,8,9,9,10,10,10,10,10,10,10,10,10,11,11,11,11,11]
-    sankey_target = [1,2,3,5,11,2,3,5,11,3,3,5,11,5,2,4,3,5,12,6,7,8,9,1,11,2,1,13,2,13,1,2,3,5,12,6,8,9,7,12,6,8,9,7]
 
     fig = go.Figure(data=[go.Sankey(
         node = dict(
@@ -517,7 +497,7 @@ def sca_report(request, slug, sector):
           source = sankey_source,
           target = sankey_target,
           value = sankey_values,
-          color = ["rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)"]
+          color = sankey_colour,
     ))])
 
     fig.update_layout(
