@@ -351,7 +351,7 @@
         <thead>
           <tr>
             <th></th>
-            <th>GDP (monetary value, in {{ currency }})</th>
+            <th>{% if space.slug == "mikkeli" %}GVA{% else %}GDP{% endif %} (monetary value, in {{ currency }})</th>
             <th>Employees</th>
           </tr>
         </thead>

@@ -430,59 +430,94 @@ def sca_report(request, slug, sector):
         nuts3_id = 585874
         bounding_box = [[50.65, 3.28], [53.6, 7.21]]
         currency = "€"
+        if sector == "biomass":
+            sankey_values = [0]
+        elif sector == "construction":
+            sankey_values = [0]
     elif slug == "bodo":
         country_id = 328727
         nuts2_id = 584307
         nuts3_id = 585880
         bounding_box = [[57.94,4.83], [71.33,31.55]]
         currency = "kr"
+        if sector == "biomass":
+            sankey_values = [0]
+        elif sector == "construction":
+            sankey_values = [0]
     elif slug == "hoje-taastrup":
         country_id = 328745
         nuts2_id = 584276
         nuts3_id = 585721
         currency = "kr."
+        if sector == "biomass":
+            sankey_values = [0]
+        elif sector == "construction":
+            sankey_values = [0]
     elif slug == "mikkeli":
         country_id = 328729
         nuts2_id = 584282
         nuts3_id = 983064
         currency = "€"
+        if sector == "biomass":
+            sankey_values = [745096.8,23579.01,0,43228.19,0,546.32,0,122.68,0,0,146,0,0,27535,0,0,0,0,0,0,7540,0,7469,0,7724,0,0,0,3000,0,83043.68,12035.32,0,0,0,0,0,0,0,0,7724,0,0,0]
+        elif sector == "construction":
+            sankey_values = [617129.6,246851.8,123425.9,123425.9,123425.9,403224.6,0,67204.1,201612.3,0,0,0,0,75312.76,37656.38,263594.66,2448498.3,22036484.7,2293,0,27924,0,0,0,5381,0,28708,0,0,0,27708.4,27708.4,0,0,0,0,0,0,13854.2,0,4598,0,0,784]
     elif slug == "porto":
         country_id = 328813
         nuts2_id = 584336
         nuts3_id = 586124
         currency = "€"
+        if sector == "biomass":
+            sankey_values = [0,0,247,13,0,19121,0,36074,141934,99789,4,1903,8157,38350,0,0,19,927,8,0,0,0,0,0,0,0,38350,0,0,0,0,0,197794,84768,0,0,0,0,0,0,0,0,26816,0,11534,0]
+        elif sector == "construction":
+            sankey_values = [0]
     elif slug == "roskilde":
         country_id = 328745
         nuts2_id = 584272
         nuts3_id = 585630
         currency = "€"
+        if sector == "biomass":
+            sankey_values = [0]
+        elif sector == "construction":
+            sankey_values = [0]
     elif slug == "sevilla":
         country_id = 328741
         nuts2_id = 584286
         nuts3_id = 585776
         currency = "€"
+        if sector == "biomass":
+            sankey_values = [0]
+        elif sector == "construction":
+            sankey_values = [0]
     elif slug == "valles-occidental":
         country_id = 328741
         nuts2_id = 584283
         nuts3_id = 585244
         currency = "€"
+        if sector == "biomass":
+            sankey_values = [0]
+        elif sector == "construction":
+            sankey_values = [0]
 
     country = ReferenceSpace.objects.get(id=country_id)
     nuts2 = ReferenceSpace.objects.get(id=nuts2_id)
     nuts3 = ReferenceSpace.objects.get(id=nuts3_id)
 
+    sankey_source = [0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,4,4,5,5,5,5,5,5,5,6,7,8,9,9,10,10,10,10,10,10,10,10,10,11,11,11,11,11]
+    sankey_target = [1,2,3,5,11,2,3,5,11,3,3,5,11,5,2,4,3,5,12,6,7,8,9,1,11,2,1,13,2,13,1,2,3,5,12,6,8,9,7,12,6,8,9,7]
+
     fig = go.Figure(data=[go.Sankey(
         node = dict(
           thickness = 10,
           line = dict(width = 0),
-          label = ["Extraction", "Manufacturing", "Retail", "Use", "Stock", "Waste collection", "Incineration", "Composting", "Imports", "Exports", "Landfill", "Anaerobic digestion", "Harvesting"],
+          label = ["Extraction/Harvesting", "Manufacturing", "Retail", "Use", "Stock", "Waste collection", "Incineration", "Recycling", "Anaerobic digestion", "Composting", "Import", "Export", "Landfill", "Harvesting"],
           color = "#efefef",
         ),
         link = dict(
-          source = [0,0,0,0,0,1,1,1,2,2,2,3,3,3,4,4,5,5,5,5,5,5,6,7,7,8,8,8,8,0,0,0,0,1,1,1,2,2,2,3,3,3,4,4,5,5,5,5,5,5,6,7,7,8,8,8,8,0,0,0,0,1,1,1,2,2,2,3,3,3,4,4,5,5,5,5,5,5,6,7,7,8,8,8,8],
-          target = [0,1,2,3,5,2,3,5,3,5,9,5,2,4,3,5,10,6,11,7,1,2,2,2,12,1,2,3,5,1,2,3,5,2,3,5,3,5,9,5,2,4,3,5,10,6,11,7,1,2,2,2,12,1,2,3,5,1,2,3,5,2,3,5,3,5,9,5,2,4,3,5,10,6,11,7,1,2,2,2,12,1,2,3,5],
-          value = [100,100,1000,2000,100,0,90,10,750,50,200,800,40,2000,80,1000,960,0,0,0,0,1000,0,0,0,100,500,500,100,500,0,0,50,500,50,50,950,50,0,100,0,850,0,1000,100,0,0,0,0,1000,0,0,0,100,500,0,0,0,0,0,0,50,0,5,143,2,0,1,0,142,2,40,2,0,0,0,2,44,0,0,0,50,100,0,0],
-          color = ["rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","rgba(228,26,28,0.5)","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#377eb8","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a","#4daf4a"]
+          source = sankey_source,
+          target = sankey_target,
+          value = sankey_values,
+          color = ["rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)"]
     ))])
 
     fig.update_layout(
@@ -490,6 +525,8 @@ def sca_report(request, slug, sector):
         font=dict(size = 14, color = 'black', family = 'Lato'),
         plot_bgcolor='rgba(255,255,255,0)',
         paper_bgcolor='rgba(255,255,255,0)',
+        height=600,
+        width=1000,
     )
 
     sankey = fig.to_html(full_html=False)

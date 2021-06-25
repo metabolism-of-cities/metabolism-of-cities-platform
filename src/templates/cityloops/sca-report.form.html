@@ -240,7 +240,7 @@
     <div class="row">
       <div class="col-lg">
         <div class="form-group">
-          <label for="space-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">7A</span> {{ sector|title }} GDP of {{ space }}</label>
+          <label for="space-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">7A</span> {{ sector|title }} {% if space.slug == "mikkeli" %}GVA{% else %}GDP{% endif %} of {{ space }}</label>
           <div class="input-group">
             <div class="input-group-prepend">
               <div class="input-group-text">{{ currency }}</div>
@@ -262,7 +262,7 @@
     <div class="row">
       <div class="col-lg">
         <div class="form-group">
-          <label for="nuts3-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">8A</span> {{ sector|title }} GDP of {{ nuts3 }}</label>
+          <label for="nuts3-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">8A</span> {{ sector|title }} {% if space.slug == "mikkeli" %}GVA{% else %}GDP{% endif %} of {{ nuts3 }}</label>
           <div class="input-group">
             <div class="input-group-prepend">
               <div class="input-group-text">{{ currency }}</div>
@@ -284,7 +284,7 @@
     <div class="row">
       <div class="col-lg">
         <div class="form-group">
-          <label for="nuts2-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">9A</span> {{ sector|title }} GDP of {{ nuts2 }}</label>
+          <label for="nuts2-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">9A</span> {{ sector|title }} {% if space.slug == "mikkeli" %}GVA{% else %}GDP{% endif %} of {{ nuts2 }}</label>
           <div class="input-group">
             <div class="input-group-prepend">
               <div class="input-group-text">{{ currency }}</div>
@@ -306,7 +306,7 @@
     <div class="row">
       <div class="col-lg">
         <div class="form-group">
-          <label for="country-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">10A</span> {{ sector|title }} GDP of {{ country }}</label>
+          <label for="country-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">10A</span> {{ sector|title }} {% if space.slug == "mikkeli" %}GVA{% else %}GDP{% endif %} of {{ country }}</label>
           <div class="input-group">
             <div class="input-group-prepend">
               <div class="input-group-text">{{ currency }}</div>
