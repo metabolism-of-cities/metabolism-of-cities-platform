@@ -167,7 +167,7 @@
     <img class="cityloops-logo" src="https://metabolismofcities.org/media/records/CityLoops_Logo.png">
 
     <div class="moc-background"></div>
-    <img class="moc-logo" src="https://metabolismofcities.org/media/logos/Metabolism_of_Cities_full_logo_white.png">
+    <img class="moc-logo" src="https://i.imgur.com/ARgcRYc.png">
   </div>
 
   <div class="report-content">
@@ -513,12 +513,16 @@
     <section id="matrix">
       <h1>Data quality assessment</h1>
 
+
+
       <p>
         Numerous datasets were collected and considered in the sector-wide circularity assessment. In some cases, datasets were not available for some materials or for some lifecycle stages for the studied sector. Therefore, estimations need to be done by looking at data at higher spatial scales (region or country). This section qualitatively assesses how reliable the data used is.
       </p>
 
+      <h3>Data quality</h3>
+
       <div class="mb-4">
-        <label>Matrix based on the data gap analysis matrix</label><br>
+        <label>Data quality matrix</label><br>
         {% if report.matrix_html %}
           {{ report.matrix_html|safe }}
         {% else %}
@@ -527,7 +531,6 @@
       </div>
 
       <div class="mb-4">
-        <label>Couple of paragraphs that explain the data quality</label><br>
         {% if report.quality_html %}
           {{ report.quality_html|safe }}
         {% else %}
@@ -536,7 +539,7 @@
       </div>
 
       <div class="mb-4">
-        <label>Couple of paragraphs that explain the gaps and in general how they were closed (sources, assumptions, calculations)</label><br>
+        <h3>Data gaps and assumptions</h3>
         {% if report.gaps_html %}
           {{ report.gaps_html|safe }}
         {% else %}
@@ -553,7 +556,7 @@
       </p>
 
       <div class="mb-4">
-        <label>Insights on status quo</label><br>
+        <label>Insights on status quo of the {{ sector }} sector</label><br>
         {% if report.status_quo_html %}
           {{ report.status_quo_html|safe }}
         {% else %}
@@ -562,7 +565,7 @@
       </div>
 
       <div class="mb-4">
-        <label>Upscaling (or reflect on) DAs</label><br>
+        <label>Connection to and upscaling of demonstration actions</label><br>
         {% if report.upscaling_html %}
           {{ report.upscaling_html|safe }}
         {% else %}
