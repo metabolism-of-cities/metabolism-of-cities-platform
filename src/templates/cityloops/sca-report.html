@@ -173,8 +173,14 @@
   <div class="report-content">
     <section id="introduction">
       <h1>Introduction</h1>
-      <p>Maybe short section on what the SCA is. How long cities have been working on them with the two courses.</p>
-      <p><a href="https://cityloops.metabolismofcities.org/dashboards/apeldoorn/">URL to City's Data Hub.</a></p>
+
+      <p>
+        The EU Horizon 2020 funded CityLoops project focuses on closing the material loops of two central sectors  of any city in terms of material flows, societal needs and employment, namely the construction and biomass sectors. Due to their sizes, they represent a considerable opportunity for cities to transform their metabolism and economy towards a more circular state.
+      </p>
+
+      <p>
+        Within this project, seven European cities, amongst those also the City of {{ space.name }} are planning to implement demonstration actions to kickstart their circularity journey. To better understand what the current circularity status quo is, as well as the impact of these actions, and the efforts needed to transform their sector, a <a href="https://cityloops.metabolismofcities.org/media/uploads/libraryitem/report/CityLoops_WP4_D4.3_Sector-Wide_Circularity_Assessment_Method.pdf">Sector-Wide Circularity Assessment</a> method was developed. This method combines a circular city and circular sector definition, a material flow and stock accounting method, as well as circularity indicators. The sector itself was defined in terms of a number of representative materials that make up a large share of the sector and associated economic activities. The {{ sector }} sector is made up of {% if sector == "construction" %}11{% elif sector == "biomass" %}12{% endif %} materials, depicted as icons here, which were studied along the entirety of their supply chains. Altogether, these elements help to set a solid knowledge and analytical foundation to develop future circularity roadmaps and action plans.
+      </p>
 
       <div class="row text-center materials">
         {% if sector == "construction" %}
@@ -204,10 +210,23 @@
           <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-salad"></i><div>Vegetables</div></div></div>
         {% endif%}
       </div>
+
+      <p>
+        The assessment was carried out by the cities themselves after receiving extensive training in the form of courses on data collection (<a href="https://cityloops.metabolismofcities.org/courses/course-1a-data-collection-for-circularity-assessment-of-construction-sector-wp2/">construction</a> and <a href="https://cityloops.metabolismofcities.org/courses/course-1b-data-collection-for-circularity-assessment-of-biomass-sector-wp3/">biomass</a>) and <a href="https://cityloops.metabolismofcities.org/courses/course-2-data-processing-and-analysis-for-sector-wide-circularity-assessment-wp23/">data processing</a>. Numerous additional insights can be found in the individual <a href="https://cityloops.metabolismofcities.org/">Data Hubs</a> of each city.
+      </p>
+
+      <p>
+        This current Sector-Wide Circularity Assessment report provides contextual information on the city and the economic sector under study. It then illustrates how circular these sectors are through circularity indicators and a Sankey diagram. Finally, it analyses and interprets the results, presents the limitations from the data used and offers recommendations about how to make this sector more circular.
+      </p>
     </section>
 
     <section id="urban-context">
       <h1>Urban context</h1>
+
+      <p>
+        To contextualise the results of the sector-wide circularity assessment, this section provides population and land use information data of the city. In addition, population and area of the city under study, as well as its corresponding NUTS3, NUTS2 and country were included. Data for these scales were added to better understand how relevant and important the approximations are when downscaling data from these scales to a city level.
+      </p>
+
       <div class="row mb-3">
         <div class="col-3">
           <div class="context-map rounded" id="space-map"></div>
@@ -347,6 +366,10 @@
     <section id="sector-context">
       <h1>Economic context of {{ sector }} sector</h1>
 
+      <p>
+        This section puts into perspective the economic context of the sector under study. It describes how many people are employed in this sector, as well as  who the main actors involved (from all lifecycle stages for the sector’s materials) are.
+      </p>
+
       <table class="table border">
         <thead>
           <tr>
@@ -459,6 +482,11 @@
 
     <section id="indicators">
       <h1>Indicators</h1>
+
+      <p>
+        To monitor the progress of this economic sector towards circularity, a number of indicators were proposed and measured. Altogether, these indicators depict several facets of circularity of the sector. As such, they need to be considered in combination rather than in isolation when assessing circularity. In addition, these indicators can be compared to other cities or spatial scales (such as the country level). However, this has to be done with great care and use of the contextual elements in the previous sections of the report. Finally, the value measured from these indicators can be traced over time to track the sector’s progress towards circularity.
+      </p>
+
       {% if report.indicators_table_html %}
         {{ report.indicators_table_html|safe }}
       {% else %}
@@ -468,6 +496,11 @@
 
     <section id="visualisations">
       <h1>Visualisations</h1>
+
+      <p>
+        Measuring circularity is a data heavy exercise. Numerous datasets were collected and visualised throughout the sector-wide circularity assessment process. To synthesise these findings, a Sankey diagram illustrates how material flows from the studied economic sector are circulating from one lifecycle stage to another. The height of each line is proportional to the weight of the flow. This diagram therefore helps to quickly have an overview of all the materials flows that compose the sector and their respective shares.
+      </p>
+
       {% if report.sankey_description_html %}
         {{ report.sankey_description_html|safe }}
       {% else %}
@@ -479,6 +512,10 @@
 
     <section id="matrix">
       <h1>Data quality assessment</h1>
+
+      <p>
+        Numerous datasets were collected and considered in the sector-wide circularity assessment. In some cases, datasets were not available for some materials or for some lifecycle stages for the studied sector. Therefore, estimations need to be done by looking at data at higher spatial scales (region or country). This section qualitatively assesses how reliable the data used is.
+      </p>
 
       <div class="mb-4">
         <label>Matrix based on the data gap analysis matrix</label><br>
@@ -510,6 +547,11 @@
 
     <section id="analysis">
       <h1>Data analysis</h1>
+
+      <p>
+        This section analyses the Sankey diagram developed in the previous section. It discusses and interprets the results for the sector-wide circularity assessment. It also reflects on how the current demonstration actions fit within the bigger picture of the sector, as well as how they could be upscaled to accelerate the transition towards a more circular sector.
+      </p>
+
       <div class="mb-4">
         <label>Insights on status quo</label><br>
         {% if report.status_quo_html %}
