@@ -347,7 +347,7 @@
       <h2>Land use</h2>
 
       {% if space.slug == "porto" %}
-        <img class="img-fluid rounded-top" src="https://i.imgur.com/BFShwFF.png">
+        <img class="img-fluid rounded-top mb-4" src="https://i.imgur.com/BFShwFF.png">
 
         <div class="border border-top-0 rounded-bottom p-3">
           <ul class="fa-ul mb-0">
@@ -360,7 +360,7 @@
           </ul>
         </div>
       {% elif space.slug == "mikkeli" %}
-        <img class="img-fluid rounded-top" src="https://i.imgur.com/Cto4brf.png">
+        <img class="img-fluid rounded-top mb-4" src="https://i.imgur.com/Cto4brf.png">
         <div class="border border-top-0 rounded-bottom p-3">
           <ul class="fa-ul mb-0">
             <li><span class="fa-li"><i class="fas fa-circle" style="color: #e41a1c"></i></span> Agricultural areas</li>
@@ -372,7 +372,7 @@
           </ul>
         </div>
       {% elif space.slug == "apeldoorn" %}
-        <img class="img-fluid rounded-top" src="https://i.imgur.com/dSye4WJ.png">
+        <img class="img-fluid rounded-top mb-4" src="https://i.imgur.com/dSye4WJ.png">
         <div class="border border-top-0 rounded-bottom p-3">
           <div class="row">
             <div class="col-4">
@@ -573,7 +573,15 @@
         <span class="question-number bg-dark text-light rounded px-2 mr-2">14</span>
       {% endif %}
 
-      <div>{{ sankey|safe }}</div>
+      {% if space.slug == "mikkeli" and sector == "biomass" %}
+        <img class="border rounded img-fluis" src="https://cityloops.metabolismofcities.org/media/records/210629_Mikkeli_Biomass_Sankey_v1.large.png">
+      {% elif space.slug == "mikkeli" and sector == "construction" %}
+        <img class="border rounded img-fluis" src="https://cityloops.metabolismofcities.org/media/records/210629_Mikkeli_Construction_Sankey_v1.large.png">
+      {% elif space.slug == "porto" and sector == "biomass" %}
+        <img class="border rounded img-fluis" src="https://cityloops.metabolismofcities.org/media/records/210629_Porto_Biomass_Sankey_v1.large.png">
+      {% else %}
+        <div>{{ sankey|safe }}</div>
+      {% endif %}
     </section>
 
     <section id="matrix">
