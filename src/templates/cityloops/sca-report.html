@@ -346,7 +346,73 @@
     <section>
       <h2>Land use</h2>
 
-      {% if report.land_use_dataset %}
+      {% if space.slug == "porto" %}
+        <img class="img-fluid rounded-top" src="https://i.imgur.com/BFShwFF.png">
+
+        <div class="border border-top-0 rounded-bottom p-3">
+          <ul class="fa-ul mb-0">
+            <li><span class="fa-li"><i class="fas fa-circle" style="color: #e41a1c"></i></span> Espaço Central</li>
+            <li><span class="fa-li"><i class="fas fa-circle" style="color: #377eb8"></i></span> Espaço Residencial</li>
+            <li><span class="fa-li"><i class="fas fa-circle" style="color: #4daf4a"></i></span> Espaço Verde</li>
+            <li><span class="fa-li"><i class="fas fa-circle" style="color: #984ea3"></i></span> Espaço de Actividades Económicas</li>
+            <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Espaço de Uso Especial - Equipamentos e Infraestruturas</li>
+            <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff33"></i></span> Não Atribuída</li>
+          </ul>
+        </div>
+      {% elif space.slug == "mikkeli" %}
+        <img class="img-fluid rounded-top" src="https://i.imgur.com/Cto4brf.png">
+        <div class="border border-top-0 rounded-bottom p-3">
+          <ul class="fa-ul mb-0">
+            <li><span class="fa-li"><i class="fas fa-circle" style="color: #e41a1c"></i></span> Agricultural areas</li>
+            <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Artificial surfaces</li>
+            <li><span class="fa-li"><i class="fas fa-circle" style="color: #4daf4a"></i></span> Forests</li>
+            <li><span class="fa-li"><i class="fas fa-circle" style="color: #984ea3"></i></span> Roads</li>
+            <li><span class="fa-li"><i class="fas fa-circle" style="color: #377eb8"></i></span> Water bodies</li>
+            <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff33"></i></span> Wetlands</li>
+          </ul>
+        </div>
+      {% elif space.slug == "apeldoorn" %}
+        <img class="img-fluid rounded-top" src="https://i.imgur.com/dSye4WJ.png">
+        <div class="border border-top-0 rounded-bottom p-3">
+          <div class="row">
+            <div class="col-4">
+              <ul class="fa-ul mb-0">
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #144d58"></i></span> Bedrijfsterrein</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #a6cee3"></i></span> Begraafplaats</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #33a02c"></i></span> Bos</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #b2df8a"></i></span> Bouwterrein</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #e31a1c"></i></span> Dagrecreatief terrein</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #fb9a99"></i></span> Delfstofwinplaats</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Detailhandel en horeca</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #fdbf6f"></i></span> Droog natuurlijk terrein</li>
+              </ul>
+            </div>
+            <div class="col-4">
+              <ul class="fa-ul mb-0">
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #6a3d9a"></i></span> Glastuinbouw</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #cab2d6"></i></span> Hoofdweg</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #b15928"></i></span> Nat natuurlijk terrein</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff99"></i></span> Openbare voorziening</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #8dd3c7"></i></span> Overig agrarisch gebruik</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #bd3e6e"></i></span> Overig binnenwater</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #bebada"></i></span> Park en plantsoen</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #fb8072"></i></span> Sociaal-culturele voorziening</li>
+              </ul>
+            </div>
+            <div class="col-4">
+              <ul class="fa-ul mb-0">
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #80b1d3"></i></span> Spoorweg</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #fdb462"></i></span> Sportterrein</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #b3de69"></i></span> Stortplaats</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #fccde5"></i></span> Verblijfsrecreatie</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #d9d9d9"></i></span> Volkstuin</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #bc80bd"></i></span> Water met recreatieve functie</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ccebc5"></i></span> Woongebied</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% elif report.land_use_dataset %}
         {% if report.land_use_dataset.type.name == "Image" %}
           <img src="{{ report.land_use_dataset.image.url }}" class="img-fluid">
         {% else %}
@@ -374,7 +440,7 @@
         <thead>
           <tr>
             <th></th>
-            <th>{% if space.slug == "mikkeli" %}GVA{% else %}GDP{% endif %} (monetary value, in {{ currency }})</th>
+            <th>{% if space.slug == "mikkeli" or space.slug == "porto" %}GVA{% else %}GDP{% endif %} (monetary value, in {{ currency }})</th>
             <th>Employees</th>
           </tr>
         </thead>
