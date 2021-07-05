@@ -30,7 +30,7 @@
 
 <!-- open container -->
 <div class="container">
-  <h2 class="mb-4">Resources and community</h2>
+  <h2 class="mb-4 text-ndee-primary">Resources and Community</h2>
 
   <section>
     <div class="row">
@@ -51,7 +51,7 @@
               <!-- <img src="{{ each.image.url }}" class="card-img-top" alt=""> -->
             {% endif %}
             <div class="card-body">
-              <strong class="d-block text-uppercase text-sm mb-3">{{ each.date|date:"d F Y" }}</strong>
+              <strong class="d-block text-uppercase text-ndee-purple text-sm mb-3">{{ each.date|date:"d F Y" }}</strong>
               <h6 class="card-title font-weight-bold">{{ each }}</h6>
               <p class="text-sm">
                 {{ each.description|truncatewords_html:"20" }}

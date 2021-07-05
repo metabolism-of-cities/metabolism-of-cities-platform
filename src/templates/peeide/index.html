@@ -124,13 +124,13 @@
   <div class="container">
     <div class="my-4">
       <h3 class="text-ndee-primary font-weight-bold">
-        <a href="{% url 'peeide:research' %}">Research topics <i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i></a>
+        <a href="{% url 'peeide:research' %}">Research Topics <i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i></a>
       </h3>
     </div>
 
     <div class="row">
       {% for each in research %}
-        <div class="col-md-6 col-lg-4 mb-4">
+        <div class="col-md-6 col-lg-3 mb-4">
           <div class="p-4 bg-ndee-light-blue rounded single-research">
             <div class="text-center"><i class="fal fa-{{ each.icon }} text-ndee-primary"></i></div>
             <h5 class="text-ndee-primary font-weight-bold">{{ each }}</h5>
@@ -145,7 +145,7 @@
 <section>
   <div class="container">
     <h3 class="text-ndee-primary font-weight-bold mb-4">
-      <a href="{% url 'peeide:news' %}">Featured resources <i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i></a>
+      <a href="{% url 'peeide:news' %}">Resources and Community <i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i></a>
     </h3>
     <div class="rounded" style="background-color: #B0EFF3">
       <div class="row mb-4">
@@ -154,7 +154,7 @@
             <div class="carousel-inner">
               {% for each in carousel %}
                 <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                  <strong class="d-block text-uppercase text-sm mb-3">{{ each.date|date:"d F Y" }}</strong>
+                  <strong class="d-block text-uppercase text-ndee-purple text-sm mb-3">{{ each.date|date:"d F Y" }}</strong>
                   <a href="{{ each.get_absolute_url }}"><h3 class="text-ndee-primary font-weight-bold">{{ each }}</h3></a>
                   {{ each.get_description|truncatewords_html:40 }}
                 </div>
@@ -247,7 +247,7 @@
     <div class="row projects">
       {% for each in projects %}
         <div class="col-md-6 col-lg-4 mb-4">
-          <div class="border rounded">
+          <div>
             {% if each.image %}
               <img class="rounded-top project-image" src="{{ each.image.thumbnail.url }}" alt="{{ each }} image">
             {% endif %}

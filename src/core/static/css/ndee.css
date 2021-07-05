@@ -93,8 +93,8 @@ nav li.nav-item:not(:last-of-type) {
 
 img.ndee-banner {
   width: 100%;
-  height: 300px;
-  max-height: 30vh;
+  height: 450px;
+  max-height: 40vh;
   margin-bottom: 2rem;
   object-fit: cover;
   object-position: center; }

@@ -47,12 +47,12 @@
 <!-- close container -->
 </div>
 
-<img class="ndee-banner" src="https://i.imgur.com/bF4qdQq.jpg">
+<img class="ndee-banner" src="https://i.imgur.com/GuSSuCF.jpg">
 
 <!-- open container -->
 <div class="container">
   <section>
-    <h2>{{ webpage }}</h2>
+    <h2 class="text-ndee-primary">{{ webpage }}</h2>
 
     <div class="row">
       <div class="col-lg-8">
@@ -62,11 +62,9 @@
   </section>
 
   <section>
-    <h3 class="mb-4">Research</h3>
-
     <div class="row research">
       {% for each in research %}
-        <div class="col-md-6 col-lg-4 mb-4">
+        <div class="col-md-6 col-lg-3 mb-4">
           <div class="p-4 bg-ndee-light-blue rounded single-research">
             <div class="text-center"><i class="fal fa-{{ each.icon }} text-ndee-primary"></i></div>
             <h5 class="text-ndee-primary font-weight-bold">{{ each }}</h5>
@@ -83,7 +81,7 @@
     <div class="row projects">
       {% for each in projects %}
         <div class="col-md-6 col-lg-4 mb-4">
-          <div class="border rounded">
+          <div>
             {% if each.image %}
               <img class="rounded-top project-image" src="{{ each.image.thumbnail.url }}" alt="{{ each }} image">
             {% endif %}

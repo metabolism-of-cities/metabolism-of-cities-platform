@@ -25,7 +25,7 @@
 
     {% if PROJECT.slug == "peeide" %}
       <div class="mb-3">
-        <strong class="text-uppercase text-sm">{{ info.date|date:"d F Y" }}</strong>
+        <strong class="text-uppercase text-sm text-ndee-purple">{{ info.date|date:"d F Y" }}</strong>
         {% if info.author %}
         | {{ info.author }}
         {% endif %}
@@ -77,20 +77,30 @@
       </div>
     {% endif %}
 
-    {% if PROJECT.slug != "peeide" %}
-      <h5>Latest news</h5>
-      <div class="card">
-        <div class="list-group list-group-flush">
-          {% for each in latest %}
+    <h5>Latest news</h5>
+    <div class="card {% if PROJECT.slug == 'peeide' %}bg-white border-0{% endif %}">
+      <div class="list-group list-group-flush">
+        {% for each in latest %}
+          {% if PROJECT.slug == "peeide" %}
+            <a href="../{{ each.slug }}/" class="list-group-item">
+          {% else %}
             <a href="/news/{{ each.slug }}/" class="list-group-item">
-            <div>{{ each }}</div>
+          {% endif %}
+          <div>{{ each }}</div>
+          {% if PROJECT.slug == "peeide" %}
+            <div class="text-uppercase text-sm font-weight-bold text-ndee-purple">{{ info.date|date:"d F Y" }}</div>
+          {% else %}
             <div class="text-muted mb-0">{{ each.date }}</div>
-          </a>
-          {% endfor %}
+          {% endif %}
+        </a>
+        {% endfor %}
+        {% if PROJECT.slug == "peeide" %}
+          <a href="../" class="list-group-item font-weight-bold">News archive</a>
+        {% else %}
           <a href="/news/" class="list-group-item font-weight-bold">News archive</a>
-        </div>
+        {% endif %}
       </div>
-    {% endif %}
+    </div>
 
   </div>
 </div>
