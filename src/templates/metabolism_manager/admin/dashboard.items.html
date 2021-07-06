@@ -53,6 +53,11 @@
       height: 200px;
       width: 100%;
     }
+
+    #gallery-wrapper.hidden,
+    #table-wrapper.hidden {
+      display: none;
+    }
   </style>
 {% endblock %}
 
@@ -63,7 +68,7 @@
   {% include "metabolism_manager/admin/_dashboard.menu.html" %}
 
   <section>
-    {% if slug == "latest" %}
+    <div id="gallery-wrapper" class="hidden">
       <div class="row">
         {% for each in items %}
           <div class="col-md-6 col-lg-4 mb-4">
@@ -71,10 +76,10 @@
               <div class="card-header">{{ each.owner }}</div>
               {% if each.image %}
                 <div class="lightbox">
-                  <a href="{{ each.image.large.url }}" style="background-image: url('{{ each.image.large.url }}');" data-caption="{{ each.owner }}" class="card-img-top d-block"></a>
+                  <a href="{{ each.image.large.url }}" style="background-image: url('{{ each.image.thumbnail.url }}');" data-caption="{{ each.owner }}" class="card-img-top d-block"></a>
                 </div>
               {% elif each.owner.image %}
-                <img src="{{ each.owner.image.url }}" class="card-img-top p-3" alt="{{ each.owner }}">
+                <img src="{{ each.owner.thumbnail.url }}" class="card-img-top p-3" alt="{{ each.owner }}">
               {% endif %}
               <ul class="list-group list-group-flush">
                 {% if each.owner.meta_data.address %}
@@ -95,7 +100,8 @@
           </div>
         {% endfor %}
       </div>
-    {% else %}
+    </div>
+    <div id="table-wrapper">
       <table class="table bg-white datatable">
         <thead>
           <tr>
@@ -117,7 +123,7 @@
               {{ each.start_date|date:'d N Y' }}
             </td>
             <td class="text-nowrap">
-              {{ each.end_date|date:'d N Y' }}
+              {{ each.end_date|date:'d N Y'|default:"Open ended" }}
             </td>
             {% if slug == "resources" or slug == "technology" %}
               <td class="text-nowrap">{{ each.material_type.parent }}</td>
@@ -142,8 +148,7 @@
       <div class="btn btn-primary mt-3" data-toggle="modal" data-entry="{{ slug }}" data-target="#add-entry-modal">
         <i class="fa fa-plus mr-2"></i> Add {{ slug }}
       </div>
-    {% endif %}
-
+    </div>
   </section>
 
   {% if slug == "space" %}
@@ -236,8 +241,8 @@
     ]
 
     {% for each in material_list %}
-    var {{ each.material_type__name|cut:" "|cut:"-" }}demand = 0
-    var {{ each.material_type__name|cut:" "|cut:"-" }}supply = 0
+    var {{ each.material_type__name|safe|escape|cut:" "|cut:"-"|cut:","|cut:"<"|cut:">"|cut:"("|cut:")"|cut:"²" }}demand = 0
+    var {{ each.material_type__name|safe|escape|cut:" "|cut:"-"|cut:","|cut:"<"|cut:">"|cut:"("|cut:")"|cut:"²" }}supply = 0
     {% endfor %}
 
     let maxHeight = 0;
@@ -274,5 +279,10 @@
         $(this).height(newHeight)
       })
     }
+
+    // toggle between list and gallery view
+    $("#gallery").change(function() {
+      $("#gallery-wrapper, #table-wrapper").toggleClass("hidden");
+    })
   </script>
 {% endblock %}

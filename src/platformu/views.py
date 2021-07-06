@@ -247,14 +247,14 @@ def admin_dashboard_items(request, slug, organization=None):
         messages.error(request, "Please enter data first.")
     else:
         if slug == "resources":
-            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id__in=[31603,31604,31605,31606,31607,31608,31609,31610,31611,31612,31613,31614,31615,31616,31617,31618], start_date__lte=date.today(), end_date__gte=date.today())
+            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id__in=[31603,31604,31605,31606,31607,31608,31609,31610,31611,31612,31613,31614,31615,31616,31617,31618], start_date__lte=date.today()).exclude(end_date__lte=date.today())
         elif slug == "space":
-            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31621, start_date__lte=date.today(), end_date__gte=date.today())
-            material_list = MaterialDemand.objects.filter(owner__in=organization_list, start_date__lte=date.today(), end_date__gte=date.today(), material_type__parent__name="Space").values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
+            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=31621, start_date__lte=date.today()).exclude(end_date__lte=date.today())
+            material_list = MaterialDemand.objects.filter(owner__in=organization_list, start_date__lte=date.today(), material_type__parent__name="Space").exclude(end_date__lte=date.today()).values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
         elif slug == "technology":
-            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id__in=[752967,752973,752980,752994], start_date__lte=date.today(), end_date__gte=date.today())
+            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id__in=[752967,752973,752980,752994], start_date__lte=date.today()).exclude(end_date__lte=date.today())
         elif slug == "staff":
-            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=584734, start_date__lte=date.today(), end_date__gte=date.today())
+            items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=584734, start_date__lte=date.today()).exclude(end_date__lte=date.today())
 
 
     context = {
