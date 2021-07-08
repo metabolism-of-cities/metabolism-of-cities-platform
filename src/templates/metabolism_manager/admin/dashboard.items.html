@@ -105,40 +105,57 @@
       <table class="table bg-white datatable">
         <thead>
           <tr>
-            <th>From</th>
-            <th>Until</th>
-            <th>Type</th>
+            <th class="border-0">Status</th>
             {% if slug == "resources" or slug == "technology" %}
-              <th>Name</th>
+              <th class="border-0">Type</th>
             {% endif %}
-            <th>Quantity</th>
-            <th>Organisation</th>
-            <th></th>
+            <th class="border-0">Name</th>
+            {% if slug == "space" %}
+              <th class="border-0">Availability</th>
+            {% endif %}
+            <th class="border-0">Quantity</th>
+            <th class="border-0">Date</th>
+            <th class="border-0"></th>
           </tr>
         </thead>
         <tbody>
         {% for each in items %}
           <tr>
-            <td class="text-nowrap">
-              {{ each.start_date|date:'d N Y' }}
-            </td>
-            <td class="text-nowrap">
-              {{ each.end_date|date:'d N Y'|default:"Open ended" }}
+            <td>
+              {% if each.quantity > 0 %}
+                <span class="text-secondary">
+                  <i class="fal fa-fw fa-sign-in"></i> Demand
+                </span>
+              {% else %}
+                <span class="text-primary">
+                  <i class="fal fa-fw fa-sign-out"></i> Supply
+                </span>
+              {% endif %}
             </td>
             {% if slug == "resources" or slug == "technology" %}
-              <td class="text-nowrap">{{ each.material_type.parent }}</td>
+              <td>
+                <i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-1"></i>
+                {{ each.material_type.parent }}
+              </td>
             {% endif %}
-            <td class="text-nowrap">
-            {% if each.name %}
-              {{ each.name }}<br>
-            {% endif %}
-            {{ each.material_type }}</td>
-            <td class="text-nowrap">{{ each.absolute_quantity|floatformat }} {{ each.unit.symbol }}</td>
-            <td class="text-nowrap">
-              <a href="{% url 'platformu:admin_entity' my_organization.id each.owner.id %}">{{ each.owner }}</a>
+            <td>
+              {% if each.name %}
+                {{ each.name }}
+              {% else %}
+                {{ each.material_type }}
+              {% endif %}
             </td>
-            <td class="has-button text-right">
-              <a class="btn btn-primary btn-sm" href="{% url 'platformu:admin_datapoint' each.id %}"><i class="far mr-0 fa-info-circle"></i></a>
+            {% if slug == "space" %}
+              <td>
+                {{ each.get_availability_display }}
+              </td>
+            {% endif %}
+            <td>{{ each.absolute_quantity|floatformat }} {{ each.unit.symbol }}</td>
+            <td>
+              {{ each.start_date|date:"d M Y" }} - {% if each.end_date %}{{ each.end_date|date:"d M Y" }}{% else %}open ended{% endif %}
+            </td>
+            <td class="text-right has-button">
+              <a class="btn btn-primary btn-sm" href="{% url 'platformu:admin_datapoint' each.id %}"><i class="fa fa-info-circle mr-0"></i></a>
             </td>
           </tr>
         {% endfor %}
