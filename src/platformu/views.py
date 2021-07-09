@@ -634,9 +634,9 @@ def admin_entity_material(request, organization, id, slug, material=None, edit=N
         if material_name.lower() == "other":
             add_name_field = True
 
-    fields = ["start_date", "end_date", "description","availability", "image"]
-    if slug == "technology" or slug == "staff" or slug == "space" or add_name_field:
-        fields = ["name"] + fields
+    fields = ["name", "start_date", "end_date", "description","availability", "image"]
+    # if slug == "technology" or slug == "staff" or slug == "space" or add_name_field:
+        # fields = ["name"] + fields
     ModelForm = modelform_factory(MaterialDemand, fields=fields)
 
     if edit:

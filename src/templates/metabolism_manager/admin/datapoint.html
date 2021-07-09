@@ -19,7 +19,7 @@
 
 {% block content %}
 
-  <h1>Data entry</h1>
+  <h1>{% if data.name %}{{ data.name }}{% else %}Data entry{% endif %}</h1>
   <a class="btn btn-sm btn-primary-basic" href="javascript:history.back()"><i class="fas fa-angle-left"></i> Back</a>
   <a class="btn btn-sm btn-primary-basic float-right" href="{% url 'platformu:admin_entity_material' my_organization.id info.id 'data' data.id %}"><i class="fas fa-pencil"></i> Edit</a>
 
@@ -61,11 +61,7 @@
         </li>
 
         <li class="list-group-item">
-          <i class="fal fa-fw fa-calendar mr-2"></i>{{ data.start_date|date:"d M Y" }} - {{ data.end_date|date:"d M Y"|default:"Open ended" }}
-        </li>
-
-        <li class="list-group-item">
-          <i class="fal fa-fw fa-balance-scale mr-2" aria-hidden="true"></i> {{ data.get_availability_display }}
+          <i class="fal fa-fw fa-calendar mr-2"></i> {{ data.start_date|date:"d M Y" }} - {{ data.end_date|date:"d M Y"|default:"Open ended" }}
         </li>
 
         {% if data.description %}
