@@ -667,6 +667,7 @@ def admin_entity_material(request, organization, id, slug, material=None, edit=N
             demand.time = request.POST.get("time")
             demand.save()
             messages.success(request, "Information was saved.")
+            return redirect(request.GET.get("prev"))
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
 

@@ -58,15 +58,20 @@
     #table-wrapper.hidden {
       display: none;
     }
+
+    .company-initials {
+      height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 6rem;
+    }
   </style>
 {% endblock %}
 
 {% block content %}
 
-  <h3>Dashboard</h3>
-
   {% include "metabolism_manager/admin/_dashboard.menu.html" %}
-
   <section>
     <div id="gallery-wrapper" class="hidden">
       <div class="row">
@@ -79,7 +84,9 @@
                   <a href="{{ each.image.large.url }}" style="background-image: url('{{ each.image.thumbnail.url }}');" data-caption="{{ each.owner }}" class="card-img-top d-block"></a>
                 </div>
               {% elif each.owner.image %}
-                <img src="{{ each.owner.thumbnail.url }}" class="card-img-top p-3" alt="{{ each.owner }}">
+                <img src="{{ each.owner.thumbnail.url }}" class="card-img-top p-4" alt="{{ each.owner }}">
+              {% else %}
+                <div class="company-initials">{{ each.owner.name|slice:"1" }}</div>
               {% endif %}
               <ul class="list-group list-group-flush">
                 {% if each.owner.meta_data.address %}
