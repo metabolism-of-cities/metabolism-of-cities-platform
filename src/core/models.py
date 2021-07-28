@@ -2523,6 +2523,7 @@ class MaterialDemand(Record):
     quantity = models.FloatField()
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
     start_date = models.DateField()
+    estimate_value = models.IntegerField(null=True, blank=True, help_text="The total estimate value of the listing")
     end_date = models.DateField(null=True, blank=True, help_text="The end date is optional, leave blank if it's open ended")
     owner = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="demand")
     AVAILABILITY = [
