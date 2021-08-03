@@ -107,15 +107,10 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-6 pr-lg-5">
-        <h1 class="hero-header text-white">Collaboratively researching the impacts of the digital economy</h1>
+        <h1 class="hero-header text-white">{{ webpage }}</h1>
       </div>
-      <div class="col-lg-6 pl-lg-5">
-        <p class="text-white text-lg">
-          The rapid adoption and acceleration of the use of digital technologies is transforming the way we access and process information, impacting the global economy and our social dynamics. These dramatic technological and social changes also have important environmental and energy implications.
-        </p>
-        <p class="text-white text-lg">
-          This initiative seeks to catalyze and disseminate research across various disciplines on a number of high-priority issue areas at the intersection of energy, environment, and digital platforms.
-        </p>
+      <div class="col-lg-6 pl-lg-5 text-white text-lg">
+        {{ webpage.get_description }}
       </div>
     </div>
   </div>

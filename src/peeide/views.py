@@ -20,6 +20,7 @@ def index(request):
     carousel = News.objects.filter(projects=info, include_in_timeline=True).distinct().order_by("-date")
 
     context = {
+        "webpage": get_object_or_404(Webpage, pk=1002744),
         "team": People.objects.filter(parent_list__record_child=info).filter(Q(parent_list__relationship__name="Admin") | Q(parent_list__relationship__name="Core member")),
         "research": research,
         "carousel": carousel,
