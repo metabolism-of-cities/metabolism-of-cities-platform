@@ -21,7 +21,7 @@
       <img class="img-fluid mb-4" src="{{ info.image.url }}">
     {% endif %}
 
-    <h4>{{ info }}</h4>
+    <h4 class="{% if PROJECT.slug == 'peeide' %}text-ndee-primary{% endif %}">{{ info }}</h4>
 
     {% if PROJECT.slug == "peeide" %}
       <div class="mb-3">
@@ -77,7 +77,11 @@
       </div>
     {% endif %}
 
-    <h5>Latest news</h5>
+    {% if PROJECT.slug == "peeide" %}
+      <h5 class="text-ndee-primary">Latest resources</h5>
+    {% else %}
+      <h5>Latest news</h5>
+    {% endif %}
     <div class="card {% if PROJECT.slug == 'peeide' %}bg-white border-0{% endif %}">
       <div class="list-group list-group-flush">
         {% for each in latest %}
@@ -88,14 +92,14 @@
           {% endif %}
           <div>{{ each }}</div>
           {% if PROJECT.slug == "peeide" %}
-            <div class="text-uppercase text-sm font-weight-bold text-ndee-purple">{{ info.date|date:"d F Y" }}</div>
+            <div class="text-uppercase text-sm font-weight-bold text-ndee-purple">{{ each.date|date:"d F Y" }}</div>
           {% else %}
             <div class="text-muted mb-0">{{ each.date }}</div>
           {% endif %}
         </a>
         {% endfor %}
         {% if PROJECT.slug == "peeide" %}
-          <a href="../" class="list-group-item font-weight-bold">News archive</a>
+          <a href="../" class="list-group-item font-weight-bold">Resource archive</a>
         {% else %}
           <a href="/news/" class="list-group-item font-weight-bold">News archive</a>
         {% endif %}
