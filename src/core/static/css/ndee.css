@@ -110,3 +110,10 @@ img.ndee-banner {
 .custom-control-input:checked ~ .custom-control-label::before {
   border-color: #008dac !important;
   background-color: #008dac !important; }
+
+.gallery a:hover,
+a.large-icon-box:hover,
+.btn-icon:hover,
+.btn-thumbnail:hover,
+.btn-card:hover {
+  transform: none !important; }

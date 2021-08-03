@@ -158,3 +158,11 @@ img.ndee-banner {
   border-color: $ndee-primary !important;
   background-color: $ndee-primary !important;
 }
+
+.gallery a:hover,
+a.large-icon-box:hover,
+.btn-icon:hover,
+.btn-thumbnail:hover,
+.btn-card:hover {
+  transform: none !important;
+}

@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% load static %}
 
 {% block head %}
   <style>
@@ -102,7 +103,7 @@
 </div>
 
 <section id="ndee-hero">
-  <img src="https://i.imgur.com/azjasxZ.jpg">
+  <img src="{% static 'img/ndee-cables.jpg' %}">
   <div class="container">
     <div class="row">
       <div class="col-lg-6 pr-lg-5">
@@ -168,7 +169,7 @@
           </div>
         </div>
         <div class="col-lg-6 pl-lg-0">
-          <img src="https://i.imgur.com/bF4qdQq.jpg" class="img-fluid rounded-right carousel-img">
+          <img src="{% static 'img/ndee-energy.jpg' %}" class="img-fluid rounded-right carousel-img">
         </div>
       </div>
     </div>

@@ -30,25 +30,12 @@
 
 <!-- open container -->
 <div class="container">
-  <h2 class="mb-4 text-ndee-primary">Resources and Community</h2>
+  <h2 class="mb-4 text-ndee-primary">{{ webpage }}</h2>
 
   <section>
     <div class="row">
       <div class="col-lg-8">
-
-        <p>nDEE is designed to help foster community amongst researchers and others interested in the intersection of the digital economy and the environment. Here are some ways to engage. </p>
-
-        <h4>Add to the Bibliography</h4>
-
-        <p>Email us at <a href="mailto:networkdee@berkeley.edu">networkDEE@berkeley.edu</a> to suggest resources to add to the main bibliography.</p>
-
-        <h4>Receive Our Newsletter</h4>
-
-        <p>Scroll to the bottom of any page to subscribe to the nDEE listserv and join group conversation about these issues.</p>
-
-        <h4>News & Events</h4>
-
-        <p>Below are news items, event postings, and other resources related to the digital economy’s environmental and energy impacts. If there is anything you'd like to add or have us post, please email us at <a href="mailto:networkdee@berkeley.edu">networkDEE@berkeley.edu</a>.</p>
+        {{ webpage.get_description }}
       </div>
     </div>
   </section>

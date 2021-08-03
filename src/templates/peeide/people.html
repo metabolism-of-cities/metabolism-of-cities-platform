@@ -1,22 +1,24 @@
 {% extends "_base.html" %}
 
+{% load static %}
+
 {% block head %}
-<style>
-  .container.main-content {
-    display: none;
-  }
+  <style>
+    .container.main-content {
+      display: none;
+    }
 
-  img.ndee-banner {
-    object-position: center 70%;
-  }
+    img.ndee-banner {
+      object-position: center 70%;
+    }
 
-  .row-people img {
-    border-radius: 100%;
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-  }
-</style>
+    .row-people img {
+      border-radius: 100%;
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -24,7 +26,7 @@
 <!-- close container -->
 </div>
 
-<img class="ndee-banner" src="https://i.imgur.com/bF4qdQq.jpg">
+<img class="ndee-banner" src="{% static 'img/ndee-waste.jpg' %}">
 
 <!-- open container -->
 <div class="container">
