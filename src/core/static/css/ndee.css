@@ -87,6 +87,8 @@ nav li.nav-item:not(:last-of-type) {
     height: 1px;
     background-color: #37C1FF;
     margin: .5rem 0 1rem 0; }
+  #footer-ndee .subheader {
+    color: #61e0e8; }
 
 .rotate-45 {
   transform: rotate(-45deg); }
