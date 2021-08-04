@@ -1095,7 +1095,7 @@ class LibraryItem(Record):
     abstract_original_language = models.TextField(null=True, blank=True)
     date_added = models.DateTimeField(null=True, blank=True, auto_now_add=True)
     file = models.FileField(null=True, blank=True, upload_to="library")
-    url = models.CharField(max_length=500, null=True, blank=True)
+    url = models.CharField(max_length=2048, null=True, blank=True)
     file_url = models.URLField(null=True, blank=True)
     open_access = models.BooleanField(null=True, blank=True)
     doi = models.CharField(max_length=255, null=True, blank=True)
