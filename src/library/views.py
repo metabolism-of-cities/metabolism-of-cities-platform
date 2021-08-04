@@ -540,7 +540,7 @@ Email: {email}
 Details
 ----------------------
 {details}''',
-            recipient,
+            sender,
             [recipient],
             reply_to=[email],
         )
