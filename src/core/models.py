@@ -1063,6 +1063,7 @@ class LibraryItemType(models.Model):
         ("other", "Other"),
     )
     group = models.CharField(max_length=20, choices=GROUP, null=True, blank=True)
+    bibtex_name = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -1213,8 +1214,39 @@ class LibraryItem(Record):
         else:
             return ""
 
+    @property
+    def get_doi_url(self):
+        return None if not self.doi else f"https://doi.org/{self.doi}"
+
+    @property
     def get_full_citation(self):
         return mark_safe("<em>" + self.name + "</em>, " + self.get_author_citation() + ", " + str(self.year))
+
+    @property
+    def get_citation_apa(self):
+        citation = f"{self.get_author_citation()} ({self.year}). {self.name}. "
+        if self.publisher():
+            citation = citation + f"<em>{self.publisher()}</em>. "
+        if self.doi:
+            citation = citation + f"<a href='{self.get_doi_url}'>{self.get_doi_url}</a>"
+        elif self.url:
+            citation = citation + f"<a href='{self.url}'>{self.url}</a>"
+            
+        return mark_safe(citation)
+
+    @property
+    def get_citation_bibtex(self):
+        citation = '''@type{tag,
+        <pre id="bibtex-ref">@article{reference_tag,
+          author = "{{info.authorlist}}",
+          title = "{{info.title}}",{% if info.journal %}
+          journal = "{{info.journal}}",{% endif %}
+          year = {{info.year}},{% if info.url %}url = "{{info.url}}",{% endif %}{% if info.abstract %}
+          abstract = "{{ info.abstract }}",{% endif %}{% if info.doi %}
+          doi = "{{info.doi}}",{% endif %}
+        }</pre>'''
+
+        return citation
 
     def embed(self):
         if "youtu" in self.url:

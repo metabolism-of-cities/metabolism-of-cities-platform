@@ -273,6 +273,18 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     else:
         info = get_object_or_404(LibraryItem, pk=id)
 
+
+    if "format" in request.GET:
+        # I get a very odd error if this is loaded at the top
+        # local variable 'HttpResponse' referenced before assignment
+        # So for some reason we need to load it here
+        # Would be good to fix
+        from django.http import HttpResponse
+        if request.GET["format"] == "bibtex":
+            return HttpResponse(info.get_citation_bibtex)
+        elif request.GET["format"] == "ris":
+            a = 2
+
     section = "library"
     url_processing = None
     curator = False
