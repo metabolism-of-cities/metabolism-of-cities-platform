@@ -90,7 +90,10 @@
           </li>
 
           <li class="list-group-item table-item">
-            <div><i class="fal fa-fw fa-{{ info.type.icon }} mr-1"></i>Type</div>
+            <div><i class="fal fa-fw fa-{{ info.type.icon }} mr-1"></i>
+              {% if PROJECT.slug == "peeide" %}Reference{% endif %}
+              Type 
+            </div>
             <div>{{ info.type }}</div>
           </li>
 
@@ -132,7 +135,7 @@
 
             {% if info.tags.all %}
               <li class="list-group-item">
-                <i class="fal fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Tags
+                <i class="fal fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> {% if PROJECT.slug == "peeide" %}Keywords{% else %}Tags{% endif %}
                 <br>
                 {% for each in info.tags.all %}
                   <a class="btn btn-sm btn-primary-outline mt-1" href="{% url URLS.LIBRARY %}?find=true&amp;search={{ each.id }}&amp;types=all">{{ each }}</a>
@@ -161,7 +164,7 @@
               {% if info.type.name == "Report" or info.type.name == "Dataset" or info.type.name == "Document" %}
                 <div><i class="fal fa-fw fa-download mr-1"></i> Download</div>
               {% else %}
-                <div><i class="fal fa-fw fa-link mr-1"></i> Website</div>
+                <div><i class="fal fa-fw fa-link mr-1"></i> URL</div>
               {% endif %}
               <div class="text-truncate">
                 <a href="{{ info.url }}">{{ info.url }}</a>
