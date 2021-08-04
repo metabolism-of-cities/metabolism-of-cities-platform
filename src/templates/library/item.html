@@ -600,6 +600,11 @@
         </div>
       {% endif %}
 
+      {% with link=PROJECT.slug|add:":report_error" %}
+        <hr>
+        <p class="text-muted">Something wrong with this information? <a href="{% url link info.id %}">Report errors here</a>.</p>
+      {% endwith %}
+
       {% if request.user.is_superuser %}
         <section id="metadata" role="tabpanel" class="tab-pane">
           <h4>Metadata</h4>

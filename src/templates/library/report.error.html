@@ -1,0 +1,50 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  
+  <h1>Report an error</h1>
+
+  <p>Record: <a href="{% url URLS.LIBRARY_ITEM info.id %}">{{ info }}</a></p>
+
+  {% if request.method != "POST" %}
+
+    <div class="alert alert-info">
+      What should be corrected? Please provide details so that we can fix this. 
+    </div>
+
+    <form method="post">
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Details</label>
+        <div class="col-sm-10">
+          <textarea class="form-control" rows="10" name="details" required></textarea>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Your name</label>
+        <div class="col-sm-10">
+          <input class="form-control" type="text" name="name" />
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="col-sm-2 control-label">E-mail</label>
+        <div class="col-sm-10">
+          <input class="form-control" type="email" name="email" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </div>
+      
+      {% csrf_token %}
+
+    </form>
+
+  {% endif %}
+
+{% endblock %}

@@ -24,6 +24,9 @@ import folium
 # To check if NaN
 import math
 
+# To send mail
+from django.core.mail import EmailMultiAlternatives
+
 THIS_PROJECT = PROJECT_ID["library"]
 
 def get_site_tag(request):
@@ -506,6 +509,49 @@ def data_json(request, id):
         "top_level": top_level,
     }
     return JsonResponse(json_object, safe=False)
+
+def report_error(request, id):
+    info = get_object_or_404(LibraryItem, pk=id)
+    project = get_project(request)
+
+    email = request.POST.get("email")
+    posted_by = request.POST.get("name")
+    details = request.POST.get("details")
+    host_name = request.get_host()
+    link = f"{host_name}/items/{info.id}/"
+
+    sender = settings.SITE_EMAIL
+    try:
+        recipient = project.meta_data.get("email")
+    except:
+        recipient = sender
+
+    if "details" in request.POST:
+        message = EmailMultiAlternatives(
+            f"Website error reported - {info.name}",
+f'''An error was reported with one of the records in the online library ({project.name})
+
+Record: {info.name}
+Link to review: {link}
+Submitted by: {posted_by}
+Email: {email}
+
+----------------------
+Details
+----------------------
+{details}''',
+            recipient,
+            [recipient],
+            reply_to=[email],
+        )
+        message.send()
+        msg = "Your message was sent - thanks for your input!"
+        messages.success(request, msg)
+    context = {
+        "info": info,
+        "title": "Report error",
+    }
+    return render(request, "library/report.error.html", context)
 
 def map(request, article, tag=None):
     info = get_object_or_404(Webpage, pk=article)
