@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.admin.views.decorators import staff_member_required
 from django.forms import modelform_factory
 from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMultiAlternatives
 
 from django.utils import timezone
 import pytz
@@ -63,6 +64,44 @@ def bibliography(request):
     }
 
     return render(request, "peeide/library.html", context)
+
+def bibliography_suggestion(request):
+    project = get_project(request)
+    if request.method == "POST" and "details" in request.POST:
+        email = request.POST.get("email")
+        posted_by = request.POST.get("name")
+        details = request.POST.get("details")
+
+        sender = settings.SITE_EMAIL
+        try:
+            recipient = project.meta_data.get("email")
+        except:
+            recipient = sender
+
+        message = EmailMultiAlternatives(
+            f"Suggestion for the bibliography - {project.name}",
+f'''Someone submitted a suggestion for the bibliography. The details can be found below.
+
+Submitted by: {posted_by}
+Email: {email}
+
+----------------------
+Details
+----------------------
+{details}''',
+            sender,
+            [recipient],
+            reply_to=[email],
+        )
+        message.send()
+        msg = "Your message was sent - thanks for your input!"
+        messages.success(request, msg)
+
+    context = {
+        "title": "Submit a suggestion",
+    }
+
+    return render(request, "peeide/suggestion.html", context)
 
 def bibliography_list(request, id=None):
     keyword = request.GET.get("keyword")

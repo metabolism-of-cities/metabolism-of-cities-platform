@@ -13,6 +13,7 @@ urlpatterns =  [
     path("research/", views.research, name="research"),
     path("bibliography/", views.bibliography),
     path("bibliography/search/", views.bibliography_list, name="library_search"),
+    path("bibliography/suggestion/", views.bibliography_suggestion, name="bibliography_suggestion"),
     path("bibliography/sectors/<int:id>/", views.bibliography_list, name="sector"),
     path("bibliography/technologies/<int:id>/", views.bibliography_list, name="technology"),
 
