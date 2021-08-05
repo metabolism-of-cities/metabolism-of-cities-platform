@@ -281,9 +281,10 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         # Would be good to fix
         from django.http import HttpResponse
         if request.GET["format"] == "bibtex":
-            return HttpResponse(info.get_citation_bibtex)
-        elif request.GET["format"] == "ris":
-            a = 2
+            response = HttpResponse(info.get_citation_bibtex, content_type="text/plain")
+            if "download" in request.GET:
+                response["Content-Disposition"] = f"attachment; filename=\"{info.name}.bib\""
+            return response
 
     section = "library"
     url_processing = None

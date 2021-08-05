@@ -191,12 +191,11 @@
           {% endif %}
 
           {% if info.doi %}
-            <li class="list-group-item">
-              <i class="fal fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> DOI
-              <br>
-              <a class="badge badge-primary" href="https://doi.org/{{ info.doi }}">
-                {{ info.doi }}
-              </a>
+            <li class="list-group-item table-item">
+                <div><i class="fal fa-fw fa-tag mr-1"></i> DOI</div>
+              <div class="text-truncate">
+                <a href="{{ info.get_doi_url }}">{{ info.doi }}</a>
+              </div>
             </li>
           {% endif %}
 
@@ -207,6 +206,14 @@
               <span class="badge badge-primary">{{ info.isbn }}</span>
             </li>
           {% endif %}
+
+          <li class="list-group-item">
+            <i class="fal fa-fw fa-quote-right mb-1 mr-1" aria-hidden="true"></i> Citation
+            <br>
+            <a class="badge badge-secondary" data-toggle="modal" data-target="#citation" href="#citation">
+              View/download citation
+            </a>
+          </li>
 
           {% if info.type.group == "academic" and PROJECT.slug != "ascus2021" %}
           <li class="list-group-item">
@@ -605,7 +612,7 @@
         <p class="text-muted">Something wrong with this information? <a href="{% url link info.id %}">Report errors here</a>.</p>
       {% endwith %}
 
-      <div class="modal" tabindex="-1">
+      <div class="modal" tabindex="-1" id="citation">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -620,8 +627,8 @@
               </p>
             </div>
             <div class="modal-footer">
-              <a class="btn btn-primary" href="?format=bibtex">Bibtex</a>
-              <a class="btn btn-primary" href="?format=ris">RIS</a>
+              <a class="btn btn-primary" href="?format=bibtex&amp;download=true">Download BibteX</a>
+              <a class="btn btn-primary" href="?format=bibtex">View BibTeX</a>
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
           </div>
@@ -629,12 +636,12 @@
       </div>
 
       {% if request.user.is_superuser %}
-        <section id="metadata" role="tabpanel" class="tab-pane">
+        <section id="metadata" role="tabpanel" class="tab-pane border mt-5 p-3 text-muted">
           <h4>Metadata</h4>
           <span class="badge badge-primary mb-4">Available to super user only</span>
 
           {% if info.meta_data %}
-            <div class="bg-white border rounded">
+            <div class="bg-white rounded">
               <ul class="list-group list-group-flush">
               {% for key,value in info.meta_data.items %}
                 <li class="list-group-item table-item">

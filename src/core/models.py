@@ -1170,7 +1170,7 @@ class LibraryItem(Record):
     # others contain Firstname Lastname; Firstname Lastname; etc.
     # This script tries to get the author_list ready for in-text citation (up to two authors; adding et al
     # if there are more).
-    def get_author_citation(self):
+    def get_author_citation(self, full=False):
         if self.author_citation:
             return self.author_citation
         elif self.author_list:
@@ -1207,7 +1207,9 @@ class LibraryItem(Record):
                 return author_array[0]
             elif len(author_array) == 2:
                 return author_array[0] + " and " + author_array[1]
-            elif len(author_array) > 2:
+            elif len(author_array) > 2 and full:
+                return " and ".join(author_array)
+            elif len(author_array) > 2 and not full:
                 return mark_safe(bleach.clean(author_array[0]) + " <em>et al.</em>")
             else:
                 return ""
@@ -1224,27 +1226,51 @@ class LibraryItem(Record):
 
     @property
     def get_citation_apa(self):
-        citation = f"{self.get_author_citation()} ({self.year}). {self.name}. "
+        citation = bleach.clean(f"{self.get_author_citation()} ({self.year}). {self.name}. ")
         if self.publisher():
-            citation = citation + f"<em>{self.publisher()}</em>. "
+            p = bleach.clean(str(self.publisher()))
+            citation = citation + f"<em>{p}</em>. "
         if self.doi:
-            citation = citation + f"<a href='{self.get_doi_url}'>{self.get_doi_url}</a>"
+            citation = citation + bleach.clean(f"<a href='{self.get_doi_url}'>{self.get_doi_url}</a>")
         elif self.url:
-            citation = citation + f"<a href='{self.url}'>{self.url}</a>"
+            url = bleach.clean(self.url)
+            citation = citation + f"<a href='{url}'>{url}</a>"
             
         return mark_safe(citation)
 
     @property
     def get_citation_bibtex(self):
-        citation = '''@type{tag,
-        <pre id="bibtex-ref">@article{reference_tag,
-          author = "{{info.authorlist}}",
-          title = "{{info.title}}",{% if info.journal %}
-          journal = "{{info.journal}}",{% endif %}
-          year = {{info.year}},{% if info.url %}url = "{{info.url}}",{% endif %}{% if info.abstract %}
-          abstract = "{{ info.abstract }}",{% endif %}{% if info.doi %}
-          doi = "{{info.doi}}",{% endif %}
-        }</pre>'''
+        author_string = ""
+        journal_string = ""
+        doi_string = ""
+        url_string = ""
+        if self.get_author_citation():
+            author = self.get_author_citation(full=True)
+            author = self.author_list
+            author_string = f"  author = {{{author}}},\n"
+            tag = author.partition(" ")[0] + str(self.year) + self.name.partition(" ")[0]
+        else:
+            tag = self.name.partition(" ")[0] + str(self.year)
+        if self.publisher():
+            if self.type.name == "Journal Article":
+                journal_string = f"  journal = {{{self.publisher()}}},\n"
+            else:
+                journal_string = f"  publisher = {{{self.publisher()}}},\n"
+        if self.url:
+            url_string = f"  url = {{{self.url}}},\n"
+        if self.doi:
+            doi_string = f"  doi = {{{self.doi}}},\n"
+        tag = slugify(tag)
+        return (
+            f"@{self.type.bibtex_name}{{{tag},\n"
+            f"  title = {{{self.name}}}\n"
+            f"{author_string}"
+            f"{journal_string}"
+            f"{url_string}"
+            f"{doi_string}"
+            f"  year = {{{self.year}}}\n"
+            f"}}"
+        )
 
         return citation
 
@@ -2752,6 +2778,34 @@ class ZoteroItem(models.Model):
                 info.is_public = False
             else:
                 info.is_public = True
+
+        journal = self.data.get("publicationTitle")
+        if journal:
+            record_new_journal = True
+            check = RecordRelationship.objects.filter(record_child=info, relationship_id=2)
+            if check:
+                current = check[0]
+                if current.record_parent.name == journal:
+                    record_new_journal = False
+                else:
+                    # We will change the journal
+                    check.delete()
+            if record_new_journal:
+                # Let's check to see if this journal already exist in our list with organizations
+                organization = Organization.objects.filter(name=journal)
+                if not organization:
+                    # If not, we create it
+                    organization = Organization.objects.create(
+                        name = journal,
+                        type = "journal",
+                    )                        
+                else:
+                    organization = organization[0]
+                RecordRelationship.objects.create(
+                    record_parent = organization,
+                    record_child = info,
+                    relationship_id = 2,
+                )
 
         info.save()
 
