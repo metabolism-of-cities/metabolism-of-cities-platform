@@ -6,10 +6,12 @@ from django.http import Http404, HttpResponseRedirect, JsonResponse, HttpRespons
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q
+from django.contrib import messages
 
 from django.utils import timezone
 import pytz
 from functools import wraps
+import json
 
 from django.views.decorators.clickjacking import xframe_options_exempt
 from core.mocfunctions import *
@@ -57,3 +59,51 @@ def community(request):
         "webpage": Webpage.objects.get(pk=51385),
     }
     return render(request, "islands/team.html", context)
+
+def map(request):
+ 
+    project = get_object_or_404(Project, pk=request.project)
+
+    # Same block is included in index.html
+    spaces = ReferenceSpace.objects.filter(activated__part_of_project=project, geometry__isnull=False)
+    features = []
+
+    # We should cache this block!
+    for each in spaces:
+        geo = each.geometry.centroid
+        url = reverse(project.slug + ":dashboard", args=[each.slug])
+
+        content = ""
+        if each.image:
+            content = f"<a class='d-block' href='{url}'><img alt='{each.name}' src='{each.get_thumbnail}' /></a><hr>"
+        content = content + f"<a href='{url}'>View details</a>"
+
+        try:
+            features.append({
+                "type": "Feature",
+                "geometry": json.loads(geo.json),
+                "properties": {
+                    "name": each.name,
+                    "id": each.id,
+                    "content": content,
+                    "color": "",
+                },
+            })
+        except Exception as e:
+            messages.error(request, f"We had an issue reading one of the items which had an invalid geometry ({each}). Error: {str(e)}")
+
+    data = {
+        "type":"FeatureCollection",
+        "features": features,
+        "geom_type": "Point",
+    }
+
+    context = {
+        "load_leaflet": True,
+        "load_leaflet_item": True,
+        "load_datatables": True,
+        "spaces": spaces,
+        "data": data,
+    }
+    return render(request, "islands/map.html", context)
+

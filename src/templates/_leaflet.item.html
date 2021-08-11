@@ -107,8 +107,8 @@
         })
       }
 
-      map.addLayer(dataLayer).fitBounds(dataLayer.getBounds())
-  {% endif %}
+      map.addLayer(dataLayer).fitBounds(dataLayer.getBounds(), {padding: [20,20]})
 
+  {% endif %}
 
 </script>
