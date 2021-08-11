@@ -1153,17 +1153,9 @@ def controlpanel_zotero_collection(request, id):
             sectors.delete()
             technologies = Tag.objects.filter(parent_tag__id=1088)
             technologies.delete()
-
-            collection = ZoteroCollection.objects.get(pk=4)
-        
-            ids = [1219, 1192, 1199, 1197, 1204, 1196, 1188, 1279, 1215, 1220, 1214, 1178, 1457, 1345, 1181, 1348, 1422, 1451, 1187, 1339, 1203, 1202, 1190, 1201, 1166, 1191, 1426, 1210, 1216, 1158, 1340, 1139, 1157, 1141, 1250, 1341, 1344, 1212, 1184, 1195, 1189, 1193, 1221, 1173, 1230, 1185, 1136, 1145, 1329, 1179, 1180, 1183, 1206, 1174, 1222, 1198, 1213, 1186, 1217, 1132, 1122, 1356, 874, 1218, 1333, 1170, 1163, 1182, 1304, 1343, 1194, 1200, 1162, 1270, 1211, 1281, 1138, 1140, 1249, 1118, 1295, 912]
-            removed_items = ZoteroItem.objects.filter(id__in=ids, collection=collection)
-            removed_items.delete()
-
-            info = collection
-                
         # End delete block
-
+        for each in ZoteroItem.objects.filter(collection=info):
+            each.import_to_library()
         messages.success(request, "Information was synced with the library.")
 
     context = {
