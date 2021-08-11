@@ -203,7 +203,7 @@ class ZoteroImport(CronJobBase):
                         data = each["data"],
                         collection = collection,
                     )
-                if collection.uid == 3:
+                if collection.uid == 3 or collection.uid == 4:
                     info.import_to_library()
 
 class EmailNotifications(CronJobBase):

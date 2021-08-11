@@ -1153,9 +1153,39 @@ def controlpanel_zotero_collection(request, id):
             sectors.delete()
             technologies = Tag.objects.filter(parent_tag__id=1088)
             technologies.delete()
+
+            from pyzotero import zotero
+            collection = ZoteroCollection.objects.get(pk=4)
+        
+            api = collection.api
+            zotero_id = collection.zotero_id
+
+            zot = zotero.Zotero(zotero_id, "group", api)
+            list = zot.everything(zot.top())
+
+            all_zotero_items = ZoteroItem.objects.filter(collection=collection)
+            ids = []
+            for each in all_zotero_items:
+                ids.append(each.id)
+            p(ids)
+
+            for each in list:
+                try:
+                    info = ZoteroItem.objects.get(key=each["data"].get("key"))
+                    info.data = each["data"]
+                    info.save()
+                    ids.remove(info.id)
+                except:
+                    p("NEW ITEM!")
+                    p(each)
+            
+            removed_items = ZoteroItem.objects.filter(id__in=ids)
+            removed_items.delete()
+
+            info = collection
+                
         # End delete block
-        for each in ZoteroItem.objects.filter(collection=info):
-            each.import_to_library()
+
         messages.success(request, "Information was synced with the library.")
 
     context = {
