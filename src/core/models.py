@@ -2779,7 +2779,9 @@ class ZoteroItem(models.Model):
             else:
                 info.is_public = True
 
+        info.save()
         journal = self.data.get("publicationTitle")
+
         if journal:
             record_new_journal = True
             check = RecordRelationship.objects.filter(record_child=info, relationship_id=2)
@@ -2806,8 +2808,6 @@ class ZoteroItem(models.Model):
                     record_child = info,
                     relationship_id = 2,
                 )
-
-        info.save()
 
         # Let's now add the tags
         if self.collection.uid == 3:
