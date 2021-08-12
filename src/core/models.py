@@ -2816,6 +2816,7 @@ class ZoteroItem(models.Model):
 
         if self.collection.uid == 4:
             # NDEE collection has tags recorded in different fields and we use those instead
+            info.tags.clear()
             sector_tag = Tag.objects.get(pk=1089)
             technology_tag = Tag.objects.get(pk=1088)
             if self.get_ndee_sectors:
