@@ -54,8 +54,8 @@ def people(request):
     return render(request, "peeide/people.html", context)
 
 def bibliography(request):
-    sectors = Tag.objects.filter(parent_tag__id=1089).exclude(name="Hide").annotate(total=Count("record")).order_by("name")
-    technologies = Tag.objects.filter(parent_tag__id=1088).annotate(total=Count("record")).order_by("name")
+    sectors = Tag.objects.filter(parent_tag__id=1089).exclude(name="Hide").annotate(total=Count("record", filter=Q(record__is_deleted=False, record__is_public=True))).filter(total__gt=0).order_by("name")
+    technologies = Tag.objects.filter(parent_tag__id=1088).annotate(total=Count("record", filter=Q(record__is_deleted=False, record__is_public=True))).filter(total__gt=0).order_by("name")
     context = {
         "webpage": get_object_or_404(Webpage, pk=51473),
         "sectors": sectors,
