@@ -258,7 +258,7 @@ def admin_dashboard_items(request, slug, organization=None):
 
 
     context = {
-        "page": "dashboard",
+        "page": "dashboard_items",
         "my_organization": my_organization,
         "organization_list": organization_list,
         "data": data,
@@ -266,7 +266,6 @@ def admin_dashboard_items(request, slug, organization=None):
         "material_list": material_list,
         "gps": gps,
         "min_values": min_values,
-        "load_lightbox": True,
         "load_select2": True,
         "load_datatables": True,
         "load_highcharts": True,

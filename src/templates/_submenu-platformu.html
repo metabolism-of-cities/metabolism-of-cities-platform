@@ -9,7 +9,7 @@
       <div class="collapse navbar-collapse" id="ascus-navbar">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a class="navbar-brand-small" href="{% if DEBUG %}/{% if PROJECT.id != 1 %}{{ PROJECT.slug }}{% endif %}{% else %}{{ PROJECT.get_website }}{% endif %}">
+            <a class="navbar-brand-small" href="{% url 'platformu:admin_dashboard' %}">
               <img alt="{{ PROJECT }}" src="{{ LOGO }}?u=true">
             </a>
           </li>

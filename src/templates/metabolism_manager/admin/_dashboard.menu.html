@@ -35,8 +35,11 @@
       <label class="custom-control-label" for="gallery">Gallery view</label>
     </div>
   </li>
+  {% if page == "dashboard_items" %}
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="modal" data-entry="{{ slug }}" data-target="#add-entry-modal">
+      <i class="fal fa-plus mr-2"></i> Add {{ slug }}
+    </a>
+  </li>
+  {% endif %}
 </ul>
-
-
-
-
