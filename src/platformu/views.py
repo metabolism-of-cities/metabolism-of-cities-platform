@@ -633,7 +633,7 @@ def admin_entity_material(request, organization, id, slug, material=None, edit=N
         if material_name.lower() == "other":
             add_name_field = True
 
-    fields = ["name", "start_date", "end_date", "estimate_value", "description", "availability", "image"]
+    fields = ["name", "start_date", "end_date", "estimate_value", "description", "days", "time", "availability", "image"]
     # if slug == "technology" or slug == "staff" or slug == "space" or add_name_field:
         # fields = ["name"] + fields
     ModelForm = modelform_factory(MaterialDemand, fields=fields)
@@ -666,7 +666,7 @@ def admin_entity_material(request, organization, id, slug, material=None, edit=N
             demand.time = request.POST.get("time")
             demand.save()
             messages.success(request, "Information was saved.")
-            return redirect(request.GET.get("prev"))
+            # return redirect(request.GET.get("prev"))
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
 
