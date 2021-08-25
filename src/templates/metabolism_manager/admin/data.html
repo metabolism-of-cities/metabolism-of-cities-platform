@@ -27,15 +27,14 @@
       <thead>
         <tr>
           <th>Status</th>
+          <th>Name</th>
           <th>From</th>
           <th>Until</th>
-          <th>Type</th>
           {% if key == "Resources" or key == "Technology" %}
-            <th>Name</th>
+            <th>Type</th>
           {% endif %}
           <th>Quantity</th>
           <th>Organisation</th>
-          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -43,26 +42,27 @@
         <tr>
           <td class="text-nowrap">
             {% if each.type == "demand" %}
-              <i class="fal fa-sign-in fa-fw mr-2 text-secondary"></i> Demand
+              <span class="badge badge-secondary">Demand</span>
             {% else %}
-              <i class="fal fa-sign-out fa-fw mr-2 text-primary"></i> Supply
+              <span class="badge badge-primary">Supply</span>
             {% endif %}
           </td>
+          <td class="text-nowrap">
+            <a href="{% url 'platformu:admin_datapoint' each.id %}">
+              {% if each.name %}
+                {{ each.name }}
+              {% else %}
+                {{ each.material_type }}
+              {% endif %}
+            </a>
+          </td>
           <td class="text-nowrap">{{ each.start_date }}</td>
-          <td class="text-nowrap">{{ each.end_date }}</td>
+          <td class="text-nowrap">{{ each.end_date|default:"" }}</td>
           {% if key == "Resources" or key == "Technology" %}
             <td>{{ each.material_type.parent }}</td>
           {% endif %}
-          <td class="text-nowrap">
-          {% if each.name %}
-            {{ each.name }}<br>
-          {% endif %}
-          {{ each.material_type }}</td>
           <td class="text-nowrap">{{ each.absolute_quantity }} {{ each.unit.symbol }}</td>
-          <td class="text-truncate">{{ each.owner }}</td>
-          <td class="has-button">
-            <a class="btn btn-sm btn-primary" href="{% url 'platformu:admin_datapoint' each.id %}"><i class="fa fa-info-circle m-0"></i></a>
-          </td>
+          <td class="text-truncate"><a href="{% url 'platformu:admin_entity' my_organization.id each.owner.organization.id %}">{{ each.owner }}</a></td>
         </tr>
       {% endfor %}
       </tbody>

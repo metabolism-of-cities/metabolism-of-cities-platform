@@ -84,10 +84,10 @@
         <thead>
           <tr>
             <th class="border-0">Status</th>
+            <th class="border-0">Name</th>
             {% if slug == "resources" or slug == "technology" %}
               <th class="border-0">Type</th>
             {% endif %}
-            <th class="border-0">Name</th>
             {% if slug == "space" %}
               <th class="border-0">Availability</th>
             {% endif %}
@@ -100,15 +100,20 @@
           {% for each in data %}
             <tr>
               <td>
-                {% if each.quantity > 0 %}
-                  <span class="text-secondary">
-                    <i class="fal fa-sign-in"></i> Demand
-                  </span>
+                {% if each.type == "demand" %}
+                  <span class="badge badge-secondary">Demand</span>
                 {% else %}
-                  <span class="text-primary">
-                    <i class="fal fa-sign-out"></i> Supply
-                  </span>
+                  <span class="badge badge-primary">Supply</span>
                 {% endif %}
+              </td>
+              <td>
+                <a href="{% url 'platformu:admin_datapoint' each.id %}">
+                  {% if each.name %}
+                    {{ each.name }}
+                  {% else %}
+                    {{ each.material_type }}
+                  {% endif %}
+                </a>
               </td>
               {% if slug == "resources" or slug == "technology" %}
                 <td>
@@ -116,13 +121,6 @@
                   {{ each.material_type.parent }}
                 </td>
               {% endif %}
-              <td>
-                {% if each.name %}
-                  {{ each.name }}
-                {% else %}
-                  {{ each.material_type }}
-                {% endif %}
-              </td>
               {% if slug == "space" %}
                 <td>
                   {{ each.get_availability_display }}
@@ -134,7 +132,6 @@
               </td>
               <td class="text-right has-button">
                 <a class="btn btn-primary-basic btn-sm" href="edit/{{ each.id }}/?prev={{ request.get_full_path|cut:'?action=add' }}"><i class="fal fa-pencil mr-0"></i></a>
-                <a class="btn btn-primary btn-sm" href="{% url 'platformu:admin_datapoint' each.id %}"><i class="fa fa-info-circle mr-0"></i></a>
               </td>
             </tr>
           {% endfor %}
@@ -178,8 +175,8 @@
             <tr>
               <td><span class="material-name">{{ each }}</span><span hidden class="material-tags">item-{{ each.parent.id }} </span></td>
               <td class="text-right">
-                <a class="btn btn-sm btn-secondary-basic float-right" href="demand/{{ each.id }}/?prev={{ request.get_full_path }}"><i class="fal mr-1 fa-sign-in"></i> Log demand</a>
-                <a class="btn btn-sm btn-primary-basic float-right" href="supply/{{ each.id }}/?prev={{ request.get_full_path }}"><i class="fal mr-1 fa-sign-out"></i> Log supply</a>
+                <a class="btn btn-sm btn-secondary-basic float-right" href="demand/{{ each.id }}/?prev={{ request.get_full_path|cut:'?action=add' }}"><i class="fal mr-1 fa-sign-in"></i> Log demand</a>
+                <a class="btn btn-sm btn-primary-basic float-right" href="supply/{{ each.id }}/?prev={{ request.get_full_path|cut:'?action=add' }}"><i class="fal mr-1 fa-sign-out"></i> Log supply</a>
               </td>
             </tr>
             {% endfor %}
@@ -188,7 +185,7 @@
 
         {% if slug == "resources" or slug == "technology" %}
           <div class="first-load text-center pt-4">
-            <h2 class="my-4"><i class="fad fa-arrow-left mr-2"></i> Please select a category</h2>
+            <h2 class="my-4"><i class="far fa-arrow-left mr-2"></i> Please select a category</h2>
           </div>
         {% endif %}
 
