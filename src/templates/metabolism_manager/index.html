@@ -3,38 +3,98 @@
 {% block page_name %}fullwidth{% endblock %}
 
 {% block css %}
-  <style type="text/css">
-    body.fullwidth .container.main-content .fullwidth-wrapper {
-      color: #fff;
-      padding: 20vh 0;
-      text-align:center;
-      background-size: cover;
-      background-image:url("/media/header_image/home.huge.jpg");
+  <style>
+    .centered-flex {
+      display: flex;
+      align-items: center;
     }
-    .fullwidth-wrapper h1, .fullwidth-wrapper p {
-      text-shadow: 1px 1px 5px #000;
-    }
-    .main-content.container {
-      padding-top: 0;
+
+    section {
+      padding: 4rem 0;
     }
   </style>
 {% endblock %}
 
 {% block content %}
 
-  <div class="fullwidth-wrapper">
-    <div class="jumbotron jumbotron-fluid">
-      <div class="container">
-        <h1 class="display-4">PlatformU</h1>
-        <p class="lead">
-          The essential digital tool for area managers. 
-        </p>
+</div>
+<!-- closing container so we can use the full width of the page -->
+
+  <section class="container">
+    <h3 class="text-center my-5">PlatformU is the essential digital tool for area managers to manage circular economy ambitions, improve industrial symbiosis and address local challenges.</h3>
+
+    <div class="text-center">
+      <a class="btn btn-lg btn-primary mr-3 mb-2" href="accounts/register/"><i class="fa fa-user-plus"></i> Sign Up</a>
+      <a class="btn btn-lg btn-dark mr-3 mb-2" href="about/" data-scroll=""><i class="fa fa-info-circle"></i> Read More</a>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="row">
+      <div class="col-md centered-flex">
+        <div>
+          <h3>Collect very different data, in one place</h3>
+
+          <p>Area managers and coordinators of industrial and technology parks, are often weighed down in complexity. PlatformU helps to collect and visualise a range of geo-referenced data associated with the demand and supply of resources, technology, space and staff.</p>
+        </div>
+      </div>
+      <div class="col-md">
+        <img src="https://i.imgur.com/JFPxSBz.jpg" class="img-fluid" alt="PlatformU screenshot">
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="container">
-    {{ webpage.get_content|safe }}
-  </div>
+  <section class="bg-white border-top border-bottom">
+    <div class="container">
+      <div class="row">
+        <div class="col-md">
+          <img src="https://i.imgur.com/eoagl8V.png" class="img-fluid" alt="PlatformU screenshot">
+        </div>
+        <div class="col-md centered-flex">
+          <div>
+            <h3>Look for connections and symbiosis</h3>
+
+            <p>By collecting data in one place, it is possible to look for opportunities to connect supply and demand. PlatformU provides visualisation tools to help show connections between organisations.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="row">
+      <div class="col-md centered-flex">
+        <div>
+          <h3>Help your fight common challenges</h3>
+
+          <p>Organisations that are better connected, are more likely to collaborate on solving bigger problems. PlatformU can help identify common social, technical and environmental resources in order to develop new opportunities. </p>
+        </div>
+      </div>
+      <div class="col-md">
+        <img src="https://i.imgur.com/x5Zvjnr.jpg" class="img-fluid" alt="PlatformU screenshot">
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white border-top border-bottom">
+    <div class="container">
+      <h3>Try it, it is free</h3>
+
+      <p>PlatformU was developed by <a href="https://metabolismofcities.org/">Metabolism of Cities</a> in partnership with academics and researchers and with grateful support from foundations and public financing. Our ambition is to create tools to help reduce the environmental impact of industry and manufacturing, a sector that has a large demand of resources and produces vast quantities of waste. By better understanding how businesses and organisations work, it may be possible to find systemic  solutions that can help both the individual and collective. Explore PlatformU now!</p>
+    </div>
+
+    <div class="text-center my-5">
+      <a class="btn btn-lg btn-primary mr-3 mb-2" href="accounts/register/"><i class="fa fa-user-plus"></i> Sign Up</a>
+      <a class="btn btn-lg btn-dark mr-3 mb-2" href="about/" data-scroll=""><i class="fa fa-info-circle"></i> Read More</a>
+    </div>
+  </section>
+
+
+  <!-- Note from Guus: I've removed this for now because it was too cumbersome to get the images in the media folder -->
+  <!-- Good change it will significantly change soon, so for now very quick and low effort -->
+  <!-- {{ webpage.get_content|safe }} -->
+
+<!-- don't need to close this div since it's done previously -->
+<!-- </div> -->
 
 {% endblock %}
