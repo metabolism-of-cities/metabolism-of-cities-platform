@@ -22,6 +22,22 @@
     #table-wrapper.hidden {
       display: none;
     }
+
+    .single-gallery-item img {
+      object-fit: cover;
+      height: 200px;
+      width: 100%;
+    }
+
+    .single-gallery-item:hover {
+      border-color: #343a40 !important;
+    }
+
+    .single-gallery-item .badge {
+      position: absolute;
+      top: 15px;
+      right: 1rem;
+    }
   </style>
 {% endblock %}
 
@@ -29,112 +45,93 @@
 {% block content %}
   {% include "metabolism_manager/admin/_entity.menu.html" %}
 
-  <div class="row">
-    <div class="col-md">
-      <h3>{{ slug|title }}</h3>
-    </div>
-    <div class="col-md d-flex align-items-end justify-content-end">
-      <div class="custom-control custom-switch mb-2">
-        <input type="checkbox" class="custom-control-input" id="gallery">
-        <label class="custom-control-label" for="gallery">Gallery view</label>
-      </div>
-    </div>
-  </div>
-
   {% if data %}
     <div id="gallery-wrapper" class="row hidden">
       {% for each in data %}
-        <div class="col-lg-4 col-md-6 mb-4">
-          <div class="card">
-            <div class="card-header">
+        <div class="col-md-6 col-lg-4 mb-4">
+          <a class="d-block bg-white text-dark single-gallery-item border" href="{% url 'platformu:admin_datapoint' each.id %}">
+            <div class="card-header position-relative font-weight-bold">
+              <i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-2"></i>
               {% if each.name %}
                 {{ each.name }}
               {% else %}
                 {{ each.material_type }}
               {% endif %}
+              {% if each.type == 'supply' %}
+                <span class="badge badge-primary">Supply</span>
+              {% else %}
+                <span class="badge badge-secondary">Demand</span>
+              {% endif %}
             </div>
             {% if each.image %}
-              <div class="lightbox">
-                <a href="{{ each.image.large.url }}" style="background-image: url('{{ each.image.large.url }}');" data-caption="{% if each.name %}{{ each.name }}{% else %}{{ each.material_type }}{% endif %}" class="card-img-top d-block"></a>
-              </div>
+              <img class="border-bottom" src="{{ each.image.thumbnail.url }}" alt="Image of {{ each.owner }}'s {{ each.material_type }}">
+            {% elif each.owner.image %}
+              <img class="border-bottom" src="{{ each.owner.image.thumbnail.url }}" alt="{{ each.owner }}">
             {% endif %}
             <ul class="list-group list-group-flush">
-              <li class="list-group-item">
-                <i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-2"></i> {{ each.material_type.parent }} - {{ each.material_type }}
-              </li>
               {% if each.owner.meta_data.address %}
                 <li class="list-group-item"><i class="fal fa-fw fa-map-marker-alt mr-2"></i> {{ each.owner.meta_data.address }}</li>
               {% endif %}
+              <li class="list-group-item"><i class="fal fa-fw fa-building mr-2"></i> {{ each.owner }}</li>
               <li class="list-group-item"><i class="fal fa-fw fa-balance-scale mr-2"></i> {{ each.absolute_quantity|floatformat }} {{ each.unit.symbol }}</li>
-              <li class="list-group-item text-{% if each.type == 'supply' %}primary{% else %}secondary{% endif %}">
-                <i class="fal fa-fw fa-{% if each.type == 'supply' %}sign-out{% else %}sign-in{% endif %} mr-2"></i> {% if each.type == "supply" %}Supply{% else %}Demand{% endif %}
-              </li>
               <li class="list-group-item"><i class="fal fa-fw fa-calendar mr-2"></i> {{ each.start_date|date:'d N Y' }} - {% if each.end_date %}{{ each.end_date|date:"d M Y" }}{% else %}open ended{% endif %}</li>
-              <li class="list-group-item"><i class="fal fa-fw fa-calendar-plus mr-2"></i> Added on {{ each.date_created|date:'d F' }}</li>
-              <li class="list-group-item text-center">
-                <a class="btn btn-primary" href="{% url 'platformu:admin_datapoint' each.id %}">More details</a>
-              </li>
             </ul>
-          </div>
+          </a>
         </div>
       {% endfor %}
     </div>
     <div id="table-wrapper" class="table-responsive mb-4">
-      <table class="table bg-white">
+      <table class="table bg-white datatable">
         <thead>
           <tr>
             <th class="border-0">Status</th>
-            <th class="border-0">Name</th>
             {% if slug == "resources" or slug == "technology" %}
-              <th class="border-0">Type</th>
+              <th class="border-0">Name</th>
             {% endif %}
+            <th class="border-0">Type</th>
             {% if slug == "space" %}
               <th class="border-0">Availability</th>
             {% endif %}
             <th class="border-0">Quantity</th>
             <th class="border-0">Date</th>
-            <th class="border-0"></th>
           </tr>
         </thead>
         <tbody>
-          {% for each in data %}
-            <tr>
-              <td>
-                {% if each.type == "demand" %}
-                  <span class="badge badge-secondary">Demand</span>
+        {% for each in data %}
+          <tr>
+            <td>
+              {% if each.type == 'supply' %}
+                <span class="badge badge-primary">Supply</span>
+              {% else %}
+                <span class="badge badge-secondary">Demand</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'platformu:admin_datapoint' each.id %}">
+                {% if each.name %}
+                  {{ each.name }}
                 {% else %}
-                  <span class="badge badge-primary">Supply</span>
+                  {{ each.material_type }}
                 {% endif %}
-              </td>
+              </a>
+            </td>
+            {% if slug == "resources" or slug == "technology" %}
               <td>
-                <a href="{% url 'platformu:admin_datapoint' each.id %}">
-                  {% if each.name %}
-                    {{ each.name }}
-                  {% else %}
-                    {{ each.material_type }}
-                  {% endif %}
-                </a>
+                <i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-1"></i>
+                {{ each.material_type.parent }}
               </td>
-              {% if slug == "resources" or slug == "technology" %}
-                <td>
-                  <i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-1"></i>
-                  {{ each.material_type.parent }}
-                </td>
-              {% endif %}
-              {% if slug == "space" %}
-                <td>
-                  {{ each.get_availability_display }}
-                </td>
-              {% endif %}
-              <td>{{ each.absolute_quantity|floatformat }} {{ each.unit.symbol }}</td>
+            {% endif %}
+            {% if slug == "space" %}
               <td>
-                {{ each.start_date|date:"d M Y" }} - {% if each.end_date %}{{ each.end_date|date:"d M Y" }}{% else %}open ended{% endif %}
+                {{ each.get_availability_display }}
               </td>
-              <td class="text-right has-button">
-                <a class="btn btn-primary-basic btn-sm" href="edit/{{ each.id }}/?prev={{ request.get_full_path|cut:'?action=add' }}"><i class="fal fa-pencil mr-0"></i></a>
-              </td>
-            </tr>
-          {% endfor %}
+            {% endif %}
+            <td>{{ each.absolute_quantity|floatformat }} {{ each.unit.symbol }}</td>
+            <td>
+              {{ each.start_date|date:"d M Y" }} - {% if each.end_date %}{{ each.end_date|date:"d M Y" }}{% else %}open ended{% endif %}
+            </td>
+          </tr>
+        {% endfor %}
         </tbody>
       </table>
     </div>
@@ -146,8 +143,6 @@
       </div>
     </div>
   {% endif %}
-
-  <button class="btn btn-primary add-existing mr-2"><i class="fas fa-plus"></i> Add new entry</button>
 
   <div class="card container mt-4 filter-table" id="add-material">
     <div class="row">

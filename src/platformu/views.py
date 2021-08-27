@@ -414,6 +414,16 @@ def admin_data(request, organization=None):
 def admin_datapoint(request, id):
 
     data = MaterialDemand.objects.get(pk=id)
+
+    if data.material_type.parent.id == 31621:
+        slug = "space"
+    elif data.material_type.parent.id in [752967,752973,752980,752994]:
+        slug = "technology"
+    elif data.material_type.parent.id == 584734:
+        slug = "staff"
+    else:
+        slug = "resources"
+
     my_organization = my_organizations(request)[0]
 
     # This is how we check that this user actually has access to this data point
@@ -423,6 +433,7 @@ def admin_datapoint(request, id):
         "my_organization": my_organization,
         "info": info,
         "data": data,
+        "slug": slug,
         "load_lightbox": True,
     }
     return render(request, "metabolism_manager/admin/datapoint.html", context)
@@ -605,9 +616,11 @@ def admin_entity_materials(request, organization, id, slug=None):
         "main_groups": main_groups,
         "materials": materials,
         "slug": slug,
+        "gallery_view": True,
         "page": "entity_" + slug,
         "data": MaterialDemand.objects.filter(owner=info, material_type__in=materials),
         "load_lightbox": True,
+        "load_datatables": True,
     }
     return render(request, "metabolism_manager/admin/entity.materials.html", context)
 

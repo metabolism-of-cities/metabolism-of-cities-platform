@@ -19,9 +19,11 @@
 
 {% block content %}
 
-  <h1>{% if data.name %}{{ data.name }}{% else %}Data entry{% endif %}</h1>
+  <h1>{% if data.name %}{{ data.name }}{% else %}Data entry{% endif %} {{ slug }}</h1>
   <a class="btn btn-sm btn-primary-basic" href="javascript:history.back()"><i class="fas fa-angle-left"></i> Back</a>
-  <a class="btn btn-sm btn-primary-basic float-right" href="{% url 'platformu:admin_entity_material' my_organization.id info.id 'data' data.id %}"><i class="fas fa-pencil"></i> Edit</a>
+  <a class="btn btn-sm btn-primary-basic float-right" href="{% url 'platformu:admin_entity_material' my_organization.id info.id 'data' data.id %}?prev={% url 'platformu:admin_entity_materials' my_organization.id info.id slug %}">
+    <i class="fal fa-pencil"></i> Edit
+  </a>
 
   <div class="card-deck mt-3">
     <div class="card details">
