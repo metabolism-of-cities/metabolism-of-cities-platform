@@ -730,9 +730,45 @@ def admin_entity_user(request, organization, id, user=None):
     return render(request, "metabolism_manager/admin/entity.user.html", context)
 
 @login_required
-def admin_area(request):
+def admin_area(request, organization=None):
+
+    data = gps = material_list = None
+    min_values = {}
+
+    if organization:
+        my_organization = my_organizations(request, organization)
+    else:
+        my_organization = my_organizations(request)
+        if my_organization:
+            my_organization = my_organization[0]
+        else:
+            return redirect("platformu:create_my_organization")
+
+    organization_list = Organization.objects_include_private.filter(
+            tags__parent_tag_id = TAG_ID["platformu_segments"],
+            tags__belongs_to = my_organization,
+    ).distinct()
+
+    data = MaterialDemand.objects.filter(owner__in=organization_list)
+
+    resources_items = data.filter(material_type__parent_id__in=[31603,31604,31605,31606,31607,31608,31609,31610,31611,31612,31613,31614,31615,31616,31617,31618])
+    space_items = data.filter(material_type__parent_id=31621)
+    technology_items = data.filter(material_type__parent_id__in=[752967,752973,752980,752994])
+    staff_items = data.filter(material_type__parent_id=584734)
+
     context = {
-        "page": "area",
+        "page": "map",
+        "my_organization": my_organization,
+        "organization_list": organization_list,
+        "data": data,
+        "resources_items": resources_items,
+        "space_items": space_items,
+        "technology_items": technology_items,
+        "staff_items": staff_items,
+        "gps": gps,
+        "load_highcharts": True,
+        "load_leaflet_basics": True,
+        "load_leaflet": True,
     }
     return render(request, "metabolism_manager/admin/area.html", context)
 
@@ -773,20 +809,6 @@ def admin_connections(request, organization=None):
         "organization_list": organization_list,
     }
     return render(request, "metabolism_manager/admin/connections.html", context)
-
-@login_required
-def dashboard(request):
-    my_organization = my_organizations(request, organization)
-    info = get_entity_record(request, my_organization, id)
-
-    context = {
-        "page": "dashboard",
-        "my_organization": my_organization,
-        "info": info,
-        "properties": properties,
-    }
-    return render(request, "metabolism_manager/dashboard.html", context)
-
 
 # These things we should likely clean up
 
