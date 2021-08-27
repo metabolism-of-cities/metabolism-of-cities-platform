@@ -186,7 +186,7 @@ def admin_dashboard(request, organization=None):
     organization_list = Organization.objects_include_private.filter(
             tags__parent_tag_id = TAG_ID["platformu_segments"],
             tags__belongs_to = my_organization,
-    )
+    ).distinct()
 
     if not organization_list:
         messages.error(request, "Please enter data first.")
@@ -241,7 +241,7 @@ def admin_dashboard_items(request, slug, organization=None):
     organization_list = Organization.objects_include_private.filter(
             tags__parent_tag_id = TAG_ID["platformu_segments"],
             tags__belongs_to = my_organization,
-    )
+    ).distinct()
 
     if not organization_list:
         messages.error(request, "Please enter data first.")
@@ -294,7 +294,7 @@ def admin_dashboard_latest(request, organization=None):
     organization_list = Organization.objects_include_private.filter(
             tags__parent_tag_id = TAG_ID["platformu_segments"],
             tags__belongs_to = my_organization,
-    )
+    ).distinct()
 
     if not organization_list:
         messages.error(request, "Please enter data first.")
@@ -339,7 +339,7 @@ def admin_map(request, organization=None):
     organization_list = Organization.objects_include_private.filter(
             tags__parent_tag_id = TAG_ID["platformu_segments"],
             tags__belongs_to = my_organization,
-    )
+    ).distinct()
 
     if not organization_list:
         messages.error(request, "Please enter data first.")
@@ -390,7 +390,7 @@ def admin_data(request, organization=None):
     organization_list = Organization.objects_include_private.filter(
             tags__parent_tag_id = TAG_ID["platformu_segments"],
             tags__belongs_to = my_organization,
-    )
+    ).distinct()
 
     if not organization_list:
         messages.error(request, "Please enter data first.")
@@ -751,7 +751,7 @@ def admin_connections(request, organization=None):
     organization_list = Organization.objects_include_private.filter(
             tags__parent_tag_id = TAG_ID["platformu_segments"],
             tags__belongs_to = my_organization,
-    )
+    ).distinct()
 
     if not organization_list:
         messages.error(request, "Please enter data first.")
