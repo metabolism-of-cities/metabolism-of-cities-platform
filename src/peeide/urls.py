@@ -16,6 +16,7 @@ urlpatterns =  [
     path("bibliography/suggestion/", views.bibliography_suggestion, name="bibliography_suggestion"),
     path("bibliography/sectors/<int:id>/", views.bibliography_list, name="sector"),
     path("bibliography/technologies/<int:id>/", views.bibliography_list, name="technology"),
+    path("library/", views.bibliography_list),
 
     # news
     path("news/", views.news_list, name="news"),

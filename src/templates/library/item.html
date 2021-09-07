@@ -138,7 +138,9 @@
                 <i class="fal fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> {% if PROJECT.slug == "peeide" %}Keywords{% else %}Tags{% endif %}
                 <br>
                 {% for each in info.tags.all %}
-                  <a class="btn btn-sm btn-primary-outline mt-1" href="{% url URLS.LIBRARY %}?find=true&amp;search={{ each.id }}&amp;types=all">{{ each }}</a>
+                  {% if not each.hidden %}
+                    <a class="btn btn-sm btn-primary-outline mt-1" href="{% url URLS.LIBRARY %}?find=true&amp;search={{ each.id }}&amp;types=all">{{ each }}</a>
+                  {% endif %}
                 {% endfor %}
               </li>
             {% endif %}

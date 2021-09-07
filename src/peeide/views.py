@@ -54,8 +54,9 @@ def people(request):
     return render(request, "peeide/people.html", context)
 
 def bibliography(request):
-    sectors = Tag.objects.filter(parent_tag__id=1089).exclude(name="Hide").annotate(total=Count("record", filter=Q(record__is_deleted=False, record__is_public=True))).filter(total__gt=0).order_by("name")
-    technologies = Tag.objects.filter(parent_tag__id=1088).annotate(total=Count("record", filter=Q(record__is_deleted=False, record__is_public=True))).filter(total__gt=0).order_by("name")
+    ndee_tag = Tag.objects.get(id=1643)
+    sectors = Tag.objects.filter(parent_tag__id=1089).exclude(name="Hide").annotate(total=Count("record", filter=Q(record__is_deleted=False, record__is_public=True, record__tags=ndee_tag))).filter(total__gt=0).order_by("name")
+    technologies = Tag.objects.filter(parent_tag__id=1088).annotate(total=Count("record", filter=Q(record__is_deleted=False, record__is_public=True, record__tags=ndee_tag))).filter(total__gt=0).order_by("name")
     context = {
         "webpage": get_object_or_404(Webpage, pk=51473),
         "sectors": sectors,
@@ -108,7 +109,14 @@ def bibliography_list(request, id=None):
     author = request.GET.get("author")
     type = request.GET.get("type")
     tag = None
+    # In the beginning, we simply filtered to see if the tags included a nDEE-specific sector...
     items = LibraryItem.objects.filter(tags__parent_tag__parent_tag_id=1087).distinct()
+    # But then we got other sites using those tags too, so we had to do this tweak...
+    ndee_tag = Tag.objects.get(id=1643)
+    # Ideally we fully streamline this and use one or the other, not both
+    items = items.filter(tags=ndee_tag)
+    if request.GET.get("search"):
+        id = request.GET.get("search")
     if id:
         tag = Tag.objects.get(pk=id)
         items = items.filter(tags=tag)
