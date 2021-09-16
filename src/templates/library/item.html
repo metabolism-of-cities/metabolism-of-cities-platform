@@ -295,12 +295,12 @@
         <form method="post" class="form form-horizontal mt-2" action="{% url "ascus2021:account_vote" %}">
           {% csrf_token %}
           <div class="alert alert-warning">
-            <h3>Best contribution</h3>
+            <h3>Best PTA</h3>
             <p>
             {% if best_vote %}
                 You already cast your vote
             {% else %}
-              <button type="submit" class="btn btn-success" name="best_contribution" value="{{ info.id }}"><i class="fa fa-vote-yea"></i> Vote for this contribution.</button>
+              <button type="submit" class="btn btn-success" name="best_pta" value="{{ info.id }}"><i class="fa fa-vote-yea"></i> Vote for this path-to-action document.</button>
               <input type="hidden" name="next" value="{{ request.get_full_path }}" />
             {% endif %}
             </p>

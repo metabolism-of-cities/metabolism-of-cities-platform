@@ -14,10 +14,12 @@
 <li class="nav-item"><a class="nav-link" href="/page/keynotes/">Keynotes</a></li>
 
 {% if not request.user.is_authenticated %}
-  <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:article" "rates" %}">Rates</a></li>
   <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:article" "login" %}">Login</a></li>
-  <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:register" %}">Register</a></li>
 {% else %}
+  <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:logout" %}">Logout</a></li>
+{% endif %}
+
+{% if False %}
   <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:signup" %}">Register</a></li>
   <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:article" "rates" %}">Rates</a></li>
   <li class="nav-item"><a class="nav-link" href="{% url "ascus2021:logout" %}">Logout</a></li>

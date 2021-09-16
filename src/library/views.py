@@ -268,7 +268,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         info = LibraryItem.objects_include_private \
             .filter(pk=id) \
             .filter(parent_list__record_child__id=request.project) \
-            .filter(tags__id=771)
+            .filter(tags__id__in=[771,919])
         info = info[0]
     else:
         info = get_object_or_404(LibraryItem, pk=id)
@@ -409,7 +409,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         "properties": properties,
 
         # The following we'll only have during the AScUS voting round; remove afterwards
-        "best_vote": RecordRelationship.objects.filter(relationship_id=39, record_parent=request.user.people) if request.user.is_authenticated else None,
+        "best_vote": RecordRelationship.objects.filter(relationship_id=32, record_parent=request.user.people) if request.user.is_authenticated else None,
     }
     return render(request, "library/item.html", context)
 

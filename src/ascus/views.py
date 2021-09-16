@@ -215,6 +215,7 @@ def ascus_account(request):
     )
 
     show_discussion = False
+    show_discussion = True ## TEMP REMOVE
     show_abstract = False
 
     if my_discussions:
@@ -336,6 +337,19 @@ def account_vote(request):
             messages.error(request, "You have already cast a vote.")
         return redirect(request.POST["next"])
 
+    check_vote = RecordRelationship.objects.filter(relationship_id=32, record_parent=request.user.people)
+    if "best_pta" in request.POST:
+        if not check_vote:
+            RecordRelationship.objects.create(
+                record_parent = request.user.people,
+                record_child_id = request.POST["best_pta"],
+                relationship_id = 32,
+            )
+            messages.success(request, "Thanks for your vote!")
+        else:
+            messages.error(request, "You have already cast a vote.")
+        return redirect(request.POST["next"])
+
 @check_ascus_access
 def forum(request):
     project = get_project(request)
@@ -405,10 +419,11 @@ def ascus_account_edit(request):
     }
     return render(request, "ascus/account.edit.html", context)
 
+@check_ascus_access
 def account_outputs(request):
     webpage = get_object_or_404(Webpage, slug="/ascus/outputs/")
     outputs = LibraryItem.objects \
-        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+        .filter(parent_list__record_child__id=request.project) \
         .filter(tags__id=919)
     context = {
         "header_title": "Path-to-Action documents",
@@ -534,7 +549,7 @@ def account_output(request):
         my_output = LibraryItem.objects_include_private \
             .filter(pk=request.GET["id"]) \
             .filter(child_list__record_parent=request.user.people) \
-            .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
+            .filter(parent_list__record_child__id=request.project) \
             .filter(tags__id=919)
         if my_output:
             my_output = my_output[0]
@@ -550,7 +565,7 @@ def account_output(request):
         if form.is_valid():
             info = form.save(commit=False)
             info.status = "active"
-            info.year = 2020
+            info.year = 2021
             info.save()
             # Adding the tag "Path to Action"
             info.tags.add(Tag.objects.get(pk=919))
@@ -563,10 +578,10 @@ def account_output(request):
                 )
                 RecordRelationship.objects.create(
                     record_parent = info,
-                    record_child_id = PAGE_ID["ascus"],
+                    record_child_id = request.project,
                     relationship = Relationship.objects.get(name="Presentation"),
                 )
-            return redirect("ascus:account")
+            return redirect("ascus2021:account")
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
     context = {
@@ -1033,11 +1048,21 @@ def controlpanel_vote(request):
         else:
             best_contribution[item] += 1
 
+    best = RecordRelationship.objects.filter(relationship__id=32)
+    best_pta = {}
+    for each in best:
+        item = each.record_child
+        if item not in best_pta:
+            best_pta[item] = 1
+        else:
+            best_pta[item] += 1
+
 
     context = {
         "best_list": best_list,
         "best_contribution": best_contribution,
         "most_active_list": most_active_list,
+        "best_pta": best_pta,
         "load_datatables": True,
         "title": "Voting results",
     }

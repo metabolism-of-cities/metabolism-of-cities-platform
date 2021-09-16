@@ -44,6 +44,24 @@
     </tbody>
   </table>
 
+  <h2 class="mt-4">Best PTA</h2>
+  <table class="table table-striped datatable table-card">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Votes</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for key,value in best_pta.items %}
+      <tr>
+        <td>{{ key }}</td>
+        <td>{{ value }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
   <h2 class="mt-4">Best contribution</h2>
   <table class="table table-striped datatable table-card">
     <thead>
