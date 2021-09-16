@@ -230,7 +230,7 @@
           <li class="list-group-item table-item">
             <div><i class="fal fa-fw fa-user mr-1"></i> Uploaded by</div>
             <div>
-              <a href="{% url URLS.PROFILE info.uploader.id %}">{{ info.uploader }}</a>
+              {{ info.uploader.name_and_link }}
             </div>
           </li>
           {% endif %}

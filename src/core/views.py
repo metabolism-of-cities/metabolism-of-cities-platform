@@ -233,13 +233,19 @@ def user_reset(request):
 
 def user_profile(request, id=None, project=None):
 
+    project = get_project(request)
     if id:
         info = People.objects.get(pk=id)
     elif request.user.is_authenticated:
         info = request.user.people
+        return redirect(project.get_slug() + ":user", info.id)
     else:
         project = get_object_or_404(Project, pk=request.project)
         return redirect(project.get_slug() + ":login")
+
+    if not info.user:
+        # This means the profile was deleted - do not show a page
+        raise Http404("This profile was not found")
 
     completed = Work.objects.filter(assigned_to=info, status=Work.WorkStatus.COMPLETED)
     open = Work.objects.filter(assigned_to=info).filter(Q(status=Work.WorkStatus.OPEN)|Q(status=Work.WorkStatus.PROGRESS))
@@ -254,15 +260,65 @@ def user_profile(request, id=None, project=None):
     return render(request, "auth/profile.html", context)
 
 @login_required
-def user_profile_form(request):
+def user_profile_form(request, id=None):
+
     ModelForm = modelform_factory(
         People,
         fields = ("name", "description", "research_interests", "image", "website", "email", "twitter", "google_scholar", "orcid", "researchgate", "linkedin"),
         labels = { "description": "Profile/bio", "image": "Photo" }
     )
     form = ModelForm(request.POST or None, request.FILES or None, instance=request.user.people)
+
     if request.method == "POST":
-        if form.is_valid():
+        if "delete" in request.POST:
+            people = request.user.people
+            people.user = None
+            people.save()
+            u = request.user
+            u.delete()
+            people.affiliation = None
+            people.email = None
+            people.email_public = False
+            people.website = None
+            people.twitter = None
+            people.google_scholar = None
+            people.orcid = None
+            people.researchgate = None
+            people.linkedin = None
+            people.research_interests = None
+            people.status = "inactive"
+            people.image = None
+            people.description = None
+            people.meta_data = None
+            if "anonymous" in request.POST:
+                people.name = f"Contributor #{people.id}"
+                people.firstname = None
+                people.lastname = None
+            people.save()
+
+            # Remove any topics this user is subscribed to
+            people.subscribed.clear()
+
+            # If the user is in charge of any task, reassign them
+            my_work = Work.objects.filter(assigned_to=people)
+            for each in my_work:
+                each.assigned_to = None
+                each.save()
+                message_description = str(people) + " is no longer responsible for this task"
+                message_title = "Task unassigned"
+                message = Message.objects.create(
+                    name = message_title,
+                    description = message_description,
+                    parent = each,
+                    posted_by = people,
+                )
+                set_author(people.id, message.id)
+
+            logout(request)
+            messages.success(request, "Your profile has been removed from our database.")
+            project = get_project(request)
+            return redirect(project.get_slug() + ":index")
+        elif form.is_valid():
             people = form.save()
 
             user = people.user
@@ -293,6 +349,7 @@ def user_profile_form(request):
             return redirect(request.GET["return"])
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
+
     context = {
         "menu": "profile",
         "form": form,

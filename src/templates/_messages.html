@@ -6,10 +6,10 @@
           <div class="row metadata">
             <div class="col-6">
               {{ each.posted_by.avatar }}
-              {% if DESIGN.back_link %}
-              <a href="/hub/users/{{ each.posted_by.id }}/">{{ each.posted_by }}</a>
+              {% if DESIGN.back_link and each.posted_by.user %}
+                <a href="/hub/users/{{ each.posted_by.id }}/">{{ each.posted_by }}</a>
               {% else %}
-              {{ each.posted_by }}
+                {{ each.posted_by }}
               {% endif %}
               {% if each.posted_by.get_my_space %}
                 <span class="badge badge-light ml-1">{{ each.posted_by.get_my_space }}</span>

@@ -1,11 +1,18 @@
 {% extends "_base.html" %}
 {% load bootstrap4 %}
 
+{% block head %}
+<style type="text/css">
+.delete-block{display:none}
+</style>
+{% endblock %}
+
 {% block content %}
 
   {% include "hub/_nav.html" %}
 
   <form method="post" class="form form-horizontal" enctype="multipart/form-data">
+
     {% bootstrap_form form layout="horizontal" %}
 
     <div class="form-group row">
@@ -38,18 +45,60 @@
       </div>
     </div>
 
-    {% buttons %}
-      <div class="col-md-offset-3 col-md-9">
+    <div class="form-group row">
+      <div class="offset-md-3 col-md-9">
         <button type="submit" class="btn btn-success">Save</button>
+        <a class="float-right" href="#" id="delete">Want to delete your profile?</a>
+        {% csrf_token %}
       </div>
-    {% endbuttons %}
-    {% csrf_token %}
+    </div>
+
   </form>
+
+  <section class="delete-block">
+    <h4>Deleting your profile</h4>
+    <p>
+      If you want to delete your profile, you can click one of the two options below. 
+      Please note that we keep a record of documents and information contributed
+      by our community, which will remain online even if you remove your profile. However, 
+      if you like we can make your contributions anonymous instead of showing your name.
+    </p>
+
+    <h5>Option 1: remove my personal profile - keep my name associated with my contributions</h5>
+    <p>
+      We will remove your online profile and personal information from the database. However, 
+      your name will be kept and your contributions will still show your name next to them.
+    </p>
+
+    <form method="post">
+      <button type="submit" class="btn btn-danger" onclick="javascript:return confirm('Are you sure?')">Delete my profile</button>
+      {% csrf_token %}
+      <input type="hidden" name="delete" value="true" />
+    </form>
+
+    <h5 class="mt-3">Option 2: remove my personal profile and anonymise my contributions</h5>
+    <p>
+      We will remove your online profile and personal information from the database. However, 
+      your name will be kept and your contributions will still show your name next to them.
+    </p>
+
+    <form method="post">
+      <button type="submit" class="btn btn-danger" onclick="javascript:return confirm('Are you sure?')">Delete my profile and anonymise contributions</button>
+      {% csrf_token %}
+      <input type="hidden" name="delete" value="true" />
+      <input type="hidden" name="anonymous" value="true" />
+    </form>
+
+  </section>
 
 {% endblock %}
 
 {% block footer %}
   <script>
     $("#id_email").attr("required", "required");
+    $("#delete").click(function(e){
+      e.preventDefault();
+      $(".delete-block").toggle("fast");
+    });
   </script>
 {% endblock %}

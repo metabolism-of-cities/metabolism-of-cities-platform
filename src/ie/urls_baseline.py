@@ -95,6 +95,7 @@ baseline_urlpatterns = [
     # Users
     path("hub/users/", core.users, name="users"),
     path("hub/users/<int:id>/", core.user_profile, name="user"),
+    path("hub/users/<int:id>/edit/", core.user_profile_form),
     path("hub/scoreboard/", core.users, {"scoreboard": True}, name="scoreboard"),
     path("hub/rules/", core.rules, name="rules"),
     path("hub/selector/", core.hub_selector, name="hub_selector"),
