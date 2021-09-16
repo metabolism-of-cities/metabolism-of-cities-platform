@@ -108,7 +108,7 @@ def overview(request, preconf=False):
         "my_topic_registrations": my_topic_registrations,
         "preconf": preconf,
         "best_vote": RecordRelationship.objects.filter(relationship_id=37, record_parent=request.user.people) if request.user.is_authenticated else None,
-        "activate_voting": True,
+        "activate_voting": False,
     }
     return render(request, "ascus/program.html", context)
 
@@ -180,7 +180,7 @@ def participant(request, id):
         "discussions": discussions,
         "attendance": attendance,
         "most_active": RecordRelationship.objects.filter(relationship_id=38, record_parent=request.user.people) if request.user.is_authenticated else None,
-        "activate_voting": True,
+        "activate_voting": False,
     }
     return render(request, "ascus/participant.html", context)
 
@@ -200,7 +200,7 @@ def ascus_account(request):
     my_outputs = LibraryItem.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
         .filter(parent_list__record_child__id=request.project) \
-        .filter(tags__id=919)
+        .filter(tags__id=919).distinct()
     my_presentations = LibraryItem.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
         .filter(parent_list__record_child__id=request.project) \
@@ -419,10 +419,18 @@ def ascus_account_edit(request):
     }
     return render(request, "ascus/account.edit.html", context)
 
-@check_ascus_access
 def account_outputs(request):
+    is_ascus_participant = False
+    if request.user.is_authenticated and hasattr(request.user, "people"):
+        check_participant = RecordRelationship.objects.filter(
+            record_parent = request.user.people,
+            record_child_id = request.project,
+            relationship__name = "Participant",
+        )
+        if check_participant.exists():
+            is_ascus_participant = True
     webpage = get_object_or_404(Webpage, slug="/ascus/outputs/")
-    outputs = LibraryItem.objects \
+    outputs = LibraryItem.objects_include_private \
         .filter(parent_list__record_child__id=request.project) \
         .filter(tags__id=919)
     context = {
@@ -431,6 +439,7 @@ def account_outputs(request):
         "webpage": webpage,
         "outputs": outputs,
         "menu": "outputs",
+        "is_ascus_participant": is_ascus_participant,
     }
     return render(request, "ascus/account.outputs.html", context)
 
@@ -1056,7 +1065,6 @@ def controlpanel_vote(request):
             best_pta[item] = 1
         else:
             best_pta[item] += 1
-
 
     context = {
         "best_list": best_list,

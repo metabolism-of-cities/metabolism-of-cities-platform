@@ -13,7 +13,13 @@
     <tbody>
     {% for each in outputs %}
       <tr>
-        <td><a href="{% url URLS.LIBRARY_ITEM each.id %}">{{ each }}</a></td>
+        <td>
+          {% if is_ascus_participant or each.is_public %}
+            <a href="{% url URLS.LIBRARY_ITEM each.id %}">{{ each }}</a>
+          {% else %}
+            {{ each }}
+          {% endif %}
+        </td>
         <td>{{ each.author_list }}</td>
       </tr>
     {% endfor %}

@@ -264,13 +264,24 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     if data_section_type:
         submenu = "library"
 
+    info = None
     if project.slug == "ascus2021":
-        info = LibraryItem.objects_include_private \
-            .filter(pk=id) \
-            .filter(parent_list__record_child__id=request.project) \
-            .filter(tags__id__in=[771,919])
-        info = info[0]
-    else:
+        # For AScUS participants we DO show those objects
+        # that are marked as private, because the participants must be able to see them
+        if request.user.is_authenticated and hasattr(request.user, "people"):
+            check_participant = RecordRelationship.objects.filter(
+                record_parent = request.user.people,
+                record_child_id = request.project,
+                relationship__name = "Participant",
+            )
+            if check_participant.exists():
+                is_ascus_participant = True
+                info = LibraryItem.objects_include_private \
+                    .filter(pk=id) \
+                    .filter(parent_list__record_child__id=request.project) \
+                    .filter(tags__id__in=[771,919])
+                info = info[0]
+    if not info:
         info = get_object_or_404(LibraryItem, pk=id)
 
 
