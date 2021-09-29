@@ -2559,7 +2559,6 @@ class Material(Record):
     code = models.CharField(max_length=255, null=True, blank=True, db_index=True)
     parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="children")
     catalog = models.ForeignKey(MaterialCatalog, on_delete=models.CASCADE, blank=True, null=True, related_name="content")
-    #is_separator = models.BooleanField()
     measurement_type = models.IntegerField(choices=MaterialType.choices, db_index=True, blank=True, null=True, default=1)
     icon = models.CharField(max_length=50, null=True, blank=True, help_text="Only include the icon name, not fa- classes --- see https://fontawesome.com/icons?d=gallery")
 
@@ -2583,36 +2582,6 @@ class Unit(models.Model):
 
     def __str__(self):
         return self.name
-
-class MaterialDemand(Record):
-    material_type = models.ForeignKey(Material, on_delete=models.CASCADE)
-    quantity = models.FloatField()
-    unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
-    start_date = models.DateField()
-    estimate_value = models.IntegerField(null=True, blank=True, help_text="The total estimate value of the listing")
-    end_date = models.DateField(null=True, blank=True, help_text="The end date is optional, leave blank if it's open ended")
-    owner = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="demand")
-    AVAILABILITY = [
-        ('Unavailable', 'Unavailable'),
-        ('Occasionally', 'Occasionally available'),
-        ('Short_term_use', 'Available short-term use'),
-        ('Long_term_use', 'Available for long-term use'),
-    ]
-    availability = models.CharField(max_length=50, null=True,  blank=True, choices=AVAILABILITY)
-    days = models.CharField(max_length=255, null=True)
-    time = models.CharField(max_length=255, null=True)
-
-    def __str__(self):
-        return self.material_type.name
-
-    def type(self):
-        return "supply" if self.quantity < 0 else "demand"
-
-    def absolute_quantity(self):
-        return self.quantity*-1 if self.quantity < 0 else self.quantity
-
-    class Meta:
-        ordering = ["start_date"]
 
 class Sector(Record):
     icon = models.CharField(max_length=255, null=True, blank=True)
@@ -2690,37 +2659,6 @@ class Notification(models.Model):
 
     def __str__(self):
         return str(self.people) + " is notified about " + str(self.record)
-
-class EurostatDB(models.Model):
-    title = models.CharField(max_length=2000)
-    code = models.CharField(max_length=255)
-    type = models.CharField(max_length=255)
-    last_update = models.CharField(max_length=255, null=True, blank=True)
-    data_start = models.CharField(max_length=255, null=True, blank=True)
-    data_end = models.CharField(max_length=255, null=True, blank=True)
-    url_overwrite = models.URLField(max_length=255, null=True, blank=True)
-    is_reviewed = models.BooleanField(db_index=True, default=False)
-    is_approved = models.BooleanField(db_index=True, null=True, blank=True)
-    is_denied = models.BooleanField(db_index=True, null=True, blank=True)
-    is_duplicate = models.BooleanField(db_index=True, null=True, blank=True, default=False)
-    has_no_meta_data = models.BooleanField(db_index=True, null=True, blank=True)
-    notes = models.TextField(null=True, blank=True)
-    tags = models.ManyToManyField(Tag, blank=True)
-    spaces = models.ManyToManyField(ReferenceSpace, blank=True)
-
-    def __str__(self):
-        return self.title
-
-from django import forms
-class EurostatForm(forms.ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super(EurostatForm, self).__init__(*args, **kwargs)
-        self.fields["title"].strip = False
-
-    class Meta:
-        model = EurostatDB
-        fields = "__all__"
 
 class ZoteroCollection(Record):
     uid = models.AutoField(primary_key=True)
@@ -2991,8 +2929,50 @@ class Milestone(Record):
     class Meta:
         ordering = ["year", "position"]
 
+###
+### PLATFORM-U SPECIFIC TABLES
+### These are created exclusively for the PlatformU website. This website is not yet mature
+### and tables will not be merged with the main database until it is more extensively used
+### and matured.
+###
 
-# CityLoops
+class MaterialDemand(Record):
+    material_type = models.ForeignKey(Material, on_delete=models.CASCADE)
+    quantity = models.FloatField()
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+    start_date = models.DateField()
+    estimate_value = models.IntegerField(null=True, blank=True, help_text="The total estimate value of the listing")
+    end_date = models.DateField(null=True, blank=True, help_text="The end date is optional, leave blank if it's open ended")
+    owner = models.ForeignKey(Record, on_delete=models.CASCADE, related_name="demand")
+    AVAILABILITY = [
+        ('Unavailable', 'Unavailable'),
+        ('Occasionally', 'Occasionally available'),
+        ('Short_term_use', 'Available short-term use'),
+        ('Long_term_use', 'Available for long-term use'),
+    ]
+    availability = models.CharField(max_length=50, null=True,  blank=True, choices=AVAILABILITY)
+    days = models.CharField(max_length=255, null=True)
+    time = models.CharField(max_length=255, null=True)
+
+    def __str__(self):
+        return self.material_type.name
+
+    def type(self):
+        return "supply" if self.quantity < 0 else "demand"
+
+    def absolute_quantity(self):
+        return self.quantity*-1 if self.quantity < 0 else self.quantity
+
+    class Meta:
+        ordering = ["start_date"]
+
+###
+### CITYLOOPS SPECIFIC TABLES
+### These are created exclusively for the CityLoops website. This website is not yet mature
+### and tables will not be merged with the main database until it is more extensively used
+### and matured.
+###
+
 class CityLoopsIndicator(models.Model):
     number = models.PositiveSmallIntegerField()
     name = models.CharField(max_length=255)
@@ -3245,6 +3225,38 @@ class CityLoopsSCAReport(models.Model):
 
     def __str__(self):
         return f"{self.city} - {self.sector}"
+
+class EurostatDB(models.Model):
+    title = models.CharField(max_length=2000)
+    code = models.CharField(max_length=255)
+    type = models.CharField(max_length=255)
+    last_update = models.CharField(max_length=255, null=True, blank=True)
+    data_start = models.CharField(max_length=255, null=True, blank=True)
+    data_end = models.CharField(max_length=255, null=True, blank=True)
+    url_overwrite = models.URLField(max_length=255, null=True, blank=True)
+    is_reviewed = models.BooleanField(db_index=True, default=False)
+    is_approved = models.BooleanField(db_index=True, null=True, blank=True)
+    is_denied = models.BooleanField(db_index=True, null=True, blank=True)
+    is_duplicate = models.BooleanField(db_index=True, null=True, blank=True, default=False)
+    has_no_meta_data = models.BooleanField(db_index=True, null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
+    tags = models.ManyToManyField(Tag, blank=True)
+    spaces = models.ManyToManyField(ReferenceSpace, blank=True)
+
+    def __str__(self):
+        return self.title
+
+from django import forms
+class EurostatForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(EurostatForm, self).__init__(*args, **kwargs)
+        self.fields["title"].strip = False
+
+    class Meta:
+        model = EurostatDB
+        fields = "__all__"
+
 
 # This is the format to use from now on
 # Note that there is a uid primary key, separate from the record_id
