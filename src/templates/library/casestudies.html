@@ -6,11 +6,11 @@
 {% block content %}
   <h1>Case studies</h1>
 
-{% cache 600 library_casestudies_table %}
+{% cache 600 library_casestudies_table_ %}
   <table class="table table-striped datatable">
     <thead>
       <tr>
-        <th>Publication</th>
+        <th style="width:50%">Publication</th>
         <th>Year</th>
         <th>Location</th>
         <th>Method(s)</th>
@@ -20,19 +20,27 @@
     {% for each in list %}
       {% if each.spaces.all %}
         <tr>
-          <td><a href="{{ each.get_absolute_url }}">{{ each }}</a></td>
-          <td>{{ each.year }}</td>
           <td>
+            <a href="{{ each.get_absolute_url }}">{{ each }}</a>
+            <br>
+            <strong>
+              {{ each.type }}
+            </strong>
+            <br>
+            {{ each.get_author_citation }}
+          </td>
+          <td>{{ each.year }}</td>
+          <td class="cutoff">
             {% for space in each.spaces.all %}
               {% if space.is_city %}
-                <span class="badge badge-light">{{ space }}</span>
+                <span class="badge badge-light">{{ space }}</span><br>
               {% endif %}
             {% endfor %}
           </td>
-          <td>
+          <td class="cutoff">
             {% for tag in each.tags.all %}
               {% if tag.parent_tag.parent_tag.id == 792 %}
-                <span class="badge badge-light">{{ tag }}</span><br>
+                <span class="badge badge-light" title="{{ tag }}">{{ tag.shortcode }}</span><br>
               {% endif %}
             {% endfor %}
           </td>
