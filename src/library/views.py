@@ -953,6 +953,14 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 # function to run. When we first run this a few lines up, the spaces have not
                 # yet been added so it can't update the photo
 
+            if request.user.is_superuser and request.POST.get("additional_spaces"):
+                additional_spaces = request.POST.get("additional_spaces")
+                for each in additional_spaces.split(","):
+                    try:
+                        info.spaces.add(ReferenceSpace.objects.get(pk=each.strip()))
+                    except Exception as e:
+                        messages.warning(request, f"Sorry, we could not add one of the spaces (ID: {each}). <br><strong>Error code: {str(e)}</strong>")
+
             if request.POST.get("publisher") or request.POST.get("journal"):
                 record_new = True
                 if request.POST.get("journal"):
