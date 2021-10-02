@@ -23,7 +23,7 @@
 
   <h1>{{ article.title }}</h1>
   <p>
-    {{ article.content|safe }}
+    {{ article.get_description }}
   </p>
 
   <div id="map" class="leaflet-map mb-4"></div>

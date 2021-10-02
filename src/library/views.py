@@ -38,7 +38,9 @@ def get_site_tag(request):
 def index(request):
     tags = [324, 322, 664, 318, 739]
     show_results = False
-    tag = list = search_tag = None
+    tag = None
+    list = None
+    search_tag = None
     urban_only = True
     core_filter = get_site_tag(request)
     space = None
@@ -46,6 +48,15 @@ def index(request):
         title = "Homepage"
     else:
         title = "Library"
+
+    ############################
+    if "circle" in request.GET:
+        all = LibraryItem.objects.filter(author_list="Circle Economy")
+        if all.count() < 15:
+            for each in all:
+                each.tags.add(Tag.objects.get(pk=core_filter)) # add urban
+                each.tags.add(Tag.objects.get(pk=TAG_ID["case_study"])) # add case study
+    ############################
 
     if request.project == 17:
         # The islands use a 'Themes' subset of tags, which we need to add to the list
@@ -58,7 +69,7 @@ def index(request):
         elif "type" in request.GET:
             list = LibraryItem.objects.filter(type__group__in=request.GET.getlist("type"))
         else:
-            list = LibraryItem.objects.filter(type__group="academic")
+            list = LibraryItem.objects.all()
         if not request.GET.get("urban_only"):
             urban_only = False
         if urban_only:
@@ -167,10 +178,12 @@ def methodology(request, slug, id):
 
     tagged_items = LibraryItem.tags.through.objects \
         .filter(tag__parent_tag=info, record__is_public=True, record__is_deleted=False) \
-        .values("tag").annotate(total=Count("tag"))
+        .values("tag").annotate(total=Count("tag", filter=Q(record__tags__id=get_site_tag(request))))
+
     total = {}
     for each in tagged_items:
         total[each["tag"]] = each["total"]
+
     context = {
         "info": info,
         "title": info.name,
@@ -194,7 +207,7 @@ def methodology_list(request, slug, id):
         "tags": Tag.objects.filter(parent_tag_id=792),
         "edit_link": "/admin/core/tag/" + str(info.id) + "/change/",
         "list": Tag.objects.filter(parent_tag=info),
-        "items": LibraryItem.objects.filter(tags=info),
+        "items": LibraryItem.objects.filter(tags=info).filter(tags__id=get_site_tag(request)),
         "load_datatables": True,
         "menu": "library",
     }
@@ -210,7 +223,10 @@ def download(request):
     return render(request, "article.html", context)
 
 def casestudies(request, slug=None):
-    list = LibraryItem.objects.prefetch_related("spaces").prefetch_related("tags").prefetch_related("spaces__geocodes").prefetch_related("tags__parent_tag").filter(status="active", tags__id=TAG_ID["case_study"])
+    core_filter = get_site_tag(request)
+    list = LibraryItem.objects.filter(tags__id=TAG_ID["case_study"]).filter(tags__id=core_filter) \
+        .prefetch_related("spaces").prefetch_related("tags").prefetch_related("spaces__geocodes").prefetch_related("tags__parent_tag")
+
     totals = None
     page = "casestudies.html"
     if slug == "calendar":
@@ -586,7 +602,9 @@ def map(request, article, tag=None):
     elif tag:
         items = LibraryItem.objects.filter(status="active", tags__id=tag)
     else:
-        items = LibraryItem.objects.filter(status="active", tags__id=TAG_ID["case_study"])
+        core_filter = get_site_tag(request)
+        items = LibraryItem.objects.filter(tags__id=TAG_ID["case_study"]).filter(tags__id=core_filter) \
+            .prefetch_related("spaces").prefetch_related("tags").prefetch_related("spaces__geocodes").prefetch_related("tags__parent_tag")
     context = {
         "article": info,
         "items": items.distinct(),
