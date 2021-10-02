@@ -1,5 +1,111 @@
 {% extends "_base.html" %}
 
+{% block footer %}
+
+  <script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery.fancytree@2.38.0/dist/modules/jquery.fancytree.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery.fancytree@2.38.0/dist/modules/jquery.fancytree.filter.js"></script>
+
+<script type="text/javascript">
+	$(function(){
+		// Attach the fancytree widget to an existing <div id="tree"> element
+		// and pass the tree options as an argument to the fancytree() function:
+		$("#tree").fancytree({
+			extensions: ["filter"],
+			quicksearch: true,
+			source: {
+				url: "/static/js/materials.json"
+			},
+			filter: {
+				autoApply: false,   // Re-apply last filter if lazy data is loaded
+				autoExpand: true, // Expand all branches that contain matches while filtered
+				counter: true,     // Show a badge with number of matching child nodes near parent icons
+				fuzzy: false,      // Match single characters in order, e.g. 'fb' will match 'FooBar'
+				hideExpandedCounter: true,  // Hide counter badge if parent is expanded
+				hideExpanders: true,       // Hide expanders if all child nodes are hidden by filter
+				highlight: true,   // Highlight matches by wrapping inside <mark> tags
+				leavesOnly: true, // Match end nodes only
+				nodata: true,      // Display a 'no data' status node if result is empty
+				mode: "dimm"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
+			},
+		});
+		var tree = $.ui.fancytree.getTree("#tree");
+
+		/*
+		 * Event handlers for our little demo interface
+		 */
+		$("input[name=search]").on("keyup", function(e){
+			var n,
+				tree = $.ui.fancytree.getTree(),
+				args = "autoApply autoExpand fuzzy hideExpanders highlight leavesOnly nodata".split(" "),
+				opts = {},
+				filterFunc = $("#branchMode").is(":checked") ? tree.filterBranches : tree.filterNodes,
+				match = $(this).val();
+
+			$.each(args, function(i, o) {
+				opts[o] = $("#" + o).is(":checked");
+			});
+			opts.mode = $("#hideMode").is(":checked") ? "hide" : "dimm";
+
+            // Manually added as I did not get the filters above to work
+            opts.mode = "hide";
+            /// End manual stuff from Paul
+
+			if(e && e.which === $.ui.keyCode.ESCAPE || $.trim(match) === ""){
+				$("button#btnResetSearch").trigger("click");
+				return;
+			}
+			if($("#regex").is(":checked")) {
+				// Pass function to perform match
+				n = filterFunc.call(tree, function(node) {
+					return new RegExp(match, "i").test(node.title);
+				}, opts);
+			} else {
+				// Pass a string to perform case insensitive matching
+				n = filterFunc.call(tree, match, opts);
+			}
+			$("button#btnResetSearch").attr("disabled", false);
+			$("span#matches").text("(" + n + " matches)");
+		}).focus();
+
+		$("button#btnResetSearch").click(function(e){
+			$("input[name=search]").val("");
+			$("span#matches").text("");
+			tree.clearFilter();
+		}).attr("disabled", true);
+
+		$("fieldset input:checkbox").change(function(e){
+				var id = $(this).attr("id"),
+					flag = $(this).is(":checked");
+
+				// Some options can only be set with general filter options (not method args):
+				switch( id ){
+				case "counter":
+				case "hideExpandedCounter":
+					tree.options.filter[id] = flag;
+					break;
+				}
+				tree.clearFilter();
+				$("input[name=search]").keyup();
+		});
+
+	});
+</script>
+
+{% endblock %}
+
+{% block head %}
+
+<link href="//cdn.jsdelivr.net/npm/jquery.fancytree@2.38/dist/skin-lion/ui.fancytree.min.css" rel="stylesheet">
+<style type="text/css">
+ .fancytree-ext-filter span.fancytree-title mark {
+   background-color: #E09090;
+ }
+ article{display:none}
+</style>
+
+{% endblock %}
+
 {% block content %}
 
   <h1 class="mb-0">{% if info %}{{ info }}{% else %}Materials{% endif %}</h1>
@@ -16,6 +122,24 @@
     </a>
   {% endif %}
 
+
+
+
+  <h1>Example: 'filter' extension</h1>
+  <p>
+    <label>Filter:</label>
+    <input name="search" placeholder="Filter..." autocomplete="off">
+    <button id="btnResetSearch">&times;</button>
+    <span id="matches"></span>
+  </p>
+
+  <div id="tree">
+  </div>
+
+
+
+
+  <article>
   {% if list %}
     <table class="table border rounded datatable mt-4">
       <thead>
@@ -61,5 +185,7 @@
   {% if edit_mode %}
     <a class="btn btn-default-basic" href="create/?{% if not material %}catalog={{ catalog }}&amp;{% endif %}next={{ request.get_full_path }}"><i class="fal fa-plus"></i> Add material</a>
   {% endif %}
+
+  </article>
 
 {% endblock %}
