@@ -49,15 +49,6 @@ def index(request):
     else:
         title = "Library"
 
-    ############################
-    if "circle" in request.GET:
-        all = LibraryItem.objects.filter(author_list="Circle Economy")
-        if all.count() < 15:
-            for each in all:
-                each.tags.add(Tag.objects.get(pk=core_filter)) # add urban
-                each.tags.add(Tag.objects.get(pk=TAG_ID["case_study"])) # add case study
-    ############################
-
     if request.project == 17:
         # The islands use a 'Themes' subset of tags, which we need to add to the list
         tags.append(944)
