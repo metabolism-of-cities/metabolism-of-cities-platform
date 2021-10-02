@@ -122,7 +122,12 @@
     </a>
   {% endif %}
 
-
+  {% for each in list %}
+    <li>
+      {{ each }}
+      <span class="badge badge-info">{{ each.parent }}</span>
+    </li>
+  {% endfor %}
 
 
   <h1>Example: 'filter' extension</h1>

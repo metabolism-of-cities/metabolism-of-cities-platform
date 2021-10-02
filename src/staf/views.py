@@ -1055,13 +1055,29 @@ def materials(request, id=None, catalog=None, project_name=None, edit_mode=False
     if id:
         info = Material.objects.get(pk=id)
         list = Material.objects.filter(parent=info)
-        #list = Material.objects.filter(tree_node__ancestors__contains=[id])
+        list = Material.objects.filter(tree_node__ancestors__contains=[id])
     else:
         if not catalog:
             catalog = request.GET.get("catalog")
         list = Material.objects.filter(parent__isnull=True, catalog_id=catalog)
 
     list = list.order_by("code", "name")
+
+    class Tree(dict):
+        def __missing__(self, key):
+            value = self[key] = type(self)()
+            return value
+        def insert(self, key, ancestors):
+            if ancestors:
+                self[ancestors[0]].insert(key, ancestors[1:])
+            else:
+              self[key]
+
+    tree = Tree()
+    for each in list:
+        tree.insert(each['node'], each['ancestors'])
+
+    p(tree)
 
     context = {
         "list": list,

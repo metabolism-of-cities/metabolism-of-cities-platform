@@ -1,0 +1,15 @@
+
+[
+	{"key": "6", "title": "node with some extra classes (will be added to the generated markup)", "extraClasses": "my-extra-class" },
+	{"key": "10", "title": "Folder 1", "children": [
+		{"key": "10_1", "title": "Sub-item 1.1", "children": [
+			{"key": "10_1_1", "title": "Sub-item 1.1.1"},
+			{"key": "10_1_2", "title": "Sub-item 1.1.2 r"}
+		]},
+		{"key": "10_2", "title": "Sub-item 1.2", "children": [
+			{"key": "10_2_1", "title": "Sub-item 1.2.1"},
+			{"key": "10_2_2", "title": "Sub-item 1.2.2"}
+		]}
+	]}
+]
+

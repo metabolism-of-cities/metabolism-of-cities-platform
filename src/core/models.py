@@ -2589,6 +2589,16 @@ class MaterialTree(models.Model):
         db_table = "stafdb_material_tree"
         managed = False
 
+class MaterialTreeClosure(models.Model):
+    path = ArrayField(base_field=models.IntegerField(), primary_key=True)
+    ancestor = models.ForeignKey(MaterialTree, related_name='+', on_delete=models.CASCADE)
+    descendant = models.ForeignKey(MaterialTree, related_name='+', on_delete=models.CASCADE)
+    depth = models.IntegerField()
+
+    class Meta:
+        db_table = "stafdb_material_tree_closure"
+        managed = False
+
 class Unit(models.Model):
     name = models.CharField(max_length=255)
     symbol = models.CharField(max_length=255)
