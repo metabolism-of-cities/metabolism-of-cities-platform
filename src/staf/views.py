@@ -1055,6 +1055,7 @@ def materials(request, id=None, catalog=None, project_name=None, edit_mode=False
     if id:
         info = Material.objects.get(pk=id)
         list = Material.objects.filter(parent=info)
+        #list = Material.objects.filter(tree_node__ancestors__contains=[id])
     else:
         if not catalog:
             catalog = request.GET.get("catalog")

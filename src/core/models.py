@@ -70,6 +70,9 @@ from django.contrib.gis.gdal.srs import (AxisOrder, CoordTransform, SpatialRefer
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+# Used for the adjacency lists
+from django.contrib.postgres.fields import ArrayField
+
 def get_date_range(start, end, months_only=False):
 
     if start and not end and months_only:
@@ -2571,6 +2574,20 @@ class Material(Record):
     class Meta:
         db_table = "stafdb_material"
         ordering = ["code", "name"]
+
+# This is a managed table, which is actually a Common Table Expression in our database
+# containing a constantly updated list with ancestors for each material node
+# See more at https://schinckel.net/2016/01/23/adjacency-lists-in-django-with-postgres/
+# The code for the view is contained in a separate SQL file (reset.sql)
+
+class MaterialTree(models.Model):
+    root = models.ForeignKey(Material, related_name="+", on_delete=models.CASCADE)
+    node = models.OneToOneField(Material, related_name="tree_node", primary_key=True, on_delete=models.CASCADE)
+    ancestors = ArrayField(base_field=models.IntegerField())
+
+    class Meta:
+        db_table = "stafdb_material_tree"
+        managed = False
 
 class Unit(models.Model):
     name = models.CharField(max_length=255)
