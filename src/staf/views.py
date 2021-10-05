@@ -1073,12 +1073,13 @@ def materials(request, id=None, catalog=None, project_name=None, edit_mode=False
             else:
               self[key]
 
-    tree = Tree()
-    for each in list:
-        tree.insert(each['node'], each['ancestors'])
+    #tree = Tree()
+    #for each in list:
+    #    tree.insert(each['node'], each['ancestors'])
+    #
+    #p(tree)
 
-    p(tree)
-
+    tree = get_material_tree(18998)
     context = {
         "list": list,
         "title": "Materials",
@@ -1086,6 +1087,7 @@ def materials(request, id=None, catalog=None, project_name=None, edit_mode=False
         "info": info,
         "catalog": catalog,
         "load_datatables": True,
+        "tree": tree,
     }
 
     return render(request, "staf/materials.html", context)

@@ -3,6 +3,10 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from core.models import *
 
+# Needed for Raw SQL queries
+from django.db import connection
+import json
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -201,3 +205,69 @@ def work_item_unvote(info, people):
     info.save()
 
     return True
+
+# This is a complicated query that returns a well-structured JSON tree containing
+# the parents and their children for materials
+# Developed as per this article: 
+# https://schinckel.net/2017/07/01/tree-data-as-a-nested-list-redux/
+def get_material_tree(catalog):
+    with connection.cursor() as cursor:
+        query = """WITH RECURSIVE location_with_level AS (
+      SELECT *,
+             0 AS lvl
+        FROM stafdb_material
+       WHERE parent_id IS NULL AND catalog_id = %s
+
+      UNION ALL
+
+      SELECT child.*,
+             parent.lvl + 1
+        FROM stafdb_material child
+        JOIN location_with_level parent ON parent.record_ptr_id = child.parent_id
+    ),
+    maxlvl AS (
+      SELECT max(lvl) maxlvl FROM location_with_level
+    ),
+    c_tree AS (
+      SELECT location_with_level.*,
+             NULL::JSONB children
+        FROM location_with_level, maxlvl
+       WHERE lvl = maxlvl
+
+       UNION
+
+       (
+         SELECT (branch_parent).*,
+                jsonb_agg(branch_child)
+           FROM (
+             SELECT branch_parent,
+                    to_jsonb(branch_child) - 'lvl' - 'parent_id' - 'record_ptr_id' AS branch_child
+               FROM location_with_level branch_parent
+               JOIN c_tree branch_child ON branch_child.parent_id = branch_parent.record_ptr_id
+           ) branch
+           GROUP BY branch.branch_parent
+
+           UNION
+
+           SELECT c.*,
+                  NULL::JSONB
+           FROM location_with_level c
+           WHERE NOT EXISTS (SELECT 1
+                               FROM location_with_level hypothetical_child
+                              WHERE hypothetical_child.parent_id = c.record_ptr_id)
+       )
+    )
+
+    SELECT jsonb_pretty(
+             array_to_json(
+               array_agg(
+                 row_to_json(c_tree)::JSONB - 'lvl' - 'parent_id' - 'record_ptr_id'
+               )
+             )::JSONB
+           ) AS tree
+      FROM c_tree
+      WHERE lvl=0;"""
+
+        cursor.execute(query, [catalog])
+        row = cursor.fetchone()
+    return json.loads(row[0])
