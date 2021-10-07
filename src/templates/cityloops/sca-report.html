@@ -565,19 +565,18 @@
       {% if space.slug == "mikkeli" and sector == "biomass" %}
         <img class="border rounded img-fluis" src="https://cityloops.metabolismofcities.org/media/records/210629_Mikkeli_Biomass_Sankey_v1.large.png">
       {% elif space.slug == "mikkeli" and sector == "construction" %}
-        <img class="border rounded img-fluis" src="https://cityloops.metabolismofcities.org/media/records/210629_Mikkeli_Construction_Sankey_v1.large.png">
+        <div>{{ sankey|safe }}</div>
+        <!-- <img class="border rounded img-fluis" src="https://cityloops.metabolismofcities.org/media/records/210629_Mikkeli_Construction_Sankey_v1.large.png"> -->
       {% elif space.slug == "porto" and sector == "biomass" %}
         <img class="border rounded img-fluis" src="https://cityloops.metabolismofcities.org/media/records/210629_Porto_Biomass_Sankey_v1.large.png">
       {% else %}
         <div>{{ sankey|safe }}</div>
       {% endif %}
+
     </section>
 
     <section id="matrix">
       <h1>Data quality assessment</h1>
-
-
-
       <p>
         Numerous datasets were collected and considered in the sector-wide circularity assessment. In some cases, datasets were not available for some materials or for some lifecycle stages for the studied sector. Therefore, estimations need to be done by looking at data at higher spatial scales (region or country). This section qualitatively assesses how reliable the data used is.
       </p>
