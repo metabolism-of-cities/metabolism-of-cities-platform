@@ -427,7 +427,7 @@ def sca_report(request, slug, sector):
     sankey_source = []
     sankey_target = []
     sankey_values = []
-    sankey_colour = []
+    sankey_labels = ["","","","","","","","","","","Redistribution","","","","Reuse","","Reuse","","","","","","","Remanufacturing","","","Recycling","","","","","","","","","","","","","","","","","",]
 
     if slug == "apeldoorn":
         country_id = 328768
@@ -506,6 +506,7 @@ def sca_report(request, slug, sector):
           source = sankey_source,
           target = sankey_target,
           value = sankey_values,
+          label = sankey_labels,
           color = sankey_colour,
     ))])
 
