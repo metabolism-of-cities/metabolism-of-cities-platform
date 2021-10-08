@@ -1079,7 +1079,7 @@ def materials(request, id=None, catalog=None, project_name=None, edit_mode=False
     #
     #p(tree)
 
-    tree = get_material_tree(18998)
+    p(list)
     context = {
         "list": list,
         "title": "Materials",
@@ -1087,10 +1087,18 @@ def materials(request, id=None, catalog=None, project_name=None, edit_mode=False
         "info": info,
         "catalog": catalog,
         "load_datatables": True,
-        "tree": tree,
     }
 
     return render(request, "staf/materials.html", context)
+
+def materials_json(request, id, download=False):
+
+    tree = get_material_tree(id)
+
+    response = HttpResponse(tree, content_type="application/json")
+    if download:
+        response["Content-Disposition"] = f"attachment; filename=\"material_tree.json\""
+    return response
 
 def material(request, catalog, id):
     list = Material.objects.filter(id=1)

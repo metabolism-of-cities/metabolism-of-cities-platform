@@ -210,26 +210,44 @@ def work_item_unvote(info, people):
 # the parents and their children for materials
 # Developed as per this article: 
 # https://schinckel.net/2017/07/01/tree-data-as-a-nested-list-redux/
+# The code works, but there is one key issue: it returns duplicated root nodes
+# which is also experienced by other users. If we are able to solve this, 
+# then we can get a very neat browsable tree using the fancytree plugin!
+
 def get_material_tree(catalog):
+
+    # We need to pull up the individual fields, because the fancytree plugin requires as "key" and a "title" field. 
+    # I also manually JOINed the core_record table below, as it contains the actual title
+    # Lastly the jsonb_agg function contains an ORDER BY command, so we can order by name. 
+    # Other than that this is similar in structure to the sample on the webpage outlined above
+
+    field_names = "record_ptr_id, code AS key, CONCAT_WS(' - ', code, core_record.name) AS title, catalog_id, parent_id, icon, measurement_type"
+    field_names_child = "child.record_ptr_id, child.code AS key, CONCAT_WS(' - ', child.code, r.name) AS title, child.catalog_id, child.parent_id, child.icon, child.measurement_type"
+    field_names_location_level = "location_with_level.record_ptr_id, location_with_level.key, location_with_level.title, location_with_level.catalog_id, location_with_level.parent_id, location_with_level.icon, location_with_level.measurement_type, location_with_level.lvl"
+    field_names_branch = "(branch_parent).record_ptr_id, (branch_parent).key, (branch_parent).title, (branch_parent).catalog_id, (branch_parent).parent_id, (branch_parent).icon, (branch_parent).measurement_type, (branch_parent).lvl"
+    field_names_c = "c.record_ptr_id, c.key, c.title, c.catalog_id, c.parent_id, c.icon, c.measurement_type, c.lvl"
+
     with connection.cursor() as cursor:
-        query = """WITH RECURSIVE location_with_level AS (
-      SELECT *,
+        query = f"""WITH RECURSIVE location_with_level AS (
+      SELECT {field_names},
              0 AS lvl
         FROM stafdb_material
+        JOIN core_record ON stafdb_material.record_ptr_id = core_record.id
        WHERE parent_id IS NULL AND catalog_id = %s
 
       UNION ALL
 
-      SELECT child.*,
+      SELECT {field_names_child},
              parent.lvl + 1
         FROM stafdb_material child
+        JOIN core_record r ON child.record_ptr_id = r.id
         JOIN location_with_level parent ON parent.record_ptr_id = child.parent_id
-    ),
+    ), 
     maxlvl AS (
       SELECT max(lvl) maxlvl FROM location_with_level
     ),
     c_tree AS (
-      SELECT location_with_level.*,
+      SELECT {field_names_location_level},
              NULL::JSONB children
         FROM location_with_level, maxlvl
        WHERE lvl = maxlvl
@@ -237,8 +255,8 @@ def get_material_tree(catalog):
        UNION
 
        (
-         SELECT (branch_parent).*,
-                jsonb_agg(branch_child)
+         SELECT {field_names_branch},
+                jsonb_agg(branch_child ORDER BY branch_child->>'title')
            FROM (
              SELECT branch_parent,
                     to_jsonb(branch_child) - 'lvl' - 'parent_id' - 'record_ptr_id' AS branch_child
@@ -249,7 +267,7 @@ def get_material_tree(catalog):
 
            UNION
 
-           SELECT c.*,
+           SELECT {field_names_c},
                   NULL::JSONB
            FROM location_with_level c
            WHERE NOT EXISTS (SELECT 1
@@ -270,4 +288,4 @@ def get_material_tree(catalog):
 
         cursor.execute(query, [catalog])
         row = cursor.fetchone()
-    return json.loads(row[0])
+    return row[0]

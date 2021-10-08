@@ -170,6 +170,7 @@ baseline_staf_urlpatterns = [
     path("materials/catalogs/", staf.materials_catalogs, name="materials_catalogs"),
     path("materials/", staf.materials, name="materials"),
     path("materials/<int:id>/", staf.materials, name="materials"),
+    path("materials/<int:id>/json/", staf.materials_json, name="materials_json"),
     path("materials/create/", staf.material_form, name="material_form"),
     path("materials/<int:id>/view/", staf.material, name="material"),
     path("materials/<int:id>/edit/", staf.material_form, name="material_form"),
