@@ -288,4 +288,22 @@ def get_material_tree(catalog):
 
         cursor.execute(query, [catalog])
         row = cursor.fetchone()
-    return row[0]
+        # In an ideal scenario, we could just return row[0] and that's it. 
+        # However, due to the duplicated root elements we need to loop over both root elements,
+        # check which children are duplicated, and generate a single list with only unique items
+
+    #return row[0]
+
+    # So this is what we do instead:
+    a = json.loads(row[0])
+    items = []
+    keys = []
+    for each in a[0]["children"]:
+        if each["key"] not in keys:
+            keys.append(each["key"])
+            items.append(each)
+    for each in a[1]["children"]:
+        if each["key"] not in keys:
+            keys.append(each["key"])
+            items.append(each)
+    return json.dumps(items)
