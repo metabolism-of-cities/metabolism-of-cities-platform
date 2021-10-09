@@ -233,7 +233,7 @@ def get_material_tree(catalog):
              0 AS lvl
         FROM stafdb_material
         JOIN core_record ON stafdb_material.record_ptr_id = core_record.id
-       WHERE parent_id IS NULL AND catalog_id = %s
+       WHERE parent_id IS NULL AND catalog_id = %s AND core_record.is_deleted = False and core_record.is_public = True
 
       UNION ALL
 
@@ -296,14 +296,18 @@ def get_material_tree(catalog):
 
     # So this is what we do instead:
     a = json.loads(row[0])
-    items = []
-    keys = []
+    all = {}
     for each in a[0]["children"]:
-        if each["key"] not in keys:
-            keys.append(each["key"])
-            items.append(each)
+        if not each["key"] in all:
+            all[each["key"]] = {"children": each["children"], "key": each["key"], "title": each["title"]}
+        else:
+            all[each["key"]]["children"] += each["children"]
     for each in a[1]["children"]:
-        if each["key"] not in keys:
-            keys.append(each["key"])
-            items.append(each)
+        if not each["key"] in all:
+            all[each["key"]] = {"children": each["children"], "key": each["key"], "title": each["title"]}
+        else:
+            all[each["key"]]["children"] += each["children"]
+    items = []
+    for key,value in all.items():
+        items.append(value)
     return json.dumps(items)

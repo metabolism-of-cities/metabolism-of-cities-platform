@@ -1079,7 +1079,6 @@ def materials(request, id=None, catalog=None, project_name=None, edit_mode=False
     #
     #p(tree)
 
-    p(list)
     context = {
         "list": list,
         "title": "Materials",
