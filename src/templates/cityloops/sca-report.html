@@ -32,6 +32,10 @@
     }
 
     @media all {
+      @page {
+        size: unset !important;
+      }
+
       body {
         min-width: unset !important;
         background-color: #fff !important;
@@ -40,8 +44,8 @@
       .cover-page {
         page-break-after: always;
         position: relative;
-        width: 100vw;
-        height: 100vh;
+        width: 100vw !important;
+        height: 100vh !important;
       }
 
       .cover-title {
@@ -53,26 +57,26 @@
 
       .report-title {
         background-color: #004d76;
-        font-size: 2.75rem;
+        font-size: 1.75rem;
         padding: 8px;
-        line-height: 5.5rem;
+        line-height: 3.5rem;
       }
 
       .city-title {
         background-color: #00b6ed;
-        font-size: 3rem;
+        font-size: 2rem;
         padding: 8px;
-        line-height: 5.5rem;
+        line-height: 4rem;
       }
 
       .cover-image {
-        width: 100vw;
-        height: 100vh;
+        width: 100vw !important;
+        height: 100vh !important;
         position: absolute;
         top: 0;
         left: 0;
-        object-fit: cover;
         z-index: -1;
+        object-fit: cover;
       }
 
       .cityloops-logo {
@@ -105,13 +109,14 @@
       }
 
       .report-content {
-        padding: 5rem;
-        max-width: 297mm;
+        padding: 3rem;
+        width: 100%;
       }
 
       .context-map {
-        height: 200px;
+        height: 150px;
         width: 100%;
+        max-width: 150px;
         border-radius: .25rem;
       }
 
@@ -121,8 +126,12 @@
       }
 
       iframe {
-        max-width: calc(297mm - 12rem);
+        width: 100vw;
         height: 500px;
+      }
+
+      #sankey {
+        width: 100%;
       }
 
       .sankey-link {
@@ -152,6 +161,19 @@
       .table td.bg-yellow {
         background-color: #e6d384 !important;
       }
+    }
+
+    h1 {
+      font-size: 1.75rem !important;
+    }
+
+    h2 {
+      font-size: 1.5rem !important;
+    }
+
+    h3,
+    h4 {
+      font-size: 1.25rem !important;
     }
   </style>
 </head>
@@ -247,7 +269,7 @@
       </div>
       <div class="row mb-4">
         <div class="col-3">
-          <h4>{{ space }}</h4>
+          <strong>{{ space }}</strong>
           <div>
             <i class="fal fa-users fa-fw mr-2"></i>
             {% if report.space_population %}
@@ -267,7 +289,7 @@
         </div>
 
         <div class="col-3">
-          <h4>{{ nuts3 }}</h4>
+          <strong>{{ nuts3 }}</strong>
           <div>
             <i class="fal fa-users fa-fw mr-2"></i>
             {% if report.nuts3_population %}
@@ -287,7 +309,7 @@
         </div>
 
         <div class="col-3">
-          <h4>{{ nuts2 }}</h4>
+          <strong>{{ nuts2 }}</strong>
           <div>
             <i class="fal fa-users fa-fw mr-2"></i>
             {% if report.nuts2_population %}
@@ -307,7 +329,7 @@
         </div>
 
         <div class="col-3">
-          <h4>{{ country }}</h4>
+          <strong>{{ country }}</strong>
           <div>
             <i class="fal fa-users fa-fw mr-2"></i>
             {% if report.country_population %}
@@ -351,7 +373,7 @@
       <h2>Land use</h2>
 
       {% if space.slug == "porto" %}
-        <img class="img-fluid rounded-top mb-4" src="https://i.imgur.com/BFShwFF.png">
+        <img class="img-fluid rounded-top" src="https://i.imgur.com/BFShwFF.png">
 
         <div class="border border-top-0 rounded-bottom p-3">
           <ul class="fa-ul mb-0">
@@ -364,7 +386,7 @@
           </ul>
         </div>
       {% elif space.slug == "mikkeli" %}
-        <img class="img-fluid rounded-top mb-4" src="https://i.imgur.com/Cto4brf.png">
+        <img class="img-fluid rounded-top" src="https://i.imgur.com/Cto4brf.png">
         <div class="border border-top-0 rounded-bottom p-3">
           <ul class="fa-ul mb-0">
             <li><span class="fa-li"><i class="fas fa-circle" style="color: #e41a1c"></i></span> Agricultural areas</li>
@@ -573,7 +595,7 @@
       {% elif space.slug == "porto" and sector == "biomass" %}
         <img class="border rounded img-fluid" src="https://cityloops.metabolismofcities.org/media/records/210629_Porto_Biomass_Sankey_v1.large.png">
       {% else %}
-        <div>{{ sankey|safe }}</div>
+        <div id="sankey">{{ sankey|safe }}</div>
       {% endif %}
 
     </section>

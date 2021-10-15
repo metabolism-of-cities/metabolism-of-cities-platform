@@ -520,7 +520,7 @@ def sca_report(request, slug, sector):
         modebar_remove = ["lasso", "select"],
     )
 
-    sankey = fig.to_html(full_html=False)
+    sankey = fig.to_html(full_html=True)
 
     context = {
         "space": space,
