@@ -32,8 +32,6 @@ from collections import defaultdict
 from django.template import Context
 from django.forms import modelform_factory
 
-from weasyprint import HTML, CSS
-from weasyprint.fonts import FontConfiguration
 from datetime import datetime
 import csv
 
@@ -2120,6 +2118,11 @@ def newsletter(request):
 # TEMPORARY PAGES DURING DEVELOPMENT
 
 def pdf(request):
+    from weasyprint import HTML, CSS
+    from weasyprint.fonts import FontConfiguration
+    # THIS GIVES AN ERROR WHEN PLACED AT THE TOP OF THE FILE
+    # TODO - TO BE FIXED BY PAUL
+    # https://metabolismofcities.org/hub/work/1004851/
     name = request.GET["name"]
     score = request.GET["score"]
     date = datetime.datetime.now()

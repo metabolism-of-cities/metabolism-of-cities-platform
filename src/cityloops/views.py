@@ -511,12 +511,13 @@ def sca_report(request, slug, sector):
     ))])
 
     fig.update_layout(
-        hovermode = 'x',
-        font=dict(size = 14, color = 'black', family = 'Lato'),
-        plot_bgcolor='rgba(255,255,255,0)',
-        paper_bgcolor='rgba(255,255,255,0)',
-        height=600,
-        width=1000,
+        hovermode = "x",
+        font = dict(size = 14, color = "black", family = "Lato"),
+        plot_bgcolor = "rgba(255,255,255,0)",
+        paper_bgcolor = "rgba(255,255,255,0)",
+        height = 600,
+        width = 1000,
+        modebar_remove = ["lasso", "select"],
     )
 
     sankey = fig.to_html(full_html=False)
