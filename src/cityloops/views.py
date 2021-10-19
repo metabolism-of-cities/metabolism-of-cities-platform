@@ -517,7 +517,7 @@ def sca_report(request, slug, sector):
         paper_bgcolor = "rgba(255,255,255,0)",
         height = 600,
         width = 1000,
-        # modebar_remove = ["lasso", "select"],
+        modebar_remove = ["lasso", "select"],
     )
 
     sankey = fig.to_html(full_html=True)

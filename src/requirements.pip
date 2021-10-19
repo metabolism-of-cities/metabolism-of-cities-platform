@@ -35,4 +35,4 @@ contextily
 pyzotero
 folium
 odfpy
-plotly==4.14.3
+plotly==5.3.1
