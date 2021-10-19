@@ -126,7 +126,7 @@
       }
 
       iframe {
-        width: 100vw;
+        width: calc(210mm - 6rem - 2px);
         height: 500px;
       }
 
@@ -380,26 +380,50 @@
         <img class="img-fluid rounded-top" src="https://i.imgur.com/BFShwFF.png">
 
         <div class="border border-top-0 rounded-bottom p-3">
-          <ul class="fa-ul mb-0">
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #e41a1c"></i></span> Central Space</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #377eb8"></i></span> Residential Space</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #4daf4a"></i></span> Green Space</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #984ea3"></i></span> Economic Activities Space</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Special Use Space - Equipment and Infrastructure</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff33"></i></span> Not Assigned</li>
-          </ul>
+          <div class="row">
+            <div class="col-4">
+              <ul class="fa-ul mb-0">
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #e41a1c"></i></span> Central Space</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #377eb8"></i></span> Residential Space</li>
+              </ul>
+            </div>
+            <div class="col-4">
+              <ul class="fa-ul mb-0">
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #4daf4a"></i></span> Green Space</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #984ea3"></i></span> Economic Activities Space</li>
+              </ul>
+            </div>
+            <div class="col-4">
+              <ul class="fa-ul mb-0">
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Special Use Space - Equipment and Infrastructure</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff33"></i></span> Not Assigned</li>
+              </ul>
+            </div>
+          </div>
         </div>
       {% elif space.slug == "mikkeli" %}
         <img class="img-fluid rounded-top" src="https://i.imgur.com/Cto4brf.png">
         <div class="border border-top-0 rounded-bottom p-3">
-          <ul class="fa-ul mb-0">
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #e41a1c"></i></span> Agricultural areas</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Artificial surfaces</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #4daf4a"></i></span> Forests</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #984ea3"></i></span> Roads</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #377eb8"></i></span> Water bodies</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff33"></i></span> Wetlands</li>
-          </ul>
+          <div class="row">
+            <div class="col-4">
+              <ul class="fa-ul mb-0">
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #e41a1c"></i></span> Agricultural areas</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Artificial surfaces</li>
+              </ul>
+            </div>
+            <div class="col-4">
+              <ul class="fa-ul mb-0">
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #4daf4a"></i></span> Forests</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #984ea3"></i></span> Roads</li>
+              </ul>
+            </div>
+            <div class="col-4">
+              <ul class="fa-ul mb-0">
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #377eb8"></i></span> Water bodies</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff33"></i></span> Wetlands</li>
+              </ul>
+            </div>
+          </div>
         </div>
       {% elif space.slug == "apeldoorn" %}
         <img class="img-fluid rounded-top" src="https://i.imgur.com/CElb173.png">
