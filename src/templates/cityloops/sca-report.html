@@ -208,10 +208,6 @@
         Within this project, seven European cities, amongst those also the City of {{ space.name }} are planning to implement demonstration actions to kickstart their circularity journey. To better understand what the current circularity status quo is, as well as the impact of these actions, and the efforts needed to transform their sector, a <a href="https://cityloops.metabolismofcities.org/media/uploads/libraryitem/report/CityLoops_WP4_D4.3_Sector-Wide_Circularity_Assessment_Method.pdf">Sector-Wide Circularity Assessment</a> method was developed. This method combines a circular city and circular sector definition, a material flow and stock accounting method, as well as circularity indicators. The sector itself was defined in terms of a number of representative materials that make up a large share of the sector and associated economic activities. The {{ sector }} sector is made up of {% if sector == "construction" %}11{% elif sector == "biomass" %}12{% endif %} materials, depicted as icons here, which were studied along the entirety of their supply chains. Altogether, these elements help to set a solid knowledge and analytical foundation to develop future circularity roadmaps and action plans.
       </p>
 
-      <p class="font-italic" style="background-color: #144d5850">
-        The italic texts in this report were written by <a href="https://metabolismofcities.org/">Metabolism of Cities</a>' Aristide Athanassiadis and Carolin Bellstedt. They provide relevant general information and serve as connecting elements of the single report parts.
-      </p>
-
       <div class="row text-center materials">
         {% if sector == "construction" %}
           <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-cubes"></i><div>Aluminium</div></div></div>
@@ -247,6 +243,10 @@
 
       <p class="font-italic">
         This current Sector-Wide Circularity Assessment report provides contextual information on the city and the economic sector under study. It then illustrates how circular these sectors are through circularity indicators and a Sankey diagram. Finally, it analyses and interprets the results, presents the limitations from the data used and offers recommendations about how to make this sector more circular.
+      </p>
+
+      <p class="font-italic text-primary">
+        The italic texts in this report were written by <a href="https://metabolismofcities.org/">Metabolism of Cities</a>' Aristide Athanassiadis and Carolin Bellstedt. They provide relevant general information and serve as connecting elements of the single report parts.
       </p>
     </section>
 
@@ -596,7 +596,7 @@
         <img class="border rounded img-fluid" src="https://cityloops.metabolismofcities.org/media/records/210629_Mikkeli_Biomass_Sankey_v1.large.png">
       {% elif space.slug == "mikkeli" and sector == "construction" %}
         <img class="border rounded img-fluid" src="https://cityloops.metabolismofcities.org/media/records/211007_Mikkeli_Construction_Sankey_v2.large.png">
-      {% elif space.slug == "porto" and sector == "biomasss" %}
+      {% elif space.slug == "porto" and sector == "biomass" %}
         <img class="border rounded img-fluid" src="https://cityloops.metabolismofcities.org/media/records/210629_Porto_Biomass_Sankey_v1.large.png">
       {% else %}
         <div id="sankey">{{ sankey|safe }}</div>
