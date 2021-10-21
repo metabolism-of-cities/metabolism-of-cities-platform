@@ -403,10 +403,12 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
 
     # TEMPORARY CODE TO GET UNIT FOR CHARTS IN SCA REPORTS
     # https://data.metabolismofcities.org/tasks/991921/
-    units = Data.objects.filter(id=id).values("unit").distinct()
-    unit = False
-    if units.count == 1:
-        unit = units[1]
+    units = None
+    unit = None
+    if info.data.all():
+        units = info.data.values("unit__name").distinct()
+        if units.count() == 1:
+            unit = units[1]
 
     context = {
         "info": info,
