@@ -126,7 +126,7 @@
       }
 
       iframe {
-        width: calc(210mm - 6rem - 2px);
+        max-width: calc(210mm - 6rem - 2px);
         height: 500px;
       }
 
@@ -628,11 +628,51 @@
 
     <section id="matrix">
       <h1>Data quality assessment</h1>
+
       <p class="font-italic">
         Numerous datasets were collected and considered in the sector-wide circularity assessment. In some cases, datasets were not available for some materials or for some lifecycle stages for the studied sector. Therefore, estimations need to be done by looking at data at higher spatial scales (region or country). This section qualitatively assesses how reliable the data used is.
       </p>
 
       <h3>Data quality</h3>
+
+      <p class="font-italic">
+        Before describing data gaps and assumptions, the overall data quality is considered. It is expressed through four data quality dimensions that are depicted in the data quality matrix: reliability, completeness, temporal correlation, and spatial correlation. Each dimension has its own criteria for the ranking of high (green), medium (yellow) and low (red), which is based on this <a target="_blank" href="https://lca-net.com/files/Pedigree_report_final_May2012.pdf">Pedigree report</a> and shown in the table below. There can be additional explanations in some cells, as supporting information.
+      </p>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Rating</th>
+            <th>Reliability</th>
+            <th>Completeness</th>
+            <th>Temporal correlation</th>
+            <th>Spatial correlation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>high (green)</td>
+            <td>Reviewed or measured data</td>
+            <td>Data exists for all of the single materials and their respective economic activites</td>
+            <td>1 data less than 3 years difference to the time period of the data set </td>
+            <td>City-level data</td>
+          </tr>
+          <tr>
+            <td>medium (yellow)</td>
+            <td>Estimated data</td>
+            <td>Data exists for most single materials and most economic activities</td>
+            <td>2 data less than 6 years difference to the time period of the data set</td>
+            <td>Regional-level data (NUTS 3)</td>
+          </tr>
+          <tr>
+            <td>low (red)</td>
+            <td>Provisional data</td>
+            <td>Data exists for the sector only for the Life Cycle Stages</td>
+            <td>3 data less than 10 years difference to the time period of the data set</td>
+            <td>NUTS 2 and country-level data</td>
+          </tr>
+        </tbody>
+      </table>
 
       <div class="mb-4">
         <label>Data quality matrix</label><br>
