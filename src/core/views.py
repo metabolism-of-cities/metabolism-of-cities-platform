@@ -400,7 +400,7 @@ def index(request):
         "HOMEPAGE": True,
         "header_subtitle": blurb,
         "show_project_design": True,
-        "projects": Project.objects.filter(pk__in=[2,3,4,32018,16,18]),
+        "projects": Project.objects.filter(pk__in=[2,3,4,32018,6]),
         "alternative_design": alternative_design,
         "posts": ForumTopic.objects.order_by("-last_update__date_created")[:3],
         "news": News.objects.filter(projects__in=MOC_PROJECTS).distinct()[:3]
