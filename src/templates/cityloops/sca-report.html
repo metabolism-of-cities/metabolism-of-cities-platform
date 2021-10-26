@@ -622,13 +622,24 @@
 
       {% if space.slug == "mikkeli" and sector == "biomass" %}
         <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/210629_Mikkeli_Biomass_Sankey_v1.large.png">
+        <p><a href="https://cityloops.metabolismofcities.org/library/997499/">Source data</a></p>
+
       {% elif space.slug == "mikkeli" and sector == "construction" %}
         <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/211007_Mikkeli_Construction_Sankey_v2.large.png">
+        <p><a href="https://cityloops.metabolismofcities.org/library/997491/">Source data</a></p>
+
       {% elif space.slug == "apeldoorn" and sector == "biomass" %}
         <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/211022_Apeldoorn_Biomass_Sankey_v1.large.png">
+        <p><a href="https://cityloops.metabolismofcities.org/library/1004810/">Source data</a></p>
+
+      {% elif space.slug == "apeldoorn" and sector == "construction" %}
+        <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/211026_Sevilla_Construction_Sankey_v2.large.png">
+        <p><a href="https://cityloops.metabolismofcities.org/library/1004805/">Source data</a></p>
+
       {% elif space.slug == "porto" and sector == "biomass" %}
         <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/211026_Porto_Biomass_Sankey_v2.large.png">
         <p><a href="https://cityloops.metabolismofcities.org/library/997482/">Source data</a></p>
+
       {% endif %}
       <div class="d-print-none" id="sankey">{{ sankey|safe }}</div>
     </section>
