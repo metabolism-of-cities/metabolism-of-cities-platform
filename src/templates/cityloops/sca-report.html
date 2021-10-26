@@ -580,7 +580,7 @@
         {% if report.land_use_dataset.type.name == "Image" %}
           <img src="{{ report.actors_dataset.image.url }}" class="img-fluid">
         {% else %}
-          <iframe class="libraryitem mb-4" src="/library/preview/{{ report.actors_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
+          <iframe class="libraryitem mb-4" src="{% url 'staf:libraryframe' report.actors_dataset.id %}" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
         {% endif %}
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">12A</span>
