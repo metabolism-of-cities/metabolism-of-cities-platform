@@ -363,7 +363,7 @@
       {% if report.population_dataset %}
         {% if report.population_dataset.type.name == "Image" %}
           <img src="{{ report.population_dataset.image.url }}" class="img-fluid">
-          <p><a href="{% url 'data:library_item' report.population_dataset.is_part_of.id %}">Data source</a></p>
+          <p><a href="{% url 'data:library_item' report.population_dataset.id %}">Data source</a></p>
         {% else %}
           <iframe class="libraryitem mb-4" src="/library/preview/{{ report.population_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
         {% endif %}
@@ -463,7 +463,7 @@
       {% elif report.land_use_dataset %}
         {% if report.land_use_dataset.type.name == "Image" %}
           <img src="{{ report.land_use_dataset.image.url }}" class="img-fluid">
-          <p><a href="{% url 'data:library_item' report.land_use_dataset.is_part_of.id %}">Data source</a></p>
+          <p><a href="{% url 'data:library_item' report.land_use_dataset.id %}">Data source</a></p>
         {% else %}
           <iframe class="libraryitem mb-4" src="/library/preview/{{ report.land_use_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
         {% endif %}
@@ -581,7 +581,7 @@
       {% if report.actors_dataset %}
         {% if report.land_use_dataset.type.name == "Image" %}
           <img src="{{ report.actors_dataset.image.url }}" class="img-fluid">
-          <p><a href="{% url 'data:library_item' report.actors_dataset.is_part_of.id %}">Data source</a></p>
+          <p><a href="{% url 'data:library_item' report.actors_dataset.id %}">Data source</a></p>
         {% else %}
           <iframe class="libraryitem mb-4" src="{% url 'staf:libraryframe' report.actors_dataset.id %}" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
         {% endif %}
