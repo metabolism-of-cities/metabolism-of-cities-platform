@@ -28,7 +28,11 @@
           text: "{{ info.get_dataviz_properties.title }}"
         },
         subtitle: {
-          text: "{{ info.get_dataviz_properties.subtitle }}"
+          {% if info.get_dataviz_properties.subtitle %}
+            text: "{{ info.get_dataviz_properties.subtitle }}" + unit
+          {% else %}
+            text: "Measured in " + unit
+          {% endif %}
         },
       {% else %}
         title: {
@@ -51,11 +55,13 @@
         },
       {% endif %}
       yAxis: {
-        {% if info.get_dataviz_properties.show_yaxis_label == "true" %}
-          title: {
+        title: {
+          {% if info.get_dataviz_properties.show_yaxis_label == "true" %}
             text: "{{ info.get_dataviz_properties.yaxis_label_text }}"
-          },
-        {% endif %}
+          {% else %}
+            text: unit
+          {% endif %}
+        },
         {% if info.get_dataviz_properties.yaxis_range == "true" %}
           softMin: {% if info.get_dataviz_properties.yaxis_min %}{{ info.get_dataviz_properties.yaxis_min }}{% else %}null{% endif %},
           softMax: {% if info.get_dataviz_properties.yaxis_max %}{{ info.get_dataviz_properties.yaxis_max }}{% else %}null{% endif %},

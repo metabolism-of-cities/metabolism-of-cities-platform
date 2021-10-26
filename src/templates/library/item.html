@@ -672,6 +672,9 @@
 
 {% block footer %}
   {% if info.data.all %}
+    <script>
+      let unit = "{{ unit.unit__name|default:'various units' }}";
+    </script>
     {% include "_chart.footer.html" %}
   {% endif %}
 {% endblock %}
