@@ -579,7 +579,7 @@
       <h4>The actors of the {{ sector }} sector</h4>
 
       {% if report.actors_dataset %}
-        {% if report.land_use_dataset.type.name == "Image" %}
+        {% if report.actors_dataset.type.name == "Image" %}
           <img src="{{ report.actors_dataset.image.url }}" class="img-fluid">
           <p><a href="{% url 'cityloops:library_item' report.actors_dataset.id %}">Data source</a></p>
         {% else %}
