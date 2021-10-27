@@ -45,6 +45,10 @@
         max-width: 100%;
       }
 
+      .page-break-{{ space.slug }}-{{ sector }} {
+        page-break-after: always;
+      }
+
       .cover-page {
         page-break-after: always;
         position: relative;
@@ -358,6 +362,8 @@
       </div>
     </section>
 
+    <div class="page-break-apeldoorn-biomass"></div>
+
     <section>
       <h2>Population of {{ space }}</h2>
       {% if report.population_dataset %}
@@ -381,6 +387,8 @@
         <span class="question-number bg-dark text-light rounded px-2 mr-2">5B</span>
       {% endif %}
     </section>
+
+    <div class="page-break-apeldoorn-biomass"></div>
 
     <section>
       <h2>Land use</h2>
@@ -487,6 +495,8 @@
       {% endif %}
     </section>
 
+    <div class="page-break-apeldoorn-biomass"></div>
+
     <section id="sector-context">
       <h1>Economic context of {{ sector }} sector</h1>
 
@@ -583,6 +593,8 @@
         <span class="question-number bg-dark text-light rounded px-2 mr-2">11</span>
       {% endif %}
     </section>
+
+    <div class="page-break-apeldoorn-biomass"></div>
 
     <section>
       <h4>The actors of the {{ sector }} sector</h4>
