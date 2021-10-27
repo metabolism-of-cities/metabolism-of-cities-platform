@@ -643,6 +643,9 @@
         <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/211026_Porto_Biomass_Sankey_v2.large.png">
         <p><a href="https://cityloops.metabolismofcities.org/library/997482/">Data source</a></p>
 
+      {% elif space.slug == "sevilla" and sector == "construction" %}
+        <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/211027_Sevilla_construction_Sankey_v1.large.png">
+        <p><a href="https://cityloops.metabolismofcities.org/library/997482/">Data source</a></p>
       {% endif %}
       <div class="d-print-none" id="sankey">{{ sankey|safe }}</div>
     </section>
