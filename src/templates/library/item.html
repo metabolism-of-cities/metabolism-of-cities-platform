@@ -85,11 +85,6 @@
       <div class="border rounded bg-white my-4">
         <ul class="list-group list-group-flush">
           <li class="list-group-item table-item">
-            <div><i class="fal fa-fw fa-fingerprint mr-1"></i> ID</div>
-            <div class="text-monospace"><code>{{ info.id }}</code></div>
-          </li>
-
-          <li class="list-group-item table-item">
             <div><i class="fal fa-fw fa-{{ info.type.icon }} mr-1"></i>
               {% if PROJECT.slug == "peeide" %}Reference{% endif %}
               Type 
@@ -243,6 +238,11 @@
             </div>
           </li>
           {% endif %}
+
+          <li class="list-group-item table-item">
+            <div><i class="fal fa-fw fa-fingerprint mr-1"></i> ID</div>
+            <div class="text-monospace"><code>{{ info.id }}</code></div>
+          </li>
         </ul>
       </div>
 
