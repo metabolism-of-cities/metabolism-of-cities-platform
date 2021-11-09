@@ -20,6 +20,10 @@
       height: 100%;
       font-size: 20px;
     }
+
+    .topic-title {
+      font-size: 1.25rem;
+    }
   </style>
 {% endblock %}
 
@@ -33,10 +37,9 @@
 <!-- open container -->
 <div class="container">
 
-
   <h2 class="text-ndee-primary">Community Forum</h2>
 
-  <div id="topic-list">
+  <div id="topic-list" class="mb-4">
     <div class="row mb-4">
       <div class="col-md-8 mb-2">
         <input class="search form-control" type="text" name="search" placeholder="Search by title">
@@ -64,13 +67,6 @@
                   <i class="fa fa-star text-warning"></i>
                 {% endif %}
                 <a href="{{ each.id }}/" class="topic-title">{{ each }}</a>
-                <br>
-                <!-- for tag in each.tags -->
-                <span class="badge badge-light">{% if each.part_of_project.id == 1 %}General{% else %}{{ each.part_of_project }}{% endif %}</span>
-                <!-- end for -->
-                <span class="topic-tags" hidden>
-                  Project-{{ each.part_of_project.id }}-id
-                </span>
               </td>
               <td class="d-none d-lg-table-cell">
                   {% for poster in each.posters|slice:"4" %}
@@ -95,7 +91,7 @@
       </table>
     </div>
 
-    <div class="card no-results">
+    <div class="card no-results bg-white">
       <div class="card-body text-center">
         <h2 class="my-4"><i class="fad fa-search"></i> No topics found</h2>
         <button class="btn btn-lg btn-primary clear-filter my-4">Show all topics</button>
@@ -106,6 +102,9 @@
   {% if not request.user.is_authenticated %}
     {% include "_notauthenticated.html" %}
   {% endif %}
+
+<!-- no need to close container as it's been closed before  -->
+<!-- </div> -->
 
 {% endblock %}
 

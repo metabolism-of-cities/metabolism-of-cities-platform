@@ -102,8 +102,7 @@ img.ndee-banner {
   object-position: center; }
 
 .card {
-  box-shadow: none !important;
-  background-color: #edfcff; }
+  box-shadow: none !important; }
   .card .card-title {
     color: #008dac; }
 
