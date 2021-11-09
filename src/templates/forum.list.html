@@ -23,7 +23,7 @@
       <div class="col-md-8 mb-2">
         <input class="search form-control" type="text" name="search" placeholder="Search by title">
       </div>
-      {% if not forum_is_only_for_project  %}
+      {% if not forum_is_only_for_project and PROJECT.slug != "peeide" %}
         <div class="col-md-4 mb-2">
           {% if project %}
             Showing: general forum and project forum.<br>

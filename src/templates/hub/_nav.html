@@ -2,6 +2,8 @@
 
   {% if menu == "processing" or menu == "analysis" or menu == "harvesting" or data_contribution_hub %}
     <h1 class="mb-0">Data contribution hub</h1>
+  {% elif PROJECT.slug == "peeide" %}
+    <h1>Forum</h1>
   {% else %}
     <h1 class="mb-0">Community Portal</h1>
   {% endif %}
@@ -10,7 +12,7 @@
     <a href="{% url URLS.DASHBOARD space.slug %}" class="btn btn-sm btn-primary-light">{{ space }}</a>
   {% endif %}
 
-  <ul class="nav nav-tabs mb-4 mt-3">
+  <ul class="nav nav-tabs mb-4 mt-3 forum-nav">
     {% if menu == "processing" or menu == "analysis" or menu == "harvesting" or data_contribution_hub %}
       <li class="nav-item">
         <a class="nav-link {% if menu == 'home' %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}{% if space %}/dashboards/{{ space.slug }}/hub/{% else %}/hub/data/{% endif %}">
@@ -32,7 +34,6 @@
           Analysis
         </a>
       </li>
-
     {% else %}
       <li class="nav-item">
         <a class="nav-link {% if menu == 'home' %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/"><i class="fa fa-home"></i></a>

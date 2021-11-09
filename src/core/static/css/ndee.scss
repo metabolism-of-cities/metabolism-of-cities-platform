@@ -156,6 +156,10 @@ img.ndee-banner {
   }
 }
 
+.card.table-responsive {
+  background-color: #fff;
+}
+
 .dataTables_wrapper .paginate_button.page-item.active .page-link,
 .dataTables_wrapper .paginate_button.page-item.active .page-link:hover,
 .custom-control-input:checked ~ .custom-control-label::before {
@@ -169,4 +173,8 @@ a.large-icon-box:hover,
 .btn-thumbnail:hover,
 .btn-card:hover {
   transform: none !important;
+}
+
+.forum-nav {
+  display: none;
 }
