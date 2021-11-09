@@ -87,13 +87,18 @@
               <img class="rounded-top project-image" src="{{ each.image.thumbnail.url }}" alt="{{ each }} image">
             {% endif %}
             <div class="p-3 mt-3 rounded project-text">
-              <h5 class="text-ndee-primary font-weight-bold">
+              <h5 class="text-ndee-primary font-weight-bold mb-1">
                 {% if each.url %}
-                  <a target="_blank" href="{{ each.url }}">{{ each }}</a>
+                  <a target="_blank" href="{{ each.url }}">
+                    {{ each }} <i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i>
+                  </a>
                 {% else %}
                   {{ each }}
                 {% endif %}
               </h5>
+              {% if each.end_date > today %}
+                <div class="badge bg-ndee-light-blue text-ndee-primary mb-1">Ongoing project</div>
+              {% endif %}
               <div class="text-dark">{{ each.get_description }}</div>
             </div>
           </div>

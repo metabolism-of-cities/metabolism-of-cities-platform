@@ -1,4 +1,4 @@
-<div class="p-4 border rounded bg-light mb-4">
+<div class="p-4 border rounded bg-light my-4">
   <p class="h3 mb-4">Log in to join the conversation</p>
   <a class="btn btn-lg btn-{% if PROJECT.slug == 'peeide' %}ndee-{% endif %}primary mr-3 mb-2" href="/accounts/register/?next={{ request.get_full_path }}"><i class="fal fa-user-plus" aria-hidden="true"></i> Sign Up</a>
   <a class="btn btn-lg btn-{% if PROJECT.slug == 'peeide' %}ndee-{% endif %}primary mr-3 mb-2" href="/accounts/login/?next={{ request.get_full_path }}"><i class="fal fa-sign-in" aria-hidden="true"></i> Log In</a>

@@ -9,6 +9,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.forms import modelform_factory
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMultiAlternatives
+from datetime import date
 
 from django.utils import timezone
 import pytz
@@ -26,6 +27,7 @@ def index(request):
         "research": research,
         "carousel": carousel,
         "projects": projects[:3],
+        "today": date.today(),
     }
     return render(request, "peeide/index.html", context)
 
@@ -39,6 +41,7 @@ def research(request):
         "webpage": get_object_or_404(Webpage, pk=51471),
         "projects": projects,
         "research": research,
+        "today": date.today(),
     }
 
     return render(request, "peeide/research.html", context)
