@@ -103,6 +103,8 @@ img.ndee-banner {
 
 .card {
   box-shadow: none !important; }
+  .card .card-header {
+    background-color: #008dac; }
   .card .card-title {
     color: #008dac; }
 

@@ -150,6 +150,10 @@ img.ndee-banner {
 .card {
   box-shadow: none !important;
 
+  .card-header {
+    background-color: $ndee-primary;
+  }
+
   .card-title {
     color: $ndee-primary;
   }

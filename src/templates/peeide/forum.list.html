@@ -21,7 +21,7 @@
       font-size: 20px;
     }
 
-    .topic-title {
+    .topic-title-wrap {
       font-size: 1.25rem;
     }
   </style>
@@ -45,7 +45,7 @@
         <input class="search form-control" type="text" name="search" placeholder="Search by title">
       </div>
       <div class="col-md-4 mb-2">
-        <a class="btn btn-ndee btn-ndee-primary d-block" href="create/"><i class="fas fa-fw fa-comment-alt-plus"></i> Post new topic</a>
+        <a class="btn btn-ndee btn-ndee-primary d-block" href="create/"><i class="fas fa-fw fa-comment-alt-plus"></i> Start new conversation</a>
       </div>
     </div>
 
@@ -62,7 +62,7 @@
         <tbody class="list">
           {% for each in list %}
             <tr>
-              <td>
+              <td class="topic-title-wrap">
                 {% if each.is_starred %}
                   <i class="fa fa-star text-warning"></i>
                 {% endif %}

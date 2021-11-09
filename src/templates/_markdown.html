@@ -8,7 +8,7 @@
   <md-ordered-list title="Ordered list" class="btn btn-primary-basic btn-sm"><i class="fas fa-fw fa-list-ol"></i></md-ordered-list>
   <md-unordered-list title="Unordered list" class="btn btn-primary-basic btn-sm"><i class="fas fa-fw fa-list"></i></md-unordered-list>
   <md-task-list title="Task list" class="btn btn-primary-basic btn-sm"><i class="fas fa-fw fa-tasks"></i></md-task-list>
-  <div class="btn btn-primary float-right btn-sm open-markdown-help"><i class="fas fa-fw fa-question-circle"></i> Help</div>
+  <div class="btn btn-{% if PROJECT.slug == 'peeide' %}ndee-{% endif %}primary float-right btn-sm open-markdown-help"><i class="fas fa-fw fa-question-circle"></i> Help</div>
 </markdown-toolbar>
 
 <div class="card markdown-help" style="display:none">
