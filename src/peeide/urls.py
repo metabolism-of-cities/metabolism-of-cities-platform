@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from core import views as core
+from community import views as community
 from library import views as library
 from ie.urls_baseline import baseline_urlpatterns
 from ie.urls_library_baseline import baseline_library_urlpatterns
@@ -17,6 +18,7 @@ urlpatterns =  [
     path("bibliography/sectors/<int:id>/", views.bibliography_list, name="sector"),
     path("bibliography/technologies/<int:id>/", views.bibliography_list, name="technology"),
     path("library/", views.bibliography_list),
+    path("forum/", community.forum_list, name="forum_list"),
 
     # news
     path("news/", views.news_list, name="news"),

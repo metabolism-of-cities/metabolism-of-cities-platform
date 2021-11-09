@@ -132,7 +132,11 @@ def forum_list(request, parent=None, section=None):
         "project": project,
         "forum_is_only_for_project": forum_is_only_for_project,
     }
-    return render(request, "forum.list.html", context)
+
+    if project and project.slug == "peeide":
+        return render(request, "peeide/forum.list.html", context)
+    else:
+        return render(request, "forum.list.html", context)
 
 def forum(request, id, section=None):
     info = Record.objects_include_private.get(pk=id)
