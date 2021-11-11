@@ -55,6 +55,22 @@
       </div>
     </div>
 
+    {% if PROJECT.slug == "peeide" %}
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label">Research topic(s)</label>
+        <div class="col-sm-9" id="research_topics_gui">
+          {% for each in research_topics %}
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="topic_{{ each.id }}" data-topic="{{ each.id }}">
+              <label class="custom-control-label" for="topic_{{ each.id }}">{{ each }}</label>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <input hidden type="text" id="research_topics" name="research_topics" value="{{ info.meta_data.research_topics }}">
+    {% endif %}
+
     {% if PROJECT.slug != "peeide" %}
     <div class="form-group row">
       <label class="col-sm-3 col-form-label">Research team</label>
@@ -104,6 +120,29 @@
       $("#publishers").select2({
         theme: "bootstrap4",
       });
+    </script>
+  {% endif %}
+  {% if PROJECT.slug == "peeide" %}
+    <script>
+      // hidden input for research topics so that it can be added to the metadata
+      $("#research_topics_gui input").change(function() {
+
+        let hiddenValues = []
+
+        $("#research_topics_gui input").each(function() {
+          if (this.checked) {
+            hiddenValues.push($(this).data("topic"));
+          }
+        })
+
+        $("#research_topics").val(hiddenValues);
+      })
+
+      // get the selected research topics and check the checkboxes for them
+      let savedResearchTopics = [{{ info.meta_data.research_topics }}]
+      $(savedResearchTopics).each(function() {
+        $("#topic_" + this).prop("checked", true);
+      })
     </script>
   {% endif %}
   <script type="text/javascript">

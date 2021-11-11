@@ -191,6 +191,8 @@ def controlpanel_project_form(request, slug=None, id=None):
 
     project = get_object_or_404(Project, pk=request.project)
 
+    research_topics = Tag.objects.filter(parent_tag_id=1227).order_by("name")
+
     ModelForm = modelform_factory(
         PublicProject,
         fields=["name", "url", "start_date", "end_date", "image", "part_of_project"],
@@ -220,6 +222,7 @@ def controlpanel_project_form(request, slug=None, id=None):
             info.meta_data["research_team"] = request.POST.get("research_team")
             info.meta_data["researcher"] = request.POST.get("researcher")
             info.meta_data["institution"] = request.POST.get("institution")
+            info.meta_data["research_topics"] = request.POST.get("research_topics")
             info.save()
 
             messages.success(request, "The information was saved.")
@@ -252,8 +255,10 @@ def controlpanel_project_form(request, slug=None, id=None):
         "form": form,
         "title": "Add project" if not id else "Edit project",
         "load_markdown": True,
+        "load_select2": True,
         "curator": curator,
         "info": info,
+        "research_topics": research_topics,
     }
 
     return render(request, "controlpanel/project.form.html", context)
