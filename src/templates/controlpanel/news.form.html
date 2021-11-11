@@ -6,12 +6,9 @@
   <h1 class="mb-4">{{ title }}</h1>
 
   {% if info %}
-    <div class="alert alert-warning">
-      <a href="{{ info.get_absolute_url }}">
-        <i class="fa fa-fw fa-link"></i>
-        View news article
-      </a>
-    </div>
+    <a class="btn btn-{% if PROJECT.slug == 'peeide' %}ndee-{% endif %}primary mb-4" href="{{ info.get_absolute_url }}">
+      <i class="fal fa-fw fa-link mr-2"></i> View news article
+    </a>
   {% endif %}
 
   <form method="post" enctype="multipart/form-data">
@@ -30,19 +27,35 @@
     </div>
 
     <div class="form-group row">
-    <label class="col-md-3 col-form-label" for="id_type">Type</label>
-    <div class="col-md-9">
-    <select name="format" class="form-control" id="id_type">
-      <option value="markdown">Markdown</option>
-      <option value="html" {% if info.meta_data.format == "html" %}selected{% endif %}>HTML</option>
-      <option value="markdown_html" {% if info.meta_data.format == "markdown_html" %}selected{% endif %}>Markdown and HTML</option>
-    </select>
+      <label class="col-md-3 col-form-label" for="id_type">Type</label>
+      <div class="col-md-9">
+        <select name="format" class="custom-select form-control" id="id_type">
+          <option value="markdown">Markdown</option>
+          <option value="html" {% if info.meta_data.format == "html" %}selected{% endif %}>HTML</option>
+          <option value="markdown_html" {% if info.meta_data.format == "markdown_html" %}selected{% endif %}>Markdown and HTML</option>
+        </select>
+      </div>
     </div>
-    </div>
+
+    {{test}}
+
+    {% if PROJECT.slug == "peeide" %}
+      <div class="form-group row">
+        <label class="col-md-3 col-form-label" for="category">Category</label>
+        <div class="col-md-9">
+          <select name="category" class="custom-select form-control" id="category">
+            <option value="event" {% if info.meta_data.category == "event" %}selected{% endif %}>Event</option>
+            <option value="news" {% if info.meta_data.category == "news" %}selected{% endif %}>News</option>
+            <option value="resource" {% if info.meta_data.category == "resource" %}selected{% endif %}>Resource</option>
+            <option value="other" {% if not info.meta_data.category or info.meta_data.category == "other" %}selected{% endif %}>Other</option>
+          </select>
+        </div>
+      </div>
+    {% endif %}
 
     <div class="form-group markdown-textarea">
       {% include "_markdown.html" %}
-      <textarea class="form-control mb-4" id="text" rows="30" name="description">{{ info.description|default_if_none:"" }}</textarea>
+      <textarea class="form-control mb-4" id="text" rows="10" name="description">{{ info.description|default_if_none:"" }}</textarea>
     </div>
 
     {% buttons %}
@@ -72,7 +85,7 @@
   $("#people").select2({
     theme: "bootstrap4",
     ajax: {
-      url: "{% url "core:search_ajax" "people" %}",
+      url: "{% url 'core:search_ajax' 'people' %}",
       dataType: "json"
     }
   });

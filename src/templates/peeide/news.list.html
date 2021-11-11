@@ -40,26 +40,101 @@
     </div>
   </section>
 
-  <section>
-    <div class="row">
-      {% for each in list %}
-        <div class="col-lg-4 col-md-6 mb-4">
-          <a class="card btn-card border-0 bg-ndee-light-blue" href="{{ each.slug }}/">
-            {% if each.image %}
-              <!-- <img src="{{ each.image.url }}" class="card-img-top" alt=""> -->
-            {% endif %}
-            <div class="card-body">
-              <strong class="d-block text-uppercase text-ndee-purple text-sm mb-3">{{ each.date|date:"d F Y" }}</strong>
-              <h6 class="card-title font-weight-bold">{{ each }}</h6>
-              <p class="text-sm">
-                {{ each.description|truncatewords_html:"20" }}
-              </p>
-            </div>
-          </a>
-        </div>
-      {% endfor %}
-    </div>
-  </section>
+  {% if resources %}
+    <section>
+      <h3>Resources</h3>
+      <div class="row">
+        {% for each in resources %}
+          <div class="col-lg-4 col-md-6 mb-4">
+            <a class="card btn-card border-0 bg-ndee-light-blue" href="{{ each.slug }}/">
+              {% if each.image %}
+                <!-- <img src="{{ each.image.url }}" class="card-img-top" alt=""> -->
+              {% endif %}
+              <div class="card-body">
+                <strong class="d-block text-uppercase text-ndee-purple text-sm mb-3">{{ each.date|date:"d F Y" }}</strong>
+                <h6 class="card-title font-weight-bold">{{ each }}</h6>
+                <p class="text-sm">
+                  {{ each.description|truncatewords_html:"20" }}
+                </p>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  {% if news %}
+    <section>
+      <h3>News</h3>
+      <div class="row">
+        {% for each in news %}
+          <div class="col-lg-4 col-md-6 mb-4">
+            <a class="card btn-card border-0 bg-ndee-light-blue" href="{{ each.slug }}/">
+              {% if each.image %}
+                <!-- <img src="{{ each.image.url }}" class="card-img-top" alt=""> -->
+              {% endif %}
+              <div class="card-body">
+                <strong class="d-block text-uppercase text-ndee-purple text-sm mb-3">{{ each.date|date:"d F Y" }}</strong>
+                <h6 class="card-title font-weight-bold">{{ each }}</h6>
+                <p class="text-sm">
+                  {{ each.description|truncatewords_html:"20" }}
+                </p>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  {% if events %}
+    <section>
+      <h3>Events</h3>
+      <div class="row">
+        {% for each in events %}
+          <div class="col-lg-4 col-md-6 mb-4">
+            <a class="card btn-card border-0 bg-ndee-light-blue" href="{{ each.slug }}/">
+              {% if each.image %}
+                <!-- <img src="{{ each.image.url }}" class="card-img-top" alt=""> -->
+              {% endif %}
+              <div class="card-body">
+                <strong class="d-block text-uppercase text-ndee-purple text-sm mb-3">{{ each.date|date:"d F Y" }}</strong>
+                <h6 class="card-title font-weight-bold">{{ each }}</h6>
+                <p class="text-sm">
+                  {{ each.description|truncatewords_html:"20" }}
+                </p>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  {% if other %}
+    <section>
+      <h3>Other</h3>
+      <div class="row">
+        {% for each in other %}
+          <div class="col-lg-4 col-md-6 mb-4">
+            <a class="card btn-card border-0 bg-ndee-light-blue" href="{{ each.slug }}/">
+              {% if each.image %}
+                <!-- <img src="{{ each.image.url }}" class="card-img-top" alt=""> -->
+              {% endif %}
+              <div class="card-body">
+                <strong class="d-block text-uppercase text-ndee-purple text-sm mb-3">{{ each.date|date:"d F Y" }}</strong>
+                <h6 class="card-title font-weight-bold">{{ each }}</h6>
+                <p class="text-sm">
+                  {{ each.description|truncatewords_html:"20" }}
+                </p>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
 </div>
 
 {% include "peeide/_newsletter-signup.html" %}

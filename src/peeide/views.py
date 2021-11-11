@@ -172,6 +172,10 @@ def bibliography_list(request, id=None):
 def news_list(request, header_subtitle=None):
     project = get_object_or_404(Project, pk=request.project)
     list = News.objects.filter(projects=project).distinct()
+    news = list.filter(meta_data__category="news")
+    events = list.filter(meta_data__category="event")
+    resources = list.filter(meta_data__category="resource")
+    other = list.filter(Q(meta_data__category="other") | Q(meta_data__category__isnull=True))
 
     context = {
         "webpage": get_object_or_404(Webpage, pk=1002742),
@@ -179,6 +183,10 @@ def news_list(request, header_subtitle=None):
         "add_link": "/controlpanel/news/create/?next=/peeide/controlpanel/news/",
         "title": "Resources and community",
         "menu": "news",
+        "news": news,
+        "events": events,
+        "resources": resources,
+        "other": other,
     }
     return render(request, "peeide/news.list.html", context)
 
