@@ -146,9 +146,9 @@
         $("#research-topics").val(topic)
       } else {
         $(".projects div[data-topics]").each(function() {
-          let topics = $(this).data("topics");
+          let topics = $(this).data("topics").toString();
 
-          if (topic.indexOf(topics) != -1){
+          if (topics.indexOf(topic) == -1){
             $(this).hide()
           } else {
             $(this).show()
