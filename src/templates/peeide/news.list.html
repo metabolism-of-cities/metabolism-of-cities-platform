@@ -107,7 +107,7 @@
                 <strong class="d-block text-uppercase text-ndee-purple text-sm mb-3">{{ each.date|date:"d F Y" }}</strong>
                 <h6 class="card-title font-weight-bold">{{ each }}</h6>
                 <p class="text-sm">
-                  {{ each.get_description|truncatewords_html:"20" }}
+                  {{ each.get_description|striptags|truncatewords_html:"20" }}
                 </p>
               </div>
             </a>
@@ -135,7 +135,7 @@
                 <strong class="d-block text-uppercase text-ndee-purple text-sm mb-3">{{ each.date|date:"d F Y" }}</strong>
                 <h6 class="card-title font-weight-bold">{{ each }}</h6>
                 <p class="text-sm">
-                  {{ each.get_description|truncatewords_html:"20" }}
+                  {{ each.get_description|striptags|truncatewords_html:"20" }}
                 </p>
               </div>
             </a>
@@ -163,7 +163,7 @@
                 <strong class="d-block text-uppercase text-ndee-purple text-sm mb-3">{{ each.date|date:"d F Y" }}</strong>
                 <h6 class="card-title font-weight-bold">{{ each }}</h6>
                 <p class="text-sm">
-                  {{ each.get_description|truncatewords_html:"20" }}
+                  {{ each.get_description|striptags|truncatewords_html:"20" }}
                 </p>
               </div>
             </a>
@@ -191,7 +191,7 @@
                 <strong class="d-block text-uppercase text-ndee-purple text-sm mb-3">{{ each.date|date:"d F Y" }}</strong>
                 <h6 class="card-title font-weight-bold">{{ each }}</h6>
                 <p class="text-sm">
-                  {{ each.get_description|truncatewords_html:"20" }}
+                  {{ each.get_description|striptags|truncatewords_html:"20" }}
                 </p>
               </div>
             </a>
