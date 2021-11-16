@@ -17,6 +17,23 @@
   #newsletter-form {
     width: 100%;
   }
+
+  .resource-link {
+    text-align: center;
+    font-size: 1.25rem;
+    padding: 2rem 1rem;
+    cursor: pointer;
+  }
+
+  .resource-link i {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: .5rem;
+  }
+
+  .container section:last-of-type {
+    margin-bottom: 2rem;
+  }
 </style>
 {% endblock %}
 
@@ -37,15 +54,51 @@
       <div class="col-lg-8">
         {{ webpage.get_description }}
       </div>
+      <div class="col-lg-4">
+        <h4>Jump to...</h4>
+        <div class="row mb-4">
+          {% if resources %}
+            <div class="col-sm-6 mb-4" onclick="scrollToID('resources')">
+              <div class="resource-link rounded bg-ndee-light-blue text-ndee-primary">
+                <i class="fal fa-box-full"></i> Resources
+              </div>
+            </div>
+          {% endif %}
+
+          {% if news %}
+            <div class="col-sm-6 mb-4" onclick="scrollToID('news')">
+              <div class="resource-link rounded bg-ndee-light-blue text-ndee-primary">
+                <i class="fal fa-newspaper"></i> News
+              </div>
+            </div>
+          {% endif %}
+
+          {% if events %}
+            <div class="col-sm-6 mb-4" onclick="scrollToID('events')">
+              <div class="resource-link rounded bg-ndee-light-blue text-ndee-primary">
+                <i class="fal fa-calendar-day"></i> Events
+              </div>
+            </div>
+          {% endif %}
+
+          {% if other %}
+            <div class="col-sm-6 mb-4" onclick="scrollToID('other')">
+              <div class="resource-link rounded bg-ndee-light-blue text-ndee-primary">
+                <i class="fal fa-toolbox"></i> Other
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
     </div>
   </section>
 
   {% if resources %}
-    <section>
+    <section id="resources">
       <h3>Resources</h3>
       <div class="row">
         {% for each in resources %}
-          <div class="col-lg-4 col-md-6 mb-4">
+          <div class="col-lg-4 col-md-6 mb-4 col-link" {% if forloop.counter > 3 %}hidden{% endif %}>
             <a class="card btn-card border-0 bg-ndee-light-blue" href="{{ each.slug }}/">
               {% if each.image %}
                 <!-- <img src="{{ each.image.url }}" class="card-img-top" alt=""> -->
@@ -54,22 +107,26 @@
                 <strong class="d-block text-uppercase text-ndee-purple text-sm mb-3">{{ each.date|date:"d F Y" }}</strong>
                 <h6 class="card-title font-weight-bold">{{ each }}</h6>
                 <p class="text-sm">
-                  {{ each.description|truncatewords_html:"20" }}
+                  {{ each.get_description|truncatewords_html:"20" }}
                 </p>
               </div>
             </a>
           </div>
         {% endfor %}
       </div>
+
+      {% if resources.count > 3 %}
+        <div class="btn btn-ndee-primary show-all"><i class="fa fa-caret-down"></i> Show all</div>
+      {% endif %}
     </section>
   {% endif %}
 
   {% if news %}
-    <section>
+    <section id="news">
       <h3>News</h3>
       <div class="row">
         {% for each in news %}
-          <div class="col-lg-4 col-md-6 mb-4">
+          <div class="col-lg-4 col-md-6 mb-4 col-link" {% if forloop.counter > 3 %}hidden{% endif %}>
             <a class="card btn-card border-0 bg-ndee-light-blue" href="{{ each.slug }}/">
               {% if each.image %}
                 <!-- <img src="{{ each.image.url }}" class="card-img-top" alt=""> -->
@@ -78,22 +135,26 @@
                 <strong class="d-block text-uppercase text-ndee-purple text-sm mb-3">{{ each.date|date:"d F Y" }}</strong>
                 <h6 class="card-title font-weight-bold">{{ each }}</h6>
                 <p class="text-sm">
-                  {{ each.description|truncatewords_html:"20" }}
+                  {{ each.get_description|truncatewords_html:"20" }}
                 </p>
               </div>
             </a>
           </div>
         {% endfor %}
       </div>
+
+      {% if news.count > 3 %}
+        <div class="btn btn-ndee-primary show-all"><i class="fa fa-caret-down"></i> Show all</div>
+      {% endif %}
     </section>
   {% endif %}
 
   {% if events %}
-    <section>
+    <section id="events">
       <h3>Events</h3>
       <div class="row">
         {% for each in events %}
-          <div class="col-lg-4 col-md-6 mb-4">
+          <div class="col-lg-4 col-md-6 mb-4 col-link" {% if forloop.counter > 3 %}hidden{% endif %}>
             <a class="card btn-card border-0 bg-ndee-light-blue" href="{{ each.slug }}/">
               {% if each.image %}
                 <!-- <img src="{{ each.image.url }}" class="card-img-top" alt=""> -->
@@ -102,22 +163,26 @@
                 <strong class="d-block text-uppercase text-ndee-purple text-sm mb-3">{{ each.date|date:"d F Y" }}</strong>
                 <h6 class="card-title font-weight-bold">{{ each }}</h6>
                 <p class="text-sm">
-                  {{ each.description|truncatewords_html:"20" }}
+                  {{ each.get_description|truncatewords_html:"20" }}
                 </p>
               </div>
             </a>
           </div>
         {% endfor %}
       </div>
+
+      {% if events.count > 3 %}
+        <div class="btn btn-ndee-primary show-all"><i class="fa fa-caret-down"></i> Show all</div>
+      {% endif %}
     </section>
   {% endif %}
 
   {% if other %}
-    <section>
+    <section id="other">
       <h3>Other</h3>
       <div class="row">
         {% for each in other %}
-          <div class="col-lg-4 col-md-6 mb-4">
+          <div class="col-lg-4 col-md-6 mb-4 col-link" {% if forloop.counter > 3 %}hidden{% endif %}>
             <a class="card btn-card border-0 bg-ndee-light-blue" href="{{ each.slug }}/">
               {% if each.image %}
                 <!-- <img src="{{ each.image.url }}" class="card-img-top" alt=""> -->
@@ -126,13 +191,17 @@
                 <strong class="d-block text-uppercase text-ndee-purple text-sm mb-3">{{ each.date|date:"d F Y" }}</strong>
                 <h6 class="card-title font-weight-bold">{{ each }}</h6>
                 <p class="text-sm">
-                  {{ each.description|truncatewords_html:"20" }}
+                  {{ each.get_description|truncatewords_html:"20" }}
                 </p>
               </div>
             </a>
           </div>
         {% endfor %}
       </div>
+
+      {% if other.count > 3 %}
+        <div class="btn btn-ndee-primary show-all"><i class="fa fa-caret-down"></i> Show all</div>
+      {% endif %}
     </section>
   {% endif %}
 </div>
@@ -142,4 +211,10 @@
 {% endblock %}
 
 {% block footer %}
+  <script>
+    $(".show-all").click(function() {
+      $(this).prev().find(".col-link").removeAttr("hidden");
+      $(this).remove()
+    })
+  </script>
 {% endblock %}
