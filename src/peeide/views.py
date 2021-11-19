@@ -23,7 +23,7 @@ def index(request):
 
     context = {
         "webpage": get_object_or_404(Webpage, pk=1002744),
-        "team": People.objects.filter(parent_list__record_child=info).filter(Q(parent_list__relationship__name="Admin") | Q(parent_list__relationship__name="Core member")),
+        "team": People.objects.filter(parent_list__record_child=info).filter(Q(parent_list__relationship__name="Admin") | Q(parent_list__relationship__name="Core member")).distinct(),
         "research": research,
         "carousel": carousel,
         "projects": projects[:3],
@@ -50,8 +50,8 @@ def people(request):
     info = get_object_or_404(Project, pk=request.project)
     context = {
         "webpage": get_object_or_404(Webpage, pk=51472),
-        "team": People.objects.filter(parent_list__record_child=info).filter(Q(parent_list__relationship__name="Admin") | Q(parent_list__relationship__name="Core member")),
-        "network": People.objects.filter(parent_list__record_child=info, parent_list__relationship__name="Team member"),
+        "team": People.objects.filter(parent_list__record_child=info).filter(Q(parent_list__relationship__name="Admin") | Q(parent_list__relationship__name="Core member")).distinct(),
+        "network": People.objects.filter(parent_list__record_child=info, parent_list__relationship__name="Team member").distinct(),
     }
 
     return render(request, "peeide/people.html", context)

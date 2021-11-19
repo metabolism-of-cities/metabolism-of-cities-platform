@@ -9,6 +9,7 @@
   <link rel="canonical" href="{{ info.get_full_url }}" />
   <!-- When we have fully figured all this out we can consider getting it indexed. Ensure there is a canonical link as this page is generated with various URLs -->
   <meta name="robots" content="noindex">
+
 {% endblock %}
 
 {% block css %}
@@ -36,6 +37,15 @@
 
     audio {
       width: 100%;
+    }
+
+    .fullwidth-hr {
+      margin-left: -1rem;
+      width: calc(100% + 2rem);
+    }
+
+    #bibtext {
+      white-space: pre-wrap;
     }
 
     {% if info.is_deleted %}
@@ -207,9 +217,10 @@
           <li class="list-group-item">
             <i class="fal fa-fw fa-quote-right mb-1 mr-1" aria-hidden="true"></i> Citation
             <br>
-            <a class="badge badge-secondary" data-toggle="modal" data-target="#citation" href="#citation">
-              View/download citation
+            <a class="btn btn-sm btn-primary-outline load-citation" data-toggle="modal" data-target="#citation" href="#citation">
+              APA / BibTeX
             </a>
+            <a class="btn btn-sm btn-primary-outline" href="?format=bibtex&amp;download=true">Add to reference manager</a>
           </li>
 
           {% if info.type.group == "academic" and PROJECT.slug != "ascus2021" %}
@@ -615,7 +626,7 @@
       {% endwith %}
 
       <div class="modal" tabindex="-1" id="citation">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Citation</h5>
@@ -624,14 +635,20 @@
               </button>
             </div>
             <div class="modal-body">
+
+              <h5>APA</h5>
               <p>
                 {{ info.get_citation_apa }}
               </p>
+
+              <hr class="fullwidth-hr">
+
+              <h5>BibTeX</h5>
+              <code id="bibtext">
+              </code>
             </div>
             <div class="modal-footer">
-              <a class="btn btn-primary" href="?format=bibtex&amp;download=true">Download BibteX</a>
-              <a class="btn btn-primary" href="?format=bibtex">View BibTeX</a>
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary-outline" data-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
@@ -677,4 +694,12 @@
     </script>
     {% include "_chart.footer.html" %}
   {% endif %}
+
+  <script>
+    $(".load-citation").click(function() {
+      $.get("?format=bibtex", function(data) {
+        $("#bibtext").html(data)
+      })
+    })
+  </script>
 {% endblock %}
