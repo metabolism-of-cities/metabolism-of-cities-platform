@@ -4,42 +4,57 @@
   
   <h1>Report an error</h1>
 
-  <p>Record: <a href="{% url URLS.LIBRARY_ITEM info.id %}">{{ info }}</a></p>
+  <div class="border rounded bg-light p-3 d-inline-block mb-4">
+    Record: <a href="{% url URLS.LIBRARY_ITEM info.id %}">{{ info }}</a>
+  </div>
 
   {% if request.method != "POST" %}
 
-    <div class="alert alert-info">
-      What should be corrected? Please provide details so that we can fix this. 
-    </div>
+    <p>What should be corrected? Please provide details so that we can fix this.</p>
 
     <form method="post">
 
-      <div class="form-group">
+      <div class="form-group row">
         <label class="col-sm-2 control-label">Details</label>
         <div class="col-sm-10">
           <textarea class="form-control" rows="10" name="details" required></textarea>
         </div>
       </div>
 
-      <div class="form-group">
+      <div class="form-group row">
         <label class="col-sm-2 control-label">Your name</label>
         <div class="col-sm-10">
           <input class="form-control" type="text" name="name" />
         </div>
       </div>
       
-      <div class="form-group">
+      <div class="form-group row">
         <label class="col-sm-2 control-label">E-mail</label>
         <div class="col-sm-10">
           <input class="form-control" type="email" name="email" />
         </div>
       </div>
 
-      <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-          <button type="submit" class="btn btn-primary">Submit</button>
+      {% if PROJECT.slug == "peeide" %}
+        <div class="row form-group">
+          <div class="offset-sm-2 col-sm-5">
+            <button type="submit" class="btn btn-ndee btn-ndee-primary">
+              <i class="fal fa-envelope-open-text"></i> Submit
+            </button>
+          </div>
+          <div class="col-sm-5 text-right">
+            <a class="btn btn-ndee btn-ndee-primary-outline" href="{% url 'peeide:page' 'bibliography' %}">
+              <i class="fal fa-arrow-left"></i> Back to bibliography
+            </a>
+          </div>
         </div>
-      </div>
+      {% else %}
+        <div class="form-group row">
+          <div class="offset-sm-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+      {% endif %}
       
       {% csrf_token %}
 
