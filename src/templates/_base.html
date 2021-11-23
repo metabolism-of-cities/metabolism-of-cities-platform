@@ -7,7 +7,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <link class="favicon" rel="shortcut icon" sizes="126x126" href="{% static 'img/favicon/favicon.png' %}">
+  {% if PROJECT.slug == "peeide" %}
+    <link class="favicon" rel="shortcut icon" sizes="192x192" href="{% static 'img/favicon/favicon.ndee.png' %}">
+  {% else %}
+    <link class="favicon" rel="shortcut icon" sizes="126x126" href="{% static 'img/favicon/favicon.png' %}">
+  {% endif %}
 
   {% if PROJECT.id == 1 %}
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/favicon/apple-touch-icon.png' %}">

@@ -1,0 +1,43 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block content %}
+  <h1 class="mb-0">{{ info }}</h1>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back to header images
+  </a>
+
+  <div class="row">
+    <div class="col-md col-lg-5">
+      <h3>Current image</h3>
+      <img class="img-fluid rounded" src="{{ info.image.thumbnail.url }}">
+    </div>
+    <div class="col-md col-lg-7">
+      <h3>Replace image</h3>
+      <div class="border-top border-left border-right rounded-top bg-light p-3">
+        <h5>Things to keep in mind</h5>
+        <ul class="pl-3 mb-0">
+          <li>The header image will cover the entire width of the screen, including screens potentially larger than your own</li>
+          <li>The image will be stretched out in case someone's screen is wider than the image</li>
+          <li>Try to keep the file size to a minimum, ideally under 300KB</li>
+          <li>The header images are wide, but not tall. You can keep the file size low by cropping out parts of the image that won't be visible anyway</li>
+        </ul>
+      </div>
+      <form method="post" enctype="multipart/form-data" class="border rounded-bottom p-3 mb-4">
+        <input type="file" name="image" class="d-block mb-4" accept="image/*">
+        {% csrf_token %}
+
+        <button type="submit" class="btn btn-ndee-primary">
+          <i class="fa fa-save"></i> Save
+        </button>
+      </form>
+
+      <a href="../" class="btn btn-primary-basic mb-4">
+        <i class="fal fa-angle-left"></i>
+        Back to header images
+      </a>
+    </div>
+  </div>
+
+{% endblock %}

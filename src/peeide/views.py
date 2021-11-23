@@ -42,6 +42,7 @@ def research(request):
         "projects": projects,
         "research": research,
         "today": date.today(),
+        "header_image": LibraryItem.objects.get(pk=1009391)
     }
 
     return render(request, "peeide/research.html", context)
@@ -52,6 +53,7 @@ def people(request):
         "webpage": get_object_or_404(Webpage, pk=51472),
         "team": People.objects.filter(parent_list__record_child=info).filter(Q(parent_list__relationship__name="Admin") | Q(parent_list__relationship__name="Core member")).distinct(),
         "network": People.objects.filter(parent_list__record_child=info, parent_list__relationship__name="Team member").distinct(),
+        "header_image": LibraryItem.objects.get(pk=1009390)
     }
 
     return render(request, "peeide/people.html", context)
@@ -65,6 +67,7 @@ def bibliography(request):
         "sectors": sectors,
         "technologies": technologies,
         "types": LibraryItemType.objects.all(),
+        "header_image": LibraryItem.objects.get(pk=1009392)
     }
 
     return render(request, "peeide/library.html", context)
@@ -165,6 +168,7 @@ def bibliography_list(request, id=None):
         "author": author,
         "type": type,
         "types": LibraryItemType.objects.all(),
+        "header_image": LibraryItem.objects.get(pk=1009392)
     }
 
     return render(request, "peeide/library.list.html", context)
@@ -187,6 +191,7 @@ def news_list(request, header_subtitle=None):
         "events": events,
         "resources": resources,
         "other": other,
+        "header_image": LibraryItem.objects.get(pk=1009394)
     }
     return render(request, "peeide/news.list.html", context)
 
@@ -285,3 +290,33 @@ def controlpanel_projects(request, type=None):
         "type": type,
     }
     return render(request, "controlpanel/projects.html", context)
+
+@login_required
+def controlpanel_header_images(request):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    pages = LibraryItem.objects.filter(id__in=[1009390,1009391,1009392,1009393,1009394])
+
+    context = {
+        "pages": pages
+    }
+
+    return render(request, "peeide/controlpanel.header-images.html", context)
+
+@login_required
+def controlpanel_header_image_form(request, id=None):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    info = get_object_or_404(LibraryItem, pk=id)
+
+    if request.method == "POST":
+        info.image = request.FILES["image"]
+        info.save()
+        messages.success(request, "The image was saved.")
+
+    context = {
+        "info": info,
+    }
+    return render(request, "peeide/controlpanel.header-image.form.html", context)

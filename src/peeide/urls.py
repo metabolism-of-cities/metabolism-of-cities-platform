@@ -28,6 +28,8 @@ urlpatterns =  [
     path("controlpanel/projects/", views.controlpanel_projects),
     path("controlpanel/projects/<int:id>/", views.controlpanel_project_form),
     path("controlpanel/projects/create/", views.controlpanel_project_form),
+    path("controlpanel/header-images/", views.controlpanel_header_images, name="controlpanel_header_images"),
+    path("controlpanel/header-images/<int:id>/", views.controlpanel_header_image_form, name="controlpanel_header_image_form"),
 
     # not sure if we need this one:
     # path("", core.article, {"id": 51471}, name="index"),

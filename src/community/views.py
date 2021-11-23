@@ -134,6 +134,7 @@ def forum_list(request, parent=None, section=None):
     }
 
     if project and project.slug == "peeide":
+        context["header_image"] = LibraryItem.objects.get(pk=1009393)
         return render(request, "peeide/forum.list.html", context)
     else:
         return render(request, "forum.list.html", context)
