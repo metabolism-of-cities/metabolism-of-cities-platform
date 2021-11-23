@@ -1,5 +1,14 @@
 {% extends "_base.html" %}
 
+{% block head %}
+  <style>
+    .single-page {
+      margin-bottom: 3rem;
+    }
+  </style>
+{% endblock %}
+
+
 {% block content %}
   <h1 class="mb-0">Header images</h1>
   <a href="../" class="btn btn-primary-basic mb-4">
@@ -9,16 +18,13 @@
 
   <div class="row">
     {% for each in pages %}
-      <div class="col-lg-4 col-sm-6 mb-4">
-        <div class="card border-0">
+      <div class="col-lg-4 col-sm-6 single-page">
+        <a class="card border-0" href="{% url 'peeide:controlpanel_header_image_form' each.id %}">
           <img src="{{ each.image.thumbnail.url }}" class="card-img-top" alt="{{ each }} image">
           <div class="card-body p-0 pt-3">
             <h5 class="card-title">{{ each }}</h5>
-            <a class="btn btn-ndee-primary" href="{% url 'peeide:controlpanel_header_image_form' each.id %}">
-              <i class="fal fa-random"></i> Change image
-            </a>
           </div>
-        </div>
+        </a>
       </div>
     {% endfor %}
   </div>
