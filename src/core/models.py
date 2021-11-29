@@ -1202,9 +1202,15 @@ class LibraryItem(Record):
                     author_array.append(lastname)
             elif "," in author_list:
                 authors = author_list.split(",")
-                for each in authors:
-                    lastname = each.rpartition(" ")[2]
-                    author_array.append(lastname)
+                if len(authors) == 2:
+                    # If there are only two names, we assume it's one person in the Doe, Jane format and
+                    # we will format as "Jane Doe"
+                    author_array.append(f"{authors[1]} {authors[0]}")
+                else:
+                    # If we have > 1 author, then we list the last names of all involved
+                    for each in authors:
+                        lastname = each.rpartition(" ")[2]
+                        author_array.append(lastname)
             else:
                 # One option is to show JUST the lastname, but in practice it's more likely
                 # that this is the name of an entity like "City of Cape Town", so let's do the

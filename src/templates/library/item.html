@@ -130,7 +130,7 @@
                 <br>
                 {% if info.authors.all %}
                   {% for each in info.authors %}
-                    <a class="btn btn-sm btn-primary-outline mt-1" href="">{{ each }}</a>
+                    {{ each }}{% if not forloop.last %}, {% endif %}
                   {% endfor %}
                 {% else %}
                   {{ info.get_author_citation }}
