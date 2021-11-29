@@ -1232,9 +1232,6 @@ def controlpanel_news_form(request, id=None):
     else:
         form = ModelForm(request.POST or None, request.FILES or None, initial={"projects": request.project})
     if request.method == "POST":
-        # saving category for ndee / peeide news articles and resources
-        if project == PROJECT_ID["peeide"]:
-            info.meta_data["category"] = request.POST.get("category")
 
         if form.is_valid():
             info = form.save(commit=False)
@@ -1243,6 +1240,9 @@ def controlpanel_news_form(request, id=None):
             info.description = request.POST.get("description")
             meta_data = info.meta_data if info.meta_data else {}
             meta_data["format"] = request.POST.get("format")
+            # saving category for ndee / peeide news articles and resources
+            if project == PROJECT_ID["peeide"]:
+                meta_data["category"] = request.POST.get("category")
             info.meta_data = meta_data
             info.save()
             form.save_m2m()
