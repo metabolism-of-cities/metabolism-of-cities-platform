@@ -26,7 +26,11 @@
     Questions marked with <i class="fab fa-markdown"></i> allow for Markdown formatted input. Make sure to save your changes.
     <br>
     <a class="btn btn-primary mt-3" href="{% url 'cityloops:sca_report' space.slug sector %}">
-      <i class="fal fa-file-alt"></i> View report
+      <i class="fal fa-file-alt"></i> View online report
+    </a>
+
+    <a class="btn btn-primary mt-3" href="{% url 'cityloops:sca_report' space.slug sector %}?format=pdf">
+      <i class="fal fa-file-pdf"></i> View PDF report
     </a>
 
     <div class="btn btn-primary mt-3 show-markdown">

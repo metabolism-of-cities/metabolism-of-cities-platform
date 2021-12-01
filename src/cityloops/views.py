@@ -525,7 +525,7 @@ def sca_report(request, slug, sector):
         plot_bgcolor = "rgba(255,255,255,0)",
         paper_bgcolor = "rgba(255,255,255,0)",
         height = 600,
-        width = 1000,
+        width = 1110,
         modebar_remove = ["lasso", "select"],
     )
 
@@ -547,7 +547,10 @@ def sca_report(request, slug, sector):
         "currency": currency,
         "bounding_box": bounding_box,
     }
-    return render(request, "cityloops/sca-report.html", context)
+    if "format" in request.GET:
+        return render(request, "cityloops/sca-report.html", context)
+    else:
+        return render(request, "cityloops/sca-report.online.html", context)
 
 def sca_report_form(request, slug, sector):
     space = get_space(request, slug)
