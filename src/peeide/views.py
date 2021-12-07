@@ -45,7 +45,7 @@ def research(request):
         "proposals": proposals,
         "research": research,
         "today": date.today(),
-        # "header_image": LibraryItem.objects.get(pk=1009391)
+        "header_image": LibraryItem.objects.get(pk=1009391)
     }
 
     return render(request, "peeide/research.html", context)
