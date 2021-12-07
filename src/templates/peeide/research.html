@@ -51,6 +51,10 @@
   #show-all {
     font-size: 1rem;
   }
+
+  #proposals {
+    max-width: 992px;
+  }
 </style>
 {% endblock %}
 
@@ -130,6 +134,26 @@
       {% endfor %}
     </div>
   </section>
+
+  {% if proposals %}
+  <section id="proposals" class="pb-4">
+    <h3 class="mb-2 mb-sm-4">Research proposals</h3>
+    {% for each in proposals %}
+      <div class="mb-4">
+        <h5 class="text-ndee-primary font-weight-bold mb-1">
+          {% if each.url %}
+            <a target="_blank" href="{{ each.url }}">
+              {{ each }} <i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i>
+            </a>
+          {% else %}
+            {{ each }}
+          {% endif %}
+        </h5>
+        <div class="text-dark">{{ each.get_description }}</div>
+      </div>
+    {% endfor %}
+  </section>
+  {% endif %}
 </div>
 
 {% include "peeide/_newsletter-signup.html" %}

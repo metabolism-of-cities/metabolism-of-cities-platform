@@ -56,9 +56,21 @@
     </div>
 
     {% if PROJECT.slug == "peeide" %}
+      <!-- proposal boolean -->
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label">Proposal</label>
+        <div class="col-sm-9 align-self-center">
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="proposal" name="proposal" {% if info.meta_data.proposal %}checked{% endif %}>
+            <label class="custom-control-label" for="proposal">Research proposal</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- research topics -->
       <div class="form-group row">
         <label class="col-sm-3 col-form-label">Research topic(s)</label>
-        <div class="col-sm-9" id="research_topics_gui">
+        <div class="col-sm-9 align-self-center" id="research_topics_gui">
           {% for each in research_topics %}
             <div class="custom-control custom-switch">
               <input type="checkbox" class="custom-control-input" id="topic_{{ each.id }}" data-topic="{{ each.id }}">
@@ -69,7 +81,7 @@
       </div>
 
       <input hidden type="text" id="research_topics" name="research_topics" value="{{ info.meta_data.research_topics }}">
-    {% endif %}
+   {% endif %}
 
     {% if PROJECT.slug != "peeide" %}
     <div class="form-group row">

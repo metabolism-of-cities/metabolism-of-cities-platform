@@ -35,14 +35,17 @@ def research(request):
     info = get_object_or_404(Project, pk=request.project)
 
     research = Tag.objects.filter(parent_tag_id=1227).order_by("name")
-    projects = PublicProject.objects.filter(part_of_project=info).order_by("name")
+    all_projects = PublicProject.objects.filter(part_of_project=info)
+    projects = all_projects.filter(Q(meta_data__proposal=False) | Q(meta_data__proposal__isnull=True)).distinct().order_by("name")
+    proposals = all_projects.filter(meta_data__proposal=True).distinct().order_by("name")
 
     context = {
         "webpage": get_object_or_404(Webpage, pk=51471),
         "projects": projects,
+        "proposals": proposals,
         "research": research,
         "today": date.today(),
-        "header_image": LibraryItem.objects.get(pk=1009391)
+        # "header_image": LibraryItem.objects.get(pk=1009391)
     }
 
     return render(request, "peeide/research.html", context)
@@ -236,6 +239,8 @@ def controlpanel_project_form(request, slug=None, id=None):
             info.meta_data["researcher"] = request.POST.get("researcher")
             info.meta_data["institution"] = request.POST.get("institution")
             info.meta_data["research_topics"] = request.POST.get("research_topics")
+            info.meta_data["proposal"] = True if request.POST.get("proposal") else False
+
             info.save()
 
             messages.success(request, "The information was saved.")
