@@ -217,10 +217,16 @@
           <li class="list-group-item">
             <i class="fal fa-fw fa-quote-right mb-1 mr-1" aria-hidden="true"></i> Citation
             <br>
-            <a class="btn btn-sm btn-primary-outline load-citation" data-toggle="modal" data-target="#citation" href="#citation">
-              APA / BibTeX
+            <a class="btn btn-sm btn-primary-outline load-citation" data-tab="apa" data-toggle="modal" data-target="#citation" href="#citation">
+              APA
             </a>
-            <a class="btn btn-sm btn-primary-outline" href="?format=bibtex&amp;download=true">Add to reference manager</a>
+            <a class="btn btn-sm btn-primary-outline load-citation" data-tab="bib" data-toggle="modal" data-target="#citation" href="#citation">
+              BibTeX
+            </a>
+            <a class="btn btn-sm btn-primary-outline load-citation" data-tab="ris" data-toggle="modal" data-target="#citation" href="#citation">
+              RIS
+            </a>
+            <!-- <a class="btn btn-sm btn-primary-outline" href="?format=bibtex&amp;download=true">Add to reference manager</a> -->
           </li>
 
           {% if info.type.group == "academic" and PROJECT.slug != "ascus2021" %}
@@ -277,7 +283,7 @@
         {% for each in authors_temp %}
           <div class="card mt-4">
             {% if each.image %}
-            <a href="{% url "ascus:participant" each.id %}">
+            <a href="{% url 'ascus:participant' each.id %}">
               <img class="card-img-top" src="{{ each.image.thumbnail.url }}">
             </a>
             {% endif %}
@@ -285,7 +291,7 @@
               <div class="mb-4">
                 <span class="details">
                   {% if each.image %}
-                  <a href="{% url "ascus:participant" each.id %}">
+                  <a href="{% url 'ascus:participant' each.id %}">
                     <strong>{{ each }}</strong>
                   </a>
                   {% else %}
@@ -303,7 +309,7 @@
           </div>
         {% endfor %}
 
-        <form method="post" class="form form-horizontal mt-2" action="{% url "ascus2021:account_vote" %}">
+        <form method="post" class="form form-horizontal mt-2" action="{% url 'ascus2021:account_vote' %}">
           {% csrf_token %}
           <div class="alert alert-warning">
             <h3>Best PTA</h3>
@@ -635,20 +641,58 @@
               </button>
             </div>
             <div class="modal-body">
-
-              <h5>APA</h5>
-              <p>
-                {{ info.get_citation_apa }}
-              </p>
-
+              <nav>
+                <div class="nav nav-pills nav-fill" id="citation-tab" role="tablist">
+                  <a class="nav-item nav-link" data-tab="apa" id="nav-apa-tab" data-toggle="tab" href="#nav-apa" role="tab" aria-controls="nav-apa" aria-selected="false">APA</a>
+                  <a class="nav-item nav-link" data-tab="bib" id="nav-bib-tab" data-toggle="tab" href="#nav-bib" role="tab" aria-controls="nav-bib" aria-selected="false">BibTeX</a>
+                  <a class="nav-item nav-link" data-tab="ris" id="nav-ris-tab" data-toggle="tab" href="#nav-ris" role="tab" aria-controls="nav-ris" aria-selected="false">RIS</a>
+                </div>
+              </nav>
               <hr class="fullwidth-hr">
+              <div class="tab-content">
+                <div class="tab-pane" id="nav-apa" role="tabpanel" aria-labelledby="nav-apa-tab">
+                  <div>{{ info.get_citation_apa }}</div>
 
-              <h5>BibTeX</h5>
-              <code id="bibtext">
-              </code>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary-outline" data-dismiss="modal">Close</button>
+                  <hr class="fullwidth-hr">
+
+                  <div>
+                    <div class="btn btn-primary copy-citation" data-citation="apa">
+                      <i class="fal fa-copy"></i> Copy
+                    </div>
+                    <button type="button" class="btn btn-primary-outline float-right" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+                <div class="tab-pane" id="nav-bib" role="tabpanel" aria-labelledby="nav-bib-tab">
+                  <code id="bibtext"></code>
+
+                  <hr class="fullwidth-hr">
+
+                  <div>
+                    <div class="btn btn-primary copy-citation" data-citation="bib">
+                      <i class="fal fa-copy"></i> Copy
+                    </div>
+                    <a class="btn btn-primary" href="?format=bibtex&amp;download=true">
+                      <i class="fal fa-download"></i> Download
+                    </a>
+                    <button type="button" class="btn btn-primary-outline float-right" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+                <div class="tab-pane" id="nav-ris" role="tabpanel" aria-labelledby="nav-ris-tab">
+                  <code id="ris"></code>
+
+                  <hr class="fullwidth-hr">
+
+                  <div>
+                    <div class="btn btn-primary copy-citation" data-citation="ris">
+                      <i class="fal fa-copy"></i> Copy
+                    </div>
+                    <a class="btn btn-primary" href="?format=bibtex&amp;download=true">
+                      <i class="fal fa-download"></i> Download
+                    </a>
+                    <button type="button" class="btn btn-primary-outline float-right" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -696,10 +740,52 @@
   {% endif %}
 
   <script>
+    let loadedBib = false
+    let loadedRis = false
+
     $(".load-citation").click(function() {
-      $.get("?format=bibtex", function(data) {
-        $("#bibtext").html(data)
-      })
+      if (loadedBib == false) {
+        $.get("?format=bibtex", function(data) {
+          $("#bibtext").html(data)
+          loadedBib = true;
+        })
+      }
+
+      // if (loadedRis == false) {
+      //   $.get("?format=ris", function(data) {
+      //     $("#ris").html(data)
+      //     loadedRis = true;
+      //   })
+      // }
+
+      let tab = $(this).data("tab");
+
+      $("#citation .nav-item, #citation .tab-pane").removeClass("active");
+      $("#nav-" + tab + "-tab, #nav-" + tab).addClass("active");
+    })
+
+    // copy URL of job portal
+    function CopyURL(format) {
+      // Get the text field
+      var jobPortalURL = document.getElementById("citation-" + format);
+
+      // Select the text field
+      jobPortalURL.select();
+      jobPortalURL.setSelectionRange(0, 99999); // For mobile devices //
+
+      // Copy the text inside the text field
+      navigator.clipboard.writeText(jobPortalURL.value);
+    }
+
+    $("#copy-url").click(function() {
+      CopyURL();
+      $("#copy-url i").removeClass("fa-copy").addClass("fa-check")
+      $("#copy-url .text").text("URL copied to clipboard!")
+
+      setTimeout(function(){
+        $("#copy-url i").removeClass("fa-check").addClass("fa-copy")
+        $("#copy-url .text").text("Copy URL")
+      }, 5000);
     })
   </script>
 {% endblock %}
