@@ -44,7 +44,8 @@
       width: calc(100% + 2rem);
     }
 
-    #bibtext {
+    #bib,
+    #ris {
       white-space: pre-wrap;
     }
 
@@ -652,24 +653,26 @@
               <div class="tab-content">
                 <div class="tab-pane" id="nav-apa" role="tabpanel" aria-labelledby="nav-apa-tab">
                   <div>{{ info.get_citation_apa }}</div>
+                  <input hidden type="text" id="input-apa" value="{{ info.get_citation_apa }}">
 
                   <hr class="fullwidth-hr">
 
                   <div>
                     <div class="btn btn-primary copy-citation" data-citation="apa">
-                      <i class="fal fa-copy"></i> Copy
+                      <i class="fal fa-copy"></i> <span class="text">Copy</span>
                     </div>
                     <button type="button" class="btn btn-primary-outline float-right" data-dismiss="modal">Close</button>
                   </div>
                 </div>
                 <div class="tab-pane" id="nav-bib" role="tabpanel" aria-labelledby="nav-bib-tab">
-                  <code id="bibtext"></code>
+                  <code id="bib"></code>
+                  <textarea hidden id="input-bib"></textarea>
 
                   <hr class="fullwidth-hr">
 
                   <div>
                     <div class="btn btn-primary copy-citation" data-citation="bib">
-                      <i class="fal fa-copy"></i> Copy
+                      <i class="fal fa-copy"></i> <span class="text">Copy</span>
                     </div>
                     <a class="btn btn-primary" href="?format=bibtex&amp;download=true">
                       <i class="fal fa-download"></i> Download
@@ -679,14 +682,15 @@
                 </div>
                 <div class="tab-pane" id="nav-ris" role="tabpanel" aria-labelledby="nav-ris-tab">
                   <code id="ris"></code>
+                  <textarea hidden id="input-ris"></textarea>
 
                   <hr class="fullwidth-hr">
 
                   <div>
                     <div class="btn btn-primary copy-citation" data-citation="ris">
-                      <i class="fal fa-copy"></i> Copy
+                      <i class="fal fa-copy"></i> <span class="text">Copy</span>
                     </div>
-                    <a class="btn btn-primary" href="?format=bibtex&amp;download=true">
+                    <a class="btn btn-primary" href="?format=ris&amp;download=true">
                       <i class="fal fa-download"></i> Download
                     </a>
                     <button type="button" class="btn btn-primary-outline float-right" data-dismiss="modal">Close</button>
@@ -746,17 +750,17 @@
     $(".load-citation").click(function() {
       if (loadedBib == false) {
         $.get("?format=bibtex", function(data) {
-          $("#bibtext").html(data)
+          $("#bib, #input-bib").html(data)
           loadedBib = true;
         })
       }
 
-      // if (loadedRis == false) {
-      //   $.get("?format=ris", function(data) {
-      //     $("#ris").html(data)
-      //     loadedRis = true;
-      //   })
-      // }
+      if (loadedRis == false) {
+        $.get("?format=ris", function(data) {
+          $("#ris, #input-ris").html(data)
+          loadedRis = true;
+        })
+      }
 
       let tab = $(this).data("tab");
 
@@ -764,27 +768,30 @@
       $("#nav-" + tab + "-tab, #nav-" + tab).addClass("active");
     })
 
-    // copy URL of job portal
-    function CopyURL(format) {
+    // copy citation
+    function copyCitation(format) {
       // Get the text field
-      var jobPortalURL = document.getElementById("citation-" + format);
+      var citation = document.getElementById("input-" + format);
 
       // Select the text field
-      jobPortalURL.select();
-      jobPortalURL.setSelectionRange(0, 99999); // For mobile devices //
+      citation.select();
+      citation.setSelectionRange(0, 99999); // For mobile devices //
 
       // Copy the text inside the text field
-      navigator.clipboard.writeText(jobPortalURL.value);
+      navigator.clipboard.writeText(citation.value);
     }
 
-    $("#copy-url").click(function() {
-      CopyURL();
-      $("#copy-url i").removeClass("fa-copy").addClass("fa-check")
-      $("#copy-url .text").text("URL copied to clipboard!")
+    $(".copy-citation").click(function() {
+      let button = $(this)
+      let format = button.data("citation")
+      copyCitation(format);
+
+      button.find("i").removeClass("fa-copy").addClass("fa-check")
+      button.find(".text").text("Copied to clipboard")
 
       setTimeout(function(){
-        $("#copy-url i").removeClass("fa-check").addClass("fa-copy")
-        $("#copy-url .text").text("Copy URL")
+        button.find("i").removeClass("fa-check").addClass("fa-copy")
+        button.find(".text").text("Copy")
       }, 5000);
     })
   </script>

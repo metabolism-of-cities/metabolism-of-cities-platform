@@ -303,6 +303,12 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
             if "download" in request.GET:
                 response["Content-Disposition"] = f"attachment; filename=\"{info.name}.bib\""
             return response
+        elif request.GET["format"] == "ris":
+            response = HttpResponse(info.get_citation_ris, content_type="text/plain")
+            if "download" in request.GET:
+                response["Content-Disposition"] = f"attachment; filename=\"{info.name}.ris\""
+            return response
+
 
     section = "library"
     url_processing = None

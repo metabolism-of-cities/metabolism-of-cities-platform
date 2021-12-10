@@ -1288,6 +1288,80 @@ class LibraryItem(Record):
 
         return citation
 
+    # def get_type_ris(self):
+    #     if self.type.name == "Artwork":
+    #         return "ART"
+    #     else:
+    #         return "JOUR"
+
+    @property
+    def get_citation_ris(self):
+        item_type = "JOUR"
+        author_string = ""
+        journal_string = ""
+        doi_string = ""
+        url_string = ""
+
+        # type_ris = get_type_ris(self.type.name)
+
+        if " and " in self.author_list:
+            authors = self.author_list.split(" and ")
+            for each in authors:
+                if "," in each:
+                    firstname = each.split(",", 1)[1]
+                    lastname = each.split(",", 1)[0]
+                else:
+                    firstname = each.rpartition(" ")[1]
+                    lastname = each.rpartition(" ")[2]
+                author = f"AU -{firstname} {lastname}\n"
+                author_string = author_string + author
+        elif ";" in self.author_list:
+            authors = self.author_list.split(";")
+            for each in authors:
+                if "," in each:
+                    firstname = each.split(",", 1)[1]
+                    lastname = each.split(",", 1)[0]
+                else:
+                    firstname = each.rpartition(" ")[1]
+                    lastname = each.rpartition(" ")[2]
+                author = f"AU -{firstname} {lastname}\n"
+                author_string = author_string + author
+        elif "," in self.author_list:
+            authors = self.author_list.split(",")
+            if len(authors) == 2:
+                # If there are only two names, we assume it's one person in the Doe, Jane format and
+                # we will format as "Jane Doe"
+                author_string = f"AU -{authors[1]} {authors[0]}\n"
+            else:
+                # If we have > 1 author, then we list the last names of all involved
+                for each in authors:
+                    firstname = each.rpartition(" ")[1]
+                    lastname = each.rpartition(" ")[2]
+                    author = f"AU -{firstname} {lastname}\n"
+                    author_string = author_string + author
+
+        if self.publisher():
+            if self.type.name == "Journal Article":
+                journal_string = f"T2 - {self.publisher()}\n"
+            else:
+                journal_string = f"PB - {self.publisher()}\n"
+        if self.url:
+            url_string = f"LK - {self.url}\n"
+        if self.doi:
+            doi_string = f"DO - {self.doi}\n"
+        return (
+            f"TY - {item_type}\n"
+            f"TI - {self.name}\n"
+            f"PY - {self.year}\n"
+            f"{author_string}"
+            f"{journal_string}"
+            f"{url_string}"
+            f"{doi_string}"
+            f"ER - "
+        )
+
+        return citation
+
     def embed(self):
         if "youtu" in self.url:
             url = self.url
