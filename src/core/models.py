@@ -1072,6 +1072,7 @@ class LibraryItemType(models.Model):
     )
     group = models.CharField(max_length=20, choices=GROUP, null=True, blank=True)
     bibtex_name = models.CharField(max_length=100, null=True, blank=True)
+    ris_name = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -1288,21 +1289,13 @@ class LibraryItem(Record):
 
         return citation
 
-    # def get_type_ris(self):
-    #     if self.type.name == "Artwork":
-    #         return "ART"
-    #     else:
-    #         return "JOUR"
 
     @property
     def get_citation_ris(self):
-        item_type = "JOUR"
         author_string = ""
         journal_string = ""
         doi_string = ""
         url_string = ""
-
-        # type_ris = get_type_ris(self.type.name)
 
         if " and " in self.author_list:
             authors = self.author_list.split(" and ")
@@ -1350,7 +1343,7 @@ class LibraryItem(Record):
         if self.doi:
             doi_string = f"DO - {self.doi}\n"
         return (
-            f"TY - {item_type}\n"
+            f"TY - {self.type.ris_name}\n"
             f"TI - {self.name}\n"
             f"PY - {self.year}\n"
             f"{author_string}"
