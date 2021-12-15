@@ -621,13 +621,13 @@
           Measuring circularity is a data heavy exercise. Numerous datasets were collected and visualised throughout the sector-wide circularity assessment process. To synthesise these findings, a Sankey diagram illustrates how material flows from the studied economic sector are circulating from one lifecycle stage to another. The height of each line is proportional to the weight of the flow. This diagram therefore helps to quickly have an overview of all the materials flows that compose the sector and their respective shares. The flows that are coloured in light blue in the Sankey diagram, are return flows. This means that they flow in the opposite direction of the lifecycle stages and are subjected to reuse, redistribution, or remanufacturing. Their size relative to the others is a good indication for the materials' circularity.
         </p>
 
+        <div id="sankey">{{ sankey|safe }}</div>
+
         {% if report.sankey_description_html %}
           {{ report.sankey_description_html|safe }}
         {% else %}
           <span class="question-number bg-dark text-light rounded px-2 mr-2">14</span>
         {% endif %}
-
-        <div id="sankey">{{ sankey|safe }}</div>
       </section>
 
       <section id="matrix">
