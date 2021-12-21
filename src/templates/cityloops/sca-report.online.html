@@ -161,7 +161,11 @@
           <img class="img-fluid" src="https://i.imgur.com/ARgcRYc.png">
         </div>
       </div>
-      <img class="cover-image rounded" src="{{ space.get_large_photo }}">
+      {% if space.slug == "roskilde" %}
+        <img class="cover-image rounded" src="https://cityloops.metabolismofcities.org/media/records/Roskilde_ratusz_mpazdziora.large.jpg">
+      {% else %}
+        <img class="cover-image rounded" src="{{ space.get_large_photo }}">
+      {% endif %}
     </div>
 
     <div class="report-content">
@@ -755,6 +759,9 @@
           {% if report.actors_dataset %}
             <li><a href="{% url 'cityloops:library_item' report.actors_dataset.id  %}">{{ report.actors_dataset }}</a></li>
           {% endif %}
+          <li>
+            Header image: <a href="https://commons.wikimedia.org/wiki/File:Roskilde_ratusz_mpazdziora.jpg">Mariusz Paździora</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>, via Wikimedia Commons
+          </li>
         </ul>
       </section>
     </div>

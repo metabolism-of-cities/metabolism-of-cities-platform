@@ -195,7 +195,11 @@
       <br>
       <span class="city-title">{{ space }}</span>
     </div>
-    <img class="cover-image" src="{{ space.get_large_photo }}">
+    {% if space.slug == "roskilde" %}
+      <img class="cover-image" src="https://cityloops.metabolismofcities.org/media/records/Roskilde_ratusz_mpazdziora.large.jpg">
+    {% else %}
+      <img class="cover-image" src="{{ space.get_large_photo }}">
+    {% endif %}
 
     <div class="cityloops-background"></div>
     <img class="cityloops-logo" src="https://metabolismofcities.org/media/records/CityLoops_Logo.png">
@@ -709,6 +713,15 @@
       {% elif space.slug == "sevilla" and sector == "biomass" %}
         <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/211027_Sevilla_Biomass_Sankey_v1.large.png">
         <p><a href="https://cityloops.metabolismofcities.org/library/1009190/">Data source</a></p>
+
+      {% elif space.slug == "hoje-taastrup" and sector == "construction" %}
+        <img class="img-fluid" src="https://i.imgur.com/FnjYe1g.png">
+        <p><a href="">Data source</a></p>
+
+      {% elif space.slug == "roskilde" and sector == "construction" %}
+        <img class="img-fluid" src="https://i.imgur.com/tCLNP6g.png">
+        <p><a href="">Data source</a></p>
+
       {% endif %}
     </section>
 
@@ -840,6 +853,11 @@
         {% endif %}
         {% if report.actors_dataset %}
           <li><a href="{% url 'cityloops:library_item' report.actors_dataset.id  %}">{{ report.actors_dataset }}</a></li>
+        {% endif %}
+        {% if space.slug == "roskilde" %}
+          <li>
+            Header image: <a href="https://commons.wikimedia.org/wiki/File:Roskilde_ratusz_mpazdziora.jpg">Mariusz Paździora</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>, via Wikimedia Commons
+          </li>
         {% endif %}
       </ul>
     </section>
