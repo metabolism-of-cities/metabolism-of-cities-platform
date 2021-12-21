@@ -504,6 +504,34 @@
             </div>
           </div>
         </div>
+      {% elif space.slug == "roskilde" %}
+        <img class="img-fluid rounded-top" src="https://cityloops.metabolismofcities.org/media/records/roskilde-land-use-map.large.png">
+        <div class="border border-top-0 rounded-bottom p-3">
+          <div class="row">
+            <div class="col-4">
+              <ul class="fa-ul mb-0">
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #008000"></i></span> Area for public purposes</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #0000ff"></i></span> Business area</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff0000"></i></span> Center</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffa500"></i></span> Land area</li>
+              </ul>
+            </div>
+            <div class="col-4">
+              <ul class="fa-ul mb-0">
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #800080"></i></span> Residential area</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #a52a2a"></i></span> Mixed housing and business</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffc0cb"></i></span> Technical facilities</li>
+              </ul>
+            </div>
+            <div class="col-4">
+              <ul class="fa-ul mb-0">
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #008080"></i></span> Recreational area</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #800000"></i></span> Vacation home area</li>
+                <li><span class="fa-li"><i class="fas fa-circle" style="color: #000080"></i></span> Other</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       {% elif report.land_use_dataset %}
         {% if report.land_use_dataset.type.name == "Image" %}
           <img src="{{ report.land_use_dataset.image.url }}" class="img-fluid">
