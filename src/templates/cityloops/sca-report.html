@@ -709,12 +709,6 @@
 
       <div class="d-print-none" id="sankey">{{ sankey|safe }}</div>
 
-      {% if report.sankey_description_html %}
-        {{ report.sankey_description_html|safe }}
-      {% else %}
-        <span class="question-number bg-dark text-light rounded px-2 mr-2">14</span>
-      {% endif %}
-
       {% if space.slug == "mikkeli" and sector == "biomass" %}
         <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/210629_Mikkeli_Biomass_Sankey_v1.large.png">
         <p><a href="https://cityloops.metabolismofcities.org/library/997499/">Data source</a></p>
@@ -749,7 +743,12 @@
       {% elif space.slug == "roskilde" and sector == "construction" %}
         <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/211221_Roskilde_construction_Sankey_v1.large.png">
         <p><a href="https://cityloops.metabolismofcities.org/library/1009536/">Data source</a></p>
+      {% endif %}
 
+      {% if report.sankey_description_html %}
+        {{ report.sankey_description_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">14</span>
       {% endif %}
     </section>
 
