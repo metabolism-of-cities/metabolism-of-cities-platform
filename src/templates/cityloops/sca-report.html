@@ -397,151 +397,145 @@
     <section>
       <h2>Land use</h2>
 
-      {% if space.slug == "porto" %}
-        <img class="img-fluid rounded-top" src="https://i.imgur.com/BFShwFF.png">
-
-        <div class="border border-top-0 rounded-bottom p-3">
-          <div class="row">
-            <div class="col-4">
-              <ul class="fa-ul mb-0">
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #e41a1c"></i></span> Historic Space</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #377eb8"></i></span> Urbanised Space</li>
-              </ul>
-            </div>
-            <div class="col-4">
-              <ul class="fa-ul mb-0">
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #4daf4a"></i></span> Green Space</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #984ea3"></i></span> Industrial Space</li>
-              </ul>
-            </div>
-            <div class="col-4">
-              <ul class="fa-ul mb-0">
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Special Use Space - Equipment and Infrastructure</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff33"></i></span> Not Assigned</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      {% elif space.slug == "mikkeli" %}
-        <img class="img-fluid rounded-top" src="https://i.imgur.com/Cto4brf.png">
-        <div class="border border-top-0 rounded-bottom p-3">
-          <div class="row">
-            <div class="col-4">
-              <ul class="fa-ul mb-0">
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #e41a1c"></i></span> Agricultural areas</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Artificial surfaces</li>
-              </ul>
-            </div>
-            <div class="col-4">
-              <ul class="fa-ul mb-0">
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #4daf4a"></i></span> Forests</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #984ea3"></i></span> Roads</li>
-              </ul>
-            </div>
-            <div class="col-4">
-              <ul class="fa-ul mb-0">
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #377eb8"></i></span> Water bodies</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff33"></i></span> Wetlands</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      {% elif space.slug == "apeldoorn" %}
-        <img class="img-fluid rounded-top" src="https://i.imgur.com/CElb173.png">
-        <div class="border border-top-0 rounded-bottom p-3">
-          <div class="row">
-            <div class="col-4">
-              <ul class="fa-ul mb-0">
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #144d58"></i></span> Agriculture</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #a6cee3"></i></span> Built area</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #33a02c"></i></span> Dry natural terrain</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #b2df8a"></i></span> Forest</li>
-              </ul>
-            </div>
-            <div class="col-4">
-              <ul class="fa-ul mb-0">
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #e31a1c"></i></span> Greenhouse horticulture</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #fb9a99"></i></span> Industrial area</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Main road</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #fdbf6f"></i></span> Railway</li>
-              </ul>
-            </div>
-            <div class="col-4">
-              <ul class="fa-ul mb-0">
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #6a3d9a"></i></span> Recreation</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #cab2d6"></i></span> Semi-built area</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #b15928"></i></span> Water</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff99"></i></span> Wet natural terrain</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      {% elif space.slug == "hoje-taastrup" %}
-        <img class="img-fluid rounded-top" src="https://cityloops.metabolismofcities.org/media/records/hoje-taastrup-land-use-map.large.png">
-        <div class="border border-top-0 rounded-bottom p-3">
-          <div class="row">
-            <div class="col-4">
-              <ul class="fa-ul mb-0">
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #008000"></i></span> Area for public purposes</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #0000ff"></i></span> Business area</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff0000"></i></span> Center</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffa500"></i></span> Land area</li>
-              </ul>
-            </div>
-            <div class="col-4">
-              <ul class="fa-ul mb-0">
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #800080"></i></span> Residential area</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #a52a2a"></i></span> Mixed housing and business</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffc0cb"></i></span> Technical facilities</li>
-              </ul>
-            </div>
-            <div class="col-4">
-              <ul class="fa-ul mb-0">
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #008080"></i></span> Recreational area</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #800000"></i></span> Vacation home area</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #000080"></i></span> Other</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      {% elif space.slug == "roskilde" %}
-        <img class="img-fluid rounded-top" src="https://cityloops.metabolismofcities.org/media/records/roskilde-land-use-map.large.png">
-        <div class="border border-top-0 rounded-bottom p-3">
-          <div class="row">
-            <div class="col-4">
-              <ul class="fa-ul mb-0">
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #008000"></i></span> Area for public purposes</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #0000ff"></i></span> Business area</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff0000"></i></span> Center</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffa500"></i></span> Land area</li>
-              </ul>
-            </div>
-            <div class="col-4">
-              <ul class="fa-ul mb-0">
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #800080"></i></span> Residential area</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #a52a2a"></i></span> Mixed housing and business</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffc0cb"></i></span> Technical facilities</li>
-              </ul>
-            </div>
-            <div class="col-4">
-              <ul class="fa-ul mb-0">
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #008080"></i></span> Recreational area</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #800000"></i></span> Vacation home area</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #000080"></i></span> Other</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      {% elif report.land_use_dataset %}
+      {% if report.land_use_dataset %}
         {% if report.land_use_dataset.type.name == "Image" %}
           <img src="{{ report.land_use_dataset.image.url }}" class="img-fluid">
-          {% if report.land_use_dataset.is_part_of %}
-            <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.is_part_of.id %}">Data source</a></p>
-          {% else %}
-            <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.id %}">Data source</a></p>
+
+          {% if space.slug == "porto" %}
+            <div class="border border-top-0 rounded-bottom p-3">
+              <div class="row">
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #e41a1c"></i></span> Historic Space</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #377eb8"></i></span> Urbanised Space</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #4daf4a"></i></span> Green Space</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #984ea3"></i></span> Industrial Space</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Special Use Space - Equipment and Infrastructure</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff33"></i></span> Not Assigned</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {% elif space.slug == "mikkeli" %}
+            <div class="border border-top-0 rounded-bottom p-3">
+              <div class="row">
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #e41a1c"></i></span> Agricultural areas</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Artificial surfaces</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #4daf4a"></i></span> Forests</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #984ea3"></i></span> Roads</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #377eb8"></i></span> Water bodies</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff33"></i></span> Wetlands</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {% elif space.slug == "apeldoorn" %}
+            <div class="border border-top-0 rounded-bottom p-3">
+              <div class="row">
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #144d58"></i></span> Agriculture</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #a6cee3"></i></span> Built area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #33a02c"></i></span> Dry natural terrain</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #b2df8a"></i></span> Forest</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #e31a1c"></i></span> Greenhouse horticulture</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #fb9a99"></i></span> Industrial area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Main road</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #fdbf6f"></i></span> Railway</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #6a3d9a"></i></span> Recreation</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #cab2d6"></i></span> Semi-built area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #b15928"></i></span> Water</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff99"></i></span> Wet natural terrain</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {% elif space.slug == "hoje-taastrup" %}
+            <div class="border border-top-0 rounded-bottom p-3">
+              <div class="row">
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #008000"></i></span> Area for public purposes</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #0000ff"></i></span> Business area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff0000"></i></span> Center</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffa500"></i></span> Land area</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #800080"></i></span> Residential area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #a52a2a"></i></span> Mixed housing and business</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffc0cb"></i></span> Technical facilities</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #008080"></i></span> Recreational area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #800000"></i></span> Vacation home area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #000080"></i></span> Other</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {% elif space.slug == "roskilde" %}
+            <div class="border border-top-0 rounded-bottom p-3">
+              <div class="row">
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #008000"></i></span> Area for public purposes</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #0000ff"></i></span> Business area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff0000"></i></span> Center</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffa500"></i></span> Land area</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #800080"></i></span> Residential area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #a52a2a"></i></span> Mixed housing and business</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffc0cb"></i></span> Technical facilities</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #008080"></i></span> Recreational area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #800000"></i></span> Vacation home area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #000080"></i></span> Other</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           {% endif %}
+
+          <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.is_part_of.id %}">Data source</a></p>
         {% else %}
           <iframe class="libraryitem mb-4" src="/library/preview/{{ report.land_use_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
+          <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.id %}">Data source</a></p>
         {% endif %}
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">6A</span>
