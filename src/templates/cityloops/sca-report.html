@@ -532,7 +532,11 @@
             </div>
           {% endif %}
 
-          <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.is_part_of.id %}">Data source</a></p>
+          {% if report.land_use_dataset.is_part_of %}
+            <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.is_part_of.id %}">Data source</a></p>
+          {% else %}
+            <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.id %}">Data source</a></p>
+          {% endif %}
         {% else %}
           <iframe class="libraryitem mb-4" src="/library/preview/{{ report.land_use_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
           <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.id %}">Data source</a></p>
