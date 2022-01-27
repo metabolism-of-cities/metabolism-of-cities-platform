@@ -9,6 +9,7 @@
   <link rel="canonical" href="{{ info.get_full_url }}" />
   <!-- When we have fully figured all this out we can consider getting it indexed. Ensure there is a canonical link as this page is generated with various URLs -->
   <meta name="robots" content="noindex">
+
 {% endblock %}
 
 {% block css %}
@@ -36,6 +37,16 @@
 
     audio {
       width: 100%;
+    }
+
+    .fullwidth-hr {
+      margin-left: -1rem;
+      width: calc(100% + 2rem);
+    }
+
+    #bib,
+    #ris {
+      white-space: pre-wrap;
     }
 
     {% if info.is_deleted %}
@@ -85,11 +96,6 @@
       <div class="border rounded bg-white my-4">
         <ul class="list-group list-group-flush">
           <li class="list-group-item table-item">
-            <div><i class="fal fa-fw fa-fingerprint mr-1"></i> ID</div>
-            <div class="text-monospace"><code>{{ info.id }}</code></div>
-          </li>
-
-          <li class="list-group-item table-item">
             <div><i class="fal fa-fw fa-{{ info.type.icon }} mr-1"></i>
               {% if PROJECT.slug == "peeide" %}Reference{% endif %}
               Type 
@@ -125,7 +131,7 @@
                 <br>
                 {% if info.authors.all %}
                   {% for each in info.authors %}
-                    <a class="btn btn-sm btn-primary-outline mt-1" href="">{{ each }}</a>
+                    {{ each }}{% if not forloop.last %}, {% endif %}
                   {% endfor %}
                 {% else %}
                   {{ info.get_author_citation }}
@@ -212,9 +218,16 @@
           <li class="list-group-item">
             <i class="fal fa-fw fa-quote-right mb-1 mr-1" aria-hidden="true"></i> Citation
             <br>
-            <a class="badge badge-secondary" data-toggle="modal" data-target="#citation" href="#citation">
-              View/download citation
+            <a class="btn btn-sm btn-primary-outline load-citation" data-tab="apa" data-toggle="modal" data-target="#citation" href="#citation">
+              APA
             </a>
+            <a class="btn btn-sm btn-primary-outline load-citation" data-tab="bib" data-toggle="modal" data-target="#citation" href="#citation">
+              BibTeX
+            </a>
+            <a class="btn btn-sm btn-primary-outline load-citation" data-tab="ris" data-toggle="modal" data-target="#citation" href="#citation">
+              RIS
+            </a>
+            <!-- <a class="btn btn-sm btn-primary-outline" href="?format=bibtex&amp;download=true">Add to reference manager</a> -->
           </li>
 
           {% if info.type.group == "academic" and PROJECT.slug != "ascus2021" %}
@@ -243,6 +256,11 @@
             </div>
           </li>
           {% endif %}
+
+          <li class="list-group-item table-item">
+            <div><i class="fal fa-fw fa-fingerprint mr-1"></i> ID</div>
+            <div class="text-monospace"><code>{{ info.id }}</code></div>
+          </li>
         </ul>
       </div>
 
@@ -266,7 +284,7 @@
         {% for each in authors_temp %}
           <div class="card mt-4">
             {% if each.image %}
-            <a href="{% url "ascus:participant" each.id %}">
+            <a href="{% url 'ascus:participant' each.id %}">
               <img class="card-img-top" src="{{ each.image.thumbnail.url }}">
             </a>
             {% endif %}
@@ -274,7 +292,7 @@
               <div class="mb-4">
                 <span class="details">
                   {% if each.image %}
-                  <a href="{% url "ascus:participant" each.id %}">
+                  <a href="{% url 'ascus:participant' each.id %}">
                     <strong>{{ each }}</strong>
                   </a>
                   {% else %}
@@ -292,7 +310,7 @@
           </div>
         {% endfor %}
 
-        <form method="post" class="form form-horizontal mt-2" action="{% url "ascus2021:account_vote" %}">
+        <form method="post" class="form form-horizontal mt-2" action="{% url 'ascus2021:account_vote' %}">
           {% csrf_token %}
           <div class="alert alert-warning">
             <h3>Best PTA</h3>
@@ -615,7 +633,7 @@
       {% endwith %}
 
       <div class="modal" tabindex="-1" id="citation">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Citation</h5>
@@ -624,14 +642,61 @@
               </button>
             </div>
             <div class="modal-body">
-              <p>
-                {{ info.get_citation_apa }}
-              </p>
-            </div>
-            <div class="modal-footer">
-              <a class="btn btn-primary" href="?format=bibtex&amp;download=true">Download BibteX</a>
-              <a class="btn btn-primary" href="?format=bibtex">View BibTeX</a>
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <nav>
+                <div class="nav nav-pills nav-fill" id="citation-tab" role="tablist">
+                  <a class="nav-item nav-link" data-tab="apa" id="nav-apa-tab" data-toggle="tab" href="#nav-apa" role="tab" aria-controls="nav-apa" aria-selected="false">APA</a>
+                  <a class="nav-item nav-link" data-tab="bib" id="nav-bib-tab" data-toggle="tab" href="#nav-bib" role="tab" aria-controls="nav-bib" aria-selected="false">BibTeX</a>
+                  <a class="nav-item nav-link" data-tab="ris" id="nav-ris-tab" data-toggle="tab" href="#nav-ris" role="tab" aria-controls="nav-ris" aria-selected="false">RIS</a>
+                </div>
+              </nav>
+              <hr class="fullwidth-hr">
+              <div class="tab-content">
+                <div class="tab-pane" id="nav-apa" role="tabpanel" aria-labelledby="nav-apa-tab">
+                  <div>{{ info.get_citation_apa }}</div>
+                  <input hidden type="text" id="input-apa" value="{{ info.get_citation_apa }}">
+
+                  <hr class="fullwidth-hr">
+
+                  <div>
+                    <div class="btn btn-primary copy-citation" data-citation="apa">
+                      <i class="fal fa-copy"></i> <span class="text">Copy</span>
+                    </div>
+                    <button type="button" class="btn btn-primary-outline float-right" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+                <div class="tab-pane" id="nav-bib" role="tabpanel" aria-labelledby="nav-bib-tab">
+                  <code id="bib"></code>
+                  <textarea hidden id="input-bib"></textarea>
+
+                  <hr class="fullwidth-hr">
+
+                  <div>
+                    <div class="btn btn-primary copy-citation" data-citation="bib">
+                      <i class="fal fa-copy"></i> <span class="text">Copy</span>
+                    </div>
+                    <a class="btn btn-primary" href="?format=bibtex&amp;download=true">
+                      <i class="fal fa-download"></i> Download
+                    </a>
+                    <button type="button" class="btn btn-primary-outline float-right" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+                <div class="tab-pane" id="nav-ris" role="tabpanel" aria-labelledby="nav-ris-tab">
+                  <code id="ris"></code>
+                  <textarea hidden id="input-ris"></textarea>
+
+                  <hr class="fullwidth-hr">
+
+                  <div>
+                    <div class="btn btn-primary copy-citation" data-citation="ris">
+                      <i class="fal fa-copy"></i> <span class="text">Copy</span>
+                    </div>
+                    <a class="btn btn-primary" href="?format=ris&amp;download=true">
+                      <i class="fal fa-download"></i> Download
+                    </a>
+                    <button type="button" class="btn btn-primary-outline float-right" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -672,6 +737,62 @@
 
 {% block footer %}
   {% if info.data.all %}
+    <script>
+      let unit = "{{ unit.unit__name|default:'various units' }}";
+    </script>
     {% include "_chart.footer.html" %}
   {% endif %}
+
+  <script>
+    let loadedBib = false
+    let loadedRis = false
+
+    $(".load-citation").click(function() {
+      if (loadedBib == false) {
+        $.get("?format=bibtex", function(data) {
+          $("#bib, #input-bib").html(data)
+          loadedBib = true;
+        })
+      }
+
+      if (loadedRis == false) {
+        $.get("?format=ris", function(data) {
+          $("#ris, #input-ris").html(data)
+          loadedRis = true;
+        })
+      }
+
+      let tab = $(this).data("tab");
+
+      $("#citation .nav-item, #citation .tab-pane").removeClass("active");
+      $("#nav-" + tab + "-tab, #nav-" + tab).addClass("active");
+    })
+
+    // copy citation
+    function copyCitation(format) {
+      // Get the text field
+      var citation = document.getElementById("input-" + format);
+
+      // Select the text field
+      citation.select();
+      citation.setSelectionRange(0, 99999); // For mobile devices //
+
+      // Copy the text inside the text field
+      navigator.clipboard.writeText(citation.value);
+    }
+
+    $(".copy-citation").click(function() {
+      let button = $(this)
+      let format = button.data("citation")
+      copyCitation(format);
+
+      button.find("i").removeClass("fa-copy").addClass("fa-check")
+      button.find(".text").text("Copied to clipboard")
+
+      setTimeout(function(){
+        button.find("i").removeClass("fa-check").addClass("fa-copy")
+        button.find(".text").text("Copy")
+      }, 5000);
+    })
+  </script>
 {% endblock %}

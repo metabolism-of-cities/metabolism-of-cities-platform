@@ -12,10 +12,9 @@
 
   <link class="favicon" rel="shortcut icon" sizes="126x126" href="{% static 'img/favicon/favicon.png' %}">
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-     integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+     integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
      crossorigin=""/>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
   <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-VhBcF/php0Z/P5ZxlxaEx1GwqTQVIBu4G4giRWxTKOCjTxsPFETUDdVL5B6vYvOt" crossorigin="anonymous">
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
@@ -27,17 +26,34 @@
       -webkit-print-color-adjust:exact;
     }
 
+    p {
+      text-align: justify;
+      text-justify: inter-word;
+    }
+
     @media all {
+      @page {
+        size: unset !important;
+      }
+
       body {
         min-width: unset !important;
         background-color: #fff !important;
       }
 
+      img {
+        max-width: 100%;
+      }
+
+      .page-break-{{ space.slug }}-{{ sector }} {
+        page-break-after: always;
+      }
+
       .cover-page {
         page-break-after: always;
         position: relative;
-        width: 100vw;
-        height: 100vh;
+        width: 100vw !important;
+        height: 100vh !important;
       }
 
       .cover-title {
@@ -49,26 +65,26 @@
 
       .report-title {
         background-color: #004d76;
-        font-size: 2.75rem;
+        font-size: 1.75rem;
         padding: 8px;
-        line-height: 5.5rem;
+        line-height: 3.5rem;
       }
 
       .city-title {
         background-color: #00b6ed;
-        font-size: 3rem;
+        font-size: 2rem;
         padding: 8px;
-        line-height: 5.5rem;
+        line-height: 4rem;
       }
 
       .cover-image {
-        width: 100vw;
-        height: 100vh;
+        width: 100vw !important;
+        height: 100vh !important;
         position: absolute;
         top: 0;
         left: 0;
-        object-fit: cover;
         z-index: -1;
+        object-fit: cover;
       }
 
       .cityloops-logo {
@@ -101,13 +117,14 @@
       }
 
       .report-content {
-        padding: 5rem;
-        max-width: 297mm;
+        /*padding: 3rem;*/
+        width: 100%;
       }
 
       .context-map {
-        height: 200px;
+        height: 150px;
         width: 100%;
+        max-width: 150px;
         border-radius: .25rem;
       }
 
@@ -117,8 +134,12 @@
       }
 
       iframe {
-        max-width: calc(297mm - 12rem);
+        max-width: calc(210mm - 6rem - 2px);
         height: 500px;
+      }
+
+      #sankey {
+        width: 100%;
       }
 
       .sankey-link {
@@ -130,24 +151,37 @@
       }
 
       .table td.bg-red {
-        background-color: red !important;
+        background-color: #B57272 !important;
       }
 
       .table td.bg-green {
-        background-color: green !important;
+        background-color: #87C291 !important;
       }
 
       .table td.bg-orange {
-        background-color: orange !important;
+        background-color: #D9946C !important;
       }
 
       .table td.bg-blue {
-        background-color: blue !important;
+        background-color: #b2c3ef !important;
       }
 
       .table td.bg-yellow {
-        background-color: gold !important;
+        background-color: #e6d384 !important;
       }
+    }
+
+    h1 {
+      font-size: 1.75rem !important;
+    }
+
+    h2 {
+      font-size: 1.5rem !important;
+    }
+
+    h3,
+    h4 {
+      font-size: 1.25rem !important;
     }
   </style>
 </head>
@@ -161,7 +195,11 @@
       <br>
       <span class="city-title">{{ space }}</span>
     </div>
-    <img class="cover-image" src="{{ space.get_large_photo }}">
+    {% if space.slug == "roskilde" %}
+      <img class="cover-image" src="https://cityloops.metabolismofcities.org/media/records/Roskilde_ratusz_mpazdziora.large.jpg">
+    {% else %}
+      <img class="cover-image" src="{{ space.get_large_photo }}">
+    {% endif %}
 
     <div class="cityloops-background"></div>
     <img class="cityloops-logo" src="https://metabolismofcities.org/media/records/CityLoops_Logo.png">
@@ -174,11 +212,11 @@
     <section id="introduction">
       <h1>Introduction</h1>
 
-      <p>
+      <p class="font-italic">
         The EU Horizon 2020 funded CityLoops project focuses on closing the material loops of two central sectors  of any city in terms of material flows, societal needs and employment, namely the construction and biomass sectors. Due to their sizes, they represent a considerable opportunity for cities to transform their metabolism and economy towards a more circular state.
       </p>
 
-      <p>
+      <p class="font-italic">
         Within this project, seven European cities, amongst those also the City of {{ space.name }} are planning to implement demonstration actions to kickstart their circularity journey. To better understand what the current circularity status quo is, as well as the impact of these actions, and the efforts needed to transform their sector, a <a href="https://cityloops.metabolismofcities.org/media/uploads/libraryitem/report/CityLoops_WP4_D4.3_Sector-Wide_Circularity_Assessment_Method.pdf">Sector-Wide Circularity Assessment</a> method was developed. This method combines a circular city and circular sector definition, a material flow and stock accounting method, as well as circularity indicators. The sector itself was defined in terms of a number of representative materials that make up a large share of the sector and associated economic activities. The {{ sector }} sector is made up of {% if sector == "construction" %}11{% elif sector == "biomass" %}12{% endif %} materials, depicted as icons here, which were studied along the entirety of their supply chains. Altogether, these elements help to set a solid knowledge and analytical foundation to develop future circularity roadmaps and action plans.
       </p>
 
@@ -211,19 +249,23 @@
         {% endif%}
       </div>
 
-      <p>
+      <p class="font-italic">
         The assessment was carried out by the cities themselves after receiving extensive training in the form of courses on data collection (<a href="https://cityloops.metabolismofcities.org/courses/course-1a-data-collection-for-circularity-assessment-of-construction-sector-wp2/">construction</a> and <a href="https://cityloops.metabolismofcities.org/courses/course-1b-data-collection-for-circularity-assessment-of-biomass-sector-wp3/">biomass</a>) and <a href="https://cityloops.metabolismofcities.org/courses/course-2-data-processing-and-analysis-for-sector-wide-circularity-assessment-wp23/">data processing</a>. Numerous additional insights can be found in the individual <a href="https://cityloops.metabolismofcities.org/">Data Hubs</a> of each city.
       </p>
 
-      <p>
+      <p class="font-italic">
         This current Sector-Wide Circularity Assessment report provides contextual information on the city and the economic sector under study. It then illustrates how circular these sectors are through circularity indicators and a Sankey diagram. Finally, it analyses and interprets the results, presents the limitations from the data used and offers recommendations about how to make this sector more circular.
+      </p>
+
+      <p class="font-italic text-primary">
+        (* The italic texts in this report were written by <a href="https://metabolismofcities.org/">Metabolism of Cities</a>' Aristide Athanassiadis and Carolin Bellstedt. They provide relevant general information and serve as connecting elements of the single report parts.)
       </p>
     </section>
 
     <section id="urban-context">
       <h1>Urban context</h1>
 
-      <p>
+      <p class="font-italic">
         To contextualise the results of the sector-wide circularity assessment, this section provides population and land use information data of the city. In addition, population and area of the city under study, as well as its corresponding NUTS3, NUTS2 and country were included. Data for these scales were added to better understand how relevant and important the approximations are when downscaling data from these scales to a city level.
       </p>
 
@@ -243,7 +285,7 @@
       </div>
       <div class="row mb-4">
         <div class="col-3">
-          <h4>{{ space }}</h4>
+          <strong>{{ space }}</strong>
           <div>
             <i class="fal fa-users fa-fw mr-2"></i>
             {% if report.space_population %}
@@ -263,7 +305,7 @@
         </div>
 
         <div class="col-3">
-          <h4>{{ nuts3 }}</h4>
+          <strong>{{ nuts3 }}</strong>
           <div>
             <i class="fal fa-users fa-fw mr-2"></i>
             {% if report.nuts3_population %}
@@ -283,7 +325,7 @@
         </div>
 
         <div class="col-3">
-          <h4>{{ nuts2 }}</h4>
+          <strong>{{ nuts2 }}</strong>
           <div>
             <i class="fal fa-users fa-fw mr-2"></i>
             {% if report.nuts2_population %}
@@ -303,7 +345,7 @@
         </div>
 
         <div class="col-3">
-          <h4>{{ country }}</h4>
+          <strong>{{ country }}</strong>
           <div>
             <i class="fal fa-users fa-fw mr-2"></i>
             {% if report.country_population %}
@@ -324,11 +366,18 @@
       </div>
     </section>
 
+    <div class="page-break-apeldoorn-biomass page-break-apeldoorn-construction page-break-mikkeli-biomass page-break-mikkeli-construction page-break-porto-biomass page-break-sevilla-biomass page-break-sevilla-construction page-break-hoje-taastrup-construction page-break-roskilde-construction"></div>
+
     <section>
       <h2>Population of {{ space }}</h2>
       {% if report.population_dataset %}
         {% if report.population_dataset.type.name == "Image" %}
           <img src="{{ report.population_dataset.image.url }}" class="img-fluid">
+          {% if report.population_dataset.is_part_of %}
+            <p><a href="{% url 'cityloops:library_item' report.population_dataset.is_part_of.id %}">Data source</a></p>
+          {% else %}
+            <p><a href="{% url 'cityloops:library_item' report.population_dataset.id %}">Data source</a></p>
+          {% endif %}
         {% else %}
           <iframe class="libraryitem mb-4" src="/library/preview/{{ report.population_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
         {% endif %}
@@ -343,80 +392,154 @@
       {% endif %}
     </section>
 
+    <div class="page-break-apeldoorn-biomass page-break-apeldoorn-construction page-break-mikkeli-biomass page-break-mikkeli-construction page-break-porto-biomass page-break-sevilla-biomass page-break-sevilla-construction page-break-hoje-taastrup-construction page-break-roskilde-construction"></div>
+
     <section>
       <h2>Land use</h2>
 
-      {% if space.slug == "porto" %}
-        <img class="img-fluid rounded-top mb-4" src="https://i.imgur.com/BFShwFF.png">
-
-        <div class="border border-top-0 rounded-bottom p-3">
-          <ul class="fa-ul mb-0">
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #e41a1c"></i></span> Espaço Central</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #377eb8"></i></span> Espaço Residencial</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #4daf4a"></i></span> Espaço Verde</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #984ea3"></i></span> Espaço de Actividades Económicas</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Espaço de Uso Especial - Equipamentos e Infraestruturas</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff33"></i></span> Não Atribuída</li>
-          </ul>
-        </div>
-      {% elif space.slug == "mikkeli" %}
-        <img class="img-fluid rounded-top mb-4" src="https://i.imgur.com/Cto4brf.png">
-        <div class="border border-top-0 rounded-bottom p-3">
-          <ul class="fa-ul mb-0">
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #e41a1c"></i></span> Agricultural areas</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Artificial surfaces</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #4daf4a"></i></span> Forests</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #984ea3"></i></span> Roads</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #377eb8"></i></span> Water bodies</li>
-            <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff33"></i></span> Wetlands</li>
-          </ul>
-        </div>
-      {% elif space.slug == "apeldoorn" %}
-        <img class="img-fluid rounded-top mb-4" src="https://i.imgur.com/dSye4WJ.png">
-        <div class="border border-top-0 rounded-bottom p-3">
-          <div class="row">
-            <div class="col-4">
-              <ul class="fa-ul mb-0">
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #144d58"></i></span> Bedrijfsterrein</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #a6cee3"></i></span> Begraafplaats</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #33a02c"></i></span> Bos</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #b2df8a"></i></span> Bouwterrein</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #e31a1c"></i></span> Dagrecreatief terrein</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #fb9a99"></i></span> Delfstofwinplaats</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Detailhandel en horeca</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #fdbf6f"></i></span> Droog natuurlijk terrein</li>
-              </ul>
-            </div>
-            <div class="col-4">
-              <ul class="fa-ul mb-0">
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #6a3d9a"></i></span> Glastuinbouw</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #cab2d6"></i></span> Hoofdweg</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #b15928"></i></span> Nat natuurlijk terrein</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff99"></i></span> Openbare voorziening</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #8dd3c7"></i></span> Overig agrarisch gebruik</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #bd3e6e"></i></span> Overig binnenwater</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #bebada"></i></span> Park en plantsoen</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #fb8072"></i></span> Sociaal-culturele voorziening</li>
-              </ul>
-            </div>
-            <div class="col-4">
-              <ul class="fa-ul mb-0">
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #80b1d3"></i></span> Spoorweg</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #fdb462"></i></span> Sportterrein</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #b3de69"></i></span> Stortplaats</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #fccde5"></i></span> Verblijfsrecreatie</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #d9d9d9"></i></span> Volkstuin</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #bc80bd"></i></span> Water met recreatieve functie</li>
-                <li><span class="fa-li"><i class="fas fa-circle" style="color: #ccebc5"></i></span> Woongebied</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      {% elif report.land_use_dataset %}
+      {% if report.land_use_dataset %}
         {% if report.land_use_dataset.type.name == "Image" %}
           <img src="{{ report.land_use_dataset.image.url }}" class="img-fluid">
+
+          {% if space.slug == "porto" %}
+            <div class="border border-top-0 rounded-bottom p-3">
+              <div class="row">
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #e41a1c"></i></span> Historic Space</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #377eb8"></i></span> Urbanised Space</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #4daf4a"></i></span> Green Space</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #984ea3"></i></span> Industrial Space</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Special Use Space - Equipment and Infrastructure</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff33"></i></span> Not Assigned</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {% elif space.slug == "mikkeli" %}
+            <div class="border border-top-0 rounded-bottom p-3">
+              <div class="row">
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #e41a1c"></i></span> Agricultural areas</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Artificial surfaces</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #4daf4a"></i></span> Forests</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #984ea3"></i></span> Roads</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #377eb8"></i></span> Water bodies</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff33"></i></span> Wetlands</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {% elif space.slug == "apeldoorn" %}
+            <div class="border border-top-0 rounded-bottom p-3">
+              <div class="row">
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #144d58"></i></span> Agriculture</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #a6cee3"></i></span> Built area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #33a02c"></i></span> Dry natural terrain</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #b2df8a"></i></span> Forest</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #e31a1c"></i></span> Greenhouse horticulture</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #fb9a99"></i></span> Industrial area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Main road</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #fdbf6f"></i></span> Railway</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #6a3d9a"></i></span> Recreation</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #cab2d6"></i></span> Semi-built area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #b15928"></i></span> Water</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff99"></i></span> Wet natural terrain</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {% elif space.slug == "hoje-taastrup" %}
+            <div class="border border-top-0 rounded-bottom p-3">
+              <div class="row">
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #008000"></i></span> Area for public purposes</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #0000ff"></i></span> Business area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff0000"></i></span> Center</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffa500"></i></span> Land area</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #800080"></i></span> Residential area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #a52a2a"></i></span> Mixed housing and business</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffc0cb"></i></span> Technical facilities</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #008080"></i></span> Recreational area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #800000"></i></span> Vacation home area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #000080"></i></span> Other</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {% elif space.slug == "roskilde" %}
+            <div class="border border-top-0 rounded-bottom p-3">
+              <div class="row">
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #008000"></i></span> Area for public purposes</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #0000ff"></i></span> Business area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff0000"></i></span> Center</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffa500"></i></span> Land area</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #800080"></i></span> Residential area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #a52a2a"></i></span> Mixed housing and business</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffc0cb"></i></span> Technical facilities</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #008080"></i></span> Recreational area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #800000"></i></span> Vacation home area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #000080"></i></span> Other</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if report.land_use_dataset.is_part_of %}
+            <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.is_part_of.id %}">Data source</a></p>
+          {% else %}
+            <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.id %}">Data source</a></p>
+          {% endif %}
         {% else %}
           <iframe class="libraryitem mb-4" src="/library/preview/{{ report.land_use_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
+          <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.id %}">Data source</a></p>
         {% endif %}
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">6A</span>
@@ -429,12 +552,16 @@
       {% endif %}
     </section>
 
+    <div class="page-break-apeldoorn-biomass page-break-mikkeli-biomass page-break-mikkeli-construction page-break-sevilla-biomass page-break-sevilla-construction"></div>
+
     <section id="sector-context">
       <h1>Economic context of {{ sector }} sector</h1>
 
-      <p>
+      <p class="font-italic">
         This section puts into perspective the economic context of the sector under study. It describes how many people are employed in this sector, as well as  who the main actors involved (from all lifecycle stages for the sector’s materials) are.
       </p>
+
+      <div class="page-break-apeldoorn-construction"></div>
 
       <table class="table border">
         <thead>
@@ -526,14 +653,21 @@
       {% endif %}
     </section>
 
+    <div class="page-break-apeldoorn-biomass page-break-mikkeli-biomass page-break-mikkeli-construction page-break-porto-biomass page-break-hoje-taastrup-construction"></div>
+
     <section>
       <h4>The actors of the {{ sector }} sector</h4>
 
       {% if report.actors_dataset %}
-        {% if report.land_use_dataset.type.name == "Image" %}
+        {% if report.actors_dataset.type.name == "Image" %}
           <img src="{{ report.actors_dataset.image.url }}" class="img-fluid">
+          {% if report.actors_dataset.is_part_of %}
+            <p><a href="{% url 'cityloops:library_item' report.actors_dataset.is_part_of.id %}">Data source</a></p>
+          {% else %}
+            <p><a href="{% url 'cityloops:library_item' report.actors_dataset.id %}">Data source</a></p>
+          {% endif %}
         {% else %}
-          <iframe class="libraryitem mb-4" src="/library/preview/{{ report.actors_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
+          <iframe class="libraryitem mb-4" src="{% url 'staf:libraryframe' report.actors_dataset.id %}" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
         {% endif %}
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">12A</span>
@@ -546,10 +680,12 @@
       {% endif %}
     </section>
 
+    <div class="page-break-apeldoorn-biomass page-break-roskilde-construction"></div>
+
     <section id="indicators">
       <h1>Indicators</h1>
 
-      <p>
+      <p class="font-italic">
         To monitor the progress of this economic sector towards circularity, a number of indicators were proposed and measured. Altogether, these indicators depict several facets of circularity of the sector. As such, they need to be considered in combination rather than in isolation when assessing circularity. In addition, these indicators can be compared to other cities or spatial scales (such as the country level). However, this has to be done with great care and use of the contextual elements in the previous sections of the report. Finally, the value measured from these indicators can be traced over time to track the sector’s progress towards circularity.
       </p>
 
@@ -560,40 +696,111 @@
       {% endif %}
     </section>
 
+    <div class="page-break-mikkeli-biomass page-break-apeldoorn-biomass page-break-porto-biomass page-break-hoje-taastrup-construction"></div>
+
     <section id="visualisations">
       <h1>Visualisations</h1>
 
-      <p>
-        Measuring circularity is a data heavy exercise. Numerous datasets were collected and visualised throughout the sector-wide circularity assessment process. To synthesise these findings, a Sankey diagram illustrates how material flows from the studied economic sector are circulating from one lifecycle stage to another. The height of each line is proportional to the weight of the flow. This diagram therefore helps to quickly have an overview of all the materials flows that compose the sector and their respective shares.
+      <p class="font-italic">
+        Measuring circularity is a data heavy exercise. Numerous datasets were collected and visualised throughout the sector-wide circularity assessment process. To synthesise these findings, a Sankey diagram illustrates how material flows from the studied economic sector are circulating from one lifecycle stage to another. The height of each line is proportional to the weight of the flow. This diagram therefore helps to quickly have an overview of all the materials flows that compose the sector and their respective shares. The flows that are coloured in light blue in the Sankey diagram, are return flows. This means that they flow in the opposite direction of the lifecycle stages and are subjected to reuse, redistribution, or remanufacturing. Their size relative to the others is a good indication for the materials' circularity.
       </p>
+
+      <div class="d-print-none" id="sankey">{{ sankey|safe }}</div>
+
+      {% if space.slug == "mikkeli" and sector == "biomass" %}
+        <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/210629_Mikkeli_Biomass_Sankey_v1.large.png">
+        <p><a href="https://cityloops.metabolismofcities.org/library/997499/">Data source</a></p>
+
+      {% elif space.slug == "mikkeli" and sector == "construction" %}
+        <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/211007_Mikkeli_Construction_Sankey_v2.large.png">
+        <p><a href="https://cityloops.metabolismofcities.org/library/997491/">Data source</a></p>
+
+      {% elif space.slug == "apeldoorn" and sector == "biomass" %}
+        <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/211022_Apeldoorn_Biomass_Sankey_v1.large.png">
+        <p><a href="https://cityloops.metabolismofcities.org/library/1004810/">Data source</a></p>
+
+      {% elif space.slug == "apeldoorn" and sector == "construction" %}
+        <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/211026_Sevilla_Construction_Sankey_v2.large.png">
+        <p><a href="https://cityloops.metabolismofcities.org/library/1004805/">Data source</a></p>
+
+      {% elif space.slug == "porto" and sector == "biomass" %}
+        <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/211026_Porto_Biomass_Sankey_v2.large.png">
+        <p><a href="https://cityloops.metabolismofcities.org/library/997482/">Data source</a></p>
+
+      {% elif space.slug == "sevilla" and sector == "construction" %}
+        <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/211027_Sevilla_construction_Sankey_v1.large.png">
+        <p><a href="https://cityloops.metabolismofcities.org/library/1009180/">Data source</a></p>
+      {% elif space.slug == "sevilla" and sector == "biomass" %}
+        <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/211027_Sevilla_Biomass_Sankey_v1.large.png">
+        <p><a href="https://cityloops.metabolismofcities.org/library/1009190/">Data source</a></p>
+
+      {% elif space.slug == "hoje-taastrup" and sector == "construction" %}
+        <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/211221_Hoje-Taastrup_construction_Sankey_v2.large.png">
+        <p><a href="https://cityloops.metabolismofcities.org/library/1009545/">Data source</a></p>
+
+      {% elif space.slug == "roskilde" and sector == "construction" %}
+        <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/211221_Roskilde_construction_Sankey_v1.large.png">
+        <p><a href="https://cityloops.metabolismofcities.org/library/1009536/">Data source</a></p>
+      {% endif %}
 
       {% if report.sankey_description_html %}
         {{ report.sankey_description_html|safe }}
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">14</span>
       {% endif %}
-
-      {% if space.slug == "mikkeli" and sector == "biomass" %}
-        <img class="border rounded img-fluis" src="https://cityloops.metabolismofcities.org/media/records/210629_Mikkeli_Biomass_Sankey_v1.large.png">
-      {% elif space.slug == "mikkeli" and sector == "construction" %}
-        <img class="border rounded img-fluis" src="https://cityloops.metabolismofcities.org/media/records/210629_Mikkeli_Construction_Sankey_v1.large.png">
-      {% elif space.slug == "porto" and sector == "biomass" %}
-        <img class="border rounded img-fluis" src="https://cityloops.metabolismofcities.org/media/records/210629_Porto_Biomass_Sankey_v1.large.png">
-      {% else %}
-        <div>{{ sankey|safe }}</div>
-      {% endif %}
     </section>
 
     <section id="matrix">
       <h1>Data quality assessment</h1>
 
-
-
-      <p>
+      <p class="font-italic">
         Numerous datasets were collected and considered in the sector-wide circularity assessment. In some cases, datasets were not available for some materials or for some lifecycle stages for the studied sector. Therefore, estimations need to be done by looking at data at higher spatial scales (region or country). This section qualitatively assesses how reliable the data used is.
       </p>
 
       <h3>Data quality</h3>
+
+      <p class="font-italic">
+        Before describing data gaps and assumptions, the overall data quality is considered. It is expressed through four data quality dimensions that are depicted in the data quality matrix: reliability, completeness, temporal correlation, and spatial correlation. Each dimension has its own criteria for the ranking of high (green), medium (yellow) and low (red), which is based on this <a target="_blank" href="https://lca-net.com/files/Pedigree_report_final_May2012.pdf">Pedigree report</a> and shown in the table below. There can be additional explanations in some cells, as supporting information.
+      </p>
+
+      <div class="page-break-apeldoorn-construction page-break-porto-biomass page-break-sevilla-biomass"></div>
+
+      <table class="table font-italic">
+        <thead>
+          <tr>
+            <th>Rating</th>
+            <th>Reliability</th>
+            <th>Completeness</th>
+            <th>Temporal correlation</th>
+            <th>Spatial correlation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="bg-green">high</td>
+            <td>Reviewed or measured data</td>
+            <td>Data exists for all of the single materials and their respective economic activites</td>
+            <td>Data less than 3 years difference to the time period of the data set </td>
+            <td>City-level data</td>
+          </tr>
+          <tr>
+            <td class="bg-yellow">medium</td>
+            <td>Estimated data</td>
+            <td>Data exists for most single materials and most economic activities</td>
+            <td>Data less than 6 years difference to the time period of the data set</td>
+            <td>Regional-level data (NUTS 3)</td>
+          </tr>
+          <tr>
+            <td class="bg-red">low</td>
+            <td>Provisional data</td>
+            <td>Data exists for the sector only for the Life Cycle Stages</td>
+            <td>Data less than 10 years difference to the time period of the data set</td>
+            <td>NUTS 2 and country-level data</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="page-break-hoje-taastrup-construction page-break-mikkeli-biomass"></div>
 
       <div class="mb-4">
         <label>Data quality matrix</label><br>
@@ -612,6 +819,8 @@
         {% endif %}
       </div>
 
+      <div class="page-break-hoje-taastrup-construction"></div>
+
       <div class="mb-4">
         <h3>Data gaps and assumptions</h3>
         {% if report.gaps_html %}
@@ -622,10 +831,12 @@
       </div>
     </section>
 
+    <div class="page-break-mikkeli-biomass"></div>
+
     <section id="analysis">
       <h1>Data analysis</h1>
 
-      <p>
+      <p class="font-italic">
         This section analyses the Sankey diagram developed in the previous section. It discusses and interprets the results for the sector-wide circularity assessment. It also reflects on how the current demonstration actions fit within the bigger picture of the sector, as well as how they could be upscaled to accelerate the transition towards a more circular sector.
       </p>
 
@@ -657,6 +868,8 @@
       </div>
     </section>
 
+    <div class="page-break-sevilla-construction"></div>
+
     <section id="references">
       <h1>References</h1>
       <ul>
@@ -672,11 +885,18 @@
         {% if report.actors_dataset %}
           <li><a href="{% url 'cityloops:library_item' report.actors_dataset.id  %}">{{ report.actors_dataset }}</a></li>
         {% endif %}
+        {% if space.slug == "roskilde" %}
+          <li>
+            Header image: <a href="https://commons.wikimedia.org/wiki/File:Roskilde_ratusz_mpazdziora.jpg">Mariusz Paździora</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>, via Wikimedia Commons
+          </li>
+        {% endif %}
       </ul>
     </section>
   </div>
 
-  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+     crossorigin=""></script>
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script>
     // table tweaks
@@ -704,9 +924,8 @@
         attribution: "Map data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors, " +
           "<a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, " +
           "Imagery © <a href='http://mapbox.com'>Mapbox</a>",
-        id: "mapbox/streets-v11",
         maxZoom: 18,
-        id: "mapbox/streets-v11",
+        id: "mapbox/light-v10",
         tileSize: 512,
         zoomOffset: -1,
         accessToken: "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q"
@@ -728,9 +947,8 @@
       attribution: "Map data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors, " +
         "<a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, " +
         "Imagery © <a href='http://mapbox.com'>Mapbox</a>",
-      id: "mapbox/streets-v11",
+      id: "mapbox/light-v10",
       maxZoom: 18,
-      id: "mapbox/streets-v11",
       tileSize: 512,
       zoomOffset: -1,
       accessToken: "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q"
@@ -751,9 +969,8 @@
       attribution: "Map data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors, " +
         "<a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, " +
         "Imagery © <a href='http://mapbox.com'>Mapbox</a>",
-      id: "mapbox/streets-v11",
+      id: "mapbox/light-v10",
       maxZoom: 18,
-      id: "mapbox/streets-v11",
       tileSize: 512,
       zoomOffset: -1,
       accessToken: "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q"
@@ -774,9 +991,8 @@
       attribution: "Map data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors, " +
         "<a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, " +
         "Imagery © <a href='http://mapbox.com'>Mapbox</a>",
-      id: "mapbox/streets-v11",
+      id: "mapbox/light-v10",
       maxZoom: 18,
-      id: "mapbox/streets-v11",
       tileSize: 512,
       zoomOffset: -1,
       accessToken: "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q"

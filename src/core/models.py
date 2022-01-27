@@ -1075,6 +1075,7 @@ class LibraryItemType(models.Model):
     )
     group = models.CharField(max_length=20, choices=GROUP, null=True, blank=True)
     bibtex_name = models.CharField(max_length=100, null=True, blank=True)
+    ris_name = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -1205,9 +1206,15 @@ class LibraryItem(Record):
                     author_array.append(lastname)
             elif "," in author_list:
                 authors = author_list.split(",")
-                for each in authors:
-                    lastname = each.rpartition(" ")[2]
-                    author_array.append(lastname)
+                if len(authors) == 2:
+                    # If there are only two names, we assume it's one person in the Doe, Jane format and
+                    # we will format as "Jane Doe"
+                    author_array.append(f"{authors[1]} {authors[0]}")
+                else:
+                    # If we have > 1 author, then we list the last names of all involved
+                    for each in authors:
+                        lastname = each.rpartition(" ")[2]
+                        author_array.append(lastname)
             else:
                 # One option is to show JUST the lastname, but in practice it's more likely
                 # that this is the name of an entity like "City of Cape Town", so let's do the
@@ -1281,6 +1288,72 @@ class LibraryItem(Record):
             f"{doi_string}"
             f"  year = {{{self.year}}}\n"
             f"}}"
+        )
+
+        return citation
+
+
+    @property
+    def get_citation_ris(self):
+        author_string = ""
+        journal_string = ""
+        doi_string = ""
+        url_string = ""
+
+        if " and " in self.author_list:
+            authors = self.author_list.split(" and ")
+            for each in authors:
+                if "," in each:
+                    firstname = each.split(",", 1)[1]
+                    lastname = each.split(",", 1)[0]
+                else:
+                    firstname = each.rpartition(" ")[1]
+                    lastname = each.rpartition(" ")[2]
+                author = f"AU -{firstname} {lastname}\n"
+                author_string = author_string + author
+        elif ";" in self.author_list:
+            authors = self.author_list.split(";")
+            for each in authors:
+                if "," in each:
+                    firstname = each.split(",", 1)[1]
+                    lastname = each.split(",", 1)[0]
+                else:
+                    firstname = each.rpartition(" ")[1]
+                    lastname = each.rpartition(" ")[2]
+                author = f"AU -{firstname} {lastname}\n"
+                author_string = author_string + author
+        elif "," in self.author_list:
+            authors = self.author_list.split(",")
+            if len(authors) == 2:
+                # If there are only two names, we assume it's one person in the Doe, Jane format and
+                # we will format as "Jane Doe"
+                author_string = f"AU -{authors[1]} {authors[0]}\n"
+            else:
+                # If we have > 1 author, then we list the last names of all involved
+                for each in authors:
+                    firstname = each.rpartition(" ")[1]
+                    lastname = each.rpartition(" ")[2]
+                    author = f"AU -{firstname} {lastname}\n"
+                    author_string = author_string + author
+
+        if self.publisher():
+            if self.type.name == "Journal Article":
+                journal_string = f"T2 - {self.publisher()}\n"
+            else:
+                journal_string = f"PB - {self.publisher()}\n"
+        if self.url:
+            url_string = f"LK - {self.url}\n"
+        if self.doi:
+            doi_string = f"DO - {self.doi}\n"
+        return (
+            f"TY - {self.type.ris_name}\n"
+            f"TI - {self.name}\n"
+            f"PY - {self.year}\n"
+            f"{author_string}"
+            f"{journal_string}"
+            f"{url_string}"
+            f"{doi_string}"
+            f"ER - "
         )
 
         return citation

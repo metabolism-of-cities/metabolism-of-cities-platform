@@ -2,49 +2,50 @@
 
 {% block page_name %}forum list{% endblock %}
 
+<!-- THIS IS THE FORUM LIST FOR PEEIDE / NDEE ONLY -->
+<!-- IT IS SUBSTANTIALLY DIFFERENT FROM THE ORIGINAL /templates/forum.list.html -->
+<!-- SO A NEW FILE WAS CREATED -->
+
 {% block css %}
   <style>
     .faded {
       opacity:0.5
+    }
+
+    .container.main-content {
+      display: none;
+    }
+
+    .search.form-control {
+      height: 100%;
+      font-size: 20px;
+    }
+
+    .topic-title-wrap {
+      font-size: 1.25rem;
     }
   </style>
 {% endblock %}
 
 {% block content %}
 
-  {% if subsite.id == 53 %}
-    {% include "metabolism_manager/_user.menu.html" %}
-  {% endif %}
+<!-- close container -->
+</div>
 
-  {% if section == "volunteer_hub" %}
-    {% include "hub/_nav.html" %}
-  {% endif %}
+<img class="ndee-banner" src="{{ header_image.image.url }}">
 
-  <div id="topic-list">
+<!-- open container -->
+<div class="container">
+
+  <h2 class="text-ndee-primary">Community Forum</h2>
+
+  <div id="topic-list" class="mb-4">
     <div class="row mb-4">
       <div class="col-md-8 mb-2">
         <input class="search form-control" type="text" name="search" placeholder="Search by title">
       </div>
-      {% if not forum_is_only_for_project and PROJECT.slug != "peeide" %}
-        <div class="col-md-4 mb-2">
-          {% if project %}
-            Showing: general forum and project forum.<br>
-            <a href="https://metabolismofcities.org/forum/">View the entire forum here.</a>
-          {% else %}
-            <select class="custom-select tag-filter">
-              <option value="all">Filter by project</option>
-              <option value="Project-1-id">General</option>
-              {% for each in projects %}
-                {% if each.id != 1 %}
-                  <option value="Project-{{ each.id }}-id">{{ each }}</option>
-                {% endif %}
-              {% endfor %}
-            </select>
-          {% endif %}
-        </div>
-      {% endif %}
       <div class="col-md-4 mb-2">
-        <a class="btn btn-primary d-block" href="create/"><i class="fas fa-fw fa-comment-alt-plus"></i> Post new topic</a>
+        <a class="btn btn-ndee btn-ndee-primary d-block" href="create/"><i class="fas fa-fw fa-comment-alt-plus"></i> Start new conversation</a>
       </div>
     </div>
 
@@ -61,18 +62,11 @@
         <tbody class="list">
           {% for each in list %}
             <tr>
-              <td>
+              <td class="topic-title-wrap">
                 {% if each.is_starred %}
                   <i class="fa fa-star text-warning"></i>
                 {% endif %}
                 <a href="{{ each.id }}/" class="topic-title">{{ each }}</a>
-                <br>
-                <!-- for tag in each.tags -->
-                <span class="badge badge-light">{% if each.part_of_project.id == 1 %}General{% else %}{{ each.part_of_project }}{% endif %}</span>
-                <!-- end for -->
-                <span class="topic-tags" hidden>
-                  Project-{{ each.part_of_project.id }}-id
-                </span>
               </td>
               <td class="d-none d-lg-table-cell">
                   {% for poster in each.posters|slice:"4" %}
@@ -97,7 +91,7 @@
       </table>
     </div>
 
-    <div class="card no-results">
+    <div class="card no-results bg-white">
       <div class="card-body text-center">
         <h2 class="my-4"><i class="fad fa-search"></i> No topics found</h2>
         <button class="btn btn-lg btn-primary clear-filter my-4">Show all topics</button>
@@ -108,6 +102,9 @@
   {% if not request.user.is_authenticated %}
     {% include "_notauthenticated.html" %}
   {% endif %}
+
+<!-- no need to close container as it's been closed before  -->
+<!-- </div> -->
 
 {% endblock %}
 

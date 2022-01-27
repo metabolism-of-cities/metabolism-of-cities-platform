@@ -198,7 +198,7 @@ class GeocodeAdmin(SearchAdmin):
     search_fields = ["name"]
 
 class LibraryItemTypeAdmin(SearchAdmin):
-    list_display = ["name", "group", "id", "icon"]
+    list_display = ["name", "group", "id", "icon", "bibtex_name", "ris_name"]
     list_filter = ["group"]
 
 class SpaceAdmin(admin.ModelAdmin):

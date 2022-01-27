@@ -48,7 +48,7 @@
 <!-- close container -->
 </div>
 
-<img class="ndee-banner" src="{% static 'img/computers.jpg' %}">
+<img class="ndee-banner" src="{{ header_image.image.url }}">
 
 <!-- open container -->
 <div class="container">
@@ -69,7 +69,6 @@
       {% if tag and additional_tag %}+{% endif %}
       {% if additional_tag %}<span class="bg-ndee-light-blue text-primary border rounded mx-1 p-1">{{ additional_tag }}</span>{% endif %}
 
-
       yielded <strong>{{ items.count }}</strong> result{{ items.count|pluralize }}
     </div>
 
@@ -78,9 +77,9 @@
     </a>
 
     {% if not "tag" in request.GET %}
-    <div class="btn btn-ndee btn-ndee-sm btn-ndee-primary show-narrow mb-4">
-      <i class="fa fa-caret-down"></i> Narrow down your search
-    </div>
+      <div class="btn btn-ndee btn-ndee-sm btn-ndee-primary show-narrow mb-4">
+        <i class="fa fa-caret-down"></i> Narrow down your search
+      </div>
 
       <section id="item-lists" class="hidden">
         <div class="row">

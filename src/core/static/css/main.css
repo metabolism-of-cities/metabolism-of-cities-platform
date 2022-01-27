@@ -2096,3 +2096,6 @@ nav.navbar .projects-category {
   .dataTables_wrapper .paginate_button.page-item.active .page-link:active, .dataTables_wrapper .paginate_button.page-item.active .page-link:focus {
     border-color: #0f3b43 !important;
     background-color: #0f3b43 !important; }
+
+.plotlyjsicon {
+  display: none !important; }

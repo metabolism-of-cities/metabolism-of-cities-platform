@@ -65,11 +65,13 @@
   }
 
   .indicator .title {
-    position: absolute;
-    top: -16px;
+    margin-top: -2.25rem;
+    margin-bottom: 1rem;
     background: #fcfcfc;
-    padding: 0 1rem;
+    padding: 0 .5rem;
     font-weight: bold;
+    width: max-content;
+    max-width: calc(100% - 1rem);
   }
 
   .indicator .number {
@@ -162,9 +164,9 @@
           {% endifchanged %}
 
           <div class="indicator">
-            <div class="title" id="indicator-{{ each.number }}">
+            <div class="title" id="indicator-{{ each.number }}" title="{{ each.name }}">
               <span class="number">{{ each.number }}</span>
-              {{ each.name }}
+              <span class="text">{{ each.name }}</span>
             </div>
 
             <div class="description">

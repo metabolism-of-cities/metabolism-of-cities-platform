@@ -22,7 +22,7 @@
     {% if not edit_message or edit_title %}
       <div class="form-group">
         <label for="title">Topic title</label>
-        <input type="text" class="form-control" id="title" name="title" required value="{{ edit_title|default_if_none:"" }}">
+        <input type="text" class="form-control" id="title" name="title" required value="{{ edit_title|default_if_none:'' }}">
       </div>
     {% endif %}
 
@@ -51,7 +51,7 @@
       </div>
     {% endif %}
 
-    <button type="submit" class="btn btn-lg btn-primary mt-4"><i class="fas fa-fw fa-comment-alt-plus"></i> Submit</button>
+    <button type="submit" class="btn btn-lg btn-{% if PROJECT.slug == 'peeide' %}ndee-{% endif %}primary mt-4"><i class="fas fa-fw fa-comment-alt-plus"></i> Submit</button>
   </form>
 
 {% endblock %}

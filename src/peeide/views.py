@@ -9,6 +9,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.forms import modelform_factory
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMultiAlternatives
+from datetime import date
 
 from django.utils import timezone
 import pytz
@@ -22,10 +23,11 @@ def index(request):
 
     context = {
         "webpage": get_object_or_404(Webpage, pk=1002744),
-        "team": People.objects.filter(parent_list__record_child=info).filter(Q(parent_list__relationship__name="Admin") | Q(parent_list__relationship__name="Core member")),
+        "team": People.objects.filter(parent_list__record_child=info).filter(Q(parent_list__relationship__name="Admin") | Q(parent_list__relationship__name="Core member")).distinct(),
         "research": research,
         "carousel": carousel,
         "projects": projects[:3],
+        "today": date.today(),
     }
     return render(request, "peeide/index.html", context)
 
@@ -33,12 +35,17 @@ def research(request):
     info = get_object_or_404(Project, pk=request.project)
 
     research = Tag.objects.filter(parent_tag_id=1227).order_by("name")
-    projects = PublicProject.objects.filter(part_of_project=info).order_by("name")
+    all_projects = PublicProject.objects.filter(part_of_project=info)
+    projects = all_projects.filter(Q(meta_data__proposal=False) | Q(meta_data__proposal__isnull=True)).distinct().order_by("name")
+    proposals = all_projects.filter(meta_data__proposal=True).distinct().order_by("name")
 
     context = {
         "webpage": get_object_or_404(Webpage, pk=51471),
         "projects": projects,
+        "proposals": proposals,
         "research": research,
+        "today": date.today(),
+        "header_image": LibraryItem.objects.get(pk=1009391)
     }
 
     return render(request, "peeide/research.html", context)
@@ -47,8 +54,9 @@ def people(request):
     info = get_object_or_404(Project, pk=request.project)
     context = {
         "webpage": get_object_or_404(Webpage, pk=51472),
-        "team": People.objects.filter(parent_list__record_child=info).filter(Q(parent_list__relationship__name="Admin") | Q(parent_list__relationship__name="Core member")),
-        "network": People.objects.filter(parent_list__record_child=info, parent_list__relationship__name="Team member"),
+        "team": People.objects.filter(parent_list__record_child=info).filter(Q(parent_list__relationship__name="Admin") | Q(parent_list__relationship__name="Core member")).distinct(),
+        "network": People.objects.filter(parent_list__record_child=info, parent_list__relationship__name="Team member").distinct(),
+        "header_image": LibraryItem.objects.get(pk=1009390)
     }
 
     return render(request, "peeide/people.html", context)
@@ -62,6 +70,7 @@ def bibliography(request):
         "sectors": sectors,
         "technologies": technologies,
         "types": LibraryItemType.objects.all(),
+        "header_image": LibraryItem.objects.get(pk=1009392)
     }
 
     return render(request, "peeide/library.html", context)
@@ -162,6 +171,7 @@ def bibliography_list(request, id=None):
         "author": author,
         "type": type,
         "types": LibraryItemType.objects.all(),
+        "header_image": LibraryItem.objects.get(pk=1009392)
     }
 
     return render(request, "peeide/library.list.html", context)
@@ -169,6 +179,10 @@ def bibliography_list(request, id=None):
 def news_list(request, header_subtitle=None):
     project = get_object_or_404(Project, pk=request.project)
     list = News.objects.filter(projects=project).distinct()
+    news = list.filter(meta_data__category="news")
+    events = list.filter(meta_data__category="event")
+    resources = list.filter(meta_data__category="resource")
+    other = list.filter(Q(meta_data__category="other") | Q(meta_data__category__isnull=True))
 
     context = {
         "webpage": get_object_or_404(Webpage, pk=1002742),
@@ -176,6 +190,11 @@ def news_list(request, header_subtitle=None):
         "add_link": "/controlpanel/news/create/?next=/peeide/controlpanel/news/",
         "title": "Resources and community",
         "menu": "news",
+        "news": news,
+        "events": events,
+        "resources": resources,
+        "other": other,
+        "header_image": LibraryItem.objects.get(pk=1009394)
     }
     return render(request, "peeide/news.list.html", context)
 
@@ -187,6 +206,8 @@ def controlpanel_project_form(request, slug=None, id=None):
         curator = True
 
     project = get_object_or_404(Project, pk=request.project)
+
+    research_topics = Tag.objects.filter(parent_tag_id=1227).order_by("name")
 
     ModelForm = modelform_factory(
         PublicProject,
@@ -217,6 +238,9 @@ def controlpanel_project_form(request, slug=None, id=None):
             info.meta_data["research_team"] = request.POST.get("research_team")
             info.meta_data["researcher"] = request.POST.get("researcher")
             info.meta_data["institution"] = request.POST.get("institution")
+            info.meta_data["research_topics"] = request.POST.get("research_topics")
+            info.meta_data["proposal"] = True if request.POST.get("proposal") else False
+
             info.save()
 
             messages.success(request, "The information was saved.")
@@ -249,8 +273,10 @@ def controlpanel_project_form(request, slug=None, id=None):
         "form": form,
         "title": "Add project" if not id else "Edit project",
         "load_markdown": True,
+        "load_select2": True,
         "curator": curator,
         "info": info,
+        "research_topics": research_topics,
     }
 
     return render(request, "controlpanel/project.form.html", context)
@@ -269,3 +295,33 @@ def controlpanel_projects(request, type=None):
         "type": type,
     }
     return render(request, "controlpanel/projects.html", context)
+
+@login_required
+def controlpanel_header_images(request):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    pages = LibraryItem.objects.filter(id__in=[1009390,1009391,1009392,1009393,1009394])
+
+    context = {
+        "pages": pages
+    }
+
+    return render(request, "peeide/controlpanel.header-images.html", context)
+
+@login_required
+def controlpanel_header_image_form(request, id=None):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    info = get_object_or_404(LibraryItem, pk=id)
+
+    if request.method == "POST":
+        info.image = request.FILES["image"]
+        info.save()
+        messages.success(request, "The image was saved.")
+
+    context = {
+        "info": info,
+    }
+    return render(request, "peeide/controlpanel.header-image.form.html", context)

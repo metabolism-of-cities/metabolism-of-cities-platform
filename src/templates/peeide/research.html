@@ -40,6 +40,21 @@
     margin-bottom: 0;
   }
 
+  #research-topics {
+    width: unset;
+  }
+
+  .row.research div[data-topic] {
+    cursor: pointer ;
+  }
+
+  #show-all {
+    font-size: 1rem;
+  }
+
+  #proposals {
+    max-width: 992px;
+  }
 </style>
 {% endblock %}
 
@@ -48,7 +63,7 @@
 <!-- close container -->
 </div>
 
-<img class="ndee-banner" src="{% static 'img/chips.jpg' %}">
+<img class="ndee-banner" src="{{ header_image.image.url }}">
 
 <!-- open container -->
 <div class="container">
@@ -66,7 +81,7 @@
     <div class="row research">
       {% for each in research %}
         <div class="col-md-6 col-lg-3 mb-4">
-          <div class="p-4 bg-ndee-light-blue rounded single-research">
+          <div class="p-4 bg-ndee-light-blue rounded single-research" data-topic="{{ each.id }}">
             <div class="text-center"><i class="fal fa-{{ each.icon }} text-ndee-primary"></i></div>
             <h5 class="text-ndee-primary font-weight-bold">{{ each }}</h5>
             <div class="description text-sm">{{ each.get_description }}</div>
@@ -77,23 +92,41 @@
   </section>
 
   <section>
-    <h3 class="mb-4">Projects</h3>
+    <div class="row">
+      <div class="col-sm">
+        <h3 class="mb-2 mb-sm-4">Projects</h3>
+      </div>
+      <div class="col-sm text-sm-right mb-4 mb-sm-0">
+        <span id="show-all" style="display:none">Filtered (<a href="javascript:filterProjects('all')">show all</a>)</span>
+        <select class="custom-select" id="research-topics">
+          <option value="all" selected>All research topics</option>
+          {% for each in research %}
+            <option value="{{ each.id }}">{{ each }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
 
     <div class="row projects">
       {% for each in projects %}
-        <div class="col-md-6 col-lg-4 mb-4">
+        <div class="col-md-6 col-lg-4 mb-4" data-topics="{{ each.meta_data.research_topics }}">
           <div>
             {% if each.image %}
               <img class="rounded-top project-image" src="{{ each.image.thumbnail.url }}" alt="{{ each }} image">
             {% endif %}
-            <div class="p-3 mt-3 rounded project-text">
-              <h5 class="text-ndee-primary font-weight-bold">
+            <div class="py-2 mt-3 rounded project-text">
+              <h5 class="text-ndee-primary font-weight-bold mb-1">
                 {% if each.url %}
-                  <a target="_blank" href="{{ each.url }}">{{ each }}</a>
+                  <a target="_blank" href="{{ each.url }}">
+                    {{ each }} <i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i>
+                  </a>
                 {% else %}
                   {{ each }}
                 {% endif %}
               </h5>
+              {% if each.end_date > today %}
+                <div class="badge bg-ndee-light-blue text-ndee-primary mb-1">Ongoing project</div>
+              {% endif %}
               <div class="text-dark">{{ each.get_description }}</div>
             </div>
           </div>
@@ -101,8 +134,74 @@
       {% endfor %}
     </div>
   </section>
+
+  {% if proposals %}
+  <section id="proposals" class="pb-4">
+    <h3 class="mb-2 mb-sm-4">Research proposals</h3>
+    {% for each in proposals %}
+      <div class="mb-4">
+        <h5 class="text-ndee-primary font-weight-bold mb-1">
+          {% if each.url %}
+            <a target="_blank" href="{{ each.url }}">
+              {{ each }} <i class="fal fa-arrow-circle-right text-ndee-secondary rotate-45 ml-1"></i>
+            </a>
+          {% else %}
+            {{ each }}
+          {% endif %}
+        </h5>
+        <div class="text-dark">{{ each.get_description }}</div>
+      </div>
+    {% endfor %}
+  </section>
+  {% endif %}
 </div>
 
 {% include "peeide/_newsletter-signup.html" %}
 
+{% endblock %}
+
+{% block footer %}
+  <script>
+    // only show projects that match the selected research topic
+    function filterProjects(topic) {
+      if (topic == "all") {
+        $(".projects div[data-topics]").show()
+        $("#show-all").hide()
+        $("#research-topics").val(topic)
+      } else {
+        $(".projects div[data-topics]").each(function() {
+          let topics = $(this).data("topics").toString();
+
+          if (topics.indexOf(topic) == -1){
+            $(this).hide()
+          } else {
+            $(this).show()
+          }
+        })
+
+        $("#show-all").show()
+      }
+    }
+
+    $("#research-topics").change(function() {
+      let topic = $("#research-topics").val()
+
+      filterProjects(topic)
+    })
+
+    // click on a research topic to filter projects and scroll down
+    $(".research div[data-topic]").click(function() {
+      let topic = $(this).data("topic").toString();
+
+      $("#research-topics").val(topic)
+      filterProjects(topic)
+
+      $("html, body").animate({
+          scrollTop: $(".row.projects").offset().top - 100
+      }, 600);
+    })
+
+    // show all projects on page load
+    $("#research-topics").val("all")
+  </script>
 {% endblock %}

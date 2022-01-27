@@ -32,8 +32,6 @@ from collections import defaultdict
 from django.template import Context
 from django.forms import modelform_factory
 
-from weasyprint import HTML, CSS
-from weasyprint.fonts import FontConfiguration
 from datetime import datetime
 import csv
 
@@ -402,7 +400,7 @@ def index(request):
         "HOMEPAGE": True,
         "header_subtitle": blurb,
         "show_project_design": True,
-        "projects": Project.objects.filter(pk__in=[2,3,4,32018,16,18]),
+        "projects": Project.objects.filter(pk__in=[2,3,4,32018,6]),
         "alternative_design": alternative_design,
         "posts": ForumTopic.objects.order_by("-last_update__date_created")[:3],
         "news": News.objects.filter(projects__in=MOC_PROJECTS).distinct()[:3]
@@ -1234,6 +1232,7 @@ def controlpanel_news_form(request, id=None):
     else:
         form = ModelForm(request.POST or None, request.FILES or None, initial={"projects": request.project})
     if request.method == "POST":
+
         if form.is_valid():
             info = form.save(commit=False)
             if not id:
@@ -1241,9 +1240,13 @@ def controlpanel_news_form(request, id=None):
             info.description = request.POST.get("description")
             meta_data = info.meta_data if info.meta_data else {}
             meta_data["format"] = request.POST.get("format")
+            # saving category for ndee / peeide news articles and resources
+            if project == PROJECT_ID["peeide"]:
+                meta_data["category"] = request.POST.get("category")
             info.meta_data = meta_data
             info.save()
             form.save_m2m()
+
 
             # TO DO
             # There is a contraint, for slug + project combined, and we should
@@ -2120,6 +2123,11 @@ def newsletter(request):
 # TEMPORARY PAGES DURING DEVELOPMENT
 
 def pdf(request):
+    from weasyprint import HTML, CSS
+    from weasyprint.fonts import FontConfiguration
+    # THIS GIVES AN ERROR WHEN PLACED AT THE TOP OF THE FILE
+    # TODO - TO BE FIXED BY PAUL
+    # https://metabolismofcities.org/hub/work/1004851/
     name = request.GET["name"]
     score = request.GET["score"]
     date = datetime.datetime.now()

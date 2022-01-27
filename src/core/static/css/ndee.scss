@@ -149,11 +149,18 @@ img.ndee-banner {
 
 .card {
   box-shadow: none !important;
-  background-color: $ndee-light-blue;
+
+  .card-header {
+    background-color: $ndee-primary;
+  }
 
   .card-title {
     color: $ndee-primary;
   }
+}
+
+.card.table-responsive {
+  background-color: #fff;
 }
 
 .dataTables_wrapper .paginate_button.page-item.active .page-link,
@@ -169,4 +176,8 @@ a.large-icon-box:hover,
 .btn-thumbnail:hover,
 .btn-card:hover {
   transform: none !important;
+}
+
+.forum-nav {
+  display: none;
 }

@@ -17,13 +17,13 @@
 
 <h2 class="mb-0">{{ info }}</h2>
 
-{% if info.forumtopic.part_of_project %}
+{% if info.forumtopic.part_of_project and PROJECT.slug != "peeide" %}
   <div class="tags">
     <span class="badge badge-primary">{{ info.forumtopic.part_of_project }}</a>
   </div>
 {% endif %}
 
-<a class="btn btn-sm btn-primary-basic mt-2" href="../"><i class="fas fa-angle-left"></i> Back to topic list</a>
+<a class="btn btn-sm btn-primary-basic my-2" href="../"><i class="fas fa-angle-left"></i> Back to topic list</a>
 
 {% include "_messages.html" %}
 

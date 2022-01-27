@@ -3254,6 +3254,16 @@ def dataframe(request, id):
 def libraryframe(request, id):
     info = get_object_or_404(LibraryItem, pk=id)
     project = get_object_or_404(Project, pk=request.project)
+
+    # TEMPORARY CODE TO GET UNIT FOR CHARTS IN SCA REPORTS
+    # https://data.metabolismofcities.org/tasks/991921/
+    units = None
+    unit = None
+    if info.data.all():
+        units = info.data.values("unit__name").distinct()
+        if units.count() == 1:
+            unit = units[1]
+
     context = {
         "info": info,
         "iframe": True,
@@ -3261,6 +3271,10 @@ def libraryframe(request, id):
         "first_view": "map",
         "show_map": True,
         "library_item": project.get_slug() + ":library_item",
+
+        # Here temporarily, see comment above
+        "units": units,
+        "unit": unit,
     }
     if info.meta_data and "processed" in info.meta_data:
         if info.is_map:

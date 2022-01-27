@@ -102,10 +102,14 @@ img.ndee-banner {
   object-position: center; }
 
 .card {
-  box-shadow: none !important;
-  background-color: #edfcff; }
+  box-shadow: none !important; }
+  .card .card-header {
+    background-color: #008dac; }
   .card .card-title {
     color: #008dac; }
+
+.card.table-responsive {
+  background-color: #fff; }
 
 .dataTables_wrapper .paginate_button.page-item.active .page-link,
 .dataTables_wrapper .paginate_button.page-item.active .page-link:hover,
@@ -119,3 +123,6 @@ a.large-icon-box:hover,
 .btn-thumbnail:hover,
 .btn-card:hover {
   transform: none !important; }
+
+.forum-nav {
+  display: none; }

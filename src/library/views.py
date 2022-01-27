@@ -303,6 +303,12 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
             if "download" in request.GET:
                 response["Content-Disposition"] = f"attachment; filename=\"{info.name}.bib\""
             return response
+        elif request.GET["format"] == "ris":
+            response = HttpResponse(info.get_citation_ris, content_type="text/plain")
+            if "download" in request.GET:
+                response["Content-Disposition"] = f"attachment; filename=\"{info.name}.ris\""
+            return response
+
 
     section = "library"
     url_processing = None
@@ -401,6 +407,15 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
             load_leaflet = True
             load_leaflet_time = True
 
+    # TEMPORARY CODE TO GET UNIT FOR CHARTS IN SCA REPORTS
+    # https://data.metabolismofcities.org/tasks/991921/
+    units = None
+    unit = None
+    if info.data.all():
+        units = info.data.values("unit__name").distinct()
+        if units.count() == 1:
+            unit = units[1]
+
     context = {
         "info": info,
         "spaces": spaces,
@@ -425,6 +440,10 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         "url_processing": url_processing,
         "spaces_message": spaces_message,
         "properties": properties,
+
+        # Here temporarily, see comment above
+        "units": units,
+        "unit": unit,
 
         # The following we'll only have during the AScUS voting round; remove afterwards
         "best_vote": RecordRelationship.objects.filter(relationship_id=32, record_parent=request.user.people) if request.user.is_authenticated else None,
