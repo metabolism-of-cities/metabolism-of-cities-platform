@@ -10,6 +10,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q, Sum, Count
 
 from django.utils import timezone
+import time
 import pytz
 from functools import wraps
 
@@ -3014,6 +3015,7 @@ def shapefile_json(request, id, download=False):
     return response
 
 def data(request, json=False):
+    start_time = time.time()
     data = Data.objects.all()
 
     start = request.GET.get("date_start")
@@ -3140,6 +3142,8 @@ def data(request, json=False):
             "within": within,
             "spaces_within": spaces_within if within else None,
             "map": mark_safe(map._repr_html_()) if within else None,
+            "duration": (time.time() - start_time)*1000,
+            "load_select2": True,
         }
         return render(request, "staf/data.html", context)
 
@@ -3346,6 +3350,76 @@ def sankeybuilder(request):
     }
 
     return render(request, "staf/sankey-builder.html", context)
+
+# JSON catalog searches for materials and reference spaces
+# These can be used e.g. for select2s and other searches
+
+def material_search_json(request):
+    materials = {
+        "results": []
+    }
+    if request.GET.get("q"):
+        all = Material.objects.filter(Q(name__icontains=request.GET.get("q"))|Q(code__icontains=request.GET.get("q")))
+        if all.count() > 50:
+            all = all[:50]
+        for each in all:
+            materials["results"].append(
+                {
+                    "id": each.id, 
+                    "text": f"{each.name} ({each.code}) - {each.catalog.name}",
+                    "name": each.name,
+                    "code": each.code,
+                    "catalog": each.catalog.name,
+                }
+            )
+    response = HttpResponse(json.dumps(materials), content_type="application/json")
+    return response
+
+def activity_search_json(request):
+    activities = {
+        "results": []
+    }
+    if request.GET.get("q"):
+        all = Activity.objects.filter(name__icontains=request.GET.get("q"))
+        if all.count() > 50:
+            all = all[:50]
+        for each in all:
+            activities["results"].append(
+                {
+                    "id": each.id, 
+                    "text": f"{each.name} ({each.code}) - {each.catalog.name}",
+                    "name": each.name,
+                    "code": each.code,
+                    "catalog": each.catalog.name,
+                }
+            )
+    response = HttpResponse(json.dumps(activities), content_type="application/json")
+    return response
+
+def referencespace_search_json(request):
+    spaces = {
+        "results": []
+    }
+    if request.GET.get("q"):
+        all = ReferenceSpace.objects.filter(name__icontains=request.GET.get("q"))
+        if "must_have_geometry" in request.GET:
+            all = all.filter(geometry__isnull=False)
+        if all.count() > 50:
+            all = all[:50]
+        for each in all:
+            full_label = each.name
+            if each.source:
+                full_label += f" ({each.source.name})"
+            spaces["results"].append(
+                {
+                    "id": each.id, 
+                    "text": full_label,
+                    "name": each.name,
+                    "source": each.source.name if each.source else None,
+                }
+            )
+    response = HttpResponse(json.dumps(spaces), content_type="application/json")
+    return response
 
 # Control panel sections
 # The main control panel views are in the core/views file, but these are STAF-specific

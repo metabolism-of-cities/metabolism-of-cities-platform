@@ -162,8 +162,11 @@ baseline_staf_urlpatterns = [
     path("referencespaces/view/<int:id>/", staf.referencespace, name="referencespace"),
     path("referencespaces/edit/<int:id>/", staf.referencespace_form, name="referencespace_form"),
     path("referencespaces/view/<int:referencespace_photo>/photos/upload/", library.form, {"type": 38}, name="library_photo_upload"),
+    path("referencespaces/search/", staf.referencespace_search_json, name="referencespace_search"),
     path("referencespaces/<int:id>/", staf.referencespaces_list, name="referencespaces_list"),
     path("referencespaces/<slug:group>/", staf.referencespaces, name="referencespaces"),
+
+    path("activities/search/", staf.activity_search_json, name="activity_search"),
 
     path("library/preview/<int:id>/", staf.libraryframe, name="libraryframe"),
 
@@ -175,6 +178,7 @@ baseline_staf_urlpatterns = [
     path("materials/<int:id>/view/", staf.material, name="material"),
     path("materials/<int:id>/edit/", staf.material_form, name="material_form"),
     path("materials/<int:parent>/create/", staf.material_form, name="material_form"),
+    path("materials/search/", staf.material_search_json, name="material_search"),
     path("units/", staf.units, name="units"),
     path("units/conversion/", staf.units_conversion, name="units_conversion"),
     path("units/<int:id>/", staf.unit, name="unit"),

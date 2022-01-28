@@ -28,11 +28,18 @@
       </div>
       <div class="col-lg">
         <label>Material</label>
-        <input class="form-control" type="text" name="material" value="{{ request.GET.material }}" placeholder="Enter material code, e.g. EMP1.3">
+        <select class="materials form-control" name="material" value="{{ request.GET.material }}">
+        </select>
       </div>
       <div class="col-lg">
         <label>Within</label>
-        <input class="form-control" type="number" name="within" value="{{ request.GET.within }}" placeholder="Enter space ID">
+        <select class="spaces form-control" name="within" value="{{ request.GET.within }}">
+        </select>
+      </div>
+      <div class="col-lg">
+        <label>Economic activity</label>
+        <select class="activities form-control" name="activity" value="{{ request.GET.activity }}">
+        </select>
       </div>
       <div class="col-lg">
         <label>Source document</label>
@@ -57,4 +64,30 @@
 
   {% include "staf/_data.list.html" %}
 
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+  $("select.materials").select2({
+    ajax: {
+      url: "{% url "staf:material_search" %}",
+      dataType: "json"
+      // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+    }
+  });
+  $("select.activities").select2({
+    ajax: {
+      url: "{% url "staf:activity_search" %}",
+      dataType: "json"
+      // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+    }
+  });
+  $("select.spaces").select2({
+    ajax: {
+      url: "{% url "staf:referencespace_search" %}?must_have_geometry=true",
+      dataType: "json"
+      // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+    }
+  });
+</script>
 {% endblock %}

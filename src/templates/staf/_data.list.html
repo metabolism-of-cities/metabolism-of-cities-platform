@@ -1,6 +1,10 @@
+{% load humanize %}
 
   <div class="rounded border bg-light p-3 mb-4">
-    <i class="fal fa-list mr-2"></i> {{ total }} records found. {% if total > 200 %}Showing 200 records only{% endif %}
+    <i class="fal fa-list mr-2"></i> {{ total|intcomma }} records found. {% if total > 200 %}Showing 200 records only{% endif %}
+    <div class="float-right text-muted">
+      Query speed: {{ duration|floatformat }} ms
+    </div>
   </div>
 
   <table class="table datatable datatable-card bg-white">
