@@ -347,7 +347,8 @@ img.tall-img {
 
 .btn-card {
   color: #212529;
-  height: 100%; }
+  height: 100%;
+  border: none; }
   .btn-card:hover {
     color: #212529; }
   .btn-card.video i.fa-play-circle {
@@ -358,10 +359,14 @@ img.tall-img {
     top: calc(50% - 3rem); }
   .btn-card.contain img.card-img-top {
     object-fit: contain; }
-  .btn-card .card-body.media img {
-    width: 100px;
-    height: 50px;
-    object-fit: cover; }
+  .btn-card .card-body {
+    background-color: #efefef;
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem; }
+    .btn-card .card-body.media img {
+      width: 100px;
+      height: 50px;
+      object-fit: cover; }
 
 .markdown-textarea markdown-toolbar {
   padding: .375rem;

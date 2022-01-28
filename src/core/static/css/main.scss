@@ -545,6 +545,7 @@ img.tall-img {
   @extend %box-shadow;
   color: $dark;
   height: 100%;
+  border: none;
 
   &:hover {
     color: $dark;
@@ -562,11 +563,18 @@ img.tall-img {
     object-fit: contain;
   }
 
-  .card-body.media img {
-    width: 100px;
-    height: 50px;
-    object-fit: cover;
+  .card-body {
+    background-color: $light;
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+
+    &.media img {
+      width: 100px;
+      height: 50px;
+      object-fit: cover;
+    }
   }
+
 }
 
 // MARKDOWN TOOLBAR
