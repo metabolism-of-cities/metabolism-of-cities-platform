@@ -163,13 +163,15 @@
 
           </div>
           <div class="pdf-links">
-            <a class="btn btn-inverse rounded-0" href="?format=print">
-              <i class="fal fa-file-pdf"></i> PDF version
-            </a>
+            {% if sca_report_pdf_url %}
+              <a class="btn btn-inverse rounded-0" href="{{ sca_report_pdf_url }}" target="_blank">
+                <i class="fal fa-file-pdf"></i> PDF version
+              </a>
+            {% endif %}
             {% if sca_report_id %}
-            <a class="btn btn-inverse rounded-0" href="{% url 'cityloops:library_item' sca_report_id %}">
-              <i class="fal fa-info-circle"></i> Report metadata
-            </a>
+              <a class="btn btn-inverse rounded-0" href="{% url 'cityloops:library_item' sca_report_id %}" target="_blank">
+                <i class="fal fa-info-circle"></i> Report metadata
+              </a>
             {% endif %}
           </div>
         </div>

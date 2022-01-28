@@ -429,6 +429,7 @@ def sca_report(request, slug, sector):
     sankey_values = []
     sankey_labels = ["","","","","","","","","","","Redistribution","","","","Reuse","","Reuse","","","","","","","Remanufacturing","","","Recycling","","","","","","","","","","","","","","","","","",]
     sca_report_id = None
+    sca_report_pdf_url = None
 
     if slug == "apeldoorn":
         country_id = 328768
@@ -442,9 +443,11 @@ def sca_report(request, slug, sector):
         if sector == "construction":
             sankey_values = [0,0,0,0,0,627229.98,0,104538.33,313614.99,0,0,0,0,67001.20,33500.60,234504.20,443.14,43871.31,5152.24,2111.61,34304.65,1326.36,1391.40,0,0,211.16,10291.40,0,0,0,533388.77,533388.77,0,0,0,0,0,0,0,0,0,0,0,0]
             sca_report_id = 1009943
+            sca_report_pdf_url = "https://cityloops.metabolismofcities.org/media/uploads/libraryitem/report/Sector-wide_Circularity_Assessment_for_the_Construction_Sector_-_Apeldoorn.pdf"
         elif sector == "biomass":
             sankey_values = [48841,1546,0,2834,0,2058856,0,462340,0,0,0,0,0,117030,0,0,0,0,6308,10916,114451,8025,6569,0,0,0,0,0,0,0,627455,90935,0,0,0,0,0,0,0,0,0,0,0,0]
             sca_report_id = 1009880
+            sca_report_pdf_url = "https://cityloops.metabolismofcities.org/media/uploads/libraryitem/report/Sector-wide_Circularity_Assessment_for_the_Biomass_Sector_-_Apeldoorn.pdf"
     elif slug == "bodo":
         country_id = 328727
         nuts2_id = 584307
@@ -463,6 +466,7 @@ def sca_report(request, slug, sector):
         if sector == "construction":
             sankey_values = [116639.75,174959.63,116639.75,0,174959.63,172781.83,0,15707.44,125659.52,0,0,0,0,103589.75,51794.88,362564.13,6339.82,627642.67,119202.85,4872.91,385208.04,1756.34,4511.36,659.78,117771.22,57540,487.29,115562.41,0,0,0,49200,98400,49200,44520,0,0,0,0,49200,15562.5,15562.5,249000,0,31125]
             sca_report_id = 1009951
+            sca_report_pdf_url = "https://cityloops.metabolismofcities.org/media/uploads/libraryitem/report/Sector-wide_Circularity_Assessment_for_the_Construction_Sector_-_Hoje-Taastrup.pdf"
     elif slug == "mikkeli":
         country_id = 328729
         nuts2_id = 584282
@@ -474,9 +478,11 @@ def sca_report(request, slug, sector):
         if sector == "biomass":
             sankey_values = [745097,23579,0,43228,0,546,0,123,0,0,146,0,0,18186,0,0,0,0,0,0,7540,0,7469,0,7724,0,0,0,3000,0,83044,12035,0,0,0,0,0,0,0,0,7724,0,0,0]
             sca_report_id = 1009884
+            sca_report_pdf_url = "https://cityloops.metabolismofcities.org/media/uploads/libraryitem/report/Sector-wide_Circularity_Assessment_for_the_Biomass_Sector_-_Mikkeli.pdf"
         elif sector == "construction":
             sankey_values = [617130,246852,123426,123426,123426,403225,0,67204,201612,0,0,0,0,75313,37656,263595,356,35242,2293,0,27924,0,0,0,5381,0,28708,0,0,0,27708,27708,0,0,0,0,0,0,13854,0,4598,0,0,784]
             sca_report_id = 1009955
+            sca_report_pdf_url = "https://cityloops.metabolismofcities.org/media/uploads/libraryitem/report/Sector-wide_Circularity_Assessment_for_the_Construction_Sector_-_Mikkeli_qspzyj5.pdf"
     elif slug == "porto":
         country_id = 328813
         nuts2_id = 584336
@@ -489,6 +495,7 @@ def sca_report(request, slug, sector):
             sankey_colour = ["rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)"]
             sankey_labels = ["","","","","","","","","","","Redistribution","","","","Reuse","","Food donation","Local composting","Reuse","","","","","","","Remanufacturing","","","Recycling","","","","","","","","","","","","","","","","",""]
             sca_report_id = 1009888
+            sca_report_pdf_url = "https://cityloops.metabolismofcities.org/media/uploads/libraryitem/report/Sector-wide_Circularity_Assessment_for_the_Biomass_Sector_-_Porto.pdf"
     elif slug == "roskilde":
         country_id = 328745
         nuts2_id = 584272
@@ -512,9 +519,11 @@ def sca_report(request, slug, sector):
         if sector == "biomass":
             sankey_values = [12992746.38,411162.86,0,753798.58,0,2571687.46,0,577501.75,0,969877.09,0,18499.02,79281.51,16637601.18,0,0,0,0,85000,105,1916,75000,600,21980,0,0,1916,75000,0,0,4339922.77,628974.31,0,0,0,0,0,0,0,0,0,0,0,0]
             sca_report_id = 1009892
+            sca_report_pdf_url = "https://cityloops.metabolismofcities.org/media/uploads/libraryitem/report/Sector-wide_Circularity_Assessment_for_the_Biomass_Sector_-_Sevilla.pdf"
         if sector == "construction":
             sankey_values = [881799.58,352719.83,176359.92,176359.92,176359.92,244299.22,0,40716.54,122149.61,1692002.70,0,112800.18,451200.72,203340.57,203340.57,1626724.58,4450.42,440591.34,431,0,600,0,0,18452,0,0,3396,0,0,0,167697.41,167697.41,0,0,0,0,0,0,0,0,0,0,0,0]
             sca_report_id = 1009959
+            sca_report_pdf_url = "https://cityloops.metabolismofcities.org/media/uploads/libraryitem/report/Sector-wide_Circularity_Assessment_for_the_Construction_Sector_-_Sevilla.pdf"
     elif slug == "valles-occidental":
         country_id = 328741
         nuts2_id = 584283
@@ -568,6 +577,7 @@ def sca_report(request, slug, sector):
         "currency": currency,
         "bounding_box": bounding_box,
         "sca_report_id": sca_report_id,
+        "sca_report_pdf_url": sca_report_pdf_url,
     }
     if "format" in request.GET:
         return render(request, "cityloops/sca-report.html", context)
