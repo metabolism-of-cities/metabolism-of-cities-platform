@@ -500,7 +500,8 @@ blockquote {
   border-color: #144d58; }
 
 .card.icon-card {
-  height: 100%; }
+  height: 100%;
+  border: none; }
   .card.icon-card .icon {
     height: 128px;
     font-size: 4rem;
@@ -511,6 +512,10 @@ blockquote {
     border-top-right-radius: .25rem; }
   .card.icon-card .card-header {
     text-align: center; }
+  .card.icon-card .card-body {
+    background-color: #efefef;
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem; }
 
 .card-table table {
   margin-bottom: 0;

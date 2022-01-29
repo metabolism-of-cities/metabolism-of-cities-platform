@@ -773,6 +773,7 @@ blockquote {
   // LARGE ICON CARD
   &.icon-card {
     height: 100%;
+    border: none;
 
     .icon {
       height: 128px;
@@ -786,6 +787,12 @@ blockquote {
 
     .card-header {
       text-align: center;
+    }
+
+    .card-body {
+      background-color: $light;
+      border-bottom-left-radius: .25rem;
+      border-bottom-right-radius: .25rem;
     }
   }
 }
