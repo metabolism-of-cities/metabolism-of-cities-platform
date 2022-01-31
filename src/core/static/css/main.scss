@@ -8,6 +8,7 @@ $gray: #808080;
 $light: #efefef;
 $very-light: #fbfbfb;
 $basic-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
+$danger: #dc3545;
 
 // CITYLOOPS COLOURS
 $cityloops-primary: #004d76;
@@ -688,7 +689,7 @@ blockquote {
   }
 
   &.swal-button--danger {
-    background-color: #dc3545 !important;
+    background-color: $danger !important;
 
     &:hover {
       background-color: #c82333 !important;
@@ -1754,11 +1755,11 @@ body.dataset {
     }
     &[data-rating="5"] {
       .full {
-        background-color: #dc3545;;
+        background-color: $danger;;
       }
 
       .number {
-        background-color: #dc3545;;
+        background-color: $danger;;
       }
     }
   }
@@ -2415,7 +2416,7 @@ body.geocode.list {
       cursor: pointer;
 
       &:hover {
-        color: #dc3545;
+        color: $danger;
       }
     }
   }
@@ -3130,6 +3131,35 @@ textarea.form-control:focus, input.form-control:focus, select.custom-select:focu
     background-color: transparentize($secondary, 0.9);
     border-color: transparent;
     color: $secondary;
+  }
+}
+
+// LIST GROUP ITEM
+.list-group-item-primary.list-group-item-action {
+  color: lighten($primary, 15%);
+
+  &:hover {
+    color: $primary;
+    background-color: transparentize($primary, 0.9) !important;
+  }
+
+  &:active, &:focus {
+    color: $primary;
+    background-color: transparentize($primary, 0.9) !important;
+  }
+}
+
+.list-group-item-danger.list-group-item-action {
+  color: lighten($danger, 5%);
+
+  &:hover {
+    color: $danger;
+    background-color: transparentize($danger, 0.9) !important;
+  }
+
+  &:active, &:focus {
+    color: $danger;
+    background-color: transparentize($danger, 0.9) !important;
   }
 }
 
