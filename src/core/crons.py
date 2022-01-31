@@ -32,6 +32,14 @@ class ProcessDataset(CronJobBase):
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = "core.process_dataset" # Unique code for logging purposes
 
+    list = LibraryItem.objects.filter(type__name="Dataset", meta_data__ready_for_processing=True)
+    for each in list:
+        p(each)
+        each.convert_stocks_flows_data()
+        each.meta_data["processed"] = True
+        each.meta_data["ready_for_processing"] = False
+        each.save()
+
     def do(self):
         list = LibraryItem.objects.filter(type__name="Dataset", meta_data__ready_for_processing=True)
         for each in list:

@@ -1,0 +1,69 @@
+{% extends "_base.html" %}
+{% block css %}
+<style type="text/css">
+textarea.form-control{height:200px}
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <h1>Reference Space Validator</h1>
+  {% if spaces %}
+    {% if request.POST.source %}
+    <ol>
+      {% for each in spaces %}
+        <li class="{% if each in spaces_names %}text-success{% else %}text-danger{% endif %}">{{ each }}</li>
+      {% endfor %}
+    </ol>
+    <p>For your convenience, here is a list with the problematic ones:</p>
+    <ol>
+      {% for each in spaces %}
+        {% if each not in spaces_names %}
+          <li class="{% if each in spaces_names %}text-success{% else %}text-danger{% endif %}">{{ each }}</li>
+          {% endif %}
+      {% endfor %}
+    </ol>
+    {% else %}
+    <p>We searched the database using the first one, and found the following potential source documents:</p>
+    <form method="post">
+      <ul class="no-list">
+        {% for each in hits %}
+        <li>
+          <label>
+            <input type="radio" name="source" value="{{ each.source.id }}">
+            #{{ each.id }} - 
+            <a href="{% url URLS.SPACE each.id %}">{{ each }}</a> found in 
+            <a href="{% url URLS.LIBRARY_ITEM each.source.id %}">{{ each.source }}</a>
+          </label>
+        </li>
+        {% endfor %}
+        </ul>
+        <button type="submit" class="btn btn-success">Validate this source</button>
+        <input type="hidden" name="spaces" value="{{ request.POST.spaces }}" />
+      {% csrf_token %}
+    </form>
+
+  {% endif %}
+  {% else %}
+  <p>
+    Use this to see if a list of reference spaces is valid (e.g. to see if names for spaces used in a certain data file are compatible with our lists).
+  </p>
+
+  <form method="post">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Reference spaces</label>
+      <div class="col-sm-10">
+        <textarea class="form-control" name="spaces"></textarea>
+        <small>Enter or copy your list here - each space on a new line</small>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-primary">Next</button>
+      </div>
+    </div>
+    {% csrf_token %}
+  </form>
+  {% endif %}
+
+{% endblock %}

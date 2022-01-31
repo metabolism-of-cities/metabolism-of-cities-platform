@@ -1292,7 +1292,6 @@ class LibraryItem(Record):
 
         return citation
 
-
     @property
     def get_citation_ris(self):
         author_string = ""
@@ -1415,6 +1414,20 @@ class LibraryItem(Record):
             return settings.MEDIA_URL + self.meta_data["shapefile_plot"]
         except:
             return None
+    
+    # When we process a dataset, we need to know which materials catalog to use
+    # By default, we use the home-made "Energy, materials and products catalog" 
+    # which has ID 18998. However, if another one is set in the meta data, then 
+    # we use that. 
+    # NOTE: Up until now there is no front-end interface to change the materials
+    # catalog. It can only be done by using the /admin interface. Creating a front-end
+    # interface is on the to-do list...
+    @property
+    def get_associated_materials_catalog(self):
+        try:
+            return self.meta_data["associated_materials_catalog"]
+        except:
+            return 18998
 
     @property
     def get_dataviz_properties(self):
@@ -1537,7 +1550,7 @@ class LibraryItem(Record):
 
                     if material_code not in materials:
                         try:
-                            m = Material.objects.get(catalog_id=18998, code=material_code)
+                            m = Material.objects.get(catalog_id=self.get_associated_materials_catalog, code=material_code)
                             materials[material_code] = m
                         except:
                             error = f"We could not find the material/product with code: '{material_code}'"
@@ -1559,11 +1572,18 @@ class LibraryItem(Record):
 
                     try:
                         if type == "flows":
-                            start = start.strftime("%Y-%m-%d")
-                            end = end.strftime("%Y-%m-%d")
+                            # When CSV files are being read, 'start' and 'end' are string objects
+                            # and we can not run strftime on those objects. We assume they are 
+                            # already in the right format in that case. But if this is eg Excel we
+                            # want to convert to YYYY-MM-DD to be sure.
+                            if not isinstance(start, str):
+                                start = start.strftime("%Y-%m-%d")
+                            if not isinstance(end, str):
+                                end = end.strftime("%Y-%m-%d")
                             full_string = str(start) + str(end)
                         elif type == "stock" or type == "population":
-                            start = start.strftime("%Y-%m-%d")
+                            if not isinstance(start, str):
+                                start = start.strftime("%Y-%m-%d")
                             end = None
                             full_string = str(start)
                             period = str(start)
@@ -1596,7 +1616,8 @@ class LibraryItem(Record):
 
             if not error:
                 try:
-                    Data.objects.bulk_create(items)
+                    batch_size = 250*1000
+                    Data.objects.bulk_create(items, batch_size)
                 except Exception as e:
                     error = f"We were unable to save the records - this is the error that came back: {e}"
 
@@ -1614,7 +1635,6 @@ class LibraryItem(Record):
 
     # This function converts the shapefile into ReferenceSpaces
     def convert_shapefile(self):
-        print(self)
 
         check = ReferenceSpace.objects.filter(source=self)
         error = False

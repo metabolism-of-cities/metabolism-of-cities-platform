@@ -163,6 +163,7 @@ baseline_staf_urlpatterns = [
     path("referencespaces/edit/<int:id>/", staf.referencespace_form, name="referencespace_form"),
     path("referencespaces/view/<int:referencespace_photo>/photos/upload/", library.form, {"type": 38}, name="library_photo_upload"),
     path("referencespaces/search/", staf.referencespace_search_json, name="referencespace_search"),
+    path("referencespaces/validator/", staf.referencespaces_validator, name="referencespaces_validator"),
     path("referencespaces/<int:id>/", staf.referencespaces_list, name="referencespaces_list"),
     path("referencespaces/<slug:group>/", staf.referencespaces, name="referencespaces"),
 
