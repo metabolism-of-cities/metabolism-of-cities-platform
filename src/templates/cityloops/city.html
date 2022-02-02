@@ -4,20 +4,7 @@
 
   <h1>{{ info }}</h1>
 
-  {% if construction_sankey %}
-    <h2>Construction sector sankey</h2>
-    <div class="border rounded bg-white p-3 mb-4">
-      {{ construction_sankey|safe }}
-    </div>
-  {% endif %}
-  {% if biomass_sankey %}
-    <h2>Biomass sector sankey</h2>
-    <div class="border rounded bg-white p-3 mb-4">
-      {{ biomass_sankey|safe }}
-    </div>
-  {% endif %}
-
-  <div class="alert alert-dark text-center p-5">
+  <div class="alert alert-dark text-center p-5 mb-4">
     <h2 class="pt-5 pb-5">
     <i class="fa fa-exclamation-triangle"></i><br>
       Data dashboard is under construction.
@@ -31,5 +18,17 @@
     </div>
   </div>
 
+  {% if construction_sankey %}
+    <h2>Construction sector sankey</h2>
+    <div class="border rounded bg-white p-3 mb-4">
+      {{ construction_sankey|safe }}
+    </div>
+  {% endif %}
+  {% if biomass_sankey %}
+    <h2>Biomass sector sankey</h2>
+    <div class="border rounded bg-white p-3 mb-4">
+      {{ biomass_sankey|safe }}
+    </div>
+  {% endif %}
 
 {% endblock %}
