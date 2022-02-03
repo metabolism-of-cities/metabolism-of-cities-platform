@@ -253,6 +253,7 @@ def get_material_tree(catalog):
         FROM stafdb_material child
         JOIN core_record r ON child.record_ptr_id = r.id
         JOIN location_with_level parent ON parent.record_ptr_id = child.parent_id
+       WHERE r.is_deleted = False AND r.is_public = True
     ), 
     maxlvl AS (
       SELECT max(lvl) maxlvl FROM location_with_level
@@ -325,11 +326,26 @@ def get_material_tree(catalog):
         else:
             # If not, then we need to loop and regroup... ugly script below
             all = {}
+
+            # This merges the top-level items into a single one...
             for each in a:
                 if not each["key"] in all:
                     all[each["key"]] = {"children": each["children"], "key": each["key"], "title": each["title"]}
                 else:
                     all[each["key"]]["children"] += each["children"]
+
+            # And this merges the second-level items into single ones if repeated
+            # Note that we could go down and down at further levels but at this stage it doesn't seem worth it
+            for key,value in all.items():
+                child_list = {}
+                for each in value["children"]:
+                    if not each["key"] in child_list:
+                        child_list[each["key"]] = {"children": each["children"], "key": each["key"], "title": each["title"]}
+                    else:
+                        child_list[each["key"]]["children"] += each["children"]
+
+                # And then we replace the existing (unmerged) children with a list of the new (merged) children
+                all[key]["children"] = list(child_list.values())
                 
             items = []
             for key,value in all.items():
