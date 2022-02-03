@@ -1556,7 +1556,12 @@ def materials(request, id=None, catalog=None, project_name=None, edit_mode=False
     if id:
         info = Material.objects.get(pk=id)
         list = Material.objects.filter(parent=info)
-        #list = Material.objects.filter(tree_node__ancestors__contains=[id])
+        parent_elements = Material.objects.filter(tree_node__ancestors__contains=[id])
+        parent_elements = MaterialTree.objects.get(node_id=id)
+        p(parent_elements.root)
+        p(parent_elements.ancestors)
+        a = Material.objects.filter(pk__in=parent_elements.ancestors).order_by("tree_node__ancestors")
+        p(a)
     else:
         if not catalog:
             catalog = get_object_or_404(MaterialCatalog, pk=request.GET.get("catalog"))
