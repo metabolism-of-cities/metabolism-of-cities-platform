@@ -65,3 +65,10 @@ class Closure(models.Model):
     class Meta:
         app_label = 'tree'
         managed = False
+
+----
+
+UPDATE stafdb_material SET parent_id = NULL WHERE parent_id = 25935;
+DELETE FROM "stafdb_material"
+WHERE "catalog_id" = '18998' AND "parent_id" IS NULL AND (("record_ptr_id" = '25935'));
+

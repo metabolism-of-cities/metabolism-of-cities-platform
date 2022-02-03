@@ -2664,6 +2664,10 @@ class Material(Record):
         else:
             return self.name
 
+    # This will return a queryset with all the parents of this material (entire tree)
+    def parents(self):
+        return Material.objects.filter(pk__in=self.tree_node.ancestors).order_by("tree_node__ancestors")
+
     class Meta:
         db_table = "stafdb_material"
         ordering = ["code", "name"]

@@ -19,40 +19,22 @@
             url: "{% url link catalog.id %}"
           {% endwith %}
         },
-        filter: {
-          autoApply: false,   // Re-apply last filter if lazy data is loaded
-          autoExpand: true, // Expand all branches that contain matches while filtered
-          counter: true,     // Show a badge with number of matching child nodes near parent icons
-          fuzzy: false,      // Match single characters in order, e.g. 'fb' will match 'FooBar'
-          hideExpandedCounter: true,  // Hide counter badge if parent is expanded
-          hideExpanders: true,       // Hide expanders if all child nodes are hidden by filter
-          highlight: true,   // Highlight matches by wrapping inside <mark> tags
-          leavesOnly: true, // Match end nodes only
-          nodata: true,      // Display a 'no data' status node if result is empty
-          mode: "dimm"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
-        },
       });
       var tree = $.ui.fancytree.getTree("#tree");
 
-      /*
-       * Event handlers for our little demo interface
-       */
       $("input[name=search]").on("keyup", function(e){
         var n,
           tree = $.ui.fancytree.getTree(),
-          args = "autoApply autoExpand fuzzy hideExpanders highlight leavesOnly nodata".split(" "),
+          args = "autoExpand hideExpanders highlight nodata".split(" "),
           opts = {},
-          filterFunc = $("#branchMode").is(":checked") ? tree.filterBranches : tree.filterNodes,
+          filterFunc = tree.filterNodes,
           match = $(this).val();
 
         $.each(args, function(i, o) {
           opts[o] = $("#" + o).is(":checked");
         });
-        opts.mode = $("#hideMode").is(":checked") ? "hide" : "dimm";
-
-              // Manually added as I did not get the filters above to work
-              opts.mode = "hide";
-              /// End manual stuff from Paul
+        opts.autoExpand = true;
+        opts.mode = "hide";
 
         if(e && e.which === $.ui.keyCode.ESCAPE || $.trim(match) === ""){
           $("button#btnResetSearch").trigger("click");
@@ -107,6 +89,20 @@
      .fancytree-ext-filter span.fancytree-title mark {
        background-color: #E09090;
      }
+    ul.fancytree-container {
+      padding:10px;
+      font-family:Lato, Helvetica Neue, Arial, Helvetica, sans-serif;
+      background: #f4f4f4;
+    }
+    #treesection h3{
+      margin-bottom: 0;
+      background: #1d7182;
+      font-size: 15px;
+      padding: 10px;
+      border: 2px solid #333;
+      border-bottom: 1px solid #999;
+      color: #fff;
+    }
     </style>
   {% endif %}
 
@@ -120,7 +116,14 @@
     <ol class="breadcrumb bg-transparent p-0">
       <li class="breadcrumb-item"><a href="{% url "staf:catalogs" %}">Data catalogs</a></li>
       <li class="breadcrumb-item"><a href="{% url "staf:materials_catalogs" %}">Materials</a></li>
-      <li class="breadcrumb-item active" aria-current="page">{{ catalog }}</li>
+      {% if catalog %}
+        <li class="breadcrumb-item active" aria-current="page">{{ catalog }}</li>
+      {% elif info %}
+        {% for each in info.parents %}
+          <li class="breadcrumb-item"><a href="{% url "staf:materials" each.id %}">{{ each }}</a></li>
+        {% endfor %}
+        <li class="breadcrumb-item active" aria-current="page">{{ info }}</li>
+      {% endif %}
     </ol>
   </nav>
 
@@ -146,18 +149,24 @@
   {% endif %}
 
   {% if catalog %}
-    <p>
-      <label>Filter:</label>
-      <input name="search" placeholder="Filter..." autocomplete="off">
-      <button id="btnResetSearch">&times;</button>
-      <span id="matches"></span>
-    </p>
 
-    <div id="tree">
+    <div class="input-group mb-3">
+      <input type="text" name="search" autocomplete="off" class="form-control" placeholder="Filter...">
+      <button id="btnResetSearch" class="input-group-text">&times;</button>
     </div>
+
+    <section id="treesection" class="mb-4">
+      <h3>Material tree</h3>
+      <div id="tree">
+      </div>
+    </section>
+
   {% endif %}
 
-    <article>
+
+  <article>
+
+  {% if False %}
     {% if list %}
       <table class="table border rounded datatable mt-4">
         <thead>
@@ -198,6 +207,8 @@
       </table>
     {% else %}
       <div class="alert alert-warning">No materials found in this category.</div>
+    {% endif %}
+
     {% endif %}
 
     {% if edit_mode %}
