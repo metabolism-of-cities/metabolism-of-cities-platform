@@ -16,7 +16,7 @@
         quicksearch: true,
         source: {
           {% with link=PROJECT.slug|add:":materials_json" %}
-            url: "{% url link catalog %}"
+            url: "{% url link catalog.id %}"
           {% endwith %}
         },
         filter: {
@@ -114,7 +114,15 @@
 
 {% block content %}
 
-  <h1 class="mb-0">{% if info %}{{ info }}{% else %}Materials{% endif %}</h1>
+  <h1 class="mb-0">{% if info %}{{ info }}{% else %}{{ catalog }}{% endif %}</h1>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-transparent p-0">
+      <li class="breadcrumb-item"><a href="{% url "staf:catalogs" %}">Data catalogs</a></li>
+      <li class="breadcrumb-item"><a href="{% url "staf:materials_catalogs" %}">Materials</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ catalog }}</li>
+    </ol>
+  </nav>
 
   {% if info.parent %}
     <a href="../{{ info.parent.id }}/" class="btn btn-primary-basic mt-2">
@@ -138,7 +146,6 @@
   {% endif %}
 
   {% if catalog %}
-    <h1>Example: 'filter' extension</h1>
     <p>
       <label>Filter:</label>
       <input name="search" placeholder="Filter..." autocomplete="off">
@@ -148,7 +155,7 @@
 
     <div id="tree">
     </div>
-  {% else %}
+  {% endif %}
 
     <article>
     {% if list %}
@@ -198,7 +205,5 @@
     {% endif %}
 
     </article>
-
-  {% endif %}
 
 {% endblock %}

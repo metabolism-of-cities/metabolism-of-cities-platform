@@ -211,8 +211,17 @@ def work_item_unvote(info, people):
 # Developed as per this article: 
 # https://schinckel.net/2017/07/01/tree-data-as-a-nested-list-redux/
 # The code works, but there is one key issue: it returns duplicated root nodes
-# which is also experienced by other users. If we are able to solve this, 
-# then we can get a very neat browsable tree using the fancytree plugin!
+# which is also experienced by other users (see comments on page above)
+# The duplicate root nodes are created when the children are of different depths
+# E.g.:
+# - Group 1
+#   - Item 1
+#   - Item 2
+#     - Subitem 1
+#   - Item 3
+# In this tree, there is one level going to depth=3 ("subitem 1"), whereas the others
+# are at depth=2. This is what seems to cause the problem; uneven depth within the nodes.
+# When all nodes have the same depth, no problem. 
 
 def get_material_tree(catalog):
 
@@ -221,8 +230,10 @@ def get_material_tree(catalog):
     # Lastly the jsonb_agg function contains an ORDER BY command, so we can order by name. 
     # Other than that this is similar in structure to the sample on the webpage outlined above
 
-    field_names = "record_ptr_id, code AS key, CONCAT_WS(' - ', code, core_record.name) AS title, catalog_id, parent_id, icon, measurement_type"
-    field_names_child = "child.record_ptr_id, child.code AS key, CONCAT_WS(' - ', child.code, r.name) AS title, child.catalog_id, child.parent_id, child.icon, child.measurement_type"
+    case_statement = "(CASE WHEN code IS NOT NULL THEN code ELSE CAST(record_ptr_id AS VARCHAR) END)"
+    field_names = f"record_ptr_id, {case_statement} AS key, CONCAT_WS(' - ', {case_statement}, core_record.name) AS title, catalog_id, parent_id, icon, measurement_type"
+    case_statement = "(CASE WHEN child.code IS NOT NULL THEN child.code ELSE CAST(child.record_ptr_id AS VARCHAR) END)"
+    field_names_child = f"child.record_ptr_id, {case_statement} AS key, CONCAT_WS(' - ', {case_statement}, r.name) AS title, child.catalog_id, child.parent_id, child.icon, child.measurement_type"
     field_names_location_level = "location_with_level.record_ptr_id, location_with_level.key, location_with_level.title, location_with_level.catalog_id, location_with_level.parent_id, location_with_level.icon, location_with_level.measurement_type, location_with_level.lvl"
     field_names_branch = "(branch_parent).record_ptr_id, (branch_parent).key, (branch_parent).title, (branch_parent).catalog_id, (branch_parent).parent_id, (branch_parent).icon, (branch_parent).measurement_type, (branch_parent).lvl"
     field_names_c = "c.record_ptr_id, c.key, c.title, c.catalog_id, c.parent_id, c.icon, c.measurement_type, c.lvl"
@@ -272,7 +283,7 @@ def get_material_tree(catalog):
            FROM location_with_level c
            WHERE NOT EXISTS (SELECT 1
                                FROM location_with_level hypothetical_child
-                              WHERE hypothetical_child.parent_id = c.record_ptr_id)
+                              WHERE hypothetical_child.parent_id = c.record_ptr_id) ORDER BY title
        )
     )
 
@@ -292,22 +303,35 @@ def get_material_tree(catalog):
         # However, due to the duplicated root elements we need to loop over both root elements,
         # check which children are duplicated, and generate a single list with only unique items
 
-    #return row[0]
-
-    # So this is what we do instead:
     a = json.loads(row[0])
-    all = {}
-    for each in a[0]["children"]:
-        if not each["key"] in all:
-            all[each["key"]] = {"children": each["children"], "key": each["key"], "title": each["title"]}
+    if len(a) == 1:
+        # The problem only occurs when there is only a single root element
+        return row[0]
+    else:
+        # So what we gotta do here is loop over all the top-level items, and check if 
+        # the same root element is duplicated. We check by putting all the KEY values (which are 
+        # unique to each node) in a list, and to check if there are any duplicates
+        key_list = []
+        duplicated_root_element = False
+        for each in a:
+            if each["key"] in key_list:
+                duplicated_root_element = True
+            else:
+                key_list.append(each["key"])
+
+        if not duplicated_root_element:
+            # If the root elements are different (different keys), then we are also good to go
+            return row[0]
         else:
-            all[each["key"]]["children"] += each["children"]
-    for each in a[1]["children"]:
-        if not each["key"] in all:
-            all[each["key"]] = {"children": each["children"], "key": each["key"], "title": each["title"]}
-        else:
-            all[each["key"]]["children"] += each["children"]
-    items = []
-    for key,value in all.items():
-        items.append(value)
-    return json.dumps(items)
+            # If not, then we need to loop and regroup... ugly script below
+            all = {}
+            for each in a:
+                if not each["key"] in all:
+                    all[each["key"]] = {"children": each["children"], "key": each["key"], "title": each["title"]}
+                else:
+                    all[each["key"]]["children"] += each["children"]
+                
+            items = []
+            for key,value in all.items():
+                items.append(value)
+            return json.dumps(items)
