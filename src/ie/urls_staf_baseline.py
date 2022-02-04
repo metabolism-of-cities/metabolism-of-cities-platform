@@ -172,6 +172,7 @@ baseline_staf_urlpatterns = [
     path("library/preview/<int:id>/", staf.libraryframe, name="libraryframe"),
 
     path("materials/catalogs/", staf.materials_catalogs, name="materials_catalogs"),
+    path("materials/catalogs/<int:catalog>/", staf.materials, name="materials_catalog"),
     path("materials/", staf.materials, name="materials"),
     path("materials/<int:id>/", staf.materials, name="materials"),
     path("materials/<int:id>/json/", staf.materials_json, name="materials_json"),

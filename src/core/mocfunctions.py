@@ -271,7 +271,7 @@ def get_material_tree(catalog):
                 jsonb_agg(branch_child ORDER BY branch_child->>'title')
            FROM (
              SELECT branch_parent,
-                    to_jsonb(branch_child) - 'lvl' - 'parent_id' - 'record_ptr_id' AS branch_child
+                to_jsonb(branch_child) - 'lvl' - 'parent_id' - 'record_ptr_id' AS branch_child
                FROM location_with_level branch_parent
                JOIN c_tree branch_child ON branch_child.parent_id = branch_parent.record_ptr_id
            ) branch
@@ -300,6 +300,7 @@ def get_material_tree(catalog):
 
         cursor.execute(query, [catalog])
         row = cursor.fetchone()
+
         # In an ideal scenario, we could just return row[0] and that's it. 
         # However, due to the duplicated root elements we need to loop over both root elements,
         # check which children are duplicated, and generate a single list with only unique items

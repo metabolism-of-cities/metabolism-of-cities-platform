@@ -1387,9 +1387,10 @@ def referencespace(request, id=None, space=None, slug=None):
 
         # Note that there may be _multiple_ spaces (e.g. cities) associated with the source document, for instance
         # because it is a national coverage shapefile. So we must check which of the spaces THIS item fits into
-        associated_spaces = info.source.spaces.all()
-        if associated_spaces.count() > 1:
-            associated_spaces = info.source.spaces.filter(geometry__contains=info.geometry)
+        if info.source:
+            associated_spaces = info.source.spaces.all()
+            if associated_spaces.count() > 1:
+                associated_spaces = info.source.spaces.filter(geometry__contains=info.geometry)
 
     all_siblings = 0
     try:
@@ -1552,40 +1553,26 @@ def materials(request, id=None, catalog=None, project_name=None, edit_mode=False
     if request.user.is_authenticated and request.user.id == 1:
         edit_mode = True
 
-    info = None
-    if id:
-        info = Material.objects.get(pk=id)
-        list = Material.objects.filter(parent=info)
-    else:
-        if not catalog:
-            catalog = get_object_or_404(MaterialCatalog, pk=request.GET.get("catalog"))
-        list = Material.objects.filter(parent__isnull=True, catalog=catalog)
+    catalog = get_object_or_404(MaterialCatalog, pk=request.GET.get("catalog"))
 
-    list = list.order_by("code", "name")
-
-    class Tree(dict):
-        def __missing__(self, key):
-            value = self[key] = type(self)()
-            return value
-        def insert(self, key, ancestors):
-            if ancestors:
-                self[ancestors[0]].insert(key, ancestors[1:])
-            else:
-              self[key]
-
-    #tree = Tree()
-    #for each in list:
-    #    tree.insert(each['node'], each['ancestors'])
-    #
-    #p(tree)
+    if request.GET.get("open"):
+        # In the GET parameter we pass the "key" from the json object. However, that key is
+        # either the "code" field if it is set, OR it is the id if the code is not set
+        # So let's check which one it is... 
+        # BTW at some point we include the id in the json object but I haven't been able to 
+        # engineer this yet
+        info = Material.objects.filter(catalog=catalog, code=request.GET.get("open"))
+        if not info:
+            info = Material.objects.filter(catalog=catalog, pk=request.GET.get("open"))
+        if info:
+            info = info[0]
+            return redirect("staf:material", info.id)
 
     context = {
         "list": list,
         "title": "Materials",
         "edit_mode": edit_mode,
-        "info": info,
         "catalog": catalog,
-        "load_datatables": True,
     }
 
     return render(request, "staf/materials.html", context)
@@ -1599,12 +1586,24 @@ def materials_json(request, id, download=False):
         response["Content-Disposition"] = f"attachment; filename=\"material_tree.json\""
     return response
 
-def material(request, catalog, id):
-    list = Material.objects.filter(id=1)
+def material(request, id):
+    info = get_object_or_404(Material, pk=id)
+
+    documents = LibraryItem.objects.values("name", "id").filter(data__material=info).distinct()
+    spaces = ReferenceSpace.objects.values("name", "id").filter(data_from_space__material=info).distinct()
+    if not spaces:
+        spaces = ReferenceSpace.objects.values("name", "id").filter(data_to_space__material=info).distinct()
+    if documents:
+        documents = documents[:10]
+    if spaces:
+        spaces = spaces[:10]
+
     context = {
-        "list": list,
+        "info": info,
+        "documents": documents,
+        "spaces": spaces,
     }
-    return render(request, "staf/materials.html", context)
+    return render(request, "staf/material.html", context)
 
 @login_required
 def material_form(request, catalog=None, id=None, parent=None, project_name=None):

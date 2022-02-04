@@ -19,6 +19,13 @@
             url: "{% url link catalog.id %}"
           {% endwith %}
         },
+      activate: function(event, data) {
+        var node = data.node;
+        // acces node attributes
+        l = node.title;
+        l += ' <a class="btn btn-light ml-4" style="padding:.175rem .75rem" href="?catalog={{ catalog.id }}&amp;open=' + node.key + '">More &raquo;</a>';
+        $("#selected-node").html(l);
+      },
       });
       var tree = $.ui.fancytree.getTree("#tree");
 
@@ -103,6 +110,17 @@
       border-bottom: 1px solid #999;
       color: #fff;
     }
+    #selected-node {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      left: 0;
+      background: #333;
+      color: #fff;
+      text-align: center;
+      padding: 5px 0;
+      z-index: 1000000;
+    }
     </style>
   {% endif %}
 
@@ -156,9 +174,14 @@
     </div>
 
     <section id="treesection" class="mb-4">
+
       <h3>Material tree</h3>
+
       <div id="tree">
       </div>
+
+      <div><span id="selected-node"></span></div>
+
     </section>
 
   {% endif %}

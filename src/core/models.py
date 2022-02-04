@@ -3015,7 +3015,7 @@ class TimePeriod(models.Model):
 class Data(models.Model):
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.FloatField(null=True, blank=True)
-    material = models.ForeignKey(Material, on_delete=models.CASCADE, null=True, blank=True)
+    material = models.ForeignKey(Material, on_delete=models.CASCADE, null=True, blank=True, related_name="data")
     material_name = models.CharField(max_length=500, null=True, blank=True)
     source = models.ForeignKey(LibraryItem, on_delete=models.CASCADE, related_name="data")
     origin_space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE, null=True, blank=True, related_name="data_from_space")

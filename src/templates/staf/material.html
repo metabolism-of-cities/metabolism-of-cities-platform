@@ -1,0 +1,85 @@
+{% extends "_base.html" %}
+{% load humanize %}
+
+{% block title %}{{ info }}{% endblock %}
+
+{% block head %}
+<style type="text/css">
+dl > dt:nth-of-type(2n+1),
+dl > dd:nth-of-type(2n+1) {
+  background: #f4f4f4;
+}
+dt,dd {
+  margin:0;
+  padding: 7px 0;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+  
+  <h1>Material fact sheet</h1>
+
+  <dl class="row">
+    <dt class="col-sm-3">Material ID</dt>
+    <dd class="col-sm-9"><code>{{ info.pk }}</code></dd>
+
+    <dt class="col-sm-3">Material</dt>
+    <dd class="col-sm-9">{{ info.name }}</dd>
+
+    <dt class="col-sm-3">Material catalog</dt>
+    <dd class="col-sm-9"><a href="{% url "staf:materials_catalog" info.catalog.id %}">{{ info.catalog }}</a></dd>
+
+    <dt class="col-sm-3">Material code</dt>
+    <dd class="col-sm-9">{{ info.code }}</dd>
+
+    {% if info.parents %}
+      <dt class="col-sm-3">Parent elements</dt>
+      <dd class="col-sm-9">
+        <ul>
+          {% for each in info.parents %}
+            <li><a href="{% url "staf:material" each.id %}">{{ each }}</a></li>
+          {% endfor %}
+        </ul>
+      </dd>
+    {% endif %}
+
+    {% if info.children.all %}
+      <dt class="col-sm-3">Child elements</dt>
+      <dd class="col-sm-9">
+        <ul>
+          {% for each in info.children.all %}
+            <li><a href="{% url "staf:material" each.id %}">{{ each }}</a></li>
+          {% endfor %}
+        </ul>
+      </dd>
+    {% endif %}
+
+    <dt class="col-sm-3">Number of data points</dt>
+    <dd class="col-sm-9"><a href="{% url "staf:data" %}?material={{ info.id }}">{{ info.data.count|intcomma }}</a></dd>
+
+    {% if documents %}
+      <dt class="col-sm-3">Data sources {% if documents|length == 10 %}<br><span class="badge badge-secondary">Limited to 10 records</span>{% endif %}</dt>
+      <dd class="col-sm-9">
+        <ul>
+        {% for each in documents %}
+          <li><a href="{% url URLS.LIBRARY_ITEM each.id %}">{{ each.name }}</a></li>
+        {% endfor %}
+        </ul>
+      </dd>
+    {% endif %}
+
+    {% if spaces %}
+      <dt class="col-sm-3">Reference spaces {% if spaces|length == 10 %}<br><span class="badge badge-secondary">Limited to 10 records</span>{% endif %}</dt>
+      <dd class="col-sm-9">
+        <ul>
+        {% for each in spaces %}
+          <li><a href="{% url URLS.SPACE each.id %}">{{ each.name }}</a></li>
+        {% endfor %}
+        </ul>
+      </dd>
+    {% endif %}
+
+  </dl>
+
+{% endblock %}
