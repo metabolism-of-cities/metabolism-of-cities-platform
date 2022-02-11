@@ -5,15 +5,21 @@
 {% block content %}
 
   <h1>{{ webpage }}</h1>
+
   {{ webpage.get_description }}
 
-  <div class="list-group">
-  {% for each in types %}
-    <a href="form/?type={{ each.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" class="list-group-item list-group-item-action">
-      <i class="fa fa-fw fa-{{ each.icon }}"></i>
-      {{ each }}
-    </a>
-  {% endfor %}
+  <div class="row">
+    {% for each in types %}
+      <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+        <a class="card icon-card btn-card" href="form/?type={{ each.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}">
+          <div class="icon">
+            <i class="fal fa-fw fa-{{ each.icon }}"></i>
+          </div>
+          <div class="card-header rounded-bottom">{{ each }}</div>
+        </a>
+      </div>
+    {% endfor %}
   </div>
+
 
 {% endblock %}

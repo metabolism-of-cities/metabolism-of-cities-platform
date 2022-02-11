@@ -56,8 +56,8 @@
         </p>
       </div>
     {% elif request.GET.parent %}
-      <div class="alert alert-warning">
-        {{ _("You are adding a screenshot or image to an existing document.") }}
+      <div class="alert alert-primary">
+        <i class="fal fa-exclamation-triangle mr-2"></i> {{ _("You are adding a screenshot or image to an existing document.") }}
       </div>
     {% endif %}
 
@@ -112,13 +112,15 @@
     {% endif %}
 
     {% if request.user.is_superuser %}
-      <div class="alert alert-warning">
-        <i class="fa fa-lock"></i> Super-user feature only
-      </div>
-      <div class="form-group">
-        <label>Additional reference spaces</label>
-        <input class="form-control" name="additional_spaces" />
-        <small>Add the IDs for reference spaces, separated by commas.</small>
+      <div class="border border-warning rounded mb-4">
+        <div class="alert alert-warning">
+          <i class="fal fa-lock mr-2"></i> Super-user feature only
+        </div>
+        <div class="form-group m-3">
+          <label>Additional reference spaces</label>
+          <input class="form-control" name="additional_spaces" />
+          <small>Add the IDs for reference spaces, separated by commas.</small>
+        </div>
       </div>
     {% endif %}
 

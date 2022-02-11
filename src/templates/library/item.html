@@ -342,6 +342,10 @@
               <a href="?edit&amp;return={{ request.get_full_path }}" class="list-group-item list-group-item-action list-group-item-primary">
                 <i class="fal fa-fw fa-pencil mr-1"></i> Edit
               </a>
+
+              <a href="{% url 'library:upload' %}form/?inventory=true&amp;type=38&amp;parent={{ info.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" class="list-group-item list-group-item-action list-group-item-primary">
+                <i class="fal fa-fw fa-plus mr-1"></i> Add image
+              </a>
             {% endif %}
             {% if curator and IS_DATA_PORTAL and url_processing %}
 

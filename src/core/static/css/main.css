@@ -367,6 +367,9 @@ img.tall-img {
       width: 100px;
       height: 50px;
       object-fit: cover; }
+  .btn-card .card-header {
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem; }
 
 .markdown-textarea markdown-toolbar {
   padding: .375rem;
