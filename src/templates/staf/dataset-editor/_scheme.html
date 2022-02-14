@@ -1,16 +1,15 @@
-
-            <label class="category">Color scheme</label>
-            <input type="hidden" name="scheme" value="{% if properties.scheme %}{{ properties.scheme }}{% else %}moc{% endif %}" id="scheme" />
-            <div id="color-schemes" class="row">
-              {% for name,colors in schemes.items %}
-              <div class="{% if name == 'twentyfour' %}col-md-12{% else %}col-md-6{% endif %} mb-3">
-                <div class="single-scheme {% if properties.scheme == name or not properties.scheme and name == 'moc' %}active{% endif %}" data-scheme="{{ name }}">
-                  <div class='row no-gutters'>
-                    {% for each in colors %}
-                      <div class="col single-color" style="background-color: {{ each }}">&nbsp;</div>
-                    {% endfor %}
-                  </div>
-                </div>
-              </div>
-              {% endfor %}
-            </div>
+<label class="category">Colour scheme</label>
+<input type="hidden" name="scheme" value="{% if properties.scheme %}{{ properties.scheme }}{% else %}moc{% endif %}" id="scheme" />
+<div id="color-schemes" class="row">
+  {% for name,colors in schemes.items %}
+  <div class="{% if name == 'twentyfour' %}col-md-12{% else %}col-md-6{% endif %} mb-3">
+    <div class="single-scheme {% if properties.scheme == name or not properties.scheme and name == 'moc' %}active{% endif %}" data-scheme="{{ name }}">
+      <div class='row no-gutters'>
+        {% for each in colors %}
+          <div class="col single-color" style="background-color: {{ each }}">&nbsp;</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>

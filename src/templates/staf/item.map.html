@@ -35,26 +35,28 @@
 
   <section>
     {% if info.meta_data.processing_error %}
-      <div class="alert alert-danger ml-2">
+      <div class="alert alert-danger d-inline-block">
+        <i class="fal fa-fw fa-exclamation-triangle mr-1"></i>
         <strong>There was an issue processing this shapefile.</strong><br>
         {{ info.meta_data.processing_error }}
       </div>
     {% elif not spaces %}
-      <div class="alert alert-dark ml-2">
+      <div class="alert alert-dark d-inline-block">
+        <i class="fal fa-fw fa-exclamation-triangle mr-1"></i>
         There are no layers available yet. Be sure to process shapefiles
         (<a href="https://multimedia.metabolismofcities.org/videos/332795/">instructions
-        here</a> [spanish]) in order to add layers to the map.
+        here</a>) in order to add layers to the map.
       </div>
     {% elif not data %}
-      <div class="alert alert-dark ml-2">
-        <i class="fa fa-exclamation-triangle"></i>
+      <div class="alert alert-dark d-inline-block">
+        <i class="fal fa-fw fa-exclamation-triangle mr-1"></i>
         We have been unable to generate a map. It seems like the elements in this map do not
         have coordinates. Be sure to check the source file.
       </div>
     {% else %}
       {% if space_count %}
         <div class="alert alert-warning">
-          <i class="fa fa-exclamation-circle"></i>
+          <i class="fal fa-fw fa-exclamation-circle mr-1"></i>
           The map contains a total of {{ space_count|intcomma }} items. Due to this large number of elements, we are
           only showing a partial map below.
           {% if simplify_factor %} The map is furthermore simplified to make it easier to render.{% endif %}
@@ -62,10 +64,10 @@
           to view the entire map.
         </div>
       {% elif simplify_factor %}
-        <div class="alert alert-warning">
-          <i class="fa fa-exclamation-circle"></i>
-          We are showing a simplified version of this map, due to the large file size ({{ size }}). If you want to
-          view the map with full details, click the button below.<br>
+        <div class="alert alert-primary d-inline-block text-center mb-0">
+          <div class="mb-2">
+            <i class="fal fa-fw fa-exclamation-circle mr-1"></i> Due to the large file size ({{ size }}), we are showing a simplified version of this map.
+          </div>
           <a href="./?show_full=true" rel="nofollow" class="btn btn-primary">View full version</a>
         </div>
       {% endif %}
