@@ -1,24 +1,38 @@
 {% extends "_base.html" %}
 
-{% block page_name %}reset{% endblock %}
 {% block title %}Reset your password{% endblock %}
 
+{% block head %}
+  <meta name="robots" content="noindex">
+
+  <style>
+    .reset-container {
+      max-width: 600px !important;
+      margin: 2.5rem auto;
+    }
+
+    .reset-container label {
+      margin-bottom: 0;
+    }
+  </style>
+{% endblock %}
+
 {% block content %}
-  <div class="card login">
-    <div class="card-body">
-      <h3>Reset your password</h3>
-      <hr>
-      <p>
-        Enter your email address below and we will send you an email with instructions explaining how to reset your password.
-      </p>
-      <hr>
-      <form method="post">
-        {% csrf_token %}
-        <div class="form-group">
-          <input type="email" class="form-control" id="email" name="email" placeholder="Your email address" required="required">
-        </div>
-        <button type="submit" class="btn btn-primary"><i class="fas fa-fw fa-key"></i> Reset password</button>
-      </form>
+  <div class="reset-container">
+    <h1>Reset your password</h1>
+    <p>
+      Enter your email address below and we will send you an email with instructions explaining how to reset your password.
+    </p>
+    <div class="card">
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            <input type="email" class="form-control" id="email" name="email" placeholder="Your email address" required="required">
+          </div>
+          <button type="submit" class="btn btn-primary"><i class="fal fa-fw fa-key"></i> Reset password</button>
+        </form>
+      </div>
     </div>
   </div>
 {% endblock %}

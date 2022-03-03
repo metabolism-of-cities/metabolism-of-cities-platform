@@ -1,10 +1,19 @@
 {% extends "_base.html" %}
-
-{% block page_name %}register{% endblock %}
 {% block title %}Register Form{% endblock %}
 
 {% block head %}
   <meta name="robots" content="noindex">
+
+  <style>
+    .register-container {
+      max-width: 600px !important;
+      margin: 2.5rem auto;
+    }
+
+    .register-container label {
+      margin-bottom: 0;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -13,77 +22,84 @@
     {% include "hub/_nav.html" %}
   {% endif %}
 
-  <div class="card register">
-    <div class="card-body">
-      <h3>Register</h3>
-      <hr>
-      <form method="post" action="" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% if PROJECT.slug == "ascus2021" %}
-          <p>Do you already have a Metabolism of Cities account? <a href="../login/">Log in here.</a></p>
-        {% elif PROJECT.id == 16 %}
-          <div class="form-group">
-            <label for="org">Organisation</label>
-            <input type="text" class="form-control" id="org" name="organization" value="{{ request.POST.organization }}">
-          </div>
-        {% endif %}
-        <div class="form-group">
-          <label for="name">Your name</label>
-          <input type="name" class="form-control" id="name" name="name" required value="{{ request.POST.name }}">
-        </div>
-        {% if request.GET.course_signup == "331733" %}
-          <div class="form-group">
-            <label for="city">City</label>
-            <input type="name" class="form-control" id="city" name="city" required value="{{ request.POST.city }}">
-          </div>
-        {% endif %}
-        <div class="form-group">
-          <label for="email">E-mail</label>
-          <input type="email" class="form-control" id="email" name="email" required value="{{ request.POST.email }}">
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" class="form-control" id="password" name="password" required value="{{ request.POST.password }}">
-        </div>
-        {% if request.GET.course_signup == "331733" %}
-          <div class="alert alert-warning">
-            <h2 class="h5 text-center">Preguntas para participantes del curso</h2>
-
+  <div class="register-container">
+    <h1>Create your account</h1>
+    <div class="card">
+      <div class="card-body">
+        <form method="post" action="" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% if PROJECT.slug == "ascus2021" %}
+            <p>Do you already have a Metabolism of Cities account? <a href="../login/">Log in here.</a></p>
+          {% elif PROJECT.id == 16 %}
             <div class="form-group">
-              <label>
-                ¿Conoces algo del tema <em>metabolismo urbano</em>?
-              </label>
-              <select class="custom-select" required name="previous_um_knowlege">
-                <option selected></option>
-                <option value="yes">Sí, estoy familiarizado con el tema</option>
-                <option value="little-bit">Sí, pero poco</option>
-                <option value="no">Todavía no</option>
-              </select>
+              <label for="org">Organisation</label>
+              <input type="text" class="form-control" id="org" name="organization" value="{{ request.POST.organization }}">
             </div>
-
-            <div class="form-group">
-              <label>
-                ¿Por qué te interesa el curso?
-              </label>
-              <textarea name="interest" class="form-control" rows="5" placeholder=""></textarea>
-            </div>
-
+          {% endif %}
+          <div class="form-group">
+            <label for="name">Your name</label>
+            <input type="name" class="form-control" id="name" name="name" required value="{{ request.POST.name }}">
           </div>
-        {% endif %}
-        <div class="form-group">
-          <label for="photo">Profile photo <code class="ml-4">optional</code></label>
-          <input type="file" class="form-control" id="photo" name="photo">
-        </div>
-        <div class="form-group">
-          <label>Background/interests <code class="ml-4">optional</code></label>
-          <textarea name="background" class="form-control" rows="5" placeholder="Please let us know a bit about your background and interests">{{ request.POST.background }}</textarea>
-        </div>
-        <div class="form-group">
-          <label for="tw">Prove you are human: please write <strong>hello</strong> in the box below</label>
-          <input type="tw" class="form-control" id="tw" name="tw" required value="{{ request.POST.tw }}">
-        </div>
-        <button type="submit" class="btn btn-primary"><i class="fas fa-fw fa-user-plus"></i> Register</button>
-      </form>
+          {% if request.GET.course_signup == "331733" %}
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="name" class="form-control" id="city" name="city" required value="{{ request.POST.city }}">
+            </div>
+          {% endif %}
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" class="form-control" id="email" name="email" required value="{{ request.POST.email }}">
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required value="{{ request.POST.password }}">
+          </div>
+          {% if request.GET.course_signup == "331733" %}
+            <div class="alert alert-warning">
+              <h2 class="h5 text-center">Preguntas para participantes del curso</h2>
+
+              <div class="form-group">
+                <label>
+                  ¿Conoces algo del tema <em>metabolismo urbano</em>?
+                </label>
+                <select class="custom-select" required name="previous_um_knowlege">
+                  <option selected></option>
+                  <option value="yes">Sí, estoy familiarizado con el tema</option>
+                  <option value="little-bit">Sí, pero poco</option>
+                  <option value="no">Todavía no</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>
+                  ¿Por qué te interesa el curso?
+                </label>
+                <textarea name="interest" class="form-control" rows="5" placeholder=""></textarea>
+              </div>
+
+            </div>
+          {% endif %}
+          <div class="form-group">
+            <label for="photo">Profile photo <small>(optional)</small></label>
+            <input type="file" class="form-control" id="photo" name="photo">
+          </div>
+          <div class="form-group">
+            <label>Background/interests <small>(optional)</small></label>
+            <textarea name="background" class="form-control" rows="5" placeholder="Please let us know a bit about your background and interests">{{ request.POST.background }}</textarea>
+          </div>
+          <div class="form-group">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="privacy" required>
+              <label class="custom-control-label" for="privacy">I accept the <a target="_blank" href="https://metabolismofcities.org/about/privacy/">Metabolism of Cities privacy policy</a></label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="tw">Please prove you are human: please write <strong>hello</strong> in the box below</label>
+            <input type="tw" class="form-control" id="tw" name="tw" required value="{{ request.POST.tw }}">
+          </div>
+          <button type="submit" class="btn btn-primary"><i class="fal fa-fw fa-user-plus"></i> Register</button>
+        </form>
+      </div>
     </div>
   </div>
 {% endblock %}

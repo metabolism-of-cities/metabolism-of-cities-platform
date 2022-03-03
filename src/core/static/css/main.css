@@ -1169,34 +1169,6 @@ body.dataset.editor.map .single-bucket {
   .highcharts-container .highcharts-drillup-button text {
     fill: #fff !important; }
 
-body.login .login.card,
-body.login .register.card,
-body.login .reset.card,
-body.register .login.card,
-body.register .register.card,
-body.register .reset.card,
-body.reset .login.card,
-body.reset .register.card,
-body.reset .reset.card {
-  max-width: 600px !important;
-  margin: 2.5rem auto; }
-  body.login .login.card hr,
-  body.login .register.card hr,
-  body.login .reset.card hr,
-  body.register .login.card hr,
-  body.register .register.card hr,
-  body.register .reset.card hr,
-  body.reset .login.card hr,
-  body.reset .register.card hr,
-  body.reset .reset.card hr {
-    margin-left: -1.25rem;
-    width: calc(100% + 2.5rem); }
-
-body.login .no-account,
-body.register .no-account,
-body.reset .no-account {
-  margin-top: 4rem; }
-
 body.team .single-person {
   margin-bottom: 2rem; }
   body.team .single-person .card-img-block img {
