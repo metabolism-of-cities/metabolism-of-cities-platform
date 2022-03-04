@@ -100,10 +100,12 @@
   </script>
   <script src="{% static 'js/data.js' %}?refresh=1333"></script>
   <script>
+    console.log("initial: {{ info.get_dataviz_properties.initial_chart }}")
+
     // first visualisation to open
     {% if info.get_dataviz_properties %}
-      $(".nav-link[data-tab='{{ info.get_dataviz_properties.initial_chart }}']").click();
+      $(".nav-link[data-viz='{{ info.get_dataviz_properties.initial_chart }}']").click();
     {% else %}
-      $(".nav-link[data-tab='bar']").click();
+      $(".nav-link[data-viz='bar']").click();
     {% endif %}
   </script>
