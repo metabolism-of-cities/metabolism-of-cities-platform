@@ -723,25 +723,28 @@
       </div>
 
       {% if request.user.is_superuser %}
-        <section id="metadata" role="tabpanel" class="tab-pane border mt-5 p-3 text-muted">
-          <h4>Metadata</h4>
-          <span class="badge badge-primary mb-4">Available to super user only</span>
+      <section id="metadata" class="bg-white">
+        <div class="border border-warning rounded mb-4">
+          <div class="alert alert-warning">
+            <i class="fal fa-lock mr-2"></i> Available to super users only
+          </div>
+
+          <h4 class="pl-3">Metadata</h4>
 
           {% if info.meta_data %}
-            <div class="bg-white rounded">
-              <ul class="list-group list-group-flush">
-              {% for key,value in info.meta_data.items %}
-                <li class="list-group-item table-item">
-                  <div class="font-weight-bold">{{ key }}</div>
-                  <div>{{ value }}</div>
-                </li>
-              {% endfor %}
-              </ul>
-            </div>
+            <ul class="list-group list-group-flush">
+            {% for key,value in info.meta_data.items %}
+              <li class="list-group-item table-item">
+                <div class="font-weight-bold">{{ key }}</div>
+                <div>{{ value }}</div>
+              </li>
+            {% endfor %}
+            </ul>
           {% else %}
-            <h5>This file has no meta data</h5>
+            <h5 class="pl-3">This file has no meta data</h5>
           {% endif %}
-        </section>
+        </div>
+      </section>
       {% endif %}
 
       {% if PROJECT.slug == "ascus" or PROJECT.slug == "ascus2021" %}
