@@ -104,7 +104,7 @@
     }
 
     iframe {
-      width: 100%
+      width: 100%;
       height: 500px;
       margin-bottom: 2rem;
     }
@@ -363,7 +363,7 @@
         {% if report.population_dataset %}
           {% if report.population_dataset.is_part_of %}
             {% if report.population_dataset.is_part_of.data.all %}
-              <iframe class="mb-4" src="/library/preview/{{ report.population_dataset.is_part_of.id }}/" onload="resizeIframe(this)"></iframe>
+              <iframe class="libraryitem mb-4" src="/library/preview/{{ report.population_dataset.is_part_of.id }}/" onload="resizeIframe(this)"></iframe>
             {% elif report.population_dataset.is_part_of.type.name == "Image" %}
               <img src="{{ report.population_dataset.is_part_of.image.url }}" class="img-fluid">
               <p><a href="{% url 'cityloops:library_item' report.population_dataset.is_part_of.id %}">Data source</a></p>
@@ -376,7 +376,7 @@
               <img src="{{ report.population_dataset.image.url }}" class="img-fluid">
               <p><a href="{% url 'cityloops:library_item' report.population_dataset.id %}">Data source</a></p>
             {% elif report.population_dataset.data.all %}
-              <iframe class="mb-4" src="/library/preview/{{ report.population_dataset.id }}/" onload="resizeIframe(this)"></iframe>
+              <iframe class="libraryitem mb-4" src="/library/preview/{{ report.population_dataset.id }}/" onload="resizeIframe(this)"></iframe>
             {% endif %}
           {% endif %}
         {% else %}
@@ -568,7 +568,7 @@
               <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.id %}">Data source</a></p>
             {% endif %}
           {% else %}
-            <iframe class="mb-4" src="/library/preview/{{ report.land_use_dataset.id }}/" onload="resizeIframe(this)"></iframe>
+            <iframe class="libraryitem mb-4" src="/library/preview/{{ report.land_use_dataset.id }}/" onload="resizeIframe(this)"></iframe>
             <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.id %}">Data source</a></p>
           {% endif %}
         {% else %}
@@ -682,16 +682,53 @@
       <section>
         <h4>The actors of the {{ sector }} sector</h4>
 
-        {% if report.actors_dataset %}
-          {% if report.actors_dataset.type.name == "Image" %}
-            <img src="{{ report.actors_dataset.image.url }}" class="img-fluid">
-            {% if report.actors_dataset.is_part_of %}
-              <p><a href="{% url 'cityloops:library_item' report.actors_dataset.is_part_of.id %}">Data source</a></p>
-            {% else %}
-              <p><a href="{% url 'cityloops:library_item' report.actors_dataset.id %}">Data source</a></p>
+        {% if report.population_dataset %}
+          {% if report.population_dataset.is_part_of %}
+            {% if report.population_dataset.is_part_of.data.all %}
+              <iframe class="libraryitem mb-4" src="/library/preview/{{ report.population_dataset.is_part_of.id }}/" onload="resizeIframe(this)"></iframe>
+            {% elif report.population_dataset.is_part_of.type.name == "Image" %}
+              <img src="{{ report.population_dataset.is_part_of.image.url }}" class="img-fluid">
+              <p><a href="{% url 'cityloops:library_item' report.population_dataset.is_part_of.id %}">Data source</a></p>
+            {% elif report.population_dataset.type.name == "Image" %}
+              <img src="{{ report.population_dataset.image.url }}" class="img-fluid">
+              <p><a href="{% url 'cityloops:library_item' report.population_dataset.is_part_of.id %}">Data source</a></p>
             {% endif %}
           {% else %}
-            <iframe class="mb-4" src="{% url 'staf:libraryframe' report.actors_dataset.id %}" onload="resizeIframe(this)"></iframe>
+            {% if report.population_dataset.type.name == "Image" %}
+              <img src="{{ report.population_dataset.image.url }}" class="img-fluid">
+              <p><a href="{% url 'cityloops:library_item' report.population_dataset.id %}">Data source</a></p>
+            {% elif report.population_dataset.data.all %}
+              <iframe class="libraryitem mb-4" src="/library/preview/{{ report.population_dataset.id }}/" onload="resizeIframe(this)"></iframe>
+            {% endif %}
+          {% endif %}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">5A</span>
+        {% endif %}
+
+        {% if report.population_description_html %}
+          {{ report.population_description_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">5B</span>
+        {% endif %}
+
+        {% if report.actors_dataset %}
+          {% if report.actors_dataset.is_part_of %}
+            {% if report.actors_dataset.is_part_of.data.all %}
+              <iframe class="libraryitem mb-4" src="{% url 'staf:libraryframe' report.actors_dataset.id %}" onload="resizeIframe(this)"></iframe>
+            {% elif report.actors_dataset.is_part_of.type.name == "Image" %}
+              <img src="{{ report.actors_dataset.is_part_of.image.url }}" class="img-fluid">
+              <p><a href="{% url 'cityloops:library_item' report.actors_dataset.is_part_of.id %}">Data source</a></p>
+            {% elif report.actors_dataset.type.name == "Image" %}
+              <img src="{{ report.actors_dataset.image.url }}" class="img-fluid">
+              <p><a href="{% url 'cityloops:library_item' report.actors_dataset.is_part_of.id %}">Data source</a></p>
+            {% endif %}
+          {% else %}
+            {% if report.actors_dataset.type.name == "Image" %}
+              <img src="{{ report.actors_dataset.image.url }}" class="img-fluid">
+              <p><a href="{% url 'cityloops:library_item' report.actors_dataset.id %}">Data source</a></p>
+            {% elif report.actors_dataset.data.all %}
+              <iframe class="libraryitem mb-4" src="{% url 'staf:libraryframe' report.actors_dataset.id %}" onload="resizeIframe(this)"></iframe>
+            {% endif %}
           {% endif %}
         {% else %}
           <span class="question-number bg-dark text-light rounded px-2 mr-2">12A</span>
