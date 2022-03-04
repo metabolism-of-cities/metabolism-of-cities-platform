@@ -618,7 +618,10 @@
       {% endif %}
 
       {% if info.data.all %}
-        {% include "_data.visualizations.html" %}
+        <section>
+          <h3>Data</h3>
+          {% include "_data.visualizations.html" %}
+        </section>
       {% endif %}
 
       {% if info.meta_data.ready_for_processing or "crunch" in request.GET %}

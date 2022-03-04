@@ -10,26 +10,23 @@
 {% endblock %}
 
 {% block css %}
-  <style type="text/css">
-    .top-message-box .alert {
-      text-align: center;
-    }
+  <style>
     #map {
-      height: 50vh;
+      height: 600px;
     }
   </style>
 {% endblock %}
 
 {% block iframe_content %}
 
-<div class="bar alert alert-dark">
-  <h3 class="h5 text-center mb-0 pb-0"><strong>{{ info }}</strong></h3>
-</div>
+<h4>{{ info }}</h4>
 
 <div id="map" class="leaflet-map"></div>
 
 <div class="text-center mt-3 mb-3">
-  <a class="btn btn-lg btn-warning" href="{% url URLS.LIBRARY_ITEM info.id %}" target="_parent">View details <i class="fa fa-arrow-right"></i> </a>
+  <a class="btn btn-lg btn-warning" href="{% url URLS.LIBRARY_ITEM info.id %}" target="_parent">
+    View details <i class="fal fa-fw fa-arrow-right"></i>
+  </a>
 </div>
 
 {% endblock %}

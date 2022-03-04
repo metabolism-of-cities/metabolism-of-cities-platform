@@ -40,22 +40,22 @@
 
 {% block iframe_content %}
 
-<div class="bar alert alert-dark">
-  <h3 class="h5 text-center"><strong>{{ info }}</strong></h3>
-</div>
+<!-- <h4>{{ info }}</h4> -->
 
 {% if info.type.name == "Video Recording" %}
 
-<div class="videoblock">
-  {% if info.video %}
+{% if info.video %}
+  <div class="videoblock">
     {{ info.video.embed|safe }}
-  {% else %}
-    {{ info.embed|safe }}
-  {% endif %}
-</div>
+  </div>
+{% else %}
+  {{ info.embed|safe }}
+{% endif %}
 
-<div class="text-center mt-3">
-  <a class="btn btn-lg btn-warning" href="{% url URLS.LIBRARY_ITEM info.id %}" target="_parent">View details <i class="fa fa-arrow-right"></i> </a>
+<div class="text-center mt-3 mb-3">
+  <a class="btn btn-lg btn-warning" href="{% url URLS.LIBRARY_ITEM info.id %}" target="_parent">
+    View details <i class="fal fa-fw fa-arrow-right"></i>
+  </a>
 </div>
 
 {% else %}

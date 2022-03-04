@@ -381,7 +381,7 @@
             <p><a href="{% url 'cityloops:library_item' report.population_dataset.id %}">Data source</a></p>
           {% endif %}
         {% else %}
-          <iframe class="libraryitem mb-4" src="/library/preview/{{ report.population_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
+          <iframe class="mb-4" src="/library/preview/{{ report.population_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
         {% endif %}
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">5A</span>
@@ -574,7 +574,7 @@
             <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.id %}">Data source</a></p>
           {% endif %}
         {% else %}
-          <iframe class="libraryitem mb-4" src="/library/preview/{{ report.land_use_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
+          <iframe class="mb-4" src="/library/preview/{{ report.land_use_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
           <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.id %}">Data source</a></p>
         {% endif %}
       {% else %}
@@ -703,7 +703,7 @@
             <p><a href="{% url 'cityloops:library_item' report.actors_dataset.id %}">Data source</a></p>
           {% endif %}
         {% else %}
-          <iframe class="libraryitem mb-4" src="{% url 'staf:libraryframe' report.actors_dataset.id %}" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
+          <iframe class="mb-4" src="{% url 'staf:libraryframe' report.actors_dataset.id %}" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
         {% endif %}
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">12A</span>
