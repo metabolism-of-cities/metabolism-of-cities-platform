@@ -1134,6 +1134,8 @@ iframe.libraryitem {
   width: 100%;
   border: none;
   min-height: 400px; }
+  iframe.libraryitem body {
+    background-color: transparent; }
 
 body.dataset.editor .preview-wrap {
   padding: 1rem;

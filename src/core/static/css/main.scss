@@ -1780,6 +1780,10 @@ iframe.libraryitem {
   width: 100%;
   border: none;
   min-height: 400px;
+
+  body {
+    background-color: transparent;
+  }
 }
 
 // DATASET EDITOR PAGE
@@ -2218,6 +2222,7 @@ body.fullwidth .container.main-content {
   >.alert {
     text-align: center;
   }
+
   .fullwidth-wrapper {
     padding-top: 4rem;
     padding-bottom: 4rem;
