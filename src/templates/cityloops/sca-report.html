@@ -611,7 +611,7 @@
         <thead>
           <tr>
             <th></th>
-            <th>{% if space.slug == "mikkeli" or space.slug == "porto" %}GVA{% else %}GDP{% endif %} (monetary value, in {{ currency }})</th>
+            <th>{% if space.slug == "mikkeli" or space.slug == "porto" %}GVA{% elif space.slug == "bodo" %}Turnover{% else %}GDP{% endif %} (monetary value, in {{ currency }})</th>
             <th>Employees</th>
           </tr>
         </thead>
@@ -785,6 +785,11 @@
       {% elif space.slug == "roskilde" and sector == "construction" %}
         <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/211221_Roskilde_construction_Sankey_v1.large.png">
         <p><a href="https://cityloops.metabolismofcities.org/library/1009536/">Data source</a></p>
+
+      {% elif space.slug == "bodo" and sector == "construction" %}
+        <img class="img-fluid" src="https://cityloops.metabolismofcities.org/media/records/Bodø_construction_sector_Sankey_diagram.large.png">
+        <p><a href="https://cityloops.metabolismofcities.org/library/1004599/">Data source</a></p>
+
       {% endif %}
 
       {% if report.sankey_description_html %}
