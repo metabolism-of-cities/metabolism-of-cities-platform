@@ -991,13 +991,6 @@
     function resizeIframe(obj) {
       obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
     }
-
-    // remove static images that should only show up in the printed version of the report
-    // we need to run this twice; the first removes the p tag around the image
-    // the second time it removes the p tag around the data source link
-    // it's an ugly fix, but there's no good way to do this more efficiently (that I know of)
-    $(".static-image").next("p").remove()
-    $(".static-image").next("p").remove()
   </script>
 </body>
 </html>
