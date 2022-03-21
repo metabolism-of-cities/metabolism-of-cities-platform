@@ -51,7 +51,10 @@ def index(request):
         "show_project_design": True,
         "webpage": Webpage.objects.get(pk=31595),
     }
-    return render(request, "metabolism_manager/index.html", context)
+    if request.user.is_authenticated:
+        return redirect("platformu:admin_dashboard")
+    else:
+        return render(request, "metabolism_manager/index.html", context)
 
 @login_required
 def admin(request):
