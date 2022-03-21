@@ -8,12 +8,18 @@
     height: 700px;
     max-height: 90vh;
   }
+
+  #map {
+    height: 600px;
+  }
 </style>
 {% endblock %}
 
 {% block content %}
 
 <h1 class="mb-4">Connections between organisations</h1>
+
+<div id="map" class="border mb-4" hidden></div>
 
 <section>
   <div id="connections" class="border"></div>
@@ -43,6 +49,50 @@
 {% endblock %}
 
 {% block footer %}
+<!-- add connections to map -->
+<script>
+  function showMap() {
+    $("#map").removeAttr("hidden")
+
+    // create the array with all the connections
+    let connections = [
+      {% for each in connections %}
+        {% if each.record_parent.meta_data.lat and each.record_parent.meta_data.lng and each.record_child.meta_data.lat and each.record_child.meta_data.lng %}
+          {
+              "type": "Feature",
+              "properties": {
+                "dependency": "{{ each.meta_data.dependency }}",
+              },
+              "geometry": {
+                  "type": "LineString",
+                  "coordinates": [[{{ each.record_parent.meta_data.lng }}, {{ each.record_parent.meta_data.lat }}], [{{ each.record_child.meta_data.lng }}, {{ each.record_child.meta_data.lat }}]],
+              }
+          },
+        {% endif %}
+      {% endfor %}
+    ];
+
+    // set the style depending on the dependency
+    let connectionLines = L.geoJSON(connections, {
+      style: function(feature) {
+        switch (feature.properties.dependency) {
+          case 'Low':    return {color: "green"};
+          case 'Medium': return {color: "blue"};
+          case 'High':   return {color: "red"};
+          default:       return {color: "black"};
+        }
+      }
+    })
+
+    // add connections to the map
+    connectionLines.addTo(map);
+
+    // zoom the map to the polyline
+    map.fitBounds(connectionLines.getBounds());
+  }
+</script>
+
+<!-- add connections to network graph -->
 <script src="https://code.highcharts.com/modules/networkgraph.js"></script>
 <script>
   const defaultFont = "Lato, Helvetica Neue, Arial, Helvetica, sans-serif";
@@ -125,9 +175,8 @@
             from: "{{ each.record_parent }}",
             to: "{{ each.record_child }}",
             className: "test",
-            color: "#000",
-            // width: "{% if each.meta_data.dependency == 'Low' %}1{% elif each.meta_data.dependency == 'Medium' %}3{% elif each.meta_data.dependency == 'High' %}7{% endif %}",
-            width: "2",
+            color: "{% if each.meta_data.dependency == 'Low' %}#666{% elif each.meta_data.dependency == 'Medium' %}#333{% elif each.meta_data.dependency == 'High' %}#000{% endif %}",
+            width: "{% if each.meta_data.dependency == 'Low' %}2{% elif each.meta_data.dependency == 'Medium' %}4{% elif each.meta_data.dependency == 'High' %}5{% endif %}",
             custom: {
               link: "{% url 'platformu:admin_entity' my_organization.id each.id %}",
             },

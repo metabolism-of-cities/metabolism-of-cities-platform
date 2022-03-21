@@ -194,7 +194,6 @@ footer {
     footer#sitemap .projects-category {
       font-weight: bold;
       margin-bottom: .25rem;
-      border-bottom: 2px solid rgba(33, 37, 41, 0.5);
       color: #212529;
       font-size: 1.1rem; }
     footer#sitemap a {

@@ -808,6 +808,7 @@ def admin_connections(request, organization=None):
         "my_organization": my_organization,
         "load_highcharts": True,
         "load_datatables": True,
+        "load_leaflet": True,
         "connections": connections,
         "organization_list": organization_list,
     }
