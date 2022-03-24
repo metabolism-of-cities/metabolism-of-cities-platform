@@ -631,6 +631,8 @@ def sca_report(request, slug, sector):
         sankey_labels = ["","","","","","","","","","","Redistribution","","","","Reuse","","Reuse","","","","","","","","","","Recycling","Recycling","","","","","","","","","","","","","","","","",""]
         if sector == "construction":
             sankey_values = [316450,1898700,949350,0,3164500,252168.08,0,0,183394.97,0,0,0,0,948973.36,316324.45,5061191.25,6835.20,676685.21,173998.18,12157.43,347990.87,3687.15,8114.4,5334.17,132238.23,57951.20,1215.74,104397.26,0,0,0,70728.43,141456.85,70728.43,69678.4,0,0,0,0,70728.43,17807.65,17807.65,284922.45,0,35615.31]
+            sca_report_id = 1010612
+            sca_report_pdf_url = "https://cityloops.metabolismofcities.org/media/uploads/libraryitem/report/Sector-wide_Circularity_Assessment_for_the_Construction_Sector_-_Roskilde.pdf"
     elif slug == "sevilla":
         sankey_source = [0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,4,4,5,5,5,5,5,5,5,6,7,8,9,9,10,10,10,10,10,10,10,10,10,11,11,11,11,11]
         sankey_target = [1,2,3,5,11,2,3,5,11,3,3,5,11,5,2,4,3,5,12,6,7,8,9,1,11,2,1,0,2,13,1,2,3,5,12,6,8,9,7,12,6,8,9,7]
