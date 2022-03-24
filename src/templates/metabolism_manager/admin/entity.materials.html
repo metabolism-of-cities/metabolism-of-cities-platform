@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% load static %}
 
 {% block title %}Metabolism Manager{% endblock %}
 {% block page_name %}entity materials{% endblock %}
@@ -38,29 +39,54 @@
       top: 15px;
       right: 1rem;
     }
+
+    .gallery-view-search-wrapper {
+      padding-bottom: 6px;
+    }
+
+    .gallery-view-number-dropdown {
+      width: auto;
+      display: inline-block;
+    }
+
+    .gallery-view-search {
+      margin-left: 3px;
+      display: inline-block;
+      width: auto;
+    }
   </style>
 {% endblock %}
 
 
 {% block content %}
-  {% include "metabolism_manager/admin/_entity.menu.html" %}
+{% include "metabolism_manager/admin/_entity.menu.html" %}
 
-  {% if data %}
-    <div id="gallery-wrapper" class="row hidden">
+{% if data %}
+  <div id="gallery-wrapper" class="hidden">
+    <div class="row gallery-view-search-wrapper">
+      <div class="col-md-6">
+      </div>
+      <div class="col-md-6 text-right">
+        <label>Search:
+          <input type="search" class="form-control form-control-sm gallery-view-search search">
+        </label>
+      </div>
+    </div>
+    <div class="row list">
       {% for each in data %}
         <div class="col-md-6 col-lg-4 mb-4">
           <a class="d-block bg-white text-dark single-gallery-item border" href="{% url 'platformu:admin_datapoint' each.id %}">
             <div class="card-header position-relative font-weight-bold">
               <i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-2"></i>
               {% if each.name %}
-                {{ each.name }}
+                <span class="name">{{ each.name }}</span>
               {% else %}
-                {{ each.material_type }}
+                <span class="type">{{ each.material_type }}</span>
               {% endif %}
               {% if each.type == 'supply' %}
-                <span class="badge badge-primary">Supply</span>
+                <span class="badge badge-primary status">Supply</span>
               {% else %}
-                <span class="badge badge-secondary">Demand</span>
+                <span class="badge badge-secondary status">Demand</span>
               {% endif %}
             </div>
             {% if each.image %}
@@ -72,7 +98,7 @@
               {% if each.owner.meta_data.address %}
                 <li class="list-group-item"><i class="fal fa-fw fa-map-marker-alt mr-2"></i> {{ each.owner.meta_data.address }}</li>
               {% endif %}
-              <li class="list-group-item"><i class="fal fa-fw fa-building mr-2"></i> {{ each.owner }}</li>
+              <li class="list-group-item"><i class="fal fa-fw fa-building mr-2"></i> <span class="owner">{{ each.owner }}</span></li>
               <li class="list-group-item"><i class="fal fa-fw fa-balance-scale mr-2"></i> {{ each.absolute_quantity|floatformat }} {{ each.unit.symbol }}</li>
               <li class="list-group-item"><i class="fal fa-fw fa-calendar mr-2"></i> {{ each.start_date|date:'d N Y' }} - {% if each.end_date %}{{ each.end_date|date:"d M Y" }}{% else %}open ended{% endif %}</li>
             </ul>
@@ -80,125 +106,125 @@
         </div>
       {% endfor %}
     </div>
-    <div id="table-wrapper" class="table-responsive mb-4">
-      <table class="table bg-white datatable">
-        <thead>
-          <tr>
-            <th class="border-0">Status</th>
-            {% if slug == "resources" or slug == "technology" %}
-              <th class="border-0">Name</th>
+  </div>
+
+  <div id="table-wrapper" class="table-responsive mb-4">
+    <table class="table bg-white datatable">
+      <thead>
+        <tr>
+          <th class="border-0">Status</th>
+          {% if slug == "resources" or slug == "technology" %}
+            <th class="border-0">Name</th>
+          {% endif %}
+          <th class="border-0">Type</th>
+          {% if slug == "space" %}
+            <th class="border-0">Availability</th>
+          {% endif %}
+          <th class="border-0">Quantity</th>
+          <th class="border-0">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in data %}
+        <tr>
+          <td>
+            {% if each.type == 'supply' %}
+              <span class="badge badge-primary">Supply</span>
+            {% else %}
+              <span class="badge badge-secondary">Demand</span>
             {% endif %}
-            <th class="border-0">Type</th>
-            {% if slug == "space" %}
-              <th class="border-0">Availability</th>
-            {% endif %}
-            <th class="border-0">Quantity</th>
-            <th class="border-0">Date</th>
-          </tr>
-        </thead>
-        <tbody>
-        {% for each in data %}
-          <tr>
-            <td>
-              {% if each.type == 'supply' %}
-                <span class="badge badge-primary">Supply</span>
+          </td>
+          <td>
+            <a href="{% url 'platformu:admin_datapoint' each.id %}">
+              {% if each.name %}
+                {{ each.name }}
               {% else %}
-                <span class="badge badge-secondary">Demand</span>
+                {{ each.material_type }}
               {% endif %}
-            </td>
+            </a>
+          </td>
+          {% if slug == "resources" or slug == "technology" %}
             <td>
-              <a href="{% url 'platformu:admin_datapoint' each.id %}">
-                {% if each.name %}
-                  {{ each.name }}
-                {% else %}
-                  {{ each.material_type }}
-                {% endif %}
-              </a>
+              <i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-1"></i>
+              {{ each.material_type.parent }}
             </td>
-            {% if slug == "resources" or slug == "technology" %}
-              <td>
-                <i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-1"></i>
-                {{ each.material_type.parent }}
-              </td>
-            {% endif %}
-            {% if slug == "space" %}
-              <td>
-                {{ each.get_availability_display }}
-              </td>
-            {% endif %}
-            <td>{{ each.absolute_quantity|floatformat }} {{ each.unit.symbol }}</td>
+          {% endif %}
+          {% if slug == "space" %}
             <td>
-              {{ each.start_date|date:"d M Y" }} - {% if each.end_date %}{{ each.end_date|date:"d M Y" }}{% else %}open ended{% endif %}
+              {{ each.get_availability_display }}
             </td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
-    </div>
+          {% endif %}
+          <td>{{ each.absolute_quantity|floatformat }} {{ each.unit.symbol }}</td>
+          <td>
+            {{ each.start_date|date:"d M Y" }} - {% if each.end_date %}{{ each.end_date|date:"d M Y" }}{% else %}open ended{% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
-  {% else %}
-    <div class="mt-3">
-      <div class="alert alert-light d-inline-block">
-        <i class="fal fa-empty-set mr-2"></i> You have no data in this category yet. Use the option below to add data
-      </div>
-    </div>
-  {% endif %}
-
-  <div class="card container mt-4 filter-table" id="add-material">
-    <div class="row">
-      {% if slug == "resources" or slug == "technology" %}
-        <div class="col-md-6 col-lg-4 py-3 col-filter">
-          <div class="form-group">
-            <input type="text" class="form-control search" placeholder="Search..." disabled>
-          </div>
-          <ul class="nav nav-pills flex-column tag-filter">
-            <li class="nav-item">
-              <div class="nav-link" data-tag="all"><i class="fal fa-fw fa-circle mr-2"></i> All materials</div>
-            </li>
-            {% for each in main_groups %}
-            <li class="nav-item">
-              <div class="nav-link" data-tag="item-{{ each.id }}"><i class="fal fa-fw fa-{{ each.icon }} mr-2"></i> {{ each }}</div>
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
-      {% endif %}
-      <div class="col-md-6 col-lg-8 p-0 col-results">
-        <table class="table bg-white table-sm mb-0">
-          <tbody class="list" {% if slug == "resources" or slug == "technology" %}hidden{% endif %}>
-            {% for each in materials %}
-            <tr>
-              <td><span class="material-name">{{ each }}</span><span hidden class="material-tags">item-{{ each.parent.id }} </span></td>
-              <td class="text-right">
-                <a class="btn btn-sm btn-secondary-basic float-right" href="demand/{{ each.id }}/?prev={{ request.get_full_path|cut:'?action=add' }}"><i class="fal mr-1 fa-sign-in"></i> Log demand</a>
-                <a class="btn btn-sm btn-primary-basic float-right" href="supply/{{ each.id }}/?prev={{ request.get_full_path|cut:'?action=add' }}"><i class="fal mr-1 fa-sign-out"></i> Log supply</a>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-
-        {% if slug == "resources" or slug == "technology" %}
-          <div class="first-load text-center pt-4">
-            <h2 class="my-4"><i class="far fa-arrow-left mr-2"></i> Please select a category</h2>
-          </div>
-        {% endif %}
-
-        <div class="no-results text-center pt-4">
-          <h2 class="my-4"><i class="fad fa-search mr-2"></i> No materials found</h2>
-          <button class="btn btn-lg btn-primary clear-filter my-4">Show all materials</button>
-        </div>
-
-      </div>
+{% else %}
+  <div class="mt-3">
+    <div class="alert alert-light d-inline-block">
+      <i class="fal fa-empty-set mr-2"></i> You have no data in this category yet. Use the option below to add data
     </div>
   </div>
+{% endif %}
+
+<div class="card container mt-4 filter-table" id="add-material">
+  <div class="row">
+    {% if slug == "resources" or slug == "technology" %}
+      <div class="col-md-6 col-lg-4 py-3 col-filter">
+        <div class="form-group">
+          <input type="text" class="form-control search" placeholder="Search..." disabled>
+        </div>
+        <ul class="nav nav-pills flex-column tag-filter">
+          <li class="nav-item">
+            <div class="nav-link" data-tag="all"><i class="fal fa-fw fa-circle mr-2"></i> All materials</div>
+          </li>
+          {% for each in main_groups %}
+          <li class="nav-item">
+            <div class="nav-link" data-tag="item-{{ each.id }}"><i class="fal fa-fw fa-{{ each.icon }} mr-2"></i> {{ each }}</div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+    <div class="col-md-6 col-lg-8 p-0 col-results">
+      <table class="table bg-white table-sm mb-0">
+        <tbody class="list" {% if slug == "resources" or slug == "technology" %}hidden{% endif %}>
+          {% for each in materials %}
+          <tr>
+            <td><span class="material-name">{{ each }}</span><span hidden class="material-tags">item-{{ each.parent.id }} </span></td>
+            <td class="text-right">
+              <a class="btn btn-sm btn-secondary-basic float-right" href="demand/{{ each.id }}/?prev={{ request.get_full_path|cut:'?action=add' }}"><i class="fal mr-1 fa-sign-in"></i> Log demand</a>
+              <a class="btn btn-sm btn-primary-basic float-right" href="supply/{{ each.id }}/?prev={{ request.get_full_path|cut:'?action=add' }}"><i class="fal mr-1 fa-sign-out"></i> Log supply</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% if slug == "resources" or slug == "technology" %}
+        <div class="first-load text-center pt-4">
+          <h2 class="my-4"><i class="far fa-arrow-left mr-2"></i> Please select a category</h2>
+        </div>
+      {% endif %}
+
+      <div class="no-results text-center pt-4">
+        <h2 class="my-4"><i class="fad fa-search mr-2"></i> No materials found</h2>
+        <button class="btn btn-lg btn-primary clear-filter my-4">Show all materials</button>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 {% endblock %}
 
 {% block footer %}
-  <!-- add listjs to search and filter - -https://listjs.com/api/ -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-
+  <script src="{% static 'js/list.min.js' %}"></script>
   <script>
     // button to show list of materials to add
     $(".btn.add-existing").click(function() {
@@ -314,5 +340,26 @@
 
     // uncheck gallery view on load
     $("#gallery").prop("checked", false)
+
+    // use listjs to search through entries in gallery view
+    var listOptions = {
+      valueNames: ["name", "type", "status", "owner"],
+    };
+
+    var galleryList = new List("gallery-wrapper", listOptions);
+
+    // match listjs and datatables search
+    $(".dataTables_filter input[type='search']").keyup(function() {
+      let searchValue = $(this).val()
+      $(".gallery-view-search").val(searchValue)
+      galleryList.search(searchValue)
+    })
+
+    function onSearchComplete() {
+      let searchValue = $(".gallery-view-search").val();
+      datatable.search(searchValue).draw();
+    }
+
+    galleryList.on("searchComplete", onSearchComplete)
   </script>
 {% endblock %}

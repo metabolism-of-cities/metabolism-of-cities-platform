@@ -85,6 +85,21 @@
       top: 15px;
       right: 1rem;
     }
+
+    .gallery-view-search-wrapper {
+      padding-bottom: 6px;
+    }
+
+    .gallery-view-number-dropdown {
+      width: auto;
+      display: inline-block;
+    }
+
+    .gallery-view-search {
+      margin-left: 3px;
+      display: inline-block;
+      width: auto;
+    }
   </style>
 {% endblock %}
 
@@ -94,21 +109,30 @@
 
   <section>
     <div id="gallery-wrapper" class="hidden">
-      <div class="row">
+      <div class="row gallery-view-search-wrapper">
+        <div class="col-md-6">
+        </div>
+        <div class="col-md-6 text-right">
+          <label>Search:
+            <input type="search" class="form-control form-control-sm gallery-view-search search">
+          </label>
+        </div>
+      </div>
+      <div class="row list">
         {% for each in items %}
           <div class="col-md-6 col-lg-4 mb-4">
             <a class="d-block bg-white text-dark single-gallery-item border" href="{% url 'platformu:admin_datapoint' each.id %}">
               <div class="card-header position-relative font-weight-bold">
                 <i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-2"></i>
                 {% if each.name %}
-                  {{ each.name }}
+                  <span class="name">{{ each.name }}</span>
                 {% else %}
-                  {{ each.material_type }}
+                  <span class="type">{{ each.material_type }}</span>
                 {% endif %}
                 {% if each.type == 'supply' %}
-                  <span class="badge badge-primary">Supply</span>
+                  <span class="badge badge-primary status">Supply</span>
                 {% else %}
-                  <span class="badge badge-secondary">Demand</span>
+                  <span class="badge badge-secondary status">Demand</span>
                 {% endif %}
               </div>
               {% if each.image %}
@@ -120,7 +144,7 @@
                 {% if each.owner.meta_data.address %}
                   <li class="list-group-item"><i class="fal fa-fw fa-map-marker-alt mr-2"></i> {{ each.owner.meta_data.address }}</li>
                 {% endif %}
-                <li class="list-group-item"><i class="fal fa-fw fa-building mr-2"></i> {{ each.owner }}</li>
+                <li class="list-group-item"><i class="fal fa-fw fa-building mr-2"></i> <span class="owner">{{ each.owner }}</span></li>
                 <li class="list-group-item"><i class="fal fa-fw fa-balance-scale mr-2"></i> {{ each.absolute_quantity|floatformat }} {{ each.unit.symbol }}</li>
                 <li class="list-group-item"><i class="fal fa-fw fa-calendar mr-2"></i> {{ each.start_date|date:'d N Y' }} - {% if each.end_date %}{{ each.end_date|date:"d M Y" }}{% else %}open ended{% endif %}</li>
               </ul>
@@ -241,11 +265,10 @@
       </div>
     </div>
   </div>
-
-
 {% endblock %}
 
 {% block footer %}
+  <script src="{% static 'js/list.min.js' %}"></script>
   <script>
     // select right dropdown in modal from sections
     $(".btn[data-entry]").click(function() {
@@ -321,5 +344,26 @@
     $("#gallery").change(function() {
       $("#gallery-wrapper, #table-wrapper").toggleClass("hidden");
     })
+
+    // use listjs to search through entries in gallery view
+    var listOptions = {
+      valueNames: ["name", "type", "status", "owner"],
+    };
+
+    var galleryList = new List("gallery-wrapper", listOptions);
+
+    // match listjs and datatables search
+    $(".dataTables_filter input[type='search']").keyup(function() {
+      let searchValue = $(this).val()
+      $(".gallery-view-search").val(searchValue)
+      galleryList.search(searchValue)
+    })
+
+    function onSearchComplete() {
+      let searchValue = $(".gallery-view-search").val();
+      datatable.search(searchValue).draw();
+    }
+
+    galleryList.on("searchComplete", onSearchComplete)
   </script>
 {% endblock %}
