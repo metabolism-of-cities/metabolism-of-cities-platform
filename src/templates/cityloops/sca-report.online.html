@@ -701,7 +701,7 @@
             {% if report.actors_dataset.type.name == "Image" %}
               <img src="{{ report.actors_dataset.image.url }}" class="img-fluid">
               <p><a href="{% url 'cityloops:library_item' report.actors_dataset.id %}">Data source</a></p>
-            {% elif report.actors_dataset.data.all %}
+            {% elif report.actors_dataset.data %}
               <iframe class="libraryitem mb-4" src="{% url 'staf:libraryframe' report.actors_dataset.id %}" onload="resizeIframe(this)"></iframe>
             {% endif %}
           {% endif %}
