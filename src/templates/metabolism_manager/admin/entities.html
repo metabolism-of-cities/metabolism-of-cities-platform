@@ -14,23 +14,6 @@
 {% block content %}
   <h1 class="mb-4">My organisations</h1>
 
-  {% if not tags %}
-    <div class="alert alert-warning">
-      You don't have any clusters yet. Please set up a cluster to get started.
-      A cluster is a way to group the organisations that you manage. You could do this by area (e.g. New York cluster),
-      by type (e.g. Plumbing cluster), or by any other criteria as you see fit.
-   </div>
-
-   <form method="post" class="form-inline">
-     {% csrf_token %}
-     <div class="form-group mb-2 mr-2">
-       <label for="name" class="sr-only">Name</label>
-       <input type="text" name="name" class="form-control" id="name" placeholder="Name" required>
-     </div>
-     <button type="submit" class="btn btn-primary mb-2"><i class="fas fa-plus"></i> Add cluster</button>
-   </form>
-  {% endif %}
-
   <section>
     <div id="map" class="leaflet-map shadow-none border"></div>
   </section>
@@ -40,19 +23,21 @@
       <thead>
         <tr>
           <th>Organisation</th>
-          <th>Site</th>
-          <th>Cluster</th>
+          <th>Tags</th>
           <th>Sector</th>
           <th>Employees</th>
           <th>Last updated</th>
         </tr>
       </thead>
       <tbody>
-        {% for each in organization_list %}
+        {% for each in entity_list %}
         <tr>
           <td><a href="{% url 'platformu:admin_entity' my_organization.id each.id %}">{{ each }}</a></td>
-          <td></td>
-          <td>{% for tag in each.tags.all %}{{ tag }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+          <td>
+            {% for tag in each.tags.all %}
+              <a href="{% url 'platformu:admin_tags' my_organization.id %}#tag-{{ tag.id }}" class="badge badge-primary">{{ tag }}</a>
+            {% endfor %}
+          </td>
           <td>
             {% for sector in each.sectors.all %}
               {{ sector }}
@@ -70,7 +55,7 @@
     </a>
   </section>
 
-  <div class="btn btn-primary-basic toggle-advanced">
+  <div class="btn btn-primary-basic toggle-advanced" hidden>
     <i class="fa fa-caret-down"></i> Show advanced options
   </div>
 
@@ -158,19 +143,19 @@
     })
 
     // add organisations to map
-    var allOrganisations = L.featureGroup();
+    var allEntities = L.featureGroup();
 
-    {% for each in organization_list %}
+    {% for each in entity_list %}
       {% if each.meta_data.lat and each.meta_data.lng  %}
         var popupContent = "<a class='btn btn-primary' href='{% url 'platformu:admin_entity' my_organization.id each.id %}'>{{ each }}</a>";
         var marker{{ forloop.counter0 }} = L.marker([{{ each.meta_data.lat }}, {{ each.meta_data.lng }}]).bindPopup(popupContent);
-        allOrganisations.addLayer(marker{{ forloop.counter0 }})
+        allEntities.addLayer(marker{{ forloop.counter0 }})
       {% endif %}
     {% endfor %}
 
-    allOrganisations.addTo(map);
+    allEntities.addTo(map);
 
-    var bounds = allOrganisations.getBounds()
+    var bounds = allEntities.getBounds()
     map.fitBounds(bounds);
   </script>
 {% endblock %}

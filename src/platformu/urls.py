@@ -11,9 +11,8 @@ urlpatterns = baseline_urlpatterns + [
 
     path("", views.index, name="index"),
     path("manager/", views.admin, name="admin"),
-    path("manager/<int:organization>/clusters/", views.clusters, name="admin_clusters"),
     path("manager/organizations/create/", views.create_my_organization, name="create_my_organization"),
-    path("manager/<int:organization>/map/", views.admin_map, name="admin_map"),
+
     path("manager/map/", views.admin_map, name="admin_map"),
     path("manager/dashboard/", views.admin_dashboard, name="admin_dashboard"),
     path("manager/dashboard/items/<slug:slug>/", views.admin_dashboard_items, name="admin_dashboard_items"),
@@ -22,6 +21,12 @@ urlpatterns = baseline_urlpatterns + [
     path("manager/connections/", views.admin_connections, name="admin_connections"),
     path("manager/data/", views.admin_data, name="admin_data"),
     path("manager/data/<int:id>/", views.admin_datapoint, name="admin_datapoint"),
+
+    path("manager/<int:organization>/map/", views.admin_map, name="admin_map"),
+    path("manager/<int:organization>/tags/", views.admin_tags, name="admin_tags"),
+    path("manager/<int:organization>/tags/<int:id>", views.admin_tag_form, name="admin_tag_form"),
+
+    path("manager/<int:organization>/entities/", views.admin_entities, name="admin_entities"),
     path("manager/<int:organization>/entities/<int:id>/", views.admin_entity, name="admin_entity"),
     path("manager/<int:organization>/entities/<int:id>/edit/", views.admin_entity_form, name="admin_entity_form"),
     path("manager/<int:organization>/entities/<int:id>/materials/", views.admin_entity_materials, name="admin_entity_materials"),
