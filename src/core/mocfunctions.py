@@ -31,6 +31,7 @@ RELATIONSHIP_ID = {
     "publisher": 2,
     "platformu_admin": 1,
     "processor": 34,
+    "owner": 35,
 }
 
 # If we add any new project, we should add it to this list.

@@ -20,7 +20,7 @@
 
   {% if not gps.lat or not gps.lng %}
     <div class="alert alert-danger">
-      Sorry, the GPS coordinates for <a href="{% url 'platformu:admin' %}">your organisations</a> are not set properly. Please check the values so that we can generate the map for you.
+      Sorry, the GPS coordinates for <a href="{% url 'platformu:admin_entities' my_organization.id %}">your organisations</a> are not set properly. Please check the values so that we can generate the map for you.
     </div>
   {% endif %}
   <div id="listings"></div>

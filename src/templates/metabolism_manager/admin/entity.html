@@ -24,7 +24,7 @@
 {% endblock %}
 
 {% block content %}
-  {% include "metabolism_manager/admin/_entity.menu.html" %}
+{% include "metabolism_manager/admin/_entity.menu.html" %}
 
 <div class="row">
   <div class="col-md-4 mb-4">
@@ -207,6 +207,20 @@
             {% endfor %}
           </tbody>
         </table>
+      </section>
+    {% endif %}
+
+    <section>
+      <h4>Tags</h4>
+      {% for each in info.tags.all %}
+      <a href="{% url 'platformu:admin_tags' my_organization.id %}#tag-{{ each.id }}" class="badge badge-primary">{{ each }}</a>
+      {% endfor %}
+    </section>
+
+    {% if info.meta_data.internal_notes %}
+      <section>
+        <h4>Internal notes</h3>
+        <div>{{ info.meta_data.internal_notes|linebreaksbr }}</div>
       </section>
     {% endif %}
   </div>

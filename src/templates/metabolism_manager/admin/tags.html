@@ -1,0 +1,70 @@
+{% extends "_base.html" %}
+
+{% block title %}Tags{% endblock %}
+
+{% block head %}
+<style>
+  #tag-form {
+    max-width: 500px;
+  }
+
+  #tag-form label {
+    font-weight: bold;
+    margin-bottom: 0;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <h1>Tags</h1>
+
+  <section class="row">
+    {% for each in tag_list %}
+      <div class="col-md-6 col-lg-4">
+        <div class="single-tag border bg-white mb-4" id="tag-{{ each.id }}">
+          <div class="p-3 border-bottom">
+            <div class="float-right"><a href="{% url 'platformu:admin_tag_form' my_organization.id each.id %}"> <i class="fal fa-edit"></i> </a></div>
+            <div class="font-weight-bold pr-4">{{ each }}</div>
+            {{ each.description }}
+          </div>
+          <div class="p-3">
+            <ul class="list-unstyled mb-0">
+            {% for entity in entity_list %}
+              {% if each in entity.tags.all %}
+                <li><a href="{% url 'platformu:admin_entity' my_organization.id entity.id %}">{{ entity }}</a></li>
+              {% endif %}
+            {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </section>
+
+  <section>
+    <h3>Create a new tag</h3>
+    <form method="post" id="tag-form">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" name="name">
+      </div>
+
+      <div class="form-group">
+        <label for="name">Description (optional)</label>
+        <textarea class="form-control" rows="3" name="description"></textarea>
+      </div>
+
+      <button class="btn btn-primary">
+        <i class="fa fa-save"></i> Save tag
+      </button>
+    </form>
+  </section>
+
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
