@@ -82,6 +82,12 @@
     .gallery-toggle {
       display: none;
     }
+
+    form.filters .input-group-prepend .input-group-text {
+      display: block;
+      text-align: center;
+      width: 65px;
+    }
   </style>
 {% endblock %}
 
@@ -93,7 +99,7 @@
     <div class="tab-pane show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
       {% if not gps.lat or not gps.lng %}
         <div class="alert alert-danger">
-          Sorry, the GPS coordinates for <a href="{% url 'platformu:admin' %}">your organisations</a> are not set properly. Please check the values so that we can generate the map for you.
+          Sorry, the GPS coordinates for <a href="{% url 'platformu:admin_entities' my_organization.id %}">your organisations</a> are not set properly. Please check the values so that we can generate the map for you.
         </div>
       {% endif %}
 
@@ -104,52 +110,58 @@
             <ul class="list mb-0"></ul>
           </div>
           <div class="sticky-top">
-            <form class="row filters mb-2">
-              <div class="col-md-6 col-lg-4 mb-2">
-                <label class="sr-only" for="material">Layer</label>
-                <div class="input-group mb-2">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">Layer</div>
-                  </div>
-                  <select class="custom-select material filter">
-                    <option value="all">All layers</option>
-                    {% for each in material_list %}
-                      <option value="{{ each.material_type__name }}">{{ each.material_type__parent__name }} - {{ each.material_type__name }}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4 mb-2">
-                <label class="sr-only" for="status">Type</label>
-                <div class="input-group mb-2">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">Type</div>
-                  </div>
-                  <select class="custom-select status filter">
-                    <option value="all" selected>Any</option>
-                    <option value="Supply">Supply</option>
-                    <option value="Demand">Demand</option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4 mb-2">
-                <label class="sr-only" for="from">Date</label>
-                <div class="input-group mb-2">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">Date</div>
-                  </div>
-                  <input type="date" class="form-control from filter" min="{{ today|date:'Y-m-d' }}" id="from">
-                </div>
-              </div>
-            </form>
-
             <div id="map" class="leaflet-map border rounded-0"></div>
           </div>
         </div>
         <div class="col-lg-3 map-listing">
-          <div class="btn btn-primary btn-block mb-4" data-toggle="modal" data-target="#add-entry-modal">
+          <div class="btn btn-primary btn-block mb-2" data-toggle="modal" data-target="#add-entry-modal">
             <i class="far fa-plus mr-2"></i> Add entry
           </div>
+
+          <form class="filters mb-2">
+            <label class="sr-only" for="material">Layer</label>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">Layer</div>
+              </div>
+              <select class="custom-select material filter">
+                <option value="all">All layers</option>
+                {% for each in material_list %}
+                  <option value="{{ each.material_type__name }}">{{ each.material_type__parent__name }} - {{ each.material_type__name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <label class="sr-only" for="Tag">Tag</label>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">Tag</div>
+              </div>
+              <select class="custom-select tag filter">
+                <option value="all">All tags</option>
+                {% for each in tag_list %}
+                  <option value="{{ each.id }}">{{ each }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <label class="sr-only" for="status">Type</label>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">Type</div>
+              </div>
+              <select class="custom-select status filter">
+                <option value="all" selected>Any</option>
+                <option value="Supply">Supply</option>
+                <option value="Demand">Demand</option>
+              </select>
+            </div>
+            <label class="sr-only" for="from">Date</label>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">Date</div>
+              </div>
+              <input type="date" class="form-control from filter" min="{{ today|date:'Y-m-d' }}" id="from">
+            </div>
+          </form>
 
           <table class="table bg-white table-sm">
             <thead>
@@ -246,6 +258,7 @@
           "start_date": {{ each.start_date|date:"U" }},
           "end_date": {{ each.end_date|date:"U"|default:"9556582400" }},
           "img": "{{ each.image.thumbnail.url }}",
+          "tags": [{% for tag in each.owner.tags.all %}"{{ tag.id }}",{% endfor %}],
         },
       {% endfor %}
     ]
@@ -291,6 +304,7 @@
       // check what the user has selected in the dropdowns
       var status = $("form select.status").val()
       var material = $("form select.material").val()
+      var tag = $("form select.tag").val()
 
       var get_date = $("form #from").val()
           if (get_date != "") {
@@ -317,6 +331,14 @@
       for (var i = filteredListings.length - 1; i >= 0; i--) {
         if (material != "all") {
           if (filteredListings[i].material != material) {
+          }
+        }
+      }
+
+      // filter tag
+      for (var i = filteredListings.length - 1; i >= 0; i--) {
+        if (tag != "all") {
+          if (filteredListings[i].tags.indexOf(tag) == -1 ) {
             filteredListings.splice(i, 1);
           }
         }
@@ -434,7 +456,7 @@
     })
 
     function resetFilter() {
-      $(".material.filter, .status.filter").val("all")
+      $(".material.filter, .status.filter, .tag.filter").val("all")
       $(".from.filter").val("")
     }
 

@@ -191,10 +191,10 @@
         </div>
 
         <div class="form-group">
-          <label for="tags">Clusters</label>
-          <select id="tags" class="form-control select2" name="tags" multiple required>
-            {% for each in list_tag %}
-              <option value="{{ each.id }}" {% if each in entity_tags  %}selected{% endif %}>{{ each.name }}</option>
+          <label for="tags">Tags</label>
+          <select id="tags" class="form-control select2" name="tags" multiple>
+            {% for each in tag_list %}
+              <option value="{{ each.id }}" {% if each in info.tags.all %}selected{% endif %}>{{ each.name }}</option>
             {% endfor %}
           </select>
         </div>
@@ -285,7 +285,6 @@
         <hr>
 
         <h3>Links with local businesses</h3>
-
         <p>Some explanation of what this is and what it's used for.</p>
 
         <div class="form-group" id="links">
@@ -302,10 +301,12 @@
                   </select>
                 </div>
                 <div class="col">
-                  <label for="url">{% if forloop.counter0 == 0 %}Dependence{%endif %}</label>
+                  <label for="dependency">{% if forloop.counter0 == 0 %}Dependence{%endif %}</label>
                   <select class="custom-select" name="link_dependence_{{ forloop.counter0 }}">
                     {% for dependency in list_dependency %}
-                    <option value="{{ dependency }}" {% if dependency == each.meta_data.dependency %}selected{% endif %}> {{ dependency }}</option>
+                    <option value="{{ dependency }}" {% if dependency == each.meta_data.dependency %}selected{% endif %}>
+                      {{ dependency }}
+                    </option>
                     {% endfor %}
                   </select>
                 </div>
@@ -320,9 +321,16 @@
           {% endif %}
         </div>
 
-
         <div class="btn btn-sm btn-primary" id="add-link">
           <i class="fa fa-plus"></i> Add link
+        </div>
+
+        <hr>
+
+        <h3 class="mb-0">Internal notes</h3>
+        <p class="mb-2">Only visible to members of {{ my_organization.name }}</p>
+        <div class="form-group" id="internal-notes">
+          <textarea rows="4" class="form-control" name="internal_notes">{{ info.meta_data.internal_notes }}</textarea>
         </div>
 
         <hr>
@@ -424,9 +432,11 @@
       <label>Business name</label>
       {% endif %}
       <select class="custom-select business-name" name="link_business_0">
-        <option selected disabled>Type to search existing business, hit enter to create new option</option>
-        {% for each in organization_list %}
-        <option value="{{ each.id }}">{{ each }}</option>
+        <option selected disabled>Type to search</option>
+        {% for each in entity_list %}
+          {% if each.id != info.id %}
+            <option value="{{ each.id }}">{{ each }}</option>
+          {% endif %}
         {% endfor %}
       </select>
     </div>
