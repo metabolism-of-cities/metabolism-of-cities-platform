@@ -19,10 +19,7 @@
             <a class="nav-link {% if page == 'dashboard' %}active{% endif %}" href="{% url 'platformu:admin_dashboard' %}">Dashboard</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link {% if page == 'organisations' %}active{% endif %}" href="{% url 'platformu:admin_entities' my_organization.id %}">My organisations</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if page == 'tags' %}active{% endif %}" href="{% url 'platformu:admin_tags' my_organization.id %}">Tags</a>
+            <a class="nav-link {% if page == 'organisations' %}active{% endif %}" href="{% url 'platformu:admin' %}">My organisations</a>
           </li>
           <li class="nav-item">
             <a class="nav-link {% if page == 'connections' %}active{% endif %}" href="{% url 'platformu:admin_connections' %}">Connections</a>

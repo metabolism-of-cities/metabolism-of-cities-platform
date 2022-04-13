@@ -31,23 +31,15 @@ def my_organizations(request, id=None):
             return None
             return redirect("platformu:create_my_organization")
 
-# my_entities returns the list of entities owned by this user's organization
-def my_entities(request, my_organization):
-    return Organization.objects_include_private.filter(child_list__record_parent = my_organization, child_list__relationship = RELATIONSHIP_ID["owner"]).distinct()
-
-# my_tags returns the list of tags that are owned by this user's organization
-def my_tags(request, my_organization):
-    return Tag.objects_include_private.filter(belongs_to=my_organization, parent_tag__id=TAG_ID["platformu_segments"]).distinct()
-
 # this makes sure that if I open a record of an organization, that
 # my own organization indeed manages this record, which is done by checking
-# if the organization of the user is the owner of the entity
+# the tag associated with this organization
 def get_entity_record(request, my_organization, entity):
     try:
-        check = Organization.objects_include_private.filter(
+        check = Organization.objects_unfiltered.filter(
             pk = entity,
-            child_list__record_parent = my_organization,
-            child_list__relationship = RELATIONSHIP_ID["owner"],
+            tags__parent_tag_id = TAG_ID["platformu_segments"],
+            tags__belongs_to = my_organization,
         )
         return check[0]
 
@@ -83,7 +75,7 @@ def create_my_organization(request):
     organizations = my_organizations(request)
 
     if request.method == "POST":
-        organization = Organization.objects.create(name=request.POST["name"], is_public=False)
+        organization = Organization.objects.create(name=request.POST["name"])
         RecordRelationship.objects.create(
             record_parent = request.user.people,
             record_child = organization,
@@ -106,13 +98,9 @@ def create_my_organization(request):
     return render(request, "metabolism_manager/admin/my_organization.html", context)
 
 @login_required
-def admin_entities(request, organization):
+def clusters(request, organization):
     my_organization = my_organizations(request, organization)
-    tag_list = my_tags(request, my_organization).order_by("name")
-
     if request.method == "POST":
-
-        # TO FIX - THIS IS CREATING A TAG FOR EACH ENTITY
         if "name" in request.POST:
             Tag.objects.create(
                 name = request.POST["name"],
@@ -165,64 +153,21 @@ def admin_entities(request, organization):
                         cluster_no_found = list(dict.fromkeys(cluster_no_found))
                         messages.error(request, "We could not find the following cluster: " + str(cluster_no_found))
 
-    entity_list = my_entities(request, my_organization)
+    organization_list = Organization.objects_include_private.filter(tags__belongs_to=my_organization, is_deleted=False).distinct()
     inactive_organizations = Organization.objects_include_private.filter(is_deleted=True).distinct()
 
     context = {
         "page": "organisations",
-        "entity_list": entity_list,
+        "organization_list": organization_list,
         "inactive_organizations": inactive_organizations,
-        "my_organization": my_organization,
+        "clusters": clusters,
         "info": my_organization,
-        "tags": tag_list,
+        "tags": Tag.objects.filter(belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"]).order_by("id"),
         "my_organization": my_organization,
         "load_leaflet": True,
         "load_datatables": True,
     }
-    return render(request, "metabolism_manager/admin/entities.html", context)
-
-@login_required
-def admin_tags(request, organization):
-    my_organization = my_organizations(request, organization)
-    entity_list = my_entities(request, my_organization)
-    tag_list = my_tags(request, my_organization).order_by("name")
-
-    if request.method == "POST":
-        Tag.objects.create(
-            name = request.POST["name"],
-            description = request.POST["description"],
-            parent_tag = Tag.objects.get(pk=TAG_ID["platformu_segments"]),
-            belongs_to = my_organization,
-            # is_public = False,
-        )
-
-    context = {
-        "page": "tags",
-        "my_organization": my_organization,
-        "entity_list": entity_list,
-        "tag_list": tag_list,
-    }
-    return render(request, "metabolism_manager/admin/tags.html", context)
-
-@login_required
-def admin_tag_form(request, organization, id):
-    my_organization = my_organizations(request, organization)
-    info = Tag.objects.get(pk=id, parent_tag_id=TAG_ID["platformu_segments"], belongs_to=my_organization)
-
-    if request.method == "POST":
-        info.name = request.POST["name"]
-        info.description = request.POST["description"]
-
-        info.save()
-
-        return redirect(reverse("platformu:admin_tags", args=[my_organization.id]))
-
-    context = {
-        "info": info,
-        "page": "tags",
-        "my_organization": my_organization,
-    }
-    return render(request, "metabolism_manager/admin/tag.form.html", context)
+    return render(request, "metabolism_manager/admin/clusters.html", context)
 
 @login_required
 def admin_dashboard(request, organization=None):
@@ -241,8 +186,10 @@ def admin_dashboard(request, organization=None):
         else:
             return redirect("platformu:create_my_organization")
 
-    organization_list = my_entities(request, my_organization)
-    tag_list = my_tags(request, my_organization).order_by("name")
+    organization_list = Organization.objects_include_private.filter(
+            tags__parent_tag_id = TAG_ID["platformu_segments"],
+            tags__belongs_to = my_organization,
+    ).distinct()
 
     if not organization_list:
         messages.error(request, "Please enter data first.")
@@ -262,7 +209,6 @@ def admin_dashboard(request, organization=None):
         "tab": "map",
         "my_organization": my_organization,
         "organization_list": organization_list,
-        "tag_list": tag_list,
         "data": data,
         "today": date.today(),
         "material_list": material_list,
@@ -359,6 +305,7 @@ def admin_dashboard_latest(request, organization=None):
         items = MaterialDemand.objects.filter(owner__in=organization_list).filter(start_date__lte=date.today(), end_date__gte=date.today()).order_by('-id')[:10]
         material_list = MaterialDemand.objects.filter(owner__in=organization_list).values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
 
+
     context = {
         "page": "dashboard",
         "tab": "latest",
@@ -375,6 +322,7 @@ def admin_dashboard_latest(request, organization=None):
     }
 
     return render(request, "metabolism_manager/admin/dashboard.items.html", context)
+
 
 @login_required
 def admin_map(request, organization=None):
@@ -499,14 +447,13 @@ def admin_entity(request, organization, id):
     local_businesses = RecordRelationship.objects.filter(record_parent_id=id, relationship_id=35)
 
     materials = MaterialDemand.objects.filter(owner_id=id, start_date__lte=date.today()).exclude(end_date__lt=date.today())
-    info = get_entity_record(request, my_organization, id)
 
     context = {
         "page": "entity",
         "my_organization": my_organization,
         "materials": materials,
         "local_businesses": local_businesses,
-        "info": info,
+        "info": get_entity_record(request, my_organization, id),
         "load_datatables": True,
         "load_highcharts": True,
         "load_leaflet_basics": True,
@@ -516,24 +463,25 @@ def admin_entity(request, organization, id):
 @login_required
 def admin_entity_form(request, organization, id=None):
     my_organization = my_organizations(request, organization)
-    entity_list = my_entities(request, my_organization)
-
-    tag_list = my_tags(request, organization)
-    list_dependency = [1,2,3,4,5,6,7,8,9,10]
+    organization_list = Organization.objects_include_private.filter(
+        tags__parent_tag_id = TAG_ID["platformu_segments"],
+        tags__belongs_to = my_organization,
+    )
+    list_dependency = ["Low", "Medium", "High"]
     edit = False
-
     if id:
         info = get_entity_record(request, my_organization, id)
         edit = True
+        entity_tags = info.tags.all()
         local_businesses = RecordRelationship.objects.filter(record_parent_id=id, relationship_id=35)
     else:
         info = None
+        entity_tags = None
         local_businesses = None
 
     if request.method == "POST":
         if not edit:
             info = Organization()
-        info.is_public = False
         info.name = request.POST["name"]
         info.description = request.POST["description"]
         info.url = request.POST["url"]
@@ -549,6 +497,7 @@ def admin_entity_form(request, organization, id=None):
             "address": request.POST.get("address"),
             "contact": request.POST.get("contact"),
             "employees": request.POST.get("employees"),
+            "workers": request.POST.get("workers"),
             "volunteers": request.POST.get("volunteers"),
             "office_space": request.POST.get("office_space"),
             "operational_space": request.POST.get("operational_space"),
@@ -566,36 +515,29 @@ def admin_entity_form(request, organization, id=None):
             "sales_export": request.POST.get("sales-export"),
             "nace_code": request.POST.get("nace_code"),
             "updated_at": date_now.strftime("%Y-%m-%d"),
-            "internal_notes": request.POST.get("internal_notes"),
         }
-
         info.save()
         info.sectors.clear()
         if "sector" in request.POST:
             info.sectors.add(Sector.objects.get(pk=request.POST["sector"]))
 
-        if not edit:
-            RecordRelationship.objects.create(
-                record_parent = my_organization,
-                record_child = info,
-                relationship_id = 35, # Make my_organization the owner of this entity
-            )
-
-        # tags
-        if info.tags:
+        if "tags" in request.POST and request.POST.getlist("tags"):
             info.tags.clear()
-        for tag in request.POST.getlist("tags"):
-            info.tags.add(tag)
+            for tag_id in request.POST.getlist("tags"):
+                try:
+                    tag = Tag.objects.get(pk=tag_id)
+                    info.tags.add(tag)
+                except Exception as e:
+                    p(e)
 
-
-        # Let remove all business links when the form is submitted
+        #Let remove all business links when the form is submitted
         RecordRelationship.objects.filter(record_parent=info, relationship_id=35).delete()
         for count in range(30):
             business_name = "link_business_" + str(count)
             dependency = "link_dependence_" + str(count)
             if business_name in request.POST and dependency in request.POST :
-                # We need to check if the organization exist in the system
-                # If it doesn't exist we record a new one
+                #We need to check if the organization exist in the system
+                #If it doesn't exist we record a new one
                 check = None
                 try:
                     check = Organization.objects_unfiltered.get(pk=request.POST[business_name])
@@ -628,7 +570,7 @@ def admin_entity_form(request, organization, id=None):
     context = {
         "page": "entity_form",
         "my_organization": my_organization,
-        "entity_list": entity_list,
+        "organization_list": organization_list,
         "info": info,
         "sectors": Sector.objects.all(),
         "geoapify_api": settings.GEOAPIFY_API,
@@ -636,7 +578,8 @@ def admin_entity_form(request, organization, id=None):
         "nace_codes": Activity.objects.filter(catalog_id=3655, parent__isnull=True).order_by("code"),
         "local_businesses": local_businesses,
         "list_dependency": list_dependency,
-        "tag_list": tag_list,
+        "list_tag": Tag.objects.filter(belongs_to=organization, parent_tag__id=TAG_ID["platformu_segments"]).order_by("id"),
+        "entity_tags": entity_tags,
     }
     return render(request, "metabolism_manager/admin/entity.form.html", context)
 
