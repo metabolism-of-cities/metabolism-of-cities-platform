@@ -33,7 +33,7 @@ def my_organizations(request, id=None):
 
 # my_entities returns the list of entities owned by this user's organization
 def my_entities(request, my_organization):
-    return Organization.objects_include_private.filter(child_list__record_parent = my_organization, child_list__relationship = RELATIONSHIP_ID["owner"]).distinct()
+    return Organization.objects_include_private.filter(child_list__record_parent = my_organization, child_list__relationship = 35).distinct()
 
 # my_tags returns the list of tags that are owned by this user's organization
 def my_tags(request, my_organization):
@@ -47,7 +47,7 @@ def get_entity_record(request, my_organization, entity):
         check = Organization.objects_include_private.filter(
             pk = entity,
             child_list__record_parent = my_organization,
-            child_list__relationship = RELATIONSHIP_ID["owner"],
+            child_list__relationship = 35,
         )
         return check[0]
 

@@ -24,12 +24,12 @@ PLACEHOLDER_PHOTO_THUMBNAIL = "/media/records/placeholder.thumbnail.png"
 PLACEHOLDER_PHOTO = "/media/records/placeholder.png"
 
 RELATIONSHIP_ID = {
+    "platformu_admin": 1,
+    "publisher": 2,
     "author": 4,
+    "member": 6,
     "uploader": 11,
     "participant": 12,
-    "member": 6,
-    "publisher": 2,
-    "platformu_admin": 1,
     "processor": 34,
     "owner": 35,
 }
