@@ -95,6 +95,7 @@
 <!-- add connections to network graph -->
 <script src="https://code.highcharts.com/modules/networkgraph.js"></script>
 <script>
+  const colors = ["#71C6FE", "#5DBEFE", "#48B5FE", "#34ADFE", "#20A5FE", "#0B9DFE", "#0193F4", "#0186DF", "#017ACB", "#016fb9"]
   const defaultFont = "Lato, Helvetica Neue, Arial, Helvetica, sans-serif";
 
   Highcharts.setOptions({
@@ -169,14 +170,17 @@
           }
         },
       },
+      link: {
+        lineWidth: 5,
+        color: "black",
+      },
       data: [
         {% for each in connections %}
           {
             from: "{{ each.record_parent }}",
             to: "{{ each.record_child }}",
-            className: "test",
-            color: "{% if each.meta_data.dependency == 'Low' %}#666{% elif each.meta_data.dependency == 'Medium' %}#333{% elif each.meta_data.dependency == 'High' %}#000{% endif %}",
-            width: "{% if each.meta_data.dependency == 'Low' %}2{% elif each.meta_data.dependency == 'Medium' %}4{% elif each.meta_data.dependency == 'High' %}5{% endif %}",
+            color: colors[{% if each.meta_data.dependency == 'Low' %}3{% elif each.meta_data.dependency == 'Medium' %}6{% elif each.meta_data.dependency == 'High' %}9{% else %}{{ each.meta_data.dependency }}{% endif %}],
+            width: {% if each.meta_data.dependency == 'Low' %}3{% elif each.meta_data.dependency == 'Medium' %}6{% elif each.meta_data.dependency == 'High' %}9{% else %}{{ each.meta_data.dependency }}{% endif %},
             custom: {
               link: "{% url 'platformu:admin_entity' my_organization.id each.id %}",
             },

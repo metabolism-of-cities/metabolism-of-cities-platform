@@ -15,17 +15,9 @@
 
     .leaflet-map {
       box-shadow: none;
-      height: 700px;
+      height: 500px;
       max-height: 90vh;
       position: sticky !important;
-    }
-
-    .map-listing {
-      font-size: .75rem;
-    }
-
-    .map-listing table {
-      margin-bottom: 0;
     }
 
     .map-listing tbody tr:hover {
@@ -70,11 +62,6 @@
       font-size: 13px;
     }
 
-    .reset-outside {
-      margin-top: -1px;
-      font-size: .75rem;
-    }
-
     .highcharts-point {
       cursor: pointer;
     }
@@ -93,74 +80,20 @@
 
 {% block content %}
 
-  {% include "metabolism_manager/admin/_entries.menu.html" %}
+  {% if organization_list %}
+    {% include "metabolism_manager/admin/_entries.menu.html" %}
 
-  <div class="tab-content" id="tabs">
-    <div class="tab-pane show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
-      {% if not gps.lat or not gps.lng %}
-        <div class="alert alert-danger">
-          Sorry, the GPS coordinates for <a href="{% url 'platformu:admin_entities' my_organization.id %}">your organisations</a> are not set properly. Please check the values so that we can generate the map for you.
-        </div>
-      {% endif %}
-
-      <div class="row">
-        <!-- status -->
-        <div class="col">
-          <label class="mb-0 font-weight-bold">Status</label>
-          <select class="custom-select search-input" name="status">
-            <option value="" selected>Any status</option>
-            <option value="Supply">Supply</option>
-            <option value="Demand">Demand</option>
-          </select>
-        </div>
-
-        <!-- type -->
-        <div class="col">
-          <label class="mb-0 font-weight-bold">Type</label>
-          <select class="form-control select2 search-input" name="type">
-            <option value="" selected>Any type</option>
-            {% for material in material_list %}
-              {% ifchanged material.material_type__parent__name %}
-                {% if not forloop.first %}
-                </optgroup>
-                {% endif %}
-                <optgroup label="{{ material.material_type__parent__name }}">
-              {% endifchanged %}
-                <option value="{{ material.material_type__name }}">{{ material.material_type__name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <!-- tag -->
-        <div class="col">
-          <label class="mb-0 font-weight-bold">Tag</label>
-          <select class="custom-select search-input" name="tag">
-            <option value="" selected>All tags</option>
-            {% for each in tag_list %}
-              <option value="{{ each.id }}">{{ each }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <!-- date -->
-        <div class="col">
-          <label class="mb-0 font-weight-bold">Date</label>
-          <input class="form-control search-input" type="date" name="date">
-        </div>
-        <div class="col-lg-2">
-          <label class="mb-0 font-weight-bold"></label>
-          <div class="btn btn-primary d-block" id="btn-quick-search"><i class="fal fa-search"></i> Search</div>
-        </div>
-      </div>
-
-      <section class="row">
-        <div class="col-lg-6 map-listing">
-          <div class="btn btn-primary btn-block mb-2" data-toggle="modal" data-target="#add-entry-modal">
-            <i class="far fa-plus mr-2"></i> Add entry
+    <div class="tab-content" id="tabs">
+      <div class="tab-pane show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+        {% if not gps.lat or not gps.lng %}
+          <div class="alert alert-danger">
+            Sorry, the GPS coordinates for <a href="{% url 'platformu:admin_entities' my_organization.id %}">your organisations</a> are not set properly. Please check the values so that we can generate the map for you.
           </div>
+        {% endif %}
 
-          <form class="filters mb-2">
-            <!-- status -->
+        <form class="row filters mb-2">
+          <!-- status -->
+          <div class="col-lg">
             <label class="sr-only" for="status">Status</label>
             <div class="input-group mb-2">
               <div class="input-group-prepend">
@@ -172,8 +105,10 @@
                 <option value="Demand">Demand</option>
               </select>
             </div>
+          </div>
 
-            <!-- type -->
+          <!-- type -->
+          <div class="col-lg">
             <label class="sr-only" for="type">Type</label>
             <div class="input-group mb-2">
               <div class="input-group-prepend">
@@ -192,8 +127,10 @@
                 {% endfor %}
               </select>
             </div>
+          </div>
 
-            <!-- tag -->
+          <!-- tag -->
+          <div class="col-lg">
             <label class="sr-only" for="Tag">Tag</label>
             <div class="input-group mb-2">
               <div class="input-group-prepend">
@@ -206,8 +143,10 @@
                 {% endfor %}
               </select>
             </div>
+          </div>
 
-            <!-- date -->
+          <!-- date -->
+          <div class="col-lg">
             <label class="sr-only" for="from">Date</label>
             <div class="input-group mb-2">
               <div class="input-group-prepend">
@@ -215,84 +154,93 @@
               </div>
               <input type="date" class="form-control from filter" id="from">
             </div>
-          </form>
-
-          <table class="table bg-white table-sm">
-            <thead>
-              <tr>
-                <th colspan="3"><span id="listing-count"></span></th>
-              </tr>
-              <tr class="no-results" hidden>
-                <th colspan="3" class="text-center">
-                  <i class="fal fa-empty-set fa-2x my-2"></i>
-                  <div>
-                    Your current filter has produced no results
-                  </div>
-                  <div class="btn btn-primary btn-sm my-2 reset-filter">
-                    <i class="fa fa-filter"></i> Reset filter
-                  </div>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
-
-          <div class="btn btn-primary btn-block btn-sm reset-filter reset-outside">
-            <i class="fa fa-filter"></i> Reset filter
           </div>
-        </div>
+        </form>
 
-        <div class="col-lg-6">
-          <div class="missing-listings border p-3 bg-white mb-4" hidden>
-            <i class="fal fa-exclamation-triangle mr-2"></i> Some listings are missing from the map. Please add coordinates for the following organisation(s):
-            <ul class="list mb-0"></ul>
+        <section class="row">
+          <div class="col-lg-6 map-listing">
+            <table class="table bg-white">
+              <thead>
+                <tr>
+                  <th colspan="3"><span id="listing-count"></span></th>
+                </tr>
+                <tr class="no-results" hidden>
+                  <th colspan="3" class="text-center">
+                    <i class="fal fa-empty-set fa-2x my-2"></i>
+                    <div>
+                      Your current filter has produced no results
+                    </div>
+                    <div class="btn btn-primary my-2 reset-filter">
+                      <i class="fa fa-filter"></i> Reset filter
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+
+            <div class="btn btn-primary reset-filter reset-outside">
+              <i class="fa fa-filter"></i> Reset filter
+            </div>
+            <div class="btn btn-secondary float-right" data-toggle="modal" data-target="#add-entry-modal">
+              <i class="far fa-plus mr-2"></i> Add entry
+            </div>
           </div>
-          <div class="sticky-top">
-            <div id="map" class="leaflet-map border rounded-0"></div>
+
+          <div class="col-lg-6">
+            <div class="missing-listings border p-3 bg-white mb-4" hidden>
+              <i class="fal fa-exclamation-triangle mr-2"></i> Some listings are missing from the map. Please add coordinates for the following organisation(s):
+              <ul class="list mb-0"></ul>
+            </div>
+            <div class="sticky-top">
+              <div id="map" class="leaflet-map border rounded-0"></div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
-  </div>
 
-  <!-- add entry modal -->
-  <div class="modal fade" id="add-entry-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="add-entry" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="add-entry">Add entry</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="mb-0 font-weight-bold" for="modal-organisation">Organisation</label>
-            <select class="form-control custom-select select2" id="modal-organisation">
-              {% for each in organization_list %}
-                <option value="{{ each.id }}">{{ each }}</option>
-              {% endfor %}
-            </select>
+    <!-- add entry modal -->
+    <div class="modal fade" id="add-entry-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="add-entry" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="add-entry">Add entry</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="mb-0 font-weight-bold" for="modal-organisation">Organisation</label>
+              <select class="form-control custom-select select2" id="modal-organisation">
+                {% for each in organization_list %}
+                  <option value="{{ each.id }}">{{ each }}</option>
+                {% endfor %}
+              </select>
+            </div>
 
-          <div class="form-group">
-            <label class="mb-0 font-weight-bold" for="modal-organisation">Type</label>
-            <select class="form-control custom-select select2" id="modal-type">
-              <option value="resources">Resources</option>
-              <option value="space">Space</option>
-              <option value="technology">Technology</option>
-              <option value="staff">Staff</option>
-            </select>
+            <div class="form-group">
+              <label class="mb-0 font-weight-bold" for="modal-organisation">Type</label>
+              <select class="form-control custom-select select2" id="modal-type">
+                <option value="resources">Resources</option>
+                <option value="space">Space</option>
+                <option value="technology">Technology</option>
+                <option value="staff">Staff</option>
+              </select>
+            </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary submit-modal">Continue</button>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary submit-modal">Continue</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  {% else %}
+    <a class="btn btn-lg btn-primary" href="{% url 'platformu:admin_entity_form' my_organization.id %}"><i class="fal fa-plus"></i> Add organisation</a>
+  {% endif %}
 
 {% endblock %}
 
@@ -456,7 +404,7 @@
               var prettyTo = uglyTo.toLocaleDateString("en-GB", dateOptions);
             }
 
-            var popupContent = "<div class='popup-title'>" + listing.name + "</div><img src='" + listing.img + "'><div class='popup-content'><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + listing.organisation + "</li><li class='list-group-item'><i class='far fa-fw fa-" + listing.icon + " mr-2'></i>" + listing.type + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + listing.quantity + "</li><li class='list-group-item text-" + listing.status_color + "'><i class='far fa-fw fa-" + listing.status_icon + " mr-2'></i>" + listing.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a class='btn btn-sm btn-primary' href='../data/" + listing.id + "/'>More details</a></li></ul></div>"
+            var popupContent = "<div class='popup-title'>" + listing.name + "</div><img src='" + listing.img + "'><div class='popup-content'><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + listing.organisation + "</li><li class='list-group-item'><i class='far fa-fw fa-" + listing.icon + " mr-2'></i>" + listing.type + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + listing.quantity + "</li><li class='list-group-item text-" + listing.status_color + "'><i class='far fa-fw fa-" + listing.status_icon + " mr-2'></i>" + listing.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a class='btn btn-sm btn-primary' href=" + listing.id + "/>More details</a></li></ul></div>"
 
             var iconMarker = L.AwesomeMarkers.icon({
               icon: listing.icon,
@@ -512,12 +460,19 @@
     $("body").on("click", ".map-listing tr:not(.header)", function() {
       let id = $(this).attr("data-id");
 
-      let selectedMarker = filteredLayer.getLayers().find(x => x.options.id === id);
+      var url = "{% url 'platformu:admin_entry' my_organization.id 9999999999 %}".replace(/9999999999/, id.toString());
 
-      filteredLayer.zoomToShowLayer(selectedMarker, function() {
-        selectedMarker.openPopup();
-        map.setView(selectedMarker.getLatLng());
-      })
+      window.location.href = url;
+
+
+      // previously, clicking on the listing would open it on the map
+      // we might want this again later, so keeping this code here
+      // let selectedMarker = filteredLayer.getLayers().find(x => x.options.id === id);
+
+      // filteredLayer.zoomToShowLayer(selectedMarker, function() {
+        // selectedMarker.openPopup();
+        // map.setView(selectedMarker.getLatLng());
+      // })
     })
 
     function resetFilter() {

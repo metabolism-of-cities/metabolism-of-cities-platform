@@ -12,126 +12,111 @@
 {% endblock %}
 
 {% block content %}
-  <h1 class="mb-4">My organisations</h1>
+  {% if organization_list %}
+    <h1 class="mb-4">My organisations</h1>
 
-  <section>
-    <div id="map" class="leaflet-map shadow-none border"></div>
-  </section>
+    <section>
+      <div id="map" class="leaflet-map shadow-none border"></div>
+    </section>
 
-  <section>
-    <table class="table datatable">
-      <thead>
-        <tr>
-          <th>Organisation</th>
-          <th>Tags</th>
-          <th>Sector</th>
-          <th>Employees</th>
-          <th>Last updated</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for each in entity_list %}
-        <tr>
-          <td><a href="{% url 'platformu:admin_entity' my_organization.id each.id %}">{{ each }}</a></td>
-          <td>
-            {% for tag in each.tags.all %}
-              <a href="{% url 'platformu:admin_tags' my_organization.id %}#tag-{{ tag.id }}" class="badge badge-primary">{{ tag }}</a>
-            {% endfor %}
-          </td>
-          <td>
-            {% for sector in each.sectors.all %}
-              {{ sector }}
-            {% endfor %}
-          </td>
-          <td>{{ each.meta_data.employees }}</td>
-          <td>{{ each.meta_data.updated_at }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <section>
+      <table class="table datatable">
+        <thead>
+          <tr>
+            <th>Organisation</th>
+            <th>Tags</th>
+            <th>Sector</th>
+            <th>Employees</th>
+            <th>Last updated</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for each in organization_list %}
+          <tr>
+            <td><a href="{% url 'platformu:admin_entity' my_organization.id each.id %}">{{ each }}</a></td>
+            <td>
+              {% for tag in each.tags.all %}
+                <a href="{% url 'platformu:admin_tags' my_organization.id %}#tag-{{ tag.id }}" class="badge badge-primary">{{ tag }}</a>
+              {% endfor %}
+            </td>
+            <td>
+              {% for sector in each.sectors.all %}
+                {{ sector }}
+              {% endfor %}
+            </td>
+            <td>{{ each.meta_data.employees }}</td>
+            <td>{{ each.meta_data.updated_at }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
 
-    <a class="btn btn-primary mt-4" href="{% url 'platformu:admin_entity_form' my_organization.id %}">
-      <i class="fas fa-plus"></i> Add new organisation
-    </a>
-  </section>
+      <a class="btn btn-primary mt-4" href="{% url 'platformu:admin_entity_form' my_organization.id %}">
+        <i class="fas fa-plus"></i> Add new organisation
+      </a>
+    </section>
 
-  <div class="btn btn-primary-basic toggle-advanced" hidden>
-    <i class="fa fa-caret-down"></i> Show advanced options
-  </div>
-
-  <section class="advanced hidden">
-    <h3>Clusters</h3>
-    <ul class="list-group list-group-flush">
-      {% for each in tags %}
-        <li class="list-group-item">{{ each.id }}</li>
-      {% endfor %}
-    </ul>
-
-    <h4>Add new cluster</h4>
-    <form method="post" class="form-inline">
-      {% csrf_token %}
-      <div class="form-group mb-2 mr-2">
-        <label for="name" class="sr-only">Name</label>
-        <input type="text" name="name" class="form-control" id="name" placeholder="Name" required>
-      </div>
-      <button type="submit" class="btn btn-primary mb-2"><i class="fas fa-plus"></i> Add cluster</button>
-    </form>
-  </section>
-
-  <section class="advanced hidden">
-    <h3>Import organisations</h3>
-    <div class="row">
-      <div class="col-md-6">
-        <div class="border bg-white p-3 mb-4">
-          <p class="mb-4">
-            <i class="fal fa-exclamation-circle mr-2"></i> It's important to use the right format when importing organizations. Please save your spreadsheet as a .csv file and use the column headers <code>name</code> and <code>cluster</code> as shown in the table.
-          </p>
-
-          <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <input type="file" accept=".csv" name="import">
-            <br>
-            <button type="submit" class="btn btn-primary mt-4">
-              <i class="fa fa-file-import mr-2"></i> Import
-            </button>
-          </form>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <table class="table bg-white">
-          <thead>
-            <tr>
-              <th class="text-monospace">name</th>
-              <th class="text-monospace">cluster</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Business, Inc.</td>
-              <td>3</td>
-            </tr>
-            <tr>
-              <td>Kramerica Industries</td>
-              <td>14</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="border bg-white p-3 mb-4">
-          <p class="mb-0">
-            <i class="fal fa-info-circle mr-2"></i> At the moment it's only possible to import organisations' names and clusters. We're working on importing more organisational information as well as importing resource data.
-          </p>
-        </div>
-      </div>
+    <div class="btn btn-primary-basic toggle-advanced" hidden>
+      <i class="fa fa-caret-down"></i> Show advanced options
     </div>
-  </section>
 
-  <section class="advanced hidden">
-    <h3>Inactive organisations</h3>
-    {% for each in inactive_organizations %}
-      {{ each }}
-    {% endfor %}
-  </section>
+    <section class="advanced hidden">
+      <h3>Import organisations</h3>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="border bg-white p-3 mb-4">
+            <p class="mb-4">
+              <i class="fal fa-exclamation-circle mr-2"></i> It's important to use the right format when importing organizations. Please save your spreadsheet as a .csv file and use the column headers <code>name</code> and <code>cluster</code> as shown in the table.
+            </p>
+
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="file" accept=".csv" name="import">
+              <br>
+              <button type="submit" class="btn btn-primary mt-4">
+                <i class="fa fa-file-import mr-2"></i> Import
+              </button>
+            </form>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <table class="table bg-white">
+            <thead>
+              <tr>
+                <th class="text-monospace">name</th>
+                <th class="text-monospace">cluster</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Business, Inc.</td>
+                <td>3</td>
+              </tr>
+              <tr>
+                <td>Kramerica Industries</td>
+                <td>14</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="border bg-white p-3 mb-4">
+            <p class="mb-0">
+              <i class="fal fa-info-circle mr-2"></i> At the moment it's only possible to import organisations' names and clusters. We're working on importing more organisational information as well as importing resource data.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="advanced hidden">
+      <h3>Inactive organisations</h3>
+      {% for each in inactive_organizations %}
+        {{ each }}
+      {% endfor %}
+    </section>
+  {% else %}
+    <a class="btn btn-lg btn-primary" href="{% url 'platformu:admin_entity_form' my_organization.id %}"><i class="fal fa-plus"></i> Add organisation</a>
+  {% endif %}
 
 {% endblock %}
 
@@ -145,7 +130,7 @@
     // add organisations to map
     var allEntities = L.featureGroup();
 
-    {% for each in entity_list %}
+    {% for each in organization_list %}
       {% if each.meta_data.lat and each.meta_data.lng  %}
         var popupContent = "<a class='btn btn-primary' href='{% url 'platformu:admin_entity' my_organization.id each.id %}'>{{ each }}</a>";
         var marker{{ forloop.counter0 }} = L.marker([{{ each.meta_data.lat }}, {{ each.meta_data.lng }}]).bindPopup(popupContent);

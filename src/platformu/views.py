@@ -113,16 +113,16 @@ def admin_dashboard(request, organization):
     tag_list = my_tags(request, my_organization).order_by("name")
 
     if not organization_list:
-        messages.error(request, "Please enter data first.")
-
-    gps = organization_list[0].meta_data
-    if not "lat" in gps:
-        messages.error(request, "Please ensure that you enter the address/GPS details first.")
+        messages.error(request, "You haven't added any organisations yet.")
+    else:
+        gps = organization_list[0].meta_data
+        if not "lat" in gps:
+            messages.error(request, "Please ensure that you enter the address/GPS details first.")
 
     data = MaterialDemand.objects.filter(owner__in=organization_list, start_date__lte=date.today()).exclude(end_date__lte=date.today())
 
     latest = MaterialDemand.objects.filter(owner__in=organization_list).order_by('-id')[:5]
-    material_list = MaterialDemand.objects.filter(owner__in=organization_list).values("material_type__name", "material_type__parent__name", "material_type__icon").distinct().order_by("material_type__parent__name")
+    material_list = MaterialDemand.objects.filter(owner__in=organization_list).values("material_type__name", "material_type__parent__name", "material_type__parent__icon").distinct().order_by("material_type__parent__name")
 
     context = {
         "page": "dashboard",
@@ -133,6 +133,7 @@ def admin_dashboard(request, organization):
         "latest": latest,
         "material_list": material_list,
         "load_select2": True,
+        "load_leaflet": True,
     }
 
     return render(request, "metabolism_manager/admin/dashboard.html", context)
@@ -141,6 +142,11 @@ def admin_dashboard(request, organization):
 def admin_entities(request, organization):
     my_organization = my_organizations(request, organization)
     tag_list = my_tags(request, my_organization).order_by("name")
+    organization_list = my_entities(request, my_organization)
+    inactive_organizations = Organization.objects_include_private.filter(is_deleted=True).distinct()
+
+    if not organization_list:
+        messages.error(request, "You haven't added any organisations yet.")
 
     if request.method == "POST":
 
@@ -197,14 +203,10 @@ def admin_entities(request, organization):
                         cluster_no_found = list(dict.fromkeys(cluster_no_found))
                         messages.error(request, "We could not find the following cluster: " + str(cluster_no_found))
 
-    entity_list = my_entities(request, my_organization)
-    inactive_organizations = Organization.objects_include_private.filter(is_deleted=True).distinct()
-
     context = {
         "page": "organisations",
-        "entity_list": entity_list,
+        "organization_list": organization_list,
         "inactive_organizations": inactive_organizations,
-        "my_organization": my_organization,
         "info": my_organization,
         "tags": tag_list,
         "my_organization": my_organization,
@@ -268,7 +270,7 @@ def admin_entries_search(request, organization):
     tag_list = my_tags(request, my_organization).order_by("name")
 
     if not organization_list:
-        messages.error(request, "Please enter data first.")
+        messages.error(request, "You haven't added any organisations yet.")
     else:
         gps = organization_list[0].meta_data
         if not "lat" in gps:
@@ -399,6 +401,35 @@ def admin_entries_type(request, organization, slug):
     return render(request, "metabolism_manager/admin/entries.list.html", context)
 
 @login_required
+def admin_entry(request, organization, id):
+
+    data = MaterialDemand.objects.get(pk=id)
+
+    if data.material_type.parent.id == 31621:
+        slug = "space"
+    elif data.material_type.parent.id in [752967,752973,752980,752994]:
+        slug = "technology"
+    elif data.material_type.parent.id == 584734:
+        slug = "staff"
+    else:
+        slug = "resources"
+
+    my_organization = my_organizations(request)[0]
+
+    # This is how we check that this user actually has access to this data point
+    info = get_entity_record(request, my_organization, data.owner.id)
+
+    context = {
+        "my_organization": my_organization,
+        "page": "entries",
+        "info": info,
+        "data": data,
+        "slug": slug,
+        "load_lightbox": True,
+    }
+    return render(request, "metabolism_manager/admin/entry.html", context)
+
+@login_required
 def admin_map(request, organization=None):
 
     data = gps = material_list = None
@@ -486,34 +517,6 @@ def admin_data(request, organization=None):
         "types": types,
     }
     return render(request, "metabolism_manager/admin/data.html", context)
-
-@login_required
-def admin_datapoint(request, organization, id):
-
-    data = MaterialDemand.objects.get(pk=id)
-
-    if data.material_type.parent.id == 31621:
-        slug = "space"
-    elif data.material_type.parent.id in [752967,752973,752980,752994]:
-        slug = "technology"
-    elif data.material_type.parent.id == 584734:
-        slug = "staff"
-    else:
-        slug = "resources"
-
-    my_organization = my_organizations(request)[0]
-
-    # This is how we check that this user actually has access to this data point
-    info = get_entity_record(request, my_organization, data.owner.id)
-
-    context = {
-        "my_organization": my_organization,
-        "info": info,
-        "data": data,
-        "slug": slug,
-        "load_lightbox": True,
-    }
-    return render(request, "metabolism_manager/admin/datapoint.html", context)
 
 @login_required
 def admin_entity(request, organization, id):
@@ -777,28 +780,6 @@ def admin_entity_material(request, organization, id, slug, material=None, edit=N
         "demand": demand,
     }
     return render(request, "metabolism_manager/admin/entity.material.html", context)
-
-@login_required
-def admin_entity_data(request, organization, id):
-    my_organization = my_organizations(request, organization)
-    info = get_entity_record(request, my_organization, id)
-    context = {
-        "page": "entity_data",
-        "my_organization": my_organization,
-        "info": info,
-    }
-    return render(request, "metabolism_manager/admin/entity.data.html", context)
-
-@login_required
-def admin_entity_log(request, organization, id):
-    my_organization = my_organizations(request, organization)
-    info = get_entity_record(request, my_organization, id)
-    context = {
-        "page": "entity_log",
-        "my_organization": my_organization,
-        "info": info,
-    }
-    return render(request, "metabolism_manager/admin/entity.log.html", context)
 
 @login_required
 def admin_entity_user(request, organization, id, user=None):

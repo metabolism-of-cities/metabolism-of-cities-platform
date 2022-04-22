@@ -16,13 +16,13 @@ urlpatterns = baseline_urlpatterns + [
     path("manager/<int:organization>/dashboard/", views.admin_dashboard, name="admin_dashboard"),
     path("manager/<int:organization>/entries/", views.admin_entries_search, name="admin_entries_search"),
     path("manager/<int:organization>/entries/latest/", views.admin_entries_latest, name="admin_entries_latest"),
+    path("manager/<int:organization>/entries/<int:id>/", views.admin_entry, name="admin_entry"),
     path("manager/<int:organization>/entries/<slug:slug>/", views.admin_entries_type, name="admin_entries_type"),
 
     path("manager/<int:organization>/map/", views.admin_map, name="admin_map"),
     path("manager/<int:organization>/area/", views.admin_area, name="admin_area"),
     path("manager/<int:organization>/connections/", views.admin_connections, name="admin_connections"),
     path("manager/<int:organization>/data/", views.admin_data, name="admin_data"),
-    path("manager/<int:organization>/data/<int:id>/", views.admin_datapoint, name="admin_datapoint"),
     path("manager/<int:organization>/map/", views.admin_map, name="admin_map"),
 
     path("manager/<int:organization>/tags/", views.admin_tags, name="admin_tags"),
