@@ -299,7 +299,7 @@ class BadgeAdmin(admin.ModelAdmin):
     autocomplete_fields = ["projects"]
 
 class TagAdmin(admin.ModelAdmin):
-    list_display = ["name", "parent_tag"]
+    list_display = ["name", "parent_tag", "belongs_to"]
     search_fields = ["name"]
 
 class CronJobLogAdmin(admin.ModelAdmin):

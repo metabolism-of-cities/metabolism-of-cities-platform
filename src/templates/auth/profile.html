@@ -5,7 +5,9 @@
 
 {% block content %}
 
-  {% include "hub/_nav.html" %}
+  {% if not PROJECT.id == 16 %}
+    {% include "hub/_nav.html" %}
+  {% endif %}
 
   <section>
     <div class="row mb-4">

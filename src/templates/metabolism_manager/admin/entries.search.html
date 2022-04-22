@@ -1,0 +1,573 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load moc_extras %}
+
+{% block title %}Metabolism Manager dashboard{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/leaflet.awesome-markers.css' %}">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
+  <style>
+    .badge {
+      line-height: .75;
+    }
+
+    .leaflet-map {
+      box-shadow: none;
+      height: 700px;
+      max-height: 90vh;
+      position: sticky !important;
+    }
+
+    .map-listing {
+      font-size: .75rem;
+    }
+
+    .map-listing table {
+      margin-bottom: 0;
+    }
+
+    .map-listing tbody tr:hover {
+      background-color: #efefef;
+      cursor: pointer;
+    }
+
+    .map-listing thead th {
+      text-align: center;
+    }
+
+    .leaflet-popup-content {
+      margin: 0;
+    }
+
+    .popup-title {
+      font-weight: bold;
+      font-size: 1rem;
+      padding: .75rem 1.25rem;
+    }
+
+    #latest .lightbox,
+    #current .lightbox {
+      height: 200px;
+    }
+
+    .lightbox a {
+      cursor: zoom-in;
+    }
+
+
+    #latest .card-img-top,
+    #current .card-img-top {
+      height: 200px;
+      background-position: center;
+      object-fit: contain;
+      background-size: cover;
+    }
+
+    .awesome-marker i {
+      margin-top: 12px;
+      font-size: 13px;
+    }
+
+    .reset-outside {
+      margin-top: -1px;
+      font-size: .75rem;
+    }
+
+    .highcharts-point {
+      cursor: pointer;
+    }
+
+    .gallery-toggle {
+      display: none;
+    }
+
+    form.filters .input-group-prepend .input-group-text {
+      display: block;
+      text-align: center;
+      width: 65px;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+
+  {% include "metabolism_manager/admin/_entries.menu.html" %}
+
+  <div class="tab-content" id="tabs">
+    <div class="tab-pane show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+      {% if not gps.lat or not gps.lng %}
+        <div class="alert alert-danger">
+          Sorry, the GPS coordinates for <a href="{% url 'platformu:admin_entities' my_organization.id %}">your organisations</a> are not set properly. Please check the values so that we can generate the map for you.
+        </div>
+      {% endif %}
+
+      <div class="row">
+        <!-- status -->
+        <div class="col">
+          <label class="mb-0 font-weight-bold">Status</label>
+          <select class="custom-select search-input" name="status">
+            <option value="" selected>Any status</option>
+            <option value="Supply">Supply</option>
+            <option value="Demand">Demand</option>
+          </select>
+        </div>
+
+        <!-- type -->
+        <div class="col">
+          <label class="mb-0 font-weight-bold">Type</label>
+          <select class="form-control select2 search-input" name="type">
+            <option value="" selected>Any type</option>
+            {% for material in material_list %}
+              {% ifchanged material.material_type__parent__name %}
+                {% if not forloop.first %}
+                </optgroup>
+                {% endif %}
+                <optgroup label="{{ material.material_type__parent__name }}">
+              {% endifchanged %}
+                <option value="{{ material.material_type__name }}">{{ material.material_type__name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- tag -->
+        <div class="col">
+          <label class="mb-0 font-weight-bold">Tag</label>
+          <select class="custom-select search-input" name="tag">
+            <option value="" selected>All tags</option>
+            {% for each in tag_list %}
+              <option value="{{ each.id }}">{{ each }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- date -->
+        <div class="col">
+          <label class="mb-0 font-weight-bold">Date</label>
+          <input class="form-control search-input" type="date" name="date">
+        </div>
+        <div class="col-lg-2">
+          <label class="mb-0 font-weight-bold"></label>
+          <div class="btn btn-primary d-block" id="btn-quick-search"><i class="fal fa-search"></i> Search</div>
+        </div>
+      </div>
+
+      <section class="row">
+        <div class="col-lg-6 map-listing">
+          <div class="btn btn-primary btn-block mb-2" data-toggle="modal" data-target="#add-entry-modal">
+            <i class="far fa-plus mr-2"></i> Add entry
+          </div>
+
+          <form class="filters mb-2">
+            <!-- status -->
+            <label class="sr-only" for="status">Status</label>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">Status</div>
+              </div>
+              <select class="custom-select status filter">
+                <option value="all" selected>Any</option>
+                <option value="Supply">Supply</option>
+                <option value="Demand">Demand</option>
+              </select>
+            </div>
+
+            <!-- type -->
+            <label class="sr-only" for="type">Type</label>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">Type</div>
+              </div>
+              <select class="custom-select type filter">
+                <option value="all">All types</option>
+                {% for material in material_list %}
+                  {% ifchanged material.material_type__parent__name %}
+                    {% if not forloop.first %}
+                    </optgroup>
+                    {% endif %}
+                    <optgroup label="{{ material.material_type__parent__name }}">
+                  {% endifchanged %}
+                    <option value="{{ material.material_type__name }}">{{ material.material_type__name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <!-- tag -->
+            <label class="sr-only" for="Tag">Tag</label>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">Tag</div>
+              </div>
+              <select class="custom-select tag filter">
+                <option value="all">All tags</option>
+                {% for each in tag_list %}
+                  <option value="{{ each.id }}">{{ each }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <!-- date -->
+            <label class="sr-only" for="from">Date</label>
+            <div class="input-group mb-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">Date</div>
+              </div>
+              <input type="date" class="form-control from filter" id="from">
+            </div>
+          </form>
+
+          <table class="table bg-white table-sm">
+            <thead>
+              <tr>
+                <th colspan="3"><span id="listing-count"></span></th>
+              </tr>
+              <tr class="no-results" hidden>
+                <th colspan="3" class="text-center">
+                  <i class="fal fa-empty-set fa-2x my-2"></i>
+                  <div>
+                    Your current filter has produced no results
+                  </div>
+                  <div class="btn btn-primary btn-sm my-2 reset-filter">
+                    <i class="fa fa-filter"></i> Reset filter
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+
+          <div class="btn btn-primary btn-block btn-sm reset-filter reset-outside">
+            <i class="fa fa-filter"></i> Reset filter
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="missing-listings border p-3 bg-white mb-4" hidden>
+            <i class="fal fa-exclamation-triangle mr-2"></i> Some listings are missing from the map. Please add coordinates for the following organisation(s):
+            <ul class="list mb-0"></ul>
+          </div>
+          <div class="sticky-top">
+            <div id="map" class="leaflet-map border rounded-0"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- add entry modal -->
+  <div class="modal fade" id="add-entry-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="add-entry" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="add-entry">Add entry</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="mb-0 font-weight-bold" for="modal-organisation">Organisation</label>
+            <select class="form-control custom-select select2" id="modal-organisation">
+              {% for each in organization_list %}
+                <option value="{{ each.id }}">{{ each }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="mb-0 font-weight-bold" for="modal-organisation">Type</label>
+            <select class="form-control custom-select select2" id="modal-type">
+              <option value="resources">Resources</option>
+              <option value="space">Space</option>
+              <option value="technology">Technology</option>
+              <option value="staff">Staff</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary submit-modal">Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block footer %}
+  <script src="{% static 'js/leaflet.awesome-markers.min.js' %}"></script>
+  <script src="{% static 'js/leaflet.markercluster.js' %}"></script>
+
+  <script>
+    // a list of all the entries
+    const allListings = [
+      {% for each in data %}
+        {
+          "lat": {{ each.owner.meta_data.lat|default:"false" }},
+          "lng": {{ each.owner.meta_data.lng|default:"false" }},
+          "name": "{% if each.name %}{{ each.name }}{% else %}{{ each.material_type.parent }}{% endif %}",
+          "organisation": "{{ each.owner }}",
+          "organisation_id": "{{ each.owner.id }}",
+          "id": "{{ each.id }}",
+          "address": "{{ each.owner.meta_data.address }}",
+          "type": "{{ each.material_type }}",
+          "icon": "{{ each.material_type.parent.icon }}",
+          "quantity": "{{ each.absolute_quantity }} {{ each.unit }}",
+          "status": "{% if each.type == 'supply' %}Supply{% else %}Demand{% endif %}",
+          "status_icon": "{% if each.type == 'supply' %}sign-out{% else %}sign-in{% endif %}",
+          "status_color": "{% if each.type == 'supply' %}primary{% else %}secondary{% endif %}",
+          "marker_color": "{% if each.type == 'supply' %}cadetblue{% else %}darkred{% endif %}",
+          "start_date": {{ each.start_date|date:"U" }},
+          "end_date": {{ each.end_date|date:"U"|default:"9556582400" }},
+          "img": "{{ each.image.thumbnail.url }}",
+          "tags": [{% for tag in each.owner.tags.all %}"{{ tag.id }}",{% endfor %}],
+        },
+      {% endfor %}
+    ]
+
+    // creating layer variable, useful so that we can check its existence and manipulate it later
+    var filteredLayer = false;
+
+    // function to update the map listing
+    function refreshListing() {
+      // remove existing entries in list
+      $(".map-listing tbody").html("");
+
+      // add listings
+      $(filteredLayer.getLayers()).each(function() {
+        $(".map-listing tbody").append("<tr data-id='" + this.options.id + "'><td class='text-center'><i class='fal fa-fw fa-" + this.options.status_icon + " text-" + this.options.color + "'></i></td><td>" + this.options.type + "</td><td>" + this.options.quantity + "</td></tr>")
+      })
+
+      // add count to header
+      let layerCount = filteredLayer.getLayers().length;
+      let layerCountText = " entries found"
+
+      if (layerCount == 1) {
+        layerCountText = " entry found"
+      };
+
+      $("#listing-count").text(layerCount + layerCountText);
+
+    }
+
+    // date options to show in popup
+    var dateOptions = {year: 'numeric', month: 'long', day: 'numeric'};
+
+    // variable to store listings without coordinates
+    var missingListings = [];
+
+    // function to show filtered items on the map
+    function filterListings() {
+      // if it exists, remove the layer currently on the map
+      if (filteredLayer != false) {
+        filteredLayer.removeFrom(map)
+      }
+
+      // check what the user has selected in the dropdowns
+      var status = $("form select.status").val()
+      var type = $("form select.type").val()
+      var tag = $("form select.tag").val()
+
+      var get_date = $("form #from").val()
+          if (get_date != "") {
+            get_date = new Date(get_date).getTime();
+            get_date = get_date / 1000;
+          }
+
+      // add all listings to the filter array
+      var filteredListings = [];
+
+      $.extend(filteredListings, allListings);
+
+      // inefficiently filtering one by one - could/should be improved
+      // filter status
+      for (var i = filteredListings.length - 1; i >= 0; i--) {
+        if (status != "all") {
+          if (filteredListings[i].status != status) {
+            filteredListings.splice(i, 1);
+          }
+        }
+      }
+
+      // filter type
+      for (var i = filteredListings.length - 1; i >= 0; i--) {
+        if (type != "all") {
+          if (filteredListings[i].type != type) {
+            filteredListings.splice(i, 1);
+          }
+        }
+      }
+
+      // filter tag
+      for (var i = filteredListings.length - 1; i >= 0; i--) {
+        if (tag != "all") {
+          if (filteredListings[i].tags.indexOf(tag) == -1 ) {
+            filteredListings.splice(i, 1);
+          }
+        }
+      }
+
+      // filter start date
+      for (var i = filteredListings.length - 1; i >= 0; i--) {
+        if (get_date != "") {
+          if (filteredListings[i].start_date > get_date || filteredListings[i].end_date < get_date) {
+            filteredListings.splice(i, 1);
+          }
+        }
+      }
+
+      // create the cluster group
+      filteredLayer = L.markerClusterGroup({
+        spiderfyOnEveryZoom: true,
+        zoomToBoundsOnClick: false,
+        showCoverageOnHover: false,
+        removeOutsideVisibleBounds: false
+      });
+
+      // take the listings and add them to the cluster group
+      // enable popups so na user can click on an object on the map and see extra information
+      if (filteredListings.length == 0) {
+        $(".map-listing tr.no-results").removeAttr("hidden")
+        $(".reset-outside").attr("hidden", "hidden");
+      } else {
+        $(".map-listing tr.no-results").attr("hidden", "hidden")
+
+        if (filteredListings.length == allListings.length) {
+          $(".reset-outside").attr("hidden", "hidden");
+        } else {
+          $(".reset-outside").removeAttr("hidden");
+        };
+
+        missingListings = []
+
+        for (var i = 0; i < filteredListings.length; i++) {
+          if (filteredListings[i].lat != false) {
+            let listing = filteredListings[i];
+
+            var uglyFrom = new Date(listing.start_date * 1000);
+            var prettyFrom = uglyFrom.toLocaleDateString("en-GB", dateOptions);
+
+            if (listing.end_date == 9556582400) {
+              var prettyTo = "Open ended"
+            } else {
+              var uglyTo = new Date(listing.end_date * 1000);
+              var prettyTo = uglyTo.toLocaleDateString("en-GB", dateOptions);
+            }
+
+            var popupContent = "<div class='popup-title'>" + listing.name + "</div><img src='" + listing.img + "'><div class='popup-content'><ul class='list-group list-group-flush'><li class='list-group-item'><i class='far fa-fw fa-map-marker-alt mr-2'></i>" + listing.organisation + "</li><li class='list-group-item'><i class='far fa-fw fa-" + listing.icon + " mr-2'></i>" + listing.type + "</li><li class='list-group-item'><i class='far fa-fw fa-balance-scale mr-2'></i>" + listing.quantity + "</li><li class='list-group-item text-" + listing.status_color + "'><i class='far fa-fw fa-" + listing.status_icon + " mr-2'></i>" + listing.status + "</li><li class='list-group-item'><i class='far fa-fw fa-calendar mr-2'></i>" + prettyFrom + " - " + prettyTo + "</li><li class='list-group-item text-center'><a class='btn btn-sm btn-primary' href='../data/" + listing.id + "/'>More details</a></li></ul></div>"
+
+            var iconMarker = L.AwesomeMarkers.icon({
+              icon: listing.icon,
+              markerColor: listing.marker_color
+            });
+
+            var marker = L.marker(new L.LatLng(filteredListings[i].lat, filteredListings[i].lng), {
+              "id": listing.id,
+              "name": listing.name,
+              "status_icon": listing.icon,
+              "color": listing.status_color,
+              "type": listing.type,
+              "quantity": listing.quantity,
+              "icon": iconMarker,
+            }).bindPopup(popupContent);
+
+            filteredLayer.addLayer(marker);
+          } else {
+            missingListings.push({
+              "organisation": filteredListings[i].organisation,
+              "id": filteredListings[i].organisation_id
+            })
+          }
+        }
+
+        // add the cluster group to the map
+        map.addLayer(filteredLayer).fitBounds(filteredLayer.getBounds())
+
+        if (missingListings.length > 0) {
+          $(".missing-listings").removeAttr("hidden")
+          $(".missing-listings .list").html("")
+          $(missingListings).each(function() {
+            $(".missing-listings .list").append("<li><a href='../{{ my_organization.id }}/entities/" + this.id + "/'>" + this.organisation + "</a></li>")
+          })
+        } else {
+          $(".missing-listings").attr("hidden", "hidden")
+        }
+      }
+
+
+      refreshListing()
+    }
+
+    // run filter whenever one of the filters changes
+    $(".filter").change(function() {
+      filterListings()
+    })
+
+    // reset filters, show listings on load
+    resetFilter()
+    filterListings();
+
+    $("body").on("click", ".map-listing tr:not(.header)", function() {
+      let id = $(this).attr("data-id");
+
+      let selectedMarker = filteredLayer.getLayers().find(x => x.options.id === id);
+
+      filteredLayer.zoomToShowLayer(selectedMarker, function() {
+        selectedMarker.openPopup();
+        map.setView(selectedMarker.getLatLng());
+      })
+    })
+
+    function resetFilter() {
+      $(".type.filter, .status.filter, .tag.filter").val("all")
+      $(".from.filter").val("")
+    }
+
+    // reset filter when no results foud
+    $(".reset-filter").click(function() {
+      resetFilter()
+      filterListings();
+    })
+
+    // select right dropdown in modal from sections
+    $(".btn[data-entry]").click(function() {
+      let type = $(this).data("entry");
+      $("#modal-type").val(type).trigger("change.select2")
+    })
+
+    // submit modal and go to right URL to add entry
+    $(".submit-modal").click(function() {
+      let organisation = $("#modal-organisation").val();
+
+      let type = $("#modal-type").val();
+      let url = "../entities/" + organisation + "/" + type + "/?action=add"
+
+      window.location.href = url;
+    })
+
+    // if there are search parameters in url, use them
+    let url_string = window.location.href;
+    let url = new URL(url_string);
+    let searchStatus = url.searchParams.get("status");
+    let searchType = url.searchParams.get("type");
+    let searchTag = url.searchParams.get("tag");
+    let searchDate = url.searchParams.get("date");
+
+    if (searchStatus) {
+      $(".filter.status").val(searchStatus)
+    }
+    if (searchType) {
+      $(".filter.type").val(searchType)
+    }
+    if (searchTag) {
+      $(".filter.tag").val(searchTag)
+    }
+    if (searchDate) {
+      $(".filter.from").val(searchDate)
+    }
+
+    filterListings()
+  </script>
+{% endblock %}

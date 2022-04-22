@@ -6,43 +6,46 @@
         Admin navigation
       </button>
 
-      <span class="position-fixed badge badge-light border-left border-bottom border-right" style="top:0; right:5px">PlatformU version 0.3.1</span>
+      <span class="position-fixed badge badge-light border-left border-bottom border-right" style="top:0; right:5px">PlatformU version 0.4.2</span>
 
       <div class="collapse navbar-collapse" id="ascus-navbar">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a class="navbar-brand-small" href="{% url 'platformu:admin_dashboard' %}">
+            <a class="navbar-brand-small" href="{% url 'platformu:admin_dashboard' my_organization.id %}">
               <img alt="{{ PROJECT }}" src="{{ LOGO }}?u=true">
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link {% if page == 'dashboard' %}active{% endif %}" href="{% url 'platformu:admin_dashboard' %}">Dashboard</a>
+            <a class="nav-link {% if page == 'dashboard' %}active{% endif %}" href="{% url 'platformu:admin_dashboard' my_organization.id %}">Dashboard</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link {% if page == 'organisations' %}active{% endif %}" href="{% url 'platformu:admin_entities' my_organization.id %}">My organisations</a>
+            <a class="nav-link {% if page == 'entries' %}active{% endif %}" href="{% url 'platformu:admin_entries_search' my_organization.id %}">Entries</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if page == 'organisations' %}active{% endif %}" href="{% url 'platformu:admin_entities' my_organization.id %}">Organisations</a>
           </li>
           <li class="nav-item">
             <a class="nav-link {% if page == 'tags' %}active{% endif %}" href="{% url 'platformu:admin_tags' my_organization.id %}">Tags</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link {% if page == 'connections' %}active{% endif %}" href="{% url 'platformu:admin_connections' %}">Connections</a>
+            <a class="nav-link {% if page == 'connections' %}active{% endif %}" href="{% url 'platformu:admin_connections' my_organization.id %}">Connections</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link {% if page == 'area' %}active{% endif %}" href="{% url 'platformu:admin_area' %}">My area</a>
+            <a class="nav-link {% if page == 'area' %}active{% endif %}" href="{% url 'platformu:admin_area' my_organization.id %}">My area</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link {% if page == 'log' %}active{% endif %}" href="{% url 'platformu:admin_data' %}">Data log</a>
+            <a class="nav-link {% if page == 'log' %}active{% endif %}" href="{% url 'platformu:admin_data' my_organization.id %}">Data log</a>
           </li>
         </ul>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
             <a class="nav-link" href="{% url 'platformu:article' 'help' %}">Help</a>
           </li>
+          <!-- <li class="nav-item"> -->
+            <!-- <a class="nav-link {% if page == 'forum' %}active{% endif %}" href="{% url 'platformu:volunteer_forum' %}">Forum</a> -->
+          <!-- </li> -->
           <li class="nav-item">
-            <a class="nav-link {% if page == 'forum' %}active{% endif %}" href="{% url 'platformu:volunteer_forum' %}">Forum</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/accounts/logout/"><i class="fa fa-sign-out"></i></a>
+            <a class="nav-link" href="/accounts/logout/"><i class="fal fa-sign-out mr-2"></i> Sign out</a>
           </li>
         </ul>
       </div>

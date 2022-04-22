@@ -214,7 +214,15 @@
 {% elif PROJECT.slug == "ascus2021" and request.user.is_authenticated %}
   {% include "_submenu-ascus2021.html" %}
 {% elif PROJECT.id == 16 and request.user.is_authenticated %}
-  {% include "_submenu-platformu.html" %}
+  {% if my_organization %}
+    {% include "_submenu-platformu.html" %}
+  {% else %}
+    <div class="container">
+      <a class="btn btn-primary mt-4" href="{% url 'platformu:admin' %}">
+        <i class="fal fa-arrow-left mr-2"></i> Return to PlatformU
+      </a>
+    </div>
+  {% endif %}
 {% endif %}
 
 {% if IS_DATA_PORTAL and space %}

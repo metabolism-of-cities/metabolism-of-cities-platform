@@ -48,7 +48,7 @@
             {% endif %}
           </td>
           <td class="text-nowrap">
-            <a href="{% url 'platformu:admin_datapoint' each.id %}">
+            <a href="{% url 'platformu:admin_datapoint' my_organization.id each.id %}">
               {% if each.name %}
                 {{ each.name }}
               {% else %}

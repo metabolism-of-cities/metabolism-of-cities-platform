@@ -105,7 +105,7 @@
 
 {% block content %}
 
-  {% include "metabolism_manager/admin/_dashboard.menu.html" %}
+  {% include "metabolism_manager/admin/_entries.menu.html" %}
 
   <section>
     <div id="gallery-wrapper" class="hidden">
@@ -121,7 +121,7 @@
       <div class="row list">
         {% for each in items %}
           <div class="col-md-6 col-lg-4 mb-4">
-            <a class="d-block bg-white text-dark single-gallery-item border" href="{% url 'platformu:admin_datapoint' each.id %}">
+            <a class="d-block bg-white text-dark single-gallery-item border" href="{% url 'platformu:admin_datapoint' my_organization.id each.id %}">
               <div class="card-header position-relative font-weight-bold">
                 <i class="fal fa-fw fa-{{ each.material_type.parent.icon }} mr-2"></i>
                 {% if each.name %}
@@ -181,7 +181,7 @@
               {% endif %}
             </td>
             <td>
-              <a href="{% url 'platformu:admin_datapoint' each.id %}">
+              <a href="{% url 'platformu:admin_datapoint' my_organization.id each.id %}">
                 {% if each.name %}
                   {{ each.name }}
                 {% else %}

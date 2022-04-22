@@ -124,7 +124,7 @@
                 </td>
               {% endif %}
               <td class="text-nowrap text-truncate name">
-                <a href="{% url 'platformu:admin_datapoint' each.id %}">
+                <a href="{% url 'platformu:admin_datapoint' my_organization.id each.id %}">
                   {% if each.name %}
                     {{ each.name }}
                   {% else %}
@@ -199,7 +199,7 @@
             </tr>
           </thead>
           <tbody>
-            {% for each in local_businesses %}
+            {% for each in entity_list %}
               <tr>
                 <td><a href="{% url 'platformu:admin_entity' my_organization.id each.record_child.id %}">{{ each.record_child }}</a></td>
                 <td>{{ each.meta_data.dependency }}</td>

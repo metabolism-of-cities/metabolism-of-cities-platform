@@ -60,7 +60,7 @@ def index(request):
         "webpage": Webpage.objects.get(pk=31595),
     }
     if request.user.is_authenticated:
-        return redirect("platformu:admin_dashboard")
+        return redirect("platformu:admin", )
     else:
         return render(request, "metabolism_manager/index.html", context)
 
@@ -69,9 +69,10 @@ def admin(request):
     organizations = my_organizations(request)
     if not organizations:
         return redirect("platformu:create_my_organization")
-    else:
-        id = organizations[0].id
-        return redirect(reverse("platformu:admin_clusters", args=[id]))
+
+    if organizations.count() == 1:
+        return redirect("platformu:admin_dashboard", organizations[0].id)
+
     context = {
         "organizations": organizations,
         "show_project_design": True,
@@ -104,6 +105,37 @@ def create_my_organization(request):
         "title": "Create new organisation",
     }
     return render(request, "metabolism_manager/admin/my_organization.html", context)
+
+@login_required
+def admin_dashboard(request, organization):
+    my_organization = my_organizations(request, organization)
+    organization_list = my_entities(request, my_organization)
+    tag_list = my_tags(request, my_organization).order_by("name")
+
+    if not organization_list:
+        messages.error(request, "Please enter data first.")
+
+    gps = organization_list[0].meta_data
+    if not "lat" in gps:
+        messages.error(request, "Please ensure that you enter the address/GPS details first.")
+
+    data = MaterialDemand.objects.filter(owner__in=organization_list, start_date__lte=date.today()).exclude(end_date__lte=date.today())
+
+    latest = MaterialDemand.objects.filter(owner__in=organization_list).order_by('-id')[:5]
+    material_list = MaterialDemand.objects.filter(owner__in=organization_list).values("material_type__name", "material_type__parent__name", "material_type__icon").distinct().order_by("material_type__parent__name")
+
+    context = {
+        "page": "dashboard",
+        "tab": "map",
+        "my_organization": my_organization,
+        "organization_list": organization_list,
+        "tag_list": tag_list,
+        "latest": latest,
+        "material_list": material_list,
+        "load_select2": True,
+    }
+
+    return render(request, "metabolism_manager/admin/dashboard.html", context)
 
 @login_required
 def admin_entities(request, organization):
@@ -225,22 +257,13 @@ def admin_tag_form(request, organization, id):
     return render(request, "metabolism_manager/admin/tag.form.html", context)
 
 @login_required
-def admin_dashboard(request, organization=None):
-
+def admin_entries_search(request, organization):
     types = None
 
     data = gps = material_list = None
     min_values = {}
 
-    if organization:
-        my_organization = my_organizations(request, organization)
-    else:
-        my_organization = my_organizations(request)
-        if my_organization:
-            my_organization = my_organization[0]
-        else:
-            return redirect("platformu:create_my_organization")
-
+    my_organization = my_organizations(request, organization)
     organization_list = my_entities(request, my_organization)
     tag_list = my_tags(request, my_organization).order_by("name")
 
@@ -258,8 +281,8 @@ def admin_dashboard(request, organization=None):
     }
 
     context = {
-        "page": "dashboard",
-        "tab": "map",
+        "page": "entries",
+        "tab": "search",
         "my_organization": my_organization,
         "organization_list": organization_list,
         "tag_list": tag_list,
@@ -277,10 +300,54 @@ def admin_dashboard(request, organization=None):
         "properties": properties,
     }
 
-    return render(request, "metabolism_manager/admin/dashboard.html", context)
+    return render(request, "metabolism_manager/admin/entries.search.html", context)
 
 @login_required
-def admin_dashboard_items(request, slug, organization=None):
+def admin_entries_latest(request, organization):
+    types = None
+
+    data = gps = material_list = None
+    min_values = {}
+
+    if organization:
+        my_organization = my_organizations(request, organization)
+    else:
+        my_organization = my_organizations(request)
+        if my_organization:
+            my_organization = my_organization[0]
+        else:
+            return redirect("platformu:create_my_organization")
+
+    organization_list = Organization.objects_include_private.filter(
+            tags__parent_tag_id = TAG_ID["platformu_segments"],
+            tags__belongs_to = my_organization,
+    ).distinct()
+
+    if not organization_list:
+        messages.error(request, "Please enter data first.")
+    else:
+        items = MaterialDemand.objects.filter(owner__in=organization_list).filter(start_date__lte=date.today(), end_date__gte=date.today()).order_by('-id')[:10]
+        material_list = MaterialDemand.objects.filter(owner__in=organization_list).values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
+
+    context = {
+        "page": "entries",
+        "tab": "latest",
+        "my_organization": my_organization,
+        "organization_list": organization_list,
+        "items": items,
+        "today": date.today(),
+        "material_list": material_list,
+        "min_values": min_values,
+        "load_lightbox": True,
+        "load_select2": True,
+        "load_datatables": True,
+        "slug": "latest",
+    }
+
+    return render(request, "metabolism_manager/admin/entries.list.html", context)
+
+@login_required
+def admin_entries_type(request, organization, slug):
     items = None
 
     data = gps = material_list = None
@@ -313,9 +380,8 @@ def admin_dashboard_items(request, slug, organization=None):
         elif slug == "staff":
             items = MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=584734, start_date__lte=date.today()).exclude(end_date__lte=date.today())
 
-
     context = {
-        "page": "dashboard_items",
+        "page": "entries",
         "my_organization": my_organization,
         "organization_list": organization_list,
         "data": data,
@@ -330,51 +396,7 @@ def admin_dashboard_items(request, slug, organization=None):
         "slug": slug,
     }
 
-    return render(request, "metabolism_manager/admin/dashboard.items.html", context)
-
-@login_required
-def admin_dashboard_latest(request, organization=None):
-    types = None
-
-    data = gps = material_list = None
-    min_values = {}
-
-    if organization:
-        my_organization = my_organizations(request, organization)
-    else:
-        my_organization = my_organizations(request)
-        if my_organization:
-            my_organization = my_organization[0]
-        else:
-            return redirect("platformu:create_my_organization")
-
-    organization_list = Organization.objects_include_private.filter(
-            tags__parent_tag_id = TAG_ID["platformu_segments"],
-            tags__belongs_to = my_organization,
-    ).distinct()
-
-    if not organization_list:
-        messages.error(request, "Please enter data first.")
-    else:
-        items = MaterialDemand.objects.filter(owner__in=organization_list).filter(start_date__lte=date.today(), end_date__gte=date.today()).order_by('-id')[:10]
-        material_list = MaterialDemand.objects.filter(owner__in=organization_list).values("material_type__name", "material_type__parent__name").distinct().order_by("material_type__name")
-
-    context = {
-        "page": "dashboard",
-        "tab": "latest",
-        "my_organization": my_organization,
-        "organization_list": organization_list,
-        "items": items,
-        "today": date.today(),
-        "material_list": material_list,
-        "min_values": min_values,
-        "load_lightbox": True,
-        "load_select2": True,
-        "load_datatables": True,
-        "slug": "latest",
-    }
-
-    return render(request, "metabolism_manager/admin/dashboard.items.html", context)
+    return render(request, "metabolism_manager/admin/entries.list.html", context)
 
 @login_required
 def admin_map(request, organization=None):
@@ -466,7 +488,7 @@ def admin_data(request, organization=None):
     return render(request, "metabolism_manager/admin/data.html", context)
 
 @login_required
-def admin_datapoint(request, id):
+def admin_datapoint(request, organization, id):
 
     data = MaterialDemand.objects.get(pk=id)
 

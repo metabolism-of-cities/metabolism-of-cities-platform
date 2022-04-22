@@ -11,8 +11,7 @@
 
   <ul>
     {% for each in organizations %}
-    <li><a href="{% url 'platformu_admin_clusters' each.record.id %}">{{ each.record }}</a></li>
+      <li><a href="{% url 'platformu:admin_dashboard' each.id %}">{{ each }}</a></li>
     {% endfor %}
   </ul>
-
 {% endblock %}
