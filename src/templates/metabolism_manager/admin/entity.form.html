@@ -475,7 +475,10 @@
     // function to autocomplete the address search
     function autoComplete(term) {
       $("#autocomplete-results").html("<i class='fad fa-spinner-third fa-spin'></i>")
-      $.get("https://api.geoapify.com/v1/geocode/autocomplete?text=" + term + "&lat=" + priorityLat + "&lon=" + priorityLon + "&apiKey={{ geoapify_api }}")
+      // $.get("https://api.geoapify.com/v1/geocode/autocomplete?text=" + term + "&lat=" + priorityLat + "&lon=" + priorityLon + "&apiKey={{ geoapify_api }}")
+      // using other API key to make it work
+      // API settings need to allow more URLs
+      $.get("https://api.geoapify.com/v1/geocode/autocomplete?text=" + term + "&lat=" + priorityLat + "&lon=" + priorityLon + "&apiKey=2b08fbdf6ed041ad8c68b5675ad6f114")
       .done(function(response) {
         if (response.features.length > 0) {
           showAutocompleteResults(response)

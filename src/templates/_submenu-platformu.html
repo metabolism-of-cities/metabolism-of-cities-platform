@@ -30,7 +30,7 @@
           <li class="nav-item">
             <a class="nav-link {% if page == 'connections' %}active{% endif %}" href="{% url 'platformu:admin_connections' my_organization.id %}">Connections</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" hidden>
             <a class="nav-link {% if page == 'area' %}active{% endif %}" href="{% url 'platformu:admin_area' my_organization.id %}">My area</a>
           </li>
           <li class="nav-item">
