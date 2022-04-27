@@ -199,7 +199,7 @@
             </tr>
           </thead>
           <tbody>
-            {% for each in entity_list %}
+            {% for each in local_businesses %}
               <tr>
                 <td><a href="{% url 'platformu:admin_entity' my_organization.id each.record_child.id %}">{{ each.record_child }}</a></td>
                 <td>{{ each.meta_data.dependency }}</td>
