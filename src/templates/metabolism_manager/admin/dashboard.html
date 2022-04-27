@@ -72,40 +72,19 @@
 
     <section>
       <div class="row">
-
         {% if latest %}
-          <div class="col-lg">
-            <h3>Entries by type</h3>
-
-            {% for material in material_list %}
-              {% ifchanged material.material_type__parent__name %}
-                {% if not forloop.first %}
-                  </div>
-                {% endif %}
-                <div class="list-group mb-4">
-                  <div class="list-group-item">
-                    <h5 class="mb-0">
-                      <i class="fal fa-fw fa-{{ material.material_type__parent__icon }} mr-2"></i> {{ material.material_type__parent__name }}
-                    </h5>
-                  </div>
-                  <a href="{% url 'platformu:admin_entries_search' my_organization.id %}?type={{ material.material_type__name }}" class="list-group-item list-group-item-action">
-                    {{ material.material_type__name }}
-                </a>
-              {% else %}
-                  <a href="{% url 'platformu:admin_entries_search' my_organization.id %}?type={{ material.material_type__name }}" class="list-group-item list-group-item-action">
-                    {{ material.material_type__name }}
-                </a>
-              {% endifchanged %}
-            {% endfor %}
-                </div>
-            <a class="btn btn-primary" href="{% url 'platformu:admin_entries_search' my_organization.id %}"><i class="fal fa-list"></i> All entries</a>
-          </div>
-
           <div class="col-lg">
             <h3>Latest entries</h3>
             <div class="list-group bg-white mb-4">
               {% for each in latest %}
               <a href="{% url 'platformu:admin_entry' my_organization.id each.id %}" class="list-group-item list-group-item-action">
+                <div class="float-right">
+                  {% if each.type == 'supply' %}
+                    <span class="badge badge-primary">Supply</span>
+                  {% else %}
+                    <span class="badge badge-secondary">Demand</span>
+                  {% endif %}
+                </div>
                 <h5 class="mb-0">{% if each.name %}{{ each.name }}{% else %}{{ each.material_type }}{% endif %}</h5>
                 <div>{{ each.owner }}</div>
                 <div>{{ each.absolute_quantity|floatformat }} {{ each.unit.symbol }}</div>
@@ -133,6 +112,39 @@
         </div>
       </div>
     </section>
+
+    {% if material_list %}
+      <section>
+        <h3>Entries by type</h3>
+        <div class="row">
+        {% for material in material_list %}
+          {% ifchanged material.material_type__parent__name %}
+            {% if not forloop.first %}
+                </div>
+              </div>
+            {% endif %}
+            <div class="col-md-6 col-lg-4">
+              <div class="list-group bg-white mb-4">
+                <div class="list-group-item">
+                  <h5 class="mb-0">
+                    <i class="fal fa-fw fa-{{ material.material_type__parent__icon }} mr-2"></i> {{ material.material_type__parent__name }}
+                  </h5>
+                </div>
+                <a href="{% url 'platformu:admin_entries_search' my_organization.id %}?type={{ material.material_type__name }}" class="list-group-item list-group-item-action">
+                  {{ material.material_type__name }}
+                </a>
+          {% else %}
+                <a href="{% url 'platformu:admin_entries_search' my_organization.id %}?type={{ material.material_type__name }}" class="list-group-item list-group-item-action">
+                  {{ material.material_type__name }}
+                </a>
+          {% endifchanged %}
+        {% endfor %}
+            </div>
+          </div>
+        </div>
+        <a class="btn btn-primary" href="{% url 'platformu:admin_entries_search' my_organization.id %}"><i class="fal fa-list"></i> All entries</a>
+      </section>
+    {% endif %}
 
     <!-- add entry modal -->
     <div class="modal fade" id="add-entry-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="add-entry" aria-hidden="true">

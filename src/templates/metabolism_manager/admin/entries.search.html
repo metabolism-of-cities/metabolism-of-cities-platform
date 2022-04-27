@@ -29,6 +29,11 @@
       text-align: center;
     }
 
+    .map-listing .td-status,
+    .map-listing .td-icon {
+      width: 0;
+    }
+
     .leaflet-popup-content {
       margin: 0;
     }
@@ -162,10 +167,10 @@
             <table class="table bg-white">
               <thead>
                 <tr>
-                  <th colspan="3"><span id="listing-count"></span></th>
+                  <th colspan="4"><span id="listing-count"></span></th>
                 </tr>
                 <tr class="no-results" hidden>
-                  <th colspan="3" class="text-center">
+                  <th colspan="4" class="text-center">
                     <i class="fal fa-empty-set fa-2x my-2"></i>
                     <div>
                       Your current filter has produced no results
@@ -285,7 +290,7 @@
 
       // add listings
       $(filteredLayer.getLayers()).each(function() {
-        $(".map-listing tbody").append("<tr data-id='" + this.options.id + "'><td class='text-center'><i class='fal fa-fw fa-" + this.options.status_icon + " text-" + this.options.color + "'></i></td><td>" + this.options.type + "</td><td>" + this.options.quantity + "</td></tr>")
+        $(".map-listing tbody").append("<tr data-id='" + this.options.id + "'><td class='td-status'><span class='badge badge-" + this.options.color + "'>" + this.options.status + "</span></td><td class='td-icon'><i class='fal fa-fw fa-" + this.options.status_icon + " text-" + this.options.color + "'></i></td><td>" + this.options.type + "</td><td>" + this.options.quantity + "</td></tr>")
       })
 
       // add count to header
@@ -414,6 +419,7 @@
             var marker = L.marker(new L.LatLng(filteredListings[i].lat, filteredListings[i].lng), {
               "id": listing.id,
               "name": listing.name,
+              "status": listing.status,
               "status_icon": listing.icon,
               "color": listing.status_color,
               "type": listing.type,
@@ -444,7 +450,6 @@
         }
       }
 
-
       refreshListing()
     }
 
@@ -463,7 +468,6 @@
       var url = "{% url 'platformu:admin_entry' my_organization.id 9999999999 %}".replace(/9999999999/, id.toString());
 
       window.location.href = url;
-
 
       // previously, clicking on the listing would open it on the map
       // we might want this again later, so keeping this code here
