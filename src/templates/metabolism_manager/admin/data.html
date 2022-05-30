@@ -17,13 +17,13 @@
 
 {% block content %}
 
-{{request.user.id}}
-
-<!--
+{% if vilvoorde != "test" %}
 <ul>
-  <li>{{each}}</li>
+{% for each in vilvoorde %}
+  <li>{{each.id}}: {{each}}</li>
+{% endfor %}
 </ul>
- -->
+{% endif %}
 
   <h1 class="mb-0">Data log</h1>
 
