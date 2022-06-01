@@ -513,7 +513,7 @@ def admin_data(request, organization=None):
     vilvoorde = "test"
 
     if request.user.id == 45:
-        vilvoorde = Organization.objects.filter(tags__id_in=[1224,1230,1086,1235,1229,1234,1223])
+        vilvoorde = Organization.objects.filter(tags__id__in=[1224,1230,1086,1235,1229,1234,1223])
 
     context = {
         "page": "log",
