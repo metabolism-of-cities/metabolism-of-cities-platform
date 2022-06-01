@@ -510,17 +510,17 @@ def admin_data(request, organization=None):
             "Staff": MaterialDemand.objects.filter(owner__in=organization_list, material_type__parent_id=584734),
         }
 
-    # vilvoorde = "test"
+    vilvoorde = "test"
 
-    # if request.user.id == 45:
-        # vilvoorde = Organization.objects.filter(tags__id=1696)
+    if request.user.id == 45:
+        vilvoorde = Organization.objects.filter(tags__id_in=[1224,1230,1086,1235,1229,1234,1223])
 
     context = {
         "page": "log",
         "my_organization": my_organization,
         "load_datatables": True,
         "types": types,
-        # "vilvoorde": vilvoorde,
+        "vilvoorde": vilvoorde,
     }
     return render(request, "metabolism_manager/admin/data.html", context)
 
