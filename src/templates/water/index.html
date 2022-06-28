@@ -1,5 +1,79 @@
 {% extends "_base.html" %}
+{% load static %}
+
+{% block footer %}
+  <script type="text/javascript">
+  $(function(){
+    $("select[name='level']").change(function(){
+      level = $(this).val();
+      window.location = "{% url 'water:index' %}?level=" + level;
+    });
+  });
+  </script>
+{% endblock %}
 
 {% block content %}
-  Content goes here
+
+      <div class="row mb-2" style="clear:both">
+        <div class="col-md-3">
+          <label>
+          Territoire
+          </label>
+          <select name="" class="form-control">
+            <option value="">MNCA</option>
+            <option value="" disabled>Nice</option>
+            <option value="" disabled>Tinée</option>
+            <option value="" disabled>Vésubie</option>
+            <option value="" disabled>Moyen Pays Rive Gauche</option>
+            <option value="" disabled>Rive Droite</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label>
+          Type de flux
+          </label>
+          <select name="" class="form-control">
+            <option value="">Eau</option>
+            <option value="" disabled>Energie</option>
+            <option value="" disabled>Gaz à effet de serre</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label>
+          Année
+          </label>
+          <select name="" class="form-control">
+            <option value="">2020</option>
+            <option value="" disabled>2019</option>
+            <option value="" disabled>2018</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label>
+          Détail
+          </label>
+          <select name="level" class="form-control">
+            <option value="1">Niveau 1</option>
+            <option value="2" {% if request.GET.level == "2" %}selected{% endif %}>Niveau 2</option>
+            <option value="" disabled>Niveau 3</option>
+          </select>
+        </div>
+      </div>
+
+      {% if request.GET.level == "2" %}
+        <img src="{% static "img/water/water2.svg" %}" alt="" />
+      {% else %}
+        <img src="{% static "img/water/water1.svg" %}" alt="" />
+      {% endif %}
+
+      <div>
+        <img src="{% static "img/water/logo.png" %}" alt="" class="float-right" />
+      </div>
+      <div style="clear:both"></div>
+
+  </div>
+
 {% endblock %}
