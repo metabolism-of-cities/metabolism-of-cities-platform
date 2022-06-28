@@ -20,7 +20,7 @@ def index(request):
         "topics": Webpage.objects.filter(part_of_project_id=request.project, tags__parent_tag_id=828).prefetch_related("tags"),
         "header_overwrite": "full",
         "header_subtitle": """
-  <p class="h5 mb-3" style="text-shadow: black 0 0 18px;">Are cities and nature compatible? Can humans
+  <p class="h5 mb-5" style="text-shadow: black 0 0 18px;">Are cities and nature compatible? Can humans
   thrive in an urban setting, while nature is being restored, rather than
   destroyed, through human activities? For centuries, if not millennia,
   we have been unable to reconcile the two. However, given the

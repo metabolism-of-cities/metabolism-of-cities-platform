@@ -60,6 +60,7 @@ PROJECT_ID_LIST = {
     "peeide": 51458,
     "cityloops": 6,
     "untraceable": 32542,
+    "water": 1010372,
 }
 
 PROJECT_LIST = {
@@ -81,6 +82,7 @@ PROJECT_LIST = {
     "peeide": { "id": 51458, "url": "peeide/" },
     "cityloops": { "id": 6, "url": "cityloops/" },
     "untraceable": { "id": 32542, "url": "untraceable/" },
+    "water": { "id": 1010372, "url": "water/" },
 }
 
 # This defines tags that are frequently used

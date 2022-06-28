@@ -89,7 +89,6 @@ p a {
 .top-layer {
   box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.1);
   background-color: #144d58;
-  background-image: url(https://resourcewatch.org/static/images/components/layout/header-bg-texture.png);
   background-repeat: no-repeat;
   background-position: 50%;
   background-size: cover;
