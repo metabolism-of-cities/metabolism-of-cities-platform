@@ -46,7 +46,7 @@ img.w{max-width:100%}
           </select>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-2">
           <label>
           Année
           </label>
@@ -57,7 +57,7 @@ img.w{max-width:100%}
           </select>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-2">
           <label>
           Détail
           </label>
@@ -67,6 +67,17 @@ img.w{max-width:100%}
             <option value="" disabled>Niveau 3</option>
           </select>
         </div>
+
+        <div class="col-md-2">
+          <label>
+          Unité<br>
+          </label>
+          <strong>
+          <br>
+            km3
+          </strong>
+        </div>
+
       </div>
 
       {% if request.GET.level == "2" %}
@@ -74,11 +85,6 @@ img.w{max-width:100%}
       {% else %}
         <img class="w" src="{% static "img/water/water1.png" %}" alt="" />
       {% endif %}
-
-      <div>
-        <img src="{% static "img/water/logo.png" %}" alt="" class="float-right" />
-      </div>
-      <div style="clear:both"></div>
 
   </div>
 
