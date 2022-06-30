@@ -1,6 +1,12 @@
 {% extends "_base.html" %}
 {% load static %}
 
+{% block head %}
+<style type="text/css">
+img.w{max-width:100%}
+</style>
+{% endblock %}
+
 {% block footer %}
   <script type="text/javascript">
   $(function(){
@@ -64,9 +70,9 @@
       </div>
 
       {% if request.GET.level == "2" %}
-        <img src="{% static "img/water/water2.svg" %}" alt="" />
+        <img class="w" src="{% static "img/water/water2.png" %}" alt="" />
       {% else %}
-        <img src="{% static "img/water/water1.svg" %}" alt="" />
+        <img class="w" src="{% static "img/water/water1.png" %}" alt="" />
       {% endif %}
 
       <div>
