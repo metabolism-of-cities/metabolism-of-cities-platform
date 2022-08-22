@@ -1,91 +1,251 @@
 {% extends "_base.html" %}
 {% load static %}
 
-{% block head %}
-<style type="text/css">
-img.w{max-width:100%}
-</style>
-{% endblock %}
-
-{% block footer %}
-  <script type="text/javascript">
-  $(function(){
-    $("select[name='level']").change(function(){
-      level = $(this).val();
-      window.location = "{% url 'water:index' %}?level=" + level;
-    });
-  });
-  </script>
-{% endblock %}
+{% block title %}Nice water metabolism dashboard{% endblock %}
 
 {% block content %}
 
-      <div class="row mb-2" style="clear:both">
-        <div class="col-md-3">
-          <label>
-          Territoire
-          </label>
-          <select name="" class="form-control">
-            <option value="">MNCA</option>
-            <option value="" disabled>Nice</option>
-            <option value="" disabled>Tinée</option>
-            <option value="" disabled>Vésubie</option>
-            <option value="" disabled>Moyen Pays Rive Gauche</option>
-            <option value="" disabled>Rive Droite</option>
-          </select>
-        </div>
+  <img src="{% static "img/water/water1.png" %}" style="max-width:100%" alt="" />
 
-        <div class="col-md-3">
-          <label>
-          Type de flux
-          </label>
-          <select name="" class="form-control">
-            <option value="">Eau</option>
-            <option value="" disabled>Energie</option>
-            <option value="" disabled>Gaz à effet de serre</option>
-          </select>
-        </div>
+  <h2>Nice's water metabolism</h2>
 
-        <div class="col-md-2">
-          <label>
-          Année
-          </label>
-          <select name="" class="form-control">
-            <option value="">2020</option>
-            <option value="" disabled>2019</option>
-            <option value="" disabled>2018</option>
-          </select>
+    <div class="row progress-list">
+    
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card">
+          <a href="/data/dashboards/huancayo/">
+            <img src="/media/water/input.jpg" class="card-img-top" alt="Huancayo" style="max-height:200px">
+          </a>
+          <div class="card-body">
+            <h5 class="card-title mb-0"><a href="/data/dashboards/huancayo/">Input</a></h5>
+          </div>
+          <ul class="list-group list-group-flush">
+            {% for each in input %}
+            <li class="list-group-item">
+              <i class="fas fa-fw fa-{{ each.logo }} mr-2"></i>
+              <a href="">
+              {{ each.name }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+          <div class="card-body">
+            <a class="btn btn-primary" href="/data/dashboards/huancayo/">
+              <i class="fad fa-info-circle"></i> Learn more
+            </a>
+            <a class="btn btn-primary-basic" href="/hub/">
+              <i class="fad fa-list"></i> View data
+            </a>
+          </div>
         </div>
-
-        <div class="col-md-2">
-          <label>
-          Détail
-          </label>
-          <select name="level" class="form-control">
-            <option value="1">Niveau 1</option>
-            <option value="2" {% if request.GET.level == "2" %}selected{% endif %}>Niveau 2</option>
-            <option value="" disabled>Niveau 3</option>
-          </select>
+      </div>
+    
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card">
+          <a href="/data/dashboards/huancayo/">
+            <img src="/media/water/production.jpg" class="card-img-top" alt="Huancayo" style="max-height:200px">
+          </a>
+          <div class="card-body">
+            <h5 class="card-title mb-0"><a href="/data/dashboards/huancayo/">Production</a></h5>
+          </div>
+          <ul class="list-group list-group-flush">
+            {% for each in production %}
+            <li class="list-group-item">
+              <i class="fas fa-fw fa-{{ each.logo }} mr-2"></i>
+              <a href="">
+              {{ each.name }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+          <div class="card-body">
+            <a class="btn btn-primary" href="/data/dashboards/huancayo/">
+              <i class="fad fa-info-circle"></i> Learn more
+            </a>
+            <a class="btn btn-primary-basic" href="/hub/">
+              <i class="fad fa-list"></i> View data
+            </a>
+          </div>
         </div>
-
-        <div class="col-md-2">
-          <label>
-          Unité<br>
-          </label>
-          <strong>
-          <br>
-            km³
-          </strong>
+      </div>
+    
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card">
+          <a href="/data/dashboards/huancayo/">
+            <img src="/media/water/distribution.jpg" class="card-img-top" alt="Huancayo" style="max-height:200px">
+          </a>
+          <div class="card-body">
+            <h5 class="card-title mb-0"><a href="/data/dashboards/huancayo/">Distribution</a></h5>
+          </div>
+          <ul class="list-group list-group-flush">
+            {% for each in distribution %}
+            <li class="list-group-item">
+              <i class="fas fa-fw fa-{{ each.logo }} mr-2"></i>
+              <a href="">
+              {{ each.name }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+          <div class="card-body">
+            <a class="btn btn-primary" href="/data/dashboards/huancayo/">
+              <i class="fad fa-info-circle"></i> Learn more
+            </a>
+            <a class="btn btn-primary-basic" href="/hub/">
+              <i class="fad fa-list"></i> View data
+            </a>
+          </div>
         </div>
-
+      </div>
+    
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card">
+          <a href="/data/dashboards/huancayo/">
+            <img src="/media/water/consumption.jpg" class="card-img-top" alt="Huancayo" style="max-height:200px">
+          </a>
+          <div class="card-body">
+            <h5 class="card-title mb-0"><a href="/data/dashboards/huancayo/">Consumption</a></h5>
+          </div>
+          <ul class="list-group list-group-flush">
+            {% for each in consumption %}
+            <li class="list-group-item">
+              <i class="fas fa-fw fa-{{ each.logo }} mr-2"></i>
+              <a href="">
+              {{ each.name }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+          <div class="card-body">
+            <a class="btn btn-primary" href="/data/dashboards/huancayo/">
+              <i class="fad fa-info-circle"></i> Learn more
+            </a>
+            <a class="btn btn-primary-basic" href="/hub/">
+              <i class="fad fa-list"></i> View data
+            </a>
+          </div>
+        </div>
+      </div>    
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card">
+          <a href="/data/dashboards/huancayo/">
+            <img src="/media/water/waste.jpg" class="card-img-top" alt="Huancayo" style="max-height:200px">
+          </a>
+          <div class="card-body">
+            <h5 class="card-title mb-0"><a href="/data/dashboards/huancayo/">Waste water treatment</a></h5>
+          </div>
+          <ul class="list-group list-group-flush">
+            {% for each in waste %}
+            <li class="list-group-item">
+              <i class="fas fa-fw fa-{{ each.logo }} mr-2"></i>
+              <a href="{% if each.id %}{% url "water:infrastructure_map" each.id %}{% endif %}">
+              {{ each.name }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+          <div class="card-body">
+            <a class="btn btn-primary" href="/data/dashboards/huancayo/">
+              <i class="fad fa-info-circle"></i> Learn more
+            </a>
+            <a class="btn btn-primary-basic" href="/hub/">
+              <i class="fad fa-list"></i> View data
+            </a>
+          </div>
+        </div>
       </div>
 
-      {% if request.GET.level == "2" %}
-        <img class="w" src="{% static "img/water/water2.png" %}" alt="" />
-      {% else %}
-        <img class="w" src="{% static "img/water/water1.png" %}" alt="" />
-      {% endif %}
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card">
+          <a href="/data/dashboards/huancayo/">
+            <img src="/media/water/output.jpg" class="card-img-top" alt="Huancayo" style="max-height:200px">
+          </a>
+          <div class="card-body">
+            <h5 class="card-title mb-0"><a href="/data/dashboards/huancayo/">Outputs</a></h5>
+          </div>
+          <ul class="list-group list-group-flush">
+            {% for each in output %}
+            <li class="list-group-item">
+              <i class="fas fa-fw fa-{{ each.logo }} mr-2"></i>
+              <a href="">
+              {{ each.name }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+          <div class="card-body">
+            <a class="btn btn-primary" href="/data/dashboards/huancayo/">
+              <i class="fad fa-info-circle"></i> Learn more
+            </a>
+            <a class="btn btn-primary-basic" href="/hub/">
+              <i class="fad fa-list"></i> View data
+            </a>
+          </div>
+        </div>
+      </div>    
+</div>
 
+<h2>Circularity indicators</h2>
+
+<div class="row progress-list">
+
+  <div class="col-md-6 col-lg-4 mb-4">
+    <div class="card">
+      <img src="/media/water/chart.png" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h2>Water consumption</h2>
+        <p><strong>March 2023</strong>
+        <span class="ml-4 badge bg-success text-white">+13%</span>
+        <div>
+          <a class="btn btn-primary" href="/data/dashboards/huancayo/">
+            <i class="fad fa-info-circle"></i> Learn more
+          </a>
+          <a class="btn btn-primary-basic" href="/hub/">
+            <i class="fad fa-list"></i> View data
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <div class="col-md-6 col-lg-4 mb-4">
+    <div class="card">
+      <img src="/media/water/donut.png" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h2>Water sufficiency</h2>
+        <p><strong>March 2023</strong>
+        <span class="ml-4 badge bg-success text-white">33%</span>
+        <div>
+          <a class="btn btn-primary" href="/data/dashboards/huancayo/">
+            <i class="fad fa-info-circle"></i> Learn more
+          </a>
+          <a class="btn btn-primary-basic" href="/hub/">
+            <i class="fad fa-list"></i> View data
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4 mb-4">
+    <div class="card">
+      <img src="/media/water/graph.png" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h2>Energy recovery</h2>
+        <p><strong>March 2023</strong>
+        <span class="ml-4 badge bg-success text-white">43%</span>
+        <div>
+          <a class="btn btn-primary" href="/data/dashboards/huancayo/">
+            <i class="fad fa-info-circle"></i> Learn more
+          </a>
+          <a class="btn btn-primary-basic" href="/hub/">
+            <i class="fad fa-list"></i> View data
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
 
 {% endblock %}

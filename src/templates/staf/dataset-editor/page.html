@@ -1,0 +1,84 @@
+{% extends "_base.html" %}
+{% load static %}
+{% block page_name %}dataset editor{% endblock %}
+{% block title %}Map - page editor - {{ info }}{% endblock %}
+
+{% block content %}
+  <h1 class="mb-0">Map - page editor</h1>
+  <a href="javascript:history.back()" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    Back
+  </a>
+
+  <div class="alert alert-info">
+    <i class="fa fa-info-circle"></i>
+    You can use this form to customize the page on which the map is displayed. The map itself can be changed
+    through a dedicated editor, but all other customizable non-map details can be changed here.
+  </div>
+
+  <section>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="category">Title</label>
+        <div>
+        <a href="javascript:history.back()">{{ info }}</a>
+        </div>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="category">Page settings</label>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="breadcrumbs" {% if settings.hide_breadcrumbs %}checked{% endif %} name="hide_breadcrumbs">
+              <label class="custom-control-label" for="breadcrumbs">Hide breadcrumbs</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="category">Hide default columns</label>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="gps" {% if settings.hide_gps %}checked{% endif %} name="hide_gps">
+              <label class="custom-control-label" for="gps">Hide GPS coordinates</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="description" {% if settings.hide_description %}checked{% endif %} name="hide_description">
+              <label class="custom-control-label" for="description">Hide description</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="category">Show custom fields in table</label>
+            {% if info.imported_spaces.all.0.meta_data.features %}
+              {% for key,value in info.imported_spaces.all.0.meta_data.features.items %}
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="field_{{ key|slugify }}" {% if key|slugify in settings.show_custom_fields %}checked{% endif %} name="show_custom_fields" value="{{ key|slugify }}">
+                <label class="custom-control-label" for="field_{{ key|slugify }}">{{ key }}</label>
+              </div>
+              {% endfor %}
+            {% else %}
+              <em>There are no custom fields recorded for the associated reference spaces.</em>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="category">Default list with reference spaces</label>
+            <select class="custom-select" name="default_view">
+              <option value="grid">Grid view</option>
+              <option value="grid_only" {% if settings.default_view == "grid_only" %}selected{% endif %}>Grid view only; do not show the table altogether</option>
+              <option value="table" {% if settings.default_view == "table" %}selected{% endif %}>Table view</option>
+              <option value="table_only" {% if settings.default_view == "table_only" %}selected{% endif %}>Table view only; do not show the grid altogether</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-success">
+        <i class="fas fa-fw fa-save"></i>
+        Save
+      </button>
+    </form>
+
+  </section>
+
+{% endblock %}

@@ -209,7 +209,7 @@
 
 </div>
 
-{% if space and not hide_space_menu and IS_DATA_PORTAL and not PROJECT.slug == "stocks" %}
+{% if space and not hide_space_menu and IS_DATA_PORTAL and not PROJECT.slug == "stocks" and not PROJECT.slug == "water" %}
   {% include "_submenu-data.html" %}
 {% elif PROJECT.id == 8 and request.user.is_authenticated %}
   {% include "_submenu-ascus.html" %}

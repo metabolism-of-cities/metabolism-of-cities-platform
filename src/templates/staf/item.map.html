@@ -15,23 +15,25 @@
 
   <h1>{% block title %}Map of {{ info }}{% endblock %}</h1>
 
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item">
-      {% if space %}
-        {% with link=PROJECT.slug|add:":space_maps" %}
-          <a href="{% url link space.slug %}">Maps</a>
-        {% endwith %}
-      {% else %}
-        <a href="../../">Maps</a>
-      {% endif %}
-    </li>
-    <li class="breadcrumb-item">
-      <a href="../">
-        {{ info }}
-      </a>
-    </li>
-    <li class="breadcrumb-item">Interactive map</li>
-  </ol>
+  {% if not settings.hide_breadcrumbs %}
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        {% if space %}
+          {% with link=PROJECT.slug|add:":space_maps" %}
+            <a href="{% url link space.slug %}">Maps</a>
+          {% endwith %}
+        {% else %}
+          <a href="../../">Maps</a>
+        {% endif %}
+      </li>
+      <li class="breadcrumb-item">
+        <a href="../">
+          {{ info }}
+        </a>
+      </li>
+      <li class="breadcrumb-item">Interactive map</li>
+    </ol>
+  {% endif %}
 
   <section>
     {% if info.meta_data.processing_error %}
@@ -77,6 +79,9 @@
         {% with link=PROJECT.slug|add:":chart_editor" %}
           <a href="{% url link info.id %}?next={{ request.get_full_path }}" class="btn btn-primary mt-3"><i class="fa fa-map-marker-edit"></i> Map editor</a>
         {% endwith %}
+        {% with link=PROJECT.slug|add:":page_editor" %}
+          <a href="{% url link info.id %}?next={{ request.get_full_path }}" class="btn btn-primary mt-3"><i class="fa fa-file-edit"></i> Page editor</a>
+        {% endwith %}
       {% endif %}
 
     {% endif %}
@@ -86,21 +91,23 @@
     <section>
       <h2 class="mt-4">{{ info }}</h2>
 
-      {% if show_grid %}
-        <ul class="nav nav-tabs toggle-tabs mb-3">
-          <li class="nav-item">
-            <a class="nav-link active" href="#" data-show="grid">
-              <i class="fa fa-th-large"></i>
-              Grid view
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" data-show="table">
-              <i class="fa fa-list"></i>
-              Table view
-            </a>
-          </li>
-        </ul>
+      {% if settings.default_view != "table_only" and settings.default_view != "grid_only" %}
+        {% if show_grid %}
+          <ul class="nav nav-tabs toggle-tabs mb-3">
+            <li class="nav-item">
+              <a class="nav-link {% if not settings.default_view == "table" %}active{% endif %}" href="#" data-show="grid">
+                <i class="fa fa-th-large"></i>
+                Grid view
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if settings.default_view == "table" %}active{% endif %}" href="#" data-show="table">
+                <i class="fa fa-list"></i>
+                Table view
+              </a>
+            </li>
+          </ul>
+        {% endif %}
       {% endif %}
 
       {% if info.imported_spaces.count > 500 and not "show_all_spaces" in request.GET %}
@@ -109,7 +116,7 @@
 
       {% if show_grid %}
 
-         <div class="row show-grid show-element">
+         <div class="row show-grid show-element {% if settings.default_view == "table" or settings.default_view == "table_only" %}d-none{% endif %}">
            {% for each in spaces %}
              <div class="col-lg-4 col-md-6 col-sm-6 mb-3">
               <a class="card btn-card" href="{% url URLS.SPACE each.id %}">
@@ -124,20 +131,42 @@
 
       {% endif %}
 
-      <table class="table datatable {% if show_grid %}d-none{% endif %} show-table show-element">
+      <table class="table datatable {% if show_grid and not settings.default_view == "table" and not settings.default_view == "table_only" %}d-none{% endif %} show-table show-element">
         <thead>
           <tr>
             <th>Space</th>
-            <th>Coordinates</th>
-            <th>Description</th>
+            {% if not settings.hide_gps %}
+              <th>Coordinates</th>
+            {% endif %}
+            {% if not settings.hide_description %}
+              <th>Description</th>
+            {% endif %}
+            {% if settings.show_custom_fields %}
+              {% for key,value in info.imported_spaces.all.0.meta_data.features.items %}
+                {% if key|slugify in settings.show_custom_fields %}
+                  <th>{{ key }}</th>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
         </tr>
         </thead>
         <tbody>
         {% for each in spaces %}
           <tr>
             <td><a href="{% url URLS.SPACE each.id %}">{{ each }}</a></td>
-            <td>{{ each.get_centroids }}</td>
-            <td>{{ each.description|default_if_none:""|truncatewords:30 }}</td>
+            {% if not settings.hide_gps %}
+              <td>{{ each.get_centroids }}</td>
+            {% endif %}
+            {% if not settings.hide_description %}
+              <td>{{ each.description|default_if_none:""|truncatewords:30 }}</td>
+            {% endif %}
+            {% if settings.show_custom_fields %}
+              {% for key,value in each.meta_data.features.items %}
+                {% if key|slugify in settings.show_custom_fields %}
+                  <td>{{ value }}</td>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
           </tr>
         {% endfor %}
         </tbody>

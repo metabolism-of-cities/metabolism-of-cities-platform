@@ -526,6 +526,7 @@ def map_item(request, id, space=None):
         "features": features,
         "legend": legend,
         "show_individual_colors": show_individual_colors,
+        "settings": info.meta_data.get("custom_page_view") if info.meta_data else None,
     }
     return render(request, "staf/item.map.html", context)
 
@@ -3160,6 +3161,37 @@ def chart_editor(request, id):
         return render(request, "staf/dataset-editor/map.basic.html", context)
     else:
         return render(request, "staf/dataset-editor/chart.html", context)
+
+@login_required
+def page_editor(request, id):
+
+    if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
+        unauthorized_access(request)
+
+    project = get_project(request)
+    info = get_object_or_404(LibraryItem, pk=id)
+
+    if request.method == "POST":
+        if not info.meta_data:
+            custom_view = {}
+        custom_view = request.POST
+        # No sense in storing CSRF token but we must make POST mutable before we can unset
+        setattr(request.POST, "_mutable", True)
+        del(custom_view["csrfmiddlewaretoken"]) 
+        if "show_custom_fields" in custom_view:
+            custom_view["show_custom_fields"] = request.POST.getlist("show_custom_fields")
+        info.meta_data["custom_page_view"] = custom_view
+        info.save()
+        messages.success(request, "Custom settings have been saved.")
+        if "next" in request.GET:
+            return redirect(request.GET["next"])
+
+    context = {
+        "info": info,
+        "settings": info.meta_data.get("custom_page_view") if info.meta_data else None,
+    }
+
+    return render(request, "staf/dataset-editor/page.html", context)
 
 @login_required
 def map_editor(request, id):
