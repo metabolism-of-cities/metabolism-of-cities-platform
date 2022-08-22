@@ -37,6 +37,8 @@ import folium
 from folium.plugins import Fullscreen
 
 from django.contrib.gis import geos
+import shutil
+import os
 
 def index(request):
     context = {
@@ -143,10 +145,7 @@ def layer(request, slug, id=None):
     filter_types = None
 
     project = get_project(request)
-    if project.slug == "cityloops":
-        tag_id = 971
-    else:
-        tag_id = 845
+    tag_id = get_parent_layer(request)
 
     spaces = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)
     if id:
@@ -187,10 +186,7 @@ def layer_overview(request, layer, space=None):
     if space:
         space = get_space(request, space)
     project = get_project(request)
-    if project.slug == "cityloops":
-        tag_id = 971
-    else:
-        tag_id = 845
+    tag_id = get_parent_layer(request)
 
     layer = Tag.objects.get(parent_tag_id=tag_id, slug=layer)
     children = Tag.objects.filter(parent_tag=layer)
@@ -578,7 +574,6 @@ def upload_staf_data(request, id=None, block=None, project_name="staf"):
         # Add validation code here
         session = get_object_or_404(UploadSession, pk=id)
     if request.method == "POST":
-        import os
         if not session:
             session = UploadSession.objects.create(
                 uploader=request.user.people,
@@ -603,7 +598,6 @@ def upload_staf_data(request, id=None, block=None, project_name="staf"):
             if session.part_of_project:
                 folder += "project-" + str(session.part_of_project.id) + "/"
             folder += session.type + "/" + str(session.uuid)
-            import shutil
             shutil.rmtree(folder)
             files.delete()
             messages.success(request, "The files were removed - you can upload new files instead.")
@@ -668,7 +662,6 @@ def upload_gis_file(request, id=None):
         # Add validation code here
         session = get_object_or_404(UploadSession, pk=id)
     if request.method == "POST":
-        import os
         if not session:
             session = UploadSession.objects.create(
                 uploader=request.user.people,
@@ -693,7 +686,6 @@ def upload_gis_file(request, id=None):
             if session.part_of_project:
                 folder += "project-" + str(session.part_of_project.id) + "/"
             folder += session.type + "/" + str(session.uuid)
-            import shutil
             shutil.rmtree(folder)
             files.delete()
             messages.success(request, "The files were removed - you can upload new files instead.")
@@ -1400,8 +1392,11 @@ def multimedia(request):
 def hub_harvesting(request):
 
     project = get_object_or_404(Project, pk=request.project)
+    spaces = ActivatedSpace.objects.filter(part_of_project_id=request.project)
+    if spaces.count() == 1:
+        return redirect(reverse(project.slug + ":hub_harvesting_space", args=[spaces[0].slug]))
     context = {
-        "spaces": ActivatedSpace.objects.filter(part_of_project_id=request.project),
+        "spaces": spaces,
         "menu": "harvesting",
         "hide_space_menu": True,
         "processing_link": project.slug + ":hub_harvesting_space",
@@ -1412,11 +1407,11 @@ def hub_harvesting_space(request, space):
     project = get_project(request)
     info = get_space(request, space)
     if project.slug == "cityloops":
-        tag_id = 971
         optional_list = [985, 995, 1017, 1018, 1019, 1020, 1021, 1026, 1027, 1028, 1029, 1030, 1035, 1036, 1037, 1038, 1039, 1040, 1044, 1045, 1046, 1047, 1056, 1057, 1058, 1059, 1060, 1061, 1062, 1067, 1068, 1069, 1070, 1071]
     else:
-        tag_id = 845
         optional_list = None
+    tag_id = get_parent_layer(request)
+
     layers = Tag.objects.filter(parent_tag_id=tag_id)
     counter = {}
     list_messages = None
@@ -1467,7 +1462,7 @@ def hub_harvesting_space(request, space):
 def hub_harvesting_tag(request, space, tag):
     info = get_space(request, space)
     tag = get_object_or_404(Tag, pk=tag)
-    types = [5,6,9,16,37,25,27,29,32,10,33,38,20,31,40]
+    types = [5,6,9,16,37,25,27,29,32,10,33,38,20,31,40,41]
     list = LibraryItem.objects.filter(spaces=info, tags=tag)
     list_messages = None
 
@@ -1536,10 +1531,7 @@ def hub_harvesting_tag(request, space, tag):
 
 def hub_harvesting_worksheet(request, space=None):
     project = get_project(request)
-    if project.slug == "cityloops":
-        tag_id = 971
-    else:
-        tag_id = 845
+    tag_id = get_parent_layer(request)
 
     context = {
         "title": "Instructions",
@@ -2282,10 +2274,7 @@ def hub_processing_record_save(request, id, type, space=None):
         unauthorized_access(request)
 
     work = get_work(request, info, 14)
-    if project.slug == "cityloops":
-        tag_id = 971
-    else:
-        tag_id = 845
+    tag_id = get_parent_layer(request)
 
     if request.method == "POST":
         info.name = request.POST.get("name")
@@ -2333,10 +2322,7 @@ def hub_processing_dataset_save(request, id, space=None):
     project = get_project(request)
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         unauthorized_access(request)
-    if project.slug == "cityloops":
-        tag_id = 971
-    else:
-        tag_id = 845
+    tag_id = get_parent_layer(request)
 
     try:
         work_id = 30
@@ -2785,10 +2771,7 @@ def hub_processing_gis_save(request, id, space=None):
     project = get_project(request)
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         unauthorized_access(request)
-    if project.slug == "cityloops":
-        tag_id = 971
-    else:
-        tag_id = 845
+    tag_id = get_parent_layer(request)
 
     try:
         work_id = 14 if geospreadsheet else 2

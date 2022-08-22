@@ -18,74 +18,77 @@
 
   {% include "hub/_nav.html" %}
 
-  <section>
-    <h4>Progress</h4>
+  {% if PROJECT.slug != "water" %}
 
-    <div class="progress mb-3">
-      <div class="progress-bar bg-primary" role="progressbar" style="width: {{ percentage }}%;" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100" title="{{ uploaded }} topics out of {{ total_tags }} have at least one uploaded item.">{{ percentage|floatformat:0 }}%</div>
-    </div>
+    <section>
+      <h4>Progress</h4>
 
-    {% if items %}
-      <div id="view-publications" class="btn btn-primary-basic">
-        <i class="fal fa-angle-down"></i>
-        View documents ({{ items.count }})
+      <div class="progress mb-3">
+        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ percentage }}%;" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100" title="{{ uploaded }} topics out of {{ total_tags }} have at least one uploaded item.">{{ percentage|floatformat:0 }}%</div>
       </div>
-    {% endif %}
 
-    {% if untagged_items %}
-      <div id="view-untagged" class="btn btn-primary-basic">
-        <i class="fal fa-angle-down"></i>
-        View untagged documents ({{ untagged_items.count }})
-      </div>
-    {% endif %}
-
-    <a class="btn btn-primary-basic float-right" href="{% url all_link %}"><i class="fal fa-th"></i> View all {{ SYSTEM_NAME_PLURAL }}</a>
-
-    {% if items %}
-      <div id="publications-table" class="mt-4">
-        {% include "_library.list.html" %}
-      </div>
-    {% else %}
-      <div class="my-4">
-        <div class="alert alert-light d-inline-block">
-          <i class="fa fa-exclamation-triangle mr-2"></i> No tagged items uploaded yet
+      {% if items %}
+        <div id="view-publications" class="btn btn-primary-basic">
+          <i class="fal fa-angle-down"></i>
+          View documents ({{ items.count }})
         </div>
-      </div>
-    {% endif %}
+      {% endif %}
 
-    {% if untagged_items %}
-      <div id="untagged-table" class="mt-4">
-        <h2>Untagged items</h2>
-        <p>These items were uploaded but not (yet) linked to a specific layer</p>
-        <table class="table datatable datatable-card">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Author(s)</th>
-              <th>Year</th>
-              <th>Tag(s)</th>
-            </tr>
-          </thead>
-          <tbody>
-          {% for each in untagged_items %}
-            <tr>
-              <td>
-                <a href="{% url 'data:library_item' each.id %}">{{ each }}</a>
-                <br>
-                <i class="fal fa-fw fa-{{ each.type.icon }}"></i> {{ each.type }}
-                |
-                <a href="{% url 'data:library_item' each.id %}?edit=true&amp;next={{ request.get_full_path }}&amp;update_tags=true">Edit</a>
-              </td>
-              <td>{{ each.get_author_citation }}</td>
-              <td>{{ each.year }}</td>
-              <td>{% for tag in each.tags.all %}<span class="badge badge-light mr-1">{{ tag }}</span>{% endfor %}</td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    {% endif %}
-  </section>
+      {% if untagged_items %}
+        <div id="view-untagged" class="btn btn-primary-basic">
+          <i class="fal fa-angle-down"></i>
+          View untagged documents ({{ untagged_items.count }})
+        </div>
+      {% endif %}
+
+      <a class="btn btn-primary-basic float-right" href="{% url all_link %}"><i class="fal fa-th"></i> View all {{ SYSTEM_NAME_PLURAL }}</a>
+
+      {% if items %}
+        <div id="publications-table" class="mt-4">
+          {% include "_library.list.html" %}
+        </div>
+      {% else %}
+        <div class="my-4">
+          <div class="alert alert-light d-inline-block">
+            <i class="fa fa-exclamation-triangle mr-2"></i> No tagged items uploaded yet
+          </div>
+        </div>
+      {% endif %}
+
+      {% if untagged_items %}
+        <div id="untagged-table" class="mt-4">
+          <h2>Untagged items</h2>
+          <p>These items were uploaded but not (yet) linked to a specific layer</p>
+          <table class="table datatable datatable-card">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Author(s)</th>
+                <th>Year</th>
+                <th>Tag(s)</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for each in untagged_items %}
+              <tr>
+                <td>
+                  <a href="{% url 'data:library_item' each.id %}">{{ each }}</a>
+                  <br>
+                  <i class="fal fa-fw fa-{{ each.type.icon }}"></i> {{ each.type }}
+                  |
+                  <a href="{% url 'data:library_item' each.id %}?edit=true&amp;next={{ request.get_full_path }}&amp;update_tags=true">Edit</a>
+                </td>
+                <td>{{ each.get_author_citation }}</td>
+                <td>{{ each.year }}</td>
+                <td>{% for tag in each.tags.all %}<span class="badge badge-light mr-1">{{ tag }}</span>{% endfor %}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+    </section>
+  {% endif %}
 
   <section>
     <h4>Layers</h4>
@@ -188,30 +191,33 @@
     </div>
   </section>
 
-  <div class="border rounded p-3 bg-light">
-    <h4>Do an online course</h4>
-    <p>
-      Are you not yet familiar with data collection? We have a course for you! It's open, it's free,
-      and it's fun!
-    </p>
+  {% if PROJECT.slug != "water" %}
+    <div class="border rounded p-3 bg-light">
+      <h4>Do an online course</h4>
+      <p>
+        Are you not yet familiar with data collection? We have a course for you! It's open, it's free,
+        and it's fun!
+      </p>
 
-    {% if PROJECT.slug == "cityloops" %}
-      <a class="btn btn-primary btn-sm mb-1" href="https://cityloops.metabolismofcities.org/courses/course-1a-data-collection-for-circularity-assessment-of-construction-sector-wp2/">Data collection for circularity assessment of construction sector (WP2)</a>
-      <a class="btn btn-primary btn-sm mb-1" href="https://cityloops.metabolismofcities.org/courses/course-1b-data-collection-for-circularity-assessment-of-biomass-sector-wp3/">Data collection for circularity assessment of biomass sector (WP3)</a>
-    {% else %}
-      <a class="btn btn-primary btn-sm" href="https://education.metabolismofcities.org/courses/data-and-urban-metabolism-data-collection/">English course: Data collection</a>
-      <a class="btn btn-primary btn-sm" href="https://education.metabolismofcities.org/courses/metabolismo-urbano-y-manejo-de-datos-recopilacion-de-datos/">Spanish course: Recopilación de datos</a>
-    {% endif %}
-  </div>
+      {% if PROJECT.slug == "cityloops" %}
+        <a class="btn btn-primary btn-sm mb-1" href="https://cityloops.metabolismofcities.org/courses/course-1a-data-collection-for-circularity-assessment-of-construction-sector-wp2/">Data collection for circularity assessment of construction sector (WP2)</a>
+        <a class="btn btn-primary btn-sm mb-1" href="https://cityloops.metabolismofcities.org/courses/course-1b-data-collection-for-circularity-assessment-of-biomass-sector-wp3/">Data collection for circularity assessment of biomass sector (WP3)</a>
+      {% else %}
+        <a class="btn btn-primary btn-sm" href="https://education.metabolismofcities.org/courses/data-and-urban-metabolism-data-collection/">English course: Data collection</a>
+        <a class="btn btn-primary btn-sm" href="https://education.metabolismofcities.org/courses/metabolismo-urbano-y-manejo-de-datos-recopilacion-de-datos/">Spanish course: Recopilación de datos</a>
+      {% endif %}
+    </div>
 
-  <section>
-    <h2 class="mt-4">Discussion and questions</h2>
-    {% include "_messages.html" %}
+    <section>
+      <h2 class="mt-4">Discussion and questions</h2>
+      {% include "_messages.html" %}
 
-    {% if not request.user.is_authenticated %}
-      {% include "_notauthenticated.html" %}
-    {% endif %}
-  </section>
+      {% if not request.user.is_authenticated %}
+        {% include "_notauthenticated.html" %}
+      {% endif %}
+    </section>
+
+  {% endif %}
 
 {% endblock %}
 

@@ -581,7 +581,7 @@
       {% endif %}
 
       {% if info.spaces.all %}
-        <section class="associated-spaces">
+        <section class="associated-spaces mt-3">
           <h3>Associated space{{ info.spaces.count|pluralize }}</h3>
             {% for each in info.spaces.all %}
               {% if forloop.counter < 10 or "allspaces" in request.GET %}
@@ -642,7 +642,7 @@
       {% endif %}
 
       {% if info.meta_data.processing_error %}
-        <div class="alert alert-warning mt-3">
+        <div class="alert alert-danger mt-3">
           <i class="fa fa-exclamation-triangle"></i> <strong>File processing error</strong>
           <br>
           We have tried processing this file, but have encountered an error.

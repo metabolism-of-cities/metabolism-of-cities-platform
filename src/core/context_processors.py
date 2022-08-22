@@ -36,12 +36,18 @@ def site(request):
         "TASK": slug + ":" + "work_item",
     }
 
-    if slug == "data" or slug == "cityloops" or slug == "stocks" or slug == "staf":
+    if slug == "data" or slug == "cityloops" or slug == "stocks" or slug == "staf" or slug == "water":
         is_data_portal = True
     elif slug == "islands":
         system_name_singular = "island"
         system_name_plural = "islands"
         is_data_portal = True
+
+    # A private system will have a control panel and other data upload options that are NOT publicly accessible
+    # It will also have the option to mark documents as private and not show them online
+    is_private_system = False
+    if slug == "water":
+        is_private_system = True
 
     if is_data_portal:
         urls["LAYER_OVERVIEW"] = slug + ":" + "layer_overview"
@@ -82,4 +88,5 @@ def site(request):
         "SYSTEM_NAME_PLURAL": system_name_plural,
         "URLS": urls,
         "IS_DATA_PORTAL": is_data_portal,
+        "IS_PRIVATE_SYSTEM": is_private_system,
     }

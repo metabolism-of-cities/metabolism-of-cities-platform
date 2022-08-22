@@ -145,7 +145,7 @@
       {% if info.description %}
         <h2 class="h3">Description</h2>
         {{ info.get_description }}
-      {% else %}
+      {% elif not info.meta_data.features %}
         <div class="alert alert-dark text-center p-5 mb-0">
           <h4>
           <i class="fa fa-info-circle"></i><br class="mb-4">

@@ -5,6 +5,20 @@
 
   <h2>Control Panel</h2>
   <section class="row">
+
+    {% if PROJECT.slug == "water" %}
+      <div class="col-md-3 mb-3">
+        {% with link=PROJECT.slug|add:":hub_harvesting" %}
+        <a class="card icon-card btn-card" href="{% url link %}">
+        {% endwith %}
+          <div class="icon">
+            <i class="fal fa-fw fa-database"></i>
+          </div>
+          <div class="card-header">Data</div>
+        </a>
+      </div>
+    {% endif %}
+
     <div class="col-md-3 mb-3">
       <a class="card icon-card btn-card" href="project/">
         <div class="icon">
@@ -78,16 +92,16 @@
         </a>
       </div>
 
-    {% if not PROJECT.slug == "peeide" %}
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="events/">
-          <div class="icon">
-            <i class="fal fa-fw fa-calendar-day"></i>
-          </div>
-          <div class="card-header">Events</div>
-        </a>
-      </div>
-    {% endif %}
+      {% if not PROJECT.slug == "peeide" %}
+        <div class="col-md-3 mb-3">
+          <a class="card icon-card btn-card" href="events/">
+            <div class="icon">
+              <i class="fal fa-fw fa-calendar-day"></i>
+            </div>
+            <div class="card-header">Events</div>
+          </a>
+        </div>
+      {% endif %}
 
       {% if PROJECT.slug == "islands" or PROJECT.slug == "community" or PROJECT.slug == "peeide" %}
 
@@ -227,7 +241,6 @@
       </div>
     </section>
   {% endif %}
-
 
   {% if PROJECT.slug == "library" or PROJECT.slug == "islands" or PROJECT.slug == "peeide" %}
     <section>

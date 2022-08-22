@@ -1681,7 +1681,7 @@ class LibraryItem(Record):
                         # kind of object. So we simply do another check to see if it 'has z'. BTW we can likely use hasz
                         # instead of type == point25d etc but I only now learned about it. Something for later.
                         # https://docs.djangoproject.com/en/3.1/ref/contrib/gis/geos/#django.contrib.gis.geos.GEOSGeometry.hasz
-                        error = "This shapefile includes data in 3D. We only store shapefiles with 2D data. Please remove the elevation data (Z coordinates)"
+                        error = "This shapefile includes data in 3D. We only store shapefiles with 2D data. Please remove the elevation data (Z coordinates). This can be done, for instance, using QGIS: https://docs.qgis.org/testing/en/docs/user_manual/processing_algs/qgis/vectorgeometry.html#drop-m-z-values"
                     else:
                         space = ReferenceSpace.objects.create(
                             name = self.meta_data.get("shortname"),
@@ -1808,10 +1808,10 @@ class LibraryItem(Record):
             else:
                 for i, row in df.iterrows():
                     this_row = {}
+                    meta_data = {}
                     # This CERTAINLY needs to be rewritten, I read everywhere that this looping is not ideal
                     # But I'm not sure how, so TODO
                     for column_name, content in row.iteritems():
-                        meta_data = {}
                         this_field = field_match[column_name]
                         this_row[column_name] = content
                         if this_field == "Name":

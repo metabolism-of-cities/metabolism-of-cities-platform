@@ -1,0 +1,97 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block head %}
+<style type="text/css">
+img.w{max-width:100%}
+</style>
+{% endblock %}
+
+{% block footer %}
+  <script type="text/javascript">
+  $(function(){
+    $("select[name='level']").change(function(){
+      level = $(this).val();
+      window.location = "{% url 'water:index' %}?level=" + level;
+    });
+  });
+  </script>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-3">
+
+      <div>
+        <label>
+        Territoire
+        </label>
+        <select name="" class="form-control">
+          <option value="">MNCA</option>
+          <option value="" disabled>Nice</option>
+          <option value="" disabled>Tinée</option>
+          <option value="" disabled>Vésubie</option>
+          <option value="" disabled>Moyen Pays Rive Gauche</option>
+          <option value="" disabled>Rive Droite</option>
+        </select>
+      </div>
+
+      <div class="mt-3">
+        <label>
+        Type de flux
+        </label>
+        <select name="" class="form-control">
+          <option value="">Eau</option>
+          <option value="" disabled>Energie</option>
+          <option value="" disabled>Gaz à effet de serre</option>
+        </select>
+      </div>
+
+      <div class="mt-3">
+        <label>
+        Année
+        </label>
+        <select name="" class="form-control">
+          <option value="">2020</option>
+          <option value="" disabled>2019</option>
+          <option value="" disabled>2018</option>
+        </select>
+      </div>
+
+      <div class="mt-3">
+        <label>
+        Détail
+        </label>
+        <select name="level" class="form-control">
+          <option value="1">Niveau 1</option>
+          <option value="2" {% if request.GET.level == "2" %}selected{% endif %}>Niveau 2</option>
+          <option value="" disabled>Niveau 3</option>
+        </select>
+      </div>
+
+      <div class="mt-3">
+        <label>
+        Unité<br>
+        </label>
+        <strong>
+        <br>
+          km³
+        </strong>
+      </div>
+
+    </div>
+
+    <div class="col-lg-9">
+      <img src="/media/water/mnca.svg" alt="" height="500">
+    </div>
+
+  </div>
+</div>
+
+
+
+  </div>
+
+{% endblock %}

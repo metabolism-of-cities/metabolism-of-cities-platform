@@ -103,20 +103,24 @@ def p(text):
     print(text)
     print("----------------------")
 
-# We should cache these layers for a while!
-def get_layers(request):
+# This returns the ID of the tag that can be used for getting the layer tags
+def get_parent_layer(request):
     if request.project == 6:
         tag_id = 971 # CityLoops
+    elif request.project == 1011035:
+        tag_id = 1751 # Nice
     else:
         tag_id = 845
+    return tag_id
+    
+# We should cache these layers for a while!
+def get_layers(request):
+    tag_id = get_parent_layer(request)
     return Tag.objects.filter(parent_tag_id=tag_id)
 
 # We should cache these layers for a while!
 def get_layers_count(request):
-    if request.project == 6:
-        tag_id = 971 # CityLoops
-    else:
-        tag_id = 845
+    tag_id = get_parent_layer(request)
     l = {}
     for each in Tag.objects.filter(parent_tag_id=tag_id):
         l[each.id] = each.children.count()

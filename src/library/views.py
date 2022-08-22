@@ -256,10 +256,7 @@ def journal(request, slug):
 def item(request, id, show_export=True, space=None, layer=None, data_section_type=None, json=False):
 
     project = get_project(request)
-    if project.slug == "cityloops":
-        tag_id = 971
-    else:
-        tag_id = 845
+    tag_id = get_parent_layer(request)
     submenu = None
     # These settings are used when opening the URL from one of the data sites,
     # for example from http://0.0.0.0:8000/data/dashboards/barcelona/infrastructure/
@@ -661,10 +658,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     # - When the same users decide to upload an MFA record, ?mfa=true will also be set
 
     project = get_project(request)
-    if project.slug == "cityloops":
-        tag_id = 971
-    else:
-        tag_id = 845
+    tag_id = get_parent_layer(request)
 
     journals = None # Whether or not we show a JOURNAL field in the form
     publishers = None # Whether or not we show a PUBLISHER field in the form
@@ -746,6 +740,9 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             if tag:
                 initial["tags"] = tag
 
+        if project.slug == "water":
+            if "sectors" in fields:
+                fields.remove("sectors")
         if project.slug == "ascus2021":
             if "license" in fields:
                 fields.remove("license")
@@ -906,6 +903,15 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 fields.remove("tags")
             labels["url"] = "Youtube video URL"
             files = True
+
+        elif project.slug == "water":
+            if "sectors" in fields:
+                fields.remove("sectors")
+            if "materials" in fields:
+                fields.remove("materials")
+            if "tags" in fields:
+                fields.remove("tags")
+            fields.append("is_public")
 
         ModelForm = modelform_factory(model, fields=fields, labels = labels)
 
