@@ -13,7 +13,7 @@
 
 {% block content %}
 
-  <h1>{% block title %}Map of {{ info }}{% endblock %}</h1>
+  <h1>{% block title %}Map - {{ info }}{% endblock %}</h1>
 
   {% if not settings.hide_breadcrumbs %}
     <ol class="breadcrumb">
@@ -73,6 +73,7 @@
           <a href="./?show_full=true" rel="nofollow" class="btn btn-primary">View full version</a>
         </div>
       {% endif %}
+
       <div id="map" class="leaflet-map mt-4"></div>
 
       {% if curator %}
@@ -262,5 +263,19 @@
     $(".show-element").addClass("d-none");
     $(".show-"+show).removeClass("d-none");
   });
+
+  let mapData_1 = {{ boundary|safe|escape }};
+
+      dataLayer_1 = L.geoJson(mapData_1, {
+        style: {
+          fillColor: "#144d58",
+          fillOpacity: 0.2,
+          opacity: 1,
+          weight: 2,
+          color: "#144d58",
+        },
+      })
+      map.addLayer(dataLayer_1)
+
 </script>
 {% endblock %}

@@ -4,7 +4,165 @@
 {% block head %}
 <style type="text/css">
 img.w{max-width:100%}
+#canvas {
+  background: #f4f4f4;
+  position: relative;
+  height: 560px;
+  width: 800px;
+  border: 2px solid #ccc;
+  transition: all 2s ease-out;
+}
+#canvas img {
+  position: absolute;
+  left: 200px;
+  top: 10px;
+  transition: all 1s ease-out;
+  opacity: 1;
+}
+
+#canvas .bar {
+  background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+  background-size: 1rem 1rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  background-color: #0d6efd;
+  transition: all 2s ease-out;
+  transition-delay: 2s;
+  height: 20px;
+  margin-bottom: 3px;
+}
+
+#input, #output, #losses {
+  transition: all 3s ease-out;
+  transition-delay: 2s;
+}
+
+#input {
+  position: absolute;
+  top: 190px;
+  left: -20px;
+  width: 466px;
+  transform: rotate(176deg);
+}
+
+#output {
+  position: absolute;
+  top: 190px;
+  right: 70px;
+  width: 466px;
+  transform: rotate(176deg);
+}
+
+#losses {
+  position: absolute;
+  bottom: 200px;
+  left: 200px;
+  width: 466px;
+  transform: rotate(-90deg);
+}
+
+#canvas .bar:hover {
+  cursor: pointer;
+}
+
+#canvas .progress {
+  margin-bottom: 10px;
+  width: 300px;
+  transition: all 1s ease-in;
+  transition-delay: 1s;
+}
+
+#canvas .progress.external {
+  width: 500px;
+  transition: all 3s ease-in;
+  transition-delay: 1s;
+}
+
+#output .progress.external {
+  position: relative;
+  right: 160px;
+}
+
+#losses .progress {
+  width: 90px;
+}
+
+.progress-bar:hover {
+  opacity:.5;
+  cursor: pointer;
+}
+
+#canvas h1 {
+  display: none;
+}
+
 </style>
+
+<style type="text/css" id="level0">
+#output,#input,#losses {
+  top: 0;
+  right: 0;
+  left: 0;
+  transform: rotate(0);
+}
+#input, #output {
+  transform: rotate(180deg);
+}
+
+#output .progress.external, .progress.external,
+#losses .progress, #output .progress, #input .progress {
+  width: 100%;
+  margin:0;
+  right: 0;
+  left: 0;
+  border-radius: 0;
+}
+
+#canvas {
+  overflow: hidden;
+}
+
+#output {
+  left: 400px;
+}
+
+#losses {
+  left: 400px;
+  top: 144px;
+}
+#canvas img {
+  opacity: 0;
+  width: 30px;
+  height: 30px;
+}
+
+#canvas h1 {
+  z-index: 30;
+  position: absolute;
+  color: #fff;
+  display: block;
+}
+#input_label {
+  left: 20px;
+}
+#output_label {
+  left: 420px;
+}
+#losses_label {
+  left: 420px;
+  top: 150px;
+}
+#canvas {
+  height: 220px;
+}
+</style>
+
 {% endblock %}
 
 {% block footer %}
@@ -13,6 +171,9 @@ img.w{max-width:100%}
     $("select[name='level']").change(function(){
       level = $(this).val();
       window.location = "{% url 'water:index' %}?level=" + level;
+    });
+    $("body").click(function() {
+      $("#level0").remove();
     });
   });
   </script>
@@ -84,14 +245,45 @@ img.w{max-width:100%}
     </div>
 
     <div class="col-lg-9">
-      <img src="/media/water/mnca.svg" alt="" height="500">
+      <div id="canvas">
+
+        <h1 id="input_label">
+          Input: 94,714 km³
+        </h1>
+
+        <h1 id="output_label">
+          Output: 60,915 km³
+        </h1>
+
+        <h1 id="losses_label">
+          Losses: 30,916 km³
+        </h1>
+
+        <div id="input" class="bars">
+          <div class="progress external" style="height:14px"><div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div></div>
+          <div class="progress external" style="height:6px"><div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div></div>
+          <div class="progress" style="height: 200px"><div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div></div>
+        </div>
+
+        <div id="output" class="bars">
+          <div class="progress" style="height:113px"><div class="bg-primary progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div></div>
+          <div class="progress" style="height:13px"><div class="bg-primary progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div></div>
+          <div class="progress external" style="height:2px"><div class="bg-primary progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div></div>
+          <div class="progress external" style="height:15px"><div class="bg-primary progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div></div>
+        </div>
+
+        <div id="losses" class="bars">
+          <div class="progress" style="height:72px"><div class="bg-danger progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div></div>
+        </div>
+
+        <img src="/media/water/region.png" alt="" height="500">
+
+      </div>
     </div>
 
   </div>
 </div>
 
 
-
-  </div>
 
 {% endblock %}

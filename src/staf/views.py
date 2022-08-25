@@ -447,6 +447,7 @@ def map_item(request, id, space=None):
     legend = {}
     show_individual_colors = False
     properties = info.get_dataviz_properties
+
     if "color_type" in properties:
         if properties["color_type"] == "single":
             # One single color for everything on the map
@@ -460,6 +461,25 @@ def map_item(request, id, space=None):
     if show_individual_colors and "scheme" in properties:
         s = properties["scheme"]
         colors = COLOR_SCHEMES[s]
+
+    boundary = None
+    if "boundaries" in properties:
+        try:
+            boundaries = LibraryItem.objects.get(pk=properties["boundaries"])
+
+            boundary = {
+                "type": "Feature",
+                "geometry": json.loads(boundaries.imported_spaces.all()[0].geometry.json),
+                "properties": {
+                    "name": boundaries.name,
+                    "id": boundaries.id,
+                    "content": "",
+                    "color": "",
+                },
+            }
+
+        except Exception as e:
+            messages.warning(request, "Please note: the boundaries could not be loaded.")
 
     for each in spaces:
         geom_type = each.geometry.geom_type
@@ -527,6 +547,7 @@ def map_item(request, id, space=None):
         "legend": legend,
         "show_individual_colors": show_individual_colors,
         "settings": info.meta_data.get("custom_page_view") if info.meta_data else None,
+        "boundary": boundary,
     }
     return render(request, "staf/item.map.html", context)
 

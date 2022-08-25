@@ -1,13 +1,26 @@
 {% extends "_base.html" %}
 {% load static %}
 
-{% block title %}Nice water metabolism dashboard{% endblock %}
+{% block title %}Water metabolism dashboard{% endblock %}
+
+{% block css %}
+<style type="text/css">
+a[href=""]{
+  color:#000 !important;
+  opacity: 0.7;
+}
+h5 {
+  text-decoration: underline;
+  font-weight: bold;
+}
+</style>
+{% endblock %}
 
 {% block content %}
 
   <img src="{% static "img/water/water1.png" %}" style="max-width:100%" alt="" />
 
-  <h2>Nice's water metabolism</h2>
+  <h2>Water metabolism dashboard - Métropole Nice Côte d'Azur</h2>
 
     <div class="row progress-list">
     
@@ -97,7 +110,7 @@
           </div>
         </div>
       </div>
-    
+
       <div class="col-md-6 col-lg-4 mb-4">
         <div class="card">
           <a href="/data/dashboards/huancayo/">
@@ -138,9 +151,13 @@
             {% for each in waste %}
             <li class="list-group-item">
               <i class="fas fa-fw fa-{{ each.logo }} mr-2"></i>
+              {% if each.id %}
               <a href="{% if each.id %}{% url "water:infrastructure_map" each.id %}{% endif %}">
               {{ each.name }}
               </a>
+              {% else %}
+                {{ each.name }}
+              {% endif %}
             </li>
             {% endfor %}
           </ul>
