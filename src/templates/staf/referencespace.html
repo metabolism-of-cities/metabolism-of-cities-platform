@@ -158,8 +158,8 @@
         <h2 class="mt-3 h3">Features</h2>
         <dl class="row">
           {% for key,value in info.meta_data.features.items %}
-            <dt class="col-sm-3">{{ key }}</dt>
-            <dd class="col-sm-9">{{ value }}</dd>
+            <dt class="col-sm-4">{{ key }}</dt>
+            <dd class="col-sm-8">{{ value }}</dd>
           {% endfor %}
         </dl>
       {% endif %}
@@ -177,33 +177,35 @@
         
 
       {% if info.history.all or info.source.uploader %}
-        <h2 class="mt-4 h3">Record history</h2>
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Name</th>
-              <th>Changes</th>
-            </tr>
-          </thead>
-          <tbody>
-          {% if info.history.all %}
-            {% for each in info.history.all %}
+        <section id="record_history">
+          <h2 class="mt-4 h3">Record history</h2>
+          <table class="table table-striped">
+            <thead>
               <tr>
-                <td>{{ each.date_created }}</td>
-                <td>{{ each.people }}</td>
-                <td>{{ each.comments|linebreaksbr|urlize }}</td>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Changes</th>
               </tr>
-            {% endfor %}
-          {% else %}
-            <tr>
-              <td>{{ info.source.date_created }}</td>
-              <td>{{ info.source.uploader }}</td>
-              <td>Reference space create from source document</td>
-            </tr>
-          {% endif %}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+            {% if info.history.all %}
+              {% for each in info.history.all %}
+                <tr>
+                  <td>{{ each.date_created }}</td>
+                  <td>{{ each.people }}</td>
+                  <td>{{ each.comments|linebreaksbr|urlize }}</td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td>{{ info.source.date_created }}</td>
+                <td>{{ info.source.uploader }}</td>
+                <td>Reference space create from source document</td>
+              </tr>
+            {% endif %}
+            </tbody>
+          </table>
+        </section>
       {% endif %}
 
     </div>
