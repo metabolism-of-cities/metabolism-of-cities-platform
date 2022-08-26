@@ -111,7 +111,7 @@
         {% endif %}
       {% endif %}
 
-      {% if info.imported_spaces.count > 500 and not "show_all_spaces" in request.GET %}
+      {% if spaces.count > 500 and not "show_all_spaces" in request.GET %}
         <div class="alert alert-warning">NOTE: the table is restricted to the first 500 items. <a href="?show_all_spaces=true">View all</a></div>
       {% endif %}
 
@@ -143,7 +143,7 @@
               <th>Description</th>
             {% endif %}
             {% if settings.show_custom_fields %}
-              {% for key,value in info.imported_spaces.all.0.meta_data.features.items %}
+              {% for key,value in spaces.all.0.meta_data.features.items %}
                 {% if key|slugify in settings.show_custom_fields %}
                   <th>{{ key }}</th>
                 {% endif %}
@@ -239,7 +239,7 @@
 
   </section>
 
-  {% if request.user.id == 1 and info.imported_spaces.count %}
+  {% if request.user.id == 1 and spaces.count %}
     <section>
       <h2><i class="fa fa-lock fa-fw"></i> Admin options</h2>
       <form method="post">

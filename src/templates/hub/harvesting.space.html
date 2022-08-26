@@ -121,14 +121,17 @@
           {% for each in layers %}
 
             <div class="tab-pane {% if each.id == 846 %}show active{% endif %}" id="tab-{{ each.id }}" role="tabpanel">
-              <div class="rounded border bg-light p-3 mb-3 description">
-                <i class="fa fa-info-circle mr-2"></i> {{ each.get_description|safe }}
-                {% if PROJECT.slug == "cityloops" %}
-                <div class="mt-3">
-                  <i class="fal fa-asterisk mr-2"></i> Mandatory sublayers
+
+              {% if each.get_description %}
+                <div class="rounded border bg-light p-3 mb-3 description">
+                  <i class="fa fa-info-circle mr-2"></i> {{ each.get_description|safe }}
+                  {% if PROJECT.slug == "cityloops" %}
+                  <div class="mt-3">
+                    <i class="fal fa-asterisk mr-2"></i> Mandatory sublayers
+                  </div>
+                  {% endif %}
                 </div>
-                {% endif %}
-              </div>
+              {% endif %}
 
               <h4>Data and information to obtain</h4>
               <table class="table">

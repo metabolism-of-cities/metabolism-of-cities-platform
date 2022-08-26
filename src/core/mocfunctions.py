@@ -206,3 +206,15 @@ def work_item_unvote(info, people):
     info.save()
 
     return True
+
+# Used for the water platform
+REGIONS = {
+    "MNCA": 16568,
+    "Nice": 1010422,
+    "Tinée": 1010421,
+    "Vésubie": 1010426,
+    "Moyen Pays Rive Gauche": 1010425,
+    "Rive Droite": 1010424,
+    "Est-Littoral ": 1010423,
+}
+

@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from core.mocfunctions import *
 
 def index(request):
     input = [
@@ -46,6 +47,7 @@ def index(request):
         "distribution": distribution,
         "production": production,
         "waste": waste,
+        "regions": REGIONS,
     }
     return render(request, "water/index.html", context)
 

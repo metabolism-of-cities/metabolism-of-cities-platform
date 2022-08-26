@@ -3,6 +3,7 @@ import pytz
 
 from core.models import Relationship, Project, ProjectDesign, Work, WorkSprint, Notification
 from django.conf import settings
+from core.mocfunctions import *
 
 def site(request):
     permissions = None
@@ -72,7 +73,7 @@ def site(request):
 
     design = ProjectDesign.objects.select_related("project").get(pk=project)
 
-    return {
+    context = {
         "MAPBOX_API_KEY": "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", 
         "DEBUG": settings.DEBUG,
         "CURRENT_PAGE": request.get_full_path(),
@@ -90,3 +91,8 @@ def site(request):
         "IS_DATA_PORTAL": is_data_portal,
         "IS_PRIVATE_SYSTEM": is_private_system,
     }
+    
+    if slug == "water":
+        context["REGIONS"] = REGIONS
+
+    return context

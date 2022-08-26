@@ -463,13 +463,20 @@ def map_item(request, id, space=None):
         colors = COLOR_SCHEMES[s]
 
     boundary = None
-    if "boundaries" in properties:
+    if "boundaries" in properties or "boundary" in request.GET:
         try:
-            boundaries = LibraryItem.objects.get(pk=properties["boundaries"])
+            # Boundaries could either be configured in the properties of this document,
+            # or they could be set 'on the fly' by using the GET parameters. GET always
+            # supersede general settings in properties
+            if "boundary" in request.GET:
+                b = request.GET["boundary"]
+            else:
+                b = properties["boundaries"]
+            boundaries = ReferenceSpace.objects.get(pk=b)
 
             boundary = {
                 "type": "Feature",
-                "geometry": json.loads(boundaries.imported_spaces.all()[0].geometry.json),
+                "geometry": json.loads(boundaries.geometry.json),
                 "properties": {
                     "name": boundaries.name,
                     "id": boundaries.id,
@@ -480,6 +487,11 @@ def map_item(request, id, space=None):
 
         except Exception as e:
             messages.warning(request, "Please note: the boundaries could not be loaded.")
+
+    restrict_to_within_boundaries = False
+    if "restrict_to_within_boundaries" in request.GET:
+        spaces = spaces.filter(geometry__within=boundaries.geometry)
+        restrict_to_within_boundaries = True
 
     for each in spaces:
         geom_type = each.geometry.geom_type
@@ -548,6 +560,7 @@ def map_item(request, id, space=None):
         "show_individual_colors": show_individual_colors,
         "settings": info.meta_data.get("custom_page_view") if info.meta_data else None,
         "boundary": boundary,
+        "spaces": spaces if restrict_to_within_boundaries else info.imported_spaces.all(),
     }
     return render(request, "staf/item.map.html", context)
 
