@@ -393,7 +393,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     spaces = info.imported_spaces.all()
     spaces_message = None
     if spaces.count() > 20:
-        spaces_message = f"This shapefile contains {spaces.count()} items - we are only displaying the first 20 below"
+        spaces_message = f"This shapefile contains {spaces.count()} items - we are only displaying the first 20 below."
         spaces = spaces[:20]
 
     if info.data.all():
@@ -1105,7 +1105,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
             if info:
                 if info.is_public:
-                    msg = f"The information was saved. <a href='/library/{info.id}'>View item</a>."
+                    msg = f"The information was saved. <a href='{project.get_website()}library/{info.id}'>View item</a>."
                 else:
                     msg = f"The information was saved."
             elif view_processing and "process" in request.POST:

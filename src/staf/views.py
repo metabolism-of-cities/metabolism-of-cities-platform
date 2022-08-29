@@ -493,51 +493,53 @@ def map_item(request, id, space=None):
         spaces = spaces.filter(geometry__within=boundaries.geometry)
         restrict_to_within_boundaries = True
 
-    for each in spaces:
-        geom_type = each.geometry.geom_type
-        if simplify_factor:
-            geo = each.geometry.simplify(simplify_factor)
-        else:
-            geo = each.geometry
+    data = None
+    if spaces:
+        for each in spaces:
+            geom_type = each.geometry.geom_type
+            if simplify_factor:
+                geo = each.geometry.simplify(simplify_factor)
+            else:
+                geo = each.geometry
 
-        url = reverse(project.slug + ":referencespace", args=[each.id])
+            url = reverse(project.slug + ":referencespace", args=[each.id])
 
-        # If we need separate colors we'll itinerate over them one by one
-        if show_individual_colors:
+            # If we need separate colors we'll itinerate over them one by one
+            if show_individual_colors:
+                try:
+                    color = colors[count]
+                    count += 1
+                except:
+                    color = colors[0]
+                    count = 0
+                legend[color] = each.name
+            else:
+                color = None
+
+            content = ""
+            if each.image:
+                content = f"<a class='d-block' href='{url}'><img alt='{each.name}' src='{each.get_thumbnail}' /></a><hr>"
+            content = content + f"<a href='{url}'>View details</a>"
+
             try:
-                color = colors[count]
-                count += 1
-            except:
-                color = colors[0]
-                count = 0
-            legend[color] = each.name
-        else:
-            color = None
+                features.append({
+                    "type": "Feature",
+                    "geometry": json.loads(geo.json),
+                    "properties": {
+                        "name": each.name,
+                        "id": each.id,
+                        "content": content,
+                        "color": color if color else "",
+                    },
+                })
+            except Exception as e:
+                messages.error(request, f"We had an issue reading one of the items which had an invalid geometry ({each}). Error: {str(e)}")
 
-        content = ""
-        if each.image:
-            content = f"<a class='d-block' href='{url}'><img alt='{each.name}' src='{each.get_thumbnail}' /></a><hr>"
-        content = content + f"<a href='{url}'>View details</a>"
-
-        try:
-            features.append({
-                "type": "Feature",
-                "geometry": json.loads(geo.json),
-                "properties": {
-                    "name": each.name,
-                    "id": each.id,
-                    "content": content,
-                    "color": color if color else "",
-                },
-            })
-        except Exception as e:
-            messages.error(request, f"We had an issue reading one of the items which had an invalid geometry ({each}). Error: {str(e)}")
-
-    data = {
-        "type":"FeatureCollection",
-        "features": features,
-        "geom_type": geom_type,
-    }
+        data = {
+            "type":"FeatureCollection",
+            "features": features,
+            "geom_type": geom_type,
+        }
 
     context = {
         "info": info,
@@ -2179,10 +2181,10 @@ def hub_processing_dataset_classify(request, id, space=None):
             completed = True
             return redirect("../save/")
         try:
-            info.convert_stocks_flows_data()
             if "processing_error" in info.meta_data:
                 del info.meta_data["processing_error"]
                 info.save()
+            info.convert_stocks_flows_data()
             if info.meta_data["processed"]:
                 completed = True
         except:

@@ -37,6 +37,9 @@ import os
 # For youtube url parsing
 from urllib.parse import urlparse, parse_qs
 
+# For date parsing
+from dateutil.parser import parse
+
 from django.utils import timezone
 import pytz
 
@@ -1555,6 +1558,10 @@ class LibraryItem(Record):
                             error = f"We could not find the unit with the name: '{unit}'"
 
                     try:
+                        if isinstance(start, str):
+                            start = parse(start)
+                        if isinstance(end, str):
+                            end = parse(end)
                         if type == "flows":
                             start = start.strftime("%Y-%m-%d")
                             end = end.strftime("%Y-%m-%d")

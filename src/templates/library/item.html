@@ -367,7 +367,7 @@
                   <i class="fal fa-fw fa-layer-group mr-1"></i> RESET processing
                   <br>
                   <small>
-                    This means that the file can be processed again. <strong>Existing reference spaces and associated info will be lost!</strong>
+                    This means that the file can be processed again. <strong>Existing reference spaces and associated info (including data!) will be lost!</strong>
                   </small>
                 </a>
 
@@ -603,6 +603,7 @@
           {% if spaces_message %}
             <div class="alert alert-warning">
               <i class="fa fa-info-circle"></i> {{ spaces_message }}
+              <a href="{% url URLS.MAP_ITEM info.id %}">View all &raquo;</a>
             </div>
           {% endif %}
           <ul class="list-group list-group-flush">
@@ -615,6 +616,9 @@
             {% endfor %}
           </ul>
         </section>
+        {% if info.meta_data.processed and IS_DATA_PORTAL %}
+          <a href="{% url URLS.MAP_ITEM info.id %}" class="btn btn-primary"><i class="fa fa-map"></i> View all &raquo;</a>
+        {% endif %}
       {% endif %}
 
       {% if info.data.all %}
