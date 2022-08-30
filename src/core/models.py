@@ -73,6 +73,9 @@ from django.contrib.gis.gdal.srs import (AxisOrder, CoordTransform, SpatialRefer
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+# To check if a value is NaN: https://stackoverflow.com/questions/944700/how-can-i-check-for-nan-values
+import math
+
 def get_date_range(start, end, months_only=False):
 
     if start and not end and months_only:
@@ -1470,11 +1473,11 @@ class LibraryItem(Record):
             column_count = len(df.columns)
 
             if column_count <= 5:
-                type = "population"
+                this_type = "population"
             elif column_count <= 8:
-                type = "stock"
+                this_type = "stock"
             else:
-                type= "flows"
+                this_type= "flows"
 
             materials = {}
             units = {}
@@ -1485,7 +1488,7 @@ class LibraryItem(Record):
             for row in df.itertuples():
                 if not error:
                     try:
-                        if type == "flows":
+                        if this_type == "flows":
                             period = row[1]
                             start = row[2]
                             end = row[3]
@@ -1501,7 +1504,7 @@ class LibraryItem(Record):
                                 segment = row[10]
                             except:
                                 segment = None
-                        elif type == "stock":
+                        elif this_type == "stock":
                             period = row[1]
                             start = row[1]
                             end = None
@@ -1517,7 +1520,7 @@ class LibraryItem(Record):
                                 segment = row[8]
                             except:
                                 segment = None
-                        elif type == "population":
+                        elif this_type == "population":
                             period = row[1]
                             start = row[1]
                             end = None
@@ -1562,11 +1565,11 @@ class LibraryItem(Record):
                             start = parse(start)
                         if isinstance(end, str):
                             end = parse(end)
-                        if type == "flows":
+                        if this_type == "flows":
                             start = start.strftime("%Y-%m-%d")
                             end = end.strftime("%Y-%m-%d")
                             full_string = str(start) + str(end)
-                        elif type == "stock" or type == "population":
+                        elif this_type == "stock" or this_type == "population":
                             start = start.strftime("%Y-%m-%d")
                             end = None
                             full_string = str(start)
@@ -1586,7 +1589,7 @@ class LibraryItem(Record):
                         try:
                             items.append(Data(
                                 unit = units[unit],
-                                quantity = quantity,
+                                quantity = None if math.isnan(quantity) else quantity,
                                 material = materials[material_code],
                                 material_name = material_name,
                                 source = self,
