@@ -18,7 +18,8 @@
 
 {% block content %}
   <h1>{{ webpage }}</h1>
-  {{ webpage.description|safe }}
+
+  {{ webpage.get_description }}
 
   <div class="row">
     {% for each in list %}
@@ -32,4 +33,5 @@
       </div>
     {% endfor %}
   </div>
+
 {% endblock %}
