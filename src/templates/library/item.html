@@ -261,10 +261,21 @@
           </li>
           {% endif %}
 
+          {% if not info.public %}
+            <li class="list-group-item table-item">
+              <div><i class="fal fa-fw fa-ban mr-1"></i> Access</div>
+              <div class="text-secondary">
+                <strong>Private</strong>
+                <i class="fa fa-question-circle" title="This document is not publicly accessible."></i>
+              </div>
+            </li>
+          {% endif %}
+
           <li class="list-group-item table-item">
             <div><i class="fal fa-fw fa-fingerprint mr-1"></i> ID</div>
             <div class="text-monospace"><code>{{ info.id }}</code></div>
           </li>
+          
         </ul>
       </div>
 

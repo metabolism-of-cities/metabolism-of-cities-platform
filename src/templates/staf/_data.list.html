@@ -1,6 +1,6 @@
 
   <div class="rounded border bg-light p-3 mb-4">
-    <i class="fal fa-list mr-2"></i> {{ total }} records found. {% if total > 200 %}Showing 200 records only{% endif %}
+    <i class="fal fa-list mr-2"></i> {{ total }} records found. {% if total > 200 and data.count == 200 %}Showing 200 records only. <a href="{{ request.get_full_path }}&amp;all=true">Show all</a>{% endif %}
   </div>
 
   <table class="table datatable datatable-card bg-white">

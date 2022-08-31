@@ -1443,6 +1443,17 @@ def hub_harvesting(request):
 def hub_harvesting_space(request, space):
     project = get_project(request)
     info = get_space(request, space)
+
+    # The water project manages private objects, but access is limited to curators
+    if project.slug == "water":
+        if is_part_of_team(request, project):
+            library_items = LibraryItem.objects_include_private
+        else:
+            messages.warning(request, "You need to be part of the team to view this page.")
+            return redirect(reverse(project.slug + ":login"))
+    else:
+        library_items = LibraryItem.objects
+
     if project.slug == "cityloops":
         optional_list = [985, 995, 1017, 1018, 1019, 1020, 1021, 1026, 1027, 1028, 1029, 1030, 1035, 1036, 1037, 1038, 1039, 1040, 1044, 1045, 1046, 1047, 1056, 1057, 1058, 1059, 1060, 1061, 1062, 1067, 1068, 1069, 1070, 1071]
     else:
@@ -1453,13 +1464,13 @@ def hub_harvesting_space(request, space):
     counter = {}
     list_messages = None
 
-    items = LibraryItem.objects.filter(spaces=info, tags__parent_tag__in=layers).distinct()
+    items = library_items.filter(spaces=info, tags__parent_tag__in=layers).distinct()
     for each in items:
         for tag in each.tags.all():
             if tag.parent_tag in layers:
                 counter[tag.id] = counter[tag.id] + 1 if tag.id in counter else 1
 
-    untagged_items = LibraryItem.objects.filter(spaces=info).exclude(tags__parent_tag__in=layers).distinct()
+    untagged_items = library_items.filter(spaces=info).exclude(tags__parent_tag__in=layers).distinct()
     total_tags = Tag.objects.filter(parent_tag__in=layers).count()
     uploaded = len(counter)
     if total_tags:
@@ -1497,10 +1508,23 @@ def hub_harvesting_space(request, space):
     return render(request, "hub/harvesting.space.html", context)
 
 def hub_harvesting_tag(request, space, tag):
+    project = get_project(request)
     info = get_space(request, space)
+
+    # The water project manages private objects, but access is limited to curators
+    if project.slug == "water":
+        if is_part_of_team(request, project):
+            library_items = LibraryItem.objects_include_private
+        else:
+            messages.warning(request, "You need to be part of the team to view this page.")
+            return redirect(reverse(project.slug + ":login"))
+    else:
+        library_items = LibraryItem.objects
+
+
     tag = get_object_or_404(Tag, pk=tag)
     types = [5,6,9,16,37,25,27,29,32,10,33,38,20,31,40,41]
-    list = LibraryItem.objects.filter(spaces=info, tags=tag)
+    list = library_items.filter(spaces=info, tags=tag)
     list_messages = None
 
     shapefile = [40]
@@ -3107,7 +3131,7 @@ def data(request, json=False):
             "data": j
         })
     else:
-        if data.count() > 200:
+        if data.count() > 200 and not "all" in request.GET:
             total = data.count()
             data = data[:200]
         else:

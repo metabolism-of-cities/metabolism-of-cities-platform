@@ -284,7 +284,28 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
                     .filter(pk=id) \
                     .filter(parent_list__record_child__id=request.project) \
                     .filter(tags__id__in=[771,919])
-                info = info[0]
+                if info:
+                    info = info[0]
+
+    elif project.slug == "water":
+        if request.user.is_authenticated:
+            # For the water project we allow people that have admin privileges 
+            # to see private documents
+            check_site_curator = RecordRelationship.objects.filter(
+                record_parent = request.user.people,
+                record_child_id = request.project,
+                relationship__name = "Admin",
+            )
+            if check_site_curator:
+                # And then we make sure that this document was uploaded to the water
+                # website by checking the parent tag
+                tag_id = get_parent_layer(request)
+                info = LibraryItem.objects_include_private \
+                    .filter(pk=id) \
+                    .filter(tags__parent_tag__parent_tag__id=tag_id)
+                if info:
+                    info = info[0]
+
     if not info:
         info = get_object_or_404(LibraryItem, pk=id)
 

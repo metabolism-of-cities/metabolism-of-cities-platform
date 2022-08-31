@@ -218,3 +218,22 @@ REGIONS = {
     "Est-Littoral ": 1010423,
 }
 
+# For some of the websites users might have access to documents that are not 
+# public (public=False in the record). For some sites these private files
+# can only be seen by their direct owners (e.g. whoever uploaded this);
+# for other sites any website-admin can see all the private files.
+# We use this function to decide if someone has access. 
+# At present, only the water subsite has fully embedded private documents, 
+# which can be seen by all website admins and team members.
+
+def is_part_of_team(request, project):
+    if project.slug == "water" and request.user.is_authenticated:
+        check = RecordRelationship.objects.filter(
+            record_parent = request.user.people,
+            record_child_id = project,
+            relationship__slug__in = ["admin", "team_member"]
+        )
+        if check.exists():
+            return True
+
+    return False
