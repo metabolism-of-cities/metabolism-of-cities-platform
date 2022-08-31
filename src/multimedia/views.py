@@ -22,22 +22,6 @@ def index(request):
         "dataviz": dataviz[:5],
         "dataviz_count": dataviz.count(),
     }
-    if "import" in request.GET:
-        from django.core.files import File
-        from urllib import request as rq
-        import os
-        for each in videos:
-            if each.video_site == "youtube" and not each.image:
-                try:
-                    url = "http://i3.ytimg.com/vi/" + each.embed_code + "/maxresdefault.jpg"
-                    result = rq.urlretrieve(url)
-                    each.image.save(
-                        os.path.basename(url),
-                        File(open(result[0], 'rb'))
-                    )
-                    each.save()
-                except:
-                    print("Sorry, no luck")
 
     return render(request, "multimedia/index.html", context)
 
