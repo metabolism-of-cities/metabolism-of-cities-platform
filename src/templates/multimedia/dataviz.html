@@ -12,7 +12,9 @@
 
 <div class="row mt-4">
   <div class="col-lg-8 mb-4">
-    <img class="dataviz" alt="" src="{{ info.image.url }}">
+    {% if info.image %}
+      <img class="dataviz" alt="" src="{{ info.image.url }}">
+    {% endif %}
   </div>
   <div class="col-lg-4">
     <div class="card mb-4">
@@ -68,9 +70,20 @@
       </ul>
     </div>
 
-    <a class="btn btn-primary" href="{{ info.image.url }}" target="_blank">
-      <i class="fas fa-download"></i> Download
-    </a>
+    {% if info.image %}
+      <a class="btn btn-primary" href="{{ info.image.url }}" target="_blank">
+        <i class="fas fa-download"></i> Download
+      </a>
+    {% endif %}
+
+    {% if request.user.is_superuser %}
+      <form method="post">
+        <button type="submit" class="btn btn-secondary mt-3">Change type to regular image</button>
+        <input type="hidden" name="new_type" value="38" />
+        {% csrf_token %}
+      </form>
+    {% endif %}
+
   </div>
 </div>
 {% endblock %}

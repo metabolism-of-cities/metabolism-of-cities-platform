@@ -79,10 +79,10 @@
           {% if forloop.counter < 100 %}
             <tr>
               <td>{{ each.timeframe }}</td>
-              <td>{{ each.quantity }} {{ each.unit }}</td>
+              <td>{% if each.quantity %}{{ each.quantity }} {{ each.unit.symbol }}{% endif %}</td>
               <td>{{ each.material_name }}</td>
-              <td>{{ each.origin_space }}</td>
-              <td>{{ each.destination_space }}</td>
+              <td>{{ each.origin_space|default_if_none:"" }}</td>
+              <td>{{ each.destination_space|default_if_none:"" }}</td>
             </tr>
           {% endif %}
         {% endfor %}

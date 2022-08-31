@@ -1587,9 +1587,13 @@ class LibraryItem(Record):
 
                     if not error:
                         try:
+                            # Sometimes pandas sets the value to float(nan) which should be recorded as None instead
+                            if math.isnan(quantity):
+                                quantity = None
+                            unit = units[unit] if quantity else None
                             items.append(Data(
-                                unit = units[unit],
-                                quantity = None if math.isnan(quantity) else quantity,
+                                unit = unit,
+                                quantity = quantity,
                                 material = materials[material_code],
                                 material_name = material_name,
                                 source = self,

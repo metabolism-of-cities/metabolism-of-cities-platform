@@ -75,6 +75,12 @@ def datavisualizations(request):
 
 def dataviz(request, id):
     info = get_object_or_404(LibraryItem, pk=id)
+
+    if request.user.is_superuser and "new_type" in request.POST:
+        info.type_id = request.POST.get("new_type")
+        info.save()
+        messages.success(request, "Type of document has been successfully changed!")
+
     parents = get_parents(info)
     context = {
         "info": info,

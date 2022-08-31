@@ -343,9 +343,16 @@
                 <i class="fal fa-fw fa-pencil mr-1"></i> Edit
               </a>
 
-              <a href="{% url 'library:upload' %}form/?inventory=true&amp;type=38&amp;parent={{ info.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" class="list-group-item list-group-item-action list-group-item-primary">
-                <i class="fal fa-fw fa-plus mr-1"></i> Add image
-              </a>
+              {% if info.type.name != "Image" and info.type.name != "Data visualisation" %}
+                <a href="{% url 'library:upload' %}form/?inventory=true&amp;type=38&amp;parent={{ info.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" class="list-group-item list-group-item-action list-group-item-primary">
+                  <i class="fal fa-fw fa-plus mr-1"></i> Add image
+                </a>
+
+                <a href="{% url 'library:upload' %}form/?inventory=true&amp;type=33&amp;parent={{ info.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" class="list-group-item list-group-item-action list-group-item-primary">
+                  <i class="fal fa-fw fa-plus mr-1"></i> Add data visualisation
+                </a>
+              {% endif %}
+
             {% endif %}
             {% if curator and IS_DATA_PORTAL and url_processing %}
 
@@ -553,14 +560,14 @@
       {% endif %}
 
       {% if info.is_part_of %}
-        <section class="source">
+        <section class="source mt-4">
           <h3>Original source</h3>
           <p>This item is part of <a href="../{{ info.is_part_of.id }}/">{{ info.is_part_of }}</a></p>
         </section>
       {% endif %}
 
       {% if info.children.all %}
-        <section class="children">
+        <section class="children mt-4">
           <h3>Available within this {{ info.type }}</h3>
           <div class="row">
             {% for each in info.children.all %}

@@ -810,6 +810,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 journals = Organization.objects.filter(type="journal")
 
         elif type.name == "Data visualisation" or type.name == "Image":
+            files = False
             if "image" not in fields:
                 fields.append("image")
             if type.name == "Image":
@@ -871,9 +872,6 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
         if type.name == "Image":
             model = Photo
-            files = False
-            if "image" not in fields:
-                fields.append("image")
             if "position" not in fields and id:
                 info = info.photo
                 if not info.tags.all():
