@@ -222,18 +222,37 @@ REGIONS = {
 # public (public=False in the record). For some sites these private files
 # can only be seen by their direct owners (e.g. whoever uploaded this);
 # for other sites any website-admin can see all the private files.
-# We use this function to decide if someone has access. 
+# We use this function to return a queryset that contains documents that are 
+# actually available to the user.
 # At present, only the water subsite has fully embedded private documents, 
 # which can be seen by all website admins and team members.
+# However, in the future we have plans to also have other websites use 
+# private documents, and the logic can then be added below even if it's slightly
+# different (e.g. only documents uploaded by the user)
 
-def is_part_of_team(request, project):
-    if project.slug == "water" and request.user.is_authenticated:
+def available_library_items(request):
+    # For the moment, only the water website has private documents, so we list that
+    # ID here and if the user is not on the water site we can skip the checks
+    projects_with_private_documents = [1011035]
+
+    if request.project not in projects_with_private_documents:
+        items = LibraryItem.objects
+    elif not request.user.is_authenticated:
+        # If the user is not logged in, restrict items to the public items
+        items = LibraryItem.objects
+    else:
         check = RecordRelationship.objects.filter(
             record_parent = request.user.people,
-            record_child_id = project,
+            record_child_id = request.project,
             relationship__slug__in = ["admin", "team_member"]
         )
         if check.exists():
-            return True
+            # For the water site we check that the documents (which MIGHT include private docs)
+            # have specific tags applied
+            tag_id = get_parent_layer(request)
+            items = LibraryItem.objects_include_private \
+                .filter(tags__parent_tag__parent_tag__id=tag_id)
+        else:
+            items = LibraryItems.objects
 
-    return False
+    return items

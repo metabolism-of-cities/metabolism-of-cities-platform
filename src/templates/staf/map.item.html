@@ -80,10 +80,13 @@
         {% with link=PROJECT.slug|add:":chart_editor" %}
           <a href="{% url link info.id %}?next={{ request.get_full_path }}" class="btn btn-primary mt-3"><i class="fa fa-map-marker-edit"></i> Map editor</a>
         {% endwith %}
+
         {% with link=PROJECT.slug|add:":page_editor" %}
           <a href="{% url link info.id %}?next={{ request.get_full_path }}" class="btn btn-primary mt-3"><i class="fa fa-file-edit"></i> Page editor</a>
         {% endwith %}
+
       {% endif %}
+      <a class="hide-water" href="{% url URLS.LIBRARY_ITEM info.id %}" class="btn btn-secondary mt-3 float-right"><i class="fa fa-info-circle"></i> Source</a>
 
     {% endif %}
   </section>

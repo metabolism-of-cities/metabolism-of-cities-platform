@@ -287,28 +287,11 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
                 if info:
                     info = info[0]
 
-    elif project.slug == "water":
-        if request.user.is_authenticated:
-            # For the water project we allow people that have admin privileges 
-            # to see private documents
-            check_site_curator = RecordRelationship.objects.filter(
-                record_parent = request.user.people,
-                record_child_id = request.project,
-                relationship__name = "Admin",
-            )
-            if check_site_curator:
-                # And then we make sure that this document was uploaded to the water
-                # website by checking the parent tag
-                tag_id = get_parent_layer(request)
-                info = LibraryItem.objects_include_private \
-                    .filter(pk=id) \
-                    .filter(tags__parent_tag__parent_tag__id=tag_id)
-                if info:
-                    info = info[0]
+    else:
+        info = available_library_items(request).get(pk=id)
 
     if not info:
         info = get_object_or_404(LibraryItem, pk=id)
-
 
     if "format" in request.GET:
         # I get a very odd error if this is loaded at the top
@@ -411,7 +394,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         response["Content-Disposition"] = 'attachment; filename="{}.zip"'.format(info.name)
         return response
 
-    spaces = info.imported_spaces.all()
+    spaces = ReferenceSpace.objects_include_private.filter(source=info)
     spaces_message = None
     if spaces.count() > 20:
         spaces_message = f"This shapefile contains {spaces.count()} items - we are only displaying the first 20 below."
@@ -999,10 +982,10 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 info.spaces.add(ReferenceSpace.objects.get(pk=referencespace_photo))
 
             if type.name == "Image":
-                info.save()
                 # We run this AGAIN because we want to trigger the update_referencespace_photo
                 # function to run. When we first run this a few lines up, the spaces have not
                 # yet been added so it can't update the photo
+                info.save()
 
             if request.user.is_superuser and request.POST.get("additional_spaces"):
                 additional_spaces = request.POST.get("additional_spaces")
@@ -1119,6 +1102,9 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                             info.save()
                     for each in request.FILES.getlist("files"):
                         document = Document.objects.create(name=str(each), file=each, attached_to=info)
+
+            # If there are linked Reference Spaces then these need to have the same public status as their parent document
+            info.imported_spaces.update(is_public=info.is_public)
 
             if info:
                 if info.is_public:

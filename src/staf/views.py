@@ -378,9 +378,10 @@ def space_map(request, space):
     return render(request, "staf/space.map.html", context)
 
 def map_item(request, id, space=None):
-    info = LibraryItem.objects.get(pk=id)
+    library_items = available_library_items(request)
+    info = library_items.get(pk=id)
     project = get_project(request)
-    spaces = info.imported_spaces.filter(geometry__isnull=False)
+    spaces = ReferenceSpace.objects_include_private.filter(source=info, geometry__isnull=False)
     space_count = None
     features = []
     curator = False
@@ -422,10 +423,6 @@ def map_item(request, id, space=None):
     elif info.spaces.all().count() == 1:
         # If this is only associated to a single space then we show that one
         space = info.spaces.all()[0]
-
-    if spaces.count() > 500 and "show_all_spaces" not in request.GET:
-        space_count = spaces.count()
-        spaces = spaces[:500]
 
     size = info.get_shapefile_size
     map = None
@@ -489,13 +486,21 @@ def map_item(request, id, space=None):
             messages.warning(request, "Please note: the boundaries could not be loaded.")
 
     restrict_to_within_boundaries = False
+
     if "restrict_to_within_boundaries" in request.GET:
         spaces = spaces.filter(geometry__within=boundaries.geometry)
         restrict_to_within_boundaries = True
 
+    # We don't show > 500 objects by default
+    if spaces.count() > 500 and "show_all_spaces" not in request.GET:
+        space_count = spaces.count()
+        spaces_to_display = spaces[:500]
+    else:
+        spaces_to_display = spaces
+
     data = None
     if spaces:
-        for each in spaces:
+        for each in spaces_to_display:
             geom_type = each.geometry.geom_type
             if simplify_factor:
                 geo = each.geometry.simplify(simplify_factor)
@@ -544,7 +549,7 @@ def map_item(request, id, space=None):
     context = {
         "info": info,
         "submenu": "library",
-        "spaces": info.imported_spaces.all() if not space_count else spaces,
+        "spaces": spaces_to_display if not space_count else spaces,
         "load_leaflet": True,
         "load_leaflet_item": True,
         "load_datatables": True,
@@ -562,9 +567,9 @@ def map_item(request, id, space=None):
         "show_individual_colors": show_individual_colors,
         "settings": info.meta_data.get("custom_page_view") if info.meta_data else None,
         "boundary": boundary,
-        "spaces": spaces if restrict_to_within_boundaries else info.imported_spaces.all(),
+        "spaces": spaces if restrict_to_within_boundaries else spaces,
     }
-    return render(request, "staf/item.map.html", context)
+    return render(request, "staf/map.item.html", context)
 
 def geojson(request, id):
     info = LibraryItem.objects.get(pk=id)
@@ -1444,15 +1449,7 @@ def hub_harvesting_space(request, space):
     project = get_project(request)
     info = get_space(request, space)
 
-    # The water project manages private objects, but access is limited to curators
-    if project.slug == "water":
-        if is_part_of_team(request, project):
-            library_items = LibraryItem.objects_include_private
-        else:
-            messages.warning(request, "You need to be part of the team to view this page.")
-            return redirect(reverse(project.slug + ":login"))
-    else:
-        library_items = LibraryItem.objects
+    library_items = available_library_items(request)
 
     if project.slug == "cityloops":
         optional_list = [985, 995, 1017, 1018, 1019, 1020, 1021, 1026, 1027, 1028, 1029, 1030, 1035, 1036, 1037, 1038, 1039, 1040, 1044, 1045, 1046, 1047, 1056, 1057, 1058, 1059, 1060, 1061, 1062, 1067, 1068, 1069, 1070, 1071]
@@ -1510,17 +1507,7 @@ def hub_harvesting_space(request, space):
 def hub_harvesting_tag(request, space, tag):
     project = get_project(request)
     info = get_space(request, space)
-
-    # The water project manages private objects, but access is limited to curators
-    if project.slug == "water":
-        if is_part_of_team(request, project):
-            library_items = LibraryItem.objects_include_private
-        else:
-            messages.warning(request, "You need to be part of the team to view this page.")
-            return redirect(reverse(project.slug + ":login"))
-    else:
-        library_items = LibraryItem.objects
-
+    library_items = available_library_items(request)
 
     tag = get_object_or_404(Tag, pk=tag)
     types = [5,6,9,16,37,25,27,29,32,10,33,38,20,31,40,41]
@@ -3032,7 +3019,7 @@ def shapefile_json(request, id, download=False):
     return response
 
 def data(request, json=False):
-    data = Data.objects.all()
+    data = Data.objects.filter(source__is_public=True)
 
     start = request.GET.get("date_start")
     end = request.GET.get("date_end")

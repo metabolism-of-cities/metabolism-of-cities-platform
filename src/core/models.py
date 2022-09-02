@@ -1996,6 +1996,7 @@ class LibraryItem(Record):
                         self.meta_data.pop("beginner_friendly")
             except:
                 pass
+
         super(LibraryItem, self).save(*args, **kwargs)
 
     objects = PublicActiveRecordManager()

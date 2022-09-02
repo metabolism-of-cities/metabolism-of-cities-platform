@@ -261,12 +261,14 @@
           </li>
           {% endif %}
 
-          {% if not info.public %}
+          {% if not info.is_public %}
             <li class="list-group-item table-item">
               <div><i class="fal fa-fw fa-ban mr-1"></i> Access</div>
-              <div class="text-secondary">
-                <strong>Private</strong>
-                <i class="fa fa-question-circle" title="This document is not publicly accessible."></i>
+              <div>
+                <span class="text-dark bg-warning p-1 mr-2"> 
+                  <strong>Private</strong>
+                </span>
+                  <i class="fa fa-info-circle" title="This document is not publicly accessible."></i>
               </div>
             </li>
           {% endif %}
@@ -385,7 +387,8 @@
                   <i class="fal fa-fw fa-layer-group mr-1"></i> RESET processing
                   <br>
                   <small>
-                    This means that the file can be processed again. <strong>Existing reference spaces and associated info (including data!) will be lost!</strong>
+                    This means that the file can be processed again. 
+                    <strong>Existing reference spaces and associated info (including data!) will be lost!</strong>
                   </small>
                 </a>
 
@@ -513,8 +516,8 @@
         </section>
       {% endif %}
 
-      {% if info.attachments.all or info.imported_spaces.all %}
-        {% if info.type.name == "Shapefile" or info.imported_spaces.all %}
+      {% if info.attachments.all or spaces %}
+        {% if info.type.name == "Shapefile" or spaces %}
           <h3>Map</h3>
           {% if info.get_shapefile_plot %}
             {% if info.meta_data.processed and IS_DATA_PORTAL %}
