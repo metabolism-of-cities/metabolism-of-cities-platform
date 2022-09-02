@@ -534,7 +534,7 @@
               <a href="?create_shapefile_plot=true" class="btn btn-default-outline"><i class="fa fa-image"></i> Create preview map now.</a>
             {% endif %}
           {% endif %}
-          {% if info.meta_data.processed and IS_DATA_PORTAL %}
+          {% if spaces and IS_DATA_PORTAL %}
             <a href="{% url URLS.MAP_ITEM info.id %}" class="btn btn-primary"><i class="fa fa-map"></i> View interactive map</a>
           {% endif %}
         {% endif %}

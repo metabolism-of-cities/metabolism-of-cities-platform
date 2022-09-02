@@ -1,6 +1,8 @@
 {% load static %}
   <script>
-    const json_url = "/library/{{ info.id }}/data/json/";
+    {% with link=PROJECT.slug|add:":library_data_json" %}
+    const json_url = "{% url link info.id %}";
+    {% endwith %}
     {% if info.get_dataviz_properties %}
       const properties = {{ info.get_dataviz_properties|safe }};
     {% else %}

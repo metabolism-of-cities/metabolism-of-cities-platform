@@ -450,7 +450,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     return render(request, "library/item.html", context)
 
 def data_json(request, id):
-    info = get_object_or_404(LibraryItem, pk=id)
+    info = available_library_items(request).get(pk=id)
     data = info.data.filter(quantity__isnull=False)
     x_axis = []
     stacked_fields = []
@@ -1104,7 +1104,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                         document = Document.objects.create(name=str(each), file=each, attached_to=info)
 
             # If there are linked Reference Spaces then these need to have the same public status as their parent document
-            info.imported_spaces.update(is_public=info.is_public)
+            ReferenceSpace.objects_unfiltered.filter(source=info).update(is_public=info.is_public)
 
             if info:
                 if info.is_public:

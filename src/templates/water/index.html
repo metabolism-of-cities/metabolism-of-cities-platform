@@ -175,9 +175,12 @@ h5 {
           {% for each in distribution %}
           <li class="list-group-item">
             <i class="fas fa-fw fa-{{ each.logo }} mr-2"></i>
-            <a href="">
+            {% if each.id %}
+            <a href="{% if each.id %}{% url "water:infrastructure_map" each.id %}{% endif %}{% if request.GET.region %}?boundary={{ request.GET.region }}&amp;restrict_to_within_boundaries=true{% endif %}">
             {{ each.name }}
-            </a>
+          {% else %}
+            {{ each.name }}
+          {% endif %}
           </li>
           {% endfor %}
         </ul>

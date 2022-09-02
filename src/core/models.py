@@ -3002,9 +3002,13 @@ class DataViz(Record):
         primary_key=False,
     )
     source = models.ForeignKey(LibraryItem, on_delete=models.CASCADE, null=True, blank=True, related_name="dataviz")
+    is_secondary = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ["id"]
 
 class Milestone(Record):
     position = models.PositiveSmallIntegerField(db_index=True, help_text="Enter 0 to make this the annual summary")

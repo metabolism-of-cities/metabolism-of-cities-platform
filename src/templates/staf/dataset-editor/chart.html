@@ -47,10 +47,30 @@
       Back
     </a>
 
+    <ul class="nav nav-tabs mb-4">
+      <li class="nav-item">
+        <a class="nav-link {% if not request.GET.viz %}active{% endif %}" href="?{% if request.GET.next %}&amp;next={{ request.GET.next }}{% endif %}">Main visualisation</a>
+      </li>
+      {% for each in secondary_viz_list %}
+        <li class="nav-item">
+          <a class="nav-link {% if each == info %}active{% endif %}" href="?viz={{ each.id }}{% if request.GET.next %}&amp;next={{ request.GET.next }}{% endif %}">{{ each }}</a>
+        </li>
+      {% endfor %}
+      <li class="nav-item">
+        <a class="nav-link" href="?new{% if request.GET.next %}&amp;next={{ request.GET.next }}{% endif %}">+ Add new visualisation</a>
+      </li>
+    </ul>
+
     <div class="row pb-4">
       <div class="col-lg-6">
         <form id="chart-form" method="post">
           {% csrf_token %}
+          {% if info.is_secondary %}
+            <div class="form-group">
+              <label class="category">ID</label>
+              <input type="text" class="form-control" disabled value="{{ info.pk }}">
+            </div>
+          {% endif %}
           <div class="form-group">
             <label class="category">Title</label>
             <input type="text" class="form-control" name="title" id="title" value="{% if properties.title %}{{ properties.title }}{% else %}{{ info }}{% endif %}">
@@ -200,12 +220,19 @@
             <i class="fal fa-fw fa-eye"></i>
             Generate preview
           </div>
+
+          {% if info.is_secondary %}
+            <button type="submit" class="btn btn-outline-danger float-right" form="chart-form" name="delete" value="true" onclick="javascript:return confirm('Are you sure you want to delete this chart?')">
+              <i class="fal fa-fw fa-trash-alt"></i>
+              Delete chart
+            </button>
+          {% endif %}
         </form>
 
       </div>
       <div class="col-lg-6">
         <div class="sticky-top p-4 border rounded item-visualisations">
-          <ul class="nav nav-tabs nav-justified mb-4" role="tablist">
+          <ul class="nav nav-tabs nav-justified mb-4" role="tablist" id="previews">
             <li data-chart="bar" {% if properties and not properties.show_bar %}hidden{% endif %} class="nav-item"><a class="nav-link" data-tab="bar" data-viz="bar"><i class="fal fa-fw fa-chart-bar fa-rotate-90"></i> Bar</a></li>
             <li data-chart="column" {% if not properties.show_column %}hidden{% endif %} class="nav-item"><a class="nav-link" data-tab="column" data-viz="column"><i class="fal fa-fw fa-chart-bar"></i> Column</a></li>
             <li data-chart="drilldown" {% if not properties.show_drilldown %}hidden{% endif %} class="nav-item"><a class="nav-link" data-tab="drilldown" data-viz="drilldown" data-drilldown="true"><i class="fal fa-fw fa-chart-bar"></i> Drilldown</a></li>
@@ -462,13 +489,13 @@
       });
 
       // only show enabled chart tabs
-      $("li.nav-item[data-chart!='table']").attr("hidden", "hidden");
+      $("#previews li.nav-item[data-chart!='table']").attr("hidden", "hidden");
 
       $(".enabled-chart-types input").each(function() {
         let checkbox = $(this);
         let chartType = checkbox.data("chart");
         if ( checkbox.prop("checked") ) {
-          $("li.nav-item[data-chart='" + chartType + "']").removeAttr("hidden");
+          $("#previews li.nav-item[data-chart='" + chartType + "']").removeAttr("hidden");
         }
       })
 
@@ -657,7 +684,7 @@
       $(".tab-pane[data-drilldown='true']").removeClass("loading");
     });
 
-    {% if not properties %}
+    {% if not properties and not info.is_secondary %}
       $("#first-run-modal").modal("show");
     {% endif %}
   </script>

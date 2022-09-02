@@ -3163,28 +3163,45 @@ def chart_editor(request, id):
         unauthorized_access(request)
 
     project = get_project(request)
-    try:
-        info = get_object_or_404(DataViz, source_id=id)
-        source = info.source
-    except:
-        source = get_object_or_404(LibraryItem, pk=id)
-        info = DataViz.objects.create(name=source.name, source=source)
+    source = available_library_items(request).get(pk=id)
+
+    if "new" in request.GET:
+        info = DataViz.objects.create(name="Unnamed visualisation", source=source, is_secondary=True)
+        # Should redirect back
+    elif "viz" in request.GET:
+        info = get_object_or_404(DataViz, source=source, record_id=request.GET["viz"])
+    else:
+        # If we are not creating a new viz and not opening a secondary data visualization, then we try 
+        # to open the principal data viz -- if that fails we need to create a new, empty one
+        try:
+            info = get_object_or_404(DataViz, source=source, is_secondary=False)
+        except:
+            info = DataViz.objects.create(name=source.name, source=source)
+
+    secondary_viz_list = DataViz.objects.filter(source=source, is_secondary=True)
 
     if request.method == "POST":
-        if not info.meta_data:
-            info.meta_data = {}
-        info.meta_data["properties"] = request.POST
-        info.save()
-        if info.source.is_map:
-            return redirect(project.slug + ":map_item", info.source.id)
-        elif "next" in request.GET:
-            return redirect(request.GET["next"])
+        if info.is_secondary and "delete" in request.POST:
+            info.delete()
+            messages.success(request, "Data visualization has been deleted.")
+            info = DataViz.objects.filter(source=source)[0]
+        else:
+            if not info.meta_data:
+                info.meta_data = {}
+            info.meta_data["properties"] = request.POST
+            info.name = request.POST.get("title")
+            info.save()
+            if "next" in request.GET:
+                return redirect(request.GET["next"])
+            elif info.source.is_map:
+                return redirect(project.slug + ":map_item", info.source.id)
 
     context = {
         "info": info,
         "properties": info.meta_data.get("properties") if info.meta_data else None,
         "source": source,
         "schemes": COLOR_SCHEMES,
+        "secondary_viz_list": secondary_viz_list,
     }
     if info.source.is_map:
         try:
@@ -3288,8 +3305,8 @@ def dataframe(request, id):
 
 @xframe_options_exempt
 def libraryframe(request, id):
-    info = get_object_or_404(LibraryItem, pk=id)
-    project = get_object_or_404(Project, pk=request.project)
+    info = available_library_items(request).get(pk=id)
+    project = get_project(request)
 
     # TEMPORARY CODE TO GET UNIT FOR CHARTS IN SCA REPORTS
     # https://data.metabolismofcities.org/tasks/991921/

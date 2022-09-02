@@ -24,6 +24,7 @@ def index(request):
         {"name": "Reservoirs", "logo": "rectangle-wide"},
         {"name": "Reticulation system", "logo": "chart-network"},
         {"name": "Material stock analysis", "logo": "chimney"},
+        {"name": "Water meters", "logo": "tachometer", "id": 1010649},
     ]
     production = [
         {"name": "Water treatment plants", "logo": "ball-pile"},
@@ -40,6 +41,19 @@ def index(request):
     test = [
         {"name": "XXX", "logo": "XXXX"},
     ]
+
+    # Temporary function to assign GPS coordinates to reference spaces
+    # while we wait for the final GPS coordinates to be provided
+    if "random_gps" in request.GET and request.user.id == 1:
+        from django.contrib.gis.geos import Point
+        import random 
+        spaces = ReferenceSpace.objects_include_private.filter(source_id=request.GET["random_gps"])
+        for space in spaces:
+            lat = random.randrange(4360,4430)/100
+            lng = random.randrange(6870,7390)/1000
+            space.geometry = Point(lng, lat)
+            space.save()
+
     context = {
         "input": input,
         "output": output,
