@@ -340,9 +340,12 @@ class Record(models.Model):
             self.description_html = markdown(bleach.clean(self.description))
             if hasattr(self, "dataarticle"):
                 # For data articles we have a special syntax that converts things like [@3893] to a link, or [#3983] to an iframe
-
                 p = re.compile("\[#(\d*)\]")
                 self.description_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.description_html)
+
+                # For custom dataviz, the format is [#1111-222] with 222 indicating the ID of the data viz (converted to a GET parameter)
+                p = re.compile("\[#(\d*)-(\d*)\]")
+                self.description_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/?data-viz=\2" onload="resizeIframe(this)"></iframe>', self.description_html)
 
                 p = re.compile("\[@(\d*)\]")
                 # For local testing, add /data/ to src=
@@ -1422,11 +1425,10 @@ class LibraryItem(Record):
     @property
     def get_dataviz_properties(self):
         try:
-            viz = self.dataviz.all()[0]
-            viz = viz.meta_data["properties"]
+            viz = self.dataviz.get(is_secondary=False)
+            return viz.meta_data["properties"]
         except:
-            viz = {}
-        return viz
+            return {}
 
     @property
     def is_map(self):

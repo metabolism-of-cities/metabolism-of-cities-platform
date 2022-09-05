@@ -3324,6 +3324,7 @@ def libraryframe(request, id):
         "first_view": "map",
         "show_map": True,
         "library_item": project.get_slug() + ":library_item",
+        "schemes": COLOR_SCHEMES,
 
         # Here temporarily, see comment above
         "units": units,
@@ -3378,7 +3379,11 @@ def libraryframe(request, id):
                 "geom_type": geom_type,
             }
 
-            properties = info.get_dataviz_properties
+            if "data-viz" in request.GET:
+                properties = DataViz.objects.get(pk=request.GET["data-viz"]).meta_data.get("properties")
+            else:
+                properties = info.get_dataviz_properties
+
             context_add = {
                 "spaces": info.imported_spaces.all(),
                 "load_leaflet": True,
@@ -3389,7 +3394,12 @@ def libraryframe(request, id):
             return render(request, "library/map.iframe.html", {**context, **context_add})
         else:
             context["load_highcharts"] = True
-            context["properties"] = info.get_dataviz_properties
+            if "data-viz" in request.GET:
+                properties = DataViz.objects.get(pk=request.GET["data-viz"]).meta_data.get("properties")
+            else:
+                properties = info.get_dataviz_properties
+
+            context["properties"] = properties
             return render(request, "library/chart.iframe.html", context)
     else:
         return render(request, "library/item.iframe.html", context)
