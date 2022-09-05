@@ -440,6 +440,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         "url_processing": url_processing,
         "spaces_message": spaces_message,
         "properties": properties,
+        "schemes": COLOR_SCHEMES,
 
         # Here temporarily, see comment above
         "unit": unit,
