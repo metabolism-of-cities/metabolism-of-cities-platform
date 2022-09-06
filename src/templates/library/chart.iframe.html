@@ -39,17 +39,19 @@
 
 {% block iframe_content %}
 
-<h4>{{ info }}</h4>
+{% if not request.GET.hide_title %}<h4>{{ info }}</h4>{% endif %}
 
 {% if info.data.all %}
   {% include "_data.visualizations.html" %}
 {% endif %}
 
-<div class="text-center mt-3 mb-3">
-  <a class="btn btn-lg btn-warning d-print-none" href="{% url URLS.LIBRARY_ITEM info.id %}" target="_parent">
-    View details <i class="fal fa-fw fa-arrow-right"></i>
-  </a>
-</div>
+{% if not request.GET.hide_details_link %}
+  <div class="text-center mt-3 mb-3">
+    <a class="btn btn-lg btn-warning d-print-none" href="{% url URLS.LIBRARY_ITEM info.id %}" target="_parent">
+      View details <i class="fal fa-fw fa-arrow-right"></i>
+    </a>
+  </div>
+{% endif %}
 
 {% endblock %}
 

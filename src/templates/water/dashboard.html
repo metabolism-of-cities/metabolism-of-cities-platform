@@ -1,0 +1,27 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block css %}
+<style type="text/css">
+.iframeblock h4,
+.iframeblock a.btn-warning
+{ 
+  display:none;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+  {% with link=PROJECT.slug|add:":libraryframe" %}
+    <div class="row">
+      {% for key,value in regions.items %}
+        <div class="col-6">
+          <h3>{{ key }}</h3>
+          <iframe class="libraryitem card" src="{% url link 1010973 %}?data-viz=176&boundaries={{ value }}&hide_details_link=true&hide_title=true" onload="resizeIframe(this)"></iframe>
+        </div>
+      {% endfor %}
+    </div>
+  {% endwith %}
+
+{% endblock %}

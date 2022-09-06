@@ -86,6 +86,6 @@ def site(request):
     }
     
     if slug == "water":
-        context["REGIONS"] = REGIONS
+        context["REGIONS"] = NICE_REGIONS
 
     return context

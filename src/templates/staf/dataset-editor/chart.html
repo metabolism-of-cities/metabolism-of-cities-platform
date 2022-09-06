@@ -193,14 +193,23 @@
 
           <div class="form-group mt-4">
 
-            {% if spaces %}
-              <label class="category">Data filtering</label>
+            {% if spaces.count > 1 %}
+              <label class="category">Data filtering
+                <i class="fa fa-question-circle" title="Your data is linked more than one specific locations. Select a location from the list if you want to only include data that is directly linked to this specific place."></i>
+              </label>
               <select class="custom-select" name="space">
                 <option value=""></option>
                 {% for each in spaces %}
                   <option {% if properties.space|add:"0" == each.id %}selected{% endif %} value="{{ each.id }}">{{ each.name }}</option>
                 {% endfor %}
               </select>
+            {% endif %}
+
+            {% if info.is_secondary %}
+              <label class="category mt-3">Geospatial filtering
+                <i class="fa fa-question-circle" title="You can enter the ID of a specific reference space containing boundaries (such as municipal boundaries), and the data visualization will then only include data linked to spaces within these boundaries."></i>
+              </label>
+              <input name="boundaries" class="form-control" value="{{ properties.boundaries }}" />
             {% endif %}
 
             <label class="category mt-3">Other settings</label>
@@ -220,11 +229,19 @@
               <input type="checkbox" class="custom-control-input" id="stack" name="stack" value="normal" {% if properties.stack %}checked{% endif %}>
               <label class="custom-control-label" for="stack">Stack bars / columns</label>
             </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="hide_data_table" name="hide_data_table" value="true" {% if properties.hide_data_table %}checked{% endif %}>
+              <label class="custom-control-label" for="hide_data_table">Hide data table</label>
+            </div>
+            <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="hide_nav_tabs" name="hide_nav_tabs" value="normal" {% if properties.hide_nav_tabs %}checked{% endif %}>
+              <label class="custom-control-label" for="hide_nav_tabs">Hide top menu (with different chart options)</label>
+            </div>
           </div>
 
           <button type="submit" class="btn btn-success" form="chart-form">
             <i class="fas fa-fw fa-save"></i>
-            Save charts
+            Save settings
           </button>
 
           <div class="btn btn-primary-basic btn-generate-preview">

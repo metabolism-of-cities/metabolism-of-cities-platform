@@ -456,6 +456,9 @@ def data_json(request, id):
     if "space" in request.GET:
         space = request.GET["space"]
         data = data.filter(Q(origin_space_id=space)|Q(destination_space_id=space))
+    if "boundaries" in request.GET:
+        boundaries = ReferenceSpace.objects.get(pk=request.GET["boundaries"])
+        data = data.filter(Q(origin_space__geometry__within=boundaries.geometry)|Q(destination_space__geometry__within=boundaries.geometry))
     x_axis = []
     stacked_fields = []
     stacked_field_values = {}

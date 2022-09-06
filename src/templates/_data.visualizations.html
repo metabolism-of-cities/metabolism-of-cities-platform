@@ -1,5 +1,5 @@
 <div class="item-visualisations">
-  <ul class="nav nav-tabs nav-justified d-print-none mb-4" role="tablist">
+  <ul class="nav nav-tabs nav-justified d-print-none mb-4" role="tablist" {% if properties.hide_nav_tabs %}hidden{% endif %}>
     {% if properties.show_bar or not properties %}
       <li class="nav-item"><a class="nav-link" data-tab="bar" data-viz="bar"><i class="fal fa-fw fa-chart-bar fa-rotate-90"></i> Bar</a></li>
     {% endif %}
@@ -21,7 +21,9 @@
     {% if properties.show_map %}
       <li class="nav-item"><a class="nav-link" data-tab="map" data-viz="map"><i class="fal fa-fw fa-map-marked"></i> Map</a></li>
     {% endif %}
-    <li class="nav-item"><a class="nav-link" data-tab="table"><i class="fal fa-fw fa-table"></i> Table</a></li>
+    {% if not properties.hide_data_table %}
+      <li class="nav-item"><a class="nav-link" data-tab="table"><i class="fal fa-fw fa-table"></i> Table</a></li>
+    {% endif %}
   </ul>
 
   <div class="tab-content border rounded bg-white p-2">
@@ -55,39 +57,41 @@
         </div>
       </div>
     </div>
-    <div id="table" role="tabpanel" class="table tab-pane">
-      {% if data.count > 100 %}
-        <div class="alert alert-warning">
-          We are showing the first 100 records.
-        </div>
-        {% if request.user.id == 1 %}
-          <a href="{% if DEBUG %}/data{% endif %}/data/?source={{ info.id }}" class="btn btn-primary mb-3">View data details</a>
-        {% endif %}
-      {% endif %}
-      <table class="table datatable datatable-card">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Quantity</th>
-            <th>Material</th>
-            <th>From</th>
-            <th>To</th>
-          </tr>
-        </thead>
-        <tbody>
-        {% for each in data.all %}
-          {% if forloop.counter < 100 %}
-            <tr>
-              <td>{{ each.timeframe }}</td>
-              <td>{% if each.quantity %}{{ each.quantity }} {{ each.unit.symbol }}{% endif %}</td>
-              <td>{{ each.material_name }}</td>
-              <td>{{ each.origin_space|default_if_none:"" }}</td>
-              <td>{{ each.destination_space|default_if_none:"" }}</td>
-            </tr>
+    {% if not properties.hide_data_table %}
+      <div id="table" role="tabpanel" class="table tab-pane">
+        {% if data.count > 100 %}
+          <div class="alert alert-warning">
+            We are showing the first 100 records.
+          </div>
+          {% if request.user.id == 1 %}
+            <a href="{% if DEBUG %}/data{% endif %}/data/?source={{ info.id }}" class="btn btn-primary mb-3">View data details</a>
           {% endif %}
-        {% endfor %}
-        </tbody>
-      </table>
-    </div>
+        {% endif %}
+        <table class="table datatable datatable-card">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Quantity</th>
+              <th>Material</th>
+              <th>From</th>
+              <th>To</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for each in data.all %}
+            {% if forloop.counter < 100 %}
+              <tr>
+                <td>{{ each.timeframe }}</td>
+                <td>{% if each.quantity %}{{ each.quantity }} {{ each.unit.symbol }}{% endif %}</td>
+                <td>{{ each.material_name }}</td>
+                <td>{{ each.origin_space|default_if_none:"" }}</td>
+                <td>{{ each.destination_space|default_if_none:"" }}</td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
   </div>
 </div>

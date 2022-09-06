@@ -1,7 +1,7 @@
 {% load static %}
   <script>
     {% with link=PROJECT.slug|add:":library_data_json" %}
-    const json_url = "{% url link info.id %}{% if request.GET.space %}?space={{ request.GET.space }}{% elif properties.space %}?space={{ properties.space }}{% endif %}";
+    const json_url = "{% url link info.id %}?{% if request.GET.space %}space={{ request.GET.space }}&{% elif properties.space %}space={{ properties.space }}&{% endif %}{% if request.GET.boundaries %}boundaries={{ request.GET.boundaries }}&{% elif properties.boundaries %}boundaries={{ properties.boundaries }}&{% endif %}";
     {% endwith %}
     {% if properties %}
       const properties = {{ properties|safe }};

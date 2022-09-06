@@ -18,5 +18,6 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("nice/", views.water_map, name="map"),
     path("infrastructure/", views.infrastructure, name="infrastructure"),
     path("infrastructure/<int:id>/", staf.map_item, name="infrastructure_map"),
+    path("dashboard/", views.dashboard, name="dashboard"),
 
 ]

@@ -61,7 +61,7 @@ def index(request):
         "distribution": distribution,
         "production": production,
         "waste": waste,
-        "regions": REGIONS,
+        "regions": NICE_REGIONS,
     }
     return render(request, "water/index.html", context)
 
@@ -82,3 +82,10 @@ def infrastructure(request):
         "title": "Eau",
     }
     return render(request, "water/infrastructure.html", context)
+
+def dashboard(request):
+    context = {
+        "title": "Eau",
+        "regions": NICE_REGIONS,
+    }
+    return render(request, "water/dashboard.html", context)

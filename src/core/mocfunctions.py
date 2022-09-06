@@ -208,7 +208,7 @@ def work_item_unvote(info, people):
     return True
 
 # Used for the water platform
-REGIONS = {
+NICE_REGIONS = {
     "MNCA": 16568,
     "Nice": 1010422,
     "Tinée": 1010421,

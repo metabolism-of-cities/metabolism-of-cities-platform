@@ -3185,6 +3185,16 @@ def chart_editor(request, id):
             if not info.meta_data:
                 info.meta_data = {}
             info.meta_data["properties"] = request.POST.dict()
+
+            if request.POST.get("boundaries"):
+                # Let's make sure that there are actual boundaries in the ID that was entered
+                try:
+                    ReferenceSpace.objects.get(pk=request.POST.get("boundaries"), geometry__isnull=False)
+                except:
+                    # If the boundaries do not exist then we need to unset this parameter
+                    del(info.meta_data["properties"]["boundaries"])
+                    messages.warning(request, "The boundaries that you set were invalid (no boundaries found with this ID) - the boundary setting was therefore removed.")
+
             info.name = request.POST.get("title")
             info.save()
             if "next" in request.GET:
