@@ -192,7 +192,18 @@
           </div>
 
           <div class="form-group mt-4">
-            <label class="category">Other settings</label>
+
+            {% if spaces %}
+              <label class="category">Data filtering</label>
+              <select class="custom-select" name="space">
+                <option value=""></option>
+                {% for each in spaces %}
+                  <option {% if properties.space|add:"0" == each.id %}selected{% endif %} value="{{ each.id }}">{{ each.name }}</option>
+                {% endfor %}
+              </select>
+            {% endif %}
+
+            <label class="category mt-3">Other settings</label>
             <div class="custom-control custom-switch">
               <input type="checkbox" class="custom-control-input" id="data-labels" name="data_labels" value="true" {% if properties.data_labels %}checked{% endif %}>
               <label class="custom-control-label" for="data-labels">Data labels</label>
@@ -337,7 +348,9 @@
   <script src="https://code.highcharts.com/9.1.0/modules/drilldown.js"></script>
   <script>
     // url to get the data from
-    const json_url = "/library/{{ info.source_id }}/data/json/";
+    {% with link=PROJECT.slug|add:":library_data_json" %}
+      var json_url = "{% url link source.id %}{% if properties.space %}?space={{ properties.space }}{% endif %}";
+    {% endwith %}
 
     // dataviz properties
     {% if properties %}
@@ -687,5 +700,18 @@
     {% if not properties and not info.is_secondary %}
       $("#first-run-modal").modal("show");
     {% endif %}
+
+    // Notes Paul: here I tried to make it so that json_url changes to include the new 
+    // reference space that was selected. That seems to work, but more js code is needed to 
+    // actually pull in the right information.
+    $("select[name=space]").change(function(){
+      space = $(this).val();
+      if (json_url.includes("=")) {
+        json_url = json_url.split("=")[0]
+        json_url = json_url + "=" + space;
+      } else {
+        json_url = json_url + "?space=" + space;
+      }
+    });
   </script>
 {% endblock %}

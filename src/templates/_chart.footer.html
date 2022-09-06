@@ -1,7 +1,7 @@
 {% load static %}
   <script>
     {% with link=PROJECT.slug|add:":library_data_json" %}
-    const json_url = "{% url link info.id %}";
+    const json_url = "{% url link info.id %}{% if request.GET.space %}?space={{ request.GET.space }}{% elif properties.space %}?space={{ properties.space }}{% endif %}";
     {% endwith %}
     {% if properties %}
       const properties = {{ properties|safe }};
@@ -97,7 +97,7 @@
       },
     });
   </script>
-  <script src="{% static 'js/data.js' %}?refresh=1333"></script>
+  <script src="{% static 'js/data.js' %}"></script>
   <script>
     // first visualisation to open
     {% if properties %}

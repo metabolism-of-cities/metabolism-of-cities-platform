@@ -56,7 +56,7 @@
       </div>
     </div>
     <div id="table" role="tabpanel" class="table tab-pane">
-      {% if info.data.all.count > 100 %}
+      {% if data.count > 100 %}
         <div class="alert alert-warning">
           We are showing the first 100 records.
         </div>
@@ -75,7 +75,7 @@
           </tr>
         </thead>
         <tbody>
-        {% for each in info.data.all %}
+        {% for each in data.all %}
           {% if forloop.counter < 100 %}
             <tr>
               <td>{{ each.timeframe }}</td>

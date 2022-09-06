@@ -381,7 +381,7 @@ def map_item(request, id, space=None):
     library_items = available_library_items(request)
     info = library_items.get(pk=id)
     project = get_project(request)
-    spaces = ReferenceSpace.objects_include_private.filter(source=info, geometry__isnull=False)
+    spaces = ReferenceSpace.objects_include_private.filter(source=info)
     space_count = None
     features = []
     curator = False
@@ -935,10 +935,7 @@ def referencespace(request, id=None, space=None, slug=None):
 
     photos = Photo.objects.filter(spaces=info).order_by("position").exclude(pk=info.photo.id)
 
-    data = Data.objects.filter(Q(origin_space=info)|Q(destination_space=info))
-    total = data.count()
-    if data.count() > 200:
-        data = data[:200]
+    data = LibraryItem.objects.filter(Q(data__origin_space=info)|Q(data__destination_space=info)).distinct()
 
     context = {
         "info": info,
@@ -955,7 +952,6 @@ def referencespace(request, id=None, space=None, slug=None):
         "load_lightbox": True if photos else False,
         "items": LibraryItem.objects.filter(spaces=info),
         "data": data,
-        "total": total,
     }
     return render(request, "staf/referencespace.html", context)
 
@@ -3188,7 +3184,7 @@ def chart_editor(request, id):
         else:
             if not info.meta_data:
                 info.meta_data = {}
-            info.meta_data["properties"] = request.POST
+            info.meta_data["properties"] = request.POST.dict()
             info.name = request.POST.get("title")
             info.save()
             if "next" in request.GET:
@@ -3224,6 +3220,8 @@ def chart_editor(request, id):
         context["styles"] = ["streets-v11", "outdoors-v11", "light-v10", "dark-v10", "satellite-v9", "satellite-streets-v11"]
         return render(request, "staf/dataset-editor/map.basic.html", context)
     else:
+        if info.is_secondary:
+            context["spaces"] = ReferenceSpace.objects_include_private.filter(Q(data_from_space__source=source)|Q(data_to_space__source=source)).distinct()
         return render(request, "staf/dataset-editor/chart.html", context)
 
 @login_required
@@ -3330,6 +3328,7 @@ def libraryframe(request, id):
         "units": units,
         "unit": unit,
     }
+
     if info.meta_data and "processed" in info.meta_data:
         if info.is_map:
             spaces = info.imported_spaces.filter(geometry__isnull=False)
@@ -3399,6 +3398,12 @@ def libraryframe(request, id):
             else:
                 properties = info.get_dataviz_properties
 
+            data = info.data.all()
+            if data:
+                if "space" in request.GET or properties.get("space"):
+                    space = request.GET.get("space") if "space" in request.GET else properties.get("space")
+                    data = data.filter(Q(origin_space_id=space)|Q(destination_space_id=space))
+                context["data"] = data
             context["properties"] = properties
             return render(request, "library/chart.iframe.html", context)
     else:

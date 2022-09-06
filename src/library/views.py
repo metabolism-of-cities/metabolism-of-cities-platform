@@ -453,6 +453,9 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
 def data_json(request, id):
     info = available_library_items(request).get(pk=id)
     data = info.data.filter(quantity__isnull=False)
+    if "space" in request.GET:
+        space = request.GET["space"]
+        data = data.filter(Q(origin_space_id=space)|Q(destination_space_id=space))
     x_axis = []
     stacked_fields = []
     stacked_field_values = {}

@@ -170,11 +170,14 @@
         <a class="mt-3 btn btn-primary" href="{% url URLS.LIBRARY %}?find=true&amp;types=all&amp;hide_year=true&amp;space={{ info.id }}"><i class="fa fa-books"></i> View all in the library</a>
       {% endif %}
 
-      {% if data %}
+      {% if data and IS_DATA_PORTAL %}
         <h2 class="mt-4 h3">Data</h2>
-        {% include "staf/_data.list.html" %}
+        {% for each in data %}
+          {% with link=PROJECT.slug|add:":libraryframe" %}
+            <iframe class="libraryitem card" src="{% url link each.id %}?space={{ info.id }}" onload="resizeIframe(this)"></iframe>
+          {% endwith %}
+        {% endfor %}
       {% endif %}
-        
 
       {% if info.history.all or info.source.uploader %}
         <section id="record_history">
