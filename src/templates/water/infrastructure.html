@@ -1,7 +1,12 @@
 {% extends "_base.html" %}
 {% load static %}
+{% load moc_extras %}
 
 {% block content %}
 
+{% for key,value in maps.items %}
+  <h1>{{ key }}</h1>
+  {{ value|getmap|safe }}
+{% endfor %}
 
 {% endblock %}

@@ -32,3 +32,9 @@ def strip_first_slash(string):
     else:
         return string
 
+
+#### TEMP FOR MAP CONVERSION #####
+@register.filter
+def getmap(string):
+    string = string._repr_html_()
+    return string

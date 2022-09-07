@@ -78,8 +78,80 @@ def water_map(request):
     return render(request, "water/map.html", context)
 
 def infrastructure(request):
+    from django.contrib.gis.geos import Point
+    import folium
+    lng = 1039496.6281
+    lat = 6317722.4972
+    geometry = Point(lng, lat)
+
+    # From https://stackoverflow.com/questions/38961816/geopandas-set-crs-on-points
+    import pandas as pd
+    from shapely.geometry import Point
+    from geopandas import GeoDataFrame
+
+    df = pd.DataFrame({'zip':["first item"],
+                   'Lat':[lat],
+                   'Lon':[lng]})
+
+    geometry = [Point(xy) for xy in zip(df.Lon, df.Lat)]
+    gdf = {}
+
+    crs_list = [27561,27562,27563,27564,27571,27572,27573,27574]
+
+    maps = {}
+    for each in crs_list:
+        gdf = GeoDataFrame(df, geometry=geometry)
+        gdf.set_crs(epsg=each, inplace=True, allow_override=True)
+        # Change to WGS84
+        gdf.to_crs(epsg=4326, inplace=True)
+
+        p(gdf)
+
+        for index, row in gdf.iterrows():
+            geo = row["geometry"]
+            x, y = geo.coords.xy
+            x = x[0]
+            y = y[0]
+            p(x)
+            p(y)
+
+        maps[each] = folium.Map(
+            location=[x,y],
+            zoom_start=5,
+            scrollWheelZoom=False,
+            tiles=STREET_TILES,
+            attr="Mapbox",
+        )
+
+    map2 = folium.Map(
+        location=[lng,lat],
+        zoom_start=10,
+        scrollWheelZoom=False,
+        tiles=STREET_TILES,
+        attr="Mapbox",
+    )
+
+    map3 = folium.Map(
+        location=[lng,lat],
+        zoom_start=15,
+        scrollWheelZoom=False,
+        tiles=STREET_TILES,
+        attr="Mapbox",
+    )
+
+
+    #folium.GeoJson(
+    #    geometry,
+    #    name="geojson",
+    #).add_to(map)
+
     context = {
         "title": "Eau",
+        "maps": maps,
+        "map2": map2._repr_html_() if map else None,
+        "map3": map3._repr_html_() if map else None,
+        "gdf": gdf,
+        "crs_list": crs_list,
     }
     return render(request, "water/infrastructure.html", context)
 
