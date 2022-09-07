@@ -373,13 +373,13 @@
                 <a href="{% url url_processing info.id %}" class="list-group-item list-group-item-action list-group-item-primary">
                   <i class="fal fa-fw fa-layer-group mr-1"></i> Process this file
                 </a>
+              {% else %}
+                {% with link=PROJECT.slug|add:":chart_editor" %}
+                  <a href="{% url link info.id %}?next={{ request.get_full_path }}" class="list-group-item list-group-item-action list-group-item-primary">
+                    <i class="fal fa-fw fa-{% if info.is_map %}map-marker-edit{% else %}chart-pie{% endif %} mr-1"></i> {% if info.is_map %}Map{% else %}Chart{% endif %} editor
+                  </a>
+                {% endwith %}
               {% endif %}
-
-              {% with link=PROJECT.slug|add:":chart_editor" %}
-                <a href="{% url link info.id %}?next={{ request.get_full_path }}" class="list-group-item list-group-item-action list-group-item-primary">
-                  <i class="fal fa-fw fa-{% if info.is_map %}map-marker-edit{% else %}chart-pie{% endif %} mr-1"></i> {% if info.is_map %}Map{% else %}Chart{% endif %} editor
-                </a>
-              {% endwith %}
 
               {% if request.user.is_staff and info.meta_data.processed %}
 

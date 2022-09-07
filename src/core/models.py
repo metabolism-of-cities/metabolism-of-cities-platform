@@ -1836,7 +1836,7 @@ class LibraryItem(Record):
                             lat = content
                         elif this_field == "Longitude":
                             lng = content
-                        else:
+                        elif this_field == "Other field - import":
                             meta_data[column_name] = content
 
                     try:

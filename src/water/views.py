@@ -78,10 +78,15 @@ def water_map(request):
     return render(request, "water/map.html", context)
 
 def infrastructure(request):
+
+    ###### REMOVE MOC_EXTRAS FUNCTIONS ONCE THIS IS COMPLETED!!
     from django.contrib.gis.geos import Point
     import folium
-    lng = 1039496.6281
-    lat = 6317722.4972
+
+    x = [123,456]
+    y = [660,677]
+    names = ["Name1", "Name2"]
+
     geometry = Point(lng, lat)
 
     # From https://stackoverflow.com/questions/38961816/geopandas-set-crs-on-points
@@ -89,14 +94,14 @@ def infrastructure(request):
     from shapely.geometry import Point
     from geopandas import GeoDataFrame
 
-    df = pd.DataFrame({'zip':["first item"],
-                   'Lat':[lat],
-                   'Lon':[lng]})
+    df = pd.DataFrame({'Names':names,
+                   'Lat':y,
+                   'Lon':x})
 
     geometry = [Point(xy) for xy in zip(df.Lon, df.Lat)]
     gdf = {}
 
-    crs_list = [27561,27562,27563,27564,27571,27572,27573,27574]
+    crs_list = [2154]
 
     maps = {}
     for each in crs_list:
@@ -116,8 +121,8 @@ def infrastructure(request):
             p(y)
 
         maps[each] = folium.Map(
-            location=[x,y],
-            zoom_start=5,
+            location=[y,x],
+            zoom_start=20,
             scrollWheelZoom=False,
             tiles=STREET_TILES,
             attr="Mapbox",
@@ -145,12 +150,14 @@ def infrastructure(request):
     #    name="geojson",
     #).add_to(map)
 
+    m = gdf.to_html()
+
     context = {
         "title": "Eau",
         "maps": maps,
         "map2": map2._repr_html_() if map else None,
         "map3": map3._repr_html_() if map else None,
-        "gdf": gdf,
+        "gdf": m,
         "crs_list": crs_list,
     }
     return render(request, "water/infrastructure.html", context)

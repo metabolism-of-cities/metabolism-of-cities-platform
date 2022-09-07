@@ -315,7 +315,8 @@ def map(request):
 
 def space_map(request, space):
     space = get_space(request, space)
-    list = LibraryItem.objects.filter(spaces=space, meta_data__processed__isnull=False, type__in=[20,40,41]).order_by("date_created")
+    library_items = available_library_items(request)
+    list = library_items.filter(spaces=space, meta_data__processed__isnull=False, type__in=[20,40,41]).order_by("date_created")
     project = get_project(request)
     parents = []
     features = []
@@ -334,10 +335,11 @@ def space_map(request, space):
         boundaries = None
         boundaries_source = None
 
+    parent_tag = get_parent_layer(request)
     for each in list:
         if each.imported_spaces.count() < 1000:
             dataviz = each.get_dataviz_properties
-            for tag in each.tags.filter(parent_tag__parent_tag_id=845):
+            for tag in each.tags.filter(parent_tag__parent_tag_id=parent_tag):
                 if not tag in parents:
                     parents.append(tag)
                     hits[tag.id] = []
@@ -3195,7 +3197,7 @@ def chart_editor(request, id):
                     del(info.meta_data["properties"]["boundaries"])
                     messages.warning(request, "The boundaries that you set were invalid (no boundaries found with this ID) - the boundary setting was therefore removed.")
 
-            info.name = request.POST.get("title")
+            info.name = request.POST.get("title") if "title" in request.POST else str(source)
             info.save()
             if "next" in request.GET:
                 return redirect(request.GET["next"])

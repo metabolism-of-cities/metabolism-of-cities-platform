@@ -1115,7 +1115,8 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
             if info:
                 if info.is_public:
-                    msg = f"The information was saved. <a href='{project.get_website()}library/{info.id}'>View item</a>."
+                    link = reverse(project.slug + ":library_item", args=[info.id])
+                    msg = f"The information was saved. <a href='{link}'>View item</a>."
                 else:
                     msg = f"The information was saved."
             elif view_processing and "process" in request.POST:
