@@ -102,3 +102,129 @@ Before doing any work, check in with us through our online [forum](https://metab
 Head over to our [forum](https://metabolismofcities.org/forum/) and give us a shout! We'll be glad to help debug any issues you may have with our site. Do note that operating-specific issues may be out of scope, but we will try to help where possible.
 
 **Thanks for your contribution!**
+
+
+## Macbook installation
+
+### Pre-requisites
+
+1. postgres + postgis + gdal + libgeoip (using brew)
+2. pip
+3. pyenv/virtualenv
+
+### Clone the repo
+
+```bash
+git clone https://github.com/metabolism-of-cities/metabolism-of-cities-platform.git
+```
+
+create `settings.py` file
+
+```bash
+cd metabolism-of-cities-platform/src
+mkdir media
+mkdir logs
+mkdir static
+cp ie/settings.sample.py ie/settings.py
+```
+
+### Install virtualenv and install project packages
+
+```bash
+pyenv virtualenv 3.10.5 metabolism
+pyenv activate metabolism
+```
+
+create a `.env` file with content
+
+```bash
+pyenv activate metabolism
+
+export GDAL_LIBRARY_PATH="$(gdal-config --prefix)/lib/libgdal.dylib"
+export GEOS_LIBRARY_PATH=/opt/homebrew/lib/libgeos_c.dylib
+```
+
+Please note that the `GEOS_LIBRARY_PATH` value might be different due to different macos, you can check it here https://gist.github.com/codingjoe/a31405952ec936beba99b059e665491e
+
+then run
+
+```bash
+source .env
+```
+
+Install needed packages
+
+```bash
+pip install requirements_macos.pip
+```
+
+### Setup database for the project
+
+Connect to psql using `psql -u root -p` and run
+
+```
+DROP DATABASE IF EXISTS metabolism;
+
+CREATE DATABASE metabolism;
+
+CREATE ROLE metabolism WITH LOGIN PASSWORD 'password';
+GRANT ALL PRIVILEGES ON DATABASE metabolism TO metabolism;
+ALTER USER metabolism SUPERUSER;
+```
+
+We need `metabolism` user as a superuser, as this needs to create a test database and run test on.
+
+### Migrate and runserver
+
+```bash
+python manage.py migrate
+python manage.py runserver
+```
+
+Open localhost:8000 on web browser and you will see an error page with message "Project matching query does not exist.". This is OK, as we haven't imported the test data yet.
+
+
+### Import database
+
+There are 3 databases to import (detail: https://github.com/metabolism-of-cities/metabolism-of-cities-platform#dbsqlgz)
+
+Download any of them, and import to the current database:
+
+```bash
+psql -U metabolism metabolism < db.sql
+```
+
+After that, migrate the database
+```bash
+python manage.py migrate
+```
+
+Then create first project and other related data:
+
+Open Django shell_plus
+
+```bash
+python manage.py shell_plus
+```
+
+and run those statements as below
+
+```bash
+Project.objects.create(type=ProjectType.objects.first(), slug='staf')
+ProjectDesign.objects.create(project_id=Project.objects.all()[0].id)
+```
+
+Then exit, and run
+
+```bash
+python manage.py createsuperuser
+```
+
+Create your own superuser, email and username should be the same, ex: joe@gmail.com
+
+Run the server
+```bash
+python manage.py runserver
+```
+
+Open the page http://localhost:8000/ and login with the superuser you have created.
