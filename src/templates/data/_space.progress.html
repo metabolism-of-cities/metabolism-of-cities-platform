@@ -2,7 +2,7 @@
 
 <div class="row progress-list">
   {% for each in list %}
-    {% if each.get_counter or PROJECT.slug == "cityloops" or PROJECT.slug == "islands" or show_all %}
+    {% if each.get_counter or PROJECT.slug == "water" or PROJECT.slug == "cityloops" or PROJECT.slug == "islands" or show_all %}
       <div class="col-md-6 col-lg-{% if request.GET.wide %}2{% else %}4{% endif %} mb-4">
         <div class="card">
           <a href="{% url dashboard_link each.slug %}">

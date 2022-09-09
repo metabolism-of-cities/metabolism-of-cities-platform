@@ -846,7 +846,10 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 fields.append("tags")
             initial["tags"] = request.GET.get("tag")
 
-        if space:
+        if project.slug == "water":
+            # For the water project we always activate ALL of the spaces in the list
+            initial["spaces"] = ReferenceSpace.objects.filter(activated__part_of_project=project)
+        elif space:
             initial["spaces"] = space.id
 
         if "comments" not in fields:
@@ -916,8 +919,6 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 fields.remove("sectors")
             if "materials" in fields:
                 fields.remove("materials")
-            if "tags" in fields:
-                fields.remove("tags")
             fields.append("is_public")
 
         ModelForm = modelform_factory(model, fields=fields, labels = labels)
@@ -940,6 +941,8 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
     if project.slug == "untraceable":
         form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id=828)
+    elif project.slug == "water" and "tags" in form.fields:
+        form.fields["tags"].queryset = Tag.objects.filter(parent_tag__parent_tag_id=get_parent_layer(request))
     elif project.slug == "cityloops" and "tags" in form.fields:
         form.fields["tags"].queryset = Tag.objects.filter(Q(parent_tag__parent_tag_id=971)|Q(parent_tag=1077))
     elif "mfa" in request.GET:
@@ -1159,7 +1162,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         "form": form,
         "load_select2": True,
         "type": type,
-        "title": "Adding: " + str(type),
+        "title": f"Edit: {info}" if info else f"Adding: {str(type)}",
         "publishers": publishers,
         "journals": journals,
         "tag": tag,

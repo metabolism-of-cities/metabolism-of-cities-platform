@@ -19,5 +19,6 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("infrastructure/", views.infrastructure, name="infrastructure"),
     path("infrastructure/<int:id>/", staf.map_item, name="infrastructure_map"),
     path("dashboard/", views.dashboard, name="dashboard"),
+    path("dashboards/", data.progress, { "style": "grid"}, name="dashboards"),
 
 ]
