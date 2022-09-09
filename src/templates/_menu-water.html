@@ -1,9 +1,13 @@
 <li class="nav-item">
-  <a class="nav-link active" href="{% url "water:index" %}?region=16568"><i class="fal fa-fw fa-tint"></i> Eaux</a>
+  <a class="nav-link {% if not section or section == "flows" %}active{% endif %}" href="{% url "water:index" %}?region=16568"><i class="fal fa-fw fa-tint"></i> Eaux</a>
 </li>
 <div class="nav-divider"></div>
 <li class="nav-item">
-  <a class="nav-link disabled" href="#"><i class="fal fa-fw fa-layer-group"></i> Matières</a>
+  <a class="nav-link {% if section == "map" %}active{% endif %}" href="/water/infrastructure/?region=16568"><i class="fal fa-fw fa-layer-group"></i> Infrastructure</a>
+</li>
+<div class="nav-divider"></div>
+<li class="nav-item">
+  <a class="nav-link disabled" href="#"><i class="fal fa-fw fa-chimney"></i> Matières</a>
 </li>
 <div class="nav-divider"></div>
 <li class="nav-item">

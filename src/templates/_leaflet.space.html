@@ -77,7 +77,7 @@
             var toggle_{{ layer.id }}_layer = L.DomUtil.create("div", "toggle-layer");
 
             toggle_{{ layer.id }}_layer.setAttribute("data-id", "{{ layer.id }}");
-            toggle_{{ layer.id }}_layer.setAttribute("data-geojson", "{% url URLS.GEOJSON layer.id %}{% if layer == boundaries.source %}?space={{ boundaries.id }}{% else %}?main_space={{ boundaries.id }}{% endif %}");
+            toggle_{{ layer.id }}_layer.setAttribute("data-geojson", "{% url URLS.GEOJSON layer.id %}{% if layer == boundaries.source %}?space={{ boundaries.id }}{% elif layer.get_dataviz_properties.crop_boundaries %}?crop=true&main_space={{ boundaries.id }}{% endif %}");
             toggle_{{ layer.id }}_layer.setAttribute("data-color", "{{ getcolors|get_item:layer.id }}");
 
             toggle_{{ layer.id }}_layer.innerHTML = "<ul class='fa-ul'><li><span class='fa-li'><i class='fal fa-fw fa-circle' style='color: {{ getcolors|get_item:layer.id }}'></i></span>{{ layer.meta_data.shortname|default:layer }}</li></ul>";

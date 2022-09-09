@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from core.mocfunctions import *
+from staf import views as staf
 
 def index(request):
     input = [
@@ -54,6 +55,7 @@ def index(request):
             space.geometry = Point(lng, lat)
             space.save()
 
+    infrastructure = Tag.objects.filter(parent_tag_id=1716)
     context = {
         "input": input,
         "output": output,
@@ -62,6 +64,8 @@ def index(request):
         "production": production,
         "waste": waste,
         "regions": NICE_REGIONS,
+        "infrastructure": infrastructure,
+        "documents": available_library_items(request).filter(tags__in=infrastructure),
     }
     return render(request, "water/index.html", context)
 
@@ -78,6 +82,10 @@ def water_map(request):
     return render(request, "water/map.html", context)
 
 def infrastructure(request):
+    space = ActivatedSpace.objects.get(part_of_project_id=request.project, space_id=request.GET["region"])
+    return staf.space_map(request, space.space.slug)
+
+def temp_script(request):
 
     ###### REMOVE MOC_EXTRAS FUNCTIONS ONCE THIS IS COMPLETED!!
     from django.contrib.gis.geos import Point

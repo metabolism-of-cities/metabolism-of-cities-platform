@@ -376,6 +376,7 @@ def space_map(request, space):
         "load_leaflet_space": True,
         "load_datatables": True,
         "list": list,
+        "section": "map", # Used for the water system's nav menu
     }
     return render(request, "staf/space.map.html", context)
 
@@ -461,17 +462,13 @@ def map_item(request, id, space=None):
         s = properties["scheme"]
         colors = COLOR_SCHEMES[s]
 
-    boundary = None
-    if "boundaries" in properties or "boundary" in request.GET:
+    boundary = request.GET.get("boundary") if "boundary" in request.GET else properties.get("boundaries")
+    if boundary:
         try:
             # Boundaries could either be configured in the properties of this document,
             # or they could be set 'on the fly' by using the GET parameters. GET always
             # supersede general settings in properties
-            if "boundary" in request.GET:
-                b = request.GET["boundary"]
-            else:
-                b = properties["boundaries"]
-            boundaries = ReferenceSpace.objects.get(pk=b)
+            boundaries = ReferenceSpace.objects.get(pk=boundary)
 
             boundary = {
                 "type": "Feature",
@@ -580,7 +577,7 @@ def geojson(request, id):
     spaces = info.imported_spaces.all()
     if "space" in request.GET:
         spaces = spaces.filter(id=request.GET["space"])
-    if "main_space" in request.GET and False:
+    if "main_space" in request.GET and "crop" in request.GET:
         main_space = ReferenceSpace.objects.get(pk=request.GET["main_space"])
         spaces = spaces.filter(Q(geometry__within=main_space.geometry)|Q(geometry__intersects=main_space.geometry))
     geom_type = None

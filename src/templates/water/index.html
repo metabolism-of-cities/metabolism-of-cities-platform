@@ -103,6 +103,46 @@ h5 {
 
   <h2>Water metabolism dashboard - Métropole Nice Côte d'Azur</h2>
 
+  <h3>Infrastructure</h3>
+
+  <div class="row progress-list">
+  
+    {% for tag in infrastructure %}
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card">
+          <a href="/data/dashboards/huancayo/">
+            <img src="/media/water/source.jpg" class="card-img-top" alt="Huancayo" style="max-height:200px">
+          </a>
+          <div class="card-body">
+            <h5 class="card-title mb-0"><a href="/data/dashboards/huancayo/">{{ tag }}</a></h5>
+          </div>
+          <ul class="list-group list-group-flush">
+            {% for each in documents %}
+              {% if tag in each.tags.all %}
+              <li class="list-group-item">
+                <i class="fas fa-fw fa-{{ each.logo }} mr-2"></i>
+                <a href="{% url "water:infrastructure_map" each.id %}{% if request.GET.region %}?boundary={{ request.GET.region }}&amp;restrict_to_within_boundaries=true{% endif %}">
+                {{ each.name }}
+                </a>
+              </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+          <div class="card-body" hidden>
+            <a class="btn btn-primary" href="/data/dashboards/huancayo/">
+              <i class="fad fa-info-circle"></i> Learn more
+            </a>
+            <a class="btn btn-primary-basic" href="/hub/">
+              <i class="fad fa-list"></i> View data
+            </a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+  </div>
+  
+
   <div class="row progress-list">
   
     <div class="col-md-6 col-lg-4 mb-4">

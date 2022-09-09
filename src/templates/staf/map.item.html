@@ -86,7 +86,7 @@
         {% endwith %}
 
       {% endif %}
-      <a class="hide-water" href="{% url URLS.LIBRARY_ITEM info.id %}" class="btn btn-secondary mt-3 float-right"><i class="fa fa-info-circle"></i> Source</a>
+      <a href="{% url URLS.LIBRARY_ITEM info.id %}" class="btn btn-secondary mt-3 float-right hide-water"><i class="fa fa-info-circle"></i> Source</a>
 
     {% endif %}
   </section>

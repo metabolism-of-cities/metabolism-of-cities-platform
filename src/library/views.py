@@ -709,10 +709,10 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     else:
         type = LibraryItemType.objects.get(pk=type)
 
-    if project.slug == "islands" or project.slug == "data" or project.slug == "cityloops":
+    if project.slug == "islands" or project.slug == "data" or project.slug == "cityloops" or project.slug == "water":
         data_management = True
 
-    processing_is_possible = ["Dataset", "Shapefile"]
+    processing_is_possible = ["Dataset", "Shapefile", "GPS Coordinates"]
 
     if referencespace_photo:
         # When we add a photo to a reference space we don't need a search box
@@ -1116,7 +1116,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             # If there are linked Reference Spaces then these need to have the same public status as their parent document
             ReferenceSpace.objects_unfiltered.filter(source=info).update(is_public=info.is_public)
 
-            if info:
+            if id:
                 if info.is_public:
                     link = reverse(project.slug + ":library_item", args=[info.id])
                     msg = f"The information was saved. <a href='{link}'>View item</a>."
