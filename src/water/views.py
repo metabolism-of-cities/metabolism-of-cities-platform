@@ -152,12 +152,6 @@ def temp_script(request):
         attr="Mapbox",
     )
 
-
-    #folium.GeoJson(
-    #    geometry,
-    #    name="geojson",
-    #).add_to(map)
-
     m = gdf.to_html()
 
     context = {
@@ -171,8 +165,14 @@ def temp_script(request):
     return render(request, "water/infrastructure.html", context)
 
 def dashboard(request):
+    region = None
+    flows = Tag.objects.filter(parent_tag_id=1702)
+    if "region" in request.GET:
+        region = ReferenceSpace.objects.get(pk=request.GET["region"])
     context = {
         "title": "Eau",
         "regions": NICE_REGIONS,
+        "documents": available_library_items(request).filter(tags__in=flows).order_by("id"),
+        "region": region,
     }
     return render(request, "water/dashboard.html", context)

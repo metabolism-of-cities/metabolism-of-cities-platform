@@ -29,7 +29,7 @@ months = {
 }
 
 # We only keep the relevant columns...
-columns_to_keep = ["année", "mois calcul volume", "PN_PRLVT_ECHANGES", "num_compteur", "volume retenu calendaire"]
+columns_to_keep = ["année", "mois calcul volume", "PN_PRLVT_ECHANGES", "num_compteur", "volume retenu"]
 df = df[columns_to_keep]
 
 col_names = {
@@ -37,11 +37,12 @@ col_names = {
     "année": "year",
     "PN_PRLVT_ECHANGES": "type",
     "num_compteur": "meter_number",
-    "volume retenu calendaire": "quantity",
+    "volume retenu": "quantity",
 }
 
 # Rename to English and single words
 df.rename(columns = col_names, inplace = True)
+print(df)
 
 # We will add the period name by stating "month name month year" as a string
 df["period_name"] = df["month"].astype(str) + " " + df["year"].astype(str) 
@@ -90,6 +91,8 @@ files = {
     "extraction.csv": "PRELEVEMENT D'EAU RESSOURCE",
     "import.csv": "ACHAT D'EAU POTABLE A",
     "export.csv": "VENTE D'EAU POTABLE A",
+    "overflow-treated-water.csv": "SURVERSE EAU TRAITEE",
+    "overflow-raw-water.csv": "SURVERSE EAU BRUTE",
 }
 
 for filename,type in files.items():
