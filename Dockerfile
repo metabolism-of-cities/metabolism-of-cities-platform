@@ -21,10 +21,8 @@ RUN export LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib
 RUN wget http://download.osgeo.org/gdal/3.1.0/gdal-3.1.0.tar.gz
 RUN tar xvfz gdal-3.1.0.tar.gz
 WORKDIR ./gdal-3.1.0
-RUN ./configure --with-proj=/usr/local/ --with-python --with-pg --with-geos &&\
-    make && \
-    make install && \
-    ldconfig
+RUN ./autogen.sh
+RUN CPPFLAGS=-I/usr/local/include LDFLAGS=-L/usr/local/lib  ./configure --with-proj=/usr/local/ --with-python=python3 --with-pg --with-geos &&    make &&     make install &&     ldconfig
 
 ENV PYTHONUNBUFFERED 1
 RUN mkdir /src
