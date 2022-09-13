@@ -228,3 +228,11 @@ python manage.py runserver
 ```
 
 Open the page http://localhost:8000/ and login with the superuser you have created.
+
+
+## Docker on Macbook
+
+```bash
+docker-compose build
+ENVIRONMENT=docker docker-compose up
+```

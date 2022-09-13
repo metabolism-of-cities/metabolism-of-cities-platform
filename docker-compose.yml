@@ -29,3 +29,5 @@ services:
     depends_on:
       - db
     container_name: moc_web
+    environment:
+      - "ENVIRONMENT=${ENVIRONMENT}"
