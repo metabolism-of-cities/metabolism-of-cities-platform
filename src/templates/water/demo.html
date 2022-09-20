@@ -12,7 +12,7 @@ img.w{max-width:100%}
   $(function(){
     $("select[name='level']").change(function(){
       level = $(this).val();
-      window.location = "{% url 'water:index' %}?level=" + level;
+      window.location = "{% url 'water:demo' %}?level=" + level;
     });
   });
   </script>

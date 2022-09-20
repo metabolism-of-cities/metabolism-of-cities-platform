@@ -215,7 +215,7 @@ NICE_REGIONS = {
     "Vésubie": 1010426,
     "Moyen Pays Rive Gauche": 1010425,
     "Rive Droite": 1010424,
-    "Est-Littoral ": 1010423,
+    "Est-Littoral": 1010423,
 }
 
 # For some of the websites users might have access to documents that are not 

@@ -118,8 +118,6 @@ def temp_script(request):
         # Change to WGS84
         gdf.to_crs(epsg=4326, inplace=True)
 
-        p(gdf)
-
         for index, row in gdf.iterrows():
             geo = row["geometry"]
             x, y = geo.coords.xy
@@ -176,3 +174,84 @@ def dashboard(request):
         "region": region,
     }
     return render(request, "water/dashboard.html", context)
+
+def diagram(request):
+
+    doc = available_library_items(request).get(pk=1013348)
+    file = doc.attachments.all()[0]
+
+    from openpyxl import load_workbook
+    import pandas as pd
+    import numpy as np
+    df = pd.read_excel(file.file)
+
+    if "region" in request.GET and request.GET.get("region") != "16568":
+        region = request.GET["region"]
+        this_region = None
+        for key,value in NICE_REGIONS.items():
+            if value == int(region):
+                this_region = key
+        if this_region:
+            columns_to_keep = [this_region]
+            df = df[columns_to_keep]
+            totals = df.sum(axis=1, numeric_only=True)
+            # Getting totals just so that the syntax below is the same, but in reality
+            # we only have a single column anyways
+        else:
+            messages.error(request, f"The region {region} was not found.")
+    else:
+        totals = df.set_index("Type").sum(axis=1, numeric_only=True)
+
+    demo_figures = {
+        "extract_surface": totals[0],
+        "extract_subterrain": totals[1],
+        "extract_mountains": totals[2],
+        "imports": totals[4]-totals[0]-totals[1]-totals[2]+totals[5],
+        "exports": totals[6],
+        "losses1": totals[7],
+        "losses2": totals[4]*0.02,
+        "energy": totals[8],
+        "treatment_internal": totals[9]+totals[10],
+        "treatment_external": totals[11],
+        "treatment_imports": totals[12],
+    }
+    if demo_figures["imports"] < 0:
+        demo_figures["exports"] = demo_figures["imports"]*-1
+        demo_figures["imports"] =0
+    # k m3 -> km3
+    #for key,value in demo_figures.items():
+    #    demo_figures[key] = value/(1000*1000)
+
+    data = demo_figures
+    data["extract"] = data["extract_surface"] + data["extract_subterrain"] + data["extract_mountains"]
+    data["treatment"] = data["treatment_internal"] + data["treatment_external"]
+
+    total_size = data["extract"] + data["imports"]
+    p(total_size)
+    pixels = 100
+    per_unit = pixels/total_size
+
+    pixel_data = {}
+    for key,value in data.items():
+        if value:
+            pixel_data[key] = int(value*per_unit) if int(value*per_unit) > 1 else 1
+        else:
+            pixel_data[key] = 0
+
+    pixel_data["seg1"] = pixel_data["imports"] + pixel_data["extract"]
+    pixel_data["seg2"] = pixel_data["seg1"] - pixel_data["losses1"]
+    pixel_data["seg3"] = pixel_data["seg2"] - pixel_data["losses2"]
+    pixel_data["seg4"] = pixel_data["seg3"] - pixel_data["energy"] - pixel_data["exports"]
+    pixel_data["seg5"] = pixel_data["seg4"] + pixel_data["treatment_imports"]
+    pixel_data["seg6"] = pixel_data["seg5"] - pixel_data["treatment_external"]
+
+    context = {
+        "title": "Eau",
+        "regions": NICE_REGIONS,
+        "data": data,
+        "pixel_data": pixel_data,
+        "pixels": range(1,100),
+        "rows": range(1,40),
+        "link": reverse("water:diagram"),
+    }
+    return render(request, "water/diagram.html", context)
