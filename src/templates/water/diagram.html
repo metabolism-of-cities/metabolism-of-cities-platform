@@ -1,0 +1,391 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block footer %}
+  <script type="text/javascript">
+  $(function(){
+    $("select[name='level']").change(function(){
+      level = $(this).val();
+      window.location = "{% url 'water:index' %}?level=" + level;
+    });
+    $("body").click(function() {
+      $("#level0").remove();
+    });
+
+    $("#treatment").click(function(){
+      $(this).hide();
+      $(".treatment").show();
+    });
+    $("#extraction").click(function(){
+      $(this).hide();
+      $(".extraction").show();
+    });
+  });
+  </script>
+{% endblock %}
+
+{% block head %}
+<style type="text/css">
+#waterflows {
+  transform:rotate(-10deg);
+  top: 100px;
+  position: relative;
+  z-index: 2;
+}
+#canvas img {
+  position: absolute;
+  top: 0;
+  z-index: 19;
+  pointer-events: none;
+}
+.progress {
+  border-radius: 0;
+  transform: rotate(180deg);
+}
+#input, #output {
+  position: absolute; 
+  width: 50%;
+  top: 25%;
+}
+#output {
+  left: 50%;
+}
+#losses {
+  display: none;
+}
+.clickable.progress:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+.extraction, .treatment {
+  display: none;
+}
+.extraction .progress {
+  margin-top: 10px;
+}
+.treatment .progress {
+  margin-bottom: 10px;
+}
+
+.progress.reverse {
+  transform:rotate(0deg);
+}
+.grid {
+  height: 500px;
+  position: relative;
+}
+.grid .progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 50%;
+}
+.grid .progress-bar {
+  width: 100%;
+}
+
+/* BARS START HERE */
+.grid .import {
+  left: 2%;
+}
+.grid .export {
+  left: 45%;
+}
+.grid .capture {
+  left: 2%;
+  top: 50%;
+}
+.grid .losses1 {
+  left: 25%;
+  top: 50%;
+}
+.grid .energy {
+  left: 45%;
+  top: 50%;
+}
+.grid .losses2 {
+  left: 40%;
+  top: 50%;
+}
+.grid .import_wwtp {
+  left: 65%;
+}
+.grid .export_wwtp {
+  left: 75%;
+}
+.grid .wwtp {
+  left: 85%;
+  top: 50%;
+}
+/* BARS END HERE */
+
+.grid .segment {
+  top: 40%;
+}
+.grid .seg1 {
+  left: 2%;
+}
+.grid .seg2 {
+  left: 25%;
+}
+.grid .seg3 {
+  left: 40%;
+}
+.grid .seg4 {
+  left: 45%;
+}
+.grid .seg5 {
+  left: 65%;
+}
+.grid .seg6 {
+  left: 75%;
+}
+
+/* HORIZONTAL BARS */
+.seg1 {
+  width: 23%;
+}
+.seg2 {
+  width: 15%;
+}
+.seg3 {
+  width: 5%;
+}
+.seg4 {
+  width: 20%;
+}
+.seg5 {
+  width: 10%;
+}
+.seg6 {
+  width: 10%;
+}
+/* END OF HORIZONTAL BARS */
+
+.capture {
+  width: {{ pixel_data.extract }}px;
+}
+.import {
+  width: {{ pixel_data.imports }}px;
+}
+.losses1 {
+  width: {{ pixel_data.losses1 }}px;
+}
+.losses2 {
+  width: {{ pixel_data.losses2 }}px;
+}
+.energy {
+  width: {{ pixel_data.energy }}px;
+}
+.export {
+  width: {{ pixel_data.exports }}px;
+}
+.wwtp {
+  width: {{ pixel_data.treatment_internal }}px;
+}
+.import_wwtp {
+  width: {{ pixel_data.treatment_imports }}px;
+}
+.export_wwtp {
+  width: {{ pixel_data.treatment_external }}px;
+}
+
+
+.seg1 {
+  height: {{ pixel_data.seg1 }}px !important;
+}
+.seg2 {
+  height: {{ pixel_data.seg2 }}px !important;
+}
+.seg3 {
+  height: {{ pixel_data.seg3 }}px !important;
+}
+.seg4 {
+  height: {{ pixel_data.seg4 }}px !important;
+}
+.seg5 {
+  height: {{ pixel_data.seg5 }}px !important;
+}
+.seg6 {
+  height: {{ pixel_data.seg6 }}px !important;
+}
+
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+</div>
+
+<div class="container-fluid mb-5 grid bg-warning">
+
+  <div class="import reverse progress">
+    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar" ></div>
+  </div>
+  
+  <div class="capture progress">
+    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
+  </div>
+
+  <div class="export progress">
+    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
+  </div>
+  
+  <div class="losses1 reverse progress">
+    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
+  </div>
+  
+  <div class="losses2 reverse progress">
+    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
+  </div>
+  
+  <div class="energy reverse progress">
+    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
+  </div>
+
+  <div class="import_wwtp reverse progress">
+    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar" ></div>
+  </div>
+
+  <div class="export_wwtp progress">
+    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar" ></div>
+  </div>
+  
+  <div class="wwtp reverse progress">
+    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar" ></div>
+  </div>
+  
+  <!-- HORIZONTAL BARS -->
+  <div class="progress seg1 segment">
+    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
+  </div>
+  <div class="progress seg2 segment">
+    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
+  </div>
+  <div class="progress seg3 segment">
+    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
+  </div>
+  <div class="progress seg4 segment">
+    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
+  </div>
+  <div class="progress seg5 segment">
+    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
+  </div>
+  <div class="progress seg6 segment">
+    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
+  </div>
+  
+</div>
+
+<div class="container" hidden>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-3">
+
+      <div>
+        <label>
+        Territoire
+        </label>
+        <select name="" class="form-control">
+          <option value="">MNCA</option>
+          <option value="" disabled>Nice</option>
+          <option value="" disabled>Tinée</option>
+          <option value="" disabled>Vésubie</option>
+          <option value="" disabled>Moyen Pays Rive Gauche</option>
+          <option value="" disabled>Rive Droite</option>
+          <option value="" disabled>Littoral</option>
+        </select>
+      </div>
+
+      <div class="mt-3">
+        <label>
+        Type de flux
+        </label>
+        <select name="" class="form-control">
+          <option value="">Eau</option>
+          <option value="" disabled>Energie</option>
+          <option value="" disabled>Gaz à effet de serre</option>
+        </select>
+      </div>
+
+      <div class="mt-3">
+        <label>
+        Année
+        </label>
+        <select name="" class="form-control">
+          <option value="">2020</option>
+          <option value="" disabled>2019</option>
+          <option value="" disabled>2018</option>
+        </select>
+      </div>
+
+      <div class="mt-3">
+        <label>
+        Détail
+        </label>
+        <select name="level" class="form-control">
+          <option value="1">Niveau 1</option>
+          <option value="2" {% if request.GET.level == "2" %}selected{% endif %}>Niveau 2</option>
+          <option value="" disabled>Niveau 3</option>
+        </select>
+      </div>
+
+      <div class="mt-3">
+        <label>
+        Unité<br>
+        </label>
+        <strong>
+        <br>
+          km³
+        </strong>
+      </div>
+
+    </div>
+
+    <div class="col-lg-9">
+      <div id="canvas">
+
+        <div id="waterflows">
+          <div id="input" class="bars">
+            <div class="progress" title="Input: {{ data.input }}" style="height: {{ pixel_data.input }}px"><div class="bg-warning progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div></div>
+
+            <div id="extraction" class="clickable progress" title="Extraction: {{ data.extract }}" style="height: {{ pixel_data.extract }}px"><div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div></div>
+            <div class="extraction">
+              <div class="progress" title="Surface: {{ data.extract_surface }}" style="height: {{ pixel_data.extract_surface }}px"><div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div></div>
+              <div class="progress" title="Subterrain: {{ data.extract_subterrain }}" style="height: {{ pixel_data.extract_subterrain }}px"><div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div></div>
+              <div class="progress" title="Mountains: {{ data.extract_mountains }}" style="height: {{ pixel_data.extract_mountains }}px"><div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div></div>
+            </div>
+
+          </div>
+
+          <div id="output" class="bars">
+
+            <div id="treatment" class="clickable progress" title="Treatment: {{ data.treatment }}" style="height: {{ pixel_data.treatment }}px"><div class="bg-secondary progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div></div>
+            <div class="treatment">
+              <div class="progress" title="Internal: {{ data.treatment_internal }}" style="height: {{ pixel_data.treatment_internal }}px"><div class="bg-secondary progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div></div>
+              <div class="progress" title="External: {{ data.treatment_external }}" style="height: {{ pixel_data.treatment_external }}px"><div class="bg-secondary progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div></div>
+            </div>
+
+            <div class="progress" title="Exports: {{ data.exports }}" style="height:{{ data.exports }}px"><div class="bg-primary progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div></div>
+            <div class="progress" title="Losses: {{ data.losses }}" style="height:{{ data.losses }}px"><div class="bg-danger progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div></div>
+            <div class="progress" title="Energy: {{ data.energy }}" style="height:{{ data.energy }}px"><div class="bg-dark progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div></div>
+          </div>
+
+          <div id="losses" class="bars">
+            <div class="progress" style="height:72px"><div class="bg-danger progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div></div>
+          </div>
+        </div>
+
+        <img src="/media/water/map.resized.png" alt="" width="100%">
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+{% endblock %}
