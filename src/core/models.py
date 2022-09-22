@@ -1122,6 +1122,7 @@ class LibraryItem(Record):
     comments = models.TextField(null=True, blank=True)
     license = models.ForeignKey(License, on_delete=models.CASCADE, null=True, blank=True)
     geocodes = models.ManyToManyField("Geocode", blank=True)
+    part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, related_name="library_items")
 
     STATUS = (
         ("pending", "Pending"),
