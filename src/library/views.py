@@ -709,7 +709,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     else:
         type = LibraryItemType.objects.get(pk=type)
 
-    if project.slug == "islands" or project.slug == "data" or project.slug == "cityloops" or project.slug == "water":
+    if project.is_data_project:
         data_management = True
 
     processing_is_possible = ["Dataset", "Shapefile", "GPS Coordinates"]
