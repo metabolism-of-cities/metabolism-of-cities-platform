@@ -2001,9 +2001,9 @@ class LibraryItem(Record):
                 pass
 
         # If there are linked Reference Spaces or Data points then these need to have the same public status as their parent document
-        if self:
-            ReferenceSpace.objects_unfiltered.filter(source=self).update(is_public=self.is_public)
-            Data.objects_unfiltered.filter(source=self).update(is_public=self.is_public)
+        if self.id:
+            ReferenceSpace.objects_unfiltered.filter(source_id=self.id).update(is_public=self.is_public)
+            Data.objects_unfiltered.filter(source_id=self.id).update(is_public=self.is_public)
 
         super(LibraryItem, self).save(*args, **kwargs)
 
