@@ -206,7 +206,7 @@ def diagram(request):
         "extract_surface": totals[0],
         "extract_subterrain": totals[1],
         "extract_mountains": totals[2],
-        "imports": totals[4]-totals[0]-totals[1]-totals[2]+totals[5],
+        "imports": totals[4]-totals[0]-totals[1]-totals[2]+totals[5]+totals[8],
         "exports": totals[6],
         "losses1": totals[7],
         "losses2": totals[4]*0.02,
@@ -216,18 +216,17 @@ def diagram(request):
         "treatment_imports": totals[12],
     }
     if demo_figures["imports"] < 0:
-        demo_figures["exports"] = demo_figures["imports"]*-1
+        demo_figures["exports"] = demo_figures["imports"]*-1 + demo_figures["exports"]
         demo_figures["imports"] =0
     # k m3 -> km3
-    #for key,value in demo_figures.items():
-    #    demo_figures[key] = value/(1000*1000)
+    for key,value in demo_figures.items():
+        demo_figures[key] = int(value/(1000))
 
     data = demo_figures
     data["extract"] = data["extract_surface"] + data["extract_subterrain"] + data["extract_mountains"]
     data["treatment"] = data["treatment_internal"] + data["treatment_external"]
 
     total_size = data["extract"] + data["imports"]
-    p(total_size)
     pixels = 100
     per_unit = pixels/total_size
 

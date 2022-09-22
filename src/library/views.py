@@ -1113,9 +1113,6 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                     for each in request.FILES.getlist("files"):
                         document = Document.objects.create(name=str(each), file=each, attached_to=info)
 
-            # If there are linked Reference Spaces then these need to have the same public status as their parent document
-            ReferenceSpace.objects_unfiltered.filter(source=info).update(is_public=info.is_public)
-
             if id:
                 if info.is_public:
                     link = reverse(project.slug + ":library_item", args=[info.id])

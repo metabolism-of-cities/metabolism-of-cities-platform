@@ -1999,6 +1999,10 @@ class LibraryItem(Record):
             except:
                 pass
 
+        # If there are linked Reference Spaces or Data points then these need to have the same public status as their parent document
+        ReferenceSpace.objects_unfiltered.filter(source=self).update(is_public=self.is_public)
+        Data.objects_unfiltered.filter(source=self).update(is_public=self.is_public)
+
         super(LibraryItem, self).save(*args, **kwargs)
 
     objects = PublicActiveRecordManager()
@@ -2991,6 +2995,10 @@ class Data(models.Model):
     comments = models.TextField(null=True, blank=True)
     timeframe = models.ForeignKey(TimePeriod, on_delete=models.CASCADE)
     segment_name = models.CharField(max_length=500, null=True, blank=True)
+    is_public = models.BooleanField(default=True, db_index=True)
+
+    objects = PublicRecordManager()
+    objects_unfiltered = models.Manager()
 
     class Meta:
         db_table = "stafdb_data"

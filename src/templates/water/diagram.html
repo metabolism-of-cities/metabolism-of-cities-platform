@@ -1,5 +1,6 @@
 {% extends "_base.html" %}
 {% load static %}
+{% load humanize %}
 
 {% block footer %}
   <script type="text/javascript">
@@ -80,6 +81,9 @@
   left: 0;
   height: 50%;
 }
+.grid .progress-top-bar {
+  height: 40%;
+}
 .grid .progress-bar {
   width: 100%;
 }
@@ -93,19 +97,19 @@
 }
 .grid .capture {
   left: 2%;
-  top: 50%;
+  top: 40%;
 }
 .grid .losses1 {
   left: 25%;
-  top: 50%;
+  top: 40%;
 }
 .grid .energy {
   left: 45%;
-  top: 50%;
+  top: 40%;
 }
 .grid .losses2 {
   left: 40%;
-  top: 50%;
+  top: 40%;
 }
 .grid .import_wwtp {
   left: 65%;
@@ -115,7 +119,7 @@
 }
 .grid .wwtp {
   left: 85%;
-  top: 50%;
+  top: 40%;
 }
 /* BARS END HERE */
 
@@ -191,6 +195,7 @@
 }
 
 
+/* HORIZONTAL BARS CONFIGURATION OF WIDTH */
 .seg1 {
   height: {{ pixel_data.seg1 }}px !important;
 }
@@ -209,6 +214,87 @@
 .seg6 {
   height: {{ pixel_data.seg6 }}px !important;
 }
+/* END HORIZONTAL BAR CONFIGURATION */
+
+.progress-bar-animated {
+  -webkit-animation: progress-bar-stripes 0.35s linear infinite;
+  animation: progress-bar-stripes 0.35s linear infinite;
+}
+
+.btn-icon {
+  display: inline-block;
+  height: auto;
+  width: auto;
+  margin: 0;
+  padding:0;
+}
+.btn-icon .title {
+  font-size: 1.1rem;
+  padding: 0.2rem 0.5rem;
+}
+.btn-icon .arrow {
+  text-align: center;
+  background: white;
+  color: black;
+  opacity: 0.7;
+}
+.btn-icon .arrow.in {
+  background: white;
+}
+.btn-icon .number {
+  background: #333;
+  color: white;
+  text-align: center;
+}
+
+.grid {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.icons .btn-icon {
+  position: absolute;
+}
+.i-top {
+  top: -90px;
+}
+.i-bottom {
+  bottom: -20px;
+}
+.i-capture {
+  left: 2%;
+  {% if not data.extract %}display: none !important;{% endif %}
+}
+.i-losses1 {
+  left: 24%;
+}
+.i-losses2 {
+  left: 36%;
+}
+.i-wwtp {
+  left: 80%;
+}
+.i-imports {
+  left: 1%;
+  {% if not data.imports %}display: none !important;{% endif %}
+}
+.i-exports {
+  left: 42%;
+  {% if not data.exports %}display: none !important;{% endif %}
+}
+.i-treatment-external {
+  left: 72%;
+  {% if not data.treatment_external %}display: none !important;{% endif %}
+}
+.i-treatment-imports {
+  left: 60.5%;
+  {% if not data.treatment_imports %}display: none !important;{% endif %}
+}
+
+.i-energy {
+  left: 43%;
+  {% if not data.energy %}display: none !important;{% endif %}
+}
 
 
 </style>
@@ -218,41 +304,41 @@
 
 </div>
 
-<div class="container-fluid mb-5 grid bg-warning">
+<div class="container-fluid mb-5 grid">
 
-  <div class="import reverse progress">
+  <div class="import reverse progress progress-top-bar" title="Imports: {{ data.imports }}">
     <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar" ></div>
   </div>
   
-  <div class="capture progress">
+  <div class="capture progress" title="Captage: {{ data.extract }}">
     <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
   </div>
 
-  <div class="export progress">
+  <div class="export progress progress-top-bar" title="Export: {{ data.exports }}">
     <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
   </div>
   
-  <div class="losses1 reverse progress">
+  <div class="losses1 reverse progress" title="Losses: {{ data.losses1 }}">
     <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
   </div>
   
-  <div class="losses2 reverse progress">
+  <div class="losses2 reverse progress" title="Losses: {{ data.losses2 }}">
     <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
   </div>
   
-  <div class="energy reverse progress">
+  <div class="energy reverse progress" title="Turbine: {{ data.energy }}">
     <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
   </div>
 
-  <div class="import_wwtp reverse progress">
+  <div class="import_wwtp reverse progress progress-top-bar" title="Importations eaux usées: {{ data.treatment_imports }}">
     <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar" ></div>
   </div>
 
-  <div class="export_wwtp progress">
+  <div class="export_wwtp progress progress-top-bar" title="Exportation assainissement: {{ data.treatment_external }}">
     <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar" ></div>
   </div>
   
-  <div class="wwtp reverse progress">
+  <div class="wwtp reverse progress" title="Assainissement: {{ data.treatment_internal }}">
     <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar" ></div>
   </div>
   
@@ -274,6 +360,68 @@
   </div>
   <div class="progress seg6 segment">
     <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
+  </div>
+
+  <!-- Icons -->
+
+
+
+  <div class="icons">
+
+    <a class="btn-icon i-capture i-bottom" href="">
+      <div class="arrow in"><i class="fas fa-arrow-up"></i></div>
+      <div class="title"><i class="fal fa-tint fa-fw"></i> Captage</div>
+      <div class="number">{{ data.extract|intcomma }}</div>
+    </a>
+
+    <a class="btn-icon i-losses1 i-bottom" href="">
+      <div class="arrow"><i class="fas fa-arrow-down"></i></div>
+      <div class="title"><i class="fal fa-circle-notch fa-fw"></i> Pertes</div>
+      <div class="number">{{ data.losses1|intcomma }}</div>
+    </a>
+
+    <a class="btn-icon i-losses2 i-bottom" href="">
+      <div class="arrow"><i class="fas fa-arrow-down"></i></div>
+      <div class="title"><i class="fal fa-circle-notch fa-fw"></i> Pertes</div>
+      <div class="number">{{ data.losses2|intcomma }}</div>
+    </a>
+
+    <a class="btn-icon i-energy i-bottom" href="">
+      <div class="arrow"><i class="fas fa-arrow-down"></i></div>
+      <div class="title"><i class="fal fa-bolt fa-fw"></i> Turbine</div>
+      <div class="number">{{ data.energy|intcomma }}</div>
+    </a>
+
+    <a class="btn-icon i-wwtp i-bottom" href="">
+      <div class="arrow"><i class="fas fa-arrow-down"></i></div>
+      <div class="title"><i class="fal fa-tornado fa-fw"></i> Assainissement</div>
+      <div class="number">{{ data.treatment_internal|intcomma }}</div>
+    </a>
+
+    <a class="btn-icon i-imports i-top" href="">
+      <div class="number">{{ data.imports|intcomma }}</div>
+      <div class="title"><i class="fal fa-water fa-fw"></i> Importations</div>
+      <div class="arrow in"><i class="fas fa-arrow-down"></i></div>
+    </a>
+
+    <a class="btn-icon i-exports i-top" href="">
+      <div class="number">{{ data.exports|intcomma }}</div>
+      <div class="title"><i class="fal fa-water fa-fw"></i> Exportations</div>
+      <div class="arrow"><i class="fas fa-arrow-up"></i></div>
+    </a>
+
+    <a class="btn-icon i-treatment-external i-top" href="">
+      <div class="number">{{ data.treatment_external|intcomma }}</div>
+      <div class="title"><i class="fal fa-toilet fa-fw"></i> Exportation <br>assainissement</div>
+      <div class="arrow"><i class="fas fa-arrow-up"></i></div>
+    </a>
+
+    <a class="btn-icon i-treatment-imports i-top" href="">
+      <div class="number">{{ data.treatment_imports|intcomma }}</div>
+      <div class="title"><i class="fal fa-tornado fa-fw"></i> Importations <br>eaux usées</div>
+      <div class="arrow in"><i class="fas fa-arrow-down"></i></div>
+    </a>
+
   </div>
   
 </div>
@@ -385,7 +533,5 @@
 
   </div>
 </div>
-
-
 
 {% endblock %}
