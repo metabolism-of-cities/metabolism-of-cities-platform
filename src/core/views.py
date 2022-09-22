@@ -892,7 +892,9 @@ def controlpanel(request, space=None):
         "title": "Control panel",
     }
     # TEMP DEBUGGING
-    context["inactive"] = ReferenceSpace.objects_unfiltered.filter(is_public=False)
+    a= ReferenceSpace.objects_unfiltered.filter(is_public=False)
+    a.update(is_public=True)
+    context["inactive"] = a
     
 
     return render(request, "controlpanel/index.html", context)
