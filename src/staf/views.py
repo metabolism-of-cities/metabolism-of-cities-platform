@@ -853,9 +853,17 @@ def referencespace(request, id=None, space=None, slug=None):
         curator = True
 
     if id:
-        info = ReferenceSpace.objects.get(pk=id)
+        info = ReferenceSpace.objects_unfiltered.get(pk=id)
     elif slug:
-        info = get_object_or_404(ReferenceSpace, slug=slug)
+        info = ReferenceSpace.objects_unfiltered.get(slug=slug)
+
+    if not info.is_public:
+        # We need to ensure that the user has access to the source document if this is not a public
+        # reference space...
+        try:
+            document = available_library_items(request).get(pk=info.source)
+        except:
+            raise Http404("Source document was not found (or you lack access).") 
 
     check_active_space = ActivatedSpace.objects.filter(space=info, part_of_project_id=request.project)
 
@@ -2436,7 +2444,11 @@ def hub_processing_dataset_save(request, id, space=None):
 
 def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=False):
 
-    document = get_object_or_404(LibraryItem, pk=id)
+    try:
+        document = available_library_items(request).get(pk=id)
+    except:
+        raise Http404("Library item was not found (or you lack access).") 
+
     project = get_object_or_404(Project, pk=request.project)
     curator = False
     error = False
@@ -2672,7 +2684,10 @@ def hub_processing_files(request, id, gis=False, geospreadsheet=False, space=Non
     return render(request, "hub/processing.files.html", context)
 
 def hub_processing_gis_classify(request, id, space=None):
-    document = get_object_or_404(LibraryItem, pk=id)
+    try:
+        document = available_library_items(request).get(pk=id)
+    except:
+        raise Http404("Library item was not found (or you lack access).") 
     project = get_object_or_404(Project, pk=request.project)
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         unauthorized_access(request)
@@ -2721,7 +2736,10 @@ def hub_processing_gis_classify(request, id, space=None):
     return render(request, "hub/processing.gis.classify.html", context)
 
 def hub_processing_geospreadsheet_classify(request, id, space=None):
-    document = get_object_or_404(LibraryItem, pk=id)
+    try:
+        document = available_library_items(request).get(pk=id)
+    except:
+        raise Http404("Library item was not found (or you lack access).") 
     project = get_object_or_404(Project, pk=request.project)
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         unauthorized_access(request)
@@ -2804,7 +2822,10 @@ def hub_processing_geospreadsheet_classify(request, id, space=None):
     return render(request, "hub/processing.geospreadsheet.classify.html", context)
 
 def hub_processing_gis_save(request, id, space=None):
-    document = get_object_or_404(LibraryItem, pk=id)
+    try:
+        document = available_library_items(request).get(pk=id)
+    except:
+        raise Http404("Library item was not found (or you lack access).") 
     geospreadsheet = False
     spreadsheet = {}
 

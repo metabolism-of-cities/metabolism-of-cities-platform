@@ -1122,7 +1122,7 @@ class LibraryItem(Record):
     comments = models.TextField(null=True, blank=True)
     license = models.ForeignKey(License, on_delete=models.CASCADE, null=True, blank=True)
     geocodes = models.ManyToManyField("Geocode", blank=True)
-    part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True, related_name="library_items")
+    part_of_project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True, related_name="library_items")
 
     STATUS = (
         ("pending", "Pending"),
@@ -2001,8 +2001,9 @@ class LibraryItem(Record):
                 pass
 
         # If there are linked Reference Spaces or Data points then these need to have the same public status as their parent document
-        #ReferenceSpace.objects_unfiltered.filter(source=self).update(is_public=self.is_public)
-        #Data.objects_unfiltered.filter(source=self).update(is_public=self.is_public)
+        if self:
+            ReferenceSpace.objects_unfiltered.filter(source=self).update(is_public=self.is_public)
+            Data.objects_unfiltered.filter(source=self).update(is_public=self.is_public)
 
         super(LibraryItem, self).save(*args, **kwargs)
 

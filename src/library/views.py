@@ -288,7 +288,10 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
                     info = info[0]
 
     else:
-        info = available_library_items(request).get(pk=id)
+        try:
+            info = available_library_items(request).get(pk=id)
+        except:
+            raise Http404("Library item was not found (or you lack access).") 
 
     if not info:
         info = get_object_or_404(LibraryItem, pk=id)
