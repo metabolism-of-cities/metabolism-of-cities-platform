@@ -853,9 +853,9 @@ def referencespace(request, id=None, space=None, slug=None):
         curator = True
 
     if id:
-        info = ReferenceSpace.objects_unfiltered.get(pk=id)
+        info = ReferenceSpace.objects_include_private.get(pk=id)
     elif slug:
-        info = ReferenceSpace.objects_unfiltered.get(slug=slug)
+        info = ReferenceSpace.objects_include_private.get(slug=slug)
 
     if not info.is_public:
         # We need to ensure that the user has access to the source document if this is not a public
@@ -967,7 +967,14 @@ def referencespace_form(request, id):
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         unauthorized_access(request)
 
-    info = ReferenceSpace.objects.get(pk=id)
+    info = ReferenceSpace.objects_include_private.get(pk=id)
+
+    # If this is a private reference space then we check that the user has access...
+    if not info.is_public:
+        try:
+            document = available_library_items(request).get(pk=info.source)
+        except:
+            raise Http404("Source document was not found (or you lack access).") 
 
     types = {
         "cosmetic": "Small cosmetic changes in the description",
@@ -3179,7 +3186,11 @@ def chart_editor(request, id):
         unauthorized_access(request)
 
     project = get_project(request)
-    source = available_library_items(request).get(pk=id)
+
+    try:
+        source = available_library_items(request).get(pk=id)
+    except:
+        raise Http404("Library item was not found (or you lack access).") 
 
     if "new" in request.GET:
         info = DataViz.objects.create(name="Unnamed visualisation", source=source, is_secondary=True)
@@ -3261,7 +3272,11 @@ def page_editor(request, id):
         unauthorized_access(request)
 
     project = get_project(request)
-    info = get_object_or_404(LibraryItem, pk=id)
+
+    try:
+        info = available_library_items(request).get(pk=id)
+    except:
+        raise Http404("Library item was not found (or you lack access).") 
 
     if request.method == "POST":
         if not info.meta_data:
