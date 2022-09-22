@@ -2083,7 +2083,7 @@ class Photo(LibraryItem):
 
 class ActivatedSpace(models.Model):
     space = models.ForeignKey("ReferenceSpace", on_delete=models.CASCADE, related_name="activated")
-    part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="activated_spaces")
+    part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="activated_spaces", limit_choices_to={"is_data_project":True})
     slug = models.CharField(max_length=255, db_index=True)
 
     def __str__(self):
