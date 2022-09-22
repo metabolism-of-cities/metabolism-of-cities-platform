@@ -253,6 +253,6 @@ def available_library_items(request):
             items = LibraryItem.objects_include_private \
                 .filter(tags__parent_tag__parent_tag__id=tag_id)
         else:
-            items = LibraryItems.objects
+            items = LibraryItem.objects
 
     return items
