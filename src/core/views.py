@@ -887,10 +887,6 @@ def controlpanel(request, space=None):
     if space:
         space = get_space(request, space)
 
-    a = ReferenceSpace.objects_include_private.filter(is_public=False)
-    p(a)
-    a.update(is_public=True)
-
     context = {
         "space": space,
         "title": "Control panel",

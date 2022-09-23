@@ -2017,7 +2017,11 @@ def hub_processing_dataset(request, id, space=None):
     if space:
         space = get_space(request, space)
 
-    info = get_object_or_404(LibraryItem, pk=id)
+    try:
+        info = available_library_items(request).get(pk=id)
+    except:
+        raise Http404("Library item was not found (or you lack access).") 
+
     check_files = False
 
     try:
@@ -2170,7 +2174,10 @@ def hub_processing_dataset_classify(request, id, space=None):
     if space:
         space = get_space(request, space)
 
-    info = get_object_or_404(LibraryItem, pk=id)
+    try:
+        info = available_library_items(request).get(pk=id)
+    except:
+        raise Http404("Library item was not found (or you lack access).") 
 
     try:
         work_id = 30
@@ -2325,7 +2332,10 @@ def hub_processing_dataset_classify(request, id, space=None):
     return render(request, "hub/processing.dataset.classify.html", context)
 
 def hub_processing_record_save(request, id, type, space=None):
-    info = get_object_or_404(LibraryItem, pk=id)
+    try:
+        info = available_library_items(request).get(pk=id)
+    except:
+        raise Http404("Library item was not found (or you lack access).") 
 
     project = get_project(request)
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
@@ -2375,7 +2385,10 @@ def hub_processing_record_save(request, id, type, space=None):
     return render(request, "hub/processing.dataset.save.html", context)
 
 def hub_processing_dataset_save(request, id, space=None):
-    info = get_object_or_404(LibraryItem, pk=id)
+    try:
+        info = available_library_items(request).get(pk=id)
+    except:
+        raise Http404("Library item was not found (or you lack access).") 
 
     project = get_project(request)
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
@@ -2645,7 +2658,12 @@ def hub_processing_gis(request, id, classify=False, space=None, geospreadsheet=F
     return render(request, "hub/processing.gis.html", context)
 
 def hub_processing_files(request, id, gis=False, geospreadsheet=False, space=None):
-    document = get_object_or_404(LibraryItem, pk=id)
+    try:
+        document = available_library_items(request).get(pk=id)
+    except:
+        raise Http404("Library item was not found (or you lack access).") 
+
+
     project = get_object_or_404(Project, pk=request.project)
     curator = False
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
@@ -2662,7 +2680,7 @@ def hub_processing_files(request, id, gis=False, geospreadsheet=False, space=Non
         messages.error(request, "We could not fully load all relevant information. See error below. <br><strong>Error code: " + str(e) + "</strong>")
 
     if request.method == "POST" and "updatefiles" in request.POST:
-        info = get_object_or_404(LibraryItem, pk=id)
+        info = available_library_items(request).get(pk=id)
         if "delete_file" in request.POST:
             for each in request.POST.getlist("delete_file"):
                 try:
