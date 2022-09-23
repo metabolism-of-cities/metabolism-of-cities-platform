@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from core.mocfunctions import *
 from staf import views as staf
+from django.shortcuts import redirect
+from django.http import Http404
 
 def index(request):
 
+    return redirect(reverse("water:diagram"))
     # BEGIN FIXING SCRIPTS
     docs = available_library_items(request).all()
     infrastructure = Tag.objects.filter(parent_tag_id=1766)
@@ -24,7 +27,6 @@ def index(request):
                 }
             }
             info.save()
-
     # END FIXING SCRIPTS
 
 
@@ -95,6 +97,7 @@ def index(request):
     return render(request, "water/index.html", context)
 
 def demo(request):
+    return redirect(reverse("water:diagram"))
     context = {
         "title": "Home",
     }
@@ -202,7 +205,11 @@ def dashboard(request):
 
 def diagram(request):
 
-    doc = available_library_items(request).get(pk=1013292)
+    try:
+        doc = available_library_items(request).get(pk=1013292)
+    except:
+        raise Http404("Data object was not found (or you lack access).") 
+
     file = doc.attachments.all()[0]
 
     from openpyxl import load_workbook
@@ -242,7 +249,11 @@ def diagram(request):
     }
     if demo_figures["imports"] < 0:
         demo_figures["exports"] = demo_figures["imports"]*-1 + demo_figures["exports"]
-        demo_figures["imports"] =0
+        demo_figures["imports"] = 0
+
+    demo_figures["imports_without_buy"] = demo_figures["imports"]*0.6
+    demo_figures["buy"] = demo_figures["imports"]*0.4
+
     # k m3 -> km3
     for key,value in demo_figures.items():
         demo_figures[key] = int(value/(1000))
@@ -250,6 +261,10 @@ def diagram(request):
     data = demo_figures
     data["extract"] = data["extract_surface"] + data["extract_subterrain"] + data["extract_mountains"]
     data["treatment"] = data["treatment_internal"] + data["treatment_external"]
+
+    if demo_figures["extract"] == 0:
+        demo_figures["losses2"] += demo_figures["losses1"]
+        demo_figures["losses1"] = 0
 
     total_size = data["extract"] + data["imports"]
     pixels = 100
@@ -269,6 +284,9 @@ def diagram(request):
     pixel_data["seg5"] = pixel_data["seg4"] + pixel_data["treatment_imports"]
     pixel_data["seg6"] = pixel_data["seg5"] - pixel_data["treatment_external"]
 
+    infrastructure = Tag.objects.filter(parent_tag_id=1766)
+    flows = Tag.objects.filter(parent_tag_id=1752)
+
     context = {
         "title": "Eau",
         "regions": NICE_REGIONS,
@@ -277,5 +295,8 @@ def diagram(request):
         "pixels": range(1,100),
         "rows": range(1,40),
         "link": reverse("water:diagram"),
+        "infrastructure": infrastructure, 
+        "documents": available_library_items(request).filter(tags__in=infrastructure),
+        "documents_flows": available_library_items(request).filter(tags__in=flows),
     }
     return render(request, "water/diagram.html", context)

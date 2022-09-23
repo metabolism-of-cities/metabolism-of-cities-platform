@@ -96,7 +96,7 @@
     <div id="map" class="leaflet-map"></div>
 
     <h3 class="mt-4">Source files</h3>
-    <table class="table datatable border rounded bg-white">
+    <table class="table datatable border rounded bg-white mastermap-list">
       <thead>
         <tr>
           <th>File</th>
@@ -108,7 +108,7 @@
       <tbody>
       {% for each in list %}
         <tr>
-          <td><a href="{% url URLS.LIBRARY_ITEM each.id %}">{{ each }}</a></td>
+          <td><a href="{% url URLS.MAP_ITEM each.id %}">{{ each }}</a></td>
           <td>{{ each.get_author_citation }}</td>
           <td>{{ each.year }}</td>
           <td>{{ each.imported_spaces.count }}</td>
