@@ -19,7 +19,7 @@
         </a>
       </div>
 
-  <form method="post" action="{% url "water:index" %}">
+  <form method="post" action="{% url "water:index" %}" hidden>
     <button name="fix_maps" value="true" type="submit">Fix maps</button>
     {% csrf_token %}
   </form>

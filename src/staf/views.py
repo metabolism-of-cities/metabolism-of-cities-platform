@@ -3060,7 +3060,18 @@ def shapefile_json(request, id, download=False):
     return response
 
 def data(request, json=False):
-    data = Data.objects.filter(source__is_public=True)
+    # If data come from a specific source document then we check to see the user has access
+    # to this document (and thus private data). If not, no dice.
+    
+    if "source" in request.GET and False:
+        try:
+            info = available_library_items(request).get(pk=request.GET["source"])
+            data = info.data.all()
+        except:
+            data = None
+
+    if not data:
+        data = Data.objects.filter(source__is_public=True)
 
     start = request.GET.get("date_start")
     end = request.GET.get("date_end")

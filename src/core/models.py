@@ -1446,6 +1446,11 @@ class LibraryItem(Record):
     def imported_spaces(self):
         return ReferenceSpace.objects_include_private.filter(source=self)
 
+    # Same applies to associated data
+    @property
+    def data(self):
+        return Data.objects_include_private.filter(source=self)
+
     # Returns either 'point' if this contains points, 'polygon' if it contains other geometry, and 'unknown' if we can't tell
     # This can be used to decide for instance whether to show markers on a map or draw polygons
     # Note that we use the FIRST associated reference space, even though there may be many, and take that type, so we assume
@@ -2011,7 +2016,7 @@ class LibraryItem(Record):
         # If there are linked Reference Spaces or Data points then these need to have the same public status as their parent document
         if self.id:
             ReferenceSpace.objects_unfiltered.filter(source_id=self.id).update(is_public=self.is_public)
-            Data.objects_unfiltered.filter(source_id=self.id).update(is_public=self.is_public)
+            Data.objects_include_private.filter(source_id=self.id).update(is_public=self.is_public)
 
         super(LibraryItem, self).save(*args, **kwargs)
 
@@ -2997,7 +3002,7 @@ class Data(models.Model):
     quantity = models.FloatField(null=True, blank=True)
     material = models.ForeignKey(Material, on_delete=models.CASCADE, null=True, blank=True)
     material_name = models.CharField(max_length=500, null=True, blank=True)
-    source = models.ForeignKey(LibraryItem, on_delete=models.CASCADE, related_name="data")
+    source = models.ForeignKey(LibraryItem, on_delete=models.CASCADE)
     origin_space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE, null=True, blank=True, related_name="data_from_space")
     destination_space = models.ForeignKey(ReferenceSpace, on_delete=models.CASCADE, null=True, blank=True, related_name="data_to_space")
     origin = models.ForeignKey(Activity, on_delete=models.CASCADE, null=True, blank=True, related_name="data_from")
@@ -3008,7 +3013,7 @@ class Data(models.Model):
     is_public = models.BooleanField(default=True, db_index=True)
 
     objects = PublicRecordManager()
-    objects_unfiltered = models.Manager()
+    objects_include_private = models.Manager()
 
     class Meta:
         db_table = "stafdb_data"
