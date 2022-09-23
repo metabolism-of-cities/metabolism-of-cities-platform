@@ -6,12 +6,24 @@ def index(request):
 
     # BEGIN FIXING SCRIPTS
     docs = available_library_items(request).all()
-    activated = ActivatedSpace.objects.filter(part_of_project_id=request.project)
-    if "fix_ref_spaces" in request.POST:
+    infrastructure = Tag.objects.filter(parent_tag_id=1766)
+    docs = docs.filter(tags__in=infrastructure)
+    if "fix_maps" in request.POST:
         for each in docs:
-            for space in activated:
-                each.spaces.add(space.space)
-
+            each.meta_data["custom_page_view"]["show_custom_fields"] = ["commune", "identification-de-service"]
+            each.is_public = False
+            each.save()
+            try:
+                info = each.dataviz.get(is_secondary=False)
+            except:
+                info = DataViz.objects.create(name=each.name, source=each)
+            info.meta_data = {
+                "properties": { 
+                    "show_on_master_map": "true",
+                    "crop_boundaries": "true",
+                }
+            }
+            info.save()
 
     # END FIXING SCRIPTS
 
@@ -68,7 +80,7 @@ def index(request):
             space.geometry = Point(lng, lat)
             space.save()
 
-    infrastructure = Tag.objects.filter(parent_tag_id=1716)
+    infrastructure = Tag.objects.filter(parent_tag_id=1766)
     context = {
         "input": input,
         "output": output,
@@ -177,7 +189,7 @@ def temp_script(request):
 
 def dashboard(request):
     region = None
-    flows = Tag.objects.filter(parent_tag_id=1702)
+    flows = Tag.objects.filter(parent_tag_id=1752)
     if "region" in request.GET:
         region = ReferenceSpace.objects.get(pk=request.GET["region"])
     context = {

@@ -3191,6 +3191,8 @@ def data(request, json=False):
 
 @login_required
 def dataset_editor(request, id):
+    # THIS IS NOT YET IN USE
+    # WOULD BE GOOD TO EITHER INTEGRATE OR DELETE!
     if not has_permission(request, request.project, ["curator", "admin", "publisher", "dataprocessor"]):
         unauthorized_access(request)
     context = {

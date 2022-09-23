@@ -1438,6 +1438,14 @@ class LibraryItem(Record):
         else:
             return False
 
+    # When we pull in the linked spaces, we need to include private objects as well
+    # Validation needs to take place at the level of the Library Item
+    # In other words, if someone has access to this LibraryItem, they also have access
+    # to the associated reference spaces.
+    @property
+    def imported_spaces(self):
+        return ReferenceSpace.objects_include_private.filter(source=self)
+
     # Returns either 'point' if this contains points, 'polygon' if it contains other geometry, and 'unknown' if we can't tell
     # This can be used to decide for instance whether to show markers on a map or draw polygons
     # Note that we use the FIRST associated reference space, even though there may be many, and take that type, so we assume
@@ -2377,7 +2385,7 @@ class Geocode(Record):
 class ReferenceSpace(Record):
     geocodes = models.ManyToManyField(Geocode, through="ReferenceSpaceGeocode")
     geometry = models.GeometryField(null=True, blank=True)
-    source = models.ForeignKey(LibraryItem, on_delete=models.CASCADE, null=True, blank=True, related_name="imported_spaces")
+    source = models.ForeignKey(LibraryItem, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name
