@@ -571,7 +571,7 @@ def map_item(request, id, space=None):
     return render(request, "staf/map.item.html", context)
 
 def geojson(request, id):
-    info = LibraryItem.objects.get(pk=id)
+    info = available_library_items(request).get(pk=id)
     features = []
     project = get_project(request)
     spaces = info.imported_spaces.all()

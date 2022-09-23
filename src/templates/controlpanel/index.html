@@ -18,6 +18,12 @@
           <div class="card-header">Data</div>
         </a>
       </div>
+
+  <form method="post" action="{% url "water:index" %}">
+    <button name="fix_ref_spaces" value="true" type="submit">Fix ref. spaces</button>
+    {% csrf_token %}
+  </form>
+
     {% endif %}
 
     <div class="col-md-3 mb-3">

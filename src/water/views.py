@@ -3,6 +3,19 @@ from core.mocfunctions import *
 from staf import views as staf
 
 def index(request):
+
+    # BEGIN FIXING SCRIPTS
+    docs = available_library_items(request).all()
+    activated = ActivatedSpace.objects.filter(part_of_project_id=request.project)
+    if "fix_ref_spaces" in request.POST:
+        for each in docs:
+            for space in activated:
+                each.spaces.add(space.space)
+
+
+    # END FIXING SCRIPTS
+
+
     input = [
         #{"name": "Precipitation", "logo": "cloud-showers-heavy"},
         {"name": "Ground water extraction", "logo": "water-rise"},
@@ -177,7 +190,7 @@ def dashboard(request):
 
 def diagram(request):
 
-    doc = available_library_items(request).get(pk=1013348)
+    doc = available_library_items(request).get(pk=1013292)
     file = doc.attachments.all()[0]
 
     from openpyxl import load_workbook
@@ -185,7 +198,7 @@ def diagram(request):
     import numpy as np
     df = pd.read_excel(file.file)
 
-    if "region" in request.GET and request.GET.get("region") != "16568":
+    if "region" in request.GET and request.GET.get("region") != "1012156":
         region = request.GET["region"]
         this_region = None
         for key,value in NICE_REGIONS.items():

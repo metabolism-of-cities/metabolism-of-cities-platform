@@ -36,6 +36,7 @@ def get_site_tag(request):
         return 11
 
 def index(request):
+    project = get_project(request)
     tags = [324, 322, 664, 318, 739]
     show_results = False
     tag = None
@@ -86,6 +87,9 @@ def index(request):
         list = list.filter(year__gte=request.GET["after"])
     if "before" in request.GET and request.GET["before"]:
         list = list.filter(year__lte=request.GET["before"])
+
+    if project.slug == "water":
+        list = available_library_items(request).all()
 
     context = {
         "show_project_design": True,
