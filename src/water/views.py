@@ -6,7 +6,7 @@ from django.http import Http404
 
 def index(request):
 
-    return redirect(reverse("water:diagram"))
+    return redirect(reverse("water:diagram") + "?region=1012156")
     # BEGIN FIXING SCRIPTS
     docs = available_library_items(request).all()
     infrastructure = Tag.objects.filter(parent_tag_id=1766)
@@ -97,7 +97,7 @@ def index(request):
     return render(request, "water/index.html", context)
 
 def demo(request):
-    return redirect(reverse("water:diagram"))
+    return redirect(reverse("water:diagram") + "?region=1012156")
     context = {
         "title": "Home",
     }
