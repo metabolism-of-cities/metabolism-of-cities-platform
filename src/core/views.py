@@ -603,7 +603,7 @@ def template_folium(request):
 def projects(request):
     article = get_object_or_404(Webpage, pk=PAGE_ID["projects"])
     context = {
-        "list": Project.objects.all().exclude(id__in=[1,51458]).order_by("name"),
+        "list": Project.objects.all().exclude(id__in=[1,51458,8,586773,1013329,1011035]).order_by("name"),
         "article": article,
         "types": ProjectType.objects.all().order_by("name"),
         "header_title": "Projects",
