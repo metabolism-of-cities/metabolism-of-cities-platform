@@ -2822,18 +2822,6 @@ class ZoteroItem(models.Model):
         except:
             info.type_id = 16 # Default to journal article if all else fails
 
-        if self.collection.uid == 4:
-            # NDEE collection uses specific fields for special settings
-            if self.data.get("rights") == "Yes":
-                # This field is used to indicate that there is a paywall
-                info.open_access = False
-            else:
-                info.open_access = True
-            if self.data.get("shortTitle") and "Hide" in self.data.get("shortTitle"):
-                info.is_public = False
-            else:
-                info.is_public = True
-
         info.save()
         journal = self.data.get("publicationTitle")
 
@@ -2869,37 +2857,11 @@ class ZoteroItem(models.Model):
             # Adding the island tag
             info.tags.add(Tag.objects.get(id=219))
 
-        if self.collection.uid == 4:
-            info.tags.clear()
-            # Let's record that it is part of the nDEE collection first
-            info.tags.add(Tag.objects.get(id=1643))
-            # NDEE collection has tags recorded in different fields and we use those instead
-            sector_tag = Tag.objects.get(pk=1089)
-            technology_tag = Tag.objects.get(pk=1088)
-            if self.get_ndee_sectors:
-                for each in self.get_ndee_sectors:
-                    each = each.strip()
-                    if each:
-                        try:
-                            tag = Tag.objects.get(parent_tag=sector_tag, name=each)
-                        except:
-                            tag = Tag.objects.create(name=each, parent_tag=sector_tag)
-                        info.tags.add(tag)
-            if self.get_ndee_technologies:
-                for each in self.get_ndee_technologies:
-                    each = each.strip()
-                    if each:
-                        try:
-                            tag = Tag.objects.get(parent_tag=technology_tag, name=each)
-                        except:
-                            tag = Tag.objects.create(name=each, parent_tag=technology_tag)
-                        info.tags.add(tag)
-        else:
-            for each in self.find_tags():
-                info.tags.add(each)
+        for each in self.find_tags():
+            info.tags.add(each)
 
-            for each in self.find_spaces():
-                info.spaces.add(each)
+        for each in self.find_spaces():
+            info.spaces.add(each)
 
         self.library_item = info
         self.save()
@@ -2923,24 +2885,6 @@ class ZoteroItem(models.Model):
             return all
         else:
             return None
-
-    @property
-    def get_ndee_sectors(self):
-        # For the NDEE project, the sectors are recorded in the shortTitle field,
-        # and separated by a semi-colon
-        sectors = self.data.get("shortTitle")
-        return sectors.split(";") if sectors else None
-
-    @property
-    def get_ndee_technologies(self):
-        # For the NDEE project, the technologies are recorded in the language field,
-        # and separated by a semi-colon
-        technologies = self.data.get("language")
-        ignore = ["en", "English", "en-US", "en-gb", "en-GB"]
-        if technologies in ignore:
-            # Sometimes the actual language is stored - so ignore that
-            technologies = None
-        return technologies.split(";") if technologies else None
 
     def find_match(self):
         if self.library_item:

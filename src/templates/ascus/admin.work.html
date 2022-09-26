@@ -21,7 +21,7 @@
     <tbody>
       {% for each in list %}
         <tr>
-          <td><a href="{% url "ascus:admin_payment" each.id %}">{{ each.related_to }}</a></td>
+          <td><a href="{% url "ascus2020:admin_payment" each.id %}">{{ each.related_to }}</a></td>
           <td data-sort="{{ each.date_created|date:"YmdHis" }}">{{ each.date_created }}</td>
           <td>{{ each.description|linebreaksbr }}</td>
           <td>{{ each.get_status_display }}</td>
@@ -30,9 +30,9 @@
     </tbody>
   </table>
 
-  <p class="mt-5"><a href="{% url "ascus:admin_massmail" %}?people={% for each in list %}{{ each.related_to.people.id }},{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Send mass mail</a></p>
+  <p class="mt-5"><a href="{% url "ascus2020:admin_massmail" %}?people={% for each in list %}{{ each.related_to.people.id }},{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Send mass mail</a></p>
   <p>
-    <a href="{% url "ascus:admin" %}" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a>
+    <a href="{% url "ascus2020:admin" %}" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a>
   </p>
 
 {% endblock %}

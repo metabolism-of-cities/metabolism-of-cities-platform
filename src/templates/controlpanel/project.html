@@ -14,6 +14,13 @@
       <form method="post" class="form" id="design-form" enctype="multipart/form-data">
         {% csrf_token %}
         {% bootstrap_form form %}
+
+        <h4>Project description</h4>
+        <div class="form-group markdown-textarea">
+          {% include "_markdown.html" %}
+          <textarea class="form-control mb-4" id="text" rows="30" name="description">{{ info.description|default_if_none:"" }}</textarea>
+        </div>
+
       </form>
     </div>
   </div>
@@ -28,4 +35,5 @@
     <i class="fal fa-angle-left"></i>
     Back to control panel
   </a>
+
 {% endblock %}

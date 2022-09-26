@@ -301,7 +301,7 @@
         {% for each in authors_temp %}
           <div class="card mt-4">
             {% if each.image %}
-            <a href="{% url 'ascus:participant' each.id %}">
+            <a href="{% url 'ascus2021:participant' each.id %}">
               <img class="card-img-top" src="{{ each.image.thumbnail.url }}">
             </a>
             {% endif %}
@@ -309,7 +309,7 @@
               <div class="mb-4">
                 <span class="details">
                   {% if each.image %}
-                  <a href="{% url 'ascus:participant' each.id %}">
+                  <a href="{% url 'ascus2021:participant' each.id %}">
                     <strong>{{ each }}</strong>
                   </a>
                   {% else %}

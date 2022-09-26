@@ -5,27 +5,25 @@ from django.conf.urls import include
 
 from django.views.generic.base import RedirectView
 
-from . import views as ascus2021
+from . import views
 from core import views as core
 from community import views as community
 from library import views as library
-from ascus2020 import views as views
 
 from django.conf import settings
 from django.conf.urls.static import static
 from ie.urls_baseline import baseline_urlpatterns
 
-app_name = "ascus2021"
+app_name = "ascus2020"
 
 urlpatterns = baseline_urlpatterns + [
 
     path("", views.ascus, name="index"),
 
-    path("signup/", views.signup, name="signup"),
     path("login/", core.user_login, name="login"),
     path("logout/", core.user_logout, name="logout"),
     path("overview/", views.overview, name="overview"),
-    path("awards/", core.article, {"id": 1004565}, name="awards"),
+    path("awards/", core.article, {"id": 329640}, name="awards"),
     path("preconference/", views.overview, { "preconf": True}, name="preconference"),
     path("participants/", views.participants, name="participants"),
     path("introvideos/", views.introvideos, name="introvideos"),
@@ -39,7 +37,7 @@ urlpatterns = baseline_urlpatterns + [
 
     # Account section
     path("account/", views.ascus_account, name="account"),
-    path("account/abstract/", views.ascus_account_presentation, name="account_presentation"),
+    path("account/presentation/", views.ascus_account_presentation, name="account_presentation"),
     path("account/output/", views.account_output, name="account_output"),
     path("account/outputs/", views.account_outputs, name="account_outputs"),
     path("outputs/", views.account_outputs, name="account_outputs"),
@@ -68,9 +66,6 @@ urlpatterns = baseline_urlpatterns + [
     path("forum/<int:id>/", community.forum, name="forum"),
     path("forum/<int:id>/edit/<int:edit>/", community.forum_edit, name="forum_edit"),
 
-    # Votes
-    path("controlpanel/votes/", views.controlpanel_vote),
-
     # Password reset forms
     path(
         "accounts/passwordreset/",
@@ -80,7 +75,7 @@ urlpatterns = baseline_urlpatterns + [
             html_email_template_name = "mailbody/password.reset.html", 
             subject_template_name = "mailbody/password.reset.subject.txt", 
             success_url = "/accounts/passwordreset/sent/",
-            extra_email_context = { "domain": "https://ascus2021.metabolismofcities.org" },
+            extra_email_context = { "domain": "https://ascus.metabolismofcities.org" },
         ), 
         name="password_reset", 
     ),
@@ -100,6 +95,6 @@ urlpatterns = baseline_urlpatterns + [
         name="password_reset_complete",
     ),
 
-    path("<slug:slug>/", core.article, { "subtitle": "2nd Actionable Science for Urban Sustainability · 1-4 June 2021", "project": 586773}, name="article"),
+    path("<slug:slug>/", core.article, { "prefix": "/ascus/", "subtitle": "Actionable Science for Urban Sustainability · 3-5 June 2020", "project": 8}, name="article"),
 
 ]

@@ -1069,18 +1069,22 @@ def controlpanel_project(request):
     info = Project.objects.get(pk=project)
     ModelForm = modelform_factory(
         Project,
-        fields = ("name", "description", "type", "start_date", "end_date", "screenshot", "summary_sentence"),
+        fields = ("name", "type", "start_date", "end_date", "screenshot", "summary_sentence"),
     )
     form = ModelForm(request.POST or None, request.FILES or None, instance=info)
     if request.method == "POST":
         if form.is_valid():
             info = form.save()
+            info.description = request.POST["description"]
+            info.save()
             messages.success(request, "Project details were saved")
 
     context = {
         "form": form,
         "header_title": "Project settings",
         "header_subtitle": "Use this section to manage the general project details",
+        "load_markdown": True,
+        "info": info,
     }
     return render(request, "controlpanel/project.html", context)
 
