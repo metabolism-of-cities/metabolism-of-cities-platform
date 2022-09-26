@@ -9,13 +9,21 @@
 
     {% if PROJECT.slug == "water" %}
       <div class="col-md-3 mb-3">
-        {% with link=PROJECT.slug|add:":hub_harvesting" %}
-        <a class="card icon-card btn-card" href="{% url link %}">
+        {% with link=PROJECT.slug|add:":hub_harvesting_space" %}
+        <a class="card icon-card btn-card" href="{% url link "metropole-nice-cote-dazur" %}">
         {% endwith %}
           <div class="icon">
             <i class="fal fa-fw fa-database"></i>
           </div>
-          <div class="card-header">Data</div>
+          <div class="card-header">Datasets</div>
+        </a>
+      </div>
+      <div class="col-md-3 mb-3">
+        <a class="card icon-card btn-card" href="{% url URLS.LIBRARY_ITEM "1013292" %}?edit&amp;return={{ request.get_full_path }}">
+          <div class="icon">
+            <i class="fal fa-fw fa-exchange"></i>
+          </div>
+          <div class="card-header">Sankey data</div>
         </a>
       </div>
 
