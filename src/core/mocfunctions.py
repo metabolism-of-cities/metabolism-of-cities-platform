@@ -231,11 +231,8 @@ NICE_REGIONS = {
 # different (e.g. only documents uploaded by the user)
 
 def available_library_items(request):
-    # For the moment, only the water website has private documents, so we list that
-    # ID here and if the user is not on the water site we can skip the checks
-    projects_with_private_documents = [1011035]
-
-    if request.project not in projects_with_private_documents:
+    project = get_project(request)
+    if not project.has_private_data:
         items = LibraryItem.objects
     elif not request.user.is_authenticated:
         # If the user is not logged in, restrict items to the public items

@@ -942,7 +942,7 @@ def referencespace(request, id=None, space=None, slug=None):
 
     photos = Photo.objects.filter(spaces=info).order_by("position").exclude(pk=info.photo.id)
 
-    data = LibraryItem.objects.filter(Q(data__origin_space=info)|Q(data__destination_space=info)).distinct()
+    data = available_library_items(request).filter(Q(data__origin_space=info)|Q(data__destination_space=info)).distinct()
 
     context = {
         "info": info,
@@ -2281,7 +2281,14 @@ def hub_processing_dataset_classify(request, id, space=None):
                 each = str(each[0])
                 each = each.strip()
                 if each not in spaces_list:
-                    check = ReferenceSpace.objects.filter(name=each, source__isnull=False)
+                    if project.has_private_data:
+                        # If this project has private documents, then we can check for the reference spaces that are private, 
+                        # but we must make sure that they are amongst those that this user has access to.
+                        # This more convoluted and slower query is not needed if the project doesn't even have private data
+                        # hence the condition
+                        check = ReferenceSpace.objects_include_private.filter(name=each, source__isnull=False, source__in=available_library_items(request).all())
+                    else:
+                        check = ReferenceSpace.objects.filter(name=each, source__isnull=False)
                     spaces_list[each] = check
                     if not check:
                         process_error = True

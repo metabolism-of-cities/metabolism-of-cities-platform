@@ -460,6 +460,7 @@ class Project(Record):
     )
     status = models.CharField(max_length=20, choices=STATUS, default="ongoing")
     has_subsite = models.BooleanField(default=False)
+    has_private_data = models.BooleanField(default=False, help_text="Whether or not this data portal manages provide documents and data. If not then we can simplify certain queries.")
     is_data_project = models.BooleanField(default=False)
     show_on_moc = models.BooleanField(default=True, db_index=True, help_text="Whether or not this is shown in the project section on the Metabolism of Cities website")
     slug = models.SlugField(max_length=50, unique=True, blank=True, null=True)
@@ -1565,7 +1566,7 @@ class LibraryItem(Record):
                     if space not in spaces:
                         try:
                             source = self.meta_data["processing"]["source"]
-                            s = ReferenceSpace.objects.get(source_id=source, name=space)
+                            s = ReferenceSpace.objects_include_private.get(source_id=source, name=space)
                             spaces[space] = s
                         except:
                             error = f"We could not find the space with the name: '{space}'"
