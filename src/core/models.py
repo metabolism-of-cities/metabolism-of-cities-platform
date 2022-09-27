@@ -461,6 +461,7 @@ class Project(Record):
     status = models.CharField(max_length=20, choices=STATUS, default="ongoing")
     has_subsite = models.BooleanField(default=False)
     is_data_project = models.BooleanField(default=False)
+    show_on_moc = models.BooleanField(default=True, db_index=True, help_text="Whether or not this is shown in the project section on the Metabolism of Cities website")
     slug = models.SlugField(max_length=50, unique=True, blank=True, null=True)
     url = models.URLField(max_length=255, null=True, blank=True)
     screenshot = StdImageField(upload_to="project_screenshots", variations={"thumbnail": (350, 350), "medium": (510, 510), "large": (1280, 1024)}, blank=True, null=True, help_text="1280x1024 is best - do not include browser tabs/menus", delete_orphans=True)
@@ -1643,7 +1644,7 @@ class LibraryItem(Record):
     def convert_shapefile(self):
         print(self)
 
-        check = ReferenceSpace.objects.filter(source=self)
+        check = ReferenceSpace.objects_unfiltered.filter(source=self)
         error = False
 
         if check:

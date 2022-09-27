@@ -22,4 +22,6 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("dashboard/", views.dashboard, name="dashboard"),
     path("dashboards/", data.progress, { "style": "grid"}, name="dashboards"),
 
+
+    path("temp/", views.temp_script),
 ]

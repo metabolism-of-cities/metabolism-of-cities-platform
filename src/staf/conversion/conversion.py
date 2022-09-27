@@ -29,29 +29,36 @@ months = {
 }
 
 # We only keep the relevant columns...
-columns_to_keep = ["année", "mois calcul volume", "PN_PRLVT_ECHANGES", "num_compteur", "volume retenu"]
+columns_to_keep = ["année", "mois calcul volume", "PN_PRLVT_ECHANGES", "n° CPT SIG", "volume retenu"]
 df = df[columns_to_keep]
 
 col_names = {
     "mois calcul volume": "month", 
     "année": "year",
     "PN_PRLVT_ECHANGES": "type",
-    "num_compteur": "meter_number",
+    "n° CPT SIG": "meter_number",
     "volume retenu": "quantity",
 }
+print(df)
 
 # Rename to English and single words
 df.rename(columns = col_names, inplace = True)
 print(df)
 
+# Sometimes pandas reads rows that are empty and includes them; let's delete those empty rows from the dataframe
+df.dropna(how="all", inplace=True) 
+print(df)
+
 # We will add the period name by stating "month name month year" as a string
-df["period_name"] = df["month"].astype(str) + " " + df["year"].astype(str) 
+# Note that we convert the year to int first and then str because sometimes it 
+# is read as a float, e.g. 2016.0 so we want to get rid of that decimal.
+df["period_name"] = df["month"].astype(str) + " " + df["year"].astype(int).astype(str)
 
 # Convert the month names to numbers
 df["month"] = df["month"].replace(months)
 
 # Now we can create start date YYYY-MM-01, which we then convert into a datetime object
-df["start_date"] = df["year"].astype(str) + "-" + df["month"].astype(str) + "-01"
+df["start_date"] = df["year"].astype(int).astype(str) + "-" + df["month"].astype(str) + "-01"
 df["start_date"] = pd.to_datetime(df["start_date"])
 
 # And we use this to set the end date to the last day of that month
