@@ -58,6 +58,12 @@
         opacity: .3;
       }
     {% endif %}
+
+    {% if request.user.is_superuser %}
+      #metadata .alert{margin-bottom:0}
+      #metadata .contentblock { display: none; margin-top:1rem}
+      #metadata .alert:hover {color:black;cursor:pointer}
+    {% endif %}
   </style>
 {% endblock %}
 
@@ -144,7 +150,7 @@
             {% endif %}
 
             {% if info.tags.all %}
-              <li class="list-group-item">
+              <li class="list-group-item hide-water">
                 <i class="fal fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> {% if PROJECT.slug == "peeide" %}Keywords{% else %}Tags{% endif %}
                 <br>
                 {% for each in info.tags.all %}
@@ -156,7 +162,7 @@
             {% endif %}
 
             {% if info.language and not info.type.name == "Image" %}
-            <li class="list-group-item table-item">
+            <li class="list-group-item table-item hide-water">
               <div><i class="fal fa-fw fa-language mr-1"></i> Language</div>
               <div>{{ info.get_language_display }}</div>
             </li>
@@ -219,7 +225,7 @@
             </li>
           {% endif %}
 
-          <li class="list-group-item">
+          <li class="list-group-item hide-water">
             <i class="fal fa-fw fa-quote-right mb-1 mr-1" aria-hidden="true"></i> Citation
             <br>
             <a class="btn btn-sm btn-primary-outline load-citation" data-tab="apa" data-toggle="modal" data-target="#citation" href="#citation">
@@ -234,7 +240,7 @@
             <!-- <a class="btn btn-sm btn-primary-outline" href="?format=bibtex&amp;download=true">Add to reference manager</a> -->
           </li>
 
-          {% if info.type.group == "academic" and PROJECT.slug != "ascus2021" %}
+          {% if info.type.group == "academic" and PROJECT.slug != "ascus2021" and PROJECT.slug != "water" %}
           <li class="list-group-item">
             <i class="fal fa-fw fa-search mb-1 mr-1" aria-hidden="true"></i> Search
             <br>
@@ -244,7 +250,7 @@
           {% endif %}
 
           {% if info.uploader %}
-          <li class="list-group-item table-item">
+          <li class="list-group-item table-item hide-water">
             <div><i class="fal fa-fw fa-user mr-1"></i> Uploaded by</div>
             <div>
               {{ info.uploader.name_and_link }}
@@ -253,7 +259,7 @@
           {% endif %}
 
           {% if info.processor %}
-          <li class="list-group-item table-item">
+          <li class="list-group-item table-item hide-water">
             <div><i class="fal fa-fw fa-user mr-1"></i> Processed by</div>
             <div>
               <a href="{% url URLS.PROFILE info.processor.id %}">{{ info.processor }}</a>
@@ -356,7 +362,7 @@
                 <i class="fal fa-fw fa-pencil mr-1"></i> Edit
               </a>
 
-              {% if info.type.name != "Image" and info.type.name != "Data visualisation" %}
+              {% if info.type.name != "Image" and info.type.name != "Data visualisation" and info.type.name != "Dataset" %}
                 <a href="{% url 'library:upload' %}form/?inventory=true&amp;type=38&amp;parent={{ info.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" class="list-group-item list-group-item-action list-group-item-primary">
                   <i class="fal fa-fw fa-plus mr-1"></i> Add image
                 </a>
@@ -601,7 +607,7 @@
       {% endif %}
 
       {% if info.spaces.all %}
-        <section class="associated-spaces mt-3">
+        <section class="associated-spaces mt-3 hide-water">
           <h3>Associated space{{ info.spaces.count|pluralize }}</h3>
             {% for each in info.spaces.all %}
               {% if forloop.counter < 10 or "allspaces" in request.GET %}
@@ -753,23 +759,26 @@
       <section id="metadata" class="bg-white">
         <div class="border border-warning rounded mb-4">
           <div class="alert alert-warning">
-            <i class="fal fa-lock mr-2"></i> Available to super users only
+            <i class="fal fa-lock mr-2"></i> <strong>Meta data</strong> | Available to super users only
+            <i class="fa fa-plus float-right"></i>
           </div>
 
-          <h4 class="pl-3">Metadata</h4>
+          <div class="contentblock">
+            <h4 class="pl-3">Metadata</h4>
 
-          {% if info.meta_data %}
-            <ul class="list-group list-group-flush">
-            {% for key,value in info.meta_data.items %}
-              <li class="list-group-item table-item">
-                <div class="font-weight-bold">{{ key }}</div>
-                <div>{{ value }}</div>
-              </li>
-            {% endfor %}
-            </ul>
-          {% else %}
-            <h5 class="pl-3">This file has no meta data</h5>
-          {% endif %}
+            {% if info.meta_data %}
+              <ul class="list-group list-group-flush">
+              {% for key,value in info.meta_data.items %}
+                <li class="list-group-item table-item">
+                  <div class="font-weight-bold">{{ key }}</div>
+                  <div>{{ value }}</div>
+                </li>
+              {% endfor %}
+              </ul>
+            {% else %}
+              <h5 class="pl-3">This file has no meta data</h5>
+            {% endif %}
+          </div>
         </div>
       </section>
       {% endif %}
@@ -844,5 +853,12 @@
         button.find(".text").text("Copy")
       }, 5000);
     })
+
+    {% if request.user.is_superuser %}
+    $("#metadata .alert").click(function() {
+      $("#metadata .contentblock").toggle();
+    });
+    {% endif %}
+
   </script>
 {% endblock %}

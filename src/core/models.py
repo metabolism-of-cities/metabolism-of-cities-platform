@@ -1125,6 +1125,8 @@ class LibraryItem(Record):
     license = models.ForeignKey(License, on_delete=models.CASCADE, null=True, blank=True)
     geocodes = models.ManyToManyField("Geocode", blank=True)
     part_of_project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True, related_name="library_items")
+    json = models.JSONField(null=True, blank=True, help_text="Here we store the JSON representation needed for data visualizations")
+    json_drilldown = models.JSONField(null=True, blank=True, help_text="Here we store the JSON representation needed for drill-down data visualizations")
 
     STATUS = (
         ("pending", "Pending"),
@@ -1486,6 +1488,9 @@ class LibraryItem(Record):
         if not error:
             all = Data.objects.filter(source=self)
             all.delete()
+
+            self.json = None
+            self.json_drilldown = None
 
             df = file["df"]
             column_count = len(df.columns)

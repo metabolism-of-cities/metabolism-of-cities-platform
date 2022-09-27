@@ -96,7 +96,7 @@
             <div><code>{{ info.id }}</code></div>
           </li>
           {% if associated_spaces %}
-            <li class="list-group-item ">
+            <li class="list-group-item hide-water">
               <div>
                 <i class="far fa-fw fa-globe-africa mr-1"></i> Associated space(s)
                 <br>
@@ -129,7 +129,7 @@
             {% endif %}
           {% endif %}
           {% if info.source.tags.all %}
-            <li class="list-group-item">
+            <li class="list-group-item hide-water">
               <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Tags
               <br>
               {% for each in info.source.tags.all %}
@@ -174,13 +174,13 @@
         <h2 class="mt-4 h3">Data</h2>
         {% for each in data %}
           {% with link=PROJECT.slug|add:":libraryframe" %}
-            <iframe class="libraryitem card" src="{% url link each.id %}?space={{ info.id }}" onload="resizeIframe(this)"></iframe>
+            <iframe class="libraryitem card mb-5" src="{% url link each.id %}?space={{ info.id }}" onload="resizeIframe(this)"></iframe>
           {% endwith %}
         {% endfor %}
       {% endif %}
 
       {% if info.history.all or info.source.uploader %}
-        <section id="record_history">
+        <section id="record_history" class="hide-water">
           <h2 class="mt-4 h3">Record history</h2>
           <table class="table table-striped">
             <thead>

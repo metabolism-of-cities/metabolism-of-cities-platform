@@ -453,124 +453,149 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         "unit": unit,
 
         # The following we'll only have during the AScUS voting round; remove afterwards
-        "best_vote": RecordRelationship.objects.filter(relationship_id=32, record_parent=request.user.people) if request.user.is_authenticated else None,
+        #"best_vote": RecordRelationship.objects.filter(relationship_id=32, record_parent=request.user.people) if request.user.is_authenticated else None,
     }
     return render(request, "library/item.html", context)
 
 def data_json(request, id):
     info = available_library_items(request).get(pk=id)
-    data = info.data.filter(quantity__isnull=False)
-    if "space" in request.GET:
-        space = request.GET["space"]
-        data = data.filter(Q(origin_space_id=space)|Q(destination_space_id=space))
-    if "boundaries" in request.GET:
-        boundaries = ReferenceSpace.objects.get(pk=request.GET["boundaries"])
-        data = data.filter(Q(origin_space__geometry__within=boundaries.geometry)|Q(destination_space__geometry__within=boundaries.geometry))
-    x_axis = []
-    stacked_fields = []
-    stacked_field_values = {}
-    series = []
-    unit = None
-    lat_lng = {}
-    top_level = []
+    save_json = False
+    json_object = None
 
-    number_of_materials = data.values("material_name").distinct().count()
-    number_of_origins = data.values("origin_space__name").distinct().count()
-    number_of_segments = data.values("segment_name").distinct().count()
+    if not "space" in request.GET and not "boundaries" in request.GET:
+        # If we are requesting the entirity of the data in json format, then we pull
+        # this directly from the db. If slicing is needed, then we need to construct it here
+        # If this has not yet been recorded then we record it the first time we open this.
+        if not info.json:
+            save_json = True
+        else:
+            json_object = info.json_drilldown if "drilldown" in request.GET else info.json
 
-    if "drilldown" in request.GET:
-        group_by = "timeframe__name"
-        grouped_data = data.values(group_by).annotate(total=Sum("quantity")).order_by("timeframe__start")
-        subdivision = "origin_space"
-        if number_of_origins > 1:
+    if not json_object:
+
+        data = info.data.filter(quantity__isnull=False)
+
+        if "space" in request.GET:
+            space = request.GET["space"]
+            data = data.filter(Q(origin_space_id=space)|Q(destination_space_id=space))
+
+        if "boundaries" in request.GET:
+            boundaries = ReferenceSpace.objects.get(pk=request.GET["boundaries"])
+            data = data.filter(Q(origin_space__geometry__within=boundaries.geometry)|Q(destination_space__geometry__within=boundaries.geometry))
+
+        x_axis = []
+        stacked_fields = []
+        stacked_field_values = {}
+        series = []
+        unit = None
+        lat_lng = {}
+        top_level = []
+
+        number_of_materials = data.values("material_name").distinct().count()
+        number_of_origins = data.values("origin_space__name").distinct().count()
+        number_of_segments = data.values("segment_name").distinct().count()
+
+        if "drilldown" in request.GET:
+            group_by = "timeframe__name"
+            grouped_data = data.values(group_by).annotate(total=Sum("quantity")).order_by("timeframe__start")
             subdivision = "origin_space"
-        elif number_of_materials > 1:
-            subdivision = "material"
-        elif number_of_segments > 1:
-            subdivision = "segment"
+            if number_of_origins > 1:
+                subdivision = "origin_space"
+            elif number_of_materials > 1:
+                subdivision = "material"
+            elif number_of_segments > 1:
+                subdivision = "segment"
 
-        for each in grouped_data:
-            # First we need to get the totals per [parameter]
-            top_level.append({
-                "name": each[group_by],
-                "y": each["total"],
-                "drilldown": each[group_by],
-            })
+            for each in grouped_data:
+                # First we need to get the totals per [parameter]
+                top_level.append({
+                    "name": each[group_by],
+                    "y": each["total"],
+                    "drilldown": each[group_by],
+                })
 
-            # Gotta swap out "timeframe__name" for variable, unsure how!
-            get_this_data = data.filter(timeframe__name=each[group_by])
-            this_data = []
-            for data_point in get_this_data:
-                # Should also swap out origin_space.name for a variable, somehow!
-                if subdivision == "origin_space":
-                    this_data.append([data_point.origin_space.name, data_point.quantity])
-                elif subdivision == "segment":
-                    this_data.append([data_point.segment_name, data_point.quantity])
-                elif subdivision == "material":
-                    this_data.append([data_point.material_name, data_point.quantity])
+                # Gotta swap out "timeframe__name" for variable, unsure how!
+                get_this_data = data.filter(timeframe__name=each[group_by])
+                this_data = []
+                for data_point in get_this_data:
+                    # Should also swap out origin_space.name for a variable, somehow!
+                    if subdivision == "origin_space":
+                        this_data.append([data_point.origin_space.name, data_point.quantity])
+                    elif subdivision == "segment":
+                        this_data.append([data_point.segment_name, data_point.quantity])
+                    elif subdivision == "material":
+                        this_data.append([data_point.material_name, data_point.quantity])
 
-            series.append({
-                "name": each[group_by],
-                "id": each[group_by],
-                "data": this_data,
-            })
+                series.append({
+                    "name": each[group_by],
+                    "id": each[group_by],
+                    "data": this_data,
+                })
 
-    else:
-        for each in data:
-            x_axis_field = each.timeframe.name
-            if each.segment_name and number_of_segments > 1:
-                stacked_field = each.segment_name
-            elif number_of_materials > 1 and number_of_origins < 2:
-                stacked_field = each.material_name
-            elif each.origin_space:
-                stacked_field = each.origin_space.name
-                lat_lng[stacked_field] = each.origin_space.get_centroids
-            elif each.destination_space:
-                stacked_field = each.destination_space.name
-                lat_lng[stacked_field] = each.destination_space.get_centroids
+        else:
+            for each in data:
+                x_axis_field = each.timeframe.name
+                if each.segment_name and number_of_segments > 1:
+                    stacked_field = each.segment_name
+                elif number_of_materials > 1 and number_of_origins < 2:
+                    stacked_field = each.material_name
+                elif each.origin_space:
+                    stacked_field = each.origin_space.name
+                    lat_lng[stacked_field] = each.origin_space.get_centroids
+                elif each.destination_space:
+                    stacked_field = each.destination_space.name
+                    lat_lng[stacked_field] = each.destination_space.get_centroids
 
-            if not unit:
-                if each.unit:
-                    unit = each.unit.name
-                else:
-                    unit = ""
-
-            if x_axis_field not in x_axis:
-                x_axis.append(x_axis_field)
-
-            if stacked_field not in stacked_fields:
-                stacked_fields.append(stacked_field)
-
-            if stacked_field not in stacked_field_values:
-                stacked_field_values[stacked_field] = {}
-
-            stacked_field_values[stacked_field][x_axis_field] = each.quantity
-
-        for each in stacked_fields:
-            this_series = []
-            for axis in x_axis:
-                try:
-                    v = stacked_field_values[each][axis]
-                    check = float(v)
-                    if math.isnan(check):
-                        this_series.append(None) # What to add if NaN?
+                if not unit:
+                    if each.unit:
+                        unit = each.unit.name
                     else:
-                        this_series.append(v)
-                except:
-                    this_series.append(None)
-            full = {
-                "name": each,
-                "gps": lat_lng[each] if each in lat_lng else None,
-                "data": this_series,
-            }
-            series.append(full)
+                        unit = ""
 
-    json_object = {
-        "x_axis": x_axis,
-        "series": series,
-        "y_axis_label": unit,
-        "top_level": top_level,
-    }
+                if x_axis_field not in x_axis:
+                    x_axis.append(x_axis_field)
+
+                if stacked_field not in stacked_fields:
+                    stacked_fields.append(stacked_field)
+
+                if stacked_field not in stacked_field_values:
+                    stacked_field_values[stacked_field] = {}
+
+                stacked_field_values[stacked_field][x_axis_field] = each.quantity
+
+            for each in stacked_fields:
+                this_series = []
+                for axis in x_axis:
+                    try:
+                        v = stacked_field_values[each][axis]
+                        check = float(v)
+                        if math.isnan(check):
+                            this_series.append(None) # What to add if NaN?
+                        else:
+                            this_series.append(v)
+                    except:
+                        this_series.append(None)
+                full = {
+                    "name": each,
+                    "gps": lat_lng[each] if each in lat_lng else None,
+                    "data": this_series,
+                }
+                series.append(full)
+
+        json_object = {
+            "x_axis": x_axis,
+            "series": series,
+            "y_axis_label": unit,
+            "top_level": top_level,
+        }
+
+    if save_json:
+        if "drilldown" in request.GET:
+            info.json_drilldown = json_object
+        else:
+            info.json = json_object
+        info.save()
+
     return JsonResponse(json_object, safe=False)
 
 def report_error(request, id):
