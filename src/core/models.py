@@ -76,6 +76,8 @@ from django.dispatch import receiver
 # To check if a value is NaN: https://stackoverflow.com/questions/944700/how-can-i-check-for-nan-values
 import math
 
+from django.core.cache import cache
+
 def get_date_range(start, end, months_only=False):
 
     if start and not end and months_only:
@@ -1125,8 +1127,6 @@ class LibraryItem(Record):
     license = models.ForeignKey(License, on_delete=models.CASCADE, null=True, blank=True)
     geocodes = models.ManyToManyField("Geocode", blank=True)
     part_of_project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True, related_name="library_items")
-    json = models.JSONField(null=True, blank=True, help_text="Here we store the JSON representation needed for data visualizations")
-    json_drilldown = models.JSONField(null=True, blank=True, help_text="Here we store the JSON representation needed for drill-down data visualizations")
 
     STATUS = (
         ("pending", "Pending"),
@@ -1489,8 +1489,12 @@ class LibraryItem(Record):
             all = Data.objects.filter(source=self)
             all.delete()
 
-            self.json = None
-            self.json_drilldown = None
+            # We may have cached the json objects based on old data, so we should
+            # delete any cached objects that exist.
+            if self.meta_data and "cache" in self.meta_data:
+                for each in self.meta_data.get("cache"):
+                    cache.delete(each)
+                del(self.meta_data["cache"])
 
             df = file["df"]
             column_count = len(df.columns)

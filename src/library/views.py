@@ -9,7 +9,7 @@ from django.forms import modelform_factory
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse
-from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 
 from django.utils import timezone
 import pytz
@@ -459,17 +459,13 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
 
 def data_json(request, id):
     info = available_library_items(request).get(pk=id)
-    save_json = False
-    json_object = None
+    url = request.get_full_path()
 
-    if not "space" in request.GET and not "boundaries" in request.GET:
-        # If we are requesting the entirity of the data in json format, then we pull
-        # this directly from the db. If slicing is needed, then we need to construct it here
-        # If this has not yet been recorded then we record it the first time we open this.
-        if not info.json:
-            save_json = True
-        else:
-            json_object = info.json_drilldown if "drilldown" in request.GET else info.json
+    # Each unique URL will return a unique json object. So we use the URL 
+    # as a key to cache this object. Then we record the key in the database
+    # so that we can delete this cached object in case data changes
+    # (no need for expiring cache otherwise)
+    json_object = cache.get(url)
 
     if not json_object:
 
@@ -589,11 +585,10 @@ def data_json(request, id):
             "top_level": top_level,
         }
 
-    if save_json:
-        if "drilldown" in request.GET:
-            info.json_drilldown = json_object
-        else:
-            info.json = json_object
+        cache.set(url, json_object, None)
+        if "cache" not in info.meta_data:
+            info.meta_data["cache"] = []
+        info.meta_data["cache"].append(url)
         info.save()
 
     return JsonResponse(json_object, safe=False)
