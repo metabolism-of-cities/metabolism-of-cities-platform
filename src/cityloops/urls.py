@@ -34,8 +34,14 @@ urlpatterns = baseline_urlpatterns + baseline_education_urlpatterns + [
     path("city/<slug:slug>/indicators/<slug:sector>/form/", views.city_indicators_form, name="city_indicators_form"),
     path("city/<slug:slug>/indicators/<slug:sector>/<int:id>/", views.city_indicator, name="city_indicator"),
     path("city/<slug:slug>/indicators/<slug:sector>/<int:id>/form/", views.city_indicator_form, name="city_indicator_form"),
+
+    # sca reports
     path("city/<slug:slug>/<slug:sector>/sca-report/", views.sca_report, name="sca_report"),
     path("city/<slug:slug>/<slug:sector>/sca-report/form/", views.sca_report_form, name="sca_report_form"),
+
+    # uca reports
+    path("city/<slug:slug>/uca-report/", views.uca_report, name="uca_report"),
+    path("city/<slug:slug>/uca-report/form/", views.uca_report_form, name="uca_report_form"),
 
     # copies of staf urls since they use cityloops specific tags
     path("dashboards/<slug:space>/maps/", views.space_maps, name="space_maps"),

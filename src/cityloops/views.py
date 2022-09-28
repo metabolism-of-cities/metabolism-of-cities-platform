@@ -823,6 +823,145 @@ def sca_report_form(request, slug, sector):
     }
     return render(request, "cityloops/sca-report.form.html", context)
 
+def uca_report(request, slug):
+    space = get_space(request, slug)
+
+    # try:
+    #     report = CityLoopsUCAReport.objects.get(city=space)
+    # except:
+    #     report = CityLoopsUCAReport.objects.create(city=space)
+
+    if slug == "apeldoorn":
+        country_id = 328768
+        nuts2_id = 584317
+        nuts3_id = 585874
+        currency = "€"
+    elif slug == "bodo":
+        country_id = 328727
+        nuts2_id = 584307
+        nuts3_id = 585880
+        currency = "kr"
+    elif slug == "mikkeli":
+        country_id = 328729
+        nuts2_id = 584282
+        nuts3_id = 983064
+        currency = "€"
+    elif slug == "porto":
+        country_id = 328813
+        nuts2_id = 584336
+        nuts3_id = 586124
+        currency = "€"
+    elif slug == "sevilla":
+        country_id = 328741
+        nuts2_id = 584286
+        nuts3_id = 585776
+        currency = "€"
+
+    country = ReferenceSpace.objects.get(id=country_id)
+    nuts2 = ReferenceSpace.objects.get(id=nuts2_id)
+    nuts3 = ReferenceSpace.objects.get(id=nuts3_id)
+
+    context = {
+        "space": space,
+        "country": country,
+        "nuts2": nuts2,
+        "nuts3": nuts3,
+        "currency": currency,
+    }
+
+    return render(request, "cityloops/uca-report.online.html", context)
+
+def uca_report_form(request, slug):
+    space = get_space(request, slug)
+
+    # try:
+    #     report = CityLoopsUCAReport.objects.get(city=space)
+    # except:
+    #     report = CityLoopsUCAReport.objects.create(city=space)
+
+    if request.method == "POST":
+        report.space_population = request.POST["space-population"] if request.POST["space-population"] else None
+        report.space_size = request.POST["space-size"] if request.POST["space-size"] else None
+        report.nuts3_population = request.POST["nuts3-population"] if request.POST["nuts3-population"] else None
+        report.nuts3_size = request.POST["nuts3-size"] if request.POST["nuts3-size"] else None
+        report.nuts2_population = request.POST["nuts2-population"] if request.POST["nuts2-population"] else None
+        report.nuts2_size = request.POST["nuts2-size"] if request.POST["nuts2-size"] else None
+        report.country_population = request.POST["country-population"] if request.POST["country-population"] else None
+        report.country_size = request.POST["country-size"] if request.POST["country-size"] else None
+
+        report.population_dataset = LibraryItem.objects.get(id=request.POST["population-dataset"]) if request.POST["population-dataset"] else None
+        report.population_description = request.POST["population-description"]
+
+        report.land_use_dataset = LibraryItem.objects.get(id=request.POST["land-use-dataset"]) if request.POST["land-use-dataset"] else None
+        report.land_use_description = request.POST["land-use-description"]
+
+        report.space_gdp = request.POST["space-gdp"] if request.POST["space-gdp"] else None
+        report.space_employees = request.POST["space-employees"] if request.POST["space-employees"] else None
+        report.nuts3_gdp = request.POST["nuts3-gdp"] if request.POST["nuts3-gdp"] else None
+        report.nuts3_employees = request.POST["nuts3-employees"] if request.POST["nuts3-employees"] else None
+        report.nuts2_gdp = request.POST["nuts2-gdp"] if request.POST["nuts2-gdp"] else None
+        report.nuts2_employees = request.POST["nuts2-employees"] if request.POST["nuts2-employees"] else None
+        report.country_gdp = request.POST["country-gdp"] if request.POST["country-gdp"] else None
+        report.country_employees = request.POST["country-employees"] if request.POST["country-employees"] else None
+
+        report.economic_activities = request.POST["economic-activities"]
+        domestic_extraction = request.POST["domestic-extraction"]
+        imports_exports = request.POST["imports-exports"]
+        material_consumption = request.POST["material-consumption"]
+        waste = request.POST["waste"]
+        material_stock_map = request.POST["material-stock-map"]
+        material_chart = request.POST["material-chart"]
+        typologies = request.POST["typologies"]
+        analysis = request.POST["analysis"]
+        indicators = request.POST["indicators"]
+        indicator_description = request.POST["indicator-description"]
+        matrix = request.POST["matrix"]
+        quality = request.POST["quality"]
+        gaps = request.POST["gaps"]
+        status_quo = request.POST["status-quo"]
+        recommendations = request.POST["recommendations"]
+
+        report.save()
+
+    if slug == "apeldoorn":
+        country_id = 328768
+        nuts2_id = 584317
+        nuts3_id = 585874
+        currency = "€"
+    elif slug == "bodo":
+        country_id = 328727
+        nuts2_id = 584307
+        nuts3_id = 585880
+        currency = "kr"
+    elif slug == "mikkeli":
+        country_id = 328729
+        nuts2_id = 584282
+        nuts3_id = 983064
+        currency = "€"
+    elif slug == "porto":
+        country_id = 328813
+        nuts2_id = 584336
+        nuts3_id = 586124
+        currency = "€"
+    elif slug == "sevilla":
+        country_id = 328741
+        nuts2_id = 584286
+        nuts3_id = 585776
+        currency = "€"
+
+    country = ReferenceSpace.objects.get(id=country_id)
+    nuts2 = ReferenceSpace.objects.get(id=nuts2_id)
+    nuts3 = ReferenceSpace.objects.get(id=nuts3_id)
+
+    context = {
+        "space": space,
+        "country": country,
+        "nuts2": nuts2,
+        "nuts3": nuts3,
+        "currency": currency,
+    }
+    return render(request, "cityloops/uca-report.form.html", context)
+
 # space_maps and space_map are copies from staf/views.py
 # rather than adding an exception for cityloops there, these are whole new entries to keep things organised
 def space_maps(request, space):
