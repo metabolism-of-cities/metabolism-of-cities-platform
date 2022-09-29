@@ -1,0 +1,454 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load moc_extras %}
+
+{% block head %}
+<style>
+  form#report label {
+    font-weight: bold;
+    margin-bottom: 0;
+    display: block;
+  }
+
+  .form-group {
+    margin-bottom: 2rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<form id="report" method="post">
+  <h1>UCA report form</h1>
+
+  <div class="border rounded p-3 mb-4 bg-primary-opaque">
+    Please describe your main findings and insights in this summary.
+    <br>
+
+    <a class="btn btn-primary mt-3" href="{% url 'cityloops:uca_report' space.slug %}">
+      <i class="fal fa-file-alt"></i> View online report
+    </a>
+
+    <div class="btn btn-primary mt-3 show-markdown">
+      <i class="fab fa-markdown"></i> How to use Markdown <i class="far angle fa-angle-down ml-2 mr-0"></i>
+    </div>
+
+    <div class="markdown-help mt-3 d-none">
+      <p>
+        <a href="https://en.wikipedia.org/wiki/Markdown" target="_blank">Markdown</a> is a simple <em>markup language</em> that allows you to create rich text using plain text; it lets you add headers, lists, styling, links, and much more using only plain text.
+      </p>
+      <p>
+        The buttons in the toolbar will do most of the formatting for you. Below is an overview of all the possibilities. On the left is the input - what you write in the text area. On the right is what that input will end up looking like in the report.
+      </p>
+      <table class="table table-responsive border bg-white">
+        <thead>
+          <tr>
+            <th>Input</th>
+            <th>Output</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>### Header</td>
+            <td><h3>Header</h3></td>
+          </tr>
+          <tr>
+            <td>**Bold text**</td>
+            <td><strong>Bold text</strong></td>
+          </tr>
+          <tr>
+            <td>_Italic text_</td>
+            <td><em>Italic text</em></td>
+          </tr>
+          <tr>
+            <td>[This is a link](https://example.com) to another website</td>
+            <td><a href="https://example.com">This is a link</a> to another website</td>
+          </tr>
+          <tr>
+            <td>You can write `inline code` in your text</td>
+            <td>You can write <code>inline code</code> in your text</td>
+          </tr>
+          <tr>
+            <td>
+              <p>As Walt Whitman said:</p>
+
+              <p>> Keep your face always toward the sunshine - and shadows will fall behind you.</p>
+            </td>
+            <td>
+              <p>As Walt Whitman said:</p>
+
+              <blockquote>Keep your face always toward the sunshine - and shadows will fall behind you.</blockquote>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              1. Making a list<br>
+              2. Is quite simple<br>
+              3. Try it out!
+            </td>
+            <td>
+              <ol>
+                <li>Making a list</li>
+                <li>Is quite simple</li>
+                <li>Try it out!</li>
+              </ol>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              - Bullet points<br>
+              - Are also possible<br>
+              - And just as easy
+            </td>
+            <td>
+              <ul>
+                <li>Bullet points</li>
+                <li>Are also possible</li>
+                <li>And just as easy</li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h2>Urban context</h2>
+  <div class="mb-4 border rounded bg-primary-opaque p-3">
+    <i class="fa fa-exclamation-triangle mr-2"></i> For the population and area values, only fill in integers (whole numbers). <strong>Do not add</strong> thousand separators, decimal points, or commas.
+    <hr>
+    <i class="fa fa-info-circle mr-2"></i>It's recommended to take a note of the source and year for these data. Ideally, it should be the same reference year for all eight data points.
+  </div>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="row">
+      <div class="col-lg">
+        <div class="form-group">
+          <label for="space-population"><span class="question-number bg-dark text-light rounded px-2 mr-1">1A</span> {{ space }} population</label>
+          <input type="number" min="0" max="2147483647" class="form-control" name="space-population" value="{{ report.space_population }}">
+        </div>
+      </div>
+      <div class="col-lg">
+        <div class="form-group">
+          <label for="space-size"><span class="question-number bg-dark text-light rounded px-2 mr-1">1B</span> {{ space }} area</label>
+          <div class="input-group mb-2">
+            <input type="number" min="0" max="2147483647" class="form-control" name="space-size" value="{{ report.space_size }}">
+            <div class="input-group-append">
+              <div class="input-group-text">km<sup>2</sup></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="row">
+      <div class="col-lg">
+        <div class="form-group">
+          <label for="nuts3-population"><span class="question-number bg-dark text-light rounded px-2 mr-1">2A</span> {{ nuts3 }} population</label>
+          <input type="number" min="0" max="2147483647" class="form-control" name="nuts3-population" value="{{ report.nuts3_population }}">
+        </div>
+      </div>
+      <div class="col-lg">
+        <div class="form-group">
+          <label for="nuts3-size"><span class="question-number bg-dark text-light rounded px-2 mr-1">2B</span> {{ nuts3 }} area</label>
+          <div class="input-group mb-2">
+            <input type="number" min="0" max="2147483647" class="form-control" name="nuts3-size" value="{{ report.nuts3_size }}">
+            <div class="input-group-append">
+              <div class="input-group-text">km<sup>2</sup></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="row">
+      <div class="col-lg">
+        <div class="form-group">
+          <label for="nuts2-population"><span class="question-number bg-dark text-light rounded px-2 mr-1">3A</span> {{ nuts2 }} population</label>
+          <input type="number" min="0" max="2147483647" class="form-control" name="nuts2-population" value="{{ report.nuts2_population }}">
+        </div>
+      </div>
+      <div class="col-lg">
+        <div class="form-group">
+          <label for="nuts2-size"><span class="question-number bg-dark text-light rounded px-2 mr-1">3B</span> {{ nuts2 }} area</label>
+          <div class="input-group mb-2">
+            <input type="number" min="0" max="2147483647" class="form-control" name="nuts2-size" value="{{ report.nuts2_size }}">
+            <div class="input-group-append">
+              <div class="input-group-text">km<sup>2</sup></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="row">
+      <div class="col-lg">
+        <div class="form-group">
+          <label for="country-population"><span class="question-number bg-dark text-light rounded px-2 mr-1">4A</span> {{ country }} population</label>
+          <input type="number" min="0" max="2147483647" class="form-control" name="country-population" value="{{ report.country_population }}">
+        </div>
+      </div>
+      <div class="col-lg">
+        <div class="form-group">
+          <label for="country-size"><span class="question-number bg-dark text-light rounded px-2 mr-1">4B</span> {{ country }} area</label>
+          <div class="input-group mb-2">
+            <input type="number" min="0" max="2147483647" class="form-control" name="country-size" value="{{ report.country_size }}">
+            <div class="input-group-append">
+              <div class="input-group-text">km<sup>2</sup></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">5A</span> ID number of {{ space }}'s population dataset</label>
+      <input class="form-control" type="number" min="0" max="2147483647" name="population-dataset" value="{{ report.population_dataset.id }}">
+    </div>
+
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">5B</span> <i class="fab fa-markdown"></i> Briefly describe how the population developed over time</label>
+      <textarea class="form-control" rows="3" name="population-description">{{ report.population_description }}</textarea>
+      <small>Besides normal Markdown, here you can also add dataset visualisations by adding <code>[#ID]</code>, where <code>ID</code> is the ID number of the dataset.</small>
+    </div>
+  </div>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">6A</span> ID number of {{ space }}'s land use dataset</label>
+      <input class="form-control" type="number" min="0" max="2147483647" name="land-use-dataset" value="{{ report.land_use_dataset.id }}">
+    </div>
+
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">6B</span> <i class="fab fa-markdown"></i> Briefly describe the dominant types of land use of {{ space }}</label>
+      <textarea class="form-control" rows="3" name="land-use-description">{{ report.land_use_description }}</textarea>
+    </div>
+  </div>
+
+  <h2>Economic activities</h2>
+  <div class="mb-4 border rounded bg-primary-opaque p-3">
+    <i class="fa fa-exclamation-triangle mr-2"></i> For the GDP and employees values, only fill in integers (whole numbers). <strong>Do not add</strong> thousand separators, decimal points, or commas.
+    <hr>
+    <i class="fa fa-info-circle mr-2"></i> It's recommended to take a note of the source and year for these data. Ideally, it should be the same reference year for all eight data points.
+  </div>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="row">
+      <div class="col-lg">
+        <div class="form-group">
+          <label for="space-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">7A</span>GDP of {{ space }}</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text">{{ currency }}</div>
+            </div>
+            <input type="number" min="0" max="9223372036854775807" class="form-control" name="space-gdp" value="{{ report.space_gdp }}">
+          </div>
+        </div>
+      </div>
+      <div class="col-lg">
+        <div class="form-group">
+          <label for="space-employees"><span class="question-number bg-dark text-light rounded px-2 mr-1">7B</span>Employees of {{ space }}</label>
+          <input type="number" min="0" max="2147483647" class="form-control" name="space-employees" value="{{ report.space_employees }}">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="row">
+      <div class="col-lg">
+        <div class="form-group">
+          <label for="nuts3-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">8A</span>GDP of {{ nuts3 }}</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text">{{ currency }}</div>
+            </div>
+            <input type="number" min="0" max="9223372036854775807" class="form-control" name="nuts3-gdp" value="{{ report.nuts3_gdp }}">
+          </div>
+        </div>
+      </div>
+      <div class="col-lg">
+        <div class="form-group">
+          <label for="nuts3-employees"><span class="question-number bg-dark text-light rounded px-2 mr-1">8B</span>Employees of {{ nuts3 }}</label>
+          <input type="number" min="0" max="2147483647" class="form-control" name="nuts3-employees" value="{{ report.nuts3_employees }}">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="row">
+      <div class="col-lg">
+        <div class="form-group">
+          <label for="nuts2-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">9A</span>GDP of {{ nuts2 }}</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text">{{ currency }}</div>
+            </div>
+            <input type="number" min="0" max="9223372036854775807" class="form-control" name="nuts2-gdp" value="{{ report.nuts2_gdp }}">
+          </div>
+        </div>
+      </div>
+      <div class="col-lg">
+        <div class="form-group">
+          <label for="nuts2-employees"><span class="question-number bg-dark text-light rounded px-2 mr-1">9B</span>Employees of {{ nuts2 }}</label>
+          <input type="number" min="0" max="2147483647" class="form-control" name="nuts2-employees" value="{{ report.nuts2_employees }}">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="row">
+      <div class="col-lg">
+        <div class="form-group">
+          <label for="country-gdp"><span class="question-number bg-dark text-light rounded px-2 mr-1">10A</span>GDP of {{ country }}</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text">{{ currency }}</div>
+            </div>
+            <input type="number" min="0" max="9223372036854775807" class="form-control" name="country-gdp" value="{{ report.country_gdp }}">
+          </div>
+        </div>
+      </div>
+      <div class="col-lg">
+        <div class="form-group">
+          <label for="country-employees"><span class="question-number bg-dark text-light rounded px-2 mr-1">10B</span>Employees of {{ country }}</label>
+          <input type="number" min="0" max="2147483647" class="form-control" name="country-employees" value="{{ report.country_employees }}">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">11</span> <i class="fab fa-markdown"></i> Describe the economic activities in {{ space }}</label>
+      <textarea class="form-control" rows="3" name="economic-activities">{{ report.economic_activities }}</textarea>
+      <small>Answering these questions might help: What are the main sectors of the city? What is the city famous for in terms of economic activities? Who are big/known companies and what do they do?</small>
+      <small>Besides normal Markdown, here you can also add dataset visualisations by adding <code>[#ID]</code>, where <code>ID</code> is the ID number of the dataset.</small>
+    </div>
+  </div>
+
+  <h2>Material flows in {{ space }}</h2>
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">12</span> <i class="fab fa-markdown"></i> Domestic Extraction</label>
+      <textarea class="form-control" rows="3" name="domestic-extraction">{{ report.domestic_extraction }}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">13</span> <i class="fab fa-markdown"></i> Imports & Exports</label>
+      <textarea class="form-control" rows="3" name="imports-exports">{{ report.imports_exports }}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">14</span> <i class="fab fa-markdown"></i> Domestic Material Consumption</label>
+      <textarea class="form-control" rows="3" name="material-consumption">{{ report.material_consumption }}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">15</span> <i class="fab fa-markdown"></i> Waste</label>
+      <textarea class="form-control" rows="3" name="waste">{{ report.waste }}</textarea>
+    </div>
+  </div>
+
+  <h2>Material stock in {{ space }}</h2>
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">16A</span> ID number of Material Stock Map</label>
+      <input class="form-control" type="number" min="0" max="2147483647" name="material-stock-map" value="{{ report.material_stock_map.id }}">
+    </div>
+
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">16A</span> ID number of (bar) chart with different materials</label>
+      <input class="form-control" type="number" min="0" max="2147483647" name="material-chart" value="{{ report.material_chart.id }}">
+    </div>
+
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">17</span> <i class="fab fa-markdown"></i> Describe building typologies in {{ space }}</label>
+      <textarea class="form-control" rows="3" name="typologies">{{ report.typologies }}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">18</span> <i class="fab fa-markdown"></i> Analysis of Material Stock</label>
+      <textarea class="form-control" rows="3" name="analysis">{{ report.analysis }}</textarea>
+    </div>
+  </div>
+
+  <h2>Material stock in {{ space }}</h2>
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">19</span> <i class="fab fa-markdown"></i> Insert the table with indicators</label>
+      <textarea class="form-control" rows="3" name="indicators">{{ report.indicators }}</textarea>
+    </div>
+  </div>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">20</span> Describe the indicators that were chosen and their development over time</label>
+      <textarea class="form-control" rows="2" name="indicator-description">{{ report.indicator_description }}</textarea>
+    </div>
+  </div>
+
+  <h2>Data Quality Assessment</h2>
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">21</span> <i class="fab fa-markdown"></i> Matrix based on the data quality matrix</label>
+      <textarea class="form-control" rows="3" name="matrix">{{ report.matrix }}</textarea>
+    </div>
+  </div>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">22</span> Couple of paragraphs that explain the data quality</label>
+      <textarea class="form-control" rows="2" name="quality">{{ report.quality }}</textarea>
+    </div>
+  </div>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">23</span> Couple of paragraphs that explain the gaps and in general how they were closed (sources, assumptions, calculations)</label>
+      <textarea class="form-control" rows="2" name="gaps">{{ report.gaps }}</textarea>
+    </div>
+  </div>
+
+  <h2>Analysis of Data and Indicators: Assessing Circularity</h2>
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">24</span> Insights on status quo of {{ space }}</label>
+      <textarea class="form-control" rows="2" name="status-quo">{{ report.status_quo }}</textarea>
+    </div>
+  </div>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">25</span> Recommendations for making the city more circular</label>
+      <textarea class="form-control" rows="2" name="recommendations">{{ report.recommendations }}</textarea>
+    </div>
+  </div>
+
+  {% csrf_token %}
+
+  <button type="submit" class="btn btn-primary">
+    <i class="fa fa-save"></i> Save
+  </button>
+</form>
+
+{% endblock %}
+
+{% block footer %}
+  <script>
+    $(".show-markdown").click(function() {
+      $(".show-markdown i.angle").toggleClass("fa-angle-down fa-angle-up")
+      $(".markdown-help").toggleClass("d-none")
+    })
+  </script>
+{% endblock %}
