@@ -64,6 +64,7 @@
       #metadata .contentblock { display: none; margin-top:1rem}
       #metadata .alert:hover {color:black;cursor:pointer}
     {% endif %}
+    .admin-option{display:none}
   </style>
 {% endblock %}
 
@@ -387,29 +388,52 @@
                 {% endwith %}
               {% endif %}
 
-              {% if request.user.is_staff and info.meta_data.processed %}
+              {% if request.user.is_staff %}
 
-                <a href="?reset_processing=true" class="list-group-item list-group-item-action list-group-item-primary mr-1">
-                  <i class="fal fa-fw fa-layer-group mr-1"></i> RESET processing
-                  <br>
-                  <small>
-                    This means that the file can be processed again. 
-                    <strong>Existing reference spaces and associated info (including data!) will be lost!</strong>
-                  </small>
-                </a>
+                    <a href="#" class="list-group-item list-group-item-action list-group-item-primary mr-1" id="view-admin-options">
+                      <i class="fal fa-fw fa-lock mr-1"></i> View admin options
+                    </a>
 
-              {% endif %}
+                {% if info.meta_data.processed %}
 
-              {% if request.user.is_staff and info.meta_data.processing_error %}
-                <a href="?skip_size_check=true" class="list-group-item list-group-item-action list-group-item-primary">
-                  <i class="fal fa-fw fa-layer-group mr-1"></i> Overwrite large-file block
-                  <br>
-                  <small>
-                    If you mark this, it means that all reference spaces will be imported, even if this is too large. We also mark this as
-                    'ready for processing'. Only mark this if someone has finished the processing workflow and it's now in limbo until
-                    this restriction is lifted.
-                  </small>
-                </a>
+                  {% if info.data.all %}
+                        
+                    <a href="?create_cache=true" class="list-group-item list-group-item-action list-group-item-primary mr-1 admin-option">
+                      <i class="fal fa-fw fa-brackets-curly mr-1"></i> Generate and cache chart
+                      <br>
+                      <small>
+                      Use this if the chart does not appear here. We will generate the chart on the server and store the results in memory (cache).
+                      </small>
+                    </a>
+
+                    <a href="?delete_cache=true" class="list-group-item list-group-item-action list-group-item-primary mr-1 admin-option">
+                      <i class="fal fa-fw fa-trash mr-1"></i> Remove all cached charts
+                    </a>
+
+                  {% endif %}
+
+                  <a href="?reset_processing=true" class="list-group-item list-group-item-action list-group-item-primary mr-1 admin-option">
+                    <i class="fal fa-fw fa-layer-group mr-1"></i> RESET processing
+                    <br>
+                    <small>
+                      This means that the file can be processed again. 
+                      <strong>Existing reference spaces and associated info (including data!) will be lost!</strong>
+                    </small>
+                  </a>
+
+                {% endif %}
+
+                {% if info.meta_data.processing_error %}
+                  <a href="?skip_size_check=true" class="list-group-item list-group-item-action list-group-item-primary admin-option">
+                    <i class="fal fa-fw fa-layer-group mr-1"></i> Overwrite large-file block
+                    <br>
+                    <small>
+                      If you mark this, it means that all reference spaces will be imported, even if this is too large. We also mark this as
+                      'ready for processing'. Only mark this if someone has finished the processing workflow and it's now in limbo until
+                      this restriction is lifted.
+                    </small>
+                  </a>
+                {% endif %}
               {% endif %}
             {% endif %}
 
@@ -858,6 +882,14 @@
     $("#metadata .alert").click(function() {
       $("#metadata .contentblock").toggle();
     });
+    {% endif %}
+
+    {% if request.user.is_staff %}
+      $("#view-admin-options").click(function(e){
+        e.preventDefault();
+        $(this).hide()
+        $(".admin-option").show();
+      });
     {% endif %}
 
   </script>

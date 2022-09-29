@@ -4,11 +4,13 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from .models import *
 from core.mocfunctions import *
+from library import views as library
+from django.http import QueryDict
 
 TAG_ID = settings.TAG_ID_LIST
 
 class CreatePlotPreview(CronJobBase):
-    RUN_EVERY_MINS = 60
+    RUN_EVERY_MINS = 60*4
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = "core.createplotpreview" # Unique code for logging purposes
 
@@ -41,7 +43,7 @@ class ProcessDataset(CronJobBase):
             each.save()
 
 class CheckDataProgress(CronJobBase):
-    RUN_EVERY_MINS = 85
+    RUN_EVERY_MINS = 85*3
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = "core.checkdataprogress" # Unique code for logging purposes
 
@@ -94,7 +96,7 @@ class CheckDataProgress(CronJobBase):
             each.save()
 
 class CheckDataProgressCityLoops(CronJobBase):
-    RUN_EVERY_MINS = 200
+    RUN_EVERY_MINS = 60*5
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = "core.checkdataprogresscityloops" # Unique code for logging purposes
 
@@ -144,6 +146,29 @@ class CheckDataProgressCityLoops(CronJobBase):
             if not each.meta_data:
                 each.meta_data = {}
             each.meta_data["progress_cityloops"] = progress
+            each.save()
+
+class CreateCache(CronJobBase):
+    RUN_EVERY_MINS = 60*5.5
+    schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
+    code = "core.createcache" # Unique code for logging purposes
+
+    def do(self):
+        list = LibraryItem.objects_include_private.filter(meta_data__create_cache__isnull=False)
+        for each in list:
+            for cache_key in each.meta_data["create_cache"]:
+
+                try:
+                    explode = cache_key.split("?")
+                    parameters = QueryDict(explode[1])
+                except:
+                    parameters = None
+
+                try:
+                    library.fetch_data_in_json_object(each, cache_key, parameters)
+                except Exception as e:
+                    each.meta_data["cache_error"] = str(e)
+            del(each.meta_data["create_cache"])
             each.save()
 
 class CreateMapJS(CronJobBase):

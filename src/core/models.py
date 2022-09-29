@@ -1470,6 +1470,14 @@ class LibraryItem(Record):
         except:
             return "unknown"
 
+    def delete_cached_objects(self):
+        if self.meta_data and "cache" in self.meta_data:
+            for each in self.meta_data.get("cache"):
+                cache.delete(each)
+            del(self.meta_data["cache"])
+            self.save()
+        return True
+
     # This takes the stocks or flows file and records it in the Data table
     # Note that I feel this 'try except' fest may be a bit of a loose canon and I am
     # very open to people with better ideas on how to structure this and properly catch
@@ -1491,10 +1499,7 @@ class LibraryItem(Record):
 
             # We may have cached the json objects based on old data, so we should
             # delete any cached objects that exist.
-            if self.meta_data and "cache" in self.meta_data:
-                for each in self.meta_data.get("cache"):
-                    cache.delete(each)
-                del(self.meta_data["cache"])
+            self.delete_cached_objects()
 
             df = file["df"]
             column_count = len(df.columns)

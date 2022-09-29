@@ -317,7 +317,6 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
                 response["Content-Disposition"] = f"attachment; filename=\"{info.name}.ris\""
             return response
 
-
     section = "library"
     url_processing = None
     curator = False
@@ -347,48 +346,58 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     if info.type.group == "multimedia":
         section = "multimedia_library"
 
-    if "edit" in request.GET and curator:
-        return form(request, info.id)
+    if curator:
+        if "edit" in request.GET:
+            return form(request, info.id)
 
-    if "delete" in request.GET and curator:
-        info.is_deleted = True
-        info.save()
-        messages.success(request, "This item was deleted")
+        if "delete" in request.GET:
+            info.is_deleted = True
+            info.save()
+            messages.success(request, "This item was deleted")
 
-    if "create_shapefile_plot" in request.GET and curator:
-        info.create_shapefile_plot()
-        messages.success(request, "We have tried generating the plot. If no image appears, there is an issue with the shapefile.")
+        if "create_shapefile_plot" in request.GET:
+            info.create_shapefile_plot()
+            messages.success(request, "We have tried generating the plot. If no image appears, there is an issue with the shapefile.")
 
-    if "reset_processing" in request.GET and curator:
-        if "processed" in info.meta_data:
-            info.meta_data.pop("processed")
-        if "ready_for_processing" in info.meta_data:
-            info.meta_data.pop("ready_for_processing")
-        info.meta_data["allow_deletion_spaces"] = True
-        info.save()
-        messages.success(request, "File processing options were reset - it will now appear in the list again.")
+        if "reset_processing" in request.GET:
+            if "processed" in info.meta_data:
+                info.meta_data.pop("processed")
+            if "ready_for_processing" in info.meta_data:
+                info.meta_data.pop("ready_for_processing")
+            info.meta_data["allow_deletion_spaces"] = True
+            info.save()
+            messages.success(request, "File processing options were reset - it will now appear in the list again.")
 
-    if "process_file" in request.POST and request.user.is_staff:
-        if info.type.id == 40 or info.type.id == 41:
-            info.convert_shapefile()
-        elif info.type.id == 10:
-            info.convert_stocks_flows_data()
-        messages.success(request, "File processing was started.")
+        if "skip_size_check" in request.GET: 
+            if "processing_error" in info.meta_data:
+                info.meta_data.pop("processing_error")
+            info.meta_data["ready_for_processing"] = True
+            info.meta_data["skip_size_check"] = True
+            info.save()
+            messages.success(request, "File processing options were changed - no more size check.")
 
-    if "skip_size_check" in request.GET and curator:
-        if "processing_error" in info.meta_data:
-            info.meta_data.pop("processing_error")
-        info.meta_data["ready_for_processing"] = True
-        info.meta_data["skip_size_check"] = True
-        info.save()
-        messages.success(request, "File processing options were changed - no more size check.")
+    if request.user.is_staff:
+        if "process_file" in request.POST:
+            if info.type.id == 40 or info.type.id == 41:
+                info.convert_shapefile()
+            elif info.type.id == 10:
+                info.convert_stocks_flows_data()
+            messages.success(request, "File processing was started.")
 
-    if "reload" in request.GET and request.user.is_superuser:
-        # Temporary solution to re-resize the thumbnails that are too small
-        from django.core.files.uploadedfile import UploadedFile
-        info.image = UploadedFile(file=open(info.image.path, "rb"))
-        info.save()
-        messages.success(request, "Image re-saved... " + info.image.path)
+        if "create_cache" in request.GET:
+            messages.success(request, "We have recorded the caching request. We will format data for the chart server-side, and then store it in the server memory (cache) for quick retrieval. It can take up to 6h to generate this.")
+
+        if "delete_cache" in request.GET:
+            info.delete_cached_objects()
+            messages.success(request, "All chart cache was deleted.")
+
+    if request.user.is_superuser:
+        if "reload" in request.GET:
+            # Temporary solution to re-resize the thumbnails that are too small
+            from django.core.files.uploadedfile import UploadedFile
+            info.image = UploadedFile(file=open(info.image.path, "rb"))
+            info.save()
+            messages.success(request, "Image re-saved... " + info.image.path)
 
     if request.method == "POST" and "zipfile" in request.POST:
         from django.http import HttpResponse
@@ -457,144 +466,174 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     }
     return render(request, "library/item.html", context)
 
+# We use this function to return the data in the right json object format
+# This might already be stored in cache, so in that case we just retrieve it
+# If not, then we retrieve the data, format it, and store it in cache before we
+# return it. 
+# This function is called through a cron as well, because some objects are too
+# slow to generate on the fly, and we therefore call this server-side and then
+# we generate the cache that way. 
+
+def fetch_data_in_json_object(dataset, cache_key, parameters):
+
+    json_object = cache.get(cache_key)
+
+    if json_object:
+        return json_object
+
+    data = dataset.data.filter(quantity__isnull=False)
+
+    if "space" in parameters:
+        space = parameters["space"]
+        data = data.filter(Q(origin_space_id=space)|Q(destination_space_id=space))
+
+    if "boundaries" in parameters:
+        boundaries = ReferenceSpace.objects.get(pk=parameters["boundaries"])
+        data = data.filter(Q(origin_space__geometry__within=boundaries.geometry)|Q(destination_space__geometry__within=boundaries.geometry))
+
+    x_axis = []
+    stacked_fields = []
+    stacked_field_values = {}
+    series = []
+    unit = None
+    lat_lng = {}
+    top_level = []
+
+    number_of_materials = data.values("material_name").distinct().count()
+    number_of_origins = data.values("origin_space__name").distinct().count()
+    number_of_segments = data.values("segment_name").distinct().count()
+
+    if "drilldown" in parameters:
+        group_by = "timeframe__name"
+        grouped_data = data.values(group_by).annotate(total=Sum("quantity")).order_by("timeframe__start")
+        subdivision = "origin_space"
+        if number_of_origins > 1:
+            subdivision = "origin_space"
+        elif number_of_materials > 1:
+            subdivision = "material"
+        elif number_of_segments > 1:
+            subdivision = "segment"
+
+        for each in grouped_data:
+            # First we need to get the totals per [parameter]
+            top_level.append({
+                "name": each[group_by],
+                "y": each["total"],
+                "drilldown": each[group_by],
+            })
+
+            # Gotta swap out "timeframe__name" for variable, unsure how!
+            get_this_data = data.filter(timeframe__name=each[group_by])
+            this_data = []
+            for data_point in get_this_data:
+                # Should also swap out origin_space.name for a variable, somehow!
+                if subdivision == "origin_space":
+                    this_data.append([data_point.origin_space.name, data_point.quantity])
+                elif subdivision == "segment":
+                    this_data.append([data_point.segment_name, data_point.quantity])
+                elif subdivision == "material":
+                    this_data.append([data_point.material_name, data_point.quantity])
+
+            series.append({
+                "name": each[group_by],
+                "id": each[group_by],
+                "data": this_data,
+            })
+
+    else:
+        for each in data:
+            x_axis_field = each.timeframe.name
+            if each.segment_name and number_of_segments > 1:
+                stacked_field = each.segment_name
+            elif number_of_materials > 1 and number_of_origins < 2:
+                stacked_field = each.material_name
+            elif each.origin_space:
+                stacked_field = each.origin_space.name
+                lat_lng[stacked_field] = each.origin_space.get_centroids
+            elif each.destination_space:
+                stacked_field = each.destination_space.name
+                lat_lng[stacked_field] = each.destination_space.get_centroids
+
+            if not unit:
+                if each.unit:
+                    unit = each.unit.name
+                else:
+                    unit = ""
+
+            if x_axis_field not in x_axis:
+                x_axis.append(x_axis_field)
+
+            if stacked_field not in stacked_fields:
+                stacked_fields.append(stacked_field)
+
+            if stacked_field not in stacked_field_values:
+                stacked_field_values[stacked_field] = {}
+
+            stacked_field_values[stacked_field][x_axis_field] = each.quantity
+
+        for each in stacked_fields:
+            this_series = []
+            for axis in x_axis:
+                try:
+                    v = stacked_field_values[each][axis]
+                    check = float(v)
+                    if math.isnan(check):
+                        this_series.append(None) # What to add if NaN?
+                    else:
+                        this_series.append(v)
+                except:
+                    this_series.append(None)
+            full = {
+                "name": each,
+                "gps": lat_lng[each] if each in lat_lng else None,
+                "data": this_series,
+            }
+            series.append(full)
+
+    json_object = {
+        "x_axis": x_axis,
+        "series": series,
+        "y_axis_label": unit,
+        "top_level": top_level,
+    }
+
+    cache.set(cache_key, json_object, None)
+    if "cache" not in dataset.meta_data:
+        dataset.meta_data["cache"] = []
+    dataset.meta_data["cache"].append(cache_key)
+    dataset.save()
+
+    return json_object
+
+
 def data_json(request, id):
     info = available_library_items(request).get(pk=id)
-    url = request.get_full_path()
+    cache_key = str(id)
+
+    if request.GET:
+        params = request.GET.urlencode()
+        # The "create_cache" parameter is not relevant to the chart so we remove
+        params = params.replace("create_cache=true", "")
+        if params != "":
+            cache_key += "?" + params
+
+    if "create_cache" in request.GET:
+        if not "create_cache" in info.meta_data:
+            info.meta_data["create_cache"] = [cache_key]
+        elif cache_key not in info.meta_data["create_cache"]:
+            info.meta_data["create_cache"].append(cache_key)
+        info.save()
 
     # Each unique URL will return a unique json object. So we use the URL 
     # as a key to cache this object. Then we record the key in the database
     # so that we can delete this cached object in case data changes
     # (no need for expiring cache otherwise)
-    json_object = cache.get(url)
-
-    if not json_object:
-
-        data = info.data.filter(quantity__isnull=False)
-
-        if "space" in request.GET:
-            space = request.GET["space"]
-            data = data.filter(Q(origin_space_id=space)|Q(destination_space_id=space))
-
-        if "boundaries" in request.GET:
-            boundaries = ReferenceSpace.objects.get(pk=request.GET["boundaries"])
-            data = data.filter(Q(origin_space__geometry__within=boundaries.geometry)|Q(destination_space__geometry__within=boundaries.geometry))
-
-        x_axis = []
-        stacked_fields = []
-        stacked_field_values = {}
-        series = []
-        unit = None
-        lat_lng = {}
-        top_level = []
-
-        number_of_materials = data.values("material_name").distinct().count()
-        number_of_origins = data.values("origin_space__name").distinct().count()
-        number_of_segments = data.values("segment_name").distinct().count()
-
-        if "drilldown" in request.GET:
-            group_by = "timeframe__name"
-            grouped_data = data.values(group_by).annotate(total=Sum("quantity")).order_by("timeframe__start")
-            subdivision = "origin_space"
-            if number_of_origins > 1:
-                subdivision = "origin_space"
-            elif number_of_materials > 1:
-                subdivision = "material"
-            elif number_of_segments > 1:
-                subdivision = "segment"
-
-            for each in grouped_data:
-                # First we need to get the totals per [parameter]
-                top_level.append({
-                    "name": each[group_by],
-                    "y": each["total"],
-                    "drilldown": each[group_by],
-                })
-
-                # Gotta swap out "timeframe__name" for variable, unsure how!
-                get_this_data = data.filter(timeframe__name=each[group_by])
-                this_data = []
-                for data_point in get_this_data:
-                    # Should also swap out origin_space.name for a variable, somehow!
-                    if subdivision == "origin_space":
-                        this_data.append([data_point.origin_space.name, data_point.quantity])
-                    elif subdivision == "segment":
-                        this_data.append([data_point.segment_name, data_point.quantity])
-                    elif subdivision == "material":
-                        this_data.append([data_point.material_name, data_point.quantity])
-
-                series.append({
-                    "name": each[group_by],
-                    "id": each[group_by],
-                    "data": this_data,
-                })
-
-        else:
-            for each in data:
-                x_axis_field = each.timeframe.name
-                if each.segment_name and number_of_segments > 1:
-                    stacked_field = each.segment_name
-                elif number_of_materials > 1 and number_of_origins < 2:
-                    stacked_field = each.material_name
-                elif each.origin_space:
-                    stacked_field = each.origin_space.name
-                    lat_lng[stacked_field] = each.origin_space.get_centroids
-                elif each.destination_space:
-                    stacked_field = each.destination_space.name
-                    lat_lng[stacked_field] = each.destination_space.get_centroids
-
-                if not unit:
-                    if each.unit:
-                        unit = each.unit.name
-                    else:
-                        unit = ""
-
-                if x_axis_field not in x_axis:
-                    x_axis.append(x_axis_field)
-
-                if stacked_field not in stacked_fields:
-                    stacked_fields.append(stacked_field)
-
-                if stacked_field not in stacked_field_values:
-                    stacked_field_values[stacked_field] = {}
-
-                stacked_field_values[stacked_field][x_axis_field] = each.quantity
-
-            for each in stacked_fields:
-                this_series = []
-                for axis in x_axis:
-                    try:
-                        v = stacked_field_values[each][axis]
-                        check = float(v)
-                        if math.isnan(check):
-                            this_series.append(None) # What to add if NaN?
-                        else:
-                            this_series.append(v)
-                    except:
-                        this_series.append(None)
-                full = {
-                    "name": each,
-                    "gps": lat_lng[each] if each in lat_lng else None,
-                    "data": this_series,
-                }
-                series.append(full)
-
-        json_object = {
-            "x_axis": x_axis,
-            "series": series,
-            "y_axis_label": unit,
-            "top_level": top_level,
-        }
-
-        cache.set(url, json_object, None)
-        if "cache" not in info.meta_data:
-            info.meta_data["cache"] = []
-        info.meta_data["cache"].append(url)
-        info.save()
+    json_object = fetch_data_in_json_object(info, cache_key, request.GET)
 
     return JsonResponse(json_object, safe=False)
 
 def report_error(request, id):
-    info = get_object_or_404(LibraryItem, pk=id)
+    info = available_library_items(request).get(pk=id)
     project = get_project(request)
 
     email = request.POST.get("email")
