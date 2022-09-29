@@ -563,7 +563,7 @@
               {% for each in documents %}
                 {% if tag in each.tags.all %}
                 <li class="list-group-item">
-                  <a href="{% url "water:infrastructure_map" each.id %}{% if request.GET.region %}?boundary={{ request.GET.region }}&amp;restrict_to_within_boundaries=true{% endif %}">
+                  <a href="{% url "water:infrastructure_map" each.id %}{% if request.GET.region %}?boundaries={{ request.GET.region }}&amp;restrict_to_within_boundaries=true{% endif %}">
                   {{ each.name }}
                   </a>
                 </li>
@@ -585,7 +585,7 @@
           <ul class="list-group list-group-flush">
             {% for each in documents_flows %}
               <li class="list-group-item">
-                <a href="{% url URLS.LIBRARY_ITEM each.id %}{% if request.GET.region %}?boundary={{ request.GET.region }}&amp;restrict_to_within_boundaries=true{% endif %}">
+                <a href="{% url URLS.LIBRARY_ITEM each.id %}{% if request.GET.region %}?boundaries={{ request.GET.region }}&amp;restrict_to_within_boundaries=true{% endif %}">
                 {{ each.name }}
                 </a>
                 <br>

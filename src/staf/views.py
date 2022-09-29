@@ -462,7 +462,7 @@ def map_item(request, id, space=None):
         s = properties["scheme"]
         colors = COLOR_SCHEMES[s]
 
-    boundary = request.GET.get("boundary") if "boundary" in request.GET else properties.get("boundaries")
+    boundary = request.GET.get("boundaries") if "boundaries" in request.GET else properties.get("boundaries")
     if boundary:
         try:
             # Boundaries could either be configured in the properties of this document,
