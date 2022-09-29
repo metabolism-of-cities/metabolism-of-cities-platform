@@ -588,13 +588,17 @@
                 <a href="{% url URLS.LIBRARY_ITEM each.id %}{% if request.GET.region %}?boundary={{ request.GET.region }}&amp;restrict_to_within_boundaries=true{% endif %}">
                 {{ each.name }}
                 </a>
+                <br>
+                <a href="{% url "water:dashboard" %}?document={{ each.id }}">Compare regions</a>
               </li>
             {% endfor %}
+            <li class="list-group-item">
+              <a href="{% url "water:dashboard" %}{% if request.GET.region %}?region={{ request.GET.region }}{% endif %}">View all charts</a>
+            </li>
           </ul>
         </div>
       </div>
     </div>
-
 
   </div>
 

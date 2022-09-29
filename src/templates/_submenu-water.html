@@ -22,7 +22,7 @@
                 {{ key }}
               </a>
             {% else %}
-              <a class="nav-link{% if request.GET.boundary == value|slugify or request.GET.region == value|slugify %} active{% endif %}" href="{% url "water:dashboard" %}?region={{ value }}">
+              <a class="nav-link{% if request.GET.boundary == value|slugify or request.GET.region == value|slugify %} active{% endif %}" href="{% url "water:diagram" %}?region={{ value }}">
                 {{ key }}
               </a>
             {% endif %}

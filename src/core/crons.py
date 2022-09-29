@@ -148,6 +148,9 @@ class CheckDataProgressCityLoops(CronJobBase):
             each.meta_data["progress_cityloops"] = progress
             each.save()
 
+# Normally we create the cache on-the-fly, the first time we generate a json object to represent
+# a specific data visualization. However, some datasets are too large for this to be done on-the-fly
+# so site curators can click a button to schedule the generation of the cache for this graph.
 class CreateCache(CronJobBase):
     RUN_EVERY_MINS = 60*5.5
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
@@ -168,6 +171,7 @@ class CreateCache(CronJobBase):
                     library.fetch_data_in_json_object(each, cache_key, parameters)
                 except Exception as e:
                     each.meta_data["cache_error"] = str(e)
+
             del(each.meta_data["create_cache"])
             each.save()
 

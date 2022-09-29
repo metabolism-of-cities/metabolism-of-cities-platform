@@ -13,11 +13,15 @@
 
 {% block content %}
 
+  <div class="mb-4">
+    <a href="{% url "water:diagram" %}{% if request.GET.region %}?region={{ request.GET.region }}{% endif %}">&laquo; Back</a>
+  </div>
+
   {% if region %}
     {% with link=PROJECT.slug|add:":libraryframe" %}
       <div class="row">
         {% for each in documents %}
-          <div class="col-6 mb-4">
+          <div class="col-12 mb-4">
             <h3>{{ each }}</h3>
             <iframe class="libraryitem card" src="{% url link each.id %}?ata-viz=176&boundaries={{ region.id }}&hide_details_link=true&hide_title=true" onload="resizeIframe(this)"></iframe>
           </div>
@@ -28,13 +32,18 @@
     {% with link=PROJECT.slug|add:":libraryframe" %}
       <div class="row">
         {% for key,value in regions.items %}
-          <div class="col-6 mb-4">
+          <div class="col-12 mb-4">
             <h3>{{ key }}</h3>
-            <iframe class="libraryitem card" src="{% url link 1010973 %}?data-viz=176&boundaries={{ value }}&hide_details_link=true&hide_title=true" onload="resizeIframe(this)"></iframe>
+            <iframe class="libraryitem card" src="{% url link request.GET.document %}?ata-viz=176&boundaries={{ value }}&hide_details_link=true&hide_title=true" onload="resizeIframe(this)"></iframe>
           </div>
         {% endfor %}
       </div>
     {% endwith %}
   {% endif %}
+
+  <div class="mt-4">
+    <a href="{% url "water:diagram" %}{% if request.GET.region %}?region={{ request.GET.region }}{% endif %}">&laquo; Back</a>
+  </div>
+
 
 {% endblock %}

@@ -173,8 +173,10 @@ def temp_script(request):
 def dashboard(request):
     region = None
     flows = Tag.objects.filter(parent_tag_id=1752)
-    if "region" in request.GET:
+        
+    if "region" in request.GET and request.GET.get("region"):
         region = ReferenceSpace.objects.get(pk=request.GET["region"])
+
     context = {
         "title": "Eau",
         "regions": NICE_REGIONS,

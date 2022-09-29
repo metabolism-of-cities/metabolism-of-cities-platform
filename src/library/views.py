@@ -605,7 +605,6 @@ def fetch_data_in_json_object(dataset, cache_key, parameters):
 
     return json_object
 
-
 def data_json(request, id):
     info = available_library_items(request).get(pk=id)
     cache_key = str(id)
