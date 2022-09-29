@@ -3,6 +3,7 @@ from core.mocfunctions import *
 from staf import views as staf
 from django.shortcuts import redirect
 from django.http import Http404
+from django.contrib import messages
 
 def index(request):
 
@@ -173,12 +174,18 @@ def temp_script(request):
 def dashboard(request):
     region = None
     flows = Tag.objects.filter(parent_tag_id=1752)
+    title = "Dashboard"
         
     if "region" in request.GET and request.GET.get("region"):
         region = ReferenceSpace.objects.get(pk=request.GET["region"])
+        title = str(region)
+
+    if request.GET.get("document"):
+        document = available_library_items(request).get(pk=request.GET.get("document"))
+        title = str(document)
 
     context = {
-        "title": "Eau",
+        "title": title,
         "regions": NICE_REGIONS,
         "documents": available_library_items(request).filter(tags__in=flows).order_by("id"),
         "region": region,
@@ -190,7 +197,8 @@ def diagram(request):
     try:
         doc = available_library_items(request).get(pk=1013292)
     except:
-        raise Http404("Data object was not found (or you lack access).") 
+        messages.warning(request, "Please log in first.")
+        return redirect(reverse("water:login") + "?next=" + request.get_full_path())
 
     file = doc.attachments.all()[0]
 
