@@ -165,7 +165,7 @@ class CreateCache(CronJobBase):
                     explode = cache_key.split("?")
                     parameters = QueryDict(explode[1])
                 except:
-                    parameters = None
+                    parameters = QueryDict(None)
 
                 try:
                     library.fetch_data_in_json_object(each, cache_key, parameters)

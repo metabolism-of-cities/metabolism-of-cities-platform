@@ -80,7 +80,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-lg-4 pb-4 order-2 order-lg-1">
+    <div class="col-lg-4 pb-4 order-2 order-lg-1" {% if data_layout %}hidden{% endif %}>
       {% if info.publisher.image %}
         <div class="text-center">
           <a href="{{ info.publisher.get_absolute_url }}">
@@ -454,7 +454,7 @@
         <i class="fal fa-arrow-left"></i> Back
       </a>
     </div>
-    <div class="col-lg-8 mb-4 order-1 order-lg-2">
+    <div class="col-lg-{% if data_layout %}12{% else %}8{% endif %} mb-4 order-1 order-lg-2">
       <h1>{{ info }}</h1>
 
       {% if info.image and info.type.name != "Video Recording" %}
@@ -568,21 +568,6 @@
           {% endif %}
         {% endif %}
 
-        {% if info.attachments.all %}
-          <h3 class="mt-4">Attachment(s)</h3>
-          <ul>
-          {% for each in info.attachments.all %}
-            <li><a href="{{ each.file.url }}">{{ each }}</a> ({{ each.get_size }})</li>
-          {% endfor %}
-          </ul>
-          {% if info.attachments.count > 2 %}
-            <form method="post">
-              <button type="submit" class="btn btn-default-outline" name="zipfile" value="true"><i class="fa fa-file-archive"></i> Download as zipfile</button>
-              {% csrf_token %}
-            </form>
-          {% endif %}
-
-        {% endif %}
       {% endif %}
 
       {% if request.user.is_authenticated %}
@@ -703,6 +688,99 @@
           {{ info.meta_data.processing_error }}
         </div>
       {% endif %}
+
+      {% if data_layout %}
+
+        <section class="row">
+            <div class="col-md-6 col-lg-3 mb-4">
+              <div class="card icon-card">
+                <div class="icon">
+                  <i class="far fa-fw fa-database"></i>
+                </div>
+                <div class="card-header">Material filter</div>
+                <div class="card-body">
+                  <p class="what-text">
+                    Restrict search to these materials:
+                  </p>
+                  <select multiple class="form-control">
+                    {% for each in data_materials %}
+                      <option value="{{ each.material_id }}">{{ each.material_name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+              <div class="card icon-card">
+                <div class="icon">
+                  <i class="far fa-fw fa-map"></i>
+                </div>
+                <div class="card-header">Geospatial filter</div>
+                <div class="card-body">
+                  <p class="what-text">
+                    Search within this dataset using geospatial boundaries:
+                  </p>
+                  <select multiple class="form-control">
+                    {% for each in data_spaces %}
+                      <option value="{{ each.origin_space_id }}">{{ each.origin_space__name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+              <div class="card icon-card">
+                <div class="icon">
+                  <i class="far fa-fw fa-calendar"></i>
+                </div>
+                <div class="card-header">Temporal filter</div>
+                <div class="card-body">
+                  <p class="what-text">
+                    Filter data by setting a specific timeframe:
+                  </p>
+                  <select multiple class="form-control">
+                    {% for each in data_timeframe %}
+                      <option value="{{ each.id }}">{{ each.timeframe__name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+              <div class="card icon-card">
+                <div class="icon">
+                  <i class="far fa-fw fa-download"></i>
+                </div>
+                <div class="card-header">Download data</div>
+                <div class="card-body">
+                  <p class="what-text">
+                    {{ info.data.count }} data points<br>
+                    <a href="http://" class="btn btn-secondary">ALL datapoints</a>
+                    <a href="http://" class="btn btn-secondary-outline mt-3">Filtered datapoints</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+      {% endif %}
+
+      {% if info.attachments.all %}
+        <h3 class="mt-4">Attachment(s)</h3>
+        <ul>
+        {% for each in info.attachments.all %}
+          <li><a href="{{ each.file.url }}">{{ each }}</a> ({{ each.get_size }})</li>
+        {% endfor %}
+        </ul>
+        {% if info.attachments.count > 2 %}
+          <form method="post">
+            <button type="submit" class="btn btn-default-outline" name="zipfile" value="true"><i class="fa fa-file-archive"></i> Download as zipfile</button>
+            {% csrf_token %}
+          </form>
+        {% endif %}
+
+      {% endif %}
+
 
       {% with link=PROJECT.slug|add:":report_error" %}
         <hr>

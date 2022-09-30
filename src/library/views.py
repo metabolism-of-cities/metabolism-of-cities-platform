@@ -276,6 +276,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     if project.slug == "ascus2021":
         # For AScUS participants we DO show those objects
         # that are marked as private, because the participants must be able to see them
+        # We should really embed this verification into the available_library_items function instead
         if request.user.is_authenticated and hasattr(request.user, "people"):
             check_participant = RecordRelationship.objects.filter(
                 record_parent = request.user.people,
@@ -432,6 +433,9 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         if units.count() == 1:
             unit = units[0]
 
+    data_layout = True if project.slug == "water" or "data-layout" in request.GET else False
+    data_layout = False
+
     context = {
         "info": info,
         "spaces": spaces,
@@ -458,12 +462,20 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         "properties": properties,
         "schemes": COLOR_SCHEMES,
 
+        "data_layout": data_layout,
+
         # Here temporarily, see comment above
         "unit": unit,
 
         # The following we'll only have during the AScUS voting round; remove afterwards
         #"best_vote": RecordRelationship.objects.filter(relationship_id=32, record_parent=request.user.people) if request.user.is_authenticated else None,
     }
+
+    if data_layout and info.data.all():
+        context["data_materials"] = info.data.values("material_name", "material_id").distinct().order_by("material_name")
+        context["data_timeframe"] = info.data.values("timeframe__name").distinct().order_by("timeframe__start")
+        context["data_spaces"] = info.data.values("origin_space__name", "origin_space_id").distinct().order_by("origin_space__name")
+        
     return render(request, "library/item.html", context)
 
 # We use this function to return the data in the right json object format
