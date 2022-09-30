@@ -1,7 +1,8 @@
 {% load static %}
+{% load moc_extras %}
   <script>
     {% with link=PROJECT.slug|add:":library_data_json" %}
-    const json_url = "{% url link info.id %}?{% if request.GET.space %}space={{ request.GET.space }}&{% elif properties.space %}space={{ properties.space }}&{% endif %}{% if request.GET.boundaries %}boundaries={{ request.GET.boundaries }}&{% elif properties.boundaries %}boundaries={{ properties.boundaries }}&{% endif %}{% if request.GET.create_cache %}create_cache=true&{% endif %}";
+    const json_url = "{% url link info.id %}?{% if request.GET.space %}space={{ request.GET.space }}&{% elif properties.space %}space={{ properties.space }}&{% endif %}{% if request.GET.boundaries %}boundaries={{ request.GET.boundaries }}&{% elif properties.boundaries %}boundaries={{ properties.boundaries }}&{% endif %}{% if request.GET.create_cache %}create_cache=true&{% endif %}{% if request.GET.spaces %}{% for each in request.GET|get_list:'spaces' %}spaces={{ each }}&{% endfor %}{% endif %}";
     {% endwith %}
     {% if properties %}
       const properties = {{ properties|safe }};

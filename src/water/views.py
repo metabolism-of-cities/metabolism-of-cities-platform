@@ -202,6 +202,16 @@ def diagram(request):
 
     file = doc.attachments.all()[0]
 
+    ## TEMP UPDATE CODE ###
+
+    if "update" in request.GET:
+        from django.db import connection
+        with connection.cursor() as cursor:
+            for each in TimePeriod.objects.all():
+                cursor.execute('UPDATE stafdb_data SET date_start = %s, date_end = %s, dates_label = %s WHERE timeframe_id = %s', [each.start, each.end, each.name, each.id])
+
+    ## END UPDATE CODE
+
     from openpyxl import load_workbook
     import pandas as pd
     import numpy as np

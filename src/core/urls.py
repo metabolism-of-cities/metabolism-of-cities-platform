@@ -94,10 +94,7 @@ urlpatterns = baseline_urlpatterns + [
     path("mooc/<int:id>/overview/", views.mooc),
 
     # Temporary
-    path("baseline/", views.load_baseline),
     path("pdf/", views.pdf),
-    path("tags/", views.tags),
-    path("dataimport/", views.dataimport),
 
     # Local only
     path("trim_database/", views.trim_database),
@@ -116,8 +113,4 @@ urlpatterns = baseline_urlpatterns + [
     path("search/ajax/<slug:type>/", views.search_ajax, name="search_ajax"),
 
     path("forum/", community.forum_list, name="forum_list"),
-
-    # These are permanent redirects to sort out old URL patterns 
-    # At some point, say Dec 2021, we should just remove this
-    path("resources/publications/<int:id>", views.redirect_publication),
 ]

@@ -691,7 +691,8 @@
 
       {% if data_layout %}
 
-        <section class="row">
+        <form>
+          <section class="row">
             <div class="col-md-6 col-lg-3 mb-4">
               <div class="card icon-card">
                 <div class="icon">
@@ -702,7 +703,7 @@
                   <p class="what-text">
                     Restrict search to these materials:
                   </p>
-                  <select multiple class="form-control">
+                  <select multiple class="form-control" name="materials">
                     {% for each in data_materials %}
                       <option value="{{ each.material_id }}">{{ each.material_name }}</option>
                     {% endfor %}
@@ -720,9 +721,9 @@
                   <p class="what-text">
                     Search within this dataset using geospatial boundaries:
                   </p>
-                  <select multiple class="form-control">
+                  <select multiple class="form-control" name="spaces">
                     {% for each in data_spaces %}
-                      <option value="{{ each.origin_space_id }}">{{ each.origin_space__name }}</option>
+                      <option {% if each.origin_space_id|slugify in get_spaces %}selected{% endif %} value="{{ each.origin_space_id }}">{{ each.origin_space__name }}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -738,9 +739,11 @@
                   <p class="what-text">
                     Filter data by setting a specific timeframe:
                   </p>
-                  <select multiple class="form-control">
+                  <select multiple class="form-control" name="timeframe">
                     {% for each in data_timeframe %}
-                      <option value="{{ each.id }}">{{ each.timeframe__name }}</option>
+                      <option {% if each.timeframe_id|slugify in get_timeframes %}selected{% endif %} value="{{ each.timeframe_id }}">
+                        {{ each.timeframe__name }}
+                      </option>
                     {% endfor %}
                   </select>
                 </div>
@@ -749,19 +752,40 @@
             <div class="col-md-6 col-lg-3 mb-4">
               <div class="card icon-card">
                 <div class="icon">
-                  <i class="far fa-fw fa-download"></i>
+                  <i class="far fa-fw fa-search"></i>
                 </div>
-                <div class="card-header">Download data</div>
+                <div class="card-header">Apply filters</div>
                 <div class="card-body">
                   <p class="what-text">
-                    {{ info.data.count }} data points<br>
-                    <a href="http://" class="btn btn-secondary">ALL datapoints</a>
-                    <a href="http://" class="btn btn-secondary-outline mt-3">Filtered datapoints</a>
+                    <button type="submit" class="btn btn-secondary">Apply filters</button>
+                    <button type="submit" class="btn btn-secondary-outline mt-4">Reset all filters</button>
                   </p>
                 </div>
               </div>
+            </section>
+            <input type="hidden" name="data-layout" value="true" />
+            <input type="hidden" name="boundaries" value="{{ request.GET.boundaries }}" />
+            {% if request.GET.restrict_to_within_boundaries %}
+              <input type="hidden" name="restrict_to_within_boundaries" value="true" />
+            {% endif %}
+            <input type="hidden" name="do_not_cache" value="true" />
+          </form>
+
+          <section>
+          <div class="card icon-card">
+            <div class="icon">
+              <i class="far fa-fw fa-download"></i>
             </div>
-          </section>
+            <div class="card-header">Download data</div>
+            <div class="card-body">
+              <p class="what-text">
+                {{ info.data.count }} data points<br>
+                <a href="http://" class="btn btn-secondary">ALL datapoints</a>
+                <a href="http://" class="btn btn-secondary-outline mt-3">Filtered datapoints</a>
+              </p>
+            </div>
+          </div>
+        </section>
 
       {% endif %}
 

@@ -433,8 +433,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         if units.count() == 1:
             unit = units[0]
 
-    data_layout = True if project.slug == "water" or "data-layout" in request.GET else False
-    data_layout = False
+    data_layout = True if project.slug == "ater" or "data-layout" in request.GET else False
 
     context = {
         "info": info,
@@ -473,8 +472,17 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
 
     if data_layout and info.data.all():
         context["data_materials"] = info.data.values("material_name", "material_id").distinct().order_by("material_name")
-        context["data_timeframe"] = info.data.values("timeframe__name").distinct().order_by("timeframe__start")
+        context["data_timeframe"] = info.data.values("timeframe__name", "timeframe_id").distinct("timeframe__start", "timeframe__name").order_by("timeframe__start", "timeframe__name", "timeframe_id")
         context["data_spaces"] = info.data.values("origin_space__name", "origin_space_id").distinct().order_by("origin_space__name")
+        if "spaces" in request.GET:
+            context["get_spaces"] = request.GET.getlist("spaces")
+        if "timeframe" in request.GET:
+            context["get_timeframes"] = request.GET.getlist("timeframe")
+            p(context["get_timeframes"])
+            a = []
+            for each in context["data_timeframe"]:
+                a.append((each["timeframe_id"]))
+            p(a)
         
     return render(request, "library/item.html", context)
 
@@ -490,7 +498,7 @@ def fetch_data_in_json_object(dataset, cache_key, parameters):
 
     json_object = cache.get(cache_key)
 
-    if json_object:
+    if json_object and False:
         return json_object
 
     data = dataset.data.filter(quantity__isnull=False)
@@ -498,6 +506,10 @@ def fetch_data_in_json_object(dataset, cache_key, parameters):
     if "space" in parameters:
         space = parameters["space"]
         data = data.filter(Q(origin_space_id=space)|Q(destination_space_id=space))
+
+    if "spaces" in parameters:
+        spaces = parameters.getlist("spaces")
+        data = data.filter(Q(origin_space_id__in=spaces)|Q(destination_space_id__in=spaces))
 
     if "boundaries" in parameters:
         boundaries = ReferenceSpace.objects.get(pk=parameters["boundaries"])
@@ -609,11 +621,12 @@ def fetch_data_in_json_object(dataset, cache_key, parameters):
         "top_level": top_level,
     }
 
-    cache.set(cache_key, json_object, None)
-    if "cache" not in dataset.meta_data:
-        dataset.meta_data["cache"] = []
-    dataset.meta_data["cache"].append(cache_key)
-    dataset.save()
+    if not "do_not_cache" in parameters:
+        cache.set(cache_key, json_object, None)
+        if "cache" not in dataset.meta_data:
+            dataset.meta_data["cache"] = []
+        dataset.meta_data["cache"].append(cache_key)
+        dataset.save()
 
     return json_object
 

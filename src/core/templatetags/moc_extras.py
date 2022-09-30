@@ -32,6 +32,10 @@ def strip_first_slash(string):
     else:
         return string
 
+@register.filter
+def get_list(dictionary, key):
+    return dictionary.getlist(key)
+
 
 #### TEMP FOR MAP CONVERSION #####
 @register.filter

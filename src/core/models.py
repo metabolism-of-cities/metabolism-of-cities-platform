@@ -1600,20 +1600,10 @@ class LibraryItem(Record):
                         if this_type == "flows":
                             start = start.strftime("%Y-%m-%d")
                             end = end.strftime("%Y-%m-%d")
-                            full_string = str(start) + str(end)
                         elif this_type == "stock" or this_type == "population":
                             start = start.strftime("%Y-%m-%d")
                             end = None
-                            full_string = str(start)
                             period = str(start)
-
-                        if full_string not in times:
-                            t = TimePeriod.objects.create(
-                                start = start,
-                                end = end,
-                                name = period,
-                            )
-                            times[full_string] = t
                     except Exception as e:
                         error = f"We had an issue formatting your date(s) - this error came back: {e}"
 
@@ -1631,8 +1621,10 @@ class LibraryItem(Record):
                                 source = self,
                                 origin_space = spaces[space],
                                 comments = comment,
-                                timeframe = times[full_string],
                                 segment_name = segment,
+                                date_start = start,
+                                date_end = end,
+                                dates_label = period,
                             ))
                         except Exception as e:
                             error = f"We were unable to add your item - this is the error that came back: {e} is invalid"
@@ -2968,8 +2960,11 @@ class Data(models.Model):
     origin = models.ForeignKey(Activity, on_delete=models.CASCADE, null=True, blank=True, related_name="data_from")
     destination = models.ForeignKey(Activity, on_delete=models.CASCADE, null=True, blank=True, related_name="data_to")
     comments = models.TextField(null=True, blank=True)
-    timeframe = models.ForeignKey(TimePeriod, on_delete=models.CASCADE)
+    timeframe = models.ForeignKey(TimePeriod, on_delete=models.CASCADE) #remove
     segment_name = models.CharField(max_length=500, null=True, blank=True)
+    date_start = models.DateField(db_index=True, null=True, blank=True) #Make non-nullable
+    date_end = models.DateField(db_index=True, null=True, blank=True)
+    dates_label = models.CharField(max_length=255, db_index=True, null=True, blank=True) #Make non-nullable
     is_public = models.BooleanField(default=True, db_index=True)
 
     objects = PublicRecordManager()
@@ -2977,7 +2972,7 @@ class Data(models.Model):
 
     class Meta:
         db_table = "stafdb_data"
-        ordering = ["timeframe__start", "id"]
+        ordering = ["date_start", "id"]
 
 class DataViz(Record):
     uid = models.AutoField(primary_key=True)
