@@ -433,7 +433,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         if units.count() == 1:
             unit = units[0]
 
-    data_layout = True if project.slug == "ater" or "data-layout" in request.GET else False
+    data_layout = True if project.slug == "water" or "data-layout" in request.GET else False
 
     context = {
         "info": info,
@@ -472,17 +472,18 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
 
     if data_layout and info.data.all():
         context["data_materials"] = info.data.values("material_name", "material_id").distinct().order_by("material_name")
-        context["data_timeframe"] = info.data.values("timeframe__name", "timeframe_id").distinct("timeframe__start", "timeframe__name").order_by("timeframe__start", "timeframe__name", "timeframe_id")
+        context["data_timeframes"] = info.data.values("date_start", "dates_label").distinct().order_by("date_start", "dates_label")
         context["data_spaces"] = info.data.values("origin_space__name", "origin_space_id").distinct().order_by("origin_space__name")
+
+        # These different variables are lists, having multiple variables (potentially) in the URL
+        # However, we cannot easily query the GETLISTs in the templates so it's easier to pass 
+        # them from the views for easy looping
         if "spaces" in request.GET:
             context["get_spaces"] = request.GET.getlist("spaces")
-        if "timeframe" in request.GET:
-            context["get_timeframes"] = request.GET.getlist("timeframe")
-            p(context["get_timeframes"])
-            a = []
-            for each in context["data_timeframe"]:
-                a.append((each["timeframe_id"]))
-            p(a)
+        if "timeframes" in request.GET:
+            context["get_timeframes"] = request.GET.getlist("timeframes")
+        if "materials" in request.GET:
+            context["get_materials"] = request.GET.getlist("materials")
         
     return render(request, "library/item.html", context)
 
@@ -496,10 +497,10 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
 
 def fetch_data_in_json_object(dataset, cache_key, parameters):
 
-    json_object = cache.get(cache_key)
-
-    if json_object and False:
-        return json_object
+    if not "do_not_cache" in parameters:
+        json_object = cache.get(cache_key)
+        if json_object:
+            return json_object
 
     data = dataset.data.filter(quantity__isnull=False)
 
@@ -510,6 +511,14 @@ def fetch_data_in_json_object(dataset, cache_key, parameters):
     if "spaces" in parameters:
         spaces = parameters.getlist("spaces")
         data = data.filter(Q(origin_space_id__in=spaces)|Q(destination_space_id__in=spaces))
+
+    if "timeframes" in parameters:
+        timeframes = parameters.getlist("timeframes")
+        data = data.filter(dates_label__in=timeframes)
+
+    if "materials" in parameters:
+        materials = parameters.getlist("materials")
+        data = data.filter(material_name__in=materials)
 
     if "boundaries" in parameters:
         boundaries = ReferenceSpace.objects.get(pk=parameters["boundaries"])
@@ -528,8 +537,8 @@ def fetch_data_in_json_object(dataset, cache_key, parameters):
     number_of_segments = data.values("segment_name").distinct().count()
 
     if "drilldown" in parameters:
-        group_by = "timeframe__name"
-        grouped_data = data.values(group_by).annotate(total=Sum("quantity")).order_by("timeframe__start")
+        group_by = "dates_label"
+        grouped_data = data.values(group_by).annotate(total=Sum("quantity")).order_by("dates_label")
         subdivision = "origin_space"
         if number_of_origins > 1:
             subdivision = "origin_space"
@@ -546,8 +555,8 @@ def fetch_data_in_json_object(dataset, cache_key, parameters):
                 "drilldown": each[group_by],
             })
 
-            # Gotta swap out "timeframe__name" for variable, unsure how!
-            get_this_data = data.filter(timeframe__name=each[group_by])
+            # Gotta swap out "dates_label" for variable, unsure how!
+            get_this_data = data.filter(dates_label=each[group_by])
             this_data = []
             for data_point in get_this_data:
                 # Should also swap out origin_space.name for a variable, somehow!
@@ -566,7 +575,7 @@ def fetch_data_in_json_object(dataset, cache_key, parameters):
 
     else:
         for each in data:
-            x_axis_field = each.timeframe.name
+            x_axis_field = each.dates_label
             if each.segment_name and number_of_segments > 1:
                 stacked_field = each.segment_name
             elif number_of_materials > 1 and number_of_origins < 2:

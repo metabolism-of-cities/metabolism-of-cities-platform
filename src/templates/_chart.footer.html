@@ -2,7 +2,7 @@
 {% load moc_extras %}
   <script>
     {% with link=PROJECT.slug|add:":library_data_json" %}
-    const json_url = "{% url link info.id %}?{% if request.GET.space %}space={{ request.GET.space }}&{% elif properties.space %}space={{ properties.space }}&{% endif %}{% if request.GET.boundaries %}boundaries={{ request.GET.boundaries }}&{% elif properties.boundaries %}boundaries={{ properties.boundaries }}&{% endif %}{% if request.GET.create_cache %}create_cache=true&{% endif %}{% if request.GET.spaces %}{% for each in request.GET|get_list:'spaces' %}spaces={{ each }}&{% endfor %}{% endif %}";
+    const json_url = "{% url link info.id %}?{% if request.GET.space %}space={{ request.GET.space }}&{% elif properties.space %}space={{ properties.space }}&{% endif %}{% if request.GET.boundaries %}boundaries={{ request.GET.boundaries }}&{% elif properties.boundaries %}boundaries={{ properties.boundaries }}&{% endif %}{% if request.GET.create_cache %}create_cache=true&{% endif %}{% if request.GET.spaces %}{% for each in request.GET|get_list:'spaces' %}spaces={{ each }}&{% endfor %}{% endif %}{% if request.GET.timeframes %}{% for each in request.GET|get_list:'timeframes' %}timeframes={{ each }}&{% endfor %}{% endif %}{% if request.GET.materials %}{% for each in request.GET|get_list:'materials' %}materials={{ each }}&{% endfor %}{% endif %}{% if request.GET.do_not_cache %}do_not_cache&{% endif %}";
     {% endwith %}
     {% if properties %}
       const properties = {{ properties|safe }};

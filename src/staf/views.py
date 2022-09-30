@@ -3092,11 +3092,11 @@ def data(request, json=False):
         data = data.filter(source_id=source)
 
     if start and end:
-        data = data.filter(timeframe__start__range=[start, end])
+        data = data.filter(date_start__range=[start, end])
     elif start:
-        data = data.filter(timeframe__end__gte=start)
+        data = data.filter(date_end__gte=start)
     elif end:
-        data = data.filter(timeframe__end__lte=end)
+        data = data.filter(date_end__lte=end)
 
     if origin_space:
         data = data.filter(origin_space_id=origin_space)

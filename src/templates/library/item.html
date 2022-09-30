@@ -705,7 +705,9 @@
                   </p>
                   <select multiple class="form-control" name="materials">
                     {% for each in data_materials %}
-                      <option value="{{ each.material_id }}">{{ each.material_name }}</option>
+                      <option {% if each.material_name in get_materials %}selected{% endif %} value="{{ each.material_name }}">
+                        {{ each.material_name }}
+                      </option>
                     {% endfor %}
                   </select>
                 </div>
@@ -739,10 +741,10 @@
                   <p class="what-text">
                     Filter data by setting a specific timeframe:
                   </p>
-                  <select multiple class="form-control" name="timeframe">
-                    {% for each in data_timeframe %}
-                      <option {% if each.timeframe_id|slugify in get_timeframes %}selected{% endif %} value="{{ each.timeframe_id }}">
-                        {{ each.timeframe__name }}
+                  <select multiple class="form-control" name="timeframes">
+                    {% for each in data_timeframes %}
+                      <option {% if each.dates_label in get_timeframes %}selected{% endif %} value="{{ each.dates_label }}">
+                        {{ each.dates_label }}
                       </option>
                     {% endfor %}
                   </select>

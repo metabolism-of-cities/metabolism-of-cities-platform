@@ -2938,17 +2938,6 @@ class ZoteroItem(models.Model):
                 hits.append(each)
         return hits
 
-class TimePeriod(models.Model):
-    start = models.DateField(db_index=True)
-    end = models.DateField(db_index=True, null=True, blank=True)
-    name = models.CharField(max_length=255, db_index=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        db_table = "stafdb_timeperiod"
-
 class Data(models.Model):
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.FloatField(null=True, blank=True)
@@ -2960,15 +2949,17 @@ class Data(models.Model):
     origin = models.ForeignKey(Activity, on_delete=models.CASCADE, null=True, blank=True, related_name="data_from")
     destination = models.ForeignKey(Activity, on_delete=models.CASCADE, null=True, blank=True, related_name="data_to")
     comments = models.TextField(null=True, blank=True)
-    timeframe = models.ForeignKey(TimePeriod, on_delete=models.CASCADE) #remove
     segment_name = models.CharField(max_length=500, null=True, blank=True)
-    date_start = models.DateField(db_index=True, null=True, blank=True) #Make non-nullable
+    date_start = models.DateField(db_index=True)
     date_end = models.DateField(db_index=True, null=True, blank=True)
-    dates_label = models.CharField(max_length=255, db_index=True, null=True, blank=True) #Make non-nullable
+    dates_label = models.CharField(max_length=255, db_index=True)
     is_public = models.BooleanField(default=True, db_index=True)
 
     objects = PublicRecordManager()
     objects_include_private = models.Manager()
+
+    def __str__(self):
+        return f"{self.quantity} {self.unit} of {self.material_name} ({self.origin}-{self.destination}) - {self.dates_label}"
 
     class Meta:
         db_table = "stafdb_data"
