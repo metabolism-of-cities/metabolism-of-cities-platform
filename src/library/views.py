@@ -473,7 +473,46 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     if data_layout and info.data.all():
         context["data_materials"] = info.data.values("material_name", "material_id").distinct().order_by("material_name")
         context["data_timeframes"] = info.data.values("date_start", "dates_label").distinct().order_by("date_start", "dates_label")
-        context["data_spaces"] = info.data.values("origin_space__name", "origin_space_id").distinct().order_by("origin_space__name")
+        all_relevant_spaces = ReferenceSpace.objects_include_private.filter(Q(data_from_space__source=info)|Q(data_to_space__source=info)).distinct()
+        context["data_spaces"] = all_relevant_spaces
+
+        if "boundaries" in request.GET:
+            boundaries = ReferenceSpace.objects_include_private.get(pk=request.GET["boundaries"])
+            if not boundaries.is_public:
+                # We need to ensure that the user has access to the source document if this is not a public
+                # reference space...
+                try:
+                    check = available_library_items(request).get(pk=boundaries.source)
+                except:
+                    messages.warning(request, f"We could not load the requested boundaries.")
+                    boundaries = None
+            if boundaries:
+                # We only want to show the list of spaces in the dropdown that are actually within the boundaries
+                context["data_spaces"] = context["data_spaces"].filter(geometry__within=boundaries.geometry)
+                this_location = boundaries.geometry
+
+                map = folium.Map(
+                    zoom_start=15,
+                    scrollWheelZoom=False,
+                    tiles=STREET_TILES,
+                    attr="Mapbox",
+                )
+                folium.GeoJson(
+                    boundaries.geometry.geojson,
+                    name="geojson",
+                ).add_to(map)
+
+                map.fit_bounds(map.get_bounds()) 
+
+                # But we still want to put ALL markers on the map to show what is within and what is outside of the boundaries
+                for each in all_relevant_spaces:
+                    folium.Marker(
+                        location=[each.geometry.centroid[1], each.geometry.centroid[0]],
+                        popup=each.name,
+                    ).add_to(map)
+
+                context["boundaries"] = boundaries
+                context["map"] = map._repr_html_()
 
         # These different variables are lists, having multiple variables (potentially) in the URL
         # However, we cannot easily query the GETLISTs in the templates so it's easier to pass 

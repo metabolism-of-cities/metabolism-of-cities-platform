@@ -567,7 +567,6 @@
             <a href="{% url URLS.MAP_ITEM info.id %}" class="btn btn-primary"><i class="fa fa-map"></i> View interactive map</a>
           {% endif %}
         {% endif %}
-
       {% endif %}
 
       {% if request.user.is_authenticated %}
@@ -718,14 +717,14 @@
                 <div class="icon">
                   <i class="far fa-fw fa-map"></i>
                 </div>
-                <div class="card-header">Geospatial filter</div>
+                <div class="card-header">Location filter</div>
                 <div class="card-body">
                   <p class="what-text">
-                    Search within this dataset using geospatial boundaries:
+                    Restrict data to what is linked to the following places:
                   </p>
                   <select multiple class="form-control" name="spaces">
                     {% for each in data_spaces %}
-                      <option {% if each.origin_space_id|slugify in get_spaces %}selected{% endif %} value="{{ each.origin_space_id }}">{{ each.origin_space__name }}</option>
+                      <option {% if each.id|slugify in get_spaces %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -764,17 +763,20 @@
                   </p>
                 </div>
               </div>
-            </section>
-            <input type="hidden" name="data-layout" value="true" />
+            </div>
+          </section>
+          <input type="hidden" name="data-layout" value="true" />
+          {% if request.GET.boundaries %}
             <input type="hidden" name="boundaries" value="{{ request.GET.boundaries }}" />
-            {% if request.GET.restrict_to_within_boundaries %}
-              <input type="hidden" name="restrict_to_within_boundaries" value="true" />
-            {% endif %}
-            <input type="hidden" name="do_not_cache" value="true" />
-          </form>
+          {% endif %}
+          {% if request.GET.restrict_to_within_boundaries %}
+            <input type="hidden" name="restrict_to_within_boundaries" value="true" />
+          {% endif %}
+          <input type="hidden" name="do_not_cache" value="true" />
+        </form>
 
-          <section>
-          <div class="card icon-card">
+        <section class="row">
+          <div class="card icon-card col-3">
             <div class="icon">
               <i class="far fa-fw fa-download"></i>
             </div>
@@ -785,6 +787,32 @@
                 <a href="http://" class="btn btn-secondary">ALL datapoints</a>
                 <a href="http://" class="btn btn-secondary-outline mt-3">Filtered datapoints</a>
               </p>
+            </div>
+          </div>
+          <div class="card icon-card col-3">
+            <div class="icon">
+              <i class="far fa-fw fa-location"></i>
+            </div>
+            <div class="card-header">Geospatial boundary</div>
+            <div class="card-body">
+              <p class="what-text">
+                {% if boundaries %}
+                Data are only displayed if they occur within the following boundaries:<br>
+                <strong>
+                  {% with link=PROJECT.slug|add:":referencespace" %}
+                    <a href="{% url link boundaries.id %}">
+                    {{ boundaries }}
+                    </a>
+                  {% endwith %}
+                </strong>. Boundaries are shown on the right.
+                <button class="btn btn-secondary">Apply different boundaries</button>
+                {% endif %}
+              </p>
+            </div>
+          </div>
+          <div class="card icon-card col-6">
+            <div class="leaflet-map">
+              {{ map|safe }}
             </div>
           </div>
         </section>
