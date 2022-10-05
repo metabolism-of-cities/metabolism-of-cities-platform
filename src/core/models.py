@@ -8,7 +8,6 @@ from django.urls import reverse
 from django.forms import ModelForm
 from django.conf import settings
 from markdown import markdown
-from tinymce import HTMLField
 import re
 from unidecode import unidecode
 from django.utils.text import slugify
@@ -450,8 +449,8 @@ class ProjectType(models.Model):
 
 class Project(Record):
     type = models.ForeignKey(ProjectType, on_delete=models.CASCADE, null=True, blank=True)
-    contributor_page = HTMLField(null=True, blank=True)
-    support_page = HTMLField(null=True, blank=True)
+    contributor_page = models.TextField(null=True, blank=True)
+    support_page = models.TextField(null=True, blank=True)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
     STATUS = (

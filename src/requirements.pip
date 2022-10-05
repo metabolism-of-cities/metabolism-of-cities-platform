@@ -1,6 +1,6 @@
-Django==3.1.2
-gunicorn==20.0.4
-psycopg2-binary==2.8.4
+Django==4.1.2
+gunicorn==20.1.0
+psycopg2-binary==2.9.3
 Pillow==9.2.0
 django_cron
 python-dateutil
@@ -10,7 +10,7 @@ libsass
 django-compressor
 django-sass-processor
 django-bootstrap4
-django-tinymce4-lite
+django-tinymce
 django-anymail[sendgrid]
 feedparser==5.2.1 # We need this version for now because the Zotero import fails with a newer version
 xhtml2pdf

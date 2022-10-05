@@ -276,5 +276,6 @@ CACHES = {
         'LOCATION': '/src/logs/django_cache',
     }
 }
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 #SESSION_COOKIE_DOMAIN=".metabolismofcities.org"

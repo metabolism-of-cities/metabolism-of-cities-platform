@@ -2,7 +2,6 @@ from django.contrib import admin
 from .models import *
 from django.shortcuts import redirect
 from django.contrib.admin import AdminSite
-from django.utils.translation import ugettext_lazy
 from django.contrib.auth.models import User, Group
 from django.contrib.admin.models import LogEntry
 from django_cron.models import CronJobLog
@@ -20,13 +19,13 @@ class GeoModelAdmin(admin.ModelAdmin):
 
 class MyAdminSite(AdminSite):
     # Text to put at the end of each page"s <title>.
-    site_title = ugettext_lazy("Metabolism of Cities Admin")
+    site_title = "Metabolism of Cities Admin"
 
     # Text to put in each page"s <h1> (and above login form).
-    site_header = ugettext_lazy("Metabolism of Cities Admin")
+    site_header = "Metabolism of Cities Admin"
 
     # Text to put at the top of the admin index page.
-    index_title = ugettext_lazy("Metabolism of Cities")
+    index_title = "Metabolism of Cities"
     enable_nav_sidebar = False
 
 admin_site = MyAdminSite()
