@@ -12,11 +12,11 @@ urlpatterns = baseline_urlpatterns + baseline_library_urlpatterns + [
 
     path("", views.index, name="index"),
     path("casestudies/", views.casestudies, name="casestudies"),
-    path("list/", views.list, name="list"),
+    path("list/", views.library_list, name="list"),
     path("methods/", views.methodologies, name="methods"),
     path("methods/<int:id>/<slug:slug>/", views.methodology, name="method"),
     path("methods/<int:id>/<slug:slug>/list/", views.methodology_list, name="method_list"),
-    path("list/<slug:type>/", views.list, name="list"),
+    path("list/<slug:type>/", views.library_list, name="list"),
     path("casestudies/map/", views.map, { "article": 50 }, name="map"),
     path("casestudies/<slug:slug>/", views.casestudies, name="casestudies"),
     path("download/", views.download, name="download"),

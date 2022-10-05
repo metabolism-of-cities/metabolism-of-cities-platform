@@ -253,3 +253,16 @@ def available_library_items(request):
             items = LibraryItem.objects
 
     return items
+
+# We use this to record cache objects associated with a specific record
+# We do that because we generally don't set a time-out (because the main reason for 
+# caching items it that script generation is slow; it's not about a high volume of 
+# hits). However, in order to keep track of what cache objects exist, we record them
+# in the db so that they can be erased upon loading new data. 
+
+def append_cache_to_library_item(library_item, cache_key):
+    if "cache" not in library_item.meta_data:
+        library_item.meta_data["cache"] = []
+    library_item.meta_data["cache"].append(cache_key)
+    library_item.save()
+    return True

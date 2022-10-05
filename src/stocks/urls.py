@@ -11,7 +11,7 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("home/", views.index, name="index"),
     path("about/", views.about, name="about"),
     path("contribute/", views.contribute, name="contribute"),
-    path("publications/", library.list, {"type": "stock"}, name="publications"),
+    path("publications/", library.library_list, {"type": "stock"}, name="publications"),
     path("publications/create/", library.upload),
     path("publications/create/form/", library.form),
     path("cities/", views.cities, name="cities"),

@@ -114,7 +114,7 @@ def index(request):
     }
     return render(request, "library/index.html", context)
 
-def list(request, type):
+def library_list(request, type):
     title = type
     webpage = None
     if type == "dataportals":
@@ -417,7 +417,8 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         spaces_message = f"This shapefile contains {spaces.count()} items - we are only displaying the first 20 below."
         spaces = spaces[:20]
 
-    if info.data.all():
+    data = info.data
+    if data.count():
         properties = info.get_dataviz_properties
         load_datatables = True
         load_highcharts = True
@@ -428,8 +429,8 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     # TEMPORARY CODE TO GET UNIT FOR CHARTS IN SCA REPORTS
     # https://data.metabolismofcities.org/tasks/991921/
     unit = None
-    if info.data.count():
-        units = info.data.values("unit__name").filter(quantity__isnull=False).order_by("unit__name").distinct()
+    if data.count():
+        units = data.values("unit__name").filter(quantity__isnull=False).order_by("unit__name").distinct()
         if units.count() == 1:
             unit = units[0]
 
@@ -470,11 +471,11 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         #"best_vote": RecordRelationship.objects.filter(relationship_id=32, record_parent=request.user.people) if request.user.is_authenticated else None,
     }
 
-    if data_layout and info.data.all():
-        context["data_materials"] = info.data.values("material_name", "material_id").distinct().order_by("material_name")
-        context["data_timeframes"] = info.data.values("date_start", "dates_label").distinct().order_by("date_start", "dates_label")
+    if data_layout and data.all():
+        context["data_materials"] = data.values("material_name", "material_id").distinct().order_by("material_name")
+        context["data_timeframes"] = data.values("date_start", "dates_label").distinct().order_by("date_start", "dates_label")
         all_relevant_spaces = ReferenceSpace.objects_include_private.filter(Q(data_from_space__source=info)|Q(data_to_space__source=info)).distinct()
-        context["data_spaces"] = all_relevant_spaces
+        context["data_spaces"] = all_relevant_spaces.values("id", "name")
 
         if "boundaries" in request.GET:
             boundaries = ReferenceSpace.objects_include_private.get(pk=request.GET["boundaries"])
@@ -488,31 +489,51 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
                     boundaries = None
             if boundaries:
                 # We only want to show the list of spaces in the dropdown that are actually within the boundaries
-                context["data_spaces"] = context["data_spaces"].filter(geometry__within=boundaries.geometry)
                 this_location = boundaries.geometry
 
-                map = folium.Map(
-                    zoom_start=15,
-                    scrollWheelZoom=False,
-                    tiles=STREET_TILES,
-                    attr="Mapbox",
-                )
-                folium.GeoJson(
-                    boundaries.geometry.geojson,
-                    name="geojson",
-                ).add_to(map)
+                cache_key = f"spaces-within-{boundaries.id}-from-{info.id}"
+                cache_key_map = f"map-within-{boundaries.id}-from-{info.id}"
+                data_spaces_from_cache = cache.get(cache_key)
+                map_from_cache = cache.get(cache_key_map)
 
-                map.fit_bounds(map.get_bounds()) 
-
-                # But we still want to put ALL markers on the map to show what is within and what is outside of the boundaries
-                for each in all_relevant_spaces:
-                    folium.Marker(
-                        location=[each.geometry.centroid[1], each.geometry.centroid[0]],
-                        popup=each.name,
+                if data_spaces_from_cache and map_from_cache:
+                    context["data_spaces"] = data_spaces_from_cache
+                    context["map"] = map_from_cache
+                else:
+                    # Convert to list due to caching issue
+                    # TODO
+                    context["data_spaces"] = list(context["data_spaces"].filter(geometry__within=boundaries.geometry))
+                    map = folium.Map(
+                        zoom_start=15,
+                        scrollWheelZoom=False,
+                        tiles=STREET_TILES,
+                        attr="Mapbox",
+                    )
+                    folium.GeoJson(
+                        boundaries.geometry.geojson,
+                        name="geojson",
                     ).add_to(map)
 
+                    map.fit_bounds(map.get_bounds()) 
+
+                    # But we still want to put ALL markers on the map to show what is within and what is outside of the boundaries
+                    for each in all_relevant_spaces:
+                        folium.Marker(
+                            location=[each.geometry.centroid[1], each.geometry.centroid[0]],
+                            popup=each.name,
+                        ).add_to(map)
+
+                    context["map"] = map._repr_html_()
+
+                    append_cache_to_library_item(info, cache_key)
+                    append_cache_to_library_item(info, cache_key_map)
+                    append_cache_to_library_item(boundaries, cache_key)
+                    append_cache_to_library_item(boundaries, cache_key_map)
+
+                    cache.set(cache_key, context["data_spaces"], None)
+                    cache.set(cache_key_map, context["map"], None)
+
                 context["boundaries"] = boundaries
-                context["map"] = map._repr_html_()
 
         # These different variables are lists, having multiple variables (potentially) in the URL
         # However, we cannot easily query the GETLISTs in the templates so it's easier to pass 

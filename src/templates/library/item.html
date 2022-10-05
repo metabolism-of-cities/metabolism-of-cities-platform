@@ -724,7 +724,7 @@
                   </p>
                   <select multiple class="form-control" name="spaces">
                     {% for each in data_spaces %}
-                      <option {% if each.id|slugify in get_spaces %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
+                      <option {% if each.id|slugify in get_spaces %}selected{% endif %} value="{{ each.id }}">{{ each.name }}</option>
                     {% endfor %}
                   </select>
                 </div>

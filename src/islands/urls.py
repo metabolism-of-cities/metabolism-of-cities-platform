@@ -31,8 +31,8 @@ urlpatterns = baseline_urlpatterns + baseline_library_urlpatterns + baseline_sta
     path("islands/", views.map, name="data_map"),
     path("resources/publications/", library.index, name="resources"),
     path("resources/courses/", RedirectView.as_view(url="/courses/", permanent=False)),
-    path("resources/reviews/", library.list, { "type": "reviews"}, name="reviews"),
-    path("resources/islandindustrialecology/", library.list, { "type": "island_ie"}, name="island_ie"),
+    path("resources/reviews/", library.library_list, { "type": "reviews"}, name="reviews"),
+    path("resources/islandindustrialecology/", library.library_list, { "type": "island_ie"}, name="island_ie"),
 
     # Controlpanel
     path("controlpanel/organisations/", community.controlpanel_organizations),
