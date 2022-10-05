@@ -194,4 +194,5 @@ baseline_staf_urlpatterns = [
     path("controlpanel/shapefiles/", staf.controlpanel_shapefiles, name="controlpanel_shapefiles"),
 
     path("map/", staf.map, name="map"),
+    path("search/ajax/spaces/", library.search_spaces_ajax, name="search_spaces_ajax"),
 ]

@@ -691,6 +691,7 @@
       {% if data_layout %}
 
         <form>
+
           <section class="row">
             <div class="col-md-6 col-lg-3 mb-4">
               <div class="card icon-card">
@@ -742,8 +743,8 @@
                   </p>
                   <select multiple class="form-control" name="timeframes">
                     {% for each in data_timeframes %}
-                      <option {% if each.dates_label in get_timeframes %}selected{% endif %} value="{{ each.dates_label }}">
-                        {{ each.dates_label }}
+                      <option {% if each.date_start__year|slugify in get_timeframes %}selected{% endif %} value="{{ each.date_start__year }}">
+                        {{ each.date_start__year }}
                       </option>
                     {% endfor %}
                   </select>
@@ -765,57 +766,95 @@
               </div>
             </div>
           </section>
-          <input type="hidden" name="data-layout" value="true" />
-          {% if request.GET.boundaries %}
-            <input type="hidden" name="boundaries" value="{{ request.GET.boundaries }}" />
-          {% endif %}
-          {% if request.GET.restrict_to_within_boundaries %}
-            <input type="hidden" name="restrict_to_within_boundaries" value="true" />
-          {% endif %}
-          <input type="hidden" name="do_not_cache" value="true" />
-        </form>
 
-        <section class="row">
-          <div class="card icon-card col-3">
-            <div class="icon">
-              <i class="far fa-fw fa-download"></i>
+          <input type="hidden" name="data-layout" value="true" />
+          <input type="hidden" name="do_not_cache" value="true" />
+
+          <section class="row">
+            <div class="card icon-card col-3">
+              <div class="icon">
+                <i class="far fa-fw fa-download"></i>
+              </div>
+              <div class="card-header">Download data</div>
+              <div class="card-body">
+                <p class="what-text">
+                  There are a total of 
+                  {{ info.data.count|intcomma }} data points in this dataset. Use the bottom below to download: <br>
+                  <br>
+                  <a href="#" class="btn btn-secondary">ALL datapoints</a>
+                  <a href="#" class="btn btn-secondary-outline mt-3">Filtered datapoints</a>
+                </p>
+              </div>
             </div>
-            <div class="card-header">Download data</div>
-            <div class="card-body">
-              <p class="what-text">
-                {{ info.data.count }} data points<br>
-                <a href="http://" class="btn btn-secondary">ALL datapoints</a>
-                <a href="http://" class="btn btn-secondary-outline mt-3">Filtered datapoints</a>
-              </p>
+            <div class="card icon-card col-3">
+              <div class="icon">
+                <i class="far fa-fw fa-location"></i>
+              </div>
+              <div class="card-header">Geospatial boundary</div>
+              <div class="card-body">
+                <p class="what-text">
+                  {% if boundaries %}
+                  Data are only displayed if they occur within the following boundaries:
+                  <strong>
+                    {% with link=PROJECT.slug|add:":referencespace" %}
+                      <a href="{% url link boundaries.id %}">
+                      {{ boundaries }}
+                      </a>
+                    {% endwith %}
+                  </strong>. <br><br>Boundaries are shown on the right.
+                  {% else %}
+                    <em>No geospatial boundary loaded.</em>
+                  {% endif %}
+                  <button type="button" data-toggle="modal" data-target="#searchSpace" class="btn btn-primary-outline mt-3">Load {% if boundaries %}different{% endif %} boundaries</button>
+                </p>
+              </div>
+            </div>
+            <div class="card icon-card col-6">
+              {% if map %}
+                <div class="leaflet-map">
+                  {{ map|safe }}
+                </div>
+              {% endif %}
+            </div>
+          </section>
+
+          <div class="modal fade" id="searchSpace" tabindex="-1" aria-labelledby="searchSpaceLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="searchSpaceLabel">Load new boundaries</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  We can apply a geospatial boundary to this dataset. That means that we only 
+                  display data that is associated with a location within a certain boundary.
+                  That boundary could be a region, municipality, country, etc. This only makes 
+                  sense if your dataset covers an area <em>larger</em> than the boundary that
+                  you select.
+                  <div class="mt-4">
+                    <select class="form-control" id="space_finder" name="boundaries">
+                      {% if boundaries %}
+                        <option selected value="{{ boundaries.id }}">{{ boundaries }}</option>
+                      {% endif %}
+                    </select>
+                  </div>
+                </div>
+                <div class="modal-footer">
+
+                  {% if request.GET.restrict_to_within_boundaries %}
+                    <input type="hidden" name="restrict_to_within_boundaries" value="true" />
+                  {% endif %}
+
+                  <button class="btn btn-primary" type="submit">Search</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="card icon-card col-3">
-            <div class="icon">
-              <i class="far fa-fw fa-location"></i>
-            </div>
-            <div class="card-header">Geospatial boundary</div>
-            <div class="card-body">
-              <p class="what-text">
-                {% if boundaries %}
-                Data are only displayed if they occur within the following boundaries:<br>
-                <strong>
-                  {% with link=PROJECT.slug|add:":referencespace" %}
-                    <a href="{% url link boundaries.id %}">
-                    {{ boundaries }}
-                    </a>
-                  {% endwith %}
-                </strong>. Boundaries are shown on the right.
-                <button class="btn btn-secondary">Apply different boundaries</button>
-                {% endif %}
-              </p>
-            </div>
-          </div>
-          <div class="card icon-card col-6">
-            <div class="leaflet-map">
-              {{ map|safe }}
-            </div>
-          </div>
-        </section>
+
+        </form>
 
       {% endif %}
 
@@ -1021,6 +1060,18 @@
         e.preventDefault();
         $(this).hide()
         $(".admin-option").show();
+      });
+    {% endif %}
+
+    {% if data_layout %}
+      $("#space_finder").select2({
+        theme: "bootstrap4",
+        ajax: {
+          {% with link=PROJECT.slug|add:":search_spaces_ajax" %}
+          url: "{% url link %}?has_geometry=true&local_search=true",
+          {% endwith %}
+          dataType: "json"
+        }
       });
     {% endif %}
 

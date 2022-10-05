@@ -22,8 +22,12 @@
       <div class="row">
         {% for each in documents %}
           <div class="col-12 mb-4">
+            <a class="btn btn-warning float-right" href="{% url URLS.LIBRARY_ITEM each.id %}?boundaries={{ region.id }}">
+              <i class="fa fa-search-plus"></i>
+              Explore dataset
+            </a>
             <h3>{{ each }}</h3>
-            <iframe class="libraryitem card" src="{% url link each.id %}?ata-viz=176&boundaries={{ region.id }}&hide_details_link=true&hide_title=true" onload="resizeIframe(this)"></iframe>
+            <iframe class="libraryitem card mt-3 mb-5" src="{% url link each.id %}?ata-viz=176&boundaries={{ region.id }}&hide_details_link=true&hide_title=true" onload="resizeIframe(this)"></iframe>
           </div>
         {% endfor %}
       </div>
@@ -33,8 +37,12 @@
       <div class="row">
         {% for key,value in regions.items %}
           <div class="col-12 mb-4">
+            <a class="btn btn-warning float-right" href="{% url URLS.LIBRARY_ITEM request.GET.document %}?boundaries={{ value }}">
+              <i class="fa fa-search-plus"></i>
+              Explore dataset
+            </a>
             <h3>{{ key }}</h3>
-            <iframe class="libraryitem card" src="{% url link request.GET.document %}?ata-viz=176&boundaries={{ value }}&hide_details_link=true&hide_title=true" onload="resizeIframe(this)"></iframe>
+            <iframe class="libraryitem card mt-3 mb-5" src="{% url link request.GET.document %}?ata-viz=176&boundaries={{ value }}&hide_details_link=true&hide_title=true" onload="resizeIframe(this)"></iframe>
           </div>
         {% endfor %}
       </div>

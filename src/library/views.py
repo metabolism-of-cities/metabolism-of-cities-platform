@@ -20,6 +20,7 @@ from core.mocfunctions import *
 
 #from folium import Map
 import folium
+from folium.plugins import Fullscreen
 
 # To check if NaN
 import math
@@ -473,9 +474,10 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
 
     if data_layout and data.all():
         context["data_materials"] = data.values("material_name", "material_id").distinct().order_by("material_name")
-        context["data_timeframes"] = data.values("date_start", "dates_label").distinct().order_by("date_start", "dates_label")
+        context["data_timeframes"] = data.values("date_start__year").distinct().order_by("date_start__year")
         all_relevant_spaces = ReferenceSpace.objects_include_private.filter(Q(data_from_space__source=info)|Q(data_to_space__source=info)).distinct()
         context["data_spaces"] = all_relevant_spaces.values("id", "name")
+        context["load_select2"] = True
 
         if "boundaries" in request.GET:
             boundaries = ReferenceSpace.objects_include_private.get(pk=request.GET["boundaries"])
@@ -496,7 +498,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
                 data_spaces_from_cache = cache.get(cache_key)
                 map_from_cache = cache.get(cache_key_map)
 
-                if data_spaces_from_cache and map_from_cache:
+                if data_spaces_from_cache and map_from_cache and False:
                     context["data_spaces"] = data_spaces_from_cache
                     context["map"] = map_from_cache
                 else:
@@ -515,6 +517,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
                     ).add_to(map)
 
                     map.fit_bounds(map.get_bounds()) 
+                    Fullscreen().add_to(map)
 
                     # But we still want to put ALL markers on the map to show what is within and what is outside of the boundaries
                     for each in all_relevant_spaces:
@@ -574,7 +577,7 @@ def fetch_data_in_json_object(dataset, cache_key, parameters):
 
     if "timeframes" in parameters:
         timeframes = parameters.getlist("timeframes")
-        data = data.filter(dates_label__in=timeframes)
+        data = data.filter(date_start__year__in=timeframes)
 
     if "materials" in parameters:
         materials = parameters.getlist("materials")
@@ -809,11 +812,29 @@ def search_ajax(request):
         "results": []
     }
     if query:
-        list = LibraryItem.objects.filter(name__icontains=query)
+        results = LibraryItem.objects.filter(name__icontains=query)
         if "type" in request.GET:
-            list = list.filter(type_id=request.GET.get("type"))
-        for each in list:
+            results = results.filter(type_id=request.GET.get("type"))
+        for each in results:
             r["results"].append({"id": each.id, "text": each.name + " - " + str(each.year)})
+    return JsonResponse(r, safe=False)
+
+def search_spaces_ajax(request):
+    query = request.GET.get("q")
+    r = {
+        "results": []
+    }
+    if query:
+        results = ReferenceSpace.objects.filter(name__icontains=query)
+        if "has_geometry" in request.GET:
+            results = results.filter(geometry__isnull=False)
+        if "local_search" in request.GET:
+            results = results.filter(source__part_of_project=request.project)
+        for each in results:
+            s = each.name
+            if each.source:
+                s += f" - {each.source.name}"
+            r["results"].append({"id": each.id, "text": s})
     return JsonResponse(r, safe=False)
 
 @login_required
