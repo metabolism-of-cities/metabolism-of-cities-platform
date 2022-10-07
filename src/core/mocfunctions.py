@@ -52,7 +52,12 @@ def get_space(request, slug):
     return check.space
 
 def get_project(request):
-    return get_object_or_404(Project, pk=request.project)
+    cache_key = f"project-{request.project}"
+    project = cache.get(cache_key)
+    if not project:
+        project = Project.objects.only("name", "id", "slug", "has_private_data", "is_data_project", "url").get(pk=request.project)
+        cache.set(cache_key, project, None)
+    return project
 
 # Get all the child relationships, but making sure we only show is_deleted=False and is_public=True
 def get_children(record):

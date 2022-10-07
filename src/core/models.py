@@ -525,6 +525,14 @@ class Project(Record):
     def get_dates_months(self):
         return get_date_range(self.start_date, self.end_date, True)
 
+    def save(self, *args, **kwargs):
+        # We store a project object in the cache - should be removed if we edit this project
+        try:
+            cache.delete(f"project-{self.id}")
+        except:
+            pass
+        super().save(*args, **kwargs)
+
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
     objects_include_private = PrivateRecordManager()
@@ -1432,7 +1440,7 @@ class LibraryItem(Record):
         except:
             return None
 
-    @property
+    @cached_property
     def get_dataviz_properties(self):
         try:
             viz = self.dataviz.get(is_secondary=False)
@@ -2449,23 +2457,23 @@ class ReferenceSpace(Record):
     # Let's bring back slug as a field, but make it nullable and only set when activating a space
     # TODO
 
-    @property
+    @cached_property
     def slug(self):
         return slugify(unidecode(self.name))
 
-    @property
+    @cached_property
     def is_city(self):
         #check = self.geocodes.filter(id=123)
         check = self.geocodes.filter(name="Urban").exists()
         return True if check else False
 
-    @property
+    @cached_property
     def is_island(self):
         #check = self.geocodes.filter(id=123)
         check = self.geocodes.filter(name="Island").exists()
         return True if check else False
 
-    @property
+    @cached_property
     def get_centroids(self):
         try:
             lat = self.geometry.centroid[1]
@@ -2474,14 +2482,14 @@ class ReferenceSpace(Record):
         except:
             return None
 
-    @property
+    @cached_property
     def get_lat(self):
         try:
             return self.geometry.centroid[1]
         except:
             return None
 
-    @property
+    @cached_property
     def get_lng(self):
         try:
             return self.geometry.centroid[0]
@@ -2597,6 +2605,17 @@ class ReferenceSpace(Record):
 
     def get_relative_url(self):
         return f"/referencespaces/view/{self.id}/"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        # We need to clear the cached properties for this object
+        cached_properties = ["slug", "is_city", "is_island", "get_centroids", "get_lat", "get_lng"]
+        for property in cached_properties:
+            try:
+                del self.__dict__[property]
+            except KeyError:
+                pass
 
     class Meta:
         db_table = "stafdb_referencespace"
@@ -3024,6 +3043,15 @@ class DataViz(Record):
     class Meta:
         ordering = ["id"]
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        # We need to clear the cached properties for the parent object
+        try:
+            del self.source.__dict__["get_dataviz_properties"]
+        except KeyError:
+            pass
+
 class Milestone(Record):
     position = models.PositiveSmallIntegerField(db_index=True, help_text="Enter 0 to make this the annual summary")
     year = models.PositiveSmallIntegerField()
@@ -3327,7 +3355,6 @@ class CityLoopsSCAReport(models.Model):
             self.recommendations_html = None
         else:
             self.recommendations_html = markdown(self.recommendations)
-
 
         super().save(*args, **kwargs)
 

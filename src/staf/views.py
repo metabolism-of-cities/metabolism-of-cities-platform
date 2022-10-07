@@ -190,20 +190,20 @@ def layer_overview(request, layer, space=None):
 
     layer = Tag.objects.get(parent_tag_id=tag_id, slug=layer)
     children = Tag.objects.filter(parent_tag=layer)
-    list = {}
+    items = {}
     empty_page = True
 
     for each in children:
-        l = LibraryItem.objects.filter(tags=each)
+        l = LibraryItem.objects.filter(tags=each).select_related("type")
         if space:
             l = l.filter(spaces=space)
-        list[each.id] = l
+        items[each.id] = l
         if l:
             empty_page = False
 
     context = {
         "layer": layer,
-        "list": list,
+        "list": items,
         "children": children,
         "space": space,
         "relative_url": True,
@@ -944,6 +944,13 @@ def referencespace(request, id=None, space=None, slug=None):
 
     data = available_library_items(request).filter(Q(data__origin_space=info)|Q(data__destination_space=info)).distinct()
 
+    try:
+        tags = info.source.tags.all()
+        first_tag = tags[0]
+    except:
+        tags = None
+        first_tag = None
+
     context = {
         "info": info,
         "inside_the_space": inside_the_space[:200] if inside_the_space and inside_the_space.count() > 200 else inside_the_space,
@@ -959,6 +966,8 @@ def referencespace(request, id=None, space=None, slug=None):
         "load_lightbox": True if photos else False,
         "items": LibraryItem.objects.filter(spaces=info),
         "data": data,
+        "tags": tags,
+        "first_tag": first_tag,
     }
     return render(request, "staf/referencespace.html", context)
 

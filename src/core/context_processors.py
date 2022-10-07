@@ -16,7 +16,7 @@ def site(request):
     is_data_portal = False
 
     if hasattr(request, "project"):
-        project = Project.objects_unfiltered.get(pk=request.project)
+        project = get_project(request)
     else:
         project = Project.objects.get(pk=1)
 
@@ -65,7 +65,12 @@ def site(request):
         sprints = WorkSprint.objects.filter(projects=project, start_date__lte=timezone.now(), end_date__gte=timezone.now())
         notifications = Notification.objects.filter(people=request.user.people, is_read=False)
 
-    design = ProjectDesign.objects.select_related("project").get(pk=project)
+    cache_key = f"project-design-{project.id}"
+    design = cache.get(cache_key)
+    if not design:
+        design = ProjectDesign.objects.get(project=project)
+        #project = Project.objects.only("name", "id", "slug", "has_private_data", "is_data_project", "url").get(pk=request.project)
+        cache.set(cache_key, design, None)
 
     context = {
         "MAPBOX_API_KEY": "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", 

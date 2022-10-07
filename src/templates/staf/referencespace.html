@@ -80,12 +80,12 @@
 
       <div class="p-4 bg-light rounded border text-center">
         <span class="largeicon">
-          <i class="fal fa-{{ info.source.tags.all.0.icon }}"></i>
+          <i class="fal fa-{{ first_tag.icon }}"></i>
         </span>
         <br>
         Category:<br>
         <strong>
-          {{ info.source.tags.all.0.get_name_after_period }}
+          {{ first_tag.get_name_after_period }}
         </strong>
       </div>
 
@@ -128,11 +128,11 @@
               </li>
             {% endif %}
           {% endif %}
-          {% if info.source.tags.all %}
+          {% if tags %}
             <li class="list-group-item hide-water">
               <i class="far fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> Tags
               <br>
-              {% for each in info.source.tags.all %}
+              {% for each in tags %}
                 <a class="btn btn-sm btn-primary-outline mt-1" href="{% url URLS.LIBRARY %}?find=true&amp;search={{ each.id }}&amp;types=all">{{ each }}</a>
               {% endfor %}
             </li>

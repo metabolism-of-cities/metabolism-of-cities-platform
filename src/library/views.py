@@ -92,7 +92,9 @@ def index(request):
     if project.slug == "water":
         results = available_library_items(request).all()
 
-    results = results.select_related("type")
+    if results:
+        results = results.select_related("type")
+
     context = {
         "show_project_design": True,
         "tag": tag,
@@ -439,7 +441,9 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         if units.count() == 1:
             unit = units[0]
 
-    data_layout = True if project.slug == "water" or "data-layout" in request.GET else False
+    data_layout = False
+    if info.type.name == "Dataset":
+        data_layout = True if project.slug == "water" or "data-layout" in request.GET else False
 
     context = {
         "info": info,
@@ -783,7 +787,8 @@ Details
 
 def map(request, article, tag=None):
     info = get_object_or_404(Webpage, pk=article)
-    project = get_object_or_404(Project, pk=request.project)
+    project = get_project(request)
+
     if project.slug == "islands":
         list = ReferenceSpace.objects.filter(geocodes=8355)
         items = LibraryItem.objects.filter(status="active", spaces__in=list)
@@ -793,6 +798,10 @@ def map(request, article, tag=None):
         core_filter = get_site_tag(request)
         items = LibraryItem.objects.filter(tags__id=TAG_ID["case_study"]).filter(tags__id=core_filter) \
             .prefetch_related("spaces").prefetch_related("tags").prefetch_related("spaces__geocodes").prefetch_related("tags__parent_tag")
+
+    if items:
+        items = items.select_related("type")
+
     context = {
         "article": info,
         "items": items.distinct(),
