@@ -144,11 +144,11 @@
               </li>
             {% endif %}
 
-            {% if tags.all %}
+            {% if tags %}
               <li class="list-group-item hide-water">
                 <i class="fal fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> {% if PROJECT.slug == "peeide" %}Keywords{% else %}Tags{% endif %}
                 <br>
-                {% for each in tags.all %}
+                {% for each in tags %}
                   {% if not each.hidden %}
                     <a class="btn btn-sm btn-primary-outline mt-1" href="{% url URLS.LIBRARY %}?find=true&amp;search={{ each.id }}&amp;types=all">{{ each }}</a>
                   {% endif %}
@@ -539,7 +539,7 @@
         </section>
       {% endif %}
 
-      {% if info.attachments.all or spaces %}
+      {% if attachments or spaces %}
         {% if info.type.name == "Shapefile" or spaces %}
           <h3>Map</h3>
           {% if info.get_shapefile_plot %}
@@ -608,10 +608,10 @@
         </section>
       {% endif %}
 
-      {% if spaces.all %}
+      {% if info.spaces %}
         <section class="associated-spaces mt-3 hide-water">
-          <h3>Associated space{{ spaces.count|pluralize }}</h3>
-            {% for each in spaces.all %}
+          <h3>Associated space{{ info.spaces.count|pluralize }}</h3>
+            {% for each in info.spaces.all %}
               {% if forloop.counter < 10 or "allspaces" in request.GET %}
                 {% if URLS.SPACE %}
                   <a href="{% url URLS.SPACE each.id %}">{{ each }}</a>

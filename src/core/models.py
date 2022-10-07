@@ -1460,6 +1460,11 @@ class LibraryItem(Record):
     def data(self):
         return Data.objects_include_private.filter(source=self)
 
+    # Returns all the associated reference spaces, based on the data
+    @cached_property
+    def data_spaces(self):
+        return ReferenceSpace.objects_include_private.filter(Q(data_from_space__source=self)|Q(data_to_space__source=self)).distinct()
+
     # Returns either 'point' if this contains points, 'polygon' if it contains other geometry, and 'unknown' if we can't tell
     # This can be used to decide for instance whether to show markers on a map or draw polygons
     # Note that we use the FIRST associated reference space, even though there may be many, and take that type, so we assume
@@ -1474,6 +1479,27 @@ class LibraryItem(Record):
                 return "polygon"
         except:
             return "unknown"
+
+    # We have a number of cached properties, which should be deleted when we save this
+    # We also trigger this kind of deletion when we update/change associated objects,
+    # such as relationships with this document or data
+    def delete_cached_properties(self, type=None):
+        cached_properties = {}
+        cached_properties["relationships"] = ["authors", "author", "funders", "curators", "voters", "publishers", "producer", "uploader", "organizer", "processor"]
+        cached_properties["data"] = ["data", "data_spaces"]
+        cached_properties["spaces"] = ["imported_spaces", "get_map_type", "data_spaces"]
+
+        if not type:
+            properties = cached_properties["relationships"] + cached_properties["data"] + cached_properties["spaces"]
+        else:
+            properties = cached_properties[type]
+
+        # Ref: https://medium.com/@fdemmer/django-cached-property-on-models-f4673de33990
+        for property in properties:
+            try:
+                del self.__dict__[property]
+            except KeyError:
+                pass
 
     def delete_cached_objects(self):
         if self.meta_data and "cache" in self.meta_data:
@@ -1501,6 +1527,11 @@ class LibraryItem(Record):
         if not error:
             all = Data.objects.filter(source=self)
             all.delete()
+
+            # We may have cached space-related properties for this object, so let's clear those
+            # They will be re-cached the first time the query runs so we can run this generously
+            # even if this script doesn't come to fruition
+            self.delete_cached_properties("data")
 
             # We may have cached the json objects based on old data, so we should
             # delete any cached objects that exist.
@@ -1658,6 +1689,11 @@ class LibraryItem(Record):
 
         check = ReferenceSpace.objects_unfiltered.filter(source=self)
         error = False
+
+        # We may have cached space-related properties for this object, so let's clear those
+        # They will be re-cached the first time the query runs so we can run this generously
+        # even if this script doesn't come to fruition
+        self.delete_cached_properties("space")
 
         if check:
             if self.meta_data.get("allow_deletion_spaces"):
@@ -2031,36 +2067,9 @@ class LibraryItem(Record):
             ReferenceSpace.objects_unfiltered.filter(source_id=self.id).update(is_public=self.is_public)
             Data.objects_include_private.filter(source_id=self.id).update(is_public=self.is_public)
 
-        # We have a number of cached properties, which should be deleted when we save this
-        # Ref: https://medium.com/@fdemmer/django-cached-property-on-models-f4673de33990
-        cached_properties = [
-
-            # Updated by Relationship management - requires update from that side too
-            "authors",
-            "author",
-            "funders",
-            "curators",
-            "voters",
-            "publishers",
-            "producer",
-            "uploader",
-            "organizer",
-            "processor",
-
-            # Impacted by Data - requires update from that side too
-            "data",
-
-            # Impacted by ReferenceSpace - requires update from that side too
-            "imported_spaces",
-            "get_map_type",
-        ]
-        for property in cached_properties:
-            try:
-                del self.__dict__[property]
-            except KeyError:
-                pass
-
         super(LibraryItem, self).save(*args, **kwargs)
+
+        self.delete_cached_properties()
 
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()

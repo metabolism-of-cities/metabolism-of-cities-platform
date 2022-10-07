@@ -213,48 +213,48 @@ def layer_overview(request, layer, space=None):
 
 def library_overview(request, type, space=None):
     project = get_project(request)
-    list = LibraryItem.objects.all()
+    results = LibraryItem.objects.all()
 
     if space:
         space = get_space(request, space)
-        list = list.filter(spaces=space)
+        results = results.filter(spaces=space)
 
     days = 14
     title = None
     if type == "datasets":
-        list = list.filter(type__id=10)
+        results = results.filter(type__id=10)
         if "dataviz" in request.GET:
-            list = list.filter(meta_data__processed=True)
+            results = results.filter(meta_data__processed=True)
     elif type == "maps" or type == "infrastructure" or type == "boundaries":
-        list = list.filter(type__id__in=[40,41,20])
+        results = results.filter(type__id__in=[40,41,20])
         if type == "infrastructure":
             if project.slug == "cityloops":
-                list = list.filter(tags__parent_tag__in=[997,1080,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1041])
+                results = results.filter(tags__parent_tag__in=[997,1080,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1041])
             else:
-                list = list.filter(tags__parent_tag=Tag.objects.get(pk=848))
+                results = results.filter(tags__parent_tag=Tag.objects.get(pk=848))
         elif type == "boundaries":
             if project.slug == "cityloops":
-                list = list.filter(tags__in=[975, 976, 977, 978, 979, 996])
+                results = results.filter(tags__in=[975, 976, 977, 978, 979, 996])
             else:
-                list = list.filter(tags__id=852)
+                results = results.filter(tags__id=852)
 
     elif type == "multimedia":
-        list = list.filter(type__group="multimedia")
+        results = results.filter(type__group="multimedia")
     elif type == "publications":
-        list = list.filter(type__group__in=["academic", "reports"])
+        results = results.filter(type__group__in=["academic", "reports"])
     elif type == "recent":
         title = "Recently added items"
         if "days" in request.GET:
             days = int(request.GET.get("days"))
         date = datetime.datetime.now() - datetime.timedelta(days=days)
-        list = list.filter(date_created__gte=date)
+        results = results.filter(date_created__gte=date)
     elif type == "eurostat":
-        list = list.filter(tags__id=7)
+        results = results.filter(tags__id=7)
 
-    list = list.prefetch_related("tags")
+    results = results.prefetch_related("tags").select_related("type")
     context = {
         "title": type.capitalize() if not title else title,
-        "items": list,
+        "items": results,
         "load_datatables": True,
         "space": space,
         "show_tags": True,

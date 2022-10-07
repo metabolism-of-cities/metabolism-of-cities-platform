@@ -286,7 +286,7 @@ def diagram(request):
         "rows": range(1,40),
         "link": reverse("water:diagram"),
         "infrastructure": infrastructure, 
-        "documents": available_library_items(request).filter(tags__in=infrastructure),
+        "documents": available_library_items(request).filter(tags__in=infrastructure).prefetch_related("tags"),
         "documents_flows": available_library_items(request).filter(tags__in=flows),
     }
     return render(request, "water/diagram.html", context)

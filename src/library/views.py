@@ -41,7 +41,7 @@ def index(request):
     tags = [324, 322, 664, 318, 739]
     show_results = False
     tag = None
-    list = None
+    results = None
     search_tag = None
     urban_only = True
     core_filter = get_site_tag(request)
@@ -58,47 +58,48 @@ def index(request):
     if "find" in request.GET:
         show_results = True
         if "types" in request.GET and request.GET["types"] == "all":
-            list = LibraryItem.objects.all()
+            results = LibraryItem.objects.all()
         elif "type" in request.GET:
-            list = LibraryItem.objects.filter(type__group__in=request.GET.getlist("type"))
+            results = LibraryItem.objects.filter(type__group__in=request.GET.getlist("type"))
         else:
-            list = LibraryItem.objects.all()
+            results = LibraryItem.objects.all()
         if not request.GET.get("urban_only"):
             urban_only = False
         if urban_only:
-            list = list.filter(tags__id=core_filter)
+            results = results.filter(tags__id=core_filter)
         if "space" in request.GET and request.GET["space"]:
             space = ReferenceSpace.objects.get(pk=request.GET["space"])
-            list = list.filter(spaces=space)
+            results = results.filter(spaces=space)
 
     if "search" in request.GET:
         q = request.GET.get("search")
         if q == "_ALL_":
-            list = LibraryItem.objects.filter(tags__id=core_filter)
+            results = LibraryItem.objects.filter(tags__id=core_filter)
             show_results = True
         else:
             try:
                 tag = Tag.objects_unfiltered.get(id=q)
-                list = list.filter(tags=tag)
+                results = results.filter(tags=tag)
             except:
                 # Search by open-ended keyword, so let's search for that
-                list = list.filter(Q(name__icontains=q)|Q(description__icontains=q))
+                results = results.filter(Q(name__icontains=q)|Q(description__icontains=q))
 
     if "after" in request.GET and request.GET["after"]:
-        list = list.filter(year__gte=request.GET["after"])
+        results = results.filter(year__gte=request.GET["after"])
     if "before" in request.GET and request.GET["before"]:
-        list = list.filter(year__lte=request.GET["before"])
+        results = results.filter(year__lte=request.GET["before"])
 
     if project.slug == "water":
-        list = available_library_items(request).all()
+        results = available_library_items(request).all()
 
+    results = results.select_related("type")
     context = {
         "show_project_design": True,
         "tag": tag,
         "tags": Tag.objects_unfiltered.filter(parent_tag__id__in=tags),
         "types": LibraryItemType.GROUP,
         "active_types": request.GET.getlist("type"),
-        "items": list,
+        "items": results,
         "search_space": space,
         "show_tags": True if space else False,
         "show_results": show_results,
@@ -119,35 +120,38 @@ def library_list(request, type):
     title = type
     webpage = None
     if type == "dataportals":
-        list = LibraryItem.objects.filter(type__id=39)
+        results = LibraryItem.objects.filter(type__id=39)
     elif type == "datasets":
-        list = LibraryItem.objects_unfiltered.filter(type__name="Dataset")
+        results = LibraryItem.objects_unfiltered.filter(type__name="Dataset")
     elif type == "reviews":
-        list = LibraryItem.objects.filter(tags__id=3)
+        results = LibraryItem.objects.filter(tags__id=3)
         if request.project == 17:
-            list = list.filter(tags__id=get_site_tag(request))
+            results = results.filter(tags__id=get_site_tag(request))
         title = "Review papers"
     elif type == "islands":
-        list = LibraryItem.objects.filter(tags__id=219)
+        results = LibraryItem.objects.filter(tags__id=219)
         webpage = Webpage.objects.get(pk=31887)
         title = webpage.name
     elif type == "island_ie":
-        list = LibraryItem.objects.filter(tags__id=963)
+        results = LibraryItem.objects.filter(tags__id=963)
         title = "Island Industrial Ecology"
     elif type == "island_theses":
-        list = LibraryItem.objects.filter(tags__id=219, type_id=29)
+        results = LibraryItem.objects.filter(tags__id=219, type_id=29)
         webpage = Webpage.objects.get(pk=31886)
         title = webpage.name
     elif type == "starterskit":
-        list = LibraryItem.objects.filter(tags__id=791)
+        results = LibraryItem.objects.filter(tags__id=791)
         title = "Starter's Kit"
         webpage = Webpage.objects.get(pk=34)
     elif type == "stock":
-        list = LibraryItem.objects.filter(tags__id=135)
+        results = LibraryItem.objects.filter(tags__id=135)
         title = "Material stock publications"
         webpage = Webpage.objects.get(pk=334007)
+    
+    results = results.select_related("type")
+
     context = {
-        "items": list,
+        "items": results,
         "type": type,
         "title": title,
         "load_datatables": True,
@@ -262,9 +266,9 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     project = get_project(request)
     tag_id = get_parent_layer(request)
     submenu = None
-
     # These settings are used when opening the URL from one of the data sites,
     # for example from http://0.0.0.0:8000/data/dashboards/barcelona/infrastructure/
+
     if space:
         space = get_space(request, space)
     if layer:
@@ -480,7 +484,8 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     if data_layout and data.all():
         context["data_materials"] = data.values("material_name", "material_id").distinct().order_by("material_name")
         context["data_timeframes"] = data.values("date_start__year").distinct().order_by("date_start__year")
-        all_relevant_spaces = ReferenceSpace.objects_include_private.filter(Q(data_from_space__source=info)|Q(data_to_space__source=info)).distinct()
+        all_relevant_spaces = info.data_spaces
+
         context["data_spaces"] = all_relevant_spaces.values("id", "name")
         context["load_select2"] = True
 
