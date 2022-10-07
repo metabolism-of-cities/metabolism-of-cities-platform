@@ -69,7 +69,6 @@ def site(request):
     design = cache.get(cache_key)
     if not design:
         design = ProjectDesign.objects.get(project=project)
-        #project = Project.objects.only("name", "id", "slug", "has_private_data", "is_data_project", "url").get(pk=request.project)
         cache.set(cache_key, design, None)
 
     context = {

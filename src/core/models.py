@@ -986,6 +986,14 @@ class ProjectDesign(models.Model):
         else:
             return ""
 
+    def save(self, *args, **kwargs):
+        # We store a project design object in the cache - should be removed if we edit this design
+        try:
+            cache.delete(f"project-design-{self.project.id}")
+        except:
+            pass
+        super().save(*args, **kwargs)
+
 class ForumTopic(Record):
     last_update = models.ForeignKey("Message", on_delete=models.SET_NULL, null=True, blank=True)
     part_of_project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
