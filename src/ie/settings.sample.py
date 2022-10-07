@@ -120,6 +120,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.gis',
     'django_cron',
+    'django_extensions',
     'stdimage',
     'sass_processor',
     'bootstrap4',
