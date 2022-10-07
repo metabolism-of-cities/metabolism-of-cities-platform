@@ -249,7 +249,7 @@ def forum(request, id, section=None):
 def forum_edit(request, id, edit, project_name=None, section=None):
     info = get_object_or_404(Record, pk=id)
     message = get_object_or_404(Message, pk=edit)
-    if message.author() != request.user.people:
+    if message.author != request.user.people:
         unauthorized_access(request)
     if request.method == "POST":
         message.description = request.POST.get("text")
@@ -329,7 +329,7 @@ def forum_form(request, id=False, parent=None, section=None):
 def message_form(request, id):
 
     info = get_object_or_404(Message, pk=id)
-    if info.author() != request.user.people:
+    if info.author != request.user.people:
         unauthorized_access(request)
 
     edit_title = False

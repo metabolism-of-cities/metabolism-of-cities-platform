@@ -259,13 +259,12 @@ def journal(request, slug):
     return render(request, "library/journal.html", context)
 
 def item(request, id, show_export=True, space=None, layer=None, data_section_type=None, json=False):
-
     project = get_project(request)
     tag_id = get_parent_layer(request)
     submenu = None
+
     # These settings are used when opening the URL from one of the data sites,
     # for example from http://0.0.0.0:8000/data/dashboards/barcelona/infrastructure/
-
     if space:
         space = get_space(request, space)
     if layer:
@@ -336,7 +335,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         info = info.photo
 
     if request.user.is_authenticated:
-        if has_permission(request, request.project, ["curator", "dataprocessor"]) or request.user.people == info.uploader or request.user.people == info.author():
+        if has_permission(request, request.project, ["curator", "dataprocessor"]) or request.user.people == info.uploader or request.user.people == info.author:
             curator = True
             if info.type.id == 40:
                 url_processing = project.slug + ":hub_processing_gis"
@@ -412,14 +411,15 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         response["Content-Disposition"] = 'attachment; filename="{}.zip"'.format(info.name)
         return response
 
-    spaces = ReferenceSpace.objects_include_private.filter(source=info)
+    spaces = info.imported_spaces
     spaces_message = None
     if spaces.count() > 20:
         spaces_message = f"This shapefile contains {spaces.count()} items - we are only displaying the first 20 below."
         spaces = spaces[:20]
 
     data = info.data
-    if data.count():
+    data_count = data.count()
+    if data_count:
         properties = info.get_dataviz_properties
         load_datatables = True
         load_highcharts = True
@@ -430,7 +430,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     # TEMPORARY CODE TO GET UNIT FOR CHARTS IN SCA REPORTS
     # https://data.metabolismofcities.org/tasks/991921/
     unit = None
-    if data.count():
+    if data_count:
         units = data.values("unit__name").filter(quantity__isnull=False).order_by("unit__name").distinct()
         if units.count() == 1:
             unit = units[0]
@@ -439,6 +439,8 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
 
     context = {
         "info": info,
+        "data": data,
+        "data_count": data_count,
         "spaces": spaces,
         "edit_link": info.get_edit_link(),
         "show_export": show_export,
@@ -462,6 +464,9 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         "spaces_message": spaces_message,
         "properties": properties,
         "schemes": COLOR_SCHEMES,
+        "attachments": info.attachments.all(),
+        "publisher": info.publisher,
+        "tags": info.tags.all(),
 
         "data_layout": data_layout,
 
@@ -498,7 +503,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
                 data_spaces_from_cache = cache.get(cache_key)
                 map_from_cache = cache.get(cache_key_map)
 
-                if data_spaces_from_cache and map_from_cache and False:
+                if data_spaces_from_cache and map_from_cache:
                     context["data_spaces"] = data_spaces_from_cache
                     context["map"] = map_from_cache
                 else:
@@ -873,7 +878,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         if request.user.people == get_item.uploader:
             curator = True
         # If you are one of the authors, then you can edit this item
-        elif request.user.people in get_item.authors():
+        elif request.user.people in get_item.authors:
             curator = True
     if has_permission(request, project.id, ["curator", "dataprocessor"]):
         curator = True

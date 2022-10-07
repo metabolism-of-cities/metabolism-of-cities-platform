@@ -76,6 +76,7 @@ from django.dispatch import receiver
 import math
 
 from django.core.cache import cache
+from django.utils.functional import cached_property
 
 def get_date_range(start, end, months_only=False):
 
@@ -282,47 +283,52 @@ class Record(models.Model):
     # Below follows a list of properties that can be used to get specific relationships
     # that are defined in the RecordRelationship table but that can be queried using
     # more natural language ("authors", "uploader", etc) using these properties below.
-    # These can likely be changed to @property but should be verified
 
+    @cached_property
     def authors(self):
         return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)
 
     # Return a single author -- only use if you know the record has a single author, otherwise use 'authors'
+    @cached_property
     def author(self):
         try:
             return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=4)[0]
         except:
             return None
 
+    @cached_property
     def funders(self):
         return Record.objects.filter(parent_list__record_child=self, parent_list__relationship__id=5)
 
-    @property
+    @cached_property
     def curators(self):
         return Record.objects.filter(parent_list__record_child=self, parent_list__relationship__id=20)
 
-    @property
+    @cached_property
     def voters(self):
         return People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=36)
 
+    @cached_property
     def publisher(self):
         list = Organization.objects.filter(parent_list__record_child=self, parent_list__relationship__id=2)
         return list[0] if list else None
 
+    @cached_property
     def producer(self):
         list = Organization.objects.filter(parent_list__record_child=self, parent_list__relationship__id=3)
         return list[0] if list else None
 
-    @property
+    @cached_property
     def uploader(self):
         list = People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=11)
         return list[0] if list else None
 
-    @property
+    @cached_property
     def organizer(self):
         list = People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=14)
         return list[0] if list else None
 
+    @cached_property
     def processor(self):
         list = People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=34)
         return list[0] if list else None
@@ -1244,19 +1250,19 @@ class LibraryItem(Record):
         else:
             return ""
 
-    @property
+    @cached_property
     def get_doi_url(self):
         return None if not self.doi else f"https://doi.org/{self.doi}"
 
-    @property
+    @cached_property
     def get_full_citation(self):
         return mark_safe("<em>" + self.name + "</em>, " + self.get_author_citation() + ", " + str(self.year))
 
-    @property
+    @cached_property
     def get_citation_apa(self):
         citation = bleach.clean(f"{self.get_author_citation()} ({self.year}). {self.name}. ")
-        if self.publisher():
-            p = bleach.clean(str(self.publisher()))
+        if self.publisher:
+            p = bleach.clean(str(self.publisher))
             citation = citation + f"<em>{p}</em>. "
         if self.doi:
             citation = citation + bleach.clean(f"<a href='{self.get_doi_url}'>{self.get_doi_url}</a>")
@@ -1266,7 +1272,7 @@ class LibraryItem(Record):
             
         return mark_safe(citation)
 
-    @property
+    @cached_property
     def get_citation_bibtex(self):
         author_string = ""
         journal_string = ""
@@ -1279,11 +1285,11 @@ class LibraryItem(Record):
             tag = author.partition(" ")[0] + str(self.year) + self.name.partition(" ")[0]
         else:
             tag = self.name.partition(" ")[0] + str(self.year)
-        if self.publisher():
+        if self.publisher:
             if self.type.name == "Journal Article":
-                journal_string = f"  journal = {{{self.publisher()}}},\n"
+                journal_string = f"  journal = {{{self.publisher}}},\n"
             else:
-                journal_string = f"  publisher = {{{self.publisher()}}},\n"
+                journal_string = f"  publisher = {{{self.publisher}}},\n"
         if self.url:
             url_string = f"  url = {{{self.url}}},\n"
         if self.doi:
@@ -1346,11 +1352,11 @@ class LibraryItem(Record):
                     author = f"AU -{firstname} {lastname}\n"
                     author_string = author_string + author
 
-        if self.publisher():
+        if self.publisher:
             if self.type.name == "Journal Article":
-                journal_string = f"T2 - {self.publisher()}\n"
+                journal_string = f"T2 - {self.publisher}\n"
             else:
-                journal_string = f"PB - {self.publisher()}\n"
+                journal_string = f"PB - {self.publisher}\n"
         if self.url:
             url_string = f"LK - {self.url}\n"
         if self.doi:
@@ -1445,12 +1451,12 @@ class LibraryItem(Record):
     # Validation needs to take place at the level of the Library Item
     # In other words, if someone has access to this LibraryItem, they also have access
     # to the associated reference spaces.
-    @property
+    @cached_property
     def imported_spaces(self):
         return ReferenceSpace.objects_include_private.filter(source=self)
 
     # Same applies to associated data
-    @property
+    @cached_property
     def data(self):
         return Data.objects_include_private.filter(source=self)
 
@@ -1458,7 +1464,7 @@ class LibraryItem(Record):
     # This can be used to decide for instance whether to show markers on a map or draw polygons
     # Note that we use the FIRST associated reference space, even though there may be many, and take that type, so we assume
     # that the entire map has the same type (a pretty safe assumption, would be weird if different)
-    @property
+    @cached_property
     def get_map_type(self):
         try:
             one_space = self.imported_spaces.all()[0]
@@ -2024,6 +2030,35 @@ class LibraryItem(Record):
         if self.id:
             ReferenceSpace.objects_unfiltered.filter(source_id=self.id).update(is_public=self.is_public)
             Data.objects_include_private.filter(source_id=self.id).update(is_public=self.is_public)
+
+        # We have a number of cached properties, which should be deleted when we save this
+        # Ref: https://medium.com/@fdemmer/django-cached-property-on-models-f4673de33990
+        cached_properties = [
+
+            # Updated by Relationship management - requires update from that side too
+            "authors",
+            "author",
+            "funders",
+            "curators",
+            "voters",
+            "publishers",
+            "producer",
+            "uploader",
+            "organizer",
+            "processor",
+
+            # Impacted by Data - requires update from that side too
+            "data",
+
+            # Impacted by ReferenceSpace - requires update from that side too
+            "imported_spaces",
+            "get_map_type",
+        ]
+        for property in cached_properties:
+            try:
+                del self.__dict__[property]
+            except KeyError:
+                pass
 
         super(LibraryItem, self).save(*args, **kwargs)
 

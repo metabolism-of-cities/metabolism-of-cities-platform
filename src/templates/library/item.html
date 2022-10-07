@@ -81,10 +81,10 @@
 <div class="container">
   <div class="row">
     <div class="col-lg-4 pb-4 order-2 order-lg-1" {% if data_layout %}hidden{% endif %}>
-      {% if info.publisher.image %}
+      {% if publisher.image %}
         <div class="text-center">
-          <a href="{{ info.publisher.get_absolute_url }}">
-            <img src="{{ info.publisher.image.thumbnail.url }}" class="journal rounded mt-4">
+          <a href="{{ publisher.get_absolute_url }}">
+            <img src="{{ publisher.image.thumbnail.url }}" class="journal rounded mt-4">
           </a>
         </div>
       {% else %}
@@ -114,7 +114,7 @@
             <div>{{ info.type }}</div>
           </li>
 
-          {% if info.publisher %}
+          {% if publisher %}
             <li class="list-group-item table-item">
               <div><i class="fal fa-fw fa-building mr-1"></i>
                 {% if info.type.name == "Journal Article" %}
@@ -123,7 +123,7 @@
                   Publisher
                 {% endif %}
               </div>
-              <div><a href="{{ info.publisher.get_absolute_url }}">{{ info.publisher }}</a></div>
+              <div><a href="{{ publisher.get_absolute_url }}">{{ publisher }}</a></div>
             </li>
           {% endif %}
 
@@ -140,21 +140,15 @@
               <li class="list-group-item">
                 <i class="fal fa-fw fa-user-edit mb-1 mr-1" aria-hidden="true"></i> Author(s)
                 <br>
-                {% if info.authors.all %}
-                  {% for each in info.authors %}
-                    {{ each }}{% if not forloop.last %}, {% endif %}
-                  {% endfor %}
-                {% else %}
-                  {{ info.get_author_citation }}
-                {% endif %}
+                {{ info.author_list }}
               </li>
             {% endif %}
 
-            {% if info.tags.all %}
+            {% if tags.all %}
               <li class="list-group-item hide-water">
                 <i class="fal fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> {% if PROJECT.slug == "peeide" %}Keywords{% else %}Tags{% endif %}
                 <br>
-                {% for each in info.tags.all %}
+                {% for each in tags.all %}
                   {% if not each.hidden %}
                     <a class="btn btn-sm btn-primary-outline mt-1" href="{% url URLS.LIBRARY %}?find=true&amp;search={{ each.id }}&amp;types=all">{{ each }}</a>
                   {% endif %}
@@ -396,7 +390,7 @@
 
                 {% if info.meta_data.processed %}
 
-                  {% if info.data.all %}
+                  {% if data_count %}
                         
                     <a href="?create_cache=true" class="list-group-item list-group-item-action list-group-item-primary mr-1 admin-option">
                       <i class="fal fa-fw fa-brackets-curly mr-1"></i> Generate and cache chart
@@ -614,10 +608,10 @@
         </section>
       {% endif %}
 
-      {% if info.spaces.all %}
+      {% if spaces.all %}
         <section class="associated-spaces mt-3 hide-water">
-          <h3>Associated space{{ info.spaces.count|pluralize }}</h3>
-            {% for each in info.spaces.all %}
+          <h3>Associated space{{ spaces.count|pluralize }}</h3>
+            {% for each in spaces.all %}
               {% if forloop.counter < 10 or "allspaces" in request.GET %}
                 {% if URLS.SPACE %}
                   <a href="{% url URLS.SPACE each.id %}">{{ each }}</a>
@@ -626,7 +620,7 @@
                 {% endif %}
                 {% if not forloop.last %},{% endif %}
               {% endif %}
-              {% if forloop.last and forloop.counter > 10 and not "allspaces" in request.GET %}... <a class="badge badge-dark" href="?allspaces=true">view all ({{ info.spaces.count }})</a>{% endif %}
+              {% if forloop.last and forloop.counter > 10 and not "allspaces" in request.GET %}... <a class="badge badge-dark" href="?allspaces=true">view all ({{ spaces.count }})</a>{% endif %}
             {% endfor %}
         </section>
       {% endif %}
@@ -655,7 +649,7 @@
         {% endif %}
       {% endif %}
 
-      {% if info.data.all %}
+      {% if data_count %}
         <section>
           <h3>Data</h3>
           {% include "_data.visualizations.html" %}
@@ -779,7 +773,7 @@
               <div class="card-body">
                 <p class="what-text">
                   There are a total of 
-                  {{ info.data.count|intcomma }} data points in this dataset. Use the bottom below to download: <br>
+                  {{ data_count|intcomma }} data points in this dataset. Use the bottom below to download: <br>
                   <br>
                   <a href="#" class="btn btn-secondary">ALL datapoints</a>
                   <a href="#" class="btn btn-secondary-outline mt-3">Filtered datapoints</a>
@@ -858,14 +852,14 @@
 
       {% endif %}
 
-      {% if info.attachments.all %}
+      {% if attachments %}
         <h3 class="mt-4">Attachment(s)</h3>
         <ul>
-        {% for each in info.attachments.all %}
+        {% for each in attachments %}
           <li><a href="{{ each.file.url }}">{{ each }}</a> ({{ each.get_size }})</li>
         {% endfor %}
         </ul>
-        {% if info.attachments.count > 2 %}
+        {% if attachments.count > 2 %}
           <form method="post">
             <button type="submit" class="btn btn-default-outline" name="zipfile" value="true"><i class="fa fa-file-archive"></i> Download as zipfile</button>
             {% csrf_token %}
@@ -873,7 +867,6 @@
         {% endif %}
 
       {% endif %}
-
 
       {% with link=PROJECT.slug|add:":report_error" %}
         <hr>
@@ -990,7 +983,7 @@
 {% endblock %}
 
 {% block footer %}
-  {% if info.data.all %}
+  {% if data_count %}
     <script>
       let unit = "{{ unit.unit__name|default:'various units' }}";
     </script>
