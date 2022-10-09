@@ -10,7 +10,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>{{ space }} | {{ sector|title }} sector circularity assessment report | CityLoops</title>
+  <title>{{ space }} | Urban Circularity Assessment Report | CityLoops</title>
 
   <link class="favicon" rel="shortcut icon" sizes="126x126" href="{% static 'img/favicon/favicon.png' %}">
 
@@ -170,7 +170,7 @@
       <div class="row">
         <div class="col-9">
           <div class="cover-title">
-            <span class="report-title">UCA report for</span>
+            <span class="report-title">Urban Circularity Assessment</span>
             <br>
             <span class="city-title">{{ space }}</span>
 
@@ -534,7 +534,7 @@
         <h1>Economic context of {{ space }}</h1>
 
         <p class="font-italic">
-          This section puts into perspective the economic context of the sector under study. It describes how many people are employed in this sector, as well as  who the main actors involved (from all lifecycle stages for the sector’s materials) are.
+          This section puts into perspective the economic context of {{ space }}. It describes how many people are employed in this sector, as well as who the main actors involved are.
         </p>
 
         <table class="table border">
@@ -618,31 +618,162 @@
         </table>
 
         <h4>The economic activities in {{ space }}</h4>
-        {% if report.sector_description_html %}
-          {{ report.sector_description_html|safe }}
+        {% if report.econ_description_html %}
+          {{ report.econ_description_html|safe }}
         {% else %}
           <span class="question-number bg-dark text-light rounded px-2 mr-2">11</span>
         {% endif %}
       </section>
 
       <section id="flows">
-        <h1>Material flows in {{ space }}<h1>
+        <h1>Material flows in {{ space }}</h1>
+
+        <label>Domestic Extraction</label><br>
+        {% if report.domestic_extraction_html %}
+          {{ report.domestic_extraction_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">12</span>
+        {% endif %}
+
+        <label>Imports & Exports</label><br>
+        {% if report.imports_exports_html %}
+          {{ report.imports_exports_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">13</span>
+        {% endif %}
+
+        <label>Domestic Material Consumption</label><br>
+        {% if report.consumption_html %}
+          {{ report.consumption_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">14</span>
+        {% endif %}
+
+        <label>Waste</label><br>
+        {% if report.waste_html %}
+          {{ report.waste_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">15</span>
+        {% endif %}
       </section>
 
       <section id="stock">
         <h1>Material Stock in {{ space }}</h1>
+
+        <label>Material Stock Map</label><br>
+        {% if report.stock_map_dataset %}
+          {% if report.stock_map_dataset.is_part_of %}
+            {% if report.stock_map_dataset.is_part_of.data.all %}
+              <iframe class="libraryitem mb-4" src="/library/preview/{{ report.stock_map_dataset.is_part_of.id }}/" onload="resizeIframe(this)"></iframe>
+            {% elif report.stock_map_dataset.is_part_of.type.name == "Image" %}
+              <img src="{{ report.stock_map_dataset.is_part_of.image.url }}" class="img-fluid">
+              <p><a href="{% url 'cityloops:library_item' report.stock_map_dataset.is_part_of.id %}">Data source</a></p>
+            {% elif report.stock_map_dataset.type.name == "Image" %}
+              <img src="{{ report.stock_map_dataset.image.url }}" class="img-fluid">
+              <p><a href="{% url 'cityloops:library_item' report.stock_map_dataset.is_part_of.id %}">Data source</a></p>
+            {% endif %}
+          {% else %}
+            {% if report.stock_map_dataset.type.name == "Image" %}
+              <img src="{{ report.stock_map_dataset.image.url }}" class="img-fluid">
+              <p><a href="{% url 'cityloops:library_item' report.stock_map_dataset.id %}">Data source</a></p>
+            {% elif report.stock_map_dataset.data.all %}
+              <iframe class="libraryitem mb-4" src="/library/preview/{{ report.stock_map_dataset.id }}/" onload="resizeIframe(this)"></iframe>
+            {% endif %}
+          {% endif %}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">16A</span>
+        {% endif %}
+
+        <label>Chart with different materials</label><br>
+        {% if report.materials_dataset %}
+          {% if report.materials_dataset.is_part_of %}
+            {% if report.materials_dataset.is_part_of.data.all %}
+              <iframe class="libraryitem mb-4" src="/library/preview/{{ report.materials_dataset.is_part_of.id }}/" onload="resizeIframe(this)"></iframe>
+            {% elif report.materials_dataset.is_part_of.type.name == "Image" %}
+              <img src="{{ report.materials_dataset.is_part_of.image.url }}" class="img-fluid">
+              <p><a href="{% url 'cityloops:library_item' report.materials_dataset.is_part_of.id %}">Data source</a></p>
+            {% elif report.materials_dataset.type.name == "Image" %}
+              <img src="{{ report.materials_dataset.image.url }}" class="img-fluid">
+              <p><a href="{% url 'cityloops:library_item' report.materials_dataset.is_part_of.id %}">Data source</a></p>
+            {% endif %}
+          {% else %}
+            {% if report.materials_dataset.type.name == "Image" %}
+              <img src="{{ report.materials_dataset.image.url }}" class="img-fluid">
+              <p><a href="{% url 'cityloops:library_item' report.materials_dataset.id %}">Data source</a></p>
+            {% elif report.materials_dataset.data.all %}
+              <iframe class="libraryitem mb-4" src="/library/preview/{{ report.materials_dataset.id }}/" onload="resizeIframe(this)"></iframe>
+            {% endif %}
+          {% endif %}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">16B</span>
+        {% endif %}
+
+        <label>Typologies in {{ space }}</label><br>
+        {% if report.typologies_html %}
+          {{ report.typologies_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">17</span>
+        {% endif %}
+
+        <label>Analysis of Material Stock</label><br>
+        {% if report.stock_html %}
+          {{ report.stock_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">18</span>
+        {% endif %}
       </section>
 
       <section id="analysis">
         <h1>Analysis of Flows and Stocks: Measuring Indicators</h1>
+
+        <label>Indicator tables</label><br>
+        {% if report.indicator_table_html %}
+          {{ report.indicator_table_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">19</span>
+        {% endif %}
+
+        <label>Indicators that were chosen and their development over time</label><br>
+        {% if report.indicators_html %}
+          {{ report.indicators_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">20</span>
+        {% endif %}
       </section>
 
       <section id="quality">
         <h1>Data quality assessment</h1>
+        <label>Data quality matrix</label><br>
+        {% if report.matrix_html %}
+          {{ report.matrix_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">21</span>
+        {% endif %}
+
+        <label>Data quality matrix</label><br>
+        {% if report.quality_html %}
+          {{ report.quality_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">22</span>
+        {% endif %}
       </section>
 
       <section id="circularity">
         <h1>Analysis of Data and Indicators: Assessing Circularity</h1>
+
+        <label>Insights on status quo of {{ space }}</label><br>
+        {% if report.status_quo_html %}
+          {{ report.status_quo_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">24</span>
+        {% endif %}
+
+        <label>Recommendations for making {{ space }} more circular</label><br>
+        {% if report.recommendations_html %}
+          {{ report.recommendations_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">25</span>
+        {% endif %}
       </section>
 
       <section id="references">
