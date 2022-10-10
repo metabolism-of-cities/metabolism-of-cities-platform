@@ -856,7 +856,7 @@
         <h3 class="mt-4">Attachment(s)</h3>
         <ul>
         {% for each in attachments %}
-          <li><a href="{{ each.file.url }}">{{ each }}</a> ({{ each.get_size }})</li>
+          <li><a href="{{ each.get_file }}">{{ each }}</a> ({{ each.get_size }})</li>
         {% endfor %}
         </ul>
         {% if attachments.count > 2 %}

@@ -1453,7 +1453,7 @@ def work_form(request, id=None, sprint=None):
                         attachment.file = file
                     attachment.name = file
                     attachment.save()
-                    message.attachments.add(attachment)
+                    message.files.add(attachment)
 
             messages.success(request, "Information was saved.")
             return redirect("/hub/work/" + str(info.id))

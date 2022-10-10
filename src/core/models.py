@@ -333,6 +333,10 @@ class Record(models.Model):
         list = People.objects.filter(parent_list__record_child=self, parent_list__relationship__id=34)
         return list[0] if list else None
 
+    @cached_property
+    def attachments(self):
+        return Document.objects_include_private.filter(attached_to=self)
+
     def save(self, *args, **kwargs):
         if not self.description:
             self.description_html = None
@@ -415,11 +419,16 @@ def upload_directory(instance, filename):
         sub_directory = parent.type.name
         sub_directory = sub_directory.lower()
         directory += sub_directory + "/"
-    try:
-        if parent.meta_data and "uuid" in parent.meta_data:
-            directory += parent.meta_data["uuid"] + "/"
-    except:
-        pass
+    if hasattr(parent, "is_public") and not parent.is_public:
+        if not parent.meta_data:
+            parent.meta_data = {}
+        if not "uuid" in parent.meta_data:
+            parent.meta_data["uuid"] = str(uuid.uuid4())
+        # If this is a private document then we need to ensure this file is saved in an unguessable location
+        # So that is why we preface this with a uuid (also sometimes used for multi-file documents such as shapefiles)
+        directory += parent.meta_data["uuid"] + "/"
+    elif hasattr(parent, "meta_data") and parent.meta_data and "uuid" in parent.meta_data:
+        directory += parent.meta_data["uuid"] + "/"
     return directory + filename
 
 class Language(models.Model):
@@ -429,7 +438,7 @@ class Language(models.Model):
 
 class Document(Record):
     file = models.FileField(null=True, blank=True, upload_to=upload_directory, max_length=255)
-    attached_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="attachments")
+    attached_to = models.ForeignKey(Record, on_delete=models.CASCADE, null=True, blank=True, related_name="files")
 
     objects = PublicActiveRecordManager()
     objects_unfiltered = models.Manager()
@@ -444,7 +453,26 @@ class Document(Record):
             return 0
 
     def get_url(self):
-        return self.file.url if self.file else self.image.url
+        if self.image:
+            return self.image.url
+        elif self.is_public:
+            return self.file.url
+        else:
+            return None
+
+    def get_file(self):
+        if self.attached_to and hasattr(self.attached_to, "libraryitem"):
+        # If this document is attached to a library item then we use the library URL
+        # which will force a check of credentials and allows for downloading private items
+            return f"/library/{self.attached_to.id}/download/{self.id}/"
+        else:
+        # Otherwise we create a direct download URL (which only works for public documents)
+            return f"/download/{self.id}/"
+
+    def save(self, *args, **kwargs):
+        if self.attached_to and hasattr(self.attached_to, "is_public") and not self.attached_to.is_public:
+            self.is_public = False            
+        super().save(*args, **kwargs)
 
 class ProjectType(models.Model):
     name = models.CharField(max_length=255)
@@ -2078,10 +2106,11 @@ class LibraryItem(Record):
             except:
                 pass
 
-        # If there are linked Reference Spaces or Data points then these need to have the same public status as their parent document
+        # If there are linked Reference Spaces, Documents, or Data points then these need to have the same public status as their parent document
         if self.id:
             ReferenceSpace.objects_unfiltered.filter(source_id=self.id).update(is_public=self.is_public)
             Data.objects_include_private.filter(source_id=self.id).update(is_public=self.is_public)
+            Document.objects_include_private.filter(attached_to=self.id).update(is_public=self.is_public)
 
         super(LibraryItem, self).save(*args, **kwargs)
 

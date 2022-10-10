@@ -178,7 +178,7 @@ def forum(request, id, section=None):
             )
 
             set_author(request.user.people.id, message.id)
-            authors_of_underlying_object = info.authors().distinct()
+            authors_of_underlying_object = info.authors.distinct()
             recipients = []
             for each in authors_of_underlying_object:
                 if each not in recipients:
@@ -226,7 +226,7 @@ def forum(request, id, section=None):
                         attachment.file = file
                     attachment.name = file
                     attachment.save()
-                    message.attachments.add(attachment)
+                    message.files.add(attachment)
 
             if "subscribe" in request.POST:
                 info.subscribers.add(request.user.people)
@@ -303,7 +303,7 @@ def forum_form(request, id=False, parent=None, section=None):
                     attachment.file = file
                 attachment.name = file
                 attachment.save()
-                message.attachments.add(attachment)
+                message.files.add(attachment)
 
         messages.success(request, "Your message has been posted.")
 

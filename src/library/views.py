@@ -4,11 +4,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.db.models import Count
 from django.contrib import messages
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, JsonResponse, FileResponse
 from django.forms import modelform_factory
 from django.contrib.auth.decorators import login_required
 import json
-from django.http import JsonResponse
 from django.core.cache import cache
 
 from django.utils import timezone
@@ -1571,3 +1570,21 @@ def search_tags_ajax(request):
             r["results"].append({"id": each.id, "text": each.name})
     return JsonResponse(r, safe=False)
 
+def document_download(request, document, id=None):
+    if id:
+        # If this document is linked to a library item then we need to ensure the user
+        # has access to this library item before we open the document
+        try:
+            file = available_library_items(request).get(pk=id)
+            document = file.attachments.get(pk=document)
+        except:
+            raise Http404("Document was not found (or you lack access).") 
+    else:
+        document = Document.objects.get(pk=document)
+        if document.attached_to and hasattr(document.attached_to, "libraryitem"):
+            # If this is linked to a document then it should not be opened in this way
+            # but instead include the id of that main document so we can check access
+            raise Http404("URL is invalid") 
+
+    file_path = document.file.path if document.file else document.image.path
+    return FileResponse(open(file_path, "rb"), filename=str(document.name))

@@ -296,7 +296,6 @@ def diagram(request):
     }
     return render(request, "water/diagram.html", context)
 
-
 @login_required
 def controlpanel_diagram(request):
     if not has_permission(request, request.project, ["curator", "admin", "publisher"]):

@@ -52,7 +52,7 @@
                   </a>
                   <br>
                 {% endif %}
-                <a class="btn btn-sm btn-primary-outline mb-1" href="{{ MEDIA_URL }}{{ attachment.get_url }}" target="_blank"><i class="far fa-paperclip"></i>
+                <a class="btn btn-sm btn-primary-outline mb-1" href="{{ attachment.get_file }}" target="_blank"><i class="far fa-paperclip"></i>
                   {{ attachment }}
                   ({{ attachment.get_size }})
                 </a>
