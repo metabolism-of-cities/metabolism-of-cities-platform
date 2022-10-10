@@ -1,0 +1,52 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h2>{% block title %}Sankey diagram data{% endblock %}</h2>
+
+  <div class="row">
+    <div class="col-9">
+      Use this page to upload new <strong>top-level</strong> data for the 
+      sankey diagram. Please <strong>use the same format</strong> that is 
+      currently used. Keep the same rows and columns.
+      <br>
+      <br>
+      <a href="{{ info.attachments.all.0.file.url }}" class="btn btn-primary">
+        <i class="fa fa-download"></i>
+        Download existing data
+      </a>
+      <a href="{% url "water:index" %}" class="btn btn-success">
+        <i class="fa fa-exchange"></i>
+        View sankey diagram
+      </a>
+    </div>
+    <div class="col-3">
+      <a class="card icon-card btn-card" id="newdata" href="">
+        <div class="icon">
+          <i class="fal fa-fw fa-upload"></i>
+        </div>
+        <div class="card-header">Upload new data</div>
+      </a>
+    </div>
+  </div>
+
+  <form method="post" enctype="multipart/form-data" id="update" hidden>
+    <input type="file" name="file">
+    {% csrf_token %}
+  </form>
+
+{% endblock %}
+
+{% block footer %}
+  <script type="text/javascript">
+  $(function(){
+    $("#newdata").click(function(e){
+      e.preventDefault();
+      $("input[name=file]").click();
+    });
+    $("input[name=file]").change(function(){
+      $("form#update").submit();
+    });
+  });
+  </script>
+{% endblock %}

@@ -21,7 +21,7 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("infrastructure/<int:id>/", staf.map_item, name="infrastructure_map"),
     path("dashboard/", views.dashboard, name="dashboard"),
     path("dashboards/", data.progress, { "style": "grid"}, name="dashboards"),
-
+    path("controlpanel/diagram/", views.controlpanel_diagram, name="controlpanel_diagram"),
 
     path("temp/", views.temp_script),
 ]

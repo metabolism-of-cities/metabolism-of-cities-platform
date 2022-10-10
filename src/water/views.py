@@ -4,6 +4,10 @@ from staf import views as staf
 from django.shortcuts import redirect
 from django.http import Http404
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
+
+DIAGRAM_ID = 1013292
 
 def index(request):
 
@@ -92,6 +96,7 @@ def infrastructure(request):
     space = ActivatedSpace.objects.get(part_of_project_id=request.project, space_id=request.GET["region"])
     return staf.space_map(request, space.space.slug)
 
+@staff_member_required
 def temp_script(request):
 
     ###### REMOVE MOC_EXTRAS FUNCTIONS ONCE THIS IS COMPLETED!!
@@ -195,7 +200,7 @@ def dashboard(request):
 def diagram(request):
 
     try:
-        doc = available_library_items(request).get(pk=1013292)
+        doc = available_library_items(request).get(pk=DIAGRAM_ID)
     except:
         messages.warning(request, "Please log in first.")
         return redirect(reverse("water:login") + "?next=" + request.get_full_path())
@@ -290,3 +295,24 @@ def diagram(request):
         "documents_flows": available_library_items(request).filter(tags__in=flows),
     }
     return render(request, "water/diagram.html", context)
+
+
+@login_required
+def controlpanel_diagram(request):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    info = available_library_items(request).get(pk=DIAGRAM_ID)
+
+    if request.method == "POST":
+        file = request.FILES["file"]
+        document = info.attachments.all()[0]
+        document.file = file
+        document.save()
+        messages.success(request, "The new data have been uploaded!")
+
+    context = {
+        "info": info,
+    }
+    return render(request, "water/controlpanel.diagram.html", context)
+
