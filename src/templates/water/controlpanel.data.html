@@ -1,0 +1,68 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h2>{% block title %}Master data{% endblock %}</h2>
+
+  <div class="row">
+    <div class="col-9">
+      Use this page to upload a new master dataset
+      <br>
+      <br>
+      <a href="{{ info.attachments.all.0.file.url }}" class="btn btn-primary">
+        <i class="fa fa-download"></i>
+        Download existing data
+      </a>
+      <a href="{% url "water:diagram" %}" class="btn btn-success">
+        <i class="fa fa-database"></i>
+        View data
+      </a>
+    </div>
+    <div class="col-3">
+      <a class="card icon-card btn-card" id="newdata" href="">
+        <div class="icon">
+          <i class="fal fa-fw fa-upload"></i>
+        </div>
+        <div class="card-header">Upload new data</div>
+      </a>
+    </div>
+  </div>
+
+  <form method="post" enctype="multipart/form-data" id="update" hidden>
+    <input type="file" name="file">
+    {% csrf_token %}
+  </form>
+
+  <div class="modal fade" id="loading" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Data upload and review started...</h5>
+        </div>
+        <div class="modal-body">
+          <div class="text-center mb-4">
+            <i class="fad fa-spin fa-circle-notch" style="font-size:8rem"></i>
+          </div>
+          This file is now being uploaded and we will do a preliminary check to see if 
+          all the columns are in the right place. Stay tuned....
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block footer %}
+  <script type="text/javascript">
+  $(function(){
+    $("#newdata").click(function(e){
+      e.preventDefault();
+      $("input[name=file]").click();
+    });
+    $("input[name=file]").change(function(){
+      $("#loading").modal();
+      $("form#update").submit();
+    });
+  });
+  </script>
+{% endblock %}

@@ -250,10 +250,9 @@ def available_library_items(request):
         )
         if check.exists():
             # For the water site we check that the documents (which MIGHT include private docs)
-            # have specific tags applied
+            # are specifically uploaded to this site
             tag_id = get_parent_layer(request)
-            items = LibraryItem.objects_include_private \
-                .filter(tags__parent_tag__parent_tag__id=tag_id)
+            items = LibraryItem.objects_include_private.filter(part_of_project_id=request.project)
         else:
             items = LibraryItem.objects
 

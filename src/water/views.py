@@ -7,6 +7,14 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 
+# For loading data...
+from openpyxl import load_workbook
+import pandas as pd
+import numpy as np
+import calendar
+from django.utils import timezone
+from django.core.files.uploadedfile import UploadedFile
+
 DIAGRAM_ID = 1013292
 
 def index(request):
@@ -314,4 +322,126 @@ def controlpanel_diagram(request):
         "info": info,
     }
     return render(request, "water/controlpanel.diagram.html", context)
+
+@login_required
+def controlpanel_data(request):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    files = {
+        "PRODUCTION D'EAU POTABLE": 1012192,
+        "PRELEVEMENT D'EAU RESSOURCE": 1012186,
+        "ACHAT D'EAU POTABLE A": 1012179,
+        "VENTE D'EAU POTABLE A": 1012210,
+        "SURVERSE EAU TRAITEE": 1012204,
+        "SURVERSE EAU BRUTE": 1012198,
+    }
+
+    if request.POST:
+        # For local testing purposes; in production we should error out in this case
+        delete_empty_rows = True
+
+        timestamp = timezone.now()
+        formatted = timestamp.strftime("%B %d %Y %H:%i")
+        info = LibraryItem.objects.create(name=f"Master dataset - {formatted}", part_of_project_id=request.project, is_public=False, type_id=10)
+
+        file = request.FILES["file"]
+        error = False
+
+        try:
+            df = pd.read_excel(file)
+        except Exception as e:
+            messages.error(request, "We could not open the file that was uploaded. Is this an Excel file? The specific error follows: " + str(e))
+            error = True
+
+        if not error:
+
+            # Month names in French are used in the spreadsheet so we convert to month numbers
+            months = {
+                "janvier": 1,
+                "février": 2,
+                "mars": 3,
+                "avril": 4,
+                "mai": 5,
+                "juin": 6,
+                "juillet": 7,
+                "août": 8,
+                "septembre": 9,
+                "octobre": 10,
+                "novembre": 11,
+                "décembre": 12,
+            }
+
+            # We only keep the relevant columns...
+            columns_to_keep = ["année", "mois calcul volume", "PN_PRLVT_ECHANGES", "n° CPT SIG", "volume retenu"]
+            df = df[columns_to_keep]
+
+            number_of_cols = len(df.columns)
+            if number_of_cols != len(columns_to_keep):
+                error = True
+                messages.error(request, f"There are {len(columns_to_keep)} specific columns that need to be present in the spreadsheet. We only found {number_of_cols} of these columns in your spreadsheet. Please make sure all columns exist and have the right name! The required columns are: {columns_to_keep}")
+            else:
+                col_names = {
+                    "mois calcul volume": "month", 
+                    "année": "year",
+                    "PN_PRLVT_ECHANGES": "type",
+                    "n° CPT SIG": "meter_number",
+                    "volume retenu": "quantity",
+                }
+
+                # Rename to English and single words
+                df.rename(columns = col_names, inplace = True)
+
+                # Sometimes pandas reads rows that are empty and includes them; let's delete those empty rows from the dataframe
+                df.dropna(how="all", inplace=True) 
+
+                # We will add the period name by stating "month name month year" as a string
+                # Note that we convert the year to int first and then str because sometimes it 
+                # is read as a float, e.g. 2016.0 so we want to get rid of that decimal.
+                df["period_name"] = df["month"].astype(str) + " " + df["year"].astype(int).astype(str)
+
+                # Convert the month names to numbers
+                df["month"] = df["month"].replace(months)
+
+                # Now we can create start date YYYY-MM-01, which we then convert into a datetime object
+                df["start_date"] = df["year"].astype(int).astype(str) + "-" + df["month"].astype(str) + "-01"
+                df["start_date"] = pd.to_datetime(df["start_date"])
+
+                # And we use this to set the end date to the last day of that month
+                df["end_date"] = df["start_date"] + pd.offsets.MonthEnd()
+
+                # We no longer need month/year columns so let's drop them...
+                df = df.drop(["month", "year"], axis=1)
+
+                # Check if any of the columns that are important contain empty cells...
+                if df["start_date"].isnull().sum() or df["end_date"].isnull().sum() > 0:
+                    error = "Error converting the dates. Please ensure all dates are set."
+                    messages.error(request, error)
+
+                if df["type"].isnull().sum() > 0:
+                    error = f"There are {df['type'].isnull().sum()} rows that do not have a value in the PN_PRLVT_ECHANGES column. Please check and correct or remove these rows."
+                    messages.error(request, error)
+
+                if df["meter_number"].isnull().sum() > 0:
+                    error = f"There are {df['meter_number'].isnull().sum()} rows that do not have a value in the 'num_compteur' column. Please check and correct or remove these rows. We have removed these rows in order to continue..."
+                    messages.error(request, error)
+
+                df["material"] = "water"
+                df["material_code"] = "EMP7.1"
+                df["unit"] = "m3"
+                df = df[["period_name", "start_date", "end_date", "material", "material_code", "quantity", "unit", "meter_number", "type"]]
+
+                if delete_empty_rows:
+                    df = df.dropna(subset=["meter_number"])
+
+                for type, document_id in files.items():
+                    export_df = df[df["type"] == type]
+                    export_df.drop(["type"], axis=1)
+                    file_content = export_df.to_csv(None, index=None)
+                    document = Document.objects.create(name=type, is_public=False, attached_to=info, file=UploadedFile(file_content))
+                    messages.success(request, f"We have successfully updated {type} in the file {info}")
+
+    context = {
+    }
+    return render(request, "water/controlpanel.data.html", context)
 
