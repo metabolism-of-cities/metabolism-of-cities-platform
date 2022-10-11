@@ -6,18 +6,50 @@
 
   <div class="row">
     <div class="col-9">
-      Use this page to upload a new master dataset
-      <br>
-      <br>
-      <a href="{{ info.attachments.all.0.file.url }}" class="btn btn-primary">
-        <i class="fa fa-download"></i>
-        Download existing data
-      </a>
-      <a href="{% url "water:diagram" %}" class="btn btn-success">
-        <i class="fa fa-database"></i>
-        View data
-      </a>
+      {% if request.method == "POST" and request.POST.upload %}
+        The following data points were obtained and recorded:
+        File: <a href="{% url URLS.LIBRARY_ITEM info.id %}">{{ info }}</a>
+        <table class="table table-striped mt-3 mb-3">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Data points</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for key,value in results.items %}
+            <tr>
+              <td>{{ key }}</td>
+              <td>{{ value }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        How does this look?
+        <form method="post" class="mt-2">
+          <button type="submit" class="btn btn-dark float-right">Not good, let's try again</button>
+          {% csrf_token %}
+          <input type="hidden" name="remove" value="{{ info.id }}" />
+        </form>
+        <form method="get" class="mt-2">
+          <button type="submit" class="btn btn-success">Great, let's use these numbers!</button>
+          <input type="hidden" name="process" value="{{ info.id }}" />
+        </form>
+      {% else %}
+        Use this page to upload a new master dataset
+        <br>
+        <br>
+        <a href="{{ info.attachments.all.0.file.url }}" class="btn btn-primary">
+          <i class="fa fa-download"></i>
+          Download existing data
+        </a>
+        <a href="{% url "water:diagram" %}" class="btn btn-success">
+          <i class="fa fa-database"></i>
+          View data
+        </a>
+      {% endif %}
     </div>
+    {% if not request.POST %}
     <div class="col-3">
       <a class="card icon-card btn-card" id="newdata" href="">
         <div class="icon">
@@ -26,18 +58,20 @@
         <div class="card-header">Upload new data</div>
       </a>
     </div>
+    {% endif %}
   </div>
 
   <form method="post" enctype="multipart/form-data" id="update" hidden>
     <input type="file" name="file">
     {% csrf_token %}
+    <input type="hidden" name="upload" value="true" />
   </form>
 
-  <div class="modal fade" id="loading" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="loading" tabindex="-1" aria-labelledby="md1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Data upload and review started...</h5>
+          <h5 class="modal-title" id=md1">Data upload and review started...</h5>
         </div>
         <div class="modal-body">
           <div class="text-center mb-4">

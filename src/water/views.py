@@ -13,7 +13,7 @@ import pandas as pd
 import numpy as np
 import calendar
 from django.utils import timezone
-from django.core.files.uploadedfile import UploadedFile
+from django.core.files.base import ContentFile
 
 DIAGRAM_ID = 1013292
 
@@ -336,14 +336,45 @@ def controlpanel_data(request):
         "SURVERSE EAU TRAITEE": 1012204,
         "SURVERSE EAU BRUTE": 1012198,
     }
+    results = {}
+    info = None
+    master_data_tag = Tag.objects.get(pk=1794)
 
-    if request.POST:
+    if "process" in request.GET:
+        info = available_library_items(request).get(pk=request.GET["process"], tags=master_data_tag)
+        files_list = info.attachments
+        if "done" in request.GET:
+            files_list = files_list.exclude(pk__in=request.GET.getlist("done"))
+        if files_list.count():
+            file = files_list[0]
+            match = files[file.name]
+            document = available_library_items(request).get(pk=match)
+            original_file = document.attachments[0]
+            file.attached_to = document
+            file.save()
+            document.meta_data["processing"]["file"] = file.id
+            document.save()
+            document.convert_stocks_flows_data()
+            messages.success(request, f"The following data was parsed and stored in the database: {document}.")
+            return redirect(request.get_full_path() + "&done=" + str(file.id))
+
+    if request.POST and "remove" in request.POST:
+        info = available_library_items(request).get(pk=request.POST["remove"], tags=master_data_tag)
+        info.delete()
+        messages.success(request, "Data have been deleted - you can upload a new file.")
+        return redirect(request.get_full_path())
+        
+    if request.POST and "upload" in request.POST:
         # For local testing purposes; in production we should error out in this case
         delete_empty_rows = True
 
         timestamp = timezone.now()
-        formatted = timestamp.strftime("%B %d %Y %H:%i")
+        formatted = timestamp.strftime("%B %d, %Y - %H:%M")
         info = LibraryItem.objects.create(name=f"Master dataset - {formatted}", part_of_project_id=request.project, is_public=False, type_id=10)
+        info.tags.add(master_data_tag)
+        spaces = ReferenceSpace.objects.filter(activated__part_of_project_id=request.project)
+        for each in spaces:
+            info.spaces.add(each)
 
         file = request.FILES["file"]
         error = False
@@ -438,10 +469,13 @@ def controlpanel_data(request):
                     export_df = df[df["type"] == type]
                     export_df.drop(["type"], axis=1)
                     file_content = export_df.to_csv(None, index=None)
-                    document = Document.objects.create(name=type, is_public=False, attached_to=info, file=UploadedFile(file_content))
-                    messages.success(request, f"We have successfully updated {type} in the file {info}")
+                    file_name = f"{type}.csv"
+                    document = Document.objects.create(name=type, is_public=False, attached_to=info, file=ContentFile(file_content, name=file_name))
+                    results[type] = export_df.shape[0]
 
     context = {
+        "results": results,
+        "info": info,
     }
     return render(request, "water/controlpanel.data.html", context)
 

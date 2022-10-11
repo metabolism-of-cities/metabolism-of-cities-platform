@@ -129,6 +129,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'channels',
     'bleach',
+    'django_cleanup.apps.CleanupConfig', # Must remain last in the list, https://github.com/un1t/django-cleanup
 ]
 
 # When importing data please deactivate the DebugToolbar, otherwise

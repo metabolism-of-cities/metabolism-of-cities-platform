@@ -1530,7 +1530,7 @@ def hub_harvesting_tag(request, space, tag):
 
     tag = get_object_or_404(Tag, pk=tag)
     types = [5,6,9,16,37,25,27,29,32,10,33,38,20,31,40,41]
-    list = library_items.filter(spaces=info, tags=tag)
+    items = library_items.filter(spaces=info, tags=tag)
     list_messages = None
 
     shapefile = [40]
@@ -1584,7 +1584,7 @@ def hub_harvesting_tag(request, space, tag):
         "tag": tag,
         "types": LibraryItemType.objects.filter(pk__in=types),
         "title": tag.name,
-        "items": list,
+        "items": items,
         "forum_id": forum_topic[0].id if forum_topic else "create",
         "forum_topic_title": tag.name + " - " + info.name,
         "list_messages": list_messages,

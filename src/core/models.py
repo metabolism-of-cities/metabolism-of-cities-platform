@@ -1569,7 +1569,7 @@ class LibraryItem(Record):
             error = "We could not find/open this file."
 
         if not error:
-            all = Data.objects.filter(source=self)
+            all = Data.objects_include_private.filter(source=self)
             all.delete()
 
             # We may have cached space-related properties for this object, so let's clear those
@@ -2041,7 +2041,7 @@ class LibraryItem(Record):
                 error = True
                 error_message = "Multiple files were found. Please upload ONE file that contains '.final' in the name (example.final.xls) so that we know which file to work with"
         if doc:
-            extension = doc.name
+            extension = doc.file.name
             extension = extension.split(".")
             extension = extension[-1].lower()
 
