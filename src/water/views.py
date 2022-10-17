@@ -340,6 +340,9 @@ def controlpanel_data(request):
     info = None
     master_data_tag = Tag.objects.get(pk=1794)
 
+    if "check" in request.GET:
+        i = available_library_items()
+
     if "process" in request.GET:
         info = available_library_items(request).get(pk=request.GET["process"], tags=master_data_tag)
         files_list = info.attachments
