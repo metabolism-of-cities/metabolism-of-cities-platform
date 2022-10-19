@@ -213,7 +213,7 @@
       </section>
 
       <section id="urban-context">
-        <h1 class="text-uppercase">Urban context</h1>
+        <h1>Urban Context</h1>
 
         <div class="row mb-3">
           <div class="col-3">
@@ -336,7 +336,6 @@
         {% else %}
           <span class="question-number bg-dark text-light rounded px-2 mr-2">5A</span>
         {% endif %}
-
         {% if report.population_description_html %}
           {{ report.population_description_html|safe }}
         {% else %}
@@ -537,7 +536,7 @@
       </section>
 
       <section id="sector-context">
-        <h1 class="text-uppercase">Economic context of {{ space }}</h1>
+        <h1>Economic Context of {{ space }}</h1>
 
         <p class="font-italic">
           This section puts into perspective the economic context of {{ space }}. It describes how many people are employed in this sector, as well as who the main actors involved are.
@@ -632,7 +631,7 @@
       </section>
 
       <section id="flows">
-        <h1 class="text-uppercase">Material flows in {{ space }}</h1>
+        <h1>Material Flows in {{ space }}</h1>
 
         <label>Domestic Extraction</label><br>
         {% if report.domestic_extraction_html %}
@@ -765,7 +764,7 @@
       </section>
 
       <section id="quality">
-        <h1 class="text-uppercase">Data quality assessment</h1>
+        <h1>Data Quality Assessment</h1>
         <label>Data quality matrix</label><br>
         {% if report.matrix_html %}
           {{ report.matrix_html|safe }}
@@ -819,7 +818,9 @@
           {{ report.references_html|safe }}
         {% endif %}
       </section>
-    </div>
+      {% if space.slug == "apeldoorn" %}
+        <div id="3176180f-5cdf-46bd-a2db-eac53d9977b1" class="plotly-graph-div" style="height:100%; width:100%;"></div>
+      {% endif %}
   </div>
 
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
@@ -939,5 +940,8 @@
       obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
     }
   </script>
+  {% if space.slug == "apeldoorn" %}
+    <script src="{% static 'js/uca-report.js' %}"></script>
+  {% endif %}
 </body>
 </html>

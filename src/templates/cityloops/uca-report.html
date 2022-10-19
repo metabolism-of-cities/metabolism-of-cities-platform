@@ -219,6 +219,12 @@
       <h1>Summary</h1>
     </section>
 
+    {% if report.population_description_html %}
+      {{ report.population_description_html|safe }}
+    {% else %}
+      <span class="question-number bg-dark text-light rounded px-2 mr-2">5B</span>
+    {% endif %}
+
     <section id="references">
       <h1>References</h1>
       <ul>

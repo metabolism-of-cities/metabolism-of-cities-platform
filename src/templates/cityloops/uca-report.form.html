@@ -230,7 +230,7 @@
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">5B</span> <i class="fab fa-markdown"></i> Briefly describe how the population developed over time</label>
       <textarea class="form-control" rows="3" name="population-description">{{ report.population_description }}</textarea>
       <small>Besides normal Markdown, here you can also add dataset visualisations by adding <code>[#ID]</code>, where <code>ID</code> is the ID number of the dataset. This will add an interactive visualisation <strong>for the online report online</strong>.</small>
-      <small>This visualisation will not be added to the print version of the report. You can add this by wrapping normal markdown in <code>&lt;span class="static-image"&gt;&lt;/span&gt;</code>. See <a class="embed-instructions">detailed instructions</a>.</small>
+      <small>This visualisation will not be added to the print version of the report. You can add this by wrapping normal markdown in <code>&lt;span class="d-none d-print-block"&gt;&lt;/span&gt;</code>. See <a class="embed-instructions">detailed instructions</a>.</small>
     </div>
   </div>
 
@@ -347,7 +347,7 @@
       <textarea class="form-control" rows="3" name="econ-description">{{ report.econ_description }}</textarea>
       <small>Answering these questions might help: What are the main sectors of the city? What is the city famous for in terms of economic activities? Who are big/known companies and what do they do?</small>
       <small>Besides normal Markdown, here you can also add dataset visualisations by adding <code>[#ID]</code>, where <code>ID</code> is the ID number of the dataset. This will add an interactive visualisation <strong>for the online report online</strong>.</small>
-      <small>This visualisation will not be added to the print version of the report. You can add this by wrapping normal markdown in <code>&lt;span class="static-image"&gt;&lt;/span&gt;</code>. See <a class="embed-instructions">detailed instructions</a>.</small>
+      <small>This visualisation will not be added to the print version of the report. You can add this by wrapping normal markdown in <code>&lt;span class="d-none d-print-block"&gt;&lt;/span&gt;</code>. See <a class="embed-instructions">detailed instructions</a>.</small>
     </div>
   </div>
 
@@ -378,12 +378,12 @@
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">16A</span> ID number of Material Stock Map</label>
-      <input class="form-control" type="number" min="0" max="2147483647" name="material-stock-map" value="{{ report.stock_map_dataset_id }}">
+      <input class="form-control" type="number" min="0" max="2147483647" name="material-stock-map" value="{{ report.stock_map_dataset }}">
     </div>
 
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">16A</span> ID number of (bar) chart with different materials</label>
-      <input class="form-control" type="number" min="0" max="2147483647" name="material-chart" value="{{ report.materials_dataset_id }}">
+      <input class="form-control" type="number" min="0" max="2147483647" name="material-chart" value="{{ report.materials_dataset }}">
     </div>
 
     <div class="form-group">
@@ -487,19 +487,19 @@
 
         <p>We can add an image by adding something like this to the form field:</p>
 
-        <code>&lt;span class="static-image">![Image title](url/to/image.png)&gt;&lt;/span&gt;</code>
+        <code>&lt;span class="d-none d-print-block">![Image title](url/to/image.png)&gt;&lt;/span&gt;</code>
         <br>
         <br>
-        <code>&lt;span class="static-image">[Data source](url/of/dataset)&gt;&lt;/span&gt;</code>
+        <code>&lt;span class="d-none d-print-block">[Data source](url/of/dataset)&gt;&lt;/span&gt;</code>
         <br>
         <br>
 
-        <p>From this format, you'll need to replace three things: the image title, the url to the image, and the url to the dataset. In case of our previous example, this will be:</p>
+        <p>From this format, you'll need to replace three things: the image title, the url to the image, and the url to the dataset. Taking our previous example, this will be:</p>
 
-        <code>&lt;span class="static-image">![Annual Production of Municipal Solid Waste in Sevilla line graph](https://cityloops.metabolismofcities.org/media/records/sevilla-solid-waste.large.png)&gt;&lt;/span&gt;</code>
+        <code>&lt;span class="d-none d-print-block">![Annual Production of Municipal Solid Waste in Sevilla line graph](https://cityloops.metabolismofcities.org/media/records/sevilla-solid-waste.large.png)&gt;&lt;/span&gt;</code>
         <br>
         <br>
-        <code>&lt;span class="static-image">[Data source](https://cityloops.metabolismofcities.org/library/49598/)&gt;&lt;/span&gt;</code>
+        <code>&lt;span class="d-none d-print-block">[Data source](https://cityloops.metabolismofcities.org/library/49598/)&gt;&lt;/span&gt;</code>
         <br>
         <br>
       </div>

@@ -874,7 +874,10 @@ def uca_report(request, slug):
         "bounding_box": bounding_box,
     }
 
-    return render(request, "cityloops/uca-report.online.html", context)
+    if "format" in request.GET:
+        return render(request, "cityloops/uca-report.html", context)
+    else:
+        return render(request, "cityloops/uca-report.online.html", context)
 
 def uca_report_form(request, slug):
     space = get_space(request, slug)
@@ -917,8 +920,8 @@ def uca_report_form(request, slug):
         report.imports_exports = request.POST["imports-exports"]
         report.consumption = request.POST["consumption"]
         report.waste = request.POST["waste"]
-        report.stock_map_dataset_id = request.POST["material-stock-map"]
-        report.materials_dataset_id = request.POST["material-chart"]
+        report.stock_map_dataset = request.POST["material-stock-map"]
+        report.materials_dataset = request.POST["material-chart"]
         report.typologies = request.POST["typologies"]
         report.stock = request.POST["stock"]
         report.indicator_table = request.POST["indicator-table"]
@@ -970,6 +973,7 @@ def uca_report_form(request, slug):
         "nuts3": nuts3,
         "currency": currency,
     }
+
     return render(request, "cityloops/uca-report.form.html", context)
 
 # space_maps and space_map are copies from staf/views.py
