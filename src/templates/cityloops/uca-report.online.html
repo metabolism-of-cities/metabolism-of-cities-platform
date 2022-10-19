@@ -107,6 +107,7 @@
       width: 100%;
       height: 500px;
       margin-bottom: 2rem;
+      border: none;
     }
 
     #sankey {
@@ -200,6 +201,11 @@
     <div class="report-content">
       <section id="summary">
         <h1>Summary</h1>
+        {% if report.summary_html %}
+          {{ report.summary_html|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">0</span>
+        {% endif %}
       </section>
 
       <section id="introduction">
@@ -207,7 +213,7 @@
       </section>
 
       <section id="urban-context">
-        <h1>Urban context</h1>
+        <h1 class="text-uppercase">Urban context</h1>
 
         <div class="row mb-3">
           <div class="col-3">
@@ -531,7 +537,7 @@
       </section>
 
       <section id="sector-context">
-        <h1>Economic context of {{ space }}</h1>
+        <h1 class="text-uppercase">Economic context of {{ space }}</h1>
 
         <p class="font-italic">
           This section puts into perspective the economic context of {{ space }}. It describes how many people are employed in this sector, as well as who the main actors involved are.
@@ -626,7 +632,7 @@
       </section>
 
       <section id="flows">
-        <h1>Material flows in {{ space }}</h1>
+        <h1 class="text-uppercase">Material flows in {{ space }}</h1>
 
         <label>Domestic Extraction</label><br>
         {% if report.domestic_extraction_html %}
@@ -658,7 +664,12 @@
       </section>
 
       <section id="stock">
-        <h1>Analysis of Flows and Stocks: Measuring Indicators</h1>
+        <h1>Material stock in {{ space }}</h1>
+
+        {% if space.slug == "apeldoorn" %}
+          <iframe class="rounded" src="https://gcp-europe-west1.app.carto.com/map/aee75379-6011-4098-9e70-102d2c61fcf1" onload="resizeIframe(this)"></iframe>
+        {% elif space.slug == "bodo" %}
+        {% endif %}
 
         <label>Material Stock Map</label><br>
         {% if report.stock_map_dataset %}
@@ -754,7 +765,7 @@
       </section>
 
       <section id="quality">
-        <h1>Data quality assessment</h1>
+        <h1 class="text-uppercase">Data quality assessment</h1>
         <label>Data quality matrix</label><br>
         {% if report.matrix_html %}
           {{ report.matrix_html|safe }}
@@ -803,6 +814,10 @@
           {% if report.actors_dataset %}
             <li><a href="{% url 'cityloops:library_item' report.actors_dataset.id  %}">{{ report.actors_dataset }}</a></li>
           {% endif %}
+        </ul>
+        {% if report.references_html %}
+          {{ report.references_html|safe }}
+        {% endif %}
       </section>
     </div>
   </div>

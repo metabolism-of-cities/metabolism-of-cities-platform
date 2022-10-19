@@ -825,22 +825,25 @@ def sca_report_form(request, slug, sector):
 
 def uca_report(request, slug):
     space = get_space(request, slug)
+    bounding_box = False
 
-    # try:
-    #     report = CityLoopsUCAReport.objects.get(city=space)
-    # except:
-    #     report = CityLoopsUCAReport.objects.create(city=space)
+    try:
+        report = CityLoopsUCAReport.objects.get(city=space)
+    except:
+        report = CityLoopsUCAReport.objects.create(city=space)
 
     if slug == "apeldoorn":
         country_id = 328768
         nuts2_id = 584317
         nuts3_id = 585874
         currency = "€"
+        bounding_box = [[50.65, 3.28], [53.6, 7.21]]
     elif slug == "bodo":
         country_id = 328727
         nuts2_id = 584307
         nuts3_id = 585880
         currency = "kr"
+        bounding_box = [[57.94,4.83], [71.33,31.55]]
     elif slug == "mikkeli":
         country_id = 328729
         nuts2_id = 584282
@@ -862,11 +865,13 @@ def uca_report(request, slug):
     nuts3 = ReferenceSpace.objects.get(id=nuts3_id)
 
     context = {
+        "report": report,
         "space": space,
         "country": country,
         "nuts2": nuts2,
         "nuts3": nuts3,
         "currency": currency,
+        "bounding_box": bounding_box,
     }
 
     return render(request, "cityloops/uca-report.online.html", context)
@@ -874,12 +879,14 @@ def uca_report(request, slug):
 def uca_report_form(request, slug):
     space = get_space(request, slug)
 
-    # try:
-    #     report = CityLoopsUCAReport.objects.get(city=space)
-    # except:
-    #     report = CityLoopsUCAReport.objects.create(city=space)
+    try:
+        report = CityLoopsUCAReport.objects.get(city=space)
+    except:
+        report = CityLoopsUCAReport.objects.create(city=space)
 
     if request.method == "POST":
+        report.summary = request.POST["summary"]
+
         report.space_population = request.POST["space-population"] if request.POST["space-population"] else None
         report.space_size = request.POST["space-size"] if request.POST["space-size"] else None
         report.nuts3_population = request.POST["nuts3-population"] if request.POST["nuts3-population"] else None
@@ -904,22 +911,23 @@ def uca_report_form(request, slug):
         report.country_gdp = request.POST["country-gdp"] if request.POST["country-gdp"] else None
         report.country_employees = request.POST["country-employees"] if request.POST["country-employees"] else None
 
-        report.economic_activities = request.POST["economic-activities"]
-        domestic_extraction = request.POST["domestic-extraction"]
-        imports_exports = request.POST["imports-exports"]
-        material_consumption = request.POST["material-consumption"]
-        waste = request.POST["waste"]
-        material_stock_map = request.POST["material-stock-map"]
-        material_chart = request.POST["material-chart"]
-        typologies = request.POST["typologies"]
-        analysis = request.POST["analysis"]
-        indicators = request.POST["indicators"]
-        indicator_description = request.POST["indicator-description"]
-        matrix = request.POST["matrix"]
-        quality = request.POST["quality"]
-        gaps = request.POST["gaps"]
-        status_quo = request.POST["status-quo"]
-        recommendations = request.POST["recommendations"]
+        report.econ_description = request.POST["econ-description"]
+
+        report.domestic_extraction = request.POST["domestic-extraction"]
+        report.imports_exports = request.POST["imports-exports"]
+        report.consumption = request.POST["consumption"]
+        report.waste = request.POST["waste"]
+        report.stock_map_dataset_id = request.POST["material-stock-map"]
+        report.materials_dataset_id = request.POST["material-chart"]
+        report.typologies = request.POST["typologies"]
+        report.stock = request.POST["stock"]
+        report.indicator_table = request.POST["indicator-table"]
+        report.indicators = request.POST["indicators"]
+        report.matrix = request.POST["matrix"]
+        report.quality = request.POST["quality"]
+        report.gaps = request.POST["gaps"]
+        report.status_quo = request.POST["status-quo"]
+        report.recommendations = request.POST["recommendations"]
 
         report.save()
 
@@ -954,6 +962,7 @@ def uca_report_form(request, slug):
     nuts3 = ReferenceSpace.objects.get(id=nuts3_id)
 
     context = {
+        "report": report,
         "space": space,
         "country": country,
         "nuts2": nuts2,

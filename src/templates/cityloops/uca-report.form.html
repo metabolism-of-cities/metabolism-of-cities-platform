@@ -120,7 +120,7 @@
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">0</span> <i class="fab fa-markdown"></i> Summary</label>
-      <textarea class="form-control" rows="2" name="status-quo">{{ report.summary }}</textarea>
+      <textarea class="form-control" rows="2" name="summary">{{ report.summary }}</textarea>
       <small>Please describe your main findings and insights in this summary</small>
     </div>
   </div>
@@ -344,7 +344,7 @@
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">11</span> <i class="fab fa-markdown"></i> Describe the economic activities in {{ space }}</label>
-      <textarea class="form-control" rows="3" name="economic-activities">{{ report.economic_activities }}</textarea>
+      <textarea class="form-control" rows="3" name="econ-description">{{ report.econ_description }}</textarea>
       <small>Answering these questions might help: What are the main sectors of the city? What is the city famous for in terms of economic activities? Who are big/known companies and what do they do?</small>
       <small>Besides normal Markdown, here you can also add dataset visualisations by adding <code>[#ID]</code>, where <code>ID</code> is the ID number of the dataset. This will add an interactive visualisation <strong>for the online report online</strong>.</small>
       <small>This visualisation will not be added to the print version of the report. You can add this by wrapping normal markdown in <code>&lt;span class="static-image"&gt;&lt;/span&gt;</code>. See <a class="embed-instructions">detailed instructions</a>.</small>
@@ -365,7 +365,7 @@
 
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">14</span> <i class="fab fa-markdown"></i> Domestic Material Consumption</label>
-      <textarea class="form-control" rows="3" name="material-consumption">{{ report.material_consumption }}</textarea>
+      <textarea class="form-control" rows="3" name="consumption">{{ report.consumption }}</textarea>
     </div>
 
     <div class="form-group">
@@ -378,12 +378,12 @@
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">16A</span> ID number of Material Stock Map</label>
-      <input class="form-control" type="number" min="0" max="2147483647" name="material-stock-map" value="{{ report.material_stock_map.id }}">
+      <input class="form-control" type="number" min="0" max="2147483647" name="material-stock-map" value="{{ report.stock_map_dataset_id }}">
     </div>
 
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">16A</span> ID number of (bar) chart with different materials</label>
-      <input class="form-control" type="number" min="0" max="2147483647" name="material-chart" value="{{ report.material_chart.id }}">
+      <input class="form-control" type="number" min="0" max="2147483647" name="material-chart" value="{{ report.materials_dataset_id }}">
     </div>
 
     <div class="form-group">
@@ -393,22 +393,22 @@
 
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">18</span> <i class="fab fa-markdown"></i> Analysis of Material Stock</label>
-      <textarea class="form-control" rows="3" name="analysis">{{ report.analysis }}</textarea>
+      <textarea class="form-control" rows="3" name="stock">{{ report.stock }}</textarea>
     </div>
   </div>
 
-  <h2>Material stock in {{ space }}</h2>
+  <h2>Analysis of Flows and Stocks: Measuring Indicators</h2>
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">19</span> <i class="fab fa-markdown"></i> Insert the table with indicators</label>
-      <textarea class="form-control" rows="3" name="indicators">{{ report.indicators }}</textarea>
+      <textarea class="form-control" rows="3" name="indicator-table">{{ report.indicator_table }}</textarea>
     </div>
   </div>
 
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">20</span> <i class="fab fa-markdown"></i> Describe the indicators that were chosen and their development over time</label>
-      <textarea class="form-control" rows="2" name="indicator-description">{{ report.indicator_description }}</textarea>
+      <textarea class="form-control" rows="2" name="indicators">{{ report.indicators }}</textarea>
     </div>
   </div>
 
@@ -446,6 +446,14 @@
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">25</span> <i class="fab fa-markdown"></i> Recommendations for making the city more circular</label>
       <textarea class="form-control" rows="2" name="recommendations">{{ report.recommendations }}</textarea>
+    </div>
+  </div>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">26</span> <i class="fab fa-markdown"></i> References</label>
+      <textarea class="form-control" rows="2" name="references">{{ report.references }}</textarea>
+      <small>The references to the datasets of the ID numbers you have filled out in a designated field in the form are added automatically. Only add the references to the datasets you've added to the text fields.</small>
     </div>
   </div>
 
