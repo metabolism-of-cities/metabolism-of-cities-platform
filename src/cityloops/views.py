@@ -928,6 +928,7 @@ def uca_report_form(request, slug):
         report.gaps = request.POST["gaps"]
         report.status_quo = request.POST["status-quo"]
         report.recommendations = request.POST["recommendations"]
+        report.references = request.POST["references"]
 
         report.save()
 

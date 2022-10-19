@@ -3594,7 +3594,7 @@ class CityLoopsUCAReport(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.city} - {self.sector}"
+        return f"{self.city}"
 
 class EurostatDB(models.Model):
     title = models.CharField(max_length=2000)
