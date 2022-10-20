@@ -920,8 +920,10 @@ def uca_report_form(request, slug):
         report.imports_exports = request.POST["imports-exports"]
         report.consumption = request.POST["consumption"]
         report.waste = request.POST["waste"]
-        report.stock_map_dataset = request.POST["material-stock-map"]
-        report.materials_dataset = request.POST["material-chart"]
+
+        report.stock_map_dataset = LibraryItem.objects.get(id=request.POST["material-stock-map"]) if request.POST["material-stock-map"] else None
+        report.materials_dataset = LibraryItem.objects.get(id=request.POST["material-chart"]) if request.POST["material-chart"] else None
+
         report.typologies = request.POST["typologies"]
         report.stock = request.POST["stock"]
         report.indicator_table = request.POST["indicator-table"]
