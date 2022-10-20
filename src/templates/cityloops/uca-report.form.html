@@ -378,12 +378,12 @@
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">16A</span> ID number of Material Stock Map</label>
-      <input class="form-control" type="number" min="0" max="2147483647" name="material-stock-map" value="{{ report.stock_map_dataset }}">
+      <input class="form-control" type="number" min="0" max="2147483647" name="material-stock-map" value="{{ report.stock_map_dataset.id }}">
     </div>
 
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">16A</span> ID number of (bar) chart with different materials</label>
-      <input class="form-control" type="number" min="0" max="2147483647" name="material-chart" value="{{ report.materials_dataset }}">
+      <input class="form-control" type="number" min="0" max="2147483647" name="material-chart" value="{{ report.materials_dataset.id }}">
     </div>
 
     <div class="form-group">
