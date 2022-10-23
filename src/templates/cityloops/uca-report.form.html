@@ -119,6 +119,13 @@
 
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">Cover image</span> ID number of cover image library item</label>
+      <input class="form-control" type="number" min="0" max="2147483647" name="cover-image" value="{{ report.cover_image.id }}">
+    </div>
+  </div>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">0</span> <i class="fab fa-markdown"></i> Summary</label>
       <textarea class="form-control" rows="2" name="summary">{{ report.summary }}</textarea>
       <small>Please describe your main findings and insights in this summary</small>

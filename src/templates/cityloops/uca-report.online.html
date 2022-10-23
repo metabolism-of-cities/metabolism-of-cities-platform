@@ -174,9 +174,7 @@
             <span class="report-title">Urban Circularity Assessment</span>
             <br>
             <span class="city-title">{{ space }}</span>
-
           </div>
-          <!--
           <div class="pdf-links">
             {% if sca_report_pdf_url %}
               <a class="btn btn-inverse rounded-0" href="{{ sca_report_pdf_url }}" target="_blank">
@@ -189,12 +187,12 @@
               </a>
             {% endif %}
           </div>
-          -->
         </div>
         <div class="col-3 col-logos">
           <img class="img-fluid mb-4" src="https://metabolismofcities.org/media/records/CityLoops_Logo.png">
           <img class="img-fluid" src="https://i.imgur.com/ARgcRYc.png">
         </div>
+        <img class="cover-image" src="{{ report.cover_image.image.url }}">
       </div>
     </div>
 
@@ -821,6 +819,7 @@
       {% if space.slug == "apeldoorn" %}
         <div id="3176180f-5cdf-46bd-a2db-eac53d9977b1" class="plotly-graph-div" style="height:100%; width:100%;"></div>
       {% endif %}
+    </div>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"

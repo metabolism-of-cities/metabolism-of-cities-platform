@@ -889,6 +889,7 @@ def uca_report_form(request, slug):
 
     if request.method == "POST":
         report.summary = request.POST["summary"]
+        report.cover_image = LibraryItem.objects.get(id=request.POST["cover-image"]) if request.POST["cover-image"] else None
 
         report.space_population = request.POST["space-population"] if request.POST["space-population"] else None
         report.space_size = request.POST["space-size"] if request.POST["space-size"] else None
