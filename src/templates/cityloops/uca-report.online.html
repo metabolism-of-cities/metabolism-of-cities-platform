@@ -208,10 +208,46 @@
 
       <section id="introduction">
         <h1>Introduction</h1>
+
+        <p class="font-italic">The EU Horizon 2020 funded <a href="https://cityloops.eu/">CityLoops project</a> focuses on closing the material loops of cities in terms of material flows, societal needs and employment. Cities, depending on their magnitude and types of economic activities, possess considerable opportunities and various levers to transform their metabolism and economy towards a more environmentally sustainable and circular state.</p>
+        <p class="font-italic">Within this project, seven European cities, amongst those also the city of {{space}} are (planning to) implement demonstration actions to kickstart their circularity journey. To better understand what the current circularity status quo is, as well as the impact of these actions, and the efforts needed to transform their cities, an <a href="https://cityloops.metabolismofcities.org/library/1010979/">Urban Circularity Assessment (UCA)</a> method was developed. The method consists of urban material flow and stock accounting that paired with system-wide indicators assesses the material circularity of a city.</p>
+        <p class="font-italic">The material flows are accounted economy-wide for two separate years, applying a city-level adjusted Mayer et al. (2019) framework, which in itself builds on the EW-MFA method, including a wide material scope (specified below), while optimised for a circular economy assessment. The material stock accounting is limited to the buildings of the municipality, with the exact material scope depending on data availability in each city. Finally, the mass-based, “circularity” indicators cover the entire system and enable the assessment of a city’s circularity. As such, a balance between comprehensiveness and scientific rigour on the one hand, and operability by urban policy makers and practitioners on the other is sought by the UCA method.</p>
+        <p class="font-italic">The material scope of the flow accounting aims to cover the entire local economy and is divided into a total of six material groups. These material groups are depicted as icons here and were studied each with more specific materials in sub-categories and along the supply chain of domestic extraction, imports & exports, domestic material consumption and waste. When studying these materials and the entire supply chain, together, these elements help to set a solid knowledge and analytical foundation to develop future circularity roadmaps and action plans.</p>
+
+        <div class="row text-center materials">
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-seedling"></i><div>MF1 - Biomass</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-bars"></i><div>MF2 - Metal ores (gross ores)</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-ball-pile"></i><div>MF3 - Non-metallic minerals</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-gas-pump"></i><div>MF4 - Fossil energy materials/carriers</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-ellipsis-h-alt"></i><div>MF5 - Other products</div></div></div>
+          <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-dumpster"></i><div>MF6 - Waste for final treatment and disposal</div></div></div>
+        </div>
+
+        <p class="font-italic">Within the CityLoops project, the Urban Circularity Assessment was carried out by three of the seven cities (Mikkeli, Porto and Sevilla) themselves after having previously successfully completed their <a href="https://cityloops.metabolismofcities.org/reports/">Sector-wide Circularity Assessments and Reports</a>. They could build on extensive training that they had received in the form of <a href="https://cityloops.metabolismofcities.org/courses/">courses on data collection for the construction and biomass sectors and data processing</a>. The cities were accompanied and supported in their work by the Metabolism of Cities team, who conducted the UCA for two further cities (Apeldoorn and Bodø). Numerous additional insights can be found in the individual <a href="https://cityloops.metabolismofcities.org/">Data Hubs</a> of each city.</p>
+
+        <p class="font-italic">This current Urban Circularity Assessment report presents the gathered information in seven sections:</p>
+
+        <ul class="font-italic">
+          <li>Urban Context</li>
+          <li>Economic Context of {{space}}</li>
+          <li>Material Flows in {{space}}</li>
+          <li>Material Stock in {{space}}</li>
+          <li>Analysis of Flows and Stocks: Measuring Indicators</li>
+          <li>Data Quality Assessment</li>
+          <li>Analysis of Data and Indicators: Assessing Circularity</li>
+        </ul>
+
+        <p class="font-italic">It provides contextual information of the city and the local economy under study. It then illustrates the quantities of flows in the single parts of the supply chain, summarised by a Sankey diagram, followed by a map of the material stock. Both of the accounted materials are evaluated in the form of circularity indicators and their data quality. Finally, the results are analysed and interpreted to determine a status quo, taking into account limitations of the data used, before recommendations are offered on how to achieve greater material circularity in the municipality of {{space}}.</p>
+
+        <p class="font-italic">(* The italic texts in this report were written by <a href="https://metabolismofcities.org/">Metabolism of Cities'</a> Aristide Athanassiadis and Carolin Bellstedt. They provide relevant general information and serve as connecting elements of the single report parts.)</p>
       </section>
 
       <section id="urban-context">
         <h1>Urban Context</h1>
+
+        <p class="font-italic">
+          To contextualise the results of the Urban Circularity Assessment, this section provides population and land use information data for {{space}}. In addition, population numbers and area size of the city under study, as well as its corresponding NUTS3, NUTS2 and country were included, as can be seen to the right of the {{space}} map. Data for these scales were added to better understand how relevant and important the approximations are when downscaling data from these scales to the city level.
+        </p>
 
         <div class="row mb-3">
           <div class="col-3">
@@ -537,7 +573,7 @@
         <h1>Economic Context of {{ space }}</h1>
 
         <p class="font-italic">
-          This section puts into perspective the economic context of {{ space }}. It describes how many people are employed in this sector, as well as who the main actors involved are.
+          This section puts into perspective the economic context of the city under study. It describes its significance in terms of GDP or GVA and provides information on the number of people employed, as well as the main economic activities. Main actors that play a significant importance may also be highlighted.
         </p>
 
         <table class="table border">
@@ -631,6 +667,10 @@
       <section id="flows">
         <h1>Material Flows in {{ space }}</h1>
 
+        <p class="font-italic">
+          Measuring material flows and circularity is a data heavy exercise. Numerous datasets were collected and visualised throughout the Urban Circularity Assessment process. To synthesise these findings, a Sankey diagram illustrates how material flows of the local economy of {{space}} are circulating from one lifecycle stage to another. The height of each line is proportional to the weight of the flow. This diagram therefore helps to quickly have an overview of all the materials flows that compose the economy and their respective shares. The flows that are coloured in light blue in the Sankey diagram, are return flows. This means that they flow in the opposite direction of the lifecycle stages and are subjected to reuse, redistribution, or remanufacturing. Their size relative to the others is a good indication for a materials' circularity.
+        </p>
+
         <label>Domestic Extraction</label><br>
         {% if report.domestic_extraction_html %}
           {{ report.domestic_extraction_html|safe }}
@@ -666,6 +706,7 @@
         {% if space.slug == "apeldoorn" %}
           <iframe class="rounded" src="https://gcp-europe-west1.app.carto.com/map/aee75379-6011-4098-9e70-102d2c61fcf1" onload="resizeIframe(this)"></iframe>
         {% elif space.slug == "bodo" %}
+          <iframe class="rounded" src="https://gcp-europe-west1.app.carto.com/map/e0a43829-cb21-4069-add1-829ca5ceca21" onload="resizeIframe(this)"></iframe>
         {% endif %}
 
         <label>Material Stock Map</label><br>
@@ -746,6 +787,10 @@
       <section id="analysis">
         <h1>Analysis of Flows and Stocks: Measuring Indicators</h1>
 
+        <p class="font-italic">
+          To monitor the progress of the local economy towards circularity, a number of indicators were proposed and measured. Altogether, these indicators depict several facets of circularity of the sector. As such, they need to be considered in combination rather than in isolation when assessing circularity. In addition, these indicators can be compared to other cities or spatial scales (such as the country level). However, this has to be done with great care and use of the contextual elements in the previous sections of the report. Finally, the value measured from these indicators can be traced over time to track the city’s progress towards circularity. The below table provides the value for two reference years, where possible, and the percentage change between the two.
+        </p>
+
         <label>Indicator tables</label><br>
         {% if report.indicator_table_html %}
           {{ report.indicator_table_html|safe }}
@@ -763,6 +808,46 @@
 
       <section id="quality">
         <h1>Data Quality Assessment</h1>
+
+        <p class="font-italic">Numerous datasets were collected and considered in the Urban Circularity Assessment and this section qualitatively assesses how reliable the data used is. In some cases, datasets were not available for some materials or for some lifecycle stages for the city. Therefore, estimations needed to be done by looking at data at higher spatial scales (region or country) and downscaling it with proxies, described in the part on data gaps and assumptions.</p>
+
+        <p class="font-italic">The overall data quality is considered as well and depicted in the data quality matrix below. It is expressed through four data quality dimensions: reliability, completeness, temporal correlation, and spatial correlation. Each dimension has its own criteria for the ranking of high (green), medium (yellow) and low (red), which is based on this <a href="https://lca-net.com/files/Pedigree_report_final_May2012.pdf">Pedigree report</a> and shown in the table here. There may be additional explanations in some cells, as supporting information.</p>
+
+        <table class="font-italic">
+          <thead>
+          <tr>
+            <th>Rating</th>
+            <th>Reliability</th>
+            <th>Completeness</th>
+            <th>Temporal correlation</th>
+            <th>Spatial correlation</th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span data-color="green"></span>high</td>
+              <td>Reviewed or measured data</td>
+              <td>Data exists for all of the single sub-material groups and/or materials</td>
+              <td>1 data less than 3 years difference to the time period of the data set</td>
+              <td>City-level data</td>
+            </tr>
+            <tr>
+              <td><span data-color="yellow"></span>medium</td>
+              <td>Estimated data</td>
+              <td>Data exists for most of the single sub-material groups and/or materials</td>
+              <td>2 data less than 6 years difference to the time period of the data set</td>
+              <td>Regional-level data (NUTS 3)</td>
+            </tr>
+            <tr>
+              <td><span data-color="red"></span>low</td>
+              <td>Provisional data</td>
+              <td>Data exists for the main material group only</td>
+              <td>3 data less than 10 years difference to the time period of the data set</td>
+              <td>NUTS 2 and country-level data</td>
+            </tr>
+          </tbody>
+        </table>
+
         <label>Data quality matrix</label><br>
         {% if report.matrix_html %}
           {{ report.matrix_html|safe }}
@@ -770,11 +855,18 @@
           <span class="question-number bg-dark text-light rounded px-2 mr-2">21</span>
         {% endif %}
 
-        <label>Data quality matrix</label><br>
+        <label>Data quality</label><br>
         {% if report.quality_html %}
           {{ report.quality_html|safe }}
         {% else %}
           <span class="question-number bg-dark text-light rounded px-2 mr-2">22</span>
+        {% endif %}
+
+        <label>Data gaps and assumptions</label><br>
+        {% if report.gaps %}
+          {{ report.gaps|safe }}
+        {% else %}
+          <span class="question-number bg-dark text-light rounded px-2 mr-2">23</span>
         {% endif %}
       </section>
 
