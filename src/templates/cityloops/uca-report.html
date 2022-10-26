@@ -258,7 +258,8 @@
 
       <p class="font-italic">It provides contextual information of the city and the local economy under study. It then illustrates the quantities of flows in the single parts of the supply chain, summarised by a Sankey diagram, followed by a map of the material stock. Both of the accounted materials are evaluated in the form of circularity indicators and their data quality. Finally, the results are analysed and interpreted to determine a status quo, taking into account limitations of the data used, before recommendations are offered on how to achieve greater material circularity in the municipality of {{space}}.</p>
 
-      <p class="font-italic">(* The italic texts in this report were written by <a href="https://metabolismofcities.org/">Metabolism of Cities'</a> Aristide Athanassiadis and Carolin Bellstedt. They provide relevant general information and serve as connecting elements of the single report parts.)</p>    </section>
+      <p class="font-italic">(* The italic texts in this report were written by <a href="https://metabolismofcities.org/">Metabolism of Cities'</a> Aristide Athanassiadis and Carolin Bellstedt. They provide relevant general information and serve as connecting elements of the single report parts.)</p>
+    </section>
 
     <section id="urban-context">
       <h1>Urban Context</h1>
@@ -367,27 +368,20 @@
     <section>
       <h2>Population of {{ space }}</h2>
       {% if report.population_dataset %}
-        {% if report.population_dataset.is_part_of %}
-          {% if report.population_dataset.is_part_of.data.all %}
-            <iframe class="libraryitem mb-4" src="/library/preview/{{ report.population_dataset.is_part_of.id }}/" onload="resizeIframe(this)"></iframe>
-          {% elif report.population_dataset.is_part_of.type.name == "Image" %}
-            <img src="{{ report.population_dataset.is_part_of.image.url }}" class="img-fluid">
+        {% if report.population_dataset.type.name == "Image" %}
+          <img src="{{ report.population_dataset.image.url }}" class="img-fluid">
+          {% if report.population_dataset.is_part_of %}
             <p><a href="{% url 'cityloops:library_item' report.population_dataset.is_part_of.id %}">Data source</a></p>
-          {% elif report.population_dataset.type.name == "Image" %}
-            <img src="{{ report.population_dataset.image.url }}" class="img-fluid">
-            <p><a href="{% url 'cityloops:library_item' report.population_dataset.is_part_of.id %}">Data source</a></p>
+          {% else %}
+            <p><a href="{% url 'cityloops:library_item' report.population_dataset.id %}">Data source</a></p>
           {% endif %}
         {% else %}
-          {% if report.population_dataset.type.name == "Image" %}
-            <img src="{{ report.population_dataset.image.url }}" class="img-fluid">
-            <p><a href="{% url 'cityloops:library_item' report.population_dataset.id %}">Data source</a></p>
-          {% elif report.population_dataset.data.all %}
-            <iframe class="libraryitem mb-4" src="/library/preview/{{ report.population_dataset.id }}/" onload="resizeIframe(this)"></iframe>
-          {% endif %}
+          <iframe class="mb-4" src="/library/preview/{{ report.population_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
         {% endif %}
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">5A</span>
       {% endif %}
+
       {% if report.population_description_html %}
         {{ report.population_description_html|safe }}
       {% else %}
@@ -728,26 +722,15 @@
 
       <label>Material Stock Map</label><br>
       {% if report.stock_map_dataset %}
-        {% if report.stock_map_dataset.is_part_of %}
-          {% if report.stock_map_dataset.is_part_of.data.all %}
-            <iframe class="libraryitem mb-4" src="/library/preview/{{ report.stock_map_dataset.is_part_of.id }}/" onload="resizeIframe(this)"></iframe>
-          {% elif report.stock_map_dataset.is_part_of.type.name == "Image" %}
-            <img src="{{ report.stock_map_dataset.is_part_of.image.url }}" class="img-fluid">
+        {% if report.stock_map_dataset.type.name == "Image" %}
+          <img src="{{ report.stock_map_dataset.image.url }}" class="img-fluid">
+          {% if report.stock_map_dataset.is_part_of %}
             <p><a href="{% url 'cityloops:library_item' report.stock_map_dataset.is_part_of.id %}">Data source</a></p>
-          {% elif report.stock_map_dataset.type.name == "Image" %}
-            <img src="{{ report.stock_map_dataset.image.url }}" class="img-fluid">
-            <p><a href="{% url 'cityloops:library_item' report.stock_map_dataset.is_part_of.id %}">Data source</a></p>
+          {% else %}
+            <p><a href="{% url 'cityloops:library_item' report.stock_map_dataset.id %}">Data source</a></p>
           {% endif %}
         {% else %}
-          {% if report.stock_map_dataset.type.name == "Image" %}
-            <img src="{{ report.stock_map_dataset.image.url }}" class="img-fluid">
-            <p>
-              {% if report.stock_map_dataset.image.url.description %}{{ report.stock_map_dataset.image.url.get_description }} | {% endif %}
-              <a href="{% url 'cityloops:library_item' report.stock_map_dataset.id %}"> Data source</a>
-            </p>
-          {% elif report.stock_map_dataset.data.all %}
-            <iframe class="libraryitem mb-4" src="/library/preview/{{ report.stock_map_dataset.id }}/" onload="resizeIframe(this)"></iframe>
-          {% endif %}
+          <iframe class="mb-4" src="/library/preview/{{ report.stock_map_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
         {% endif %}
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">16A</span>
@@ -755,36 +738,20 @@
 
       <label>Chart with different materials</label><br>
       {% if report.materials_dataset %}
-        {% if report.materials_dataset.is_part_of %}
-          {% if report.materials_dataset.is_part_of.data.all %}
-            <iframe class="libraryitem mb-4" src="/library/preview/{{ report.materials_dataset.is_part_of.id }}/" onload="resizeIframe(this)"></iframe>
-          {% elif report.materials_dataset.is_part_of.type.name == "Image" %}
-            <img src="{{ report.materials_dataset.is_part_of.image.url }}" class="img-fluid">
-            <p>
-              {% if report.materials_dataset.is_part_of.image.description %}{{ report.materials_dataset.is_part_of.image.get_description }} | {% endif %}
-              <a href="{% url 'cityloops:library_item' report.materials_dataset.is_part_of.id %}">Data source</a>
-            </p>
-          {% elif report.materials_dataset.type.name == "Image" %}
-            <img src="{{ report.materials_dataset.image.url }}" class="img-fluid">
-            <p>
-              {% if report.materials_dataset.image.description %}{{ report.materials_dataset.image.get_description }} | {% endif %}
-              <a href="{% url 'cityloops:library_item' report.materials_dataset.is_part_of.id %}">Data source</a>
-            </p>
+        {% if report.materials_dataset.type.name == "Image" %}
+          <img src="{{ report.materials_dataset.image.url }}" class="img-fluid">
+          {% if report.materials_dataset.is_part_of %}
+            <p><a href="{% url 'cityloops:library_item' report.materials_dataset.is_part_of.id %}">Data source</a></p>
+          {% else %}
+            <p><a href="{% url 'cityloops:library_item' report.materials_dataset.id %}">Data source</a></p>
           {% endif %}
         {% else %}
-          {% if report.materials_dataset.type.name == "Image" %}
-            <img src="{{ report.materials_dataset.image.url }}" class="img-fluid">
-            <p>
-              {% if report.materials_dataset.image.description %}{{ report.materials_dataset.image.get_description }} | {% endif %}
-              <a href="{% url 'cityloops:library_item' report.materials_dataset.id %}">Data source</a>
-            </p>
-          {% elif report.materials_dataset.data.all %}
-            <iframe class="libraryitem mb-4" src="/library/preview/{{ report.materials_dataset.id }}/" onload="resizeIframe(this)"></iframe>
-          {% endif %}
+          <iframe class="mb-4" src="/library/preview/{{ report.materials_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
         {% endif %}
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">16B</span>
       {% endif %}
+
 
       <label>Typologies in {{ space }}</label><br>
       {% if report.typologies_html %}
@@ -881,6 +848,10 @@
 
     <section id="circularity">
       <h1>Analysis of Data and Indicators: Assessing Circularity</h1>
+
+      <p class="font-italic">
+        This last section of the UCA report analyses the status quo in terms of material circularity in {{space}}. It takes into account the findings visualised in the (Sankey) diagrams and the conclusions from the indicators. The overall results of the Urban Circularity Assessment are discussed and interpreted here, before providing recommendations to accelerate the transition towards a more circular {{space}}.
+      </p>
 
       <label>Insights on status quo of {{ space }}</label><br>
       {% if report.status_quo_html %}
