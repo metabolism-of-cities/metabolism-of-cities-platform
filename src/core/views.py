@@ -245,8 +245,8 @@ def user_profile(request, id=None, project=None):
         # This means the profile was deleted - do not show a page
         raise Http404("This profile was not found")
 
-    completed = Work.objects.filter(assigned_to=info, status=Work.WorkStatus.COMPLETED)
-    open = Work.objects.filter(assigned_to=info).filter(Q(status=Work.WorkStatus.OPEN)|Q(status=Work.WorkStatus.PROGRESS))
+    completed = Work.objects.filter(assigned_to=info, status=Work.WorkStatus.COMPLETED).select_related("part_of_project", "workactivity", "related_to")
+    open = Work.objects.filter(assigned_to=info).filter(Q(status=Work.WorkStatus.OPEN)|Q(status=Work.WorkStatus.PROGRESS)).select_related("part_of_project", "workactivity", "related_to")
 
     context = {
         "menu": "profile",
