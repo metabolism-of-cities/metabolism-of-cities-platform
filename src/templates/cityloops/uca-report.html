@@ -10,7 +10,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>{{ space }} {{ sector }} sector-wide circularity assessment report | CityLoops</title>
+  <title>{{ space }} | Urban Circularity Assessment Report | CityLoops</title>
 
   <link class="favicon" rel="shortcut icon" sizes="126x126" href="{% static 'img/favicon/favicon.png' %}">
 
@@ -199,10 +199,11 @@
 <body>
   <div class="cover-page">
     <div class="cover-title">
-      <span class="report-title">UCA report for</span>
+      <span class="report-title">Urban Circularity Assessment</span>
+      <br>
       <span class="city-title">{{ space }}</span>
     </div>
-    <!-- <img class="cover-image" src="https://cityloops.metabolismofcities.org/media/records/Roskilde_ratusz_mpazdziora.large.jpg"> -->
+    <img class="cover-image" src="{{ report.cover_image.image.url }}">
 
     <div class="cityloops-background"></div>
     <img class="cityloops-logo" src="https://metabolismofcities.org/media/records/CityLoops_Logo.png">
@@ -214,16 +215,658 @@
   <div class="report-content">
     <section id="summary">
       <h1>Summary</h1>
-    </section>
-    <section id="introduction">
-      <h1>Summary</h1>
+      {% if report.summary_html %}
+        {{ report.summary_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">0</span>
+      {% endif %}
     </section>
 
-    {% if report.population_description_html %}
-      {{ report.population_description_html|safe }}
-    {% else %}
-      <span class="question-number bg-dark text-light rounded px-2 mr-2">5B</span>
-    {% endif %}
+    <section id="introduction">
+      <h1>Introduction</h1>
+
+      <p class="font-italic">The EU Horizon 2020 funded <a href="https://cityloops.eu/">CityLoops project</a> focuses on closing the material loops of cities in terms of material flows, societal needs and employment. Cities, depending on their magnitude and types of economic activities, possess considerable opportunities and various levers to transform their metabolism and economy towards a more environmentally sustainable and circular state.</p>
+
+      <p class="font-italic">Within this project, seven European cities, amongst those also the city of {{space}} are (planning to) implement demonstration actions to kickstart their circularity journey. To better understand what the current circularity status quo is, as well as the impact of these actions, and the efforts needed to transform their cities, an <a href="https://cityloops.metabolismofcities.org/library/1010979/">Urban Circularity Assessment (UCA)</a> method was developed. The method consists of urban material flow and stock accounting that paired with system-wide indicators assesses the material circularity of a city.</p>
+
+      <p class="font-italic">The material flows are accounted economy-wide for two separate years, applying a city-level adjusted Mayer et al. (2019) framework, which in itself builds on the EW-MFA method, including a wide material scope (specified below), while optimised for a circular economy assessment. The material stock accounting is limited to the buildings of the municipality, with the exact material scope depending on data availability in each city. Finally, the mass-based, “circularity” indicators cover the entire system and enable the assessment of a city’s circularity. As such, a balance between comprehensiveness and scientific rigour on the one hand, and operability by urban policy makers and practitioners on the other is sought by the UCA method.</p>
+
+      <p class="font-italic">The material scope of the flow accounting aims to cover the entire local economy and is divided into a total of six material groups. These material groups are depicted as icons here and were studied each with more specific materials in sub-categories and along the supply chain of domestic extraction, imports & exports, domestic material consumption and waste. When studying these materials and the entire supply chain, together, these elements help to set a solid knowledge and analytical foundation to develop future circularity roadmaps and action plans.</p>
+
+      <div class="row text-center materials">
+        <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-seedling"></i><div>MF1 - Biomass</div></div></div>
+        <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-bars"></i><div>MF2 - Metal ores (gross ores)</div></div></div>
+        <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-ball-pile"></i><div>MF3 - Non-metallic minerals</div></div></div>
+        <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-gas-pump"></i><div>MF4 - Fossil energy materials/carriers</div></div></div>
+        <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-ellipsis-h-alt"></i><div>MF5 - Other products</div></div></div>
+        <div class="col-4 mb-4"><div class="border rounded p-3"><i class="fal fa-fw mb-2 fa-2x fa-dumpster"></i><div>MF6 - Waste for final treatment and disposal</div></div></div>
+      </div>
+
+      <p class="font-italic">Within the CityLoops project, the Urban Circularity Assessment was carried out by three of the seven cities (Mikkeli, Porto and Sevilla) themselves after having previously successfully completed their <a href="https://cityloops.metabolismofcities.org/reports/">Sector-wide Circularity Assessments and Reports</a>. They could build on extensive training that they had received in the form of <a href="https://cityloops.metabolismofcities.org/courses/">courses on data collection for the construction and biomass sectors and data processing</a>. The cities were accompanied and supported in their work by the Metabolism of Cities team, who conducted the UCA for two further cities (Apeldoorn and Bodø). Numerous additional insights can be found in the individual <a href="https://cityloops.metabolismofcities.org/">Data Hubs</a> of each city.</p>
+
+      <p class="font-italic">This current Urban Circularity Assessment report presents the gathered information in seven sections:</p>
+
+      <ul class="font-italic">
+        <li>Urban Context</li>
+        <li>Economic Context of {{space}}</li>
+        <li>Material Flows in {{space}}</li>
+        <li>Material Stock in {{space}}</li>
+        <li>Analysis of Flows and Stocks: Measuring Indicators</li>
+        <li>Data Quality Assessment</li>
+        <li>Analysis of Data and Indicators: Assessing Circularity</li>
+      </ul>
+
+      <p class="font-italic">It provides contextual information of the city and the local economy under study. It then illustrates the quantities of flows in the single parts of the supply chain, summarised by a Sankey diagram, followed by a map of the material stock. Both of the accounted materials are evaluated in the form of circularity indicators and their data quality. Finally, the results are analysed and interpreted to determine a status quo, taking into account limitations of the data used, before recommendations are offered on how to achieve greater material circularity in the municipality of {{space}}.</p>
+
+      <p class="font-italic">(* The italic texts in this report were written by <a href="https://metabolismofcities.org/">Metabolism of Cities'</a> Aristide Athanassiadis and Carolin Bellstedt. They provide relevant general information and serve as connecting elements of the single report parts.)</p>
+    </section>
+
+    <section id="urban-context">
+      <h1>Urban Context</h1>
+
+      <p class="font-italic">
+        To contextualise the results of the Urban Circularity Assessment, this section provides population and land use information data for {{space}}. In addition, population numbers and area size of the city under study, as well as its corresponding NUTS3, NUTS2 and country were included, as can be seen to the right of the {{space}} map. Data for these scales were added to better understand how relevant and important the approximations are when downscaling data from these scales to the city level.
+      </p>
+
+      <div class="row mb-3">
+        <div class="col-3">
+          <div class="context-map rounded" id="space-map"></div>
+        </div>
+        <div class="col-3">
+          <div class="context-map rounded" id="nuts3-map"></div>
+        </div>
+        <div class="col-3">
+          <div class="context-map rounded" id="nuts2-map"></div>
+        </div>
+        <div class="col-3">
+          <div class="context-map rounded" id="country-map"></div>
+        </div>
+      </div>
+      <div class="row mb-4">
+        <div class="col-3">
+          <strong>{{ space }}</strong>
+          <div>
+            <i class="fal fa-users fa-fw mr-2"></i>
+            {% if report.space_population %}
+              {{ report.space_population|intcomma }}
+            {% else %}
+              <span class="question-number bg-dark text-light rounded px-2 mr-2">1A</span>
+            {% endif %}
+          </div>
+          <div>
+            <i class="fal fa-ruler-combined fa-fw mr-2"></i>
+            {% if report.space_size %}
+              {{ report.space_size|intcomma }} km<sup>2</sup>
+            {% else %}
+              <span class="question-number bg-dark text-light rounded px-2 mr-2">1B</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="col-3">
+          <strong>{{ nuts3 }}</strong>
+          <div>
+            <i class="fal fa-users fa-fw mr-2"></i>
+            {% if report.nuts3_population %}
+              {{ report.nuts3_population|intcomma }}
+            {% else %}
+              <span class="question-number bg-dark text-light rounded px-2 mr-2">2A</span>
+            {% endif %}
+          </div>
+          <div>
+            <i class="fal fa-ruler-combined fa-fw mr-2"></i>
+            {% if report.nuts3_size %}
+              {{ report.nuts3_size|intcomma }} km<sup>2</sup>
+            {% else %}
+              <span class="question-number bg-dark text-light rounded px-2 mr-2">2B</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="col-3">
+          <strong>{{ nuts2 }}</strong>
+          <div>
+            <i class="fal fa-users fa-fw mr-2"></i>
+            {% if report.nuts2_population %}
+              {{ report.nuts2_population|intcomma }}
+            {% else %}
+              <span class="question-number bg-dark text-light rounded px-2 mr-2">3A</span>
+            {% endif %}
+          </div>
+          <div>
+            <i class="fal fa-ruler-combined fa-fw mr-2"></i>
+            {% if report.nuts2_size %}
+              {{ report.nuts2_size|intcomma }} km<sup>2</sup>
+            {% else %}
+              <span class="question-number bg-dark text-light rounded px-2 mr-2">3B</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="col-3">
+          <strong>{{ country }}</strong>
+          <div>
+            <i class="fal fa-users fa-fw mr-2"></i>
+            {% if report.country_population %}
+              {{ report.country_population|intcomma }}
+            {% else %}
+              <span class="question-number bg-dark text-light rounded px-2 mr-2">4A</span>
+            {% endif %}
+          </div>
+          <div>
+            <i class="fal fa-ruler-combined fa-fw mr-2"></i>
+            {% if report.country_size %}
+              {{ report.country_size|intcomma }} km<sup>2</sup>
+            {% else %}
+              <span class="question-number bg-dark text-light rounded px-2 mr-2">4B</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Population of {{ space }}</h2>
+      {% if report.population_dataset %}
+        {% if report.population_dataset.type.name == "Image" %}
+          <img src="{{ report.population_dataset.image.url }}" class="img-fluid">
+          {% if report.population_dataset.is_part_of %}
+            <p><a href="{% url 'cityloops:library_item' report.population_dataset.is_part_of.id %}">Data source</a></p>
+          {% else %}
+            <p><a href="{% url 'cityloops:library_item' report.population_dataset.id %}">Data source</a></p>
+          {% endif %}
+        {% else %}
+          <iframe class="mb-4" src="/library/preview/{{ report.population_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
+        {% endif %}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">5A</span>
+      {% endif %}
+
+      {% if report.population_description_html %}
+        {{ report.population_description_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">5B</span>
+      {% endif %}
+    </section>
+
+    <section>
+      <h2>Land use</h2>
+
+      {% if report.land_use_dataset %}
+        {% if report.land_use_dataset.type.name == "Image" %}
+          <img src="{{ report.land_use_dataset.image.url }}" class="img-fluid">
+
+          {% if space.slug == "porto" %}
+            <div class="border border-top-0 rounded-bottom p-3">
+              <div class="row">
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #e41a1c"></i></span> Historic Space</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #377eb8"></i></span> Urbanised Space</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #4daf4a"></i></span> Green Space</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #984ea3"></i></span> Industrial Space</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Special Use Space - Equipment and Infrastructure</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff33"></i></span> Not Assigned</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {% elif space.slug == "mikkeli" %}
+            <div class="border border-top-0 rounded-bottom p-3">
+              <div class="row">
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #e41a1c"></i></span> Agricultural areas</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Artificial surfaces</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #4daf4a"></i></span> Forests</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #984ea3"></i></span> Roads</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #377eb8"></i></span> Water bodies</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff33"></i></span> Wetlands</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {% elif space.slug == "apeldoorn" %}
+            <div class="border border-top-0 rounded-bottom p-3">
+              <div class="row">
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #144d58"></i></span> Agriculture</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #a6cee3"></i></span> Built area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #33a02c"></i></span> Dry natural terrain</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #b2df8a"></i></span> Forest</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #e31a1c"></i></span> Greenhouse horticulture</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #fb9a99"></i></span> Industrial area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Main road</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #fdbf6f"></i></span> Railway</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #6a3d9a"></i></span> Recreation</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #cab2d6"></i></span> Semi-built area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #b15928"></i></span> Water</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff99"></i></span> Wet natural terrain</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {% elif space.slug == "hoje-taastrup" %}
+            <div class="border border-top-0 rounded-bottom p-3">
+              <div class="row">
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #008000"></i></span> Area for public purposes</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #0000ff"></i></span> Business area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff0000"></i></span> Center</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffa500"></i></span> Land area</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #800080"></i></span> Residential area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #a52a2a"></i></span> Mixed housing and business</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffc0cb"></i></span> Technical facilities</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #008080"></i></span> Recreational area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #800000"></i></span> Vacation home area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #000080"></i></span> Other</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {% elif space.slug == "roskilde" %}
+            <div class="border border-top-0 rounded-bottom p-3">
+              <div class="row">
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #008000"></i></span> Area for public purposes</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #0000ff"></i></span> Business area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff0000"></i></span> Center</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffa500"></i></span> Land area</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #800080"></i></span> Residential area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #a52a2a"></i></span> Mixed housing and business</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffc0cb"></i></span> Technical facilities</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #008080"></i></span> Recreational area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #800000"></i></span> Vacation home area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #000080"></i></span> Other</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {% elif space.slug == "bodo" %}
+            <div class="border border-top-0 rounded-bottom p-3">
+              <div class="row">
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #144d58"></i></span> Airport</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ffff99"></i></span> Alpine Slopes</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #e31a1c"></i></span> Cemetery</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #b2df8a"></i></span> Cropland</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #33a02c"></i></span> Forest</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #fb9a99"></i></span> Glacier</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #ff7f00"></i></span> Golfcourse</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #fdbf6f"></i></span> Industrial Area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #80b1d3"></i></span> Lake</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #cab2d6"></i></span> Open Area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #b15928"></i></span> Quarry</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #a6cee3"></i></span> Regulated Lake</li>
+                  </ul>
+                </div>
+                <div class="col-4">
+                  <ul class="fa-ul mb-0">
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #8dd3c7"></i></span> Riverstream</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #bd3e6e"></i></span> Runway</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #bebada"></i></span> Sports Area</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #fb8072"></i></span> Swamp</li>
+                    <li><span class="fa-li"><i class="fas fa-circle" style="color: #6a3d9a"></i></span> Urban Built Up Area</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if report.land_use_dataset.is_part_of %}
+            <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.is_part_of.id %}">Data source</a></p>
+          {% else %}
+            <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.id %}">Data source</a></p>
+          {% endif %}
+        {% else %}
+          <iframe class="libraryitem mb-4" src="/library/preview/{{ report.land_use_dataset.id }}/" onload="resizeIframe(this)"></iframe>
+          <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.id %}">Data source</a></p>
+        {% endif %}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">6A</span>
+      {% endif %}
+
+      {% if report.land_use_description_html %}
+        {{ report.land_use_description_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">6B</span>
+      {% endif %}
+    </section>
+
+    <section id="sector-context">
+      <h1>Economic Context of {{ space }}</h1>
+
+      <p class="font-italic">
+        This section puts into perspective the economic context of the city under study. It describes its significance in terms of GDP or GVA and provides information on the number of people employed, as well as the main economic activities. Main actors that play a significant importance may also be highlighted.
+      </p>
+
+      <table class="table border">
+        <thead>
+          <tr>
+            <th></th>
+            <th>GDP (monetary value, in {{ currency }})</th>
+            <th>Employees</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>{{ space }}</th>
+            <td>
+              {% if report.space_gdp %}
+                {{ report.space_gdp|intcomma }}
+              {% else %}
+                <span class="question-number bg-dark text-light rounded px-2 mr-2">7A</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if report.space_employees %}
+                {{ report.space_employees|intcomma }}
+              {% else %}
+                <span class="question-number bg-dark text-light rounded px-2 mr-2">7B</span>
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <th>{{ nuts3 }}</th>
+            <td>
+              {% if report.nuts3_gdp %}
+                {{ report.nuts3_gdp|intcomma }}
+              {% else %}
+                <span class="question-number bg-dark text-light rounded px-2 mr-2">8A</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if report.nuts3_employees %}
+                {{ report.nuts3_employees|intcomma }}
+              {% else %}
+                <span class="question-number bg-dark text-light rounded px-2 mr-2">8B</span>
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <th>{{ nuts2 }}</th>
+            <td>
+              {% if report.nuts2_gdp %}
+                {{ report.nuts2_gdp|intcomma }}
+              {% else %}
+                <span class="question-number bg-dark text-light rounded px-2 mr-2">9A</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if report.nuts2_employees %}
+                {{ report.nuts2_employees|intcomma }}
+              {% else %}
+                <span class="question-number bg-dark text-light rounded px-2 mr-2">9B</span>
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <th>{{ country }}</th>
+            <td>
+              {% if report.country_gdp %}
+                {{ report.country_gdp|intcomma }}
+              {% else %}
+                <span class="question-number bg-dark text-light rounded px-2 mr-2">10A</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if report.country_employees %}
+                {{ report.country_employees|intcomma }}
+              {% else %}
+                <span class="question-number bg-dark text-light rounded px-2 mr-2">10B</span>
+              {% endif %}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>The economic activities in {{ space }}</h4>
+      {% if report.econ_description_html %}
+        {{ report.econ_description_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">11</span>
+      {% endif %}
+    </section>
+
+    <section id="flows">
+      <h1>Material Flows in {{ space }}</h1>
+
+      <p class="font-italic">
+        Measuring material flows and circularity is a data heavy exercise. Numerous datasets were collected and visualised throughout the Urban Circularity Assessment process. To synthesise these findings, a Sankey diagram illustrates how material flows of the local economy of {{space}} are circulating from one lifecycle stage to another. The height of each line is proportional to the weight of the flow. This diagram therefore helps to quickly have an overview of all the materials flows that compose the economy and their respective shares. The flows that are coloured in light blue in the Sankey diagram, are return flows. This means that they flow in the opposite direction of the lifecycle stages and are subjected to reuse, redistribution, or remanufacturing. Their size relative to the others is a good indication for a materials' circularity.
+      </p>
+
+      <label>Domestic Extraction</label><br>
+      {% if report.domestic_extraction_html %}
+        {{ report.domestic_extraction_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">12</span>
+      {% endif %}
+
+      <label>Imports & Exports</label><br>
+      {% if report.imports_exports_html %}
+        {{ report.imports_exports_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">13</span>
+      {% endif %}
+
+      <label>Domestic Material Consumption</label><br>
+      {% if report.consumption_html %}
+        {{ report.consumption_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">14</span>
+      {% endif %}
+
+      <label>Waste</label><br>
+      {% if report.waste_html %}
+        {{ report.waste_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">15</span>
+      {% endif %}
+    </section>
+
+    <section id="stock">
+      <h1>Material stock in {{ space }}</h1>
+
+      {% if space.slug == "apeldoorn" %}
+        <iframe class="rounded" src="https://gcp-europe-west1.app.carto.com/map/aee75379-6011-4098-9e70-102d2c61fcf1" onload="resizeIframe(this)"></iframe>
+      {% elif space.slug == "bodo" %}
+      {% endif %}
+
+      <label>Material Stock Map</label><br>
+      {% if report.stock_map_dataset %}
+        {% if report.stock_map_dataset.type.name == "Image" %}
+          <img src="{{ report.stock_map_dataset.image.url }}" class="img-fluid">
+          {% if report.stock_map_dataset.is_part_of %}
+            <p><a href="{% url 'cityloops:library_item' report.stock_map_dataset.is_part_of.id %}">Data source</a></p>
+          {% else %}
+            <p><a href="{% url 'cityloops:library_item' report.stock_map_dataset.id %}">Data source</a></p>
+          {% endif %}
+        {% else %}
+          <iframe class="mb-4" src="/library/preview/{{ report.stock_map_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
+        {% endif %}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">16A</span>
+      {% endif %}
+
+      <label>Chart with different materials</label><br>
+      {% if report.materials_dataset %}
+        {% if report.materials_dataset.type.name == "Image" %}
+          <img src="{{ report.materials_dataset.image.url }}" class="img-fluid">
+          {% if report.materials_dataset.is_part_of %}
+            <p><a href="{% url 'cityloops:library_item' report.materials_dataset.is_part_of.id %}">Data source</a></p>
+          {% else %}
+            <p><a href="{% url 'cityloops:library_item' report.materials_dataset.id %}">Data source</a></p>
+          {% endif %}
+        {% else %}
+          <iframe class="mb-4" src="/library/preview/{{ report.materials_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
+        {% endif %}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">16B</span>
+      {% endif %}
+
+
+      <label>Typologies in {{ space }}</label><br>
+      {% if report.typologies_html %}
+        {{ report.typologies_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">17</span>
+      {% endif %}
+
+      <label>Analysis of Material Stock</label><br>
+      {% if report.stock_html %}
+        {{ report.stock_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">18</span>
+      {% endif %}
+    </section>
+
+    <section id="analysis">
+      <h1>Analysis of Flows and Stocks: Measuring Indicators</h1>
+
+      <p class="font-italic">
+        To monitor the progress of the local economy towards circularity, a number of indicators were proposed and measured. Altogether, these indicators depict several facets of circularity of the sector. As such, they need to be considered in combination rather than in isolation when assessing circularity. In addition, these indicators can be compared to other cities or spatial scales (such as the country level). However, this has to be done with great care and use of the contextual elements in the previous sections of the report. Finally, the value measured from these indicators can be traced over time to track the city’s progress towards circularity. The below table provides the value for two reference years, where possible, and the percentage change between the two.
+      </p>
+
+      <label>Indicator tables</label><br>
+      {% if report.indicator_table_html %}
+        {{ report.indicator_table_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">19</span>
+      {% endif %}
+
+      <label>Indicators that were chosen and their development over time</label><br>
+      {% if report.indicators_html %}
+        {{ report.indicators_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">20</span>
+      {% endif %}
+    </section>
+
+    <section id="quality">
+      <h1>Data Quality Assessment</h1>
+
+      <p class="font-italic">Numerous datasets were collected and considered in the Urban Circularity Assessment and this section qualitatively assesses how reliable the data used is. In some cases, datasets were not available for some materials or for some lifecycle stages for the city. Therefore, estimations needed to be done by looking at data at higher spatial scales (region or country) and downscaling it with proxies, described in the part on data gaps and assumptions.</p>
+
+      <p class="font-italic">The overall data quality is considered as well and depicted in the data quality matrix below. It is expressed through four data quality dimensions: reliability, completeness, temporal correlation, and spatial correlation. Each dimension has its own criteria for the ranking of high (green), medium (yellow) and low (red), which is based on this <a href="https://lca-net.com/files/Pedigree_report_final_May2012.pdf">Pedigree report</a> and shown in the table here. There may be additional explanations in some cells, as supporting information.</p>
+      <table class="font-italic">
+        <thead>
+        <tr>
+          <th>Rating</th>
+          <th>Reliability</th>
+          <th>Completeness</th>
+          <th>Temporal correlation</th>
+          <th>Spatial correlation</th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span data-color="green"></span>high</td>
+            <td>Reviewed or measured data</td>
+            <td>Data exists for all of the single sub-material groups and/or materials</td>
+            <td>1 data less than 3 years difference to the time period of the data set</td>
+            <td>City-level data</td>
+          </tr>
+          <tr>
+            <td><span data-color="yellow"></span>medium</td>
+            <td>Estimated data</td>
+            <td>Data exists for most of the single sub-material groups and/or materials</td>
+            <td>2 data less than 6 years difference to the time period of the data set</td>
+            <td>Regional-level data (NUTS 3)</td>
+          </tr>
+          <tr>
+            <td><span data-color="red"></span>low</td>
+            <td>Provisional data</td>
+            <td>Data exists for the main material group only</td>
+            <td>3 data less than 10 years difference to the time period of the data set</td>
+            <td>NUTS 2 and country-level data</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <label>Data quality matrix</label><br>
+      {% if report.matrix_html %}
+        {{ report.matrix_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">21</span>
+      {% endif %}
+
+      <label>Data quality matrix</label><br>
+      {% if report.quality_html %}
+        {{ report.quality_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">22</span>
+      {% endif %}
+    </section>
+
+    <section id="circularity">
+      <h1>Analysis of Data and Indicators: Assessing Circularity</h1>
+
+      <p class="font-italic">
+        This last section of the UCA report analyses the status quo in terms of material circularity in {{space}}. It takes into account the findings visualised in the (Sankey) diagrams and the conclusions from the indicators. The overall results of the Urban Circularity Assessment are discussed and interpreted here, before providing recommendations to accelerate the transition towards a more circular {{space}}.
+      </p>
+
+      <label>Insights on status quo of {{ space }}</label><br>
+      {% if report.status_quo_html %}
+        {{ report.status_quo_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">24</span>
+      {% endif %}
+
+      <label>Recommendations for making {{ space }} more circular</label><br>
+      {% if report.recommendations_html %}
+        {{ report.recommendations_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">25</span>
+      {% endif %}
+    </section>
 
     <section id="references">
       <h1>References</h1>
@@ -241,7 +884,13 @@
           <li><a href="{% url 'cityloops:library_item' report.actors_dataset.id  %}">{{ report.actors_dataset }}</a></li>
         {% endif %}
       </ul>
+      {% if report.references_html %}
+        {{ report.references_html|safe }}
+      {% endif %}
     </section>
+    {% if space.slug == "apeldoorn" %}
+      <div id="3176180f-5cdf-46bd-a2db-eac53d9977b1" class="plotly-graph-div" style="height:100%; width:100%;"></div>
+    {% endif %}
   </div>
 
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"

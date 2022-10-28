@@ -119,6 +119,13 @@
 
   <div class="border rounded pt-4 px-4 mb-4 bg-white">
     <div class="form-group">
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">Cover image</span> ID number of cover image library item</label>
+      <input class="form-control" type="number" min="0" max="2147483647" name="cover-image" value="{{ report.cover_image.id }}">
+    </div>
+  </div>
+
+  <div class="border rounded pt-4 px-4 mb-4 bg-white">
+    <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">0</span> <i class="fab fa-markdown"></i> Summary</label>
       <textarea class="form-control" rows="2" name="summary">{{ report.summary }}</textarea>
       <small>Please describe your main findings and insights in this summary</small>
@@ -356,21 +363,29 @@
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">12</span> <i class="fab fa-markdown"></i> Domestic Extraction</label>
       <textarea class="form-control" rows="3" name="domestic-extraction">{{ report.domestic_extraction }}</textarea>
+      <small>Besides normal Markdown, here you can also add dataset visualisations by adding <code>[#ID]</code>, where <code>ID</code> is the ID number of the dataset. This will add an interactive visualisation <strong>for the online report online</strong>.</small>
+      <small>This visualisation will not be added to the print version of the report. You can add this by wrapping normal markdown in <code>&lt;span class="d-none d-print-block"&gt;&lt;/span&gt;</code>. See <a class="embed-instructions">detailed instructions</a>.</small>
     </div>
 
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">13</span> <i class="fab fa-markdown"></i> Imports & Exports</label>
       <textarea class="form-control" rows="3" name="imports-exports">{{ report.imports_exports }}</textarea>
+      <small>Besides normal Markdown, here you can also add dataset visualisations by adding <code>[#ID]</code>, where <code>ID</code> is the ID number of the dataset. This will add an interactive visualisation <strong>for the online report online</strong>.</small>
+      <small>This visualisation will not be added to the print version of the report. You can add this by wrapping normal markdown in <code>&lt;span class="d-none d-print-block"&gt;&lt;/span&gt;</code>. See <a class="embed-instructions">detailed instructions</a>.</small>
     </div>
 
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">14</span> <i class="fab fa-markdown"></i> Domestic Material Consumption</label>
       <textarea class="form-control" rows="3" name="consumption">{{ report.consumption }}</textarea>
+      <small>Besides normal Markdown, here you can also add dataset visualisations by adding <code>[#ID]</code>, where <code>ID</code> is the ID number of the dataset. This will add an interactive visualisation <strong>for the online report online</strong>.</small>
+      <small>This visualisation will not be added to the print version of the report. You can add this by wrapping normal markdown in <code>&lt;span class="d-none d-print-block"&gt;&lt;/span&gt;</code>. See <a class="embed-instructions">detailed instructions</a>.</small>
     </div>
 
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">15</span> <i class="fab fa-markdown"></i> Waste</label>
       <textarea class="form-control" rows="3" name="waste">{{ report.waste }}</textarea>
+      <small>Besides normal Markdown, here you can also add dataset visualisations by adding <code>[#ID]</code>, where <code>ID</code> is the ID number of the dataset. This will add an interactive visualisation <strong>for the online report online</strong>.</small>
+      <small>This visualisation will not be added to the print version of the report. You can add this by wrapping normal markdown in <code>&lt;span class="d-none d-print-block"&gt;&lt;/span&gt;</code>. See <a class="embed-instructions">detailed instructions</a>.</small>
     </div>
   </div>
 
@@ -382,18 +397,22 @@
     </div>
 
     <div class="form-group">
-      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">16A</span> ID number of (bar) chart with different materials</label>
+      <label><span class="question-number bg-dark text-light rounded px-2 mr-1">16B</span> ID number of (bar) chart with different materials</label>
       <input class="form-control" type="number" min="0" max="2147483647" name="material-chart" value="{{ report.materials_dataset.id }}">
     </div>
 
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">17</span> <i class="fab fa-markdown"></i> Describe building typologies in {{ space }}</label>
       <textarea class="form-control" rows="3" name="typologies">{{ report.typologies }}</textarea>
+      <small>Besides normal Markdown, here you can also add dataset visualisations by adding <code>[#ID]</code>, where <code>ID</code> is the ID number of the dataset. This will add an interactive visualisation <strong>for the online report online</strong>.</small>
+      <small>This visualisation will not be added to the print version of the report. You can add this by wrapping normal markdown in <code>&lt;span class="d-none d-print-block"&gt;&lt;/span&gt;</code>. See <a class="embed-instructions">detailed instructions</a>.</small>
     </div>
 
     <div class="form-group">
       <label><span class="question-number bg-dark text-light rounded px-2 mr-1">18</span> <i class="fab fa-markdown"></i> Analysis of Material Stock</label>
       <textarea class="form-control" rows="3" name="stock">{{ report.stock }}</textarea>
+      <small>Besides normal Markdown, here you can also add dataset visualisations by adding <code>[#ID]</code>, where <code>ID</code> is the ID number of the dataset. This will add an interactive visualisation <strong>for the online report online</strong>.</small>
+      <small>This visualisation will not be added to the print version of the report. You can add this by wrapping normal markdown in <code>&lt;span class="d-none d-print-block"&gt;&lt;/span&gt;</code>. See <a class="embed-instructions">detailed instructions</a>.</small>
     </div>
   </div>
 
