@@ -36,12 +36,14 @@
                 <i class="fal fa-fw fa-university mr-2" aria-hidden="true"></i> {{ info.affiliation }}
               </li>
             {% endif %}
-            <li class="list-group-item">
-              <i class="fal fa-fw fa-user-plus mr-2" aria-hidden="true"></i> Signed up {{ info.user.date_joined|naturaltime }}
-            </li>
-            <li class="list-group-item">
-              <i class="fal fa-fw fa-history mr-2" aria-hidden="true"></i> Last seen {{ info.user.last_login|naturaltime }}
-            </li>
+            {% if info.user %}
+              <li class="list-group-item">
+                <i class="fal fa-fw fa-user-plus mr-2" aria-hidden="true"></i> Signed up {{ info.user.date_joined|naturaltime }}
+              </li>
+              <li class="list-group-item">
+                <i class="fal fa-fw fa-history mr-2" aria-hidden="true"></i> Last seen {{ info.user.last_login|naturaltime }}
+              </li>
+            {% endif %}
             {% if info.get_my_space %}
             <li class="list-group-item">
               <i class="fal fa-fw fa-map-marker-alt mr-2" aria-hidden="true"></i> {{ info.get_my_space }}

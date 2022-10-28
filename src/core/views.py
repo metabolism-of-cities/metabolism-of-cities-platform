@@ -241,7 +241,11 @@ def user_profile(request, id=None, project=None):
         project = get_object_or_404(Project, pk=request.project)
         return redirect(project.get_slug() + ":login")
 
-    if not info.user:
+    if project.slug == "islands" and People.objects.filter(parent_list__record_child_id=request.project, parent_list__relationship__id=6, pk=info.id).exists():
+        # The MOI site has some people that are not active users so 
+        # we check if that is the case and if so, then we (fake-) mark them as active, so we don't trigger a 404
+        pass
+    elif not info.user:
         # This means the profile was deleted - do not show a page
         raise Http404("This profile was not found")
 
