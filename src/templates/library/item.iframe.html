@@ -118,11 +118,9 @@
         <div class="text-center mt-3">
           <a class="btn btn-lg btn-warning" href="{% url URLS.LIBRARY_ITEM info.id %}" target="_parent">View details <i class="fa fa-arrow-right"></i> </a>
         </div>
-
     </div>
     <div class="col-lg-8 mb-4">
       <div class="basic-details mb-4">
-
         {% if info.get_shapefile_plot %}
           <h3 class="mt-4">Preview</h3>
           <img src="{{ info.get_shapefile_plot }}" alt="" />
@@ -134,11 +132,9 @@
           <img src="{{ info.image.url }}" class="img-fluid img-thumbnail" alt="" />
         {% endif %}
 
-
-      {% if info.description %}
-        {{ info.get_description|truncatechars_html:1000 }}
-      {% endif %}
-
+        {% if info.description %}
+          {{ info.get_description|truncatechars_html:1000 }}
+        {% endif %}
       </div>
     </div>
   </div>

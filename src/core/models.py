@@ -3503,7 +3503,7 @@ class CityLoopsUCAReport(models.Model):
             self.population_description_html = None
         else:
             self.population_description_html = markdown(self.population_description, extensions=['tables'])
-            self.population_description_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.population_description_html)
+            self.population_description_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/?hide_title=true" onload="resizeIframe(this)"></iframe>', self.population_description_html)
 
         if not self.land_use_description:
             self.land_use_description_html = None
@@ -3514,43 +3514,43 @@ class CityLoopsUCAReport(models.Model):
             self.econ_description_html = None
         else:
             self.econ_description_html = markdown(self.econ_description, extensions=['tables'])
-            self.econ_description_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.econ_description_html)
+            self.econ_description_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/?hide_title=true" onload="resizeIframe(this)"></iframe>', self.econ_description_html)
 
         if not self.domestic_extraction:
             self.domestic_extraction_html = None
         else:
             self.domestic_extraction_html = markdown(self.domestic_extraction, extensions=['tables'])
-            self.domestic_extraction_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.domestic_extraction_html)
+            self.domestic_extraction_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/?hide_title=true" onload="resizeIframe(this)"></iframe>', self.domestic_extraction_html)
 
         if not self.imports_exports:
             self.imports_exports_html = None
         else:
             self.imports_exports_html = markdown(self.imports_exports, extensions=['tables'])
-            self.imports_exports_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.imports_exports_html)
+            self.imports_exports_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/?hide_title=true" onload="resizeIframe(this)"></iframe>', self.imports_exports_html)
 
         if not self.consumption:
             self.consumption_html = None
         else:
             self.consumption_html = markdown(self.consumption, extensions=['tables'])
-            self.consumption_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.consumption_html)
+            self.consumption_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/?hide_title=true" onload="resizeIframe(this)"></iframe>', self.consumption_html)
 
         if not self.waste:
             self.waste_html = None
         else:
             self.waste_html = markdown(self.waste, extensions=['tables'])
-            self.waste_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.waste_html)
+            self.waste_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/?hide_title=true" onload="resizeIframe(this)"></iframe>', self.waste_html)
 
         if not self.typologies:
             self.typologies_html = None
         else:
             self.typologies_html = markdown(self.typologies, extensions=['tables'])
-            self.typologies_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.typologies_html)
+            self.typologies_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/?hide_title=true" onload="resizeIframe(this)"></iframe>', self.typologies_html)
 
         if not self.stock:
             self.stock_html = None
         else:
             self.stock_html = markdown(self.stock, extensions=['tables'])
-            self.stock_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.stock_html)
+            self.stock_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/?hide_title=true" onload="resizeIframe(this)"></iframe>', self.stock_html)
 
         if not self.indicator_table:
             self.indicator_table_html = None
@@ -3561,7 +3561,7 @@ class CityLoopsUCAReport(models.Model):
             self.indicators_html = None
         else:
             self.indicators_html = markdown(self.indicators, extensions=['tables'])
-            self.indicators_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.indicators_html)
+            self.indicators_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/?hide_title=true" onload="resizeIframe(this)"></iframe>', self.indicators_html)
 
         if not self.matrix:
             self.matrix_html = None

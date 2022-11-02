@@ -376,7 +376,7 @@
             <p><a href="{% url 'cityloops:library_item' report.population_dataset.id %}">Data source</a></p>
           {% endif %}
         {% else %}
-          <iframe class="mb-4" src="/library/preview/{{ report.population_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
+          <iframe class="mb-4" src="/library/preview/{{ report.population_dataset.id }}/?hide_title=true" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
         {% endif %}
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">5A</span>
@@ -567,7 +567,7 @@
             <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.id %}">Data source</a></p>
           {% endif %}
         {% else %}
-          <iframe class="libraryitem mb-4" src="/library/preview/{{ report.land_use_dataset.id }}/" onload="resizeIframe(this)"></iframe>
+          <iframe class="libraryitem mb-4" src="/library/preview/{{ report.land_use_dataset.id }}/?hide_title=true" onload="resizeIframe(this)"></iframe>
           <p><a href="{% url 'cityloops:library_item' report.land_use_dataset.id %}">Data source</a></p>
         {% endif %}
       {% else %}
@@ -715,9 +715,14 @@
     <section id="stock">
       <h1>Material stock in {{ space }}</h1>
 
+      <p class="font-italic">Determining and analysing the material stock of a city can, similarly to the material flow accounting, also be a data intensive endeavour. The intensity depends on the scope and the data availability. For the Urban Circularity Assessment, the scope includes all residential and non-residential buildings in the municipality. Unlike for the material flow quantification, the analysis is not done for one or several specific reference years, but considers all buildings that have been constructed and still exist, up until and including 2022 (year of study). The aim is to quantify the materials that every single building contains and represent them spatially on a map. Depending on the data availability around building typologies, age cohorts, building height and material intensities, different, specific quantifications and investigations can be made.</p>
+
+      <p class="font-italic">The embedded map allows to explore the building stock of {{space}} and interact with the different scales and buildings by zooming in and out, and clicking on the buildings to discover more about typologies and quantity of building materials. The widgets on the right can be used to account for certain information, e.g. the number of buildings in an area, or to filter for specific construction years, which in combination with the average useful life of buildings can be used to calculate the potential urban mine. Furthermore, an analysis can also be performed by using the lasso tool and drawing an area (a block, a neighbourhood or an urban area) to be analysed.</p>
+
       {% if space.slug == "apeldoorn" %}
-        <iframe class="rounded" src="https://gcp-europe-west1.app.carto.com/map/aee75379-6011-4098-9e70-102d2c61fcf1" onload="resizeIframe(this)"></iframe>
+        <iframe class="rounded" src="https://gcp-europe-west1.app.carto.com/map/c087a313-2dcc-4327-983f-651f90f2cd5c" onload="resizeIframe(this)"></iframe>
       {% elif space.slug == "bodo" %}
+        <iframe class="rounded" src="https://gcp-europe-west1.app.carto.com/map/e0a43829-cb21-4069-add1-829ca5ceca21" onload="resizeIframe(this)"></iframe>
       {% endif %}
 
       <label>Material Stock Map</label><br>
@@ -730,7 +735,7 @@
             <p><a href="{% url 'cityloops:library_item' report.stock_map_dataset.id %}">Data source</a></p>
           {% endif %}
         {% else %}
-          <iframe class="mb-4" src="/library/preview/{{ report.stock_map_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
+          <iframe class="mb-4" src="/library/preview/{{ report.stock_map_dataset.id }}/?hide_title=true" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
         {% endif %}
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">16A</span>
@@ -746,7 +751,7 @@
             <p><a href="{% url 'cityloops:library_item' report.materials_dataset.id %}">Data source</a></p>
           {% endif %}
         {% else %}
-          <iframe class="mb-4" src="/library/preview/{{ report.materials_dataset.id }}/" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
+          <iframe class="mb-4" src="/library/preview/{{ report.materials_dataset.id }}/?hide_title=true" onbeforeprint="resizeIframe(this)" onload="resizeIframe(this)"></iframe>
         {% endif %}
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">16B</span>
