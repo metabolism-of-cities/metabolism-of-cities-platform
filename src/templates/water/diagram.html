@@ -43,7 +43,9 @@
   </map>
 
   </div>
-  <img src="{% static "img/water/water2.png" %}" style="max-width:100%" alt="" id="w2" />
+  <div id="w2">
+    <img src="{% static "img/water/water2.png" %}" style="max-width:100%" alt="" />
+  </div>
 </div>
 
 <h1 class="text-center mt-4">Maps and data</h1>
@@ -114,7 +116,7 @@ $(function(){
     e.preventDefault();
     var id = $(this).data("id");
     console.log(id);
-    $(".watergraphs img").hide();
+    $(".watergraphs div").hide();
     $("#" + id).show();
   });
 });
