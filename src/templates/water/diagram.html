@@ -2,604 +2,121 @@
 {% load static %}
 {% load humanize %}
 
-{% block footer %}
-  <script type="text/javascript">
-  $(function(){
-    $("select[name='level']").change(function(){
-      level = $(this).val();
-      window.location = "{% url 'water:index' %}?level=" + level;
-    });
-    $("body").click(function() {
-      $("#level0").remove();
-    });
-
-    $("#treatment").click(function(){
-      $(this).hide();
-      $(".treatment").show();
-    });
-    $("#extraction").click(function(){
-      $(this).hide();
-      $(".extraction").show();
-    });
-
-
-    $(".btn-icon").click(function(e){
-      e.preventDefault();
-      var id = $(this).data("id");
-      $("[data-breakdown=" + id + "]").toggle();
-      $(this).find(".showbreakdown").toggleClass("bg-dark");
-      $(this).find(".showbreakdown").toggleClass("text-light");
-    });
-
-  });
-  </script>
-{% endblock %}
-
 {% block head %}
 <style type="text/css">
-#waterflows {
-  transform:rotate(-10deg);
-  top: 100px;
-  position: relative;
-  z-index: 2;
-}
-#canvas img {
-  position: absolute;
-  top: 0;
-  z-index: 19;
-  pointer-events: none;
-}
-.progress {
-  border-radius: 0;
-  transform: rotate(180deg);
-}
-#input, #output {
-  position: absolute; 
-  width: 50%;
-  top: 25%;
-}
-#output {
-  left: 50%;
-}
-#losses {
-  display: none;
-}
-.clickable.progress:hover {
-  opacity: 1;
-  cursor: pointer;
-}
-.extraction, .treatment {
-  display: none;
-}
-.extraction .progress {
-  margin-top: 10px;
-}
-.treatment .progress {
-  margin-bottom: 10px;
-}
-
-.progress.reverse {
-  transform:rotate(0deg);
-}
-.grid {
-  height: 700px;
-  border-top: 100px solid #f4f4f4;
-  border-bottom: 100px solid #f4f4f4;
-  position: relative;
-  background: #f4f4f4;
-}
-.grid .progress {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 50%;
-}
-.grid .progress-top-bar {
-  height: 40%;
-}
-.grid .progress-bar {
-  width: 100%;
-}
-
-/* BARS START HERE */
-.grid .import {
-  left: 2%;
-}
-.grid .imports_without_buy {
-  left: 2%;
-}
-.grid .buy {
-  left: calc(2% + {{ pixel_data.imports_without_buy }}px);
-}
-.grid .export {
-  left: 45%;
-}
-.grid .capture {
-  left: 2%;
-  top: 40%;
-}
-.grid .capture_surface {
-  left: 2%;
-  top: 40%;
-}
-.grid .capture_subterrain {
-  left: calc(2% + {{ pixel_data.extract_surface }}px);
-  top: 40%;
-}
-.grid .capture_mountains {
-  left: calc(2% + {{ pixel_data.extract_surface }}px + {{ pixel_data.extract_subterrain }}px);
-  top: 40%;
-}
-.grid .losses1 {
-  left: 25%;
-  top: 40%;
-}
-.grid .energy {
-  left: 45%;
-  top: 40%;
-}
-.grid .losses2 {
-  left: 40%;
-  top: 40%;
-}
-.grid .import_wwtp {
-  left: 65%;
-}
-.grid .export_wwtp {
-  left: 75%;
-}
-.grid .wwtp {
-  left: 85%;
-  top: 40%;
-}
-/* BARS END HERE */
-
-.grid .segment {
-  top: 40%;
-}
-.grid .seg1 {
-  left: 2%;
-}
-.grid .seg2 {
-  left: 25%;
-}
-.grid .seg3 {
-  left: 40%;
-}
-.grid .seg4 {
-  left: 45%;
-}
-.grid .seg5 {
-  left: 65%;
-}
-.grid .seg6 {
-  left: 75%;
-}
-
-/* HORIZONTAL BARS */
-.seg1 {
-  width: 23%;
-}
-.seg2 {
-  width: 15%;
-}
-.seg3 {
-  width: 5%;
-}
-.seg4 {
-  width: 20%;
-}
-.seg5 {
-  width: 10%;
-}
-.seg6 {
-  width: 10%;
-}
-/* END OF HORIZONTAL BARS */
-
-.capture {
-  width: {{ pixel_data.extract }}px;
-}
-.capture_surface {
-  width: {{ pixel_data.extract_surface }}px;
-}
-.capture_subterrain {
-  width: {{ pixel_data.extract_subterrain }}px;
-}
-.capture_mountains {
-  width: {{ pixel_data.extract_mountains }}px;
-}
-.import {
-  width: {{ pixel_data.imports }}px;
-}
-.imports_without_buy {
-  width: {{ pixel_data.imports_without_buy }}px;
-}
-.buy {
-  width: {{ pixel_data.buy }}px;
-}
-.losses1 {
-  width: {{ pixel_data.losses1 }}px;
-}
-.losses2 {
-  width: {{ pixel_data.losses2 }}px;
-}
-.energy {
-  width: {{ pixel_data.energy }}px;
-}
-.export {
-  width: {{ pixel_data.exports }}px;
-}
-.wwtp {
-  width: {{ pixel_data.treatment_internal }}px;
-}
-.import_wwtp {
-  width: {{ pixel_data.treatment_imports }}px;
-}
-.export_wwtp {
-  width: {{ pixel_data.treatment_external }}px;
-}
-
-
-/* HORIZONTAL BARS CONFIGURATION OF WIDTH */
-.seg1 {
-  height: {{ pixel_data.seg1 }}px !important;
-}
-.seg2 {
-  height: {{ pixel_data.seg2 }}px !important;
-}
-.seg3 {
-  height: {{ pixel_data.seg3 }}px !important;
-}
-.seg4 {
-  height: {{ pixel_data.seg4 }}px !important;
-}
-.seg5 {
-  height: {{ pixel_data.seg5 }}px !important;
-}
-.seg6 {
-  height: {{ pixel_data.seg6 }}px !important;
-}
-/* END HORIZONTAL BAR CONFIGURATION */
-
-.progress-bar-animated {
-  -webkit-animation: progress-bar-stripes 0.35s linear infinite;
-  animation: progress-bar-stripes 0.35s linear infinite;
-}
-
-.btn-icon {
-  display: inline-block;
-  height: auto;
-  width: auto;
-  margin: 0;
-  padding:0;
-}
-.btn-icon .title {
-  font-size: 1.1rem;
-  padding: 0.2rem 0.5rem;
-}
-.btn-icon .arrow {
-  text-align: center;
-  background: white;
-  color: black;
-  opacity: 0.7;
-}
-.btn-icon .arrow.in {
-  background: white;
-}
-.btn-icon .number {
-  background: #333;
-  color: white;
-  text-align: center;
-}
-
-.grid {
-  margin-top: 40px;
-  margin-bottom: 40px;
-}
-
-.icons .btn-icon, .icons span {
-  position: absolute;
-}
-.icons span {
-  border-bottom: 7px solid #333;
-}
-.i-top {
-  top: -90px;
-}
-.i-bottom {
-  bottom: -20px;
-}
-.i-production {
-  top: 43%;
-  left: 14%;
-  {% if not data.extract %}display: none !important;{% endif %}
-}
-.i-consumption {
-  top: 43%;
-  left: 54%;
-}
-.i-distribution {
-  top: 43%;
-  left: 30%;
-}
-.i-capture {
-  left: 2%;
-  {% if not data.extract %}display: none !important;{% endif %}
-}
-.i-losses1 {
-  left: 24%;
-  {% if not data.losses1 %}display: none !important;{% endif %}
-}
-.i-losses2 {
-  left: 37%;
-}
-.i-wwtp {
-  left: 80%;
-}
-.i-imports {
-  left: 1%;
-  {% if not data.imports %}display: none !important;{% endif %}
-}
-.i-exports {
-  left: 42%;
-  {% if not data.exports %}display: none !important;{% endif %}
-}
-.i-treatment-external {
-  left: 72%;
-  {% if not data.treatment_external %}display: none !important;{% endif %}
-}
-.i-treatment-imports {
-  left: 60.5%;
-  {% if not data.treatment_imports %}display: none !important;{% endif %}
-}
-
-.i-energy {
-  left: 43%;
-  {% if not data.energy %}display: none !important;{% endif %}
-}
-
-.breakdown {
-  display: none;
-}
-.showbreakdown {
-  padding: 5px;
-}
-
+#w2{display:none}
 </style>
 {% endblock %}
 
 {% block content %}
 
-{% if request.GET.region == "1012156" %}
-<h1 class="text-center">Our territory</h1>
-<img src="/media/water/map.resized.png" alt="" usemap="#map" width="100%" class="mb-5" />
-<map name="map">
-  <area shape="poly" coords="943, 513, 964, 488, 1042, 490, 1048, 508, 1095, 512, 1091, 537, 1038, 530, 1017, 539, 1032, 561, 1017, 571, 988, 553, 963, 551, 972, 523" href="?region=1012174" />
-  <area shape="poly" coords="781, 522, 824, 535, 860, 521, 871, 509, 924, 526, 920, 549, 946, 541, 938, 563, 945, 576, 914, 576, 876, 587, 844, 615, 824, 582, 779, 536" href="?region=1012173" />
-  <area shape="poly" coords="723, 416, 773, 394, 812, 406, 836, 445, 867, 440, 895, 462, 887, 495, 854, 489, 823, 503, 794, 505, 776, 496, 780, 466, 720, 451" href="?region=1012176" />
-  <area shape="poly" coords="680, 406, 571, 442, 632, 461, 624, 496, 559, 530, 616, 570, 674, 559, 700, 601, 741, 607, 783, 593, 710, 521, 747, 489, 678, 456" href="?region=1012175" />
-  <area shape="poly" coords="100, 4, 15, 66, 49, 116, 176, 180, 271, 158, 329, 189, 545, 324, 699, 379, 717, 393, 762, 373, 802, 387, 847, 367, 819, 329, 886, 323, 904, 277, 933, 269, 874, 176, 687, 156, 443, 111, 364, 108, 302, 110, 153, 38" href="?region=1012172" />
-</map>
-{% endif %}
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link waterlink active" href="#" data-id="w1">Niveau 1</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link waterlink" href="#" data-id="w2">Niveau 2</a>
+  </li>
 
+  <li class="nav-item dropdown ml-auto">
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Année: 2020</a>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="#">2020</a>
+      <a class="dropdown-item disabled" href="#">2019</a>
+      <a class="dropdown-item disabled" href="#">2018</a>
+    </div>
+  </li>
+</ul> 
+
+<div class="watergraphs">
+  <div id="w1">
+  <img src="/media/water/level1.png" style="max-width:100%;min-width:1110px" alt="" id="w1" usemap="#map" />
+
+  <map name="map">
+
+    <area shape="poly" coords="702, 475, 716, 448, 775, 450, 764, 465, 793, 470, 789, 482, 738, 489, 743, 516, 716, 525, 707, 504, 701, 492" href="?region=1012174" />
+    <area shape="poly" coords="614, 553, 635, 529, 639, 509, 688, 506, 688, 483, 675, 475, 682, 462, 645, 463, 620, 482, 599, 469, 586, 485, 607, 528" href="?region=1012173" />
+    <area shape="poly" coords="588, 400, 624, 381, 644, 389, 653, 420, 670, 415, 685, 448, 657, 454, 635, 453, 629, 466, 611, 465, 602, 456, 612, 438, 582, 423" href="?region=1012176" />
+    <area shape="poly" coords="587, 382, 569, 358, 594, 342, 619, 320, 614, 288, 607, 271, 583, 259, 611, 246, 604, 217, 589, 205, 601, 185, 678, 175, 748, 214, 758, 284, 713, 328, 667, 322, 661, 333, 682, 363, 631, 370, 610, 371" href="?region=1012177" />
+    <area shape="poly" coords="565, 387, 534, 401, 525, 412, 528, 445, 478, 466, 473, 513, 515, 517, 540, 511, 542, 532, 542, 551, 566, 553, 589, 543, 586, 523, 575, 481, 595, 449, 566, 434, 571, 402" href="?region=1012175" />
+    <area shape="poly" coords="379, 139, 249, 62, 182, 116, 205, 170, 286, 207, 337, 189, 393, 239, 483, 316, 558, 352, 564, 337, 593, 330, 603, 313, 589, 283, 551, 259, 590, 238, 588, 221, 563, 206, 574, 194, 587, 183, 574, 165, 490, 150, 404, 151" href="?region=1012172" />
+  </map>
+
+  </div>
+  <img src="{% static "img/water/water2.png" %}" style="max-width:100%" alt="" id="w2" />
 </div>
 
-<h1 class="text-center">Sankey diagram</h1>
-<div class="container-fluid mb-5 grid">
+<h1 class="text-center mt-4">Maps and data</h1>
 
-  <div class="import reverse progress progress-top-bar" title="Imports: {{ data.imports }}">
-    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar" ></div>
-  </div>
-
-  <div class="breakdown" data-breakdown="imports">
-    <div class="imports_without_buy reverse progress progress-top-bar" title="Importations from other regions: {{ data.imports_without_buy }}">
-      <div class="bg-success progress-bar progress-bar-striped progress-bar-animated" role="progressbar" ></div>
-    </div>
-    <div class="buy reverse progress progress-top-bar" title="Achat: {{ data.buy }}">
-      <div class="bg-warning progress-bar progress-bar-striped progress-bar-animated" role="progressbar" ></div>
-    </div>
-  </div>
-  
-  <div class="capture progress" title="Captage: {{ data.extract }}">
-    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
-  </div>
-
-  <div class="breakdown" data-breakdown="capture">
-    <div class="capture_surface progress" title="Eaux superficielles: {{ data.extract_surface }}">
-      <div class="bg-danger progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
-    </div>
-
-    <div class="capture_subterrain progress" title="Eaux sous-terraine: {{ data.extract_subterrain }}">
-      <div class="bg-success progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
-    </div>
-
-    <div class="capture_mountains progress" title="Ressource montagne: {{ data.extract_mountains }}">
-      <div class="bg-warning progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
-    </div>
-  </div>
-
-  <div class="export progress progress-top-bar" title="Export: {{ data.exports }}">
-    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
-  </div>
-  
-  <div class="losses1 reverse progress" title="Losses: {{ data.losses1 }}">
-    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
-  </div>
-  
-  <div class="losses2 reverse progress" title="Losses: {{ data.losses2 }}">
-    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
-  </div>
-  
-  <div class="energy reverse progress" title="Turbine: {{ data.energy }}">
-    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
-  </div>
-
-  <div class="import_wwtp reverse progress progress-top-bar" title="Importations eaux usées: {{ data.treatment_imports }}">
-    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar" ></div>
-  </div>
-
-  <div class="export_wwtp progress progress-top-bar" title="Exportation assainissement: {{ data.treatment_external }}">
-    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar" ></div>
-  </div>
-  
-  <div class="wwtp reverse progress" title="Assainissement: {{ data.treatment_internal }}">
-    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar" ></div>
-  </div>
-  
-  <!-- HORIZONTAL BARS -->
-  <div class="progress seg1 segment">
-    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
-  </div>
-  <div class="progress seg2 segment">
-    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
-  </div>
-  <div class="progress seg3 segment">
-    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
-  </div>
-  <div class="progress seg4 segment">
-    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
-  </div>
-  <div class="progress seg5 segment">
-    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
-  </div>
-  <div class="progress seg6 segment">
-    <div class="bg-info progress-bar progress-bar-striped progress-bar-animated" role="progressbar"></div>
-  </div>
-
-  <!-- Icons -->
-
-  <div class="icons">
-
-    <span class="badge bg-light i-production">
-      Production
-      <div class="arrow"><i class="fas fa-arrow-right"></i></div>
-    </span>
-
-    <span class="badge bg-light i-distribution">
-      Distribution
-      <div class="arrow"><i class="fas fa-arrow-right"></i></div>
-    </span>
-
-    <span class="badge bg-light i-consumption">
-      Consumption
-      <div class="arrow"><i class="fas fa-arrow-right"></i></div>
-    </span>
-
-    <a class="btn-icon i-capture i-bottom" href="" data-id="capture">
-      <div class="arrow in"><i class="fas fa-arrow-up"></i></div>
-      <div class="title"><i class="fal fa-tint fa-fw"></i> Captage</div>
-      <div class="number">{{ data.extract|intcomma }}</div>
-      <div class="showbreakdown"><i class="fa fa-search-plus"></i> Breakdown</div>
-    </a>
-
-    <a class="btn-icon i-losses1 i-bottom" href="">
-      <div class="arrow"><i class="fas fa-arrow-down"></i></div>
-      <div class="title"><i class="fal fa-circle-notch fa-fw"></i> Pertes</div>
-      <div class="number">{{ data.losses1|intcomma }}</div>
-    </a>
-
-    <a class="btn-icon i-losses2 i-bottom" href="">
-      <div class="arrow"><i class="fas fa-arrow-down"></i></div>
-      <div class="title"><i class="fal fa-circle-notch fa-fw"></i> Pertes</div>
-      <div class="number">{{ data.losses2|intcomma }}</div>
-    </a>
-
-    <a class="btn-icon i-energy i-bottom" href="">
-      <div class="arrow"><i class="fas fa-arrow-down"></i></div>
-      <div class="title"><i class="fal fa-bolt fa-fw"></i> Turbine</div>
-      <div class="number">{{ data.energy|intcomma }}</div>
-    </a>
-
-    <a class="btn-icon i-wwtp i-bottom" href="">
-      <div class="arrow"><i class="fas fa-arrow-down"></i></div>
-      <div class="title"><i class="fal fa-tornado fa-fw"></i> Assainissement</div>
-      <div class="number">{{ data.treatment_internal|intcomma }}</div>
-    </a>
-
-    <a class="btn-icon i-imports i-top" href="" data-id="imports">
-      <div class="showbreakdown"><i class="fa fa-search-plus"></i> Breakdown</div>
-      <div class="number">{{ data.imports|intcomma }}</div>
-      <div class="title"><i class="fal fa-water fa-fw"></i> Importations</div>
-      <div class="arrow in"><i class="fas fa-arrow-down"></i></div>
-    </a>
-
-    <a class="btn-icon i-exports i-top" href="">
-      <div class="number">{{ data.exports|intcomma }}</div>
-      <div class="title"><i class="fal fa-water fa-fw"></i> Exportations</div>
-      <div class="arrow"><i class="fas fa-arrow-up"></i></div>
-    </a>
-
-    <a class="btn-icon i-treatment-external i-top" href="">
-      <div class="number">{{ data.treatment_external|intcomma }}</div>
-      <div class="title"><i class="fal fa-toilet fa-fw"></i> Exportation <br>assainissement</div>
-      <div class="arrow"><i class="fas fa-arrow-up"></i></div>
-    </a>
-
-    <a class="btn-icon i-treatment-imports i-top" href="">
-      <div class="number">{{ data.treatment_imports|intcomma }}</div>
-      <div class="title"><i class="fal fa-tornado fa-fw"></i> Importations <br>eaux usées</div>
-      <div class="arrow in"><i class="fas fa-arrow-down"></i></div>
-    </a>
-
-  </div>
-  
-</div>
-
-<div class="container">
-
-  <h1 class="text-center">Maps and data</h1>
-
-  <div class="row progress-list">
-    {% for tag in infrastructure %}
-      <div class="col-md-6 col-lg-4 mb-4">
-        <div class="card icon-card">
-          <div class="icon">
-            <i class="far fa-fw fa-{{ tag.icon }}"></i>
-          </div>
-          <div class="card-body">
-            <h5 class="card-title mb-3">{{ tag }}</h5>
-            <ul class="list-group list-group-flush">
-              {% for each in documents %}
-                {% if tag in each.tags.all %}
-                <li class="list-group-item">
-                  <a href="{% url "water:infrastructure_map" each.id %}{% if request.GET.region %}?boundaries={{ request.GET.region }}&amp;restrict_to_within_boundaries=true{% endif %}">
-                  {{ each.name }}
-                  </a>
-                </li>
-                {% endif %}
-              {% endfor %}
-            </ul>
-          </div>
-        </div>
-      </div>
-    {% endfor %}
-
+<div class="row progress-list">
+  {% for tag in infrastructure %}
     <div class="col-md-6 col-lg-4 mb-4">
       <div class="card icon-card">
         <div class="icon">
-          <i class="far fa-fw fa-exchange"></i>
+          <i class="far fa-fw fa-{{ tag.icon }}"></i>
         </div>
         <div class="card-body">
-          <h5 class="card-title mb-3">Flows</h5>
+          <h5 class="card-title mb-3">{{ tag }}</h5>
           <ul class="list-group list-group-flush">
-            {% for each in documents_flows %}
+            {% for each in documents %}
+              {% if tag in each.tags.all %}
               <li class="list-group-item">
-                <a href="{% url URLS.LIBRARY_ITEM each.id %}{% if request.GET.region %}?boundaries={{ request.GET.region }}&amp;restrict_to_within_boundaries=true{% endif %}">
+                <a href="{% url "water:infrastructure_map" each.id %}{% if request.GET.region %}?boundaries={{ request.GET.region }}&amp;restrict_to_within_boundaries=true{% endif %}">
                 {{ each.name }}
                 </a>
-                <br>
-                <a href="{% url "water:dashboard" %}?document={{ each.id }}">Compare regions</a>
               </li>
+              {% endif %}
             {% endfor %}
-            <li class="list-group-item">
-              <a href="{% url "water:dashboard" %}?region={% if request.GET.region %}{{ request.GET.region }}{% else %}1012156{% endif %}">View all charts</a>
-            </li>
           </ul>
         </div>
       </div>
     </div>
+  {% endfor %}
+
+  <div class="col-md-6 col-lg-4 mb-4">
+    <div class="card icon-card">
+
+      <div class="icon">
+        <i class="far fa-fw fa-exchange"></i>
+      </div>
+
+      <div class="card-body">
+        <h5 class="card-title mb-3">Flows</h5>
+        <ul class="list-group list-group-flush">
+          {% for each in documents_flows %}
+            <li class="list-group-item">
+              <a href="{% url URLS.LIBRARY_ITEM each.id %}{% if request.GET.region %}?boundaries={{ request.GET.region }}&amp;restrict_to_within_boundaries=true{% endif %}">
+              {{ each.name }}
+              </a>
+              <br>
+              <a href="{% url "water:dashboard" %}?document={{ each.id }}">Compare regions</a>
+            </li>
+          {% endfor %}
+          <li class="list-group-item">
+            <a href="{% url "water:dashboard" %}?region={% if request.GET.region %}{{ request.GET.region }}{% else %}1012156{% endif %}">View all charts</a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
 
   </div>
+</div>
 
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+$(function(){
+  $(".waterlink").click(function(e){
+    $(".waterlink").removeClass("active");
+    $(this).addClass("active");
+    e.preventDefault();
+    var id = $(this).data("id");
+    console.log(id);
+    $(".watergraphs img").hide();
+    $("#" + id).show();
+  });
+});
+</script>
 {% endblock %}
