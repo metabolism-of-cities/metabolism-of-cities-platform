@@ -372,18 +372,19 @@ def event_list(request, header_subtitle=None, project_name=None):
     list = Event.objects.filter(end_date__lt=today).order_by("start_date")
     upcoming = Event.objects.filter(end_date__gte=today).order_by("start_date")
 
-    if project_name:
-        project = get_object_or_404(Project, pk=PROJECT_ID[project_name])
+    project = get_project(request)
+
+    if project:
         # Just un-comment this once all events have been properly tagged
-        #list = list.filter(projects=project)
-        #upcoming = upcoming.filter(projects=project)
+        list = list.filter(projects=project)
+        upcoming = upcoming.filter(projects=project)
 
     context = {
         "upcoming": upcoming,
         "archive": list,
         "add_link": "/admin/core/event/add/",
         "header_title": "Events",
-        "header_subtitle": "Find out what is happening around you!",
+        #"header_subtitle": "Find out what is happening around you!",
     }
     return render(request, "community/event.list.html", context)
 

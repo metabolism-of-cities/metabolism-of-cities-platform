@@ -142,7 +142,7 @@ baseline_urlpatterns = [
     path("controlpanel/permissions/create/", core.controlpanel_permissions_create, name="controlpanel_permissions_create"),
 
     # News links
-    path("news/", core.news_list, { "header_subtitle": "News and updates around urban metabolism literature." }, name="news"),
+    path("news/", core.news_list, name="news"),
     path("news/<slug:slug>/", core.news, name="news"),
     path("events/", core.event_list, name="events"),
     path("events/<int:id>/<slug:slug>/", core.event, name="event"),

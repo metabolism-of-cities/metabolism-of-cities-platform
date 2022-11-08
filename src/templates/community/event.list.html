@@ -1,22 +1,24 @@
 {% extends "_base.html" %}
 {% load static %}
-{% load sass_tags %}
+
 {% block title %}Events List{% endblock %}
 {% block page_name %}event list{% endblock %}
-{% block css %}
-{% endblock %}
+
 {% block content %}
 
 <section>
   <h2>Upcoming events</h2>
+  {% if PROJECT.slug != "ascus2022" %}
   <p>
     Do we miss an event? 
     <a href="{% url "community:event_form" %}">Add it now!</a>
   </p>
+  {% endif %}
+
   <div class="row">
     {% for each in upcoming %}
     <div class="col-md-6 col-lg-4 mb-4">
-      <a class="card btn-card" href="{{ each.id }}/">
+      <a class="card btn-card" href="{{ each.id }}/{{ each.slug }}">
         {% if each.image %}
           <img src="{{ each.image.url }}" class="card-img-top" alt="{{ each }}">
         {% endif %}
@@ -48,6 +50,7 @@
   </div>
 </section>
 
+{% if archive.count %}
 <section id="event-list">
   <h2>Events archive</h2>
   <input type="text" class="form-control search" placeholder="Search by event name...">
@@ -64,6 +67,9 @@
     <div class="col-md-4 mb-2">
       <select class="custom-select" data-type="event-year">
         <option value="all" selected>Anytime</option>
+        <option value="2023">2023</option>
+        <option value="2022">2022</option>
+        <option value="2021">2021</option>
         <option value="2020">2020</option>
         <option value="2019">2019</option>
         <option value="2018">2018</option>
@@ -113,6 +119,8 @@
       <button class="btn btn-lg btn-primary clear-filter my-4">Show all events</button>
     </div>
   </div>
+  {% endif %}
+
 </section>
 {% endblock %}
 

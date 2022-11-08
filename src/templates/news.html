@@ -21,16 +21,7 @@
       <img class="img-fluid mb-4" src="{{ info.image.url }}">
     {% endif %}
 
-    <h4 class="{% if PROJECT.slug == 'peeide' %}text-ndee-primary{% endif %}">{{ info }}</h4>
-
-    {% if PROJECT.slug == "peeide" %}
-      <div class="mb-3">
-        <strong class="text-uppercase text-sm text-ndee-purple">{{ info.date|date:"d F Y" }}</strong>
-        {% if info.author %}
-        | {{ info.author }}
-        {% endif %}
-      </div>
-    {% endif %}
+    <h4>{{ info }}</h4>
 
     {% if info.introduction %}
     <div class="alert alert-warning">
@@ -42,67 +33,49 @@
 
   </article>
   <div class="col-lg-4">
-    {% if PROJECT.slug != "peeide" %}
-      <div class="card basic-info">
-        <ul class="list-group list-group-flush">
-          {% if info.authors %}
-          <li class="list-group-item">
-            <i class="fal fa-fw fa-user mr-1" aria-hidden="true"></i>
-            {% if info.authors.count == 1 %}
-              {{ info.authors.0 }}
-            {% else %}
-              Authors:<br>
-              {% for each in info.authors %}
-                {{ each }}<br>
-              {% endfor %}
-            {% endif %}
-          </li>
+    <div class="card basic-info">
+      <ul class="list-group list-group-flush">
+        {% if info.authors %}
+        <li class="list-group-item">
+          <i class="fal fa-fw fa-user mr-1" aria-hidden="true"></i>
+          {% if info.authors.count == 1 %}
+            {{ info.authors.0 }}
+          {% else %}
+            Authors:<br>
+            {% for each in info.authors %}
+              {{ each }}<br>
+            {% endfor %}
           {% endif %}
-          <li class="list-group-item">
-            <i class="fal fa-fw fa-calendar mr-1" aria-hidden="true"></i> {{ info.date }}
-          </li>
-          {% if False %}
-          <li class="list-group-item">
-            <i class="fal fa-fw fa-share-alt mb-1 mr-1" aria-hidden="true"></i> Share
-            <br>
-            <div class="btn-group share mt-1" role="group">
-              <a class="btn btn-sm btn-primary-outline"><i class="fab fa-fw fa-twitter"></i></a>
-              <a class="btn btn-sm btn-primary-outline"><i class="fab fa-fw fa-linkedin-in"></i></a>
-              <a class="btn btn-sm btn-primary-outline"><i class="fab fa-fw fa-facebook-f"></i></a>
-              <a class="btn btn-sm btn-primary-outline"><i class="fas fa-fw fa-envelope"></i></a>
-            </div>
-          </li>
-          {% endif %}
-        </ul>
-      </div>
-    {% endif %}
+        </li>
+        {% endif %}
+        <li class="list-group-item">
+          <i class="fal fa-fw fa-calendar mr-1" aria-hidden="true"></i> {{ info.date }}
+        </li>
+        {% if False %}
+        <li class="list-group-item">
+          <i class="fal fa-fw fa-share-alt mb-1 mr-1" aria-hidden="true"></i> Share
+          <br>
+          <div class="btn-group share mt-1" role="group">
+            <a class="btn btn-sm btn-primary-outline"><i class="fab fa-fw fa-twitter"></i></a>
+            <a class="btn btn-sm btn-primary-outline"><i class="fab fa-fw fa-linkedin-in"></i></a>
+            <a class="btn btn-sm btn-primary-outline"><i class="fab fa-fw fa-facebook-f"></i></a>
+            <a class="btn btn-sm btn-primary-outline"><i class="fas fa-fw fa-envelope"></i></a>
+          </div>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
 
-    {% if PROJECT.slug == "peeide" %}
-      <h5 class="text-ndee-primary">Latest Resources</h5>
-    {% else %}
-      <h5>Latest news</h5>
-    {% endif %}
-    <div class="card {% if PROJECT.slug == 'peeide' %}bg-white border-0{% endif %}">
+    <h5>Latest news</h5>
+    <div class="card">
       <div class="list-group list-group-flush">
         {% for each in latest %}
-          {% if PROJECT.slug == "peeide" %}
-            <a href="../{{ each.slug }}/" class="list-group-item">
-          {% else %}
-            <a href="/news/{{ each.slug }}/" class="list-group-item">
-          {% endif %}
+          <a href="/news/{{ each.slug }}/" class="list-group-item">
           <div>{{ each }}</div>
-          {% if PROJECT.slug == "peeide" %}
-            <div class="text-uppercase text-sm font-weight-bold text-ndee-purple">{{ each.date|date:"d F Y" }}</div>
-          {% else %}
-            <div class="text-muted mb-0">{{ each.date }}</div>
-          {% endif %}
+          <div class="text-muted mb-0">{{ each.date }}</div>
         </a>
         {% endfor %}
-        {% if PROJECT.slug == "peeide" %}
-          <a href="../" class="list-group-item font-weight-bold">Resource Archive</a>
-        {% else %}
-          <a href="/news/" class="list-group-item font-weight-bold">News archive</a>
-        {% endif %}
+        <a href="/news/" class="list-group-item font-weight-bold">News archive</a>
       </div>
     </div>
 
