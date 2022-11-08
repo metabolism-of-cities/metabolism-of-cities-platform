@@ -25,11 +25,11 @@
     <div class="dark-cover"></div>
   {% endif %}
 
-  {% if PROJECT.slug == "ascus2020" %}
+  {% if PROJECT.slug == "ascus2020" or PROJECT.slug == "ascus2021" or PROJECT.slug == "ascus2022" or PROJECT.slug == "ascus2023" %}
     <div class="return-bar">
       <div class="container">
-        <a href="https://2021.ascus-society.org/">
-          AScUS 2021 is here! Go to the AScUS 2021 website.
+        <a href="https://ascus-society.org/">
+          Go back to AScUS Main page
           <i class="fad fa-arrow-circle-right"></i>
         </a>
       </div>
@@ -179,6 +179,8 @@
             {% include "_menu-peeide.html" %}
           {% elif PROJECT.slug == "ascus2021" %}
             {% include "_menu-ascus2021.html" %}
+          {% elif PROJECT.slug == "ascus2022" %}
+            {% include "_menu-ascus2022.html" %}
           {% elif PROJECT.slug == "water" %}
             {% include "_menu-water.html" %}
           {% endif %}

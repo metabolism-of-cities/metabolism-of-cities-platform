@@ -12,7 +12,8 @@ django-sass-processor
 django-bootstrap4
 django-tinymce
 django-anymail[sendgrid]
-feedparser==5.2.1 # We need this version for now because the Zotero import fails with a newer version
+#feedparser==5.2.1 # We need this version for now because the Zotero import fails with a newer version
+feedparser
 xhtml2pdf
 weasyprint
 markdown
