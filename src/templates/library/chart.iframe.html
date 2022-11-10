@@ -47,7 +47,7 @@
 
 {% if not request.GET.hide_details_link %}
   <div class="text-center mt-3 mb-3">
-    <a class="btn btn-lg btn-warning d-print-none" href="{% url URLS.LIBRARY_ITEM info.id %}" target="_parent">
+    <a class="btn btn-lg btn-warning d-print-none" href="{% url URLS.LIBRARY_ITEM info.id %}?{% if data_viz %}data-viz={{ data_viz }}{% endif %}" target="_parent">
       View details <i class="fal fa-fw fa-arrow-right"></i>
     </a>
   </div>

@@ -40,6 +40,8 @@ from django.contrib.gis import geos
 import shutil
 import os
 
+from django.core.files.base import ContentFile
+
 def index(request):
     context = {
         "show_project_design": True,
@@ -3487,6 +3489,7 @@ def libraryframe(request, id):
             context["load_highcharts"] = True
             if "data-viz" in request.GET:
                 properties = DataViz.objects.get(pk=request.GET["data-viz"]).meta_data.get("properties")
+                context["data_viz"] = request.GET["data-viz"]
             else:
                 properties = info.get_dataviz_properties
 
@@ -3495,6 +3498,11 @@ def libraryframe(request, id):
                 if "space" in request.GET or properties.get("space"):
                     space = request.GET.get("space") if "space" in request.GET else properties.get("space")
                     data = data.filter(Q(origin_space_id=space)|Q(destination_space_id=space))
+                    context["space"] = space
+                if "process" in request.GET or properties.get("process"):
+                    process = request.GET.get("process") if "process" in request.GET else properties.get("process")
+                    data = data.filter(Q(origin_id=process)|Q(destination_id=process))
+                    context["process"] = process
                 context["data"] = data
             context["properties"] = properties
             return render(request, "library/chart.iframe.html", context)
@@ -3506,6 +3514,101 @@ def sankeybuilder(request):
     }
 
     return render(request, "staf/sankey-builder.html", context)
+
+def food(request, space):
+    space = get_space(request, space)
+    project = get_project(request)
+    info = available_library_items(request).get(pk=request.GET["id"])
+    context = {
+        "space": space,
+        "info": info,
+        "viz": [267, 268, 269, 270, 271, 272],
+    }
+
+    return render(request, "staf/food.html", context)
+
+@login_required
+def food_upload(request, space):
+    tag_id = 1795
+    space = get_space(request, space)
+    project = get_project(request)
+    info = None
+    documents = None
+    conversion = None
+
+    if "id" in request.GET:
+        id = request.GET["id"]
+        info = available_library_items(request).get(pk=id)
+    else:
+        documents = available_library_items(request).filter(tags=tag_id)
+
+    if request.method == "POST":
+
+        document = None
+        if "file" in request.FILES:
+            file = request.FILES["file"]
+            if info.attachments.count():
+                document = info.attachments.all()[0]
+                document.file = file
+                document.name = file
+                document.save()
+            else:
+                document = Document.objects.create(
+                    attached_to = info,
+                    file = file,
+                    name = file,
+                )
+
+        if "new" in request.POST:
+            info = LibraryItem.objects.create(
+                type_id = 10,
+                name = f"Food system dataset for {space}",
+            )
+            info.tags.add(Tag.objects.get(pk=tag_id))
+            info.spaces.add(space)
+            info.part_of_project_id = request.project
+
+            RecordRelationship.objects.create(
+                record_parent = request.user.people,
+                record_child = info,
+                relationship_id = RELATIONSHIP_ID["uploader"],
+            )
+            messages.success(request, f"New food document was created for {space}!")
+        elif "process" in request.POST or "file" in request.FILES:
+            from staf.conversion.foodsystem import convert_file
+
+            if not document:
+                document = info.attachments.get(pk=request.POST["process"])
+            
+            if "crunch" in request.POST:
+                file_content = convert_file(document.file.path, space.name)
+                file_name = "formatted-data.csv"
+                document = info.attachments.filter(name=file_name)
+                if document:
+                    document = document[0]
+                    document.file = ContentFile(file_content, name=file_name)
+                    document.save()
+                else:
+                    document = Document.objects.create(name=file_name, is_public=True, attached_to=info, file=ContentFile(file_content, name=file_name))
+            
+                info.meta_data["processing"]["file"] = document.id
+                info.meta_data["processing"]["source"] = 1014805
+                info.meta_data["ready_for_processing"] = True
+                info.save()
+                info.convert_stocks_flows_data()
+
+                messages.success(request, "Your data have been loaded - see graphs below.")
+                return redirect(reverse("data:food", args=[space.slug]) + "?id=" + str(info.id))
+
+            else:
+                conversion = convert_file(document.file.path)
+    context = {
+        "space": space,
+        "documents": documents,
+        "info": info,
+        "conversion": conversion,
+    }
+    return render(request, "staf/food.upload.html", context)
 
 # Control panel sections
 # The main control panel views are in the core/views file, but these are STAF-specific

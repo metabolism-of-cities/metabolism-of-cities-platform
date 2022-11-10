@@ -1616,6 +1616,10 @@ class LibraryItem(Record):
                                 segment = row[10]
                             except:
                                 segment = None
+                            try:
+                                process_origin = row[11]
+                            except:
+                                process_origin = None
                         elif this_type == "stock":
                             period = row[1]
                             start = row[1]
@@ -1705,6 +1709,7 @@ class LibraryItem(Record):
                                 date_start = start,
                                 date_end = end,
                                 dates_label = period,
+                                origin_id = process_origin if process_origin else None,
                             ))
                         except Exception as e:
                             error = f"We were unable to add your item - this is the error that came back: {e} is invalid"
@@ -1737,7 +1742,7 @@ class LibraryItem(Record):
         # We may have cached space-related properties for this object, so let's clear those
         # They will be re-cached the first time the query runs so we can run this generously
         # even if this script doesn't come to fruition
-        self.delete_cached_properties("space")
+        self.delete_cached_properties("spaces")
 
         if check:
             if self.meta_data.get("allow_deletion_spaces"):

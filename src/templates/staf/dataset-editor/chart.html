@@ -210,6 +210,11 @@
                 <i class="fa fa-question-circle" title="You can enter the ID of a specific reference space containing boundaries (such as municipal boundaries), and the data visualization will then only include data linked to spaces within these boundaries."></i>
               </label>
               <input name="boundaries" class="form-control" value="{{ properties.boundaries }}" />
+
+              <label class="category mt-3">Process-based filtering
+                <i class="fa fa-question-circle" title="You can enter the ID of a specific process, and data will be filtered to only include those linked to that process."></i>
+              </label>
+              <input name="process" class="form-control" value="{{ properties.process }}" />
             {% endif %}
 
             <label class="category mt-3">Other settings</label>
@@ -314,7 +319,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                {% for each in info.data.all %}
+                {% for each in data %}
                   {% if forloop.counter < 100 %}
                     <tr>
                       <td>{{ each.timeframe }}</td>
@@ -366,7 +371,7 @@
   <script>
     // url to get the data from
     {% with link=PROJECT.slug|add:":library_data_json" %}
-      var json_url = "{% url link source.id %}{% if properties.space %}?space={{ properties.space }}{% endif %}";
+      var json_url = "{% url link source.id %}?{% if properties.space %}space={{ properties.space }}&{% endif %}{% if properties.process %}process={{ properties.process }}&{% endif %}";
     {% endwith %}
 
     // dataviz properties

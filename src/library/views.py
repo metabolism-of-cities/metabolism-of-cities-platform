@@ -425,7 +425,12 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     data = info.data
     data_count = data.count()
     if data_count:
-        properties = info.get_dataviz_properties
+
+        if "data-viz" in request.GET:
+            properties = DataViz.objects.get(pk=request.GET["data-viz"]).meta_data.get("properties")
+        else:
+            properties = info.get_dataviz_properties
+
         load_datatables = True
         load_highcharts = True
         if "show_map" in properties:
@@ -599,6 +604,9 @@ def fetch_data_in_json_object(dataset, cache_key, parameters):
     if "boundaries" in parameters:
         boundaries = ReferenceSpace.objects.get(pk=parameters["boundaries"])
         data = data.filter(Q(origin_space__geometry__within=boundaries.geometry)|Q(destination_space__geometry__within=boundaries.geometry))
+
+    if "process" in parameters:
+        data = data.filter(Q(origin_id=parameters["process"])|Q(destination_id=parameters["process"]))
 
     x_axis = []
     stacked_fields = []

@@ -106,6 +106,7 @@ class SearchAdmin(admin.ModelAdmin):
 
 class MaterialAdmin(admin.ModelAdmin):
     search_fields = ["name"]
+    list_filter = ["catalog"]
     exclude = DEFAULT_EXCLUDE + ["parent"]
 
 class NotificationAdmin(admin.ModelAdmin):
@@ -133,6 +134,7 @@ class ActivityAdmin(admin.ModelAdmin):
     list_filter = ["catalog"]
     list_display = ["code", "name", "catalog"]
     autocomplete_fields = ["parent"]
+    exclude = DEFAULT_EXCLUDE
 
 class CourseAdmin(SearchCompleteAdmin):
     exclude = DEFAULT_EXCLUDE + ["slug"]
@@ -380,7 +382,7 @@ admin_site.register(WorkActivity, WorkActivityAdmin)
 admin_site.register(Badge, BadgeAdmin)
 admin_site.register(MaterialDemand, SearchCompleteAdmin)
 admin_site.register(Milestone, SearchCompleteAdmin)
-admin_site.register(ActivityCatalog)
+admin_site.register(ActivityCatalog, SearchAdmin)
 admin_site.register(Activity, ActivityAdmin)
 admin_site.register(MaterialCatalog, SearchAdmin)
 admin_site.register(Material, MaterialAdmin)

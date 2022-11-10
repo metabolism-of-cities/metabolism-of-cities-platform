@@ -1,0 +1,10 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <h1>{% block title %}{{ info }}{% endblock %}</h1>
+  {% with link=PROJECT.slug|add:":libraryframe" %}
+    {% for each in viz %}
+      <iframe class="libraryitem card mt-3 mb-5" src="{% url link info.id %}?data-viz={{ each }}&hide_title=true" onload="resizeIframe(this)"></iframe>
+    {% endfor %}
+  {% endwith %}
+{% endblock %}

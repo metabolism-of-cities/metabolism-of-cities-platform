@@ -193,6 +193,9 @@ baseline_staf_urlpatterns = [
     path("sankeybuilder/", staf.sankeybuilder, name="sankeybuilder"),
     path("controlpanel/shapefiles/", staf.controlpanel_shapefiles, name="controlpanel_shapefiles"),
 
-    path("map/", staf.map, name="map"),
+    path("dashboards/<slug:space>/food/", staf.food, name="food"),
+    path("dashboards/<slug:space>/food/upload/", staf.food_upload, name="food_upload"),
     path("search/ajax/spaces/", library.search_spaces_ajax, name="search_spaces_ajax"),
+
+    path("food/", staf.food, name="food"),
 ]
