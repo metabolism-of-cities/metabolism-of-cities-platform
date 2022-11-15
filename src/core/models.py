@@ -1600,6 +1600,7 @@ class LibraryItem(Record):
             for row in df.itertuples():
                 if not error:
                     try:
+                        process_origin = None
                         if this_type == "flows":
                             period = row[1]
                             start = row[2]
@@ -1709,7 +1710,7 @@ class LibraryItem(Record):
                                 date_start = start,
                                 date_end = end,
                                 dates_label = period,
-                                origin_id = process_origin if process_origin else None,
+                                origin_id = process_origin,
                             ))
                         except Exception as e:
                             error = f"We were unable to add your item - this is the error that came back: {e} is invalid"
