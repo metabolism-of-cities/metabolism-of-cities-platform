@@ -357,7 +357,7 @@
                 <i class="fal fa-fw fa-pencil mr-1"></i> Edit
               </a>
 
-              {% if info.type.name != "Image" and info.type.name != "Data visualisation" and info.type.name != "Dataset" %}
+              {% if info.type.name != "Image" and info.type.name != "Data visualisation" and info.type.name != "Dataset" or PROJECT.slug == "cityloops" %}
                 <a href="{% url 'library:upload' %}form/?inventory=true&amp;type=38&amp;parent={{ info.id }}&amp;next={% if request.GET.next %}{{ request.GET.next }}{% else %}{{ request.get_full_path }}{% endif %}" class="list-group-item list-group-item-action list-group-item-primary">
                   <i class="fal fa-fw fa-plus mr-1"></i> Add image
                 </a>
