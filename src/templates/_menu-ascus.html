@@ -1,20 +1,5 @@
-<li class="nav-item"><a class="nav-link" href="{% url "ascus2020:index" %}"><i class="fa fa-home fa-fw"></i></a></li>
+<li class="nav-item"><a class="nav-link" href="{% url "ascus:index" %}"><i class="fa fa-home fa-fw"></i></a></li>
 
-<li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="program-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Program
-  </a>
-  <div class="dropdown-menu" aria-labelledby="program-dropdown">
-    <a class="dropdown-item" href="{% url "ascus2020:article" "program" %}">Schedule</a>
-    <a class="dropdown-item" href="{% url "ascus2020:preconference" %}">Pre-conference program</a>
-    <a class="dropdown-item" href="{% url "ascus2020:overview" %}">Discussion sessions</a>
-  </div>
-</li>
-
-
-<li class="nav-item"><a class="nav-link" href="{% url "ascus2020:article" "keynotes" %}">Keynotes</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url "ascus2020:article" "outputs" %}">Outputs</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url "ascus2020:article" "awards" %}">Awards</a></li>
-{% if not request.user.is_authenticated %}
-  <li class="nav-item"><a class="nav-link" href="{% url "ascus2020:article" "login" %}">Login</a></li>
-{% endif %}
+<li class="nav-item"><a class="nav-link" href="{% url "ascus:index" %}">About</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url "ascus:events" %}">Events</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url "ascus:news" %}">News</a></li>

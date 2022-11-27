@@ -5,6 +5,7 @@ from . import views
 
 app_name = "ascus"
 
-urlpatterns = baseline_urlpatterns + [
+urlpatterns = [
     path("", views.index, name="index"),
-]
+    path("events/", views.events, name="events"),
+] + baseline_urlpatterns

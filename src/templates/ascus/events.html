@@ -1,0 +1,26 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1>Events</h1>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Event</th>
+        <th>Date</th>
+        <th>Website</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in events %}
+      <tr>
+        <td>{{ each.name }}</td>
+        <td>{{ each.start_date }}</td>
+        <td><a href="{{ each.url }}">{{ each.url }}</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+ 
+{% endblock %}
