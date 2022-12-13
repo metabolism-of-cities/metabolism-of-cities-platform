@@ -1597,6 +1597,10 @@ class LibraryItem(Record):
             times = {}
             items = []
 
+            materials_catalog = 18998
+            if "materials_catalog" in self.meta_data["processing"]:
+                materials_catalog = self.meta_data["processing"]["materials_catalog"]
+
             for row in df.itertuples():
                 if not error:
                     try:
@@ -1657,7 +1661,7 @@ class LibraryItem(Record):
 
                     if material_code not in materials:
                         try:
-                            m = Material.objects.get(catalog_id=18998, code=material_code)
+                            m = Material.objects.get(catalog_id=materials_catalog, code=material_code)
                             materials[material_code] = m
                         except:
                             error = f"We could not find the material/product with code: '{material_code}'"

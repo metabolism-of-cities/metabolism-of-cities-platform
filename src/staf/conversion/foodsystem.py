@@ -82,7 +82,7 @@ def convert_file(file, return_csv=False):
     }
 
     try:
-        invalid_numbers = df[df.Quantity.isnull()]
+        invalid_numbers = df[df["Quantity (t/year)"].isnull()]
         invalid_numbers.index += 2 # Make the row numbers match those shown in a spreadsheet program
         if invalid_numbers.shape[0]:
             error = True
@@ -120,16 +120,16 @@ def convert_file(file, return_csv=False):
         if df["start_date"].isnull().sum() or df["end_date"].isnull().sum() > 0:
             error = "Error converting the dates. Please ensure all dates are set."
 
-        df["material_code"] = "EMP1"
         df["unit"] = "t"
 
         col_names = {
             "Year": "period_name",
-            "Quantity": "quantity",
+            "Quantity (t/year)": "quantity",
             "Location": "location",
             "Segment": "segment",
             "Food name": "material",
             "Process": "process",
+            "Food group": "material_code",
         }
         df.rename(columns = col_names, inplace = True)
 
@@ -137,6 +137,7 @@ def convert_file(file, return_csv=False):
             "Production": 1014853,
             "Food supply": 1014854,
             "Imports": 1014855,
+            "Exports": 1014855, ##### MUST BE FIXED!!
             "Retail sales": 1014856,
             "Waste": 1014857,
             "Food consumption": 1014858,
@@ -146,7 +147,7 @@ def convert_file(file, return_csv=False):
         replacements = {}
         for each in all_food_groups:
             replacements[each.name] = each.code
-        print(replacements)
+
         df["material_code"] = df["material_code"].replace(replacements)
 
         df["process"] = df["process"].replace(processes)

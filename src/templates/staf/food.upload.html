@@ -100,18 +100,20 @@ li.hide{display:none}
 
   {% elif not request.GET.id %}
 
-    <h2 class="mt-5">Documents</h2>
+    <h2 class="mt-5">Food system</h2>
+    {% if document %}
     <ul>
-      {% for each in documents %}
-      <li><a href="?id={{ each.id }}">{{ each }}</a> | <a href="../?id={{ each.id }}">View</a></li>
-      {% endfor %}
+      <li><a href="?id={{ document.id }}">{{ document }}</a> | <a href="../?id={{ document.id }}">View</a></li>
     </ul>
+    {% endif %}
 
-    <form method="post">
-      <button class="btn btn-primary" type="submit">Create new document for {{ space }}</button>
-      <input type="hidden" name="new" value="true" />
-      {% csrf_token %}
-    </form>
+    {% if not document %}
+      <form method="post">
+        <button class="btn btn-primary" type="submit">Create new document for {{ space }}</button>
+        <input type="hidden" name="new" value="true" />
+        {% csrf_token %}
+      </form>
+    {% endif %}
 
   {% endif %}
 

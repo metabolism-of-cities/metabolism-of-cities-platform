@@ -3518,29 +3518,77 @@ def sankeybuilder(request):
 def food(request, space):
     space = get_space(request, space)
     project = get_project(request)
-    info = available_library_items(request).get(pk=request.GET["id"])
+    tag_id = FOOD_TAG
+    info = available_library_items(request).get(tags=tag_id, spaces=space)
+
     context = {
         "space": space,
         "info": info,
         "viz": [267, 268, 269, 270, 271, 272],
     }
 
+    if "load_categories" in request.GET:
+        categories = [
+            "Alcoholic Beverages",
+            "Animal fats",
+            "Aquatic Products, Other",
+            "Cereals - Excluding Beer",
+            "Eggs",
+            "Fish, Seafood",
+            "Fruits - Excluding Wine",
+            "Meat",
+            "Milk - Excluding Butter",
+            "Miscellaneous",
+            "Offals",
+            "Oilcrops",
+            "Pulses",
+            "Spices",
+            "Starchy Roots",
+            "Stimulants",
+            "Sugar & Sweeteners",
+            "Sugar Crops",
+            "Treenuts",
+            "Vegetable Oils",
+            "Vegetables",
+            "Other (processed foods)",
+            "Animal feed",
+            "Non-food agricultural products",
+        ]
+        check = MaterialCatalog.objects.get(name="Food catalog")
+        if check:
+            c = 0
+            catalog = check
+            existing = Material.objects.filter(catalog=catalog)
+            existing.delete()
+
+            for each in categories:
+                c = c+1
+                if c < 10:
+                    code = f"FOOD.0{c}"
+                else:
+                    code = f"FOOD.{c}"
+                Material.objects.create(name=each, catalog=catalog, code=code)
+
+            messages.success(request, f"New categories were saved!")
+
     return render(request, "staf/food.html", context)
 
 @login_required
 def food_upload(request, space):
-    tag_id = 1795
+    tag_id = FOOD_TAG
     space = get_space(request, space)
     project = get_project(request)
     info = None
-    documents = None
+    document = None
     conversion = None
 
     if "id" in request.GET:
         id = request.GET["id"]
         info = available_library_items(request).get(pk=id)
     else:
-        documents = available_library_items(request).filter(tags=tag_id)
+        documents = available_library_items(request).filter(tags=tag_id, spaces=space)
+        if documents:
+            document = documents[0]
 
     if request.method == "POST":
 
@@ -3581,6 +3629,13 @@ def food_upload(request, space):
                 document = info.attachments.get(pk=request.POST["process"])
             
             if "crunch" in request.POST:
+                # This is the default space, if no sub-location is set.
+                try:
+                    boundaries = ReferenceSpace.objects.get(pk=space.meta_data["boundaries_origin"])
+                    space_name = boundaries.name
+                except:
+                    space_name = space.name
+
                 file_content = convert_file(document.file.path, space.name)
                 file_name = "formatted-data.csv"
                 document = info.attachments.filter(name=file_name)
@@ -3591,9 +3646,14 @@ def food_upload(request, space):
                 else:
                     document = Document.objects.create(name=file_name, is_public=True, attached_to=info, file=ContentFile(file_content, name=file_name))
             
+                if not info.meta_data:
+                    info.meta_data = {}
+                    info.meta_data["processing"] = {}
                 info.meta_data["processing"]["file"] = document.id
-                info.meta_data["processing"]["source"] = 1014805
+                info.meta_data["processing"]["source"] = space.source
                 info.meta_data["ready_for_processing"] = True
+                check = MaterialCatalog.objects.get(name="Food catalog")
+                info.meta_data["processing"]["materials_catalog"] = check.id
                 info.save()
                 info.convert_stocks_flows_data()
 
@@ -3604,7 +3664,7 @@ def food_upload(request, space):
                 conversion = convert_file(document.file.path)
     context = {
         "space": space,
-        "documents": documents,
+        "document": document,
         "info": info,
         "conversion": conversion,
     }
