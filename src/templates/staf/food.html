@@ -1,10 +1,138 @@
 {% extends "_base.html" %}
 
 {% block content %}
+
   <h1>{% block title %}{{ info }}{% endblock %}</h1>
-  {% with link=PROJECT.slug|add:":libraryframe" %}
-    {% for each in viz %}
-      <iframe class="libraryitem card mt-3 mb-5" src="{% url link info.id %}?data-viz={{ each }}&hide_title=true" onload="resizeIframe(this)"></iframe>
+
+  {% include "staf/_menu.food.html" %}
+  {% if request.GET.sankey %}
+
+    <form>
+      <div class="row">
+
+        <div class="col">
+          <select name="aggregate" class="form-control">
+            <option value="true" {% if aggregate %}selected{% endif %}>Aggregate at top-level</option>
+            <option value="" {% if not aggregate %}selected{% endif %}>Disaggregate where possible</option>
+          </select>
+        </div>
+
+        <div class="col">
+          <select name="food_group" class="form-control">
+            <option value="">FILTER BY SPECIFIC FOOD GROUP</option>
+            {% for each in food_groups %}
+              <option {% if food_group == each.id %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col">
+          <input type="number" name="year" value="{{ year }}" placeholder="Year" class="form-control" />
+        </div>
+
+      </div>
+
+      <div class="row mt-2">
+        <div class="col">
+          <select name="figures" class="form-control">
+            <option value="annual">Show annual totals (tons/year)</option>
+            <option value="daily" {% if population %}selected{% endif %}>Show per-capita values (kg/year)</option>
+          </select>
+        </div>
+        <div class="col">
+          <input type="number" name="population" value="{{ population }}" placeholder="Population" class="form-control percapita" {% if not population %} style="display:none" {% endif %} />
+        </div>
+        <div class="col"></div>
+      </div>
+
+      <div class="form-actions mt-2">
+        <button type="submit" class="btn btn-primary">Generate sankey</button>
+        <input type="hidden" name="sankey" value="true" />
+      </div>
+
+    </form>
+
+
+    <div id="sankey"></div>
+
+  {% elif tab == "data" %}
+
+    {% for key,data_list in data.items %}
+      <h2 class="mt-3">{{ key }}</h2>
+      <table class="table table-striped datatable">
+        <thead>
+          <tr>
+            <th>Origin</th>
+            <th>Food</th>
+            <th>Group</th>
+            <th>Year</th>
+            <th>Quantity</th>
+            <th>Segment</th>
+            <th>Location</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for each in data_list %}
+          <tr>
+            <td>{{ each.origin }}</td>
+            <td>{{ each.material_name }}</td>
+            <td>{{ each.material.name }}</td>
+            <td>{{ each.dates_label }}</td>
+            <td>{{ each.quantity }} {{ each.unit.symbol }}</td>
+            <td>{{ each.segment_name }}</td>
+            <td>{{ each.origin_space }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
     {% endfor %}
-  {% endwith %}
+
+  {% else %}
+    {% with link=PROJECT.slug|add:":libraryframe" %}
+      {% for each in viz %}
+        <iframe class="libraryitem card mt-3 mb-5" src="{% url link info.id %}?data-viz={{ each.uid }}&hide_title=true" onload="resizeIframe(this)"></iframe>
+      {% endfor %}
+    {% endwith %}
+  {% endif %}
+
+{% endblock %}
+
+{% block footer %}
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/sankey.js"></script>
+<script src="https://code.highcharts.com/9.1.0/modules/exporting.js"></script>
+
+<script>
+Highcharts.chart("sankey", {
+
+    title: {
+        text: "Food system overview"
+    },
+    accessibility: {
+        point: {
+            valueDescriptionFormat: "{index}. {point.segment}. {point.from} to {point.to}, {point.weight}."
+        }
+    },
+    series: [{
+        keys: ["from", "to", "weight", "segment"],
+        data: [
+            {% for each in js_lines %}
+              {{ each|safe }}
+            {% endfor %}
+        ],
+        type: "sankey",
+        name: "{{ space }}"
+    }]
+
+});
+
+$("select[name='figures']").change(function(){
+  if ($(this).val() == "annual") {
+    $(".percapita").hide();
+  } else {
+    $(".percapita").show();
+  }
+});
+              
+</script>
 {% endblock %}

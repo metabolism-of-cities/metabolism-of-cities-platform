@@ -14,9 +14,10 @@ li.hide{display:none}
 
 {% block content %}
 
-  {% if info %}
+  <h1>Upload food system data</h1>
+  {% include "staf/_menu.food.html" %}
 
-    <h2><a href="{% url URLS.LIBRARY_ITEM info.id %}">{{ info }}</a></h2>
+  {% if info %}
 
     {% if conversion %}
 
@@ -64,6 +65,7 @@ li.hide{display:none}
       <h4>Current file</h4>
       <a href="{{ info.attachments.all.0.file.url }}">{{ info.attachments.all.0.name }}</a> - 
       {{ info.attachments.all.0.get_size }}
+      (<a href="{% url URLS.LIBRARY_ITEM info.id %}">View details</a>)
 
       {% if conversion %}
         <form method="post" class="mt-3">

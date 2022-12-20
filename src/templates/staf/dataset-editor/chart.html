@@ -215,6 +215,18 @@
                 <i class="fa fa-question-circle" title="You can enter the ID of a specific process, and data will be filtered to only include those linked to that process."></i>
               </label>
               <input name="process" class="form-control" value="{{ properties.process }}" />
+
+              <label class="category mt-3">Date-based filtering
+                <i class="fa fa-question-circle" title="You can set a start and/or end date, and only data from this period will be shown."></i>
+              </label>
+              <div class="row">
+                <div class="col">
+                  <input name="start_date" class="form-control" value="{{ properties.start_date }}" placeholder="Start date" type="date" />
+                </div>
+                <div class="col">
+                  <input name="end_date" class="form-control" value="{{ properties.end_date }}" placeholder="End date" type="date" />
+                </div>
+              </div>
             {% endif %}
 
             <label class="category mt-3">Other settings</label>
@@ -719,7 +731,7 @@
       $(".tab-pane[data-drilldown='true']").removeClass("loading");
     });
 
-    {% if not properties and not info.is_secondary %}
+    {% if not properties and not info.is_secondary and not secondary_viz_list %}
       $("#first-run-modal").modal("show");
     {% endif %}
 

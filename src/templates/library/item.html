@@ -376,7 +376,7 @@
                 </a>
               {% else %}
                 {% with link=PROJECT.slug|add:":chart_editor" %}
-                  <a href="{% url link info.id %}?next={{ request.get_full_path }}" class="list-group-item list-group-item-action list-group-item-primary">
+                  <a href="{% url link info.id %}?next={{ request.get_full_path }}{% if active_data_viz %}&amp;viz={{ active_data_viz.id }}{% endif %}" class="list-group-item list-group-item-action list-group-item-primary">
                     <i class="fal fa-fw fa-{% if info.is_map %}map-marker-edit{% else %}chart-pie{% endif %} mr-1"></i> {% if info.is_map %}Map{% else %}Chart{% endif %} editor
                   </a>
                 {% endwith %}
@@ -652,7 +652,22 @@
       {% if data_count %}
         <section>
           <h3>Data</h3>
+
+          {% if all_data_viz %}
+            <em>The following data visualisations are available:</em>
+            <ul class="mt-2 mb-3">
+              {% for each in all_data_viz %}
+                <li>{% if each == active_data_viz %}{{ each }}{% else %}<a href="?data-viz={{ each.uid }}">{{ each }}</a>{% endif %}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+
           {% include "_data.visualizations.html" %}
+
+          {% if active_data_viz %}
+            <div class="mb-3"><a href="./">Back to main data visualisation</a></div>
+          {% endif %}
+
         </section>
       {% endif %}
 

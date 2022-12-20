@@ -427,8 +427,11 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     if data_count:
 
         if "data-viz" in request.GET:
-            properties = DataViz.objects.get(pk=request.GET["data-viz"]).meta_data.get("properties")
-        else:
+            active_data_viz = DataViz.objects.get(pk=request.GET["data-viz"])
+            if active_data_viz.meta_data:
+                properties = active_data_viz.meta_data.get("properties")
+
+        if not properties:
             properties = info.get_dataviz_properties
 
         load_datatables = True
@@ -488,6 +491,11 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         # The following we'll only have during the AScUS voting round; remove afterwards
         #"best_vote": RecordRelationship.objects.filter(relationship_id=32, record_parent=request.user.people) if request.user.is_authenticated else None,
     }
+
+    if info.meta_data and "show_all_data_viz" in info.meta_data:
+        context["all_data_viz"] = DataViz.objects.filter(source=info, is_secondary=True)
+        if "data-viz" in request.GET:
+            context["active_data_viz"] = active_data_viz
 
     if data_layout and data.all():
         context["data_materials"] = data.values("material_name", "material_id").distinct().order_by("material_name")
@@ -607,6 +615,14 @@ def fetch_data_in_json_object(dataset, cache_key, parameters):
 
     if "process" in parameters:
         data = data.filter(Q(origin_id=parameters["process"])|Q(destination_id=parameters["process"]))
+
+    if "start_date" in parameters:
+        start_date = parse(parameters["start_date"])
+        data = data.filter(date_start__gte=start_date)
+
+    if "end_date" in parameters:
+        end_date = parse(parameters["end_date"])
+        data = data.filter(date_end__lte=end_date)
 
     x_axis = []
     stacked_fields = []

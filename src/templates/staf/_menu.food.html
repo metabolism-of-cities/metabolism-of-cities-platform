@@ -1,0 +1,14 @@
+{% with link=PROJECT.slug|add:":food" %}
+  <a class="float-right {% if tab == 'upload' %} active{% endif %}" href="{% url link space.slug %}upload/"><i class="fa fa-database"></i> Manage dataset</a>
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+      <a class="nav-link{% if tab == 'graphs' %} active{% endif %}" href="{% url link space.slug %}?graphs=true">Graphs</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link{% if tab == 'sankey' %} active{% endif %}" href="{% url link space.slug %}?sankey=true">Sankey diagram</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link{% if tab == 'data' %} active{% endif %}" href="{% url link space.slug %}?data=true">Data</a>
+    </li>
+  </ul>
+{% endwith %}

@@ -3524,8 +3524,75 @@ def food(request, space):
     context = {
         "space": space,
         "info": info,
-        "viz": [267, 268, 269, 270, 271, 272],
+        "viz": DataViz.objects.filter(source=info, is_secondary=True),
+        "tab": "graphs",
     }
+
+    if "sankey" in request.GET:
+        blocks = FlowBlocks.objects.filter(diagram_id=1015040)
+        all_data = info.data.all()
+        js_lines = []
+
+        aggregate = False
+        if request.GET.get("aggregate") == "true":
+            aggregate = True
+
+        if "food_group" in request.GET and request.GET.get("food_group"):
+            material = int(request.GET["food_group"])
+            # TODO: use the filtering by parent instead of this Q query
+            all_data = all_data.filter(Q(material_id=material)|Q(material__parent_id=material))
+            context["food_group"] = material
+
+        if "year" in request.GET and request.GET.get("year"):
+            year = int(request.GET["year"])
+            context["year"] = year
+            all_data = all_data.filter(date_start__year=year)
+
+        multiplier = 1
+        if request.GET.get("figures") == "daily" and request.GET.get("population"):
+            population = int(request.GET["population"])
+            context["population"] = population
+            multiplier = 1000/population/365
+
+        for each in blocks:
+            data = all_data.filter(origin=each.origin, destination=each.destination).values("segment_name").annotate(total=Sum("quantity")).order_by("segment_name")
+            if data:
+                if data.count() > 1 and not aggregate:
+                    for each_data in data:
+                        total = round(each_data['total']*multiplier, 1)
+                        js_lines.append(f"['{each.get_origin}', '{each_data['segment_name']}', {total}],")
+                        js_lines.append(f"['{each_data['segment_name']}', '{each.get_destination}', {total}],")
+
+                else:
+                    for each_data in data:
+                        total = round(each_data['total']*multiplier, 1)
+                        if each_data['segment_name']:
+                            js_lines.append(f"['{each.get_origin}', '{each.get_destination}', {total}, '{each_data['segment_name']}'],")
+                        else:
+                            js_lines.append(f"['{each.get_origin}', '{each.get_destination}', {total}],")
+
+                    # Temp quick fix...
+                    if each.origin.name == "Production" and each.destination.name == "Food supply":
+                        js_lines.append(f"['{space.name}', 'Production', {total}],")
+                    # END TEMP FIX
+
+            else:
+                js_lines.append(f"['{each.get_origin}', '{each.get_destination}', 0],")
+
+        context["js_lines"] = js_lines
+        food_catalog = MaterialCatalog.objects.get(name="Food catalog")
+        context["food_groups"] = Material.objects.filter(catalog=food_catalog)
+
+        context["aggregate"] = aggregate
+        context["tab"] = "sankey"
+
+    elif "data" in request.GET:
+        processes = info.data.all().values("destination__name").order_by("destination__name").distinct()
+        context["data"] = {}
+        for each in processes:
+            context["data"][each["destination__name"]] = (info.data.filter(destination__name=each["destination__name"]))
+        context["tab"] = "data"
+        context["load_datatables"] = True
 
     if "load_categories" in request.GET:
         categories = [
@@ -3552,7 +3619,6 @@ def food(request, space):
             "Vegetables",
             "Other (processed foods)",
             "Animal feed",
-            "Non-food agricultural products",
         ]
         check = MaterialCatalog.objects.get(name="Food catalog")
         if check:
@@ -3561,13 +3627,16 @@ def food(request, space):
             existing = Material.objects.filter(catalog=catalog)
             existing.delete()
 
+            parent_material = Material.objects.create(name="Food and food products", catalog=catalog, code="FOOD")
+            Material.objects.create(name="Non-food agricultural products", catalog=catalog, code="NONFOOD")
+
             for each in categories:
                 c = c+1
                 if c < 10:
                     code = f"FOOD.0{c}"
                 else:
                     code = f"FOOD.{c}"
-                Material.objects.create(name=each, catalog=catalog, code=code)
+                Material.objects.create(name=each, catalog=catalog, code=code, parent=parent_material)
 
             messages.success(request, f"New categories were saved!")
 
@@ -3588,7 +3657,7 @@ def food_upload(request, space):
     else:
         documents = available_library_items(request).filter(tags=tag_id, spaces=space)
         if documents:
-            document = documents[0]
+            info = documents[0]
 
     if request.method == "POST":
 
@@ -3611,10 +3680,22 @@ def food_upload(request, space):
             info = LibraryItem.objects.create(
                 type_id = 10,
                 name = f"Food system dataset for {space}",
+                meta_data = {
+                    "show_all_data_viz": True,
+                    "processing": {},
+                }
             )
             info.tags.add(Tag.objects.get(pk=tag_id))
             info.spaces.add(space)
             info.part_of_project_id = request.project
+
+            standard_visualizations = [267, 268, 269, 270, 271, 272]
+            viz = DataViz.objects.filter(pk__in=standard_visualizations)
+            max_uid = DataViz.objects.all().order_by("-uid")[0]
+            uid = max_uid.uid
+            for each in viz:
+                uid = uid + 1
+                DataViz.objects.create(uid=uid, source=info, name=each.name, meta_data=each.meta_data, is_secondary=each.is_secondary)
 
             RecordRelationship.objects.create(
                 record_parent = request.user.people,
@@ -3646,9 +3727,6 @@ def food_upload(request, space):
                 else:
                     document = Document.objects.create(name=file_name, is_public=True, attached_to=info, file=ContentFile(file_content, name=file_name))
             
-                if not info.meta_data:
-                    info.meta_data = {}
-                    info.meta_data["processing"] = {}
                 info.meta_data["processing"]["file"] = document.id
                 info.meta_data["processing"]["source"] = space.source
                 info.meta_data["ready_for_processing"] = True
@@ -3667,6 +3745,7 @@ def food_upload(request, space):
         "document": document,
         "info": info,
         "conversion": conversion,
+        "tab": "upload",
     }
     return render(request, "staf/food.upload.html", context)
 

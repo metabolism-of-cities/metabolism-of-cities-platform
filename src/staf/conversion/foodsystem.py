@@ -4,15 +4,6 @@ import numpy as np
 import calendar
 from core.models import Material
 
-CONVERSION_STEPS = {
-    1: "Preliminary review of rows and columns",
-    2: "Check processes",
-    3: "Check food groups",
-    4: "Check dates",
-    5: "Check quantities",
-    6: "Check optional granularity",
-}
-
 def convert_file(file, return_csv=False):
 
     df = pd.read_excel(file)
@@ -24,11 +15,11 @@ def convert_file(file, return_csv=False):
     df.dropna(how="all", inplace=True) 
 
     try:
-        item_list = df["Process"].unique().tolist()
+        item_list = df["Origin"].unique().tolist()
         text = "The following processes have been identified:"
         error = False
     except:
-        text = "No 'Process' column found"
+        text = "No 'Origin' column found"
         item_list = None
         error = True
 
@@ -46,7 +37,7 @@ def convert_file(file, return_csv=False):
         all_food_groups = Material.objects.values_list("name", flat=True).filter(catalog_id=1014866)
         item_list = []
         for each in all:
-            if each not in all_food_groups:
+            if each.strip() not in all_food_groups:
                 error = True
                 text = "These food groups are not part of the official list; please check the spelling:"
                 item_list.append(each)
@@ -86,7 +77,7 @@ def convert_file(file, return_csv=False):
         invalid_numbers.index += 2 # Make the row numbers match those shown in a spreadsheet program
         if invalid_numbers.shape[0]:
             error = True
-            columns_to_keep = ["Process", "Food name"]
+            columns_to_keep = ["Origin", "Food name"]
             table = invalid_numbers[columns_to_keep]
             text = "We have found the following rows containing invalid quantities:"
         else:
@@ -128,16 +119,17 @@ def convert_file(file, return_csv=False):
             "Location": "location",
             "Segment": "segment",
             "Food name": "material",
-            "Process": "process",
+            "Origin": "process_origin",
+            "Destination": "process_destination",
             "Food group": "material_code",
         }
-        df.rename(columns = col_names, inplace = True)
+        df.rename(columns=col_names, inplace=True)
 
         processes = {
             "Production": 1014853,
             "Food supply": 1014854,
             "Imports": 1014855,
-            "Exports": 1014855, ##### MUST BE FIXED!!
+            "Exports": 1015083,
             "Retail sales": 1014856,
             "Waste": 1014857,
             "Food consumption": 1014858,
@@ -148,14 +140,19 @@ def convert_file(file, return_csv=False):
         for each in all_food_groups:
             replacements[each.name] = each.code
 
+        df["material_code"] = df["material_code"].str.strip() # Remove trailing spaces
         df["material_code"] = df["material_code"].replace(replacements)
 
-        df["process"] = df["process"].replace(processes)
+        df["process_destination"] = df["process_destination"].replace(processes)
+        df["process_origin"] = df["process_origin"].replace(processes)
 
         # Temp fix to get the right location for now
         df = df.drop(["location"], axis=1)
         df["location"] = return_csv
         df["comment"] = ""
 
-        df = df[["period_name", "start_date", "end_date", "material", "material_code", "quantity", "unit", "location", "comment", "segment", "process"]]
+        # We end up with a number of segments that are nan, so let's make those fields blank instead
+        df = df.fillna("")
+
+        df = df[["period_name", "start_date", "end_date", "material", "material_code", "quantity", "unit", "location", "comment", "segment", "process_origin", "process_destination"]]
         return df.to_csv(None, index=None)

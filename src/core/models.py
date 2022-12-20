@@ -1601,10 +1601,14 @@ class LibraryItem(Record):
             if "materials_catalog" in self.meta_data["processing"]:
                 materials_catalog = self.meta_data["processing"]["materials_catalog"]
 
+            # We end up with a number of segments or comments that are nan, so let's make those fields blank instead
+            df = df.fillna("")
+
             for row in df.itertuples():
                 if not error:
                     try:
                         process_origin = None
+                        process_destination = None
                         if this_type == "flows":
                             period = row[1]
                             start = row[2]
@@ -1625,6 +1629,10 @@ class LibraryItem(Record):
                                 process_origin = row[11]
                             except:
                                 process_origin = None
+                            try:
+                                process_destination = row[12]
+                            except:
+                                process_destination = None
                         elif this_type == "stock":
                             period = row[1]
                             start = row[1]
@@ -1715,6 +1723,7 @@ class LibraryItem(Record):
                                 date_end = end,
                                 dates_label = period,
                                 origin_id = process_origin,
+                                destination_id = process_destination,
                             ))
                         except Exception as e:
                             error = f"We were unable to add your item - this is the error that came back: {e} is invalid"
@@ -2745,15 +2754,19 @@ class FlowBlocks(models.Model):
     def __str__(self):
         return self.description if self.description else self.origin.name + " → " + self.destination.name
 
+    @property
     def get_destination(self):
         return self.destination_label if self.destination_label else self.destination.name
 
+    @property
     def get_origin(self):
         return self.origin_label if self.origin_label else self.origin.name
 
+    @property
     def get_destination_slug(self):
         return slugify(self.destination_label) if self.destination_label else slugify(self.destination.name)
 
+    @property
     def get_origin_slug(self):
         return slugify(self.origin_label) if self.origin_label else slugify(self.origin.name)
 
