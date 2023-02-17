@@ -216,10 +216,10 @@ class ZoteroImport(CronJobBase):
             zotero_id = collection.zotero_id
 
             zot = zotero.Zotero(zotero_id, "group", api)
-            #list = zot.top(limit=5)
-            list = zot.everything(zot.top())
+            #publication_list = zot.top(limit=5)
+            publication_list = zot.everything(zot.top())
 
-            for each in list:
+            for each in publication_list:
                 try:
                     info = ZoteroItem.objects.get(key=each["data"].get("key"))
                     info.data = each["data"]
