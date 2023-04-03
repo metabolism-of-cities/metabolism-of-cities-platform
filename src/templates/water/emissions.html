@@ -1,0 +1,65 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block head %}
+<style type="text/css">
+.period-dropdown{display:none}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link waterlink active" href="#" data-id="w1">Niveau 1</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link waterlink disabled" href="#" data-id="w2">Niveau 2</a>
+  </li>
+
+  <li class="nav-item ml-auto">
+    <a class="nav-link button" id="current-period" href="#" >Period: Jan-Dec 2022 
+
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+  <path d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659z"/>
+</svg>
+
+    </a>
+  </li>
+</ul> 
+
+<form class="form form-inline period-dropdown p-2 float-right">
+  <select class="form-control mr-2">
+    <option value="">Jan 2022</option>
+  </select>
+  <select class="form-control mr-2">
+    <option value="">Dec 2022</option>
+  </select>
+  <button type="submit" class="btn btn-success">Change</button>
+</form>
+
+<div class="watergraphs">
+  <div id="w1">
+  <img src="/media/water/sankeys/emissions1.png" style="max-width:100%;min-width:1110px" alt="" id="w1" usemap="#map" />
+
+  </div>
+  <div id="w2">
+  </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+$(function(){
+  $(".waterlink").click(function(e){
+    e.preventDefault();
+  });
+  $("#current-period").click(function(e){
+    e.preventDefault();
+    $(".period-dropdown").slideDown("fast");
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block head %}
+<style type="text/css">
+#w2{display:none}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link waterlink active" href="#" data-id="w1">Niveau 1</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link waterlink" href="#" data-id="w2">Niveau 2</a>
+  </li>
+
+  <li class="nav-item dropdown ml-auto">
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">Année: 2020</a>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="#">2020</a>
+      <a class="dropdown-item disabled" href="#">2019</a>
+      <a class="dropdown-item disabled" href="#">2018</a>
+    </div>
+  </li>
+</ul> 
+
+<div class="watergraphs">
+  <div id="w1">
+  <img src="/media/water/sankeys/energy1.png" style="max-width:100%;min-width:1110px" alt="" id="w1" usemap="#map" />
+
+  </div>
+  <div id="w2">
+    <img src="/media/water/sankeys/energy2.png?refresh" style="max-width:100%" alt="" />
+  </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+$(function(){
+  $(".waterlink").click(function(e){
+    $(".waterlink").removeClass("active");
+    $(this).addClass("active");
+    e.preventDefault();
+    var id = $(this).data("id");
+    console.log(id);
+    $(".watergraphs div").hide();
+    $("#" + id).show();
+  });
+});
+</script>
+{% endblock %}

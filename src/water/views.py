@@ -104,6 +104,68 @@ def infrastructure(request):
     space = ActivatedSpace.objects.get(part_of_project_id=request.project, space_id=request.GET["region"])
     return staf.space_map(request, space.space.slug)
 
+def energy(request):
+    context = {
+        "title": "Energies",
+        "section": "energy",
+        "link": reverse("water:energy"),
+    }
+    return render(request, "water/energy.html", context)
+
+def emissions(request):
+    context = {
+        "title": "Gaz à effets de serre",
+        "section": "emissions",
+        "link": reverse("water:emissions"),
+    }
+    return render(request, "water/emissions.html", context)
+
+def about(request):
+    context = {
+        "title": "A propos",
+        "hide_submenu": True,
+        "section": "about",
+    }
+    return render(request, "water/about.html", context)
+
+def contact(request):
+    context = {
+        "title": "Contact",
+        "hide_submenu": True,
+        "section": "contact",
+    }
+    return render(request, "water/contact.html", context)
+
+def water_login(request):
+    project = get_project(request)
+    redirect_url = project.get_website()
+    if request.GET.get("next"):
+        redirect_url = request.GET.get("next")
+
+    if request.user.is_authenticated:
+        return redirect(reverse("water:index"))
+
+    if request.method == "POST":
+        email = request.POST.get("email").lower()
+        password = request.POST.get("password")
+        user = authenticate(request, username=email, password=password)
+
+        if user is not None:
+            login(request, user)
+            messages.success(request, "You are logged in.")
+            return redirect(redirect_url)
+        else:
+            messages.error(request, "We could not authenticate you, please try again.")
+
+    context = {
+        "project": project,
+        "load_url_fixer": True,
+        "reset_link": project.slug + ":password_reset",
+        "section": "login",
+        "hide_submenu": True,
+    }
+    return render(request, "auth/login.html", context)
+
 @staff_member_required
 def temp_script(request):
 

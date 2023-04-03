@@ -217,7 +217,7 @@
   {% include "_submenu-ascus2020.html" %}
 {% elif PROJECT.slug == "ascus2021" and request.user.is_authenticated %}
   {% include "_submenu-ascus2021.html" %}
-{% elif PROJECT.slug == "water" %}
+{% elif PROJECT.slug == "water" and not hide_submenu %}
   {% include "_submenu-water.html" %}
 {% elif PROJECT.id == 16 and request.user.is_authenticated %}
   {% if my_organization %}

@@ -1,19 +1,34 @@
 <li class="nav-item">
-  <a class="nav-link {% if not section or section == "flows" %}active{% endif %}" href="{% url "water:index" %}?region=1012156"><i class="fal fa-fw fa-tint"></i> Eaux</a>
+  <a class="nav-link {% if not section or section == "flows" %}active{% endif %}" href="{% url "water:index" %}?region=1012156"> Eaux</a>
 </li>
 <div class="nav-divider"></div>
 <li class="nav-item">
-  <a class="nav-link {% if section == "map" %}active{% endif %}" href="{% url "water:infrastructure" %}?region=1012156"><i class="fal fa-fw fa-layer-group"></i> Infrastructure</a>
+  <a class="nav-link {% if section == "energy" %}active{% endif %}" href="{% url "water:energy" %}?region=1012156"> Energies</a>
 </li>
 <div class="nav-divider"></div>
 <li class="nav-item">
-  <a class="nav-link disabled" href="#"><i class="fal fa-fw fa-chimney"></i> Matières</a>
+  <a class="nav-link {% if section == "emissions" %}active{% endif %}" href="{% url "water:emissions" %}?region=1012156"> Gaz à effets de serre</a>
 </li>
 <div class="nav-divider"></div>
 <li class="nav-item">
-  <a class="nav-link disabled" href="#"><i class="fal fa-fw fa-building"></i> Stocks</a>
+  <a class="nav-link disabled" href="#"> Matières</a>
 </li>
 <div class="nav-divider"></div>
 <li class="nav-item">
-  <a class="nav-link disabled" href="#"><i class="fal fa-fw fa-bolt"></i> Energies</a>
+  <a class="nav-link disabled" href="#"> Stocks</a>
 </li>
+{% if not user.is_authenticated %}
+<div class="nav-divider"></div>
+<li class="nav-item">
+  <a class="nav-link {% if section == "login" %}active{% endif %}" href="{% url "water:water_login" %}"> Se connecter</a>
+</li>
+{% endif %}
+<div class="nav-divider"></div>
+<li class="nav-item">
+  <a class="nav-link {% if section == "about" %}active{% endif %}" href="{% url "water:about" %}"> A propos</a>
+</li>
+<div class="nav-divider"></div>
+<li class="nav-item">
+  <a class="nav-link {% if section == "contact" %}active{% endif %}" href="{% url "water:contact" %}"> Contact</a>
+</li>
+<div class="nav-divider"></div>
