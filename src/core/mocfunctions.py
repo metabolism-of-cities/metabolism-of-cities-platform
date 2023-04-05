@@ -217,11 +217,11 @@ def work_item_unvote(info, people):
 NICE_REGIONS = {
     "MNCA": 1012156,
     "Nice": 1012173,
-    "Tinée": 1012172,
-    "Vésubie": 1012177,
-    "Moyen Pays Rive Gauche": 1012176,
     "Rive Droite": 1012175,
     "Est-Littoral": 1012174,
+    "Moyen Pays Rive Gauche": 1012176,
+    "Tinée": 1012172,
+    "Vésubie": 1012177,
 }
 
 # For some of the websites users might have access to documents that are not 
