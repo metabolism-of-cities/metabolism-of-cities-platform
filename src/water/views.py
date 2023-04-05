@@ -269,12 +269,7 @@ def dashboard(request):
 
 def diagram(request):
 
-    try:
-        doc = available_library_items(request).get(pk=DIAGRAM_ID)
-    except:
-        messages.warning(request, "Please log in first.")
-        return redirect(reverse("water:login") + "?next=" + request.get_full_path())
-
+    doc = available_library_items(request).get(pk=DIAGRAM_ID)
     file = doc.attachments.all()[0]
 
     from openpyxl import load_workbook
