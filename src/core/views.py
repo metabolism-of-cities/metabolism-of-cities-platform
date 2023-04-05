@@ -888,6 +888,10 @@ def controlpanel(request, space=None):
     if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
+    project = get_project(request)
+    if project.slug == "water":
+        return redirect(reverse("water:controlpanel_index"))
+
     if space:
         space = get_space(request, space)
 

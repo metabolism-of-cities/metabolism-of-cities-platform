@@ -27,7 +27,8 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("contact/", views.contact, name="contact"),
     path("login/", views.water_login, name="water_login"),
 
-    path("controlpanel/diagram/", views.controlpanel_diagram, name="controlpanel_diagram"),
+    path("controlpanel/index/", views.controlpanel_index, name="controlpanel_index"),
+    path("controlpanel/upload/", views.controlpanel_upload, name="controlpanel_upload"),
     path("controlpanel/data/", views.controlpanel_data, name="controlpanel_data"),
 
     path("temp/", views.temp_script),

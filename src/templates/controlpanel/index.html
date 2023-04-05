@@ -7,35 +7,6 @@
 
   <section class="row">
 
-    {% if PROJECT.slug == "water" %}
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="{% url "water:controlpanel_data" %}">
-          <div class="icon">
-            <i class="fal fa-fw fa-database"></i>
-          </div>
-          <div class="card-header">Master dataset</div>
-        </a>
-      </div>
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="{% url "water:controlpanel_diagram" %}">
-          <div class="icon">
-            <i class="fal fa-fw fa-exchange"></i>
-          </div>
-          <div class="card-header">Sankey data</div>
-        </a>
-      </div>
-      <div class="col-md-3 mb-3">
-        {% with link=PROJECT.slug|add:":hub_harvesting_space" %}
-        <a class="card icon-card btn-card" href="{% url link "metropole-nice-cote-dazur" %}">
-        {% endwith %}
-          <div class="icon">
-            <i class="fal fa-fw fa-server"></i>
-          </div>
-          <div class="card-header">All datasets</div>
-        </a>
-      </div>
-    {% endif %}
-
     <div class="col-md-3 mb-3">
       <a class="card icon-card btn-card" href="project/">
         <div class="icon">
@@ -85,7 +56,7 @@
 
   </section>
 
-  <section class="hide-water">
+  <section>
     <h2>Content</h2>
     <div class="row">
 
@@ -222,7 +193,7 @@
   </section>
 
   {% if IS_DATA_PORTAL %}
-    <section class="hide-water">
+    <section>
       <h2>Data management</h2>
       <div class="row">
         <div class="col-md-3 mb-3">

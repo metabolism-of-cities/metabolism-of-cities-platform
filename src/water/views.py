@@ -84,6 +84,7 @@ def index(request):
         "regions": NICE_REGIONS,
         "infrastructure": infrastructure,
         "documents": available_library_items(request).filter(tags__in=infrastructure),
+        "show_submenu": True,
     }
     return render(request, "water/index.html", context)
 
@@ -109,6 +110,7 @@ def energy(request):
         "title": "Energies",
         "section": "energy",
         "link": reverse("water:energy"),
+        "show_submenu": True,
     }
     return render(request, "water/energy.html", context)
 
@@ -117,13 +119,13 @@ def emissions(request):
         "title": "Gaz à effets de serre",
         "section": "emissions",
         "link": reverse("water:emissions"),
+        "show_submenu": True,
     }
     return render(request, "water/emissions.html", context)
 
 def about(request):
     context = {
         "title": "A propos",
-        "hide_submenu": True,
         "section": "about",
     }
     return render(request, "water/about.html", context)
@@ -131,7 +133,6 @@ def about(request):
 def contact(request):
     context = {
         "title": "Contact",
-        "hide_submenu": True,
         "section": "contact",
     }
     return render(request, "water/contact.html", context)
@@ -162,7 +163,6 @@ def water_login(request):
         "load_url_fixer": True,
         "reset_link": project.slug + ":password_reset",
         "section": "login",
-        "hide_submenu": True,
     }
     return render(request, "auth/login.html", context)
 
@@ -358,11 +358,22 @@ def diagram(request):
         "infrastructure": infrastructure, 
         "documents": available_library_items(request).filter(tags__in=infrastructure).prefetch_related("tags"),
         "documents_flows": available_library_items(request).filter(tags__in=flows),
+        "show_submenu": True,
+        "section": "water",
     }
     return render(request, "water/diagram.html", context)
 
 @login_required
-def controlpanel_diagram(request):
+def controlpanel_index(request):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    context = {
+    }
+    return render(request, "water/controlpanel.index.html", context)
+
+@login_required
+def controlpanel_upload(request):
     if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
@@ -378,7 +389,7 @@ def controlpanel_diagram(request):
     context = {
         "info": info,
     }
-    return render(request, "water/controlpanel.diagram.html", context)
+    return render(request, "water/controlpanel.upload.html", context)
 
 @login_required
 def controlpanel_data(request):

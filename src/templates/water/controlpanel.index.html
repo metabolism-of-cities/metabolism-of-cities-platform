@@ -1,0 +1,68 @@
+{% extends "_base.html" %}
+
+{% block page_name %}stafcp controlpanel{% endblock %}
+{% block content %}
+
+  <h2>Control Panel</h2>
+
+  <section class="row">
+
+      <div class="col-md-3 mb-3">
+        <a class="card icon-card btn-card" href="{% url "water:controlpanel_upload" %}">
+          <div class="icon">
+            <i class="fal fa-fw fa-exchange"></i>
+          </div>
+          <div class="card-header">Sankey data</div>
+        </a>
+      </div>
+
+    <div class="col-md-3 mb-3">
+      <a class="card icon-card btn-card" href="../design/">
+        <div class="icon">
+          <i class="fal fa-fw fa-ruler"></i>
+        </div>
+        <div class="card-header">Website design</div>
+      </a>
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <a class="card icon-card btn-card" href="../users/">
+        <div class="icon">
+          <i class="fal fa-fw fa-users-medical"></i>
+        </div>
+        <div class="card-header">Team</div>
+      </a>
+    </div>
+
+  </section>
+
+  <h2>Work-in-progress</h2>
+
+  <p>
+    Parts of these sections have been built, but development has been paused until 
+    required data can be made available. The links and code are conserved here for
+    future use.
+  </p>
+
+  <section class="row">
+      <div class="col-md-3 mb-3">
+        <a class="card icon-card btn-card" href="{% url "water:controlpanel_data" %}">
+          <div class="icon">
+            <i class="fal fa-fw fa-database"></i>
+          </div>
+          <div class="card-header">Master dataset</div>
+        </a>
+      </div>
+      <div class="col-md-3 mb-3">
+        {% with link=PROJECT.slug|add:":hub_harvesting_space" %}
+        <a class="card icon-card btn-card" href="{% url link "metropole-nice-cote-dazur" %}">
+        {% endwith %}
+          <div class="icon">
+            <i class="fal fa-fw fa-server"></i>
+          </div>
+          <div class="card-header">All datasets</div>
+        </a>
+      </div>
+  </section>
+
+{% endblock %}

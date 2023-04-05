@@ -1,0 +1,78 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h2>{% block title %}Sankey diagram data{% endblock %}</h2>
+
+  <div class="row">
+    <div class="col-12">
+      <form method="post">
+        
+        <div class="mb-3">
+          <label class="form-label">Type</label>
+          <select class="form-control" name="name">
+            <option value=""></option>
+            <option value="water">Eaux</option>
+            <option value="energy">Energies</option>
+            <option value="emissions">Gaz à effets de serre</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">File</label>
+          <input type="file" class="form-control" name="file">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary"><i class="fa fa-arrow-right"></i> Next</button>
+        </div>
+        {% csrf_token %}
+      </form>
+      <h3 class="mt-5">Download templates:</h3>
+      <p>
+        You can use the templates below to upload new data. 
+      </p>
+      <a href="/media/water/templates/water.xls" class="btn btn-secondary">
+        <i class="fa fa-download"></i>
+        Water data template
+      </a>
+      <a href="/media/water/templates/energy.xls" class="btn btn-secondary">
+        <i class="fa fa-download"></i>
+        Energy data template
+      </a>
+      <a href="/media/water/templates/emissions.xls" class="btn btn-secondary">
+        <i class="fa fa-download"></i>
+        Emissions data template
+      </a>
+      <div class="alert alert-info mt-2">
+      <p><strong>Instructions:</strong></p>
+      <ul>
+        <li>
+          If you are uploading data for a single year, then leave the 'Mois' column empty.
+          Fill out the year in the 'An' column and then fill out the values for each of the 
+          territories.
+        </li>
+        <li>
+          If you are uploading data for a single month, then enter the month number (January = 1, 
+          December = 12) under 'Mois', and enter the year under 'An'. Then fill out the values for 
+          each of the territories.
+        </li>
+        <li>
+          If you are uploading data for multiple months, then start with the steps above to fill
+          out the first month, and then copy all the rows for each of the flows and paste them 
+          below the existing rows. Change the month number and fill out the values for each
+          of the territories. You can repeat this as many times as you want.
+        </li>
+        <li>
+          Please fill out data using the following units:
+          <ul>
+            <li>Water: km3</li>
+            <li>Energy: MWh</li>
+            <li>Emissions: TCO2EQ</li>
+          </ul>
+        </li>
+      </ul>
+      </div>
+
+    </div>
+  </div>
+
+{% endblock %}
