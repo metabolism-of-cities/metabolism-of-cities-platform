@@ -18,82 +18,17 @@ from django.core.files.base import ContentFile
 DIAGRAM_ID = 1013292
 
 def index(request):
+    return redirect(reverse("water:water") + "?region=1012156")
 
-    return redirect(reverse("water:diagram") + "?region=1012156")
-
-    input = [
-        #{"name": "Precipitation", "logo": "cloud-showers-heavy"},
-        {"name": "Ground water extraction", "logo": "water-rise"},
-        {"name": "Surface water", "logo": "water"},
-        {"name": "Rain water harvesting", "logo": "raindrops"},
-        {"name": "Imports", "logo": "arrow-to-right"},
-    ]
-    output = [
-        {"name": "Exports", "logo": "arrow-from-left"},
-        {"name": "Leaks and losses", "logo": "house-flood"},
-        {"name": "Dissipative use", "logo": "sprinkler"},
-    ]
-    consumption = [
-        {"name": "Residents", "logo": "shower"},
-        {"name": "Government", "logo": "faucet-drip"},
-        {"name": "Industry", "logo": "industry"},
-        {"name": "Agriculture", "logo": "tractor"},
-    ]
-    distribution = [
-        {"name": "Reservoirs", "logo": "rectangle-wide"},
-        {"name": "Reticulation system", "logo": "chart-network"},
-        {"name": "Material stock analysis", "logo": "chimney"},
-        {"name": "Water meters", "logo": "tachometer", "id": 1010649},
-    ]
-    production = [
-        {"name": "Water treatment plants", "logo": "ball-pile"},
-        {"name": "Energy analysis", "logo": "bolt"},
-        {"name": "Material flow analysis", "logo": "th-list"},
-        {"name": "Material stock analysis", "logo": "chimney"},
-    ]
-    waste = [
-        {"name": "Wastewater treatment plants", "logo": "toilet", "id": 1010500},
-        {"name": "Energy analysis", "logo": "bolt"},
-        {"name": "Material flow analysis", "logo": "th-list"},
-        {"name": "Material stock analysis", "logo": "chimney"},
-    ]
-    test = [
-        {"name": "XXX", "logo": "XXXX"},
-    ]
-
-    # Temporary function to assign GPS coordinates to reference spaces
-    # while we wait for the final GPS coordinates to be provided
-    if "random_gps" in request.GET and request.user.id == 1:
-        from django.contrib.gis.geos import Point
-        import random 
-        spaces = ReferenceSpace.objects_include_private.filter(source_id=request.GET["random_gps"])
-        for space in spaces:
-            lat = random.randrange(4360,4430)/100
-            lng = random.randrange(6870,7390)/1000
-            space.geometry = Point(lng, lat)
-            space.save()
-
-    infrastructure = Tag.objects.filter(parent_tag_id=1766)
+def water(request):
     context = {
-        "input": input,
-        "output": output,
-        "consumption": consumption,
-        "distribution": distribution,
-        "production": production,
-        "waste": waste,
+        "title": "Eau",
         "regions": NICE_REGIONS,
-        "infrastructure": infrastructure,
-        "documents": available_library_items(request).filter(tags__in=infrastructure),
+        "link": reverse("water:water"),
         "show_submenu": True,
+        "section": "water",
     }
-    return render(request, "water/index.html", context)
-
-def demo(request):
-    return redirect(reverse("water:diagram") + "?region=1012156")
-    context = {
-        "title": "Home",
-    }
-    return render(request, "water/demo.html", context)
+    return render(request, "water/water.html", context)
 
 def water_map(request):
     context = {
@@ -267,102 +202,6 @@ def dashboard(request):
     }
     return render(request, "water/dashboard.html", context)
 
-def diagram(request):
-
-    doc = available_library_items(request).get(pk=DIAGRAM_ID)
-    file = doc.attachments.all()[0]
-
-    from openpyxl import load_workbook
-    import pandas as pd
-    import numpy as np
-    df = pd.read_excel(file.file)
-
-    if "region" in request.GET and request.GET.get("region") != "1012156":
-        region = request.GET["region"]
-        this_region = None
-        for key,value in NICE_REGIONS.items():
-            if value == int(region):
-                this_region = key
-        if this_region:
-            columns_to_keep = [this_region]
-            df = df[columns_to_keep]
-            totals = df.sum(axis=1, numeric_only=True)
-            # Getting totals just so that the syntax below is the same, but in reality
-            # we only have a single column anyways
-        else:
-            messages.error(request, f"The region {region} was not found.")
-    else:
-        totals = df.set_index("Type").sum(axis=1, numeric_only=True)
-
-    demo_figures = {
-        "extract_surface": totals[0],
-        "extract_subterrain": totals[1],
-        "extract_mountains": totals[2],
-        "imports": totals[4]-totals[0]-totals[1]-totals[2]+totals[5]+totals[8],
-        "exports": totals[6],
-        "losses1": totals[7],
-        "losses2": totals[4]*0.02,
-        "energy": totals[8],
-        "treatment_internal": totals[9]+totals[10],
-        "treatment_external": totals[11],
-        "treatment_imports": totals[12],
-    }
-    if demo_figures["imports"] < 0:
-        demo_figures["exports"] = demo_figures["imports"]*-1 + demo_figures["exports"]
-        demo_figures["imports"] = 0
-
-    demo_figures["imports_without_buy"] = demo_figures["imports"]*0.6
-    demo_figures["buy"] = demo_figures["imports"]*0.4
-
-    # k m3 -> km3
-    for key,value in demo_figures.items():
-        demo_figures[key] = int(value/(1000))
-
-    data = demo_figures
-    data["extract"] = data["extract_surface"] + data["extract_subterrain"] + data["extract_mountains"]
-    data["treatment"] = data["treatment_internal"] + data["treatment_external"]
-
-    if demo_figures["extract"] == 0:
-        demo_figures["losses2"] += demo_figures["losses1"]
-        demo_figures["losses1"] = 0
-
-    total_size = data["extract"] + data["imports"]
-    pixels = 100
-    per_unit = pixels/total_size
-
-    pixel_data = {}
-    for key,value in data.items():
-        if value:
-            pixel_data[key] = int(value*per_unit) if int(value*per_unit) > 1 else 1
-        else:
-            pixel_data[key] = 0
-
-    pixel_data["seg1"] = pixel_data["imports"] + pixel_data["extract"]
-    pixel_data["seg2"] = pixel_data["seg1"] - pixel_data["losses1"]
-    pixel_data["seg3"] = pixel_data["seg2"] - pixel_data["losses2"]
-    pixel_data["seg4"] = pixel_data["seg3"] - pixel_data["energy"] - pixel_data["exports"]
-    pixel_data["seg5"] = pixel_data["seg4"] + pixel_data["treatment_imports"]
-    pixel_data["seg6"] = pixel_data["seg5"] - pixel_data["treatment_external"]
-
-    infrastructure = Tag.objects.filter(parent_tag_id=1766)
-    flows = Tag.objects.filter(parent_tag_id=1752)
-
-    context = {
-        "title": "Eau",
-        "regions": NICE_REGIONS,
-        "data": data,
-        "pixel_data": pixel_data,
-        "pixels": range(1,100),
-        "rows": range(1,40),
-        "link": reverse("water:diagram"),
-        "infrastructure": infrastructure, 
-        "documents": available_library_items(request).filter(tags__in=infrastructure).prefetch_related("tags"),
-        "documents_flows": available_library_items(request).filter(tags__in=flows),
-        "show_submenu": True,
-        "section": "water",
-    }
-    return render(request, "water/diagram.html", context)
-
 @login_required
 def controlpanel_index(request):
     if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
@@ -391,8 +230,17 @@ def controlpanel_upload(request):
     }
     return render(request, "water/controlpanel.upload.html", context)
 
+# ARCHIVED CODE
+# The code below was created in 2022 and it was used to take the meter-based
+# dataset and record every entry into the right flows category. A fair share of
+# this work was completed but this was paused on request until data could
+# be refined. In the future, this code might be re-used to continue building
+# this feature.
+# The _archived prefixes were added below... they might need to be removed
+# to restore certain functionality
+
 @login_required
-def controlpanel_data(request):
+def controlpanel_data_archived(request):
     if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
 
@@ -549,4 +397,169 @@ def controlpanel_data(request):
         "info": info,
     }
     return render(request, "water/controlpanel.data.html", context)
+
+def diagram_archived(request):
+
+    doc = available_library_items(request).get(pk=DIAGRAM_ID)
+    file = doc.attachments.all()[0]
+
+    from openpyxl import load_workbook
+    import pandas as pd
+    import numpy as np
+    df = pd.read_excel(file.file)
+
+    if "region" in request.GET and request.GET.get("region") != "1012156":
+        region = request.GET["region"]
+        this_region = None
+        for key,value in NICE_REGIONS.items():
+            if value == int(region):
+                this_region = key
+        if this_region:
+            columns_to_keep = [this_region]
+            df = df[columns_to_keep]
+            totals = df.sum(axis=1, numeric_only=True)
+            # Getting totals just so that the syntax below is the same, but in reality
+            # we only have a single column anyways
+        else:
+            messages.error(request, f"The region {region} was not found.")
+    else:
+        totals = df.set_index("Type").sum(axis=1, numeric_only=True)
+
+    demo_figures = {
+        "extract_surface": totals[0],
+        "extract_subterrain": totals[1],
+        "extract_mountains": totals[2],
+        "imports": totals[4]-totals[0]-totals[1]-totals[2]+totals[5]+totals[8],
+        "exports": totals[6],
+        "losses1": totals[7],
+        "losses2": totals[4]*0.02,
+        "energy": totals[8],
+        "treatment_internal": totals[9]+totals[10],
+        "treatment_external": totals[11],
+        "treatment_imports": totals[12],
+    }
+    if demo_figures["imports"] < 0:
+        demo_figures["exports"] = demo_figures["imports"]*-1 + demo_figures["exports"]
+        demo_figures["imports"] = 0
+
+    demo_figures["imports_without_buy"] = demo_figures["imports"]*0.6
+    demo_figures["buy"] = demo_figures["imports"]*0.4
+
+    # k m3 -> km3
+    for key,value in demo_figures.items():
+        demo_figures[key] = int(value/(1000))
+
+    data = demo_figures
+    data["extract"] = data["extract_surface"] + data["extract_subterrain"] + data["extract_mountains"]
+    data["treatment"] = data["treatment_internal"] + data["treatment_external"]
+
+    if demo_figures["extract"] == 0:
+        demo_figures["losses2"] += demo_figures["losses1"]
+        demo_figures["losses1"] = 0
+
+    total_size = data["extract"] + data["imports"]
+    pixels = 100
+    per_unit = pixels/total_size
+
+    pixel_data = {}
+    for key,value in data.items():
+        if value:
+            pixel_data[key] = int(value*per_unit) if int(value*per_unit) > 1 else 1
+        else:
+            pixel_data[key] = 0
+
+    pixel_data["seg1"] = pixel_data["imports"] + pixel_data["extract"]
+    pixel_data["seg2"] = pixel_data["seg1"] - pixel_data["losses1"]
+    pixel_data["seg3"] = pixel_data["seg2"] - pixel_data["losses2"]
+    pixel_data["seg4"] = pixel_data["seg3"] - pixel_data["energy"] - pixel_data["exports"]
+    pixel_data["seg5"] = pixel_data["seg4"] + pixel_data["treatment_imports"]
+    pixel_data["seg6"] = pixel_data["seg5"] - pixel_data["treatment_external"]
+
+    infrastructure = Tag.objects.filter(parent_tag_id=1766)
+    flows = Tag.objects.filter(parent_tag_id=1752)
+
+    context = {
+        "title": "Eau",
+        "regions": NICE_REGIONS,
+        "data": data,
+        "pixel_data": pixel_data,
+        "pixels": range(1,100),
+        "rows": range(1,40),
+        "link": reverse("water:diagram"),
+        "infrastructure": infrastructure, 
+        "documents": available_library_items(request).filter(tags__in=infrastructure).prefetch_related("tags"),
+        "documents_flows": available_library_items(request).filter(tags__in=flows),
+        "show_submenu": True,
+        "section": "water",
+    }
+    return render(request, "water/diagram.html", context)
+
+def index_archived(request):
+
+    input = [
+        #{"name": "Precipitation", "logo": "cloud-showers-heavy"},
+        {"name": "Ground water extraction", "logo": "water-rise"},
+        {"name": "Surface water", "logo": "water"},
+        {"name": "Rain water harvesting", "logo": "raindrops"},
+        {"name": "Imports", "logo": "arrow-to-right"},
+    ]
+    output = [
+        {"name": "Exports", "logo": "arrow-from-left"},
+        {"name": "Leaks and losses", "logo": "house-flood"},
+        {"name": "Dissipative use", "logo": "sprinkler"},
+    ]
+    consumption = [
+        {"name": "Residents", "logo": "shower"},
+        {"name": "Government", "logo": "faucet-drip"},
+        {"name": "Industry", "logo": "industry"},
+        {"name": "Agriculture", "logo": "tractor"},
+    ]
+    distribution = [
+        {"name": "Reservoirs", "logo": "rectangle-wide"},
+        {"name": "Reticulation system", "logo": "chart-network"},
+        {"name": "Material stock analysis", "logo": "chimney"},
+        {"name": "Water meters", "logo": "tachometer", "id": 1010649},
+    ]
+    production = [
+        {"name": "Water treatment plants", "logo": "ball-pile"},
+        {"name": "Energy analysis", "logo": "bolt"},
+        {"name": "Material flow analysis", "logo": "th-list"},
+        {"name": "Material stock analysis", "logo": "chimney"},
+    ]
+    waste = [
+        {"name": "Wastewater treatment plants", "logo": "toilet", "id": 1010500},
+        {"name": "Energy analysis", "logo": "bolt"},
+        {"name": "Material flow analysis", "logo": "th-list"},
+        {"name": "Material stock analysis", "logo": "chimney"},
+    ]
+    test = [
+        {"name": "XXX", "logo": "XXXX"},
+    ]
+
+    # Temporary function to assign GPS coordinates to reference spaces
+    # while we wait for the final GPS coordinates to be provided
+    if "random_gps" in request.GET and request.user.id == 1:
+        from django.contrib.gis.geos import Point
+        import random 
+        spaces = ReferenceSpace.objects_include_private.filter(source_id=request.GET["random_gps"])
+        for space in spaces:
+            lat = random.randrange(4360,4430)/100
+            lng = random.randrange(6870,7390)/1000
+            space.geometry = Point(lng, lat)
+            space.save()
+
+    infrastructure = Tag.objects.filter(parent_tag_id=1766)
+    context = {
+        "input": input,
+        "output": output,
+        "consumption": consumption,
+        "distribution": distribution,
+        "production": production,
+        "waste": waste,
+        "regions": NICE_REGIONS,
+        "infrastructure": infrastructure,
+        "documents": available_library_items(request).filter(tags__in=infrastructure),
+        "show_submenu": True,
+    }
+    return render(request, "water/index.html", context)
 
