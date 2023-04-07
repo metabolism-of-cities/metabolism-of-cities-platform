@@ -28,6 +28,7 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("controlpanel/upload/", views.controlpanel_upload, name="controlpanel_upload"),
     path("controlpanel/upload/<int:id>/", views.controlpanel_file, name="controlpanel_file"),
     path("controlpanel/categories/", views.controlpanel_categories, name="controlpanel_categories"),
+    path("controlpanel/territories/", views.controlpanel_spaces, name="controlpanel_spaces"),
     path("controlpanel/flows/", views.controlpanel_flows, name="controlpanel_flows"),
 
     # Archived URLs

@@ -6,18 +6,34 @@
 
   <dl>
     <dt>{{ _("Start date") }}</dt>
-    <dd>{{ min_year }}</dd>
+    <dd>{{ df.year.min }}</dd>
 
     <dt>{{ _("End date") }}</dt>
-    <dd>E202</dd>
+    <dd>{{ df.year.max }}</dd>
 
     <dt>{{ _("Number of records") }}</dt>
     <dd>{{ df.shape.0 }}</dd>
 
     <dt>{{ _("Type") }}</dt>
-    <dd>{{ info.get_type_display }}</dd>
+    <dd>{{ info.category }}</dd>
 
   </dl>
+
+  <form method="post">
+    <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> {{ _("Save data") }}</button>
+    {% csrf_token %}
+    <input type="hidden" name="save" value="true" />
+  </form>
+
+  <form method="post" class="float-right">
+    <button type="submit" class="btn btn-danger"
+     onclick="javascript:return confirm('{{ _("Are you sure?") }}')" 
+    ><i class="fa fa-trash"></i> {{ _("Delete file") }}</button>
+    {% csrf_token %}
+    <input type="hidden" name="delete" value="true"/>
+  </form>
+
+  <h2 class="mt-5">Data overview</h2>
 
   {{ table }}
 

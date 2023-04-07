@@ -18,29 +18,29 @@
           </select>
         </div>
         <div class="mb-3">
-          <label class="form-label">File</label>
+          <label class="form-label">{{ _("File") }}</label>
           <input type="file" class="form-control" name="file" required>
         </div>
         <div class="form-actions">
-          <button type="submit" class="btn btn-primary"><i class="fa fa-arrow-right"></i> Next</button>
+          <button type="submit" class="btn btn-primary"><i class="fa fa-arrow-right"></i> {{ _("Next") }}</button>
         </div>
         {% csrf_token %}
       </form>
-      <h3 class="mt-5">Uploaded files</h3>
+      <h3 class="mt-5">{{ _("Uploaded files") }}</h3>
       <table class="table table-striped">
         <thead>
           <tr>
-            <th>Type</th>
-            <th>Date</th>
-            <th>Uploader</th>
-            <th>File</th>
-            <th>Processed?</th>
+            <th>{{ _("Type") }}</th>
+            <th>{{ _("Date") }}</th>
+            <th>{{ _("Uploader") }}</th>
+            <th>{{ _("File") }}</th>
+            <th>{{ _("Processed?") }}</th>
           </tr>
         </thead>
         <tbody>
         {% for each in files %}
           <tr>
-            <td><a href="{{ each.get_absolute_url }}">{{ each.get_type_display }}</a></td>
+            <td><a href="{{ each.get_absolute_url }}">{{ each.category }}</a></td>
             <td>{{ each.date_created }}</td>
             <td>{{ each.uploader }}</td>
             <td>{{ each.file.name }}</td>

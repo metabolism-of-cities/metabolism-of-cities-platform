@@ -3667,6 +3667,20 @@ class EurostatForm(forms.ModelForm):
 ### and matured.
 ###
 
+class WaterSystemSpace(models.Model):
+    name = models.CharField(max_length=50)
+    slug = models.SlugField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ["id"]
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(unidecode(self.name))
+        super().save(*args, **kwargs)
+
 class WaterSystemCategory(models.Model):
     name = models.CharField(max_length=255)
 

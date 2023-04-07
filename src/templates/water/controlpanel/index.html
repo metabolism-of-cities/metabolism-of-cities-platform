@@ -1,9 +1,8 @@
 {% extends "_base.html" %}
 
-{% block page_name %}stafcp controlpanel{% endblock %}
 {% block content %}
 
-  <h2>Control Panel</h2>
+  <h2>{% block title %}{{ _("Control panel") }}{% endblock %}</h2>
 
   <section class="row">
 
@@ -31,6 +30,15 @@
           <i class="fal fa-fw fa-list"></i>
         </div>
         <div class="card-header">Categories</div>
+      </a>
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <a class="card icon-card btn-card" href="../territories/">
+        <div class="icon">
+          <i class="fal fa-fw fa-globe"></i>
+        </div>
+        <div class="card-header">Territories</div>
       </a>
     </div>
 

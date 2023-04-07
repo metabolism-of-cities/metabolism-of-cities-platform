@@ -127,35 +127,36 @@ def controlpanel_categories(request):
     return render(request, "water/controlpanel/categories.html", context)
 
 @login_required
+def controlpanel_spaces(request):
+    if not has_permission(request, request.project, ["curator", "admin"]):
+        unauthorized_access(request)
+
+    info = None
+    if "id" in request.GET:
+        info = WaterSystemSpace.objects.get(pk=request.GET["id"])
+
+    if "name" in request.POST:
+        if not info:
+            info = WaterSystemSpace()
+        info.name = request.POST["name"]
+        info.save()
+        messages.success(request, _("Information was saved"))
+        return redirect(request.path)
+
+    context = {
+        "spaces": WaterSystemSpace.objects.all(),
+        "info": info,
+    }
+    return render(request, "water/controlpanel/spaces.html", context)
+
+@login_required
 def controlpanel_flows(request):
     if not has_permission(request, request.project, ["curator", "admin"]):
         unauthorized_access(request)
 
     flows = WaterSystemFlow.objects.all()
-    if not flows:
-        flows = [
-        ]
-        for each in flows:
-            if len(each) == 4:
-                name = each[0]
-                description = each[1]
-                identifier = each[2]
-                category = each[3]
-            else:
-                name = each[0]
-                description = None
-                identifier = each[1]
-                category = each[2]
-            if description == "EMPTY":
-                description = None
-            WaterSystemFlow.objects.create(
-                name = name,
-                description = description,
-                identifier = identifier,
-                category_id = category
-            )
-
     info = None
+
     if "id" in request.GET:
         info = WaterSystemFlow.objects.get(pk=request.GET["id"])
 
@@ -168,6 +169,7 @@ def controlpanel_flows(request):
         info.save()
         messages.success(request, _("Information was saved"))
         return redirect(request.path)
+
     context = {
         "flows": flows,
         "info": info,
@@ -181,13 +183,14 @@ def controlpanel_upload(request):
         unauthorized_access(request)
 
     if request.method == "POST":
-        WaterSystemFile.objects.create(
+        info = WaterSystemFile.objects.create(
             file = request.FILES["file"],
             category_id = request.POST["type"],
             uploader = request.user.people,
         )
 
-        messages.success(request, "The new data have been uploaded!")
+        messages.success(request, _("The file was uploaded successfully. Please review the data below."))
+        return redirect(reverse("water:controlpanel_file", args=[info.id]))
 
     context = {
         "types": WaterSystemCategory.objects.all(),
@@ -200,7 +203,13 @@ def controlpanel_file(request, id):
     if not has_permission(request, request.project, ["curator", "admin"]):
         unauthorized_access(request)
 
-    info = WaterFile.objects.get(pk=id)
+    info = WaterSystemFile.objects.get(pk=id)
+
+    if "delete" in request.POST:
+        info.delete()
+        messages.success(request, _("The file was deleted successfully"))
+        return redirect(reverse("water:controlpanel_upload"))
+
     df = pd.read_excel(info.file)
 
     columns_to_keep = ["Flux", "Mois", "An", "MNCA", "Nice", "Rive Droite", "Est-Littoral", "Moyen Pays Rive Gauche", "Tinée", "Vésubie", "Tinée"]
@@ -254,7 +263,6 @@ def controlpanel_file(request, id):
         "info": info,
         "table": mark_safe(df.to_html()),
         "df": df,
-        "min_year": df["year"].min(),
     }
     return render(request, "water/controlpanel/file.html", context)
 
