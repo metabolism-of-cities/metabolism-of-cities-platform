@@ -1,0 +1,29 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h2>{% block title %}Manage categories{% endblock %}</h2>
+
+  {% if not info %}
+    <ul>
+      {% for each in categories %}
+        <li><a href="?id={{ each.id }}">{{ each }}</a></li>
+      {% endfor %}
+    </ul>
+
+  <h2 class="mt-5">{{ _("Add a new category") }}</h2>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+    
+    <div class="mb-3">
+      <label class="form-label">Name</label>
+      <input class="form-control" name="name" required value="{{ info.name }}">
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
+    </div>
+    {% csrf_token %}
+  </form>
+
+{% endblock %}

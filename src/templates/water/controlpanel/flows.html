@@ -1,0 +1,61 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h2>{% block title %}Manage flows{% endblock %}</h2>
+
+  {% if not info %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>{{ _("Category") }}</th>
+          <th>#</th>
+          <th>{{ _("Flow") }}</th>
+          <th>{{ _("Description") }}</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in flows %}
+        <tr>
+          <td>{{ each.category }}</td>
+          <td>{{ each.identifier }}</td>
+          <td><a href="?id={{ each.id }}">{{ each }}</a></td>
+          <td>{{ each.description|default_if_none:"" }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+    <h2 class="mt-5">{{ _("Add a new flow") }}</h2>
+    <div class="alert alert-info">
+      {{ _("NOTE: for new flows to become visible in the system diagram, graphic design changes are required.") }}
+    </div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+
+    <div class="mb-3">
+      <label class="form-label">{{ _("Type") }}</label>
+      <select class="form-control" name="type" required>
+        <option value=""></option>
+        {% for each in types %}
+          <option {% if info.category == each %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">{{ _("Number") }}</label>
+      <input class="form-control" name="identifier" required value="{{ info.identifier }}" type="number">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">{{ _("Name") }}</label>
+      <input class="form-control" name="name" required value="{{ info.name }}">
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> {{ _("Save") }}</button>
+    </div>
+    {% csrf_token %}
+  </form>
+
+{% endblock %}

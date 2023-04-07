@@ -6,26 +6,49 @@
 
   <div class="row">
     <div class="col-12">
-      <form method="post">
+      <form method="post" enctype="multipart/form-data">
         
         <div class="mb-3">
-          <label class="form-label">Type</label>
-          <select class="form-control" name="name">
+          <label class="form-label">{{ _("Type") }}</label>
+          <select class="form-control" name="type" required>
             <option value=""></option>
-            <option value="water">Eaux</option>
-            <option value="energy">Energies</option>
-            <option value="emissions">Gaz à effets de serre</option>
+            {% for each in types %}
+              <option value="{{ each.id }}">{{ each }}</option>
+            {% endfor %}
           </select>
         </div>
         <div class="mb-3">
           <label class="form-label">File</label>
-          <input type="file" class="form-control" name="file">
+          <input type="file" class="form-control" name="file" required>
         </div>
         <div class="form-actions">
           <button type="submit" class="btn btn-primary"><i class="fa fa-arrow-right"></i> Next</button>
         </div>
         {% csrf_token %}
       </form>
+      <h3 class="mt-5">Uploaded files</h3>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Date</th>
+            <th>Uploader</th>
+            <th>File</th>
+            <th>Processed?</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for each in files %}
+          <tr>
+            <td><a href="{{ each.get_absolute_url }}">{{ each.get_type_display }}</a></td>
+            <td>{{ each.date_created }}</td>
+            <td>{{ each.uploader }}</td>
+            <td>{{ each.file.name }}</td>
+            <td></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
       <h3 class="mt-5">Download templates:</h3>
       <p>
         You can use the templates below to upload new data. 

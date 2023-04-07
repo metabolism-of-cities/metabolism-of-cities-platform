@@ -14,7 +14,7 @@
 {% block content %}
 
   <div class="mb-4">
-    <a href="{% url "water:diagram" %}{% if request.GET.region %}?region={{ request.GET.region }}{% endif %}">&laquo; Back</a>
+    <a href="{% url "water:water" %}{% if request.GET.region %}?region={{ request.GET.region }}{% endif %}">&laquo; Back</a>
   </div>
 
   {% if region %}

@@ -7,14 +7,32 @@
 
   <section class="row">
 
-      <div class="col-md-3 mb-3">
-        <a class="card icon-card btn-card" href="{% url "water:controlpanel_upload" %}">
-          <div class="icon">
-            <i class="fal fa-fw fa-exchange"></i>
-          </div>
-          <div class="card-header">Sankey data</div>
-        </a>
-      </div>
+    <div class="col-md-3 mb-3">
+      <a class="card icon-card btn-card" href="{% url "water:controlpanel_upload" %}">
+        <div class="icon">
+          <i class="fal fa-fw fa-table"></i>
+        </div>
+        <div class="card-header">Sankey data</div>
+      </a>
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <a class="card icon-card btn-card" href="../flows/">
+        <div class="icon">
+          <i class="fal fa-fw fa-random"></i>
+        </div>
+        <div class="card-header">Flows</div>
+      </a>
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <a class="card icon-card btn-card" href="../categories/">
+        <div class="icon">
+          <i class="fal fa-fw fa-list"></i>
+        </div>
+        <div class="card-header">Categories</div>
+      </a>
+    </div>
 
     <div class="col-md-3 mb-3">
       <a class="card icon-card btn-card" href="../design/">

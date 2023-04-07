@@ -51,6 +51,63 @@
   </div>
 </div>
 
+<h1 hidden class="text-center mt-4">Maps and data</h1>
+
+<div hidden class="row progress-list">
+  {% for tag in infrastructure %}
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card icon-card">
+        <div class="icon">
+          <i class="far fa-fw fa-{{ tag.icon }}"></i>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title mb-3">{{ tag }}</h5>
+          <ul class="list-group list-group-flush">
+            {% for each in documents %}
+              {% if tag in each.tags.all %}
+              <li class="list-group-item">
+                <a href="{% url "water:infrastructure_map" each.id %}{% if request.GET.region %}?boundaries={{ request.GET.region }}&amp;restrict_to_within_boundaries=true{% endif %}">
+                {{ each.name }}
+                </a>
+              </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+
+  <div class="col-md-6 col-lg-4 mb-4">
+    <div class="card icon-card">
+
+      <div class="icon">
+        <i class="far fa-fw fa-exchange"></i>
+      </div>
+
+      <div class="card-body">
+        <h5 class="card-title mb-3">Flows</h5>
+        <ul class="list-group list-group-flush">
+          {% for each in documents_flows %}
+            <li class="list-group-item">
+              <a href="{% url URLS.LIBRARY_ITEM each.id %}{% if request.GET.region %}?boundaries={{ request.GET.region }}&amp;restrict_to_within_boundaries=true{% endif %}">
+              {{ each.name }}
+              </a>
+              <br>
+              <a href="{% url "water:dashboard" %}?document={{ each.id }}">Compare regions</a>
+            </li>
+          {% endfor %}
+          <li class="list-group-item">
+            <a href="{% url "water:dashboard" %}?region={% if request.GET.region %}{{ request.GET.region }}{% else %}1012156{% endif %}">View all charts</a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
 {% endblock %}
 
 {% block footer %}

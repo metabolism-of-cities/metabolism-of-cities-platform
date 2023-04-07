@@ -1,0 +1,24 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h2>{% block title %}{{ info }}{% endblock %}</h2>
+
+  <dl>
+    <dt>{{ _("Start date") }}</dt>
+    <dd>{{ min_year }}</dd>
+
+    <dt>{{ _("End date") }}</dt>
+    <dd>E202</dd>
+
+    <dt>{{ _("Number of records") }}</dt>
+    <dd>{{ df.shape.0 }}</dd>
+
+    <dt>{{ _("Type") }}</dt>
+    <dd>{{ info.get_type_display }}</dd>
+
+  </dl>
+
+  {{ table }}
+
+{% endblock %}

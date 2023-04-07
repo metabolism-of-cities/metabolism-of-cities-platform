@@ -78,6 +78,9 @@ import math
 from django.core.cache import cache
 from django.utils.functional import cached_property
 
+# For the translations
+from django.utils.translation import gettext_lazy as _
+
 def get_date_range(start, end, months_only=False):
 
     if start and not end and months_only:
@@ -3652,6 +3655,63 @@ class EurostatForm(forms.ModelForm):
         model = EurostatDB
         fields = "__all__"
 
+###
+### END OF CITYLOOPS SPECIFIC TABLES
+###
+
+
+###
+### WATER-SPECIFIC TABLES
+### These are created exclusively for the water flows website. This website is not 
+### yet mature and tables will not be merged with the main database until it is more extensively used
+### and matured.
+###
+
+class WaterSystemCategory(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ["name"]
+
+class WaterSystemFlow(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255, null=True, blank=True)
+    identifier = models.PositiveSmallIntegerField()
+    category = models.ForeignKey(WaterSystemCategory, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ["category", "identifier", "name"]
+
+class WaterSystemFile(models.Model):
+    category = models.ForeignKey(WaterSystemCategory, on_delete=models.CASCADE)
+    file = models.FileField(null=True, blank=True, upload_to="water", max_length=255)
+    date_created = models.DateTimeField(auto_now_add=True)
+    uploader = models.ForeignKey(People, on_delete=models.CASCADE)
+
+    def get_absolute_url(self):
+        return reverse("water:controlpanel_file", args=[self.id])
+
+    def __str__(self):
+        return f"{self.file}"
+
+    class Meta:
+        ordering = ["id"]
+
+
+###
+### END OF WATER SPECIFIC TABLES
+###
+
+
+###
+### DUMMY FORMAT
+###
 
 # This is the format to use from now on
 # Note that there is a uid primary key, separate from the record_id

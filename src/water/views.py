@@ -15,6 +15,9 @@ import calendar
 from django.utils import timezone
 from django.core.files.base import ContentFile
 
+# For the translations
+from django.utils.translation import gettext_lazy as _
+
 DIAGRAM_ID = 1013292
 
 def index(request):
@@ -29,16 +32,6 @@ def water(request):
         "section": "water",
     }
     return render(request, "water/water.html", context)
-
-def water_map(request):
-    context = {
-        "title": "Eau",
-    }
-    return render(request, "water/map.html", context)
-
-def infrastructure(request):
-    space = ActivatedSpace.objects.get(part_of_project_id=request.project, space_id=request.GET["region"])
-    return staf.space_map(request, space.space.slug)
 
 def energy(request):
     context = {
@@ -101,134 +94,169 @@ def water_login(request):
     }
     return render(request, "auth/login.html", context)
 
-@staff_member_required
-def temp_script(request):
-
-    ###### REMOVE MOC_EXTRAS FUNCTIONS ONCE THIS IS COMPLETED!!
-    from django.contrib.gis.geos import Point
-    import folium
-
-    lat = 10
-    lng = 10
-
-    x = [123,456]
-    y = [660,677]
-
-    names = ["Name1", "Name2"]
-
-    # From https://stackoverflow.com/questions/38961816/geopandas-set-crs-on-points
-    import pandas as pd
-    from shapely.geometry import Point
-    from geopandas import GeoDataFrame
-
-    df = pd.DataFrame({'Names':names,
-                   'Lat':y,
-                   'Lon':x})
-
-    geometry = [Point(xy) for xy in zip(df.Lon, df.Lat)]
-    gdf = {}
-
-    crs_list = [2154]
-
-    maps = {}
-    for each in crs_list:
-        gdf = GeoDataFrame(df, geometry=geometry)
-        gdf.set_crs(epsg=each, inplace=True, allow_override=True)
-        # Change to WGS84
-        gdf.to_crs(epsg=4326, inplace=True)
-
-        for index, row in gdf.iterrows():
-            geo = row["geometry"]
-            x, y = geo.coords.xy
-            x = x[0]
-            y = y[0]
-            p(x)
-            p(y)
-
-        maps[each] = folium.Map(
-            location=[y,x],
-            zoom_start=20,
-            scrollWheelZoom=False,
-            tiles=STREET_TILES,
-            attr="Mapbox",
-        )
-
-    map2 = folium.Map(
-        location=[lng,lat],
-        zoom_start=10,
-        scrollWheelZoom=False,
-        tiles=STREET_TILES,
-        attr="Mapbox",
-    )
-
-    map3 = folium.Map(
-        location=[lng,lat],
-        zoom_start=15,
-        scrollWheelZoom=False,
-        tiles=STREET_TILES,
-        attr="Mapbox",
-    )
-
-    m = gdf.to_html()
-
-    context = {
-        "title": "Eau",
-        "maps": maps,
-        "map2": map2._repr_html_() if map else None,
-        "map3": map3._repr_html_() if map else None,
-        "gdf": m,
-        "crs_list": crs_list,
-    }
-    return render(request, "water/infrastructure.html", context)
-
-def dashboard(request):
-    region = None
-    flows = Tag.objects.filter(parent_tag_id=1752)
-    title = "Dashboard"
-        
-    if "region" in request.GET and request.GET.get("region"):
-        region = ReferenceSpace.objects.get(pk=request.GET["region"])
-        title = str(region)
-
-    if request.GET.get("document"):
-        document = available_library_items(request).get(pk=request.GET.get("document"))
-        title = str(document)
-
-    context = {
-        "title": title,
-        "regions": NICE_REGIONS,
-        "documents": available_library_items(request).filter(tags__in=flows).order_by("id"),
-        "region": region,
-    }
-    return render(request, "water/dashboard.html", context)
-
 @login_required
 def controlpanel_index(request):
-    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+    if not has_permission(request, request.project, ["curator", "admin"]):
         unauthorized_access(request)
 
     context = {
     }
-    return render(request, "water/controlpanel.index.html", context)
+    return render(request, "water/controlpanel/index.html", context)
+
+@login_required
+def controlpanel_categories(request):
+    if not has_permission(request, request.project, ["curator", "admin"]):
+        unauthorized_access(request)
+
+    info = None
+    if "id" in request.GET:
+        info = WaterSystemCategory.objects.get(pk=request.GET["id"])
+
+    if "name" in request.POST:
+        if not info:
+            info = WaterSystemCategory()
+        info.name = request.POST["name"]
+        info.save()
+        messages.success(request, _("Information was saved"))
+        return redirect(request.path)
+
+    context = {
+        "categories": WaterSystemCategory.objects.all(),
+        "info": info,
+    }
+    return render(request, "water/controlpanel/categories.html", context)
+
+@login_required
+def controlpanel_flows(request):
+    if not has_permission(request, request.project, ["curator", "admin"]):
+        unauthorized_access(request)
+
+    flows = WaterSystemFlow.objects.all()
+    if not flows:
+        flows = [
+        ]
+        for each in flows:
+            if len(each) == 4:
+                name = each[0]
+                description = each[1]
+                identifier = each[2]
+                category = each[3]
+            else:
+                name = each[0]
+                description = None
+                identifier = each[1]
+                category = each[2]
+            if description == "EMPTY":
+                description = None
+            WaterSystemFlow.objects.create(
+                name = name,
+                description = description,
+                identifier = identifier,
+                category_id = category
+            )
+
+    info = None
+    if "id" in request.GET:
+        info = WaterSystemFlow.objects.get(pk=request.GET["id"])
+
+    if "name" in request.POST:
+        if not info:
+            info = WaterSystemFlow()
+        info.name = request.POST["name"]
+        info.category_id = request.POST["type"]
+        info.identifier = request.POST["identifier"]
+        info.save()
+        messages.success(request, _("Information was saved"))
+        return redirect(request.path)
+    context = {
+        "flows": flows,
+        "info": info,
+        "types": WaterSystemCategory.objects.all(),
+    }
+    return render(request, "water/controlpanel/flows.html", context)
 
 @login_required
 def controlpanel_upload(request):
-    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+    if not has_permission(request, request.project, ["curator", "admin"]):
         unauthorized_access(request)
 
-    info = available_library_items(request).get(pk=DIAGRAM_ID)
-
     if request.method == "POST":
-        file = request.FILES["file"]
-        document = info.attachments.all()[0]
-        document.file = file
-        document.save()
+        WaterSystemFile.objects.create(
+            file = request.FILES["file"],
+            category_id = request.POST["type"],
+            uploader = request.user.people,
+        )
+
         messages.success(request, "The new data have been uploaded!")
 
     context = {
-        "info": info,
+        "types": WaterSystemCategory.objects.all(),
+        "files": WaterSystemFile.objects.all(),
     }
-    return render(request, "water/controlpanel.upload.html", context)
+    return render(request, "water/controlpanel/upload.html", context)
+
+@login_required
+def controlpanel_file(request, id):
+    if not has_permission(request, request.project, ["curator", "admin"]):
+        unauthorized_access(request)
+
+    info = WaterFile.objects.get(pk=id)
+    df = pd.read_excel(info.file)
+
+    columns_to_keep = ["Flux", "Mois", "An", "MNCA", "Nice", "Rive Droite", "Est-Littoral", "Moyen Pays Rive Gauche", "Tinée", "Vésubie", "Tinée"]
+    df = df[columns_to_keep]
+
+    number_of_cols = len(df.columns)
+    if number_of_cols != len(columns_to_keep):
+        error = True
+        messages.error(request, f"There are {len(columns_to_keep)} specific columns that need to be present in the spreadsheet. We only found {number_of_cols} of these columns in your spreadsheet. Please make sure all columns exist and have the right name! The required columns are: {columns_to_keep}")
+    else:
+        col_names = {
+            "Flux": "flow",
+            "Mois": "month",
+            "An": "year",
+        }
+
+        # Rename to English
+        df.rename(columns = col_names, inplace = True)
+
+        # Sometimes pandas reads rows that are empty and includes them; let's delete those empty rows from the dataframe
+        df.dropna(how="all", inplace=True) 
+
+        months = {
+            1: "January",
+            2: "February",
+            3: "Mar",
+            4: "Apr",
+            5: "May",
+            6: "Jun",
+            7: "Jul",
+            8: "Aug",
+            9: "Sep",
+            10: "Oct",
+            11: "Nov",
+            12: "Dec",
+        }
+        # Convert the month names to numbers
+        df["month"] = df["month"].astype(int)
+        df["month"] = df["month"].replace(months)
+
+        if df["year"].isnull().sum() > 0:
+            error = f"There are {df['year'].isnull().sum()} rows that do not have a value in the YEAR column. Please check and correct or remove these rows."
+            messages.error(request, error)
+
+        if df["flow"].isnull().sum() > 0:
+            error = f"There are {df['flow'].isnull().sum()} rows that do not have a value in the FLOW column. Please check and correct or remove these rows."
+            messages.error(request, error)
+
+
+    context = {
+        "info": info,
+        "table": mark_safe(df.to_html()),
+        "df": df,
+        "min_year": df["year"].min(),
+    }
+    return render(request, "water/controlpanel/file.html", context)
 
 # ARCHIVED CODE
 # The code below was created in 2022 and it was used to take the meter-based
@@ -241,7 +269,7 @@ def controlpanel_upload(request):
 
 @login_required
 def controlpanel_data_archived(request):
-    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+    if not has_permission(request, request.project, ["curator", "admin"]):
         unauthorized_access(request)
 
     files = {
@@ -396,7 +424,7 @@ def controlpanel_data_archived(request):
         "results": results,
         "info": info,
     }
-    return render(request, "water/controlpanel.data.html", context)
+    return render(request, "water/archived/controlpanel.data.html", context)
 
 def diagram_archived(request):
 
@@ -563,3 +591,113 @@ def index_archived(request):
     }
     return render(request, "water/index.html", context)
 
+@staff_member_required
+def temp_script_archived(request):
+
+    ###### REMOVE MOC_EXTRAS FUNCTIONS ONCE THIS IS COMPLETED!!
+    from django.contrib.gis.geos import Point
+    import folium
+
+    lat = 10
+    lng = 10
+
+    x = [123,456]
+    y = [660,677]
+
+    names = ["Name1", "Name2"]
+
+    # From https://stackoverflow.com/questions/38961816/geopandas-set-crs-on-points
+    import pandas as pd
+    from shapely.geometry import Point
+    from geopandas import GeoDataFrame
+
+    df = pd.DataFrame({'Names':names,
+                   'Lat':y,
+                   'Lon':x})
+
+    geometry = [Point(xy) for xy in zip(df.Lon, df.Lat)]
+    gdf = {}
+
+    crs_list = [2154]
+
+    maps = {}
+    for each in crs_list:
+        gdf = GeoDataFrame(df, geometry=geometry)
+        gdf.set_crs(epsg=each, inplace=True, allow_override=True)
+        # Change to WGS84
+        gdf.to_crs(epsg=4326, inplace=True)
+
+        for index, row in gdf.iterrows():
+            geo = row["geometry"]
+            x, y = geo.coords.xy
+            x = x[0]
+            y = y[0]
+            p(x)
+            p(y)
+
+        maps[each] = folium.Map(
+            location=[y,x],
+            zoom_start=20,
+            scrollWheelZoom=False,
+            tiles=STREET_TILES,
+            attr="Mapbox",
+        )
+
+    map2 = folium.Map(
+        location=[lng,lat],
+        zoom_start=10,
+        scrollWheelZoom=False,
+        tiles=STREET_TILES,
+        attr="Mapbox",
+    )
+
+    map3 = folium.Map(
+        location=[lng,lat],
+        zoom_start=15,
+        scrollWheelZoom=False,
+        tiles=STREET_TILES,
+        attr="Mapbox",
+    )
+
+    m = gdf.to_html()
+
+    context = {
+        "title": "Eau",
+        "maps": maps,
+        "map2": map2._repr_html_() if map else None,
+        "map3": map3._repr_html_() if map else None,
+        "gdf": m,
+        "crs_list": crs_list,
+    }
+    return render(request, "water/infrastructure.html", context)
+
+def dashboard(request):
+    region = None
+    flows = Tag.objects.filter(parent_tag_id=1752)
+    title = "Dashboard"
+        
+    if "region" in request.GET and request.GET.get("region"):
+        region = ReferenceSpace.objects.get(pk=request.GET["region"])
+        title = str(region)
+
+    if request.GET.get("document"):
+        document = available_library_items(request).get(pk=request.GET.get("document"))
+        title = str(document)
+
+    context = {
+        "title": title,
+        "regions": NICE_REGIONS,
+        "documents": available_library_items(request).filter(tags__in=flows).order_by("id"),
+        "region": region,
+    }
+    return render(request, "water/dashboard.html", context)
+
+def infrastructure(request):
+    space = ActivatedSpace.objects.get(part_of_project_id=request.project, space_id=request.GET["region"])
+    return staf.space_map(request, space.space.slug)
+
+def water_map(request):
+    context = {
+        "title": "Eau",
+    }
+    return render(request, "water/map.html", context)

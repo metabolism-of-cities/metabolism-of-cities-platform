@@ -18,8 +18,6 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("water/", views.water, name="water"),
     path("infrastructure/", views.infrastructure, name="infrastructure"),
     path("infrastructure/<int:id>/", staf.map_item, name="infrastructure_map"),
-    path("dashboard/", views.dashboard, name="dashboard"),
-    path("dashboards/", data.progress, { "style": "grid"}, name="dashboards"),
     path("energy/", views.energy, name="energy"),
     path("emissions/", views.emissions, name="emissions"),
     path("about/", views.about, name="about"),
@@ -28,10 +26,15 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
 
     path("controlpanel/index/", views.controlpanel_index, name="controlpanel_index"),
     path("controlpanel/upload/", views.controlpanel_upload, name="controlpanel_upload"),
+    path("controlpanel/upload/<int:id>/", views.controlpanel_file, name="controlpanel_file"),
+    path("controlpanel/categories/", views.controlpanel_categories, name="controlpanel_categories"),
+    path("controlpanel/flows/", views.controlpanel_flows, name="controlpanel_flows"),
 
     # Archived URLs
     # These were part of a previous effort and are archived for now. 
     # See water/views.py for more info
     path("controlpanel/data/", views.controlpanel_data_archived, name="controlpanel_data"),
     #path("temp/", views.temp_script),
+    #path("dashboard/", views.dashboard, name="dashboard"),
+    #path("dashboards/", data.progress, { "style": "grid"}, name="dashboards"),
 ]
