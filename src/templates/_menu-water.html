@@ -1,28 +1,6 @@
 <li class="nav-item">
-  <a class="nav-link {% if section == "water" %}active{% endif %}" href="{% url "water:index" %}?region=1012156"> Eaux</a>
+  <a class="nav-link {% if section == "homepage" %}active{% endif %}" href="#"> Accueil</a>
 </li>
-<div class="nav-divider"></div>
-<li class="nav-item">
-  <a class="nav-link {% if section == "energy" %}active{% endif %}" href="{% url "water:energy" %}?region=1012156"> Energies</a>
-</li>
-<div class="nav-divider"></div>
-<li class="nav-item">
-  <a class="nav-link {% if section == "emissions" %}active{% endif %}" href="{% url "water:emissions" %}?region=1012156"> Gaz à effets de serre</a>
-</li>
-<div class="nav-divider"></div>
-<li class="nav-item">
-  <a class="nav-link disabled" href="#"> Matières</a>
-</li>
-<div class="nav-divider"></div>
-<li class="nav-item">
-  <a class="nav-link disabled" href="#"> Stocks</a>
-</li>
-{% if not user.is_authenticated %}
-<div class="nav-divider"></div>
-<li class="nav-item">
-  <a class="nav-link {% if section == "login" %}active{% endif %}" href="{% url "water:water_login" %}"> Se connecter</a>
-</li>
-{% endif %}
 <div class="nav-divider"></div>
 <li class="nav-item">
   <a class="nav-link {% if section == "about" %}active{% endif %}" href="{% url "water:about" %}"> A propos</a>
@@ -32,3 +10,14 @@
   <a class="nav-link {% if section == "contact" %}active{% endif %}" href="{% url "water:contact" %}"> Contact</a>
 </li>
 <div class="nav-divider"></div>
+{% if not user.is_authenticated %}
+<div class="nav-divider"></div>
+<li class="nav-item">
+  <a class="nav-link {% if section == "login" %}active{% endif %}" href="{% url "water:water_login" %}"> Se connecter</a>
+</li>
+{% elif "curator" in PERMISSIONS or request.user.is_staff or "admin" in PERMISSIONS %}
+<div class="nav-divider"></div>
+<li class="nav-item">
+  <a class="nav-link {% if section == "controlpanel" %}active{% endif %}" href="{% url "water:controlpanel" %}"> Control panel</a>
+</li>
+{% endif %}

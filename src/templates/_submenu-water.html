@@ -7,22 +7,24 @@
       </button>
 
       <div class="collapse navbar-collapse" id="water-navbar">
+        <strong class="mr-4">Territoire</strong>
         <ul class="navbar-nav mr-auto ml-3 ml-md-0 region-bar">
 
           {% for key,value in REGIONS.items %}
-          <li class="nav-item">
-            {% if section == "map" %}
-              <a class="nav-link{% if request.GET.boundaries == value|slugify or request.GET.region == value|slugify %} active{% endif %}" 
-              href="{% url "water:infrastructure" %}?region={{ value }}">
-                {{ key }}
-              </a>
-            {% else %}
-              <a class="{% if key == 'MNCA' %}mnca-button nav-link{% else %}btn{% endif %}{% if request.GET.boundaries == value|slugify or request.GET.region == value|slugify %} {% if key == 'MNCA' %}active{% else %}btn-dark{% endif %}{% endif %}" 
-              href="#" data-region="{{ value }}">
-                {{ key }}
-              </a>
-            {% endif %}
-          </li>
+            <li class="nav-item">
+                <a class="
+                  {% if key == 'Eau d\'Azur' %}mnca-button nav-link{% else %}btn{% endif %} 
+                  {% if request.GET.region == value|slugify %}
+                    {% if key == 'Eau d\'Azur' %}
+                      active
+                    {% else %}
+                      btn-dark
+                    {% endif %}
+                  {% endif %}"
+                href="{% url 'water:water' %}?region={{ value }}" data-region="{{ value }}">
+                  {{ key }}
+                </a>
+            </li>
           {% endfor %}
 
         </ul>

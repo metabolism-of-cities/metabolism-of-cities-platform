@@ -147,7 +147,7 @@
       </button>
 
       <div class="collapse navbar-collapse" id="project-navbar">
-        <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav {% if PROJECT.slug != "water" %}ml-auto{% endif %}">
 
           {% if PROJECT.id == 4 %}
             {% include "_menu-data.html" %}
@@ -217,7 +217,7 @@
   {% include "_submenu-ascus2020.html" %}
 {% elif PROJECT.slug == "ascus2021" and request.user.is_authenticated %}
   {% include "_submenu-ascus2021.html" %}
-{% elif PROJECT.slug == "water" and show_submenu %}
+{% elif PROJECT.slug == "water" %}
   {% include "_submenu-water.html" %}
 {% elif PROJECT.id == 16 and request.user.is_authenticated %}
   {% if my_organization %}

@@ -215,7 +215,7 @@ def work_item_unvote(info, people):
 
 # Used for the water platform
 NICE_REGIONS = {
-    "MNCA": 1012156,
+    "Eau d'Azur": 1012156,
     "Nice": 1012173,
     "Rive Droite": 1012175,
     "Est-Littoral": 1012174,
