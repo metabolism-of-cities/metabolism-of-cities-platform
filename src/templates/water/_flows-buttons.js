@@ -6,27 +6,27 @@ $(function(){
 
     if ($(this).hasClass("mnca-button")) {
       /* MNCA button is pressed so we remove all regions and only activate this one */
-      $(".region-bar a").removeClass("btn-warning");
+      $(".region-bar a").removeClass("btn-dark");
       $(this).addClass("active");
     } else {
       $(".mnca-button").removeClass("active");
-      if ($(this).hasClass("btn-warning")) {
+      if ($(this).hasClass("btn-dark")) {
         isActive = true;
       } else {
         isActive = false;
       }
 
       if (isActive) {
-        $(this).removeClass("btn-warning");
+        $(this).removeClass("btn-dark");
       } else {
-        $(this).addClass("btn-warning");
+        $(this).addClass("btn-dark");
       }
     }
 
-    var activated_regions = $(".region-bar a.btn-warning").length;
+    var activated_regions = $(".region-bar a.btn-dark").length;
     if (activated_regions == 6 || activated_regions == 0) {
       /*  Either ALL or NO region activated, so fallback to MNCA */
-      $(".region-bar a").removeClass("btn-warning");
+      $(".region-bar a").removeClass("btn-dark");
       $(".mnca-button").addClass("active");
     }
 

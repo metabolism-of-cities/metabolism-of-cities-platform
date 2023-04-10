@@ -17,7 +17,7 @@
                 {{ key }}
               </a>
             {% else %}
-              <a class="{% if key == 'MNCA' %}mnca-button nav-link{% else %}btn{% endif %}{% if request.GET.boundaries == value|slugify or request.GET.region == value|slugify %} {% if key == 'MNCA' %}active{% else %}btn-warning{% endif %}{% endif %}" 
+              <a class="{% if key == 'MNCA' %}mnca-button nav-link{% else %}btn{% endif %}{% if request.GET.boundaries == value|slugify or request.GET.region == value|slugify %} {% if key == 'MNCA' %}active{% else %}btn-dark{% endif %}{% endif %}" 
               href="#" data-region="{{ value }}">
                 {{ key }}
               </a>
