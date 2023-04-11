@@ -1,40 +1,104 @@
 {% extends "_base.html" %}
 
+{% block css %}
+<style type="text/css">
+.dataframe th,.dataframe td{padding:5px;}
+.databox {
+  overflow-y: scroll;
+  overflow-x: auto;
+  max-height: 500px;
+}
+.dataframe {
+  width: 100%;
+}
+.dataframe tr th:first-child { display: none; }
+</style>
+{% endblock %}
+
 {% block content %}
 
   <h2>{% block title %}{{ info }}{% endblock %}</h2>
 
   <dl>
-    <dt>{{ _("Start date") }}</dt>
-    <dd>{{ df.year.min }}</dd>
+    <dt>{{ _("Year(s) covered") }}</dt>
+    <dd>
+      {{ df.year.min }}
+      {% if df.year.max != df.year.min %}-{{ df.year.max }}{% endif %}
+    </dd>
 
-    <dt>{{ _("End date") }}</dt>
-    <dd>{{ df.year.max }}</dd>
-
-    <dt>{{ _("Number of records") }}</dt>
+    <dt>{{ _("Number of rows") }}</dt>
     <dd>{{ df.shape.0 }}</dd>
 
     <dt>{{ _("Type") }}</dt>
     <dd>{{ info.category }}</dd>
 
+    <dt>{{ _("Processed?") }}</dt>
+    <dd>{% if info.is_processed %}{{ _("Yes") }}{% else %}{{ _("No") }}{% endif %}</dd>
+
   </dl>
 
-  <form method="post">
-    <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> {{ _("Save data") }}</button>
-    {% csrf_token %}
-    <input type="hidden" name="save" value="true" />
-  </form>
+  {% if info.is_processed %}
+    <h2 class="mt-5">{{ _("Data overview") }}</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>{{ _("Date") }}</th>
+          <th>{{ _("Territory") }}</th>
+          <th>{{ _("Flow") }}</th>
+          <th>{{ _("Quantity") }}</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for each in info.data.all %}
+        <tr>
+          <td>
+            {% if each.timeframe == "year" %}
+              {{ each.date|date:"Y" }}
+            {% else %}
+              {{ each.date|date:"M Y" }}
+            {% endif %}
+          </td>
+          <td>{{ each.space }}</td>
+          <td>{{ each.flow }}</td>
+          <td>
+            {% if each.quantity %}
+              {{ each.quantity }} {{ each.category.unit.symbol }}
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <form method="post" class="mt-5">
+      <button type="submit" class="btn btn-danger" onclick="javascript:return confirm('Are you sure?')">{{ _("Delete data from database") }}</button>
+      <input type="hidden" name="delete_data" value="true" />
+      {% csrf_token %}
+    </form>
+  {% else %}
+    <h2 class="mt-5">{{ _("Spreadsheet overview") }}</h2>
+    <div class="databox">
+      {{ table }}
+    </div>
 
-  <form method="post" class="float-right">
-    <button type="submit" class="btn btn-danger"
-     onclick="javascript:return confirm('{{ _("Are you sure?") }}')" 
-    ><i class="fa fa-trash"></i> {{ _("Delete file") }}</button>
-    {% csrf_token %}
-    <input type="hidden" name="delete" value="true"/>
-  </form>
+    <h2 class="mt-4">{{ _("All good?") }}</h2>
+    <form method="post">
+      <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> {{ _("Save data") }}</button>
+      {% csrf_token %}
+      <input type="hidden" name="save" value="true" />
+    </form>
 
-  <h2 class="mt-5">Data overview</h2>
+    <h2 class="mt-3">{{ _("Not good?") }}</h2>
+    <form method="post">
+      <button type="submit" class="btn btn-danger"
+       onclick="javascript:return confirm('{{ _("Are you sure?") }}')" 
+      ><i class="fa fa-trash"></i> {{ _("Delete file and try again") }}</button>
+      {% csrf_token %}
+      <input type="hidden" name="delete" value="true"/>
+    </form>
 
-  {{ table }}
+  {% endif %}
+
+  <a href="../" class="btn btn-primary-outline mt-4"><i class="fa fa-arrow-left"></i> {{ _("Back to overview") }}</a>
+
 
 {% endblock %}

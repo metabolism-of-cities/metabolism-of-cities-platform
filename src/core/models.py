@@ -3683,6 +3683,7 @@ class WaterSystemSpace(models.Model):
 
 class WaterSystemCategory(models.Model):
     name = models.CharField(max_length=255)
+    unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -3697,7 +3698,7 @@ class WaterSystemFlow(models.Model):
     category = models.ForeignKey(WaterSystemCategory, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return f"{self.identifier}. {self.name}"
 
     class Meta:
         ordering = ["category", "identifier", "name"]
@@ -3707,16 +3708,29 @@ class WaterSystemFile(models.Model):
     file = models.FileField(null=True, blank=True, upload_to="water", max_length=255)
     date_created = models.DateTimeField(auto_now_add=True)
     uploader = models.ForeignKey(People, on_delete=models.CASCADE)
+    is_processed = models.BooleanField(default=False, db_index=True)
 
     def get_absolute_url(self):
         return reverse("water:controlpanel_file", args=[self.id])
 
     def __str__(self):
-        return f"{self.file}"
+        return _("File") + " #" + str(self.id)
 
     class Meta:
         ordering = ["id"]
 
+class WaterSystemData(models.Model):
+    file = models.ForeignKey(WaterSystemFile, on_delete=models.CASCADE, related_name="data")
+    flow = models.ForeignKey(WaterSystemFlow, on_delete=models.CASCADE)
+    category = models.ForeignKey(WaterSystemCategory, on_delete=models.CASCADE)
+    space = models.ForeignKey(WaterSystemSpace, on_delete=models.CASCADE)
+    quantity = models.FloatField(null=True, blank=True)
+    date = models.DateField()
+    TIMEFRAME = [
+        ("month", _("Month")),
+        ("year", _("Year")),
+    ]
+    timeframe = models.CharField(max_length=5, null=True,  blank=True, choices=TIMEFRAME, default="month")
 
 ###
 ### END OF WATER SPECIFIC TABLES

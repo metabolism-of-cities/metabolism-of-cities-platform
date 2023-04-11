@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from dateutil.parser import parse
 
 # For loading data...
 from openpyxl import load_workbook
@@ -127,6 +128,7 @@ def controlpanel_categories(request):
         if not info:
             info = WaterSystemCategory()
         info.name = request.POST["name"]
+        info.unit_id = request.POST["unit"]
         info.save()
         messages.success(request, _("Information was saved"))
         return redirect(request.path)
@@ -135,6 +137,7 @@ def controlpanel_categories(request):
         "categories": WaterSystemCategory.objects.all(),
         "info": info,
         "section": "controlpanel",
+        "units": Unit.objects.order_by("symbol"),
     }
     return render(request, "water/controlpanel/categories.html", context)
 
@@ -225,10 +228,23 @@ def controlpanel_file(request, id):
         messages.success(request, _("The file was deleted successfully"))
         return redirect(reverse("water:controlpanel_upload"))
 
-    df = pd.read_excel(info.file)
+    if "delete_data" in request.POST:
+        info.data.all().delete()
+        info.is_processed = False
+        info.save()
+        messages.success(request, _("The data was deleted successfully from the database. You can reload it below, or delete the original file."))
 
-    columns_to_keep = ["Flux", "Mois", "An", "MNCA", "Nice", "Rive Droite", "Est-Littoral", "Moyen Pays Rive Gauche", "Tinée", "Vésubie", "Tinée"]
-    df = df[columns_to_keep]
+    # We merge all the sheets, and remove the first row which only contains the unit (eg km3)
+    all_sheets = pd.read_excel(info.file, header=1, sheet_name=None)
+    all_data = pd.DataFrame()
+    cdf = pd.concat(all_sheets.values())
+    df = all_data.append(cdf, ignore_index=True)
+
+    columns_to_keep = ["Flux", "Mois", "An", "Eau d'Azur", "Nice", "Rive Droite", "Est-Littoral", "Moyen Pays Rive Gauche", "Tinée", "Vésubie", "Tinée"]
+    try:
+        df = df[columns_to_keep]
+    except Exception as e:
+        messages.error(request, "One or more of the required columns were not found. Below is the error message: " + str(e))
 
     number_of_cols = len(df.columns)
     if number_of_cols != len(columns_to_keep):
@@ -248,8 +264,8 @@ def controlpanel_file(request, id):
         df.dropna(how="all", inplace=True) 
 
         months = {
-            1: "January",
-            2: "February",
+            1: "Jan",
+            2: "Feb",
             3: "Mar",
             4: "Apr",
             5: "May",
@@ -262,8 +278,8 @@ def controlpanel_file(request, id):
             12: "Dec",
         }
         # Convert the month names to numbers
-        df["month"] = df["month"].astype(int)
-        df["month"] = df["month"].replace(months)
+        df["month"] = df["month"].astype("Int64")
+        #df["month"] = df["month"].replace(months)
 
         if df["year"].isnull().sum() > 0:
             error = f"There are {df['year'].isnull().sum()} rows that do not have a value in the YEAR column. Please check and correct or remove these rows."
@@ -273,6 +289,66 @@ def controlpanel_file(request, id):
             error = f"There are {df['flow'].isnull().sum()} rows that do not have a value in the FLOW column. Please check and correct or remove these rows."
             messages.error(request, error)
 
+    if "save" in request.POST:
+        errors = []
+        items = []
+        flows = {}
+        for index, row in df.iterrows():
+            row = row.to_dict()
+            flow = row["flow"]
+            category = info.category
+            error = None
+            if flow not in flows:
+                try:
+                    get_flow = WaterSystemFlow.objects.get(identifier=flow, category=category)
+                    flows[flow] = get_flow
+                    flow = get_flow
+                except:
+                    error = f"We could not locate flow #{flow} in the database"
+            else:
+                flow = flows[flow]
+
+            try:
+                year = row["year"]
+                month = row["month"]
+                timeframe = "month"
+                if not isinstance(month, int):
+                    month = 1
+                    timeframe = "year"
+                date = parse(f"{year}-{month}-01")
+            except ValueError:
+                error = _("Year/month information is not valid.")
+
+            if not error:
+                spaces = WaterSystemSpace.objects.all()
+                for each in spaces:
+                    quantity = row[each.name]
+                    space = each
+                    if pd.isnull(quantity):
+                        quantity = None
+                    items.append(WaterSystemData(
+                        file = info,
+                        flow = flow,
+                        category = category,
+                        timeframe = timeframe,
+                        space = space,
+                        date = date,
+                        quantity = quantity)
+                    )
+            else:
+                errors.append(error)
+
+        if not errors:
+            try:
+                WaterSystemData.objects.bulk_create(items)
+                info.is_processed = True
+                info.save()
+                messages.success(request, _("The data has been saved in the database"))
+            except Exception as e:
+                errors.append(_("Sorry, we could not save your data. Are all the quantities filled in correctly? The error is printed below: ") + str(e))
+
+        for error in errors:
+            messages.error(request, error)
 
     context = {
         "info": info,

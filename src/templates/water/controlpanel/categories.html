@@ -7,7 +7,7 @@
   {% if not info %}
     <ul>
       {% for each in categories %}
-        <li><a href="?id={{ each.id }}">{{ each }}</a></li>
+        <li><a href="?id={{ each.id }}">{{ each }}</a> ({{ each.unit.symbol }})</li>
       {% endfor %}
     </ul>
 
@@ -19,6 +19,15 @@
     <div class="mb-3">
       <label class="form-label">Name</label>
       <input class="form-control" name="name" required value="{{ info.name }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Unit</label>
+      <select class="form-control" name="unit">
+        <option value=""></option>
+        {% for each in units %}
+          <option value="{{ each.id }}" {% if each == info.unit %}selected{% endif %}>{{ each.symbol }}</option>
+        {% endfor %}
+      </select>
     </div>
     <div class="form-actions">
       <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Save</button>

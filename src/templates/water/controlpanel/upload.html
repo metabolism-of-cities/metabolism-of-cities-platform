@@ -79,21 +79,21 @@
     <table class="table table-striped">
       <thead>
         <tr>
+          <th>{{ _("File") }}</th>
           <th>{{ _("Type") }}</th>
           <th>{{ _("Date") }}</th>
           <th>{{ _("Uploader") }}</th>
-          <th>{{ _("File") }}</th>
           <th>{{ _("Processed?") }}</th>
         </tr>
       </thead>
       <tbody>
       {% for each in files %}
         <tr>
+          <td>{{ each.id }}</td>
           <td><a href="{{ each.get_absolute_url }}">{{ each.category }}</a></td>
           <td>{{ each.date_created }}</td>
           <td>{{ each.uploader }}</td>
-          <td>{{ each.file.name }}</td>
-          <td></td>
+          <td>{% if each.is_processed %}{{ _("Yes") }}{% else %}{{ _("No") }}{% endif %}</td>
         </tr>
       {% endfor %}
       </tbody>
