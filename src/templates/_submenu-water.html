@@ -1,15 +1,14 @@
 <div id="subnav-water">
   <nav class="navbar navbar-expand-md">
-    <div class="container">
+    <div class="container-xl">
 
-      <button class="navbar-toggler ml-3" type="button" data-toggle="collapse" data-target="#water-navbar" aria-controls="water-navbar" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="water-navbar">
-        <strong class="mr-4">Territoire</strong>
+      <div class="collapse navbar-collapse project-navbar-collapse" id="water-navbar">
         <ul class="navbar-nav mr-auto ml-3 ml-md-0 region-bar">
-
+          <li class="nav-item">
+            <span class="btn mr-4">
+              <strong>Territoire</strong>
+            </span>
+          </li>
           {% for key,value in REGIONS.items %}
             <li class="nav-item">
                 <a class="
