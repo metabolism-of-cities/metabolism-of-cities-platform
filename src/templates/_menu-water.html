@@ -1,23 +1,28 @@
 <li class="nav-item">
-  <a class="nav-link {% if section == "homepage" %}active{% endif %}" href="#"> Accueil</a>
+  <a class="nav-link {% if section == "homepage" %}active{% endif %}" href="{% url "water:index" %}"> Accueil</a>
 </li>
-<div class="nav-divider"></div>
 <li class="nav-item">
   <a class="nav-link {% if section == "about" %}active{% endif %}" href="{% url "water:about" %}"> A propos</a>
 </li>
-<div class="nav-divider"></div>
 <li class="nav-item">
   <a class="nav-link {% if section == "contact" %}active{% endif %}" href="{% url "water:contact" %}"> Contact</a>
 </li>
-<div class="nav-divider"></div>
 {% if not user.is_authenticated %}
-<div class="nav-divider"></div>
 <li class="nav-item">
   <a class="nav-link {% if section == "login" %}active{% endif %}" href="{% url "water:water_login" %}"> Se connecter</a>
 </li>
 {% elif "curator" in PERMISSIONS or request.user.is_staff or "admin" in PERMISSIONS %}
-<div class="nav-divider"></div>
-<li class="nav-item">
-  <a class="nav-link {% if section == "controlpanel" %}active{% endif %}" href="{% url "water:controlpanel" %}"> Control panel</a>
+<li class="nav-item ml-auto" >
+  <a class="badge badge-secondary {% if section == "controlpanel" %}active{% endif %}" href="{% url "water:controlpanel" %}">
+    <i class="fa fa-cog"></i>
+    Control panel
+  </a>
+</li>
+
+<li class="nav-item " >
+  <a class="badge badge-light" style="background:#EFEFEF;padding:5px" href="{% url "water:index" %}">
+    <i class="fa fa-user"></i>
+    {{ request.user.people }}
+  </a>
 </li>
 {% endif %}

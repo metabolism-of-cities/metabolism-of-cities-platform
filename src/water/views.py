@@ -6,6 +6,7 @@ from django.http import Http404
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
 
 # For loading data...
 from openpyxl import load_workbook
@@ -22,7 +23,12 @@ DIAGRAM_ID = 1013292
 INVERTED_REGIONS = {v: k for k, v in NICE_REGIONS.items()}
 
 def index(request):
-    return redirect(reverse("water:water") + "?region=1012156")
+    context = {
+        "title": "Accueil",
+        "section": "homepage",
+    }
+    return render(request, "water/index.html", context)
+
 
 def water(request):
     context = {
@@ -104,6 +110,7 @@ def controlpanel_index(request):
         unauthorized_access(request)
 
     context = {
+        "section": "controlpanel",
     }
     return render(request, "water/controlpanel/index.html", context)
 
@@ -127,6 +134,7 @@ def controlpanel_categories(request):
     context = {
         "categories": WaterSystemCategory.objects.all(),
         "info": info,
+        "section": "controlpanel",
     }
     return render(request, "water/controlpanel/categories.html", context)
 
@@ -150,6 +158,7 @@ def controlpanel_spaces(request):
     context = {
         "spaces": WaterSystemSpace.objects.all(),
         "info": info,
+        "section": "controlpanel",
     }
     return render(request, "water/controlpanel/spaces.html", context)
 
@@ -178,6 +187,7 @@ def controlpanel_flows(request):
         "flows": flows,
         "info": info,
         "types": WaterSystemCategory.objects.all(),
+        "section": "controlpanel",
     }
     return render(request, "water/controlpanel/flows.html", context)
 
@@ -199,6 +209,7 @@ def controlpanel_upload(request):
     context = {
         "types": WaterSystemCategory.objects.all(),
         "files": WaterSystemFile.objects.all(),
+        "section": "controlpanel",
     }
     return render(request, "water/controlpanel/upload.html", context)
 
@@ -267,6 +278,7 @@ def controlpanel_file(request, id):
         "info": info,
         "table": mark_safe(df.to_html()),
         "df": df,
+        "section": "controlpanel",
     }
     return render(request, "water/controlpanel/file.html", context)
 
