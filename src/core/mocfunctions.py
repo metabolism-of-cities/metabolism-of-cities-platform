@@ -215,13 +215,13 @@ def work_item_unvote(info, people):
 
 # Used for the water platform
 NICE_REGIONS = {
-    "Eau d'Azur": 1012156,
-    "Nice": 1012173,
-    "Rive Droite": 1012175,
-    "Est-Littoral": 1012174,
-    "Moyen Pays Rive Gauche": 1012176,
-    "Tinée": 1012172,
-    "Vésubie": 1012177,
+    1: "Eau d'Azur",
+    2: "Nice",
+    3: "Rive Droite",
+    4: "Est-Littoral",
+    5: "Moyen Pays Rive Gauche",
+    6: "Tinée",
+    7: "Vésubie",
 }
 
 # For some of the websites users might have access to documents that are not 

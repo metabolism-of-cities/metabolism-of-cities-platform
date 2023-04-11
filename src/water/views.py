@@ -21,7 +21,6 @@ from django.core.files.base import ContentFile
 from django.utils.translation import gettext_lazy as _
 
 DIAGRAM_ID = 1013292
-INVERTED_REGIONS = {v: k for k, v in NICE_REGIONS.items()}
 
 def index(request):
     context = {
@@ -38,7 +37,7 @@ def water(request):
         "link": reverse("water:water"),
         "show_submenu": True,
         "section": "water",
-        "region": INVERTED_REGIONS.get(int(request.GET['region']))
+        "region": NICE_REGIONS.get(int(request.GET['region']))
     }
     return render(request, "water/water.html", context)
 
@@ -48,7 +47,7 @@ def energy(request):
         "section": "energy",
         "link": reverse("water:energy"),
         "show_submenu": True,
-        "region": INVERTED_REGIONS.get(int(request.GET['region']))
+        "region": NICE_REGIONS.get(int(request.GET['region']))
     }
     return render(request, "water/energy.html", context)
 
@@ -58,7 +57,7 @@ def emissions(request):
         "section": "emissions",
         "link": reverse("water:emissions"),
         "show_submenu": True,
-        "region": INVERTED_REGIONS.get(int(request.GET['region']))
+        "region": NICE_REGIONS.get(int(request.GET['region']))
     }
     return render(request, "water/emissions.html", context)
 

@@ -5,7 +5,7 @@ $(function(){
     var region = $(this).data("region");
 
     if ($(this).hasClass("mnca-button")) {
-      /* MNCA button is pressed so we remove all regions and only activate this one */
+      /* Eau d'azur button is pressed so we remove all regions and only activate this one */
       $(".region-bar a").removeClass("btn-dark");
       $(this).addClass("active");
     } else {
@@ -28,6 +28,13 @@ $(function(){
       /*  Either ALL or NO region activated, so fallback to MNCA */
       $(".region-bar a").removeClass("btn-dark");
       $(".mnca-button").addClass("active");
+      $(".map-region").addClass("active-space");
+    } else {
+      $(".map-region").removeClass("active-space");
+      $(".region-bar a.btn-dark").each(function(){
+        var region = $(this).data("region");
+        $("#space-"+region).addClass("active-space");
+      });
     }
 
   });

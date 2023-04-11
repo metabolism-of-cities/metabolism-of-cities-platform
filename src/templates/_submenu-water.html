@@ -12,16 +12,16 @@
           {% for key,value in REGIONS.items %}
             <li class="nav-item">
                 <a class="
-                  {% if key == 'Eau d\'Azur' %}mnca-button nav-link{% else %}btn{% endif %} 
-                  {% if request.GET.region == value|slugify %}
-                    {% if key == 'Eau d\'Azur' %}
+                  {% if value == 'Eau d\'Azur' %}mnca-button nav-link{% else %}btn{% endif %} 
+                  {% if request.GET.region == key|slugify %}
+                    {% if value == 'Eau d\'Azur' %}
                       active
                     {% else %}
                       btn-dark
                     {% endif %}
                   {% endif %}"
-                href="{% url 'water:water' %}?region={{ value }}" data-region="{{ value }}">
-                  {{ key }}
+                href="{% url 'water:water' %}?region={{ key }}" data-region="{{ key }}">
+                  {{ value }}
                 </a>
             </li>
           {% endfor %}
