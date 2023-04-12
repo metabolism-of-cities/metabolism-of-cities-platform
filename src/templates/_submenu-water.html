@@ -11,14 +11,9 @@
           </li>
           {% for key,value in REGIONS.items %}
             <li class="nav-item">
-                <a class="
-                  {% if value == 'Eau d\'Azur' %}mnca-button nav-link{% else %}btn{% endif %} 
+                <a class="btn
                   {% if request.GET.region == key|slugify %}
-                    {% if value == 'Eau d\'Azur' %}
-                      active
-                    {% else %}
-                      btn-dark
-                    {% endif %}
+                    btn-dark
                   {% endif %}"
                 href="{% url 'water:water' %}?region={{ key }}" data-region="{{ key }}">
                   {{ value }}

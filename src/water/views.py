@@ -2,12 +2,13 @@ from django.shortcuts import render
 from core.mocfunctions import *
 from staf import views as staf
 from django.shortcuts import redirect
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from dateutil.parser import parse
+from django.db.models import Sum
 
 # For loading data...
 from openpyxl import load_workbook
@@ -74,6 +75,13 @@ def contact(request):
         "section": "contact",
     }
     return render(request, "water/contact.html", context)
+
+def ajax(request):
+    data = WaterSystemData.objects.filter(category_id=request.GET["category"]).values("flow_id").annotate(total=Sum("quantity"))
+    results = {}
+    for each in data:
+        results[each["flow_id"]] = each["total"]
+    return JsonResponse(results)
 
 def water_login(request):
     project = get_project(request)

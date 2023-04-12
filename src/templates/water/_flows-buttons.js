@@ -4,12 +4,12 @@ $(function(){
     e.preventDefault();
     var region = $(this).data("region");
 
-    if ($(this).hasClass("mnca-button")) {
+    if (region == "1") {
       /* Eau d'azur button is pressed so we remove all regions and only activate this one */
       $(".region-bar a").removeClass("btn-dark");
-      $(this).addClass("active");
+      $(this).addClass("btn-dark");
     } else {
-      $(".mnca-button").removeClass("active");
+      $(".region-bar a[data-region='1']").removeClass("btn-dark");
       if ($(this).hasClass("btn-dark")) {
         isActive = true;
       } else {
@@ -24,10 +24,10 @@ $(function(){
     }
 
     var activated_regions = $(".region-bar a.btn-dark").length;
-    if (activated_regions == 6 || activated_regions == 0) {
-      /*  Either ALL or NO region activated, so fallback to MNCA */
+    if (activated_regions == 6 || region == "1") {
+      /*  Either ALL or NO region activated, so fallback to Eau d'Azur */
       $(".region-bar a").removeClass("btn-dark");
-      $(".mnca-button").addClass("active");
+      $(".region-bar a[data-region='1']").addClass("btn-dark");
       $(".map-region").addClass("active-space");
     } else {
       $(".map-region").removeClass("active-space");

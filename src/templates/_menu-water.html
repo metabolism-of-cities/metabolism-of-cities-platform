@@ -2,6 +2,9 @@
   <a class="nav-link {% if section == "homepage" %}active{% endif %}" href="{% url "water:index" %}"> Accueil</a>
 </li>
 <li class="nav-item">
+  <a class="nav-link {% if section == "about" %}active{% endif %}" href="{% url "water:water" %}?region=1"> Metabolism Eau d'Azur</a>
+</li>
+<li class="nav-item">
   <a class="nav-link {% if section == "about" %}active{% endif %}" href="{% url "water:about" %}"> A propos</a>
 </li>
 <li class="nav-item">

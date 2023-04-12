@@ -1,50 +1,70 @@
-<div id="sidebar" class="text-center pt-3 pb-3">
-  <h3>Flux</h3>
-  <ul class="nav flex-column mt-4">
-    <li class="nav-item">
-      <a class="nav-link {% if section == "water" %}active{% endif %}" href="{% url "water:water" %}?region={{ request.GET.region }}"> Eaux</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link {% if section == "energy" %}active{% endif %}" href="{% url "water:energy" %}?region={{ request.GET.region }}"> Energies</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link {% if section == "emissions" %}active{% endif %}" href="{% url "water:emissions" %}?region={{ request.GET.region }}"> Gaz à effets de serre</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link disabled" href="#"> Matières</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link disabled" href="#"> Stocks</a>
-    </li>
-  </ul>
+<div id="sidebar-container">
+
+  <div id="sidebar" class="text-center pt-3 pb-3">
+    <h3>Flux</h3>
+    <ul class="nav flex-column mt-4">
+      <li class="nav-item">
+        <a class="btn {% if section == "water" %}btn-dark d-inline-block{% endif %}" href="{% url "water:water" %}?region={{ request.GET.region }}"> Eaux</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link btn {% if section == "energy" %}btn-dark d-inline-block{% endif %}" href="{% url "water:energy" %}?region={{ request.GET.region }}"> Energies</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link btn {% if section == "emissions" %}btn-dark d-inline-block{% endif %}" href="{% url "water:emissions" %}?region={{ request.GET.region }}"> Gaz à effets de serre</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#"> Matières</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#"> Stocks</a>
+      </li>
+    </ul>
+  </div>
+
+  <div id="sidebar-territory" class="text-center pt-3 pb-3">
+    <h3>Territoire</h3>
+    <ul class="nav flex-column mt-4 region-bar">
+    {% for key,value in REGIONS.items %}
+      <li class="nav-item">
+        <a class="btn
+          {% if request.GET.region == key|slugify %}
+            btn-dark
+          {% endif %}"
+        href="{% url 'water:water' %}?region={{ key }}" data-region="{{ key }}">
+          {{ value }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div id="sidebar-period" class="text-center pt-3 pb-3">
+    <h3>Période</h3>
+
+    <a class="nav-link button" id="current-period" href="#" >Jan-Dec 2022 
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+      <path d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659z"/>
+    </svg>
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up" viewBox="0 0 16 16">
+      <path d="M3.204 11h9.592L8 5.519 3.204 11zm-.753-.659 4.796-5.48a1 1 0 0 1 1.506 0l4.796 5.48c.566.647.106 1.659-.753 1.659H3.204a1 1 0 0 1-.753-1.659z"/>
+    </svg>
+
+    </a>
+
+    <form class="form form-inline period-dropdown p-2">
+      <select class="form-control mb-2">
+        <option value="">Jan 2022</option>
+      </select>
+      <br>
+      <select class="form-control mb-2">
+        <option value="">Dec 2022</option>
+      </select>
+      <br>
+      <button type="submit" class="btn btn-success">Change</button>
+    </form>
+
+  </div>
+
 </div>
-
-<div id="sidebar-period" class="text-center pt-3 pb-3">
-  <h3>Périodo</h3>
-
-  <a class="nav-link button" id="current-period" href="#" >Jan-Dec 2022 
-
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
-    <path d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659z"/>
-  </svg>
-
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up" viewBox="0 0 16 16">
-    <path d="M3.204 11h9.592L8 5.519 3.204 11zm-.753-.659 4.796-5.48a1 1 0 0 1 1.506 0l4.796 5.48c.566.647.106 1.659-.753 1.659H3.204a1 1 0 0 1-.753-1.659z"/>
-  </svg>
-
-  </a>
-
-  <form class="form form-inline period-dropdown p-2">
-    <select class="form-control mb-2">
-      <option value="">Jan 2022</option>
-    </select>
-    <br>
-    <select class="form-control mb-2">
-      <option value="">Dec 2022</option>
-    </select>
-    <br>
-    <button type="submit" class="btn btn-success">Change</button>
-  </form>
-
-</div>
-
