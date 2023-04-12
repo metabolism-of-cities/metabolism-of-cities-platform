@@ -34,18 +34,6 @@
       opacity:1;
       cursor: pointer;
   }
-  #path-1 {
-    stroke-width: 10px;
-  }
-
-  #path-2 {
-    stroke-width: 1px;
-  }
-
-  #path-3 {
-    stroke-width: 18px;
-  }
-
   /* use forward and backward to determine direction */
   /* misnomer because it can be either, depends on how line was drawn */
   /* trial and error to see what works */
@@ -72,6 +60,22 @@
   }
   svg {
     max-width:100%;max-height:calc(100vh - 232px)
+  }
+  .animate-toggle {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+  }
+  .loading {
+    font-size: 4em;
+    position: absolute;
+    top: 40%;
+    left: 40%;
+    z-index: 999999999;
+    display: none;
+  }
+  #w1 {
+    position: relative;
   }
 </style>
 
@@ -105,8 +109,28 @@
       <div class="main-body">
 
         <div class="watergraphs">
-        <p class="text-center mt-2 mb-1">Métabolisme {{ region }} / flux: Gaz à effets de serre / niveau: 1 / période: Jan 2022-Dec 2023</p>
+
+        <p class="text-center mt-2 mb-1">
+        Métabolisme <span id="title_region"></span> / 
+        flux: Gaz à effets de serre /
+        niveau: 1 /
+        période: <span class="title_date"></span>
+        </p>
+
+        <p id="temp"></p>
+
           <div id="w1">
+
+          <span class="loading">
+            <i class="fas fa-spinner-third fa-spin"></i>
+          </span>
+
+          <span class="animate-toggle d-print-none">
+            <label>
+              <input type="checkbox" id="animate" value="true">
+              {{ _("Animate") }}
+            </label>
+          </span>
 
   <svg
      width="338mm"
@@ -1201,12 +1225,15 @@ $(function(){
   });
 });
 </script>
-{% include "water/_flows-buttons.js" %}
+
+{% include "water/_javascript.html" %}
 
 <script type="text/javascript">
-$(function(){
   $("#space-{{ request.GET.region }}").addClass("active-space");
-});
+
+  setDateLabels();
+  $(".region-bar a").click();
+
 </script>
 
 {% endblock %}

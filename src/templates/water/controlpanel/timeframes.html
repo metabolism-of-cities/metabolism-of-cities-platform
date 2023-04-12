@@ -1,0 +1,47 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h2>{% block title %}Manage timeframes{% endblock %}</h2>
+
+  <form method="post" enctype="multipart/form-data">
+
+    <div class="alert alert-info">
+      What should be the default timeframe for the sankey diagrams?
+    </div>
+    
+    <form class="form form-inline period-dropdown p-2">
+      <select class="form-control mb-2" name="date_start">
+        <option value=""></option>
+        {% for each in time_frames %}
+          {% if each.timeframe == "month" %}
+            <option value="{{ each.date|date:"Y-m" }}" {% if PROJECT.meta_data.default_date_start == each.date|date:"Y-m" %}selected{% endif %}>
+              {{ each.date|date:"M Y" }}
+            </option>
+          {% else %}
+            <option value="{{ each.date|date:"Y" }}" {% if PROJECT.meta_data.default_date_start == each.date|date:"Y" %}selected{% endif %}>
+              {{ each.date|date:"Y" }}
+            </option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      <select class="form-control mb-2" name="date_end">
+        <option value=""></option>
+        {% for each in time_frames %}
+          {% if each.timeframe == "month" %}
+            <option value="{{ each.date|date:"Y-m" }}" {% if PROJECT.meta_data.default_date_end == each.date|date:"Y-m" %}selected{% endif %}>
+              {{ each.date|date:"M Y" }}
+            </option>
+          {% else %}
+            <option value="{{ each.date|date:"Y" }}" {% if PROJECT.meta_data.default_date_end == each.date|date:"Y" %}selected{% endif %}>
+              {{ each.date|date:"Y" }}
+            </option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      <br>
+      <button type="submit" class="btn btn-success">{{ _("Save") }}</button>
+        {% csrf_token %}
+    </form>
+
+{% endblock %}

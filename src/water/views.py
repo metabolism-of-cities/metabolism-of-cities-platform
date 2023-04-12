@@ -53,12 +53,16 @@ def energy(request):
     return render(request, "water/energy.html", context)
 
 def emissions(request):
+    category = 3
     context = {
         "title": "Gaz à effets de serre",
         "section": "emissions",
         "link": reverse("water:emissions"),
         "show_submenu": True,
-        "region": NICE_REGIONS.get(int(request.GET['region']))
+        "region": NICE_REGIONS.get(int(request.GET['region'])),
+        "category": WaterSystemCategory.objects.get(pk=category),
+        "time_frames": WaterSystemData.objects.filter(category_id=category).values("date", "timeframe").distinct().order_by("date"),
+        "flows": WaterSystemFlow.objects.filter(category_id=category),
     }
     return render(request, "water/emissions.html", context)
 
@@ -77,10 +81,29 @@ def contact(request):
     return render(request, "water/contact.html", context)
 
 def ajax(request):
-    data = WaterSystemData.objects.filter(category_id=request.GET["category"]).values("flow_id").annotate(total=Sum("quantity"))
+    regions = request.GET.getlist("region")
+    data = WaterSystemData.objects.filter(category_id=request.GET["category"]).values("flow__identifier").annotate(total=Sum("quantity"))
+
+    if regions:
+        data = data.filter(space__in=regions)
+
+    date_start = request.GET["date_start"]
+    if len(date_start) == 4:
+        date_start = parse(date_start + "-01-01")
+    else:
+        date_start = parse(date_start + "-01")
+
+    date_end = request.GET["date_end"]
+    if len(date_end) == 4:
+        date_end = parse(date_end + "-01-01")
+    else:
+        date_end = parse(date_end + "-01")
+
+    data = data.filter(date__gte=date_start, date__lte=date_end)
+
     results = {}
     for each in data:
-        results[each["flow_id"]] = each["total"]
+        results[each["flow__identifier"]] = each["total"]
     return JsonResponse(results)
 
 def water_login(request):
@@ -121,6 +144,26 @@ def controlpanel_index(request):
         "section": "controlpanel",
     }
     return render(request, "water/controlpanel/index.html", context)
+
+@login_required
+def controlpanel_timeframes(request):
+    if not has_permission(request, request.project, ["curator", "admin"]):
+        unauthorized_access(request)
+
+    if request.method == "POST":
+        project = get_project(request)
+        if not project.meta_data:
+            project.meta_data = {}
+        project.meta_data["default_date_start"] = request.POST["date_start"]
+        project.meta_data["default_date_end"] = request.POST["date_end"]
+        project.save()
+        messages.success(request, _("Information was saved"))
+
+    context = {
+        "section": "controlpanel",
+        "time_frames": WaterSystemData.objects.values("date", "timeframe").distinct().order_by("date"),
+    }
+    return render(request, "water/controlpanel/timeframes.html", context)
 
 @login_required
 def controlpanel_categories(request):

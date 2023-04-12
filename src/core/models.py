@@ -3721,7 +3721,7 @@ class WaterSystemFile(models.Model):
 
 class WaterSystemData(models.Model):
     file = models.ForeignKey(WaterSystemFile, on_delete=models.CASCADE, related_name="data")
-    flow = models.ForeignKey(WaterSystemFlow, on_delete=models.CASCADE)
+    flow = models.ForeignKey(WaterSystemFlow, on_delete=models.CASCADE, related_name="data")
     category = models.ForeignKey(WaterSystemCategory, on_delete=models.CASCADE)
     space = models.ForeignKey(WaterSystemSpace, on_delete=models.CASCADE)
     quantity = models.FloatField(null=True, blank=True)
