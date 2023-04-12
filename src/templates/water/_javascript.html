@@ -22,7 +22,7 @@
 
     /* Let's build the URL */
     category = 3;
-    var jsonURL = "/water/ajax/?category=" + category;
+    var jsonURL = "{% url "water:ajax" %}?category=" + category;
 
     $(".region-bar a.btn-dark").each(function(){
       var region = $(this).data("region");
