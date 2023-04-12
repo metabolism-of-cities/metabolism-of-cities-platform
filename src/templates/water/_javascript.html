@@ -199,5 +199,32 @@
     getData();
   });
 
+
+  /* We need to resize the sidebar so that it fits on the screen without the need to scroll */
+  var bodyWidth = $(window).width();
+  if (bodyWidth > 990) {
+    var $sidebar = $("#sidebar-container");
+    var sidebarHeight = $sidebar.outerHeight();
+
+    var bodyHeight = $(window).height();
+
+    var $toplayer = $(".top-layer");
+    var toplayerHeight = $toplayer.outerHeight();
+
+    /* We calculate the total available height by getting the body's height and removing the height of the */
+    /* top menu, and then taking 10px off that in order to leave some space. */
+    availableHeight = bodyHeight-toplayerHeight-10;
+
+    if (sidebarHeight > availableHeight) {
+      proportion = availableHeight/sidebarHeight;
+      difference = availableHeight-sidebarHeight;
+      move_by = (100-(proportion*100))/2
+      $sidebar.css({
+        transform: "translate(0, -" + move_by + "%) " + "scale(" + proportion + ")"
+      });
+    }
+  }
+
+
 </script>
 

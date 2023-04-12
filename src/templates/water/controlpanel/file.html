@@ -39,37 +39,16 @@
 
   {% if info.is_processed %}
     <h2 class="mt-5">{{ _("Data overview") }}</h2>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>{{ _("Date") }}</th>
-          <th>{{ _("Territory") }}</th>
-          <th>{{ _("Flow") }}</th>
-          <th>{{ _("Quantity") }}</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for each in info.data.all %}
-        <tr>
-          <td>
-            {% if each.timeframe == "year" %}
-              {{ each.date|date:"Y" }}
-            {% else %}
-              {{ each.date|date:"M Y" }}
-            {% endif %}
-          </td>
-          <td>{{ each.space }}</td>
-          <td>{{ each.flow }}</td>
-          <td>
-            {% if each.quantity %}
-              {{ each.quantity }} {{ each.category.unit.symbol }}
-            {% endif %}
-          </td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-    <form method="post" class="mt-5">
+    <a class="btn-icon" href="{{ info.file.url }}">
+        <div class="title"><i class="fal fa-database fa-fw"></i> {{ info.data.count }} {{ _("data points recorded.") }}</div>
+        <div class="text">
+          {{ _("The data in this spreadsheet have been recorded in the database and are used to create the sankey diagrams.") }}
+          {{ _("Click here if you want to download the original data.") }}
+        </div>
+      </a>
+    <h2 class="mt-5">{{ _("Delete data") }}</h2>
+    <p>{{ _("Use the button below to remove the data from the database. We will keep the file (for now), which you can decide to delete later.") }}</p>
+    <form method="post">
       <button type="submit" class="btn btn-danger" onclick="javascript:return confirm('Are you sure?')">{{ _("Delete data from database") }}</button>
       <input type="hidden" name="delete_data" value="true" />
       {% csrf_token %}
