@@ -853,6 +853,14 @@
       {% else %}
         <span class="question-number bg-dark text-light rounded px-2 mr-2">22</span>
       {% endif %}
+
+
+      <label>Data gaps and assumptions</label><br>
+      {% if report.gaps_html %}
+        {{ report.gaps_html|safe }}
+      {% else %}
+        <span class="question-number bg-dark text-light rounded px-2 mr-2">23</span>
+      {% endif %}
     </section>
 
     <section id="circularity">
