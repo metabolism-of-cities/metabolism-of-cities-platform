@@ -671,6 +671,10 @@
           Measuring material flows and circularity is a data heavy exercise. Numerous datasets were collected and visualised throughout the Urban Circularity Assessment process. To synthesise these findings, a Sankey diagram illustrates how material flows of the local economy of {{space}} are circulating from one lifecycle stage to another. The height of each line is proportional to the weight of the flow. This diagram therefore helps to quickly have an overview of all the materials flows that compose the economy and their respective shares. The flows that are coloured in light blue in the Sankey diagram, are return flows. This means that they flow in the opposite direction of the lifecycle stages and are subjected to reuse, redistribution, or remanufacturing. Their size relative to the others is a good indication for a materials' circularity.
         </p>
 
+        {% if space.slug == "apeldoorn" %}
+          <div id="sankey" class="plotly-graph-div" style="height:100%; width:100%;"></div>
+        {% endif %}
+
         <label>Domestic Extraction</label><br>
         {% if report.domestic_extraction_html %}
           {{ report.domestic_extraction_html|safe }}
@@ -916,9 +920,6 @@
           {{ report.references_html|safe }}
         {% endif %}
       </section>
-      {% if space.slug == "apeldoorn" %}
-        <div id="sankey" class="plotly-graph-div" style="height:100%; width:100%;"></div>
-      {% endif %}
     </div>
   </div>
 
