@@ -188,8 +188,10 @@
   $("#animate").click(function(){
     if ($(this).is(":checked")) {
       $(".path").css("stroke-dasharray", "1");
+      $(".animate-toggle label").addClass("btn-dark");
     } else {
       $(".path").css("stroke-dasharray", "0");
+      $(".animate-toggle label").removeClass("btn-dark");
     }
   });
 

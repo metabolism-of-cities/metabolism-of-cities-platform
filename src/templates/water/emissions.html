@@ -12,12 +12,14 @@
   /* black and white by default */
   .map-region {
     filter: grayscale(1);
+    opacity: 0.4;
   }
 
   /*  hover to give colour */
   /* space-X */
   .active-space {
     filter: grayscale(0);
+    opacity: 1;
   }
 
   /* not interaction with nodes so you can click on regions */
@@ -98,6 +100,9 @@
         <li class="nav-item">
           <a class="nav-link waterlink disabled" href="#" data-id="w2">Niveau 2</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link waterlink disabled" href="#" data-id="w2">Niveau 3</a>
+        </li>
         <li class="nav-item ml-auto">
           <a href="#"><i class="fa fa-download"></i></a>
         </li>
@@ -127,9 +132,9 @@
           </span>
 
           <span class="animate-toggle d-print-none">
-            <label>
+            <label class="btn font-weight-bold">
               <input type="checkbox" id="animate" value="true">
-              {{ _("Animate") }}
+              {{ _("Activer le mode animation") }}
             </label>
           </span>
 
