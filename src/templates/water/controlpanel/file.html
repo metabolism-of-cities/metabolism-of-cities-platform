@@ -20,6 +20,9 @@
   <h2>{% block title %}{{ info }}{% endblock %}</h2>
 
   <dl>
+    <dt>{{ _("Original file") }}</dt>
+    <dd><a href="{{ info.file.url }}">{{ _("Download file") }}</a></dd>
+
     <dt>{{ _("Year(s) covered") }}</dt>
     <dd>
       {{ df.year.min }}
@@ -30,7 +33,7 @@
     <dd>{{ df.shape.0 }}</dd>
 
     <dt>{{ _("Type") }}</dt>
-    <dd>{{ info.category }}</dd>
+    <dd>{{ category }}</dd>
 
     <dt>{{ _("Processed?") }}</dt>
     <dd>{% if info.is_processed %}{{ _("Yes") }}{% else %}{{ _("No") }}{% endif %}</dd>

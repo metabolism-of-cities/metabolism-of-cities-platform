@@ -315,7 +315,6 @@ def controlpanel_upload(request):
     if request.method == "POST":
         info = WaterSystemFile.objects.create(
             file = request.FILES["file"],
-            category_id = request.POST["type"],
             uploader = request.user.people,
         )
 
@@ -348,12 +347,38 @@ def controlpanel_file(request, id):
         messages.success(request, _("The data was deleted successfully from the database. You can reload it below, or delete the original file."))
 
     # We merge all the sheets, and remove the first row which only contains the unit (eg km3)
-    all_sheets = pd.read_excel(info.file, header=1, sheet_name=None)
+    all_sheets = pd.read_excel(info.file, header=3, sheet_name=None)
     all_data = pd.DataFrame()
     cdf = pd.concat(all_sheets.values())
     df = all_data.append(cdf, ignore_index=True)
+    # The 7th column is an empty separator column, let's drop it
+    df.drop(df.columns[[7]], axis=1, inplace=True)
 
-    columns_to_keep = ["Flux", "Mois", "An", "Eau d'Azur", "Nice", "Rive Droite", "Est-Littoral", "Moyen Pays Rive Gauche", "Tinée", "Vésubie", "Tinée"]
+    try:
+        category_name = (df["FLUX"].loc[df.index[0]])
+        conversion = {
+            "GAZ A EFFETS DE SERRE": 3,
+            "ENERGIE": 2,
+        }
+        category = WaterSystemCategory.objects.get(pk=conversion[category_name])
+    except Exception as e:
+        category = None
+        messages.error(request, "We tried looking up the first value in the FLUX column to check the type of flow, but this did not work. Error: " + str(e))
+
+    columns_to_keep = [
+        "N°FLUX", 
+        "NIVEAUX", 
+        "MOIS", 
+        "ANNEE", 
+        "Eau d'Azur", 
+        "Nice", 
+        "Rive Droite", 
+        "Est Littoral", 
+        "Moyen Pays\nRive Gauche", 
+        "Tinée", 
+        "Vésubie", 
+        "Tinée"
+    ]
     try:
         df = df[columns_to_keep]
     except Exception as e:
@@ -365,9 +390,12 @@ def controlpanel_file(request, id):
         messages.error(request, f"There are {len(columns_to_keep)} specific columns that need to be present in the spreadsheet. We only found {number_of_cols} of these columns in your spreadsheet. Please make sure all columns exist and have the right name! The required columns are: {columns_to_keep}")
     else:
         col_names = {
-            "Flux": "flow",
-            "Mois": "month",
-            "An": "year",
+            "N°FLUX": "flow",
+            "MOIS": "month",
+            "ANNEE": "year",
+            "Moyen Pays\nRive Gauche": "Moyen Pays Rive Gauche",
+            "Est Littoral": "Est-Littoral",
+            "NIVEAUX": "level",
         }
 
         # Rename to English
@@ -377,29 +405,46 @@ def controlpanel_file(request, id):
         df.dropna(how="all", inplace=True) 
 
         months = {
-            1: "Jan",
-            2: "Feb",
-            3: "Mar",
-            4: "Apr",
-            5: "May",
-            6: "Jun",
-            7: "Jul",
-            8: "Aug",
-            9: "Sep",
-            10: "Oct",
-            11: "Nov",
-            12: "Dec",
+            "janvier": "Jan",
+            "février": "Feb",
+            "mars": "Mar",
+            "avril": "Apr",
+            "mai": "May",
+            "juin": "Jun",
+            "juillet": "Jul",
+            "août": "Aug",
+            "septembre": "Sep",
+            "octobre": "Oct",
+            "novembre": "Nov",
+            "décembre": "Dec",
         }
-        # Convert the month names to numbers
-        df["month"] = df["month"].astype("Int64")
-        #df["month"] = df["month"].replace(months)
-
-        if df["year"].isnull().sum() > 0:
-            error = f"There are {df['year'].isnull().sum()} rows that do not have a value in the YEAR column. Please check and correct or remove these rows."
+        try:
+            df["month"] = df["month"].replace(months)
+        except:
+            error = "Month names were not valid, please review."
             messages.error(request, error)
 
-        if df["flow"].isnull().sum() > 0:
-            error = f"There are {df['flow'].isnull().sum()} rows that do not have a value in the FLOW column. Please check and correct or remove these rows."
+        # We delete all records that are not level 2 records
+        try:
+            df = df[df.level != "2"]
+        except:
+            error = "We could not locate the LEVEL (niveau) column, please review."
+            messages.error(request, error)
+
+        try:
+            if df["year"].isnull().sum() > 0:
+                error = f"There are {df['year'].isnull().sum()} rows that do not have a value in the YEAR column. Please check and correct or remove these rows."
+                messages.error(request, error)
+        except:
+            error = "The YEAR column was not found, please review"
+            messages.error(request, error)
+
+        try:
+            if df["flow"].isnull().sum() > 0:
+                error = f"There are {df['flow'].isnull().sum()} rows that do not have a value in the FLOW column. Please check and correct or remove these rows."
+                messages.error(request, error)
+        except:
+            error = "The FLOW column was not found, please review"
             messages.error(request, error)
 
     if "save" in request.POST:
@@ -409,7 +454,7 @@ def controlpanel_file(request, id):
         for index, row in df.iterrows():
             row = row.to_dict()
             flow = row["flow"]
-            category = info.category
+            category = category
             error = None
             if flow not in flows:
                 try:
@@ -437,7 +482,7 @@ def controlpanel_file(request, id):
                 for each in spaces:
                     quantity = row[each.name]
                     space = each
-                    if pd.isnull(quantity):
+                    if isinstance(quantity, str) and quantity.strip().lower() == "inconnu":
                         quantity = None
                     items.append(WaterSystemData(
                         file = info,
@@ -468,6 +513,7 @@ def controlpanel_file(request, id):
         "table": mark_safe(df.to_html()),
         "df": df,
         "section": "controlpanel",
+        "category": category,
     }
     return render(request, "water/controlpanel/file.html", context)
 

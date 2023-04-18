@@ -68,13 +68,19 @@
       {% endfor %}
 
       $.each(response, function(key, val) {
-        fraction = val/max_flow; /* Here we can calculate the flow proportionate to the max_flow */
-        width = fraction*max_width; /* This makes the width of THIS flow proportionate to the max */
-        $("#path-" + key).show();
-        $("#path-" + key).css("stroke-width", width + "px");
-        $("#path-" + key).attr("title", "FLOW #" + key + " - " + formatter.format(val) + " {{ category.unit.symbol }}");
+        if (val == null) {
+          $("#path-" + key).css("stroke-width", "1px");
+          $("#path-" + key).attr("title", "Inconnu");
+        } else {
+          fraction = val/max_flow; /* Here we can calculate the flow proportionate to the max_flow */
+          width = fraction*max_width; /* This makes the width of THIS flow proportionate to the max */
+          $("#path-" + key).css("stroke-width", width + "px");
+          $("#path-" + key).attr("title", "FLOW #" + key + " - " + formatter.format(val) + " {{ category.unit.symbol }}");
+        }
         $("#path-" + key).attr("data-toggle", "tooltip");
         $("#path-" + key).attr("data-placement", "left");
+        $("#path-" + key).show();
+
         all_flows = all_flows.filter(item => item !== Number(key)); /* We keep track which flows exist in the dataset, see below why */
 
         if (flow_mapping[key]) {
@@ -94,7 +100,11 @@
       });
 
       for (const [node_id, node_total] of Object.entries(node_totals)) {
-        $("#node-" + node_id + " .qty").text(formatter.format(node_total) + " {{ category.unit.symbol }}");
+        if (node_total == null) {
+          $("#node-" + node_id + " .qty").text("");
+        } else {
+          $("#node-" + node_id + " .qty").text(formatter.format(node_total) + " {{ category.unit.symbol }}");
+        }
       }
 
       /* Whichever flow was NOT included in the ajax response needs to be removed from the map */

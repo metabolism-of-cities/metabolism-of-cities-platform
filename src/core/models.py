@@ -3714,7 +3714,7 @@ class WaterSystemNode(models.Model):
         return self.name
 
 class WaterSystemFile(models.Model):
-    category = models.ForeignKey(WaterSystemCategory, on_delete=models.CASCADE)
+    category = models.ForeignKey(WaterSystemCategory, on_delete=models.CASCADE, blank=True, null=True)
     file = models.FileField(null=True, blank=True, upload_to="water", max_length=255)
     date_created = models.DateTimeField(auto_now_add=True)
     uploader = models.ForeignKey(People, on_delete=models.CASCADE)
