@@ -63,6 +63,7 @@ def emissions(request):
         "category": WaterSystemCategory.objects.get(pk=category),
         "time_frames": WaterSystemData.objects.filter(category_id=category).values("date", "timeframe").distinct().order_by("date"),
         "flows": WaterSystemFlow.objects.filter(category_id=category),
+        "nodes": WaterSystemNode.objects.filter(category_id=category).prefetch_related("entry_flows"),
     }
     return render(request, "water/emissions.html", context)
 
@@ -190,6 +191,55 @@ def controlpanel_categories(request):
         "units": Unit.objects.order_by("symbol"),
     }
     return render(request, "water/controlpanel/categories.html", context)
+
+@login_required
+def controlpanel_nodes(request):
+    if not has_permission(request, request.project, ["curator", "admin"]):
+        unauthorized_access(request)
+
+    info = None
+    if "id" in request.GET:
+        info = WaterSystemNode.objects.get(pk=request.GET["id"])
+
+    if "name" in request.POST:
+        if not info:
+            info = WaterSystemNode()
+        info.name = request.POST["name"]
+        info.identifier = request.POST["identifier"]
+        info.category_id = request.POST["category"]
+        info.save()
+
+        info.entry_flows.clear()
+        info.exit_flows.clear()
+
+        entry_flows = request.POST.get("entry_flows")
+        if entry_flows:
+            for each in entry_flows.split(","):
+                try:
+                    flow = WaterSystemFlow.objects.get(category_id=request.POST["category"], identifier=each)
+                    info.entry_flows.add(flow)
+                except:
+                    messages.error(request, "The following item could not be saved in the entry flows: " + each)
+
+        exit_flows = request.POST.get("exit_flows")
+        if exit_flows:
+            for each in exit_flows.split(","):
+                try:
+                    flow = WaterSystemFlow.objects.get(category_id=request.POST["category"], identifier=each)
+                    info.exit_flows.add(flow)
+                except:
+                    messages.error(request, "The following item could not be saved in the exit flows: " + each)
+
+        messages.success(request, _("Information was saved"))
+        return redirect(request.path)
+
+    context = {
+        "info": info,
+        "nodes": WaterSystemNode.objects.all(),
+        "categories": WaterSystemCategory.objects.all(),
+        "section": "controlpanel",
+    }
+    return render(request, "water/controlpanel/nodes.html", context)
 
 @login_required
 def controlpanel_spaces(request):

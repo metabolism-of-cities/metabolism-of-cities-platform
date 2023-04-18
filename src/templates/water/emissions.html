@@ -1123,12 +1123,13 @@
          id="text746"><tspan
            x="271.67841"
            y="30.370604"
-           fill="#999999"
+           fill="#000000"
            font-family="'Liberation Sans'"
            font-size="2.79634px"
            font-weight="normal"
            stroke-width="0.351926"
-           id="tspan744">3500 TCO2EQ</tspan></text>
+           class="qty"
+           id="tspan744"></tspan></text>
       <image
          transform="matrix(23.434259,0,0,23.434259,232.5346,135.06746)"
          width="1"
@@ -1176,11 +1177,12 @@
          id="text544"><tspan
            x="254.93539 256.58969 258.37689 259.13162 261.09998 263.0683 265.03662 265.79138 267.41525 269.51642 272.01038 273.68585 275.68744"
            y="-42.593914"
-           fill="#999999"
+           fill="#000"
            font-family="'Liberation Sans'"
            font-weight="normal"
            stroke-width="0.377369"
-           id="tspan542">56 000 TCO2EQ</tspan></text>
+           class="qty"
+           id="tspan542"></tspan></text>
       <text
          transform="rotate(30)"
          x="270.33694"
@@ -1238,7 +1240,8 @@ $(function(){
   $("#space-{{ request.GET.region }}").addClass("active-space");
 
   setDateLabels();
-  $(".region-bar a").click();
+  setRegionLabels();
+  getData();
 
 </script>
 

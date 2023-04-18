@@ -11,6 +11,17 @@
     maximumFractionDigits: 2
   });
 
+  flow_mapping = {}
+  {% for each in nodes %}
+    {% for flow in each.entry_flows.all %}
+      if (!flow_mapping[{{ flow.identifier }}]) {
+        flow_mapping[{{ flow.identifier }}] = [{{ each.identifier }}];
+       } else {
+        flow_mapping[{{ flow.identifier }}].push({{ each.identifier }});
+       }
+    {% endfor %}
+  {% endfor %}
+
   function errorMessage(message) {
     alert(message);
   }
@@ -45,6 +56,7 @@
 
       max_width = 10;
       all_flows = [];
+      node_totals = {}
 
       {% for each in flows %}
         all_flows.push({{ each.identifier }});
@@ -55,11 +67,30 @@
         width = fraction*max_width; /* This makes the width of THIS flow proportionate to the max */
         $("#path-" + key).show();
         $("#path-" + key).css("stroke-width", width + "px");
-        $("#path-" + key).attr("title", formatter.format(val) + " {{ category.unit.symbol }}");
+        $("#path-" + key).attr("title", "FLOW #" + key + " - " + formatter.format(val) + " {{ category.unit.symbol }}");
         $("#path-" + key).attr("data-toggle", "tooltip");
         $("#path-" + key).attr("data-placement", "left");
-        all_flows = all_flows.filter(item => item !== Number(key));
+        all_flows = all_flows.filter(item => item !== Number(key)); /* We keep track which flows exist in the dataset, see below why */
+
+        if (flow_mapping[key]) {
+          //console.log("Yes, we found: "+ key);
+          for (let flow of flow_mapping[key]) {
+            //console.log("Yes we found " + key + " with ID: " + flow);
+            if (node_totals[flow]) {
+              node_totals[flow] += val;
+            } else {
+              node_totals[flow] = val;
+            }
+          }
+        } else {
+          console.log("No, not found: "+ key);
+          // ELSE statement can be removed when testing is done
+        }
       });
+
+      for (const [node_id, node_total] of Object.entries(node_totals)) {
+        $("#node-" + node_id + " .qty").text(formatter.format(node_total) + " {{ category.unit.symbol }}");
+      }
 
       /* Whichever flow was NOT included in the ajax response needs to be removed from the map */
       $.each(all_flows, function(index, value) {
@@ -125,6 +156,29 @@
    *
   */
 
+  function setRegionLabels() {
+
+    var activated_regions = $(".region-bar a.btn-dark").length;
+    title_region = "";
+    $(".region-bar a.btn-dark").each(function(){
+      title_region += $(this).text() + ", ";
+    });
+    title_region = title_region.substring(0, title_region.length - 2);
+    $("#title_region").html(title_region);
+
+    if ($(".region-bar a[data-region='1']").hasClass("btn-dark")) {
+      /*  Either ALL or NO region activated, so fallback to Eau d'Azur */
+      $(".map-region").addClass("active-space");
+    } else {
+      $(".map-region").removeClass("active-space");
+      $(".region-bar a.btn-dark").each(function(){
+        var region = $(this).data("region");
+        $("#space-"+region).addClass("active-space");
+      });
+    }
+
+  }
+
 
   $(".region-bar a").click(function(e){
     e.preventDefault();
@@ -150,24 +204,13 @@
     }
 
     var activated_regions = $(".region-bar a.btn-dark").length;
-    title_region = "";
-    if (activated_regions == 6 || region == "1" || activated_regions == 0) {
+    if (activated_regions == 6 || activated_regions == 0 || $(".region-bar a[data-region='1']").hasClass("btn-dark")) {
       /*  Either ALL or NO region activated, so fallback to Eau d'Azur */
       $(".region-bar a").removeClass("btn-dark");
       $(".region-bar a[data-region='1']").addClass("btn-dark");
-      $(".map-region").addClass("active-space");
-      title_region = "Eau d'Azur";
-    } else {
-      $(".map-region").removeClass("active-space");
-      $(".region-bar a.btn-dark").each(function(){
-        var region = $(this).data("region");
-        $("#space-"+region).addClass("active-space");
-        title_region += $(this).text() + ", ";
-      });
-      title_region = title_region.substring(0, title_region.length - 2);
     }
-    $("#title_region").html(title_region);
 
+    setRegionLabels();
     getData();
 
   });

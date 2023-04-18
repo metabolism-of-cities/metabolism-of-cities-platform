@@ -3703,6 +3703,16 @@ class WaterSystemFlow(models.Model):
     class Meta:
         ordering = ["category", "identifier", "name"]
 
+class WaterSystemNode(models.Model):
+    name = models.CharField(max_length=255)
+    identifier = models.PositiveSmallIntegerField()
+    category = models.ForeignKey(WaterSystemCategory, on_delete=models.CASCADE, related_name="nodes")
+    entry_flows = models.ManyToManyField(WaterSystemFlow, related_name="entry")
+    exit_flows = models.ManyToManyField(WaterSystemFlow, related_name="exit")
+
+    def __str__(self):
+        return self.name
+
 class WaterSystemFile(models.Model):
     category = models.ForeignKey(WaterSystemCategory, on_delete=models.CASCADE)
     file = models.FileField(null=True, blank=True, upload_to="water", max_length=255)
