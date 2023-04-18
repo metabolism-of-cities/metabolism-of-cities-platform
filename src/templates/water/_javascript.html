@@ -11,6 +11,11 @@
     maximumFractionDigits: 2
   });
 
+  flow_titles = {}
+  {% for each in flows %}
+    flow_titles["path-{{ each.identifier }}"] = "{{ each.name|escapejs }}";
+  {% endfor %}
+
   flow_mapping = {}
   {% for each in nodes %}
     {% for flow in each.entry_flows.all %}
@@ -147,7 +152,7 @@
         date_label = start_date_label + "-" + end_date_label;
       }
 
-      $(".title_date").html(date_label);
+      $(".watergraphs p span.title_date").html(date_label);
     }
   }
 
@@ -178,7 +183,6 @@
     }
 
   }
-
 
   $(".region-bar a").click(function(e){
     e.preventDefault();
@@ -270,6 +274,45 @@
     }
   }
 
+  $(".path").click(function(){
+    get_id = $(this).attr("id");
+    title = flow_titles[get_id];
+
+    $("#chartTitle").text("Territoire: " + $("#title_region").text());
+    $("#chart").modal();
+
+    $("#chartbox").highcharts().setTitle({text:title});
+
+    if ($("#chartbox").highcharts().get("chart_data")) {
+      $("#chartbox").highcharts().get("chart_data").remove();
+    };
+
+    get_id_number = get_id.split("-")[1]; // The id will be something like 'path-51' so we need to get just 51
+    jsonURL = "{% url "water:ajax_chart_data" %}?flow=" + get_id_number + "&category={{ category.id }}";
+
+    $(".region-bar a.btn-dark").each(function(){
+      jsonURL += "&space=" + $(this).data("region");
+    });
+
+    $.getJSON(jsonURL)
+    .done(function(response) {
+      $("#chartbox").highcharts().addSeries({ id: "chart_data", data: response}); 
+    })
+    .fail(function() {
+      errorMessage("Failed to load data. Are you connected to the internet? Please reload the page or try again later.")
+    })
+  });
+
+  // We load an empty highchart, which will be populated with actual chart data once
+  // a flow is being clicked.
+  Highcharts.chart("chartbox", {
+      title: {
+          align: "left"
+      },
+      legend: {
+          enabled: false
+      },
+  });
 
 </script>
 

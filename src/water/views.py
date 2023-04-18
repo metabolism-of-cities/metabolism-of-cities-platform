@@ -64,6 +64,7 @@ def emissions(request):
         "time_frames": WaterSystemData.objects.filter(category_id=category).values("date", "timeframe").distinct().order_by("date"),
         "flows": WaterSystemFlow.objects.filter(category_id=category),
         "nodes": WaterSystemNode.objects.filter(category_id=category).prefetch_related("entry_flows"),
+        "load_highcharts": True,
     }
     return render(request, "water/emissions.html", context)
 
@@ -106,6 +107,18 @@ def ajax(request):
     for each in data:
         results[each["flow__identifier"]] = each["total"]
     return JsonResponse(results)
+
+def ajax_chart_data(request):
+    results = []
+    data = WaterSystemData.objects.filter(
+        category_id=request.GET["category"], 
+        flow__identifier=request.GET["flow"], 
+        space__in=request.GET.getlist("space")
+    ).values("date").annotate(total=Sum("quantity")).order_by("date")
+
+    for each in data:
+        results.append(each["total"])
+    return JsonResponse(results, safe=False)
 
 def water_login(request):
     project = get_project(request)
