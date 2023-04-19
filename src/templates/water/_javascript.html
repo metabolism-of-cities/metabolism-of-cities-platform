@@ -37,7 +37,7 @@
     $(".loading").show();
 
     /* Let's build the URL */
-    category = 3;
+    category = {{ category.id }};
     var jsonURL = "{% url "water:ajax" %}?category=" + category;
 
     $(".region-bar a.btn-dark").each(function(){

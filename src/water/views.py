@@ -32,23 +32,35 @@ def index(request):
 
 
 def water(request):
+    category = 1
     context = {
         "title": "Eau",
         "regions": NICE_REGIONS,
         "link": reverse("water:water"),
         "show_submenu": True,
         "section": "water",
-        "region": NICE_REGIONS.get(int(request.GET['region']))
+        "region": NICE_REGIONS.get(int(request.GET['region'])),
+        "category": WaterSystemCategory.objects.get(pk=category),
+        "time_frames": WaterSystemData.objects.filter(category_id=category).values("date", "timeframe").distinct().order_by("date"),
+        "flows": WaterSystemFlow.objects.filter(category_id=category),
+        "nodes": WaterSystemNode.objects.filter(category_id=category).prefetch_related("entry_flows"),
+        "load_highcharts": True,
     }
     return render(request, "water/water.html", context)
 
 def energy(request):
+    category = 2
     context = {
         "title": "Energies",
         "section": "energy",
         "link": reverse("water:energy"),
         "show_submenu": True,
-        "region": NICE_REGIONS.get(int(request.GET['region']))
+        "region": NICE_REGIONS.get(int(request.GET['region'])),
+        "category": WaterSystemCategory.objects.get(pk=category),
+        "time_frames": WaterSystemData.objects.filter(category_id=category).values("date", "timeframe").distinct().order_by("date"),
+        "flows": WaterSystemFlow.objects.filter(category_id=category),
+        "nodes": WaterSystemNode.objects.filter(category_id=category).prefetch_related("entry_flows"),
+        "load_highcharts": True,
     }
     return render(request, "water/energy.html", context)
 
@@ -334,12 +346,6 @@ def controlpanel_file(request, id):
         unauthorized_access(request)
 
     info = WaterSystemFile.objects.get(pk=id)
-
-    # DEBUG MODE START
-
-    if "load" in request.GET:
-        pass
-    # DEBUG MODE END
 
     if "delete" in request.POST:
         info.delete()
