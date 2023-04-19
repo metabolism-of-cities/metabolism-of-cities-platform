@@ -8,7 +8,7 @@
     <ul>
       {% for each in nodes %}
         {% ifchanged each.category %}
-          </li></ul><ul><li><h2>{{ each.category }}</h2><ul>
+          </li></ul><li><h4>{{ each.category }}</h4><ul>
         {% endifchanged %}
         <li><a href="?id={{ each.id }}">{{ each }}</a></li>
       {% endfor %}
@@ -45,6 +45,10 @@
     <div class="mb-3">
       <label class="form-label">{{ _("Exit flows") }}</label>
       <input class="form-control" name="exit_flows" value="{% for each in info.exit_flows.all %}{{ each.identifier }}{% if not forloop.last %}, {% endif %}{% endfor %}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">{{ _("Level") }}</label>
+      <input class="form-control" name="level" value="{{ info.level }}" type="number">
     </div>
     <div class="form-actions">
       <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> {{ _("Save") }}</button>

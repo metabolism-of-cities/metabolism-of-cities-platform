@@ -3709,6 +3709,7 @@ class WaterSystemNode(models.Model):
     category = models.ForeignKey(WaterSystemCategory, on_delete=models.CASCADE, related_name="nodes")
     entry_flows = models.ManyToManyField(WaterSystemFlow, related_name="entry")
     exit_flows = models.ManyToManyField(WaterSystemFlow, related_name="exit")
+    level = models.PositiveSmallIntegerField(default=2)
 
     def __str__(self):
         return self.name

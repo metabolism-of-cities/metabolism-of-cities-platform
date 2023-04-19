@@ -232,6 +232,7 @@ def controlpanel_nodes(request):
         info.name = request.POST["name"]
         info.identifier = request.POST["identifier"]
         info.category_id = request.POST["category"]
+        info.level = request.POST["level"]
         info.save()
 
         info.entry_flows.clear()
