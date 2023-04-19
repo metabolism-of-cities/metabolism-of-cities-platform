@@ -1,0 +1,72 @@
+.bi-caret-up{display:none}
+
+/* black and white by default */
+.map-region {
+  filter: grayscale(1);
+  opacity: 0.4;
+}
+
+/*  hover to give colour */
+/* space-X */
+.active-space {
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+/* not interaction with nodes so you can click on regions */
+.node {
+  pointer-events: none;
+}
+
+.path {
+  fill: none;
+  stroke-dasharray: 0; /* Change to 1 to animate the flow */
+  opacity:0.5;
+}
+.path:hover {
+    opacity:1;
+    cursor: pointer;
+}
+/* use forward and backward to determine direction */
+/* misnomer because it can be either, depends on how line was drawn */
+/* trial and error to see what works */
+.path.forward {
+  stroke-dashoffset: 1;
+  animation: forward 0.5s linear infinite;
+}
+
+.path.backward {
+  stroke-dashoffset: -1;
+  animation: backward 0.5s linear infinite;
+}
+
+@keyframes forward {
+  to {
+    stroke-dashoffset: -1;
+  }
+}
+
+@keyframes backward {
+  to {
+    stroke-dashoffset: 1;
+  }
+}
+svg {
+  max-width:100%;max-height:calc(100vh - 232px)
+}
+.animate-toggle {
+  position: absolute;
+  top: 5px;
+  left: 10px;
+}
+.loading {
+  font-size: 4em;
+  position: absolute;
+  top: 40%;
+  left: 40%;
+  z-index: 999999999;
+  display: none;
+}
+#w1 {
+  position: relative;
+}

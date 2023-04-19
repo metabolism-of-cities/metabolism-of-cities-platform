@@ -316,6 +316,9 @@
   // We load an empty highchart, which will be populated with actual chart data once
   // a flow is being clicked.
   Highcharts.chart("chartbox", {
+      chart: {
+          type: "column"
+      },
       title: {
           align: "left"
       },

@@ -335,6 +335,12 @@ def controlpanel_file(request, id):
 
     info = WaterSystemFile.objects.get(pk=id)
 
+    # DEBUG MODE START
+
+    if "load" in request.GET:
+        pass
+    # DEBUG MODE END
+
     if "delete" in request.POST:
         info.delete()
         messages.success(request, _("The file was deleted successfully"))
@@ -361,6 +367,10 @@ def controlpanel_file(request, id):
             "ENERGIE": 2,
         }
         category = WaterSystemCategory.objects.get(pk=conversion[category_name])
+        if not info.category:
+            info.category = category
+            info.save()
+
     except Exception as e:
         category = None
         messages.error(request, "We tried looking up the first value in the FLUX column to check the type of flow, but this did not work. Error: " + str(e))
