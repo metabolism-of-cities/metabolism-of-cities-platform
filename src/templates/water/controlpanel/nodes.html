@@ -10,7 +10,18 @@
         {% ifchanged each.category %}
           </li></ul><li><h4>{{ each.category }}</h4><ul>
         {% endifchanged %}
-        <li><a href="?id={{ each.id }}">{{ each.identifier }} - {{ each }}</a></li>
+        <li class="mb-3">
+          <a href="?id={{ each.id }}">{{ each.identifier }} - {{ each }}</a>
+          <br>
+          {% if each.exit_flows.count %}
+          Exit flows: 
+          {% for flow in each.exit_flows.all %}<span class="badge badge-info">{{ flow.identifier }}</span> {% endfor %}
+          {% endif %}
+          {% if each.entry_flows.count %}
+          Entry flows: 
+          {% for flow in each.entry_flows.all %}<span class="badge badge-info">{{ flow.identifier }}</span> {% endfor %}
+          {% endif %}
+        </li>
       {% endfor %}
     </li>
     </ul>

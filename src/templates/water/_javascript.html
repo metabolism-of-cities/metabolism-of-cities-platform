@@ -131,6 +131,7 @@
 
         all_flows = all_flows.filter(item => item !== Number(key)); /* We keep track which flows exist in the dataset, see below why */
 
+        // So let's see which node a flow belongs to, and then we add the total to that node
         if (flow_mapping[key]) {
           for (let flow of flow_mapping[key]) {
             if (node_totals[flow]) {
@@ -139,9 +140,6 @@
               node_totals[flow] = val;
             }
           }
-        } else {
-          console.log("No, not found: "+ key);
-          // ELSE statement can be removed when testing is done
         }
 
       });
@@ -156,18 +154,24 @@
 
       /* Whichever flow was NOT included in the ajax response needs to be removed from the map */
       $.each(all_flows, function(index, value) {
-        $("#path-" + value).hide();
+        $("#path-" + value).hide("fast");
       });
 
       $("svg").css("opacity", "1");
-      $(".loading").hide();
+      $(".loading").hide(); 
 
       $('[data-toggle="tooltip"]').tooltip({container: 'body'});
 
-      $(".nodes").show();
+      // We want to hide all the nodes that should not be displayed, and show the ones that do have values
+      $(".node").addClass("show-this-node");
       for (let node of hidden_nodes) {
-        $("#node-" + node).hide();
+        get_node = $("#node-" + node);
+        if (get_node.is(":visible")) {
+          get_node.hide("fast");
+        }
+        get_node.removeClass("show-this-node");
       }
+      $(".show-this-node").show("fast");
 
     })
     .fail(function() {
@@ -390,9 +394,24 @@
     $("input[name='level']").val(level);
   });
 
-
   /* Run this at page load */
   $("#space-{{ request.GET.region }}").addClass("active-space");
+
+  /* Each of the maps becomes semi-transparent if it is not highlighted, 
+   * but this means that the flows that are drawn underneath become visible,
+   * which is not desired. The solution is to copy all of the maps, and to
+   * make those maps completely white, so that they are a background to 
+   * cover the flow itself while allowing for a transparent upper-layer
+  */
+  $(".map-region").each(function(){
+    map_copy = $(this).clone()
+    map_copy.insertBefore(this);
+    id = map_copy.attr("id");
+    map_copy.attr("id", "clone-" + id);
+    map_copy.removeClass("map-region");
+    map_copy.removeClass("active-space");
+    map_copy.addClass("clone-region");
+  });
 
   setDateLabels();
   setRegionLabels();

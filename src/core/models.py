@@ -3718,6 +3718,9 @@ class WaterSystemNode(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ["category", "identifier"]
+
 class WaterSystemFile(models.Model):
     category = models.ForeignKey(WaterSystemCategory, on_delete=models.CASCADE, blank=True, null=True)
     file = models.FileField(null=True, blank=True, upload_to="water", max_length=255)
