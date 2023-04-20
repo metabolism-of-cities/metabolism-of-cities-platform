@@ -22,6 +22,7 @@
   fill: none;
   stroke-dasharray: 0; /* Change to 1 to animate the flow */
   opacity:0.5;
+  stroke: #000;
 }
 .path:hover {
     opacity:1;
@@ -83,6 +84,10 @@ svg {
 
 .path.purple {
   stroke: purple;
+}
+
+.path.blue {
+  stroke: blue;
 }
 
 .path.orange {

@@ -29,6 +29,10 @@
         {% endfor %}
       </select>
     </div>
+    <div class="mb-3">
+      <label class="form-label">Slug</label>
+      <input class="form-control" name="slug" required value="{{ info.slug }}">
+    </div>
     <div class="form-actions">
       <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
     </div>

@@ -80,6 +80,23 @@ def emissions(request):
     }
     return render(request, "water/emissions.html", context)
 
+def sankey(request, category):
+    category = WaterSystemCategory.objects.get(pk=category)
+    context = {
+        "title": category,
+        "section": category.slug,
+        "link": reverse("water:" + category.slug),
+        "show_submenu": True,
+        "region": NICE_REGIONS.get(int(request.GET['region'])),
+        "category": category,
+        "time_frames": WaterSystemData.objects.filter(category_id=category).values("date", "timeframe").distinct().order_by("date"),
+        "flows": WaterSystemFlow.objects.filter(category_id=category),
+        "nodes": WaterSystemNode.objects.filter(category_id=category).prefetch_related("entry_flows"),
+        "load_highcharts": True,
+        "svg": f"water/svg/{category.slug}.svg",
+    }
+    return render(request, "water/sankey.html", context)
+
 def about(request):
     context = {
         "title": "A propos",
@@ -220,6 +237,7 @@ def controlpanel_categories(request):
         if not info:
             info = WaterSystemCategory()
         info.name = request.POST["name"]
+        info.slug = request.POST["slug"]
         info.unit_id = request.POST["unit"]
         info.save()
         messages.success(request, _("Information was saved"))
@@ -258,7 +276,7 @@ def controlpanel_nodes(request):
         if entry_flows:
             for each in entry_flows.split(","):
                 try:
-                    flow = WaterSystemFlow.objects.get(category_id=request.POST["category"], identifier=each)
+                    flow = WaterSystemFlow.objects.get(category_id=request.POST["category"], identifier=each, level=info.level)
                     info.entry_flows.add(flow)
                 except:
                     messages.error(request, "The following item could not be saved in the entry flows: " + each)
@@ -267,7 +285,7 @@ def controlpanel_nodes(request):
         if exit_flows:
             for each in exit_flows.split(","):
                 try:
-                    flow = WaterSystemFlow.objects.get(category_id=request.POST["category"], identifier=each)
+                    flow = WaterSystemFlow.objects.get(category_id=request.POST["category"], identifier=each, level=info.level)
                     info.exit_flows.add(flow)
                 except:
                     messages.error(request, "The following item could not be saved in the exit flows: " + each)
@@ -506,7 +524,7 @@ def controlpanel_file(request, id):
             error = None
             if flow not in flows:
                 try:
-                    get_flow = WaterSystemFlow.objects.get(identifier=flow, category=category)
+                    get_flow = WaterSystemFlow.objects.get(identifier=flow, category=category, level=2)
                     flows[flow] = get_flow
                     flow = get_flow
                 except:

@@ -3684,6 +3684,7 @@ class WaterSystemSpace(models.Model):
 class WaterSystemCategory(models.Model):
     name = models.CharField(max_length=255)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True, null=True)
 
     def __str__(self):
         return self.name
