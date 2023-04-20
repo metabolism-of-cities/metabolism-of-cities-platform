@@ -10,7 +10,7 @@
         {% ifchanged each.category %}
           </li></ul><li><h4>{{ each.category }}</h4><ul>
         {% endifchanged %}
-        <li><a href="?id={{ each.id }}">{{ each }}</a></li>
+        <li><a href="?id={{ each.id }}">{{ each.identifier }} - {{ each }}</a></li>
       {% endfor %}
     </li>
     </ul>

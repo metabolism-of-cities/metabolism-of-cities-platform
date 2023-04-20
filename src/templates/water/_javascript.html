@@ -8,7 +8,7 @@
 
   /* Used to format numbers later on */
   const formatter = new Intl.NumberFormat('fr-FR', {
-    maximumFractionDigits: 2
+    maximumFractionDigits: 0
   });
 
   flow_titles = {}
@@ -16,15 +16,35 @@
     flow_titles["path-{{ each.identifier }}"] = "{{ each.name|escapejs }}";
   {% endfor %}
 
-  // flow_mapping is used to calculate the total quantity flowing into a node, so that
-  // the label on the box can be updated to reflect this quantity
+  /*
+  *  flow_mapping is used to calculate the total quantity flowing into a node, so that
+  *  the label on the box can be updated to reflect this quantity
+  *  all_nodes and node_mapping is used to connect all the flows to their relevant nodes. 
+  *  That way we can hide a node if not a single one of its flows is present.
+  */
+
   flow_mapping = {}
+  node_mapping = {};
+  all_nodes = []
   {% for each in nodes %}
+    all_nodes.push({{ each.identifier }});
     {% for flow in each.entry_flows.all %}
       if (!flow_mapping[{{ flow.identifier }}]) {
         flow_mapping[{{ flow.identifier }}] = [{{ each.identifier }}];
        } else {
         flow_mapping[{{ flow.identifier }}].push({{ each.identifier }});
+       }
+      if (!node_mapping[{{ each.identifier }}]) {
+        node_mapping[{{ each.identifier }}] = [{{ flow.identifier }}];
+       } else {
+        node_mapping[{{ each.identifier }}].push({{ flow.identifier }});
+       }
+    {% endfor %}
+    {% for flow in each.exit_flows.all %}
+      if (!node_mapping[{{ each.identifier }}]) {
+        node_mapping[{{ each.identifier }}] = [{{ flow.identifier }}];
+       } else {
+        node_mapping[{{ each.identifier }}].push({{ flow.identifier }});
        }
     {% endfor %}
   {% endfor %}
@@ -51,8 +71,8 @@
 
     $.getJSON(jsonURL)
     .done(function(response) {
-      items = []
-      max_flow = 0
+      items = [];
+      max_flow = 0;
 
       /*  First we get the total value of ALL flows */
       $.each(response, function(key, val) {
@@ -64,6 +84,11 @@
       max_width = 10;
       all_flows = [];
       node_totals = {}
+      /* every time we run this script, we copy all_nodes into hidden_nodes
+      *  so that all nodes are hidden until they are removed from this list
+      *  as matching flows appear 
+      */
+      hidden_nodes = [...all_nodes];
 
       {% for each in flows %}
         all_flows.push({{ each.identifier }});
@@ -71,7 +96,7 @@
 
       $.each(response, function(key, val) {
         if (val == null) {
-          $("#path-" + key).css("stroke-width", "1px");
+          $("#path-" + key).css("stroke-width", "0.3px");
           $("#path-" + key).attr("title", "Inconnu");
         } else {
           fraction = val/max_flow; /* Here we can calculate the flow proportionate to the max_flow */
@@ -82,6 +107,24 @@
           $("#path-" + key).css("stroke-width", width + "px");
           $("#path-" + key).attr("title", "FLOW #" + key + " - " + formatter.format(val) + " {{ category.unit.symbol }}");
         }
+
+        if (val == null || val > 0) {
+          /* If this flow has a value (or is UNKNOWN), then we should automatically SHOW all the nodes that are 
+          *  related to this flow. We do this by removing the node from the hidden_nodes array
+          */
+          for ([node, included_flows] of Object.entries(node_mapping)) {
+            for (var i = 0; i < included_flows.length; i++) {
+              if (included_flows[i] == key) {
+                node = parseInt(node);
+                index = hidden_nodes.indexOf(node);
+                if (index !== -1) {
+                  hidden_nodes.splice(index, 1); // 2nd parameter means remove one item only
+                }
+              }
+            }
+          }
+        }
+
         $("#path-" + key).attr("data-toggle", "tooltip");
         $("#path-" + key).attr("data-placement", "left");
         $("#path-" + key).show();
@@ -89,9 +132,7 @@
         all_flows = all_flows.filter(item => item !== Number(key)); /* We keep track which flows exist in the dataset, see below why */
 
         if (flow_mapping[key]) {
-          //console.log("Yes, we found: "+ key);
           for (let flow of flow_mapping[key]) {
-            //console.log("Yes we found " + key + " with ID: " + flow);
             if (node_totals[flow]) {
               node_totals[flow] += val;
             } else {
@@ -102,6 +143,7 @@
           console.log("No, not found: "+ key);
           // ELSE statement can be removed when testing is done
         }
+
       });
 
       for (const [node_id, node_total] of Object.entries(node_totals)) {
@@ -121,6 +163,11 @@
       $(".loading").hide();
 
       $('[data-toggle="tooltip"]').tooltip({container: 'body'});
+
+      $(".nodes").show();
+      for (let node of hidden_nodes) {
+        $("#node-" + node).hide();
+      }
 
     })
     .fail(function() {
