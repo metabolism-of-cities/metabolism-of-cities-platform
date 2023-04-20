@@ -96,7 +96,7 @@ def contact(request):
 
 def ajax(request):
     regions = request.GET.getlist("region")
-    data = WaterSystemData.objects.filter(category_id=request.GET["category"]).values("flow__identifier").annotate(total=Sum("quantity"))
+    data = WaterSystemData.objects.filter(category_id=request.GET["category"]).values("flow__identifier", "flow__part_of_flow__identifier").annotate(total=Sum("quantity"))
 
     if regions:
         data = data.filter(space__in=regions)
@@ -117,7 +117,23 @@ def ajax(request):
 
     results = {}
     for each in data:
-        results[each["flow__identifier"]] = each["total"]
+        if request.GET["level"] == "2":
+            results[each["flow__identifier"]] = each["total"]
+        else:
+            # Okay so here is how it works... level 1 is not a REAL data level
+            # i.e. there are no data in the db for this level. The reason is that 
+            # level 1 simply represents a certain aggregation of level 2 flows
+            # So what we should do is get level-2 data, and then see which flow it 
+            # belongs to, and for each flow we check if it belongs to a level-1 category
+            # If so (not all do... some are level-2 TOTALS that shouldn't be shown in level 1)
+            # then we add it to the level 1 flow (with the identifier for level 1). If not, don't 
+            # do anything with the data.
+            part_of = each["flow__part_of_flow__identifier"]
+            if part_of:
+                if part_of in results and results[part_of] and each["total"]:
+                    results[part_of] += each["total"]
+                else:
+                    results[part_of] = each["total"]
     return JsonResponse(results)
 
 def ajax_chart_data(request):
@@ -221,55 +237,6 @@ def controlpanel_categories(request):
 def controlpanel_nodes(request):
     if not has_permission(request, request.project, ["curator", "admin"]):
         unauthorized_access(request)
-
-    # TEMP DEBUG
-    if "swap" in request.GET:
-        WaterSystemNode.objects.all().update(level=1)
-
-        level_one_flows = [
-            [1, "Achats d'eau", 1, [8]],
-            [1, "Ventes d'eau", 2, [7]],
-            [1, "Prélèvements d'eau milieu naturel", 3, [1,2,3,4,5,6,9]],
-            [1, "Imports d'eau", 4, [17,19,28,29]],
-            [1, "Exports d'eau", 5, [18,34,35]],
-            [1, "Retour au milieu naturel", 6, [10,11,12,13,14,27,30]],
-            [1, "Eaux usées brutes importées dans le territoire", 7, [44]],
-            [1, "Eaux usées traitées rejetées dans le MN sur le territoire", 8, [48]],
-            [1, "Eaux usées traitées rejetées dans le MN hors du territoire", 9, [49]],
-            [1, "Eaux usées brutes NCA exportées hors du territoire", 10, [57]],
-            [1, "Assainissement non collectif", 11, [37]],
-            [1, "Imports secteurs", 12, [50]],
-            [1, "Export secteurs", 13, [51]],
-            [2, "CONSOMMATION CARBURANT AEP", 1, [1,2,3]],
-            [2, "CONSOMMATION CARBURANT EU", 2, [4,5]],
-            [2, "CONSOMMATION CARBURANT SUPPORTS", 3, [6]],
-            [2, "CONSOMMATION ELECTRICITE AEP", 4, [7,8]],
-            [2, "CONSOMMATION ELECTRICITE EU", 5, [10,11]],
-            [2, "CONSOMMATION ELECTRICITE SUPPORT", 6, [9]],
-            [2, "PRODUCTION ENERGIES RENOUVELABLES AEP", 7, [13,14,15,16,17,29]],
-            [2, "PRODUCTION ENERGIES RENOUVELABLES EU", 8, [18,19, 21, 24]],
-            [2, "PRODUCTION ENERGIES RENOUVELABLES EU (ext.)", 9, [22]],
-            [2, "IMPORTATION ENERGIES RENOUVELABLES EU SECTEURS", 10, [39]],
-            [2, "EXPORTATION ENERGIES RENOUVELABLES EU SECTEURS", 11, [40]],
-            [2, "TOTAL AUTRES SOURCES D'ENERGIE", 12, []],
-            [2, "AUTRES SOURCES D'ENERGIE AEP", 13, []],
-            [2, "AUTRES SOURCES D'ENERGIE EU", 14, []],
-            [2, "AUTRES SOURCES D'ENERGIE SUPPORT", 15, []],
-        ]
-
-        for each in level_one_flows:
-            new_flow = WaterSystemFlow.objects.create(
-                name=each[1],
-                identifier=each[2],
-                category_id=each[0],
-                level=1,
-            )
-            for flow in each[3]:
-                get_flow = WaterSystemFlow.objects.get(level=2, category_id=each[0], identifier=flow)
-                get_flow.part_of_flow=new_flow
-                get_flow.save()
-
-    # END DEBUG
 
     info = None
     if "id" in request.GET:

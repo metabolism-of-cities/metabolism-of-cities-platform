@@ -70,3 +70,30 @@ svg {
 #w1 {
   position: relative;
 }
+#w2 {
+  display:none;
+}
+.path.green {
+  stroke: #39ff00;
+}
+
+.path.yellow {
+  stroke: gold;
+}
+
+.path.purple {
+  stroke: purple;
+}
+
+.path.orange {
+  stroke: orange;
+}
+
+.path.brown {
+  stroke: brown;
+}
+
+.path.grey {
+  stroke: grey;
+}
+

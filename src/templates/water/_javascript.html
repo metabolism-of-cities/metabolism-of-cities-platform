@@ -16,6 +16,8 @@
     flow_titles["path-{{ each.identifier }}"] = "{{ each.name|escapejs }}";
   {% endfor %}
 
+  // flow_mapping is used to calculate the total quantity flowing into a node, so that
+  // the label on the box can be updated to reflect this quantity
   flow_mapping = {}
   {% for each in nodes %}
     {% for flow in each.entry_flows.all %}
@@ -38,7 +40,7 @@
 
     /* Let's build the URL */
     category = {{ category.id }};
-    var jsonURL = "{% url "water:ajax" %}?category=" + category;
+    var jsonURL = "{% url "water:ajax" %}?category=" + category + "&level=" + $("input[name=level]").val();
 
     $(".region-bar a.btn-dark").each(function(){
       var region = $(this).data("region");
@@ -74,6 +76,9 @@
         } else {
           fraction = val/max_flow; /* Here we can calculate the flow proportionate to the max_flow */
           width = fraction*max_width; /* This makes the width of THIS flow proportionate to the max */
+          if (width > 0 && width < 0.3) {
+            width = 0.3;
+          }
           $("#path-" + key).css("stroke-width", width + "px");
           $("#path-" + key).attr("title", "FLOW #" + key + " - " + formatter.format(val) + " {{ category.unit.symbol }}");
         }
@@ -326,6 +331,25 @@
           enabled: false
       },
   });
+
+  $(".waterlink").click(function(e){
+    $(".waterlink").removeClass("btn-dark");
+    $(this).addClass("btn-dark");
+    e.preventDefault();
+    var id = $(this).data("id");
+    $(".watergraphs div").hide();
+    $("#" + id).show();
+    var level = $(this).data("level");
+    $("input[name='level']").val(level);
+  });
+
+
+  /* Run this at page load */
+  $("#space-{{ request.GET.region }}").addClass("active-space");
+
+  setDateLabels();
+  setRegionLabels();
+  getData();
 
 </script>
 

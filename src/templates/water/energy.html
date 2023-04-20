@@ -4,14 +4,10 @@
 {% block page_name %}fullwidth{% endblock %}
 
 {% block head %}
-<style type="text/css">
-#w2{display:none}
-</style>
-<link rel="stylesheet" href="{% static "css/water.css" %}" />
+<link rel="stylesheet" href="{% static "css/water.css" %}?refresh" />
 {% endblock %}
 
 {% block content %}
-
 <div class="container-fluid">
 
   <div class="row">
@@ -20,15 +16,16 @@
     </div>
     <div class="col-lg-10 main offset-lg-2">
 
+      <input type="hidden" name="level" value="1" />
       <ul class="nav nav-pills d-print-none" id="top-tabs">
         <li class="nav-item">
-          <a class="btn btn-dark waterlink" href="#" data-id="w1">Niveau 1</a>
+          <a class="btn btn-dark waterlink" href="#" data-id="w1" data-level="1">Niveau 1</a>
         </li>
         <li class="nav-item">
-          <a class="btn waterlink" href="#" data-id="w2">Niveau 2</a>
+          <a class="btn waterlink" href="#" data-id="w2" data-level="2">Niveau 2</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link waterlink disabled" href="#" data-id="w2">Niveau 3</a>
+          <a class="nav-link waterlink disabled" href="#" data-id="w2" data-level="3">Niveau 3</a>
         </li>
 
         <li class="nav-item ml-auto">
@@ -44,8 +41,27 @@
       <div class="main-body">
 
         <div class="watergraphs">
-        <p class="text-center mt-2 mb-1">Métabolisme {{ region }} / flux: Energies / niveau: 1 / période: Jan 2022-Dec 2023</p>
+
+          <p class="text-center mt-2 mb-1">
+            Métabolisme <span id="title_region"></span> / 
+            flux: {{ category }} /
+            niveau: <span id="title_level">1</span> /
+            période: <span class="title_date"></span>
+          </p>
+
           <div id="w1">
+
+            <span class="loading">
+              <i class="fas fa-spinner-third fa-spin"></i>
+            </span>
+
+            <span class="animate-toggle d-print-none">
+              <label class="btn font-weight-bold">
+                <input type="checkbox" id="animate" value="true">
+                {{ _("Activer le mode animation") }}
+              </label>
+            </span>
+
 
             <svg
                width="338mm"
@@ -2211,6 +2227,8 @@
               </g>
             </svg>
 
+            {% include "water/_modal.html" %}
+
           </div>
           <div id="w2">
             <img src="/media/water/sankeys/energy2.png?refresh" style="max-width:100%" alt="" />
@@ -2227,18 +2245,5 @@
 {% endblock %}
 
 {% block footer %}
-<script type="text/javascript">
-$(function(){
-  $(".waterlink").click(function(e){
-    $(".waterlink").removeClass("btn-dark");
-    $(this).addClass("btn-dark");
-    e.preventDefault();
-    var id = $(this).data("id");
-    console.log(id);
-    $(".watergraphs div").hide();
-    $("#" + id).show();
-  });
-});
-</script>
 {% include "water/_javascript.html" %}
 {% endblock %}

@@ -16,6 +16,7 @@
     </div>
     <div class="col-lg-10 main offset-lg-2">
 
+      <input type="hidden" name="level" value="1" />
       <ul class="nav nav-pills d-print-none" id="top-tabs">
         <li class="nav-item">
           <a class="btn btn-dark waterlink" href="#" data-id="w1">Niveau 1</a>
@@ -39,14 +40,12 @@
 
         <div class="watergraphs">
 
-        <p class="text-center mt-2 mb-1">
-        Métabolisme <span id="title_region"></span> / 
-        flux: Gaz à effets de serre /
-        niveau: 1 /
-        période: <span class="title_date"></span>
-        </p>
-
-        <p id="temp"></p>
+          <p class="text-center mt-2 mb-1">
+            Métabolisme <span id="title_region"></span> / 
+            flux: {{ category }} /
+            niveau: <span id="title_level">1</span> /
+            période: <span class="title_date"></span>
+          </p>
 
           <div id="w1">
 
@@ -1136,20 +1135,7 @@
     </g>
   </svg>
 
-            <div class="modal fade" id="chart" tabindex="-1" aria-labelledby="chartLabel" aria-hidden="true">
-              <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="chartTitle"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body" id="chartbox">
-                  </div>
-                </div>
-              </div>
-            </div>
+            {% include "water/_modal.html" %}
 
           </div>
           <div id="w2">
@@ -1164,23 +1150,5 @@
 {% endblock %}
 
 {% block footer %}
-<script type="text/javascript">
-$(function(){
-  $(".waterlink").click(function(e){
-    e.preventDefault();
-  });
-});
-</script>
-
-{% include "water/_javascript.html" %}
-
-<script type="text/javascript">
-  $("#space-{{ request.GET.region }}").addClass("active-space");
-
-  setDateLabels();
-  setRegionLabels();
-  getData();
-
-</script>
-
+  {% include "water/_javascript.html" %}
 {% endblock %}
