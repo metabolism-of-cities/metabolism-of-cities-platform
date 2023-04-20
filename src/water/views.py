@@ -222,6 +222,55 @@ def controlpanel_nodes(request):
     if not has_permission(request, request.project, ["curator", "admin"]):
         unauthorized_access(request)
 
+    # TEMP DEBUG
+    if "swap" in request.GET:
+        WaterSystemNode.objects.all().update(level=1)
+
+        level_one_flows = [
+            [1, "Achats d'eau", 1, [8]],
+            [1, "Ventes d'eau", 2, [7]],
+            [1, "Prélèvements d'eau milieu naturel", 3, [1,2,3,4,5,6,9]],
+            [1, "Imports d'eau", 4, [17,19,28,29]],
+            [1, "Exports d'eau", 5, [18,34,35]],
+            [1, "Retour au milieu naturel", 6, [10,11,12,13,14,27,30]],
+            [1, "Eaux usées brutes importées dans le territoire", 7, [44]],
+            [1, "Eaux usées traitées rejetées dans le MN sur le territoire", 8, [48]],
+            [1, "Eaux usées traitées rejetées dans le MN hors du territoire", 9, [49]],
+            [1, "Eaux usées brutes NCA exportées hors du territoire", 10, [57]],
+            [1, "Assainissement non collectif", 11, [37]],
+            [1, "Imports secteurs", 12, [50]],
+            [1, "Export secteurs", 13, [51]],
+            [2, "CONSOMMATION CARBURANT AEP", 1, [1,2,3]],
+            [2, "CONSOMMATION CARBURANT EU", 2, [4,5]],
+            [2, "CONSOMMATION CARBURANT SUPPORTS", 3, [6]],
+            [2, "CONSOMMATION ELECTRICITE AEP", 4, [7,8]],
+            [2, "CONSOMMATION ELECTRICITE EU", 5, [10,11]],
+            [2, "CONSOMMATION ELECTRICITE SUPPORT", 6, [9]],
+            [2, "PRODUCTION ENERGIES RENOUVELABLES AEP", 7, [13,14,15,16,17,29]],
+            [2, "PRODUCTION ENERGIES RENOUVELABLES EU", 8, [18,19, 21, 24]],
+            [2, "PRODUCTION ENERGIES RENOUVELABLES EU (ext.)", 9, [22]],
+            [2, "IMPORTATION ENERGIES RENOUVELABLES EU SECTEURS", 10, [39]],
+            [2, "EXPORTATION ENERGIES RENOUVELABLES EU SECTEURS", 11, [40]],
+            [2, "TOTAL AUTRES SOURCES D'ENERGIE", 12, []],
+            [2, "AUTRES SOURCES D'ENERGIE AEP", 13, []],
+            [2, "AUTRES SOURCES D'ENERGIE EU", 14, []],
+            [2, "AUTRES SOURCES D'ENERGIE SUPPORT", 15, []],
+        ]
+
+        for each in level_one_flows:
+            new_flow = WaterSystemFlow.objects.create(
+                name=each[1],
+                identifier=each[2],
+                category_id=each[0],
+                level=1,
+            )
+            for flow in each[3]:
+                get_flow = WaterSystemFlow.objects.get(level=2, category_id=each[0], identifier=flow)
+                get_flow.part_of_flow=new_flow
+                get_flow.save()
+
+    # END DEBUG
+
     info = None
     if "id" in request.GET:
         info = WaterSystemNode.objects.get(pk=request.GET["id"])
@@ -296,8 +345,13 @@ def controlpanel_flows(request):
     if not has_permission(request, request.project, ["curator", "admin"]):
         unauthorized_access(request)
 
-    flows = WaterSystemFlow.objects.all()
+    flows = None
     info = None
+    
+    if "category" in request.GET:
+        flows = WaterSystemFlow.objects.filter(category_id=request.GET["category"])
+        if "level" in request.GET:
+            flows = flows.filter(level=request.GET["level"])
 
     if "id" in request.GET:
         info = WaterSystemFlow.objects.get(pk=request.GET["id"])
@@ -306,11 +360,20 @@ def controlpanel_flows(request):
         if not info:
             info = WaterSystemFlow()
         info.name = request.POST["name"]
+        info.level = request.POST["level"]
+        info.description = request.POST["description"]
         info.category_id = request.POST["type"]
         info.identifier = request.POST["identifier"]
+        part_of_flow = None
+        if request.POST.get("part_of_flow"):
+            try:
+                part_of_flow = WaterSystemFlow.objects.get(category_id=request.POST["type"], level=1, identifier=request.POST["part_of_flow"])
+            except:
+                messages.warning(request, "We could not find the level-1 flow that you entered so we left this field blank.")
+        info.part_of_flow = part_of_flow
         info.save()
         messages.success(request, _("Information was saved"))
-        return redirect(request.path)
+        return redirect(f"{request.path}?category={info.category.id}&level={info.level}")
 
     context = {
         "flows": flows,
@@ -372,6 +435,7 @@ def controlpanel_file(request, id):
         conversion = {
             "GAZ A EFFETS DE SERRE": 3,
             "ENERGIE": 2,
+            "EAUX": 1,
         }
         category = WaterSystemCategory.objects.get(pk=conversion[category_name])
         if not info.category:

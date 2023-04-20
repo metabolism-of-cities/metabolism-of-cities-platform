@@ -2,29 +2,57 @@
 
 {% block content %}
 
-  <h2>{% block title %}Manage flows{% endblock %}</h2>
+  <h2>{% block title %}{{ _("Manage flows") }}{% endblock %}</h2>
+
+  <ul class="nav nav-pills d-print-none mb-2">
+  {% for each in types %}
+    <li class="nav-item">
+      <a class="btn {% if request.GET.category == each.id|slugify %}btn-dark{% endif %}" href="?category={{ each.id }}">{{ each }}</a>
+    </li>
+  {% endfor %}
+  </ul>
+
+  {% if request.GET.category %}
+  <ul class="nav nav-pills d-print-none">
+    <li class="nav-item">
+      <a class="btn {% if request.GET.level == "1" %}btn-dark{% endif %}" href="?category={{ request.GET.category }}&amp;level=1">Level 1</a>
+    </li>
+    <li class="nav-item">
+      <a class="btn {% if request.GET.level == "2" %}btn-dark{% endif %}" href="?category={{ request.GET.category }}&amp;level=2">Level 2</a>
+    </li>
+  </ul>
+  {% endif %}
 
   {% if not info %}
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>{{ _("Category") }}</th>
-          <th>#</th>
-          <th>{{ _("Flow") }}</th>
-          <th>{{ _("Description") }}</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for each in flows %}
-        <tr>
-          <td>{{ each.category }}</td>
-          <td>{{ each.identifier }}</td>
-          <td><a href="?id={{ each.id }}">{{ each }}</a></td>
-          <td>{{ each.description|default_if_none:"" }}</td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
+    {% if flows %}
+      <table class="table table-striped mt-4">
+        <thead>
+          <tr>
+            <th>{{ _("Level") }}</th>
+            <th>#</th>
+            <th>{{ _("Flow") }}</th>
+            <th>{{ _("Description") }}</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for each in flows %}
+          <tr>
+            <td>{{ each.level }}</td>
+            <td>{{ each.identifier }}</td>
+            <td><a href="?id={{ each.id }}">{{ each.name }}</a>
+              {% if each.part_of_flow %}
+                <br>
+                <small>
+                  {{ _("Level 1") }}: <strong>{{ _("Flow #") }}{{ each.part_of_flow.identifier }} {{ each.part_of_flow.name }}</strong>
+                </small>
+              {% endif %}
+            </td>
+            <td>{{ each.description|default_if_none:"" }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
 
     <h2 class="mt-5">{{ _("Add a new flow") }}</h2>
     <div class="alert alert-info">
@@ -39,11 +67,20 @@
       <select class="form-control" name="type" required>
         <option value=""></option>
         {% for each in types %}
-          <option {% if info.category == each %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
+          <option {% if info.category == each or request.GET.category == each.id|slugify %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
         {% endfor %}
       </select>
     </div>
-    
+
+    <div class="mb-3">
+      <label class="form-label">{{ _("Level") }}</label>
+      <select class="form-control" name="level" required>
+        <option value=""></option>
+        <option {% if info.level == 1 or request.GET.level == "1" %}selected{% endif %} value="1">1</option>
+        <option {% if info.level == 2 or request.GET.level == "2" %}selected{% endif %} value="2">2</option>
+      </select>
+    </div>
+
     <div class="mb-3">
       <label class="form-label">{{ _("Number") }}</label>
       <input class="form-control" name="identifier" required value="{{ info.identifier }}" type="number">
@@ -52,10 +89,37 @@
       <label class="form-label">{{ _("Name") }}</label>
       <input class="form-control" name="name" required value="{{ info.name }}">
     </div>
+    <div class="mb-3">
+      <label class="form-label">{{ _("Description") }}</label>
+      <input class="form-control" name="description" value="{{ info.description|default_if_none:"" }}">
+    </div>
+    <div class="mb-3" id="part_of">
+      <label class="form-label">{{ _("Part of flow") }}</label>
+      <input class="form-control" name="part_of_flow" value="{{ info.part_of_flow.identifier }}" type="number">
+      <small>
+        {{ _("Most level-2 flows are part of a level-1 flows. Please enter the number of the level-1 flow here.") }}
+      </small>
+    </div>
+    {% csrf_token %}
     <div class="form-actions">
       <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> {{ _("Save") }}</button>
     </div>
-    {% csrf_token %}
   </form>
 
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+$(function(){
+  $("select[name='level']").change(function(){
+    if ($(this).val() == "2") {
+      $("#part_of").show();
+    } else {
+      $("#part_of").hide();
+      $("input[name='part_of_flow']").val("");
+    }
+  });
+  $("select[name='level']").change();
+});
+</script>
 {% endblock %}
