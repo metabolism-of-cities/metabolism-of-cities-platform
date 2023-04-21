@@ -63,6 +63,17 @@
           {% include svg %}
           {% include "water/_modal.html" %}
 
+          {% if is_admin %}
+            <div class="alert alert-info mt-5">
+              <strong>Admin tools</strong><br>
+              <span id="show_nodes" class="btn btn-default-outline">Show all nodes</span>
+              <span id="show_node_numbers" class="btn btn-default-outline">Show node numbers</span>
+              <span id="show_flows" class="btn btn-default-outline">Show all flows</span>
+              <span id="show_data" class="btn btn-default-outline">Show data</span>
+              <pre class="pt-3" id="show_data_box"></pre>
+            </div>
+          {% endif %}
+
         </div>
 
           <div id="w2">

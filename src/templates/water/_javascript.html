@@ -53,6 +53,8 @@
     alert(message);
   }
 
+  show_data = false
+
   function getData() {
     /*  We start by fading out the map and showing a loading icon */
     $("svg").css("opacity", "0.2");
@@ -73,6 +75,15 @@
     .done(function(response) {
       items = [];
       max_flow = 0;
+
+      /* Used for debugging, showing data on-screen */
+      if (show_data) {
+        data_box = "QUERY: " + jsonURL + '\n\nRESPONSE:\n';
+        $.each(response, function(key, val) {
+          data_box += 'Flow ' + key + ': ' + val + '\n';
+        });
+        $("#show_data_box").text(data_box);
+      }
 
       /*  First we get the total value of ALL flows */
       $.each(response, function(key, val) {
@@ -419,3 +430,34 @@
 
 </script>
 
+{% if is_admin %}
+<script type="text/javascript">
+$(function(){
+  $("#show_nodes").click(function(){
+    $(this).addClass("btn-default");
+    $(this).removeClass("btn-default-outline");
+    $(".node").show();
+  });
+  $("#show_node_numbers").click(function(){
+    $(this).addClass("btn-default");
+    $(this).removeClass("btn-default-outline");
+    $(".node").each(function(){
+      node_name = $(this).attr("id");
+      $(this).find("text:last").text(node_name);
+    });
+  });
+  $("#show_flows").click(function(){
+    $(this).addClass("btn-default");
+    $(this).removeClass("btn-default-outline");
+    $(".path").show();
+    $(".path").css("stroke-width", "2");
+  });
+  $("#show_data").click(function(){
+    $(this).addClass("btn-default");
+    $(this).removeClass("btn-default-outline");
+    show_data = true;
+    getData();
+  });
+});
+</script>
+{% endif %}

@@ -30,58 +30,13 @@ def index(request):
     }
     return render(request, "water/index.html", context)
 
-
-def water(request):
-    category = 1
-    context = {
-        "title": "Eau",
-        "regions": NICE_REGIONS,
-        "link": reverse("water:water"),
-        "show_submenu": True,
-        "section": "water",
-        "region": NICE_REGIONS.get(int(request.GET['region'])),
-        "category": WaterSystemCategory.objects.get(pk=category),
-        "time_frames": WaterSystemData.objects.filter(category_id=category).values("date", "timeframe").distinct().order_by("date"),
-        "flows": WaterSystemFlow.objects.filter(category_id=category),
-        "nodes": WaterSystemNode.objects.filter(category_id=category).prefetch_related("entry_flows"),
-        "load_highcharts": True,
-    }
-    return render(request, "water/water.html", context)
-
-def energy(request):
-    category = 2
-    context = {
-        "title": "Energies",
-        "section": "energy",
-        "link": reverse("water:energy"),
-        "show_submenu": True,
-        "region": NICE_REGIONS.get(int(request.GET['region'])),
-        "category": WaterSystemCategory.objects.get(pk=category),
-        "time_frames": WaterSystemData.objects.filter(category_id=category).values("date", "timeframe").distinct().order_by("date"),
-        "flows": WaterSystemFlow.objects.filter(category_id=category),
-        "nodes": WaterSystemNode.objects.filter(category_id=category).prefetch_related("entry_flows"),
-        "load_highcharts": True,
-    }
-    return render(request, "water/energy.html", context)
-
-def emissions(request):
-    category = 3
-    context = {
-        "title": "Gaz à effets de serre",
-        "section": "emissions",
-        "link": reverse("water:emissions"),
-        "show_submenu": True,
-        "region": NICE_REGIONS.get(int(request.GET['region'])),
-        "category": WaterSystemCategory.objects.get(pk=category),
-        "time_frames": WaterSystemData.objects.filter(category_id=category).values("date", "timeframe").distinct().order_by("date"),
-        "flows": WaterSystemFlow.objects.filter(category_id=category),
-        "nodes": WaterSystemNode.objects.filter(category_id=category).prefetch_related("entry_flows"),
-        "load_highcharts": True,
-    }
-    return render(request, "water/emissions.html", context)
-
 def sankey(request, category):
     category = WaterSystemCategory.objects.get(pk=category)
+
+    is_admin = False
+    if has_permission(request, request.project, ["curator", "admin"]):
+        is_admin = True
+
     context = {
         "title": category,
         "section": category.slug,
@@ -94,6 +49,7 @@ def sankey(request, category):
         "nodes": WaterSystemNode.objects.filter(category_id=category).prefetch_related("entry_flows"),
         "load_highcharts": True,
         "svg": f"water/svg/{category.slug}.svg",
+        "is_admin": is_admin,
     }
     return render(request, "water/sankey.html", context)
 
@@ -522,45 +478,46 @@ def controlpanel_file(request, id):
             flow = row["flow"]
             category = category
             error = None
-            if flow not in flows:
+            if int(row["level"]) == 2:
+                if flow not in flows:
+                    try:
+                        get_flow = WaterSystemFlow.objects.get(identifier=flow, category=category, level=2)
+                        flows[flow] = get_flow
+                        flow = get_flow
+                    except:
+                        error = f"We could not locate flow #{flow} in the database"
+                else:
+                    flow = flows[flow]
+
                 try:
-                    get_flow = WaterSystemFlow.objects.get(identifier=flow, category=category, level=2)
-                    flows[flow] = get_flow
-                    flow = get_flow
-                except:
-                    error = f"We could not locate flow #{flow} in the database"
-            else:
-                flow = flows[flow]
+                    year = row["year"]
+                    month = row["month"]
+                    timeframe = "month"
+                    if not month or month == "":
+                        month = 1
+                        timeframe = "year"
+                    date = parse(f"{year}-{month}-01")
+                except ValueError:
+                    error = _("Year/month information is not valid.")
 
-            try:
-                year = row["year"]
-                month = row["month"]
-                timeframe = "month"
-                if not isinstance(month, int):
-                    month = 1
-                    timeframe = "year"
-                date = parse(f"{year}-{month}-01")
-            except ValueError:
-                error = _("Year/month information is not valid.")
-
-            if not error:
-                spaces = WaterSystemSpace.objects.all()
-                for each in spaces:
-                    quantity = row[each.name]
-                    space = each
-                    if isinstance(quantity, str) and quantity.strip().lower() == "inconnu":
-                        quantity = None
-                    items.append(WaterSystemData(
-                        file = info,
-                        flow = flow,
-                        category = category,
-                        timeframe = timeframe,
-                        space = space,
-                        date = date,
-                        quantity = quantity)
-                    )
-            else:
-                errors.append(error)
+                if not error:
+                    spaces = WaterSystemSpace.objects.all()
+                    for each in spaces:
+                        quantity = row[each.name]
+                        space = each
+                        if isinstance(quantity, str) and quantity.strip().lower() == "inconnu":
+                            quantity = None
+                        items.append(WaterSystemData(
+                            file = info,
+                            flow = flow,
+                            category = category,
+                            timeframe = timeframe,
+                            space = space,
+                            date = date,
+                            quantity = quantity)
+                        )
+                else:
+                    errors.append(error)
 
         if not errors:
             try:
