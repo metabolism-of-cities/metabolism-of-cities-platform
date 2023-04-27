@@ -129,8 +129,9 @@ def ajax(request):
             # do anything with the data.
             part_of = each["flow__part_of_flow__identifier"]
             if part_of:
-                if part_of in results and results[part_of] and each["total"]:
-                    results[part_of] += each["total"]
+                if part_of in results and results[part_of]:
+                    if each["total"]:
+                        results[part_of] += each["total"]
                 else:
                     results[part_of] = each["total"]
     return JsonResponse(results)
