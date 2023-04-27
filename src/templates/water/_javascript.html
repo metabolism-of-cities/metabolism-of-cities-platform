@@ -143,8 +143,8 @@
         all_flows = all_flows.filter(item => item !== Number(key)); /* We keep track which flows exist in the dataset, see below why */
 
         // So let's see which node a flow belongs to, and then we add the total to that node
-        if (flow_mapping[key]) {
-          for (let flow of flow_mapping[key]) {
+        if (node_mapping[key]) {
+          for (let flow of node_mapping[key]) {
             if (node_totals[flow]) {
               node_totals[flow] += val;
             } else {
