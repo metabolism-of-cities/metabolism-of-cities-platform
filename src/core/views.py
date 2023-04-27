@@ -17,6 +17,7 @@ from django.http import JsonResponse, HttpResponse
 from django.http import Http404, HttpResponseRedirect
 
 from markdown import markdown
+from tinymce.widgets import TinyMCE
 
 # These are used so that we can send mail
 from django.core.mail import send_mail
@@ -545,7 +546,6 @@ def template(request, slug):
         context["geoapify_api"] = settings.GEOAPIFY_API
 
     if slug == "tinymce":
-        from tinymce import TinyMCE
         info = None
         class RichTextForm(forms.Form):
             description = forms.CharField(widget=TinyMCE(mce_attrs={"width": "100%" }))
@@ -1346,8 +1346,7 @@ def controlpanel_content_form(request, id=None):
     else:
         form = ModelForm(request.POST or None)
 
-    if project.slug == "islands" or "tinymce" in request.GET:
-        from tinymce import TinyMCE
+    if project.slug == "islands" or project.slug == "water" or "tinymce" in request.GET:
         class RichTextForm(forms.Form):
             description = forms.CharField(widget=TinyMCE(mce_attrs={"width": "100%" }))
         if info:

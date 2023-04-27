@@ -9,6 +9,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from dateutil.parser import parse
 from django.db.models import Sum
+from django.core.mail import EmailMessage
+from django.conf import settings
 
 # For loading data...
 from openpyxl import load_workbook
@@ -54,16 +56,40 @@ def sankey(request, category):
     return render(request, "water/sankey.html", context)
 
 def about(request):
+    info = Webpage.objects.get(part_of_project=get_project(request), slug="/about/")
     context = {
-        "title": "A propos",
         "section": "about",
+        "title": info,
+        "info": info,
     }
     return render(request, "water/about.html", context)
 
 def contact(request):
+
+    message_sent = False
+    if request.method == "POST":
+        try:
+            name = request.POST.get("name")
+            email = request.POST.get("email")
+            subject = request.POST.get("subject")
+            message = request.POST.get("message")
+            from_email = "Metabolisme Eau d'Azur<info@metabolismofcities.org>"
+            to = settings.WATER_MANAGER_EMAILS
+            mail_body = f"NOM - Prénom : {name}\nMail : {email}\nObjet : {subject}\n--------\n{message}"
+
+            msg = EmailMessage("Metabolisme Eau d'Azur: Contact", mail_body, from_email, to)
+            if email:
+                msg.reply_to = [email]
+            msg.send()
+            message_sent = True
+        except Exception as e:
+            p(str(e))
+            messages.error(request, "Sorry, there was a technical problem delivering your message. Please try again.")
+
     context = {
-        "title": "Contact",
         "section": "contact",
+        "info": Webpage.objects.get(part_of_project=get_project(request), slug="/contact/"),
+        "message_sent": message_sent,
     }
     return render(request, "water/contact.html", context)
 

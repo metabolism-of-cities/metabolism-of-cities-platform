@@ -2,8 +2,43 @@
 
 {% block content %}
 
-<h1>{{ title }}</h1>
+<h1>{% block title %}{{ info }}{% endblock %}</h1>
 
-{% lorem 5 p %}
+{% if message_sent %}
+  <div class="alert alert-success">
+    Formulaire envoyé
+  </div>
+{% else %}
+  {{ info.get_description }}
+
+  <form method="post">
+
+    <div class="mb-3">
+      <label class="form-label">NOM - Prénom</label>
+      <input type="text" class="form-control" name="name" required>
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">Mail</label>
+      <input type="email" class="form-control" name="email">
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">Objet</label>
+      <input type="text" class="form-control" name="subject" required>
+    </div>
+    
+    <div class="mb-3">
+      <textarea class="form-control" rows="7" name="message" required></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Envoyer</button>
+    </div>
+    
+    {% csrf_token %}
+  </form>
+
+{% endif %}
 
 {% endblock %}
