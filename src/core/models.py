@@ -3734,6 +3734,18 @@ class WaterSystemFile(models.Model):
     def __str__(self):
         return _("File") + " #" + str(self.id)
 
+    @property
+    def data_start(self):
+        data = self.data.all().order_by("date")
+        if data:
+            return data[0]
+
+    @property
+    def data_end(self):
+        data = self.data.all().order_by("-date")
+        if data:
+            return data[0]
+
     class Meta:
         ordering = ["id"]
 

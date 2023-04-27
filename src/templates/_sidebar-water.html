@@ -10,10 +10,10 @@
         <a class="nav-link btn {% if section == "energy" %}btn-dark d-inline-block{% endif %}" href="{% url "water:energy" %}?region={{ request.GET.region }}"> Energies</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link btn {% if section == "emissions" %}btn-dark d-inline-block{% endif %}" href="{% url "water:emissions" %}?region={{ request.GET.region }}"> Gaz à effets de serre</a>
+        <a class="nav-link btn {% if section == "emissions" %}btn-dark d-inline-block{% endif %}" href="{% url "water:emissions" %}?region={{ request.GET.region }}"> Gaz à Effet de Serre</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link disabled" href="#"> Matières</a>
+        <a class="nav-link disabled" href="#"> Matières et Matériaux</a>
       </li>
       <li class="nav-item">
         <a class="nav-link disabled" href="#"> Stocks</a>
@@ -21,7 +21,7 @@
     </ul>
   </div>
 
-  <div id="sidebar-territory" class="text-center pt-3 pb-3">
+  <div id="sidebar-territory" class="text-center pt-3 pb-3" {% if category.slug == "emissions" %}hidden{% endif %}>
     <h3>Territoire</h3>
     <ul class="nav flex-column mt-4 region-bar">
     {% for key,value in REGIONS.items %}

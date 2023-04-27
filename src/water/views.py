@@ -475,7 +475,7 @@ def controlpanel_file(request, id):
 
         # We delete all records that are not level 2 records
         try:
-            df = df[df.level != "2"]
+            df = df[df.level == 2]
         except:
             error = "We could not locate the LEVEL (niveau) column, please review."
             messages.error(request, error)
@@ -505,46 +505,45 @@ def controlpanel_file(request, id):
             flow = row["flow"]
             category = category
             error = None
-            if int(row["level"]) == 2:
-                if flow not in flows:
-                    try:
-                        get_flow = WaterSystemFlow.objects.get(identifier=flow, category=category, level=2)
-                        flows[flow] = get_flow
-                        flow = get_flow
-                    except:
-                        error = f"We could not locate flow #{flow} in the database"
-                else:
-                    flow = flows[flow]
-
+            if flow not in flows:
                 try:
-                    year = row["year"]
-                    month = row["month"]
-                    timeframe = "month"
-                    if not month or month == "":
-                        month = 1
-                        timeframe = "year"
-                    date = parse(f"{year}-{month}-01")
-                except ValueError:
-                    error = _("Year/month information is not valid.")
+                    get_flow = WaterSystemFlow.objects.get(identifier=flow, category=category, level=2)
+                    flows[flow] = get_flow
+                    flow = get_flow
+                except:
+                    error = f"We could not locate flow #{flow} in the database"
+            else:
+                flow = flows[flow]
 
-                if not error:
-                    spaces = WaterSystemSpace.objects.all()
-                    for each in spaces:
-                        quantity = row[each.name]
-                        space = each
-                        if isinstance(quantity, str) and quantity.strip().lower() == "inconnu":
-                            quantity = None
-                        items.append(WaterSystemData(
-                            file = info,
-                            flow = flow,
-                            category = category,
-                            timeframe = timeframe,
-                            space = space,
-                            date = date,
-                            quantity = quantity)
-                        )
-                else:
-                    errors.append(error)
+            try:
+                year = row["year"]
+                month = row["month"]
+                timeframe = "month"
+                if not month or month == "":
+                    month = 1
+                    timeframe = "year"
+                date = parse(f"{year}-{month}-01")
+            except ValueError:
+                error = _("Year/month information is not valid.")
+
+            if not error:
+                spaces = WaterSystemSpace.objects.all()
+                for each in spaces:
+                    quantity = row[each.name]
+                    space = each
+                    if isinstance(quantity, str) and quantity.strip().lower() == "inconnu":
+                        quantity = None
+                    items.append(WaterSystemData(
+                        file = info,
+                        flow = flow,
+                        category = category,
+                        timeframe = timeframe,
+                        space = space,
+                        date = date,
+                        quantity = quantity)
+                    )
+            else:
+                errors.append(error)
 
         if not errors:
             try:

@@ -39,15 +39,15 @@
     <p>
       You can use the templates below to upload new data. 
     </p>
-    <a href="/media/water/templates/water.xlsx" class="btn btn-secondary">
+    <a href="/media/water/templates/water.xlsx" class="btn btn-secondary" target="_blank">
       <i class="fa fa-download"></i>
       Water data template
     </a>
-    <a href="/media/water/templates/energy.xlsx" class="btn btn-secondary">
+    <a href="/media/water/templates/energy.xlsx" class="btn btn-secondary" target="_blank">
       <i class="fa fa-download"></i>
       Energy data template
     </a>
-    <a href="/media/water/templates/emissions.xlsx" class="btn btn-secondary">
+    <a href="/media/water/templates/emissions.xlsx" class="btn btn-secondary" target="_blank">
       <i class="fa fa-download"></i>
       Emissions data template
     </a>
@@ -74,7 +74,7 @@
           <th>{{ _("Type") }}</th>
           <th>{{ _("Date") }}</th>
           <th>{{ _("Uploader") }}</th>
-          <th>{{ _("Processed?") }}</th>
+          <th>{{ _("Data stored") }}</th>
         </tr>
       </thead>
       <tbody>
@@ -82,9 +82,26 @@
         <tr>
           <td>{{ each.id }}</td>
           <td><a href="{{ each.get_absolute_url }}">{{ each.category }}</a></td>
-          <td>{{ each.date_created }}</td>
+          <td>{{ each.date_created|date:"M d, Y" }}</td>
           <td>{{ each.uploader }}</td>
-          <td>{% if each.is_processed %}{{ _("Yes") }}{% else %}{{ _("No") }}{% endif %}</td>
+          <td>
+            {% if not each.data_start %}
+              <span class="badge badge-secondary">{{ _("No data stored") }}</span>
+            {% else %}
+              {% if each.data_start.timeframe == "month" %}
+                {{ each.data_start.date|date:"M Y" }}
+              {% else %}
+                {{ each.data_start.date|date:"Y" }}
+              {% endif %}
+              {% if each.data_start.date != each.data_end.date %}
+                {% if each.data_end.timeframe == "month" %}
+                  -{{ each.data_end.date|date:"M Y" }}
+                {% else %}
+                  -{{ each.data_end.date|date:"Y" }}
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          </td>
         </tr>
       {% endfor %}
       </tbody>

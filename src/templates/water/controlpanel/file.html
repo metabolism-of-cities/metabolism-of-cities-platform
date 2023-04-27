@@ -58,22 +58,24 @@
     </form>
   {% else %}
     <h2 class="mt-5">{{ _("Spreadsheet overview") }}</h2>
+    <div class="alert alert-info">
+      {{ _("The data below shows all the rows that were successfully detected in your spreadsheet. Remember that only level-2 data is being detected and stored. The system will NOT remove any existing data. If you upload data for existing periods, then you should remove the old data first as not to duplicate data.") }}
+    </div>
     <div class="databox">
       {{ table }}
     </div>
 
-    <h2 class="mt-4">{{ _("All good?") }}</h2>
+    <h2 class="mt-4">{{ _("What do you want to do with this file?") }}</h2>
     <form method="post">
-      <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> {{ _("Save data") }}</button>
+      <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> {{ _("Import data") }}</button>
       {% csrf_token %}
       <input type="hidden" name="save" value="true" />
     </form>
 
-    <h2 class="mt-3">{{ _("Not good?") }}</h2>
-    <form method="post">
+    <form method="post" class="mt-2">
       <button type="submit" class="btn btn-danger"
        onclick="javascript:return confirm('{{ _("Are you sure?") }}')" 
-      ><i class="fa fa-trash"></i> {{ _("Delete file and try again") }}</button>
+      ><i class="fa fa-trash"></i> {{ _("Delete file") }}</button>
       {% csrf_token %}
       <input type="hidden" name="delete" value="true"/>
     </form>
