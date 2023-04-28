@@ -4,7 +4,7 @@
 {% block page_name %}fullwidth{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="{% static "css/water.css" %}?2123233" />
+<link rel="stylesheet" href="{% static "css/water.css" %}?p93" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"> 
@@ -19,17 +19,17 @@
     </div>
     <div class="col-lg-10 main offset-lg-2">
 
-      <input type="hidden" name="level" value="1" />
+      <input type="hidden" name="level" value="{{ level }}" />
       <ul class="nav nav-pills d-print-none" id="top-tabs">
         <li class="nav-item">
-          <a class="btn btn-dark waterlink" href="#" data-id="w1">Niveau 1</a>
+          <a class="btn {% if level == 1 %}btn-dark{% endif %}" href="?region={{ request.GET.region }}&amp;level=1">Niveau 1</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link waterlink {% if category.slug == "emissions" %}disabled{% endif %}" href="#" data-id="w2">Niveau 2</a>
+          <a class="btn {% if level == 2 %}btn-dark{% endif %} {% if category.slug == "emissions" %}disabled{% endif %}" href="?region={{ request.GET.region }}&amp;level=2">Niveau 2</a>
         </li>
         {% if category.slug == "water" %}
           <li class="nav-item">
-            <a class="nav-link waterlink disabled" href="#" data-id="w2">Niveau 3</a>
+            <a class="nav-link disabled" href="#" data-id="w2">Niveau 3</a>
           </li>
         {% endif %}
         <li class="nav-item ml-auto">
@@ -41,7 +41,7 @@
         </li>
 
       </ul> 
-      <div class="main-body">
+      <div class="main-body level-{{ request.GET.level }}">
 
         <div class="watergraphs">
 
@@ -49,7 +49,7 @@
             «
               Métabolisme <strong id="title_region"></strong> -
               Flux : <strong>{{ category }}</strong> -
-              Niveau : <strong id="title_level">1</strong> -
+              Niveau : <strong id="title_level">{{ request.GET.level }}</strong> -
               Période : <strong class="title_date"></strong>
             »
           </p>
@@ -82,12 +82,6 @@
           {% endif %}
 
         </div>
-
-          <div id="w2">
-            {% if category.slug != "emissions" %}
-              <img src="/media/water/sankeys/{{ category.slug }}2.png" style="max-width:100%" alt="" />
-            {% endif %}
-          </div>
 
         </div>
       </div>

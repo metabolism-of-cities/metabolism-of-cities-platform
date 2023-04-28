@@ -3699,6 +3699,7 @@ class WaterSystemFlow(models.Model):
     category = models.ForeignKey(WaterSystemCategory, on_delete=models.CASCADE)
     level = models.PositiveSmallIntegerField(default=2)
     part_of_flow = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE, help_text="If this is a level-2 flow, then we indicate which level-1 flow this is part of")
+    normal_width_calculation = models.BooleanField(default=True, help_text="Some flows are extraordinarily large and should NOT be used for calculating average widths")
 
     def __str__(self):
         return f"{self.identifier}. {self.name}"

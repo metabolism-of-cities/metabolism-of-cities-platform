@@ -5,27 +5,44 @@
   <h2>{% block title %}{{ _("Manage nodes") }}{% endblock %}</h2>
 
   {% if not info %}
-    <ul>
-      {% for each in nodes %}
-        {% ifchanged each.category %}
-          </li></ul><li><h4>{{ each.category }}</h4><ul>
-        {% endifchanged %}
-        <li class="mb-3">
-          <a href="?id={{ each.id }}">{{ each.identifier }} - {{ each }}</a>
-          <br>
-          {% if each.exit_flows.count %}
-          Exit flows: 
-          {% for flow in each.exit_flows.all %}<span class="badge badge-info">{{ flow.identifier }}</span> {% endfor %}
-          {% endif %}
-          {% if each.entry_flows.count %}
-          Entry flows: 
-          {% for flow in each.entry_flows.all %}<span class="badge badge-info">{{ flow.identifier }}</span> {% endfor %}
-          {% endif %}
-        </li>
-      {% endfor %}
-    </li>
+    <ul class="nav nav-pills d-print-none mb-2">
+    {% for each in categories %}
+      <li class="nav-item">
+        <a class="btn {% if request.GET.category == each.id|slugify %}btn-dark{% endif %}" href="?category={{ each.id }}">{{ each }}</a>
+      </li>
+    {% endfor %}
     </ul>
+
+    {% if request.GET.category %}
+    <ul class="nav nav-pills d-print-none">
+      <li class="nav-item">
+        <a class="btn {% if request.GET.level == "1" %}btn-dark{% endif %}" href="?category={{ request.GET.category }}&amp;level=1">Level 1</a>
+      </li>
+      <li class="nav-item">
+        <a class="btn {% if request.GET.level == "2" %}btn-dark{% endif %}" href="?category={{ request.GET.category }}&amp;level=2">Level 2</a>
+      </li>
     </ul>
+    {% endif %}
+
+    {% if nodes %}
+      <div class="mt-3 alert alert-info">{{ nodes.count }} {{ _("nodes found") }}</div>
+      <ul class="mt-2">
+        {% for each in nodes %}
+          <li class="mb-3">
+            <a href="?id={{ each.id }}">{{ each.identifier }} - {{ each }}</a>
+            <br>
+            {% if each.exit_flows.count %}
+            Exit flows: 
+            {% for flow in each.exit_flows.all %}<span class="badge badge-info">{{ flow.identifier }}</span> {% endfor %}
+            {% endif %}
+            {% if each.entry_flows.count %}
+            Entry flows: 
+            {% for flow in each.entry_flows.all %}<span class="badge badge-info">{{ flow.identifier }}</span> {% endfor %}
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
 
   <h2 class="mt-5">{{ _("Add a new node") }}</h2>
   {% endif %}
@@ -45,7 +62,7 @@
       <select class="form-control" name="category">
         <option value=""></option>
         {% for each in categories %}
-          <option value="{{ each.id }}" {% if each == info.category %}selected{% endif %}>{{ each }}</option>
+          <option value="{{ each.id }}" {% if each == info.category or each.id|slugify == request.GET.category %}selected{% endif %}>{{ each }}</option>
         {% endfor %}
       </select>
     </div>
@@ -59,7 +76,7 @@
     </div>
     <div class="mb-3">
       <label class="form-label">{{ _("Level") }}</label>
-      <input class="form-control" name="level" value="{{ info.level }}" type="number">
+      <input class="form-control" name="level" value="{% if info.level %}{{ info.level }}{% elif request.GET.level %}{{ request.GET.level }}{% endif %}" type="number">
     </div>
     <div class="form-actions">
       <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> {{ _("Save") }}</button>

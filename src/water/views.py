@@ -39,6 +39,12 @@ def sankey(request, category):
     if has_permission(request, request.project, ["curator", "admin"]):
         is_admin = True
 
+    svg = f"water/svg/{category.slug}"
+    level = request.GET.get("level", 1)
+    if int(level) > 1:
+        svg += str(level)
+    svg += ".svg"
+
     context = {
         "title": category,
         "section": category.slug,
@@ -47,11 +53,12 @@ def sankey(request, category):
         "region": NICE_REGIONS.get(int(request.GET['region'])),
         "category": category,
         "time_frames": WaterSystemData.objects.filter(category_id=category).values("date", "timeframe").distinct().order_by("date"),
-        "flows": WaterSystemFlow.objects.filter(category_id=category),
-        "nodes": WaterSystemNode.objects.filter(category_id=category).prefetch_related("entry_flows"),
+        "flows": WaterSystemFlow.objects.filter(category_id=category, level=level),
+        "nodes": WaterSystemNode.objects.filter(category_id=category, level=level).prefetch_related("entry_flows"),
         "load_highcharts": True,
-        "svg": f"water/svg/{category.slug}.svg",
+        "svg": svg,
         "is_admin": is_admin,
+        "level": int(level),
     }
     return render(request, "water/sankey.html", context)
 
@@ -240,6 +247,11 @@ def controlpanel_nodes(request):
         unauthorized_access(request)
 
     info = None
+    nodes = None
+
+    if "category" in request.GET and "level" in request.GET:
+        nodes = WaterSystemNode.objects.filter(category_id=request.GET["category"], level=request.GET["level"])
+
     if "id" in request.GET:
         info = WaterSystemNode.objects.get(pk=request.GET["id"])
 
@@ -274,11 +286,11 @@ def controlpanel_nodes(request):
                     messages.error(request, "The following item could not be saved in the exit flows: " + each)
 
         messages.success(request, _("Information was saved"))
-        return redirect(request.path)
+        return redirect(request.path + f"?category={info.category.id}&level={info.level}")
 
     context = {
         "info": info,
-        "nodes": WaterSystemNode.objects.all(),
+        "nodes": nodes,
         "categories": WaterSystemCategory.objects.all(),
         "section": "controlpanel",
     }
@@ -332,6 +344,7 @@ def controlpanel_flows(request):
         info.description = request.POST["description"]
         info.category_id = request.POST["type"]
         info.identifier = request.POST["identifier"]
+        info.normal_width_calculation = True if request.POST.get("normal_width_calculation") else False
         part_of_flow = None
         if request.POST.get("part_of_flow"):
             try:
@@ -342,6 +355,12 @@ def controlpanel_flows(request):
         info.save()
         messages.success(request, _("Information was saved"))
         return redirect(f"{request.path}?category={info.category.id}&level={info.level}")
+
+    # TEMP DEBUG 
+    if "update" in request.GET:
+        WaterSystemFlow.objects.all().update(normal_width_calculation=True)
+        messages.success(request, _("All flows updated"))
+    # END DEBUG
 
     context = {
         "flows": flows,

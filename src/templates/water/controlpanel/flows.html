@@ -100,6 +100,14 @@
         {{ _("Most level-2 flows are part of a level-1 flows. Please enter the number of the level-1 flow here.") }}
       </small>
     </div>
+    <div class="mb-3">
+      <input type="checkbox" name="normal_width_calculation" value="true" {% if info.normal_width_calculation %}checked{% endif %} >
+      <label class="form-label">{{ _("Include when calculating line width") }}</label>
+      <br>
+      <small>
+      {{ _("Uncheck if this flow is extraordinarily large") }}
+      </small>
+    </div>
     {% csrf_token %}
     <div class="form-actions">
       <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> {{ _("Save") }}</button>

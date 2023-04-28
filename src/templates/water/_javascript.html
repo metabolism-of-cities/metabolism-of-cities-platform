@@ -12,8 +12,12 @@
   });
 
   flow_titles = {}
+  ignore_size = []
   {% for each in flows %}
     flow_titles["path-{{ each.identifier }}"] = "{{ each.name|escapejs }}";
+    {% if not each.normal_width_calculation %}
+      ignore_size.push({{each.identifier }});
+    {% endif %}
   {% endfor %}
 
   /*
@@ -21,24 +25,27 @@
   *  the label on the box can be updated to reflect this quantity
   *  all_nodes and node_mapping is used to connect all the flows to their relevant nodes. 
   *  That way we can hide a node if not a single one of its flows is present.
+  *  The format is : flow_mapping[flow_id] = [node, node, node]
+  *  node_mapping is the opposite, where we figure out which flows are linked to a node
+  *  so that we can hide the node if no flows are linked to it
   */
 
-  flow_mapping = {}
   node_mapping = {};
+  flow_mapping = {};
   all_nodes = []
   {% for each in nodes %}
     all_nodes.push({{ each.identifier }});
     {% for flow in each.entry_flows.all %}
       if (!flow_mapping[{{ flow.identifier }}]) {
         flow_mapping[{{ flow.identifier }}] = [{{ each.identifier }}];
-       } else {
+      } else {
         flow_mapping[{{ flow.identifier }}].push({{ each.identifier }});
-       }
+      }
       if (!node_mapping[{{ each.identifier }}]) {
         node_mapping[{{ each.identifier }}] = [{{ flow.identifier }}];
-       } else {
+      } else {
         node_mapping[{{ each.identifier }}].push({{ flow.identifier }});
-       }
+      }
     {% endfor %}
     {% for flow in each.exit_flows.all %}
       if (!node_mapping[{{ each.identifier }}]) {
@@ -87,7 +94,10 @@
 
       /*  First we get the total value of ALL flows */
       $.each(response, function(key, val) {
-        if (val > max_flow) {
+        /* Some of the flows are so large that they should be ignored, so let's make sure it's NOT one of those */
+        key = parseInt(key);
+        index = ignore_size.indexOf(key);
+        if (val > max_flow && index == -1) {
           max_flow = val;
         }
       });
@@ -143,12 +153,12 @@
         all_flows = all_flows.filter(item => item !== Number(key)); /* We keep track which flows exist in the dataset, see below why */
 
         // So let's see which node a flow belongs to, and then we add the total to that node
-        if (node_mapping[key]) {
-          for (let flow of node_mapping[key]) {
-            if (node_totals[flow]) {
-              node_totals[flow] += val;
+        if (flow_mapping[key]) {
+          for (let node_id of flow_mapping[key]) {
+            if (node_totals[node_id]) {
+              node_totals[node_id] += val;
             } else {
-              node_totals[flow] = val;
+              node_totals[node_id] = val;
             }
           }
         }
@@ -392,17 +402,6 @@
       legend: {
           enabled: false
       },
-  });
-
-  $(".waterlink").click(function(e){
-    $(".waterlink").removeClass("btn-dark");
-    $(this).addClass("btn-dark");
-    e.preventDefault();
-    var id = $(this).data("id");
-    $(".watergraphs div").hide();
-    $("#" + id).show();
-    var level = $(this).data("level");
-    $("input[name='level']").val(level);
   });
 
   /* Run this at page load */

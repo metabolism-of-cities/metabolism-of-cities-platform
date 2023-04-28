@@ -57,9 +57,16 @@
   }
 }
 svg {
+  opacity: 0.2;
+}
+.level-1 svg {
   max-width:100%;
   max-height:calc(100vh - 232px);
   opacity: 0.2;
+}
+.level-2 svg {
+  width: 100%;
+  min-width: 1200px;
 }
 .animate-toggle {
   position: absolute;
