@@ -122,3 +122,12 @@ svg {
 .page-water .path.grey {
   stroke: #9996BB;
 }
+#tablebox {
+  display: none;
+}
+.highcharts-exporting-group {
+  display: none;
+}
+.cursor-pointer {
+  cursor: pointer;
+}

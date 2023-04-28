@@ -59,6 +59,7 @@ def sankey(request, category):
         "svg": svg,
         "is_admin": is_admin,
         "level": int(level),
+        "selected_regions": request.GET.getlist("region"),
     }
     return render(request, "water/sankey.html", context)
 
@@ -145,14 +146,44 @@ def ajax(request):
 
 def ajax_chart_data(request):
     results = []
-    data = WaterSystemData.objects.filter(
-        category_id=request.GET["category"], 
-        flow__identifier=request.GET["flow"], 
-        space__in=request.GET.getlist("space")
-    ).values("date").annotate(total=Sum("quantity")).order_by("date")
+    if request.GET.get("level") == "1":
+        data = WaterSystemData.objects.filter(
+            category_id=request.GET["category"], 
+            flow__part_of_flow__identifier=request.GET["flow"], 
+            space__in=request.GET.getlist("space")
+        ).values("date", "timeframe").annotate(total=Sum("quantity")).order_by("date")
+    else:
+        data = WaterSystemData.objects.filter(
+            category_id=request.GET["category"], 
+            flow__identifier=request.GET["flow"], 
+            space__in=request.GET.getlist("space")
+        ).values("date", "timeframe").annotate(total=Sum("quantity")).order_by("date")
+
+    date_start = request.GET["date_start"]
+    if len(date_start) == 4:
+        date_start = parse(date_start + "-01-01")
+    else:
+        date_start = parse(date_start + "-01")
+
+    date_end = request.GET["date_end"]
+    if len(date_end) == 4:
+        date_end = parse(date_end + "-01-01")
+    else:
+        date_end = parse(date_end + "-01")
+
+    data = data.filter(date__gte=date_start, date__lte=date_end)
 
     for each in data:
-        results.append(each["total"])
+        date = each["date"]
+        if each["timeframe"] == "month":
+            date = date.strftime("%b %Y")
+        else:
+            date = date.strftime("%Y")
+        results.append({
+            "date": date, 
+            "timeframe": each["timeframe"], 
+            "quantity": each["total"],
+        })
     return JsonResponse(results, safe=False)
 
 def water_login(request):

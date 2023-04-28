@@ -72,6 +72,21 @@
 
   show_data = false
 
+  function updateLevelLinks() {
+    link = "?sankey"
+    $(".region-bar a.btn-dark").each(function(){
+      var region = $(this).data("region");
+      link += "&region=" + region;
+    });
+    link += "&date_start=" + $("select[name='date_start']").val() + "&date_end=" + $("select[name='date_end']").val();
+    link += "&level=";
+    $("#top-tabs li a").each(function(){
+      var level = $(this).data("level");
+      $(this).attr("href", link + level);
+    });
+    history.replaceState(undefined, undefined, link + $("input[name=level]").val());
+  }
+
   function getData() {
     /*  We start by fading out the map and showing a loading icon */
     $("svg").css("opacity", "0.2");
@@ -313,20 +328,8 @@
 
     setRegionLabels();
     getData();
+    updateLevelLinks();
 
-  });
-
-  $("#current-period").click(function(e){
-    e.preventDefault();
-    if ($(".period-dropdown").is(":visible")) {
-      $(".period-dropdown").slideUp("fast");
-      $("#current-period .bi-caret-down").show();
-      $("#current-period .bi-caret-up").hide();
-    } else {
-      $(".period-dropdown").slideDown("fast");
-      $("#current-period .bi-caret-down").hide();
-      $("#current-period .bi-caret-up").show();
-    }
   });
 
   $("#animate").click(function(){
@@ -343,6 +346,7 @@
     e.preventDefault();
     setDateLabels();
     getData();
+    updateLevelLinks();
   });
 
 
@@ -386,7 +390,19 @@
     };
 
     get_id_number = get_id.split("-")[1]; // The id will be something like 'path-51' so we need to get just 51
-    jsonURL = "{% url "water:ajax_chart_data" %}?flow=" + get_id_number + "&category={{ category.id }}";
+
+    // Let's see which period is selected (nth child), because we need to ONLY show those periods that 
+    // have been selected. We do this by removing the periods BEFORE the nth child from the list that
+    // holds all the periods (used in the x_axis labels)
+    selected_date = $("select[name=date_start] option:selected");
+    items_to_remove = selected_date.index();
+    x_labels = [...time_frames];
+    if (items_to_remove > 0) {
+      x_labels.splice(0, items_to_remove);
+    }
+
+    jsonURL = "{% url "water:ajax_chart_data" %}?flow=" + get_id_number + "&category={{ category.id }}&level=" + $("input[name=level]").val();
+    jsonURL += "&date_start=" + $("select[name='date_start']").val() + "&date_end=" + $("select[name='date_end']").val();
 
     $(".region-bar a.btn-dark").each(function(){
       jsonURL += "&space=" + $(this).data("region");
@@ -394,7 +410,19 @@
 
     $.getJSON(jsonURL)
     .done(function(response) {
-      $("#chartbox").highcharts().addSeries({ id: "chart_data", data: response}); 
+
+      table = '<table class="table table-striped"><thead><tr><th>{{ _("Date") }}</th><th>{{ _("Quantity") }} ({{ category.unit.symbol }})</th></tr></thead><tbody>';
+      data = [];
+      for (let x of response) {
+        data.push(x["quantity"]);
+        table += '<tr><td>' + x["date"] + '</td><td>' + x["quantity"] + '</td></tr>';
+      }
+      table += '</tbody></table>';
+      $("#tablebox").html(table);
+
+      chart = $("#chartbox").highcharts();
+      chart.addSeries({ id: "chart_data", data: data}); 
+      chart.xAxis[0].setCategories(x_labels);
     })
     .fail(function() {
       errorMessage("Failed to load data. Are you connected to the internet? Please reload the page or try again later.")
@@ -403,7 +431,7 @@
 
   // We load an empty highchart, which will be populated with actual chart data once
   // a flow is being clicked.
-  Highcharts.chart("chartbox", {
+  var chart = Highcharts.chart("chartbox", {
       credits: {
         text: "",
         href: null,
@@ -423,9 +451,27 @@
       },
       yAxis: {
         title: {
-          text: "{{ _("Value") }} ({{ category.unit.symbol }})",
+          text: "{{ _("Quantity") }} ({{ category.unit.symbol }})",
         },
       },
+  });
+
+  $(".export-png").click(function() {
+    chart.exportChart();
+  });
+
+  $(".print-chart").click(function() {
+    chart.print();
+  });
+
+  // Within the modal the user can open a chart (open by default) or table
+  $(".modal .nav-tabs a.swap-tab").click(function(e){
+    $(".modal .nav-tabs a.swap-tab").removeClass("active");    
+    $(this).addClass("active");    
+    e.preventDefault();
+    var show = $(this).data("show");
+    $(".modal-body").hide();
+    $("#" + show).show();
   });
 
   // Button to save the sankey as a file
@@ -472,6 +518,7 @@
   setDateLabels();
   setRegionLabels();
   getData();
+  updateLevelLinks();
 
 </script>
 
