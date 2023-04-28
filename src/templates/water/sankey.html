@@ -4,10 +4,27 @@
 {% block page_name %}fullwidth{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="{% static "css/water.css" %}?p93" />
+<link rel="stylesheet" href="{% static "css/water.css" %}?p934" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"> 
+
+{% if not DEBUG %}
+<style type="text/css">
+@keyframes forward {
+  to {
+    stroke-dashoffset: -1;
+  }
+}
+
+@keyframes backward {
+  to {
+    stroke-dashoffset: 1;
+  }
+}
+</style>
+{% endif %}
+
 {% endblock %}
 
 {% block content %}

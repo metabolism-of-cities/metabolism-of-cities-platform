@@ -45,17 +45,6 @@
   animation: backward 0.5s linear infinite;
 }
 
-@keyframes forward {
-  to {
-    stroke-dashoffset: -1;
-  }
-}
-
-@keyframes backward {
-  to {
-    stroke-dashoffset: 1;
-  }
-}
 svg {
   opacity: 0.2;
 }
