@@ -18,7 +18,7 @@
 }
 
 /* not interaction with nodes so you can click on regions */
-.node {
+.node, .map-region, .clone-region {
   pointer-events: none;
 }
 

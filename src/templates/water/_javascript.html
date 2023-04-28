@@ -140,18 +140,23 @@
         all_flows.push({{ each.identifier }});
       {% endfor %}
 
+      $(".path title").remove(); // Remove all titles so we can create new ones below
       $.each(response, function(key, val) {
+        flow = $("#path-" + key);
         if (val == null) {
-          $("#path-" + key).css("stroke-width", "0.3px");
-          $("#path-" + key).attr("title", "Inconnu");
+          flow.css("stroke-width", "0.3px");
+          flow.attr("title", "Inconnu");
         } else {
           fraction = val/max_flow; /* Here we can calculate the flow proportionate to the max_flow */
           width = fraction*max_width; /* This makes the width of THIS flow proportionate to the max */
           if (width > 0 && width < 0.3) {
             width = 0.3;
           }
-          $("#path-" + key).css("stroke-width", width + "px");
-          $("#path-" + key).attr("title", "FLOW #" + key + " - " + formatter.format(val) + " {{ category.unit.symbol }}");
+          flow.css("stroke-width", width + "px");
+          var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+          var titletext  = document.createTextNode("FLOW #" + key + " - " + formatter.format(val) + " {{ category.unit.symbol }}");
+          title.appendChild(titletext);
+          flow.append(title);
         }
 
         if (val == null || val > 0) {
@@ -171,8 +176,6 @@
           }
         }
 
-        $("#path-" + key).attr("data-toggle", "tooltip");
-        $("#path-" + key).attr("data-placement", "left");
         $("#path-" + key).show();
 
         all_flows = all_flows.filter(item => item !== Number(key)); /* We keep track which flows exist in the dataset, see below why */
@@ -205,8 +208,6 @@
 
       $("svg").css("opacity", "1");
       $(".loading").hide(); 
-
-      $('[data-toggle="tooltip"]').tooltip({container: 'body'});
 
       // We want to hide all the nodes that should not be displayed, and show the ones that do have values
       $(".node").addClass("show-this-node");
@@ -334,9 +335,13 @@
 
   $("#animate").click(function(){
     if ($(this).is(":checked")) {
+      // The @keyframes are very CPU intense so we don't have them in the CSS by default and only
+      // add them when the user wants to see the animations.
+      $("<style type='text/css' id='animation-css'>@keyframes forward { to { stroke-dashoffset: -1; } } @keyframes backward { to { stroke-dashoffset: 1; } } </style>").appendTo("head");
       $(".path").css("stroke-dasharray", "1");
       $(".animate-toggle label").addClass("btn-dark");
     } else {
+      $("#animation-css").remove();
       $(".path").css("stroke-dasharray", "0");
       $(".animate-toggle label").removeClass("btn-dark");
     }
@@ -413,11 +418,13 @@
 
       table = '<table class="table table-striped"><thead><tr><th>{{ _("Date") }}</th><th>{{ _("Quantity") }} ({{ category.unit.symbol }})</th></tr></thead><tbody>';
       data = [];
+      total = 0;
       for (let x of response) {
         data.push(x["quantity"]);
         table += '<tr><td>' + x["date"] + '</td><td>' + x["quantity"] + '</td></tr>';
+        total += x["quantity"];
       }
-      table += '</tbody></table>';
+      table += '</tbody><tfoot><tr><th>{{ _("Total") }}</th><th>' + total + '</th></tr></tfoot></table>';
       $("#tablebox").html(table);
 
       chart = $("#chartbox").highcharts();
@@ -439,6 +446,9 @@
           fontSize: "12px",
           cursor: "default",
         },
+      },
+      tooltip: {
+        pointFormat: '<b>{point.y} {{ category.unit.symbol }}</b>'
       },
       chart: {
           type: "column"
