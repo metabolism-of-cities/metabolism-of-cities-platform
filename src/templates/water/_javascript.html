@@ -20,6 +20,16 @@
     {% endif %}
   {% endfor %}
 
+  /* We use this in the charts, on the x-axis */
+  time_frames = []
+  {% for each in time_frames %}
+    {% if each.timeframe == "month" %}
+      time_frames.push("{{ each.date|date:"M Y" }}");
+    {% else %}
+      time_frames.push("{{ each.date|date:"Y" }}");
+    {% endif %}
+  {% endfor %}
+
   /*
   *  flow_mapping is used to calculate the total quantity flowing into a node, so that
   *  the label on the box can be updated to reflect this quantity
@@ -361,11 +371,12 @@
     }
   }
 
+  // If you click on a flow then we show a chart with all historic data for the entire period
   $(".path").click(function(){
     get_id = $(this).attr("id");
     title = flow_titles[get_id];
 
-    $("#chartTitle").text("Territoire: " + $("#title_region").text());
+    $("#chartTitle").text("Territoire : " + $("#title_region").text());
     $("#chart").modal();
 
     $("#chartbox").highcharts().setTitle({text:title});
@@ -393,6 +404,14 @@
   // We load an empty highchart, which will be populated with actual chart data once
   // a flow is being clicked.
   Highcharts.chart("chartbox", {
+      credits: {
+        text: "",
+        href: null,
+        style: {
+          fontSize: "12px",
+          cursor: "default",
+        },
+      },
       chart: {
           type: "column"
       },
@@ -402,6 +421,33 @@
       legend: {
           enabled: false
       },
+      yAxis: {
+        title: {
+          text: "{{ _("Value") }} ({{ category.unit.symbol }})",
+        },
+      },
+  });
+
+  // Button to save the sankey as a file
+  // Source: https://gist.github.com/danallison/3ec9d5314788b337b682
+
+  function downloadString(text, fileType, fileName) {
+    var blob = new Blob([text], { type: fileType });
+
+    var a = document.createElement('a');
+    a.download = fileName;
+    a.href = URL.createObjectURL(blob);
+    a.dataset.downloadurl = [fileType, a.download, a.href].join(':');
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function() { URL.revokeObjectURL(a.href); }, 1500);
+  }
+
+  $("#download").click(function(e){
+    e.preventDefault();
+    downloadString($("#sankey_svg")[0].outerHTML, "image/svg+xml", "{{ category.slug }}.svg")
   });
 
   /* Run this at page load */
