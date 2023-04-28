@@ -154,7 +154,7 @@
           }
           flow.css("stroke-width", width + "px");
           var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
-          var titletext  = document.createTextNode("FLOW #" + key + " - " + formatter.format(val) + " {{ category.unit.symbol }}");
+          var titletext  = document.createTextNode({% if is_admin %}"FLOW #" + key + " - " + {% endif %}formatter.format(val) + " {{ category.unit.symbol }}");
           title.appendChild(titletext);
           flow.append(title);
         }
